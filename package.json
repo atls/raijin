@@ -1,0 +1,29 @@
+{
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "lint": "mctl lint",
+    "test": "mctl test",
+    "commit": "mctl commit",
+    "format": "mctl format",
+    "typecheck": "mctl typecheck",
+    "checkcommit": "mctl precommit",
+    "postinstall": "lerna run compile",
+    "build": "lerna run build"
+  },
+  "devDependencies": {
+    "@monstrs/mctl": "0.1.82",
+    "husky": "4.2.5",
+    "lerna": "3.22.1",
+    "typescript": "3.9.7"
+  },
+  "workspaces": [
+    "packages/**/*"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "mctl precommit",
+      "commit-msg": "mctl commitmsg"
+    }
+  }
+}
