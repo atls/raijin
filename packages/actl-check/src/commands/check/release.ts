@@ -1,26 +1,27 @@
-import { Command } from '@oclif/command'
-import { Conclusion } from '../../types'
+import { Command }     from '@oclif/command'
+
+import { Conclusion }  from '../../types'
 import { createCheck } from '../../github'
 
 export default class ReleaseCommand extends Command {
   static description: string = 'Check release build'
+
   static examples: string[] = ['$ mctl check:release']
 
   async run(): Promise<void> {
     try {
-      const plugin = this.config.findCommand('release:build');
+      const plugin = this.config.findCommand('release:build')
 
       if (!plugin) {
-        throw new Error('mctl release:build command dependency not found');
+        throw new Error('mctl release:build command dependency not found')
       }
 
-      const command = plugin.load();
+      const command = plugin.load()
 
-      await command.run([]);
-      await this.check();
-    }
-    catch (error) {
-      await this.check(error);
+      await command.run([])
+      await this.check()
+    } catch (error) {
+      await this.check(error)
     }
   }
 
@@ -29,6 +30,6 @@ export default class ReleaseCommand extends Command {
       title: error ? 'Error build release' : 'Successful',
       summary: error ? error.message : '',
       annotations: [],
-    });
+    })
   }
 }

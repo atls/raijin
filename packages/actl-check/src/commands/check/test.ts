@@ -1,14 +1,17 @@
-import { Command } from '@oclif/command'
-import { join } from 'path'
-import { tmpdir } from 'os'
-import * as execa from 'execa'
-import { JEST_CONFIG_PATH } from '@atlantis-lab/config'
-import { isReportExists } from '../../utils'
-import { createCheck } from '../../github'
+import execa                           from 'execa'
+import { Command }                     from '@oclif/command'
+import { tmpdir }                      from 'os'
+import { join }                        from 'path'
+
+import { JEST_CONFIG_PATH }            from '@monstrs/config'
+
 import { AnnotationLevel, Conclusion } from '../../types'
+import { createCheck }                 from '../../github'
+import { isReportExists }              from '../../utils'
 
 export default class TestCommand extends Command {
   static description: string = 'Check test via jest'
+
   static examples: string[] = ['$ mctl check:test']
 
   async run(): Promise<void> {
@@ -23,13 +26,13 @@ export default class TestCommand extends Command {
         reportPath,
         '--testLocationInResults',
       ])
-    }
-    catch (error) {
+    } catch (error) {
       if (!(await isReportExists(reportPath))) {
-        this.log(error.stderr);
+        this.log(error.stderr)
       }
     }
 
+    // eslint-disable-next-line
     await this.check(require(reportPath))
   }
 
@@ -37,13 +40,19 @@ export default class TestCommand extends Command {
     const cwd = process.env.GITHUB_WORKSPACE || process.cwd()
 
     const assertions = testResults
-      .reduce((result, testResult) => [
-        ...result,
-        ...testResult.assertionResults.map((assertion) => (Object.assign(Object.assign({}, assertion), { path: testResult.name.substring(cwd.length + 1) }))),
-      ], [])
-      .filter((assertion) => assertion.status === 'failed')
+      .reduce(
+        (result, testResult) => [
+          ...result,
+          ...testResult.assertionResults.map(assertion => ({
+            ...assertion,
+            path: testResult.name.substring(cwd.length + 1),
+          })),
+        ],
+        []
+      )
+      .filter(assertion => assertion.status === 'failed')
 
-    const annotations = assertions.map((assertion) => ({
+    const annotations = assertions.map(assertion => ({
       path: assertion.path,
       start_line: assertion.location.line + 1,
       end_line: assertion.location.line + 1,
@@ -57,6 +66,6 @@ export default class TestCommand extends Command {
       title: annotations.length > 0 ? `Errors ${annotations.length}` : 'Successful',
       summary: annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
       annotations,
-    });
+    })
   }
 }

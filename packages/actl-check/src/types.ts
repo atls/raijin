@@ -1,6 +1,6 @@
 export enum AnnotationLevel {
   Warning = 'warning',
-  Failure = 'failure'
+  Failure = 'failure',
 }
 
 export enum Conclusion {
@@ -9,7 +9,7 @@ export enum Conclusion {
   Neutral = 'neutral',
   Cancelled = 'cancelled',
   TimedOut = 'timed_out',
-  ActionRequired = 'action_required'
+  ActionRequired = 'action_required',
 }
 
 export interface Annotation {

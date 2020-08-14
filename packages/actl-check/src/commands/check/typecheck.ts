@@ -1,18 +1,19 @@
-import { Command } from '@oclif/command'
-import * as execa from 'execa'
-import { AnnotationLevel, Conclusion } from '../../types'
-import { createCheck } from '../../github'
+import execa                           from 'execa'
+import { Command }                     from '@oclif/command'
 
-const getAnnotationLevel = (level) => {
+import { AnnotationLevel, Conclusion } from '../../types'
+import { createCheck }                 from '../../github'
+
+const getAnnotationLevel = level => {
   if (level !== 'failure') {
-    return AnnotationLevel.Warning;
+    return AnnotationLevel.Warning
   }
-  return AnnotationLevel.Failure;
+  return AnnotationLevel.Failure
 }
 
-const formatLine = (line) => {
+const formatLine = line => {
   const [file, rule, message] = line.split(':')
-  const [filePath, position] = file.split(/\(|\)/).filter((f) => f)
+  const [filePath, position] = file.split(/\(|\)/).filter(f => f)
   const [startLine] = position.split(',')
   const [level] = rule.trim().split(' ')
 
@@ -29,19 +30,15 @@ const formatLine = (line) => {
 
 export default class TypecheckCommand extends Command {
   static description: string = 'Check TypeScript via tsc'
+
   static examples: string[] = ['$ actl check:typecheck']
 
   async run(): Promise<void> {
     try {
-      const result = await execa(
-        'tsc',
-        ['--noEmit', '-p',
-          process.cwd(), '--pretty', 'false'],
-      )
+      const result = await execa('tsc', ['--noEmit', '-p', process.cwd(), '--pretty', 'false'])
       await this.check(result.all)
-    }
-    catch (error) {
-      await this.check(error.all);
+    } catch (error) {
+      await this.check(error.all)
     }
   }
 
@@ -50,22 +47,24 @@ export default class TypecheckCommand extends Command {
       .split('\n')
       .reduce((result, line, index) => {
         if (line.includes(' TS')) {
-          return [...result, line];
+          return [...result, line]
         }
         if (result.length > 0 && result[result.length - 1]) {
-          result[result.length - 1] = result[result.length - 1] + line;
+          // eslint-disable-next-line
+          result[result.length - 1] = result[result.length - 1] + line
         }
-        return result;
+        return result
       }, [])
-      .map(formatLine);
+      .map(formatLine)
     await createCheck(
       'TypeCheck',
       annotations.length > 0 ? Conclusion.Failure : Conclusion.Success,
       {
         title: annotations.length > 0 ? `Errors ${annotations.length}` : 'Successful',
-        summary: annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
+        summary:
+          annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
         annotations,
-      },
-    );
+      }
+    )
   }
 }
