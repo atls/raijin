@@ -1,7 +1,7 @@
 {
   "extends": "@monstrs/tsconfig/tsconfig.lib.json",
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "lib",
     "skipLibCheck": true
   },
   "exclude": ["node_modules", "src/**/*.test.ts"],
