@@ -48,6 +48,7 @@ node_modules
 # build files
 build
 dist
+lib
 .next
 
 # env vars
