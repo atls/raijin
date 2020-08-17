@@ -76,7 +76,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         if: >
           github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master'
+          github.event.pull_request.base.ref == 'master' &&
           !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
       - name: Publish to NPM
@@ -85,7 +85,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: >
           github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master'
+          github.event.pull_request.base.ref == 'master' &&
           !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
       - name: Github Registry
@@ -96,7 +96,7 @@ jobs:
           scope: ${{ secrets.SCOPE }}
         if: >
           github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master'
+          github.event.pull_request.base.ref == 'master' &&
           !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
       - name: Publish to Github Registry
@@ -105,5 +105,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
         if: >
           github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master'
+          github.event.pull_request.base.ref == 'master' &&
           !startsWith(github.event.pull_request.head.ref, 'renovate/')
