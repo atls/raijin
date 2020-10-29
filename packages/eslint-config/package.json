@@ -1,0 +1,37 @@
+{
+  "name": "@atlantis-lab/eslint-config",
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "typings": "dist/index.d.ts",
+  "files": [
+    ".eslintignore",
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -r -f dist",
+    "prepublishOnly": "yarn run build",
+    "prebuild": "yarn clean",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "2.34.0",
+    "@typescript-eslint/parser": "2.34.0",
+    "eslint-config-airbnb-typescript": "6.3.2",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-plugin-import": "2.22.0",
+    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.20.3"
+  },
+  "devDependencies": {
+    "@atlantis-lab/prettier-config": "*",
+    "@types/node": "14.0.14",
+    "typescript": "3.9.6"
+  },
+  "peerDependencies": {
+    "@atlantis-lab/prettier-config": "*",
+    "eslint": ">=6.x"
+  }
+}
