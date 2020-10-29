@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
+    "jsx": "preserve",
+    "noEmit": true,
+    "target": "esnext"
+  }
+}
