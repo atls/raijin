@@ -1,0 +1,25 @@
+{
+  "name": "@atlantis-lab/commitlint-config",
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -r -f dist",
+    "prepublishOnly": "yarn run build",
+    "prebuild": "yarn clean",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@commitlint/config-conventional": "8.3.4",
+    "@commitlint/config-lerna-scopes": "8.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "14.0.14",
+    "typescript": "3.9.6"
+  }
+}
