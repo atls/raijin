@@ -25,7 +25,7 @@
     "prepack": "yarn build",
     "postpack": "rm -f oclif.manifest.json",
     "build": "rm -rf lib && tsc -b tsconfig.json && oclif-dev manifest && oclif-dev readme",
-    "version": "oclif-dev readme && git add README.md"
+    "version": "yarn build && oclif-dev readme && git add README.md"
   },
   "dependencies": {
     "@actions/core": "1.2.0",
