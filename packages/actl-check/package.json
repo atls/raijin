@@ -24,18 +24,18 @@
   "scripts": {
     "prepack": "yarn build",
     "postpack": "rm -f oclif.manifest.json",
-    "build": "rm -rf lib && tsc -b tsconfig.json && oclif-dev manifest && oclif-dev readme",
+    "build": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "version": "oclif-dev readme && git add README.md"
   },
   "dependencies": {
     "@actions/core": "1.2.0",
     "@actions/github": "1.1.0",
+    "@atlantis-lab/config": "^0.1.2",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "2.2.2",
     "@octokit/graphql": "4.3.1",
     "@types/jest": "24.0.23",
-    "@monstrs/config": "0.2.2",
     "commitlint-format-json": "1.1.0",
     "eslint": "6.7.2",
     "execa": "3.4.0",

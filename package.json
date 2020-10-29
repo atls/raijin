@@ -13,9 +13,9 @@
   },
   "devDependencies": {
     "@monstrs/mctl": "0.1.82",
-    "husky": "^4.3.0",
-    "lerna": "^3.22.1",
-    "typescript": "^4.0.5"
+    "husky": "4.3.0",
+    "lerna": "3.22.1",
+    "typescript": "3.9.6"
   },
   "workspaces": [
     "packages/**/*"

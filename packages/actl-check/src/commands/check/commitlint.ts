@@ -1,7 +1,7 @@
 import execa                                   from 'execa'
 import { Command }                             from '@oclif/command'
 
-import { COMMITLINT_CONFIG_PATH }              from '@monstrs/config'
+import { COMMITLINT_CONFIG_PATH }              from '@atlantis-lab/config'
 
 import { Conclusion }                          from '../../types'
 import { createCheck, getPullCommitsMessages } from '../../github'

@@ -6,14 +6,14 @@ import { createCheck } from '../../github'
 export default class ReleaseCommand extends Command {
   static description: string = 'Check release build'
 
-  static examples: string[] = ['$ mctl check:release']
+  static examples: string[] = ['$ actl check:release']
 
   async run(): Promise<void> {
     try {
       const plugin = this.config.findCommand('release:build')
 
       if (!plugin) {
-        throw new Error('mctl release:build command dependency not found')
+        throw new Error('actl release:build command dependency not found')
       }
 
       const command = plugin.load()

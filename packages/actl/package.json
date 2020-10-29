@@ -20,6 +20,7 @@
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-plugins",
+      "@atlantis-lab/config",
       "@atlantis-lab/actl-check"
     ]
   },
@@ -30,6 +31,7 @@
     "version": "oclif-dev readme && git add README.md"
   },
   "dependencies": {
+    "@atlantis-lab/config": "^0.1.2",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "2.2.2",
