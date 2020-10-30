@@ -1,0 +1,46 @@
+{
+  "name": "@atlantis-lab/actl",
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "bin": {
+    "mctl": "./bin/run"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/oclif.manifest.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "oclif": {
+    "bin": "actl",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-plugins",
+      "@atlantis-lab/config",
+      "@atlantis-lab/actl-check"
+    ]
+  },
+  "scripts": {
+    "prepack": "yarn build",
+    "postpack": "rm -f oclif.manifest.json",
+    "build": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "dependencies": {
+    "@atlantis-lab/config": "^0.1.2",
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "2.2.2",
+    "@oclif/plugin-plugins": "1.7.8",
+    "tslib": "^1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@types/node": "14.0.14",
+    "typescript": "3.9.6"
+  }
+}

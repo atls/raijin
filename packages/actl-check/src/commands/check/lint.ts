@@ -9,7 +9,7 @@ import { AnnotationLevel, Conclusion }            from '../../types'
 import { createCheck }                            from '../../github'
 import { isReportExists }                         from '../../utils'
 
-const getAnnotationLevel = severity => {
+const getAnnotationLevel = (severity) => {
   if (severity === 1) {
     return AnnotationLevel.Warning
   }
@@ -56,7 +56,7 @@ export default class LintCommand extends Command {
       if (messages.length === 0) {
         return
       }
-      messages.forEach(message => {
+      messages.forEach((message) => {
         const line = (message.line || 0) + 1
         annotations.push({
           path: filePath.substring(cwd.length + 1),
@@ -70,9 +70,9 @@ export default class LintCommand extends Command {
       })
     })
 
-    const warnings = annotations.filter(annotation => annotation.annotation_level === 'warning')
+    const warnings = annotations.filter((annotation) => annotation.annotation_level === 'warning')
       .length
-    const errors = annotations.filter(annotation => annotation.annotation_level === 'failure')
+    const errors = annotations.filter((annotation) => annotation.annotation_level === 'failure')
       .length
 
     await createCheck('Lint', annotations.length > 0 ? Conclusion.Failure : Conclusion.Success, {

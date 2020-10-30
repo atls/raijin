@@ -6,7 +6,7 @@ import { COMMITLINT_CONFIG_PATH }              from '@monstrs/config'
 import { Conclusion }                          from '../../types'
 import { createCheck, getPullCommitsMessages } from '../../github'
 
-const formatResultError = error => `✖   ${error.message} [${error.name}]`
+const formatResultError = (error) => `✖   ${error.message} [${error.name}]`
 
 const formatResultStatus = (errors, warnings) =>
   `${errors.length === 0 && warnings.length === 0 ? '✔' : '✖'}   found ${errors.length} problems, ${
