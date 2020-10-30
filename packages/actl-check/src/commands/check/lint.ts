@@ -3,13 +3,13 @@ import { Command }                                from '@oclif/command'
 import { tmpdir }                                 from 'os'
 import { join }                                   from 'path'
 
-import { ESLINT_CONFIG_PATH, ESLINT_IGNORE_PATH } from '@atlantis-lab/config'
+import { ESLINT_CONFIG_PATH, ESLINT_IGNORE_PATH } from '@monstrs/config'
 
 import { AnnotationLevel, Conclusion }            from '../../types'
 import { createCheck }                            from '../../github'
 import { isReportExists }                         from '../../utils'
 
-const getAnnotationLevel = severity => {
+const getAnnotationLevel = (severity) => {
   if (severity === 1) {
     return AnnotationLevel.Warning
   }
@@ -19,7 +19,7 @@ const getAnnotationLevel = severity => {
 export default class LintCommand extends Command {
   static description: string = 'Check ESLint to statically analyze your code'
 
-  static examples: string[] = ['$ actl check:lint']
+  static examples: string[] = ['$ mctl check:lint']
 
   async run(): Promise<void> {
     const reportPath = join(tmpdir(), `eslint-report-${new Date().getTime()}.json`)
@@ -56,7 +56,7 @@ export default class LintCommand extends Command {
       if (messages.length === 0) {
         return
       }
-      messages.forEach(message => {
+      messages.forEach((message) => {
         const line = (message.line || 0) + 1
         annotations.push({
           path: filePath.substring(cwd.length + 1),
@@ -70,9 +70,9 @@ export default class LintCommand extends Command {
       })
     })
 
-    const warnings = annotations.filter(annotation => annotation.annotation_level === 'warning')
+    const warnings = annotations.filter((annotation) => annotation.annotation_level === 'warning')
       .length
-    const errors = annotations.filter(annotation => annotation.annotation_level === 'failure')
+    const errors = annotations.filter((annotation) => annotation.annotation_level === 'failure')
       .length
 
     await createCheck('Lint', annotations.length > 0 ? Conclusion.Failure : Conclusion.Success, {

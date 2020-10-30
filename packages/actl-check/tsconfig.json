@@ -1,4 +1,9 @@
 {
-  "extends": "@atlantis-lab/tsconfig/tsconfig.lib.json",
+  "extends": "@monstrs/tsconfig/tsconfig.lib.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules", "src/**/*.test.ts"],
   "include": ["src"]
 }
