@@ -1,4 +1,4 @@
-import * as execa from 'execa'
+import execa                           from 'execa'
 import { Command }                     from '@oclif/command'
 
 import { AnnotationLevel, Conclusion } from '../../types'
