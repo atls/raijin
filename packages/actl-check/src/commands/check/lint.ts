@@ -3,7 +3,7 @@ import { Command }                                from '@oclif/command'
 import { tmpdir }                                 from 'os'
 import { join }                                   from 'path'
 
-import { ESLINT_CONFIG_PATH, ESLINT_IGNORE_PATH } from '@monstrs/config'
+import { ESLINT_CONFIG_PATH, ESLINT_IGNORE_PATH } from '@atlantis-lab/config'
 
 import { AnnotationLevel, Conclusion }            from '../../types'
 import { createCheck }                            from '../../github'
@@ -19,7 +19,7 @@ const getAnnotationLevel = (severity) => {
 export default class LintCommand extends Command {
   static description: string = 'Check ESLint to statically analyze your code'
 
-  static examples: string[] = ['$ mctl check:lint']
+  static examples: string[] = ['$ actl check:lint']
 
   async run(): Promise<void> {
     const reportPath = join(tmpdir(), `eslint-report-${new Date().getTime()}.json`)

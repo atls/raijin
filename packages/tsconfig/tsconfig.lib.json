@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "declaration": true,
-    "jsx": "react",
-    "module": "commonjs",
-    "target": "es6"
-  }
-}

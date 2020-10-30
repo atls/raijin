@@ -6,7 +6,7 @@ import { createCheck } from '../../github'
 export default class ReleaseCommand extends Command {
   static description: string = 'Check release build'
 
-  static examples: string[] = ['$ mctl check:release']
+  static examples: string[] = ['$ actl check:release']
 
   async run(): Promise<void> {
     try {

@@ -3,7 +3,7 @@ import { Command }                     from '@oclif/command'
 import { tmpdir }                      from 'os'
 import { join }                        from 'path'
 
-import { JEST_CONFIG_PATH }            from '@monstrs/config'
+import { JEST_CONFIG_PATH }            from '@atlantis-lab/config'
 
 import { AnnotationLevel, Conclusion } from '../../types'
 import { createCheck }                 from '../../github'
@@ -12,7 +12,7 @@ import { isReportExists }              from '../../utils'
 export default class TestCommand extends Command {
   static description: string = 'Check test via jest'
 
-  static examples: string[] = ['$ mctl check:test']
+  static examples: string[] = ['$ actl check:test']
 
   async run(): Promise<void> {
     const reportPath = join(tmpdir(), `jest-report-${new Date().getTime()}.json`)
