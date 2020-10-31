@@ -78,7 +78,7 @@ jobs:
         with:
           node-version: '14.x'
           registry-url: 'https://npm.pkg.github.com'
-          scope: ${{ secrets.SCOPE }}
+          scope: '@atlantis-lab'
         if: >
           github.event.pull_request.merged == true &&
           github.event.pull_request.base.ref == 'master' &&
