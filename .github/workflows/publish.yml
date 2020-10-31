@@ -39,28 +39,13 @@ jobs:
           github.event.pull_request.base.ref == 'master' &&
           !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
-      - name: Configure GPG Key
-        run: |
-          mkdir -p ~/.gnupg/
-          printf "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
-          gpg --import ~/.gnupg/private.key
-        env:
-          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-        if: >
-          github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master' &&
-          !startsWith(github.event.pull_request.head.ref, 'renovate/')
-
       - name: Configure Git User
         run: |
           git config --local user.email $GIT_EMAIL
           git config --local user.name $GIT_USER
-          git config --local user.signingkey $GPG_KEY_ID
-          git config --local commit.gpgsign true
         env:
           GIT_USER: ${{ secrets.GIT_USER }}
           GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
-          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID}}
         if: >
           github.event.pull_request.merged == true &&
           github.event.pull_request.base.ref == 'master' &&
