@@ -1,5 +1,6 @@
 {
   "name": "@atlantis-lab/actl-check",
+  "repository": "git@github.com:Atlantis-Lab/actl.git",
   "version": "0.1.0",
   "license": "MIT",
   "main": "lib/index.js",
