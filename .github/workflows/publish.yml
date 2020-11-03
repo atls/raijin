@@ -1,0 +1,94 @@
+name: Publisher
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: yarn
+        if: >
+          github.event.pull_request.merged == true &&
+          github.event.pull_request.base.ref == 'master' &&
+          !startsWith(github.event.pull_request.head.ref, 'renovate/')
+
+      - name: Configure GPG Key
+        id: configure_gpg
+        uses: crazy-max/ghaction-import-gpg@v3
+        with:
+          gpg-private-key: ${{ secrets.GPG_SIGNING_KEY }}
+          git-commit-gpgsign: true
+          git-user-signingkey: true
+
+      - name: GPG user IDs
+        run: |
+          echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
+          echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
+          echo "name:        ${{ steps.import_gpg.outputs.name }}"
+          echo "email:       ${{ steps.import_gpg.outputs.email }}"
+        if: >
+          github.event.pull_request.merged == true &&
+          github.event.pull_request.base.ref == 'master' &&
+          !startsWith(github.event.pull_request.head.ref, 'renovate/')
+
+  release:
+    name: Release
+    runs-on: ununtu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Create Release
+        run: |
+          yarn lerna version --no-git-tag-version --yes -m 'chore(release): %v'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        if: >
+          github.event.pull_request.merged == true &&
+          github.event.pull_request.base.ref == 'master' &&
+          !startsWith(github.event.pull_request.head.ref, 'renovate/')
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - run: yarn
+      - run: yarn lerna publish from-package --no-verify-access --yes
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://npm.pkg.github.com/
+          scope: ${{ secrets.SCOPE }}
+      - run: yarn
+      - run: yarn lerna publish from-package --no-verify-access --yes
+         env:
+           NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}

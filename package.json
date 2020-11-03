@@ -2,6 +2,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "commit": "mctl commit",
     "build": "lerna run build"
   },
   "devDependencies": {
