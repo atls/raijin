@@ -6,27 +6,21 @@ on:
       - '**'
 
 jobs:
-  run:
-    name: Run
+  build:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        mode: ['12', '13', '14']
+    name: Checking on NodeJS v${{ matrix.node }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
+      - uses: actions/checkout@v2
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: ${{ matrix.node }}
 
       - name: Install
         run: yarn install
 
       - name: Build
         run: yarn build
-
-#      - name: Typecheck
-#        run: yarn typecheck
-#
-#      - name: Lint
-#        run: yarn lint
