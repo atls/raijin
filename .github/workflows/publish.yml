@@ -61,7 +61,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
   publish-npm:
-    needs: build
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -74,7 +74,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-gpr:
-    needs: build
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
