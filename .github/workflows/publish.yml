@@ -34,10 +34,6 @@ jobs:
         echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
         echo "name:        ${{ steps.import_gpg.outputs.name }}"
         echo "email:       ${{ steps.import_gpg.outputs.email }}"
-      if: >
-        github.event.pull_request.merged == true &&
-        github.event.pull_request.base.ref == 'master' &&
-        !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
   release:
     name: Release
@@ -59,10 +55,6 @@ jobs:
           yarn lerna version --no-git-tag-version --yes -m 'chore(release): %v'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        if: >
-          github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master' &&
-          !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
   publish-npm:
     needs: build
@@ -73,7 +65,6 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: yarn
       - run: yarn lerna publish from-package --no-verify-access --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -88,7 +79,6 @@ jobs:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
           scope: ${{ secrets.SCOPE }}
-      - run: yarn
       - run: yarn lerna publish from-package --no-verify-access --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
