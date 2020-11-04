@@ -54,7 +54,7 @@ jobs:
       - name: Create Release
         run: |
           yarn install
-          yarn lerna version --no-git-tag-version --yes -m 'chore(release): %v'
+          yarn lerna version --no-git-tag-version --yes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
