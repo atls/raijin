@@ -21,23 +21,23 @@ jobs:
           !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
       - name: Configure GPG Key
-        id: configure_gpg
-        uses: crazy-max/ghaction-import-gpg@v3
-        with:
-          gpg-private-key: ${{ secrets.GPG_SIGNING_KEY }}
-          git-commit-gpgsign: true
-          git-user-signingkey: true
-
-      - name: GPG user IDs
         run: |
-          echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
-          echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
-          echo "name:        ${{ steps.import_gpg.outputs.name }}"
-          echo "email:       ${{ steps.import_gpg.outputs.email }}"
-        if: >
-          github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master' &&
-          !startsWith(github.event.pull_request.head.ref, 'renovate/')
+          mkdir -p ~/.gnupg/
+          printf "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
+          gpg --import ~/.gnupg/private.key
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+
+      - name: Configure Git
+        run: |
+          git config --local user.email $GIT_EMAIL
+          git config --local user.name $GIT_USER
+          git config --local user.signingkey $GPG_KEY_ID
+          git config --local commit.gpgsign true
+        env:
+          GIT_USER: ${{ secrets.GIT_USER }}
+          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID}}
 
   release:
     name: Release
@@ -59,10 +59,6 @@ jobs:
           yarn lerna version --no-git-tag-version --yes -m 'chore(release): %v'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        if: >
-          github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master' &&
-          !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
   publish-npm:
     needs: build
