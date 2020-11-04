@@ -1,10 +1,11 @@
 name: Publisher
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - master
+  workflow_dispatch:
+#   pull_request:
+#     types: [closed]
+#     branches:
+#       - master
 
 jobs:
   build:
