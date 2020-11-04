@@ -73,7 +73,6 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: yarn
       - run: yarn lerna publish from-package --no-verify-access --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -88,7 +87,7 @@ jobs:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
           scope: ${{ secrets.SCOPE }}
-      - run: yarn
       - run: yarn lerna publish from-package --no-verify-access --yes
-         env:
-           NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+          
