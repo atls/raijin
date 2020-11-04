@@ -1,11 +1,10 @@
 name: Publisher
 
 on:
-  workflow_dispatch:
-#   pull_request:
-#     types: [closed]
-#     branches:
-#       - master
+  pull_request:
+    types: [closed]
+    branches:
+      - master
 
 jobs:
   build:
@@ -91,5 +90,5 @@ jobs:
           scope: ${{ secrets.SCOPE }}
       - run: yarn
       - run: yarn lerna publish from-package --no-verify-access --yes
-         env:
-           NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
