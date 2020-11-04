@@ -36,6 +36,7 @@
   "dependencies": {
     "@atlantis-lab/actl-check": "^0.3.0",
     "@atlantis-lab/actl-lint": "^0.0.0",
+    "@atlantis-lab/actl-typecheck": "^0.0.0",
     "@atlantis-lab/config": "^0.1.2",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
