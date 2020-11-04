@@ -1,7 +1,7 @@
 {
   "name": "@atlantis-lab/actl",
   "repository": "git@github.com:Atlantis-Lab/actl.git",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -34,9 +34,9 @@
     "version": "oclif-dev readme && git add README.md"
   },
   "dependencies": {
-    "@atlantis-lab/actl-check": "^0.3.0",
-    "@atlantis-lab/actl-lint": "^0.0.0",
-    "@atlantis-lab/actl-typecheck": "^0.0.0",
+    "@atlantis-lab/actl-check": "0.4.0",
+    "@atlantis-lab/actl-lint": "0.1.0",
+    "@atlantis-lab/actl-typecheck": "0.1.0",
     "@atlantis-lab/config": "^0.1.2",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
