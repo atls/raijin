@@ -51,11 +51,9 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install Dependencies
-        run: yarn
-
       - name: Create Release
         run: |
+          yarn install
           yarn lerna version --no-git-tag-version --yes -m 'chore(release): %v'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -69,7 +67,11 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: yarn lerna publish from-package --no-verify-access --yes
+
+      - name: Prepare to publishing
+        run: |
+          yarn install
+          yarn lerna publish from-package --no-verify-access --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -83,7 +85,11 @@ jobs:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
           scope: ${{ secrets.SCOPE }}
-      - run: yarn lerna publish from-package --no-verify-access --yes
+
+      - name: Prepare to publishing
+        run: |
+          yarn install
+          yarn lerna publish from-package --no-verify-access --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
           
