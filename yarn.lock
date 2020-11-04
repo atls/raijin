@@ -889,69 +889,6 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@monstrs/commitlint-config@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@monstrs/commitlint-config/-/commitlint-config-0.2.1.tgz#feb77dc8647aac23dd30e794006966fc7ffbaf6e"
-  integrity sha512-8SqdmFfug6DnBexC9y7oYA/ilFH8h0zh4yAoD6sdZBzQ55XLthiCmrKeAdU4u9wKnbCoIBNzRy6JoJmJkOvCnQ==
-  dependencies:
-    "@commitlint/config-conventional" "8.2.0"
-    "@commitlint/config-lerna-scopes" "8.2.0"
-
-"@monstrs/config@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@monstrs/config/-/config-0.2.1.tgz#c82e1aae6659bf7a27b17b1f0438070cd4fe287a"
-  integrity sha512-WVPRkDQKUIjL2vFz2xfLPptDs67lbB7gKstAnUMz7E3TrukQCJBrKQjtb4hHJofY/EmIPuwN628nxnat+mOUcA==
-  dependencies:
-    "@monstrs/commitlint-config" "0.2.1"
-    "@monstrs/eslint-config" "0.2.1"
-    "@monstrs/jest-config" "0.2.1"
-    "@monstrs/prettier-config" "0.2.1"
-    "@monstrs/tsconfig" "0.2.0"
-
-"@monstrs/eslint-config@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@monstrs/eslint-config/-/eslint-config-0.2.1.tgz#a85b343f3c49500016d0fcee17cb6307b33fe9e6"
-  integrity sha512-aZv0RzSFOL04K3N46nLEvLiJP3iwWCifJTWHoreaV/CsppLBmz8KIh21T7CShDKF1rVqpgQIkWXLxGbi1HcCGQ==
-  dependencies:
-    "@typescript-eslint/eslint-plugin" "2.10.0"
-    "@typescript-eslint/parser" "2.10.0"
-    eslint-config-airbnb-typescript "6.3.1"
-    eslint-config-prettier "6.7.0"
-    eslint-plugin-import "2.18.2"
-    eslint-plugin-jsx-a11y "6.2.3"
-    eslint-plugin-prettier "3.1.1"
-    eslint-plugin-react "7.17.0"
-
-"@monstrs/jest-config@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@monstrs/jest-config/-/jest-config-0.2.1.tgz#b86bf1daa209f1b33b6f11c65629882faa671ad2"
-  integrity sha512-Yx4LfWUunwEBfk8TjJ4Wfts9RZqn2nciJvFXC/qJLJyt9SQbwpHXBA8djwajZzCx066A2OZR7T9DOY9q0V+Mqg==
-  dependencies:
-    jest-emotion "10.0.26"
-    jest-static-stubs "0.0.1"
-    ts-jest "24.2.0"
-
-"@monstrs/prettier-config@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@monstrs/prettier-config/-/prettier-config-0.2.1.tgz#1b263a98a704b9374edb7e72325235d6415d5d11"
-  integrity sha512-4pKoj7Y1mn1ZyrDXHMEtPerQfXFFKrYlTRsEYELP+eVKTfMzCMIfE3z6V53ae4RsQ1qTMoId1CwYIlgedyNrsA==
-  dependencies:
-    "@monstrs/prettier-plugin-import-sort" "0.2.0"
-
-"@monstrs/prettier-plugin-import-sort@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@monstrs/prettier-plugin-import-sort/-/prettier-plugin-import-sort-0.2.0.tgz#e5a4571f8a0969c1cac0caab1248a6447769353c"
-  integrity sha512-I9Ign30oXzqet/2fex3aS7NASlA2s+LK6H75VbiUP5LGgH/f5qnBGQ5T7C9YNKlsY/4zvT7PlGO3Tu25zc1beQ==
-  dependencies:
-    import-sort "^6.0.0"
-    import-sort-parser-typescript "^6.0.0"
-    import-sort-style "^6.0.0"
-
-"@monstrs/tsconfig@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@monstrs/tsconfig/-/tsconfig-0.2.0.tgz#16a863f7954d72e400f71e846c751cc80e747075"
-  integrity sha512-gCUaeYjNjxyWHgNCi9VVVFmKMognTk6lO7KVASzp7aaXPiUHbtSRDW+AkjEXEV8QOhpEHoY34kQEIJ7MxQuxlQ==
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -2806,7 +2743,7 @@ eslint-import-resolver-node@^0.3.2:
     debug "^2.6.9"
     resolve "^1.13.1"
 
-eslint-module-utils@^2.4.0, eslint-module-utils@^2.4.1:
+eslint-module-utils@^2.4.1:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/eslint-module-utils/-/eslint-module-utils-2.6.0.tgz#579ebd094f56af7797d19c9866c9c9486629bfa6"
   integrity sha512-6j9xxegbqe8/kZY8cYpcp0xhbK0EgJlg3g9mib3/miLaExuuwc3n5UEfSnU6hWMbT0FAYVvDbL9RrRgpUeQIvA==
@@ -2818,23 +2755,6 @@ eslint-plugin-eslint-plugin@^2.1.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-eslint-plugin/-/eslint-plugin-eslint-plugin-2.3.0.tgz#1b6ffd13b74da5656e27106b79567b162984fc41"
   integrity sha512-xER9XjfTLrAgoUzPguPKoreDGtXt2vUnwqAqdElNrkcSbl5K1rGtSOmhgbiqCb7UN4spnjNhIZplHMNWY6Kz/w==
-
-eslint-plugin-import@2.18.2:
-  version "2.18.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.18.2.tgz#02f1180b90b077b33d447a17a2326ceb400aceb6"
-  integrity sha512-5ohpsHAiUBRNaBWAF08izwUGlbrJoJJ+W9/TBwsGoR1MnlgfwMIKrFeSjWbt6moabiXW9xNvtFz+97KHRfI4HQ==
-  dependencies:
-    array-includes "^3.0.3"
-    contains-path "^0.1.0"
-    debug "^2.6.9"
-    doctrine "1.5.0"
-    eslint-import-resolver-node "^0.3.2"
-    eslint-module-utils "^2.4.0"
-    has "^1.0.3"
-    minimatch "^3.0.4"
-    object.values "^1.1.0"
-    read-pkg-up "^2.0.0"
-    resolve "^1.11.0"
 
 eslint-plugin-import@2.19.1:
   version "2.19.1"
@@ -2868,13 +2788,6 @@ eslint-plugin-jsx-a11y@6.2.3:
     emoji-regex "^7.0.2"
     has "^1.0.3"
     jsx-ast-utils "^2.2.1"
-
-eslint-plugin-prettier@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-3.1.1.tgz#507b8562410d02a03f0ddc949c616f877852f2ba"
-  integrity sha512-A+TZuHZ0KU0cnn56/9mfR7/KjUJ9QNVXUhwvRFSR7PGPe0zQR6PTkmyqg1AtUUEOzTqeRsUwyKFh0oVZKVCrtA==
-  dependencies:
-    prettier-linter-helpers "^1.0.0"
 
 eslint-plugin-prettier@3.1.2:
   version "3.1.2"
@@ -4039,13 +3952,6 @@ is-ci@^2.0.0:
   integrity sha512-YfJT7rkpQB0updsdHLGWrvhBJfcfzNNawYDNIyQXJz0IViGf75O8EBPKSdvw2rF+LGCsX4FZ8tcr3b19LcZq4w==
   dependencies:
     ci-info "^2.0.0"
-
-is-core-module@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.0.0.tgz#58531b70aed1db7c0e8d4eb1a0a2d1ddd64bd12d"
-  integrity sha512-jq1AH6C8MuteOoBPwkxHafmByhL9j5q4OaPGdbuD+ZtQJVzH+i6E3BJDQcBA09k57i2Hh2yQbEG8yObZ0jdlWw==
-  dependencies:
-    has "^1.0.3"
 
 is-data-descriptor@^0.1.4:
   version "0.1.4"
@@ -6064,14 +5970,6 @@ resolve@1.x, resolve@^1.10.0, resolve@^1.12.0, resolve@^1.13.1, resolve@^1.8.1:
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.17.0.tgz#b25941b54968231cc2d1bb76a79cb7f2c0bf8444"
   integrity sha512-ic+7JYiV8Vi2yzQGFWOkiZD5Z9z7O2Zhm9XMaTxdJExKasieFCr+yXZ/WmXsckHiKl12ar0y6XiXDx3m4RHn1w==
   dependencies:
-    path-parse "^1.0.6"
-
-resolve@^1.11.0:
-  version "1.18.1"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.18.1.tgz#018fcb2c5b207d2a6424aee361c5a266da8f4130"
-  integrity sha512-lDfCPaMKfOJXjy0dPayzPdF1phampNWr3qFCjAu+rw/qbQmr5jWH5xN2hwh9QKfw9E5v4hwV7A+jrCmL8yjjqA==
-  dependencies:
-    is-core-module "^2.0.0"
     path-parse "^1.0.6"
 
 restore-cursor@^2.0.0:
