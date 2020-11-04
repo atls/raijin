@@ -22,6 +22,7 @@
       "@oclif/plugin-help",
       "@oclif/plugin-plugins",
       "@atlantis-lab/config",
+      "@atlantis-lab/actl-lint",
       "@atlantis-lab/actl-check"
     ]
   },
