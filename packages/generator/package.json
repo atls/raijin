@@ -1,0 +1,24 @@
+{
+  "name": "@atlantis-lab/actl-generator",
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "/lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepack": "yarn build",
+    "postpack": "rm -f oclif.manifest.json",
+    "build": "rm -rf lib && tsc -b tsconfig.json"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "14.0.14",
+    "@monstrs/config": "0.2.2",
+    "typescript": "3.9.6"
+  }
+}
