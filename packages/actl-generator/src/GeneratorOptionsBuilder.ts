@@ -1,9 +1,19 @@
 import { GeneratorOptions, fn } from './types'
 
 export class GeneratorOptionsBuilder<T> {
+  private static readonly defaultOptions: GeneratorOptions = {
+    allProperties: [],
+    defaultHandler: null,
+    strategyRouter: new Map(),
+  }
+
+  private readonly options: GeneratorOptions
+
   public constructor(
-    private readonly options: GeneratorOptions,
-  ) {}
+    options?: GeneratorOptions,
+  ) {
+    this.options = { ...GeneratorOptionsBuilder.defaultOptions, ...options }
+  }
 
   public pick(key: keyof T): this {
     this.options.allProperties.push(String(key))
@@ -51,4 +61,3 @@ export class GeneratorOptionsBuilder<T> {
     return true
   }
 }
-
