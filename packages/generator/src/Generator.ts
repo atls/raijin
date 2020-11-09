@@ -7,14 +7,14 @@ export class Generator<T> {
     const entries = []
 
     if (this.options.kdefaultHandler !== null) {
-      entries.push(this.options.kdefaultHandler, this.options.allProperties)
+      entries.push([this.options.kdefaultHandler, this.options.allProperties])
     }
 
-    const promises = entries.concat(...this.options.strategyRouter.entries())
+    const promises = entries.concat(Array.from(this.options.strategyRouter.entries()))
       .map(async ([handler, properties]) => {
         const rawResult = await handler()
         return properties.reduce(
-          (result, property) => ({ ...result, [property]: rawResult[property] }),
+          (result, property) => Object.assign({}, result, property ? { [property]: rawResult[property] } : null ),
           {} as T,
         )
       })
