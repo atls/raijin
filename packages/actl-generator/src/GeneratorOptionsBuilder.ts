@@ -42,21 +42,21 @@ export class GeneratorOptionsBuilder<T> {
   }
 
   public setDefaultResolver(resolver: fn<any>): this {
-    if (this.options.kdefaultHandler === null) {
+    if (this.options.defaultHandler === null) {
       this.unsetDefaultResolver()
     }
 
-    this.options.kdefaultHandler = resolver
+    this.options.defaultHandler = resolver
 
     return this
   }
 
   public unsetDefaultResolver(): boolean {
-    if (this.options.kdefaultHandler === null) {
+    if (this.options.defaultHandler === null) {
       return false
     }
 
-    this.options.kdefaultHandler = null
+    this.options.defaultHandler = null
 
     return true
   }

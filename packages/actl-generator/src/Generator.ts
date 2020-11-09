@@ -6,8 +6,8 @@ export class Generator<T> {
   public async generate(): Promise<T> {
     const entries = []
 
-    if (this.options.kdefaultHandler !== null) {
-      entries.push([this.options.kdefaultHandler, this.options.allProperties])
+    if (this.options.defaultHandler !== null) {
+      entries.push([this.options.defaultHandler, this.options.allProperties])
     }
 
     const promises = entries.concat(Array.from(this.options.strategyRouter.entries()))
