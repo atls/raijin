@@ -3,7 +3,7 @@ import { GeneratorOptions, fn } from './types'
 export class GeneratorOptionsBuilder<T> {
   private static readonly defaultOptions: GeneratorOptions = {
     allProperties: [],
-    kdefaultHandler: null,
+    defaultHandler: null,
     strategyRouter: new Map(),
   }
 
