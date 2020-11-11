@@ -41,7 +41,7 @@ export class GeneratorOptionsBuilder<T> {
     return this
   }
 
-  public setDefaultResolver(resolver: fn<any>, mapper?: fn<any>): this {
+  public setDefaultResolver(resolver: fn<any>): this {
     if (this.options.defaultHandler === null) {
       this.unsetDefaultResolver()
     }
