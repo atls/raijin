@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "commit": "mctl commit",
+    "test": "mctl test",
     "build": "lerna run build"
   },
   "devDependencies": {
