@@ -1,18 +1,18 @@
 import { GeneratorOptions, fn } from './types'
 
 export class GeneratorOptionsBuilder<T> {
-  private static readonly defaultOptions: GeneratorOptions = {
-    allProperties: [],
-    defaultHandler: null,
-    strategyRouter: new Map(),
+  private static readonly defaultOptionsFactory = (): GeneratorOptions => {
+    return {
+      allProperties: [],
+      defaultHandler: null,
+      strategyRouter: new Map(),
+    }
   }
 
   private readonly options: GeneratorOptions
 
-  public constructor(
-    options?: GeneratorOptions,
-  ) {
-    this.options = { ...GeneratorOptionsBuilder.defaultOptions, ...options }
+  public constructor(options?: GeneratorOptions) {
+    this.options = Object.assign(GeneratorOptionsBuilder.defaultOptionsFactory(), options)
   }
 
   public pick(key: keyof T): this {
@@ -25,7 +25,7 @@ export class GeneratorOptionsBuilder<T> {
   }
 
   public setHandler(key: keyof T, handler: fn<any>) {
-    const strategyRouter = new Map(this.options.strategyRouter)
+    const { strategyRouter } = this.options
     const properties = strategyRouter.get(handler)
 
     if (properties === undefined) {
