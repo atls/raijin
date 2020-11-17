@@ -11,10 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-      - run: yarn
         if: >
           github.event.pull_request.merged == true &&
           github.event.pull_request.base.ref == 'master' &&
@@ -39,13 +35,14 @@ jobs:
           GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
 
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-
-      - name: Setup NodeJS
+      - name: Config NPM
         uses: actions/setup-node@v1
         with:
           node-version: 14
+          registry-url: https://registry.npmjs.org/
+
+      - name: Run Yarn
+        run: yarn
 
       - name: Create Release
         run: |
@@ -56,12 +53,6 @@ jobs:
           git push
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      - name: Config NPM
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
 
       - name: Publish to NPM
         run: yarn lerna publish from-package --no-verify-access --yes
