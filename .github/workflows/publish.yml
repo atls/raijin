@@ -30,14 +30,14 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.email $GIT_EMAIL
-          git config --global user.name $GIT_USER
-          git config --global user.signingkey $GPG_KEY_ID
-          git config --global commit.gpgsign true
+          git config --local user.email $GIT_EMAIL
+          git config --local user.name $GIT_USER
+          git config --local user.signingkey $GPG_KEY_ID
+          git config --local commit.gpgsign true
         env:
           GIT_USER: ${{ secrets.GIT_USER }}
           GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
-          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID}}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
 
   release:
     needs: build
