@@ -39,11 +39,6 @@ jobs:
           GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
 
-  release:
-    needs: build
-    name: Release
-    runs-on: ubuntu-latest
-    steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
