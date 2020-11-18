@@ -1,8 +1,7 @@
 name: Publisher
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - master
 
@@ -11,10 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        if: >
-          github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master' &&
-          !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
       - name: Configure GPG Key
         run: |
@@ -23,10 +18,6 @@ jobs:
           gpg --import ~/.gnupg/private.key
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-        if: >
-          github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master' &&
-          !startsWith(github.event.pull_request.head.ref, 'renovate/')
 
       - name: Configure Git
         run: |
@@ -39,13 +30,7 @@ jobs:
           GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
 
-      - name: Config NPM
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
-
-      - name: Run Yarn
+      - name: Install Dependencies
         run: yarn
 
       - name: Create Release
@@ -54,8 +39,12 @@ jobs:
           git add .
           git commit -m 'chore(release): %s'
           git push
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Config NPM
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
 
       - name: Publish to NPM
         run: yarn lerna publish from-package --no-verify-access --yes
