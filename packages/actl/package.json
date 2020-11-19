@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
-    "mctl": "./bin/run"
+    "actl": "./bin/run"
   },
   "files": [
     "/bin",

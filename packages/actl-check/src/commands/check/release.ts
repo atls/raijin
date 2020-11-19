@@ -13,7 +13,7 @@ export default class ReleaseCommand extends Command {
       const plugin = this.config.findCommand('release:build')
 
       if (!plugin) {
-        throw new Error('mctl release:build command dependency not found')
+        throw new Error('actl release:build command dependency not found')
       }
 
       const command = plugin.load()
