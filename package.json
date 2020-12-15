@@ -2,8 +2,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "commit": "mctl commit",
-    "test": "mctl test",
+    "commit": "actl commit",
+    "test": "actl test",
     "build": "lerna run build"
   },
   "devDependencies": {

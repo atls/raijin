@@ -1,0 +1,1 @@
+{"version":"0.1.3","commands":{"typecheck":{"id":"typecheck","description":"TypeScript typecheck","pluginName":"@atlantis-lab/actl-typecheck","pluginType":"core","aliases":[],"examples":["$ actl typecheck"],"flags":{},"args":[]}}}
