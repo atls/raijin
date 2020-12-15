@@ -7,8 +7,7 @@
     "version": {
       "allowBranch": "master",
       "conventionalCommits": true,
-      "exact": true,
-      "message": "chore(release): %v"
+      "exact": true
     }
   }
 }
