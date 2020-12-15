@@ -1,7 +1,7 @@
 {
   "name": "@atlantis-lab/actl-typecheck",
   "repository": "git@github.com:Atlantis-Lab/actl.git",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
