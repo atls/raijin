@@ -1,1 +1,0 @@
-{"version":"0.0.3","commands":{"commitmsg":{"id":"commitmsg","description":"Run commitizen commit message validation hook","pluginName":"@atlantis-lab/actl-commitmsg","pluginType":"core","aliases":[],"examples":["$ actl commitmsg"],"flags":{},"args":[]}}}
