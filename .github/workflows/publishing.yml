@@ -1,4 +1,4 @@
-name: Publisher
+name: Publishing
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
     branches:
       - master
 jobs:
-  build:
+  publishing:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
