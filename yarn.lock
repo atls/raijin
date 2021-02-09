@@ -780,6 +780,17 @@
     figgy-pudding "^3.5.1"
     npmlog "^4.1.2"
 
+"@lerna/collect-updates@3.18.0":
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/@lerna/collect-updates/-/collect-updates-3.18.0.tgz#6086c64df3244993cc0a7f8fc0ddd6a0103008a6"
+  integrity sha512-LJMKgWsE/var1RSvpKDIxS8eJ7POADEc0HM3FQiTpEczhP6aZfv9x3wlDjaHpZm9MxJyQilqxZcasRANmRcNgw==
+  dependencies:
+    "@lerna/child-process" "3.16.5"
+    "@lerna/describe-ref" "3.16.5"
+    minimatch "^3.0.4"
+    npmlog "^4.1.2"
+    slash "^2.0.0"
+
 "@lerna/collect-updates@3.20.0":
   version "3.20.0"
   resolved "https://registry.yarnpkg.com/@lerna/collect-updates/-/collect-updates-3.20.0.tgz#62f9d76ba21a25b7d9fbf31c02de88744a564bd1"
@@ -1152,6 +1163,24 @@
     fs-extra "^8.1.0"
     npmlog "^4.1.2"
     upath "^1.2.0"
+
+"@lerna/project@3.18.0":
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/@lerna/project/-/project-3.18.0.tgz#56feee01daeb42c03cbdf0ed8a2a10cbce32f670"
+  integrity sha512-+LDwvdAp0BurOAWmeHE3uuticsq9hNxBI0+FMHiIai8jrygpJGahaQrBYWpwbshbQyVLeQgx3+YJdW2TbEdFWA==
+  dependencies:
+    "@lerna/package" "3.16.0"
+    "@lerna/validation-error" "3.13.0"
+    cosmiconfig "^5.1.0"
+    dedent "^0.7.0"
+    dot-prop "^4.2.0"
+    glob-parent "^5.0.0"
+    globby "^9.2.0"
+    load-json-file "^5.3.0"
+    npmlog "^4.1.2"
+    p-map "^2.1.0"
+    resolve-from "^4.0.0"
+    write-json-file "^3.2.0"
 
 "@lerna/project@3.21.0":
   version "3.21.0"
