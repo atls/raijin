@@ -12,7 +12,7 @@ export const getChangedPackages = async (files: string[]) => {
   changed.forEach((pkg) => packageGraphNodes.add(packageGraph.get(pkg.name)));
 
   const unique = Array.from(collectDependents(packageGraphNodes))
-    .map((graphNode) => graphNode.pkg)
+    .map((graphNode: any) => graphNode.pkg)
     .concat(changed)
     .reduce((result, item) => {
       result.set(item.name, item);

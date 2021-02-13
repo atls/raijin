@@ -1,5 +1,5 @@
 import { Command, flags } from '@oclif/command';
-import * as execa from 'execa'
+import execa from 'execa'
 
 import { getChangedPackages } from '../lerna'
 
