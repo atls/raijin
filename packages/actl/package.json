@@ -19,6 +19,7 @@
   "oclif": {
     "bin": "actl",
     "plugins": [
+      "@atlantis-lab/actl-build",
       "@atlantis-lab/actl-check",
       "@atlantis-lab/actl-commit",
       "@atlantis-lab/actl-commitmsg",
@@ -38,12 +39,13 @@
     "postpack": "pubflow restore"
   },
   "dependencies": {
-    "@atlantis-lab/actl-check": "0.4.11",
-    "@atlantis-lab/actl-commit": "0.0.11",
-    "@atlantis-lab/actl-commitmsg": "0.0.11",
-    "@atlantis-lab/actl-lint": "0.1.11",
-    "@atlantis-lab/actl-precommit": "0.0.11",
-    "@atlantis-lab/actl-typecheck": "0.1.11",
+    "@atlantis-lab/actl-build": "^0.0.3",
+    "@atlantis-lab/actl-check": "^0.4.11",
+    "@atlantis-lab/actl-commit": "^0.0.11",
+    "@atlantis-lab/actl-commitmsg": "^0.0.11",
+    "@atlantis-lab/actl-lint": "^0.1.11",
+    "@atlantis-lab/actl-precommit": "^0.0.11",
+    "@atlantis-lab/actl-typecheck": "^0.1.11",
     "@atlantis-lab/config": "^0.1.5",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
