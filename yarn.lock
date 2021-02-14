@@ -15,52 +15,52 @@
     "@octokit/graphql" "^2.0.1"
     "@octokit/rest" "^16.15.0"
 
-"@atlantis-lab/commitlint-config@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@atlantis-lab/commitlint-config/-/commitlint-config-0.1.2.tgz#f1e4887c4e843fc8288abc663d97a92c8a82f6ff"
-  integrity sha512-sYsPBnYV9rmqVIFUzRCCrc6LMnciNrOv6binMsjqFrkswvhuac1PjeVfGmfP8c6MmbOvoI8if9GaBDcJeLS7kg==
+"@atlantis-lab/commitlint-config@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@atlantis-lab/commitlint-config/-/commitlint-config-0.1.5.tgz#0c55dc3cd288990388cd9243f722950ae4ed4396"
+  integrity sha512-7+bLi9bP3trrsFWrwqcn8UwRZpukVXvAETUPGWSNiJdhQH8CFiJ9WSpQ+Z0+j/CZDEA001V3TW/lTtgZ+lPHiA==
   dependencies:
-    "@commitlint/config-conventional" "8.2.0"
-    "@commitlint/config-lerna-scopes" "8.2.0"
+    "@commitlint/config-conventional" "11.0.0"
+    "@commitlint/config-lerna-scopes" "11.0.0"
 
-"@atlantis-lab/config@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@atlantis-lab/config/-/config-0.1.2.tgz#b5ff6c463b205c8220002b030d380a3534080bfe"
-  integrity sha512-kNavtY6/ZOUtsHhg7vFIPC8C++bVaAFxm4wRNAsoiBb1vo6i3L2Dl42eOJmsunIi4HeO8wRcd4ojv6TF++kwpg==
+"@atlantis-lab/config@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@atlantis-lab/config/-/config-0.1.5.tgz#1158228c4f9595b1a9b528c9d87514b42d8d97e4"
+  integrity sha512-+MPBNlTJGp5HkX9jNqQGNBbU98HUPdSMuDsuJ+wBiEIMwzWh84SACAd1y98YY4pbtOfnp1Cz77plulnaZJpkEA==
   dependencies:
-    "@atlantis-lab/commitlint-config" "0.1.2"
-    "@atlantis-lab/eslint-config" "0.1.2"
-    "@atlantis-lab/jest-config" "0.1.2"
-    "@atlantis-lab/prettier-config" "0.1.2"
-    "@atlantis-lab/tsconfig" "0.1.2"
+    "@atlantis-lab/commitlint-config" "0.1.5"
+    "@atlantis-lab/eslint-config" "0.1.5"
+    "@atlantis-lab/jest-config" "0.1.5"
+    "@atlantis-lab/prettier-config" "0.1.5"
+    "@atlantis-lab/tsconfig" "0.1.5"
 
-"@atlantis-lab/eslint-config@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@atlantis-lab/eslint-config/-/eslint-config-0.1.2.tgz#af651516d6c8e5c05ff6bface1c4246b33824253"
-  integrity sha512-yOQo2gIQvweijbYZ0OiZEF/WZLFgS1XazSxJix3OhHPsK9Y8a/0POVYylw+yaSeGdB8tqScEONRM3PAkGQWTsQ==
+"@atlantis-lab/eslint-config@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@atlantis-lab/eslint-config/-/eslint-config-0.1.5.tgz#93ebbd25ee56e9f2b20b0664db2b15f0c609ac6b"
+  integrity sha512-ISbnC+nPVlIx84c7QH1JHozI2Qo+6eTnfsT8k3X0BONFaRn7akIMit0SymKjs18XvZ/FCwV2+p9uq4/JKE5hUg==
   dependencies:
-    "@typescript-eslint/eslint-plugin" "2.10.0"
-    "@typescript-eslint/parser" "2.10.0"
-    eslint-config-airbnb-typescript "6.3.1"
-    eslint-config-prettier "6.7.0"
-    eslint-plugin-import "2.19.1"
-    eslint-plugin-jsx-a11y "6.2.3"
-    eslint-plugin-prettier "3.1.2"
-    eslint-plugin-react "7.17.0"
+    "@typescript-eslint/eslint-plugin" "4.4.0"
+    "@typescript-eslint/parser" "4.4.0"
+    eslint-config-airbnb-typescript "10.0.2"
+    eslint-config-prettier "6.12.0"
+    eslint-plugin-import "2.22.1"
+    eslint-plugin-jsx-a11y "6.3.1"
+    eslint-plugin-prettier "3.1.4"
+    eslint-plugin-react "7.21.2"
 
-"@atlantis-lab/jest-config@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@atlantis-lab/jest-config/-/jest-config-0.1.2.tgz#fc88dae4223047182069a38c0396bb710c4afe0f"
-  integrity sha512-Zke54tImYRTrNkqXALbm7gJ6441pbGkXi260SmuW6WOPvhPzaGtyh2b/4czf2Q0L0V82UF6QmBgdhtB7u9Pt7w==
+"@atlantis-lab/jest-config@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@atlantis-lab/jest-config/-/jest-config-0.1.5.tgz#404a9de0448e475d71179de5202e799c2d15ffa2"
+  integrity sha512-avLteFRKWLjrgFbqiHdJ7OuPkxM+wDOB6U1MLFhxco0bvM9dAKevCzd6SglrYYSnVzqW8/llKk1UsGYHRiEUqg==
   dependencies:
-    jest-emotion "10.0.26"
+    jest-emotion "10.0.32"
     jest-static-stubs "0.0.1"
-    ts-jest "24.2.0"
+    ts-jest "26.4.1"
 
-"@atlantis-lab/prettier-config@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@atlantis-lab/prettier-config/-/prettier-config-0.1.2.tgz#b4803d07abe2fac123088a348bfc13ffda5bac85"
-  integrity sha512-4+2eBMDzAxQ7OyJ1b8Gy3xqeCkZYZoc/wVMmCWPJU6IljDEXSsMWZCVb7fsscLwgL681zLj9SoDXP33291w2rg==
+"@atlantis-lab/prettier-config@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@atlantis-lab/prettier-config/-/prettier-config-0.1.5.tgz#ee613bcde1e8647fc0c23ad2d8da7a5dd8993c06"
+  integrity sha512-C31VmEdH1sueTlysLZfCv0utsJJe1KSrcRzIUAWIQIkLfauR9Zrf1D1A7z18Fao0X+U8hhV72E9eWU41JbfDdQ==
   dependencies:
     "@atlantis-lab/prettier-plugin-import-sort" "0.0.6"
 
@@ -74,10 +74,10 @@
     import-sort-style "^6.0.0"
     prettier "^2.0.5"
 
-"@atlantis-lab/tsconfig@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@atlantis-lab/tsconfig/-/tsconfig-0.1.2.tgz#3365c6e2b4a1a2fe396c1208a41a66aa69f67375"
-  integrity sha512-GR3AxPnaC3drLf+65SsW07c3HsaSJYdoU2mIj5Dtw6dsiu6JboCSjiX1k3l+rF2DsF75c7+gNL+f5EB2SmV12A==
+"@atlantis-lab/tsconfig@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@atlantis-lab/tsconfig/-/tsconfig-0.1.5.tgz#968e4772eb8143c9218d12cb439044b8a4b98489"
+  integrity sha512-jOPJD9MisitrDnKcLme+LHweEDMnibDrOO+9UIuel9ZW0D+7DGaFB6/IwA45jBcwM/+/RVnkGylcsqftK5Rqfw==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":
   version "7.10.4"
