@@ -15,6 +15,20 @@
     "@octokit/graphql" "^2.0.1"
     "@octokit/rest" "^16.15.0"
 
+"@atlantis-lab/actl-test@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@atlantis-lab/actl-test/-/actl-test-0.0.2.tgz#486eb48e2125aa0f287082f11641da8b0a8057ad"
+  integrity sha512-q9H0l/PBi3R8yYRjvP/LFdGIRwMV3kthag4P/4v/HegLRyHm1KuaC9h/eMvNcrFlBBbkDKxwtEOMBjypO7AFwQ==
+  dependencies:
+    "@atlantis-lab/config" "^0.1.5"
+    "@oclif/command" "^1"
+    "@oclif/config" "^1"
+    "@oclif/plugin-help" "2.2.2"
+    "@types/jest" "24.0.23"
+    execa "3.4.0"
+    jest "24.9.0"
+    tslib "^1"
+
 "@atlantis-lab/commitlint-config@0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@atlantis-lab/commitlint-config/-/commitlint-config-0.1.5.tgz#0c55dc3cd288990388cd9243f722950ae4ed4396"
