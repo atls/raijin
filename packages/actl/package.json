@@ -23,6 +23,7 @@
       "@atlantis-lab/actl-check",
       "@atlantis-lab/actl-commit",
       "@atlantis-lab/actl-commitmsg",
+      "@atlantis-lab/actl-format",
       "@atlantis-lab/actl-lint",
       "@atlantis-lab/actl-precommit",
       "@atlantis-lab/actl-test",
