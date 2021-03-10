@@ -5,7 +5,7 @@ import {
   JEST_CONFIG_PATH,
 } from '@atlantis-lab/config'
 
-export default {
+module.exports = {
   '*.{js,ts,tsx,yml,yaml,json,graphql,md}': [
     `prettier --write --config ${PRETTIER_CONFIG_PATH} --ignore-path ${PRETTIER_IGNORE_PATH}`,
     'git add',

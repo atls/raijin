@@ -1,7 +1,7 @@
 {
   "name": "@atlantis-lab/actl-check",
   "repository": "git@github.com:Atlantis-Lab/actl.git",
-  "version": "0.4.16",
+  "version": "0.4.25",
   "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -30,9 +30,9 @@
     "postpack": "pubflow restore"
   },
   "dependencies": {
-    "@actions/core": "1.2.0",
+    "@actions/core": "1.2.6",
     "@actions/github": "1.1.0",
-    "@atlantis-lab/config": "^0.1.8",
+    "@atlantis-lab/config": "^0.1.10",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/errors": "^1.3.4",

@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.4.25 (2021-03-09)
+
+**Note:** Version bump only for package @atlantis-lab/actl
+
+
+
+
+
+## 0.4.24 (2021-03-09)
+
+**Note:** Version bump only for package @atlantis-lab/actl
+
+
+
+
+
+## 0.4.23 (2021-03-04)
+
+**Note:** Version bump only for package @atlantis-lab/actl
+
+
+
+
+
+## 0.4.22 (2021-03-04)
+
+**Note:** Version bump only for package @atlantis-lab/actl
+
+
+
+
+
+## 0.4.21 (2021-03-04)
+
+**Note:** Version bump only for package @atlantis-lab/actl
+
+
+
+
+
+## 0.4.20 (2021-03-04)
+
+**Note:** Version bump only for package @atlantis-lab/actl
+
+
+
+
+
+## 0.4.19 (2021-03-01)
+
+**Note:** Version bump only for package @atlantis-lab/actl
+
+
+
+
+
+## 0.4.18 (2021-03-01)
+
+**Note:** Version bump only for package @atlantis-lab/actl
+
+
+
+
+
+## 0.4.17 (2021-02-24)
+
+**Note:** Version bump only for package @atlantis-lab/actl
+
+
+
+
+
 ## 0.4.16 (2021-02-19)
 
 **Note:** Version bump only for package @atlantis-lab/actl
