@@ -1,7 +1,7 @@
 {
   "name": "@atlantis-lab/actl-cr-publisher",
   "repository": "git@github.com:Atlantis-Lab/actl.git",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
