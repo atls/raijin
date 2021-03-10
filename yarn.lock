@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@actions/core@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@actions/core/-/core-1.2.0.tgz#aa5f52b26c362c821d41557e599371a42f6c0b3d"
+  integrity sha512-ZKdyhlSlyz38S6YFfPnyNgCDZuAF2T0Qv5eHflNWytPS8Qjvz39bZFMry9Bb/dpSnqWcNeav5yM2CTYpJeY+Dw==
+
 "@actions/core@1.2.6":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@actions/core/-/core-1.2.6.tgz#a78d49f41a4def18e88ce47c2cac615d5694bf09"
@@ -14,6 +19,20 @@
   dependencies:
     "@octokit/graphql" "^2.0.1"
     "@octokit/rest" "^16.15.0"
+
+"@atlantis-lab/actl-build@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@atlantis-lab/actl-build/-/actl-build-0.0.8.tgz#38fd05fca3bf3680dda3ecf5a95118825501e4f9"
+  integrity sha512-0RPNtpZhW5A1ut85IRAbCw6ydEzpk4FZsQYdbwRmIZc1p7zAf4cKBPh36cyqxUPza6Shiop00pvgoosXp/+46A==
+  dependencies:
+    "@lerna/collect-updates" "3.18.0"
+    "@lerna/package-graph" "3.18.5"
+    "@lerna/project" "3.18.0"
+    "@oclif/command" "^1"
+    "@oclif/config" "^1"
+    "@oclif/plugin-help" "2.2.2"
+    execa "3.4.0"
+    tslib "^1"
 
 "@atlantis-lab/commitlint-config@0.1.10":
   version "0.1.10"
@@ -801,6 +820,17 @@
     chalk "^2.3.1"
     figgy-pudding "^3.5.1"
     npmlog "^4.1.2"
+
+"@lerna/collect-updates@3.18.0":
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/@lerna/collect-updates/-/collect-updates-3.18.0.tgz#6086c64df3244993cc0a7f8fc0ddd6a0103008a6"
+  integrity sha512-LJMKgWsE/var1RSvpKDIxS8eJ7POADEc0HM3FQiTpEczhP6aZfv9x3wlDjaHpZm9MxJyQilqxZcasRANmRcNgw==
+  dependencies:
+    "@lerna/child-process" "3.16.5"
+    "@lerna/describe-ref" "3.16.5"
+    minimatch "^3.0.4"
+    npmlog "^4.1.2"
+    slash "^2.0.0"
 
 "@lerna/collect-updates@3.20.0":
   version "3.20.0"
