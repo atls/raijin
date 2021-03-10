@@ -17,13 +17,5 @@ export const getPullFiles = async (): Promise<any> => {
 }
 
 export const getBranchName = async (): Promise<any> => {
-  const branch = context.ref.replace('refs/heads','').match(/(.*?)\//)
-
-  const branches = await octokit.repos.getBranch({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    branch,
-  })
-
-  return branches
+  return context.ref.replace('refs/heads','').match(/(.*?)\//)
 }

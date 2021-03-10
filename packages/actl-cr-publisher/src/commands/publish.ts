@@ -14,7 +14,7 @@ export default class BuildCommand extends Command {
 
   async run(): Promise<void> {
     const files = await getPullFiles()
-    const branch = await getBranchName()
+    const branch = getBranchName()
     const packages = await getChangedPackages(files)
     const sha = (event.after ||
       event.pull_request.head.sha ||
