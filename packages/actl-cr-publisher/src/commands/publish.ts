@@ -3,7 +3,7 @@ import * as execa from 'execa'
 import { existsSync } from 'fs'
 import { join } from 'path'
 import { getChangedPackages } from '@atlantis-lab/actl-build/lib/lerna'
-import { getPullFiles } from '../github'
+import { getPullFiles, getBranchName } from '../github'
 
 const event = process.env.GITHUB_EVENT_PATH ? require(process.env.GITHUB_EVENT_PATH) : {}
 
@@ -14,11 +14,12 @@ export default class BuildCommand extends Command {
 
   async run(): Promise<void> {
     const files = await getPullFiles()
+    const branch = await getBranchName()
     const packages = await getChangedPackages(files)
     const sha = (event.after ||
       event.pull_request.head.sha ||
       process.env.GITHUB_SHA).substr(0, 7)
-    const version = `dev-${sha}`
+    const version = `${branch}-${sha}`
     const commands = []
     const withImages = packages.filter((pkg) => existsSync(join(pkg.location, 'Dockerfile')))
 

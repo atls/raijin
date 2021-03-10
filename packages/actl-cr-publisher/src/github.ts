@@ -15,3 +15,15 @@ export const getPullFiles = async (): Promise<any> => {
   );
   return data.map(({ filename }) => join(cwd, filename));
 }
+
+export const getBranchName = async (): Promise<any> => {
+  const branch = context.ref.replace('refs/heads','').match(/(.*?)\//)
+
+  const branches = await octokit.repos.getBranch({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    branch,
+  })
+
+  return branches
+}
