@@ -7,6 +7,7 @@ const octokit = new GitHub(process.env.GITHUB_TOKEN)
 
 export const getPullFiles = async (): Promise<any> => {
   const cwd = process.cwd();
+  // @ts-ignore
   const { data } = await octokit.pulls.listFiles(
     Object.assign(
       Object.assign({}, context.repo),

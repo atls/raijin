@@ -1,9 +1,14 @@
 import { Command } from '@oclif/command'
-import * as execa from 'execa'
+import execa from 'execa'
 import { existsSync } from 'fs'
 import { join } from 'path'
 import { getChangedPackages } from '@atlantis-lab/actl-build/lib/lerna'
 import { getPullFiles, getBranchName } from '../github'
+
+interface Package {
+  location: string,
+  name: string,
+}
 
 const event = process.env.GITHUB_EVENT_PATH ? require(process.env.GITHUB_EVENT_PATH) : {}
 
@@ -21,9 +26,9 @@ export default class BuildCommand extends Command {
       process.env.GITHUB_SHA).substr(0, 7)
     const version = `${branch}-${sha}`
     const commands = []
-    const withImages = packages.filter((pkg) => existsSync(join(pkg.location, 'Dockerfile')))
+    const withImages = packages.filter((pkg: Package) => existsSync(join(pkg.location, 'Dockerfile')))
 
-    withImages.forEach((pkg) => {
+    withImages.forEach((pkg: Package) => {
       const dockerfile = join(pkg.location, 'Dockerfile').replace(`${process.cwd()}/`, '')
       const name = pkg.name.replace(/@/g, '').replace(/\//, '-')
       const repo = `${process.env.REGISTRY_URL}${name}`
