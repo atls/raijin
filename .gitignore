@@ -50,6 +50,7 @@ build
 dist
 lib
 .next
+oclif.manifest.json
 
 # env vars
 .env
