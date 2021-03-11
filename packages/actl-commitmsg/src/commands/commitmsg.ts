@@ -1,6 +1,6 @@
 import { Command } from '@oclif/command'
-import execa from 'execa'
 import commitlintConfigPath from '@atlantis-lab/config/commitlint.config.js'
+const execa = require('execa')
 
 export default class CommitmsgCommand extends Command {
   static description: string = 'Run commitizen commit message validation hook'
