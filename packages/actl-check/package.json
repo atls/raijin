@@ -41,7 +41,7 @@
     "@types/jest": "26.0.20",
     "commitlint-format-json": "1.1.0",
     "eslint": "7.19.0",
-    "execa": "3.4.0",
+    "execa": "5.0.0",
     "tslib": "^1"
   },
   "devDependencies": {
