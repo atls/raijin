@@ -6,9 +6,7 @@ import TestCommand         from './test'
 import TypecheckCommand    from './typecheck'
 
 export default class AllCommand extends Command {
-  // static description: string = 'Run all checks'
-  //
-  // static examples: string[] = ['$ actl check:all']
+  static description: string = 'Run all checks'
 
   static paths = [['check:all']]
 

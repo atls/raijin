@@ -4,7 +4,7 @@ import { Command, Option }    from 'clipanion'
 import { getChangedPackages } from '../lerna'
 
 export default class BuildCommand extends Command {
-  static strict = false
+  static descriptopn = 'Build release'
 
   static paths = [['release:build']]
 

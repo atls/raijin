@@ -3,8 +3,7 @@ import { Command } from 'clipanion'
 import { join }    from 'path'
 
 export default class PrecommitCommand extends Command {
-  // static description: string = 'Locally validate the repo before committing'
-  // static examples: string[] = ['$ actl precommit']
+  static description: string = 'Locally validate the repo before committing'
 
   static paths = [['precommit']]
 

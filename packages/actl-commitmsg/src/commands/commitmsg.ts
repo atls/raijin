@@ -4,8 +4,7 @@ import { Command }          from 'clipanion'
 const execa = require('execa')
 
 export default class CommitmsgCommand extends Command {
-  // static description: string = 'Run commitizen commit message validation hook'
-  // static examples: string[] = ['$ actl commitmsg']
+  static description: string = 'Run commitizen commit message validation hook'
 
   static paths = [['commitmsg']]
 

@@ -3,9 +3,7 @@ import { JEST_CONFIG_PATH } from '@atlantis-lab/config'
 import { Command, Option }  from 'clipanion'
 
 export default class TestCommand extends Command {
-  // static description: string = 'Run tests via jest'
-  //
-  // static examples: string[] = ['$ actl test']
+  static description: string = 'Run tests via jest'
 
   static paths = [['test']]
 

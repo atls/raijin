@@ -16,9 +16,7 @@ const getAnnotationLevel = severity => {
 }
 
 export default class LintCommand extends Command {
-  // static description: string = 'Check ESLint to statically analyze your code'
-  //
-  // static examples: string[] = ['$ actl check:lint']
+  static description: string = 'Check ESLint to statically analyze your code'
 
   static paths = [['check:lint']]
 

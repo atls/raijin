@@ -3,6 +3,8 @@ import { ESLINT_CONFIG_PATH, ESLINT_IGNORE_PATH } from '@atlantis-lab/config'
 import { Command, Option }                        from 'clipanion'
 
 export default class LintCommand extends Command {
+  static description = 'Run ESLint to statically analyze your code'
+
   static paths = [['lint']]
 
   args = Option.Proxy()

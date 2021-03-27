@@ -14,9 +14,7 @@ interface Package {
 const event = process.env.GITHUB_EVENT_PATH ? require(process.env.GITHUB_EVENT_PATH) : {}
 
 export default class BuildCommand extends Command {
-  // static description: string = 'Publish release'
-  // static examples: string[] = ['$ actl release:publish']
-  // static strict: boolean = false
+  static description: string = 'Publish release'
 
   static paths = [['release:publish']]
 

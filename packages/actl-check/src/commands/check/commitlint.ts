@@ -22,9 +22,7 @@ ${[
 `
 
 export default class CommitLintCommand extends Command {
-  // static description: string = 'Check commit message'
-  //
-  // static examples: string[] = ['$ actl check:commitlint']
+  static description: string = 'Check commit message'
 
   static paths = [['check:commitlint']]
 

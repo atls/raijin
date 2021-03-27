@@ -4,8 +4,7 @@ import { Command }                                    from 'clipanion'
 import { join }                                       from 'path'
 
 export default class FormatCommand extends Command {
-  // static description: string = 'Prettier format'
-  // static examples: string[] = ['$ actl format']
+  static description: string = 'Prettier format'
 
   static paths = [['format']]
 

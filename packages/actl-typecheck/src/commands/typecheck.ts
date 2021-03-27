@@ -2,9 +2,7 @@ import execa       from 'execa'
 import { Command } from 'clipanion'
 
 export default class TypecheckCommand extends Command {
-  // static description: string = 'TypeScript typecheck'
-  //
-  // static examples: string[] = ['$ actl typecheck']
+  static description: string = 'TypeScript typecheck'
 
   static paths = [['typecheck']]
 

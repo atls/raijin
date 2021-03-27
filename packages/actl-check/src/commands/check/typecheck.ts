@@ -29,9 +29,7 @@ const formatLine = line => {
 }
 
 export default class TypecheckCommand extends Command {
-  // static description: string = 'Check TypeScript via tsc'
-  //
-  // static examples: string[] = ['$ actl check:typecheck']
+  static description: string = 'Check TypeScript via tsc'
 
   static paths = [['check:typecheck']]
 

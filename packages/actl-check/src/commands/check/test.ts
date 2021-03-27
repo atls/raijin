@@ -9,9 +9,7 @@ import { createCheck }                 from '../../github'
 import { isReportExists }              from '../../utils'
 
 export default class TestCommand extends Command {
-  // static description: string = 'Check test via jest'
-  //
-  // static examples: string[] = ['$ actl check:test']
+  static description: string = 'Check test via jest'
 
   static paths = [['check:test']]
 

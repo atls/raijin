@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { Cli }       from 'clipanion'
+import { Cli, Builtins}       from 'clipanion'
 
 import * as commands from './commands/commands'
 
@@ -13,4 +13,5 @@ const cli = new Cli({
 })
 
 Object.keys(commands).forEach(command => cli.register(commands[command]))
+cli.register(Builtins.DefinitionsCommand)
 cli.runExit(args, Cli.defaultContext)

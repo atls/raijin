@@ -4,9 +4,7 @@ import { Conclusion }  from '../../types'
 import { createCheck } from '../../github'
 
 export default class ReleaseCommand extends Command {
-  // static description: string = 'Check release build'
-  //
-  // static examples: string[] = ['$ actl check:release']
+  static description: string = 'Check release build'
 
   static paths = [['check:release']]
 
