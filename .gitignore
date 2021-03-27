@@ -38,7 +38,7 @@ node_modules
 .Trash-*
 .c9
 .idea
-.iml
+*.iml
 
 # MacOS temporary files
 .DS_Store
