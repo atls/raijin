@@ -1,5 +1,5 @@
 import execa                                      from 'execa'
-import { Command }                                from '@oclif/command'
+import { Command }                                from 'clipanion'
 import { tmpdir }                                 from 'os'
 import { join }                                   from 'path'
 
@@ -17,11 +17,13 @@ const getAnnotationLevel = (severity) => {
 }
 
 export default class LintCommand extends Command {
-  static description: string = 'Check ESLint to statically analyze your code'
+  // static description: string = 'Check ESLint to statically analyze your code'
+  //
+  // static examples: string[] = ['$ actl check:lint']
 
-  static examples: string[] = ['$ actl check:lint']
+  static paths = [['check:lint']]
 
-  async run(): Promise<void> {
+  async execute(): Promise<void> {
     const reportPath = join(tmpdir(), `eslint-report-${new Date().getTime()}.json`)
 
     try {
@@ -40,7 +42,7 @@ export default class LintCommand extends Command {
       ])
     } catch (error) {
       if (!(await isReportExists(reportPath))) {
-        this.log(error.stderr)
+        this.context.stdout.write(`${error.stderr}`)
       }
     }
 

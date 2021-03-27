@@ -1,5 +1,5 @@
 import execa                           from 'execa'
-import { Command }                     from '@oclif/command'
+import { Command }                     from 'clipanion'
 
 import { AnnotationLevel, Conclusion } from '../../types'
 import { createCheck }                 from '../../github'
@@ -29,11 +29,13 @@ const formatLine = line => {
 }
 
 export default class TypecheckCommand extends Command {
-  static description: string = 'Check TypeScript via tsc'
+  // static description: string = 'Check TypeScript via tsc'
+  //
+  // static examples: string[] = ['$ actl check:typecheck']
 
-  static examples: string[] = ['$ actl check:typecheck']
+  static paths = [['check:typecheck']]
 
-  async run(): Promise<void> {
+  async execute(): Promise<void> {
     try {
       const result = await execa('tsc', ['--noEmit', '-p', process.cwd(), '--pretty', 'false'])
       await this.check(result.all)

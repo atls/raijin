@@ -6,7 +6,7 @@ import { getChangedPackages } from '../lerna'
 export default class BuildCommand extends Command {
   static strict = false
 
-  static paths = [['build']]
+  static paths = [['release:build']]
 
   changes = Option.Boolean(`c`, false)
 

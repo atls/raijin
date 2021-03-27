@@ -1,24 +1,18 @@
-import { Command }     from '@oclif/command'
+import { Command }     from 'clipanion'
 
 import { Conclusion }  from '../../types'
 import { createCheck } from '../../github'
 
 export default class ReleaseCommand extends Command {
-  static description: string = 'Check release build'
+  // static description: string = 'Check release build'
+  //
+  // static examples: string[] = ['$ actl check:release']
 
-  static examples: string[] = ['$ actl check:release']
+  static paths = [['check:release']]
 
-  async run(): Promise<void> {
+  async execute(): Promise<void> {
     try {
-      const plugin = this.config.findCommand('release:build')
-
-      if (!plugin) {
-        throw new Error('actl release:build command dependency not found')
-      }
-
-      const command = plugin.load()
-
-      await command.run([])
+      this.cli.run(['release:build'])
       await this.check()
     } catch (error) {
       await this.check(error)

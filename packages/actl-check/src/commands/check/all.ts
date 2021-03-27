@@ -1,4 +1,4 @@
-import { Command }       from '@oclif/command'
+import { Command, Option }       from 'clipanion'
 
 import CommitLintCommand from './commitlint'
 import LintCommand       from './lint'
@@ -6,19 +6,21 @@ import TestCommand       from './test'
 import TypecheckCommand  from './typecheck'
 
 export default class AllCommand extends Command {
-  static description: string = 'Run all checks'
+  // static description: string = 'Run all checks'
+  //
+  // static examples: string[] = ['$ actl check:all']
 
-  static examples: string[] = ['$ actl check:all']
+  static paths = [['check:all']]
 
-  async run(): Promise<void> {
-    const commands = [CommitLintCommand, LintCommand, TestCommand, TypecheckCommand]
+  async execute(): Promise<void> {
+    const commands = [CommitLintCommand.paths[0][0], LintCommand.paths[0][0], TestCommand.paths[0][0], TypecheckCommand.paths[0][0]]
 
     await Promise.all(
       commands.map(async command => {
         try {
-          await command.run([])
+          await this.cli.run([command])
         } catch (error) {
-          console.log(error) // eslint-disable-line
+          this.context.stdout.write(`${error}`) // eslint-disable-line
         }
       })
     )

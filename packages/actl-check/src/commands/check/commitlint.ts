@@ -1,5 +1,5 @@
 import execa                                   from 'execa'
-import { Command }                             from '@oclif/command'
+import { Command }                             from 'clipanion'
 
 import { COMMITLINT_CONFIG_PATH }              from '@atlantis-lab/config'
 
@@ -23,11 +23,13 @@ ${[
 `
 
 export default class CommitLintCommand extends Command {
-  static description: string = 'Check commit message'
+  // static description: string = 'Check commit message'
+  //
+  // static examples: string[] = ['$ actl check:commitlint']
 
-  static examples: string[] = ['$ actl check:commitlint']
+  static paths = [['check:commitlint']]
 
-  async run(): Promise<void> {
+  async execute(): Promise<void> {
     try {
       const messages = await getPullCommitsMessages()
       const { stdout } = await execa(

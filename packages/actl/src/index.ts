@@ -2,8 +2,7 @@
 
 import { Cli }          from 'clipanion'
 
-import { LintCommand }  from '@atlantis-lab/actl-lint'
-import { BuildCommand } from '@atlantis-lab/actl-build'
+import * as commands from './commands/commands'
 
 const [node, app, ...args] = process.argv
 
@@ -13,6 +12,5 @@ const cli = new Cli({
   binaryVersion: require('../package.json').version,
 })
 
-cli.register(LintCommand)
-cli.register(BuildCommand)
+Object.keys(commands).forEach(command => cli.register(commands[command]))
 cli.runExit(args, Cli.defaultContext)
