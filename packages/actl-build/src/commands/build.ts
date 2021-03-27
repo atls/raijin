@@ -1,39 +1,31 @@
-import { Command, flags } from '@oclif/command';
-import execa from 'execa'
+import execa                  from 'execa'
+import { Command, Option }    from 'clipanion'
 
 import { getChangedPackages } from '../lerna'
 
-
 export default class BuildCommand extends Command {
-  static description = 'Build release'
-  static examples = ['$ actl release:build']
-  static strict = false
+  static descriptopn = 'Build release'
 
-  static flags = {
-    changes: flags.boolean({
-      char: 'c',
-      description: 'Build only changes',
-      default: false,
-    }),
-  }
+  static paths = [['release:build']]
 
-  async run() {
-    const { argv, flags: { changes }, } = this.parse(BuildCommand)
+  changes = Option.Boolean(`c`, false)
 
-    if (changes) {
-      const packages = await getChangedPackages(argv)
+  args = Option.Rest()
+
+  async execute() {
+    if (this.changes) {
+      const packages = await getChangedPackages(this.args)
       const scopes = packages.map(({ name }) => `--scope=${name}`)
 
       if (scopes.length > 0) {
         await execa('yarn', ['lerna', ...scopes, 'run', 'build'], {
           stdio: 'inherit',
-        });
+        })
       }
-    }
-    else {
+    } else {
       await execa('yarn', ['lerna', 'run', 'build'], {
         stdio: 'inherit',
-      });
+      })
     }
   }
 }

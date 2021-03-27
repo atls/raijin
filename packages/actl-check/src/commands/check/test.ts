@@ -1,9 +1,8 @@
 import execa                           from 'execa'
-import { Command }                     from '@oclif/command'
+import { JEST_CONFIG_PATH }            from '@atlantis-lab/config'
+import { Command }                     from 'clipanion'
 import { tmpdir }                      from 'os'
 import { join }                        from 'path'
-
-import { JEST_CONFIG_PATH }            from '@atlantis-lab/config'
 
 import { AnnotationLevel, Conclusion } from '../../types'
 import { createCheck }                 from '../../github'
@@ -12,9 +11,9 @@ import { isReportExists }              from '../../utils'
 export default class TestCommand extends Command {
   static description: string = 'Check test via jest'
 
-  static examples: string[] = ['$ actl check:test']
+  static paths = [['check:test']]
 
-  async run(): Promise<void> {
+  async execute(): Promise<void> {
     const reportPath = join(tmpdir(), `jest-report-${new Date().getTime()}.json`)
 
     try {
@@ -28,7 +27,7 @@ export default class TestCommand extends Command {
       ])
     } catch (error) {
       if (!(await isReportExists(reportPath))) {
-        this.log(error.stderr)
+        this.context.stdout.write(`${error.stderr}`)
       }
     }
 
@@ -43,16 +42,16 @@ export default class TestCommand extends Command {
       .reduce(
         (result, testResult) => [
           ...result,
-          ...testResult.assertionResults.map((assertion) => ({
+          ...testResult.assertionResults.map(assertion => ({
             ...assertion,
             path: testResult.name.substring(cwd.length + 1),
           })),
         ],
-        []
+        [],
       )
-      .filter((assertion) => assertion.status === 'failed')
+      .filter(assertion => assertion.status === 'failed')
 
-    const annotations = assertions.map((assertion) => ({
+    const annotations = assertions.map(assertion => ({
       path: assertion.path,
       start_line: assertion.location.line + 1,
       end_line: assertion.location.line + 1,

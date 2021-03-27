@@ -1,12 +1,11 @@
 import execa                                   from 'execa'
-import { Command }                             from '@oclif/command'
-
 import { COMMITLINT_CONFIG_PATH }              from '@atlantis-lab/config'
+import { Command }                             from 'clipanion'
 
 import { Conclusion }                          from '../../types'
 import { createCheck, getPullCommitsMessages } from '../../github'
 
-const formatResultError = (error) => `✖   ${error.message} [${error.name}]`
+const formatResultError = error => `✖   ${error.message} [${error.name}]`
 
 const formatResultStatus = (errors, warnings) =>
   `${errors.length === 0 && warnings.length === 0 ? '✔' : '✖'}   found ${errors.length} problems, ${
@@ -25,15 +24,15 @@ ${[
 export default class CommitLintCommand extends Command {
   static description: string = 'Check commit message'
 
-  static examples: string[] = ['$ actl check:commitlint']
+  static paths = [['check:commitlint']]
 
-  async run(): Promise<void> {
+  async execute(): Promise<void> {
     try {
       const messages = await getPullCommitsMessages()
       const { stdout } = await execa(
         'commitlint',
         [`--config=${COMMITLINT_CONFIG_PATH}`, '-o', 'commitlint-format-json'],
-        { input: messages.join('\n') }
+        { input: messages.join('\n') },
       )
       await this.check(JSON.parse(stdout))
     } catch (error) {

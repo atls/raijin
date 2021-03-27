@@ -1,1 +1,3 @@
-export default {}
+import TestCommand from './commands/test'
+
+export { TestCommand }

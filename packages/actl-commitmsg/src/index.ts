@@ -1,2 +1,3 @@
-export default {}
+import CommitmsgCommand from './commands/commitmsg'
 
+export { CommitmsgCommand }
