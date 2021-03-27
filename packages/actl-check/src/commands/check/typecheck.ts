@@ -66,7 +66,7 @@ export default class TypecheckCommand extends Command {
         summary:
           annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
         annotations,
-      }
+      },
     )
   }
 }

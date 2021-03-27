@@ -1,12 +1,11 @@
 import execa                                   from 'execa'
-import { Command }                             from 'clipanion'
-
 import { COMMITLINT_CONFIG_PATH }              from '@atlantis-lab/config'
+import { Command }                             from 'clipanion'
 
 import { Conclusion }                          from '../../types'
 import { createCheck, getPullCommitsMessages } from '../../github'
 
-const formatResultError = (error) => `✖   ${error.message} [${error.name}]`
+const formatResultError = error => `✖   ${error.message} [${error.name}]`
 
 const formatResultStatus = (errors, warnings) =>
   `${errors.length === 0 && warnings.length === 0 ? '✔' : '✖'}   found ${errors.length} problems, ${
@@ -35,7 +34,7 @@ export default class CommitLintCommand extends Command {
       const { stdout } = await execa(
         'commitlint',
         [`--config=${COMMITLINT_CONFIG_PATH}`, '-o', 'commitlint-format-json'],
-        { input: messages.join('\n') }
+        { input: messages.join('\n') },
       )
       await this.check(JSON.parse(stdout))
     } catch (error) {

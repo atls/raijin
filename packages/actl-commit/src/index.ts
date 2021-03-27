@@ -1,5 +1,3 @@
 import CommitCommand from './commands/commit'
 
-export {
-  CommitCommand
-}
+export { CommitCommand }

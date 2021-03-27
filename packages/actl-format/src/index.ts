@@ -1,3 +1,3 @@
-import FormatCommand from "./commands/format";
+import FormatCommand from './commands/format'
 
-export { FormatCommand };
+export { FormatCommand }

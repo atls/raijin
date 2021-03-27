@@ -1,9 +1,10 @@
-import { Command } from 'clipanion'
-import execa from 'execa'
-import { existsSync } from 'fs'
-import { join } from 'path'
-import { getChangedPackages } from '@atlantis-lab/actl-build/lib/lerna'
-import { getPullFiles, getBranchName } from '../github'
+import execa                           from 'execa'
+import { Command }                     from 'clipanion'
+import { getChangedPackages }          from '@atlantis-lab/actl-build/lib/lerna'
+import { existsSync }                  from 'fs'
+import { join }                        from 'path'
+
+import { getBranchName, getPullFiles } from '../github'
 
 interface Package {
   location: string

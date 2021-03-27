@@ -1,5 +1,5 @@
 import { Command, Option } from 'clipanion'
-import { bootstrap } from 'commitizen/dist/cli/git-cz'
+import { bootstrap }       from 'commitizen/dist/cli/git-cz'
 
 export default class CommitCommand extends Command {
   // static description: string = 'Create Commitizen commit from staged files'

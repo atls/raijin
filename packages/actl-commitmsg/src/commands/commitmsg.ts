@@ -1,5 +1,5 @@
-import { Command } from 'clipanion'
 import commitlintConfigPath from '@atlantis-lab/config/commitlint.config.js'
+import { Command }          from 'clipanion'
 
 const execa = require('execa')
 

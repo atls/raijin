@@ -1,8 +1,8 @@
 import {
-  PRETTIER_CONFIG_PATH,
-  PRETTIER_IGNORE_PATH,
   ESLINT_CONFIG_PATH,
   JEST_CONFIG_PATH,
+  PRETTIER_CONFIG_PATH,
+  PRETTIER_IGNORE_PATH,
 } from '@atlantis-lab/config'
 
 module.exports = {
@@ -16,4 +16,4 @@ module.exports = {
     `jest --config ${JEST_CONFIG_PATH} --bail --findRelatedTests`,
     'git add',
   ],
-};
+}

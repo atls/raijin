@@ -1,9 +1,8 @@
 import execa                           from 'execa'
+import { JEST_CONFIG_PATH }            from '@atlantis-lab/config'
 import { Command }                     from 'clipanion'
 import { tmpdir }                      from 'os'
 import { join }                        from 'path'
-
-import { JEST_CONFIG_PATH }            from '@atlantis-lab/config'
 
 import { AnnotationLevel, Conclusion } from '../../types'
 import { createCheck }                 from '../../github'
@@ -45,16 +44,16 @@ export default class TestCommand extends Command {
       .reduce(
         (result, testResult) => [
           ...result,
-          ...testResult.assertionResults.map((assertion) => ({
+          ...testResult.assertionResults.map(assertion => ({
             ...assertion,
             path: testResult.name.substring(cwd.length + 1),
           })),
         ],
-        []
+        [],
       )
-      .filter((assertion) => assertion.status === 'failed')
+      .filter(assertion => assertion.status === 'failed')
 
-    const annotations = assertions.map((assertion) => ({
+    const annotations = assertions.map(assertion => ({
       path: assertion.path,
       start_line: assertion.location.line + 1,
       end_line: assertion.location.line + 1,

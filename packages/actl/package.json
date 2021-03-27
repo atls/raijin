@@ -29,7 +29,7 @@
     "@atlantis-lab/actl-cr-publisher": "^0.0.7",
     "@atlantis-lab/actl-format": "^0.0.8",
     "@atlantis-lab/actl-lint": "^0.1.32",
-    "@atlantis-lab/actl-precommit": "0.0.32",
+    "@atlantis-lab/actl-precommit": "^0.0.32",
     "@atlantis-lab/actl-test": "0.0.21",
     "@atlantis-lab/actl-typecheck": "0.1.32",
     "@atlantis-lab/config": "^0.1.10",
