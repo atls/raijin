@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-import { Cli }         from 'clipanion'
+import { Cli }          from 'clipanion'
 
-import { LintCommand } from '@atlantis-lab/actl-lint'
+import { LintCommand }  from '@atlantis-lab/actl-lint'
+import { BuildCommand } from '@atlantis-lab/actl-build'
 
 const [node, app, ...args] = process.argv
 
@@ -13,4 +14,5 @@ const cli = new Cli({
 })
 
 cli.register(LintCommand)
+cli.register(BuildCommand)
 cli.runExit(args, Cli.defaultContext)

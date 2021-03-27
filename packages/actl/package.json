@@ -22,13 +22,13 @@
     "postpack": "pubflow restore"
   },
   "dependencies": {
-    "@atlantis-lab/actl-build": "0.0.24",
+    "@atlantis-lab/actl-build": "^0.0.24",
     "@atlantis-lab/actl-check": "0.4.32",
     "@atlantis-lab/actl-commit": "0.0.32",
     "@atlantis-lab/actl-commitmsg": "0.0.32",
     "@atlantis-lab/actl-cr-publisher": "0.0.7",
     "@atlantis-lab/actl-format": "0.0.8",
-    "@atlantis-lab/actl-lint": "^0.1.33",
+    "@atlantis-lab/actl-lint": "^0.1.32",
     "@atlantis-lab/actl-precommit": "0.0.32",
     "@atlantis-lab/actl-test": "0.0.21",
     "@atlantis-lab/actl-typecheck": "0.1.32",
