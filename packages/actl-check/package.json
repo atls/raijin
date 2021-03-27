@@ -28,7 +28,7 @@
     "commitlint-format-json": "1.1.0",
     "eslint": "7.19.0",
     "execa": "^5.0.0",
-    "tslib": "^1"
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@monstrs/publish-flow": "^0.1.3",
