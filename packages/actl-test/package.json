@@ -6,16 +6,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
-    "/bin",
-    "/lib",
-    "/oclif.manifest.json"
+    "/lib"
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "oclif": {
-    "bin": "actl",
-    "commands": "./lib/commands"
   },
   "scripts": {
     "clean": "rm -r -f lib",
@@ -26,17 +20,14 @@
   },
   "dependencies": {
     "@atlantis-lab/config": "^0.1.10",
-    "@oclif/command": "^1",
-    "@oclif/config": "^1",
-    "@oclif/plugin-help": "2.2.2",
     "@types/jest": "26.0.20",
-    "execa": "3.4.0",
+    "clipanion": "^3.0.0-rc.10",
+    "execa": "^5.0.0",
     "jest": "26.6.3",
     "tslib": "^1"
   },
   "devDependencies": {
     "@monstrs/publish-flow": "^0.1.3",
-    "@oclif/dev-cli": "^1",
     "@types/execa": "2.0.0",
     "@types/node": "14.0.14",
     "typescript": "3.9.6"
