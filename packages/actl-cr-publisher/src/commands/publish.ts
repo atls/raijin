@@ -20,7 +20,7 @@ export default class BuildCommand extends Command {
 
   async execute(): Promise<void> {
     const files = await getPullFiles()
-    const branch = getBranchName()
+    const branch = await getBranchName()
     const packages = await getChangedPackages(files)
     const sha = (event.after || event.pull_request.head.sha || process.env.GITHUB_SHA).substr(0, 7)
     const version = `${branch}-${sha}`
