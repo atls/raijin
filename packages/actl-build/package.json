@@ -19,7 +19,6 @@
     "postpack": "pubflow restore"
   },
   "dependencies": {
-    "@atlantis-lab/config": "^0.1.10",
     "@lerna/collect-updates": "3.20.0",
     "@lerna/package-graph": "3.18.5",
     "@lerna/project": "3.18.0",
