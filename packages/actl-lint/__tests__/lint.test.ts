@@ -4,14 +4,17 @@ import { LintCommand } from '../src'
 
 import { version } from '../package.json'
 
+const readBadFile = () => readFileSync(`${__dirname}/mocks/bad-lint.ts`)
+const readPassFile = () => readFileSync(`${__dirname}/mocks/pass-lint.ts`)
+const writeBadFile = content => writeFileSync(`${__dirname}/mocks/bad-lint.ts`, content)
+
 describe('actl-lint', () => {
   // @ts-ignore
   jest.spyOn(process, 'exit').mockImplementation(jest.fn())
 
-  const badLintBackup = readFileSync(`${__dirname}/mocks/bad-lint.ts`)
-  writeFileSync(
-    `${__dirname}/mocks/bad-lint.ts`,
-    readFileSync(`${__dirname}/mocks/bad-lint.ts`)
+  const badLintBackup = readBadFile()
+  writeBadFile(
+    readBadFile()
       .toString()
       .replaceAll('//', ''),
   )
@@ -32,16 +35,14 @@ describe('actl-lint', () => {
   })
 
   it('should fix problems', () => {
-    expect(badLintBackup).not.toMatchObject(readFileSync(`${__dirname}/mocks/pass-lint.ts`))
+    expect(badLintBackup).not.toMatchObject(readPassFile())
 
     return cli
       .run(['lint', '--fix'], Cli.defaultContext)
       .then(() => {
-        expect(readFileSync(`${__dirname}/mocks/bad-lint.ts`)).toMatchObject(
-          readFileSync(`${__dirname}/mocks/pass-lint.ts`),
-        )
+        expect(readBadFile()).toMatchObject(readPassFile())
       })
-      .then(() => writeFileSync(`${__dirname}/mocks/bad-lint.ts`, badLintBackup))
+      .then(() => writeBadFile(badLintBackup))
     cli.runExit(args, Cli.defaultContext)
   })
 })
