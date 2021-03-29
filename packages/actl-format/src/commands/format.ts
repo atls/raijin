@@ -1,7 +1,7 @@
-import execa                                          from 'execa'
+import execa from 'execa'
 import { PRETTIER_CONFIG_PATH, PRETTIER_IGNORE_PATH } from '@atlantis-lab/config'
-import { Command }                                    from 'clipanion'
-import { join }                                       from 'path'
+import { Command } from 'clipanion'
+import { join } from 'path'
 
 export default class FormatCommand extends Command {
   static description: string = 'Prettier format'
