@@ -939,6 +939,15 @@
     execa "^1.0.0"
     strong-log-transformer "^2.0.0"
 
+"@lerna/child-process@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@lerna/child-process/-/child-process-4.0.0.tgz#341b96a57dffbd9705646d316e231df6fa4df6e1"
+  integrity sha512-XtCnmCT9eyVsUUHx6y/CTBYdV9g2Cr/VxyseTWBgfIur92/YKClfEtJTbOh94jRT62hlKLqSvux/UhxXVh613Q==
+  dependencies:
+    chalk "^4.1.0"
+    execa "^5.0.0"
+    strong-log-transformer "^2.1.0"
+
 "@lerna/clean@3.21.0":
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/@lerna/clean/-/clean-3.21.0.tgz#c0b46b5300cc3dae2cda3bec14b803082da3856d"
@@ -994,6 +1003,17 @@
     minimatch "^3.0.4"
     npmlog "^4.1.2"
     slash "^2.0.0"
+
+"@lerna/collect-updates@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@lerna/collect-updates/-/collect-updates-4.0.0.tgz#8e208b1bafd98a372ff1177f7a5e288f6bea8041"
+  integrity sha512-bnNGpaj4zuxsEkyaCZLka9s7nMs58uZoxrRIPJ+nrmrZYp1V5rrd+7/NYTuunOhY2ug1sTBvTAxj3NZQ+JKnOw==
+  dependencies:
+    "@lerna/child-process" "4.0.0"
+    "@lerna/describe-ref" "4.0.0"
+    minimatch "^3.0.4"
+    npmlog "^4.1.2"
+    slash "^3.0.0"
 
 "@lerna/command@3.21.0":
   version "3.21.0"
@@ -1067,6 +1087,14 @@
   integrity sha512-c01+4gUF0saOOtDBzbLMFOTJDHTKbDFNErEY6q6i9QaXuzy9LNN62z+Hw4acAAZuJQhrVWncVathcmkkjvSVGw==
   dependencies:
     "@lerna/child-process" "3.16.5"
+    npmlog "^4.1.2"
+
+"@lerna/describe-ref@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@lerna/describe-ref/-/describe-ref-4.0.0.tgz#53c53b4ea65fdceffa072a62bfebe6772c45d9ec"
+  integrity sha512-eTU5+xC4C5Gcgz+Ey4Qiw9nV2B4JJbMulsYJMW8QjGcGh8zudib7Sduj6urgZXUYNyhYpRs+teci9M2J8u+UvQ==
+  dependencies:
+    "@lerna/child-process" "4.0.0"
     npmlog "^4.1.2"
 
 "@lerna/diff@3.21.0":
@@ -8919,7 +8947,7 @@ strip-json-comments@^3.1.0, strip-json-comments@^3.1.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
-strong-log-transformer@^2.0.0:
+strong-log-transformer@^2.0.0, strong-log-transformer@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/strong-log-transformer/-/strong-log-transformer-2.1.0.tgz#0f5ed78d325e0421ac6f90f7f10e691d6ae3ae10"
   integrity sha512-B3Hgul+z0L9a236FAUC9iZsL+nVHgoCJnqCbN588DjYxvGXaXaaFbfmQ/JhvKjZwsOukuR72XbHv71Qkug0HxA==
