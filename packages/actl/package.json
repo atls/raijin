@@ -1,7 +1,7 @@
 {
   "name": "@atlantis-lab/actl",
   "repository": "git@github.com:Atlantis-Lab/actl.git",
-  "version": "0.4.35",
+  "version": "0.4.36",
   "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -22,17 +22,16 @@
     "postpack": "pubflow restore"
   },
   "dependencies": {
-
-    "@atlantis-lab/actl-build": "0.0.27",
-    "@atlantis-lab/actl-check": "0.4.35",
-    "@atlantis-lab/actl-commit": "0.0.35",
-    "@atlantis-lab/actl-commitmsg": "0.0.35",
-    "@atlantis-lab/actl-cr-publisher": "0.0.10",
-    "@atlantis-lab/actl-format": "0.0.11",
-    "@atlantis-lab/actl-lint": "0.1.35",
-    "@atlantis-lab/actl-precommit": "0.0.35",
-    "@atlantis-lab/actl-test": "0.0.24",
-    "@atlantis-lab/actl-typecheck": "0.1.35",
+    "@atlantis-lab/actl-build": "0.0.28",
+    "@atlantis-lab/actl-check": "0.4.36",
+    "@atlantis-lab/actl-commit": "0.0.36",
+    "@atlantis-lab/actl-commitmsg": "0.0.36",
+    "@atlantis-lab/actl-cr-publisher": "0.0.11",
+    "@atlantis-lab/actl-format": "0.0.12",
+    "@atlantis-lab/actl-lint": "0.1.36",
+    "@atlantis-lab/actl-precommit": "0.0.36",
+    "@atlantis-lab/actl-test": "0.0.25",
+    "@atlantis-lab/actl-typecheck": "0.1.36",
     "@atlantis-lab/config": "^0.1.12",
     "clipanion": "^3.0.0-rc.10",
     "tslib": "^1"
