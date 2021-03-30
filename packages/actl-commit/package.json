@@ -1,7 +1,7 @@
 {
   "name": "@atlantis-lab/actl-commit",
   "repository": "git@github.com:Atlantis-Lab/actl.git",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
