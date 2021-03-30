@@ -4,6 +4,5 @@
     "skipLibCheck": true,
     "outDir": "lib"
   },
-  "include": ["src"],
-  "exclude": ["__tests__"]
+  "include": ["./","mocks"]
 }
