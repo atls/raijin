@@ -12,5 +12,5 @@ export const getPullFiles = async (): Promise<any> => {
 }
 
 export const getBranchName = async (): Promise<any> => {
-  return context.ref.replace('refs/heads', '').match(/(.*?)\//)
+  return context.ref.replace('refs/heads/', '').match(/^\w+/)[0]
 }
