@@ -22,7 +22,7 @@
     "@atlantis-lab/config": "^0.1.12",
     "@types/jest": "26.0.20",
     "clipanion": "^3.0.0-rc.10",
-    "eslint": "7.19.0",
+    "eslint": "7.24.0",
     "execa": "^5.0.0",
     "jest": "26.6.3",
     "lint-staged": "9.5.0",
