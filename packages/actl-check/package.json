@@ -34,7 +34,7 @@
     "@monstrs/publish-flow": "^0.1.3",
     "@types/eslint": "6.1.3",
     "@types/execa": "2.0.0",
-    "@types/node": "14.0.14",
+    "@types/node": "14.14.41",
     "typescript": "3.9.6"
   }
 }
