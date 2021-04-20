@@ -1,0 +1,27 @@
+{
+  "name": "@atls/setup-ts-execution",
+  "repository": "git@github.com:atls/tools.git",
+  "private": true,
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.js",
+  "devDependencies": {
+    "@babel/core": "^7.13.13",
+    "@babel/plugin-proposal-async-generator-functions": "^7.13.8",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.13.5",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.13.8",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.12",
+    "@babel/plugin-transform-modules-commonjs": "^7.13.8",
+    "@babel/preset-react": "^7.13.13",
+    "@babel/preset-typescript": "^7.13.0",
+    "@babel/register": "^7.13.8",
+    "@babel/runtime": "^7.13.10",
+    "@babel/types": "^7.13.13",
+    "@types/babel__core": "7.1.14",
+    "@types/node": "^14.14.37"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

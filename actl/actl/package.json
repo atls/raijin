@@ -5,9 +5,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "bin": {
-    "actl": "./lib/index.js"
-  },
+  "bin": "./lib/index.js",
   "files": [
     "/lib"
   ],
