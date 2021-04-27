@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-require('@atls/tools-setup-ts-execution')
+require('@atls/setup-ts-execution')
 
 require('../src/cli')
-

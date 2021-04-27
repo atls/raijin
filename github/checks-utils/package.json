@@ -1,0 +1,31 @@
+{
+  "name": "@atls/github-checks-utils",
+  "repository": "git@github.com:atls/tools.git",
+  "private": true,
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build library",
+    "postpack": "rm -rf dist",
+    "prepack": "yarn run build"
+  },
+  "devDependencies": {
+    "@atls/builder": "workspace:0.0.0",
+    "@jest/test-result": "^26.6.2",
+    "@octokit/types": "^6.13.0",
+    "eslint": "^7.23.0"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
+    "@babel/code-frame": "^7.12.13"
+  }
+}
