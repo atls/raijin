@@ -1,3 +1,3 @@
-# Atlantis Controls Temporal Logic
+# Atlantis Toolset
 
-![Checks](https://github.com/Atlantis-Lab/actl/workflows/Checks/badge.svg)
+![Version](https://github.com/atls/tools/workflows/Version/badge.svg)

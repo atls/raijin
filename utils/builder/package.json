@@ -1,15 +1,14 @@
 {
-  "name": "@atls/tools-builder",
+  "name": "@atls/builder",
   "repository": "git@github.com:atls/tools.git",
   "private": true,
   "version": "0.0.0",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
-  "bin": {
-    "builder": "bin/dev"
-  },
+  "bin": "bin/dev",
   "devDependencies": {
-    "@atls/tools-setup-ts-execution": "workspace:0.0.0",
+    "@atls/code-typescript": "workspace:0.0.0",
+    "@atls/setup-ts-execution": "workspace:0.0.0",
     "@yarnpkg/builder": "^2.1.3",
     "@yarnpkg/core": "^2.4.0",
     "@yarnpkg/fslib": "^2.4.0",
