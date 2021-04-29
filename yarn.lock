@@ -66,23 +66,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atlantis-lab/actl-build@0.0.29, @atlantis-lab/actl-build@workspace:actl/actl-build":
-  version: 0.0.0-use.local
-  resolution: "@atlantis-lab/actl-build@workspace:actl/actl-build"
-  dependencies:
-    "@lerna/collect-updates": 3.20.0
-    "@lerna/package-graph": 3.18.5
-    "@lerna/project": 3.18.0
-    "@monstrs/publish-flow": ^0.1.3
-    "@types/execa": 2.0.0
-    "@types/node": 14.0.14
-    clipanion: ^3.0.0-rc.10
-    execa: ^5.0.0
-    tslib: ^1
-    typescript: 3.9.6
-  languageName: unknown
-  linkType: soft
-
 "@atlantis-lab/actl-build@npm:^0.0.8":
   version: 0.0.8
   resolution: "@atlantis-lab/actl-build@npm:0.0.8"
@@ -99,7 +82,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atlantis-lab/actl-check@0.4.37, @atlantis-lab/actl-check@workspace:actl/actl-check":
+"@atlantis-lab/actl-build@workspace:actl/actl-build":
+  version: 0.0.0-use.local
+  resolution: "@atlantis-lab/actl-build@workspace:actl/actl-build"
+  dependencies:
+    "@lerna/collect-updates": 3.20.0
+    "@lerna/package-graph": 3.18.5
+    "@lerna/project": 3.18.0
+    "@monstrs/publish-flow": ^0.1.3
+    "@types/execa": 2.0.0
+    "@types/node": 14.0.14
+    clipanion: ^3.0.0-rc.10
+    execa: ^5.0.0
+    tslib: ^1
+    typescript: 3.9.6
+  languageName: unknown
+  linkType: soft
+
+"@atlantis-lab/actl-check@workspace:actl/actl-check":
   version: 0.0.0-use.local
   resolution: "@atlantis-lab/actl-check@workspace:actl/actl-check"
   dependencies:
@@ -121,7 +121,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atlantis-lab/actl-commit@0.0.37, @atlantis-lab/actl-commit@workspace:actl/actl-commit":
+"@atlantis-lab/actl-commit@workspace:actl/actl-commit":
   version: 0.0.0-use.local
   resolution: "@atlantis-lab/actl-commit@workspace:actl/actl-commit"
   dependencies:
@@ -135,7 +135,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atlantis-lab/actl-commitmsg@0.0.37, @atlantis-lab/actl-commitmsg@workspace:actl/actl-commitmsg":
+"@atlantis-lab/actl-commitmsg@workspace:actl/actl-commitmsg":
   version: 0.0.0-use.local
   resolution: "@atlantis-lab/actl-commitmsg@workspace:actl/actl-commitmsg"
   dependencies:
@@ -151,7 +151,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atlantis-lab/actl-cr-publisher@0.0.12, @atlantis-lab/actl-cr-publisher@workspace:actl/actl-cr-publisher":
+"@atlantis-lab/actl-cr-publisher@workspace:actl/actl-cr-publisher":
   version: 0.0.0-use.local
   resolution: "@atlantis-lab/actl-cr-publisher@workspace:actl/actl-cr-publisher"
   dependencies:
@@ -166,7 +166,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atlantis-lab/actl-format@0.0.13, @atlantis-lab/actl-format@workspace:actl/actl-format":
+"@atlantis-lab/actl-format@workspace:actl/actl-format":
   version: 0.0.0-use.local
   resolution: "@atlantis-lab/actl-format@workspace:actl/actl-format"
   dependencies:
@@ -191,7 +191,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atlantis-lab/actl-lint@0.1.37, @atlantis-lab/actl-lint@workspace:actl/actl-lint":
+"@atlantis-lab/actl-lint@workspace:actl/actl-lint":
   version: 0.0.0-use.local
   resolution: "@atlantis-lab/actl-lint@workspace:actl/actl-lint"
   dependencies:
@@ -206,7 +206,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atlantis-lab/actl-precommit@0.0.37, @atlantis-lab/actl-precommit@workspace:actl/actl-precommit":
+"@atlantis-lab/actl-precommit@workspace:actl/actl-precommit":
   version: 0.0.0-use.local
   resolution: "@atlantis-lab/actl-precommit@workspace:actl/actl-precommit"
   dependencies:
@@ -226,7 +226,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atlantis-lab/actl-test@0.0.26, @atlantis-lab/actl-test@workspace:actl/actl-test":
+"@atlantis-lab/actl-test@workspace:actl/actl-test":
   version: 0.0.0-use.local
   resolution: "@atlantis-lab/actl-test@workspace:actl/actl-test"
   dependencies:
@@ -240,47 +240,6 @@ __metadata:
     jest: 26.6.3
     tslib: ^1
     typescript: 3.9.6
-  languageName: unknown
-  linkType: soft
-
-"@atlantis-lab/actl-typecheck@0.1.37, @atlantis-lab/actl-typecheck@workspace:actl/actl-typecheck":
-  version: 0.0.0-use.local
-  resolution: "@atlantis-lab/actl-typecheck@workspace:actl/actl-typecheck"
-  dependencies:
-    "@monstrs/publish-flow": ^0.1.3
-    "@types/execa": 2.0.0
-    "@types/node": 14.0.14
-    clipanion: ^3.0.0-rc.10
-    execa: ^5.0.0
-    tslib: ^1
-    typescript: 3.9.6
-  peerDependencies:
-    typescript: ^3.6
-  languageName: unknown
-  linkType: soft
-
-"@atlantis-lab/actl@workspace:actl/actl":
-  version: 0.0.0-use.local
-  resolution: "@atlantis-lab/actl@workspace:actl/actl"
-  dependencies:
-    "@atlantis-lab/actl-build": 0.0.29
-    "@atlantis-lab/actl-check": 0.4.37
-    "@atlantis-lab/actl-commit": 0.0.37
-    "@atlantis-lab/actl-commitmsg": 0.0.37
-    "@atlantis-lab/actl-cr-publisher": 0.0.12
-    "@atlantis-lab/actl-format": 0.0.13
-    "@atlantis-lab/actl-lint": 0.1.37
-    "@atlantis-lab/actl-precommit": 0.0.37
-    "@atlantis-lab/actl-test": 0.0.26
-    "@atlantis-lab/actl-typecheck": 0.1.37
-    "@atlantis-lab/config": ^0.1.12
-    "@monstrs/publish-flow": ^0.1.3
-    "@types/node": 14.0.14
-    clipanion: ^3.0.0-rc.10
-    tslib: ^1
-    typescript: 3.9.6
-  bin:
-    actl: ./lib/index.js
   languageName: unknown
   linkType: soft
 
@@ -367,21 +326,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/builder@workspace:0.0.0, @atls/builder@workspace:utils/builder":
+"@atls/actl-cli@workspace:actl/actl-cli":
   version: 0.0.0-use.local
-  resolution: "@atls/builder@workspace:utils/builder"
+  resolution: "@atls/actl-cli@workspace:actl/actl-cli"
+  dependencies:
+    "@atls/actl-typecheck": "workspace:0.1.37"
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@atls/tools-setup-ts-execution": "workspace:0.0.0"
+    "@types/node": ^14.14.41
+    clipanion: ^2.6.2
+  peerDependencies:
+    typescript: "*"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  bin:
+    actl: bin/dev
+  languageName: unknown
+  linkType: soft
+
+"@atls/actl-typecheck@workspace:0.1.37, @atls/actl-typecheck@workspace:actl/actl-typecheck":
+  version: 0.0.0-use.local
+  resolution: "@atls/actl-typecheck@workspace:actl/actl-typecheck"
   dependencies:
     "@atls/code-typescript": "workspace:0.0.0"
-    "@atls/setup-ts-execution": "workspace:0.0.0"
-    "@yarnpkg/builder": ^2.1.3
-    "@yarnpkg/core": ^2.4.0
-    "@yarnpkg/fslib": ^2.4.0
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@types/execa": 2.0.0
+    "@types/node": ^14.14.41
     clipanion: ^2.6.2
-    rimraf: ^3.0.2
-    terser-webpack-plugin: ^3.0.4
-    webpack: ^5.35.0
-  bin:
-    builder: bin/dev
   languageName: unknown
   linkType: soft
 
@@ -389,7 +361,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-typescript@workspace:code/code-typescript"
   dependencies:
-    "@atls/builder": "workspace:0.0.0"
+    "@atls/tools-builder": "workspace:0.0.0"
     "@babel/code-frame": ^7.12.13
     "@types/babel__code-frame": 7.0.2
     "@types/chalk": 2.2.0
@@ -407,7 +379,7 @@ __metadata:
   dependencies:
     "@actions/core": ^1.2.6
     "@actions/github": ^4.0.0
-    "@atls/builder": "workspace:0.0.0"
+    "@atls/tools-builder": "workspace:0.0.0"
     "@octokit/types": ^6.13.0
   languageName: unknown
   linkType: soft
@@ -418,7 +390,7 @@ __metadata:
   dependencies:
     "@actions/core": ^1.2.6
     "@actions/github": ^4.0.0
-    "@atls/builder": "workspace:0.0.0"
+    "@atls/tools-builder": "workspace:0.0.0"
     "@babel/code-frame": ^7.12.13
     "@jest/test-result": ^26.6.2
     "@octokit/types": ^6.13.0
@@ -426,9 +398,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/setup-ts-execution@workspace:0.0.0, @atls/setup-ts-execution@workspace:utils/setup-ts-execution":
+"@atls/tools-builder@workspace:0.0.0, @atls/tools-builder@workspace:utils/builder":
   version: 0.0.0-use.local
-  resolution: "@atls/setup-ts-execution@workspace:utils/setup-ts-execution"
+  resolution: "@atls/tools-builder@workspace:utils/builder"
+  dependencies:
+    "@atls/code-typescript": "workspace:0.0.0"
+    "@atls/tools-setup-ts-execution": "workspace:0.0.0"
+    "@yarnpkg/builder": ^2.1.3
+    "@yarnpkg/core": ^2.4.0
+    "@yarnpkg/fslib": ^2.4.0
+    clipanion: ^2.6.2
+    rimraf: ^3.0.2
+    terser-webpack-plugin: ^3.0.4
+    webpack: ^5.35.0
+  bin:
+    tools-builder: bin/dev
+  languageName: unknown
+  linkType: soft
+
+"@atls/tools-setup-ts-execution@workspace:0.0.0, @atls/tools-setup-ts-execution@workspace:utils/setup-ts-execution":
+  version: 0.0.0-use.local
+  resolution: "@atls/tools-setup-ts-execution@workspace:utils/setup-ts-execution"
   dependencies:
     "@babel/core": ^7.13.13
     "@babel/plugin-proposal-async-generator-functions": ^7.13.8
@@ -447,23 +437,46 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/yarn-plugin-essentials@workspace:yarn/plugin-essentials":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-essentials@workspace:yarn/plugin-essentials"
+  dependencies:
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@atls/yarn-plugin-files": "workspace:0.0.0"
+    "@atls/yarn-plugin-typescript": "workspace:0.0.0"
+    "@atls/yarn-plugin-workspaces": "workspace:0.0.0"
+    "@yarnpkg/core": ^2.4.0
+  languageName: unknown
+  linkType: soft
+
 "@atls/yarn-plugin-files@workspace:0.0.0, @atls/yarn-plugin-files@workspace:yarn/plugin-files":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-files@workspace:yarn/plugin-files"
   dependencies:
-    "@atls/builder": "workspace:0.0.0"
     "@atls/github-actions-utils": "workspace:0.0.0"
+    "@atls/tools-builder": "workspace:0.0.0"
     "@yarnpkg/cli": ^2.4.1
     "@yarnpkg/core": ^2.4.0
     clipanion: ^2.6.2
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-workspaces@workspace:yarn/plugin-workspaces":
+"@atls/yarn-plugin-typescript@workspace:0.0.0, @atls/yarn-plugin-typescript@workspace:yarn/plugin-typescript":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-typescript@workspace:yarn/plugin-typescript"
+  dependencies:
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@yarnpkg/cli": ^2.4.1
+    "@yarnpkg/core": ^2.4.0
+    clipanion: ^2.6.2
+  languageName: unknown
+  linkType: soft
+
+"@atls/yarn-plugin-workspaces@workspace:0.0.0, @atls/yarn-plugin-workspaces@workspace:yarn/plugin-workspaces":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-workspaces@workspace:yarn/plugin-workspaces"
   dependencies:
-    "@atls/builder": "workspace:0.0.0"
+    "@atls/tools-builder": "workspace:0.0.0"
     "@atls/yarn-plugin-files": "workspace:0.0.0"
     "@atls/yarn-workspace-utils": "workspace:0.0.0"
     "@yarnpkg/cli": ^2.4.1

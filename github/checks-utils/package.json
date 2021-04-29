@@ -14,7 +14,7 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/builder": "workspace:0.0.0",
+    "@atls/tools-builder": "workspace:0.0.0",
     "@jest/test-result": "^26.6.2",
     "@octokit/types": "^6.13.0",
     "eslint": "^7.23.0"

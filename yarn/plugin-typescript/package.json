@@ -1,5 +1,5 @@
 {
-  "name": "@atls/github-actions-utils",
+  "name": "@atls/yarn-plugin-typescript",
   "repository": "git@github.com:atls/tools.git",
   "private": true,
   "version": "0.0.0",
@@ -9,20 +9,19 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
+    "build": "builder build plugin",
     "postpack": "rm -rf dist",
     "prepack": "yarn run build"
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@octokit/types": "^6.13.0"
+    "@yarnpkg/cli": "^2.4.1",
+    "@yarnpkg/core": "^2.4.0",
+    "clipanion": "^2.6.2"
   },
   "publishConfig": {
+    "access": "public",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts"
-  },
-  "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0"
   }
 }

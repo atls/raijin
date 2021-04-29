@@ -2,4 +2,5 @@
 
 require('@atls/tools-setup-ts-execution')
 
-require('../src/cli')
+require('../src/cli').run()
+

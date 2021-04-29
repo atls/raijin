@@ -1,0 +1,43 @@
+{
+  "name": "@atls/actl-cli",
+  "version": "0.4.37",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "bin": {
+    "actl": "bin/dev"
+  },
+  "files": [
+    "dist",
+    "bin/run"
+  ],
+  "scripts": {
+    "build": "builder build library",
+    "postpack": "rm -rf dist",
+    "prepack": "yarn run build"
+  },
+  "devDependencies": {
+    "@atls/tools-builder": "workspace:0.0.0",
+    "@atls/tools-setup-ts-execution": "workspace:0.0.0",
+    "@types/node": "^14.14.41"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "bin": {
+      "actl": "./bin/run"
+    }
+  },
+  "dependencies": {
+    "@atls/actl-typecheck": "workspace:0.1.37",
+    "clipanion": "^2.6.2"
+  },
+  "peerDependencies": {
+    "typescript": "*"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  }
+}
