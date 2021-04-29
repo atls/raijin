@@ -1,1 +1,0 @@
-{"version":"0.0.32","commands":{"precommit":{"id":"precommit","description":"Locally validate the repo before committing","pluginName":"@atlantis-lab/actl-precommit","pluginType":"core","aliases":[],"examples":["$ actl precommit"],"flags":{},"args":[]}}}
