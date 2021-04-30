@@ -1,5 +1,5 @@
 {
-  "name": "@atls/yarn-plugin-essentials",
+  "name": "@atls/yarn-plugin-checks",
   "repository": "git@github.com:atls/tools.git",
   "private": true,
   "version": "0.0.0",
@@ -13,17 +13,18 @@
     "postpack": "rm -rf dist",
     "prepack": "yarn run build"
   },
-  "dependencies": {
-    "@atls/yarn-plugin-checks": "workspace:0.0.0",
-    "@atls/yarn-plugin-files": "workspace:0.0.0",
-    "@atls/yarn-plugin-github": "workspace:0.0.0",
-    "@atls/yarn-plugin-lint": "workspace:0.0.0",
-    "@atls/yarn-plugin-typescript": "workspace:0.0.0",
-    "@atls/yarn-plugin-workspaces": "workspace:0.0.0"
-  },
   "devDependencies": {
+    "@atls/github-checks-utils": "workspace:0.0.0",
     "@atls/tools-builder": "workspace:0.0.0",
-    "@yarnpkg/core": "^2.4.0"
+    "@atls/yarn-plugin-files": "workspace:0.0.0",
+    "@atls/yarn-run-utils": "workspace:0.0.0",
+    "@atls/yarn-workspace-utils": "workspace:0.0.0",
+    "@babel/code-frame": "^7.12.13",
+    "@yarnpkg/cli": "^2.4.1",
+    "@yarnpkg/core": "^2.4.0",
+    "@yarnpkg/fslib": "^2.4.0",
+    "clipanion": "^2.6.2",
+    "strip-ansi": "^6.0.0"
   },
   "publishConfig": {
     "access": "public",

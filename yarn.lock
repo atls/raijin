@@ -376,7 +376,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/github-checks-utils@workspace:github/checks-utils":
+"@atls/github-checks-utils@workspace:0.0.0, @atls/github-checks-utils@workspace:github/checks-utils":
   version: 0.0.0-use.local
   resolution: "@atls/github-checks-utils@workspace:github/checks-utils"
   dependencies:
@@ -458,12 +458,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/yarn-plugin-checks@workspace:0.0.0, @atls/yarn-plugin-checks@workspace:yarn/plugin-checks":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-checks@workspace:yarn/plugin-checks"
+  dependencies:
+    "@atls/github-checks-utils": "workspace:0.0.0"
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@atls/yarn-plugin-files": "workspace:0.0.0"
+    "@atls/yarn-run-utils": "workspace:0.0.0"
+    "@atls/yarn-workspace-utils": "workspace:0.0.0"
+    "@babel/code-frame": ^7.12.13
+    "@yarnpkg/cli": ^2.4.1
+    "@yarnpkg/core": ^2.4.0
+    "@yarnpkg/fslib": ^2.4.0
+    clipanion: ^2.6.2
+    strip-ansi: ^6.0.0
+  languageName: unknown
+  linkType: soft
+
 "@atls/yarn-plugin-essentials@workspace:yarn/plugin-essentials":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-essentials@workspace:yarn/plugin-essentials"
   dependencies:
     "@atls/tools-builder": "workspace:0.0.0"
+    "@atls/yarn-plugin-checks": "workspace:0.0.0"
     "@atls/yarn-plugin-files": "workspace:0.0.0"
+    "@atls/yarn-plugin-github": "workspace:0.0.0"
+    "@atls/yarn-plugin-lint": "workspace:0.0.0"
     "@atls/yarn-plugin-typescript": "workspace:0.0.0"
     "@atls/yarn-plugin-workspaces": "workspace:0.0.0"
     "@yarnpkg/core": ^2.4.0
@@ -482,9 +503,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-github@workspace:yarn/plugin-github":
+"@atls/yarn-plugin-github@workspace:0.0.0, @atls/yarn-plugin-github@workspace:yarn/plugin-github":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-github@workspace:yarn/plugin-github"
+  dependencies:
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@yarnpkg/cli": ^2.4.1
+    "@yarnpkg/core": ^2.4.0
+    clipanion: ^2.6.2
+  languageName: unknown
+  linkType: soft
+
+"@atls/yarn-plugin-lint@workspace:0.0.0, @atls/yarn-plugin-lint@workspace:yarn/plugin-lint":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-lint@workspace:yarn/plugin-lint"
   dependencies:
     "@atls/tools-builder": "workspace:0.0.0"
     "@yarnpkg/cli": ^2.4.1
@@ -514,6 +546,12 @@ __metadata:
     "@yarnpkg/cli": ^2.4.1
     "@yarnpkg/core": ^2.4.0
     clipanion: ^2.6.2
+  languageName: unknown
+  linkType: soft
+
+"@atls/yarn-run-utils@workspace:0.0.0, @atls/yarn-run-utils@workspace:yarn/run-utils":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-run-utils@workspace:yarn/run-utils"
   languageName: unknown
   linkType: soft
 
