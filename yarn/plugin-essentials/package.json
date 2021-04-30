@@ -14,7 +14,10 @@
     "prepack": "yarn run build"
   },
   "dependencies": {
+    "@atls/yarn-plugin-checks": "workspace:0.0.0",
     "@atls/yarn-plugin-files": "workspace:0.0.0",
+    "@atls/yarn-plugin-github": "workspace:0.0.0",
+    "@atls/yarn-plugin-lint": "workspace:0.0.0",
     "@atls/yarn-plugin-typescript": "workspace:0.0.0",
     "@atls/yarn-plugin-workspaces": "workspace:0.0.0"
   },

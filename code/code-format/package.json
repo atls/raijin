@@ -1,0 +1,34 @@
+{
+  "name": "@atls/code-format",
+  "repository": "git@github.com:atls/tools.git",
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build library",
+    "postpack": "rm -rf dist",
+    "prepack": "yarn run build"
+  },
+  "devDependencies": {
+    "@atls/tools-builder": "workspace:0.0.0",
+    "@babel/types": "^7.13.17",
+    "@types/globby": "9.1.0",
+    "@types/node": "^14.14.41"
+  },
+  "dependencies": {
+    "@atls/prettier-plugin-import-align": "workspace:0.0.0",
+    "@atls/prettier-plugin-import-sort": "workspace:0.0.0",
+    "globby": "^11.0.3",
+    "ignore": "^5.1.8",
+    "prettier": "^2.2.1",
+    "prettier-plugin-toml": "^0.3.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

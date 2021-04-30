@@ -1,7 +1,8 @@
 {
   "name": "@atls/actl-cli",
+  "repository": "git@github.com:atls/tools.git",
   "version": "0.4.37",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "bin": {
     "actl": "bin/dev"
@@ -29,6 +30,7 @@
     }
   },
   "dependencies": {
+    "@atls/actl-lint": "workspace:0.1.37",
     "@atls/actl-typecheck": "workspace:0.1.37",
     "clipanion": "^2.6.2"
   },

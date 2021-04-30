@@ -1,0 +1,59 @@
+{
+  "name": "@atls/code-lint",
+  "repository": "git@github.com:atls/tools.git",
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "rules",
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build library",
+    "postpack": "rm -rf dist",
+    "prepack": "yarn run build"
+  },
+  "devDependencies": {
+    "@atls/tools-builder": "workspace:0.0.0",
+    "@types/eslint": "7.2.10",
+    "@types/globby": "9.1.0",
+    "@types/node": "^14.14.41"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  },
+  "dependencies": {
+    "@atls/code-format": "workspace:0.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-import-resolver-node": "^0.3.4",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.23.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "globby": "^11.0.3",
+    "ignore": "^5.1.8",
+    "prettier": "^2.2.1",
+    "react": "*",
+    "typescript": "*"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
+  },
+  "peerDependencies": {
+    "react": "*",
+    "typescript": "*"
+  }
+}

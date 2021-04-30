@@ -1,5 +1,6 @@
 import { Cli }                    from 'clipanion'
 
+import { LintCommand }            from '@atls/actl-lint'
 import { TypeCheckCommand }       from '@atls/actl-typecheck'
 
 import { binaryVersion }          from './constants'
@@ -11,6 +12,7 @@ const run = () => {
     binaryVersion,
   })
 
+  cli.register(LintCommand)
   cli.register(TypeCheckCommand)
 
   cli

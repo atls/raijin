@@ -1,0 +1,35 @@
+{
+  "name": "@atls/prettier-plugin-import-sort",
+  "repository": "git@github.com:atls/tools.git",
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build library",
+    "postpack": "rm -rf dist",
+    "prepack": "yarn run build"
+  },
+  "dependencies": {
+    "import-sort": "^6.0.0",
+    "import-sort-parser-typescript": "^6.0.0",
+    "import-sort-style": "^6.0.0"
+  },
+  "devDependencies": {
+    "@atls/tools-builder": "workspace:0.0.0",
+    "@types/node": "^14.14.41",
+    "globby": "^11.0.3",
+    "prettier": "^2.2.1"
+  },
+  "peerDependencies": {
+    "globby": "*",
+    "prettier": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}
