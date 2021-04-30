@@ -1,0 +1,12 @@
+releases:
+  "@atlantis-lab/actl-commit": patch
+  "@atls/actl-cli": patch
+  "@atls/actl-lint": patch
+  "@atls/actl-typecheck": patch
+  "@atls/code-format": patch
+  "@atls/code-lint": patch
+  "@atls/code-typescript": patch
+  "@atls/github-actions-utils": patch
+  "@atls/github-checks-utils": patch
+  "@atls/prettier-plugin-import-align": patch
+  "@atls/prettier-plugin-import-sort": patch
