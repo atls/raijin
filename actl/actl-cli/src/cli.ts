@@ -2,6 +2,8 @@ import { Cli }                    from 'clipanion'
 
 import { LintCommand }            from '@atls/actl-lint'
 import { TypeCheckCommand }       from '@atls/actl-typecheck'
+import {TestIntegrationCommand} from "@atls/actl-test"
+import {TestUnitCommand} from "@atls/actl-test"
 
 import { binaryVersion }          from './constants'
 
@@ -14,6 +16,9 @@ const run = () => {
 
   cli.register(LintCommand)
   cli.register(TypeCheckCommand)
+
+  cli.register(TestIntegrationCommand)
+  cli.register(TestUnitCommand)
 
   cli
     .runExit(process.argv.slice(2), {
