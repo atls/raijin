@@ -1,23 +1,22 @@
 {
-  "name": "@atls/actl-test",
+  "name": "@atls/yarn-plugin-test",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.0.26",
+  "private": true,
+  "version": "0.0.0",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
+    "build": "builder build plugin",
     "postpack": "rm -rf dist",
     "prepack": "yarn run build"
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@types/node": "^14.14.41"
-  },
-  "dependencies": {
-    "@atls/code-test": "workspace:0.0.0",
+    "@yarnpkg/cli": "^2.4.1",
+    "@yarnpkg/core": "^2.4.0",
     "clipanion": "^2.6.2"
   },
   "publishConfig": {
