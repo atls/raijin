@@ -7,6 +7,7 @@ import ChecksPlugin     from '@atls/yarn-plugin-checks'
 import FilesPlugin      from '@atls/yarn-plugin-files'
 import TestPlugin     from '@atls/yarn-plugin-test'
 import LintPlugin       from '@atls/yarn-plugin-lint'
+import FormatPlugin from '@atls/yarn-plugin-format'
 
 import { mergePlugins } from './merge-plugins.util'
 
@@ -18,6 +19,7 @@ const plugin: Plugin = mergePlugins([
   FilesPlugin,
   LintPlugin,
   TestPlugin,
+  FormatPlugin,
 ])
 
 export default plugin
