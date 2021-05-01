@@ -1,0 +1,3 @@
+releases:
+  "@atls/actl-cli": patch
+  "@atls/actl-format": patch
