@@ -1,4 +1,4 @@
-import { CommitCommand } from '@actl/actl-commit'
+import { CommitCommand } from '@atls/actl-commit'
 import { FormatCommand } from '@atls/actl-format'
 
 import { LintCommand } from '@atls/actl-lint'
