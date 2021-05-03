@@ -1,0 +1,33 @@
+{
+  "name": "@atls/code-commitlint",
+  "repository": "git@github.com:atls/tools.git",
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build library",
+    "postpack": "rm -rf dist",
+    "prepack": "yarn run build"
+  },
+  "devDependencies": {
+    "@atls/tools-builder": "workspace:0.0.0",
+    "@types/globby": "9.1.0",
+    "@types/node": "^14.14.41"
+  },
+  "dependencies": {
+    "@commitlint/config-conventional": "^12.1.0",
+    "@commitlint/format": "^12.0.1",
+    "@commitlint/lint": "^12.1.0",
+    "@commitlint/load": "^12.1.0",
+    "@commitlint/read": "^12.1.0",
+    "@commitlint/types": "^12.0.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

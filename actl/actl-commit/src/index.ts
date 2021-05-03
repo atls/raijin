@@ -1,3 +1,1 @@
-import CommitCommand from './commands/commit'
-
-export { CommitCommand }
+export * from './commit.command'

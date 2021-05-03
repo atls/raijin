@@ -1,12 +1,12 @@
-import { Cli }                    from 'clipanion'
+import { CommitCommand } from '@actl/actl-commit'
+import { FormatCommand } from '@atls/actl-format'
 
-import { LintCommand }            from '@atls/actl-lint'
-import {FormatCommand}            from '@atls/actl-format'
-import { TypeCheckCommand }       from '@atls/actl-typecheck'
-import {TestIntegrationCommand} from '@atls/actl-test'
-import {TestUnitCommand} from '@atls/actl-test'
+import { LintCommand } from '@atls/actl-lint'
+import { TestIntegrationCommand, TestUnitCommand } from '@atls/actl-test'
+import { TypeCheckCommand } from '@atls/actl-typecheck'
+import { Cli } from 'clipanion'
 
-import { binaryVersion }          from './constants'
+import { binaryVersion } from './constants'
 
 const run = () => {
   const cli = new Cli({
@@ -21,6 +21,8 @@ const run = () => {
 
   cli.register(TestIntegrationCommand)
   cli.register(TestUnitCommand)
+
+  cli.register(CommitCommand)
 
   cli
     .runExit(process.argv.slice(2), {
