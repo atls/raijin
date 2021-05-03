@@ -30,6 +30,7 @@
     }
   },
   "dependencies": {
+    "@atls/actl-commit": "workspace:0.0.37",
     "@atls/actl-format": "workspace:0.0.13",
     "@atls/actl-lint": "workspace:0.1.37",
     "@atls/actl-test": "workspace:0.0.26",

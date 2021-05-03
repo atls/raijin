@@ -1,0 +1,29 @@
+{
+  "name": "@atls/yarn-plugin-commit",
+  "repository": "git@github.com:atls/tools.git",
+  "private": true,
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build plugin",
+    "postpack": "rm -rf dist",
+    "prepack": "yarn run build"
+  },
+  "devDependencies": {
+    "@atls/code-commitlint": "workspace:0.0.0",
+    "@atls/tools-builder": "workspace:0.0.0",
+    "@yarnpkg/cli": "^2.4.1",
+    "@yarnpkg/core": "^2.4.0",
+    "clipanion": "^2.6.2",
+    "lint-staged": "^10.5.4"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}
