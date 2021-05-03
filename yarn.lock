@@ -230,6 +230,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/code-configuration@workspace:0.0.0, @atls/code-configuration@workspace:code/code-configuration":
+  version: 0.0.0-use.local
+  resolution: "@atls/code-configuration@workspace:code/code-configuration"
+  dependencies:
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@yarnpkg/fslib": ^2.4.0
+  languageName: unknown
+  linkType: soft
+
 "@atls/code-format@workspace:0.0.0, @atls/code-format@workspace:code/code-format":
   version: 0.0.0-use.local
   resolution: "@atls/code-format@workspace:code/code-format"
@@ -281,6 +290,20 @@ __metadata:
       optional: true
     typescript:
       optional: true
+  languageName: unknown
+  linkType: soft
+
+"@atls/code-pack@workspace:0.0.0, @atls/code-pack@workspace:code/code-pack":
+  version: 0.0.0-use.local
+  resolution: "@atls/code-pack@workspace:code/code-pack"
+  dependencies:
+    "@atls/github-actions-utils": "workspace:0.0.0"
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@iarna/toml": ^2.2.5
+    "@types/globby": 9.1.0
+    "@types/node": ^14.14.41
+    "@yarnpkg/core": ^2.4.0
+    "@yarnpkg/fslib": ^2.4.0
   languageName: unknown
   linkType: soft
 
@@ -417,6 +440,34 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/yarn-pack-utils@workspace:0.0.0, @atls/yarn-pack-utils@workspace:yarn/pack-utils":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-pack-utils@workspace:yarn/pack-utils"
+  dependencies:
+    "@yarnpkg/core": ^2.4.0
+    "@yarnpkg/fslib": ^2.4.0
+    "@yarnpkg/plugin-pack": ^2.2.3
+  languageName: unknown
+  linkType: soft
+
+"@atls/yarn-plugin-app@workspace:0.0.0, @atls/yarn-plugin-app@workspace:yarn/plugin-app":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-app@workspace:yarn/plugin-app"
+  dependencies:
+    "@atls/code-commitlint": "workspace:0.0.0"
+    "@atls/code-configuration": "workspace:0.0.0"
+    "@atls/code-pack": "workspace:0.0.0"
+    "@atls/code-typescript": "workspace:0.0.0"
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@atls/yarn-pack-utils": "workspace:0.0.0"
+    "@yarnpkg/cli": ^2.4.1
+    "@yarnpkg/core": ^2.4.0
+    "@yarnpkg/fslib": ^2.4.0
+    "@yarnpkg/plugin-patch": ^2.1.2
+    clipanion: ^2.6.2
+  languageName: unknown
+  linkType: soft
+
 "@atls/yarn-plugin-checks@workspace:0.0.0, @atls/yarn-plugin-checks@workspace:yarn/plugin-checks":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-checks@workspace:yarn/plugin-checks"
@@ -453,6 +504,7 @@ __metadata:
   resolution: "@atls/yarn-plugin-essentials@workspace:yarn/plugin-essentials"
   dependencies:
     "@atls/tools-builder": "workspace:0.0.0"
+    "@atls/yarn-plugin-app": "workspace:0.0.0"
     "@atls/yarn-plugin-checks": "workspace:0.0.0"
     "@atls/yarn-plugin-commit": "workspace:0.0.0"
     "@atls/yarn-plugin-files": "workspace:0.0.0"
@@ -1516,6 +1568,13 @@ __metadata:
     minimatch: ^3.0.4
     strip-json-comments: ^3.1.1
   checksum: d3f51b741997cbf36662d8b5a52985bfa5d2873e48cadccd95c67fcce1706327ec98ebb6f0be79c6ecbc31bdeca32c2b1c4f66fd1cf3934c434d1ac269cbceac
+  languageName: node
+  linkType: hard
+
+"@iarna/toml@npm:^2.2.5":
+  version: 2.2.5
+  resolution: "@iarna/toml@npm:2.2.5"
+  checksum: 929a8516a24996b75768f7e0591815e37004f2cdda12b245c9a5ae64f423b4bd2bdd6943fc80e9bb5360a7be0b6d05bac57c178578d9a73acfb2eab125c594ee
   languageName: node
   linkType: hard
 

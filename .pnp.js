@@ -63,12 +63,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:code/code-commitlint"
       },
       {
+        "name": "@atls/code-configuration",
+        "reference": "workspace:code/code-configuration"
+      },
+      {
         "name": "@atls/code-format",
         "reference": "workspace:code/code-format"
       },
       {
         "name": "@atls/code-lint",
         "reference": "workspace:code/code-lint"
+      },
+      {
+        "name": "@atls/code-pack",
+        "reference": "workspace:code/code-pack"
       },
       {
         "name": "@atls/code-test",
@@ -101,6 +109,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {
         "name": "@atls/tools-setup-ts-execution",
         "reference": "workspace:utils/setup-ts-execution"
+      },
+      {
+        "name": "@atls/yarn-pack-utils",
+        "reference": "workspace:yarn/pack-utils"
+      },
+      {
+        "name": "@atls/yarn-plugin-app",
+        "reference": "workspace:yarn/plugin-app"
       },
       {
         "name": "@atls/yarn-plugin-checks",
@@ -168,8 +184,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/actl-test", ["workspace:actl/actl-test"]],
       ["@atls/actl-typecheck", ["workspace:actl/actl-typecheck"]],
       ["@atls/code-commitlint", ["workspace:code/code-commitlint"]],
+      ["@atls/code-configuration", ["workspace:code/code-configuration"]],
       ["@atls/code-format", ["workspace:code/code-format"]],
       ["@atls/code-lint", ["virtual:a4077ec3ae2253d855f1780165c472f60c20fb9df6697448f376b73329cc31f93c0748e455e50579fa24027574a66dfc6360863684a6fd57fd158aa09e7442a6#workspace:code/code-lint", "workspace:code/code-lint"]],
+      ["@atls/code-pack", ["workspace:code/code-pack"]],
       ["@atls/code-test", ["workspace:code/code-test"]],
       ["@atls/code-typescript", ["workspace:code/code-typescript"]],
       ["@atls/github-actions-utils", ["workspace:github/actions-utils"]],
@@ -178,6 +196,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/prettier-plugin-import-sort", ["virtual:f9807afcb526b4d6e13fb3d234c661249977ac3055717c87dd399d6c6feee2fb4cc03d420a3486477b474445c87d8037e84f12b5460f9fe8fe148dc544469f14#workspace:prettier/prettier-plugin-import-sort", "workspace:prettier/prettier-plugin-import-sort"]],
       ["@atls/tools-builder", ["workspace:utils/builder"]],
       ["@atls/tools-setup-ts-execution", ["workspace:utils/setup-ts-execution"]],
+      ["@atls/yarn-pack-utils", ["workspace:yarn/pack-utils"]],
+      ["@atls/yarn-plugin-app", ["workspace:yarn/plugin-app"]],
       ["@atls/yarn-plugin-checks", ["workspace:yarn/plugin-checks"]],
       ["@atls/yarn-plugin-commit", ["workspace:yarn/plugin-commit"]],
       ["@atls/yarn-plugin-essentials", ["workspace:yarn/plugin-essentials"]],
@@ -487,6 +507,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@atls/code-configuration", [
+        ["workspace:code/code-configuration", {
+          "packageLocation": "./code/code-configuration/",
+          "packageDependencies": [
+            ["@atls/code-configuration", "workspace:code/code-configuration"],
+            ["@atls/tools-builder", "workspace:utils/builder"],
+            ["@yarnpkg/fslib", "npm:2.4.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@atls/code-format", [
         ["workspace:code/code-format", {
           "packageLocation": "./code/code-format/",
@@ -569,6 +600,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:2.2.1"],
             ["react", "npm:17.0.2"],
             ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@atls/code-pack", [
+        ["workspace:code/code-pack", {
+          "packageLocation": "./code/code-pack/",
+          "packageDependencies": [
+            ["@atls/code-pack", "workspace:code/code-pack"],
+            ["@atls/github-actions-utils", "workspace:github/actions-utils"],
+            ["@atls/tools-builder", "workspace:utils/builder"],
+            ["@iarna/toml", "npm:2.2.5"],
+            ["@types/globby", "npm:9.1.0"],
+            ["@types/node", "npm:14.14.43"],
+            ["@yarnpkg/core", "npm:2.4.0"],
+            ["@yarnpkg/fslib", "npm:2.4.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -752,6 +799,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@atls/yarn-pack-utils", [
+        ["workspace:yarn/pack-utils", {
+          "packageLocation": "./yarn/pack-utils/",
+          "packageDependencies": [
+            ["@atls/yarn-pack-utils", "workspace:yarn/pack-utils"],
+            ["@yarnpkg/core", "npm:2.4.0"],
+            ["@yarnpkg/fslib", "npm:2.4.0"],
+            ["@yarnpkg/plugin-pack", "virtual:94a7577d6443f27f9c2124d632b9410afd563f79088c1c6b315e2bd505d59a80ad3b467e96bbd43f2bcffe9f65602b27f5b24e6fb83819466252b754d0740861#npm:2.2.3"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@atls/yarn-plugin-app", [
+        ["workspace:yarn/plugin-app", {
+          "packageLocation": "./yarn/plugin-app/",
+          "packageDependencies": [
+            ["@atls/yarn-plugin-app", "workspace:yarn/plugin-app"],
+            ["@atls/code-commitlint", "workspace:code/code-commitlint"],
+            ["@atls/code-configuration", "workspace:code/code-configuration"],
+            ["@atls/code-pack", "workspace:code/code-pack"],
+            ["@atls/code-typescript", "workspace:code/code-typescript"],
+            ["@atls/tools-builder", "workspace:utils/builder"],
+            ["@atls/yarn-pack-utils", "workspace:yarn/pack-utils"],
+            ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:2.4.1"],
+            ["@yarnpkg/core", "npm:2.4.0"],
+            ["@yarnpkg/fslib", "npm:2.4.0"],
+            ["@yarnpkg/plugin-patch", "virtual:1a3c3e23862886e9097ce19869c0e7579fcaf2a13ac61e2db69eb820d60eab05a6451a869f00327653a532992ac8cbd663e095383ba4785278a9e364376de93d#npm:2.1.2"],
+            ["clipanion", "npm:2.6.2"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@atls/yarn-plugin-checks", [
         ["workspace:yarn/plugin-checks", {
           "packageLocation": "./yarn/plugin-checks/",
@@ -793,6 +872,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@atls/yarn-plugin-essentials", "workspace:yarn/plugin-essentials"],
             ["@atls/tools-builder", "workspace:utils/builder"],
+            ["@atls/yarn-plugin-app", "workspace:yarn/plugin-app"],
             ["@atls/yarn-plugin-checks", "workspace:yarn/plugin-checks"],
             ["@atls/yarn-plugin-commit", "workspace:yarn/plugin-commit"],
             ["@atls/yarn-plugin-files", "workspace:yarn/plugin-files"],
@@ -2310,6 +2390,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["js-yaml", "npm:3.14.1"],
             ["minimatch", "npm:3.0.4"],
             ["strip-json-comments", "npm:3.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@iarna/toml", [
+        ["npm:2.2.5", {
+          "packageLocation": "./.yarn/cache/@iarna-toml-npm-2.2.5-6da1399e8e-929a8516a2.zip/node_modules/@iarna/toml/",
+          "packageDependencies": [
+            ["@iarna/toml", "npm:2.2.5"]
           ],
           "linkType": "HARD",
         }]
@@ -4500,6 +4589,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/yarnpkg__cli", null],
             ["@types/yarnpkg__core", null],
             ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:2.4.1"],
+            ["@yarnpkg/core", "npm:2.4.0"],
+            ["@yarnpkg/fslib", "npm:2.4.0"],
+            ["clipanion", "npm:2.6.2"],
+            ["micromatch", "npm:4.0.4"],
+            ["tar-stream", "npm:2.2.0"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "packagePeers": [
+            "@types/yarnpkg__cli",
+            "@types/yarnpkg__core",
+            "@yarnpkg/cli",
+            "@yarnpkg/core"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:94a7577d6443f27f9c2124d632b9410afd563f79088c1c6b315e2bd505d59a80ad3b467e96bbd43f2bcffe9f65602b27f5b24e6fb83819466252b754d0740861#npm:2.2.3", {
+          "packageLocation": "./.yarn/$$virtual/@yarnpkg-plugin-pack-virtual-d420f8a208/0/cache/@yarnpkg-plugin-pack-npm-2.2.3-191b975889-93240e522e.zip/node_modules/@yarnpkg/plugin-pack/",
+          "packageDependencies": [
+            ["@yarnpkg/plugin-pack", "virtual:94a7577d6443f27f9c2124d632b9410afd563f79088c1c6b315e2bd505d59a80ad3b467e96bbd43f2bcffe9f65602b27f5b24e6fb83819466252b754d0740861#npm:2.2.3"],
+            ["@types/yarnpkg__cli", null],
+            ["@types/yarnpkg__core", null],
+            ["@yarnpkg/cli", null],
             ["@yarnpkg/core", "npm:2.4.0"],
             ["@yarnpkg/fslib", "npm:2.4.0"],
             ["clipanion", "npm:2.6.2"],
