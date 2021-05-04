@@ -1,5 +1,5 @@
 {
-  "name": "@atls/github-actions-utils",
+  "name": "@atls/code-configuration",
   "repository": "git@github.com:atls/tools.git",
   "version": "0.0.0",
   "license": "BSD-3-Clause",
@@ -13,16 +13,14 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@octokit/types": "^6.13.0",
-    "@types/node": "14.14.37"
+    "@atls/tools-builder": "workspace:0.0.0"
+  },
+  "dependencies": {
+    "@yarnpkg/fslib": "^2.4.0"
   },
   "publishConfig": {
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
-  },
-  "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0"
+    "typings": "dist/index.d.ts",
+    "access": "public"
   }
 }
