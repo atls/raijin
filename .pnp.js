@@ -672,7 +672,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@actions/core", "npm:1.2.7"],
             ["@actions/github", "npm:4.0.0"],
             ["@atls/tools-builder", "workspace:utils/builder"],
-            ["@octokit/types", "npm:6.14.0"]
+            ["@octokit/types", "npm:6.14.0"],
+            ["@types/node", "npm:14.14.37"]
           ],
           "linkType": "SOFT",
         }]
@@ -688,6 +689,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/code-frame", "npm:7.12.13"],
             ["@jest/test-result", "npm:26.6.2"],
             ["@octokit/types", "npm:6.14.0"],
+            ["@types/node", "npm:14.14.37"],
             ["eslint", "npm:7.25.0"]
           ],
           "linkType": "SOFT",
