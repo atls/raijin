@@ -1,7 +1,7 @@
 {
   "name": "@atls/actl-test",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -17,7 +17,7 @@
     "@types/node": "^14.14.41"
   },
   "dependencies": {
-    "@atls/code-test": "workspace:0.0.0",
+    "@atls/code-test": "workspace:0.0.1",
     "clipanion": "^2.6.2"
   },
   "publishConfig": {

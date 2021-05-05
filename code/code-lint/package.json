@@ -1,7 +1,7 @@
 {
   "name": "@atls/code-lint",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -25,7 +25,7 @@
     "typings": "dist/index.d.ts"
   },
   "dependencies": {
-    "@atls/code-format": "workspace:0.0.0",
+    "@atls/code-format": "workspace:0.0.1",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "eslint": "^7.23.0",

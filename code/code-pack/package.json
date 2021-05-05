@@ -1,7 +1,7 @@
 {
   "name": "@atls/code-pack",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -13,7 +13,7 @@
     "prepack": "yarn run build"
   },
   "dependencies": {
-    "@atls/github-actions-utils": "workspace:0.0.0",
+    "@atls/github-actions-utils": "workspace:0.0.1",
     "@iarna/toml": "^2.2.5",
     "@yarnpkg/core": "^2.4.0",
     "@yarnpkg/fslib": "^2.4.0"

@@ -1,7 +1,7 @@
 {
   "name": "@atls/actl-commit",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [

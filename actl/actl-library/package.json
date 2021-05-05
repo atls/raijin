@@ -1,7 +1,7 @@
 {
   "name": "@atls/actl-library",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -18,7 +18,7 @@
     "@types/rimraf": "^3.0.0"
   },
   "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.0",
+    "@atls/code-typescript": "workspace:0.0.1",
     "clipanion": "^2.6.2",
     "rimraf": "^3.0.2"
   },

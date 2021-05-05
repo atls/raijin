@@ -1,7 +1,7 @@
 {
   "name": "@atls/code-test",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -22,8 +22,8 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.0",
-    "@atls/prettier-plugin-import-sort": "workspace:0.0.0",
+    "@atls/code-typescript": "workspace:0.0.1",
+    "@atls/prettier-plugin-import-sort": "workspace:0.0.1",
     "@emotion/jest": "^11.2.1",
     "@jest/core": "^26.6.3",
     "@jest/test-result": "^26.6.2",
