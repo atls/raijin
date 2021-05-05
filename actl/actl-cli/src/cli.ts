@@ -2,7 +2,9 @@ import { CommitCommand } from '@atls/actl-commit'
 import { FormatCommand } from '@atls/actl-format'
 
 import { LintCommand } from '@atls/actl-lint'
-import { TestIntegrationCommand, TestUnitCommand } from '@atls/actl-test'
+import { LibraryBuildCommand } from '@atls/actl-library'
+import { TestIntegrationCommand } from '@atls/actl-test'
+import { TestUnitCommand } from '@atls/actl-test'
 import { TypeCheckCommand } from '@atls/actl-typecheck'
 import { Cli } from 'clipanion'
 
@@ -23,6 +25,8 @@ const run = () => {
   cli.register(TestUnitCommand)
 
   cli.register(CommitCommand)
+
+  cli.register(LibraryBuildCommand)
 
   cli
     .runExit(process.argv.slice(2), {

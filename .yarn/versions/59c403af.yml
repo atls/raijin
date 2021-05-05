@@ -1,5 +1,5 @@
 releases:
-  "@atlantis-lab/actl-commit": patch
+  "@atls/actl-commit": patch
   "@atls/actl-cli": patch
   "@atls/actl-lint": patch
   "@atls/actl-typecheck": patch
