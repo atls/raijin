@@ -13,6 +13,7 @@
   "workspaces": [
     "prettier/*",
     "code/**/*",
+    "webpack/*",
     "actl/**/*",
     "github/*",
     "utils/*",
