@@ -1,14 +1,14 @@
-import { CommitCommand } from '@atls/actl-commit'
-import { FormatCommand } from '@atls/actl-format'
+import { CommitCommand }          from '@atls/actl-commit'
+import { FormatCommand }          from '@atls/actl-format'
 
-import { LintCommand } from '@atls/actl-lint'
-import { LibraryBuildCommand } from '@atls/actl-library'
+import { LintCommand }            from '@atls/actl-lint'
+import { LibraryBuildCommand }    from '@atls/actl-library'
 import { TestIntegrationCommand } from '@atls/actl-test'
-import { TestUnitCommand } from '@atls/actl-test'
-import { TypeCheckCommand } from '@atls/actl-typecheck'
-import { Cli } from 'clipanion'
+import { TestUnitCommand }        from '@atls/actl-test'
+import { TypeCheckCommand }       from '@atls/actl-typecheck'
+import { Cli }                    from 'clipanion'
 
-import { binaryVersion } from './constants'
+import { binaryVersion }          from './constants'
 
 const run = () => {
   const cli = new Cli({
