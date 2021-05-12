@@ -42,7 +42,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/actl-cli@workspace:0.4.38, @atls/actl-cli@workspace:actl/actl-cli":
+"@atls/actl-cli@workspace:0.4.39, @atls/actl-cli@workspace:actl/actl-cli":
   version: 0.0.0-use.local
   resolution: "@atls/actl-cli@workspace:actl/actl-cli"
   dependencies:
@@ -252,7 +252,7 @@ __metadata:
   dependencies:
     "@atls/code-typescript": "workspace:0.0.1"
     "@atls/tools-builder": "workspace:0.0.0"
-    "@atls/webpack-proto-imports-loader": "workspace:0.0.0"
+    "@atls/webpack-proto-imports-loader": "workspace:0.0.1"
     "@types/file-loader": 4.2.1
     "@types/jest": ^26.0.22
     "@types/node": ^14.14.41
@@ -407,7 +407,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/webpack-proto-imports-loader@workspace:0.0.0, @atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader":
+"@atls/webpack-proto-imports-loader@workspace:0.0.1, @atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader":
   version: 0.0.0-use.local
   resolution: "@atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader"
   dependencies:
@@ -14158,7 +14158,7 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "tools@workspace:."
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.38"
+    "@atls/actl-cli": "workspace:0.4.39"
     "@types/jest": ^26.0.22
     "@types/node": ^14.14.41
     "@yarnpkg/cli": ^2.4.1

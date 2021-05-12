@@ -1,4 +1,0 @@
-releases:
-  "@atls/actl-cli": patch
-  "@atls/code-service": patch
-  "@atls/webpack-proto-imports-loader": patch
