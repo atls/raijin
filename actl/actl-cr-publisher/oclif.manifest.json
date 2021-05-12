@@ -1,1 +1,0 @@
-{"version":"0.0.7","commands":{"publish":{"id":"publish","description":"Publish release","pluginName":"@atlantis-lab/actl-cr-publisher","pluginType":"core","aliases":[],"examples":["$ actl release:publish"],"flags":{},"args":[]}}}
