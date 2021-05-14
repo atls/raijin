@@ -21,7 +21,7 @@ export const pack = async (
     project: {
       id: repo,
       name: repo,
-      version: '0.0.0',
+      version: '0.0.1',
     },
     build: {
       exclude: ['.git', '.yarn/unplugged'],

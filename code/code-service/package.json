@@ -16,8 +16,8 @@
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
     "@types/file-loader": "4.2.1",
-    "@types/jest": "^26.0.22",
-    "@types/node": "^14.14.41",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^14.14.44",
     "@types/protocol-buffers-schema": "3.4.0",
     "@types/wait-for-localhost": "3.1.0",
     "@types/webpack": "^5.28.0",
@@ -35,9 +35,9 @@
     "@yarnpkg/core": "^2.4.0",
     "fast-glob": "^3.2.5",
     "string-replace-loader": "^3.0.1",
-    "ts-loader": "^8.1.0",
+    "ts-loader": "^8.2.0",
     "typescript": "^4.2.4",
-    "webpack": "^5.35.0",
+    "webpack": "^5.37.0",
     "webpack-chain": "^6.5.1"
   }
 }

@@ -1,19 +1,19 @@
-import { typescriptAstFormat }      from './constants'
-import { printer }                  from './extract'
-import { nodeImportSize, traverse } from './utils'
+import { typescriptAstFormat } from './constants'
+import { printer }             from './extract'
+import { nodeImportSize }      from './utils'
 
 const print = (...args) => {
   const [path] = args
   const node = path.getNode()
 
-  const result = printer.print(...args)
+  let result = printer.print(...args)
 
   if (node.type === 'ImportDeclaration') {
-    result.parts = traverse(result.parts, (part) => {
-      if (node.alignOffset > 0 && part === ' from') {
+    result = result.map((part) => {
+      if (Array.isArray(part) && part[0] === ' from' && node.alignOffset > 0) {
         const fill = Array.apply(0, Array(node.alignOffset)).fill(' ').join('')
 
-        return `${fill} from`
+        part[0] = `${fill} from` // eslint-disable-line no-param-reassign
       }
 
       return part

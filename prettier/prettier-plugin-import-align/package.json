@@ -14,14 +14,13 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@types/node": "^14.14.41",
-    "prettier": "^2.2.1"
+    "@types/node": "^14.14.44",
+    "prettier": "^2.3.0"
   },
   "peerDependencies": {
     "prettier": "*"
   },
   "publishConfig": {
-    "access": "public",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts"
   }
