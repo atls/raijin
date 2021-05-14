@@ -8,6 +8,7 @@ import TestPlugin       from '@atls/yarn-plugin-test'
 import HuskyPlugin      from '@atls/yarn-plugin-husky'
 import WorkspacesPlugin from '@atls/yarn-plugin-workspaces'
 import FilesPlugin      from '@atls/yarn-plugin-files'
+import AppPlugin        from '@atls/yarn-plugin-app'
 import GitHubPlugin     from '@atls/yarn-plugin-github'
 import ChecksPlugin     from '@atls/yarn-plugin-checks'
 
@@ -19,11 +20,12 @@ const plugin: Plugin = mergePlugins([
   FormatPlugin,
   CommitPlugin,
   GitHubPlugin,
-  HuskyPlugin,
   ChecksPlugin,
+  HuskyPlugin,
   FilesPlugin,
   LintPlugin,
   TestPlugin,
+  AppPlugin,
 ])
 
 export default plugin

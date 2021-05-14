@@ -4,11 +4,11 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@atls/actl-cli": "workspace:0.4.39",
-    "@types/jest": "^26.0.22",
-    "@types/node": "^14.14.41",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^14.14.44",
     "@yarnpkg/cli": "^2.4.1",
-    "husky": "5.2.0",
-    "typescript": "^4.2.3"
+    "husky": "6.0.0",
+    "typescript": "^4.2.4"
   },
   "workspaces": [
     "prettier/*",
