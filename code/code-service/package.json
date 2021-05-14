@@ -1,7 +1,7 @@
 {
   "name": "@atls/code-service",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -29,8 +29,8 @@
     "typings": "dist/index.d.ts"
   },
   "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.1",
-    "@atls/webpack-proto-imports-loader": "workspace:0.0.1",
+    "@atls/code-typescript": "workspace:0.0.2",
+    "@atls/webpack-proto-imports-loader": "workspace:0.0.2",
     "@yarnpkg/cli": "^2.4.1",
     "@yarnpkg/core": "^2.4.0",
     "fast-glob": "^3.2.5",

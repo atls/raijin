@@ -14,7 +14,7 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/github-checks-utils": "workspace:0.0.1",
+    "@atls/github-checks-utils": "workspace:0.0.2",
     "@atls/tools-builder": "workspace:0.0.0",
     "@atls/yarn-plugin-files": "workspace:0.0.0",
     "@atls/yarn-run-utils": "workspace:0.0.0",

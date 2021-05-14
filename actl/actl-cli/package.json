@@ -1,7 +1,7 @@
 {
   "name": "@atls/actl-cli",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.4.39",
+  "version": "0.4.40",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "bin": {
@@ -30,12 +30,12 @@
     }
   },
   "dependencies": {
-    "@atls/actl-commit": "workspace:0.0.38",
-    "@atls/actl-format": "workspace:0.0.14",
-    "@atls/actl-library": "workspace:0.0.1",
-    "@atls/actl-lint": "workspace:0.1.38",
-    "@atls/actl-test": "workspace:0.0.27",
-    "@atls/actl-typecheck": "workspace:0.1.38",
+    "@atls/actl-commit": "workspace:0.0.39",
+    "@atls/actl-format": "workspace:0.0.15",
+    "@atls/actl-library": "workspace:0.0.2",
+    "@atls/actl-lint": "workspace:0.1.39",
+    "@atls/actl-test": "workspace:0.0.28",
+    "@atls/actl-typecheck": "workspace:0.1.39",
     "clipanion": "^2.6.2"
   },
   "peerDependencies": {

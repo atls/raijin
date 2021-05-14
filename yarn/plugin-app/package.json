@@ -14,10 +14,10 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/code-commitlint": "workspace:0.0.1",
-    "@atls/code-configuration": "workspace:0.0.1",
-    "@atls/code-pack": "workspace:0.0.1",
-    "@atls/code-typescript": "workspace:0.0.1",
+    "@atls/code-commitlint": "workspace:0.0.2",
+    "@atls/code-configuration": "workspace:0.0.2",
+    "@atls/code-pack": "workspace:0.0.2",
+    "@atls/code-typescript": "workspace:0.0.2",
     "@atls/tools-builder": "workspace:0.0.0",
     "@atls/yarn-pack-utils": "workspace:0.0.0",
     "@yarnpkg/cli": "^2.4.1",

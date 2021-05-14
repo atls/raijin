@@ -1,7 +1,7 @@
 {
   "name": "@atls/actl-format",
   "repository": "git@github.com:atls/tools.git",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -17,7 +17,7 @@
     "@types/node": "^14.14.41"
   },
   "dependencies": {
-    "@atls/code-format": "workspace:0.0.1",
+    "@atls/code-format": "workspace:0.0.2",
     "clipanion": "^2.6.2"
   },
   "publishConfig": {
