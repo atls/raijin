@@ -1,6 +1,6 @@
 {
   "name": "@atls/actl-renderer",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -17,10 +17,10 @@
     "@types/node": "^14.14.44"
   },
   "dependencies": {
-    "@atls/cli-ui-pretty-logs": "workspace:0.0.0",
-    "@atls/code-service": "workspace:0.0.2",
-    "@atls/webpack-localtunnel-plugin": "workspace:0.0.0",
-    "@atls/webpack-start-server-plugin": "workspace:0.0.0",
+    "@atls/cli-ui-pretty-logs": "workspace:0.0.1",
+    "@atls/code-service": "workspace:0.0.3",
+    "@atls/webpack-localtunnel-plugin": "workspace:0.0.1",
+    "@atls/webpack-start-server-plugin": "workspace:0.0.1",
     "clipanion": "^2.6.2",
     "execa": "^5.0.0",
     "fs-extra": "^9.1.0"

@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-lint",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -23,7 +23,7 @@
     "typings": "dist/index.d.ts"
   },
   "dependencies": {
-    "@atls/code-format": "workspace:0.0.2",
+    "@atls/code-format": "workspace:0.0.3",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "eslint": "^7.26.0",

@@ -1,6 +1,6 @@
 {
   "name": "@atls/actl-typecheck",
-  "version": "0.1.39",
+  "version": "0.1.40",
   "license": "MIT",
   "main": "src/index.ts",
   "files": [
@@ -17,7 +17,7 @@
     "@types/node": "^14.14.41"
   },
   "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.2",
+    "@atls/code-typescript": "workspace:0.0.3",
     "clipanion": "^2.6.2"
   },
   "publishConfig": {

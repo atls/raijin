@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-format",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -18,8 +18,8 @@
     "@types/node": "^14.14.44"
   },
   "dependencies": {
-    "@atls/prettier-plugin-import-align": "workspace:0.0.2",
-    "@atls/prettier-plugin-import-sort": "workspace:0.0.2",
+    "@atls/prettier-plugin-import-align": "workspace:0.0.3",
+    "@atls/prettier-plugin-import-sort": "workspace:0.0.3",
     "globby": "^11.0.3",
     "ignore": "^5.1.8",
     "prettier": "^2.3.0",

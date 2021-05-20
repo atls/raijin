@@ -1,6 +1,6 @@
 {
   "name": "@atls/actl-library",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -17,7 +17,7 @@
     "@types/rimraf": "^3.0.0"
   },
   "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.2",
+    "@atls/code-typescript": "workspace:0.0.3",
     "clipanion": "^2.6.2",
     "rimraf": "^3.0.2"
   },
