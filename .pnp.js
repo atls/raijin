@@ -111,8 +111,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:utils/setup-ts-execution"
       },
       {
+        "name": "@atls/webpack-localtunnel-plugin",
+        "reference": "workspace:webpack/webpack-localtunnel-plugin"
+      },
+      {
         "name": "@atls/webpack-proto-imports-loader",
         "reference": "workspace:webpack/webpack-proto-imports-loader"
+      },
+      {
+        "name": "@atls/webpack-start-server-plugin",
+        "reference": "workspace:webpack/webpack-start-server-plugin"
       },
       {
         "name": "@atls/yarn-pack-utils",
@@ -199,7 +207,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/prettier-plugin-import-sort", ["virtual:f9807afcb526b4d6e13fb3d234c661249977ac3055717c87dd399d6c6feee2fb4cc03d420a3486477b474445c87d8037e84f12b5460f9fe8fe148dc544469f14#workspace:prettier/prettier-plugin-import-sort", "workspace:prettier/prettier-plugin-import-sort"]],
       ["@atls/tools-builder", ["workspace:utils/builder"]],
       ["@atls/tools-setup-ts-execution", ["workspace:utils/setup-ts-execution"]],
+      ["@atls/webpack-localtunnel-plugin", ["workspace:webpack/webpack-localtunnel-plugin"]],
       ["@atls/webpack-proto-imports-loader", ["workspace:webpack/webpack-proto-imports-loader"]],
+      ["@atls/webpack-start-server-plugin", ["workspace:webpack/webpack-start-server-plugin"]],
       ["@atls/yarn-pack-utils", ["workspace:yarn/pack-utils"]],
       ["@atls/yarn-plugin-app", ["workspace:yarn/plugin-app"]],
       ["@atls/yarn-plugin-checks", ["workspace:yarn/plugin-checks"]],
@@ -772,6 +782,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@atls/webpack-localtunnel-plugin", [
+        ["workspace:webpack/webpack-localtunnel-plugin", {
+          "packageLocation": "./webpack/webpack-localtunnel-plugin/",
+          "packageDependencies": [
+            ["@atls/webpack-localtunnel-plugin", "workspace:webpack/webpack-localtunnel-plugin"],
+            ["@atls/tools-builder", "workspace:utils/builder"],
+            ["@types/localtunnel", "npm:2.0.0"],
+            ["@types/node", "npm:14.14.41"],
+            ["localtunnel", "npm:2.0.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@atls/webpack-proto-imports-loader", [
         ["workspace:webpack/webpack-proto-imports-loader", {
           "packageLocation": "./webpack/webpack-proto-imports-loader/",
@@ -787,6 +810,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ts-loader", "virtual:a0bc915c153d5ff422ab909e9d6f033b3dd86f2ae1e865fd1b2c29932a554fe0a30358fbb65e84213aad5851f7bbdf303597798b16a80e9d5dcfc0569e5d66c5#npm:8.2.0"],
             ["webpack", "virtual:b6792102938e253ab23ca510a9dd4fd8aea4dd9d8fa30c6ba878c046d5980b65730d33999e9c0f361fd71700ec36a147f60140f1775d772383e14705e2f22fed#npm:5.37.0"],
             ["webpack-chain", "npm:6.5.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@atls/webpack-start-server-plugin", [
+        ["workspace:webpack/webpack-start-server-plugin", {
+          "packageLocation": "./webpack/webpack-start-server-plugin/",
+          "packageDependencies": [
+            ["@atls/webpack-start-server-plugin", "workspace:webpack/webpack-start-server-plugin"],
+            ["@atls/tools-builder", "workspace:utils/builder"],
+            ["@types/node", "npm:14.14.41"],
+            ["webpack", "virtual:b6792102938e253ab23ca510a9dd4fd8aea4dd9d8fa30c6ba878c046d5980b65730d33999e9c0f361fd71700ec36a147f60140f1775d772383e14705e2f22fed#npm:5.37.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -3180,6 +3215,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/localtunnel", [
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/@types-localtunnel-npm-2.0.0-ecf1269338-33c96b3095.zip/node_modules/@types/localtunnel/",
+          "packageDependencies": [
+            ["@types/localtunnel", "npm:2.0.0"],
+            ["@types/node", "npm:14.14.41"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/minimatch", [
         ["npm:3.0.3", {
           "packageLocation": "./.yarn/cache/@types-minimatch-npm-3.0.3-c8b0625f84-672ccdac19.zip/node_modules/@types/minimatch/",
@@ -5266,6 +5311,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["axios", [
+        ["npm:0.21.1", {
+          "packageLocation": "./.yarn/cache/axios-npm-0.21.1-d192f6b3b3-864fb7b5d0.zip/node_modules/axios/",
+          "packageDependencies": [
+            ["axios", "npm:0.21.1"],
+            ["follow-redirects", "virtual:d192f6b3b31cd5d11a443145a3883a70c04cbd7c813c53085dbaf50263735f1162f10fdbddd53c24e162ec3bc37b90966413084323739b7cf942b8bfb4da8831#npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["axobject-query", [
         ["npm:2.2.0", {
           "packageLocation": "./.yarn/cache/axobject-query-npm-2.2.0-6553738f52-c963a3ba9f.zip/node_modules/axobject-query/",
@@ -6232,6 +6287,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["string-width", "npm:4.2.0"],
             ["strip-ansi", "npm:6.0.0"],
             ["wrap-ansi", "npm:6.2.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:7.0.4", {
+          "packageLocation": "./.yarn/cache/cliui-npm-7.0.4-d6b8a9edb6-c49ac1d13f.zip/node_modules/cliui/",
+          "packageDependencies": [
+            ["cliui", "npm:7.0.4"],
+            ["string-width", "npm:4.2.0"],
+            ["strip-ansi", "npm:6.0.0"],
+            ["wrap-ansi", "npm:7.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -8498,6 +8563,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/fn-name-npm-2.0.1-955ccc097e-0b2a1df516.zip/node_modules/fn-name/",
           "packageDependencies": [
             ["fn-name", "npm:2.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["follow-redirects", [
+        ["npm:1.14.1", {
+          "packageLocation": "./.yarn/cache/follow-redirects-npm-1.14.1-e6bdc0f8e5-761a186996.zip/node_modules/follow-redirects/",
+          "packageDependencies": [
+            ["follow-redirects", "npm:1.14.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:d192f6b3b31cd5d11a443145a3883a70c04cbd7c813c53085dbaf50263735f1162f10fdbddd53c24e162ec3bc37b90966413084323739b7cf942b8bfb4da8831#npm:1.14.1", {
+          "packageLocation": "./.yarn/$$virtual/follow-redirects-virtual-0c4ea90a75/0/cache/follow-redirects-npm-1.14.1-e6bdc0f8e5-761a186996.zip/node_modules/follow-redirects/",
+          "packageDependencies": [
+            ["follow-redirects", "virtual:d192f6b3b31cd5d11a443145a3883a70c04cbd7c813c53085dbaf50263735f1162f10fdbddd53c24e162ec3bc37b90966413084323739b7cf942b8bfb4da8831#npm:1.14.1"],
+            ["debug", null]
+          ],
+          "packagePeers": [
+            "debug"
           ],
           "linkType": "HARD",
         }]
@@ -11108,6 +11193,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["localtunnel", [
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/localtunnel-npm-2.0.1-d90533a1e0-09e4b1b926.zip/node_modules/localtunnel/",
+          "packageDependencies": [
+            ["localtunnel", "npm:2.0.1"],
+            ["axios", "npm:0.21.1"],
+            ["debug", "virtual:924a2859e1c4c241c1490a5f880a31697c3f74e8a083fa18a9d4229900ccc00b083f4dd49fa54d15d90beec9faf9fd53071158cdbe8d2b82b4c76abe480beb7e#npm:4.3.1"],
+            ["openurl", "npm:1.1.1"],
+            ["yargs", "npm:16.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["locate-path", [
         ["npm:2.0.0", {
           "packageLocation": "./.yarn/cache/locate-path-npm-2.0.0-673d28b0ea-ee5a888d68.zip/node_modules/locate-path/",
@@ -12266,6 +12364,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["onetime", "npm:5.1.2"],
             ["mimic-fn", "npm:2.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["openurl", [
+        ["npm:1.1.1", {
+          "packageLocation": "./.yarn/cache/openurl-npm-1.1.1-67b69d9f28-cbe2e03594.zip/node_modules/openurl/",
+          "packageDependencies": [
+            ["openurl", "npm:1.1.1"]
           ],
           "linkType": "HARD",
         }]
@@ -16116,6 +16223,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["strip-ansi", "npm:6.0.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:7.0.0", {
+          "packageLocation": "./.yarn/cache/wrap-ansi-npm-7.0.0-ad6e1a0554-09939dd775.zip/node_modules/wrap-ansi/",
+          "packageDependencies": [
+            ["wrap-ansi", "npm:7.0.0"],
+            ["ansi-styles", "npm:4.2.1"],
+            ["string-width", "npm:4.2.0"],
+            ["strip-ansi", "npm:6.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["wrappy", [
@@ -16200,6 +16317,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["y18n", "npm:4.0.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:5.0.8", {
+          "packageLocation": "./.yarn/cache/y18n-npm-5.0.8-5f3a0a7e62-56275bfa72.zip/node_modules/y18n/",
+          "packageDependencies": [
+            ["y18n", "npm:5.0.8"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["yallist", [
@@ -16243,6 +16367,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["which-module", "npm:2.0.0"],
             ["y18n", "npm:4.0.0"],
             ["yargs-parser", "npm:18.1.3"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:16.2.0", {
+          "packageLocation": "./.yarn/cache/yargs-npm-16.2.0-547873d425-a79ce1f043.zip/node_modules/yargs/",
+          "packageDependencies": [
+            ["yargs", "npm:16.2.0"],
+            ["cliui", "npm:7.0.4"],
+            ["escalade", "npm:3.1.1"],
+            ["get-caller-file", "npm:2.0.5"],
+            ["require-directory", "npm:2.1.1"],
+            ["string-width", "npm:4.2.0"],
+            ["y18n", "npm:5.0.8"],
+            ["yargs-parser", "npm:20.2.7"]
           ],
           "linkType": "HARD",
         }]
