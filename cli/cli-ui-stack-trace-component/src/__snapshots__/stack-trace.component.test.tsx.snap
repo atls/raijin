@@ -3,7 +3,7 @@
 exports[`stack trace component render 1`] = `
 "
   Stack
-    Object.<anonymous>                                                                         mctl/mctl-ui/src/stack-trace/stack-trace.component.test.tsx:10:12
+    Object.<anonymous>                                                                         actl/actl-ui/src/stack-trace/stack-trace.component.test.tsx:10:12
     Object.asyncJestTest           .yarn/cache/jest-jasmine2-npm-26.6.3-aba0c11c28-18b15901f8.zip/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:106:37
                                             .yarn/cache/jest-jasmine2-npm-26.6.3-aba0c11c28-18b15901f8.zip/node_modules/jest-jasmine2/build/queueRunner.js:45:12
     mapper                                  .yarn/cache/jest-jasmine2-npm-26.6.3-aba0c11c28-18b15901f8.zip/node_modules/jest-jasmine2/build/queueRunner.js:28:19
