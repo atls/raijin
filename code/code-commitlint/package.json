@@ -1,6 +1,5 @@
 {
   "name": "@atls/code-commitlint",
-  "repository": "git@github.com:atls/tools.git",
   "version": "0.0.2",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",

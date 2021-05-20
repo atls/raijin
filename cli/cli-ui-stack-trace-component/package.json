@@ -1,0 +1,32 @@
+{
+  "name": "@atls/cli-ui-stack-trace-component",
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build library",
+    "postpack": "rm -rf dist",
+    "prepack": "yarn run build"
+  },
+  "devDependencies": {
+    "@atls/tools-builder": "workspace:0.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/react": "^17.0.5",
+    "strip-ansi": "^6.0.0"
+  },
+  "dependencies": {
+    "@atls/cli-ui-renderer": "workspace:0.0.0",
+    "@atls/cli-ui-source-component": "workspace:0.0.0",
+    "@atls/stack-trace": "^0.0.1",
+    "ink": "^3.0.8",
+    "react": "^17.0.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

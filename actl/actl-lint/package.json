@@ -1,6 +1,5 @@
 {
   "name": "@atls/actl-lint",
-  "repository": "git@github.com:atls/tools.git",
   "version": "0.1.39",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",

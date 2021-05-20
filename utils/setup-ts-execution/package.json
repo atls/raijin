@@ -1,6 +1,5 @@
 {
   "name": "@atls/tools-setup-ts-execution",
-  "repository": "git@github.com:atls/tools.git",
   "private": true,
   "version": "0.0.0",
   "license": "BSD-3-Clause",

@@ -1,0 +1,35 @@
+{
+  "name": "@atls/cli-ui-log-record-component",
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build library",
+    "postpack": "rm -rf dist",
+    "prepack": "yarn run build"
+  },
+  "devDependencies": {
+    "@atls/logger": "^0.0.1",
+    "@atls/tools-builder": "workspace:0.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^14.14.44",
+    "@types/react": "^17.0.5",
+    "strip-ansi": "^6.0.0"
+  },
+  "dependencies": {
+    "@atls/cli-ui-renderer": "workspace:0.0.0",
+    "@atls/cli-ui-stack-trace-component": "workspace:0.0.0",
+    "@atls/logger": "^0.0.1",
+    "ink": "^3.0.8",
+    "react": "^17.0.2",
+    "string-to-color": "^2.2.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}
