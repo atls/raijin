@@ -17,7 +17,8 @@
     "actl/**/*",
     "github/*",
     "utils/*",
-    "yarn/*"
+    "yarn/*",
+    "cli/*"
   ],
   "resolutions": {
     "@types/react": "17.0.2",
