@@ -407,6 +407,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/webpack-localtunnel-plugin@workspace:webpack/webpack-localtunnel-plugin":
+  version: 0.0.0-use.local
+  resolution: "@atls/webpack-localtunnel-plugin@workspace:webpack/webpack-localtunnel-plugin"
+  dependencies:
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@types/localtunnel": 2.0.0
+    "@types/node": ^14.14.44
+    localtunnel: ^2.0.1
+  peerDependencies:
+    webpack: ^5
+  languageName: unknown
+  linkType: soft
+
 "@atls/webpack-proto-imports-loader@workspace:0.0.2, @atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader":
   version: 0.0.0-use.local
   resolution: "@atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader"
@@ -421,6 +434,16 @@ __metadata:
     ts-loader: ^8.1.0
     webpack: ^5.35.0
     webpack-chain: ^6.5.1
+  languageName: unknown
+  linkType: soft
+
+"@atls/webpack-start-server-plugin@workspace:webpack/webpack-start-server-plugin":
+  version: 0.0.0-use.local
+  resolution: "@atls/webpack-start-server-plugin@workspace:webpack/webpack-start-server-plugin"
+  dependencies:
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@types/node": ^14.14.44
+    webpack: ^5.37.0
   languageName: unknown
   linkType: soft
 
@@ -2257,6 +2280,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/localtunnel@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@types/localtunnel@npm:2.0.0"
+  dependencies:
+    "@types/node": "*"
+  checksum: 33c96b3095b135e6640f99bbb1522514a1a3c926a75a499b37fe707f5a8bc00378be1c85d22f633e6bb731eb094a3232864ce39ba1a004b2417997bd2112bbf9
+  languageName: node
+  linkType: hard
+
 "@types/minimatch@npm:*":
   version: 3.0.3
   resolution: "@types/minimatch@npm:3.0.3"
@@ -3834,6 +3866,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:0.21.1":
+  version: 0.21.1
+  resolution: "axios@npm:0.21.1"
+  dependencies:
+    follow-redirects: ^1.10.0
+  checksum: 864fb7b5d077d236737f10adca53bf451a93f35a15271f56fba8da07265a02d26b7d881b935a6697dc6adb0549ea3e56d2eecb403edaa3bb78f6479901c10f69
+  languageName: node
+  linkType: hard
+
 "axobject-query@npm:^2.2.0":
   version: 2.2.0
   resolution: "axobject-query@npm:2.2.0"
@@ -4675,6 +4716,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cliui@npm:^7.0.2":
+  version: 7.0.4
+  resolution: "cliui@npm:7.0.4"
+  dependencies:
+    string-width: ^4.2.0
+    strip-ansi: ^6.0.0
+    wrap-ansi: ^7.0.0
+  checksum: c49ac1d13f6dda4beaa11b26f62867e0e9892eb985951187d7c691793e0fe08b9bc15cedfaf4dc6d2e9a4d1516704c0c9dcb671ebcd758dbabb18b5d757fbdb5
+  languageName: node
+  linkType: hard
+
 "clone-deep@npm:^4.0.1":
   version: 4.0.1
   resolution: "clone-deep@npm:4.0.1"
@@ -5246,7 +5298,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:^4.0.0, debug@npm:^4.0.1, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.2.0":
+"debug@npm:4.3.1, debug@npm:^4.0.0, debug@npm:^4.0.1, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.2.0":
   version: 4.3.1
   resolution: "debug@npm:4.3.1"
   dependencies:
@@ -6610,6 +6662,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"follow-redirects@npm:^1.10.0":
+  version: 1.14.1
+  resolution: "follow-redirects@npm:1.14.1"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 761a18699688b19d66b3e9199ecaf9cd39ede953f3529299c7fca4190b27b855c17c491170977844d5db5e169ffc35ebae999bb0833e9c9c61988d19c20ae7ab
+  languageName: node
+  linkType: hard
+
 "for-in@npm:^1.0.2":
   version: 1.0.2
   resolution: "for-in@npm:1.0.2"
@@ -6843,7 +6905,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"get-caller-file@npm:^2.0.1":
+"get-caller-file@npm:^2.0.1, get-caller-file@npm:^2.0.5":
   version: 2.0.5
   resolution: "get-caller-file@npm:2.0.5"
   checksum: 9dd9e1e2591039ee4c38c897365b904f66f1e650a8c1cb7b7db8ce667fa63e88cc8b13282b74df9d93de481114b3304a0487880d31cd926dfda6efe71455855d
@@ -8945,6 +9007,20 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"localtunnel@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "localtunnel@npm:2.0.1"
+  dependencies:
+    axios: 0.21.1
+    debug: 4.3.1
+    openurl: 1.1.1
+    yargs: 16.2.0
+  bin:
+    lt: bin/lt.js
+  checksum: 09e4b1b92692baa173074c65b78cd33c36e87eb7f1a664e10ffeee5ef6f918cd5b91ac59249f634797ed3067a32f359bb8443ff6c8ff39732dee6566177ecedb
+  languageName: node
+  linkType: hard
+
 "locate-path@npm:^2.0.0":
   version: 2.0.0
   resolution: "locate-path@npm:2.0.0"
@@ -9994,6 +10070,13 @@ fsevents@^1.2.7:
   dependencies:
     mimic-fn: ^2.1.0
   checksum: e425f6caeb20cf2598ffece94be5663932e34d074f1631b682b13d5f01cc1e0712a7dc711eff1706bb5a5aaab8a52e37bd5edcf560334e3222219d7e8b09c21c
+  languageName: node
+  linkType: hard
+
+"openurl@npm:1.1.1":
+  version: 1.1.1
+  resolution: "openurl@npm:1.1.1"
+  checksum: cbe2e03594b9ceee8b1cfccb505d6bcea852417061952ef46a5dfe53c0aac9ce870f89d5142a9882bdf11e8fdb457655c7cdb2e7c2f5560d98322755eaacca06
   languageName: node
   linkType: hard
 
@@ -13375,6 +13458,17 @@ typescript@^3.2.4:
   languageName: node
   linkType: hard
 
+"wrap-ansi@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "wrap-ansi@npm:7.0.0"
+  dependencies:
+    ansi-styles: ^4.0.0
+    string-width: ^4.1.0
+    strip-ansi: ^6.0.0
+  checksum: 09939dd775ae565bb99a25a6c072fe3775a95fa71751b5533c94265fe986ba3e3ab071a027ab76cf26876bd9afd10ac3c2d06d7c4bcce148bf7d2d9514e3a0df
+  languageName: node
+  linkType: hard
+
 "wrappy@npm:1":
   version: 1.0.2
   resolution: "wrappy@npm:1.0.2"
@@ -13437,6 +13531,13 @@ typescript@^3.2.4:
   languageName: node
   linkType: hard
 
+"y18n@npm:^5.0.5":
+  version: 5.0.8
+  resolution: "y18n@npm:5.0.8"
+  checksum: 56275bfa72a8a585c4d2905b086862fb881dfe7871adcefe4ecf4c1a6a78c6389b459b427c0a8672ccdb09731a78143acc71f0bcc8dc8d8427869fafe7f18b95
+  languageName: node
+  linkType: hard
+
 "yallist@npm:^3.0.0, yallist@npm:^3.0.2, yallist@npm:^3.0.3":
   version: 3.1.1
   resolution: "yallist@npm:3.1.1"
@@ -13458,7 +13559,7 @@ typescript@^3.2.4:
   languageName: node
   linkType: hard
 
-"yargs-parser@npm:20.x":
+"yargs-parser@npm:20.x, yargs-parser@npm:^20.2.2":
   version: 20.2.7
   resolution: "yargs-parser@npm:20.2.7"
   checksum: 124e7f1c24c9609d5d1c343f14b83289634e19bb43770708ebb6a19852647aaa0f89edcbf0e5b18a21bee77f54513ab5051518b2950cda69eb607a7c6251aa4f
@@ -13472,6 +13573,21 @@ typescript@^3.2.4:
     camelcase: ^5.0.0
     decamelize: ^1.2.0
   checksum: 33871721679053cc38165afc6356c06c3e820459589b5db78f315886105070eb90cbb583cd6515fa4231937d60c80262ca2b7c486d5942576802446318a39597
+  languageName: node
+  linkType: hard
+
+"yargs@npm:16.2.0":
+  version: 16.2.0
+  resolution: "yargs@npm:16.2.0"
+  dependencies:
+    cliui: ^7.0.2
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.0
+    y18n: ^5.0.5
+    yargs-parser: ^20.2.2
+  checksum: a79ce1f043021cd645de1ffebb6149541d382ba68f4a6b5eca5d2ad65af51893371bbd78e240dc3b6cf0cbb419511ba5bda715dec992e4266e6863ea49f14feb
   languageName: node
   linkType: hard
 
