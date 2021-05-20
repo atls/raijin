@@ -1,0 +1,3 @@
+releases:
+  "@atls/webpack-localtunnel-plugin": patch
+  "@atls/webpack-start-server-plugin": patch
