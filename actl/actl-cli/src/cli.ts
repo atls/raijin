@@ -3,6 +3,9 @@ import { FormatCommand }          from '@atls/actl-format'
 
 import { LintCommand }            from '@atls/actl-lint'
 import { LibraryBuildCommand }    from '@atls/actl-library'
+import { ServiceBuildCommand }    from '@atls/actl-service'
+import { ServiceStartCommand }    from '@atls/actl-service'
+import { ServiceDevCommand }      from '@atls/actl-service'
 import { RendererBuildCommand }   from '@atls/actl-renderer'
 import { RendererDevCommand }     from '@atls/actl-renderer'
 import { TestIntegrationCommand } from '@atls/actl-test'
@@ -27,6 +30,10 @@ const run = () => {
   cli.register(TestUnitCommand)
 
   cli.register(CommitCommand)
+
+  cli.register(ServiceBuildCommand)
+  cli.register(ServiceStartCommand)
+  cli.register(ServiceDevCommand)
 
   cli.register(RendererBuildCommand)
   cli.register(RendererDevCommand)

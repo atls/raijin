@@ -47,6 +47,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:actl/actl-renderer"
       },
       {
+        "name": "@atls/actl-service",
+        "reference": "workspace:actl/actl-service"
+      },
+      {
         "name": "@atls/actl-test",
         "reference": "workspace:actl/actl-test"
       },
@@ -216,6 +220,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/actl-library", ["workspace:actl/actl-library"]],
       ["@atls/actl-lint", ["virtual:67722966f9b20870f82a8c03dffa3b80ded007073cf495d7857bd830bc98512ee341dcec3f267799ff82d17348591d844dfd2683251670c3abdde430c9011a43#workspace:actl/actl-lint", "workspace:actl/actl-lint"]],
       ["@atls/actl-renderer", ["workspace:actl/actl-renderer"]],
+      ["@atls/actl-service", ["workspace:actl/actl-service"]],
       ["@atls/actl-test", ["workspace:actl/actl-test"]],
       ["@atls/actl-typecheck", ["workspace:actl/actl-typecheck"]],
       ["@atls/cli-ui-log-record-component", ["workspace:cli/cli-ui-log-record-component"]],
@@ -329,6 +334,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/actl-library", "workspace:actl/actl-library"],
             ["@atls/actl-lint", "virtual:67722966f9b20870f82a8c03dffa3b80ded007073cf495d7857bd830bc98512ee341dcec3f267799ff82d17348591d844dfd2683251670c3abdde430c9011a43#workspace:actl/actl-lint"],
             ["@atls/actl-renderer", "workspace:actl/actl-renderer"],
+            ["@atls/actl-service", "workspace:actl/actl-service"],
             ["@atls/actl-test", "workspace:actl/actl-test"],
             ["@atls/actl-typecheck", "workspace:actl/actl-typecheck"],
             ["@atls/tools-builder", "workspace:utils/builder"],
@@ -353,6 +359,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/actl-library", "workspace:actl/actl-library"],
             ["@atls/actl-lint", "virtual:67722966f9b20870f82a8c03dffa3b80ded007073cf495d7857bd830bc98512ee341dcec3f267799ff82d17348591d844dfd2683251670c3abdde430c9011a43#workspace:actl/actl-lint"],
             ["@atls/actl-renderer", "workspace:actl/actl-renderer"],
+            ["@atls/actl-service", "workspace:actl/actl-service"],
             ["@atls/actl-test", "workspace:actl/actl-test"],
             ["@atls/actl-typecheck", "workspace:actl/actl-typecheck"],
             ["@atls/tools-builder", "workspace:utils/builder"],
@@ -462,6 +469,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clipanion", "npm:2.6.2"],
             ["execa", "npm:5.0.0"],
             ["fs-extra", "npm:9.1.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@atls/actl-service", [
+        ["workspace:actl/actl-service", {
+          "packageLocation": "./actl/actl-service/",
+          "packageDependencies": [
+            ["@atls/actl-service", "workspace:actl/actl-service"],
+            ["@atls/cli-ui-pretty-logs", "workspace:cli/cli-ui-pretty-logs"],
+            ["@atls/code-service", "workspace:code/code-service"],
+            ["@atls/tools-builder", "workspace:utils/builder"],
+            ["@atls/webpack-start-server-plugin", "workspace:webpack/webpack-start-server-plugin"],
+            ["@types/blessed", "npm:0.1.17"],
+            ["@types/node", "npm:14.14.41"],
+            ["@types/react", "npm:17.0.2"],
+            ["@types/react-blessed", "npm:0.3.2"],
+            ["blessed", "npm:0.1.81"],
+            ["clipanion", "npm:2.6.2"],
+            ["react", "npm:17.0.2"],
+            ["react-blessed", "virtual:ffb6087868113eedce4995f4e766ddb7536939de1abb941fd1aaf487e12dbd134bbee235c338038421f7e65667a5cd1e660714e04ca055e8599147f0395ed7a3#npm:0.6.2"]
           ],
           "linkType": "SOFT",
         }]
@@ -3166,6 +3194,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/blessed", [
+        ["npm:0.1.17", {
+          "packageLocation": "./.yarn/cache/@types-blessed-npm-0.1.17-6f38d0b113-5844644d33.zip/node_modules/@types/blessed/",
+          "packageDependencies": [
+            ["@types/blessed", "npm:0.1.17"],
+            ["@types/node", "npm:14.14.41"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/cacheable-request", [
         ["npm:6.0.1", {
           "packageLocation": "./.yarn/cache/@types-cacheable-request-npm-6.0.1-067bf7714d-3dae802a08.zip/node_modules/@types/cacheable-request/",
@@ -3487,6 +3525,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:17.0.2"],
             ["@types/prop-types", "npm:15.7.3"],
             ["csstype", "npm:3.0.8"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/react-blessed", [
+        ["npm:0.3.2", {
+          "packageLocation": "./.yarn/cache/@types-react-blessed-npm-0.3.2-7cf13362bc-263255e7dc.zip/node_modules/@types/react-blessed/",
+          "packageDependencies": [
+            ["@types/react-blessed", "npm:0.3.2"],
+            ["@types/blessed", "npm:0.1.17"],
+            ["@types/react", "npm:17.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -5831,6 +5880,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["buffer", "npm:5.6.0"],
             ["inherits", "npm:2.0.4"],
             ["readable-stream", "npm:3.6.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["blessed", [
+        ["npm:0.1.81", {
+          "packageLocation": "./.yarn/cache/blessed-npm-0.1.81-7da02fe8f4-92fcf39658.zip/node_modules/blessed/",
+          "packageDependencies": [
+            ["blessed", "npm:0.1.81"]
           ],
           "linkType": "HARD",
         }]
@@ -13756,6 +13814,41 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["react-blessed", [
+        ["npm:0.6.2", {
+          "packageLocation": "./.yarn/cache/react-blessed-npm-0.6.2-157b33ebd9-b267dc2b0e.zip/node_modules/react-blessed/",
+          "packageDependencies": [
+            ["react-blessed", "npm:0.6.2"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:ffb6087868113eedce4995f4e766ddb7536939de1abb941fd1aaf487e12dbd134bbee235c338038421f7e65667a5cd1e660714e04ca055e8599147f0395ed7a3#npm:0.6.2", {
+          "packageLocation": "./.yarn/$$virtual/react-blessed-virtual-7fd88db28a/0/cache/react-blessed-npm-0.6.2-157b33ebd9-b267dc2b0e.zip/node_modules/react-blessed/",
+          "packageDependencies": [
+            ["react-blessed", "virtual:ffb6087868113eedce4995f4e766ddb7536939de1abb941fd1aaf487e12dbd134bbee235c338038421f7e65667a5cd1e660714e04ca055e8599147f0395ed7a3#npm:0.6.2"],
+            ["@types/blessed", "npm:0.1.17"],
+            ["@types/react", "npm:17.0.2"],
+            ["@types/react-devtools-core", null],
+            ["@types/ws", null],
+            ["blessed", "npm:0.1.81"],
+            ["react", "npm:17.0.2"],
+            ["react-devtools-core", null],
+            ["react-reconciler", "virtual:7fd88db28a42af4ecc2cc11df97423a5ef21f1320775665390da12df3cf3fc89a1a0fe0e05c5a2efce33b96048bbabb8df2f6d4961b4a013c1fc0ab308b61036#npm:0.20.4"],
+            ["ws", null]
+          ],
+          "packagePeers": [
+            "@types/blessed",
+            "@types/react-devtools-core",
+            "@types/react",
+            "@types/ws",
+            "blessed",
+            "react-devtools-core",
+            "react",
+            "ws"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["react-devtools-core", [
         ["npm:4.13.3", {
           "packageLocation": "./.yarn/cache/react-devtools-core-npm-4.13.3-f4c942dbe7-bede9f92cd.zip/node_modules/react-devtools-core/",
@@ -13784,12 +13877,36 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["react-reconciler", [
+        ["npm:0.20.4", {
+          "packageLocation": "./.yarn/cache/react-reconciler-npm-0.20.4-a5fa142057-1db1b825a7.zip/node_modules/react-reconciler/",
+          "packageDependencies": [
+            ["react-reconciler", "npm:0.20.4"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["npm:0.24.0", {
           "packageLocation": "./.yarn/cache/react-reconciler-npm-0.24.0-eaeed763d0-4c6528771b.zip/node_modules/react-reconciler/",
           "packageDependencies": [
             ["react-reconciler", "npm:0.24.0"]
           ],
           "linkType": "SOFT",
+        }],
+        ["virtual:7fd88db28a42af4ecc2cc11df97423a5ef21f1320775665390da12df3cf3fc89a1a0fe0e05c5a2efce33b96048bbabb8df2f6d4961b4a013c1fc0ab308b61036#npm:0.20.4", {
+          "packageLocation": "./.yarn/$$virtual/react-reconciler-virtual-9fdce2980f/0/cache/react-reconciler-npm-0.20.4-a5fa142057-1db1b825a7.zip/node_modules/react-reconciler/",
+          "packageDependencies": [
+            ["react-reconciler", "virtual:7fd88db28a42af4ecc2cc11df97423a5ef21f1320775665390da12df3cf3fc89a1a0fe0e05c5a2efce33b96048bbabb8df2f6d4961b4a013c1fc0ab308b61036#npm:0.20.4"],
+            ["@types/react", "npm:17.0.2"],
+            ["loose-envify", "npm:1.4.0"],
+            ["object-assign", "npm:4.1.1"],
+            ["prop-types", "npm:15.7.2"],
+            ["react", "npm:17.0.2"],
+            ["scheduler", "npm:0.13.6"]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
+          ],
+          "linkType": "HARD",
         }],
         ["virtual:df66e6c195b38738232b5eeef475828600e407de1507cd9c637a1da36ddb854a0e9a7862e15d0a73bd9a7476da3342cf27db7a3fa87c9a144753b61dda35ff51#npm:0.24.0", {
           "packageLocation": "./.yarn/$$virtual/react-reconciler-virtual-3014607e54/0/cache/react-reconciler-npm-0.24.0-eaeed763d0-4c6528771b.zip/node_modules/react-reconciler/",
@@ -14380,6 +14497,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["scheduler", [
+        ["npm:0.13.6", {
+          "packageLocation": "./.yarn/cache/scheduler-npm-0.13.6-b71d30dee2-6778b87d7f.zip/node_modules/scheduler/",
+          "packageDependencies": [
+            ["scheduler", "npm:0.13.6"],
+            ["loose-envify", "npm:1.4.0"],
+            ["object-assign", "npm:4.1.1"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:0.18.0", {
           "packageLocation": "./.yarn/cache/scheduler-npm-0.18.0-ee0cc1e577-007678c559.zip/node_modules/scheduler/",
           "packageDependencies": [

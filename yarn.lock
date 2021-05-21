@@ -51,6 +51,7 @@ __metadata:
     "@atls/actl-library": "workspace:0.0.3"
     "@atls/actl-lint": "workspace:0.1.40"
     "@atls/actl-renderer": "workspace:0.0.1"
+    "@atls/actl-service": "workspace:0.0.0"
     "@atls/actl-test": "workspace:0.0.29"
     "@atls/actl-typecheck": "workspace:0.1.40"
     "@atls/tools-builder": "workspace:0.0.0"
@@ -145,6 +146,25 @@ __metadata:
     clipanion: ^2.6.2
     execa: ^5.0.0
     fs-extra: ^9.1.0
+  languageName: unknown
+  linkType: soft
+
+"@atls/actl-service@workspace:0.0.0, @atls/actl-service@workspace:actl/actl-service":
+  version: 0.0.0-use.local
+  resolution: "@atls/actl-service@workspace:actl/actl-service"
+  dependencies:
+    "@atls/cli-ui-pretty-logs": "workspace:0.0.1"
+    "@atls/code-service": "workspace:0.0.3"
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@atls/webpack-start-server-plugin": "workspace:0.0.1"
+    "@types/blessed": ^0.1.17
+    "@types/node": ^14.14.44
+    "@types/react": ^17.0.5
+    "@types/react-blessed": ^0.3.2
+    blessed: ^0.1.81
+    clipanion: ^2.6.2
+    react: ^17.0.2
+    react-blessed: ^0.6.2
   languageName: unknown
   linkType: soft
 
@@ -2197,6 +2217,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/blessed@npm:*, @types/blessed@npm:^0.1.17":
+  version: 0.1.17
+  resolution: "@types/blessed@npm:0.1.17"
+  dependencies:
+    "@types/node": "*"
+  checksum: 5844644d3378d386e2b9412524b8304498af9036857e9a6082b01c0b956fb3be1ec462c4b4f0e8325194e56e70085b61a4c030797121a77bf509041f5d543d93
+  languageName: node
+  linkType: hard
+
 "@types/cacheable-request@npm:^6.0.1":
   version: 6.0.1
   resolution: "@types/cacheable-request@npm:6.0.1"
@@ -2462,6 +2491,16 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: a3af625b37ab47bbe5f23edfd3376a4ca94a6409ed40b44b86c3525998156f3cb102adca56481f10b9637b847082ab21dcb2600c9df886073fac4bc97673b344
+  languageName: node
+  linkType: hard
+
+"@types/react-blessed@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "@types/react-blessed@npm:0.3.2"
+  dependencies:
+    "@types/blessed": "*"
+    "@types/react": "*"
+  checksum: 263255e7dc91e13eee6dccb3e4f907c5b77fb9649b977e954a77c610b675d66bfbe8b17e6852a67b9ddb7208cb02abe55c80acacd1fcd2c31ae7359cae9ec2e3
   languageName: node
   linkType: hard
 
@@ -4243,6 +4282,15 @@ __metadata:
     inherits: ^2.0.4
     readable-stream: ^3.4.0
   checksum: 1aee3b6f4634d74facd5950953f80b9b4dcd265b8a7466d1ae19e65e174e8f3b36a84adea4ba13592b8653b2d0dc342a09debfa98e014d572669152ae93bbbe5
+  languageName: node
+  linkType: hard
+
+"blessed@npm:^0.1.81":
+  version: 0.1.81
+  resolution: "blessed@npm:0.1.81"
+  bin:
+    blessed: ./bin/tput.js
+  checksum: 92fcf3965851765aa47e6f7a9fca36a20dda2e104c1d0fe6c85c76eeee3b31e8e24a9fc173ae0e5b71e42c7da43e59bb1646f9b596366972f6768764eeb04698
   languageName: node
   linkType: hard
 
@@ -11211,6 +11259,21 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-blessed@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "react-blessed@npm:0.6.2"
+  dependencies:
+    react: ^16.8.0
+    react-reconciler: ^0.20.4
+  peerDependencies:
+    blessed: ^0.1.81
+    react: ^16.8.0
+    react-devtools-core: ^3.0.0
+    ws: ^6.0.0
+  checksum: b267dc2b0e57b98a5eb99079c20a8f43d9f5dcb3d616878edbee3f3d3219edbf1e9c1f2b07577c6ba32551f14ecbb3d4433e83e77aace2f4646f5a7a0f8a00a5
+  languageName: node
+  linkType: hard
+
 "react-devtools-core@npm:^4.6.0":
   version: 4.13.3
   resolution: "react-devtools-core@npm:4.13.3"
@@ -11235,6 +11298,20 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-reconciler@npm:^0.20.4":
+  version: 0.20.4
+  resolution: "react-reconciler@npm:0.20.4"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    prop-types: ^15.6.2
+    scheduler: ^0.13.6
+  peerDependencies:
+    react: ^16.0.0
+  checksum: 1db1b825a743b905736efd6a5526b23c53ee1977590701f5246a8193fc39850c38ee3ba990232b2796262e0f52afa247e27f2df305058b622c62f8e3c7d44215
+  languageName: node
+  linkType: hard
+
 "react-reconciler@npm:^0.24.0":
   version: 0.24.0
   resolution: "react-reconciler@npm:0.24.0"
@@ -11256,6 +11333,17 @@ fsevents@^1.2.7:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: 7d0dfebafe1d297503157abb2e9acdb49852185deb8700c16f4a6faad87642f84903ab18cfc16f40b9a0dfe97540f99834982ee953e6d48b39c41608dc3e4b29
+  languageName: node
+  linkType: hard
+
+"react@npm:^16.8.0":
+  version: 16.14.0
+  resolution: "react@npm:16.14.0"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    prop-types: ^15.6.2
+  checksum: 2769580b22952a52de3b5b2ea0f09cb904030b762d759739f49ab4da0b1f550e5c087ce3728c4be90f423d09481e0c075483c0c30b1ea9c549445c8b12020fd3
   languageName: node
   linkType: hard
 
@@ -11777,6 +11865,16 @@ resolve@^2.0.0-next.3:
   dependencies:
     xmlchars: ^2.2.0
   checksum: 6ad14be68da9b84af0fa3de346fd78bd3a8e8a73a462e2852279a1fff1e2619988919294001abe3ecef3783f9498962a0619d960ccca4ec2ca914526fde1acc2
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.13.6":
+  version: 0.13.6
+  resolution: "scheduler@npm:0.13.6"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 6778b87d7ff5820c8f5a1eff7f325c5ee45218e4be4bbaa937b3ec0c2d18e6799e1008e3ebc46591a84991f4313f43d5099a79b8a545a3a9261ca372ad645516
   languageName: node
   linkType: hard
 

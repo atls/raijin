@@ -34,6 +34,7 @@
     "@atls/actl-library": "workspace:0.0.3",
     "@atls/actl-lint": "workspace:0.1.40",
     "@atls/actl-renderer": "workspace:0.0.1",
+    "@atls/actl-service": "workspace:0.0.0",
     "@atls/actl-test": "workspace:0.0.29",
     "@atls/actl-typecheck": "workspace:0.1.40",
     "clipanion": "^2.6.2"
