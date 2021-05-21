@@ -42,7 +42,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/actl-cli@workspace:0.4.41, @atls/actl-cli@workspace:actl/actl-cli":
+"@atls/actl-cli@workspace:0.4.42, @atls/actl-cli@workspace:actl/actl-cli":
   version: 0.0.0-use.local
   resolution: "@atls/actl-cli@workspace:actl/actl-cli"
   dependencies:
@@ -51,7 +51,7 @@ __metadata:
     "@atls/actl-library": "workspace:0.0.3"
     "@atls/actl-lint": "workspace:0.1.40"
     "@atls/actl-renderer": "workspace:0.0.1"
-    "@atls/actl-service": "workspace:0.0.0"
+    "@atls/actl-service": "workspace:0.0.1"
     "@atls/actl-test": "workspace:0.0.29"
     "@atls/actl-typecheck": "workspace:0.1.40"
     "@atls/tools-builder": "workspace:0.0.0"
@@ -149,7 +149,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/actl-service@workspace:0.0.0, @atls/actl-service@workspace:actl/actl-service":
+"@atls/actl-service@workspace:0.0.1, @atls/actl-service@workspace:actl/actl-service":
   version: 0.0.0-use.local
   resolution: "@atls/actl-service@workspace:actl/actl-service"
   dependencies:
@@ -13110,7 +13110,7 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "tools@workspace:."
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.41"
+    "@atls/actl-cli": "workspace:0.4.42"
     "@types/jest": ^26.0.23
     "@types/node": ^14.14.44
     "@yarnpkg/cli": ^2.4.1
