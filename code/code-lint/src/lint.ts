@@ -19,6 +19,7 @@ class Linter {
         extends: [require.resolve('../rules/base')],
       },
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      fix: true,
       useEslintrc: false,
       cwd: path.join(__dirname, '../'),
       cacheLocation: path.join(this.cwd, '.yarn', '.eslintcache'),
