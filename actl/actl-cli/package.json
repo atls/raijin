@@ -1,6 +1,6 @@
 {
   "name": "@atls/actl-cli",
-  "version": "0.4.42",
+  "version": "0.4.43",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "bin": {
@@ -32,7 +32,7 @@
     "@atls/actl-commit": "workspace:0.0.40",
     "@atls/actl-format": "workspace:0.0.16",
     "@atls/actl-library": "workspace:0.0.3",
-    "@atls/actl-lint": "workspace:0.1.40",
+    "@atls/actl-lint": "workspace:0.1.41",
     "@atls/actl-renderer": "workspace:0.0.1",
     "@atls/actl-service": "workspace:0.0.1",
     "@atls/actl-test": "workspace:0.0.29",
