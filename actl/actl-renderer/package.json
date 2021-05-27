@@ -1,6 +1,6 @@
 {
   "name": "@atls/actl-renderer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@atls/cli-ui-pretty-logs": "workspace:0.0.1",
-    "@atls/code-service": "workspace:0.0.3",
+    "@atls/code-service": "workspace:0.0.4",
     "@atls/webpack-localtunnel-plugin": "workspace:0.0.1",
     "@atls/webpack-start-server-plugin": "workspace:0.0.1",
     "clipanion": "^2.6.2",
