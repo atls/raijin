@@ -14,6 +14,7 @@ const FORCE_UNPLUGGED_PACKAGES = new Set([
   'fsevents',
   'core-js',
   'core-js-pure',
+  'protobufjs',
 ])
 
 export const getUnpluggedDependencies = async (): Promise<Set<String>> => {
