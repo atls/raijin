@@ -1,0 +1,5 @@
+releases:
+  "@atls/actl-cli": patch
+  "@atls/actl-renderer": patch
+  "@atls/actl-service": patch
+  "@atls/code-service": patch
