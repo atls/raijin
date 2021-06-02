@@ -4,8 +4,8 @@ import React            from 'react'
 import { Transform }    from 'stream'
 import { EOL }          from 'os'
 
-import { renderStatic } from '@monstrs/cli-ui-renderer'
-import { LogRecord }    from '@monstrs/cli-ui-log-record-component'
+import { renderStatic } from '@atls/cli-ui-renderer'
+import { LogRecord }    from '@atls/cli-ui-log-record-component'
 
 export class PrettyLogsTransform extends Transform {
   parse(row) {
