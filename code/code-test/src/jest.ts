@@ -13,6 +13,8 @@ const unit = async (
   results: AggregatedResult
   globalConfig: Config.GlobalConfig
 }> => {
+  process.env.TS_JEST_DISABLE_VER_CHECKER = 'true'
+
   const argv: any = {
     rootDir: project,
     ci: false,
@@ -41,6 +43,8 @@ const integration = async (
   results: AggregatedResult
   globalConfig: Config.GlobalConfig
 }> => {
+  process.env.TS_JEST_DISABLE_VER_CHECKER = 'true'
+
   const argv: any = {
     rootDir: project,
     ci: false,

@@ -53,4 +53,10 @@ module.exports = {
 
     'no-shadow': ['error', { allow: ['ClientFactory', 'ServerBuilder'] }],
   },
+  settings: {
+    react: {
+      pragma: 'React',
+      version: '17.0.2',
+    },
+  },
 }

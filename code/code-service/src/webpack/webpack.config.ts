@@ -1,10 +1,11 @@
-import Config           from 'webpack-chain'
-import path             from 'path'
-import webpack          from 'webpack'
+import Config                from 'webpack-chain'
+import path                  from 'path'
+import webpack               from 'webpack'
 
-import { base }         from '@atls/code-typescript'
+import { base }              from '@atls/code-typescript'
 
-import { getExternals } from './externals'
+import { getExternals }      from './externals'
+import { getResolveAliases } from './resolve'
 
 export interface WebpackConfigPlugin {
   name: string
@@ -41,6 +42,12 @@ export const createWebpackConfig = async (
   config.output.path(path.join(cwd, 'dist')).filename('[name].js')
 
   config.resolve.extensions.add('.tsx').add('.ts').add('.js')
+
+  const aliases = await getResolveAliases(cwd)
+
+  aliases.forEach((target) => {
+    config.resolve.alias.set(target, require.resolve(target, { paths: [cwd] }))
+  })
 
   config.externals(externals)
 
