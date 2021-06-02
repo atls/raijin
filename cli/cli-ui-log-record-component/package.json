@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-log-record-component",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -21,8 +21,8 @@
     "strip-ansi": "^6.0.0"
   },
   "dependencies": {
-    "@atls/cli-ui-renderer": "workspace:0.0.1",
-    "@atls/cli-ui-stack-trace-component": "workspace:0.0.1",
+    "@atls/cli-ui-renderer": "workspace:0.0.2",
+    "@atls/cli-ui-stack-trace-component": "workspace:0.0.2",
     "@atls/logger": "^0.0.1",
     "ink": "^3.0.8",
     "react": "^17.0.2",

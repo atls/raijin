@@ -3,7 +3,7 @@
   "private": true,
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@atls/actl-cli": "workspace:0.4.44",
+    "@atls/actl-cli": "workspace:0.4.45",
     "@types/jest": "^26.0.23",
     "@types/node": "^14.17.0",
     "@yarnpkg/cli": "^2.4.1",

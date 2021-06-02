@@ -8,7 +8,7 @@
     "builder": "bin/dev"
   },
   "devDependencies": {
-    "@atls/code-typescript": "workspace:0.0.3",
+    "@atls/code-typescript": "workspace:0.0.4",
     "@atls/tools-setup-ts-execution": "workspace:0.0.0",
     "@yarnpkg/builder": "^2.1.3",
     "@yarnpkg/core": "^2.4.0",
