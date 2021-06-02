@@ -14,13 +14,10 @@
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
     "@types/localtunnel": "2.0.0",
-    "@types/node": "^14.14.44"
+    "@types/node": "^14.17.0"
   },
   "dependencies": {
     "localtunnel": "^2.0.1"
-  },
-  "peerDependencies": {
-    "webpack": "^5"
   },
   "publishConfig": {
     "access": "public",
