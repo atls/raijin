@@ -14,15 +14,18 @@
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
     "@types/jest": "^26.0.23",
-    "@types/react": "^17.0.5",
+    "@types/react": "^17.0.6",
+    "ink": "^3.0.8",
     "strip-ansi": "^6.0.0"
   },
   "dependencies": {
     "@atls/cli-ui-renderer": "workspace:0.0.1",
     "@atls/cli-ui-source-component": "workspace:0.0.1",
-    "@atls/stack-trace": "^0.0.1",
+    "@atls/stack-trace": "^0.0.1"
+  },
+  "peerDependencies": {
     "ink": "^3.0.8",
-    "react": "^17.0.2"
+    "react": "*"
   },
   "publishConfig": {
     "access": "public",

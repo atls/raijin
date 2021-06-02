@@ -13,10 +13,10 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@types/node": "^14.14.44"
+    "@types/node": "^14.17.0"
   },
   "dependencies": {
-    "webpack": "^5.37.0"
+    "webpack": "^5.37.1"
   },
   "publishConfig": {
     "access": "public",

@@ -8,7 +8,15 @@ const getMessage = (body: Body) => {
     return body
   }
 
-  return body.message
+  if (typeof body.message === 'string') {
+    return body.message
+  }
+
+  if (body.stack) {
+    return ''
+  }
+
+  return JSON.stringify(body)
 }
 
 export interface MessageProps {
