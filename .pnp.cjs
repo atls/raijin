@@ -59,6 +59,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:actl/actl-typecheck"
       },
       {
+        "name": "@atls/buildpack-core",
+        "reference": "workspace:buildpack/buildpack-core"
+      },
+      {
         "name": "@atls/cli-ui-log-record-component",
         "reference": "workspace:cli/cli-ui-log-record-component"
       },
@@ -223,6 +227,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/actl-service", ["workspace:actl/actl-service"]],
       ["@atls/actl-test", ["workspace:actl/actl-test"]],
       ["@atls/actl-typecheck", ["workspace:actl/actl-typecheck"]],
+      ["@atls/buildpack-core", ["workspace:buildpack/buildpack-core"]],
       ["@atls/cli-ui-log-record-component", ["virtual:e0b391570ec9f8989915d797a4a0d1afc17ea70caf4c548de596fed02e7abe0ba2aca2addc79364ca4f7cd7ff1f030f76bbcb0df83a27863c64f68d671fbc484#workspace:cli/cli-ui-log-record-component", "workspace:cli/cli-ui-log-record-component"]],
       ["@atls/cli-ui-pretty-logs", ["workspace:cli/cli-ui-pretty-logs"]],
       ["@atls/cli-ui-renderer", ["workspace:cli/cli-ui-renderer"]],
@@ -539,6 +544,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/execa", "npm:2.0.0"],
             ["@types/node", "npm:14.14.37"],
             ["clipanion", "virtual:7678ab02e40d97629b6493eec8a6c2183b3e5ad6e71c739f4b1312ef4626fd3e9c5bd854b8bf262b29088c6a80e73bfcad7b4cffed928db2d71138ad9af6b2b1#npm:3.0.0-rc.12"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@atls/buildpack-core", [
+        ["workspace:buildpack/buildpack-core", {
+          "packageLocation": "./buildpack/buildpack-core/",
+          "packageDependencies": [
+            ["@atls/buildpack-core", "workspace:buildpack/buildpack-core"],
+            ["@atls/tools-builder", "workspace:utils/builder"],
+            ["@babel/types", "npm:7.14.2"],
+            ["@iarna/toml", "npm:2.2.5"],
+            ["@types/execa", "npm:2.0.0"],
+            ["@types/node", "npm:14.14.37"],
+            ["execa", "npm:5.0.0"]
           ],
           "linkType": "SOFT",
         }]
