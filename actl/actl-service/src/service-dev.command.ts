@@ -1,4 +1,5 @@
 import { Command }                  from 'clipanion'
+import { Option }                   from 'clipanion'
 import { PassThrough }              from 'stream'
 
 import { watch }                    from '@atls/code-service'
@@ -19,13 +20,12 @@ const waitSignals = (watcher): Promise<void> =>
   })
 
 class ServiceDevCommand extends Command {
-  @Command.Boolean(`-p,--pretty-logs`)
-  prettyLogs: boolean = false
+  static paths = [['service', 'dev']]
 
-  @Command.String(`-s,--source`)
-  source?: string
+  prettyLogs = Option.Boolean(`-p,--pretty-logs`, false)
 
-  @Command.Path(`service`, `dev`)
+  source = Option.String(`-s,--source`)
+
   async execute() {
     const startServerPluginArgs: Partial<StartServerPluginOptions> = {}
 

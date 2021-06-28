@@ -1,13 +1,14 @@
 import { Command }       from 'clipanion'
+import { Option }        from 'clipanion'
 
 import { formatProject } from '@atls/code-format'
 import { formatFiles }   from '@atls/code-format'
 
 class FormatCommand extends Command {
-  @Command.Rest({ required: 0 })
-  files: Array<string> = []
+  static paths = [['format']]
 
-  @Command.Path(`format`)
+  files: Array<string> = Option.Rest({ required: 0 })
+
   async execute() {
     if (this.files.length > 0) {
       formatFiles(this.files)

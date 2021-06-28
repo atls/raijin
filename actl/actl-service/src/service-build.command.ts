@@ -1,12 +1,13 @@
 import { Command } from 'clipanion'
+import { Option }  from 'clipanion'
 
 import { build }   from '@atls/code-service'
 
 class ServiceBuildCommand extends Command {
-  @Command.String(`-s,--source`)
-  source?: string
+  static paths = [['service', 'build']]
 
-  @Command.Path(`service`, `build`)
+  source = Option.String(`-s,--source`)
+
   async execute() {
     const { errors, warnings } = await build({ cwd: this.source || process.cwd() })
 

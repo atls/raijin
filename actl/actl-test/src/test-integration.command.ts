@@ -1,28 +1,24 @@
 import { Command }       from 'clipanion'
+import { Option }        from 'clipanion'
 import { writeFileSync } from 'fs'
 
 import { integration }   from '@atls/code-test'
 
 class TestIntegrationCommand extends Command {
-  @Command.Boolean(`-u,--update-shapshot`)
-  updateSnapshot: boolean = false
+  static paths = [['test:integration']]
 
-  @Command.Boolean(`-u,--bail`)
-  bail: boolean = false
+  updateSnapshot = Option.Boolean(`-u,--update-shapshot`, false)
 
-  @Command.Boolean(`--find-related-tests`)
-  findRelatedTests: boolean = false
+  bail = Option.Boolean(`-b,--bail`, false)
 
-  @Command.Boolean(`--json`)
-  json: boolean = false
+  findRelatedTests = Option.Boolean(`--find-related-tests`, false)
 
-  @Command.String('-r,--report')
-  report: string
+  json = Option.Boolean(`--json`, false)
 
-  @Command.Rest({ required: 0 })
-  files: Array<string> = []
+  report = Option.String('-r,--report')
 
-  @Command.Path(`test:integration`)
+  files: Array<string> = Option.Rest({ required: 0 })
+
   async execute() {
     const { results } = await integration(
       process.cwd(),

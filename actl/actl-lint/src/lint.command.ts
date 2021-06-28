@@ -1,16 +1,16 @@
 import { Command }       from 'clipanion'
+import { Option }        from 'clipanion'
 import { writeFileSync } from 'fs'
 
 import { Linter }        from '@atls/code-lint'
 
 class LintCommand extends Command {
-  @Command.String('-r,--report')
-  report: string
+  static paths = [['lint']]
 
-  @Command.Rest({ required: 0 })
-  files: Array<string> = []
+  report = Option.String('-r,--report')
 
-  @Command.Path(`lint`)
+  files: Array<string> = Option.Rest({ required: 0 })
+
   async execute() {
     const linter = new Linter()
 
