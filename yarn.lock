@@ -190,6 +190,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/buildpack-core@workspace:buildpack/buildpack-core":
+  version: 0.0.0-use.local
+  resolution: "@atls/buildpack-core@workspace:buildpack/buildpack-core"
+  dependencies:
+    "@atls/tools-builder": "workspace:0.0.0"
+    "@babel/types": ^7.14.2
+    "@iarna/toml": ^2.2.5
+    "@types/execa": 2.0.0
+    "@types/node": ^14.17.0
+    execa: ^5.0.0
+  languageName: unknown
+  linkType: soft
+
 "@atls/cli-ui-log-record-component@workspace:0.0.2, @atls/cli-ui-log-record-component@workspace:cli/cli-ui-log-record-component":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-log-record-component@workspace:cli/cli-ui-log-record-component"
