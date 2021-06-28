@@ -1,14 +1,15 @@
 import rimraf             from 'rimraf'
 import { Command }        from 'clipanion'
+import { Option }         from 'clipanion'
 import { promises as fs } from 'fs'
 
 import { TypeScript }     from '@atls/code-typescript'
 
 class BuildLibraryCommand extends Command {
-  @Command.String(`-t,--target`)
-  target: string = './dist'
+  static paths = [['build', 'library']]
 
-  @Command.Path(`build`, `library`)
+  target = Option.String(`-t,--target`, './dist')
+
   async execute() {
     await this.cleanTarget()
 

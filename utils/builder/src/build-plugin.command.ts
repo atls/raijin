@@ -10,6 +10,7 @@ import { formatUtils }   from '@yarnpkg/core'
 import { structUtils }   from '@yarnpkg/core'
 import { npath }         from '@yarnpkg/fslib'
 import { Command }       from 'clipanion'
+import { Option }        from 'clipanion'
 import { Usage }         from 'clipanion'
 import fs                from 'fs'
 import path              from 'path'
@@ -19,10 +20,11 @@ import webpack           from 'webpack'
 const getNormalizedName = (name: string) => name.replace('yarn-plugin', 'plugin')
 
 export class BuildPluginCommand extends Command {
-  @Command.Boolean(`--no-minify`, {
+  static paths = [['build', 'plugin']]
+
+  noMinify = Option.Boolean(`--no-minify`, false, {
     description: `Build a plugin for development, without optimizations (minifying, mangling, treeshaking)`,
   })
-  noMinify: boolean = false
 
   static usage: Usage = Command.Usage({
     description: `build a local plugin`,
@@ -35,7 +37,6 @@ export class BuildPluginCommand extends Command {
     ],
   })
 
-  @Command.Path(`build`, `plugin`)
   async execute() {
     const basedir = process.cwd()
     const portableBaseDir = npath.toPortablePath(basedir)

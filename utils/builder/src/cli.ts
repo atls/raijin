@@ -1,4 +1,5 @@
-import { Cli, Command }        from 'clipanion'
+import { Cli }                 from 'clipanion'
+import { Builtins }            from 'clipanion'
 
 import { BuildLibraryCommand } from './build-library.command'
 import { BuildPluginCommand }  from './build-plugin.command'
@@ -11,7 +12,7 @@ const cli = new Cli({
 cli.register(BuildLibraryCommand)
 cli.register(BuildPluginCommand)
 
-cli.register(Command.Entries.Help)
-cli.register(Command.Entries.Version)
+cli.register(Builtins.HelpCommand)
+cli.register(Builtins.VersionCommand)
 
 cli.runExit(process.argv.slice(2), Cli.defaultContext)
