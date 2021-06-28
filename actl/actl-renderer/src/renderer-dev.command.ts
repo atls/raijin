@@ -1,4 +1,5 @@
 import { Command }                  from 'clipanion'
+import { Option }                   from 'clipanion'
 import { PassThrough }              from 'stream'
 
 import { watch }                    from '@atls/code-service'
@@ -20,16 +21,14 @@ const waitSignals = (watcher): Promise<void> =>
   })
 
 class RendererDevCommand extends Command {
-  @Command.Boolean(`-p,--pretty-logs`)
-  prettyLogs: boolean = false
+  static paths = [['renderer', 'dev']]
 
-  @Command.String(`-s,--source`)
-  source?: string
+  prettyLogs = Option.Boolean(`-p,--pretty-logs`, false)
 
-  @Command.String(`-t,--tunnel`)
-  tunnel?: string
+  source = Option.String(`-s,--source`)
 
-  @Command.Path(`renderer`, `dev`)
+  tunnel = Option.String(`-t,--tunnel`)
+
   async execute() {
     const startServerPluginArgs: Partial<StartServerPluginOptions> = {}
 

@@ -4,16 +4,16 @@ import { Project }                from '@yarnpkg/core'
 import { StreamReport }           from '@yarnpkg/core'
 import { structUtils }            from '@yarnpkg/core'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
-import { Command }                from 'clipanion'
+import { Option }                 from 'clipanion'
 
 import { getChangedWorkspaces }   from '@atls/yarn-workspace-utils'
 import { getChangedFiles }        from '@atls/yarn-plugin-files'
 
 class WorkspacesChangedListCommand extends BaseCommand {
-  @Command.Boolean('--json')
-  public json = false
+  static paths = [['workspaces', 'changed', 'list']]
 
-  @Command.Path('workspaces', 'changed', 'list')
+  json = Option.Boolean('--json', false)
+
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 

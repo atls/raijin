@@ -1,11 +1,11 @@
 import { BaseCommand } from '@yarnpkg/cli'
-import { Command }     from 'clipanion'
+import { Option }      from 'clipanion'
 
 class FormatCommand extends BaseCommand {
-  @Command.Rest({ required: 0 })
-  args: Array<string> = []
+  static paths = [['format']]
 
-  @Command.Path('format')
+  args: Array<string> = Option.Rest({ required: 0 })
+
   async execute() {
     await this.cli.run(['actl', 'format', ...this.args])
   }

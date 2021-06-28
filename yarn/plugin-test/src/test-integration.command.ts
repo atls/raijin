@@ -1,11 +1,11 @@
 import { BaseCommand } from '@yarnpkg/cli'
-import { Command }     from 'clipanion'
+import { Option }      from 'clipanion'
 
 class TestIntegrationCommand extends BaseCommand {
-  @Command.Rest({ required: 0 })
-  args: Array<string> = []
+  static paths = [['test', 'integration']]
 
-  @Command.Path('test', 'integration')
+  args: Array<string> = Option.Rest({ required: 0 })
+
   async execute() {
     await this.cli.run(['actl', 'test:integration', ...this.args])
   }

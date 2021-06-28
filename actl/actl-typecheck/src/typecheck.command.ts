@@ -1,16 +1,16 @@
 import { Command }       from 'clipanion'
+import { Option }        from 'clipanion'
 import { writeFileSync } from 'fs'
 
 import { TypeScript }    from '@atls/code-typescript'
 
 class TypeCheckCommand extends Command {
-  @Command.String('-r,--report')
-  report: string
+  static paths = [['typecheck']]
 
-  @Command.Rest({ required: 0 })
-  files: Array<string> = []
+  report = Option.String('-r,--report')
 
-  @Command.Path(`typecheck`)
+  files = Option.Rest({ required: 0 })
+
   async execute() {
     const ts = new TypeScript()
 

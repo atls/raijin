@@ -1,6 +1,6 @@
 /* eslint-disable import/no-dynamic-require */
 
-require(`${__dirname}/.pnp.js`).setup()
+require(`${__dirname}/.pnp.cjs`).setup()
 require(`${__dirname}/utils/setup-ts-execution/src/index.js`)
 
 require('@yarnpkg/cli/lib/polyfills')

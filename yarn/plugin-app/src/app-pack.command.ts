@@ -3,28 +3,24 @@ import { Configuration } from '@yarnpkg/core'
 import { Project }       from '@yarnpkg/core'
 import { StreamReport }  from '@yarnpkg/core'
 import { execUtils }     from '@yarnpkg/core'
-import { Command }       from 'clipanion'
+import { Option }        from 'clipanion'
 
 import { pack }          from '@atls/code-pack'
 import { TagPolicy }     from '@atls/code-pack'
 
 class AppPackCommand extends BaseCommand {
-  @Command.String(`-r,--registry`)
-  registry: string = ''
+  static paths = [['app', 'pack']]
 
-  @Command.String(`-t,--tag-policy`)
-  tagPolicy: TagPolicy = 'revision'
+  registry: string = Option.String(`-r,--registry`, { required: true })
 
-  @Command.Boolean(`-p,--publish`)
-  publish: boolean = false
+  tagPolicy?: TagPolicy = Option.String(`-t,--tag-policy`)
 
-  @Command.String(`--builder`)
-  builder: string = ''
+  publish: boolean = Option.Boolean(`-p,--publish`, false)
 
-  @Command.String(`--buildpack`)
-  buildpack: string = ''
+  builder?: string = Option.String(`--builder`)
 
-  @Command.Path('app', 'pack')
+  buildpack?: string = Option.String(`--buildpack`)
+
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 
@@ -64,7 +60,7 @@ class AppPackCommand extends BaseCommand {
               workspace: workspace.manifest.raw.name,
               registry: this.registry,
               publish: this.publish,
-              tagPolicy: this.tagPolicy,
+              tagPolicy: this.tagPolicy || 'revision',
               buildpack: this.buildpack,
               builder: this.builder,
             },

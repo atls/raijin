@@ -4,40 +4,32 @@ import { Project }                from '@yarnpkg/core'
 import { StreamReport }           from '@yarnpkg/core'
 import { structUtils }            from '@yarnpkg/core'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
-import { Command }                from 'clipanion'
+import { Option }                 from 'clipanion'
 
 import { getChangedWorkspaces }   from '@atls/yarn-workspace-utils'
 import { getChangedFiles }        from '@atls/yarn-plugin-files'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
-  @Command.String()
-  commandName!: string
+  static paths = [['workspaces', 'changed', 'foreach']]
 
-  @Command.Proxy()
-  args: string[] = []
+  verbose = Option.Boolean('-v,--verbose', false)
 
-  @Command.Boolean('-v,--verbose')
-  verbose = false
+  parallel = Option.Boolean('-p,--parallel', false)
 
-  @Command.Boolean('-p,--parallel')
-  parallel = false
+  interlaced = Option.Boolean('-i,--interlaced', false)
 
-  @Command.Boolean('-i,--interlaced')
-  interlaced = false
+  publicOnly: boolean = Option.Boolean('--no-private', false)
 
-  @Command.Boolean('--no-private')
-  publicOnly: boolean = false
+  topological: boolean = Option.Boolean('-t,--topological', false)
 
-  @Command.Boolean(`-t,--topological`)
-  topological: boolean = false
+  topologicalDev: boolean = Option.Boolean('--topological-dev', false)
 
-  @Command.Boolean(`--topological-dev`)
-  topologicalDev: boolean = false
+  jobs?: number = Option.String('-j,--jobs')
 
-  @Command.String('-j,--jobs')
-  jobs?: number
+  commandName = Option.String()
 
-  @Command.Path('workspaces', 'changed', 'foreach')
+  args = Option.Proxy()
+
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 

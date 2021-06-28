@@ -1,7 +1,6 @@
 import { BaseCommand }           from '@yarnpkg/cli'
 import { Configuration }         from '@yarnpkg/core'
 import { Project }               from '@yarnpkg/core'
-import { Command }               from 'clipanion'
 import { xfs }                   from '@yarnpkg/fslib'
 import { ppath }                 from '@yarnpkg/fslib'
 import { toFilename }            from '@yarnpkg/fslib'
@@ -11,7 +10,8 @@ import { Conclusion }            from '@atls/github-checks-utils'
 import { createCheck }           from '@atls/github-checks-utils'
 
 class ChecksTestUnitCommand extends BaseCommand {
-  @Command.Path('checks', 'test', 'unit')
+  static paths = [['checks', 'test', 'unit']]
+
   async execute() {
     const { project } = await Project.find(
       await Configuration.find(this.context.cwd, this.context.plugins),

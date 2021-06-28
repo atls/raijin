@@ -1,4 +1,5 @@
 import { Command } from 'clipanion'
+import { Option }  from 'clipanion'
 import execa       from 'execa'
 import fs          from 'fs-extra'
 import path        from 'path'
@@ -6,13 +7,12 @@ import path        from 'path'
 import { build }   from '@atls/code-service'
 
 class RendererBuildCommand extends Command {
-  @Command.String(`-s,--source`)
-  source?: string
+  static paths = [['renderer', 'build']]
 
-  @Command.Boolean('-e,--export')
-  export: boolean = false
+  source? = Option.String(`-s,--source`)
 
-  @Command.Path(`renderer`, `build`)
+  export = Option.Boolean('-e,--export', false)
+
   async execute() {
     await execa('yarn', ['next', 'build', 'src'], {
       cwd: this.source || process.cwd(),

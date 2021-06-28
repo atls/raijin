@@ -1,17 +1,16 @@
+import { Cli }                    from 'clipanion'
+
 import { CommitCommand }          from '@atls/actl-commit'
 import { FormatCommand }          from '@atls/actl-format'
-
-import { LintCommand }            from '@atls/actl-lint'
 import { LibraryBuildCommand }    from '@atls/actl-library'
+import { LintCommand }            from '@atls/actl-lint'
 import { ServiceBuildCommand }    from '@atls/actl-service'
-import { ServiceStartCommand }    from '@atls/actl-service'
 import { ServiceDevCommand }      from '@atls/actl-service'
 import { RendererBuildCommand }   from '@atls/actl-renderer'
 import { RendererDevCommand }     from '@atls/actl-renderer'
 import { TestIntegrationCommand } from '@atls/actl-test'
 import { TestUnitCommand }        from '@atls/actl-test'
 import { TypeCheckCommand }       from '@atls/actl-typecheck'
-import { Cli }                    from 'clipanion'
 
 import { binaryVersion }          from './constants'
 
@@ -32,7 +31,6 @@ const run = () => {
   cli.register(CommitCommand)
 
   cli.register(ServiceBuildCommand)
-  cli.register(ServiceStartCommand)
   cli.register(ServiceDevCommand)
 
   cli.register(RendererBuildCommand)

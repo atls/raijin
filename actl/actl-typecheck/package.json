@@ -14,11 +14,11 @@
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
     "@types/execa": "2.0.0",
-    "@types/node": "^14.14.41"
+    "@types/node": "^14.17.0"
   },
   "dependencies": {
     "@atls/code-typescript": "workspace:0.0.4",
-    "clipanion": "^2.6.2"
+    "clipanion": "^3.0.0-rc.12"
   },
   "publishConfig": {
     "access": "public",

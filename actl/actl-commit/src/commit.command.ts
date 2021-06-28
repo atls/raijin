@@ -1,11 +1,13 @@
 import { Command }   from 'clipanion'
+import { Option }    from 'clipanion'
+
 import { bootstrap } from './bootstrap'
 
 class CommitCommand extends Command {
-  @Command.Rest({ required: 0 })
-  args: Array<string> = []
+  static paths = [['commit']]
 
-  @Command.Path(`commit`)
+  args: Array<string> = Option.Rest({ required: 0 })
+
   async execute() {
     try {
       await bootstrap(this.args)
