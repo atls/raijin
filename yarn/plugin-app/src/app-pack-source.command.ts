@@ -7,7 +7,7 @@ import { structUtils }           from '@yarnpkg/core'
 import { PortablePath }          from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'
 import { patchUtils }            from '@yarnpkg/plugin-patch'
-import { Command }               from 'clipanion'
+import { Option }                from 'clipanion'
 
 import { copyRcFile }            from '@atls/yarn-pack-utils'
 import { copyPlugins }           from '@atls/yarn-pack-utils'
@@ -22,10 +22,10 @@ import { clearUnusedWorkspaces } from '@atls/yarn-pack-utils'
 import { packWorkspace }         from '@atls/yarn-pack-utils'
 
 class AppPackSourceCommand extends BaseCommand {
-  @Command.String('-d,--destination')
-  destination!: PortablePath
+  static paths = [['app', 'pack', 'source']]
 
-  @Command.Path('app', 'pack', 'source')
+  destination: PortablePath = Option.String('-d,--destination', { required: true })
+
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 

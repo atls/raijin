@@ -1,13 +1,13 @@
 import { BaseCommand }   from '@yarnpkg/cli'
 import { Configuration } from '@yarnpkg/core'
 import { Project }       from '@yarnpkg/core'
-import { Command }       from 'clipanion'
+import { Option }        from 'clipanion'
 
 class AppRendererBuildCommand extends BaseCommand {
-  @Command.Boolean('-e,--export')
-  export: boolean = false
+  static paths = [['app', 'renderer', 'build']]
 
-  @Command.Path('app', 'renderer', 'build')
+  export = Option.Boolean('-e,--export', false)
+
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 

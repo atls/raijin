@@ -3,15 +3,15 @@ import { Configuration }          from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
 import { StreamReport }           from '@yarnpkg/core'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
-import { Command }                from 'clipanion'
+import { Option }                 from 'clipanion'
 
 import { getChangedFiles }        from './changed-files.util'
 
 class FilesChangedListCommand extends BaseCommand {
-  @Command.Boolean('--json')
-  public json = false
+  static paths = [['files', 'changed', 'list']]
 
-  @Command.Path('files', 'changed', 'list')
+  json = Option.Boolean('--json', false)
+
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 

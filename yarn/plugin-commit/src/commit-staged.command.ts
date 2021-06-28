@@ -1,5 +1,4 @@
 import { BaseCommand } from '@yarnpkg/cli'
-import { Command }     from 'clipanion'
 import lintStaged      from 'lint-staged'
 
 const config = {
@@ -10,7 +9,8 @@ const config = {
 }
 
 export class CommitStagedCommand extends BaseCommand {
-  @Command.Path('commit', 'staged')
+  static paths = [['commit', 'staged']]
+
   async execute() {
     try {
       const passed = await lintStaged({

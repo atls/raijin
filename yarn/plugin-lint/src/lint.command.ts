@@ -1,11 +1,11 @@
 import { BaseCommand } from '@yarnpkg/cli'
-import { Command }     from 'clipanion'
+import { Option }      from 'clipanion'
 
 class LintCommand extends BaseCommand {
-  @Command.Rest({ required: 0 })
-  args: Array<string> = []
+  static paths = [['lint']]
 
-  @Command.Path(`lint`)
+  args: Array<string> = Option.Rest({ required: 0 })
+
   async execute() {
     await this.cli.run(['actl', 'lint', ...this.args])
   }

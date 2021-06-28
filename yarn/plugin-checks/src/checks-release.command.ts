@@ -1,7 +1,6 @@
 import { BaseCommand }                 from '@yarnpkg/cli'
 import { Configuration }               from '@yarnpkg/core'
 import { Project }                     from '@yarnpkg/core'
-import { Command }                     from 'clipanion'
 import { ppath }                       from '@yarnpkg/fslib'
 import { toFilename }                  from '@yarnpkg/fslib'
 import stripAnsi                       from 'strip-ansi'
@@ -14,7 +13,8 @@ import { getChangedFiles }             from '@atls/yarn-plugin-files'
 import { PassThroughRunContext }       from '@atls/yarn-run-utils'
 
 class ChecksReleaseCommand extends BaseCommand {
-  @Command.Path('checks', 'release')
+  static paths = [['checks', 'release']]
+
   async execute() {
     const { project } = await Project.find(
       await Configuration.find(this.context.cwd, this.context.plugins),

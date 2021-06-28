@@ -1,15 +1,15 @@
 import { BaseCommand }          from '@yarnpkg/cli'
 import { Configuration }        from '@yarnpkg/core'
 import { Project }              from '@yarnpkg/core'
-import { Command }              from 'clipanion'
+import { Option }               from 'clipanion'
 
 import { ProjectConfiguration } from '@atls/code-configuration'
 
 class AppRendererDevCommand extends BaseCommand {
-  @Command.Boolean('-t,--tunnel')
-  tunnel: Boolean = false
+  static paths = [['app', 'renderer', 'dev']]
 
-  @Command.Path('app', 'renderer', 'dev')
+  tunnel = Option.Boolean('-t,--tunnel', false)
+
   async execute() {
     const { project } = await Project.find(
       await Configuration.find(this.context.cwd, this.context.plugins),
