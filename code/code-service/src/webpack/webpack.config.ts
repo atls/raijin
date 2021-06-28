@@ -19,8 +19,7 @@ export const createWebpackConfig = async (
   plugins: WebpackConfigPlugin[] = []
 ) => {
   const externals = (await getExternals(cwd)).reduce(
-    // @ts-ignore
-    (result, dependency: string) => ({
+    (result, dependency) => ({
       ...result,
       [dependency]: `commonjs2 ${dependency}`,
     }),

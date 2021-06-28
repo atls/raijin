@@ -17,35 +17,6 @@ const FORCE_UNPLUGGED_PACKAGES = new Set([
   'protobufjs',
 ])
 
-export const getUnpluggedDependencies = async (): Promise<Set<String>> => {
-  const configuration = await Configuration.find(
-    process.cwd() as PortablePath,
-    getPluginConfiguration()
-  )
-
-  const entries = await fg('*/node_modules/*/package.json', {
-    cwd: configuration.get(`pnpUnpluggedFolder`),
-  })
-
-  const dependenciesNames = new Set<string>()
-
-  await Promise.all(
-    entries
-      .map((entry) => path.join(configuration.get(`pnpUnpluggedFolder`), entry))
-      .map(async (entry) => {
-        try {
-          const { name } = JSON.parse((await fs.readFile(entry)).toString())
-
-          if (name && !FORCE_UNPLUGGED_PACKAGES.has(name)) {
-            dependenciesNames.add(name)
-          }
-        } catch {} // eslint-disable-line
-      })
-  )
-
-  return dependenciesNames
-}
-
 export const unusedExternals = [
   // nestjs
   'cli-color',
@@ -80,7 +51,37 @@ export const unusedExternals = [
   'next',
 ]
 
-export const getExternals = async (cwd: string) => {
+export const getUnpluggedDependencies = async (): Promise<Set<string>> => {
+  const configuration = await Configuration.find(
+    process.cwd() as PortablePath,
+    getPluginConfiguration()
+  )
+
+  const pnpUnpluggedFolder = configuration.get('pnpUnpluggedFolder') as string
+  const dependenciesNames = new Set<string>()
+
+  const entries = await fg('*/node_modules/*/package.json', {
+    cwd: pnpUnpluggedFolder,
+  })
+
+  await Promise.all(
+    entries
+      .map((entry) => path.join(pnpUnpluggedFolder, entry))
+      .map(async (entry) => {
+        try {
+          const { name } = JSON.parse((await fs.readFile(entry)).toString())
+
+          if (name && !FORCE_UNPLUGGED_PACKAGES.has(name)) {
+            dependenciesNames.add(name)
+          }
+        } catch {} // eslint-disable-line
+      })
+  )
+
+  return dependenciesNames
+}
+
+export const getExternals = async (cwd: string): Promise<Array<string>> => {
   const configuration = await Configuration.find(
     process.cwd() as PortablePath,
     getPluginConfiguration()
@@ -90,11 +91,11 @@ export const getExternals = async (cwd: string) => {
 
   const workspace = project.getWorkspaceByFilePath(cwd as PortablePath)
 
-  const workspaceExternals: Array<String> = Object.keys(
+  const workspaceExternals: Array<string> = Object.keys(
     workspace?.manifest?.raw?.externalDependencies || {}
   )
 
-  const unpluggedExternals: Array<String> = Array.from(await getUnpluggedDependencies())
+  const unpluggedExternals: Array<string> = Array.from(await getUnpluggedDependencies())
 
   return Array.from(new Set([...workspaceExternals, ...unpluggedExternals, ...unusedExternals]))
 }
