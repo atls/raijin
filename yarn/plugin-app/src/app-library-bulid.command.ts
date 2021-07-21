@@ -10,7 +10,7 @@ class AppLibraryBuildCommand extends BaseCommand {
 
     const { project } = await Project.find(configuration, this.context.cwd)
 
-    await this.cli.run(['mctl', 'library', 'build', '--source', this.context.cwd], {
+    await this.cli.run(['actl', 'library', 'build', '--source', this.context.cwd], {
       cwd: project.cwd,
     })
   }
