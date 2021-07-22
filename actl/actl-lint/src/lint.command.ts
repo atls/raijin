@@ -9,10 +9,12 @@ class LintCommand extends Command {
 
   report = Option.String('-r,--report')
 
+  fix = Option.Boolean('--fix')
+
   files: Array<string> = Option.Rest({ required: 0 })
 
   async execute() {
-    const linter = new Linter()
+    const linter = new Linter({ fix: this.fix })
 
     const { results, errorCount } =
       this.files.length > 0 ? linter.lintFiles(this.files) : linter.lint()
