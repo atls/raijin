@@ -37,7 +37,7 @@
     "@atls/actl-service": "workspace:0.0.3",
     "@atls/actl-test": "workspace:0.0.30",
     "@atls/actl-typecheck": "workspace:0.1.41",
-    "clipanion": "^3.0.0-rc.12"
+    "clipanion": "^3.0.1"
   },
   "peerDependencies": {
     "typescript": "*"

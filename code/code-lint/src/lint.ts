@@ -6,20 +6,13 @@ import { CLIEngine }                              from 'eslint'
 
 import { createPatterns, ignore as ignoreConfig } from './config'
 
-interface Options {
-  fix?: boolean
-}
-
 class Linter {
   engine: CLIEngine
 
   cwd: string
 
-  fix: boolean
-
-  constructor({ fix = false }: Options, projectCwd?: string) {
+  constructor(projectCwd?: string) {
     this.cwd = projectCwd || process.cwd()
-    this.fix = fix
 
     this.engine = new CLIEngine({
       baseConfig: {
@@ -29,21 +22,15 @@ class Linter {
       useEslintrc: false,
       cwd: path.join(__dirname, '../'),
       cacheLocation: path.join(this.cwd, '.yarn', '.eslintcache'),
-      fix,
     })
   }
 
   lintFiles(files: string[] = []) {
     const ignorer = ignore().add(ignoreConfig)
-    const report = this.engine.executeOnFiles(
+
+    return this.engine.executeOnFiles(
       files.filter((file) => ignorer.filter([path.relative(this.cwd, file)]).length !== 0)
     )
-
-    if (this.fix) {
-      CLIEngine.outputFixes(report)
-    }
-
-    return report
   }
 
   lint() {

@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@yarnpkg/core": "^3.0.0-rc.5"
+    "@yarnpkg/core": "^3.0.0-rc.12"
   },
   "publishConfig": {
     "access": "public",

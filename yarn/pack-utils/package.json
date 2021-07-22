@@ -8,10 +8,10 @@
     "dist"
   ],
   "devDependencies": {
-    "@yarnpkg/cli": "^3.0.0-rc.5",
-    "@yarnpkg/core": "^3.0.0-rc.5",
-    "@yarnpkg/fslib": "^2.5.0-rc.5",
-    "@yarnpkg/plugin-pack": "^3.0.0-rc.5"
+    "@yarnpkg/cli": "^3.0.0-rc.12",
+    "@yarnpkg/core": "^3.0.0-rc.12",
+    "@yarnpkg/fslib": "^2.5.0-rc.12",
+    "@yarnpkg/plugin-pack": "^3.0.0-rc.12"
   },
   "publishConfig": {
     "access": "public",
