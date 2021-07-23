@@ -7,9 +7,9 @@ import { TypeScript }    from '@atls/code-typescript'
 class TypeCheckCommand extends Command {
   static paths = [['typecheck']]
 
-  report = Option.String('-r,--report')
-
   files = Option.Rest({ required: 0 })
+
+  report = Option.String('-r,--report')
 
   async execute() {
     const ts = new TypeScript()
