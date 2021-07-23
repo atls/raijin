@@ -1,6 +1,6 @@
 {
   "name": "@atls/actl-typecheck",
-  "version": "0.1.41",
+  "version": "0.1.42",
   "license": "MIT",
   "main": "src/index.ts",
   "files": [

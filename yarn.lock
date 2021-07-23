@@ -42,7 +42,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/actl-cli@workspace:0.4.47, @atls/actl-cli@workspace:actl/actl-cli":
+"@atls/actl-cli@workspace:0.4.48, @atls/actl-cli@workspace:actl/actl-cli":
   version: 0.0.0-use.local
   resolution: "@atls/actl-cli@workspace:actl/actl-cli"
   dependencies:
@@ -52,8 +52,8 @@ __metadata:
     "@atls/actl-lint": "workspace:0.1.44"
     "@atls/actl-renderer": "workspace:0.0.4"
     "@atls/actl-service": "workspace:0.0.4"
-    "@atls/actl-test": "workspace:0.0.30"
-    "@atls/actl-typecheck": "workspace:0.1.41"
+    "@atls/actl-test": "workspace:0.0.31"
+    "@atls/actl-typecheck": "workspace:0.1.42"
     "@atls/tools-builder": "workspace:0.0.0"
     "@atls/tools-setup-ts-execution": "workspace:0.0.0"
     "@types/node": ^14.17.0
@@ -167,7 +167,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/actl-test@workspace:0.0.30, @atls/actl-test@workspace:actl/actl-test":
+"@atls/actl-test@workspace:0.0.31, @atls/actl-test@workspace:actl/actl-test":
   version: 0.0.0-use.local
   resolution: "@atls/actl-test@workspace:actl/actl-test"
   dependencies:
@@ -178,7 +178,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/actl-typecheck@workspace:0.1.41, @atls/actl-typecheck@workspace:actl/actl-typecheck":
+"@atls/actl-typecheck@workspace:0.1.42, @atls/actl-typecheck@workspace:actl/actl-typecheck":
   version: 0.0.0-use.local
   resolution: "@atls/actl-typecheck@workspace:actl/actl-typecheck"
   dependencies:
@@ -13791,7 +13791,7 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "tools@workspace:."
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.47"
+    "@atls/actl-cli": "workspace:0.4.48"
     "@types/jest": ^26.0.24
     "@types/node": ^14.17.0
     "@yarnpkg/cli": ^3.0.0-rc.12
