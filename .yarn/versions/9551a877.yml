@@ -1,0 +1,10 @@
+releases:
+  "@atls/actl-cli": patch
+  "@atls/actl-commit": patch
+  "@atls/actl-format": patch
+  "@atls/actl-library": patch
+  "@atls/actl-lint": patch
+  "@atls/actl-renderer": patch
+  "@atls/actl-service": patch
+  "@atls/code-lint": patch
+  "@atls/code-service": patch
