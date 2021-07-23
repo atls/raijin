@@ -16,6 +16,7 @@ const closeWatcher = (watcher): Promise<void> =>
   )
 
 describe('service', () => {
+  jest.setTimeout(15000)
   describe('watch', () => {
     it('simple', async () => {
       const watcher = await watch({ cwd: path.join(__dirname, 'fixtures/simple') })

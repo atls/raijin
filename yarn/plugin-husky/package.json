@@ -14,11 +14,11 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@yarnpkg/cli": "^3.0.0-rc.5",
-    "@yarnpkg/core": "^3.0.0-rc.5",
-    "@yarnpkg/fslib": "^2.5.0-rc.5",
-    "ci-info": "^3.1.1",
-    "clipanion": "^3.0.0-rc.12"
+    "@yarnpkg/cli": "^3.0.0-rc.12",
+    "@yarnpkg/core": "^3.0.0-rc.12",
+    "@yarnpkg/fslib": "^2.5.0-rc.12",
+    "ci-info": "^3.2.0",
+    "clipanion": "^3.0.1"
   },
   "publishConfig": {
     "access": "public",

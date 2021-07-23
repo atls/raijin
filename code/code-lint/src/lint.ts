@@ -19,6 +19,7 @@ class Linter {
 
   constructor({ fix = false }: Options, projectCwd?: string) {
     this.cwd = projectCwd || process.cwd()
+
     this.fix = fix
 
     this.engine = new CLIEngine({

@@ -21,7 +21,7 @@
     "@atls/code-service": "workspace:0.0.5",
     "@atls/webpack-localtunnel-plugin": "workspace:0.0.2",
     "@atls/webpack-start-server-plugin": "workspace:0.0.2",
-    "clipanion": "^3.0.0-rc.12",
+    "clipanion": "^3.0.1",
     "execa": "^5.0.0",
     "fs-extra": "^10.0.0"
   },

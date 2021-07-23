@@ -15,9 +15,9 @@
   "devDependencies": {
     "@atls/github-actions-utils": "workspace:0.0.4",
     "@atls/tools-builder": "workspace:0.0.0",
-    "@yarnpkg/cli": "^3.0.0-rc.5",
-    "@yarnpkg/core": "^3.0.0-rc.5",
-    "clipanion": "^3.0.0-rc.12"
+    "@yarnpkg/cli": "^3.0.0-rc.12",
+    "@yarnpkg/core": "^3.0.0-rc.12",
+    "clipanion": "^3.0.1"
   },
   "publishConfig": {
     "access": "public",

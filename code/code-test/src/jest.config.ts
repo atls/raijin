@@ -1,4 +1,5 @@
 import { base } from '@atls/code-typescript'
+import { join } from 'path'
 
 export const unitConfig = {
   testRegex: '\\.test\\.(ts|tsx)$',
@@ -16,6 +17,7 @@ export const unitConfig = {
   transform: {
     '^.+\\.[tj]sx?$': require.resolve('ts-jest'),
   },
+  resolver: join(__dirname, '../resolver.js'),
 }
 
 export const integrationConfig = {
@@ -34,4 +36,5 @@ export const integrationConfig = {
   transform: {
     '^.+\\.[tj]sx?$': require.resolve('ts-jest'),
   },
+  resolver: join(__dirname, '../resolver.js'),
 }

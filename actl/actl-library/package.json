@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@atls/code-typescript": "workspace:0.0.4",
-    "clipanion": "^3.0.0-rc.12",
+    "clipanion": "^3.0.1",
     "rimraf": "^3.0.2"
   },
   "publishConfig": {
