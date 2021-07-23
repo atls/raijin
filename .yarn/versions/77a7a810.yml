@@ -1,0 +1,4 @@
+releases:
+  "@atls/actl-cli": patch
+  "@atls/actl-test": patch
+  "@atls/actl-typecheck": patch
