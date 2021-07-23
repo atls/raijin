@@ -1,6 +1,6 @@
 {
   "name": "@atls/actl-commit",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
