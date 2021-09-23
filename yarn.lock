@@ -42,7 +42,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/actl-cli@workspace:0.4.48, @atls/actl-cli@workspace:actl/actl-cli":
+"@atls/actl-cli@workspace:0.4.49, @atls/actl-cli@workspace:actl/actl-cli":
   version: 0.0.0-use.local
   resolution: "@atls/actl-cli@workspace:actl/actl-cli"
   dependencies:
@@ -13791,7 +13791,7 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "tools@workspace:."
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.48"
+    "@atls/actl-cli": "workspace:0.4.49"
     "@types/jest": ^26.0.24
     "@types/node": ^14.17.0
     "@yarnpkg/cli": ^3.0.0-rc.12
