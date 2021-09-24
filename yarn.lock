@@ -42,7 +42,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/actl-cli@workspace:0.4.48, @atls/actl-cli@workspace:actl/actl-cli":
+"@atls/actl-cli@workspace:0.4.49, @atls/actl-cli@workspace:actl/actl-cli":
   version: 0.0.0-use.local
   resolution: "@atls/actl-cli@workspace:actl/actl-cli"
   dependencies:
@@ -467,7 +467,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-pack@workspace:0.0.4, @atls/code-pack@workspace:code/code-pack":
+"@atls/code-pack@workspace:0.0.5, @atls/code-pack@workspace:code/code-pack":
   version: 0.0.0-use.local
   resolution: "@atls/code-pack@workspace:code/code-pack"
   dependencies:
@@ -722,7 +722,7 @@ __metadata:
   dependencies:
     "@atls/code-commitlint": "workspace:0.0.4"
     "@atls/code-configuration": "workspace:0.0.4"
-    "@atls/code-pack": "workspace:0.0.4"
+    "@atls/code-pack": "workspace:0.0.5"
     "@atls/code-typescript": "workspace:0.0.4"
     "@atls/tools-builder": "workspace:0.0.0"
     "@atls/yarn-pack-utils": "workspace:0.0.0"
@@ -14652,13 +14652,13 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "tools@workspace:."
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.48"
-    "@types/jest": ^27.0.1
-    "@types/node": ^16.7.10
-    "@yarnpkg/cli": ^3.1.0-rc.2
-    "@yarnpkg/pnpify": ^3.0.1
-    husky: 7.0.2
-    typescript: ^4.4.2
+    "@atls/actl-cli": "workspace:0.4.49"
+    "@types/jest": ^26.0.24
+    "@types/node": ^14.17.0
+    "@yarnpkg/cli": ^3.0.0-rc.12
+    "@yarnpkg/pnpify": ^3.0.0-rc.13
+    husky: 7.0.1
+    typescript: ^4.3.5
   languageName: unknown
   linkType: soft
 
