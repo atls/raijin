@@ -12,7 +12,7 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@monstrs/tools-builder": "workspace:0.0.1",
+    "@atls/tools-builder": "workspace:0.0.0",
     "@types/babel__code-frame": "7.0.3",
     "@types/chalk": "2.2.0",
     "@types/deepmerge": "2.2.0",

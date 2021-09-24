@@ -12,8 +12,8 @@
     "prepack": "yarn run build"
   },
   "dependencies": {
-    "@iarna/toml": "^2.2.5",
     "@atls/github-actions-utils": "workspace:0.0.4",
+    "@iarna/toml": "^2.2.5",
     "@yarnpkg/core": "^3.1.0-rc.3",
     "@yarnpkg/fslib": "^2.6.0-rc.2"
   },

@@ -12,8 +12,8 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@babel/types": "^7.15.0",
     "@atls/tools-builder": "workspace:0.0.0",
+    "@babel/types": "^7.15.0",
     "@types/node": "^16.7.10"
   },
   "dependencies": {

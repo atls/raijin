@@ -19,9 +19,9 @@
     "@atls/yarn-run-utils": "workspace:0.0.0",
     "@atls/yarn-workspace-utils": "workspace:0.0.0",
     "@babel/code-frame": "^7.14.5",
-    "@yarnpkg/cli": "^3.0.0-rc.12",
-    "@yarnpkg/core": "^3.0.0-rc.12",
-    "@yarnpkg/fslib": "^2.5.0-rc.12",
+    "@yarnpkg/cli": "^3.1.0-rc.2",
+    "@yarnpkg/core": "^3.1.0-rc.3",
+    "@yarnpkg/fslib": "^2.6.0-rc.2",
     "clipanion": "^3.0.1",
     "strip-ansi": "^6.0.0"
   },
