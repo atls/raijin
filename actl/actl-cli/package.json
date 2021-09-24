@@ -1,6 +1,6 @@
 {
   "name": "@atls/actl-cli",
-  "version": "0.4.48",
+  "version": "0.4.49",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "bin": {
