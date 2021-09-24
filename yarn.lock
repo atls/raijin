@@ -207,7 +207,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/buildpack-node-start@workspace:buildpack/buildpack-node-start"
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.48"
+    "@atls/actl-cli": "workspace:0.4.49"
     "@atls/buildpack-core": "workspace:0.0.0"
     "@babel/core": ^7.15.0
     "@babel/plugin-proposal-async-generator-functions": ^7.14.9
@@ -227,7 +227,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/buildpack-yarn-install@workspace:buildpack/buildpack-yarn-install"
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.48"
+    "@atls/actl-cli": "workspace:0.4.49"
     "@atls/buildpack-core": "workspace:0.0.0"
     execa: ^5.1.1
   languageName: unknown
@@ -237,7 +237,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/buildpack-yarn-workspace-build@workspace:buildpack/buildpack-yarn-workspace-build"
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.48"
+    "@atls/actl-cli": "workspace:0.4.49"
     "@atls/buildpack-core": "workspace:0.0.0"
     "@babel/core": ^7.15.0
     "@babel/plugin-proposal-async-generator-functions": ^7.14.9
@@ -257,7 +257,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/buildpack-yarn-workspace-pack@workspace:buildpack/buildpack-yarn-workspace-pack"
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.48"
+    "@atls/actl-cli": "workspace:0.4.49"
     "@atls/buildpack-core": "workspace:0.0.0"
     "@babel/core": ^7.15.0
     "@babel/plugin-proposal-async-generator-functions": ^7.14.9
@@ -281,7 +281,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/buildpack-yarn-workspace-serve@workspace:buildpack/buildpack-yarn-workspace-serve"
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.48"
+    "@atls/actl-cli": "workspace:0.4.49"
     "@atls/buildpack-core": "workspace:0.0.0"
     "@yarnpkg/core": ^3.1.0-rc.3
     "@yarnpkg/fslib": ^2.6.0-rc.2
@@ -292,7 +292,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/buildpack-yarn-workspace-start@workspace:buildpack/buildpack-yarn-workspace-start"
   dependencies:
-    "@atls/actl-cli": "workspace:0.4.48"
+    "@atls/actl-cli": "workspace:0.4.49"
     "@atls/buildpack-core": "workspace:0.0.0"
     "@babel/core": ^7.15.0
     "@babel/plugin-proposal-async-generator-functions": ^7.14.9
@@ -14653,12 +14653,12 @@ resolve@^2.0.0-next.3:
   resolution: "tools@workspace:."
   dependencies:
     "@atls/actl-cli": "workspace:0.4.49"
-    "@types/jest": ^26.0.24
-    "@types/node": ^14.17.0
-    "@yarnpkg/cli": ^3.0.0-rc.12
-    "@yarnpkg/pnpify": ^3.0.0-rc.13
-    husky: 7.0.1
-    typescript: ^4.3.5
+    "@types/jest": ^27.0.1
+    "@types/node": ^16.7.10
+    "@yarnpkg/cli": ^3.1.0-rc.2
+    "@yarnpkg/pnpify": ^3.0.1
+    husky: 7.0.2
+    typescript: ^4.4.2
   languageName: unknown
   linkType: soft
 
