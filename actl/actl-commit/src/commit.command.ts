@@ -12,7 +12,7 @@ class CommitCommand extends Command {
     try {
       await bootstrap(this.args)
     } catch (error) {
-      this.context.stdout.write(error.message)
+      this.context.stdout.write((error as Error).message)
 
       process.exit(1)
     }

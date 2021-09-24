@@ -18,7 +18,7 @@
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
     "@atls/tools-setup-ts-execution": "workspace:0.0.0",
-    "@types/node": "^14.17.0"
+    "@types/node": "^16.7.10"
   },
   "publishConfig": {
     "access": "public",
