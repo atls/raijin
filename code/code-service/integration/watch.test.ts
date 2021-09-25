@@ -6,6 +6,8 @@ import path      from 'path'
 
 import { watch } from '../src'
 
+jest.setTimeout(7000)
+
 const closeWatcher = (watcher): Promise<void> =>
   new Promise((resolve) =>
     watcher.close(() => {
@@ -16,7 +18,6 @@ const closeWatcher = (watcher): Promise<void> =>
   )
 
 describe('service', () => {
-  jest.setTimeout(15000)
   describe('watch', () => {
     it('simple', async () => {
       const watcher = await watch({ cwd: path.join(__dirname, 'fixtures/simple') })

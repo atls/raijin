@@ -4,12 +4,12 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@atls/actl-cli": "workspace:0.4.49",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^14.17.0",
-    "@yarnpkg/cli": "^3.0.0-rc.12",
-    "@yarnpkg/pnpify": "^3.0.0-rc.13",
-    "husky": "7.0.1",
-    "typescript": "^4.3.5"
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.10",
+    "@yarnpkg/cli": "^3.1.0-rc.2",
+    "@yarnpkg/pnpify": "^3.0.1",
+    "husky": "7.0.2",
+    "typescript": "^4.4.2"
   },
   "workspaces": [
     "buildpack/*",
@@ -23,7 +23,8 @@
     "cli/*"
   ],
   "resolutions": {
-    "@types/react": "17.0.2",
-    "@types/node": "14.14.37"
+    "browserslist": "4.16.5",
+    "globby": "11.0.3",
+    "@jest/types": "27.1.1"
   }
 }

@@ -13,11 +13,11 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@types/node": "^14.17.0",
-    "@types/react": "^17.0.6"
+    "@types/node": "^16.7.10",
+    "@types/react": "^17.0.19"
   },
   "dependencies": {
-    "ink": "^3.0.8",
+    "ink": "^3.0.9",
     "react": "*"
   },
   "publishConfig": {

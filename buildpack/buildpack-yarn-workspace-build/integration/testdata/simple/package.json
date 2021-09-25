@@ -1,0 +1,12 @@
+{
+  "name": "simple",
+  "version": "0.0.1",
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependenciesMeta": {
+    "leftpad@0.0.1": {
+      "unplugged": true
+    }
+  }
+}

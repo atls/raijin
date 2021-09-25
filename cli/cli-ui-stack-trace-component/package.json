@@ -13,9 +13,10 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@types/jest": "^26.0.23",
-    "@types/react": "^17.0.6",
-    "ink": "^3.0.8",
+    "@types/jest": "^27.0.1",
+    "@types/react": "^17.0.19",
+    "ink": "^3.0.9",
+    "react": "*",
     "strip-ansi": "^6.0.0"
   },
   "dependencies": {

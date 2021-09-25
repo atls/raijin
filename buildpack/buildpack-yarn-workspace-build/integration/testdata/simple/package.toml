@@ -1,0 +1,14 @@
+[project]
+id = 'test'
+name = 'test'
+version = '0.0.0'
+
+[build]
+exclude = [
+    '.git',
+    '.yarn/unplugged',
+]
+
+[[build.env]]
+name = 'WORKSPACE'
+value = '@simple/app'

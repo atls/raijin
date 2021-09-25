@@ -1,0 +1,22 @@
+{
+  "name": "@atls/buildpack-yarn-install",
+  "private": true,
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@atls/buildpack-core": "workspace:0.0.0",
+    "execa": "^5.1.1"
+  },
+  "devDependencies": {
+    "@atls/actl-cli": "workspace:0.4.49"
+  },
+  "scripts": {
+    "clean": "rm -r -f dist",
+    "prebuild": "yarn clean",
+    "build": "actl service build"
+  }
+}
