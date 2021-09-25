@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-format",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -13,13 +13,12 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@babel/types": "^7.14.5",
-    "@types/globby": "9.1.0",
-    "@types/node": "^14.17.0"
+    "@babel/types": "^7.15.0",
+    "@types/node": "^16.7.10"
   },
   "dependencies": {
-    "@atls/prettier-plugin-import-align": "workspace:0.0.4",
-    "@atls/prettier-plugin-import-sort": "workspace:0.0.4",
+    "@atls/prettier-plugin-import-align": "workspace:0.0.5",
+    "@atls/prettier-plugin-import-sort": "workspace:0.0.5",
     "globby": "^11.0.3",
     "ignore": "^5.1.8",
     "prettier": "^2.3.2",

@@ -1,6 +1,6 @@
 {
   "name": "@atls/webpack-start-server-plugin",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -13,10 +13,10 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@types/node": "^14.17.0"
+    "@types/node": "^16.7.10"
   },
   "dependencies": {
-    "webpack": "^5.44.0"
+    "webpack": "^5.51.1"
   },
   "publishConfig": {
     "access": "public",

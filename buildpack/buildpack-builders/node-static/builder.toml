@@ -1,0 +1,6 @@
+[[order]]
+
+[stack]
+id = "tech.atls.stacks.node-static"
+run-image = "atls/stack-node-static:run"
+build-image = "atls/stack-node-static:build"

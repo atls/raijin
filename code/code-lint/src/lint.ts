@@ -30,21 +30,15 @@ class Linter {
       useEslintrc: false,
       cwd: path.join(__dirname, '../'),
       cacheLocation: path.join(this.cwd, '.yarn', '.eslintcache'),
-      fix,
     })
   }
 
   lintFiles(files: string[] = []) {
     const ignorer = ignore().add(ignoreConfig)
-    const report = this.engine.executeOnFiles(
+
+    return this.engine.executeOnFiles(
       files.filter((file) => ignorer.filter([path.relative(this.cwd, file)]).length !== 0)
     )
-
-    if (this.fix) {
-      CLIEngine.outputFixes(report)
-    }
-
-    return report
   }
 
   lint() {

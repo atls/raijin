@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-configuration",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -15,7 +15,7 @@
     "@atls/tools-builder": "workspace:0.0.0"
   },
   "dependencies": {
-    "@yarnpkg/fslib": "^2.5.0-rc.12"
+    "@yarnpkg/fslib": "^2.6.0-rc.2"
   },
   "publishConfig": {
     "main": "dist/index.js",

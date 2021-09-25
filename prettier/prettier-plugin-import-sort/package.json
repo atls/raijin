@@ -1,6 +1,6 @@
 {
   "name": "@atls/prettier-plugin-import-sort",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -18,9 +18,9 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@types/node": "^14.17.0",
-    "globby": "^11.0.3",
-    "prettier": "^2.3.0"
+    "@types/node": "^16.7.10",
+    "globby": "^12.0.2",
+    "prettier": "^2.3.2"
   },
   "peerDependencies": {
     "globby": "*",

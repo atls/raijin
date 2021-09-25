@@ -1,0 +1,15 @@
+{
+  "name": "simple",
+  "version": "0.0.1",
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "@yarnpkg/pnpify": "^2.4.0"
+  },
+  "dependenciesMeta": {
+    "leftpad@0.0.1": {
+      "unplugged": true
+    }
+  }
+}

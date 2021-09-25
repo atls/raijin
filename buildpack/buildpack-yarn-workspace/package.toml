@@ -1,0 +1,14 @@
+[buildpack]
+uri = "."
+
+[[dependencies]]
+image = "atls/buildpack-yarn-install:0.0.0"
+
+[[dependencies]]
+image = "atls/buildpack-yarn-workspace-build:0.0.0"
+
+[[dependencies]]
+image = "atls/buildpack-yarn-workspace-pack:0.0.0"
+
+[[dependencies]]
+image = "atls/buildpack-yarn-workspace-start:0.0.0"

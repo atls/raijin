@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-test",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -15,19 +15,19 @@
   },
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^14.17.0",
-    "jest-haste-map": "^27.0.6",
-    "typescript": "^4.3.5"
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.10",
+    "jest-haste-map": "^27.1.0",
+    "typescript": "^4.4.2"
   },
   "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.4",
+    "@atls/code-typescript": "workspace:0.0.5",
     "@emotion/jest": "^11.3.0",
-    "@jest/core": "^27.0.6",
-    "@jest/test-result": "^27.0.6",
-    "@jest/types": "^27.0.6",
+    "@jest/core": "^27.1.0",
+    "@jest/test-result": "^27.1.0",
+    "@jest/types": "^27.1.0",
     "jest-static-stubs": "^0.0.1",
-    "ts-jest": "^27.0.3"
+    "ts-jest": "^27.0.5"
   },
   "peerDependenciesMeta": {
     "jest": {

@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-service",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -15,12 +15,12 @@
   "devDependencies": {
     "@atls/tools-builder": "workspace:0.0.0",
     "@types/file-loader": "5.0.1",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^14.17.0",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.10",
     "@types/protocol-buffers-schema": "3.4.1",
     "@types/wait-for-localhost": "3.1.0",
     "@types/webpack": "^5.28.0",
-    "@yarnpkg/fslib": "^2.5.0-rc.12",
+    "@yarnpkg/fslib": "^2.6.0-rc.2",
     "wait-for-localhost": "^3.3.0"
   },
   "publishConfig": {
@@ -28,15 +28,15 @@
     "typings": "dist/index.d.ts"
   },
   "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.4",
-    "@atls/webpack-proto-imports-loader": "workspace:0.0.4",
-    "@yarnpkg/cli": "^3.0.0-rc.12",
-    "@yarnpkg/core": "^3.0.0-rc.12",
-    "fast-glob": "^3.2.5",
-    "string-replace-loader": "^3.0.1",
-    "ts-loader": "^9.2.3",
-    "typescript": "^4.3.5",
-    "webpack": "^5.44.0",
+    "@atls/code-typescript": "workspace:0.0.5",
+    "@atls/webpack-proto-imports-loader": "workspace:0.0.5",
+    "@yarnpkg/cli": "^3.1.0-rc.2",
+    "@yarnpkg/core": "^3.1.0-rc.3",
+    "fast-glob": "^3.2.7",
+    "string-replace-loader": "^3.0.3",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.2",
+    "webpack": "^5.51.1",
     "webpack-chain": "^6.5.1"
   }
 }

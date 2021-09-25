@@ -13,10 +13,10 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/github-actions-utils": "workspace:0.0.4",
+    "@atls/github-actions-utils": "workspace:0.0.5",
     "@atls/tools-builder": "workspace:0.0.0",
-    "@yarnpkg/cli": "^3.0.0-rc.12",
-    "@yarnpkg/core": "^3.0.0-rc.12",
+    "@yarnpkg/cli": "^3.1.0-rc.2",
+    "@yarnpkg/core": "^3.1.0-rc.3",
     "clipanion": "^3.0.1"
   },
   "publishConfig": {
