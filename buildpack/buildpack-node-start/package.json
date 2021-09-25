@@ -12,7 +12,7 @@
     "execa": "^5.1.1"
   },
   "devDependencies": {
-    "@atls/actl-cli": "workspace:0.4.49",
+    "@atls/actl-cli": "workspace:0.4.50",
     "@babel/core": "^7.15.0",
     "@babel/plugin-proposal-async-generator-functions": "^7.14.9",
     "@babel/plugin-proposal-class-properties": "^7.14.5",

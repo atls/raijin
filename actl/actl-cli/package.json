@@ -1,6 +1,6 @@
 {
   "name": "@atls/actl-cli",
-  "version": "0.4.49",
+  "version": "0.4.50",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "bin": {
@@ -29,14 +29,14 @@
     }
   },
   "dependencies": {
-    "@atls/actl-commit": "workspace:0.0.42",
-    "@atls/actl-format": "workspace:0.0.18",
-    "@atls/actl-library": "workspace:0.0.5",
-    "@atls/actl-lint": "workspace:0.1.44",
-    "@atls/actl-renderer": "workspace:0.0.4",
-    "@atls/actl-service": "workspace:0.0.4",
-    "@atls/actl-test": "workspace:0.0.31",
-    "@atls/actl-typecheck": "workspace:0.1.42",
+    "@atls/actl-commit": "workspace:0.0.43",
+    "@atls/actl-format": "workspace:0.0.19",
+    "@atls/actl-library": "workspace:0.0.6",
+    "@atls/actl-lint": "workspace:0.1.45",
+    "@atls/actl-renderer": "workspace:0.0.5",
+    "@atls/actl-service": "workspace:0.0.5",
+    "@atls/actl-test": "workspace:0.0.32",
+    "@atls/actl-typecheck": "workspace:0.1.43",
     "clipanion": "^3.0.1"
   },
   "peerDependencies": {

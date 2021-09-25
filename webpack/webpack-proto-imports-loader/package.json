@@ -1,6 +1,6 @@
 {
   "name": "@atls/webpack-proto-imports-loader",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -12,7 +12,7 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/code-typescript": "workspace:0.0.4",
+    "@atls/code-typescript": "workspace:0.0.5",
     "@atls/tools-builder": "workspace:0.0.0",
     "@monstrs/types-import-proto": "0.0.1",
     "@types/node": "^16.7.10",

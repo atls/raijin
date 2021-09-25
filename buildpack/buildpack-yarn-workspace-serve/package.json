@@ -13,7 +13,7 @@
     "@yarnpkg/fslib": "^2.6.0-rc.2"
   },
   "devDependencies": {
-    "@atls/actl-cli": "workspace:0.4.49"
+    "@atls/actl-cli": "workspace:0.4.50"
   },
   "scripts": {
     "clean": "rm -r -f dist",

@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-stack-trace-component",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -20,8 +20,8 @@
     "strip-ansi": "^6.0.0"
   },
   "dependencies": {
-    "@atls/cli-ui-renderer": "workspace:0.0.2",
-    "@atls/cli-ui-source-component": "workspace:0.0.2",
+    "@atls/cli-ui-renderer": "workspace:0.0.3",
+    "@atls/cli-ui-source-component": "workspace:0.0.3",
     "@atls/stack-trace": "^0.0.1"
   },
   "peerDependencies": {
