@@ -153,9 +153,9 @@ export class BuildPluginCommand extends Command {
                   if (message) {
                     report.reportInfoOnce(MessageName.UNNAMED, `${prettyWebpack}: ${message}`)
                   }
-                }),
+                }) as any,
               ],
-            })
+            }) as any
           )
 
           buildErrors = await new Promise<string | null>((resolve, reject) => {
