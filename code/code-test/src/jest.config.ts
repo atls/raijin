@@ -11,6 +11,7 @@ export const unitConfig = {
   globals: {
     'ts-jest': {
       tsconfig: base.compilerOptions,
+      isolatedModules: true,
       diagnostics: false,
     },
   },
@@ -30,6 +31,7 @@ export const integrationConfig = {
   globals: {
     'ts-jest': {
       tsconfig: base.compilerOptions,
+      isolatedModules: true,
       diagnostics: false,
     },
   },
