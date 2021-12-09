@@ -1,9 +1,8 @@
-import { AggregatedResult }  from '@jest/test-result'
-import { Config }            from '@jest/types'
-import { runCLI }            from '@jest/core'
+import { AggregatedResult } from '@jest/test-result'
+import { Config }           from '@jest/types'
+import { runCLI }           from '@jest/core'
 
-import { integrationConfig } from './jest.config'
-import { unitConfig }        from './jest.config'
+import { buildUnitConfig }  from './jest.config'
 
 const unit = async (
   project: string,
@@ -25,7 +24,7 @@ const unit = async (
     passWithNoTests: true,
     runTestsByPath: false,
     testLocationInResults: true,
-    config: JSON.stringify(unitConfig),
+    config: JSON.stringify(buildUnitConfig(project)),
     maxConcurrency: 5,
     notifyMode: 'failure-change',
     _: files || [],
@@ -55,7 +54,7 @@ const integration = async (
     passWithNoTests: true,
     runTestsByPath: false,
     testLocationInResults: true,
-    config: JSON.stringify(integrationConfig),
+    config: JSON.stringify(buildUnitConfig(project)),
     maxConcurrency: 5,
     notifyMode: 'failure-change',
     _: files || [],
