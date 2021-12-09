@@ -1,0 +1,5 @@
+releases:
+  "@atls/actl-cli": patch
+  "@atls/actl-lint": patch
+  "@atls/code-lint": patch
+  "@atls/github-checks-utils": patch
