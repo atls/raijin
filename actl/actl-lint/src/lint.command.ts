@@ -9,17 +9,14 @@ class LintCommand extends Command {
 
   report = Option.String('-r,--report')
 
-  fix = Option.Boolean('--fix')
-
   files: Array<string> = Option.Rest({ required: 0 })
 
   async execute() {
-    const linter = new Linter({ fix: this.fix })
+    const linter = new Linter()
 
-    const { results, errorCount } =
-      this.files.length > 0 ? linter.lintFiles(this.files) : linter.lint()
+    const results = this.files.length > 0 ? await linter.lintFiles(this.files) : await linter.lint()
 
-    const output = linter.format(results)
+    const output = await linter.format(results)
 
     if (this.report) {
       writeFileSync(this.report, JSON.stringify(results, null, 2))
@@ -29,7 +26,7 @@ class LintCommand extends Command {
       this.context.stdout.write(output)
     }
 
-    process.exit(errorCount ? 1 : 0)
+    process.exit(results.some((result) => result.errorCount > 0) ? 1 : 0)
   }
 }
 

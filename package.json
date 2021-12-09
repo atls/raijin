@@ -23,8 +23,6 @@
     "cli/*"
   ],
   "resolutions": {
-    "browserslist": "4.16.5",
-    "globby": "11.0.3",
-    "@jest/types": "27.1.1"
+    "globby": "11.0.3"
   }
 }
