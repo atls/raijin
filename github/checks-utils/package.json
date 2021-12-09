@@ -16,7 +16,7 @@
     "@jest/test-result": "^27.3.1",
     "@octokit/types": "^6.26.0",
     "@types/node": "^16.7.10",
-    "eslint": "^7.32.0"
+    "eslint": "^8.1.0"
   },
   "publishConfig": {
     "main": "dist/index.js",
