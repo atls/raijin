@@ -1535,6 +1535,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/tools-builder", "workspace:utils/builder"],
             ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0-rc.6"],
             ["@yarnpkg/core", "npm:3.1.0-rc.7"],
+            ["@yarnpkg/fslib", "npm:2.6.0-rc.6"],
             ["clipanion", "virtual:b644898db9d00f9f37d5eb44e36f20e9479b44afd1de161232b42c49fdda6d24ee83083e27e52420bf3b4985c46a47d2bef42581f5a599abf04e801793aa0916#npm:3.0.1"]
           ],
           "linkType": "SOFT",

@@ -15,6 +15,7 @@ class Linter {
     this.cwd = projectCwd || process.cwd()
 
     this.engine = new ESLint({
+      ignore: false,
       baseConfig: {
         extends: [require.resolve('../rules/base')],
       },
