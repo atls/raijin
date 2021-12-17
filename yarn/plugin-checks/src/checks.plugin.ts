@@ -5,6 +5,7 @@ import { ChecksLintCommand }            from './checks-lint.command'
 import { ChecksTestUnitCommand }        from './checks-test-unit.command'
 import { ChecksTestIntegrationCommand } from './checks-test-integration.command'
 import { ChecksReleaseCommand }         from './checks-release.command'
+import { ChecksRunCommand }             from './checks-run.command'
 
 export const plugin: Plugin = {
   commands: [
@@ -13,5 +14,6 @@ export const plugin: Plugin = {
     ChecksTypeCheckCommand,
     ChecksLintCommand,
     ChecksReleaseCommand,
+    ChecksRunCommand,
   ],
 }

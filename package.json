@@ -4,6 +4,7 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@atls/actl-cli": "workspace:0.4.50",
+    "@atls/yarn-runtime": "workspace:0.0.1",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.7.10",
     "@yarnpkg/cli": "^3.1.0-rc.2",

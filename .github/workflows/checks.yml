@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: '14.7'
+          node-version: '16.13'
 
       - name: Install
         run: yarn install
@@ -23,27 +23,5 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
-      - name: Lint
-        run: yarn checks lint
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-
-      - name: TypeCheck
-        run: yarn checks typecheck
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-
-      - name: TestUnit
-        run: yarn checks test unit
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-
-      - name: TestIntegration
-        run: yarn checks test integration
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-
-      - name: Release
-        run: yarn checks release
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Run
+        run: yarn checks run

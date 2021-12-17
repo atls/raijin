@@ -1,18 +1,12 @@
-import { Cli }                    from 'clipanion'
+import { Cli }                  from 'clipanion'
 
-import { CommitCommand }          from '@atls/actl-commit'
-import { FormatCommand }          from '@atls/actl-format'
-import { LibraryBuildCommand }    from '@atls/actl-library'
-import { LintCommand }            from '@atls/actl-lint'
-import { ServiceBuildCommand }    from '@atls/actl-service'
-import { ServiceDevCommand }      from '@atls/actl-service'
-import { RendererBuildCommand }   from '@atls/actl-renderer'
-import { RendererDevCommand }     from '@atls/actl-renderer'
-import { TestIntegrationCommand } from '@atls/actl-test'
-import { TestUnitCommand }        from '@atls/actl-test'
-import { TypeCheckCommand }       from '@atls/actl-typecheck'
+import { LibraryBuildCommand }  from '@atls/actl-library'
+import { ServiceBuildCommand }  from '@atls/actl-service'
+import { ServiceDevCommand }    from '@atls/actl-service'
+import { RendererBuildCommand } from '@atls/actl-renderer'
+import { RendererDevCommand }   from '@atls/actl-renderer'
 
-import { binaryVersion }          from './constants'
+import { binaryVersion }        from './constants'
 
 const run = () => {
   const cli = new Cli({
@@ -20,15 +14,6 @@ const run = () => {
     binaryName: `actl`,
     binaryVersion,
   })
-
-  cli.register(LintCommand)
-  cli.register(FormatCommand)
-  cli.register(TypeCheckCommand)
-
-  cli.register(TestIntegrationCommand)
-  cli.register(TestUnitCommand)
-
-  cli.register(CommitCommand)
 
   cli.register(ServiceBuildCommand)
   cli.register(ServiceDevCommand)

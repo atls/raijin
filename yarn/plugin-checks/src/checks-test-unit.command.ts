@@ -1,41 +1,54 @@
-import { BaseCommand }           from '@yarnpkg/cli'
-import { Configuration }         from '@yarnpkg/core'
-import { Project }               from '@yarnpkg/core'
-import { xfs }                   from '@yarnpkg/fslib'
-import { ppath }                 from '@yarnpkg/fslib'
-import { toFilename }            from '@yarnpkg/fslib'
+import { StreamReport }              from '@yarnpkg/core'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
 
-import { formatJestTestResults } from '@atls/github-checks-utils'
-import { Conclusion }            from '@atls/github-checks-utils'
-import { createCheck }           from '@atls/github-checks-utils'
+import { Conclusion }                from '@atls/github-checks-utils'
+import { createCheck }               from '@atls/github-checks-utils'
+import type * as Runtime             from '@atls/yarn-runtime'
 
-class ChecksTestUnitCommand extends BaseCommand {
+import { AbstractChecksTestCommand } from './abstract-checks-test.command'
+
+class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static paths = [['checks', 'test', 'unit']]
 
   async execute() {
-    const { project } = await Project.find(
-      await Configuration.find(this.context.cwd, this.context.plugins),
-      this.context.cwd
-    )
+    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
 
-    const report = ppath.join(await xfs.mktempPromise(), toFilename('report.json'))
+    const { Tester }: typeof Runtime = require('@atls/yarn-runtime') as typeof Runtime
+    const tester = new Tester(project.cwd)
 
-    await this.cli.run(['actl', 'test:unit', '--report', report])
-
-    const results = await xfs.readJsonPromise(report)
-
-    const annotations = formatJestTestResults(results, project.cwd)
-
-    await createCheck(
-      'Test:Unit',
-      annotations.length > 0 ? Conclusion.Failure : Conclusion.Success,
+    const commandReport = await StreamReport.start(
       {
-        title: annotations.length > 0 ? `Errors ${annotations.length}` : 'Successful',
-        summary:
-          annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
-        annotations,
+        stdout: this.context.stdout,
+        configuration,
+      },
+      async () => {
+        try {
+          const results = await tester.unit()
+
+          const annotations = this.formatResults(results, project.cwd)
+
+          await createCheck(
+            'Test:Unit',
+            annotations.length > 0 ? Conclusion.Failure : Conclusion.Success,
+            {
+              title: annotations.length > 0 ? `Errors ${annotations.length}` : 'Successful',
+              summary:
+                annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
+              annotations,
+            }
+          )
+        } catch (error) {
+          await createCheck('Test:Unit', Conclusion.Failure, {
+            title: 'Test:Unit run failed',
+            summary: (error as any).message,
+          })
+        }
       }
     )
+
+    return commandReport.exitCode()
   }
 }
 

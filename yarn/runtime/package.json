@@ -1,6 +1,6 @@
 {
-  "name": "@atls/github-checks-utils",
-  "version": "0.0.5",
+  "name": "@atls/yarn-runtime",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -11,17 +11,14 @@
     "postpack": "rm -rf dist",
     "prepack": "yarn run build"
   },
-  "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@octokit/types": "^6.26.0",
-    "@types/node": "^16.7.10"
+  "dependencies": {
+    "@atls/code-format": "workspace:^",
+    "@atls/code-lint": "workspace:^",
+    "@atls/code-test": "workspace:^",
+    "@atls/code-typescript": "workspace:^"
   },
   "publishConfig": {
     "main": "dist/index.js",
     "typings": "dist/index.d.ts"
-  },
-  "dependencies": {
-    "@actions/core": "^1.5.0",
-    "@actions/github": "^4.0.0"
   }
 }

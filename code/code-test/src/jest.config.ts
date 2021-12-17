@@ -13,6 +13,7 @@ const isFileExists = (file: string) => {
 }
 
 export const buildUnitConfig = (root: string) => ({
+  transformIgnorePatterns: ['/node_modules/', '\\.pnp\\.[^\\/]+$'],
   testRegex: '\\.test\\.(ts|tsx)$',
   modulePathIgnorePatterns: ['dist', 'integration'],
   snapshotSerializers: [require.resolve('@emotion/jest/serializer')],

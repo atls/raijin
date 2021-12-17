@@ -1,17 +1,33 @@
-import { BaseCommand }  from '@yarnpkg/cli'
-import { PortablePath } from '@yarnpkg/fslib'
-import { Option }       from 'clipanion'
+import { BaseCommand }   from '@yarnpkg/cli'
+import { StreamReport }  from '@yarnpkg/core'
+import { Configuration } from '@yarnpkg/core'
+import { Project }       from '@yarnpkg/core'
+import { Option }        from 'clipanion'
+
+import type * as Runtime from '@atls/yarn-runtime'
 
 class TestIntegrationCommand extends BaseCommand {
   static paths = [['test', 'integration']]
 
-  args: Array<string> = Option.Rest({ required: 0 })
+  updateSnapshot = Option.Boolean(`-u,--update-shapshot`, false)
+
+  bail = Option.Boolean(`-b,--bail`, false)
+
+  findRelatedTests = Option.Boolean(`--find-related-tests`, false)
+
+  files: Array<string> = Option.Rest({ required: 0 })
 
   async execute() {
-    const cwd = this.cwd || process.cwd()
+    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
+
+    const { Tester }: typeof Runtime = require('@atls/yarn-runtime') as typeof Runtime
+    const tester = new Tester(project.cwd)
+
+    const cwd = project.cwd
     const isWorkspace = this.context.cwd !== cwd
 
-    const args = ['actl', 'test:integration']
+    const args: Array<string> = []
 
     if (isWorkspace) {
       const scope = this.context.cwd.replace(cwd, '')
@@ -19,9 +35,24 @@ class TestIntegrationCommand extends BaseCommand {
       args.push(scope.startsWith('/') ? scope.substr(1) : scope)
     }
 
-    await this.cli.run(args.concat(this.args), {
-      cwd: isWorkspace ? (cwd as PortablePath) : this.context.cwd,
-    })
+    const commandReport = await StreamReport.start(
+      {
+        stdout: this.context.stdout,
+        configuration,
+      },
+      async () => {
+        await tester.integration(
+          {
+            findRelatedTests: this.findRelatedTests,
+            updateSnapshot: this.updateSnapshot,
+            bail: this.bail,
+          },
+          args.concat(this.files)
+        )
+      }
+    )
+
+    return commandReport.exitCode()
   }
 }
 

@@ -11,6 +11,7 @@ import FilesPlugin      from '@atls/yarn-plugin-files'
 import AppPlugin        from '@atls/yarn-plugin-app'
 import GitHubPlugin     from '@atls/yarn-plugin-github'
 import ChecksPlugin     from '@atls/yarn-plugin-checks'
+import CheckPlugin      from '@atls/yarn-plugin-check'
 
 import { mergePlugins } from './merge-plugins.util'
 
@@ -21,6 +22,7 @@ const plugin: Plugin = mergePlugins([
   CommitPlugin,
   GitHubPlugin,
   ChecksPlugin,
+  CheckPlugin,
   HuskyPlugin,
   FilesPlugin,
   LintPlugin,
