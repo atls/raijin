@@ -1,8 +1,8 @@
-api = "0"
+api = "0.2"
 
 [buildpack]
 id = "tech.atls.buildpacks.node-start"
-version = "0.0.0"
+version = "0.0.1"
 name = "Node Start Buildpack"
 
 [metadata]

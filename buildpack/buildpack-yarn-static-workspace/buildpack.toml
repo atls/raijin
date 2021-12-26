@@ -1,8 +1,8 @@
-api = "0"
+api = "0.2"
 
 [buildpack]
 id = "tech.atls.buildpacks.yarn-static-workspace"
-version = "0.0.0"
+version = "0.0.2"
 name = "Yarn Static Workspace Buildpack"
 
 [metadata]
@@ -12,12 +12,12 @@ include_files = ["buildpack.toml"]
 
 [[order.group]]
 id = "tech.atls.buildpacks.yarn-install"
-version = "0.0.0"
+version = "0.0.2"
 
 [[order.group]]
 id = "tech.atls.buildpacks.yarn-workspace-build"
-version = "0.0.0"
+version = "0.0.2"
 
 [[order.group]]
 id = "tech.atls.buildpacks.yarn-workspace-serve"
-version = "0.0.0"
+version = "0.0.2"

@@ -1,5 +1,6 @@
-import fs                     from 'fs'
 import { parse }              from '@iarna/toml'
+
+import fs                     from 'fs'
 
 import { BuildpackPlanEntry } from './buildpack-plan.entry'
 

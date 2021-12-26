@@ -1,15 +1,15 @@
 {
   "name": "@simple/app",
   "version": "0.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "author": "",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": ""
+  },
+  "license": "MIT",
+  "author": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
   },
   "dependencies": {
     "leftpad": "^0.0.1"

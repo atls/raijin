@@ -1,5 +1,6 @@
-import fs                from 'fs'
 import { stringify }     from '@iarna/toml'
+
+import fs                from 'fs'
 
 import { DetectContext } from './cnb'
 import { ExitHandler }   from './cnb'

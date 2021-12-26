@@ -1,7 +1,7 @@
+import { PortablePath } from '@yarnpkg/fslib'
 import { execUtils }    from '@yarnpkg/core'
 import { xfs }          from '@yarnpkg/fslib'
 import { ppath }        from '@yarnpkg/fslib'
-import { PortablePath } from '@yarnpkg/fslib'
 
 import { Builder }      from '@atls/buildpack-core'
 import { BuildContext } from '@atls/buildpack-core'
@@ -35,19 +35,16 @@ export class YarnWorkspaceServeBuilder implements Builder {
         const distPath = ppath.join(cwd, target.location as PortablePath, 'dist' as PortablePath)
         const destination = await xfs.mktempPromise()
 
-        // eslint-disable-next-line no-restricted-syntax
         for (const file of await xfs.readdirPromise(distPath)) {
           // eslint-disable-next-line no-await-in-loop
           await xfs.copyPromise(ppath.join(destination, file), ppath.join(distPath, file))
         }
 
-        // eslint-disable-next-line no-restricted-syntax
         for (const file of await xfs.readdirPromise(cwd)) {
           // eslint-disable-next-line no-await-in-loop
           await xfs.removePromise(ppath.join(cwd, file))
         }
 
-        // eslint-disable-next-line no-restricted-syntax
         for (const file of await xfs.readdirPromise(destination)) {
           // eslint-disable-next-line no-await-in-loop
           await xfs.copyPromise(ppath.join(cwd, file), ppath.join(destination, file))
