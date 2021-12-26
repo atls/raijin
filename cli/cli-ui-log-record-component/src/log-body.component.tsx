@@ -1,7 +1,8 @@
+import type { Body }  from '@atls/logger'
+
 import React          from 'react'
-import { FC }         from 'react'
 import { Box }        from 'ink'
-import { Body }       from '@atls/logger'
+import { FC }         from 'react'
 
 import { StackTrace } from '@atls/cli-ui-stack-trace-component'
 

@@ -1,5 +1,6 @@
-import { supportsColor }    from 'supports-color'
 import { codeFrameColumns } from '@babel/code-frame'
+
+import { supportsColor }    from 'supports-color'
 
 const { level } = supportsColor({ isTTY: true })
 

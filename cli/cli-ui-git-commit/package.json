@@ -1,0 +1,36 @@
+{
+  "name": "@atls/cli-ui-git-commit-component",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@atls/code-commit": "workspace:0.0.1",
+    "@types/node": "^16.11.12",
+    "@types/react": "^17.0.37",
+    "@yarnpkg/libui": "^2.2.0",
+    "camelcase": "^6.2.1",
+    "figures": "^3.2.0",
+    "ink": "^3.2.0",
+    "ink-autocomplete": "^0.0.0",
+    "ink-multi-select": "^2.0.0",
+    "ink-select-input": "^4.2.1",
+    "ink-text-input": "^4.0.2"
+  },
+  "peerDependencies": {
+    "ink": "^3.0.8",
+    "react": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

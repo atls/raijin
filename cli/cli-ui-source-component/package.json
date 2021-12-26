@@ -7,20 +7,19 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@types/babel__code-frame": "7.0.3",
-    "@types/node": "^16.7.10",
-    "@types/react": "^17.0.19",
-    "ink": "^3.0.9"
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.14.5",
+    "@babel/code-frame": "^7.16.0",
     "supports-color": "^8.1.1"
+  },
+  "devDependencies": {
+    "@types/babel__code-frame": "7.0.3",
+    "@types/node": "^16.11.12",
+    "@types/react": "^17.0.37",
+    "ink": "^3.2.0"
   },
   "peerDependencies": {
     "ink": "^3.0.8",
