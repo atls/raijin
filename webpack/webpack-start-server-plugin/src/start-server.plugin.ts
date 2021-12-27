@@ -1,8 +1,8 @@
-import { fork }         from 'child_process'
+import sysPath          from 'path'
 import { ChildProcess } from 'child_process'
 import { Writable }     from 'stream'
-import sysPath          from 'path'
-import webpack          from 'webpack'
+import { EntryPlugin }  from 'webpack'
+import { fork }         from 'child_process'
 
 export interface StartServerPluginOptions {
   verbose: boolean
@@ -46,7 +46,7 @@ export class StartServerPlugin {
 
     /* eslint-disable no-underscore-dangle */
 
-    const entryScript = webpack.EntryPlugin
+    const entryScript = EntryPlugin
       ? entry._runtimeChunk.files.values().next().value
       : entry.chunks[0].files[0]
 
@@ -179,10 +179,11 @@ export class StartServerPlugin {
     compiler.hooks.make.tap(plugin, (compilation) => {
       compilation.addEntry(
         compilation.compiler.context,
-        webpack.EntryPlugin.createDependency(this.getMonitor(), {
+        EntryPlugin.createDependency(this.getMonitor(), {
           name: this.options.entryName,
         }),
         this.options.entryName,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         () => {}
       )
     })

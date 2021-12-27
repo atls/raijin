@@ -1,0 +1,30 @@
+{
+  "name": "@atls/prettier-plugin",
+  "version": "0.0.1",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "globby": "^11.0.4",
+    "import-sort": "^6.0.0",
+    "import-sort-parser": "^6.0.0",
+    "import-sort-parser-typescript": "^6.0.0",
+    "import-sort-style": "^6.0.0",
+    "prettier": "^2.5.1",
+    "sort-package-json": "^1.53.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.12"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

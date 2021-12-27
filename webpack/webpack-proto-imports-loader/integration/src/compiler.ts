@@ -1,12 +1,13 @@
 /* eslint-disable no-shadow */
 
+import Config                 from 'webpack-chain'
 import path                   from 'path'
 import webpack                from 'webpack'
-import Config                 from 'webpack-chain'
+import { Volume }             from 'memfs'
 import { Stats }              from 'webpack'
 import { createFsFromVolume } from 'memfs'
-import { Volume }             from 'memfs'
-import { base }               from '@atls/code-typescript'
+
+import tsconfig               from '@atls/config-typescript'
 
 export const compiler = (fixture): Promise<Stats> => {
   const config = new Config()
@@ -23,7 +24,7 @@ export const compiler = (fixture): Promise<Stats> => {
     .options({
       transpileOnly: true,
       experimentalWatchApi: true,
-      compilerOptions: base.compilerOptions,
+      compilerOptions: tsconfig.compilerOptions,
       configFile: path.join(__dirname, './tsconfig.json'),
     })
 

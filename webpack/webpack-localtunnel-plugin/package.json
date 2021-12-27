@@ -7,17 +7,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@types/localtunnel": "2.0.1",
-    "@types/node": "^16.7.10"
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "localtunnel": "^2.0.1"
+    "localtunnel": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/localtunnel": "2.0.1",
+    "@types/node": "^16.11.12"
   },
   "publishConfig": {
     "access": "public",
