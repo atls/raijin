@@ -1,11 +1,13 @@
-import { AnyJson }          from '@iarna/toml'
-import { parse, stringify } from '@iarna/toml'
-import { writeFileSync }    from 'fs'
-import { readFileSync }     from 'fs'
-import { rmdirSync }        from 'fs'
-import { existsSync }       from 'fs'
-import { mkdirSync }        from 'fs'
-import { join }             from 'path'
+import { AnyJson }       from '@iarna/toml'
+import { parse }         from '@iarna/toml'
+import { stringify }     from '@iarna/toml'
+
+import { writeFileSync } from 'fs'
+import { readFileSync }  from 'fs'
+import { rmdirSync }     from 'fs'
+import { existsSync }    from 'fs'
+import { mkdirSync }     from 'fs'
+import { join }          from 'path'
 
 export class Layer {
   private metadata: { [key: string]: string | null } = {}

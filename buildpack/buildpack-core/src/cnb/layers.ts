@@ -23,7 +23,6 @@ export class Layers {
   }
 
   save() {
-    // eslint-disable-next-line no-restricted-syntax
     for (const layer of this.layers.values()) {
       layer.save()
     }

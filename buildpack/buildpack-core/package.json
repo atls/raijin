@@ -1,30 +1,29 @@
 {
   "name": "@atls/buildpack-core",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
     "dist"
   ],
   "scripts": {
+    "build": "yarn library build",
     "exec": "yarn run build && yarn node test.js",
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@babel/types": "^7.15.0",
-    "@types/execa": "2.0.0",
-    "@types/node": "^16.7.10"
-  },
-  "publishConfig": {
-    "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@iarna/toml": "^2.2.5",
     "execa": "^5.1.1"
+  },
+  "devDependencies": {
+    "@babel/types": "^7.16.0",
+    "@types/execa": "2.0.0",
+    "@types/node": "^16.11.12"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
   }
 }

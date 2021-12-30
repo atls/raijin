@@ -1,8 +1,8 @@
-api = "0"
+api = "0.2"
 
 [buildpack]
 id = "tech.atls.buildpacks.yarn-install"
-version = "0.0.0"
+version = "0.0.1"
 name = "Yarn Install Buildpack"
 
 [metadata]
