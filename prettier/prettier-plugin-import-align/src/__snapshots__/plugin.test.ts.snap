@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`import-align should match latest snapshot 1`] = `
-"import long from \\"./long\\";
-import a    from \\"./a\\";
-"
-`;

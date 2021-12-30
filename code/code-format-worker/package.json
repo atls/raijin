@@ -1,0 +1,35 @@
+{
+  "name": "@atls/code-format-worker",
+  "version": "0.0.1",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "run build:worker && run build:source",
+    "build:source": "yarn library build",
+    "build:worker": "rollup -c",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/code-format": "workspace:0.0.5",
+    "@atls/code-worker-utils": "workspace:0.0.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.1.1",
+    "@types/node": "^16.11.12",
+    "esbuild": "^0.14.3",
+    "rollup": "^2.61.1",
+    "rollup-plugin-analyzer": "^4.0.0",
+    "rollup-plugin-esbuild": "^4.7.2",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}
