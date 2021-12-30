@@ -1,0 +1,11 @@
+{
+  "name": "@atls/schematics",
+  "version": "0.1",
+  "schematics": {
+    "project": {
+      "factory": "./project/project.factory#main",
+      "schema": "./project/schema.json",
+      "description": "Project schematic"
+    }
+  }
+}
