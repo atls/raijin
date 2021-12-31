@@ -1,15 +1,19 @@
 import { BaseCommand } from '@yarnpkg/cli'
+
 import lintStaged      from 'lint-staged'
+import { Option }      from 'clipanion'
 
 const config = {
-  '*.{yml,yaml,json,graphql,md}': 'yarn actl format',
-  '*.{js,jsx,ts,tsx}': ['yarn actl format', 'yarn actl lint'],
-  '*.{ts,tsx}': ['yarn actl typecheck'],
-  '*.{tsx,ts}': ['yarn actl test:unit --bail --find-related-tests'],
+  '*.{yml,yaml,json,graphql,md}': 'yarn format',
+  '*.{js,jsx,ts,tsx}': ['yarn format', 'yarn lint'],
+  '*.{ts,tsx}': ['yarn typecheck'],
+  '*.{tsx,ts}': ['yarn test unit --bail --find-related-tests'],
 }
 
 export class CommitStagedCommand extends BaseCommand {
   static paths = [['commit', 'staged']]
+
+  args: Array<string> = Option.Rest({ required: 0 })
 
   async execute() {
     try {
