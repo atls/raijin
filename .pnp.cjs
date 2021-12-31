@@ -878,7 +878,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./code/code-configuration/",
           "packageDependencies": [
             ["@atls/code-configuration", "workspace:code/code-configuration"],
-            ["@yarnpkg/fslib", "npm:2.6.0-rc.6"]
+            ["@yarnpkg/fslib", "npm:2.6.1-rc.4"]
           ],
           "linkType": "SOFT",
         }]

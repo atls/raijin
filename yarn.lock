@@ -407,7 +407,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-configuration@workspace:code/code-configuration"
   dependencies:
-    "@yarnpkg/fslib": ^2.6.0-rc.2
+    "@yarnpkg/fslib": ^2.6.1-rc.3
   languageName: unknown
   linkType: soft
 
