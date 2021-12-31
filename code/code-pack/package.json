@@ -18,7 +18,6 @@
     "@yarnpkg/fslib": "^2.6.0-rc.2"
   },
   "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
     "@types/node": "^16.7.10"
   },
   "publishConfig": {

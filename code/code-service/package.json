@@ -13,7 +13,6 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
     "@types/file-loader": "5.0.1",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.7.10",

@@ -13,7 +13,6 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
     "@atls/yarn-plugin-files": "workspace:0.0.0",
     "@atls/yarn-workspace-utils": "workspace:0.0.0",
     "@yarnpkg/cli": "^3.1.0-rc.2",

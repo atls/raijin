@@ -13,7 +13,6 @@
   },
   "devDependencies": {
     "@atls/logger": "^0.0.1",
-    "@atls/tools-builder": "workspace:0.0.0",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.7.10",
     "@types/react": "^17.0.19",

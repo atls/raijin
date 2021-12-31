@@ -1,0 +1,25 @@
+{
+  "name": "@atls/cli-ui-parts",
+  "version": "0.0.1",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@yarnpkg/libui": "^2.2.0",
+    "figures": "^3.2.0",
+    "ink": "^3.2.0",
+    "react": "^17.0.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

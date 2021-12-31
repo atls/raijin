@@ -12,7 +12,6 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
     "@types/node": "^16.7.10",
     "@types/react": "^17.0.19"
   },

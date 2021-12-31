@@ -11,9 +11,6 @@
     "postpack": "rm -rf dist",
     "prepack": "yarn run build"
   },
-  "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0"
-  },
   "dependencies": {
     "@yarnpkg/fslib": "^2.6.0-rc.2"
   },

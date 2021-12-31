@@ -13,7 +13,6 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
     "@yarnpkg/cli": "^3.1.0-rc.2",
     "@yarnpkg/core": "^3.1.0-rc.3",
     "@yarnpkg/fslib": "^2.6.0-rc.2",
