@@ -225,7 +225,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-commit@workspace:0.0.1, @atls/code-commit@workspace:code/code-commit":
+"@atls/code-commit@workspace:0.0.1, @atls/code-commit@workspace:^, @atls/code-commit@workspace:code/code-commit":
   version: 0.0.0-use.local
   resolution: "@atls/code-commit@workspace:code/code-commit"
   dependencies:
@@ -640,6 +640,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-commit@workspace:yarn/plugin-commit"
   dependencies:
+    "@atls/code-commit": "workspace:^"
     "@yarnpkg/cli": ^3.1.0-rc.2
     "@yarnpkg/core": ^3.1.0-rc.3
     clipanion: ^3.0.1

@@ -1071,6 +1071,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./yarn/plugin-commit/",
           "packageDependencies": [
             ["@atls/yarn-plugin-commit", "workspace:yarn/plugin-commit"],
+            ["@atls/code-commit", "workspace:code/code-commit"],
             ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0-rc.6"],
             ["@yarnpkg/core", "npm:3.1.0-rc.7"],
             ["clipanion", "virtual:b644898db9d00f9f37d5eb44e36f20e9479b44afd1de161232b42c49fdda6d24ee83083e27e52420bf3b4985c46a47d2bef42581f5a599abf04e801793aa0916#npm:3.0.1"],
@@ -28591,7 +28592,7 @@ function applyPatch(pnpapi, opts) {
     if (request === `pnpapi`) return parentApi; // Request `Module._resolveFilename` (ie. `resolveRequest`) to tell us
     // which file we should load
 
-    const modulePath = external_module_.Module._resolveFilename(request, parent, isMain); // We check whether the module is owned by the dependency tree of the
+    const modulePath = external_module_.Module.at_resolveFilename(request, parent, isMain); // We check whether the module is owned by the dependency tree of the
     // module that required it. If it isn't, then we need to create a new
     // store and possibly load its sandboxed PnP runtime.
 
