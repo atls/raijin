@@ -3,7 +3,7 @@ import { Text }          from 'ink'
 import { Box }           from 'ink'
 import { FC }            from 'react'
 
-import { SourcePreview } from '@monstrs/cli-ui-source-component'
+import { SourcePreview } from '@atls/cli-ui-source-component'
 
 export interface ESLintResultMessageProps {
   ruleId: string | null

@@ -4,39 +4,24 @@
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
-    "rules",
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@types/eslint": "7.28.0",
-    "@types/node": "^16.7.10"
-  },
-  "publishConfig": {
-    "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "build": "yarn library build",
+    "build:worker": "rollup -c",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-format": "workspace:0.0.5",
-    "@typescript-eslint/eslint-plugin": "^5.2.0",
-    "@typescript-eslint/parser": "^5.2.0",
-    "eslint": "^8.1.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-node": "^0.3.6",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.26.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "globby": "^11.0.3",
-    "ignore": "^5.1.8",
-    "prettier": "^2.3.2",
+    "@atls/config-eslint": "workspace:0.0.1",
+    "eslint": "^8.4.1",
+    "globby": "^11.0.4",
+    "ignore": "^5.1.9"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.12"
+  },
+  "peerDependencies": {
     "react": "*",
     "typescript": "*"
   },
@@ -48,8 +33,8 @@
       "optional": true
     }
   },
-  "peerDependencies": {
-    "react": "*",
-    "typescript": "*"
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
   }
 }
