@@ -10,13 +10,10 @@ export const getRequiredWorkspaces = (
 ): Set<Workspace> => {
   const requiredWorkspaces = new Set([...workspaces])
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const ws of requiredWorkspaces) {
-    // eslint-disable-next-line no-restricted-syntax
     for (const scope of scopes) {
       const deps = ws.manifest.getForScope(scope).values()
 
-      // eslint-disable-next-line no-restricted-syntax
       for (const dep of deps) {
         const workspace = project.tryWorkspaceByDescriptor(dep)
 

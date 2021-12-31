@@ -6,7 +6,6 @@ export const clearUnusedWorkspaces = (
   workspaces: Set<Workspace>,
   production: boolean = false
 ): void => {
-  // eslint-disable-next-line no-restricted-syntax
   for (const ws of project.workspaces) {
     if (workspaces.has(ws)) {
       if (production) {

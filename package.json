@@ -3,12 +3,13 @@
   "private": true,
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "@types/node": "^16.7.10",
-    "@yarnpkg/cli": "^3.1.0-rc.2",
-    "@yarnpkg/pnpify": "^3.0.1",
-    "husky": "7.0.2",
-    "typescript": "^4.4.2"
+    "@atls/tools-setup-ts-execution": "workspace:0.0.1",
+    "@types/eslint": "^8.2.1",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.12",
+    "@yarnpkg/builder": "^3.1.0",
+    "husky": "7.0.4",
+    "typescript": "^4.5.4"
   },
   "workspaces": [
     "schematics/**/*",
@@ -22,6 +23,16 @@
     "cli/*"
   ],
   "resolutions": {
+    "@yarnpkg/cli": "3.1.0",
+    "@yarnpkg/core": "3.1.0",
+    "clipanion": "3.1.0",
     "globby": "11.0.3"
-  }
+  },
+  "schematic": {
+    "collection": "@atls/schematics",
+    "schematic": "project",
+    "type": "libraries",
+    "migration": 0
+  },
+  "packageManager": "yarn@3.1.0"
 }

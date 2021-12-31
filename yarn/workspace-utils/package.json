@@ -1,14 +1,14 @@
 {
   "name": "@atls/yarn-workspace-utils",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
     "dist"
   ],
   "devDependencies": {
-    "@yarnpkg/core": "^3.1.0-rc.3"
+    "@yarnpkg/core": "^3.2.0-rc.8"
   },
   "publishConfig": {
     "access": "public",

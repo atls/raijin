@@ -1,12 +1,15 @@
 {
   "name": "@atls/yarn-run-utils",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "@yarnpkg/core": "^3.2.0-rc.8"
+  },
   "publishConfig": {
     "access": "public",
     "main": "dist/index.js",

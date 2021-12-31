@@ -16,7 +16,7 @@
     "@atls/code-configuration": "workspace:0.0.5",
     "@atls/code-pack": "workspace:0.0.6",
     "@atls/code-typescript": "workspace:0.0.5",
-    "@atls/yarn-pack-utils": "workspace:0.0.0",
+    "@atls/yarn-pack-utils": "workspace:0.0.1",
     "@yarnpkg/cli": "^3.1.0-rc.2",
     "@yarnpkg/core": "^3.1.0-rc.3",
     "@yarnpkg/fslib": "^2.6.0-rc.2",

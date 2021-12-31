@@ -15,8 +15,8 @@
   "devDependencies": {
     "@atls/github-checks-utils": "workspace:0.0.5",
     "@atls/yarn-plugin-files": "workspace:0.0.0",
-    "@atls/yarn-run-utils": "workspace:0.0.0",
-    "@atls/yarn-workspace-utils": "workspace:0.0.0",
+    "@atls/yarn-run-utils": "workspace:0.0.1",
+    "@atls/yarn-workspace-utils": "workspace:0.0.1",
     "@babel/code-frame": "^7.14.5",
     "@yarnpkg/cli": "^3.1.0-rc.2",
     "@yarnpkg/core": "^3.1.0-rc.3",
