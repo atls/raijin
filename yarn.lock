@@ -206,7 +206,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info-component":
+"@atls/cli-ui-error-info-component@workspace:0.0.1, @atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info-component":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info-component"
   dependencies:
@@ -411,7 +411,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-format-worker@workspace:code/code-format-worker":
+"@atls/code-format-worker@workspace:0.0.1, @atls/code-format-worker@workspace:code/code-format-worker":
   version: 0.0.0-use.local
   resolution: "@atls/code-format-worker@workspace:code/code-format-worker"
   dependencies:
@@ -765,7 +765,7 @@ __metadata:
     "@atls/yarn-plugin-checks": "workspace:0.0.0"
     "@atls/yarn-plugin-commit": "workspace:0.0.1"
     "@atls/yarn-plugin-files": "workspace:0.0.0"
-    "@atls/yarn-plugin-format": "workspace:0.0.0"
+    "@atls/yarn-plugin-format": "workspace:0.0.1"
     "@atls/yarn-plugin-lint": "workspace:0.0.0"
     "@atls/yarn-plugin-test": "workspace:0.0.0"
     "@atls/yarn-plugin-typescript": "workspace:0.0.0"
@@ -869,13 +869,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-format@workspace:0.0.0, @atls/yarn-plugin-format@workspace:yarn/plugin-format":
+"@atls/yarn-plugin-format@workspace:0.0.1, @atls/yarn-plugin-format@workspace:yarn/plugin-format":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-format@workspace:yarn/plugin-format"
   dependencies:
-    "@yarnpkg/cli": ^3.1.0-rc.2
-    "@yarnpkg/core": ^3.1.0-rc.3
-    clipanion: ^3.0.1
+    "@atls/cli-ui-error-info-component": "workspace:0.0.1"
+    "@atls/cli-ui-renderer": "workspace:0.0.3"
+    "@atls/code-format-worker": "workspace:0.0.1"
+    "@atls/yarn-run-utils": "workspace:0.0.1"
+    "@yarnpkg/builder": 3.1.0
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
+    clipanion: 3.2.0-rc.4
+    react: ^17.0.2
+  peerDependencies:
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
   languageName: unknown
   linkType: soft
 
@@ -4321,7 +4330,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/builder@npm:^3.1.0":
+"@yarnpkg/builder@npm:3.1.0, @yarnpkg/builder@npm:^3.1.0":
   version: 3.1.0
   resolution: "@yarnpkg/builder@npm:3.1.0"
   dependencies:
