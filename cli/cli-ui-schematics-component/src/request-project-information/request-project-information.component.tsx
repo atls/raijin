@@ -6,8 +6,8 @@ import { FC }                 from 'react'
 import { useEffect }          from 'react'
 import { useState }           from 'react'
 
-import { IndicatorComponent } from '@monstrs/cli-ui-parts'
-import { ProjectType }        from '@monstrs/schematics'
+import { IndicatorComponent } from '@atls/cli-ui-parts'
+import { ProjectType }        from '@atls/schematics'
 
 const Submit = ({ onSubmit, ...props }) => {
   useEffect(() => {

@@ -13,7 +13,6 @@
     "prepack": "yarn run build"
   },
   "devDependencies": {
-    "@atls/code-commitlint": "workspace:0.0.5",
     "@atls/code-configuration": "workspace:0.0.5",
     "@atls/code-pack": "workspace:0.0.6",
     "@atls/code-typescript": "workspace:0.0.5",
