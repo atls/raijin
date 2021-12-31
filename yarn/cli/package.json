@@ -65,19 +65,14 @@
   "@yarnpkg/builder": {
     "bundles": {
       "standard": [
-        "@atls/yarn-plugin-check",
         "@atls/yarn-plugin-checks",
         "@atls/yarn-plugin-commit",
         "@atls/yarn-plugin-files",
         "@atls/yarn-plugin-format",
         "@atls/yarn-plugin-lint",
         "@atls/yarn-plugin-test",
-        "@atls/yarn-plugin-image",
-        "@atls/yarn-plugin-schematics",
         "@atls/yarn-plugin-typescript",
         "@atls/yarn-plugin-workspaces",
-        "@atls/yarn-plugin-library",
-        "@atls/yarn-plugin-service",
         "@yarnpkg/plugin-interactive-tools",
         "@yarnpkg/plugin-workspace-tools",
         "@yarnpkg/plugin-typescript",

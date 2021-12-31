@@ -1,0 +1,34 @@
+{
+  "name": "@atls/cli-ui-eslint-result-component",
+  "version": "0.0.1",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/cli-ui-source-component": "workspace:0.0.3"
+  },
+  "devDependencies": {
+    "@atls/cli-ui-renderer": "workspace:0.0.3",
+    "@types/jest": "^27.0.3",
+    "@types/react": "^17.0.37",
+    "ink": "^3.2.0",
+    "react": "^17.0.2",
+    "strip-ansi": "^6.0.1"
+  },
+  "peerDependencies": {
+    "ink": "^3.0.8",
+    "react": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

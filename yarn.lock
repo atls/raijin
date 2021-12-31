@@ -206,6 +206,39 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info-component":
+  version: 0.0.0-use.local
+  resolution: "@atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info-component"
+  dependencies:
+    "@atls/cli-ui-stack-trace-component": "workspace:0.0.3"
+    "@types/jest": ^27.0.3
+    "@types/node": ^16.11.12
+    "@types/react": ^17.0.37
+    ink: ^3.2.0
+    react: ^17.0.2
+  peerDependencies:
+    ink: ^3.0.8
+    react: "*"
+  languageName: unknown
+  linkType: soft
+
+"@atls/cli-ui-eslint-result-component@workspace:cli/cli-ui-eslint-result-component":
+  version: 0.0.0-use.local
+  resolution: "@atls/cli-ui-eslint-result-component@workspace:cli/cli-ui-eslint-result-component"
+  dependencies:
+    "@atls/cli-ui-renderer": "workspace:0.0.3"
+    "@atls/cli-ui-source-component": "workspace:0.0.3"
+    "@types/jest": ^27.0.3
+    "@types/react": ^17.0.37
+    ink: ^3.2.0
+    react: ^17.0.2
+    strip-ansi: ^6.0.1
+  peerDependencies:
+    ink: ^3.0.8
+    react: "*"
+  languageName: unknown
+  linkType: soft
+
 "@atls/cli-ui-git-commit-component@workspace:0.0.1, @atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit"
@@ -370,7 +403,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-configuration@workspace:0.0.5, @atls/code-configuration@workspace:code/code-configuration":
+"@atls/code-configuration@workspace:code/code-configuration":
   version: 0.0.0-use.local
   resolution: "@atls/code-configuration@workspace:code/code-configuration"
   dependencies:
@@ -444,7 +477,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-pack@workspace:0.0.6, @atls/code-pack@workspace:code/code-pack":
+"@atls/code-pack@workspace:code/code-pack":
   version: 0.0.0-use.local
   resolution: "@atls/code-pack@workspace:code/code-pack"
   dependencies:
@@ -772,7 +805,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-pack-utils@workspace:0.0.1, @atls/yarn-pack-utils@workspace:yarn/pack-utils":
+"@atls/yarn-pack-utils@workspace:yarn/pack-utils":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-pack-utils@workspace:yarn/pack-utils"
   dependencies:
@@ -780,22 +813,6 @@ __metadata:
     "@yarnpkg/core": ^3.2.0-rc.8
     "@yarnpkg/fslib": ^2.6.1-rc.3
     "@yarnpkg/plugin-pack": ^3.1.0
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-plugin-app@workspace:yarn/plugin-app":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-app@workspace:yarn/plugin-app"
-  dependencies:
-    "@atls/code-configuration": "workspace:0.0.5"
-    "@atls/code-pack": "workspace:0.0.6"
-    "@atls/code-typescript": "workspace:0.0.5"
-    "@atls/yarn-pack-utils": "workspace:0.0.1"
-    "@yarnpkg/cli": ^3.1.0-rc.2
-    "@yarnpkg/core": ^3.1.0-rc.3
-    "@yarnpkg/fslib": ^2.6.0-rc.2
-    "@yarnpkg/plugin-patch": ^3.0.1-rc.1
-    clipanion: ^3.0.1
   languageName: unknown
   linkType: soft
 
@@ -4445,7 +4462,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/fslib@npm:^2.6.0-rc.2, @yarnpkg/fslib@npm:^2.6.0-rc.6":
+"@yarnpkg/fslib@npm:^2.6.0-rc.2":
   version: 2.6.0-rc.6
   resolution: "@yarnpkg/fslib@npm:2.6.0-rc.6"
   dependencies:
@@ -4873,21 +4890,6 @@ __metadata:
     "@yarnpkg/cli": ^3.1.0
     "@yarnpkg/core": ^3.1.0
   checksum: 4e58259e5aaed125b062f6f5a7c306abb62ff28e920a89b6e13a9c5f19a25a1fee338a82ade2df0b42a5edf1effc33e2adbb717f0f000cf88bb0e8643080b533
-  languageName: node
-  linkType: hard
-
-"@yarnpkg/plugin-patch@npm:^3.0.1-rc.1":
-  version: 3.0.1-rc.5
-  resolution: "@yarnpkg/plugin-patch@npm:3.0.1-rc.5"
-  dependencies:
-    "@yarnpkg/fslib": ^2.6.0-rc.6
-    "@yarnpkg/libzip": ^2.2.2
-    clipanion: ^3.0.1
-    tslib: ^1.13.0
-  peerDependencies:
-    "@yarnpkg/cli": ^3.1.0-rc.6
-    "@yarnpkg/core": ^3.1.0-rc.7
-  checksum: 27dd35b8cc3cb0b6fad24b8bd0b661b13838b73bcc80231b4eea9e5b7c47375bf79019af46224c94305c5acdce7461910f3494414a59578e15ea2fc36dc6a435
   languageName: node
   linkType: hard
 
@@ -16465,27 +16467,27 @@ typescript@^4.4.2:
 
 "typescript@patch:typescript@*#~builtin<compat/typescript>":
   version: 4.3.2
-  resolution: "typescript@patch:typescript@npm%3A4.3.2#~builtin<compat/typescript>::version=4.3.2&hash=ddd1e8"
+  resolution: "typescript@patch:typescript@npm%3A4.3.2#~builtin<compat/typescript>::version=4.3.2&hash=de8f8a"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 7ede84257208120b3e6bf5b7f512c1d173f49264e34388f1deb4b9a9cf67439aad7008cc1a3480ab048523ecd4f1974a95fbab638f44216478a625c768954c2a
+  checksum: 67da730521568e0de52b13926ad714288a1a6f265b3563c0e646731e6676454bad78bea9e29eafeeb922987e09df9c52d22fabbcddd225dc88783d3610df5209
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@4.5.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.4.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.5.4#~builtin<compat/typescript>":
   version: 4.5.4
-  resolution: "typescript@patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=ddd1e8"
+  resolution: "typescript@patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=de8f8a"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 270255355c3236076dbbd0900ff0b7b159fac7e6a95f9ed8c59f57361c7dace9f1fbffd3b5eb21377c7f636027382ad89eb64b2acfbcd9e08574f04cfc75ca3d
+  checksum: eda87927f9cfb94aca9b5e47842daf37347ad3073133e17f556fbb6c18f3493c5b551eedab0f4b26774235ddb7acbe0087250d5285f72ce6819a0891dd5a74ed
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@^3.2.4#~builtin<compat/typescript>":
   version: 3.9.7
-  resolution: "typescript@patch:typescript@npm%3A3.9.7#~builtin<compat/typescript>::version=3.9.7&hash=ddd1e8"
+  resolution: "typescript@patch:typescript@npm%3A3.9.7#~builtin<compat/typescript>::version=3.9.7&hash=de8f8a"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -16495,11 +16497,11 @@ typescript@^4.4.2:
 
 "typescript@patch:typescript@^4.4.2#~builtin<compat/typescript>":
   version: 4.4.3
-  resolution: "typescript@patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=ddd1e8"
+  resolution: "typescript@patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=de8f8a"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 79f5c13d21c9dea3eb44d2b7002ff25a0569fefc432e083d65a360e3aca990aca25fc733e14aa6883b5e9a68e3e2f0330a34123e048806f91d701732ece00e6f
+  checksum: 33a916819907e819430802c50405f18c187448d678696a81545f494a7ec16207f8c15340c945df62109bd1d951091a9f15f3d2eb931a3c889f962c8509017697
   languageName: node
   linkType: hard
 
