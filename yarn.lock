@@ -518,7 +518,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-test-worker@workspace:code/code-test-worker":
+"@atls/code-test-worker@workspace:0.0.1, @atls/code-test-worker@workspace:code/code-test-worker":
   version: 0.0.0-use.local
   resolution: "@atls/code-test-worker@workspace:code/code-test-worker"
   dependencies:
@@ -785,7 +785,7 @@ __metadata:
     "@atls/yarn-plugin-files": "workspace:0.0.0"
     "@atls/yarn-plugin-format": "workspace:0.0.1"
     "@atls/yarn-plugin-lint": "workspace:0.0.1"
-    "@atls/yarn-plugin-test": "workspace:0.0.0"
+    "@atls/yarn-plugin-test": "workspace:0.0.1"
     "@atls/yarn-plugin-typescript": "workspace:0.0.0"
     "@atls/yarn-plugin-workspaces": "workspace:0.0.0"
     "@yarnpkg/builder": ^3.1.0
@@ -950,14 +950,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-test@workspace:0.0.0, @atls/yarn-plugin-test@workspace:yarn/plugin-test":
+"@atls/yarn-plugin-test@workspace:0.0.1, @atls/yarn-plugin-test@workspace:yarn/plugin-test":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-test@workspace:yarn/plugin-test"
   dependencies:
-    "@yarnpkg/cli": ^3.1.0-rc.2
-    "@yarnpkg/core": ^3.1.0-rc.3
-    "@yarnpkg/fslib": ^2.6.0-rc.2
-    clipanion: ^3.0.1
+    "@atls/code-test-worker": "workspace:0.0.1"
+    "@yarnpkg/builder": ^3.1.0
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
+    clipanion: ^3.2.0-rc.4
+    typescript: ^4.5.4
+  peerDependencies:
+    "@yarnpkg/cli": ^3.2.0-rc.7
+    "@yarnpkg/core": ^3.2.0-rc.7
   languageName: unknown
   linkType: soft
 
