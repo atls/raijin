@@ -548,7 +548,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-service-worker@workspace:code/code-service-worker":
+"@atls/code-service-worker@workspace:0.0.1, @atls/code-service-worker@workspace:code/code-service-worker":
   version: 0.0.0-use.local
   resolution: "@atls/code-service-worker@workspace:code/code-service-worker"
   dependencies:
@@ -876,6 +876,7 @@ __metadata:
     "@atls/yarn-plugin-format": "workspace:0.0.1"
     "@atls/yarn-plugin-lint": "workspace:0.0.1"
     "@atls/yarn-plugin-schematics": "workspace:0.0.1"
+    "@atls/yarn-plugin-service": "workspace:0.0.1"
     "@atls/yarn-plugin-test": "workspace:0.0.1"
     "@atls/yarn-plugin-typescript": "workspace:0.0.1"
     "@atls/yarn-plugin-workspaces": "workspace:0.0.1"
@@ -914,7 +915,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-pack-utils@workspace:yarn/pack-utils":
+"@atls/yarn-pack-utils@workspace:0.0.1, @atls/yarn-pack-utils@workspace:yarn/pack-utils":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-pack-utils@workspace:yarn/pack-utils"
   dependencies:
@@ -1069,6 +1070,29 @@ __metadata:
     "@yarnpkg/fslib": ^2.6.1-rc.2
     ink: ^3.2.0
     react: "*"
+  languageName: unknown
+  linkType: soft
+
+"@atls/yarn-plugin-service@workspace:0.0.1, @atls/yarn-plugin-service@workspace:yarn/plugin-service":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-service@workspace:yarn/plugin-service"
+  dependencies:
+    "@atls/cli-ui-error-info-component": "workspace:0.0.1"
+    "@atls/cli-ui-log-record-component": "workspace:0.0.3"
+    "@atls/cli-ui-renderer": "workspace:0.0.3"
+    "@atls/code-service-worker": "workspace:0.0.1"
+    "@atls/yarn-pack-utils": "workspace:0.0.1"
+    "@atls/yarn-run-utils": "workspace:0.0.1"
+    "@yarnpkg/builder": ^3.1.0
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
+    clipanion: ^3.2.0-rc.4
+    react: ^17.0.2
+    rimraf: ^3.0.2
+    typescript: ^4.5.4
+  peerDependencies:
+    "@yarnpkg/cli": ^3.2.0-rc.7
+    "@yarnpkg/core": ^3.2.0-rc.7
   languageName: unknown
   linkType: soft
 
