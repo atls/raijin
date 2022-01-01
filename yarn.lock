@@ -12,6 +12,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@actions/core@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "@actions/core@npm:1.6.0"
+  dependencies:
+    "@actions/http-client": ^1.0.11
+  checksum: ac4689b6095110546d771f15388173c5e4ff3f808a9cadca2089df5e92b8c81e8ee32c47a38b7ab9dc9e690bac4be71561a73fec631547dfa57ee9b7ff7dc6d7
+  languageName: node
+  linkType: hard
+
 "@actions/github@npm:^4.0.0":
   version: 4.0.0
   resolution: "@actions/github@npm:4.0.0"
@@ -724,7 +733,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/github-checks-utils@workspace:0.0.5, @atls/github-checks-utils@workspace:github/checks-utils":
+"@atls/github-checks-utils@workspace:github/checks-utils":
   version: 0.0.0-use.local
   resolution: "@atls/github-checks-utils@workspace:github/checks-utils"
   dependencies:
@@ -930,16 +939,34 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-checks@workspace:yarn/plugin-checks"
   dependencies:
-    "@atls/github-checks-utils": "workspace:0.0.5"
+    "@actions/core": ^1.6.0
+    "@actions/github": ^5.0.0
+    "@atls/cli-ui-eslint-result-component": "workspace:0.0.1"
+    "@atls/cli-ui-renderer": "workspace:0.0.3"
+    "@atls/cli-ui-typescript-diagnostic-component": "workspace:0.0.1"
+    "@atls/code-lint-worker": "workspace:0.0.1"
+    "@atls/code-test-worker": "workspace:0.0.1"
+    "@atls/code-typescript": "workspace:0.0.5"
+    "@atls/code-typescript-worker": "workspace:0.0.1"
     "@atls/yarn-plugin-files": "workspace:0.0.1"
     "@atls/yarn-run-utils": "workspace:0.0.1"
     "@atls/yarn-workspace-utils": "workspace:0.0.1"
-    "@babel/code-frame": ^7.14.5
-    "@yarnpkg/cli": ^3.1.0-rc.2
-    "@yarnpkg/core": ^3.1.0-rc.3
-    "@yarnpkg/fslib": ^2.6.0-rc.2
-    clipanion: ^3.0.1
-    strip-ansi: ^6.0.0
+    "@babel/code-frame": ^7.16.0
+    "@jest/test-result": ^27.4.2
+    "@octokit/types": ^6.34.0
+    "@types/node": ^16.11.12
+    "@yarnpkg/builder": ^3.1.0
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
+    "@yarnpkg/fslib": ^2.6.1-rc.3
+    clipanion: ^3.2.0-rc.4
+    eslint: ^8.4.1
+    react: ^17.0.2
+    strip-ansi: ^6.0.1
+  peerDependencies:
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
+    "@yarnpkg/fslib": ^2.6.1-rc.3
   languageName: unknown
   linkType: soft
 
@@ -1188,7 +1215,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/code-frame@npm:^7.16.7, @babel/code-frame@npm:^7.8.3":
+"@babel/code-frame@npm:^7.16.0, @babel/code-frame@npm:^7.16.7, @babel/code-frame@npm:^7.8.3":
   version: 7.16.7
   resolution: "@babel/code-frame@npm:7.16.7"
   dependencies:

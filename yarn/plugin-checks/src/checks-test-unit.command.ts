@@ -1,41 +1,50 @@
-import { BaseCommand }           from '@yarnpkg/cli'
-import { Configuration }         from '@yarnpkg/core'
-import { Project }               from '@yarnpkg/core'
-import { xfs }                   from '@yarnpkg/fslib'
-import { ppath }                 from '@yarnpkg/fslib'
-import { toFilename }            from '@yarnpkg/fslib'
+import { StreamReport }              from '@yarnpkg/core'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
 
-import { formatJestTestResults } from '@atls/github-checks-utils'
-import { Conclusion }            from '@atls/github-checks-utils'
-import { createCheck }           from '@atls/github-checks-utils'
+import { TesterWorker }              from '@atls/code-test-worker'
 
-class ChecksTestUnitCommand extends BaseCommand {
+import { AbstractChecksTestCommand } from './abstract-checks-test.command'
+import { GitHubChecks }              from './github.checks'
+
+class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static paths = [['checks', 'test', 'unit']]
 
   async execute() {
-    const { project } = await Project.find(
-      await Configuration.find(this.context.cwd, this.context.plugins),
-      this.context.cwd
-    )
+    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
 
-    const report = ppath.join(await xfs.mktempPromise(), toFilename('report.json'))
-
-    await this.cli.run(['actl', 'test:unit', '--report', report])
-
-    const results = await xfs.readJsonPromise(report)
-
-    const annotations = formatJestTestResults(results, project.cwd)
-
-    await createCheck(
-      'Test:Unit',
-      annotations.length > 0 ? Conclusion.Failure : Conclusion.Success,
+    const commandReport = await StreamReport.start(
       {
-        title: annotations.length > 0 ? `Errors ${annotations.length}` : 'Successful',
-        summary:
-          annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
-        annotations,
+        stdout: this.context.stdout,
+        configuration,
+      },
+      async () => {
+        const checks = new GitHubChecks('Test:Unit')
+
+        const { id: checkId } = await checks.start()
+
+        try {
+          const results = await new TesterWorker(project.cwd).run('unit')
+
+          const annotations = this.formatResults(results, project.cwd)
+
+          await checks.complete(checkId, {
+            title: annotations.length > 0 ? `Errors ${annotations.length}` : 'Successful',
+            summary:
+              annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
+            annotations,
+          })
+        } catch (error) {
+          await checks.failure({
+            title: 'Test:Unit run failed',
+            summary: (error as any).message,
+          })
+        }
       }
     )
+
+    return commandReport.exitCode()
   }
 }
 
