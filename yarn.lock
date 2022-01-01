@@ -321,7 +321,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-pretty-logs@workspace:cli/cli-ui-pretty-logs":
+"@atls/cli-ui-pretty-logs@workspace:0.0.3, @atls/cli-ui-pretty-logs@workspace:cli/cli-ui-pretty-logs":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-pretty-logs@workspace:cli/cli-ui-pretty-logs"
   dependencies:
@@ -885,6 +885,7 @@ __metadata:
     "@atls/yarn-plugin-files": "workspace:0.0.1"
     "@atls/yarn-plugin-format": "workspace:0.0.1"
     "@atls/yarn-plugin-image": "workspace:0.0.1"
+    "@atls/yarn-plugin-library": "workspace:0.0.1"
     "@atls/yarn-plugin-lint": "workspace:0.0.1"
     "@atls/yarn-plugin-schematics": "workspace:0.0.1"
     "@atls/yarn-plugin-service": "workspace:0.0.1"
@@ -1087,6 +1088,29 @@ __metadata:
     "@yarnpkg/cli": ^3.2.0-rc.8
     "@yarnpkg/core": ^3.2.0-rc.8
     "@yarnpkg/fslib": ^2.6.1-rc.3
+  languageName: unknown
+  linkType: soft
+
+"@atls/yarn-plugin-library@workspace:0.0.1, @atls/yarn-plugin-library@workspace:yarn/plugin-library":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-library@workspace:yarn/plugin-library"
+  dependencies:
+    "@atls/cli-ui-error-info-component": "workspace:0.0.1"
+    "@atls/cli-ui-log-record-component": "workspace:0.0.3"
+    "@atls/cli-ui-pretty-logs": "workspace:0.0.3"
+    "@atls/cli-ui-renderer": "workspace:0.0.3"
+    "@atls/cli-ui-typescript-diagnostic-component": "workspace:0.0.1"
+    "@atls/code-typescript-worker": "workspace:0.0.1"
+    "@atls/yarn-run-utils": "workspace:0.0.1"
+    "@yarnpkg/builder": ^3.1.0
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
+    clipanion: ^3.2.0-rc.4
+    react: ^17.0.2
+    rimraf: ^3.0.2
+  peerDependencies:
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
   languageName: unknown
   linkType: soft
 

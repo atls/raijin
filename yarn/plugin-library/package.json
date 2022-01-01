@@ -1,0 +1,41 @@
+{
+  "name": "@atls/yarn-plugin-library",
+  "version": "0.0.1",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build plugin",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/cli-ui-error-info-component": "workspace:0.0.1",
+    "@atls/cli-ui-log-record-component": "workspace:0.0.3",
+    "@atls/cli-ui-pretty-logs": "workspace:0.0.3",
+    "@atls/cli-ui-renderer": "workspace:0.0.3",
+    "@atls/cli-ui-typescript-diagnostic-component": "workspace:0.0.1",
+    "@atls/code-typescript-worker": "workspace:0.0.1",
+    "@atls/yarn-run-utils": "workspace:0.0.1",
+    "clipanion": "^3.2.0-rc.4",
+    "react": "^17.0.2",
+    "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "@yarnpkg/builder": "^3.1.0",
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}
