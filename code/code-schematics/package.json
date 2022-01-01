@@ -1,6 +1,6 @@
 {
-  "name": "@atls/code-pack",
-  "version": "0.0.6",
+  "name": "@atls/code-schematics",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -8,17 +8,17 @@
   ],
   "scripts": {
     "build": "yarn library build",
+    "build:worker": "rollup -c",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@actions/github": "^5.0.0",
-    "@iarna/toml": "^2.2.5",
-    "@yarnpkg/core": "^3.2.0-rc.8",
-    "@yarnpkg/fslib": "^2.6.1-rc.3"
+    "@angular-devkit/core": "^13.1.1",
+    "@angular-devkit/schematics": "^13.1.1",
+    "@atls/schematics": "workspace:0.0.1"
   },
   "devDependencies": {
-    "@types/node": "^16.11.12"
+    "rxjs": "6.6.7"
   },
   "publishConfig": {
     "main": "dist/index.js",

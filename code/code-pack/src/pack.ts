@@ -1,8 +1,8 @@
+import { stringify }   from '@iarna/toml'
+import { execUtils }   from '@yarnpkg/core'
 import { xfs }         from '@yarnpkg/fslib'
 import { ppath }       from '@yarnpkg/fslib'
 import { toFilename }  from '@yarnpkg/fslib'
-import { stringify }   from '@iarna/toml'
-import { execUtils }   from '@yarnpkg/core'
 
 import { PackOptions } from './pack.interfaces'
 import { PackOutputs } from './pack.interfaces'
@@ -12,7 +12,7 @@ export const pack = async (
   { workspace, registry, publish, tagPolicy, builder, buildpack }: PackOptions,
   context
 ): Promise<PackOutputs> => {
-  const repo = workspace.replace('@', '').replace(new RegExp('/', 'g'), '-')
+  const repo = workspace.replace('@', '').replace(/\//g, '-')
   const image = `${registry}${repo}`
 
   const tag = await getTag(tagPolicy)
@@ -44,11 +44,12 @@ export const pack = async (
     '--descriptor',
     descriptorPath,
     '--buildpack',
-    buildpack || 'monstrs/buildpack-yarn-workspace:0.0.2',
+    buildpack || 'atls/buildpack-yarn-workspace:0.0.2',
     '--builder',
     builder || 'monstrs/builder-base:buster',
     '--tag',
     `${image}:latest`,
+    '--verbose',
   ]
 
   if (publish) {
