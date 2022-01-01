@@ -1,7 +1,7 @@
 {
   "name": "@atls/yarn-plugin-checks",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@atls/github-checks-utils": "workspace:0.0.5",
-    "@atls/yarn-plugin-files": "workspace:0.0.0",
+    "@atls/yarn-plugin-files": "workspace:0.0.1",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "@atls/yarn-workspace-utils": "workspace:0.0.1",
     "@babel/code-frame": "^7.14.5",

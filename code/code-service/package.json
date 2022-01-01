@@ -4,38 +4,37 @@
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
-    "tsconfig.stub.json",
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/config-typescript": "workspace:0.0.1",
+    "@atls/webpack-proto-imports-loader": "workspace:0.0.5",
+    "@atls/webpack-start-server-plugin": "workspace:0.0.3",
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8",
+    "fast-glob": "^3.2.7",
+    "string-replace-loader": "^3.0.3",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.4",
+    "webpack": "^5.65.0",
+    "webpack-chain": "^6.5.1"
   },
   "devDependencies": {
-    "@types/file-loader": "5.0.1",
-    "@types/jest": "^27.0.2",
-    "@types/node": "^16.7.10",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.12",
     "@types/protocol-buffers-schema": "3.4.1",
     "@types/wait-for-localhost": "3.1.0",
     "@types/webpack": "^5.28.0",
-    "@yarnpkg/fslib": "^2.6.0-rc.2",
+    "@yarnpkg/fslib": "^2.6.1-rc.3",
     "wait-for-localhost": "^3.3.0"
   },
   "publishConfig": {
     "main": "dist/index.js",
     "typings": "dist/index.d.ts"
-  },
-  "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.5",
-    "@atls/webpack-proto-imports-loader": "workspace:0.0.5",
-    "@yarnpkg/cli": "^3.1.0-rc.2",
-    "@yarnpkg/core": "^3.1.0-rc.3",
-    "fast-glob": "^3.2.7",
-    "string-replace-loader": "^3.0.3",
-    "ts-loader": "^9.2.5",
-    "typescript": "^4.4.2",
-    "webpack": "^5.51.1",
-    "webpack-chain": "^6.5.1"
   }
 }
