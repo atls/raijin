@@ -217,6 +217,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:yarn/plugin-lint"
       },
       {
+        "name": "@atls/yarn-plugin-schematics",
+        "reference": "workspace:yarn/plugin-schematics"
+      },
+      {
         "name": "@atls/yarn-plugin-test",
         "reference": "workspace:yarn/plugin-test"
       },
@@ -240,14 +244,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)|$))$)",
     "fallbackExclusionList": [
-      ["@atls/cli-ui-error-info-component", ["virtual:24399fea0f4ebc9e5c4e5babc40eab1bd2fee8a0847feb20ed672fa2355aca1f6872ea619c8d5780d77db29a218bc0a608a14f3824f711a17f1511b6b4c00144#workspace:cli/cli-ui-error-info-component", "workspace:cli/cli-ui-error-info-component"]],
+      ["@atls/cli-ui-error-info-component", ["virtual:24399fea0f4ebc9e5c4e5babc40eab1bd2fee8a0847feb20ed672fa2355aca1f6872ea619c8d5780d77db29a218bc0a608a14f3824f711a17f1511b6b4c00144#workspace:cli/cli-ui-error-info-component", "virtual:b50c69c2efb21a4733959594abfdf9426fb19f3c816ef663aed8b425cae1b33c4dfa66818caf7368fe75460fd347d4168b01696d89994bf00e4e1d58d3f4e232#workspace:cli/cli-ui-error-info-component", "workspace:cli/cli-ui-error-info-component"]],
       ["@atls/cli-ui-eslint-result-component", ["virtual:1fa78d160ee7374abf72aa4db64fafe3b438256697a4810e08fe6e782cde96061a8f1a603100babffe68203ca80047f6676c1dbfa9781452a4193d8b111b2d62#workspace:cli/cli-ui-eslint-result-component", "workspace:cli/cli-ui-eslint-result-component"]],
       ["@atls/cli-ui-git-commit-component", ["virtual:9311d24769b8c52d10422d9b8486d31d5d2ade5d1cae398e5a2857c283d29247815274fc1aa34ffcd7797e4784051d903d013aba1b84334c2aa60668a4931e5f#workspace:cli/cli-ui-git-commit", "workspace:cli/cli-ui-git-commit"]],
       ["@atls/cli-ui-log-record-component", ["virtual:e0b391570ec9f8989915d797a4a0d1afc17ea70caf4c548de596fed02e7abe0ba2aca2addc79364ca4f7cd7ff1f030f76bbcb0df83a27863c64f68d671fbc484#workspace:cli/cli-ui-log-record-component", "workspace:cli/cli-ui-log-record-component"]],
       ["@atls/cli-ui-parts", ["workspace:cli/cli-ui-parts"]],
       ["@atls/cli-ui-pretty-logs", ["workspace:cli/cli-ui-pretty-logs"]],
       ["@atls/cli-ui-renderer", ["workspace:cli/cli-ui-renderer"]],
-      ["@atls/cli-ui-schematics-component", ["workspace:cli/cli-ui-schematics-component"]],
+      ["@atls/cli-ui-schematics-component", ["virtual:b50c69c2efb21a4733959594abfdf9426fb19f3c816ef663aed8b425cae1b33c4dfa66818caf7368fe75460fd347d4168b01696d89994bf00e4e1d58d3f4e232#workspace:cli/cli-ui-schematics-component", "workspace:cli/cli-ui-schematics-component"]],
       ["@atls/cli-ui-source-component", ["virtual:5146f01c2adbbbb5f81c7da698c42a92c0dcefb3e7e762a2d38e34f8934262ecb4a8880fdf941c450467aa6e90ddb3a59b13357b8da3f56a8a1238d409930479#workspace:cli/cli-ui-source-component", "virtual:ad4a778ec6cc82725bd1d4cf8f90210314f07c32474a1e815e6d404397631ffb98876caa0e0dd1a3462697501542c82aa879bb326ab6216c7a6b5ff0b9a37f1f#workspace:cli/cli-ui-source-component", "workspace:cli/cli-ui-source-component"]],
       ["@atls/cli-ui-stack-trace-component", ["virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#workspace:cli/cli-ui-stack-trace-component", "virtual:8a37356ab0ddf81294e8ab110d6ac4f678bd316208a905528af3cb225ad54307facf60ce754583d329dc01fff988d24937742585f06ecaa7c37f9be12a12de36#workspace:cli/cli-ui-stack-trace-component", "workspace:cli/cli-ui-stack-trace-component"]],
       ["@atls/cli-ui-typescript-diagnostic-component", ["virtual:b63919926669ea5b8a6e9fbfce1b92be88f5876779735fd4e97e34c9be6cc9e462f6a75995a5eb47ffaf7c463a3de53602b31a8cae4e7e252995e598a1e3bf24#workspace:cli/cli-ui-typescript-diagnostic-component", "workspace:cli/cli-ui-typescript-diagnostic-component"]],
@@ -288,6 +292,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/yarn-plugin-github", ["workspace:yarn/plugin-github"]],
       ["@atls/yarn-plugin-husky", ["workspace:yarn/plugin-husky"]],
       ["@atls/yarn-plugin-lint", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-lint", "workspace:yarn/plugin-lint"]],
+      ["@atls/yarn-plugin-schematics", ["workspace:yarn/plugin-schematics"]],
       ["@atls/yarn-plugin-test", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-test", "workspace:yarn/plugin-test"]],
       ["@atls/yarn-plugin-typescript", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-typescript", "workspace:yarn/plugin-typescript"]],
       ["@atls/yarn-plugin-workspaces", ["workspace:yarn/plugin-workspaces"]],
@@ -303,13 +308,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {
           "packageLocation": "./",
           "packageDependencies": [
-            ["@atls/tools-setup-ts-execution", "workspace:utils/setup-ts-execution"],
             ["@types/eslint", "npm:8.2.1"],
             ["@types/jest", "npm:27.4.0"],
             ["@types/node", "npm:16.11.17"],
             ["@yarnpkg/builder", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
             ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
-            ["@yarnpkg/core", "npm:3.1.0"],
             ["husky", "npm:7.0.4"],
             ["typescript", "patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=de8f8a"]
           ],
@@ -586,6 +589,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["virtual:b50c69c2efb21a4733959594abfdf9426fb19f3c816ef663aed8b425cae1b33c4dfa66818caf7368fe75460fd347d4168b01696d89994bf00e4e1d58d3f4e232#workspace:cli/cli-ui-error-info-component", {
+          "packageLocation": "./.yarn/__virtual__/@atls-cli-ui-error-info-component-virtual-e0f3ce4615/1/cli/cli-ui-error-info-component/",
+          "packageDependencies": [
+            ["@atls/cli-ui-error-info-component", "virtual:b50c69c2efb21a4733959594abfdf9426fb19f3c816ef663aed8b425cae1b33c4dfa66818caf7368fe75460fd347d4168b01696d89994bf00e4e1d58d3f4e232#workspace:cli/cli-ui-error-info-component"],
+            ["@atls/cli-ui-stack-trace-component", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#workspace:cli/cli-ui-stack-trace-component"],
+            ["@types/ink", null],
+            ["@types/jest", "npm:27.4.0"],
+            ["@types/node", "npm:16.11.17"],
+            ["@types/react", "npm:17.0.38"],
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],
+            ["react", "npm:17.0.2"]
+          ],
+          "packagePeers": [
+            "@types/ink",
+            "ink",
+            "react"
+          ],
+          "linkType": "SOFT",
+        }],
         ["workspace:cli/cli-ui-error-info-component", {
           "packageLocation": "./cli/cli-ui-error-info-component/",
           "packageDependencies": [
@@ -766,6 +788,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@atls/cli-ui-schematics-component", [
+        ["virtual:b50c69c2efb21a4733959594abfdf9426fb19f3c816ef663aed8b425cae1b33c4dfa66818caf7368fe75460fd347d4168b01696d89994bf00e4e1d58d3f4e232#workspace:cli/cli-ui-schematics-component", {
+          "packageLocation": "./.yarn/__virtual__/@atls-cli-ui-schematics-component-virtual-25ebd26655/1/cli/cli-ui-schematics-component/",
+          "packageDependencies": [
+            ["@atls/cli-ui-schematics-component", "virtual:b50c69c2efb21a4733959594abfdf9426fb19f3c816ef663aed8b425cae1b33c4dfa66818caf7368fe75460fd347d4168b01696d89994bf00e4e1d58d3f4e232#workspace:cli/cli-ui-schematics-component"],
+            ["@atls/cli-ui-parts", "workspace:cli/cli-ui-parts"],
+            ["@atls/schematics", "workspace:schematics/schematics"],
+            ["@types/ink", null],
+            ["@types/node", "npm:16.11.17"],
+            ["@types/react", "npm:17.0.38"],
+            ["@yarnpkg/libui", "virtual:d0107e32c595a572b602eb6ac131793dbf59829e4b9f9283985a64837ecbb83061610d83042cf00a31eb0944455005f08e673c2a36ef95309215bde89da1c7bd#npm:2.2.0"],
+            ["camelcase", "npm:6.2.1"],
+            ["figures", "npm:3.2.0"],
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],
+            ["ink-autocomplete", "npm:0.0.0"],
+            ["ink-multi-select", "npm:2.0.0"],
+            ["ink-select-input", "virtual:d0107e32c595a572b602eb6ac131793dbf59829e4b9f9283985a64837ecbb83061610d83042cf00a31eb0944455005f08e673c2a36ef95309215bde89da1c7bd#npm:4.2.1"],
+            ["ink-text-input", "virtual:d0107e32c595a572b602eb6ac131793dbf59829e4b9f9283985a64837ecbb83061610d83042cf00a31eb0944455005f08e673c2a36ef95309215bde89da1c7bd#npm:4.0.2"],
+            ["react", "npm:17.0.2"]
+          ],
+          "packagePeers": [
+            "@types/ink",
+            "ink",
+            "react"
+          ],
+          "linkType": "SOFT",
+        }],
         ["workspace:cli/cli-ui-schematics-component", {
           "packageLocation": "./cli/cli-ui-schematics-component/",
           "packageDependencies": [
@@ -1729,6 +1777,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/core", "npm:3.1.0"],
             ["clipanion", "virtual:11e49090eef2ab4a7d256d57407eff59125c10a45a2c4a95d4b4eed662e01c6bb0b545ee238f4cce0100c8d2885c1a88c24bcf184f4baba2c58b80f525a4f6ab#npm:3.1.0"],
             ["react", "npm:17.0.2"],
+            ["typescript", "patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=de8f8a"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@atls/yarn-plugin-schematics", [
+        ["workspace:yarn/plugin-schematics", {
+          "packageLocation": "./yarn/plugin-schematics/",
+          "packageDependencies": [
+            ["@atls/yarn-plugin-schematics", "workspace:yarn/plugin-schematics"],
+            ["@atls/cli-ui-error-info-component", "virtual:b50c69c2efb21a4733959594abfdf9426fb19f3c816ef663aed8b425cae1b33c4dfa66818caf7368fe75460fd347d4168b01696d89994bf00e4e1d58d3f4e232#workspace:cli/cli-ui-error-info-component"],
+            ["@atls/cli-ui-parts", "workspace:cli/cli-ui-parts"],
+            ["@atls/cli-ui-renderer", "workspace:cli/cli-ui-renderer"],
+            ["@atls/cli-ui-schematics-component", "virtual:b50c69c2efb21a4733959594abfdf9426fb19f3c816ef663aed8b425cae1b33c4dfa66818caf7368fe75460fd347d4168b01696d89994bf00e4e1d58d3f4e232#workspace:cli/cli-ui-schematics-component"],
+            ["@atls/code-schematics-worker", "workspace:code/code-schematics-worker"],
+            ["@atls/schematics", "workspace:schematics/schematics"],
+            ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],
+            ["@yarnpkg/builder", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
+            ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
+            ["@yarnpkg/core", "npm:3.1.0"],
+            ["@yarnpkg/fslib", "npm:2.6.1-rc.4"],
+            ["@yarnpkg/libui", "virtual:ae5c57bfa6db99356c602f67aad3c174292a9118f1157fbd225ba9bc554605bfa73c6dc202ff170d8e6f17342ac5941f851747044ce19afe45ba3c975b6e1e94#npm:2.2.0"],
+            ["clipanion", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#npm:3.1.0"],
+            ["force-stdin-tty", "npm:0.0.1"],
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],
+            ["react", "npm:17.0.2"],
+            ["typanion", "npm:3.7.1"],
             ["typescript", "patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=de8f8a"]
           ],
           "linkType": "SOFT",
@@ -6161,8 +6236,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yup", "npm:0.32.9"]
           ],
           "packagePeers": [
-            "@types/yarnpkg__core",
-            "@yarnpkg/core"
+            "@types/yarnpkg__core"
           ],
           "linkType": "HARD",
         }]
@@ -19943,13 +20017,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["tools", "workspace:."],
-            ["@atls/tools-setup-ts-execution", "workspace:utils/setup-ts-execution"],
             ["@types/eslint", "npm:8.2.1"],
             ["@types/jest", "npm:27.4.0"],
             ["@types/node", "npm:16.11.17"],
             ["@yarnpkg/builder", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
             ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
-            ["@yarnpkg/core", "npm:3.1.0"],
             ["husky", "npm:7.0.4"],
             ["typescript", "patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=de8f8a"]
           ],
