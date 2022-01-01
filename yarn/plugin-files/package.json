@@ -9,14 +9,22 @@
   ],
   "scripts": {
     "build": "builder build plugin",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@actions/github": "^5.0.0",
+    "@octokit/types": "^6.34.0",
+    "clipanion": "^3.2.0-rc.4"
   },
   "devDependencies": {
-    "@atls/github-actions-utils": "workspace:0.0.5",
-    "@yarnpkg/cli": "^3.1.0-rc.2",
-    "@yarnpkg/core": "^3.1.0-rc.3",
-    "clipanion": "^3.0.1"
+    "@yarnpkg/builder": "3.1.0",
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8"
   },
   "publishConfig": {
     "access": "public",

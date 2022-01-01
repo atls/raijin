@@ -722,7 +722,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/github-actions-utils@workspace:0.0.5, @atls/github-actions-utils@workspace:github/actions-utils":
+"@atls/github-actions-utils@workspace:github/actions-utils":
   version: 0.0.0-use.local
   resolution: "@atls/github-actions-utils@workspace:github/actions-utils"
   dependencies:
@@ -1013,10 +1013,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-files@workspace:yarn/plugin-files"
   dependencies:
-    "@atls/github-actions-utils": "workspace:0.0.5"
-    "@yarnpkg/cli": ^3.1.0-rc.2
-    "@yarnpkg/core": ^3.1.0-rc.3
-    clipanion: ^3.0.1
+    "@actions/github": ^5.0.0
+    "@octokit/types": ^6.34.0
+    "@yarnpkg/builder": 3.1.0
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
+    clipanion: ^3.2.0-rc.4
+  peerDependencies:
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
   languageName: unknown
   linkType: soft
 
