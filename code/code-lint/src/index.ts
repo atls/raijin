@@ -1,1 +1,1 @@
-export * from './lineter'
+export * from './linter'
