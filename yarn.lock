@@ -371,7 +371,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-typescript-diagnostic-component@workspace:cli/cli-ui-typescript-diagnostic-component":
+"@atls/cli-ui-typescript-diagnostic-component@workspace:0.0.1, @atls/cli-ui-typescript-diagnostic-component@workspace:cli/cli-ui-typescript-diagnostic-component":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-typescript-diagnostic-component@workspace:cli/cli-ui-typescript-diagnostic-component"
   dependencies:
@@ -553,18 +553,34 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/code-typescript-worker@workspace:0.0.1, @atls/code-typescript-worker@workspace:code/code-typescript-worker":
+  version: 0.0.0-use.local
+  resolution: "@atls/code-typescript-worker@workspace:code/code-typescript-worker"
+  dependencies:
+    "@atls/code-typescript": "workspace:0.0.5"
+    "@atls/code-worker-utils": "workspace:0.0.1"
+    "@rollup/plugin-commonjs": ^21.0.1
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.1.1
+    esbuild: ^0.14.3
+    flatted: ^3.2.4
+    rollup: ^2.61.1
+    rollup-plugin-analyzer: ^4.0.0
+    rollup-plugin-esbuild: ^4.7.2
+    rollup-plugin-terser: ^7.0.2
+    typescript: ^4.5.4
+  languageName: unknown
+  linkType: soft
+
 "@atls/code-typescript@workspace:0.0.5, @atls/code-typescript@workspace:code/code-typescript":
   version: 0.0.0-use.local
   resolution: "@atls/code-typescript@workspace:code/code-typescript"
   dependencies:
-    "@babel/code-frame": ^7.14.5
-    "@types/babel__code-frame": 7.0.3
-    "@types/chalk": 2.2.0
+    "@atls/config-typescript": "workspace:0.0.1"
     "@types/deepmerge": 2.2.0
-    "@types/node": ^16.7.10
-    chalk: ^4.1.2
+    "@types/node": ^16.11.12
     deepmerge: ^4.2.2
-    typescript: ^4.4.2
+    typescript: ^4.5.4
   languageName: unknown
   linkType: soft
 
@@ -970,9 +986,20 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-typescript@workspace:yarn/plugin-typescript"
   dependencies:
-    "@yarnpkg/cli": ^3.1.0-rc.2
-    "@yarnpkg/core": ^3.1.0-rc.3
-    clipanion: ^3.0.1
+    "@atls/cli-ui-error-info-component": "workspace:0.0.1"
+    "@atls/cli-ui-renderer": "workspace:0.0.3"
+    "@atls/cli-ui-typescript-diagnostic-component": "workspace:0.0.1"
+    "@atls/code-typescript-worker": "workspace:0.0.1"
+    "@atls/yarn-run-utils": "workspace:0.0.1"
+    "@yarnpkg/builder": 3.1.0
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
+    clipanion: ^3.2.0-rc.4
+    react: ^17.0.2
+    typescript: ^4.5.4
+  peerDependencies:
+    "@yarnpkg/cli": ^3.2.0-rc.7
+    "@yarnpkg/core": ^3.2.0-rc.7
   languageName: unknown
   linkType: soft
 
@@ -3322,15 +3349,6 @@ __metadata:
     "@types/node": "*"
     "@types/responselike": "*"
   checksum: c25b1bfa2f4f2cc1ca8e1bebad99f2e2c502a3fc09b5270765bfd6b57b1b73b9fab7127acb618beb04c646534a21c62b052aa6942bdfc461ee49387ec9975cd5
-  languageName: node
-  linkType: hard
-
-"@types/chalk@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@types/chalk@npm:2.2.0"
-  dependencies:
-    chalk: "*"
-  checksum: 846437590d0bf0026d8c2f454e5d91a486becfabde61c0441025e791a0fed75304e143717bc4d025569394dcce5a32f2c53d97253d0c735ac1abae63f1b25c3e
   languageName: node
   linkType: hard
 
@@ -6363,16 +6381,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:*, chalk@npm:^4.0.0, chalk@npm:^4.1.0":
-  version: 4.1.1
-  resolution: "chalk@npm:4.1.1"
-  dependencies:
-    ansi-styles: ^4.1.0
-    supports-color: ^7.1.0
-  checksum: 036e973e665ba1a32c975e291d5f3d549bceeb7b1b983320d4598fb75d70fe20c5db5d62971ec0fe76cdbce83985a00ee42372416abfc3a5584465005a7855ed
-  languageName: node
-  linkType: hard
-
 "chalk@npm:^2.0.0, chalk@npm:^2.3.0, chalk@npm:^2.4.1, chalk@npm:^2.4.2":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
@@ -6394,13 +6402,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "chalk@npm:4.1.2"
+"chalk@npm:^4.0.0, chalk@npm:^4.1.0":
+  version: 4.1.1
+  resolution: "chalk@npm:4.1.1"
   dependencies:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
-  checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
+  checksum: 036e973e665ba1a32c975e291d5f3d549bceeb7b1b983320d4598fb75d70fe20c5db5d62971ec0fe76cdbce83985a00ee42372416abfc3a5584465005a7855ed
   languageName: node
   linkType: hard
 
@@ -8942,6 +8950,13 @@ __metadata:
   version: 3.1.1
   resolution: "flatted@npm:3.1.1"
   checksum: 508935e3366d95444131f0aaa801a4301f24ea5bcb900d12764e7335b46b910730cc1b5bcfcfb8eccb7c8db261ba0671c6a7ca30d10870ff7a7756dc7e731a7a
+  languageName: node
+  linkType: hard
+
+"flatted@npm:^3.2.4":
+  version: 3.2.4
+  resolution: "flatted@npm:3.2.4"
+  checksum: 7d33846428ab337ec81ef9b8b9103894c1c81f5f67feb32bd4ed106fbc47da60d56edb42efd36c9f1f30a010272aeccd34ec1ffacfe9dfdff19673b1d4df481b
   languageName: node
   linkType: hard
 

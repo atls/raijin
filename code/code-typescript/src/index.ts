@@ -1,4 +1,2 @@
-export { Diagnostic, DiagnosticCategory } from 'typescript'
-
+export * from './typescript.utils'
 export * from './typescript'
-export * from './config'
