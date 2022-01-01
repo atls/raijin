@@ -221,6 +221,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:yarn/plugin-husky"
       },
       {
+        "name": "@atls/yarn-plugin-image",
+        "reference": "workspace:yarn/plugin-image"
+      },
+      {
         "name": "@atls/yarn-plugin-lint",
         "reference": "workspace:yarn/plugin-lint"
       },
@@ -305,6 +309,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/yarn-plugin-format", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-format", "workspace:yarn/plugin-format"]],
       ["@atls/yarn-plugin-github", ["workspace:yarn/plugin-github"]],
       ["@atls/yarn-plugin-husky", ["workspace:yarn/plugin-husky"]],
+      ["@atls/yarn-plugin-image", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-image", "workspace:yarn/plugin-image"]],
       ["@atls/yarn-plugin-lint", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-lint", "workspace:yarn/plugin-lint"]],
       ["@atls/yarn-plugin-schematics", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-schematics", "workspace:yarn/plugin-schematics"]],
       ["@atls/yarn-plugin-service", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-service", "workspace:yarn/plugin-service"]],
@@ -1592,6 +1597,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/yarn-plugin-commit", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-commit"],
             ["@atls/yarn-plugin-files", "virtual:84e1c23feeba8a4431723f8b857b98e7109f53d2998b4073b6b3430aaef2c8a91e76d89dc7735d791141f1f51b6ee1978b61d668277f6ed0f74efef6f2122bff#workspace:yarn/plugin-files"],
             ["@atls/yarn-plugin-format", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-format"],
+            ["@atls/yarn-plugin-image", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-image"],
             ["@atls/yarn-plugin-lint", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-lint"],
             ["@atls/yarn-plugin-schematics", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-schematics"],
             ["@atls/yarn-plugin-service", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-service"],
@@ -1907,6 +1913,57 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/fslib", "npm:2.6.0-rc.6"],
             ["ci-info", "npm:3.2.0"],
             ["clipanion", "virtual:11e49090eef2ab4a7d256d57407eff59125c10a45a2c4a95d4b4eed662e01c6bb0b545ee238f4cce0100c8d2885c1a88c24bcf184f4baba2c58b80f525a4f6ab#npm:3.1.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@atls/yarn-plugin-image", [
+        ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-image", {
+          "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-image-virtual-a4b8619f7d/1/yarn/plugin-image/",
+          "packageDependencies": [
+            ["@atls/yarn-plugin-image", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-image"],
+            ["@atls/code-pack", "workspace:code/code-pack"],
+            ["@atls/yarn-pack-utils", "workspace:yarn/pack-utils"],
+            ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],
+            ["@iarna/toml", "npm:2.2.5"],
+            ["@types/yarnpkg__cli", null],
+            ["@types/yarnpkg__core", null],
+            ["@types/yarnpkg__fslib", null],
+            ["@yarnpkg/builder", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
+            ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
+            ["@yarnpkg/core", "npm:3.1.0"],
+            ["@yarnpkg/fslib", "npm:2.6.1-rc.4"],
+            ["@yarnpkg/plugin-patch", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#npm:3.1.1-rc.7"],
+            ["clipanion", "virtual:11e49090eef2ab4a7d256d57407eff59125c10a45a2c4a95d4b4eed662e01c6bb0b545ee238f4cce0100c8d2885c1a88c24bcf184f4baba2c58b80f525a4f6ab#npm:3.1.0"],
+            ["tempy", "npm:1.0.1"],
+            ["typescript", "patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=de8f8a"]
+          ],
+          "packagePeers": [
+            "@types/yarnpkg__cli",
+            "@types/yarnpkg__core",
+            "@types/yarnpkg__fslib",
+            "@yarnpkg/cli",
+            "@yarnpkg/core",
+            "@yarnpkg/fslib"
+          ],
+          "linkType": "SOFT",
+        }],
+        ["workspace:yarn/plugin-image", {
+          "packageLocation": "./yarn/plugin-image/",
+          "packageDependencies": [
+            ["@atls/yarn-plugin-image", "workspace:yarn/plugin-image"],
+            ["@atls/code-pack", "workspace:code/code-pack"],
+            ["@atls/yarn-pack-utils", "workspace:yarn/pack-utils"],
+            ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],
+            ["@iarna/toml", "npm:2.2.5"],
+            ["@yarnpkg/builder", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
+            ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
+            ["@yarnpkg/core", "npm:3.1.0"],
+            ["@yarnpkg/fslib", "npm:2.6.1-rc.4"],
+            ["@yarnpkg/plugin-patch", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#npm:3.1.1-rc.7"],
+            ["clipanion", "virtual:11e49090eef2ab4a7d256d57407eff59125c10a45a2c4a95d4b4eed662e01c6bb0b545ee238f4cce0100c8d2885c1a88c24bcf184f4baba2c58b80f525a4f6ab#npm:3.1.0"],
+            ["tempy", "npm:1.0.1"],
+            ["typescript", "patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=de8f8a"]
           ],
           "linkType": "SOFT",
         }]
@@ -10180,6 +10237,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["crypto-random-string", [
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/crypto-random-string-npm-2.0.0-8ab47992ef-0283879f55.zip/node_modules/crypto-random-string/",
+          "packageDependencies": [
+            ["crypto-random-string", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["cssom", [
         ["npm:0.3.8", {
           "packageLocation": "./.yarn/cache/cssom-npm-0.3.8-a9291d36ff-24beb3087c.zip/node_modules/cssom/",
@@ -10535,6 +10601,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["define-property", "npm:2.0.2"],
             ["is-descriptor", "npm:1.0.2"],
             ["isobject", "npm:3.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["del", [
+        ["npm:6.0.0", {
+          "packageLocation": "./.yarn/cache/del-npm-6.0.0-fb1f14b406-5742891627.zip/node_modules/del/",
+          "packageDependencies": [
+            ["del", "npm:6.0.0"],
+            ["globby", "npm:11.0.3"],
+            ["graceful-fs", "npm:4.2.6"],
+            ["is-glob", "npm:4.0.1"],
+            ["is-path-cwd", "npm:2.2.0"],
+            ["is-path-inside", "npm:3.0.3"],
+            ["p-map", "npm:4.0.0"],
+            ["rimraf", "npm:3.0.2"],
+            ["slash", "npm:3.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -14331,6 +14414,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/is-obj-npm-2.0.0-3d95e053f4-c9916ac8f4.zip/node_modules/is-obj/",
           "packageDependencies": [
             ["is-obj", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["is-path-cwd", [
+        ["npm:2.2.0", {
+          "packageLocation": "./.yarn/cache/is-path-cwd-npm-2.2.0-e35e4aab5f-46a840921b.zip/node_modules/is-path-cwd/",
+          "packageDependencies": [
+            ["is-path-cwd", "npm:2.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["is-path-inside", [
+        ["npm:3.0.3", {
+          "packageLocation": "./.yarn/cache/is-path-inside-npm-3.0.3-2ea0ef44fd-abd50f0618.zip/node_modules/is-path-inside/",
+          "packageDependencies": [
+            ["is-path-inside", "npm:3.0.3"]
           ],
           "linkType": "HARD",
         }]
@@ -19825,6 +19926,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["temp-dir", [
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/temp-dir-npm-2.0.0-e8af180805-cc4f0404bf.zip/node_modules/temp-dir/",
+          "packageDependencies": [
+            ["temp-dir", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["tempy", [
+        ["npm:1.0.1", {
+          "packageLocation": "./.yarn/cache/tempy-npm-1.0.1-12882f05f7-e77ca4440a.zip/node_modules/tempy/",
+          "packageDependencies": [
+            ["tempy", "npm:1.0.1"],
+            ["del", "npm:6.0.0"],
+            ["is-stream", "npm:2.0.0"],
+            ["temp-dir", "npm:2.0.0"],
+            ["type-fest", "npm:0.16.0"],
+            ["unique-string", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["terminal-link", [
         ["npm:2.1.1", {
           "packageLocation": "./.yarn/cache/terminal-link-npm-2.1.1-de80341758-ce3d2cd3a4.zip/node_modules/terminal-link/",
@@ -20641,6 +20765,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/type-fest-npm-0.16.0-e1b8ff05d9-1a4102c06d.zip/node_modules/type-fest/",
+          "packageDependencies": [
+            ["type-fest", "npm:0.16.0"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:0.18.1", {
           "packageLocation": "./.yarn/cache/type-fest-npm-0.18.1-47b079775d-e96dcee18a.zip/node_modules/type-fest/",
           "packageDependencies": [
@@ -20772,6 +20903,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["unique-slug", "npm:2.0.2"],
             ["imurmurhash", "npm:0.1.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["unique-string", [
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/unique-string-npm-2.0.0-3153c97e47-ef68f63913.zip/node_modules/unique-string/",
+          "packageDependencies": [
+            ["unique-string", "npm:2.0.0"],
+            ["crypto-random-string", "npm:2.0.0"]
           ],
           "linkType": "HARD",
         }]
