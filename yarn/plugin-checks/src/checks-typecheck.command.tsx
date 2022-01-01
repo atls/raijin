@@ -1,3 +1,4 @@
+import React                            from 'react'
 import { EOL }                          from 'node:os'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
