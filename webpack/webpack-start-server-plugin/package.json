@@ -7,15 +7,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@types/node": "^16.7.10"
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "webpack": "^5.51.1"
+    "webpack": "^5.65.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.12"
   },
   "publishConfig": {
     "access": "public",

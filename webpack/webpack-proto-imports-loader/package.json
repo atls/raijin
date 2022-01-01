@@ -7,23 +7,23 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@atls/code-typescript": "workspace:0.0.5",
-    "@monstrs/types-import-proto": "0.0.1",
-    "@types/node": "^16.7.10",
-    "memfs": "^3.2.3",
-    "ts-loader": "^9.2.5",
-    "typescript": "^4.4.2",
-    "webpack": "^5.51.1",
-    "webpack-chain": "^6.5.1"
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
     "file-loader": "^6.2.0",
-    "protocol-buffers-schema": "^3.5.2"
+    "protocol-buffers-schema": "^3.6.0"
+  },
+  "devDependencies": {
+    "@atls/config-typescript": "workspace:0.0.1",
+    "@monstrs/types-import-proto": "0.0.1",
+    "@types/node": "^16.11.12",
+    "memfs": "^3.4.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.4",
+    "webpack": "^5.65.0",
+    "webpack-chain": "^6.5.1"
   },
   "publishConfig": {
     "access": "public",

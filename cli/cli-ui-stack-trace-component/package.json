@@ -7,21 +7,21 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "@types/react": "^17.0.19",
-    "ink": "^3.0.9",
-    "react": "*",
-    "strip-ansi": "^6.0.0"
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@atls/cli-ui-renderer": "workspace:0.0.3",
     "@atls/cli-ui-source-component": "workspace:0.0.3",
     "@atls/stack-trace": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "@types/react": "^17.0.37",
+    "ink": "^3.2.0",
+    "react": "^17.0.2",
+    "strip-ansi": "^6.0.1"
   },
   "peerDependencies": {
     "ink": "^3.0.8",

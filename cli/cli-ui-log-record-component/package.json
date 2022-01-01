@@ -7,24 +7,24 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@atls/logger": "^0.0.1",
-    "@types/jest": "^27.0.2",
-    "@types/node": "^16.7.10",
-    "@types/react": "^17.0.19",
-    "ink": "^3.0.9",
-    "react": "*",
-    "strip-ansi": "^6.0.0"
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@atls/cli-ui-renderer": "workspace:0.0.3",
     "@atls/cli-ui-stack-trace-component": "workspace:0.0.3",
     "@atls/logger": "^0.0.1",
     "string-to-color": "^2.2.2"
+  },
+  "devDependencies": {
+    "@atls/logger": "^0.0.1",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.12",
+    "@types/react": "^17.0.37",
+    "ink": "^3.2.0",
+    "react": "^17.0.2",
+    "strip-ansi": "^6.0.1"
   },
   "peerDependencies": {
     "ink": "^3.0.8",

@@ -1,6 +1,6 @@
 import React               from 'react'
-import { FC }              from 'react'
 import { Text }            from 'ink'
+import { FC }              from 'react'
 
 import { codeFrameSource } from './utils'
 

@@ -1,7 +1,8 @@
-import React    from 'react'
-import { FC }   from 'react'
-import { Text } from 'ink'
-import { Body } from '@atls/logger'
+import type { Body } from '@atls/logger'
+
+import React         from 'react'
+import { Text }      from 'ink'
+import { FC }        from 'react'
 
 const getMessage = (body: Body) => {
   if (typeof body === 'string') {
