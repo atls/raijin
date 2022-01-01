@@ -13,6 +13,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/yarn-plugin-check": "workspace:0.0.1",
     "@atls/yarn-plugin-checks": "workspace:0.0.1",
     "@atls/yarn-plugin-commit": "workspace:0.0.1",
     "@atls/yarn-plugin-files": "workspace:0.0.1",
@@ -67,6 +68,7 @@
   "@yarnpkg/builder": {
     "bundles": {
       "standard": [
+        "@atls/yarn-plugin-check",
         "@atls/yarn-plugin-checks",
         "@atls/yarn-plugin-commit",
         "@atls/yarn-plugin-files",

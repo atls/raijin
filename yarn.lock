@@ -879,6 +879,7 @@ __metadata:
   resolution: "@atls/yarn-cli@workspace:yarn/cli"
   dependencies:
     "@atls/tools-setup-ts-execution": "workspace:0.0.1"
+    "@atls/yarn-plugin-check": "workspace:0.0.1"
     "@atls/yarn-plugin-checks": "workspace:0.0.1"
     "@atls/yarn-plugin-commit": "workspace:0.0.1"
     "@atls/yarn-plugin-files": "workspace:0.0.1"
@@ -932,6 +933,19 @@ __metadata:
     "@yarnpkg/core": ^3.2.0-rc.8
     "@yarnpkg/fslib": ^2.6.1-rc.3
     "@yarnpkg/plugin-pack": ^3.1.0
+  languageName: unknown
+  linkType: soft
+
+"@atls/yarn-plugin-check@workspace:0.0.1, @atls/yarn-plugin-check@workspace:yarn/plugin-check":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-check@workspace:yarn/plugin-check"
+  dependencies:
+    "@yarnpkg/builder": 3.1.0
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
+  peerDependencies:
+    "@yarnpkg/cli": ^3.2.0-rc.8
+    "@yarnpkg/core": ^3.2.0-rc.8
   languageName: unknown
   linkType: soft
 

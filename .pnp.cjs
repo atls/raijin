@@ -193,6 +193,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:yarn/pack-utils"
       },
       {
+        "name": "@atls/yarn-plugin-check",
+        "reference": "workspace:yarn/plugin-check"
+      },
+      {
         "name": "@atls/yarn-plugin-checks",
         "reference": "workspace:yarn/plugin-checks"
       },
@@ -294,6 +298,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/webpack-start-server-plugin", ["workspace:webpack/webpack-start-server-plugin"]],
       ["@atls/yarn-cli", ["workspace:yarn/cli"]],
       ["@atls/yarn-pack-utils", ["workspace:yarn/pack-utils"]],
+      ["@atls/yarn-plugin-check", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-check", "workspace:yarn/plugin-check"]],
       ["@atls/yarn-plugin-checks", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-checks", "workspace:yarn/plugin-checks"]],
       ["@atls/yarn-plugin-commit", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-commit", "workspace:yarn/plugin-commit"]],
       ["@atls/yarn-plugin-files", ["workspace:yarn/plugin-files"]],
@@ -1582,6 +1587,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@atls/yarn-cli", "workspace:yarn/cli"],
             ["@atls/tools-setup-ts-execution", "workspace:utils/setup-ts-execution"],
+            ["@atls/yarn-plugin-check", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-check"],
             ["@atls/yarn-plugin-checks", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-checks"],
             ["@atls/yarn-plugin-commit", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-commit"],
             ["@atls/yarn-plugin-files", "workspace:yarn/plugin-files"],
@@ -1637,6 +1643,36 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/core", "npm:3.1.0"],
             ["@yarnpkg/fslib", "npm:2.6.1-rc.4"],
             ["@yarnpkg/plugin-pack", "virtual:a432f295a6826ae0257846200f7bfa3de0462a33d6ccd69aec9df0290d65b6d2d87f430b772daaa156e42e962a75c4cecfeaa89c1a45473c0510ebbebfa257c9#npm:3.1.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@atls/yarn-plugin-check", [
+        ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-check", {
+          "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-check-virtual-d8c23d5093/1/yarn/plugin-check/",
+          "packageDependencies": [
+            ["@atls/yarn-plugin-check", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-check"],
+            ["@types/yarnpkg__cli", null],
+            ["@types/yarnpkg__core", null],
+            ["@yarnpkg/builder", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#npm:3.1.0"],
+            ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
+            ["@yarnpkg/core", "npm:3.1.0"]
+          ],
+          "packagePeers": [
+            "@types/yarnpkg__cli",
+            "@types/yarnpkg__core",
+            "@yarnpkg/cli",
+            "@yarnpkg/core"
+          ],
+          "linkType": "SOFT",
+        }],
+        ["workspace:yarn/plugin-check", {
+          "packageLocation": "./yarn/plugin-check/",
+          "packageDependencies": [
+            ["@atls/yarn-plugin-check", "workspace:yarn/plugin-check"],
+            ["@yarnpkg/builder", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#npm:3.1.0"],
+            ["@yarnpkg/cli", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:3.1.0"],
+            ["@yarnpkg/core", "npm:3.1.0"]
           ],
           "linkType": "SOFT",
         }]
