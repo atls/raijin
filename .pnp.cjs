@@ -149,14 +149,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:config/typescript"
       },
       {
-        "name": "@atls/github-actions-utils",
-        "reference": "workspace:github/actions-utils"
-      },
-      {
-        "name": "@atls/github-checks-utils",
-        "reference": "workspace:github/checks-utils"
-      },
-      {
         "name": "@atls/prettier-plugin",
         "reference": "workspace:prettier/plugin"
       },
@@ -211,14 +203,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {
         "name": "@atls/yarn-plugin-format",
         "reference": "workspace:yarn/plugin-format"
-      },
-      {
-        "name": "@atls/yarn-plugin-github",
-        "reference": "workspace:yarn/plugin-github"
-      },
-      {
-        "name": "@atls/yarn-plugin-husky",
-        "reference": "workspace:yarn/plugin-husky"
       },
       {
         "name": "@atls/yarn-plugin-image",
@@ -295,8 +279,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/config-jest", ["workspace:config/jest"]],
       ["@atls/config-prettier", ["workspace:config/prettier"]],
       ["@atls/config-typescript", ["workspace:config/typescript"]],
-      ["@atls/github-actions-utils", ["workspace:github/actions-utils"]],
-      ["@atls/github-checks-utils", ["workspace:github/checks-utils"]],
       ["@atls/prettier-plugin", ["workspace:prettier/plugin"]],
       ["@atls/schematics", ["workspace:schematics/schematics"]],
       ["@atls/schematics-utils", ["workspace:schematics/schematics-utils"]],
@@ -311,8 +293,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/yarn-plugin-commit", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-commit", "workspace:yarn/plugin-commit"]],
       ["@atls/yarn-plugin-files", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-files", "workspace:yarn/plugin-files"]],
       ["@atls/yarn-plugin-format", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-format", "workspace:yarn/plugin-format"]],
-      ["@atls/yarn-plugin-github", ["workspace:yarn/plugin-github"]],
-      ["@atls/yarn-plugin-husky", ["workspace:yarn/plugin-husky"]],
       ["@atls/yarn-plugin-image", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-image", "workspace:yarn/plugin-image"]],
       ["@atls/yarn-plugin-library", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-library", "workspace:yarn/plugin-library"]],
       ["@atls/yarn-plugin-lint", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-lint", "workspace:yarn/plugin-lint"]],
@@ -357,13 +337,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@actions/core", [
-        ["npm:1.5.0", {
-          "packageLocation": "./.yarn/cache/@actions-core-npm-1.5.0-466389976d-ef1ef51c4b.zip/node_modules/@actions/core/",
-          "packageDependencies": [
-            ["@actions/core", "npm:1.5.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:1.6.0", {
           "packageLocation": "./.yarn/cache/@actions-core-npm-1.6.0-a2628c48cb-ac4689b609.zip/node_modules/@actions/core/",
           "packageDependencies": [
@@ -374,17 +347,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@actions/github", [
-        ["npm:4.0.0", {
-          "packageLocation": "./.yarn/cache/@actions-github-npm-4.0.0-80bcb91a08-0a1dd8e11b.zip/node_modules/@actions/github/",
-          "packageDependencies": [
-            ["@actions/github", "npm:4.0.0"],
-            ["@actions/http-client", "npm:1.0.8"],
-            ["@octokit/core", "npm:3.1.1"],
-            ["@octokit/plugin-paginate-rest", "npm:2.2.3"],
-            ["@octokit/plugin-rest-endpoint-methods", "npm:4.1.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:5.0.0", {
           "packageLocation": "./.yarn/cache/@actions-github-npm-5.0.0-903c87c756-d107bca856.zip/node_modules/@actions/github/",
           "packageDependencies": [
@@ -402,14 +364,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@actions-http-client-npm-1.0.11-f7fe88143c-2c72834ec3.zip/node_modules/@actions/http-client/",
           "packageDependencies": [
             ["@actions/http-client", "npm:1.0.11"],
-            ["tunnel", "npm:0.0.6"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:1.0.8", {
-          "packageLocation": "./.yarn/cache/@actions-http-client-npm-1.0.8-1dd3dafd34-77785fb911.zip/node_modules/@actions/http-client/",
-          "packageDependencies": [
-            ["@actions/http-client", "npm:1.0.8"],
             ["tunnel", "npm:0.0.6"]
           ],
           "linkType": "HARD",
@@ -1386,35 +1340,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
-      ["@atls/github-actions-utils", [
-        ["workspace:github/actions-utils", {
-          "packageLocation": "./github/actions-utils/",
-          "packageDependencies": [
-            ["@atls/github-actions-utils", "workspace:github/actions-utils"],
-            ["@actions/core", "npm:1.5.0"],
-            ["@actions/github", "npm:4.0.0"],
-            ["@octokit/types", "npm:6.31.0"],
-            ["@types/node", "npm:16.9.6"]
-          ],
-          "linkType": "SOFT",
-        }]
-      ]],
-      ["@atls/github-checks-utils", [
-        ["workspace:github/checks-utils", {
-          "packageLocation": "./github/checks-utils/",
-          "packageDependencies": [
-            ["@atls/github-checks-utils", "workspace:github/checks-utils"],
-            ["@actions/core", "npm:1.5.0"],
-            ["@actions/github", "npm:4.0.0"],
-            ["@babel/code-frame", "npm:7.14.5"],
-            ["@jest/test-result", "npm:27.4.2"],
-            ["@octokit/types", "npm:6.31.0"],
-            ["@types/node", "npm:16.9.6"],
-            ["eslint", "npm:8.4.1"]
-          ],
-          "linkType": "SOFT",
-        }]
-      ]],
       ["@atls/logger", [
         ["npm:0.0.1", {
           "packageLocation": "./.yarn/cache/@atls-logger-npm-0.0.1-87e1241a58-ad4fc939b6.zip/node_modules/@atls/logger/",
@@ -1862,32 +1787,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/core", "npm:3.1.0"],
             ["clipanion", "virtual:11e49090eef2ab4a7d256d57407eff59125c10a45a2c4a95d4b4eed662e01c6bb0b545ee238f4cce0100c8d2885c1a88c24bcf184f4baba2c58b80f525a4f6ab#npm:3.1.0"],
             ["react", "npm:17.0.2"]
-          ],
-          "linkType": "SOFT",
-        }]
-      ]],
-      ["@atls/yarn-plugin-github", [
-        ["workspace:yarn/plugin-github", {
-          "packageLocation": "./yarn/plugin-github/",
-          "packageDependencies": [
-            ["@atls/yarn-plugin-github", "workspace:yarn/plugin-github"],
-            ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:3.1.0"],
-            ["@yarnpkg/core", "npm:3.1.0"],
-            ["clipanion", "virtual:11e49090eef2ab4a7d256d57407eff59125c10a45a2c4a95d4b4eed662e01c6bb0b545ee238f4cce0100c8d2885c1a88c24bcf184f4baba2c58b80f525a4f6ab#npm:3.1.0"]
-          ],
-          "linkType": "SOFT",
-        }]
-      ]],
-      ["@atls/yarn-plugin-husky", [
-        ["workspace:yarn/plugin-husky", {
-          "packageLocation": "./yarn/plugin-husky/",
-          "packageDependencies": [
-            ["@atls/yarn-plugin-husky", "workspace:yarn/plugin-husky"],
-            ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:3.1.0"],
-            ["@yarnpkg/core", "npm:3.1.0"],
-            ["@yarnpkg/fslib", "npm:2.6.0-rc.6"],
-            ["ci-info", "npm:3.2.0"],
-            ["clipanion", "virtual:11e49090eef2ab4a7d256d57407eff59125c10a45a2c4a95d4b4eed662e01c6bb0b545ee238f4cce0100c8d2885c1a88c24bcf184f4baba2c58b80f525a4f6ab#npm:3.1.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -4885,14 +4784,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@octokit/auth-token", [
-        ["npm:2.4.1", {
-          "packageLocation": "./.yarn/cache/@octokit-auth-token-npm-2.4.1-e2c0bdda70-492c7cbe14.zip/node_modules/@octokit/auth-token/",
-          "packageDependencies": [
-            ["@octokit/auth-token", "npm:2.4.1"],
-            ["@octokit/types", "npm:4.0.2"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:2.5.0", {
           "packageLocation": "./.yarn/cache/@octokit-auth-token-npm-2.5.0-a1c6ffb640-45949296c0.zip/node_modules/@octokit/auth-token/",
           "packageDependencies": [
@@ -4903,19 +4794,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@octokit/core", [
-        ["npm:3.1.1", {
-          "packageLocation": "./.yarn/cache/@octokit-core-npm-3.1.1-ece35c2fcb-9a45c63183.zip/node_modules/@octokit/core/",
-          "packageDependencies": [
-            ["@octokit/core", "npm:3.1.1"],
-            ["@octokit/auth-token", "npm:2.4.1"],
-            ["@octokit/graphql", "npm:4.5.0"],
-            ["@octokit/request", "npm:5.4.6"],
-            ["@octokit/types", "npm:5.1.0"],
-            ["before-after-hook", "npm:2.1.0"],
-            ["universal-user-agent", "npm:6.0.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:3.5.1", {
           "packageLocation": "./.yarn/cache/@octokit-core-npm-3.5.1-a933dedcf7-67179739fc.zip/node_modules/@octokit/core/",
           "packageDependencies": [
@@ -4944,16 +4822,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@octokit/graphql", [
-        ["npm:4.5.0", {
-          "packageLocation": "./.yarn/cache/@octokit-graphql-npm-4.5.0-bcfd3d895e-c8c854e559.zip/node_modules/@octokit/graphql/",
-          "packageDependencies": [
-            ["@octokit/graphql", "npm:4.5.0"],
-            ["@octokit/request", "npm:5.4.6"],
-            ["@octokit/types", "npm:4.0.2"],
-            ["universal-user-agent", "npm:5.0.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:4.8.0", {
           "packageLocation": "./.yarn/cache/@octokit-graphql-npm-4.8.0-83d118b4da-f68afe53f6.zip/node_modules/@octokit/graphql/",
           "packageDependencies": [
@@ -4966,13 +4834,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@octokit/openapi-types", [
-        ["npm:10.6.0", {
-          "packageLocation": "./.yarn/cache/@octokit-openapi-types-npm-10.6.0-5c04ed0a2b-b35a7249fa.zip/node_modules/@octokit/openapi-types/",
-          "packageDependencies": [
-            ["@octokit/openapi-types", "npm:10.6.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:11.2.0", {
           "packageLocation": "./.yarn/cache/@octokit-openapi-types-npm-11.2.0-10b7a5c509-eb373ea496.zip/node_modules/@octokit/openapi-types/",
           "packageDependencies": [
@@ -4988,15 +4849,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@octokit/plugin-paginate-rest", "npm:2.17.0"]
           ],
           "linkType": "SOFT",
-        }],
-        ["npm:2.2.3", {
-          "packageLocation": "./.yarn/cache/@octokit-plugin-paginate-rest-npm-2.2.3-f55a239935-7bdbaa962a.zip/node_modules/@octokit/plugin-paginate-rest/",
-          "packageDependencies": [
-            ["@octokit/plugin-paginate-rest", "npm:2.2.3"],
-            ["@octokit/core", "npm:3.5.1"],
-            ["@octokit/types", "npm:5.1.0"]
-          ],
-          "linkType": "HARD",
         }],
         ["virtual:903c87c756ff376993db7d0e5ac595612aee1f0826ca5f6d69a72b53e5fb45e6f84b226ae6952ecc8230bec80c0bcf90f41589a458e0189d0a6908414588bea6#npm:2.17.0", {
           "packageLocation": "./.yarn/__virtual__/@octokit-plugin-paginate-rest-virtual-aa48c9c789/0/cache/@octokit-plugin-paginate-rest-npm-2.17.0-4d48903092-c8753cda6f.zip/node_modules/@octokit/plugin-paginate-rest/",
@@ -5014,15 +4866,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@octokit/plugin-rest-endpoint-methods", [
-        ["npm:4.1.0", {
-          "packageLocation": "./.yarn/cache/@octokit-plugin-rest-endpoint-methods-npm-4.1.0-877886e0c8-d7f9f9497e.zip/node_modules/@octokit/plugin-rest-endpoint-methods/",
-          "packageDependencies": [
-            ["@octokit/plugin-rest-endpoint-methods", "npm:4.1.0"],
-            ["@octokit/types", "npm:5.1.0"],
-            ["deprecation", "npm:2.3.1"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:5.13.0", {
           "packageLocation": "./.yarn/cache/@octokit-plugin-rest-endpoint-methods-npm-5.13.0-976c113da3-f331457e43.zip/node_modules/@octokit/plugin-rest-endpoint-methods/",
           "packageDependencies": [
@@ -5047,21 +4890,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@octokit/request", [
-        ["npm:5.4.6", {
-          "packageLocation": "./.yarn/cache/@octokit-request-npm-5.4.6-2260ece15a-52870669b8.zip/node_modules/@octokit/request/",
-          "packageDependencies": [
-            ["@octokit/request", "npm:5.4.6"],
-            ["@octokit/endpoint", "npm:6.0.1"],
-            ["@octokit/request-error", "npm:2.0.1"],
-            ["@octokit/types", "npm:5.1.0"],
-            ["deprecation", "npm:2.3.1"],
-            ["is-plain-object", "npm:3.0.0"],
-            ["node-fetch", "npm:2.6.0"],
-            ["once", "npm:1.4.0"],
-            ["universal-user-agent", "npm:6.0.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:5.6.2", {
           "packageLocation": "./.yarn/cache/@octokit-request-npm-5.6.2-2a9866bd05-51ef3ad244.zip/node_modules/@octokit/request/",
           "packageDependencies": [
@@ -5077,16 +4905,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@octokit/request-error", [
-        ["npm:2.0.1", {
-          "packageLocation": "./.yarn/cache/@octokit-request-error-npm-2.0.1-acf948f81f-cf17cd522b.zip/node_modules/@octokit/request-error/",
-          "packageDependencies": [
-            ["@octokit/request-error", "npm:2.0.1"],
-            ["@octokit/types", "npm:4.0.2"],
-            ["deprecation", "npm:2.3.1"],
-            ["once", "npm:1.4.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:2.1.0", {
           "packageLocation": "./.yarn/cache/@octokit-request-error-npm-2.1.0-51ac624306-baec2b5700.zip/node_modules/@octokit/request-error/",
           "packageDependencies": [
@@ -5104,30 +4922,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@octokit/types", "npm:2.16.2"],
             ["@types/node", "npm:16.9.6"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:4.0.2", {
-          "packageLocation": "./.yarn/cache/@octokit-types-npm-4.0.2-66bfbecc66-2d950f1abf.zip/node_modules/@octokit/types/",
-          "packageDependencies": [
-            ["@octokit/types", "npm:4.0.2"],
-            ["@types/node", "npm:16.9.6"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:5.1.0", {
-          "packageLocation": "./.yarn/cache/@octokit-types-npm-5.1.0-250a66bb50-95411b65ee.zip/node_modules/@octokit/types/",
-          "packageDependencies": [
-            ["@octokit/types", "npm:5.1.0"],
-            ["@types/node", "npm:16.9.6"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:6.31.0", {
-          "packageLocation": "./.yarn/cache/@octokit-types-npm-6.31.0-b5ee55a05d-d95ef3a92a.zip/node_modules/@octokit/types/",
-          "packageDependencies": [
-            ["@octokit/types", "npm:6.31.0"],
-            ["@octokit/openapi-types", "npm:10.6.0"]
           ],
           "linkType": "HARD",
         }],
@@ -6606,15 +6400,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@yarnpkg-fslib-npm-2.6.0-ec8b110e16-4affa8fbd4.zip/node_modules/@yarnpkg/fslib/",
           "packageDependencies": [
             ["@yarnpkg/fslib", "npm:2.6.0"],
-            ["@yarnpkg/libzip", "npm:2.2.2"],
-            ["tslib", "npm:1.13.0"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:2.6.0-rc.6", {
-          "packageLocation": "./.yarn/cache/@yarnpkg-fslib-npm-2.6.0-rc.6-f6c593a8df-f2d5759c70.zip/node_modules/@yarnpkg/fslib/",
-          "packageDependencies": [
-            ["@yarnpkg/fslib", "npm:2.6.0-rc.6"],
             ["@yarnpkg/libzip", "npm:2.2.2"],
             ["tslib", "npm:1.13.0"]
           ],
@@ -8854,13 +8639,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["before-after-hook", [
-        ["npm:2.1.0", {
-          "packageLocation": "./.yarn/cache/before-after-hook-npm-2.1.0-68b62dea36-bb956b32d3.zip/node_modules/before-after-hook/",
-          "packageDependencies": [
-            ["before-after-hook", "npm:2.1.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:2.2.2", {
           "packageLocation": "./.yarn/cache/before-after-hook-npm-2.2.2-b463f0552f-dc2e1ffe38.zip/node_modules/before-after-hook/",
           "packageDependencies": [
@@ -11378,51 +11156,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["eslint", [
-        ["npm:8.4.1", {
-          "packageLocation": "./.yarn/cache/eslint-npm-8.4.1-f532f40df7-d962cd7cd0.zip/node_modules/eslint/",
-          "packageDependencies": [
-            ["eslint", "npm:8.4.1"],
-            ["@eslint/eslintrc", "npm:1.0.5"],
-            ["@humanwhocodes/config-array", "npm:0.9.2"],
-            ["ajv", "npm:6.12.6"],
-            ["chalk", "npm:4.1.1"],
-            ["cross-spawn", "npm:7.0.3"],
-            ["debug", "virtual:bd5ac53f2a4d13161e4becd2185852df3b4231ea7460becce6b80faf113589c84e6d5a7592f2b45846dcda321b203d871f080c12cd9638e02938ccdf6bfbd6ee#npm:4.3.3"],
-            ["doctrine", "npm:3.0.0"],
-            ["enquirer", "npm:2.3.6"],
-            ["escape-string-regexp", "npm:4.0.0"],
-            ["eslint-scope", "npm:7.1.0"],
-            ["eslint-utils", "virtual:f532f40df73defbb174be112250551094f21acc14f40b4a26df1c5c2b63887ce80fe093d62515fad931f6aebec31b8d866f4e00f5041fffce8c9b57fd0220a3f#npm:3.0.0"],
-            ["eslint-visitor-keys", "npm:3.1.0"],
-            ["espree", "npm:9.2.0"],
-            ["esquery", "npm:1.4.0"],
-            ["esutils", "npm:2.0.3"],
-            ["fast-deep-equal", "npm:3.1.3"],
-            ["file-entry-cache", "npm:6.0.1"],
-            ["functional-red-black-tree", "npm:1.0.1"],
-            ["glob-parent", "npm:6.0.2"],
-            ["globals", "npm:13.7.0"],
-            ["ignore", "npm:4.0.6"],
-            ["import-fresh", "npm:3.3.0"],
-            ["imurmurhash", "npm:0.1.4"],
-            ["is-glob", "npm:4.0.1"],
-            ["js-yaml", "npm:4.1.0"],
-            ["json-stable-stringify-without-jsonify", "npm:1.0.1"],
-            ["levn", "npm:0.4.1"],
-            ["lodash.merge", "npm:4.6.2"],
-            ["minimatch", "npm:3.0.4"],
-            ["natural-compare", "npm:1.4.0"],
-            ["optionator", "npm:0.9.1"],
-            ["progress", "npm:2.0.3"],
-            ["regexpp", "npm:3.2.0"],
-            ["semver", "npm:7.3.5"],
-            ["strip-ansi", "npm:6.0.1"],
-            ["strip-json-comments", "npm:3.1.1"],
-            ["text-table", "npm:0.2.0"],
-            ["v8-compile-cache", "npm:2.1.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:8.5.0", {
           "packageLocation": "./.yarn/cache/eslint-npm-8.5.0-430cfb54e1-c1a9e26070.zip/node_modules/eslint/",
           "packageDependencies": [
@@ -11736,20 +11469,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-utils", "virtual:dbb8196e37130fe567895398be5ee5de44712bbc5c5ddc9ee8b0a567f3d9e42b6c73161cdd28aadc0cc7c8c0316ab3c83666dd4607bbbc2bde9e236e6795f1e6#npm:3.0.0"],
             ["@types/eslint", "npm:8.2.1"],
             ["eslint", "npm:8.5.0"],
-            ["eslint-visitor-keys", "npm:2.0.0"]
-          ],
-          "packagePeers": [
-            "@types/eslint",
-            "eslint"
-          ],
-          "linkType": "HARD",
-        }],
-        ["virtual:f532f40df73defbb174be112250551094f21acc14f40b4a26df1c5c2b63887ce80fe093d62515fad931f6aebec31b8d866f4e00f5041fffce8c9b57fd0220a3f#npm:3.0.0", {
-          "packageLocation": "./.yarn/__virtual__/eslint-utils-virtual-cce9ecb417/0/cache/eslint-utils-npm-3.0.0-630b3a4013-0668fe02f5.zip/node_modules/eslint-utils/",
-          "packageDependencies": [
-            ["eslint-utils", "virtual:f532f40df73defbb174be112250551094f21acc14f40b4a26df1c5c2b63887ce80fe093d62515fad931f6aebec31b8d866f4e00f5041fffce8c9b57fd0220a3f#npm:3.0.0"],
-            ["@types/eslint", null],
-            ["eslint", "npm:8.4.1"],
             ["eslint-visitor-keys", "npm:2.0.0"]
           ],
           "packagePeers": [
@@ -16606,14 +16325,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["node-fetch", [
-        ["npm:2.6.0", {
-          "packageLocation": "./.yarn/cache/node-fetch-npm-2.6.0-29c7a53447-2b741e9315.zip/node_modules/node-fetch/",
-          "packageDependencies": [
-            ["node-fetch", "npm:2.6.0"],
-            ["encoding", "npm:0.1.13"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:2.6.6", {
           "packageLocation": "./.yarn/cache/node-fetch-npm-2.6.6-056db6b778-ee8290626b.zip/node_modules/node-fetch/",
           "packageDependencies": [
