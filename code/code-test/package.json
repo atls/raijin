@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-test",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -14,7 +14,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-jest": "workspace:0.0.1",
+    "@atls/config-jest": "workspace:0.0.2",
     "@jest/core": "^27.4.5",
     "@jest/test-result": "^27.4.2",
     "@jest/types": "^27.4.2"

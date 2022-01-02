@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-schematics-worker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -14,12 +14,12 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-schematics": "workspace:0.0.1",
-    "@atls/code-worker-utils": "workspace:0.0.1"
+    "@atls/code-schematics": "workspace:0.0.2",
+    "@atls/code-worker-utils": "workspace:0.0.2"
   },
   "devDependencies": {
     "@angular-devkit/schematics": "^13.1.1",
-    "@atls/schematics": "workspace:0.0.1",
+    "@atls/schematics": "workspace:0.0.2",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.1.1",

@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-format-worker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -14,8 +14,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-format": "workspace:0.0.5",
-    "@atls/code-worker-utils": "workspace:0.0.1"
+    "@atls/code-format": "workspace:0.0.6",
+    "@atls/code-worker-utils": "workspace:0.0.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",

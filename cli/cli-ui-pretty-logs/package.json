@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-pretty-logs",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -12,8 +12,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-log-record-component": "workspace:0.0.3",
-    "@atls/cli-ui-renderer": "workspace:0.0.3",
+    "@atls/cli-ui-log-record-component": "workspace:0.0.4",
+    "@atls/cli-ui-renderer": "workspace:0.0.4",
     "ink": "^3.2.0",
     "react": "^17.0.2"
   },

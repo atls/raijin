@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-git-commit-component",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -12,7 +12,7 @@
     "postpack": "rm -rf dist"
   },
   "devDependencies": {
-    "@atls/code-commit": "workspace:0.0.1",
+    "@atls/code-commit": "workspace:0.0.2",
     "@types/node": "^16.11.12",
     "@types/react": "^17.0.37",
     "@yarnpkg/libui": "^2.2.0",

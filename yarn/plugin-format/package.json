@@ -13,9 +13,9 @@
     "prepack": "yarn run build"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:0.0.1",
-    "@atls/cli-ui-renderer": "workspace:0.0.3",
-    "@atls/code-format-worker": "workspace:0.0.1",
+    "@atls/cli-ui-error-info-component": "workspace:0.0.2",
+    "@atls/cli-ui-renderer": "workspace:0.0.4",
+    "@atls/code-format-worker": "workspace:0.0.2",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "clipanion": "3.2.0-rc.4",
     "react": "^17.0.2"
