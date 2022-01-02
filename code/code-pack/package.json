@@ -7,19 +7,18 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/github-actions-utils": "workspace:0.0.5",
+    "@actions/github": "^5.0.0",
     "@iarna/toml": "^2.2.5",
-    "@yarnpkg/core": "^3.1.0-rc.3",
-    "@yarnpkg/fslib": "^2.6.0-rc.2"
+    "@yarnpkg/core": "^3.2.0-rc.8",
+    "@yarnpkg/fslib": "^2.6.1-rc.3"
   },
   "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@types/node": "^16.7.10"
+    "@types/node": "^16.11.12"
   },
   "publishConfig": {
     "main": "dist/index.js",

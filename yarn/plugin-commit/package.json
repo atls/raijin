@@ -1,7 +1,7 @@
 {
   "name": "@atls/yarn-plugin-commit",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -9,16 +9,31 @@
   ],
   "scripts": {
     "build": "builder build plugin",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/cli-ui-git-commit-component": "workspace:0.0.1",
+    "@atls/code-commit": "workspace:0.0.1",
+    "@yarnpkg/libui": "^2.2.0",
+    "clipanion": "^3.2.0-rc.4",
+    "commitizen": "^4.2.4",
+    "force-stdin-tty": "^0.0.1",
+    "ink": "^3.2.0",
+    "lint-staged": "^11.2.6",
+    "react": "^17.0.2",
+    "word-wrap": "^1.2.3"
   },
   "devDependencies": {
-    "@atls/code-commitlint": "workspace:0.0.5",
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@yarnpkg/cli": "^3.1.0-rc.2",
-    "@yarnpkg/core": "^3.1.0-rc.3",
-    "clipanion": "^3.0.1",
-    "lint-staged": "^11.1.2"
+    "@yarnpkg/builder": "^3.1.0",
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8",
+    "@yarnpkg/fslib": "^2.6.1-rc.3"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8",
+    "@yarnpkg/fslib": "^2.6.1-rc.3"
   },
   "publishConfig": {
     "access": "public",

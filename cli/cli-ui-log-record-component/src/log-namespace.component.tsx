@@ -1,18 +1,11 @@
 import React    from 'react'
-import { FC }   from 'react'
 import { Text } from 'ink'
-import toColor  from 'string-to-color'
-
-const color = (name) => {
-  const parts = name.split(':')
-
-  return toColor(parts.length > 1 ? parts[0] : name)
-}
+import { FC }   from 'react'
 
 export interface NamespaceProps {
   children: string
 }
 
 export const LogNamespace: FC<NamespaceProps> = ({ children }) => (
-  <Text color={color(children)}>[{children}]</Text>
+  <Text color='#d75f00'>{children}</Text>
 )

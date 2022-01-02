@@ -1,6 +1,0 @@
-[[order]]
-
-[stack]
-id = "tech.atls.stacks.node"
-run-image = "atls/stack-node:run"
-build-image = "atls/stack-node:build"

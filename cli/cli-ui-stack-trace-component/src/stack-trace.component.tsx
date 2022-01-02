@@ -1,10 +1,13 @@
+/* eslint-disable react/no-array-index-key */
+
 import { parse }          from '@atls/stack-trace'
+
 import React              from 'react'
-import { FC }             from 'react'
-import { useMemo }        from 'react'
 import { Text }           from 'ink'
 import { Box }            from 'ink'
 import { Spacer }         from 'ink'
+import { FC }             from 'react'
+import { useMemo }        from 'react'
 
 import { SourcePreview }  from '@atls/cli-ui-source-component'
 
@@ -25,26 +28,14 @@ export const StackTrace: FC<StackTraceProps> = ({ children }) => {
   return (
     <Box flexDirection='column' flexGrow={1}>
       {source && stack?.topFrame?.line && (
-        <>
-          <Box paddingLeft={2} marginTop={1}>
-            <Text backgroundColor='red' color='white'>
-              Location
-            </Text>
-          </Box>
-          <Box paddingLeft={4}>
-            <SourcePreview line={stack?.topFrame?.line} column={stack?.topFrame?.column}>
-              {source}
-            </SourcePreview>
-          </Box>
-        </>
+        <Box>
+          <SourcePreview line={stack?.topFrame?.line} column={stack?.topFrame?.column}>
+            {source}
+          </SourcePreview>
+        </Box>
       )}
-      <Box paddingLeft={2} marginTop={1}>
-        <Text backgroundColor='red' color='white'>
-          Stack
-        </Text>
-      </Box>
-      {stack.frames.map((frame: any) => (
-        <Box key={`${frame.file}-${frame.line}`} justifyContent='flex-end' paddingLeft={4}>
+      {stack.frames.map((frame: any, index) => (
+        <Box key={`${frame.file}-${frame.line}-${frame.column}-${index}`} justifyContent='flex-end'>
           <Text>{frame.function}</Text>
           <Spacer />
           <Text color='gray'>{frame.file}</Text>

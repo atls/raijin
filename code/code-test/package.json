@@ -5,29 +5,23 @@
   "main": "src/index.ts",
   "files": [
     "dist",
-    "config.js",
     "resolver.js"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@types/jest": "^27.0.2",
-    "@types/node": "^16.7.10",
-    "jest-haste-map": "^27.3.1",
-    "typescript": "^4.4.2"
+    "build": "yarn library build",
+    "build:worker": "rollup -c",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.5",
-    "@emotion/jest": "^11.5.0",
-    "@jest/core": "^27.3.1",
-    "@jest/test-result": "^27.3.1",
-    "@jest/types": "^27.2.5",
-    "jest-static-stubs": "^0.0.1",
-    "ts-jest": "^27.0.5"
+    "@atls/config-jest": "workspace:0.0.1",
+    "@jest/core": "^27.4.5",
+    "@jest/test-result": "^27.4.2",
+    "@jest/types": "^27.4.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.12"
   },
   "peerDependenciesMeta": {
     "jest": {

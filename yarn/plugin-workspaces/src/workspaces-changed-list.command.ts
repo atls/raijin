@@ -1,13 +1,14 @@
 import { BaseCommand }            from '@yarnpkg/cli'
+import { WorkspaceRequiredError } from '@yarnpkg/cli'
 import { Configuration }          from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
 import { StreamReport }           from '@yarnpkg/core'
 import { structUtils }            from '@yarnpkg/core'
-import { WorkspaceRequiredError } from '@yarnpkg/cli'
+
 import { Option }                 from 'clipanion'
 
-import { getChangedWorkspaces }   from '@atls/yarn-workspace-utils'
 import { getChangedFiles }        from '@atls/yarn-plugin-files'
+import { getChangedWorkspaces }   from '@atls/yarn-workspace-utils'
 
 class WorkspacesChangedListCommand extends BaseCommand {
   static paths = [['workspaces', 'changed', 'list']]
@@ -34,7 +35,6 @@ class WorkspacesChangedListCommand extends BaseCommand {
         const files = await getChangedFiles(project)
         const workspaces = getChangedWorkspaces(project, files)
 
-        // eslint-disable-next-line no-restricted-syntax
         for (const ws of workspaces) {
           report.reportInfo(null, ws.relativeCwd)
           report.reportJson({

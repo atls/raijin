@@ -1,59 +1,48 @@
-import deepmerge            from 'deepmerge'
-import ts                   from 'typescript'
-import { CompilerOptions }  from 'typescript'
+import type { Diagnostic }      from 'typescript'
+import type { CompilerOptions } from 'typescript'
 
-import { base }             from './config'
-import { groupDiagnostics } from './diagnostics'
-import { formatDiagnostic } from './diagnostics'
+import deepmerge                from 'deepmerge'
+import ts                       from 'typescript'
+
+import tsconfig                 from '@atls/config-typescript'
 
 class TypeScript {
-  cwd: string
+  constructor(private readonly cwd: string) {}
 
-  constructor(projectCwd?: string) {
-    this.cwd = projectCwd || process.cwd()
+  check(include: Array<string> = []): Promise<Array<Diagnostic>> {
+    return this.run(include)
   }
 
-  formatDiagnostic(diagnostic, raw?) {
-    return formatDiagnostic(this.cwd, diagnostic, raw)
+  build(
+    include: Array<string> = [],
+    override: Partial<CompilerOptions> = {}
+  ): Promise<Array<Diagnostic>> {
+    return this.run(include, override, false)
   }
 
-  check(include: Array<string> = []) {
-    const config = this.getCompilerConfig(include)
+  private async run(
+    include: Array<string> = [],
+    override: Partial<CompilerOptions> = {},
+    noEmit = true
+  ): Promise<Array<Diagnostic>> {
+    const config = deepmerge(tsconfig, { compilerOptions: override }, {
+      include,
+    } as any)
 
-    if (config.errors && config.errors.length > 0) {
-      return groupDiagnostics(config.errors)
+    const { fileNames, options, errors } = ts.parseJsonConfigFileContent(config, ts.sys, this.cwd)
+
+    if (errors?.length > 0) {
+      return errors
     }
 
-    return this.run(config)
-  }
-
-  build(include: Array<string> = [], override: Partial<CompilerOptions> = {}) {
-    const config = this.getCompilerConfig(include, override)
-
-    if (config.errors && config.errors.length > 0) {
-      return groupDiagnostics(config.errors)
-    }
-
-    return this.run(config, false)
-  }
-
-  private run(config, noEmit = true) {
-    const program = ts.createProgram(config.fileNames, {
-      ...config.options,
+    const program = ts.createProgram(fileNames, {
+      ...options,
       noEmit,
     })
 
     const result = program.emit()
 
-    return groupDiagnostics(ts.getPreEmitDiagnostics(program).concat(result.diagnostics))
-  }
-
-  private getCompilerConfig(include: Array<string> = [], override: Partial<CompilerOptions> = {}) {
-    return ts.parseJsonConfigFileContent(
-      deepmerge(base, { compilerOptions: override }, { include } as any),
-      ts.sys,
-      this.cwd
-    )
+    return ts.getPreEmitDiagnostics(program).concat(result.diagnostics)
   }
 }
 

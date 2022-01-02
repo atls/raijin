@@ -1,27 +1,28 @@
-// eslint-disable-next-line
+const babel = require('@babel/core')
 const { dirname } = require('path')
+const { join } = require('path')
+const { tmpdir } = require('os')
 
-// eslint-disable-next-line
-const { workspaces } = require('../../../package.json')
+const weeksSinceUNIXEpoch = Math.floor(Date.now() / 604800000)
 
-const workspacesPaths = workspaces.map((workspace) => {
-  const [workspacePath] = workspace.split('/')
+if (!process.env.BABEL_CACHE_PATH)
+  process.env.BABEL_CACHE_PATH = join(
+    tmpdir(),
+    'babel',
+    `.babel.${babel.version}.${babel.getEnv()}.${weeksSinceUNIXEpoch}.json`
+  )
 
-  return `/${workspacePath}/`
-})
-
-// eslint-disable-next-line
-require(`@babel/register`)({
+require('@babel/register')({
   root: dirname(__dirname),
-  extensions: [`.tsx`, `.ts`],
-  only: [(request) => workspacesPaths.some((workspace) => request.includes(workspace))],
+  extensions: ['.tsx', '.ts'],
+  only: [(p) => '/'],
   plugins: [
-    require.resolve(`@babel/plugin-transform-modules-commonjs`),
-    require.resolve(`@babel/plugin-proposal-optional-chaining`),
-    require.resolve(`@babel/plugin-proposal-nullish-coalescing-operator`),
-    [require.resolve(`@babel/plugin-proposal-decorators`), { legacy: true }],
-    [require.resolve(`@babel/plugin-proposal-class-properties`), { loose: true }],
-    require.resolve(`@babel/plugin-proposal-async-generator-functions`),
+    require.resolve('@babel/plugin-transform-modules-commonjs'),
+    require.resolve('@babel/plugin-proposal-optional-chaining'),
+    require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
+    [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
+    [require.resolve('@babel/plugin-proposal-class-properties'), { loose: true }],
+    require.resolve('@babel/plugin-proposal-async-generator-functions'),
   ],
-  presets: [require.resolve(`@babel/preset-typescript`), require.resolve(`@babel/preset-react`)],
+  presets: [require.resolve('@babel/preset-typescript'), require.resolve('@babel/preset-react')],
 })

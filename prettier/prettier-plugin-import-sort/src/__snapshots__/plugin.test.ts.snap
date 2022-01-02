@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`import-sort should match latest snapshot 1`] = `
-"import a from \\"./a\\";
-import b from \\"./b\\";
-"
-`;

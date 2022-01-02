@@ -1,7 +1,7 @@
 {
   "name": "@atls/yarn-plugin-format",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -12,11 +12,22 @@
     "postpack": "rm -rf dist",
     "prepack": "yarn run build"
   },
+  "dependencies": {
+    "@atls/cli-ui-error-info-component": "workspace:0.0.1",
+    "@atls/cli-ui-renderer": "workspace:0.0.3",
+    "@atls/code-format-worker": "workspace:0.0.1",
+    "@atls/yarn-run-utils": "workspace:0.0.1",
+    "clipanion": "3.2.0-rc.4",
+    "react": "^17.0.2"
+  },
   "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@yarnpkg/cli": "^3.1.0-rc.2",
-    "@yarnpkg/core": "^3.1.0-rc.3",
-    "clipanion": "^3.0.1"
+    "@yarnpkg/builder": "3.1.0",
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8"
   },
   "publishConfig": {
     "access": "public",

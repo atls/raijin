@@ -17,7 +17,6 @@ export const packWorkspace = async (
     const reportedProgress = report.reportProgress(progress)
 
     try {
-      // eslint-disable-next-line no-restricted-syntax
       for (const file of files) {
         const src = ppath.join(workspace.cwd, file)
         const dest = ppath.join(destination, workspace.relativeCwd, file)

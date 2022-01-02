@@ -1,0 +1,47 @@
+name: Preview
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - master
+
+jobs:
+  run:
+    name: Preview
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.13'
+
+      - name: Install
+        run: yarn install
+
+      - name: Changes
+        run: yarn files changed list
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Install Buildpack Cli
+        run: |
+          (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.18.0/pack-v0.18.0-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
+
+      - name: Login to Google Container Registry
+        run: echo -e $GCR_KEYFILE | docker login -u _json_key --password-stdin https://eu.gcr.io
+        env:
+          GCR_KEYFILE: ${{ secrets.GCR_KEYFILE }}
+
+      - name: Preview
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        run: |
+          yarn workspaces changed foreach app pack \
+            --registry 'eu.gcr.io/${{ secrets.GCR_PROJECT_ID }}/<%= projectName %>-' \
+            --tag-policy ctx-hash-timestamp \
+            --publish

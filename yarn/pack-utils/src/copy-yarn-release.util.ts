@@ -1,8 +1,8 @@
+import { Project }      from '@yarnpkg/core'
+import { Report }       from '@yarnpkg/core'
 import { PortablePath } from '@yarnpkg/fslib'
 import { xfs }          from '@yarnpkg/fslib'
 import { ppath }        from '@yarnpkg/fslib'
-import { Project }      from '@yarnpkg/core'
-import { Report }       from '@yarnpkg/core'
 
 export const copyYarnRelease = async (
   project: Project,

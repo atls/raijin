@@ -1,14 +1,34 @@
-import { execUtils }            from '@yarnpkg/core'
-import { PortablePath }         from '@yarnpkg/fslib'
+import { PortablePath } from '@yarnpkg/fslib'
+import { context }      from '@actions/github'
+import { execUtils }    from '@yarnpkg/core'
 
-import { isGithubActionsEnv }   from '@atls/github-actions-utils'
-import { getPullRequestSha }    from '@atls/github-actions-utils'
-import { getPullRequestNumber } from '@atls/github-actions-utils'
+import { TagPolicy }    from './pack.interfaces'
 
-import { TagPolicy }            from './pack.interfaces'
+export const getPullRequestSha = (): string => {
+  const event = context.payload
+
+  return (
+    process.env.GITHUB_PULL_REQUST_HEAD_SHA ||
+    event.after ||
+    event.pull_request?.head?.sha ||
+    process.env.GITHUB_SHA
+  )
+}
+
+export const getPullRequestId = (): string => {
+  const event = context.payload
+
+  return event.pull_request?.id
+}
+
+export const getPullRequestNumber = (): string => {
+  const event = context.payload
+
+  return String(event.pull_request?.number)
+}
 
 export const getRevision = async () => {
-  if (isGithubActionsEnv()) {
+  if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
     return getPullRequestSha()
   }
 
@@ -23,7 +43,7 @@ export const getRevision = async () => {
 }
 
 export const getContext = async () => {
-  if (isGithubActionsEnv()) {
+  if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
     return getPullRequestNumber()
   }
 

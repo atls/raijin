@@ -7,20 +7,19 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@types/node": "^16.7.10",
-    "@types/react": "^17.0.19"
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@atls/cli-ui-log-record-component": "workspace:0.0.3",
     "@atls/cli-ui-renderer": "workspace:0.0.3",
-    "ink": "^3.0.9",
-    "react": "*"
+    "ink": "^3.2.0",
+    "react": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.12",
+    "@types/react": "^17.0.37"
   },
   "publishConfig": {
     "access": "public",

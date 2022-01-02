@@ -1,16 +1,18 @@
-import { BaseCommand }                 from '@yarnpkg/cli'
-import { Configuration }               from '@yarnpkg/core'
-import { Project }                     from '@yarnpkg/core'
-import { ppath }                       from '@yarnpkg/fslib'
-import { toFilename }                  from '@yarnpkg/fslib'
-import stripAnsi                       from 'strip-ansi'
+import { BaseCommand }           from '@yarnpkg/cli'
+import { Configuration }         from '@yarnpkg/core'
+import { Project }               from '@yarnpkg/core'
+import { ppath }                 from '@yarnpkg/fslib'
+import { toFilename }            from '@yarnpkg/fslib'
 
-import { Annotation, AnnotationLevel } from '@atls/github-checks-utils'
-import { Conclusion }                  from '@atls/github-checks-utils'
-import { createCheck }                 from '@atls/github-checks-utils'
-import { getChangedWorkspaces }        from '@atls/yarn-workspace-utils'
-import { getChangedFiles }             from '@atls/yarn-plugin-files'
-import { PassThroughRunContext }       from '@atls/yarn-run-utils'
+import stripAnsi                 from 'strip-ansi'
+
+import { PassThroughRunContext } from '@atls/yarn-run-utils'
+import { getChangedFiles }       from '@atls/yarn-plugin-files'
+import { getChangedWorkspaces }  from '@atls/yarn-workspace-utils'
+
+import { GitHubChecks }          from './github.checks'
+import { AnnotationLevel }       from './github.checks'
+import { Annotation }            from './github.checks'
 
 class ChecksReleaseCommand extends BaseCommand {
   static paths = [['checks', 'release']]
@@ -23,38 +25,49 @@ class ChecksReleaseCommand extends BaseCommand {
 
     const workspaces = getChangedWorkspaces(project, await getChangedFiles(project))
 
-    const annotations: Array<Annotation> = []
+    const checks = new GitHubChecks('Release')
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const workspace of workspaces) {
-      if (workspace.manifest.scripts.get('build')) {
-        const context = new PassThroughRunContext()
+    const { id: checkId } = await checks.start()
 
-        // eslint-disable-next-line no-await-in-loop
-        const code = await this.cli.run(
-          ['workspace', workspace.manifest.raw.name, 'build'],
-          context
-        )
+    try {
+      const annotations: Array<Annotation> = []
 
-        if (code > 0) {
-          annotations.push({
-            annotation_level: AnnotationLevel.Failure,
-            title: `Error release workspace ${workspace.manifest.raw.name}`,
-            message: `Exit code ${code}`,
-            raw_details: stripAnsi(context.output),
-            path: ppath.join(workspace.relativeCwd, toFilename('package.json')),
-            start_line: 1,
-            end_line: 1,
-          })
+      for (const workspace of workspaces) {
+        if (workspace.manifest.scripts.get('build')) {
+          const context = new PassThroughRunContext()
+
+          // eslint-disable-next-line no-await-in-loop
+          const code = await this.cli.run(
+            ['workspace', workspace.manifest.raw.name, 'build'],
+            context
+          )
+
+          if (code > 0) {
+            annotations.push({
+              annotation_level: AnnotationLevel.Failure,
+              title: `Error release workspace ${workspace.manifest.raw.name}`,
+              message: `Exit code ${code}`,
+              raw_details: stripAnsi(context.output),
+              path: ppath.join(workspace.relativeCwd, toFilename('package.json')),
+              start_line: 1,
+              end_line: 1,
+            })
+          }
         }
       }
-    }
 
-    await createCheck('Release', annotations.length > 0 ? Conclusion.Failure : Conclusion.Success, {
-      title: annotations.length > 0 ? `Errors ${annotations.length}` : 'Successful',
-      summary: annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
-      annotations,
-    })
+      await checks.complete(checkId, {
+        title: annotations.length > 0 ? `Errors ${annotations.length}` : 'Successful',
+        summary:
+          annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
+        annotations,
+      })
+    } catch (error) {
+      await checks.failure({
+        title: 'Release run failed',
+        summary: (error as any).message,
+      })
+    }
   }
 }
 

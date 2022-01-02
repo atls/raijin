@@ -1,6 +1,0 @@
-[[order]]
-
-[stack]
-id = "tech.atls.stacks.operator"
-run-image = "atls/stack-operator:run"
-build-image = "atls/stack-operator:build"

@@ -1,1 +1,1 @@
-export * from './jest'
+export * from './tester'

@@ -1,0 +1,28 @@
+{
+  "name": "@atls/code-commit",
+  "version": "0.0.1",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@commitlint/format": "^15.0.0",
+    "@commitlint/lint": "^15.0.0",
+    "@commitlint/load": "^15.0.0",
+    "@commitlint/read": "^15.0.0",
+    "@commitlint/types": "^15.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.12"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

@@ -1,2 +1,2 @@
-export * from './build'
-export * from './watch'
+export * from './webpack.config'
+export * from './service'

@@ -7,22 +7,20 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build library",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
-  },
-  "devDependencies": {
-    "@atls/tools-builder": "workspace:0.0.0",
-    "@babel/types": "^7.15.0",
-    "@types/node": "^16.7.10"
+    "build": "yarn library build",
+    "build:worker": "rollup -c",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/prettier-plugin-import-align": "workspace:0.0.5",
-    "@atls/prettier-plugin-import-sort": "workspace:0.0.5",
-    "globby": "^11.0.3",
-    "ignore": "^5.1.8",
-    "prettier": "^2.3.2",
-    "prettier-plugin-toml": "^0.3.1"
+    "@atls/config-prettier": "workspace:0.0.1",
+    "@atls/prettier-plugin": "workspace:0.0.1",
+    "globby": "^11.0.4",
+    "ignore": "^5.1.9",
+    "prettier": "^2.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.12"
   },
   "publishConfig": {
     "main": "dist/index.js",

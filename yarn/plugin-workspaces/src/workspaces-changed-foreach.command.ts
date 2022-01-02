@@ -1,13 +1,14 @@
 import { BaseCommand }            from '@yarnpkg/cli'
+import { WorkspaceRequiredError } from '@yarnpkg/cli'
 import { Configuration }          from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
 import { StreamReport }           from '@yarnpkg/core'
 import { structUtils }            from '@yarnpkg/core'
-import { WorkspaceRequiredError } from '@yarnpkg/cli'
+
 import { Option }                 from 'clipanion'
 
-import { getChangedWorkspaces }   from '@atls/yarn-workspace-utils'
 import { getChangedFiles }        from '@atls/yarn-plugin-files'
+import { getChangedWorkspaces }   from '@atls/yarn-workspace-utils'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static paths = [['workspaces', 'changed', 'foreach']]
@@ -43,18 +44,17 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
     const workspaces = getChangedWorkspaces(project, files)
 
     if (!workspaces.length) {
-      const report = await StreamReport.start(
+      const commandReport = await StreamReport.start(
         {
           configuration,
           stdout: this.context.stdout,
         },
-        // eslint-disable-next-line no-shadow
         async (report) => {
           report.reportInfo(null, 'No workspaces changed')
         }
       )
 
-      return report.exitCode()
+      return commandReport.exitCode()
     }
 
     const input = ['workspaces', 'foreach']
