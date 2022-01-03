@@ -21,6 +21,7 @@ export class EvalWorker {
       worker.once('message', (result) => {
         worker.off('error', reject)
         worker.off('exit', exitHandler)
+
         resolve(result)
       })
 

@@ -1,11 +1,5 @@
-export * from './clear-unused-workspaces.util'
-export * from './get-required-workspaces.util'
-export * from './copy-cache-marked-files.util'
-export * from './copy-protocol-files.util'
-export * from './copy-yarn-release.util'
-export * from './copy-manifests.util'
-export * from './copy-rc-files.util'
-export * from './copy-plugins.util'
-export * from './generate-lock-file.util'
-export * from './pack-workspace.util'
-export * from './parse-spec.util'
+import * as workspacesUtils from './workspaces.utils'
+import * as copyUtils       from './copy.utils'
+import * as packUtils       from './pack.utils'
+
+export { workspacesUtils, copyUtils, packUtils }

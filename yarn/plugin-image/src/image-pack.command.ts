@@ -1,35 +1,40 @@
-import { BaseCommand }           from '@yarnpkg/cli'
-import { Workspace }             from '@yarnpkg/core'
-import { Configuration }         from '@yarnpkg/core'
-import { Project }               from '@yarnpkg/core'
-import { Cache }                 from '@yarnpkg/core'
-import { StreamReport }          from '@yarnpkg/core'
-import { Report }                from '@yarnpkg/core'
-import { PortablePath }          from '@yarnpkg/fslib'
-import { stringify }             from '@iarna/toml'
-import { structUtils }           from '@yarnpkg/core'
-import { execUtils }             from '@yarnpkg/core'
-import { xfs }                   from '@yarnpkg/fslib'
-import { ppath }                 from '@yarnpkg/fslib'
-import { toFilename }            from '@yarnpkg/fslib'
-import { patchUtils }            from '@yarnpkg/plugin-patch'
+import { BaseCommand }   from '@yarnpkg/cli'
+import { Workspace }     from '@yarnpkg/core'
+import { Configuration } from '@yarnpkg/core'
+import { Project }       from '@yarnpkg/core'
+import { StreamReport }  from '@yarnpkg/core'
+import { PortablePath }  from '@yarnpkg/fslib'
+import { stringify }     from '@iarna/toml'
+import { execUtils }     from '@yarnpkg/core'
+import { xfs }           from '@yarnpkg/fslib'
+import { ppath }         from '@yarnpkg/fslib'
+import { toFilename }    from '@yarnpkg/fslib'
 
-import tempy                     from 'tempy'
-import { Option }                from 'clipanion'
+import tempy             from 'tempy'
+import { Option }        from 'clipanion'
 
-import { TagPolicy }             from '@atls/code-pack'
-import { tagUtils }              from '@atls/code-pack'
-import { copyRcFile }            from '@atls/yarn-pack-utils'
-import { copyPlugins }           from '@atls/yarn-pack-utils'
-import { copyYarnRelease }       from '@atls/yarn-pack-utils'
-import { copyManifests }         from '@atls/yarn-pack-utils'
-import { copyCacheMarkedFiles }  from '@atls/yarn-pack-utils'
-import { generateLockfile }      from '@atls/yarn-pack-utils'
-import { copyProtocolFiles }     from '@atls/yarn-pack-utils'
-import { parseSpec }             from '@atls/yarn-pack-utils'
-import { getRequiredWorkspaces } from '@atls/yarn-pack-utils'
-import { clearUnusedWorkspaces } from '@atls/yarn-pack-utils'
-import { packWorkspace }         from '@atls/yarn-pack-utils'
+import { TagPolicy }     from '@atls/code-pack'
+import { tagUtils }      from '@atls/code-pack'
+import { packUtils }     from '@atls/yarn-pack-utils'
+
+const forRepository = async (repo: string) => {
+  const descriptor = {
+    project: {
+      id: repo,
+      name: repo,
+      version: '0.0.1',
+    },
+    build: {
+      exclude: ['.git', '.yarn/unplugged'],
+    },
+  }
+
+  const descriptorPath = ppath.join(await xfs.mktempPromise(), toFilename('project.toml'))
+
+  await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
+
+  return descriptorPath
+}
 
 class ImagePackCommand extends BaseCommand {
   static paths = [['image', 'pack']]
@@ -56,33 +61,19 @@ class ImagePackCommand extends BaseCommand {
         if (this.isWorkspaceAllowedForBundle(workspace)) {
           const destination = tempy.directory() as PortablePath
 
-          await this.bundle(configuration, project, workspace, report, destination)
+          report.reportInfo(
+            null,
+            `Package workspace ${workspace.manifest.raw.name} to ${destination}`
+          )
+
+          await packUtils.pack(configuration, project, workspace, report, destination)
 
           const repo = workspace.manifest.raw.name.replace('@', '').replace(/\//g, '-')
           const image = `${this.registry}${repo}`
 
           const tag = await tagUtils.getTag(this.tagPolicy || 'revision')
 
-          const descriptor = {
-            project: {
-              id: repo,
-              name: repo,
-              version: '0.0.1',
-            },
-            build: {
-              exclude: ['.git', '.yarn/unplugged'],
-              env: [
-                {
-                  name: 'WORKSPACE',
-                  value: workspace.manifest.raw.name,
-                },
-              ],
-            },
-          }
-
-          const descriptorPath = ppath.join(await xfs.mktempPromise(), toFilename('project.toml'))
-
-          await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
+          const descriptorPath = await forRepository(repo)
 
           const args = [
             'build',
@@ -140,87 +131,6 @@ class ImagePackCommand extends BaseCommand {
     ].some((command) => buildCommand?.includes(command))
 
     return hasAllowedBuildScript && Boolean(name)
-  }
-
-  async bundle(
-    configuration: Configuration,
-    project: Project,
-    workspace: Workspace,
-    report: Report,
-    destination: PortablePath
-  ) {
-    const requiredWorkspaces = getRequiredWorkspaces(project, [workspace], true)
-
-    clearUnusedWorkspaces(project, requiredWorkspaces, true)
-
-    const cache = await Cache.find(configuration)
-
-    await report.startTimerPromise('Resolution Step', async () => {
-      await project.resolveEverything({ report, cache })
-    })
-
-    await report.startTimerPromise('Fetch Step', async () => {
-      await project.fetchEverything({ report, cache })
-    })
-
-    await xfs.mkdirpPromise(destination)
-
-    await report.startTimerPromise('Copy RC files', async () => {
-      await copyRcFile(project, destination, report)
-    })
-
-    await report.startTimerPromise('Copy plugins', async () => {
-      await copyPlugins(project, destination, report)
-    })
-
-    await report.startTimerPromise('Copy Yarn releases', async () => {
-      await copyYarnRelease(project, destination, report)
-    })
-
-    await report.startTimerPromise('Copy manifests', async () => {
-      await copyManifests(project.workspaces, destination, report)
-    })
-
-    await report.startTimerPromise('Copy protocol files', async () => {
-      await copyProtocolFiles(project, destination, report, (descriptor) => {
-        if (descriptor.range.startsWith('exec:')) {
-          const parsed = parseSpec(descriptor.range)
-
-          if (parsed?.parentLocator) {
-            return {
-              parentLocator: parsed.parentLocator,
-              paths: [parsed.path],
-            }
-          }
-
-          return undefined
-        }
-
-        if (descriptor.range.startsWith('patch:')) {
-          const { parentLocator, patchPaths: paths } = patchUtils.parseDescriptor(descriptor)
-
-          if (parentLocator) {
-            return { parentLocator, paths }
-          }
-        }
-
-        return undefined
-      })
-    })
-
-    await report.startTimerPromise('Copy cache marked files', async () => {
-      await copyCacheMarkedFiles(project, cache, destination, report)
-    })
-
-    await generateLockfile(project, destination, report)
-
-    for await (const ws of requiredWorkspaces) {
-      const name = ws.manifest.name ? structUtils.stringifyIdent(ws.manifest.name) : ''
-
-      await report.startTimerPromise(`Pack workspace ${name}`, async () => {
-        await packWorkspace(ws, destination, report)
-      })
-    }
   }
 }
 

@@ -1548,7 +1548,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:3.1.0"],
             ["@yarnpkg/core", "npm:3.1.0"],
             ["@yarnpkg/fslib", "npm:2.6.1-rc.4"],
-            ["@yarnpkg/plugin-pack", "virtual:761f7f850923de667f2a30a25f6efb4366ea5cd0c49ffc512f691fed9ff94af7e59ad217b728948c5a9dddd8ee4a6f11adb8d28584fa608ecb9b380e682e737a#npm:3.1.0"]
+            ["@yarnpkg/plugin-pack", "virtual:761f7f850923de667f2a30a25f6efb4366ea5cd0c49ffc512f691fed9ff94af7e59ad217b728948c5a9dddd8ee4a6f11adb8d28584fa608ecb9b380e682e737a#npm:3.1.0"],
+            ["@yarnpkg/plugin-patch", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#npm:3.1.1-rc.7"]
           ],
           "linkType": "SOFT",
         }]
