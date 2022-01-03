@@ -32,11 +32,15 @@ class ChecksReleaseCommand extends BaseCommand {
     try {
       const annotations: Array<Annotation> = []
 
-      for (const workspace of workspaces) {
+      for await (const workspace of workspaces) {
         if (workspace.manifest.scripts.get('build')) {
           const context = new PassThroughRunContext()
 
-          // eslint-disable-next-line no-await-in-loop
+          const outputWritter = (data) => this.context.stdout.write(data)
+
+          context.stdout.on('data', outputWritter)
+          context.stderr.on('data', outputWritter)
+
           const code = await this.cli.run(
             ['workspace', workspace.manifest.raw.name, 'build'],
             context
