@@ -1,0 +1,12 @@
+releases:
+  "@atls/cli-ui-schematics-component": patch
+  "@atls/code-format-worker": patch
+  "@atls/code-lint-worker": patch
+  "@atls/code-schematics": patch
+  "@atls/code-schematics-worker": patch
+  "@atls/code-service-worker": patch
+  "@atls/code-test": patch
+  "@atls/code-test-worker": patch
+  "@atls/code-typescript-worker": patch
+  "@atls/code-worker-utils": patch
+  "@atls/schematics": patch
