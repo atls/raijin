@@ -1,26 +1,27 @@
-import { Configuration }         from '@yarnpkg/core'
-import { Workspace }             from '@yarnpkg/core'
-import { Project }               from '@yarnpkg/core'
-import { Report }                from '@yarnpkg/core'
-import { Cache }                 from '@yarnpkg/core'
-import { Locator }               from '@yarnpkg/core'
-import { PortablePath }          from '@yarnpkg/fslib'
-import { structUtils }           from '@yarnpkg/core'
-import { toFilename }            from '@yarnpkg/fslib'
-import { xfs }                   from '@yarnpkg/fslib'
-import { ppath }                 from '@yarnpkg/fslib'
-import { npath }                 from '@yarnpkg/fslib'
-import { patchUtils }            from '@yarnpkg/plugin-patch'
+import { Configuration }   from '@yarnpkg/core'
+import { Workspace }       from '@yarnpkg/core'
+import { Project }         from '@yarnpkg/core'
+import { Report }          from '@yarnpkg/core'
+import { Cache }           from '@yarnpkg/core'
+import { Locator }         from '@yarnpkg/core'
+import { PortablePath }    from '@yarnpkg/fslib'
+import { Filename }        from '@yarnpkg/fslib'
+import { CwdFS }           from '@yarnpkg/fslib'
+import { structUtils }     from '@yarnpkg/core'
+import { tgzUtils }        from '@yarnpkg/core'
+import { toFilename }      from '@yarnpkg/fslib'
+import { xfs }             from '@yarnpkg/fslib'
+import { ppath }           from '@yarnpkg/fslib'
+import { npath }           from '@yarnpkg/fslib'
+import { packUtils }       from '@yarnpkg/plugin-pack'
 
-import { copyRcFile }            from './copy.utils'
-import { copyPlugins }           from './copy.utils'
-import { copyYarnRelease }       from './copy.utils'
-import { copyManifests }         from './copy.utils'
-import { copyCacheMarkedFiles }  from './copy.utils'
-import { copyProtocolFiles }     from './copy.utils'
-import { getRequiredWorkspaces } from './workspaces.utils'
-import { clearUnusedWorkspaces } from './workspaces.utils'
-import { packWorkspace }         from './workspaces.utils'
+import { ExportCache }     from './export/ExportCache'
+import { copyRcFile }      from './copy.utils'
+import { copyPlugins }     from './copy.utils'
+import { copyYarnRelease } from './copy.utils'
+import { genPackTgz }      from './export/exportUtils'
+import { makeFetcher }     from './export/exportUtils'
+import { makeResolver }    from './export/exportUtils'
 
 export const generateLockfile = async (
   project: Project,
@@ -56,76 +57,72 @@ export const pack = async (
   report: Report,
   destination: PortablePath
 ) => {
-  const requiredWorkspaces = getRequiredWorkspaces(project, [workspace], true)
+  const cache = await Cache.find(configuration, { immutable: true })
 
-  clearUnusedWorkspaces(project, requiredWorkspaces, true)
+  await project.restoreInstallState()
 
-  const cache = await Cache.find(configuration)
+  await packUtils.prepareForPack(workspace, { report }, async () => {
+    workspace.manifest.devDependencies.clear()
 
-  await report.startTimerPromise('Resolution Step', async () => {
-    await project.resolveEverything({ report, cache })
-  })
+    const baseFs = new CwdFS(destination)
 
-  await report.startTimerPromise('Fetch Step', async () => {
-    await project.fetchEverything({ report, cache })
-  })
+    const tgz = await genPackTgz(workspace)
 
-  await xfs.mkdirpPromise(destination)
+    // @ts-ignore
+    await tgzUtils.extractArchiveTo(tgz, baseFs, { stripComponents: 1 })
 
-  await report.startTimerPromise('Copy RC files', async () => {
-    await copyRcFile(project, destination, report)
-  })
+    const tmpConfiguration = Configuration.create(destination, destination, configuration.plugins)
 
-  await report.startTimerPromise('Copy plugins', async () => {
-    await copyPlugins(project, destination, report)
-  })
+    tmpConfiguration.values.set(
+      `bstatePath`,
+      ppath.join(destination, `build-state.yml` as Filename)
+    )
 
-  await report.startTimerPromise('Copy Yarn releases', async () => {
-    await copyYarnRelease(project, destination, report)
-  })
+    // tmpConfiguration.values.set(`enableNetwork`, false);
+    // tmpConfiguration.values.set(`enableMirror`, false);
 
-  await report.startTimerPromise('Copy manifests', async () => {
-    await copyManifests(project.workspaces, destination, report)
-  })
+    tmpConfiguration.values.set(`globalFolder`, configuration.get(`globalFolder`))
+    tmpConfiguration.values.set(`packageExtensions`, configuration.get(`packageExtensions`))
 
-  await report.startTimerPromise('Copy protocol files', async () => {
-    await copyProtocolFiles(project, destination, report, (descriptor) => {
-      if (descriptor.range.startsWith('exec:')) {
-        const parsed = parseSpec(descriptor.range)
+    await tmpConfiguration.refreshPackageExtensions()
 
-        if (parsed?.parentLocator) {
-          return {
-            parentLocator: parsed.parentLocator,
-            paths: [parsed.path],
-          }
-        }
+    const { project: tmpProject, workspace: tmpWorkspace } = await Project.find(
+      tmpConfiguration,
+      destination
+    )
 
-        return undefined
-      }
+    tmpWorkspace!.manifest.dependencies = workspace.manifest.dependencies
+    tmpWorkspace!.manifest.peerDependencies = workspace.manifest.peerDependencies
+    tmpWorkspace!.manifest.resolutions = project.topLevelWorkspace.manifest.resolutions
+    tmpWorkspace!.manifest.dependenciesMeta = project.topLevelWorkspace.manifest.dependenciesMeta
+    tmpWorkspace!.manifest.devDependencies.clear()
 
-      if (descriptor.range.startsWith('patch:')) {
-        const { parentLocator, patchPaths: paths } = patchUtils.parseDescriptor(descriptor)
+    await tmpProject.install({
+      // @ts-ignore
+      cache: await ExportCache.find(tmpConfiguration, cache),
+      fetcher: makeFetcher(project),
+      resolver: makeResolver(project),
+      report,
+      persistProject: false,
+    })
 
-        if (parentLocator) {
-          return { parentLocator, paths }
-        }
-      }
+    await report.startTimerPromise('Copy RC files', async () => {
+      await copyRcFile(project, destination, report)
+    })
 
-      return undefined
+    await report.startTimerPromise('Copy plugins', async () => {
+      await copyPlugins(project, destination, report)
+    })
+
+    await report.startTimerPromise('Copy Yarn releases', async () => {
+      await copyYarnRelease(project, destination, report)
+    })
+
+    await generateLockfile(tmpProject, destination, report)
+
+    await xfs.writeJsonPromise(ppath.join(destination, 'package.json' as PortablePath), {
+      ...tmpWorkspace!.manifest.exportTo({}),
+      devDependencies: {},
     })
   })
-
-  await report.startTimerPromise('Copy cache marked files', async () => {
-    await copyCacheMarkedFiles(project, cache, destination, report)
-  })
-
-  await generateLockfile(project, destination, report)
-
-  for await (const ws of requiredWorkspaces) {
-    const name = ws.manifest.name ? structUtils.stringifyIdent(ws.manifest.name) : ''
-
-    await report.startTimerPromise(`Pack workspace ${name}`, async () => {
-      await packWorkspace(ws, destination, report)
-    })
-  }
 }

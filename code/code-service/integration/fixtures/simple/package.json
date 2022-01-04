@@ -6,6 +6,9 @@
     "build": "yarn service build",
     "prepack": "run build"
   },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "devDependencies": {
     "express": "^4.17.1"
   },

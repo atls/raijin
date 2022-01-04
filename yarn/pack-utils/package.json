@@ -12,7 +12,8 @@
     "@yarnpkg/core": "^3.2.0-rc.8",
     "@yarnpkg/fslib": "^2.6.1-rc.3",
     "@yarnpkg/plugin-pack": "^3.1.0",
-    "@yarnpkg/plugin-patch": "^3.1.1-rc.6"
+    "@yarnpkg/plugin-patch": "^3.1.1-rc.6",
+    "tar-stream": "^2.2.0"
   },
   "publishConfig": {
     "access": "public",

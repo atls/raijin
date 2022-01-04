@@ -7,14 +7,12 @@ const { type, cwd, options, files = [] } = workerData
 
 const tester = new Tester(cwd)
 
-if (type === 'unit') {
-  tester.unit(options, files).then((results) => {
-    parentPort!.postMessage(results)
-    process.exit(0)
+const tests = type === 'unit' ? tester.unit(options, files) : tester.integration(options, files)
+
+tests
+  .then((results) => parentPort!.postMessage(results))
+  .then(() => {
+    setTimeout(() => {
+      process.exit(0)
+    }, 100)
   })
-} else {
-  tester.integration(options, files).then((results) => {
-    parentPort!.postMessage(results)
-    process.exit(0)
-  })
-}
