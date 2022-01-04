@@ -417,7 +417,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-format-worker@workspace:code/code-format-worker"
   dependencies:
-    "@atls/code-format": "workspace:0.0.6"
+    "@atls/code-format": "workspace:0.0.7"
     "@atls/code-worker-utils": "workspace:0.0.2"
     "@rollup/plugin-commonjs": ^21.0.1
     "@rollup/plugin-json": ^4.1.0
@@ -431,7 +431,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-format@workspace:0.0.6, @atls/code-format@workspace:code/code-format":
+"@atls/code-format@workspace:0.0.7, @atls/code-format@workspace:code/code-format":
   version: 0.0.0-use.local
   resolution: "@atls/code-format@workspace:code/code-format"
   dependencies:

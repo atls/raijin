@@ -14,7 +14,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-format": "workspace:0.0.6",
+    "@atls/code-format": "workspace:0.0.7",
     "@atls/code-worker-utils": "workspace:0.0.2"
   },
   "devDependencies": {
