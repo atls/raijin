@@ -1,0 +1,5 @@
+releases:
+  "@atls/code-service": patch
+  "@atls/code-service-worker": patch
+  "@atls/code-test": patch
+  "@atls/code-test-worker": patch
