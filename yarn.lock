@@ -883,6 +883,7 @@ __metadata:
     "@yarnpkg/fslib": ^2.6.1-rc.3
     "@yarnpkg/plugin-pack": ^3.1.0
     "@yarnpkg/plugin-patch": ^3.1.1-rc.6
+    tar-stream: ^2.2.0
   languageName: unknown
   linkType: soft
 
@@ -5898,7 +5899,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bl@npm:^4.1.0":
+"bl@npm:^4.0.3, bl@npm:^4.1.0":
   version: 4.1.0
   resolution: "bl@npm:4.1.0"
   dependencies:
@@ -15236,6 +15237,19 @@ resolve@^2.0.0-next.3:
     inherits: ^2.0.3
     readable-stream: ^3.1.1
   checksum: 71025989746dbaade17f7e75e4e1323602185b32049ddcb21ea9e0e4a7a474f73513236cce2860ce67c99ddd576a11369afaec245c259d265d28385ab2662188
+  languageName: node
+  linkType: hard
+
+"tar-stream@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "tar-stream@npm:2.2.0"
+  dependencies:
+    bl: ^4.0.3
+    end-of-stream: ^1.4.1
+    fs-constants: ^1.0.0
+    inherits: ^2.0.3
+    readable-stream: ^3.1.1
+  checksum: 699831a8b97666ef50021c767f84924cfee21c142c2eb0e79c63254e140e6408d6d55a065a2992548e72b06de39237ef2b802b99e3ece93ca3904a37622a66f3
   languageName: node
   linkType: hard
 

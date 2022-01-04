@@ -34,8 +34,7 @@ test('success', () => {
 
             expect(code).toBe(0)
             expect(stdout).toContain('Done')
-            expect(stderr).toContain('Test Suites: 1 passed, 1 total')
-            expect(stderr).toContain('Tests:       1 passed, 1 total')
+            expect(stderr).toContain('PASS ./unit-success.test.ts')
           }
         )
       )
@@ -66,8 +65,7 @@ test('success', () => {
 
             expect(code).toBe(0)
             expect(stdout).toContain('Done')
-            expect(stderr).toContain('Test Suites: 1 failed, 1 total')
-            expect(stderr).toContain('Tests:       1 failed, 1 total')
+            expect(stderr).toContain('FAIL ./unit-invalid.test.ts')
           }
         )
       )
@@ -99,8 +97,7 @@ test('success', () => {
 
             expect(code).toBe(0)
             expect(stdout).toContain('Done')
-            expect(stderr).toContain('Test Suites: 1 passed, 1 total')
-            expect(stderr).toContain('Tests:       1 passed, 1 total')
+            expect(stderr).toContain('PASS integration/success.test.ts')
           }
         )
       )
@@ -132,8 +129,7 @@ test('success', () => {
 
             expect(code).toBe(0)
             expect(stdout).toContain('Done')
-            expect(stderr).toContain('Test Suites: 1 failed, 1 total')
-            expect(stderr).toContain('Tests:       1 failed, 1 total')
+            expect(stderr).toContain('FAIL integration/invalid.test.ts')
           }
         )
       )
