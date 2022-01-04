@@ -16,7 +16,7 @@
     "@atls/cli-ui-error-info-component": "workspace:0.0.2",
     "@atls/cli-ui-log-record-component": "workspace:0.0.4",
     "@atls/cli-ui-renderer": "workspace:0.0.4",
-    "@atls/code-service-worker": "workspace:0.0.2",
+    "@atls/code-service-worker": "workspace:0.0.3",
     "@atls/yarn-pack-utils": "workspace:0.0.1",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "clipanion": "^3.2.0-rc.4",

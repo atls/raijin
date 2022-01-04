@@ -1,7 +1,7 @@
 {
   "name": "@atls/yarn-plugin-format",
-  "private": true,
   "version": "0.0.1",
+  "private": true,
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -9,13 +9,13 @@
   ],
   "scripts": {
     "build": "builder build plugin",
-    "postpack": "rm -rf dist",
-    "prepack": "yarn run build"
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@atls/cli-ui-error-info-component": "workspace:0.0.2",
     "@atls/cli-ui-renderer": "workspace:0.0.4",
-    "@atls/code-format-worker": "workspace:0.0.2",
+    "@atls/code-format-worker": "workspace:0.0.3",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "clipanion": "3.2.0-rc.4",
     "react": "^17.0.2"

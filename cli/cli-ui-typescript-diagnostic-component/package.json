@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-typescript-diagnostic-component",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@atls/cli-ui-source-component": "workspace:0.0.4",
-    "@atls/code-typescript": "workspace:0.0.6"
+    "@atls/code-typescript": "workspace:0.0.7"
   },
   "devDependencies": {
     "@atls/cli-ui-renderer": "workspace:0.0.4",
