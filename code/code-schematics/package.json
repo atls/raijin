@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-schematics",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -15,7 +15,7 @@
   "dependencies": {
     "@angular-devkit/core": "^13.1.1",
     "@angular-devkit/schematics": "^13.1.1",
-    "@atls/schematics": "workspace:0.0.2"
+    "@atls/schematics": "workspace:0.0.3"
   },
   "devDependencies": {
     "rxjs": "6.6.7"
