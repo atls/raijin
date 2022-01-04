@@ -1,5 +1,5 @@
-import { join }   from 'node:path'
 import { Worker } from 'node:worker_threads'
+import { join }   from 'node:path'
 
 export class EvalWorker {
   static async run<T>(content: string, workerData: object): Promise<T> {
