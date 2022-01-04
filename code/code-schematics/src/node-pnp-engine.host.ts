@@ -1,6 +1,6 @@
 import { dirname }                                 from 'node:path'
-import { join }                                    from 'node:path'
 import { resolve }                                 from 'node:path'
+import { join }                                    from 'node:path'
 
 import { RuleFactory }                             from '@angular-devkit/schematics/'
 import { FileSystemCollectionDesc }                from '@angular-devkit/schematics/tools'

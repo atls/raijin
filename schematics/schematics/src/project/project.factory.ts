@@ -1,8 +1,8 @@
 import { readFileSync }         from 'node:fs'
 
 import { Source }               from '@angular-devkit/schematics'
-import { join }                 from '@angular-devkit/core'
 import { strings }              from '@angular-devkit/core'
+import { join }                 from '@angular-devkit/core'
 import { apply }                from '@angular-devkit/schematics'
 import { mergeWith }            from '@angular-devkit/schematics'
 import { move }                 from '@angular-devkit/schematics'

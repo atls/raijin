@@ -1,5 +1,5 @@
-import { accessSync }       from 'node:fs'
 import { join }             from 'node:path'
+import { accessSync }       from 'node:fs'
 
 import { AggregatedResult } from '@jest/test-result'
 import { Config }           from '@jest/types'
