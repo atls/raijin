@@ -317,12 +317,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-schematics-component@workspace:0.0.4, @atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component":
+"@atls/cli-ui-schematics-component@workspace:0.0.5, @atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component"
   dependencies:
     "@atls/cli-ui-parts": "workspace:0.0.2"
-    "@atls/schematics": "workspace:0.0.4"
+    "@atls/schematics": "workspace:0.0.5"
     "@types/node": ^16.11.12
     "@types/react": ^17.0.37
     "@yarnpkg/libui": ^2.2.0
@@ -495,14 +495,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-schematics-worker@workspace:0.0.4, @atls/code-schematics-worker@workspace:code/code-schematics-worker":
+"@atls/code-schematics-worker@workspace:0.0.5, @atls/code-schematics-worker@workspace:code/code-schematics-worker":
   version: 0.0.0-use.local
   resolution: "@atls/code-schematics-worker@workspace:code/code-schematics-worker"
   dependencies:
     "@angular-devkit/schematics": ^13.1.1
-    "@atls/code-schematics": "workspace:0.0.4"
+    "@atls/code-schematics": "workspace:0.0.5"
     "@atls/code-worker-utils": "workspace:0.0.4"
-    "@atls/schematics": "workspace:0.0.4"
+    "@atls/schematics": "workspace:0.0.5"
     "@rollup/plugin-commonjs": ^21.0.1
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^13.1.1
@@ -518,13 +518,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-schematics@workspace:0.0.4, @atls/code-schematics@workspace:code/code-schematics":
+"@atls/code-schematics@workspace:0.0.5, @atls/code-schematics@workspace:code/code-schematics":
   version: 0.0.0-use.local
   resolution: "@atls/code-schematics@workspace:code/code-schematics"
   dependencies:
     "@angular-devkit/core": ^13.1.1
     "@angular-devkit/schematics": ^13.1.1
-    "@atls/schematics": "workspace:0.0.4"
+    "@atls/schematics": "workspace:0.0.5"
     rxjs: 6.6.7
   languageName: unknown
   linkType: soft
@@ -733,7 +733,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/schematics@workspace:0.0.4, @atls/schematics@workspace:schematics/schematics":
+"@atls/schematics@workspace:0.0.5, @atls/schematics@workspace:schematics/schematics":
   version: 0.0.0-use.local
   resolution: "@atls/schematics@workspace:schematics/schematics"
   dependencies:
@@ -1070,9 +1070,9 @@ __metadata:
     "@atls/cli-ui-error-info-component": "workspace:0.0.2"
     "@atls/cli-ui-parts": "workspace:0.0.2"
     "@atls/cli-ui-renderer": "workspace:0.0.4"
-    "@atls/cli-ui-schematics-component": "workspace:0.0.4"
-    "@atls/code-schematics-worker": "workspace:0.0.4"
-    "@atls/schematics": "workspace:0.0.4"
+    "@atls/cli-ui-schematics-component": "workspace:0.0.5"
+    "@atls/code-schematics-worker": "workspace:0.0.5"
+    "@atls/schematics": "workspace:0.0.5"
     "@atls/yarn-run-utils": "workspace:0.0.1"
     "@yarnpkg/builder": 3.1.0
     "@yarnpkg/cli": ^3.2.0-rc.8
@@ -15595,7 +15595,7 @@ resolve@^2.0.0-next.3:
     "@atls/code-service": "workspace:0.0.10"
     "@atls/config-eslint": "workspace:0.0.2"
     "@atls/config-jest": "workspace:0.0.2"
-    "@atls/schematics": "workspace:0.0.4"
+    "@atls/schematics": "workspace:0.0.5"
     "@atls/tools-setup-ts-execution": "workspace:0.0.1"
     "@jest/core": ^27.4.5
     "@types/eslint": ^8.2.1
