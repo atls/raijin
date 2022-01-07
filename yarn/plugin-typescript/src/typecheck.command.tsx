@@ -40,8 +40,8 @@ class TypeCheckCommand extends BaseCommand {
               this.args.length > 0
                 ? this.args
                 : project.topLevelWorkspace.manifest.workspaceDefinitions.map(
-                  (definition) => definition.pattern
-                )
+                    (definition) => definition.pattern
+                  )
             )
 
             progress.end()
