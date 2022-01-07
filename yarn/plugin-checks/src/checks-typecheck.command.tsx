@@ -1,4 +1,3 @@
-import React                            from 'react'
 import { EOL }                          from 'node:os'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
@@ -11,10 +10,13 @@ import { codeFrameColumns }             from '@babel/code-frame'
 import { xfs }                          from '@yarnpkg/fslib'
 import { ppath }                        from '@yarnpkg/fslib'
 
+import React                            from 'react'
+
 import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
 import { TypeScriptWorker }             from '@atls/code-typescript-worker'
 import { renderStatic }                 from '@atls/cli-ui-renderer'
 import { flattenDiagnosticMessageText } from '@atls/code-typescript'
+import { getLineAndCharacterOfPosition } from '@atls/code-typescript'
 
 import { GitHubChecks }                 from './github.checks'
 import { AnnotationLevel }              from './github.checks'
@@ -57,8 +59,9 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
             diagnostics.forEach((diagnostic) => {
               if (diagnostic.file) {
-                const position = diagnostic.file.getLineAndCharacterOfPosition(
-                  diagnostic.start || 0
+                const position = getLineAndCharacterOfPosition(
+                  diagnostic.file,
+          diagnostic.start || 0
                 )
 
                 annotations.push({
