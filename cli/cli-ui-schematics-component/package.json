@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-schematics-component",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@atls/cli-ui-parts": "workspace:0.0.2",
-    "@atls/schematics": "workspace:0.0.5",
+    "@atls/schematics": "workspace:0.0.6",
     "@types/node": "^16.11.12",
     "@types/react": "^17.0.37",
     "@yarnpkg/libui": "^2.2.0",
