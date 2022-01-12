@@ -61,7 +61,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
               if (diagnostic.file) {
                 const position = getLineAndCharacterOfPosition(
                   diagnostic.file,
-          diagnostic.start || 0
+                  diagnostic.start || 0
                 )
 
                 annotations.push({

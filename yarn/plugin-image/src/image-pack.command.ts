@@ -80,7 +80,7 @@ class ImagePackCommand extends BaseCommand {
             `${image}:${tag}`,
             '--verbose',
             '--buildpack',
-            'atls/buildpack-yarn-workspace:0.0.2',
+            'monstrs/buildpack-yarn-workspace:0.0.3',
             '--builder',
             'monstrs/builder-base:buster',
             '--descriptor',

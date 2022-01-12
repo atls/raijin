@@ -44,7 +44,7 @@ export const pack = async (
     '--descriptor',
     descriptorPath,
     '--buildpack',
-    buildpack || 'atls/buildpack-yarn-workspace:0.0.2',
+    buildpack || 'monstrs/buildpack-yarn-workspace:0.0.3',
     '--builder',
     builder || 'monstrs/builder-base:buster',
     '--tag',
