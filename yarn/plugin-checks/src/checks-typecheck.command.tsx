@@ -1,26 +1,26 @@
-import { EOL }                          from 'node:os'
+import { EOL }                           from 'node:os'
 
-import { BaseCommand }                  from '@yarnpkg/cli'
-import { Configuration }                from '@yarnpkg/core'
-import { Project }                      from '@yarnpkg/core'
-import { StreamReport }                 from '@yarnpkg/core'
-import { MessageName }                  from '@yarnpkg/core'
-import { PortablePath }                 from '@yarnpkg/fslib'
-import { codeFrameColumns }             from '@babel/code-frame'
-import { xfs }                          from '@yarnpkg/fslib'
-import { ppath }                        from '@yarnpkg/fslib'
+import { BaseCommand }                   from '@yarnpkg/cli'
+import { Configuration }                 from '@yarnpkg/core'
+import { Project }                       from '@yarnpkg/core'
+import { StreamReport }                  from '@yarnpkg/core'
+import { MessageName }                   from '@yarnpkg/core'
+import { PortablePath }                  from '@yarnpkg/fslib'
+import { codeFrameColumns }              from '@babel/code-frame'
+import { xfs }                           from '@yarnpkg/fslib'
+import { ppath }                         from '@yarnpkg/fslib'
 
-import React                            from 'react'
+import React                             from 'react'
 
-import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptWorker }             from '@atls/code-typescript-worker'
-import { renderStatic }                 from '@atls/cli-ui-renderer'
-import { flattenDiagnosticMessageText } from '@atls/code-typescript'
+import { TypeScriptDiagnostic }          from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScriptWorker }              from '@atls/code-typescript-worker'
+import { renderStatic }                  from '@atls/cli-ui-renderer'
+import { flattenDiagnosticMessageText }  from '@atls/code-typescript'
 import { getLineAndCharacterOfPosition } from '@atls/code-typescript'
 
-import { GitHubChecks }                 from './github.checks'
-import { AnnotationLevel }              from './github.checks'
-import { Annotation }                   from './github.checks'
+import { GitHubChecks }                  from './github.checks'
+import { AnnotationLevel }               from './github.checks'
+import { Annotation }                    from './github.checks'
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static paths = [['checks', 'typecheck']]
@@ -59,10 +59,10 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
             diagnostics.forEach((diagnostic) => {
               if (diagnostic.file) {
-                const position = getLineAndCharacterOfPosition(
-                  diagnostic.file,
-                  diagnostic.start || 0
-                )
+                const position =
+                  (diagnostic.file as any).lineMap && diagnostic.start
+                    ? getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)
+                    : null
 
                 annotations.push({
                   path: ppath.normalize(
@@ -72,18 +72,20 @@ class ChecksTypeCheckCommand extends BaseCommand {
                     .split(EOL)
                     .at(0) as string,
                   message: flattenDiagnosticMessageText(diagnostic.messageText, EOL),
-                  start_line: position.line + 1,
-                  end_line: position.line + 1,
-                  raw_details: codeFrameColumns(
-                    xfs.readFileSync(diagnostic.file.fileName as PortablePath).toString(),
-                    {
-                      start: {
-                        line: position.line + 1,
-                        column: position.character + 1,
-                      },
-                    },
-                    { highlightCode: false }
-                  ),
+                  start_line: position ? position.line + 1 : 0,
+                  end_line: position ? position.line + 1 : 0,
+                  raw_details: position
+                    ? codeFrameColumns(
+                        xfs.readFileSync(diagnostic.file.fileName as PortablePath).toString(),
+                        {
+                          start: {
+                            line: position.line + 1,
+                            column: position.character + 1,
+                          },
+                        },
+                        { highlightCode: false }
+                      )
+                    : flattenDiagnosticMessageText(diagnostic.messageText, EOL),
                   annotation_level: AnnotationLevel.Failure,
                 })
               }
