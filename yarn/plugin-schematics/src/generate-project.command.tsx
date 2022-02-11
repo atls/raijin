@@ -104,7 +104,7 @@ class GenerateProjectCommand extends BaseCommand {
                     collection: '@atls/schematics',
                     schematic: 'project',
                     type: options.type,
-                    migration: Date.now(),
+                    migration: String(Date.now()),
                   },
                 }
               }

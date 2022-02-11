@@ -36,7 +36,7 @@ class MigrationUpCommand extends BaseCommand {
           try {
             const events = await schematics.migrate(
               'project',
-              workspace?.manifest?.raw?.schematic?.migration || 0
+              workspace?.manifest?.raw?.tools?.schematic?.migration || '0'
             )
 
             progress.end()

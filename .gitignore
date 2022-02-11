@@ -46,3 +46,6 @@ package.tgz
 
 .idea/workspace.xml
 .idea/vcs.xml
+
+# next.js output
+.next

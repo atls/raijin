@@ -21,13 +21,9 @@ export class SchematicsWorker {
     private readonly dryRun = false
   ) {}
 
-  async run(
-    type: 'migrate' | 'generate',
-    schematicName: string,
-    options = {}
-  ): Promise<Array<DryRunEvent>> {
+  generate(schematicName: string, options = {}): Promise<Array<DryRunEvent>> {
     return EvalWorker.run(getContent(), {
-      type,
+      type: 'generate',
       cwd: this.cwd,
       force: this.force,
       dryRun: this.dryRun,
@@ -36,11 +32,19 @@ export class SchematicsWorker {
     })
   }
 
-  generate(schematicName: string, options = {}) {
-    return this.run('generate', schematicName, options)
-  }
-
-  migrate(schematicName: string, options = {}) {
-    return this.run('migrate', schematicName, options)
+  migrate(
+      schematicName: string,
+      migrationVersion: string,
+      options = {}
+  ): Promise<Array<DryRunEvent>> {
+    return EvalWorker.run(getContent(), {
+      type: 'migrate',
+      cwd: this.cwd,
+      force: this.force,
+      dryRun: this.dryRun,
+      migrationVersion,
+      schematicName,
+      options,
+    })
   }
 }
