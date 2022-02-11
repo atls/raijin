@@ -14,9 +14,6 @@
     "cli/*"
   ],
   "resolutions": {
-    "@yarnpkg/cli": "3.1.0",
-    "@yarnpkg/core": "3.1.0",
-    "clipanion": "3.1.0",
     "globby": "11.0.3"
   },
   "devDependencies": {
@@ -31,7 +28,7 @@
     "@types/eslint": "^8.2.1",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.12",
-    "@yarnpkg/builder": "^3.1.0",
+    "@yarnpkg/builder": "^3.1.1-rc.2",
     "eslint": "^8.4.1",
     "eslint-import-resolver-node": "^0.3.6",
     "espree": "^9.2.0",
