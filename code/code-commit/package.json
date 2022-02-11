@@ -12,14 +12,14 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@commitlint/format": "^15.0.0",
-    "@commitlint/lint": "^15.0.0",
-    "@commitlint/load": "^15.0.0",
-    "@commitlint/read": "^15.0.0",
-    "@commitlint/types": "^15.0.0"
+    "@commitlint/format": "^16.0.0",
+    "@commitlint/lint": "^16.0.0",
+    "@commitlint/load": "^16.1.0",
+    "@commitlint/read": "^16.0.0",
+    "@commitlint/types": "^16.0.0"
   },
   "devDependencies": {
-    "@types/node": "^16.11.12"
+    "@types/node": "^17.0.17"
   },
   "publishConfig": {
     "main": "dist/index.js",

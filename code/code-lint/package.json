@@ -14,12 +14,12 @@
   },
   "dependencies": {
     "@atls/config-eslint": "workspace:0.0.2",
-    "eslint": "^8.4.1",
+    "eslint": "^8.8.0",
     "globby": "^11.0.4",
-    "ignore": "^5.1.9"
+    "ignore": "^5.2.0"
   },
   "devDependencies": {
-    "@types/node": "^16.11.12"
+    "@types/node": "^17.0.17"
   },
   "peerDependencies": {
     "react": "*",
