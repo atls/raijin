@@ -43,3 +43,6 @@ node_modules
 dist/
 
 package.tgz
+
+# next.js output
+.next
