@@ -16,11 +16,11 @@
     "@atls/config-prettier": "workspace:0.0.1",
     "@atls/prettier-plugin": "workspace:0.0.2",
     "globby": "^11.0.4",
-    "ignore": "^5.1.9",
+    "ignore": "^5.2.0",
     "prettier": "^2.5.1"
   },
   "devDependencies": {
-    "@types/node": "^16.11.12"
+    "@types/node": "^17.0.17"
   },
   "publishConfig": {
     "main": "dist/index.js",
