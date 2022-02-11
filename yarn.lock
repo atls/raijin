@@ -6423,28 +6423,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clipanion@npm:^3.0.1":
-  version: 3.1.0
-  resolution: "clipanion@npm:3.1.0"
-  dependencies:
-    typanion: ^3.3.1
-  peerDependencies:
-    typanion: "*"
-  checksum: bf350082e8953c697cfe35262845700012bdeb1cc490f81cd17de2fe985c8861750164509795ad95d3ee6a2b3742a1d5c6394cdf0f3ff4c4d24173a9fec3418e
-  languageName: node
-  linkType: hard
-
-"clipanion@npm:^3.2.0-rc.4, clipanion@npm:^3.2.0-rc.6":
-  version: 3.2.0-rc.8
-  resolution: "clipanion@npm:3.2.0-rc.8"
-  dependencies:
-    typanion: ^3.3.1
-  peerDependencies:
-    typanion: "*"
-  checksum: 9c212e85516048e2b95ba1132ee139729ea8e574be2881578d82794d3cec6ced89fed364e7443a24344358e8b1b9fe4124351f8e748ba40e508faaa9b20b3750
-  languageName: node
-  linkType: hard
-
 "cliui@npm:^7.0.2":
   version: 7.0.4
   resolution: "cliui@npm:7.0.4"

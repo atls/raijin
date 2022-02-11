@@ -14,7 +14,8 @@
     "cli/*"
   ],
   "resolutions": {
-    "globby": "11.0.3"
+    "globby": "11.0.3",
+    "clipanion": "3.2.0-rc.4"
   },
   "devDependencies": {
     "@angular-devkit/core": "^13.2.3",
