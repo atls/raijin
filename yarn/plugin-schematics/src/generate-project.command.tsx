@@ -99,12 +99,14 @@ class GenerateProjectCommand extends BaseCommand {
               ),
               {
                 ...workspace!.manifest.raw,
-                schematic: {
-                  collection: '@atls/schematics',
-                  schematic: 'project',
-                  type: options.type,
-                  migration: 0,
-                },
+                tools: {
+                  schematic: {
+                    collection: '@atls/schematics',
+                    schematic: 'project',
+                    type: options.type,
+                    migration: String(Date.now()),
+                  },
+                }
               }
             )
           } catch (error) {

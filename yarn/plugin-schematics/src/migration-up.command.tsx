@@ -3,6 +3,8 @@ import { Configuration }    from '@yarnpkg/core'
 import { Project }          from '@yarnpkg/core'
 import { MessageName }      from '@yarnpkg/core'
 import { StreamReport }     from '@yarnpkg/core'
+import { xfs }              from '@yarnpkg/fslib'
+import { npath }            from '@yarnpkg/fslib'
 
 import React                from 'react'
 
@@ -34,7 +36,7 @@ class MigrationUpCommand extends BaseCommand {
           try {
             const events = await schematics.migrate(
               'project',
-              workspace?.manifest?.raw?.schematic?.migration || 0
+              workspace?.manifest?.raw?.tools?.schematic?.migration || '0'
             )
 
             progress.end()
@@ -48,6 +50,22 @@ class MigrationUpCommand extends BaseCommand {
                 report.reportInfo(MessageName.UNNAMED, `${eventPath}: ${event.kind}`)
               }
             })
+
+            await xfs.writeJsonPromise(
+                npath.toPortablePath(
+                    npath.join(npath.fromPortablePath(workspace!.cwd), 'package.json')
+                ),
+                {
+                  ...workspace!.manifest.raw,
+                  tools: {
+                    ...workspace!.manifest.raw.tools,
+                    schematic: {
+                      ...workspace!.manifest.raw.tools.schematic,
+                      migration: Date.now(),
+                    },
+                  },
+                }
+            )
           } catch (error) {
             progress.end()
 

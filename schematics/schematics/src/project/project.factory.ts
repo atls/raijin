@@ -1,8 +1,9 @@
 import { readFileSync }         from 'node:fs'
+import { join }                 from 'node:path'
 
+import { MergeStrategy }        from '@angular-devkit/schematics'
 import { Source }               from '@angular-devkit/schematics'
 import { strings }              from '@angular-devkit/core'
-import { join }                 from '@angular-devkit/core'
 import { apply }                from '@angular-devkit/schematics'
 import { mergeWith }            from '@angular-devkit/schematics'
 import { move }                 from '@angular-devkit/schematics'
@@ -31,7 +32,7 @@ const generateCommon = (options): Source =>
 const generateProjectSpecifiec = (options): Source => {
   const { name: projectName } = JSON.parse(readFileSync(join(options.cwd, 'package.json'), 'utf-8'))
 
-  return apply(url(`./files/${options.type}`), [
+    return apply(url(join('./files', options.type)), [
     template({
       ...strings,
       ...options,
@@ -44,7 +45,7 @@ const generateProjectSpecifiec = (options): Source => {
 
 export const main = (options) =>
   chain([
-    mergeWith(generateCommon(options)),
-    mergeWith(generateProjectSpecifiec(options)),
+    mergeWith(generateCommon(options), MergeStrategy.Overwrite),
+    mergeWith(generateProjectSpecifiec(options), MergeStrategy.Overwrite),
     updateTsConfig,
   ])

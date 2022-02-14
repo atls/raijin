@@ -1,3 +1,9 @@
 {
-  "schematics": {}
+  "schematics": {
+    "add-next-output-to-gitignore": {
+      "version": "1643055091770",
+      "description": "Add .next to .gitignore",
+      "factory": "./migrations/update-1643055091770/add-next-to-gitignore.migration"
+    }
+  }
 }

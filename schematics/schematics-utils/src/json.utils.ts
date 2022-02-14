@@ -27,6 +27,7 @@ export const updateJsonInTree = <T = any, O = T>(
   (host: Tree, context: SchematicContext): Tree => {
     if (!host.exists(path)) {
       host.create(path, serializeJson(callback({} as T, context)))
+
       return host
     }
 
