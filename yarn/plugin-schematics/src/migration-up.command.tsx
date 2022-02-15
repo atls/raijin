@@ -52,19 +52,19 @@ class MigrationUpCommand extends BaseCommand {
             })
 
             await xfs.writeJsonPromise(
-                npath.toPortablePath(
-                    npath.join(npath.fromPortablePath(workspace!.cwd), 'package.json')
-                ),
-                {
-                  ...workspace!.manifest.raw,
-                  tools: {
-                    ...workspace!.manifest.raw.tools,
-                    schematic: {
-                      ...workspace!.manifest.raw.tools.schematic,
-                      migration: Date.now(),
-                    },
+              npath.toPortablePath(
+                npath.join(npath.fromPortablePath(workspace!.cwd), 'package.json')
+              ),
+              {
+                ...workspace!.manifest.raw,
+                tools: {
+                  ...workspace!.manifest.raw.tools,
+                  schematic: {
+                    ...workspace!.manifest.raw.tools.schematic,
+                    migration: String(Date.now()),
                   },
-                }
+                },
+              }
             )
           } catch (error) {
             progress.end()

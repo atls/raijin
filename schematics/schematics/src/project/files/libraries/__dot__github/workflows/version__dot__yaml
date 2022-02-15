@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Version
-        run: yarn workspaces changed foreach --no-private --verbose run version patch --deferred
+        run: yarn workspaces changed foreach --no-private --verbose version patch --deferred
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 

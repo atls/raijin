@@ -25,7 +25,7 @@ jobs:
       - name: Npm Publish
         run: |
           yarn version apply --all
-          yarn workspaces changed foreach --verbose --topological --no-private run npm publish --access public
+          yarn workspaces changed foreach --verbose --topological --no-private npm publish --access public
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
