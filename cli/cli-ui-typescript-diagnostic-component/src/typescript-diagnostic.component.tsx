@@ -65,7 +65,7 @@ export const TypeScriptDiagnostic: FC<TypeScriptDiagnosticProps> = ({
         </Text>
         <Text color='white'>: {flattenDiagnosticMessageText(messageText, '\n')}</Text>
       </Box>
-      {file.text && position && (
+      {file?.text && position && (
         <Box marginBottom={1}>
           <SourcePreview line={position.line + 1} column={position.character}>
             {file.text}
