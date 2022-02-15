@@ -1,8 +1,8 @@
-import commitformat    from '@commitlint/format'
-import commitlint      from '@commitlint/lint'
-import { LintOutcome } from '@commitlint/types'
+import commitformat           from '@commitlint/format'
+import { LintOutcome }        from '@commitlint/types'
 
-import { rules }       from './commit.rules'
+import { rules }              from './commit.rules'
+import { lint as commitlint } from './commitlint'
 
 export class CommitLinter {
   async lint(message: string): Promise<LintOutcome> {

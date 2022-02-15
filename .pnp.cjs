@@ -1017,11 +1017,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@atls/code-commit", "workspace:code/code-commit"],\
             ["@commitlint/format", "npm:16.0.0"],\
+            ["@commitlint/is-ignored", "npm:16.0.0"],\
             ["@commitlint/lint", "npm:16.0.0"],\
             ["@commitlint/load", "npm:16.1.0"],\
             ["@commitlint/read", "npm:16.0.0"],\
+            ["@commitlint/rules", "npm:16.0.0"],\
             ["@commitlint/types", "npm:16.0.0"],\
-            ["@types/node", "npm:17.0.17"]\
+            ["@types/node", "npm:17.0.17"],\
+            ["conventional-changelog-angular", "npm:5.0.13"],\
+            ["conventional-commits-parser", "npm:3.2.4"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -9473,6 +9477,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/conventional-changelog-angular-npm-5.0.12-0dd88eb3f8-552db8762d.zip/node_modules/conventional-changelog-angular/",\
           "packageDependencies": [\
             ["conventional-changelog-angular", "npm:5.0.12"],\
+            ["compare-func", "npm:2.0.0"],\
+            ["q", "npm:1.5.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.0.13", {\
+          "packageLocation": "./.yarn/cache/conventional-changelog-angular-npm-5.0.13-50e4a302c4-6ed4972fce.zip/node_modules/conventional-changelog-angular/",\
+          "packageDependencies": [\
+            ["conventional-changelog-angular", "npm:5.0.13"],\
             ["compare-func", "npm:2.0.0"],\
             ["q", "npm:1.5.1"]\
           ],\

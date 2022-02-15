@@ -13,10 +13,14 @@
   },
   "dependencies": {
     "@commitlint/format": "^16.0.0",
+    "@commitlint/is-ignored": "^16.0.0",
     "@commitlint/lint": "^16.0.0",
     "@commitlint/load": "^16.1.0",
     "@commitlint/read": "^16.0.0",
-    "@commitlint/types": "^16.0.0"
+    "@commitlint/rules": "^16.0.0",
+    "@commitlint/types": "^16.0.0",
+    "conventional-changelog-angular": "^5.0.13",
+    "conventional-commits-parser": "^3.2.4"
   },
   "devDependencies": {
     "@types/node": "^17.0.17"
