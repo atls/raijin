@@ -44,7 +44,7 @@
       "collection": "@atls/schematics",
       "schematic": "project",
       "type": "libraries",
-      "migration": "1645001345611"
+      "migration": "1645001973970"
     }
   }
 }
