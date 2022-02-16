@@ -12,7 +12,7 @@ export const readYamlInTree = <T = any>(host: Tree, path: string): T => {
     throw new Error(`Cannot find ${path}`)
   }
 
-  return load(host.read(path)!.toString('utf-8'))
+  return load(host.read(path)!.toString('utf-8')) as T
 }
 
 export const updateYamlInTree = <T = any, O = T>(
