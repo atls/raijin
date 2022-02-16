@@ -53,11 +53,13 @@ export const copyPlugins = async (
 ): Promise<void> => {
   const pluginDir = ppath.join(toFilename('.yarn'), toFilename('plugins'))
 
-  report.reportInfo(null, pluginDir)
+  if (await xfs.existsPromise(ppath.join(project.cwd, pluginDir))) {
+    report.reportInfo(null, pluginDir)
 
-  await xfs.copyPromise(ppath.join(destination, pluginDir), ppath.join(project.cwd, pluginDir), {
-    overwrite: true,
-  })
+    await xfs.copyPromise(ppath.join(destination, pluginDir), ppath.join(project.cwd, pluginDir), {
+      overwrite: true,
+    })
+  }
 }
 
 // https://github.com/yarnpkg/berry/blob/d38d573/packages/plugin-patch/sources/patchUtils.ts#L10
