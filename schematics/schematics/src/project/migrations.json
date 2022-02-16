@@ -8,7 +8,7 @@
     "library-workflows-remove-run": {
       "version": "1645001345611",
       "description": "Remove run from version and public workflow",
-      "factory": "./migrations/update-1643063153411/library-workflows-remove-run.migration"
+      "factory": "./migrations/update-1645001345611/library-workflows-remove-run.migration"
     }
   }
 }
