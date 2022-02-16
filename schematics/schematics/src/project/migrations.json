@@ -4,6 +4,11 @@
       "version": "1643055091770",
       "description": "Add .next to .gitignore",
       "factory": "./migrations/update-1643055091770/add-next-to-gitignore.migration"
+    },
+    "library-workflows-remove-run": {
+      "version": "1645001345611",
+      "description": "Remove run from version and public workflow",
+      "factory": "./migrations/update-1643063153411/library-workflows-remove-run.migration"
     }
   }
 }
