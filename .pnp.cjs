@@ -1153,7 +1153,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/code-schematics", "workspace:code/code-schematics"],\
             ["@angular-devkit/core", "virtual:98960fafd45888ddef85512799855b5f4cf986921f66a3b924655a0ca969c2b71b962c307850f33aa150b6a5190f1b4f113ec8cc2f030c894545c7a602fa294e#npm:13.2.3"],\
             ["@angular-devkit/schematics", "npm:13.2.3"],\
-            ["@atls/schematics", "workspace:schematics/schematics"],\
             ["rxjs", "npm:6.6.7"]\
           ],\
           "linkType": "SOFT"\
@@ -1167,7 +1166,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@angular-devkit/schematics", "npm:13.2.3"],\
             ["@atls/code-schematics", "workspace:code/code-schematics"],\
             ["@atls/code-worker-utils", "workspace:code/code-worker-utils"],\
-            ["@atls/schematics", "workspace:schematics/schematics"],\
             ["@rollup/plugin-commonjs", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:21.0.1"],\
             ["@rollup/plugin-json", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:4.1.0"],\
             ["@rollup/plugin-node-resolve", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:13.1.3"],\
@@ -1437,12 +1435,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
             ["@angular-devkit/core", "virtual:98960fafd45888ddef85512799855b5f4cf986921f66a3b924655a0ca969c2b71b962c307850f33aa150b6a5190f1b4f113ec8cc2f030c894545c7a602fa294e#npm:13.2.3"],\
             ["@angular-devkit/schematics", "npm:13.2.3"],\
+            ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/node", "npm:17.0.17"],\
+            ["js-yaml", "npm:4.1.0"],\
             ["rimraf", "npm:3.0.2"],\
             ["semver", "npm:6.3.0"],\
             ["strip-json-comments", "npm:3.0.1"],\
-            ["typescript", "patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=142761"],\
-            ["yaml", "npm:1.10.2"]\
+            ["typescript", "patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=142761"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -5418,6 +5417,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.4.0"],\
             ["jest-diff", "npm:27.2.0"],\
             ["pretty-format", "npm:27.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/js-yaml", [\
+        ["npm:4.0.5", {\
+          "packageLocation": "./.yarn/cache/@types-js-yaml-npm-4.0.5-bb64d71397-7dcac8c50f.zip/node_modules/@types/js-yaml/",\
+          "packageDependencies": [\
+            ["@types/js-yaml", "npm:4.0.5"]\
           ],\
           "linkType": "HARD"\
         }]\

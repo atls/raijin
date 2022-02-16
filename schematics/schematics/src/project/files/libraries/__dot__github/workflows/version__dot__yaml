@@ -18,7 +18,7 @@ jobs:
           ref: master
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: '16.13'
 
@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Version
-        run: yarn workspaces changed foreach --no-private --verbose run version patch --deferred
+        run: yarn workspaces changed foreach --no-private --verbose version patch --deferred
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 

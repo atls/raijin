@@ -14,8 +14,7 @@
   },
   "dependencies": {
     "@angular-devkit/core": "^13.2.3",
-    "@angular-devkit/schematics": "^13.2.3",
-    "@atls/schematics": "workspace:0.0.6"
+    "@angular-devkit/schematics": "^13.2.3"
   },
   "devDependencies": {
     "rxjs": "6.6.7"
