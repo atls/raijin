@@ -29,9 +29,9 @@
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
-    "@yarnpkg/cli": "^3.2.0-rc.11",
-    "@yarnpkg/core": "^3.2.0-rc.11",
-    "@yarnpkg/fslib": "^2.6.1-rc.6"
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8",
+    "@yarnpkg/fslib": "^2.6.1-rc.3"
   },
   "publishConfig": {
     "access": "public",

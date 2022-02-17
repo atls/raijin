@@ -1,5 +1,5 @@
-import { workerData } from 'node:worker_threads'
 import { parentPort } from 'node:worker_threads'
+import { workerData } from 'node:worker_threads'
 
 import { Tester }     from '@atls/code-test'
 

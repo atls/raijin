@@ -34,26 +34,26 @@ export class Linter {
     const linter = new ESLinter(linterConfig)
 
     const results: Array<ESLint.LintResult> = await Promise.all(
-      files
-        .filter((file) => ignored.filter([relative(this.cwd, file)]).length !== 0)
-        .map(async (filePath) => {
-          const source = await readFile(filePath, 'utf8')
+        files
+            .filter((file) => ignored.filter([relative(this.cwd, file)]).length !== 0)
+            .map(async (filePath) => {
+              const source = await readFile(filePath, 'utf8')
 
-          // @ts-ignore
-          const messages = linter.verify(source, eslintconfig, { filename: filePath })
+              // @ts-ignore
+              const messages = linter.verify(source, eslintconfig, { filename: filePath })
 
-          return {
-            filePath,
-            source,
-            messages,
-            errorCount: messages.filter((message) => message.severity === 1).length,
-            fatalErrorCount: messages.filter((message) => message.severity === 0).length,
-            warningCount: messages.filter((message) => message.severity === 2).length,
-            fixableErrorCount: 0,
-            fixableWarningCount: 0,
-            usedDeprecatedRules: [],
-          }
-        })
+              return {
+                filePath,
+                source,
+                messages,
+                errorCount: messages.filter((message) => message.severity === 1).length,
+                fatalErrorCount: messages.filter((message) => message.severity === 0).length,
+                warningCount: messages.filter((message) => message.severity === 2).length,
+                fixableErrorCount: 0,
+                fixableWarningCount: 0,
+                usedDeprecatedRules: [],
+              }
+            })
     )
 
     return results

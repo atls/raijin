@@ -1,7 +1,7 @@
 import * as plugin        from '@atls/prettier-plugin'
 
-import { readFile }       from 'node:fs/promises'
 import { writeFile }      from 'node:fs/promises'
+import { readFile }       from 'node:fs/promises'
 import { relative }       from 'node:path'
 
 import globby             from 'globby'

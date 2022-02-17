@@ -1,5 +1,5 @@
-import { join }                               from 'node:path'
 import { readFile }                           from 'node:fs/promises'
+import { join }                               from 'node:path'
 
 import type { PortablePath }                  from '@yarnpkg/fslib'
 

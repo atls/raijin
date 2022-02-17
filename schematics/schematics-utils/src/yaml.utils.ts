@@ -1,18 +1,16 @@
-import { Rule }                         from '@angular-devkit/schematics'
+import { Rule }             from '@angular-devkit/schematics'
+import { SchematicContext } from '@angular-devkit/schematics'
+import { Tree }             from '@angular-devkit/schematics'
 
-import { SchematicContext }       from '@angular-devkit/schematics'
-
-import { Tree } from '@angular-devkit/schematics'
-
-import { load }                         from 'js-yaml'
-import { dump }                         from 'js-yaml'
+import { load }             from 'js-yaml'
+import { dump }             from 'js-yaml'
 
 export const readYamlInTree = <T = any>(host: Tree, path: string): T => {
   if (!host.exists(path)) {
     throw new Error(`Cannot find ${path}`)
   }
 
-  return load(host.read(path)!.toString('utf-8')) as T
+  return load(host.read(path)!.toString('utf-8'))
 }
 
 export const updateYamlInTree = <T = any, O = T>(

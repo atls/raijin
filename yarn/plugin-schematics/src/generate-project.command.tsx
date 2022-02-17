@@ -106,7 +106,7 @@ class GenerateProjectCommand extends BaseCommand {
                     type: options.type,
                     migration: String(Date.now()),
                   },
-                }
+                },
               }
             )
           } catch (error) {
