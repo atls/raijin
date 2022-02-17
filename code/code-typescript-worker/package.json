@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-typescript-worker",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -14,8 +14,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-typescript": "workspace:0.0.8",
-    "@atls/code-worker-utils": "workspace:0.0.4",
+    "@atls/code-typescript": "workspace:0.0.9",
+    "@atls/code-worker-utils": "workspace:0.0.5",
     "flatted": "^3.2.4"
   },
   "devDependencies": {

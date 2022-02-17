@@ -13,7 +13,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-pack": "workspace:0.0.8",
+    "@atls/code-pack": "workspace:0.0.9",
     "@atls/yarn-pack-utils": "workspace:0.0.1",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "@iarna/toml": "^2.2.5",
