@@ -1,6 +1,6 @@
 import { chain }            from '@angular-devkit/schematics'
 
-import { updateFileInTree } from '@monstrs/schematics-utils'
+import { updateFileInTree } from '@atls/schematics-utils'
 
 const removeRunFromVersionWorkflow = updateFileInTree('.github/workflows/version.yaml', (file) =>
   file.replace('run version patch', 'version patch'))

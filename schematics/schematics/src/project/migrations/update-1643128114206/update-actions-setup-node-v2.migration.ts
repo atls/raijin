@@ -1,6 +1,6 @@
 import { chain }            from '@angular-devkit/schematics'
 
-import { updateFileInTree } from '@monstrs/schematics-utils'
+import { updateFileInTree } from '@atls/schematics-utils'
 
 const updater = (file) => file.replace('actions/setup-node@v1', 'actions/setup-node@v2')
 

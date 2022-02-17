@@ -29,7 +29,7 @@ describe('schematics', () => {
       tree.create('.github/workflows/publish.yaml', workflow)
 
       schematicRunner = new SchematicTestRunner(
-        '@monstrs/schematics',
+        '@atls/schematics',
         join(__dirname, '../../migrations.json')
       )
     })
