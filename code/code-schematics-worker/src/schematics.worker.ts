@@ -33,9 +33,9 @@ export class SchematicsWorker {
   }
 
   migrate(
-      schematicName: string,
-      migrationVersion: string,
-      options = {}
+    schematicName: string,
+    migrationVersion: string,
+    options = {}
   ): Promise<Array<DryRunEvent>> {
     return EvalWorker.run(getContent(), {
       type: 'migrate',

@@ -1,8 +1,15 @@
-let hook;
+let hook
 
 module.exports.getContent = () => {
   if (typeof hook === `undefined`)
-    hook = require('zlib').brotliDecompressSync(Buffer.from('GwADYKwKzHNdR5Lmmgpp3k4Oz2Jh1jZTfb54D9uv77mlKqK2YdA1WYIo9BXQVL3d1ZFTJolQWXBqNKxRyo/7rN05PQUZE7wg9RLUnC4cKi6OynH5mohCkSLaa8l7MrSesVmfOTX2Syi+1Ui4x80VpWS3Qs0Fqad877rQ7FTDHJDe9xwkfq2b/EI7Uj/n4UqmEfIQ9HP9mR8cUTf7uJ8xYsdJELOTPg0fPn5VuQxVKch+R7D+uQGNdwDeIUo+pIZCkLKGWawftpDEMzN+fiv2Cc8ZCe9pz3auifPL+xdJ0aTo1FTejLSmKH//Ps4mFE+NEkELeuI5a1bdpfE80YKmpsNVXi7lCtABacn+PM1G8NSshOzLjrcNZs+OQuhTJxYB', 'base64')).toString();
+    hook = require('zlib')
+      .brotliDecompressSync(
+        Buffer.from(
+          'GwMDYCwKTDf0rizmy4aYd3r4HIay5pbq88U70Lf7nKkO2YwqbHGYIAp9BTSVd05HmSRC5fecGg1rlHLjX+bqHM8LMiZ4Qeol6GO6VZ7awHDVdlpy3tyTlYsapIU19sNkuNVY9D0ODlFq2a3w5sJS7dGe9LGX2eYTW0P+Pm9D4teq2W8CJQ0577FknsI90P0chCwER1QNRB7U2GnHSUC2k7uTTvv4W+UyBEzR2c+g17/4Xnj5VtDvcErepYZqwZU1yCw+zHSJb874+XkxTljUSDRbe9ZzsDgfw39JMueLzunlTUorl/Ir8GOGQvipcVHQiJ4E2xpUd/l4zmtBrqADVY4v3RWNDuBMxudpMMKegpVw+3LAWwWwZ2ck9K1OmAE=',
+          'base64'
+        )
+      )
+      .toString()
 
-  return hook;
-};
+  return hook
+}

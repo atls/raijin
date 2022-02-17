@@ -32,7 +32,7 @@ const generateCommon = (options): Source =>
 const generateProjectSpecifiec = (options): Source => {
   const { name: projectName } = JSON.parse(readFileSync(join(options.cwd, 'package.json'), 'utf-8'))
 
-    return apply(url(join('./files', options.type)), [
+  return apply(url(join('./files', options.type)), [
     template({
       ...strings,
       ...options,
