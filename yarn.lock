@@ -661,7 +661,7 @@ __metadata:
   resolution: "@atls/config-eslint@workspace:config/eslint"
   dependencies:
     "@atls/config-prettier": "workspace:0.0.1"
-    "@types/eslint": 8.4.0
+    "@types/eslint": 8.4.1
     "@types/node": ^17.0.10
     "@typescript-eslint/eslint-plugin": ^5.10.0
     "@typescript-eslint/parser": ^5.10.0
@@ -3598,17 +3598,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:8.4.0":
-  version: 8.4.0
-  resolution: "@types/eslint@npm:8.4.0"
-  dependencies:
-    "@types/estree": "*"
-    "@types/json-schema": "*"
-  checksum: 1260156f346d6f97fcfe2c89ebbea1ccab01cdc50db86fed47bed564ce20ec869ad24f4ac2849cb5b4ee82094c2858b2516654099018e1e288872f2d6dded400
-  languageName: node
-  linkType: hard
-
-"@types/eslint@npm:^8.4.0":
+"@types/eslint@npm:8.4.1, @types/eslint@npm:^8.4.0":
   version: 8.4.1
   resolution: "@types/eslint@npm:8.4.1"
   dependencies:
