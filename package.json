@@ -23,7 +23,7 @@
     "@atls/code-service": "workspace:0.0.11",
     "@atls/config-eslint": "workspace:0.0.3",
     "@atls/config-jest": "workspace:0.0.3",
-    "@atls/schematics": "workspace:0.0.8",
+    "@atls/schematics": "workspace:0.0.9",
     "@atls/tools-setup-ts-execution": "workspace:0.0.1",
     "@jest/core": "^27.4.7",
     "@types/eslint": "^8.4.0",
