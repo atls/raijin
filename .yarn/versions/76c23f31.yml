@@ -1,0 +1,12 @@
+releases:
+  "@atls/cli-ui-git-commit-component": patch
+  "@atls/cli-ui-parts": patch
+  "@atls/cli-ui-schematics-component": patch
+  "@atls/code-configuration": patch
+  "@atls/code-lint": patch
+  "@atls/code-lint-worker": patch
+  "@atls/code-pack": patch
+  "@atls/code-service": patch
+  "@atls/code-service-worker": patch
+  "@atls/config-eslint": patch
+  "@atls/schematics": patch
