@@ -29,7 +29,7 @@
     "@types/eslint": "^8.4.0",
     "@types/jest": "^27.4.0",
     "@types/node": "^17.0.10",
-    "@yarnpkg/builder": "^3.1.1-rc.2",
+    "@yarnpkg/builder": "^3.2.0",
     "eslint": "^8.7.0",
     "eslint-import-resolver-node": "^0.3.6",
     "espree": "^9.2.0",

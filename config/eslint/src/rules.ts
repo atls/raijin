@@ -722,12 +722,7 @@ const rules: Linter.RulesRecord = {
     },
   ],
   'react/void-dom-elements-no-children': ['error'],
-  'react/default-props-match-prop-types': [
-    'error',
-    {
-      allowRequiredDefaults: false,
-    },
-  ],
+  'react/default-props-match-prop-types': ['off'],
   'react/no-redundant-should-component-update': ['error'],
   'react/no-unused-state': ['error'],
   'react/boolean-prop-naming': [
@@ -775,7 +770,7 @@ const rules: Linter.RulesRecord = {
   'react/jsx-no-useless-fragment': ['error'],
   'react/no-adjacent-inline-elements': ['off'],
   'react/jsx-no-constructed-context-values': ['error'],
-  'react/no-unstable-nested-components': ['error'],
+  'react/no-unstable-nested-components': ['off'],
   'react/no-namespace': ['error'],
   'react/prefer-exact-props': ['error'],
   'react/no-arrow-function-lifecycle': ['error'],

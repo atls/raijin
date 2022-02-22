@@ -12,7 +12,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@yarnpkg/libui": "^2.2.0",
+    "@yarnpkg/libui": "^2.2.1",
     "figures": "^3.2.0",
     "ink": "^3.2.0",
     "react": "^17.0.2"
