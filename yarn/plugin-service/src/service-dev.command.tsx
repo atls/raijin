@@ -5,6 +5,7 @@ import { MessageName }     from '@yarnpkg/core'
 import { Project }         from '@yarnpkg/core'
 
 import React               from 'react'
+import { Option }          from 'clipanion'
 
 import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
 import { LogRecord }       from '@atls/cli-ui-log-record-component'
@@ -14,6 +15,8 @@ import { renderStatic }    from '@atls/cli-ui-renderer'
 
 class ServiceDevCommand extends BaseCommand {
   static paths = [['service', 'dev']]
+
+  showWarnings = Option.Boolean('-w,--show-warnings', false)
 
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
@@ -34,10 +37,18 @@ class ServiceDevCommand extends BaseCommand {
             await new ServiceWorker(this.context.cwd, project.cwd).watch((logRecord) => {
               progress.end()
 
-              renderStatic(<LogRecord {...logRecord} />, process.stdout.columns - 12)
+              renderStatic(<LogRecord name='webpack' {...logRecord} />, process.stdout.columns - 12)
                 .split('\n')
                 .forEach((line) => {
-                  report.reportInfo(MessageName.UNNAMED, line)
+                  if (logRecord.severityText === 'ERROR') {
+                    report.reportError(MessageName.UNNAMED, line)
+                  } else if (logRecord.severityText === 'WARN') {
+                    if (this.showWarnings) {
+                      report.reportWarning(MessageName.UNNAMED, line)
+                    }
+                  } else {
+                    report.reportInfo(MessageName.UNNAMED, line)
+                  }
                 })
             })
           } catch (error) {
