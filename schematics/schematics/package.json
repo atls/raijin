@@ -1,6 +1,6 @@
 {
   "name": "@atls/schematics",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -16,7 +16,7 @@
     "@angular-devkit/core": "^13.2.5",
     "@angular-devkit/schematics": "^13.2.5",
     "@atls/config-typescript": "workspace:0.0.1",
-    "@atls/schematics-utils": "workspace:0.0.4"
+    "@atls/schematics-utils": "workspace:0.0.5"
   },
   "devDependencies": {
     "@types/node": "^17.0.21",

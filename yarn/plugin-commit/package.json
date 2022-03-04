@@ -13,8 +13,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-git-commit-component": "workspace:0.0.3",
-    "@atls/code-commit": "workspace:0.0.3",
+    "@atls/cli-ui-git-commit-component": "workspace:0.0.4",
+    "@atls/code-commit": "workspace:0.0.4",
     "@yarnpkg/libui": "^2.2.1",
     "clipanion": "^3.2.0-rc.6",
     "commitizen": "^4.2.4",
