@@ -1,12 +1,11 @@
-import { PassThrough }         from 'node:stream'
+import { PassThrough }       from 'node:stream'
 
-import webpack                 from 'webpack'
-import { Watching }            from 'webpack'
+import webpack               from 'webpack'
+import { Watching }          from 'webpack'
 
-import { StartServerPlugin }   from '@atls/webpack-start-server-plugin'
+import { StartServerPlugin } from '@atls/webpack-start-server-plugin'
 
-import { WebpackConfigPlugin } from './webpack'
-import { WebpackConfig }       from './webpack.config'
+import { WebpackConfig }     from './webpack.config'
 
 export interface ServiceBuildResultMessage {
   message: string
@@ -15,6 +14,12 @@ export interface ServiceBuildResultMessage {
 export interface ServiceBuildResult {
   errors: ServiceBuildResultMessage[]
   warnings: ServiceBuildResultMessage[]
+}
+
+export interface WebpackConfigPlugin {
+  name: string
+  use: any
+  args: any[]
 }
 
 export class Service {
@@ -32,7 +37,7 @@ export class Service {
             reject(error)
           } else {
             resolve({
-              errors: [{ message: error.message }],
+              errors: [error],
               warnings: [],
             })
           }
@@ -40,9 +45,8 @@ export class Service {
           const { errors = [], warnings = [] } = stats.toJson()
 
           resolve({
-            // eslint-disable-next-line
-            errors: errors.map((error) => ({ message: error.message })),
-            warnings: warnings.map((warning) => ({ message: warning.message })),
+            errors,
+            warnings,
           })
         } else {
           resolve({
@@ -90,7 +94,7 @@ export class Service {
       if (error) {
         callback({
           severityText: 'ERROR',
-          body: error.message || error,
+          body: error,
         })
       } else if (stats) {
         const { errors = [], warnings = [] } = stats.toJson()
@@ -98,13 +102,13 @@ export class Service {
         warnings.forEach((warning) =>
           callback({
             severityText: 'WARN',
-            body: warning.message,
+            body: warning,
           }))
 
         errors.forEach((err) =>
           callback({
             severityText: 'ERROR',
-            body: err.message,
+            body: err,
           }))
       }
     })

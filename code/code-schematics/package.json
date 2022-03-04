@@ -13,11 +13,11 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@angular-devkit/core": "^13.1.4",
-    "@angular-devkit/schematics": "^13.1.4"
+    "@angular-devkit/core": "^13.2.5",
+    "@angular-devkit/schematics": "^13.2.5"
   },
   "devDependencies": {
-    "rxjs": "6.6.7"
+    "rxjs": "7.5.4"
   },
   "publishConfig": {
     "main": "dist/index.js",

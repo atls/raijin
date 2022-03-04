@@ -1,21 +1,16 @@
-import { readFile }                           from 'node:fs/promises'
-import { join }                               from 'node:path'
+import { readFile }                   from 'node:fs/promises'
+import { join }                       from 'node:path'
 
-import type { PortablePath }                  from '@yarnpkg/fslib'
+import Config                         from 'webpack-chain'
+import fg                             from 'fast-glob'
+import findUp                         from 'find-up'
+import { HotModuleReplacementPlugin } from 'webpack'
+import { Configuration }              from 'webpack'
 
-import { Configuration as YarnConfiguration } from '@yarnpkg/core'
-import { Project }                            from '@yarnpkg/core'
-import { getPluginConfiguration }             from '@yarnpkg/cli'
+import tsconfig                       from '@atls/config-typescript'
 
-import Config                                 from 'webpack-chain'
-import fg                                     from 'fast-glob'
-import { HotModuleReplacementPlugin }         from 'webpack'
-import { Configuration }                      from 'webpack'
-
-import tsconfig                               from '@atls/config-typescript'
-
-import { FORCE_UNPLUGGED_PACKAGES }           from './webpack.externals'
-import { UNUSED_EXTERNALS }                   from './webpack.externals'
+import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals'
+import { UNUSED_EXTERNALS }           from './webpack.externals'
 
 export type WebpackEnvironment = 'production' | 'development'
 
@@ -26,17 +21,13 @@ export class WebpackConfig {
     environment: WebpackEnvironment = 'production',
     plugins: Array<any> = []
   ): Promise<Configuration> {
-    const root = process.cwd() as PortablePath
-    const configuration = await YarnConfiguration.find(root, getPluginConfiguration())
-    const { project } = await Project.find(configuration, root)
-
     const config = new Config()
 
     this.applyCommon(config, environment)
     this.applyPlugins(config, environment)
     this.applyModules(config)
 
-    config.externals(await this.getExternals(configuration, project))
+    config.externals(await this.getExternals())
 
     plugins.forEach((plugin) => {
       config.plugin(plugin.name).use(plugin.use, plugin.args)
@@ -91,8 +82,14 @@ export class WebpackConfig {
       .loader(require.resolve('@atls/webpack-proto-imports-loader'))
   }
 
-  async getUnpluggedDependencies(configuration: YarnConfiguration): Promise<Set<string>> {
-    const pnpUnpluggedFolder = configuration.get('pnpUnpluggedFolder') as string
+  async getUnpluggedDependencies(): Promise<Set<string>> {
+    const yarnFolder = await findUp('.yarn')
+
+    if (!yarnFolder) {
+      return Promise.resolve(new Set())
+    }
+
+    const pnpUnpluggedFolder = join(yarnFolder, 'unplugged')
     const dependenciesNames = new Set<string>()
 
     const entries = await fg('*/node_modules/*/package.json', {
@@ -116,19 +113,22 @@ export class WebpackConfig {
     return dependenciesNames
   }
 
-  async getExternals(
-    configuration: YarnConfiguration,
-    project: Project
-  ): Promise<{ [key: string]: string }> {
-    const workspace = project.getWorkspaceByFilePath(this.cwd as PortablePath)
+  async getWorkspaceExternals(): Promise<Set<string>> {
+    try {
+      const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
 
-    const workspaceExternals: Array<string> = Object.keys(
-      workspace?.manifest?.raw?.externalDependencies || {}
-    )
+      const { externalDependencies = {} } = JSON.parse(content)
 
-    const unpluggedExternals: Array<string> = Array.from(
-      await this.getUnpluggedDependencies(configuration)
-    )
+      return new Set(Object.keys(externalDependencies))
+    } catch {
+      return Promise.resolve(new Set())
+    }
+  }
+
+  async getExternals(): Promise<{ [key: string]: string }> {
+    const workspaceExternals: Array<string> = Array.from(await this.getWorkspaceExternals())
+
+    const unpluggedExternals: Array<string> = Array.from(await this.getUnpluggedDependencies())
 
     return Array.from(
       new Set([...workspaceExternals, ...unpluggedExternals, ...UNUSED_EXTERNALS])

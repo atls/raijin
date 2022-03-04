@@ -17,7 +17,7 @@ export const LogBody: FC<BodyProps> = ({ children }) => {
 
   if (children.stack) {
     return (
-      <Box>
+      <Box paddingBottom={1}>
         <StackTrace>{children.stack}</StackTrace>
       </Box>
     )

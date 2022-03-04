@@ -14,10 +14,10 @@
   "dependencies": {
     "@atls/cli-ui-renderer": "workspace:0.0.4",
     "@atls/cli-ui-source-component": "workspace:0.0.4",
-    "@atls/stack-trace": "^0.0.1"
+    "@atls/stack-trace": "^0.0.2"
   },
   "devDependencies": {
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.4.1",
     "@types/react": "^17.0.39",
     "ink": "^3.2.0",
     "react": "^17.0.2",
