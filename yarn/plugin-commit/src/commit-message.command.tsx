@@ -55,7 +55,15 @@ export class CommitMessageCommand extends BaseCommand {
 
     const overwroteStdin = forceStdinTty()
 
-    const commit: CommitProperties | undefined = await renderForm(RequestCommitMessageApp, {})
+    const commit: CommitProperties | undefined = await renderForm(
+      RequestCommitMessageApp,
+      {},
+      {
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+        stderr: this.context.stderr,
+      }
+    )
 
     if (commit) {
       await xfs.writeFilePromise(commitMessageFile as PortablePath, this.formatCommit(commit))
