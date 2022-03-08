@@ -8,44 +8,30 @@ import { npath }                          from '@yarnpkg/fslib'
 import { renderForm }                     from '@yarnpkg/libui/sources/misc/renderForm'
 
 import React                              from 'react'
-import { Option }                         from 'clipanion'
 import { forceStdinTty }                  from 'force-stdin-tty'
-import { isOneOf }                        from 'typanion'
-import { isLiteral }                      from 'typanion'
-import { isOptional }                     from 'typanion'
 
 import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
 import { SubmitInjectedComponentFactory } from '@atls/cli-ui-parts'
 import { RequestProjectInformation }      from '@atls/cli-ui-schematics-component'
 import { ProjectInformationProperties }   from '@atls/cli-ui-schematics-component'
 import { SchematicsWorker }               from '@atls/code-schematics-worker'
-import { ProjectType }                    from '@atls/schematics'
 import { SpinnerProgress }                from '@atls/yarn-run-utils'
 import { renderStatic }                   from '@atls/cli-ui-renderer'
 
 class GenerateProjectCommand extends BaseCommand {
   static paths = [['generate', 'project']]
 
-  type = Option.String('-t,--type', {
-    validator: isOptional(
-      isOneOf([isLiteral(ProjectType.PROJECT), isLiteral(ProjectType.LIBRARIES)], {
-        exclusive: true,
-      })
-    ),
-  })
-
   private async requestOptions(): Promise<ProjectInformationProperties | undefined> {
-    if (this.type) {
-      return {
-        type: this.type,
-      }
-    }
-
     const overwroteStdin = forceStdinTty()
 
     const options: ProjectInformationProperties | undefined = await renderForm(
       SubmitInjectedComponentFactory<ProjectInformationProperties>(RequestProjectInformation),
-      {}
+      {},
+      {
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+        stderr: this.context.stderr,
+      }
     )
 
     if (overwroteStdin) {

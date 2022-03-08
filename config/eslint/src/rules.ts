@@ -709,12 +709,7 @@ const rules: Linter.RulesRecord = {
   'react/no-unescaped-entities': ['error'],
   'react/no-children-prop': ['error'],
   'react/no-array-index-key': ['error'],
-  'react/require-default-props': [
-    'error',
-    {
-      forbidDefaultForRequired: true,
-    },
-  ],
+  'react/require-default-props': ['off'],
   'react/forbid-foreign-prop-types': [
     'warn',
     {
