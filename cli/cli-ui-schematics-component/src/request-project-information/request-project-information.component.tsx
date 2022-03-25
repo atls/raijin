@@ -1,10 +1,10 @@
+import Select                 from 'ink-select-input'
 import React                  from 'react'
+import { Box }                from 'ink'
+import { Text }               from 'ink'
 import { FC }                 from 'react'
 import { useEffect }          from 'react'
 import { useState }           from 'react'
-import Select                 from 'ink-select-input'
-import { Box }                from 'ink'
-import { Text }               from 'ink'
 
 import { IndicatorComponent } from '@atls/cli-ui-parts'
 import { ProjectType }        from '@atls/schematics'

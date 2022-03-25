@@ -1,4 +1,5 @@
 import { BaseCommand } from '@yarnpkg/cli'
+
 import { Option }      from 'clipanion'
 
 class CommitCommand extends BaseCommand {

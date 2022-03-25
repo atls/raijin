@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "@atls/code-test": "workspace:0.0.10",
-    "@atls/code-worker-utils": "workspace:0.0.5"
+    "@atls/code-worker-utils": "workspace:0.0.5",
+    "flatted": "^3.2.5"
   },
   "devDependencies": {
     "@jest/test-result": "^27.5.1",
