@@ -1286,6 +1286,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@rollup/plugin-json", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:4.1.0"],\
             ["@rollup/plugin-node-resolve", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:13.1.3"],\
             ["esbuild", "npm:0.14.25"],\
+            ["flatted", "npm:3.2.5"],\
             ["rollup", "npm:2.69.1"],\
             ["rollup-plugin-analyzer", "npm:4.0.0"],\
             ["rollup-plugin-esbuild", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:4.8.2"],\
