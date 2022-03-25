@@ -13,8 +13,8 @@
     "postpack": "rm -rf dist && yarn node ./scripts/postpack.js"
   },
   "dependencies": {
-    "@angular-devkit/core": "^13.2.5",
-    "@angular-devkit/schematics": "^13.2.5",
+    "@angular-devkit/core": "^13.3.0",
+    "@angular-devkit/schematics": "^13.3.0",
     "@atls/config-typescript": "workspace:0.0.1",
     "@atls/schematics-utils": "workspace:0.0.5"
   },
