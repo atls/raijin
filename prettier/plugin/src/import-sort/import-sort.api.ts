@@ -38,7 +38,18 @@ const loadWorkspaces = () => {
 
 const workspaces = loadWorkspaces()
 
-export const isWorkspaceModule = (imported: any) => workspaces.has(imported.moduleName)
+export const isWorkspaceModule = (imported: any) => {
+  if (!(imported.moduleName.startsWith('@') && imported.moduleName.includes('/'))) {
+    return false
+  }
+
+  const moduleParts = imported.moduleName.split('/')
+
+  const moduleName =
+    moduleParts.length === 2 ? imported.moduleName : moduleParts.slice(0, 2).join('/')
+
+  return workspaces.has(moduleName)
+}
 
 export const isNodeModule = (imported: any, ...rest) => imported.moduleName.startsWith('node:')
 
