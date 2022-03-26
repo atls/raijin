@@ -18,7 +18,7 @@
     "@atls/cli-ui-renderer": "workspace:0.0.5",
     "@atls/code-lint-worker": "workspace:0.0.7",
     "@atls/yarn-run-utils": "workspace:0.0.1",
-    "clipanion": "3.2.0-rc.6",
+    "clipanion": "^3.2.0-rc.6",
     "react": "^17.0.2"
   },
   "devDependencies": {

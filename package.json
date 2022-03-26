@@ -18,8 +18,8 @@
     "globby": "11.0.3"
   },
   "devDependencies": {
-    "@angular-devkit/core": "^13.2.5",
-    "@angular-devkit/schematics": "^13.2.5",
+    "@angular-devkit/core": "^13.3.0",
+    "@angular-devkit/schematics": "^13.3.0",
     "@atls/code-service": "workspace:0.0.12",
     "@atls/config-eslint": "workspace:0.0.5",
     "@atls/config-jest": "workspace:0.0.4",
@@ -30,7 +30,7 @@
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.21",
     "@yarnpkg/builder": "^3.2.0",
-    "eslint": "^8.10.0",
+    "eslint": "^8.11.0",
     "eslint-import-resolver-node": "^0.3.6",
     "espree": "^9.3.1",
     "husky": "7.0.4",

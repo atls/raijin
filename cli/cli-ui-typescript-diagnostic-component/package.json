@@ -18,7 +18,7 @@
   "devDependencies": {
     "@atls/cli-ui-renderer": "workspace:0.0.5",
     "@types/jest": "^27.4.1",
-    "@types/react": "^17.0.39",
+    "@types/react": "^17.0.43",
     "ink": "^3.2.0",
     "react": "^17.0.2",
     "strip-ansi": "^6.0.1",
