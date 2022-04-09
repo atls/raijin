@@ -47,7 +47,13 @@ export class GitHubChecks {
       completed_at: new Date().toISOString(),
       status: 'completed',
       conclusion: output.annotations.length > 0 ? 'failure' : 'success',
-      output,
+      output:
+        output.annotations?.length > 50
+          ? {
+              ...output,
+              annotations: output.annotations.slice(0, 50),
+            }
+          : output,
     })
   }
 
@@ -61,7 +67,13 @@ export class GitHubChecks {
       completed_at: new Date().toISOString(),
       status: 'completed',
       conclusion: 'failure',
-      output,
+      output:
+        output.annotations?.length > 50
+          ? {
+              ...output,
+              annotations: output.annotations.slice(0, 50),
+            }
+          : output,
     })
   }
 }
