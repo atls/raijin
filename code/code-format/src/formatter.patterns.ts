@@ -15,7 +15,6 @@ export const ignore = [
   '**/**/lib/*',
   '**/**/templates/*.yaml',
   '**/templates/*.yaml',
-  '**/types/**',
   '.terraform',
 ]
 
