@@ -326,12 +326,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-schematics-component@workspace:0.0.11, @atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component":
+"@atls/cli-ui-schematics-component@workspace:0.0.12, @atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component"
   dependencies:
     "@atls/cli-ui-parts": "workspace:0.0.3"
-    "@atls/schematics": "workspace:0.0.11"
+    "@atls/schematics": "workspace:0.0.12"
     "@types/node": ^17.0.21
     "@types/react": ^17.0.43
     "@yarnpkg/libui": ^2.2.1
@@ -426,11 +426,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-format-worker@workspace:0.0.7, @atls/code-format-worker@workspace:code/code-format-worker":
+"@atls/code-format-worker@workspace:0.0.8, @atls/code-format-worker@workspace:code/code-format-worker":
   version: 0.0.0-use.local
   resolution: "@atls/code-format-worker@workspace:code/code-format-worker"
   dependencies:
-    "@atls/code-format": "workspace:0.0.12"
+    "@atls/code-format": "workspace:0.0.13"
     "@atls/code-worker-utils": "workspace:0.0.5"
     "@rollup/plugin-commonjs": ^21.0.2
     "@rollup/plugin-json": ^4.1.0
@@ -444,7 +444,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-format@workspace:0.0.12, @atls/code-format@workspace:code/code-format":
+"@atls/code-format@workspace:0.0.13, @atls/code-format@workspace:code/code-format":
   version: 0.0.0-use.local
   resolution: "@atls/code-format@workspace:code/code-format"
   dependencies:
@@ -746,7 +746,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/schematics@workspace:0.0.11, @atls/schematics@workspace:schematics/schematics":
+"@atls/schematics@workspace:0.0.12, @atls/schematics@workspace:schematics/schematics":
   version: 0.0.0-use.local
   resolution: "@atls/schematics@workspace:schematics/schematics"
   dependencies:
@@ -995,7 +995,7 @@ __metadata:
   dependencies:
     "@atls/cli-ui-error-info-component": "workspace:0.0.4"
     "@atls/cli-ui-renderer": "workspace:0.0.6"
-    "@atls/code-format-worker": "workspace:0.0.7"
+    "@atls/code-format-worker": "workspace:0.0.8"
     "@atls/yarn-run-utils": "workspace:0.0.1"
     "@yarnpkg/builder": 3.2.0
     "@yarnpkg/cli": ^3.2.0
@@ -1082,9 +1082,9 @@ __metadata:
     "@atls/cli-ui-error-info-component": "workspace:0.0.4"
     "@atls/cli-ui-parts": "workspace:0.0.3"
     "@atls/cli-ui-renderer": "workspace:0.0.6"
-    "@atls/cli-ui-schematics-component": "workspace:0.0.11"
+    "@atls/cli-ui-schematics-component": "workspace:0.0.12"
     "@atls/code-schematics-worker": "workspace:0.0.10"
-    "@atls/schematics": "workspace:0.0.11"
+    "@atls/schematics": "workspace:0.0.12"
     "@atls/yarn-run-utils": "workspace:0.0.1"
     "@yarnpkg/builder": 3.2.0
     "@yarnpkg/cli": ^3.2.0
@@ -15646,7 +15646,7 @@ resolve@^2.0.0-next.3:
     "@atls/code-service": "workspace:0.0.13"
     "@atls/config-eslint": "workspace:0.0.6"
     "@atls/config-jest": "workspace:0.0.4"
-    "@atls/schematics": "workspace:0.0.11"
+    "@atls/schematics": "workspace:0.0.12"
     "@atls/tools-setup-ts-execution": "workspace:0.0.1"
     "@jest/core": ^27.5.1
     "@types/eslint": ^8.4.1
