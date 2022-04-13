@@ -14,7 +14,6 @@ export const UNUSED_EXTERNALS = [
   'cli-color',
   'flaschenpost',
   'amqp-connection-manager',
-  'kafkajs',
   'amqplib',
   'redis',
   'mqtt',
