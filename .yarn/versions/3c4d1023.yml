@@ -1,0 +1,3 @@
+releases:
+  "@atls/code-service": patch
+  "@atls/code-service-worker": patch
