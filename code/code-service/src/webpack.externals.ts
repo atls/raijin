@@ -34,6 +34,7 @@ export const UNUSED_EXTERNALS = [
   'mysql2',
   'mssql',
   'sql.js',
+  'sqlite3',
 
   // pnp
   'pnpapi',
