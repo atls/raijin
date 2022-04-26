@@ -540,11 +540,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-service-worker@workspace:0.0.8, @atls/code-service-worker@workspace:code/code-service-worker":
+"@atls/code-service-worker@workspace:0.0.9, @atls/code-service-worker@workspace:code/code-service-worker":
   version: 0.0.0-use.local
   resolution: "@atls/code-service-worker@workspace:code/code-service-worker"
   dependencies:
-    "@atls/code-service": "workspace:0.0.14"
+    "@atls/code-service": "workspace:0.0.15"
     "@atls/code-worker-utils": "workspace:0.0.5"
     "@rollup/plugin-commonjs": ^21.0.2
     "@rollup/plugin-json": ^4.1.0
@@ -559,7 +559,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-service@workspace:0.0.14, @atls/code-service@workspace:code/code-service":
+"@atls/code-service@workspace:0.0.15, @atls/code-service@workspace:code/code-service":
   version: 0.0.0-use.local
   resolution: "@atls/code-service@workspace:code/code-service"
   dependencies:
@@ -1113,7 +1113,7 @@ __metadata:
     "@atls/cli-ui-error-info-component": "workspace:0.0.4"
     "@atls/cli-ui-log-record-component": "workspace:0.0.6"
     "@atls/cli-ui-renderer": "workspace:0.0.6"
-    "@atls/code-service-worker": "workspace:0.0.8"
+    "@atls/code-service-worker": "workspace:0.0.9"
     "@atls/yarn-pack-utils": "workspace:0.0.1"
     "@atls/yarn-run-utils": "workspace:0.0.1"
     "@yarnpkg/builder": ^3.2.0
@@ -15643,7 +15643,7 @@ resolve@^2.0.0-next.3:
   dependencies:
     "@angular-devkit/core": ^13.3.0
     "@angular-devkit/schematics": ^13.3.0
-    "@atls/code-service": "workspace:0.0.14"
+    "@atls/code-service": "workspace:0.0.15"
     "@atls/config-eslint": "workspace:0.0.6"
     "@atls/config-jest": "workspace:0.0.4"
     "@atls/schematics": "workspace:0.0.12"
