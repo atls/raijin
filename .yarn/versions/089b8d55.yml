@@ -1,4 +1,0 @@
-releases:
-  "@atls/cli-ui-typescript-diagnostic-component": patch
-  "@atls/code-typescript": patch
-  "@atls/code-typescript-worker": patch
