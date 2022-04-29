@@ -32,6 +32,7 @@ export class TypeScriptWorker {
       cwd: originalCwd,
       type: 'build',
       include,
+      override,
     })
   }
 }
