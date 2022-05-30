@@ -21,9 +21,9 @@
     "@atls/schematics": "workspace:0.0.12",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "@yarnpkg/libui": "^2.2.1",
-    "clipanion": "^3.2.0-rc.6",
+    "clipanion": "^3.2.0-rc.11",
     "force-stdin-tty": "^0.0.1",
-    "typanion": "^3.7.1"
+    "typanion": "^3.9.0"
   },
   "devDependencies": {
     "@yarnpkg/builder": "3.2.0",
