@@ -21,12 +21,12 @@
     "@atls/schematics": "workspace:0.0.12",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "@yarnpkg/libui": "^2.2.1",
-    "clipanion": "^3.2.0-rc.11",
+    "clipanion": "^3.2.0-rc.10",
     "force-stdin-tty": "^0.0.1",
-    "typanion": "^3.9.0"
+    "typanion": "^3.7.1"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "3.2.0",
+    "@yarnpkg/builder": "^3.2.0",
     "@yarnpkg/cli": "^3.2.0",
     "@yarnpkg/core": "^3.2.0",
     "@yarnpkg/fslib": "^2.6.1",
