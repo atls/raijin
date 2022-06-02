@@ -27,8 +27,8 @@
     "webpack-chain": "^6.5.1"
   },
   "devDependencies": {
-    "@types/jest": "^27.4.1",
-    "@types/node": "^17.0.21",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^17.0.38",
     "@types/protocol-buffers-schema": "3.4.1",
     "@types/wait-for-localhost": "3.1.0",
     "@types/webpack": "^5.28.0",

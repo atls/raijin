@@ -222,9 +222,9 @@ __metadata:
   resolution: "@atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info-component"
   dependencies:
     "@atls/cli-ui-stack-trace-component": "workspace:0.0.6"
-    "@types/jest": ^27.4.1
-    "@types/node": ^17.0.21
-    "@types/react": ^17.0.43
+    "@types/jest": ^27.5.2
+    "@types/node": ^17.0.38
+    "@types/react": ^17.0.45
     ink: ^3.2.0
     react: ^17.0.2
   peerDependencies:
@@ -239,8 +239,8 @@ __metadata:
   dependencies:
     "@atls/cli-ui-renderer": "workspace:0.0.6"
     "@atls/cli-ui-source-component": "workspace:0.0.6"
-    "@types/jest": ^27.4.1
-    "@types/react": ^17.0.43
+    "@types/jest": ^27.5.2
+    "@types/react": ^17.0.45
     ink: ^3.2.0
     react: ^17.0.2
     strip-ansi: ^6.0.1
@@ -255,8 +255,8 @@ __metadata:
   resolution: "@atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit"
   dependencies:
     "@atls/code-commit": "workspace:0.0.5"
-    "@types/node": ^17.0.21
-    "@types/react": ^17.0.43
+    "@types/node": ^17.0.38
+    "@types/react": ^17.0.45
     "@yarnpkg/libui": ^2.2.1
     camelcase: ^6.3.0
     figures: ^3.2.0
@@ -278,9 +278,9 @@ __metadata:
     "@atls/cli-ui-renderer": "workspace:0.0.6"
     "@atls/cli-ui-stack-trace-component": "workspace:0.0.6"
     "@atls/logger": ^0.0.1
-    "@types/jest": ^27.4.1
-    "@types/node": ^17.0.21
-    "@types/react": ^17.0.43
+    "@types/jest": ^27.5.2
+    "@types/node": ^17.0.38
+    "@types/react": ^17.0.45
     ink: ^3.2.0
     react: ^17.0.2
     string-to-color: ^2.2.2
@@ -308,8 +308,8 @@ __metadata:
   dependencies:
     "@atls/cli-ui-log-record-component": "workspace:0.0.6"
     "@atls/cli-ui-renderer": "workspace:0.0.6"
-    "@types/node": ^17.0.21
-    "@types/react": ^17.0.43
+    "@types/node": ^17.0.38
+    "@types/react": ^17.0.45
     ink: ^3.2.0
     react: ^17.0.2
   languageName: unknown
@@ -319,8 +319,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-renderer@workspace:cli/cli-ui-renderer"
   dependencies:
-    "@types/node": ^17.0.21
-    "@types/react": ^17.0.43
+    "@types/node": ^17.0.38
+    "@types/react": ^17.0.45
     ink: ^3.2.0
     react: ^17.0.2
   languageName: unknown
@@ -332,8 +332,8 @@ __metadata:
   dependencies:
     "@atls/cli-ui-parts": "workspace:0.0.3"
     "@atls/schematics": "workspace:0.0.12"
-    "@types/node": ^17.0.21
-    "@types/react": ^17.0.43
+    "@types/node": ^17.0.38
+    "@types/react": ^17.0.45
     "@yarnpkg/libui": ^2.2.1
     camelcase: ^6.3.0
     figures: ^3.2.0
@@ -354,8 +354,8 @@ __metadata:
   dependencies:
     "@babel/code-frame": ^7.16.7
     "@types/babel__code-frame": 7.0.3
-    "@types/node": ^17.0.21
-    "@types/react": ^17.0.43
+    "@types/node": ^17.0.38
+    "@types/react": ^17.0.45
     ink: ^3.2.0
     supports-color: ^8.1.1
   peerDependencies:
@@ -371,8 +371,8 @@ __metadata:
     "@atls/cli-ui-renderer": "workspace:0.0.6"
     "@atls/cli-ui-source-component": "workspace:0.0.6"
     "@atls/stack-trace": ^0.0.2
-    "@types/jest": ^27.4.1
-    "@types/react": ^17.0.43
+    "@types/jest": ^27.5.2
+    "@types/react": ^17.0.45
     ink: ^3.2.0
     react: ^17.0.2
     strip-ansi: ^6.0.1
@@ -389,8 +389,8 @@ __metadata:
     "@atls/cli-ui-renderer": "workspace:0.0.6"
     "@atls/cli-ui-source-component": "workspace:0.0.6"
     "@atls/code-typescript": "workspace:0.0.12"
-    "@types/jest": ^27.4.1
-    "@types/react": ^17.0.43
+    "@types/jest": ^27.5.2
+    "@types/react": ^17.0.45
     ink: ^3.2.0
     react: ^17.0.2
     strip-ansi: ^6.0.1
@@ -412,7 +412,7 @@ __metadata:
     "@commitlint/read": ^16.2.1
     "@commitlint/rules": ^16.2.1
     "@commitlint/types": ^16.2.1
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     conventional-changelog-angular: ^5.0.13
     conventional-commits-parser: ^3.2.4
   languageName: unknown
@@ -435,7 +435,7 @@ __metadata:
     "@rollup/plugin-commonjs": ^21.0.2
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^13.1.3
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     esbuild: ^0.14.27
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
@@ -450,7 +450,7 @@ __metadata:
   dependencies:
     "@atls/config-prettier": "workspace:0.0.4"
     "@atls/prettier-plugin": "workspace:0.0.4"
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     globby: ^11.0.4
     ignore: ^5.2.0
     prettier: ^2.6.1
@@ -466,7 +466,7 @@ __metadata:
     "@rollup/plugin-commonjs": ^21.0.2
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^13.1.3
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     esbuild: ^0.14.27
     eslint: ^8.11.0
     rollup: ^2.70.1
@@ -481,7 +481,7 @@ __metadata:
   resolution: "@atls/code-lint@workspace:code/code-lint"
   dependencies:
     "@atls/config-eslint": "workspace:0.0.6"
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     eslint: ^8.11.0
     globby: ^11.0.4
     ignore: ^5.2.0
@@ -502,7 +502,7 @@ __metadata:
   dependencies:
     "@actions/github": ^5.0.0
     "@iarna/toml": ^2.2.5
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     "@yarnpkg/core": ^3.2.0
     "@yarnpkg/fslib": ^2.6.1
   languageName: unknown
@@ -519,7 +519,7 @@ __metadata:
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^13.1.3
     "@rollup/plugin-replace": ^3.1.0
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     builtin-modules: ^3.2.0
     esbuild: ^0.14.27
     rollup: ^2.70.1
@@ -550,7 +550,7 @@ __metadata:
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^13.1.3
     "@rollup/plugin-replace": ^3.1.0
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     esbuild: ^0.14.27
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
@@ -566,8 +566,8 @@ __metadata:
     "@atls/config-typescript": "workspace:0.0.1"
     "@atls/webpack-proto-imports-loader": "workspace:0.0.8"
     "@atls/webpack-start-server-plugin": "workspace:0.0.5"
-    "@types/jest": ^27.4.1
-    "@types/node": ^17.0.21
+    "@types/jest": ^27.5.2
+    "@types/node": ^17.0.38
     "@types/protocol-buffers-schema": 3.4.1
     "@types/wait-for-localhost": 3.1.0
     "@types/webpack": ^5.28.0
@@ -613,8 +613,8 @@ __metadata:
     "@jest/core": ^27.5.1
     "@jest/test-result": ^27.5.1
     "@jest/types": ^27.5.1
-    "@types/jest": ^27.4.1
-    "@types/node": ^17.0.21
+    "@types/jest": ^27.5.2
+    "@types/node": ^17.0.38
   peerDependenciesMeta:
     jest:
       optional: true
@@ -646,7 +646,7 @@ __metadata:
   dependencies:
     "@atls/config-typescript": "workspace:0.0.1"
     "@types/deepmerge": 2.2.0
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     deepmerge: ^4.2.2
     typescript: ^4.6.2
   languageName: unknown
@@ -663,8 +663,8 @@ __metadata:
   resolution: "@atls/config-eslint@workspace:config/eslint"
   dependencies:
     "@atls/config-prettier": "workspace:0.0.4"
-    "@types/eslint": ^8.4.1
-    "@types/node": ^17.0.21
+    "@types/eslint": ^8.4.2
+    "@types/node": ^17.0.38
     "@typescript-eslint/eslint-plugin": ^5.16.0
     "@typescript-eslint/parser": ^5.16.0
     eslint: ^8.11.0
@@ -686,7 +686,7 @@ __metadata:
     "@atls/config-typescript": "workspace:0.0.1"
     "@emotion/jest": ^11.8.0
     "@monstrs/jest-pnp-resolver": 0.0.1
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     jest-static-stubs: ^0.0.1
     ts-jest: ^27.1.3
   languageName: unknown
@@ -696,7 +696,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/config-prettier@workspace:config/prettier"
   dependencies:
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     prettier: ^2.6.1
   languageName: unknown
   linkType: soft
@@ -720,7 +720,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/prettier-plugin@workspace:prettier/plugin"
   dependencies:
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     globby: ^11.0.4
     import-sort: ^6.0.0
     import-sort-parser: ^6.0.0
@@ -737,7 +737,7 @@ __metadata:
   dependencies:
     "@angular-devkit/core": ^13.3.0
     "@angular-devkit/schematics": ^13.3.0
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     js-yaml: ^4.1.0
     rimraf: 3.0.2
     semver: ^6.3.0
@@ -754,7 +754,7 @@ __metadata:
     "@angular-devkit/schematics": ^13.3.0
     "@atls/config-typescript": "workspace:0.0.1"
     "@atls/schematics-utils": "workspace:0.0.6"
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     copy-dir: ^1.3.0
     globby: ^11.0.4
   languageName: unknown
@@ -787,7 +787,7 @@ __metadata:
     "@babel/runtime": ^7.17.8
     "@babel/types": ^7.17.0
     "@types/babel__core": 7.1.19
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
   languageName: unknown
   linkType: soft
 
@@ -796,7 +796,7 @@ __metadata:
   resolution: "@atls/webpack-localtunnel-plugin@workspace:webpack/webpack-localtunnel-plugin"
   dependencies:
     "@types/localtunnel": 2.0.1
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     localtunnel: ^2.0.2
   languageName: unknown
   linkType: soft
@@ -807,7 +807,7 @@ __metadata:
   dependencies:
     "@atls/config-typescript": "workspace:0.0.1"
     "@monstrs/types-import-proto": 0.0.1
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     file-loader: ^6.2.0
     memfs: ^3.4.1
     protocol-buffers-schema: ^3.6.0
@@ -829,7 +829,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/webpack-start-server-plugin@workspace:webpack/webpack-start-server-plugin"
   dependencies:
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     webpack: ^5.70.0
   languageName: unknown
   linkType: soft
@@ -932,7 +932,7 @@ __metadata:
     "@babel/code-frame": ^7.16.7
     "@jest/test-result": ^27.5.1
     "@octokit/types": ^6.34.0
-    "@types/node": ^17.0.21
+    "@types/node": ^17.0.38
     "@yarnpkg/builder": ^3.2.0
     "@yarnpkg/cli": ^3.2.0
     "@yarnpkg/core": ^3.2.0
@@ -3745,13 +3745,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:^8.4.1":
-  version: 8.4.1
-  resolution: "@types/eslint@npm:8.4.1"
+"@types/eslint@npm:^8.4.2":
+  version: 8.4.2
+  resolution: "@types/eslint@npm:8.4.2"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: b5790997ee9d3820d16350192d41849b0e2448c9e93650acac672ddf502e35c0a5a25547172a9eec840a96687cd94ba1cee672cbd86640f8f4ff1b65960d2ab9
+  checksum: e81268cdeb8d64d84af649344df88f064ece0f05db62072657c976b6162ffe16f94b6480a5367d627c629272c2d86d0ee8c24f7095e98f8e743b16f98500673b
   languageName: node
   linkType: hard
 
@@ -3824,13 +3824,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^27.4.1":
-  version: 27.4.1
-  resolution: "@types/jest@npm:27.4.1"
+"@types/jest@npm:^27.5.2":
+  version: 27.5.2
+  resolution: "@types/jest@npm:27.5.2"
   dependencies:
     jest-matcher-utils: ^27.0.0
     pretty-format: ^27.0.0
-  checksum: 5184f3eef4832d01ee8f59bed15eec45ccc8e29c724a5e6ce37bf74396b37bdf04f557000f45ba4fc38ae6075cf9cfcce3d7a75abc981023c61ceb27230a93e4
+  checksum: 7e11c6826aa429ad990dc262e4e4b54aa36573287fddf15773e4137f07d11d3105f0dd9f1baff73252160a057df23f5529bb83b1bf83cd3f45f9460a5ca5c22e
   languageName: node
   linkType: hard
 
@@ -3908,7 +3908,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:>=12, @types/node@npm:^17.0.21":
+"@types/node@npm:>=12":
   version: 17.0.21
   resolution: "@types/node@npm:17.0.21"
   checksum: 89dcd2fe82f21d3634266f8384e9c865cf8af49685639fbdbd799bdd1040480fb1e8eeda2d3b9fce41edbe704d2a4be9f427118c4ae872e8d9bb7cbeb3c41a94
@@ -3919,6 +3919,13 @@ __metadata:
   version: 13.13.52
   resolution: "@types/node@npm:13.13.52"
   checksum: 8f1afff497ebeba209e2dc340d823284e087a47632afe99a7daa30eaff80893e520f222ad400cd1f2d3b8288e93cf3eaded52a8e64eaefb8aacfe6c35de98f42
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^17.0.38":
+  version: 17.0.38
+  resolution: "@types/node@npm:17.0.38"
+  checksum: 9db1c39d603850ced665ab60b8f8ebce674ff9d762dfff0f776d520e71e4d73fdcd4c7f69213b804d878cf3e726911b09cae4ee66e35ae2724538de9f4838681
   languageName: node
   linkType: hard
 
@@ -3970,14 +3977,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^17.0.43":
-  version: 17.0.43
-  resolution: "@types/react@npm:17.0.43"
+"@types/react@npm:^17.0.45":
+  version: 17.0.45
+  resolution: "@types/react@npm:17.0.45"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 981b0993f5b3ea9d3488b8cc883201e8ae47ba7732929f788f450a79fd72829e658080d5084e67caa008e58d989b0abc1d5f36ff0a1cda09315ea3a3c0c9dc11
+  checksum: 3cc13a02824c13f6fa4807a83abd065ac1d9943359e76bd995cc7cd2b4148c1176ebd54a30a9f4eb8a0f141ff359d712876f256c4fee707e4290607ef8410b3e
   languageName: node
   linkType: hard
 
@@ -15649,9 +15656,9 @@ resolve@^2.0.0-next.3:
     "@atls/schematics": "workspace:0.0.12"
     "@atls/tools-setup-ts-execution": "workspace:0.0.1"
     "@jest/core": ^27.5.1
-    "@types/eslint": ^8.4.1
-    "@types/jest": ^27.4.1
-    "@types/node": ^17.0.21
+    "@types/eslint": ^8.4.2
+    "@types/jest": ^27.5.2
+    "@types/node": ^17.0.38
     "@yarnpkg/builder": ^3.2.0
     eslint: ^8.11.0
     eslint-import-resolver-node: ^0.3.6
