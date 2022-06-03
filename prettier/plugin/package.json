@@ -21,7 +21,7 @@
     "sort-package-json": "^1.54.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.21"
+    "@types/node": "^17.0.38"
   },
   "publishConfig": {
     "main": "dist/index.js",

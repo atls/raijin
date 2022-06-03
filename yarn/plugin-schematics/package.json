@@ -26,7 +26,7 @@
     "typanion": "^3.7.1"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "3.2.0",
+    "@yarnpkg/builder": "^3.2.0",
     "@yarnpkg/cli": "^3.2.0",
     "@yarnpkg/core": "^3.2.0",
     "@yarnpkg/fslib": "^2.6.1",

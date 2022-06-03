@@ -13,12 +13,12 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@actions/github": "^5.0.0",
+    "@actions/github": "^5.0.3",
     "@octokit/types": "^6.34.0",
     "clipanion": "^3.2.0-rc.6"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "3.2.0",
+    "@yarnpkg/builder": "^3.2.0",
     "@yarnpkg/cli": "^3.2.0",
     "@yarnpkg/core": "^3.2.0"
   },
