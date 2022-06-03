@@ -13,8 +13,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@actions/core": "^1.6.0",
-    "@actions/github": "^5.0.0",
+    "@actions/core": "^1.8.2",
+    "@actions/github": "^5.0.3",
     "@atls/cli-ui-eslint-result-component": "workspace:0.0.4",
     "@atls/cli-ui-renderer": "workspace:0.0.6",
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:0.0.8",
