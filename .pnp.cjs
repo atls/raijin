@@ -1060,7 +1060,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:17.0.38"],\
             ["globby", "npm:11.0.3"],\
             ["ignore", "npm:5.2.0"],\
-            ["prettier", "npm:2.6.1"]\
+            ["prettier", "npm:2.5.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -1356,7 +1356,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-prettier", "virtual:7aed8cf9106f781330fe216ac479d03159058250072e4818a5a6bc9d31f087c38678fde842724541ef0148411801d573460512fb69d87b320db4a931b99c5771#npm:4.0.0"],\
             ["eslint-plugin-react", "virtual:7aed8cf9106f781330fe216ac479d03159058250072e4818a5a6bc9d31f087c38678fde842724541ef0148411801d573460512fb69d87b320db4a931b99c5771#npm:7.29.4"],\
             ["eslint-plugin-react-hooks", "virtual:7aed8cf9106f781330fe216ac479d03159058250072e4818a5a6bc9d31f087c38678fde842724541ef0148411801d573460512fb69d87b320db4a931b99c5771#npm:4.3.0"],\
-            ["prettier", "npm:2.6.1"],\
+            ["prettier", "npm:2.5.1"],\
             ["react", "npm:17.0.2"]\
           ],\
           "linkType": "SOFT"\
@@ -1383,7 +1383,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@atls/config-prettier", "workspace:config/prettier"],\
             ["@types/node", "npm:17.0.38"],\
-            ["prettier", "npm:2.6.1"]\
+            ["prettier", "npm:2.5.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -1418,7 +1418,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["import-sort-parser", "npm:6.0.0"],\
             ["import-sort-parser-typescript", "npm:6.0.0"],\
             ["import-sort-style", "npm:6.0.0"],\
-            ["prettier", "npm:2.6.1"],\
+            ["prettier", "npm:2.5.1"],\
             ["sort-package-json", "npm:1.54.0"]\
           ],\
           "linkType": "SOFT"\
@@ -11447,7 +11447,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/prettier", null],\
             ["eslint", "npm:8.11.0"],\
             ["eslint-config-prettier", null],\
-            ["prettier", "npm:2.6.1"],\
+            ["prettier", "npm:2.5.1"],\
             ["prettier-linter-helpers", "npm:1.0.0"]\
           ],\
           "packagePeers": [\
@@ -17438,10 +17438,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["prettier", [\
-        ["npm:2.6.1", {\
-          "packageLocation": "./.yarn/cache/prettier-npm-2.6.1-94a3731152-78be1f8a3d.zip/node_modules/prettier/",\
+        ["npm:2.5.1", {\
+          "packageLocation": "./.yarn/cache/prettier-npm-2.5.1-58b195b509-21b9408476.zip/node_modules/prettier/",\
           "packageDependencies": [\
-            ["prettier", "npm:2.6.1"]\
+            ["prettier", "npm:2.5.1"]\
           ],\
           "linkType": "HARD"\
         }]\
