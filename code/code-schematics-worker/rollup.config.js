@@ -23,7 +23,7 @@ const wrapOutput = () => ({
 
 export default [
   {
-    external: ['pnpapi'],
+    external: ['pnpapi', 'fsevents'],
     input: './src/schematics.worker.source.ts',
     output: {
       file: './src/schematics.worker.content.js',

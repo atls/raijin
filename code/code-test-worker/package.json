@@ -20,8 +20,8 @@
     "flatted": "^3.2.5"
   },
   "devDependencies": {
-    "@jest/test-result": "^27.5.1",
-    "@jest/types": "^27.5.1",
+    "@jest/test-result": "^28.1.0",
+    "@jest/types": "^28.1.0",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.1.3",

@@ -17,7 +17,7 @@
     "@atls/prettier-plugin": "workspace:0.0.4",
     "globby": "^11.0.4",
     "ignore": "^5.2.0",
-    "prettier": "^2.6.1"
+    "prettier": "^2.6.2"
   },
   "devDependencies": {
     "@types/node": "^17.0.38"
