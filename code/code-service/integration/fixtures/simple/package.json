@@ -7,10 +7,10 @@
     "prepack": "run build"
   },
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.18.1"
   },
   "devDependencies": {
-    "express": "^4.17.3"
+    "express": "^4.18.1"
   },
   "externalDependencies": {
     "express": "*"

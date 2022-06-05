@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@atls/config-eslint": "workspace:0.0.6",
-    "eslint": "^8.11.0",
+    "eslint": "^8.17.0",
     "globby": "^11.0.4",
     "ignore": "^5.2.0"
   },
