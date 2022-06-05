@@ -16,7 +16,7 @@
     "@atls/cli-ui-git-commit-component": "workspace:0.0.5",
     "@atls/code-commit": "workspace:0.0.5",
     "@yarnpkg/libui": "^2.2.1",
-    "clipanion": "^3.2.0-rc.6",
+    "clipanion": "^3.2.0-rc.11",
     "commitizen": "^4.2.4",
     "force-stdin-tty": "^0.0.1",
     "ink": "^3.2.0",
@@ -25,10 +25,10 @@
     "word-wrap": "^1.2.3"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "^3.2.0",
-    "@yarnpkg/cli": "^3.2.0",
-    "@yarnpkg/core": "^3.2.0",
-    "@yarnpkg/fslib": "^2.6.1"
+    "@yarnpkg/builder": "^3.2.2",
+    "@yarnpkg/cli": "^3.2.1",
+    "@yarnpkg/core": "^3.2.2",
+    "@yarnpkg/fslib": "^2.6.2"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "^3.2.0-rc.8",
