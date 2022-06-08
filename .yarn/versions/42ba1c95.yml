@@ -1,0 +1,15 @@
+releases:
+  "@atls/cli-ui-error-info-component": patch
+  "@atls/cli-ui-eslint-result-component": patch
+  "@atls/cli-ui-git-commit-component": patch
+  "@atls/cli-ui-log-record-component": patch
+  "@atls/cli-ui-parts": patch
+  "@atls/cli-ui-pretty-logs": patch
+  "@atls/cli-ui-renderer": patch
+  "@atls/cli-ui-schematics-component": patch
+  "@atls/cli-ui-source-component": patch
+  "@atls/cli-ui-stack-trace-component": patch
+  "@atls/cli-ui-typescript-diagnostic-component": patch
+  "@atls/code-lint": patch
+  "@atls/code-lint-worker": patch
+  "@atls/config-eslint": patch
