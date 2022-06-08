@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-schematics-worker",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -14,7 +14,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-schematics": "workspace:0.0.10",
+    "@atls/code-schematics": "workspace:0.0.11",
     "@atls/code-worker-utils": "workspace:0.0.5"
   },
   "devDependencies": {

@@ -13,10 +13,10 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:0.0.4",
-    "@atls/cli-ui-log-record-component": "workspace:0.0.6",
-    "@atls/cli-ui-renderer": "workspace:0.0.6",
-    "@atls/code-service-worker": "workspace:0.0.9",
+    "@atls/cli-ui-error-info-component": "workspace:0.0.5",
+    "@atls/cli-ui-log-record-component": "workspace:0.0.7",
+    "@atls/cli-ui-renderer": "workspace:0.0.7",
+    "@atls/code-service-worker": "workspace:0.0.10",
     "@atls/yarn-pack-utils": "workspace:0.0.1",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "clipanion": "^3.2.0-rc.11",

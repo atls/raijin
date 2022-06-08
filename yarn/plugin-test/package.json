@@ -13,7 +13,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-test-worker": "workspace:0.0.7",
+    "@atls/code-test-worker": "workspace:0.0.8",
     "clipanion": "^3.2.0-rc.11"
   },
   "devDependencies": {

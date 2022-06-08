@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-stack-trace-component",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -12,8 +12,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-renderer": "workspace:0.0.6",
-    "@atls/cli-ui-source-component": "workspace:0.0.6",
+    "@atls/cli-ui-renderer": "workspace:0.0.7",
+    "@atls/cli-ui-source-component": "workspace:0.0.7",
     "@atls/stack-trace": "^0.0.2"
   },
   "devDependencies": {

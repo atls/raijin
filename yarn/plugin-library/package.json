@@ -13,12 +13,12 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:0.0.4",
-    "@atls/cli-ui-log-record-component": "workspace:0.0.6",
-    "@atls/cli-ui-pretty-logs": "workspace:0.0.6",
-    "@atls/cli-ui-renderer": "workspace:0.0.6",
-    "@atls/cli-ui-typescript-diagnostic-component": "workspace:0.0.8",
-    "@atls/code-typescript-worker": "workspace:0.0.8",
+    "@atls/cli-ui-error-info-component": "workspace:0.0.5",
+    "@atls/cli-ui-log-record-component": "workspace:0.0.7",
+    "@atls/cli-ui-pretty-logs": "workspace:0.0.7",
+    "@atls/cli-ui-renderer": "workspace:0.0.7",
+    "@atls/cli-ui-typescript-diagnostic-component": "workspace:0.0.9",
+    "@atls/code-typescript-worker": "workspace:0.0.9",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "clipanion": "^3.2.0-rc.11",
     "react": "^18.1.0",

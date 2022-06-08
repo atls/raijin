@@ -1,6 +1,6 @@
 {
   "name": "@atls/config-eslint",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -12,7 +12,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-prettier": "workspace:0.0.4",
+    "@atls/config-prettier": "workspace:0.0.5",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
     "eslint": "^8.17.0",
