@@ -15,7 +15,7 @@
     "@yarnpkg/libui": "^2.2.1",
     "figures": "^3.2.0",
     "ink": "^3.2.0",
-    "react": "^17.0.2"
+    "react": "^18.1.0"
   },
   "publishConfig": {
     "access": "public",

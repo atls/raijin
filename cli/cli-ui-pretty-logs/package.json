@@ -15,11 +15,11 @@
     "@atls/cli-ui-log-record-component": "workspace:0.0.6",
     "@atls/cli-ui-renderer": "workspace:0.0.6",
     "ink": "^3.2.0",
-    "react": "^17.0.2"
+    "react": "^18.1.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.38",
-    "@types/react": "^17.0.45"
+    "@types/react": "^18.0.12"
   },
   "publishConfig": {
     "access": "public",
