@@ -22,7 +22,7 @@ export const BADGES = [
 ]
 
 export const COLORS = {
-  '@atls/nestjs': { labelColor: '#EB2845', color: '#2E2F37' },
+  '@atls/nestjs': { labelColor: '#CB5458', color: '#BE4045' },
   '@atls/next': { labelColor: '#354247', color: '#1D282D' },
   '@atls/react': { labelColor: '#43CFF4', color: '#2DBFE6' },
   '@atls-ui': { labelColor: '#097CEB', color: '#0B6DCC' },

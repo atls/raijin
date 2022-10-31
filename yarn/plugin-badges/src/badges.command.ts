@@ -1,22 +1,24 @@
-import { BaseCommand }     from '@yarnpkg/cli'
-import { WorkspaceRequiredError }     from '@yarnpkg/cli'
-import { StreamReport }    from '@yarnpkg/core'
-import { Configuration }   from '@yarnpkg/core'
-import { Project }   from '@yarnpkg/core'
-import { structUtils }   from '@yarnpkg/core'
-import { miscUtils }   from '@yarnpkg/core'
-import { LocatorHash }   from '@yarnpkg/core'
-import { Package }   from '@yarnpkg/core'
-import { Workspace }   from '@yarnpkg/core'
+/* eslint-disable no-continue */
 
-import { readFileAsync }   from 'fs-extra-promise'
-import { writeFileAsync }  from 'fs-extra-promise'
-import { join }            from 'path'
+import { BaseCommand }            from '@yarnpkg/cli'
+import { WorkspaceRequiredError } from '@yarnpkg/cli'
+import { StreamReport }           from '@yarnpkg/core'
+import { Configuration }          from '@yarnpkg/core'
+import { Project }                from '@yarnpkg/core'
+import { LocatorHash }            from '@yarnpkg/core'
+import { Package }                from '@yarnpkg/core'
+import { Workspace }              from '@yarnpkg/core'
+import { structUtils }            from '@yarnpkg/core'
+import { miscUtils }              from '@yarnpkg/core'
 
-import { SpinnerProgress } from '@atls/yarn-run-utils'
+import { readFileAsync }          from 'fs-extra-promise'
+import { writeFileAsync }         from 'fs-extra-promise'
+import { join }                   from 'path'
 
-import { BADGES }          from './badges.constants'
-import { COLORS }          from './badges.constants'
+import { SpinnerProgress }        from '@atls/yarn-run-utils'
+
+import { BADGES }                 from './badges.constants'
+import { COLORS }                 from './badges.constants'
 
 class BadgesCommand extends BaseCommand {
   static paths = [['badges', 'generate']]
@@ -29,12 +31,14 @@ class BadgesCommand extends BaseCommand {
 
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project, workspace } = await Project.find(configuration, this.context.cwd)
+    const { project, workspace: projectWorkspace } = await Project.find(
+      configuration,
+      this.context.cwd
+    )
 
-    if (!workspace)
-      throw new WorkspaceRequiredError(project.cwd, this.context.cwd);
+    if (!projectWorkspace) throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
 
-    await project.restoreInstallState();
+    await project.restoreInstallState()
 
     const commandReport = await StreamReport.start(
       {
@@ -48,59 +52,55 @@ class BadgesCommand extends BaseCommand {
           progress.start()
 
           const traverseWorkspace = (workspace: Workspace) => {
-            const initialHash = workspace.anchoredLocator.locatorHash;
+            const initialHash = workspace.anchoredLocator.locatorHash
 
-            const seen = new Map<LocatorHash, Package>();
-            const pass = [initialHash];
+            const seen = new Map<LocatorHash, Package>()
+            const pass = [initialHash]
 
             while (pass.length > 0) {
-              const hash = pass.shift()!;
-              if (seen.has(hash))
-                continue;
+              const hash = pass.shift()!
+              if (seen.has(hash)) continue
 
-              const pkg = project.storedPackages.get(hash);
+              const pkg = project.storedPackages.get(hash)
               if (typeof pkg === `undefined`)
-                throw new Error(`Assertion failed: Expected the package to be registered`);
+                throw new Error(`Assertion failed: Expected the package to be registered`)
 
-              seen.set(hash, pkg);
+              seen.set(hash, pkg)
 
               if (structUtils.isVirtualLocator(pkg))
-                pass.push(structUtils.devirtualizeLocator(pkg).locatorHash);
+                pass.push(structUtils.devirtualizeLocator(pkg).locatorHash)
 
-              if (hash !== initialHash)
-                continue;
+              if (hash !== initialHash) continue
 
               for (const dependency of pkg.dependencies.values()) {
-                const resolution = project.storedResolutions.get(dependency.descriptorHash);
+                const resolution = project.storedResolutions.get(dependency.descriptorHash)
                 if (typeof resolution === `undefined`)
-                  throw new Error(`Assertion failed: Expected the resolution to be registered`);
+                  throw new Error(`Assertion failed: Expected the resolution to be registered`)
 
-                pass.push(resolution);
+                pass.push(resolution)
               }
             }
 
-            return seen.values();
-          };
+            return seen.values()
+          }
 
           const traverseAllWorkspaces = () => {
-            const aggregate = new Map<LocatorHash, Package>();
+            const aggregate = new Map<LocatorHash, Package>()
 
             for (const workspace of project.workspaces)
-              for (const pkg of traverseWorkspace(workspace))
-                aggregate.set(pkg.locatorHash, pkg);
+              for (const pkg of traverseWorkspace(workspace)) aggregate.set(pkg.locatorHash, pkg)
 
-            return aggregate.values();
-          };
+            return aggregate.values()
+          }
 
           const lookupSet = traverseAllWorkspaces()
-          const sortedLookup = miscUtils.sortMap([...lookupSet], pkg => {
-            return structUtils.stringifyLocator(pkg)
-          })
+          const sortedLookup = miscUtils.sortMap([...lookupSet], (pkg) =>
+            structUtils.stringifyLocator(pkg))
 
           const getVersion = async (name) => {
             const expectedDescriptor = structUtils.parseDescriptor(name)
 
-            const selection = sortedLookup.filter(pkg => {
+            const selection = sortedLookup.filter((pkg) => {
               if (pkg.scope === expectedDescriptor.scope && pkg.name === expectedDescriptor.name) {
                 return true
               }
@@ -151,13 +151,13 @@ class BadgesCommand extends BaseCommand {
             if (pkg.version) {
               return `${badges}<img src="${BadgesCommand.BADGE_URL}?style=${
                 BadgesCommand.BADGE_STYLE
-              }&label=${encodeURIComponent(pkg.name)}&message=${pkg.version}&${getColors()}">\n`
+              }&label=${encodeURIComponent(pkg.name)}&message=${pkg.version}&${getColors()}">  `
             }
 
             return badges
           }, '')
 
-          parts[1] = `\n\n${parts[1]}\n`
+          parts[1] = `\n\n${parts[1]}\n\n`
 
           await writeFileAsync(readmePath, parts.join('[//]: # (VERSIONS)'))
 
