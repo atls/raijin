@@ -5,7 +5,7 @@ import { formatUtils }   from '@yarnpkg/core'
 export class SpinnerProgress {
   static PROGRESS_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
 
-  static PROGRESS_INTERVAL = 120
+  static PROGRESS_INTERVAL = 90
 
   private running = false
 
@@ -34,7 +34,8 @@ export class SpinnerProgress {
         this.clear()
         this.write()
 
-        this.position = this.position >= SpinnerProgress.length ? 0 : this.position + 1
+        this.position =
+          this.position === SpinnerProgress.PROGRESS_FRAMES.length - 1 ? 0 : this.position + 1
 
         this.tick()
       }

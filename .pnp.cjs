@@ -185,6 +185,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:yarn/pack-utils"\
       },\
       {\
+        "name": "@atls/yarn-plugin-badges",\
+        "reference": "workspace:yarn/plugin-badges"\
+      },\
+      {\
         "name": "@atls/yarn-plugin-check",\
         "reference": "workspace:yarn/plugin-check"\
       },\
@@ -288,6 +292,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/webpack-start-server-plugin", ["workspace:webpack/webpack-start-server-plugin"]],\
       ["@atls/yarn-cli", ["workspace:yarn/cli"]],\
       ["@atls/yarn-pack-utils", ["workspace:yarn/pack-utils"]],\
+      ["@atls/yarn-plugin-badges", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-badges", "workspace:yarn/plugin-badges"]],\
       ["@atls/yarn-plugin-check", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-check", "workspace:yarn/plugin-check"]],\
       ["@atls/yarn-plugin-checks", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-checks", "workspace:yarn/plugin-checks"]],\
       ["@atls/yarn-plugin-commit", ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-commit", "workspace:yarn/plugin-commit"]],\
@@ -1548,6 +1553,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@atls/yarn-cli", "workspace:yarn/cli"],\
             ["@atls/tools-setup-ts-execution", "workspace:utils/setup-ts-execution"],\
+            ["@atls/yarn-plugin-badges", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-badges"],\
             ["@atls/yarn-plugin-check", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-check"],\
             ["@atls/yarn-plugin-checks", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-checks"],\
             ["@atls/yarn-plugin-commit", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-commit"],\
@@ -1608,6 +1614,46 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/plugin-pack", "virtual:4dfb36678fa5c0180a82b6eba7a236a9cbf4ddf481565508777206cf0f560fcc1456408b126fcd8eaf7bd6722aebc2cb69e4c7b10b01f018e08960b5ee31c05b#npm:3.1.2"],\
             ["@yarnpkg/plugin-patch", "virtual:4dfb36678fa5c0180a82b6eba7a236a9cbf4ddf481565508777206cf0f560fcc1456408b126fcd8eaf7bd6722aebc2cb69e4c7b10b01f018e08960b5ee31c05b#npm:3.2.1"],\
             ["tar-stream", "npm:2.2.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@atls/yarn-plugin-badges", [\
+        ["virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-badges", {\
+          "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-badges-virtual-796945a84b/1/yarn/plugin-badges/",\
+          "packageDependencies": [\
+            ["@atls/yarn-plugin-badges", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-badges"],\
+            ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
+            ["@types/child-process-promise", "npm:2.2.2"],\
+            ["@types/fs-extra-promise", "npm:1.0.10"],\
+            ["@types/yarnpkg__cli", null],\
+            ["@types/yarnpkg__core", null],\
+            ["@yarnpkg/builder", "npm:3.2.2"],\
+            ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:3.2.1"],\
+            ["@yarnpkg/core", "npm:3.2.2"],\
+            ["fs-extra-promise", "npm:1.0.1"],\
+            ["typescript", "patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=bda367"]\
+          ],\
+          "packagePeers": [\
+            "@types/yarnpkg__cli",\
+            "@types/yarnpkg__core",\
+            "@yarnpkg/cli",\
+            "@yarnpkg/core"\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["workspace:yarn/plugin-badges", {\
+          "packageLocation": "./yarn/plugin-badges/",\
+          "packageDependencies": [\
+            ["@atls/yarn-plugin-badges", "workspace:yarn/plugin-badges"],\
+            ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
+            ["@types/child-process-promise", "npm:2.2.2"],\
+            ["@types/fs-extra-promise", "npm:1.0.10"],\
+            ["@yarnpkg/builder", "npm:3.2.2"],\
+            ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:3.2.1"],\
+            ["@yarnpkg/core", "npm:3.2.2"],\
+            ["fs-extra-promise", "npm:1.0.1"],\
+            ["typescript", "patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=bda367"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -5462,6 +5508,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/bluebird", [\
+        ["npm:3.5.37", {\
+          "packageLocation": "./.yarn/cache/@types-bluebird-npm-3.5.37-eef4da5e7b-851a2eca0a.zip/node_modules/@types/bluebird/",\
+          "packageDependencies": [\
+            ["@types/bluebird", "npm:3.5.37"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/cacheable-request", [\
         ["npm:6.0.1", {\
           "packageLocation": "./.yarn/cache/@types-cacheable-request-npm-6.0.1-067bf7714d-c25b1bfa2f.zip/node_modules/@types/cacheable-request/",\
@@ -5471,6 +5526,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/keyv", "npm:3.1.1"],\
             ["@types/node", "npm:16.9.6"],\
             ["@types/responselike", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/child-process-promise", [\
+        ["npm:2.2.2", {\
+          "packageLocation": "./.yarn/cache/@types-child-process-promise-npm-2.2.2-53840fecc6-e7b1140372.zip/node_modules/@types/child-process-promise/",\
+          "packageDependencies": [\
+            ["@types/child-process-promise", "npm:2.2.2"],\
+            ["@types/node", "npm:16.9.6"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5569,6 +5634,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-estree-npm-0.0.51-bc20719267-e56a3bcf75.zip/node_modules/@types/estree/",\
           "packageDependencies": [\
             ["@types/estree", "npm:0.0.51"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/fs-extra", [\
+        ["npm:4.0.12", {\
+          "packageLocation": "./.yarn/cache/@types-fs-extra-npm-4.0.12-ef65781a9b-6a14044be3.zip/node_modules/@types/fs-extra/",\
+          "packageDependencies": [\
+            ["@types/fs-extra", "npm:4.0.12"],\
+            ["@types/node", "npm:16.9.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/fs-extra-promise", [\
+        ["npm:1.0.10", {\
+          "packageLocation": "./.yarn/cache/@types-fs-extra-promise-npm-1.0.10-2abfa71f8d-a65d59cb93.zip/node_modules/@types/fs-extra-promise/",\
+          "packageDependencies": [\
+            ["@types/fs-extra-promise", "npm:1.0.10"],\
+            ["@types/bluebird", "npm:3.5.37"],\
+            ["@types/fs-extra", "npm:4.0.12"],\
+            ["@types/node", "npm:16.9.6"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12837,6 +12924,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
+        ["npm:2.1.2", {\
+          "packageLocation": "./.yarn/cache/fs-extra-npm-2.1.2-ef1a5dd493-3f9c7563a0.zip/node_modules/fs-extra/",\
+          "packageDependencies": [\
+            ["fs-extra", "npm:2.1.2"],\
+            ["graceful-fs", "npm:4.2.6"],\
+            ["jsonfile", "npm:2.4.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:8.1.0", {\
           "packageLocation": "./.yarn/cache/fs-extra-npm-8.1.0-197473387f-bf44f0e6ce.zip/node_modules/fs-extra/",\
           "packageDependencies": [\
@@ -12844,6 +12940,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graceful-fs", "npm:4.2.6"],\
             ["jsonfile", "npm:4.0.0"],\
             ["universalify", "npm:0.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["fs-extra-promise", [\
+        ["npm:1.0.1", {\
+          "packageLocation": "./.yarn/cache/fs-extra-promise-npm-1.0.1-ed4924f7cc-09b29c5df8.zip/node_modules/fs-extra-promise/",\
+          "packageDependencies": [\
+            ["fs-extra-promise", "npm:1.0.1"],\
+            ["bluebird", "npm:3.7.2"],\
+            ["fs-extra", "npm:2.1.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -15748,6 +15855,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["jsonfile", [\
+        ["npm:2.4.0", {\
+          "packageLocation": "./.yarn/cache/jsonfile-npm-2.4.0-5547489d6b-f5064aabbc.zip/node_modules/jsonfile/",\
+          "packageDependencies": [\
+            ["jsonfile", "npm:2.4.0"],\
+            ["graceful-fs", "npm:4.2.6"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:4.0.0", {\
           "packageLocation": "./.yarn/cache/jsonfile-npm-4.0.0-10ce3aea15-6447d6224f.zip/node_modules/jsonfile/",\
           "packageDependencies": [\
