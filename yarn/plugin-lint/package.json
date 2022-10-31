@@ -16,7 +16,7 @@
     "@atls/cli-ui-error-info-component": "workspace:0.0.5",
     "@atls/cli-ui-eslint-result-component": "workspace:0.0.5",
     "@atls/cli-ui-renderer": "workspace:0.0.7",
-    "@atls/code-lint-worker": "workspace:0.0.9",
+    "@atls/code-lint-worker": "workspace:0.0.10",
     "@atls/yarn-run-utils": "workspace:0.0.1",
     "clipanion": "^3.2.0-rc.11",
     "react": "^18.1.0"
