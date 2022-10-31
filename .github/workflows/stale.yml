@@ -1,0 +1,22 @@
+name: 'Check for stale issues and PRs'
+on:
+  schedule:
+    # every day at 6:00 UTC (9:00 MSK)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v6
+        with:
+          repo-token: ${{ secrets.ISSUE_STALE }}
+          stale-issue-message: 'Статус?'
+          stale-pr-message: 'Статус?'
+          close-issue-message: 'Таске месяц. Закрыта за утратой актуальности.'
+          close-pr-message: 'ПРу месяц. Закрыт за утратой актуальности.'
+          days-before-issue-stale: 14
+          days-before-pr-stale: 14
+          days-before-issue-close: 30
+          days-before-pr-close: 30
