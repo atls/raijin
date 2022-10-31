@@ -5,7 +5,7 @@ import { formatUtils }   from '@yarnpkg/core'
 export class SpinnerProgress {
   static PROGRESS_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
 
-  static PROGRESS_INTERVAL = 120
+  static PROGRESS_INTERVAL = 90
 
   private running = false
 
