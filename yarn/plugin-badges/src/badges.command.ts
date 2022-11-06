@@ -155,7 +155,7 @@ class BadgesCommand extends BaseCommand {
             if (pkg.version) {
               const queryStringParams = {
                 style: BadgesCommand.BADGE_STYLE,
-                url: join(
+                link: join(
                   BadgesCommand.REGISTRY_URL,
                   BadgesCommand.REGISTRY_PACKAGE_PATH,
                   pkg.name
