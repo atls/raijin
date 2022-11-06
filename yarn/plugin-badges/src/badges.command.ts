@@ -153,21 +153,20 @@ class BadgesCommand extends BaseCommand {
             }
 
             if (pkg.version) {
+              const packageLink = join(BadgesCommand.REGISTRY_URL, BadgesCommand.REGISTRY_PACKAGE_PATH, pkg.name)
+
               const queryStringParams = {
                 style: BadgesCommand.BADGE_STYLE,
-                link: join(
-                  BadgesCommand.REGISTRY_URL,
-                  BadgesCommand.REGISTRY_PACKAGE_PATH,
-                  pkg.name
-                ),
                 label: pkg.name,
                 message: pkg.version,
                 ...getColors(),
               }
 
-              return `${badges}<img src="${BadgesCommand.BADGE_URL}?${stringify(
-                queryStringParams
-              )}">  `
+              const badge = `<img src="${BadgesCommand.BADGE_URL}?${stringify(queryStringParams)}">`
+
+              const wrapWithLink = (content: string, link: string) => `[${content}](${link})`
+
+              return `${badges}${wrapWithLink(badge, packageLink)}  `
             }
 
             return badges
