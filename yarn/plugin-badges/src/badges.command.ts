@@ -14,6 +14,7 @@ import { miscUtils }              from '@yarnpkg/core'
 import { readFileAsync }          from 'fs-extra-promise'
 import { writeFileAsync }         from 'fs-extra-promise'
 import { join }                   from 'path'
+import { stringify }              from 'querystring'
 
 import { SpinnerProgress }        from '@atls/yarn-run-utils'
 
@@ -28,6 +29,10 @@ class BadgesCommand extends BaseCommand {
   static BADGE_URL = 'https://img.shields.io/static/v1'
 
   static BADGE_STYLE = 'for-the-badge'
+
+  static REGISTRY_URL = 'https://npmjs.com'
+
+  static REGISTRY_PACKAGE_PATH = '/package'
 
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
@@ -127,13 +132,12 @@ class BadgesCommand extends BaseCommand {
             }))
           )
 
-          parts[1] = atlsVersions.reduce((badges, pkg) => {
+          const versionsReducer = (badges, pkg) => {
             const getColors = () => {
-              const createQueryString = (colors) =>
-                `labelColor=${colors.labelColor.replace('#', '')}&color=${colors.color.replace(
-                  '#',
-                  ''
-                )}`
+              const extractColors = (colors) => ({
+                labelColor: colors.labelColor.replace('#', ''),
+                color: colors.color.replace('#', ''),
+              })
 
               const pair = Object.entries(COLORS).find(
                 ([pattern]) => pkg.name.search(pattern) !== -1
@@ -142,21 +146,34 @@ class BadgesCommand extends BaseCommand {
               if (pair) {
                 const [, colors] = pair
 
-                return createQueryString(colors)
+                return extractColors(colors)
               }
 
-              return createQueryString(COLORS.tools)
+              return extractColors(COLORS.tools)
             }
 
             if (pkg.version) {
-              return `${badges}<img src="${BadgesCommand.BADGE_URL}?style=${
-                BadgesCommand.BADGE_STYLE
-              }&label=${encodeURIComponent(pkg.name)}&message=${pkg.version}&${getColors()}">  `
+              const packageLink = `${BadgesCommand.REGISTRY_URL}${BadgesCommand.REGISTRY_PACKAGE_PATH}/${pkg.name}`
+              join(BadgesCommand.REGISTRY_URL, BadgesCommand.REGISTRY_PACKAGE_PATH, pkg.name)
+
+              const queryStringParams = {
+                style: BadgesCommand.BADGE_STYLE,
+                label: pkg.name,
+                message: pkg.version,
+                ...getColors(),
+              }
+
+              const badge = `<img src="${BadgesCommand.BADGE_URL}?${stringify(queryStringParams)}">`
+
+              const wrapWithLink = (content: string, link: string) => `[${content}](${link})`
+
+              return `${badges}${wrapWithLink(badge, packageLink)}  `
             }
 
             return badges
-          }, '')
+          }
 
+          parts[1] = atlsVersions.reduce(versionsReducer, '')
           parts[1] = `\n\n${parts[1]}\n\n`
 
           await writeFileAsync(readmePath, parts.join('[//]: # (VERSIONS)'))

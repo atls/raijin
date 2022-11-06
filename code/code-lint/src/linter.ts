@@ -1,11 +1,12 @@
 import { readFile }           from 'node:fs/promises'
-import { relative }           from 'node:path'
 
 import type { ESLint }        from 'eslint'
 
 import globby                 from 'globby'
 import ignorer                from 'ignore'
 import { Linter as ESLinter } from 'eslint'
+import { join }               from 'path'
+import { relative }           from 'path'
 
 import eslintconfig           from '@atls/config-eslint'
 
@@ -14,6 +15,14 @@ import { createPatterns }     from './linter.patterns'
 
 export class Linter {
   constructor(private readonly cwd: string) {}
+
+  private async getProjectIgnorePatterns(): Promise<Array<string>> {
+    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { linterIgnorePatterns = [] } = JSON.parse(content)
+
+    return linterIgnorePatterns
+  }
 
   async lint(files?: Array<string>): Promise<Array<ESLint.LintResult>> {
     if (files && files.length > 0) {
@@ -28,7 +37,9 @@ export class Linter {
   }
 
   async lintFiles(files: Array<string> = []): Promise<Array<ESLint.LintResult>> {
-    const ignored = ignorer().add(ignore)
+    const ignored = ignorer()
+      .add(ignore)
+      .add(await this.getProjectIgnorePatterns())
 
     const linterConfig: any = { configType: 'flat' }
     const linter = new ESLinter(linterConfig)
