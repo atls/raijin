@@ -8,9 +8,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build bundle",
+    "build": "builder build bundle && run patch",
     "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "postpack": "rm -rf dist",
+    "patch": "node patches/index-of.patch.js"
   },
   "dependencies": {
     "@atls/yarn-plugin-badges": "workspace:0.0.1",
