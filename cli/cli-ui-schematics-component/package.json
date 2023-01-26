@@ -16,7 +16,7 @@
     "@atls/schematics": "workspace:0.0.13",
     "@types/node": "^17.0.38",
     "@types/react": "^18.0.12",
-    "@yarnpkg/libui": "^2.2.1",
+    "@yarnpkg/libui": "^3.0.0-rc.36",
     "camelcase": "^6.3.0",
     "figures": "^3.2.0",
     "ink": "^3.2.0",

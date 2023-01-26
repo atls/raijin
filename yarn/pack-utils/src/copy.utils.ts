@@ -134,7 +134,7 @@ export const copyYarnRelease = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const src = project.configuration.get('yarnPath')
+  const src = project.configuration.get('yarnPath') as PortablePath
   const path = ppath.relative(project.cwd, src)
   const dest = ppath.join(destination, path)
 

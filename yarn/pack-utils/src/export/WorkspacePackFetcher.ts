@@ -10,7 +10,7 @@ import { Locator }             from '@yarnpkg/core'
 import { MinimalFetchOptions } from '@yarnpkg/core'
 import { Project }             from '@yarnpkg/core'
 import { WorkspaceResolver }   from '@yarnpkg/core'
-import { WorkspaceFetcher }    from '@yarnpkg/core/lib/WorkspaceFetcher'
+import { WorkspaceFetcher }    from '@yarnpkg/core'
 import { PortablePath }        from '@yarnpkg/fslib'
 
 import { genPackZip }          from './exportUtils'

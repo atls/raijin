@@ -16,8 +16,8 @@
     "@atls/config-typescript": "workspace:0.0.1",
     "@atls/webpack-proto-imports-loader": "workspace:0.0.9",
     "@atls/webpack-start-server-plugin": "workspace:0.0.6",
-    "@yarnpkg/cli": "^3.2.1",
-    "@yarnpkg/core": "^3.2.2",
+    "@yarnpkg/cli": "^4.0.0-rc.36",
+    "@yarnpkg/core": "^4.0.0-rc.36",
     "fast-glob": "^3.2.11",
     "find-up": "^5.0.0",
     "string-replace-loader": "^3.1.0",
@@ -32,7 +32,7 @@
     "@types/protocol-buffers-schema": "3.4.1",
     "@types/wait-for-localhost": "3.1.0",
     "@types/webpack": "^5.28.0",
-    "@yarnpkg/fslib": "^2.6.2",
+    "@yarnpkg/fslib": "^3.0.0-rc.36",
     "wait-for-localhost": "^3.3.0"
   },
   "publishConfig": {
