@@ -1,3 +1,5 @@
+import { readFile }      from 'node:fs/promises'
+
 import { BaseCommand }   from '@yarnpkg/cli'
 import { Workspace }     from '@yarnpkg/core'
 import { Configuration } from '@yarnpkg/core'
@@ -12,6 +14,7 @@ import { toFilename }    from '@yarnpkg/fslib'
 
 import tempy             from 'tempy'
 import { Option }        from 'clipanion'
+import { join }          from 'path'
 
 import { TagPolicy }     from '@atls/code-pack'
 import { tagUtils }      from '@atls/code-pack'
@@ -70,19 +73,26 @@ class ImagePackCommand extends BaseCommand {
 
           const repo = workspace.manifest.raw.name.replace('@', '').replace(/\//g, '-')
           const image = `${this.registry}${repo}`
+          // @ts-ignore
+          const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+
+          const { packConfiguration = {} } = JSON.parse(content)
 
           const tag = await tagUtils.getTag(this.tagPolicy || 'revision')
 
           const descriptorPath = await forRepository(repo)
+
+          const buildpackVersion = packConfiguration.buildpackVersion || '0.0.3'
+          const builderTag = packConfiguration.builderTag || 'buster-16.13'
 
           const args = [
             'build',
             `${image}:${tag}`,
             '--verbose',
             '--buildpack',
-            'atlantislab/buildpack-yarn-workspace:0.0.3',
+            `atlantislab/buildpack-yarn-workspace:${buildpackVersion}`,
             '--builder',
-            'atlantislab/builder-base:buster',
+            `atlantislab/builder-base:${builderTag}`,
             '--descriptor',
             descriptorPath,
             '--tag',
