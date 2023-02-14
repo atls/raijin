@@ -102,7 +102,7 @@ export const pack = async (
     await tmpProject.install({
       // @ts-ignore
       cache: await ExportCache.find(tmpConfiguration, cache),
-      fetcher: makeFetcher(project),      
+      fetcher: makeFetcher(project),
       report,
       persistProject: false,
     })

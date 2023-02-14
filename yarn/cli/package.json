@@ -8,10 +8,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build bundle && run patch",
+    "build": "run prebuild-patch && builder build bundle && run postbuild-patch",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist",
-    "patch": "node patches/run.js"
+    "postbuild-patch": "node patches/post-build.hook.js",
+    "prebuild-patch": "node patches/pre-build.hook.js"
   },
   "dependencies": {
     "@atls/yarn-plugin-badges": "workspace:0.0.1",
@@ -62,6 +63,8 @@
   },
   "devDependencies": {
     "@atls/tools-setup-ts-execution": "workspace:0.0.1",
+    "@types/fs-extra": "^11",
+    "fs-extra": "^11.1.0",
     "super-resolve": "^1.0.0"
   },
   "publishConfig": {

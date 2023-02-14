@@ -1560,6 +1560,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-test", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-test"],\
           ["@atls/yarn-plugin-typescript", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-typescript"],\
           ["@atls/yarn-plugin-workspaces", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-workspaces"],\
+          ["@types/fs-extra", "npm:11.0.1"],\
           ["@yarnpkg/builder", "npm:4.0.0-rc.36"],\
           ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:4.0.0-rc.36"],\
           ["@yarnpkg/core", "npm:4.0.0-rc.38"],\
@@ -1588,6 +1589,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/plugin-workspace-tools", "virtual:c546bed70701237de3d393d4c2d9e0170a8a6ed6b9e7a4189b70a214ac1b22de5f6e0a498849a73ac101a6bd2eb7f362143683427a784db5a1884547a440c2de#npm:4.0.0-rc.36"],\
           ["@yarnpkg/shell", "npm:4.0.0-rc.36"],\
           ["clipanion", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#npm:3.2.0-rc.6"],\
+          ["fs-extra", "npm:11.1.0"],\
           ["semver", "npm:7.3.7"],\
           ["super-resolve", "npm:1.0.0"],\
           ["typanion", "npm:3.7.1"],\
@@ -5625,6 +5627,15 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@types/fs-extra", [\
+      ["npm:11.0.1", {\
+        "packageLocation": "../../.yarn/berry/cache/@types-fs-extra-npm-11.0.1-f11620397b-9.zip/node_modules/@types/fs-extra/",\
+        "packageDependencies": [\
+          ["@types/fs-extra", "npm:11.0.1"],\
+          ["@types/jsonfile", "npm:6.1.1"],\
+          ["@types/node", "npm:16.9.6"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:4.0.12", {\
         "packageLocation": "../../.yarn/berry/cache/@types-fs-extra-npm-4.0.12-ef65781a9b-9.zip/node_modules/@types/fs-extra/",\
         "packageDependencies": [\
@@ -5741,6 +5752,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../.yarn/berry/cache/@types-json5-npm-0.0.29-f63a7916bd-9.zip/node_modules/@types/json5/",\
         "packageDependencies": [\
           ["@types/json5", "npm:0.0.29"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/jsonfile", [\
+      ["npm:6.1.1", {\
+        "packageLocation": "../../.yarn/berry/cache/@types-jsonfile-npm-6.1.1-62ad833c58-9.zip/node_modules/@types/jsonfile/",\
+        "packageDependencies": [\
+          ["@types/jsonfile", "npm:6.1.1"],\
+          ["@types/node", "npm:16.9.6"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -12233,6 +12254,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../.yarn/berry/cache/fs-extra-npm-10.0.0-4f8c704115-9.zip/node_modules/fs-extra/",\
         "packageDependencies": [\
           ["fs-extra", "npm:10.0.0"],\
+          ["graceful-fs", "npm:4.2.6"],\
+          ["jsonfile", "npm:6.0.1"],\
+          ["universalify", "npm:2.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:11.1.0", {\
+        "packageLocation": "../../.yarn/berry/cache/fs-extra-npm-11.1.0-2cd157426f-9.zip/node_modules/fs-extra/",\
+        "packageDependencies": [\
+          ["fs-extra", "npm:11.1.0"],\
           ["graceful-fs", "npm:4.2.6"],\
           ["jsonfile", "npm:6.0.1"],\
           ["universalify", "npm:2.0.0"]\

@@ -853,6 +853,7 @@ __metadata:
     "@atls/yarn-plugin-test": "workspace:0.0.1"
     "@atls/yarn-plugin-typescript": "workspace:0.0.1"
     "@atls/yarn-plugin-workspaces": "workspace:0.0.1"
+    "@types/fs-extra": "npm:^11"
     "@yarnpkg/builder": "npm:^4.0.0-rc.36"
     "@yarnpkg/cli": "npm:^4.0.0-rc.36"
     "@yarnpkg/core": "npm:^4.0.0-rc.36"
@@ -881,6 +882,7 @@ __metadata:
     "@yarnpkg/plugin-workspace-tools": "npm:^4.0.0-rc.36"
     "@yarnpkg/shell": "npm:^4.0.0-rc.36"
     clipanion: "npm:^3.2.0-rc.10"
+    fs-extra: "npm:^11.1.0"
     semver: "npm:^7.3.7"
     super-resolve: "npm:^1.0.0"
     typanion: "npm:^3.7.1"
@@ -3734,6 +3736,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/fs-extra@npm:^11":
+  version: 11.0.1
+  resolution: "@types/fs-extra@npm:11.0.1"
+  dependencies:
+    "@types/jsonfile": "npm:*"
+    "@types/node": "npm:*"
+  checksum: aefb00f11b78b9c97987e734507f9f5d5f9713e73b3334d474e1e8248a2d55b7dbf822067e42622bb62191646c684500da182923673753baa408a21baf65e49e
+  languageName: node
+  linkType: hard
+
 "@types/fs-extra@npm:^4":
   version: 4.0.12
   resolution: "@types/fs-extra@npm:4.0.12"
@@ -3828,6 +3840,15 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: 4f7f0667d7573ce2888e01e5e887c9661bb2a7e7fd79aae3c57391e812e87cc2fadc4dc1616530f33e63798a011fabe816f41730b511050aba702688466765fd
+  languageName: node
+  linkType: hard
+
+"@types/jsonfile@npm:*":
+  version: 6.1.1
+  resolution: "@types/jsonfile@npm:6.1.1"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 512b06e09f3e5e0f8e45323b54e8d5eb43367a88408812d320e3003cfdd5bd5f49bb13212a1ea66c111f20202b2c05cc72a00214c41668ed74abbe6cb06c76ab
   languageName: node
   linkType: hard
 
@@ -9053,6 +9074,17 @@ __metadata:
     jsonfile: "npm:^6.0.1"
     universalify: "npm:^2.0.0"
   checksum: 768d137af1a607d59985b063b632031406a40d3ea528e7e720a9f36ed8f48c951aad025b03f491074869d25f53c2a56a4b331b1fe49519b40154228553abc7eb
+  languageName: node
+  linkType: hard
+
+"fs-extra@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "fs-extra@npm:11.1.0"
+  dependencies:
+    graceful-fs: "npm:^4.2.0"
+    jsonfile: "npm:^6.0.1"
+    universalify: "npm:^2.0.0"
+  checksum: 20d9909070e7d9754cb651af067ae4343b5fc9b05fa9b8765a9348dab7dfa9b78c0f1ebe791774f06d4cca4231f4be9889a916d0457e8e87097a613e6bdd1746
   languageName: node
   linkType: hard
 
