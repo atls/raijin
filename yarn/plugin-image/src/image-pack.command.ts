@@ -73,8 +73,7 @@ class ImagePackCommand extends BaseCommand {
 
           const repo = workspace.manifest.raw.name.replace('@', '').replace(/\//g, '-')
           const image = `${this.registry}${repo}`
-          // @ts-ignore
-          const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+          const content = await readFile(join(this.context.cwd, 'package.json'), 'utf-8')
 
           const { packConfiguration = {} } = JSON.parse(content)
 

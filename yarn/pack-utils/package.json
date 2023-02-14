@@ -7,7 +7,11 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "semver": "^7.3.8"
+  },
   "devDependencies": {
+    "@types/semver": "^7",
     "@yarnpkg/cli": "^4.0.0-rc.36",
     "@yarnpkg/core": "^4.0.0-rc.36",
     "@yarnpkg/fslib": "^3.0.0-rc.36",

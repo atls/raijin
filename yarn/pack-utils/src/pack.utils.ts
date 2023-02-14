@@ -19,9 +19,9 @@ import { ExportCache }     from './export/ExportCache'
 import { copyRcFile }      from './copy.utils'
 import { copyPlugins }     from './copy.utils'
 import { copyYarnRelease } from './copy.utils'
+import { copyCache }       from './copy.utils'
 import { genPackTgz }      from './export/exportUtils'
 import { makeFetcher }     from './export/exportUtils'
-import { makeResolver }    from './export/exportUtils'
 
 export const generateLockfile = async (
   project: Project,
@@ -65,6 +65,8 @@ export const pack = async (
     workspace.manifest.devDependencies.clear()
 
     const baseFs = new CwdFS(destination)
+    baseFs.mkdirSync('.yarn' as PortablePath)
+    baseFs.mkdirSync('.yarn/cache' as PortablePath)
 
     const tgz = await genPackTgz(workspace)
 
@@ -100,8 +102,7 @@ export const pack = async (
     await tmpProject.install({
       // @ts-ignore
       cache: await ExportCache.find(tmpConfiguration, cache),
-      fetcher: makeFetcher(project),
-      resolver: makeResolver(project),
+      fetcher: makeFetcher(project),      
       report,
       persistProject: false,
     })
@@ -116,6 +117,10 @@ export const pack = async (
 
     await report.startTimerPromise('Copy Yarn releases', async () => {
       await copyYarnRelease(project, destination, report)
+    })
+
+    await report.startTimerPromise('Copy cache', async () => {
+      await copyCache(project, destination, report)
     })
 
     await generateLockfile(tmpProject, destination, report)

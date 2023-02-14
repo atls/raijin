@@ -5,3 +5,6 @@ const { join } = require('path')
 const patches = readdirSync(__dirname).filter((name) => name.search(/run\.js/) === -1)
 
 patches.forEach((patch) => execSync(`node ${join(__dirname, patch)}`))
+
+// eslint-disable-next-line
+console.log('Patches applied')
