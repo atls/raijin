@@ -13,6 +13,8 @@ import { getChangedWorkspaces }   from '@atls/yarn-workspace-utils'
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static paths = [['workspaces', 'changed', 'foreach']]
 
+  exclude = Option.String('--exclude', '')
+
   verbose = Option.Boolean('-v,--verbose', false)
 
   parallel = Option.Boolean('-p,--parallel', false)
@@ -63,6 +65,11 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
       input.push('--include')
       input.push(structUtils.stringifyIdent(ws.locator))
     })
+
+    if (this.exclude) {      
+      input.push('--exclude')
+      input.push(this.exclude)
+    }
 
     if (this.verbose) {
       input.push('--verbose')

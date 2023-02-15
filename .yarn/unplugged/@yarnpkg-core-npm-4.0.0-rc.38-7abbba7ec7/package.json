@@ -1,14 +1,27 @@
 {
   "name": "@yarnpkg/core",
   "version": "4.0.0-rc.38",
-  "stableVersion": "3.4.0",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/yarnpkg/berry.git",
+    "directory": "packages/yarnpkg-core"
+  },
   "license": "BSD-2-Clause",
-  "main": "./lib/index.js",
+  "sideEffects": false,
   "exports": {
     ".": "./lib/index.js",
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
+  "main": "./lib/index.js",
+  "files": [
+    "/lib/**/*"
+  ],
+  "scripts": {
+    "build:zip:worker": "rollup -c",
+    "prepack": "run build:compile \"$(pwd)\"",
+    "postpack": "rm -rf lib",
+    "update:zip:worker": "run build:zip:worker"
+  },
   "dependencies": {
     "@arcanis/slice-ansi": "^1.1.1",
     "@types/semver": "^7.1.0",
@@ -58,28 +71,15 @@
     "rollup-plugin-esbuild": "^3.0.2",
     "rollup-plugin-terser": "^7.0.2"
   },
-  "scripts": {
-    "build:zip:worker": "rollup -c",
-    "update:zip:worker": "run build:zip:worker",
-    "postpack": "rm -rf lib",
-    "prepack": "run build:compile \"$(pwd)\""
+  "engines": {
+    "node": ">=14.15.0"
   },
   "publishConfig": {
-    "main": "./lib/index.js",
     "exports": {
       ".": "./lib/index.js",
       "./package.json": "./package.json"
-    }
+    },
+    "main": "./lib/index.js"
   },
-  "files": [
-    "/lib/**/*"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "ssh://git@github.com/yarnpkg/berry.git",
-    "directory": "packages/yarnpkg-core"
-  },
-  "engines": {
-    "node": ">=14.15.0"
-  }
+  "stableVersion": "3.4.0"
 }
