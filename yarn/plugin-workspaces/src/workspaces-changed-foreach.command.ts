@@ -66,7 +66,7 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
       input.push(structUtils.stringifyIdent(ws.locator))
     })
 
-    if (this.exclude) {      
+    if (this.exclude) {
       input.push('--exclude')
       input.push(this.exclude)
     }

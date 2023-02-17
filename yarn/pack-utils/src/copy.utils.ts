@@ -144,15 +144,3 @@ export const copyYarnRelease = async (
     overwrite: true,
   })
 }
-
-export const copyCache = async (project: Project, destination: PortablePath, report: Report) => {
-  const src = '.yarn/cache' as PortablePath
-  const path = ppath.relative(project.cwd, src)
-  const dest = ppath.join(destination, path)
-
-  report.reportInfo(null, path)
-
-  await xfs.copyPromise(dest, src, {
-    overwrite: true,
-  })
-}

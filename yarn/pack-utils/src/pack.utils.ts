@@ -119,10 +119,6 @@ export const pack = async (
       await copyYarnRelease(project, destination, report)
     })
 
-    await report.startTimerPromise('Copy cache', async () => {
-      await copyCache(project, destination, report)
-    })
-
     await generateLockfile(tmpProject, destination, report)
 
     await xfs.writeJsonPromise(ppath.join(destination, 'package.json' as PortablePath), {
