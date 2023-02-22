@@ -19,7 +19,6 @@ import { ExportCache }     from './export/ExportCache'
 import { copyRcFile }      from './copy.utils'
 import { copyPlugins }     from './copy.utils'
 import { copyYarnRelease } from './copy.utils'
-import { copyCache }       from './copy.utils'
 import { genPackTgz }      from './export/exportUtils'
 import { makeFetcher }     from './export/exportUtils'
 
