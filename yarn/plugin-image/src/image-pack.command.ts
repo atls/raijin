@@ -81,8 +81,8 @@ class ImagePackCommand extends BaseCommand {
 
           const descriptorPath = await forRepository(repo)
 
-          const buildpackVersion = packConfiguration.buildpackVersion || '0.0.3'
-          const builderTag = packConfiguration.builderTag || 'buster-16.13'
+          const buildpackVersion = packConfiguration.buildpackVersion || '0.0.4'
+          const builderTag = packConfiguration.builderTag || 'buster-18.13'
 
           const args = [
             'build',
