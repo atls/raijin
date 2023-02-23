@@ -7,12 +7,16 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "semver": "^7.3.8"
+  },
   "devDependencies": {
-    "@yarnpkg/cli": "^3.2.1",
-    "@yarnpkg/core": "^3.2.2",
-    "@yarnpkg/fslib": "^2.6.2",
-    "@yarnpkg/plugin-pack": "^3.1.2",
-    "@yarnpkg/plugin-patch": "^3.2.1",
+    "@types/semver": "^7",
+    "@yarnpkg/cli": "^4.0.0-rc.36",
+    "@yarnpkg/core": "^4.0.0-rc.36",
+    "@yarnpkg/fslib": "^3.0.0-rc.36",
+    "@yarnpkg/plugin-pack": "^4.0.0-rc.36",
+    "@yarnpkg/plugin-patch": "^4.0.0-rc.36",
     "tar-stream": "^2.2.0"
   },
   "publishConfig": {

@@ -21,7 +21,6 @@ import { copyPlugins }     from './copy.utils'
 import { copyYarnRelease } from './copy.utils'
 import { genPackTgz }      from './export/exportUtils'
 import { makeFetcher }     from './export/exportUtils'
-import { makeResolver }    from './export/exportUtils'
 
 export const generateLockfile = async (
   project: Project,
@@ -65,6 +64,8 @@ export const pack = async (
     workspace.manifest.devDependencies.clear()
 
     const baseFs = new CwdFS(destination)
+    baseFs.mkdirSync('.yarn' as PortablePath)
+    baseFs.mkdirSync('.yarn/cache' as PortablePath)
 
     const tgz = await genPackTgz(workspace)
 
@@ -101,7 +102,6 @@ export const pack = async (
       // @ts-ignore
       cache: await ExportCache.find(tmpConfiguration, cache),
       fetcher: makeFetcher(project),
-      resolver: makeResolver(project),
       report,
       persistProject: false,
     })

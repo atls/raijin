@@ -6,10 +6,9 @@
 import { Project }               from '@yarnpkg/core'
 import { VirtualFetcher }        from '@yarnpkg/core'
 import { Workspace }             from '@yarnpkg/core'
-import { MultiFetcher }          from '@yarnpkg/core/lib/MultiFetcher'
-import { MultiResolver }         from '@yarnpkg/core/lib/MultiResolver'
-import { ProtocolResolver }      from '@yarnpkg/core/lib/ProtocolResolver'
-import { VirtualResolver }       from '@yarnpkg/core/lib/VirtualResolver'
+import { MultiFetcher }          from '@yarnpkg/core'
+import { MultiResolver }         from '@yarnpkg/core'
+import { VirtualResolver }       from '@yarnpkg/core'
 import { CwdFS }                 from '@yarnpkg/fslib'
 import { Filename }              from '@yarnpkg/fslib'
 import { PortablePath }          from '@yarnpkg/fslib'
@@ -59,7 +58,6 @@ export const makeResolver = (project: Project) => {
   return new MultiResolver([
     new VirtualResolver(),
     new WorkspacePackResolver(project),
-    new ProtocolResolver(),
 
     ...pluginResolvers,
   ])
