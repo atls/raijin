@@ -1,4 +1,4 @@
-![toolset-github-cover](https://user-images.githubusercontent.com/102182195/233626201-18de519e-a8f3-4484-8077-c8d63ae7429e.jpg)
+![toolset-github-cover](https://user-images.githubusercontent.com/102182195/234980835-78ed0fdb-c692-4b0e-ac95-b46c8cbd17a4.png)
 
 # Atlantis Toolset
 
