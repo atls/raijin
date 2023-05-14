@@ -1390,7 +1390,8 @@ const RAW_RUNTIME_STATE =
       ["workspace:config/typescript", {\
         "packageLocation": "./config/typescript/",\
         "packageDependencies": [\
-          ["@atls/config-typescript", "workspace:config/typescript"]\
+          ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["typescript", "patch:typescript@npm%3A4.6.2#optional!builtin<compat/typescript>::version=4.6.2&hash=5d3a66"]\
         ],\
         "linkType": "SOFT"\
       }]\
