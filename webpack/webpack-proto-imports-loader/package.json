@@ -1,6 +1,6 @@
 {
   "name": "@atls/webpack-proto-imports-loader",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -16,7 +16,7 @@
     "protocol-buffers-schema": "^3.6.0"
   },
   "devDependencies": {
-    "@atls/config-typescript": "workspace:0.0.1",
+    "@atls/config-typescript": "workspace:0.0.2",
     "@monstrs/types-import-proto": "0.0.1",
     "@types/node": "^17.0.38",
     "memfs": "^3.4.4",
