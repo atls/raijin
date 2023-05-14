@@ -704,6 +704,8 @@ __metadata:
 "@atls/config-typescript@workspace:0.0.1, @atls/config-typescript@workspace:config/typescript":
   version: 0.0.0-use.local
   resolution: "@atls/config-typescript@workspace:config/typescript"
+  dependencies:
+    typescript: "npm:^4.6.2"
   languageName: unknown
   linkType: soft
 
