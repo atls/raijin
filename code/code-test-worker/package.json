@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-test-worker",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -15,8 +15,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-test": "workspace:0.0.15",
-    "@atls/code-worker-utils": "workspace:0.0.5",
+    "@atls/code-test": "workspace:0.0.16",
+    "@atls/code-worker-utils": "workspace:0.0.6",
     "flatted": "^3.2.5"
   },
   "devDependencies": {
