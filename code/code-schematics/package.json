@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-schematics",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
