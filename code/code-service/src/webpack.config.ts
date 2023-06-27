@@ -80,6 +80,12 @@ export class WebpackConfig {
       .test(/\.proto$/)
       .use('proto')
       .loader(require.resolve('@atls/webpack-proto-imports-loader'))
+
+    config.module
+      .rule('fonts')
+      .test(/\.(woff|woff2|eot|ttf|otf)$/i)
+      .use('file-loader')
+      .loader(require.resolve('file-loader'))
   }
 
   async getUnpluggedDependencies(): Promise<Set<string>> {
