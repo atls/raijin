@@ -2,6 +2,7 @@ import * as plugin        from '@atls/prettier-plugin'
 
 import { writeFile }      from 'node:fs/promises'
 import { readFile }       from 'node:fs/promises'
+import { join }           from 'node:path'
 import { relative }       from 'node:path'
 
 import globby             from 'globby'
@@ -21,9 +22,18 @@ import { createPatterns } from './formatter.patterns'
 export class Formatter {
   constructor(private readonly cwd: string) {}
 
+  private async getProjectIgnorePatterns(): Promise<Array<string>> {
+    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { formatterIgnorePatterns = [] } = JSON.parse(content)
+
+    return formatterIgnorePatterns
+  }
+
   async formatFiles(files: Array<string> = []) {
     const formatFiles = ignorer()
       .add(ignore)
+      .add(await this.getProjectIgnorePatterns())
       .filter(files.map((filepath) => relative(this.cwd, filepath)))
 
     for (const filename of formatFiles) {
