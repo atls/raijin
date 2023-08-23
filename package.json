@@ -23,10 +23,10 @@
   "devDependencies": {
     "@angular-devkit/core": "^13.3.7",
     "@angular-devkit/schematics": "^13.3.7",
-    "@atls/code-service": "workspace:0.0.21",
+    "@atls/code-service": "workspace:0.0.22",
     "@atls/config-eslint": "workspace:0.0.7",
     "@atls/config-jest": "workspace:0.0.6",
-    "@atls/schematics": "workspace:0.0.16",
+    "@atls/schematics": "workspace:0.0.17",
     "@atls/tools-setup-ts-execution": "workspace:0.0.1",
     "@jest/core": "^28.1.0",
     "@types/eslint": "^8.4.2",
