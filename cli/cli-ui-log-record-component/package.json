@@ -14,11 +14,11 @@
   "dependencies": {
     "@atls/cli-ui-renderer": "workspace:0.0.7",
     "@atls/cli-ui-stack-trace-component": "workspace:0.0.7",
-    "@atls/logger": "^0.0.1",
+    "@atls/logger": "^0.0.2",
     "string-to-color": "^2.2.2"
   },
   "devDependencies": {
-    "@atls/logger": "^0.0.1",
+    "@atls/logger": "^0.0.2",
     "@types/jest": "^27.5.2",
     "@types/node": "^17.0.38",
     "@types/react": "^18.0.12",
