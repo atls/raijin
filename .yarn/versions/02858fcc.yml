@@ -1,0 +1,3 @@
+releases:
+  "@atls/cli-ui-log-record-component": patch
+  "@atls/cli-ui-pretty-logs": patch
