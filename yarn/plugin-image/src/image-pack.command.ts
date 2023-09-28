@@ -96,6 +96,7 @@ class ImagePackCommand extends BaseCommand {
             '--tag',
             `${image}:latest`,
             '--verbose',
+            '--trust-builder',
           ]
 
           if (this.publish) {
