@@ -496,7 +496,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-pack@workspace:0.0.15, @atls/code-pack@workspace:code/code-pack":
+"@atls/code-pack@workspace:0.0.16, @atls/code-pack@workspace:code/code-pack":
   version: 0.0.0-use.local
   resolution: "@atls/code-pack@workspace:code/code-pack"
   dependencies:
@@ -1038,7 +1038,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-image@workspace:yarn/plugin-image"
   dependencies:
-    "@atls/code-pack": "workspace:0.0.15"
+    "@atls/code-pack": "workspace:0.0.16"
     "@atls/yarn-pack-utils": "workspace:0.0.1"
     "@atls/yarn-run-utils": "workspace:0.0.1"
     "@iarna/toml": "npm:^2.2.5"
