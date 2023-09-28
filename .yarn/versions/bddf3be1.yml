@@ -1,0 +1,5 @@
+releases:
+  "@atls/code-pack": patch
+
+undecided:
+  - "@atls/schematics"
