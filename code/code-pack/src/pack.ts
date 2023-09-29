@@ -50,7 +50,6 @@ export const pack = async (
     '--tag',
     `${image}:latest`,
     '--verbose',
-    '--trust-builder',
   ]
 
   if (publish) {
