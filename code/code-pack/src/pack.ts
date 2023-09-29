@@ -46,7 +46,7 @@ export const pack = async (
     '--buildpack',
     buildpack || 'atlantislab/buildpack-yarn-workspace:0.0.4',
     '--builder',
-    builder || 'atlantislab/builder-base:buster-18.13',
+    builder || 'atlantislab/builder-base:buster',
     '--tag',
     `${image}:latest`,
     '--verbose',
