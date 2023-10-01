@@ -87,16 +87,15 @@ class ImagePackCommand extends BaseCommand {
           const args = [
             'build',
             `${image}:${tag}`,
-            '--descriptor',
-            descriptorPath,
+            '--verbose',
             '--buildpack',
             `atlantislab/buildpack-yarn-workspace:${buildpackVersion}`,
             '--builder',
             `atlantislab/builder-base:${builderTag}`,
+            '--descriptor',
+            descriptorPath,
             '--tag',
             `${image}:latest`,
-            '--verbose',
-            '--trust-builder',
           ]
 
           if (this.publish) {
