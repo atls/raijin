@@ -170,14 +170,18 @@ const rules: Linter.RulesRecord = {
   ],
   '@typescript-eslint/no-empty-function': ['error'],
   '@typescript-eslint/indent': 'off',
-  'no-shadow': [
+  '@typescript-eslint/no-shadow': [
     'error',
     {
-      allow: ['ClientFactory', 'ServerBuilder'],
-      builtinGlobals: false,
-      hoist: 'functions',
-    },
+      'allow': [
+        'ClientFactory',
+        'ServerBuilder'
+      ],
+      'builtinGlobals': false,
+      'hoist': 'functions'
+    }
   ],
+  'no-shadow': 'off',
   curly: 0,
   'lines-around-comment': 0,
   'max-len': 0,
