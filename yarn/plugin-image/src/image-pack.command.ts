@@ -86,6 +86,7 @@ class ImagePackCommand extends BaseCommand {
 
           const args = [
             'build',
+            '--trust-builder',
             `${image}:${tag}`,
             '--verbose',
             '--buildpack',

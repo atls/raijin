@@ -40,6 +40,7 @@ export const pack = async (
 
   const args = [
     'build',
+    '--trust-builder',
     `${image}:${tag}`,
     '--descriptor',
     descriptorPath,
