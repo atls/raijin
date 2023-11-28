@@ -7,15 +7,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn library build",
+    "build": "yarn library build && node -e 'const fs = require(\"fs\"); const config = require(\"./dist/index.js\"); fs.writeFileSync(\"./dist/.prettierrc\", JSON.stringify(config, null, 2))'",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@trivago/prettier-plugin-sort-imports": "3.4.0",
     "prettier": "^2.6.2"
   },
   "devDependencies": {
-    "@types/node": "^17.0.38"
+    "@types/node": "18.18.13"
   },
   "publishConfig": {
     "main": "dist/index.js",
