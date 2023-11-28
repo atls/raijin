@@ -6,11 +6,11 @@ import react                  from 'eslint-plugin-react'
 import reactHooks             from 'eslint-plugin-react-hooks'
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
 
-import rules                  from './rules'
+import eslintrc from './.eslintrc'
 
 export default [
   {
-    rules,
+    rules: eslintrc,
     plugins: {
       react,
       'jsx-a11y': jsxA11y,
