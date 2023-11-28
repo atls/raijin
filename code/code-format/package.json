@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-format",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -13,7 +13,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-prettier": "workspace:0.0.5",
+    "@atls/config-prettier": "workspace:0.0.6",
     "@atls/prettier-plugin": "workspace:0.0.7",
     "globby": "^11.0.4",
     "ignore": "^5.2.0",

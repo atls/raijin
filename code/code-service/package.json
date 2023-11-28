@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-service",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -13,8 +13,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-typescript": "workspace:0.0.2",
-    "@atls/webpack-proto-imports-loader": "workspace:0.0.10",
+    "@atls/config-typescript": "workspace:0.0.3",
+    "@atls/webpack-proto-imports-loader": "workspace:0.0.11",
     "@atls/webpack-start-server-plugin": "workspace:0.0.6",
     "@yarnpkg/cli": "^4.0.0-rc.36",
     "@yarnpkg/core": "^4.0.0-rc.36",
