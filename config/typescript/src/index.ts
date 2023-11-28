@@ -2,9 +2,9 @@ export default {
   compilerOptions: {
     lib: ['dom', 'dom.iterable', 'esnext'],
 
-    declaration: false,
-
     emitDecoratorMetadata: true,
+
+    declaration: false,
     experimentalDecorators: true,
 
     esModuleInterop: true,

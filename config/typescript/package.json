@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn library build && tsc && node -e 'const fs = require(\"fs\"); const config = require(\"./dist/index.js\"); fs.writeFileSync(\"./dist/index.json\", JSON.stringify(config, null, 2))'",
+    "build": "yarn library build && node -e 'const fs = require(\"fs\"); const config = require(\"./dist/index.js\"); fs.writeFileSync(\"./dist/tsconfig.json\", JSON.stringify(config, null, 2))'",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
