@@ -6,16 +6,6 @@
   "files": [
     "dist"
   ],
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.js"
-    },
-    "./tsconfig": {
-      "require": "./dist/tsconfig.json",
-      "import": "./dist/tsconfig.json"
-    }
-  },
   "scripts": {
     "build": "yarn library build && node -e 'const fs = require(\"fs\"); const config = require(\"./dist/index.js\"); fs.writeFileSync(\"./dist/tsconfig.json\", JSON.stringify(config, null, 2))'",
     "prepack": "yarn run build",
