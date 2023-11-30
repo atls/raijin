@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn library build && node -e 'const fs = require(\"fs\"); const config = require(\"./dist/index.js\"); fs.writeFileSync(\"./dist/.prettierrc\", JSON.stringify(config, null, 2))'",
+    "build": "yarn library build",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
