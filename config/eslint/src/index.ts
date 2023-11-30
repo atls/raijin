@@ -6,7 +6,7 @@ import react                  from 'eslint-plugin-react'
 import reactHooks             from 'eslint-plugin-react-hooks'
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
 
-import eslintrc from './.eslintrc'
+import eslintrc               from './rules'
 
 export default [
   {

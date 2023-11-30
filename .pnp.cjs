@@ -319,6 +319,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@atls/tools-setup-ts-execution", "workspace:utils/setup-ts-execution"],\
           ["@jest/core", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:28.1.0"],\
+          ["@rushstack/eslint-patch", "npm:1.6.0"],\
           ["@types/eslint", "npm:8.4.2"],\
           ["@types/jest", "npm:27.5.2"],\
           ["@types/node", "npm:17.0.38"],\
@@ -5626,6 +5627,15 @@ const RAW_RUNTIME_STATE =
         "packagePeers": [\
           "@types/rollup",\
           "rollup"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@rushstack/eslint-patch", [\
+      ["npm:1.6.0", {\
+        "packageLocation": "./.yarn/cache/@rushstack-eslint-patch-npm-1.6.0-5901435a0f-cf2cc9a7e6.zip/node_modules/@rushstack/eslint-patch/",\
+        "packageDependencies": [\
+          ["@rushstack/eslint-patch", "npm:1.6.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -20516,6 +20526,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@atls/tools-setup-ts-execution", "workspace:utils/setup-ts-execution"],\
           ["@jest/core", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#npm:28.1.0"],\
+          ["@rushstack/eslint-patch", "npm:1.6.0"],\
           ["@types/eslint", "npm:8.4.2"],\
           ["@types/jest", "npm:27.5.2"],\
           ["@types/node", "npm:17.0.38"],\

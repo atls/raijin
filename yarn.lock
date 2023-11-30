@@ -3768,6 +3768,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rushstack/eslint-patch@npm:1.6.0":
+  version: 1.6.0
+  resolution: "@rushstack/eslint-patch@npm:1.6.0"
+  checksum: cf2cc9a7e653d555a7b7d4898931d588ea308108d0acfd20ffab2039fa90793f33a4e7cd465b4527ad31e4b7b59df84295339e94a19c60a51490744c14b937b3
+  languageName: node
+  linkType: hard
+
 "@sinclair/typebox@npm:^0.23.3":
   version: 0.23.5
   resolution: "@sinclair/typebox@npm:0.23.5"
@@ -16291,6 +16298,7 @@ __metadata:
     "@atls/schematics": "workspace:0.0.19"
     "@atls/tools-setup-ts-execution": "workspace:0.0.1"
     "@jest/core": "npm:^28.1.0"
+    "@rushstack/eslint-patch": "npm:1.6.0"
     "@types/eslint": "npm:^8.4.2"
     "@types/jest": "npm:^27.5.2"
     "@types/node": "npm:^17.0.38"

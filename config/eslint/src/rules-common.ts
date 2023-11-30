@@ -1,6 +1,4 @@
-import type { Linter } from 'eslint'
-
-const eslintrc: Linter.RulesRecord = {
+module.exports = {
   'no-undef': ['off'],
   'brace-style': 'off',
   '@typescript-eslint/brace-style': 'off',
@@ -173,13 +171,10 @@ const eslintrc: Linter.RulesRecord = {
   '@typescript-eslint/no-shadow': [
     'error',
     {
-      'allow': [
-        'ClientFactory',
-        'ServerBuilder'
-      ],
-      'builtinGlobals': false,
-      'hoist': 'functions'
-    }
+      allow: ['ClientFactory', 'ServerBuilder'],
+      builtinGlobals: false,
+      hoist: 'functions',
+    },
   ],
   'no-shadow': 'off',
   curly: 0,
@@ -1385,5 +1380,3 @@ const eslintrc: Linter.RulesRecord = {
   'vars-on-top': ['error'],
   yoda: ['error'],
 }
-
-export default eslintrc
