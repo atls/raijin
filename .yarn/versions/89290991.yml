@@ -1,0 +1,7 @@
+releases:
+  "@atls/code-lint": patch
+  "@atls/code-lint-worker": patch
+  "@atls/config-eslint": patch
+
+undecided:
+  - "@atls/schematics"
