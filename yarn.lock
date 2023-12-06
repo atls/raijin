@@ -686,11 +686,11 @@ __metadata:
   resolution: "@atls/config-jest@workspace:config/jest"
   dependencies:
     "@atls/config-typescript": "workspace:0.0.3"
-    "@emotion/jest": "npm:^11.9.1"
+    "@emotion/jest": "npm:11.9.1"
     "@monstrs/jest-pnp-resolver": "npm:0.0.1"
-    "@types/node": "npm:^17.0.38"
-    jest-static-stubs: "npm:^0.0.1"
-    ts-jest: "npm:^28.0.4"
+    "@types/node": "npm:18.11.9"
+    jest-static-stubs: "npm:0.0.1"
+    ts-jest: "npm:28.0.4"
   languageName: unknown
   linkType: soft
 
@@ -3015,7 +3015,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/jest@npm:^11.9.1":
+"@emotion/jest@npm:11.9.1":
   version: 11.9.1
   resolution: "@emotion/jest@npm:11.9.1"
   dependencies:
@@ -4205,6 +4205,13 @@ __metadata:
   version: 16.9.6
   resolution: "@types/node@npm:16.9.6"
   checksum: 8131b7321c77ecb002259a5e52193cd78599e35b5a1475369c1d81fcc8e228e4d42cfb958af68c2e7cdf3358c3dfd3a023856b2ae48fceab38fa31805aa3d483
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:18.11.9":
+  version: 18.11.9
+  resolution: "@types/node@npm:18.11.9"
+  checksum: 7b7d90894dd1ae9b6836e49ace5bdea55cc08806a508e38851e333f1ad77ec81ea6dca58e6a2444ad0471fee965b9908cc1ef06028eebca9c20d54729df98bab
   languageName: node
   linkType: hard
 
@@ -11710,7 +11717,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-static-stubs@npm:^0.0.1":
+"jest-static-stubs@npm:0.0.1":
   version: 0.0.1
   resolution: "jest-static-stubs@npm:0.0.1"
   checksum: ed6f43e5d646c2abc59beb33220ee68e8844e0475064d0d27defc784c3a4edfa53f0cbe8047d64b05e8b72db4cf8842e62e2cd3d3e6798f3beb5d2bf8ddc5a8b
@@ -16354,7 +16361,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^28.0.4":
+"ts-jest@npm:28.0.4":
   version: 28.0.4
   resolution: "ts-jest@npm:28.0.4"
   dependencies:
