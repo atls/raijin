@@ -6,7 +6,7 @@ export const unit = {
   modulePathIgnorePatterns: ['dist', 'integration'],
   snapshotSerializers: [require.resolve('@emotion/jest/serializer')],
   moduleNameMapper: {
-    '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid)$': 'jest-static-stubs/$1',
+    '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid|ttf|woff|woff2|eot|otf)$': 'jest-static-stubs/$1',
   },
   globals: {
     'ts-jest': {
@@ -26,7 +26,7 @@ export const integration = {
   modulePathIgnorePatterns: ['dist'],
   snapshotSerializers: [require.resolve('@emotion/jest/serializer')],
   moduleNameMapper: {
-    '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid)$': 'jest-static-stubs/$1',
+    '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid|ttf|woff|woff2|eot|otf)$': 'jest-static-stubs/$1',
   },
   globals: {
     'ts-jest': {

@@ -1371,7 +1371,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@emotion/jest", "virtual:2bbec827ae5f0cd14745b7fb4b1f63840ef7aa82a7732ebe5fe02d573fd075f05fdf02bac228735f4ec9d391e1990fe4b0ac46fe60c29d70138fb2948512e5dd#npm:11.9.1"],\
           ["@monstrs/jest-pnp-resolver", "npm:0.0.1"],\
-          ["@types/node", "npm:17.0.38"],\
+          ["@types/node", "npm:18.11.9"],\
           ["jest-static-stubs", "npm:0.0.1"],\
           ["ts-jest", "virtual:2bbec827ae5f0cd14745b7fb4b1f63840ef7aa82a7732ebe5fe02d573fd075f05fdf02bac228735f4ec9d391e1990fe4b0ac46fe60c29d70138fb2948512e5dd#npm:28.0.4"]\
         ],\
@@ -6154,6 +6154,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-node-npm-18.11.18-d61e8a4a20-bd39552701.zip/node_modules/@types/node/",\
         "packageDependencies": [\
           ["@types/node", "npm:18.11.18"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:18.11.9", {\
+        "packageLocation": "./.yarn/cache/@types-node-npm-18.11.9-d21dd6ec05-7b7d90894d.zip/node_modules/@types/node/",\
+        "packageDependencies": [\
+          ["@types/node", "npm:18.11.9"]\
         ],\
         "linkType": "HARD"\
       }],\
