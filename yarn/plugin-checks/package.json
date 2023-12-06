@@ -19,7 +19,7 @@
     "@atls/cli-ui-renderer": "workspace:0.0.7",
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:0.0.18",
     "@atls/code-lint-worker": "workspace:0.0.20",
-    "@atls/code-test-worker": "workspace:0.0.16",
+    "@atls/code-test-worker": "workspace:0.0.17",
     "@atls/code-typescript": "workspace:0.0.22",
     "@atls/code-typescript-worker": "workspace:0.0.18",
     "@atls/yarn-plugin-files": "workspace:0.0.1",
