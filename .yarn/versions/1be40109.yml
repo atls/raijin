@@ -1,5 +1,0 @@
-releases:
-  "@atls/code-test": patch
-  "@atls/code-test-worker": patch
-  "@atls/config-jest": patch
-  "@atls/jest-static-stubs": patch
