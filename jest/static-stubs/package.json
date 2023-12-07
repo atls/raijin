@@ -1,0 +1,6 @@
+{
+  "name": "@atls/jest-static-stubs",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "license": "BSD-3-Clause"
+}
