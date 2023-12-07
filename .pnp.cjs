@@ -142,6 +142,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:config/typescript"\
     },\
     {\
+      "name": "@atls/jest-static-stubs",\
+      "reference": "workspace:jest/static-stubs"\
+    },\
+    {\
       "name": "@atls/prettier-plugin",\
       "reference": "workspace:prettier/plugin"\
     },\
@@ -276,6 +280,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/config-jest", ["workspace:config/jest"]],\
     ["@atls/config-prettier", ["workspace:config/prettier"]],\
     ["@atls/config-typescript", ["workspace:config/typescript"]],\
+    ["@atls/jest-static-stubs", ["workspace:jest/static-stubs"]],\
     ["@atls/prettier-plugin", ["workspace:prettier/plugin"]],\
     ["@atls/schematics", ["workspace:schematics/schematics"]],\
     ["@atls/schematics-utils", ["workspace:schematics/schematics-utils"]],\
@@ -1369,10 +1374,10 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/config-jest", "workspace:config/jest"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/jest-static-stubs", "workspace:jest/static-stubs"],\
           ["@emotion/jest", "virtual:2bbec827ae5f0cd14745b7fb4b1f63840ef7aa82a7732ebe5fe02d573fd075f05fdf02bac228735f4ec9d391e1990fe4b0ac46fe60c29d70138fb2948512e5dd#npm:11.9.1"],\
           ["@monstrs/jest-pnp-resolver", "npm:0.0.1"],\
           ["@types/node", "npm:18.11.9"],\
-          ["jest-static-stubs", "npm:0.0.1"],\
           ["ts-jest", "virtual:2bbec827ae5f0cd14745b7fb4b1f63840ef7aa82a7732ebe5fe02d573fd075f05fdf02bac228735f4ec9d391e1990fe4b0ac46fe60c29d70138fb2948512e5dd#npm:28.0.4"]\
         ],\
         "linkType": "SOFT"\
@@ -1396,6 +1401,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["typescript", "patch:typescript@npm%3A4.6.2#optional!builtin<compat/typescript>::version=4.6.2&hash=5d3a66"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@atls/jest-static-stubs", [\
+      ["workspace:jest/static-stubs", {\
+        "packageLocation": "./jest/static-stubs/",\
+        "packageDependencies": [\
+          ["@atls/jest-static-stubs", "workspace:jest/static-stubs"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -15410,15 +15424,6 @@ const RAW_RUNTIME_STATE =
           ["natural-compare", "npm:1.4.0"],\
           ["pretty-format", "npm:28.1.0"],\
           ["semver", "npm:7.3.5"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["jest-static-stubs", [\
-      ["npm:0.0.1", {\
-        "packageLocation": "./.yarn/cache/jest-static-stubs-npm-0.0.1-7b218ca3ef-ed6f43e5d6.zip/node_modules/jest-static-stubs/",\
-        "packageDependencies": [\
-          ["jest-static-stubs", "npm:0.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\

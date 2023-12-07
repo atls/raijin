@@ -9,6 +9,7 @@
     "webpack/*",
     "github/*",
     "config/*",
+    "jest/*",
     "utils/*",
     "yarn/*",
     "cli/*"
