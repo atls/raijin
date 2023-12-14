@@ -16,6 +16,8 @@ class TestUnitCommand extends BaseCommand {
 
   findRelatedTests = Option.Boolean('--find-related-tests', false)
 
+  watchMode = Option.Boolean('--watch', false)
+
   files: Array<string> = Option.Rest({ required: 0 })
 
   async execute() {
@@ -42,6 +44,7 @@ class TestUnitCommand extends BaseCommand {
             findRelatedTests: this.findRelatedTests,
             updateSnapshot: this.updateSnapshot,
             bail: this.bail,
+            watch: this.watchMode,
           },
           args.concat(this.files)
         )
