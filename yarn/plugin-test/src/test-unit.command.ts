@@ -18,6 +18,8 @@ class TestUnitCommand extends BaseCommand {
 
   watchMode = Option.Boolean('--watch', false)
 
+  watchAllMode = Option.Boolean('--watchAll', false)
+
   files: Array<string> = Option.Rest({ required: 0 })
 
   async execute() {
@@ -45,6 +47,7 @@ class TestUnitCommand extends BaseCommand {
             updateSnapshot: this.updateSnapshot,
             bail: this.bail,
             watch: this.watchMode,
+            watchAll: this.watchAllMode,
           },
           args.concat(this.files)
         )
