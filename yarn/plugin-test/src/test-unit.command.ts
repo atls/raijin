@@ -27,7 +27,7 @@ class TestUnitCommand extends BaseCommand {
     if (workspace) {
       const scope = this.context.cwd.replace(project.cwd, '')
 
-      args.push(scope.startsWith('/') ? scope.substr(1) : scope)
+      args.push(scope.startsWith('/') ? scope.slice(1) : scope)
     }
 
     const commandReport = await StreamReport.start(
