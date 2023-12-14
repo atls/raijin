@@ -49,6 +49,9 @@
     }
   },
   "packageManager": "yarn@3.6.3",
+  "formatterIgnorePatterns": [
+    "*.js"
+  ],
   "tools": {
     "schematic": {
       "collection": "@atls/schematics",
