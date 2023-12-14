@@ -16,6 +16,10 @@ class TestUnitCommand extends BaseCommand {
 
   findRelatedTests = Option.Boolean('--find-related-tests', false)
 
+  watchMode = Option.Boolean('--watch', false)
+
+  watchAllMode = Option.Boolean('--watchAll', false)
+
   files: Array<string> = Option.Rest({ required: 0 })
 
   async execute() {
@@ -27,7 +31,7 @@ class TestUnitCommand extends BaseCommand {
     if (workspace) {
       const scope = this.context.cwd.replace(project.cwd, '')
 
-      args.push(scope.startsWith('/') ? scope.substr(1) : scope)
+      args.push(scope.startsWith('/') ? scope.slice(1) : scope)
     }
 
     const commandReport = await StreamReport.start(
@@ -42,6 +46,8 @@ class TestUnitCommand extends BaseCommand {
             findRelatedTests: this.findRelatedTests,
             updateSnapshot: this.updateSnapshot,
             bail: this.bail,
+            watch: this.watchMode,
+            watchAll: this.watchAllMode,
           },
           args.concat(this.files)
         )
