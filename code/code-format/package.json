@@ -13,7 +13,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-prettier": "workspace:0.0.6",
+    "@atls/config-prettier": "workspace:*",
     "@atls/prettier-plugin": "workspace:0.0.7",
     "globby": "^11.0.4",
     "ignore": "^5.2.0",
