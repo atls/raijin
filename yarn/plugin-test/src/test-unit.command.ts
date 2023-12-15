@@ -18,7 +18,7 @@ class TestUnitCommand extends BaseCommand {
 
   watchMode = Option.Boolean('--watch', false)
 
-  watchAllMode = Option.Boolean('--watchAll', false)
+  watchAllMode = Option.Boolean('--watchAll')
 
   files: Array<string> = Option.Rest({ required: 0 })
 
