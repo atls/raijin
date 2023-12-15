@@ -25,7 +25,7 @@
     "@angular-devkit/core": "^13.3.7",
     "@angular-devkit/schematics": "^13.3.7",
     "@atls/code-service": "workspace:0.0.24",
-    "@atls/config-eslint": "workspace:0.0.10",
+    "@atls/config-eslint": "workspace:0.0.11",
     "@atls/config-jest": "workspace:0.0.9",
     "@atls/schematics": "workspace:0.0.19",
     "@atls/tools-setup-ts-execution": "workspace:0.0.1",

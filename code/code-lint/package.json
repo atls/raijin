@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-lint",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -13,7 +13,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-eslint": "workspace:0.0.10",
+    "@atls/config-eslint": "workspace:0.0.11",
     "eslint": "^8.17.0",
     "globby": "^11.0.4",
     "ignore": "^5.2.0"

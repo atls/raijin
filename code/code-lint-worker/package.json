@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-lint-worker",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -14,7 +14,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-lint": "workspace:0.0.27",
+    "@atls/code-lint": "workspace:0.0.28",
     "@atls/code-worker-utils": "workspace:0.0.6"
   },
   "devDependencies": {

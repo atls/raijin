@@ -1,7 +1,0 @@
-releases:
-  "@atls/code-format": patch
-  "@atls/code-format-worker": patch
-  "@atls/code-lint": patch
-  "@atls/code-lint-worker": patch
-  "@atls/config-eslint": patch
-  "@atls/config-prettier": patch
