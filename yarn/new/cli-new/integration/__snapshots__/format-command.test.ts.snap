@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`yarn commands format it should align imports 1`] = `
+"import type { type } from './a'
+
+import third         from './a'
+import { first }     from './a'
+import { second }    from './a'
+"
+`;
+
+exports[`yarn commands format it should order imports 1`] = `
+"import type { c } from './d'
+
+import { b }      from '@scope/name'
+
+import { a }      from './c'
+"
+`;
+
+exports[`yarn commands format it should split imports 1`] = `
+"import { a }    from './c'
+import { b } from './c'
+import { d }    from './e'
+"
+`;

@@ -1,0 +1,86 @@
+{
+  "name": "@atls/yarn-cli-new",
+  "version": "0.0.1",
+  "private": true,
+  "license": "ISC",
+  "main": "sources/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build bundle",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/yarn-plugin-badges-new": "workspace:*",
+    "@atls/yarn-plugin-check-new": "workspace:*",
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "@yarnpkg/fslib": "3.0.1",
+    "@yarnpkg/libzip": "3.0.0",
+    "@yarnpkg/parsers": "3.0.0",
+    "@yarnpkg/plugin-compat": "latest",
+    "@yarnpkg/plugin-constraints": "latest",
+    "@yarnpkg/plugin-dlx": "latest",
+    "@yarnpkg/plugin-essentials": "latest",
+    "@yarnpkg/plugin-exec": "latest",
+    "@yarnpkg/plugin-file": "latest",
+    "@yarnpkg/plugin-git": "latest",
+    "@yarnpkg/plugin-github": "latest",
+    "@yarnpkg/plugin-http": "latest",
+    "@yarnpkg/plugin-init": "latest",
+    "@yarnpkg/plugin-interactive-tools": "latest",
+    "@yarnpkg/plugin-link": "latest",
+    "@yarnpkg/plugin-nm": "latest",
+    "@yarnpkg/plugin-npm": "latest",
+    "@yarnpkg/plugin-npm-cli": "latest",
+    "@yarnpkg/plugin-pack": "latest",
+    "@yarnpkg/plugin-patch": "latest",
+    "@yarnpkg/plugin-pnp": "latest",
+    "@yarnpkg/plugin-pnpm": "latest",
+    "@yarnpkg/plugin-stage": "latest",
+    "@yarnpkg/plugin-typescript": "latest",
+    "@yarnpkg/plugin-version": "latest",
+    "@yarnpkg/plugin-workspace-tools": "latest",
+    "@yarnpkg/shell": "4.0.0",
+    "ci-info": "4.0.0",
+    "clipanion": "4.0.0-rc.2",
+    "semver": "7.5.4",
+    "typanion": "3.14.0"
+  },
+  "@yarnpkg/builder": {
+    "bundles": {
+      "standard": [
+        "@atls/yarn-plugin-badges-new",
+        "@yarnpkg/plugin-compat",
+        "@yarnpkg/plugin-constraints",
+        "@yarnpkg/plugin-dlx",
+        "@yarnpkg/plugin-essentials",
+        "@yarnpkg/plugin-exec",
+        "@yarnpkg/plugin-file",
+        "@yarnpkg/plugin-git",
+        "@yarnpkg/plugin-github",
+        "@yarnpkg/plugin-http",
+        "@yarnpkg/plugin-init",
+        "@yarnpkg/plugin-interactive-tools",
+        "@yarnpkg/plugin-link",
+        "@yarnpkg/plugin-nm",
+        "@yarnpkg/plugin-npm",
+        "@yarnpkg/plugin-npm-cli",
+        "@yarnpkg/plugin-pack",
+        "@yarnpkg/plugin-patch",
+        "@yarnpkg/plugin-pnp",
+        "@yarnpkg/plugin-pnpm",
+        "@yarnpkg/plugin-stage",
+        "@yarnpkg/plugin-typescript",
+        "@yarnpkg/plugin-version",
+        "@yarnpkg/plugin-workspace-tools"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@types/semver": "7.5.6"
+  }
+}

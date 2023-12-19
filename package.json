@@ -11,7 +11,7 @@
     "config/*",
     "jest/*",
     "utils/*",
-    "yarn/*",
+    "yarn/**/*",
     "cli/*"
   ],
   "resolutions": {
@@ -48,7 +48,7 @@
       "unplugged": true
     }
   },
-  "packageManager": "yarn@3.6.3",
+  "packageManager": "yarn@4.0.2",
   "formatterIgnorePatterns": [
     "*.js"
   ],

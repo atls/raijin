@@ -1,0 +1,34 @@
+{
+  "name": "@atls/yarn-plugin-badges-new",
+  "version": "0.0.1",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build plugin",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/yarn-run-utils-new": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/child-process-promise": "2.2.6",
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "typescript": "4.6.2"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}
