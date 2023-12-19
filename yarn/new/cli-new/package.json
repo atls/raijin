@@ -27,12 +27,12 @@
     "@atls/yarn-plugin-test-new": "workspace:*",
     "@atls/yarn-plugin-typescript-new": "workspace:*",
     "@atls/yarn-plugin-workspaces-new": "workspace:*",
-    "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.0.2",
-    "@yarnpkg/core": "4.0.2",
-    "@yarnpkg/fslib": "3.0.1",
-    "@yarnpkg/libzip": "3.0.0",
-    "@yarnpkg/parsers": "3.0.0",
+    "@yarnpkg/builder": "latest",
+    "@yarnpkg/cli": "latest",
+    "@yarnpkg/core": "latest",
+    "@yarnpkg/fslib": "latest",
+    "@yarnpkg/libzip": "latest",
+    "@yarnpkg/parsers": "latest",
     "@yarnpkg/plugin-compat": "latest",
     "@yarnpkg/plugin-constraints": "latest",
     "@yarnpkg/plugin-dlx": "latest",
@@ -56,9 +56,9 @@
     "@yarnpkg/plugin-typescript": "latest",
     "@yarnpkg/plugin-version": "latest",
     "@yarnpkg/plugin-workspace-tools": "latest",
-    "@yarnpkg/shell": "4.0.0",
-    "ci-info": "4.0.0",
-    "clipanion": "4.0.0-rc.2",
+    "@yarnpkg/shell": "latest",
+    "ci-info": "latest",
+    "clipanion": "latest",
     "semver": "7.5.4",
     "typanion": "3.14.0"
   },
@@ -66,6 +66,7 @@
     "bundles": {
       "standard": [
         "@atls/yarn-plugin-badges-new",
+        "@atls/yarn-plugin-check-new",
         "@atls/yarn-plugin-test-new",
         "@yarnpkg/plugin-compat",
         "@yarnpkg/plugin-constraints",
@@ -94,6 +95,6 @@
     }
   },
   "devDependencies": {
-    "@types/semver": "7.5.6"
+    "@types/semver": "latest"
   }
 }
