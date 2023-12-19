@@ -15,7 +15,6 @@
     "cli/*"
   ],
   "resolutions": {
-    "clipanion": "3.2.0-rc.6",
     "eslint": "8.17.0",
     "globby": "11.0.3",
     "prettier": "2.5.1",

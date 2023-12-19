@@ -8,16 +8,16 @@
     "dist"
   ],
   "dependencies": {
-    "semver": "^7.3.8"
+    "semver": "latest"
   },
   "devDependencies": {
-    "@types/semver": "^7",
-    "@yarnpkg/cli": "^4.0.0-rc.36",
-    "@yarnpkg/core": "^4.0.0-rc.36",
-    "@yarnpkg/fslib": "^3.0.0-rc.36",
-    "@yarnpkg/plugin-pack": "^4.0.0-rc.36",
-    "@yarnpkg/plugin-patch": "^4.0.0-rc.36",
-    "tar-stream": "^2.2.0"
+    "@types/semver": "latest",
+    "@yarnpkg/cli": "latest",
+    "@yarnpkg/core": "latest",
+    "@yarnpkg/fslib": "latest",
+    "@yarnpkg/plugin-pack": "latest",
+    "@yarnpkg/plugin-patch": "latest",
+    "tar-stream": "latest"
   },
   "publishConfig": {
     "access": "public",

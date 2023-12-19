@@ -1,11 +1,13 @@
-const fs = require(`fs`);
+const fs = require(`fs`)
 
 // Makes it possible to access our dependencies
-const pnpFile = `${__dirname}/../../../.pnp.cjs`;
-if (fs.existsSync(pnpFile))
-  require(pnpFile).setup();
+const pnpFile = `${__dirname}/../../../../../.pnp.cjs`
+if (fs.existsSync(pnpFile)) {
+  console.log('found it')
+  require(pnpFile).setup()
+}
 
-require(`@yarnpkg/monorepo/scripts/setup-ts-execution`);
-require(`@yarnpkg/monorepo/scripts/setup-local-plugins`);
+require(`@yarnpkg/monorepo/scripts/setup-ts-execution`)
+require(`@yarnpkg/monorepo/scripts/setup-local-plugins`)
 
-require(`./cli`);
+require(`./cli`)

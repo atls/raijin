@@ -1,0 +1,54 @@
+{
+  "name": "@atls/yarn-plugin-checks-new",
+  "version": "0.0.1",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build plugin",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@actions/core": "latest",
+    "@actions/github": "latest",
+    "@atls/cli-ui-eslint-result-component": "workspace:*",
+    "@atls/cli-ui-renderer": "workspace:*",
+    "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
+    "@atls/code-lint-worker": "workspace:*",
+    "@atls/code-test-worker": "workspace:*",
+    "@atls/code-typescript": "workspace:*",
+    "@atls/code-typescript-worker": "workspace:*",
+    "@atls/yarn-plugin-files-new": "workspace:*",
+    "@atls/yarn-run-utils-new": "workspace:*",
+    "@atls/yarn-workspace-utils-new": "workspace:*",
+    "@babel/code-frame": "latest",
+    "@jest/test-result": "latest",
+    "clipanion": "latest",
+    "react": "18.2.0",
+    "strip-ansi": "latest",
+    "undici": "^6.0.1"
+  },
+  "devDependencies": {
+    "@octokit/types": "latest",
+    "@types/node": "18.19.3",
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "@yarnpkg/fslib": "3.0.1",
+    "eslint": "latest"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*",
+    "@yarnpkg/fslib": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

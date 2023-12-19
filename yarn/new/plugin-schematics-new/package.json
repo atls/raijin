@@ -1,0 +1,49 @@
+{
+  "name": "@atls/yarn-plugin-schematics-new",
+  "version": "0.0.1",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build plugin",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/cli-ui-error-info-component": "workspace:*",
+    "@atls/cli-ui-parts": "workspace:*",
+    "@atls/cli-ui-renderer": "workspace:*",
+    "@atls/cli-ui-schematics-component": "workspace:*",
+    "@atls/code-schematics-worker": "workspace:*",
+    "@atls/schematics": "workspace:*",
+    "@atls/yarn-run-utils-new": "workspace:*",
+    "@yarnpkg/libui": "latest",
+    "clipanion": "latest",
+    "force-stdin-tty": "latest",
+    "typanion": "latest"
+  },
+  "devDependencies": {
+    "@yarnpkg/builder": "latest",
+    "@yarnpkg/cli": "latest",
+    "@yarnpkg/core": "latest",
+    "@yarnpkg/fslib": "latest",
+    "ink": "latest",
+    "react": "latest",
+    "typescript": "^4.6.2"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*",
+    "@yarnpkg/fslib": "*",
+    "ink": "*",
+    "react": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

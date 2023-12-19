@@ -1,0 +1,28 @@
+{
+  "name": "@atls/yarn-pack-utils-new",
+  "version": "0.0.1",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@yarnpkg/libzip": "latest",
+    "semver": "latest"
+  },
+  "devDependencies": {
+    "@types/semver": "latest",
+    "@yarnpkg/cli": "latest",
+    "@yarnpkg/core": "latest",
+    "@yarnpkg/fslib": "latest",
+    "@yarnpkg/plugin-pack": "latest",
+    "@yarnpkg/plugin-patch": "latest",
+    "tar-stream": "latest"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

@@ -16,15 +16,15 @@
     "@atls/yarn-run-utils-new": "workspace:*"
   },
   "devDependencies": {
-    "@types/child-process-promise": "2.2.6",
-    "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.0.2",
-    "@yarnpkg/core": "4.0.2",
+    "@types/child-process-promise": "latest",
+    "@yarnpkg/builder": "latest",
+    "@yarnpkg/cli": "latest",
+    "@yarnpkg/core": "latest",
     "typescript": "4.6.2"
   },
   "peerDependencies": {
-    "@yarnpkg/cli": "4.0.2",
-    "@yarnpkg/core": "4.0.2"
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*"
   },
   "publishConfig": {
     "access": "public",

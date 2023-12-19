@@ -2,7 +2,7 @@
   "name": "@atls/yarn-cli-new",
   "version": "0.0.1",
   "private": true,
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "main": "sources/index.ts",
   "files": [
     "dist"
@@ -15,6 +15,18 @@
   "dependencies": {
     "@atls/yarn-plugin-badges-new": "workspace:*",
     "@atls/yarn-plugin-check-new": "workspace:*",
+    "@atls/yarn-plugin-checks-new": "workspace:*",
+    "@atls/yarn-plugin-commit-new": "workspace:*",
+    "@atls/yarn-plugin-files-new": "workspace:*",
+    "@atls/yarn-plugin-format-new": "workspace:*",
+    "@atls/yarn-plugin-image-new": "workspace:*",
+    "@atls/yarn-plugin-library-new": "workspace:*",
+    "@atls/yarn-plugin-lint-new": "workspace:*",
+    "@atls/yarn-plugin-schematics-new": "workspace:*",
+    "@atls/yarn-plugin-service-new": "workspace:*",
+    "@atls/yarn-plugin-test-new": "workspace:*",
+    "@atls/yarn-plugin-typescript-new": "workspace:*",
+    "@atls/yarn-plugin-workspaces-new": "workspace:*",
     "@yarnpkg/builder": "4.0.0",
     "@yarnpkg/cli": "4.0.2",
     "@yarnpkg/core": "4.0.2",
@@ -54,6 +66,7 @@
     "bundles": {
       "standard": [
         "@atls/yarn-plugin-badges-new",
+        "@atls/yarn-plugin-test-new",
         "@yarnpkg/plugin-compat",
         "@yarnpkg/plugin-constraints",
         "@yarnpkg/plugin-dlx",

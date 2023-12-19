@@ -1,5 +1,3 @@
-/* eslint-disable no-continue */
-
 import { SpinnerProgress }        from '@atls/yarn-run-utils-new'
 import { BaseCommand }            from '@yarnpkg/cli'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
@@ -15,7 +13,6 @@ import { readFileSync }           from 'fs'
 import { writeFileSync }          from 'fs'
 
 import { join }      from 'path'
-import { stringify } from 'node:querystring'
 
 import { BADGES } from './badges.constants'
 import { COLORS } from './badges.constants'
@@ -105,11 +102,7 @@ class BadgesCommand extends BaseCommand {
             const expectedDescriptor = structUtils.parseDescriptor(name)
 
             const selection = sortedLookup.filter((pkg) => {
-              if (pkg.scope === expectedDescriptor.scope && pkg.name === expectedDescriptor.name) {
-                return true
-              }
-
-              return false
+              return pkg.scope === expectedDescriptor.scope && pkg.name === expectedDescriptor.name
             })
 
             if (selection.length > 0) {
@@ -155,13 +148,6 @@ class BadgesCommand extends BaseCommand {
               const packageLink = `${BadgesCommand.REGISTRY_URL}${BadgesCommand.REGISTRY_PACKAGE_PATH}/${pkg.name}`
               join(BadgesCommand.REGISTRY_URL, BadgesCommand.REGISTRY_PACKAGE_PATH, pkg.name)
 
-              // const queryStringParams = {
-              //   style: BadgesCommand.BADGE_STYLE,
-              //   label: pkg.name,
-              //   message: pkg.version,
-              //   ...getColors(),
-              // }
-
               const newQueryStringParams = new URLSearchParams({
                 style: BadgesCommand.BADGE_STYLE,
                 label: pkg.name,
@@ -169,7 +155,7 @@ class BadgesCommand extends BaseCommand {
                 ...getColors(),
               })
 
-              const badge = `<img src="${BadgesCommand.BADGE_URL}?${newQueryStringParams.toString()}">`
+              const badge = `<img src="${BadgesCommand.BADGE_URL}?${newQueryStringParams.toString()}" alt='badge'>`
 
               const wrapWithLink = (content: string, link: string) => `[${content}](${link})`
 

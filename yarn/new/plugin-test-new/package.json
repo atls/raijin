@@ -1,0 +1,34 @@
+{
+  "name": "@atls/yarn-plugin-test-new",
+  "version": "0.0.1",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build plugin",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/code-test-worker": "workspace:*",
+    "clipanion": "latest"
+  },
+  "devDependencies": {
+    "@yarnpkg/builder": "latest",
+    "@yarnpkg/cli": "latest",
+    "@yarnpkg/core": "latest",
+    "typescript": "^4.6.2"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}
