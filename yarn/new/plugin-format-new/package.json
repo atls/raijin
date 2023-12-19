@@ -8,26 +8,29 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build plugin",
+    "build": "builder build plugin --no-minify --source-map",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:*",
-    "@atls/cli-ui-renderer": "workspace:*",
-    "@atls/code-format-worker": "workspace:*",
+    "@atls/cli-ui-error-info-component-new": "workspace:*",
+    "@atls/cli-ui-renderer-new": "workspace:*",
+    "@atls/code-format-worker-new": "workspace:*",
     "@atls/yarn-run-utils-new": "workspace:*",
+    "@types/react": "16.14.54",
     "clipanion": "4.0.0-rc.2",
-    "react": "18.2.0"
+    "react": "16.14.0"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "latest",
-    "@yarnpkg/cli": "latest",
-    "@yarnpkg/core": "latest"
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "ink": "3"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
-    "@yarnpkg/core": "*"
+    "@yarnpkg/core": "*",
+    "ink": "*"
   },
   "publishConfig": {
     "access": "public",

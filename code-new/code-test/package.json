@@ -1,0 +1,34 @@
+{
+  "name": "@atls/code-test-new",
+  "version": "0.0.23",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist",
+    "resolver.js"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/config-jest": "workspace:*",
+    "@jest/core": "latest",
+    "@jest/test-result": "latest",
+    "@jest/types": "latest"
+  },
+  "devDependencies": {
+    "@types/jest": "latest",
+    "@types/node": "18.19.3"
+  },
+  "peerDependenciesMeta": {
+    "jest": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

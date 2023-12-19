@@ -13,18 +13,20 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:*",
-    "@atls/cli-ui-log-record-component": "workspace:*",
-    "@atls/cli-ui-pretty-logs": "workspace:*",
-    "@atls/cli-ui-renderer": "workspace:*",
-    "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
-    "@atls/code-typescript-worker": "workspace:*",
+    "@atls/cli-ui-error-info-component-new": "workspace:*",
+    "@atls/cli-ui-log-record-component-new": "workspace:*",
+    "@atls/cli-ui-pretty-logs-new": "workspace:*",
+    "@atls/cli-ui-renderer-new": "workspace:*",
+    "@atls/cli-ui-typescript-diagnostic-component-new": "workspace:*",
+    "@atls/code-typescript-worker-new": "workspace:*",
     "@atls/yarn-run-utils-new": "workspace:*",
     "clipanion": "latest",
-    "react": "latest",
+    "react": "16.14.0",
+    "react-devtools-core": "4.28.5",
     "rimraf": "latest"
   },
   "devDependencies": {
+    "@types/react": "18.2.45",
     "@yarnpkg/builder": "latest",
     "@yarnpkg/cli": "latest",
     "@yarnpkg/core": "latest"

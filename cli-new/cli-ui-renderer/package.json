@@ -1,0 +1,27 @@
+{
+  "name": "@atls/cli-ui-renderer-new",
+  "version": "0.0.7",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "ink": "^3.0.8",
+    "react": "16"
+  },
+  "devDependencies": {
+    "@types/node": "18.19.3",
+    "@types/react": "16.14.54"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

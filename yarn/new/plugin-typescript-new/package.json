@@ -13,10 +13,10 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:*",
-    "@atls/cli-ui-renderer": "workspace:*",
-    "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
-    "@atls/code-typescript-worker": "workspace:*",
+    "@atls/cli-ui-error-info-component-new": "workspace:*",
+    "@atls/cli-ui-renderer-new": "workspace:*",
+    "@atls/cli-ui-typescript-diagnostic-component-new": "workspace:*",
+    "@atls/code-typescript-worker-new": "workspace:*",
     "@atls/yarn-run-utils-new": "workspace:*",
     "@types/react": "^18.2.45",
     "clipanion": "latest",
@@ -26,7 +26,7 @@
     "@yarnpkg/builder": "latest",
     "@yarnpkg/cli": "latest",
     "@yarnpkg/core": "latest",
-    "typescript": "^4.6.2"
+    "typescript": "4.6.4"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

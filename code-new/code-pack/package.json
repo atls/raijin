@@ -1,0 +1,27 @@
+{
+  "name": "@atls/code-pack-new",
+  "version": "0.0.18",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@actions/github": "6.0.0",
+    "@iarna/toml": "3.0.0",
+    "@yarnpkg/core": "4.0.2",
+    "@yarnpkg/fslib": "3.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "18.19.3"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

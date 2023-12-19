@@ -1,0 +1,33 @@
+{
+  "name": "@atls/code-commit-new",
+  "version": "0.0.7",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@commitlint/format": "latest",
+    "@commitlint/is-ignored": "latest",
+    "@commitlint/lint": "latest",
+    "@commitlint/load": "latest",
+    "@commitlint/read": "latest",
+    "@commitlint/rules": "latest",
+    "@commitlint/types": "latest",
+    "conventional-changelog-angular": "latest",
+    "conventional-commits-parser": "latest"
+  },
+  "devDependencies": {
+    "@types/conventional-commits-parser": "^3.0.6",
+    "@types/node": "18.19.3"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "@atls/code-lint-new",
+  "version": "0.0.28",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/config-eslint-new": "workspace:*",
+    "@types/eslint": "8.4.2",
+    "eslint": "8.17.0",
+    "globby": "11.1.0",
+    "ignore": "5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.19.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "typescript": "*"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

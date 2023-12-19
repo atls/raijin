@@ -7,10 +7,10 @@ import { Project }         from '@yarnpkg/core'
 import React               from 'react'
 import { Option }          from 'clipanion'
 
-import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
-import { FormatterWorker } from '@atls/code-format-worker'
+import { ErrorInfo }       from '@atls/cli-ui-error-info-component-new'
+import { FormatterWorker } from '@atls/code-format-worker-new'
 import { SpinnerProgress } from '@atls/yarn-run-utils-new'
-import { renderStatic }    from '@atls/cli-ui-renderer'
+import { renderStatic }    from '@atls/cli-ui-renderer-new'
 
 class FormatCommand extends BaseCommand {
   static paths = [['format']]

@@ -1,0 +1,36 @@
+{
+  "name": "@atls/cli-ui-typescript-diagnostic-component-new",
+  "version": "0.0.18",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/cli-ui-source-component-new": "workspace:*",
+    "@atls/code-typescript": "workspace:*"
+  },
+  "devDependencies": {
+    "@atls/cli-ui-renderer-new": "workspace:*",
+    "@types/jest": "latest",
+    "@types/react": "16.14.54",
+    "ink": "^3.0.8",
+    "react": "16.14.0",
+    "strip-ansi": "latest",
+    "typescript": "4.6.4"
+  },
+  "peerDependencies": {
+    "ink": "*",
+    "react": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

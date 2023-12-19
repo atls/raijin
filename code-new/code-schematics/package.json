@@ -1,0 +1,25 @@
+{
+  "name": "@atls/code-schematics-new",
+  "version": "0.0.18",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@angular-devkit/core": "17.0.7",
+    "@angular-devkit/schematics": "17.0.7"
+  },
+  "devDependencies": {
+    "rxjs": "7.8.1"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

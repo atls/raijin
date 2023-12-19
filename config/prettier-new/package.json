@@ -1,0 +1,25 @@
+{
+  "name": "@atls/config-prettier-new",
+  "version": "0.0.7",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build && node -e 'const fs = require(\"fs\"); const config = require(\"./dist/index.js\"); fs.writeFileSync(\"./dist/.prettierrc\", JSON.stringify(config.default, null, 2))'",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@types/prettier": "3.0.0",
+    "prettier": "3.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "18.19.3"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

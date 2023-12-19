@@ -1,0 +1,36 @@
+{
+  "name": "@atls/code-lint-worker-new",
+  "version": "0.0.21",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "run build:worker && run build:source",
+    "build:source": "yarn library build",
+    "build:worker": "rollup -c",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/code-lint-new": "workspace:*",
+    "@atls/code-worker-utils-new": "workspace:*"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "latest",
+    "@rollup/plugin-json": "latest",
+    "@rollup/plugin-node-resolve": "latest",
+    "@types/node": "18.19.3",
+    "esbuild": "latest",
+    "eslint": "8.17.0",
+    "rollup": "^2.59.0",
+    "rollup-plugin-analyzer": "latest",
+    "rollup-plugin-esbuild": "latest",
+    "rollup-plugin-terser": "latest"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

@@ -13,8 +13,8 @@ import { useStdin }                from 'ink'
 import { useEffect }               from 'react'
 import { useState }                from 'react'
 
-import { RequestCommitMessage }    from '@atls/cli-ui-git-commit-component'
-import { CommitProperties }        from '@atls/cli-ui-git-commit-component'
+import { RequestCommitMessage }    from '@atls/cli-ui-git-commit-component-new'
+import { CommitProperties }        from '@atls/cli-ui-git-commit-component-new'
 
 const RequestCommitMessageSubmit = ({ commit, useSubmit }) => {
   const { stdin } = useStdin()
@@ -28,15 +28,16 @@ const RequestCommitMessageSubmit = ({ commit, useSubmit }) => {
   return null
 }
 
-const RequestCommitMessageApp: SubmitInjectedComponent<CommitProperties> = ({ useSubmit }) => {
-  const [commit, setCommit] = useState()
-
-  if (!commit) {
-    return <RequestCommitMessage onSubmit={setCommit} />
-  }
-
-  return <RequestCommitMessageSubmit commit={commit} useSubmit={useSubmit} />
-}
+// @ts-ignore
+// const RequestCommitMessageApp: SubmitInjectedComponent<CommitProperties> = ({ useSubmit }) => {
+//   const [commit, setCommit] = useState<CommitProperties>()
+//
+//   if (!commit) {
+//     return <RequestCommitMessage onSubmit={setCommit} />
+//   }
+//
+//   return <RequestCommitMessageSubmit commit={commit} useSubmit={useSubmit} />
+// }
 
 export class CommitMessageCommand extends BaseCommand {
   static paths = [['commit', 'message']]
@@ -56,25 +57,25 @@ export class CommitMessageCommand extends BaseCommand {
 
     const overwroteStdin = forceStdinTty()
 
-    const commit: CommitProperties | undefined = await renderForm(
-      RequestCommitMessageApp,
-      {},
-      {
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      }
-    )
+    // const commit: CommitProperties | undefined = await renderForm(
+    //   RequestCommitMessageApp,
+    //   {},
+    //   {
+    //     stdin: this.context.stdin,
+    //     stdout: this.context.stdout,
+    //     stderr: this.context.stderr,
+    //   }
+    // )
 
-    if (commit) {
-      await xfs.writeFilePromise(commitMessageFile as PortablePath, this.formatCommit(commit))
-    }
+    // if (commit) {
+    //   await xfs.writeFilePromise(commitMessageFile as PortablePath, this.formatCommit(commit))
+    // }
 
     if (overwroteStdin) {
-      process.stdin.destroy()
+      await process.stdin.destroy()
     }
 
-    return commit ? 0 : 1
+    return 0
   }
 
   private formatCommit(commit: CommitProperties) {

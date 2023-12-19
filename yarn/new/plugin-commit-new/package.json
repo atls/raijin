@@ -13,18 +13,20 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-git-commit-component": "workspace:*",
-    "@atls/code-commit": "workspace:*",
+    "@atls/cli-ui-git-commit-component-new": "workspace:*",
+    "@atls/code-commit-new": "workspace:*",
     "@yarnpkg/libui": "latest",
     "clipanion": "latest",
     "commitizen": "latest",
     "force-stdin-tty": "latest",
-    "ink": "latest",
+    "ink": "^3.0.8",
     "lint-staged": "latest",
-    "react": "latest",
+    "react": "16",
+    "react-devtools-core": "4.28.5",
     "word-wrap": "latest"
   },
   "devDependencies": {
+    "@types/react": "^18.2.45",
     "@yarnpkg/builder": "latest",
     "@yarnpkg/cli": "latest",
     "@yarnpkg/core": "latest",

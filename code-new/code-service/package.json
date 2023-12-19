@@ -1,0 +1,43 @@
+{
+  "name": "@atls/code-service-new",
+  "version": "0.0.24",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist",
+    "tsconfig.stub.json"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/config-typescript-new": "workspace:*",
+    "@atls/webpack-proto-imports-loader-new": "workspace:*",
+    "@atls/webpack-start-server-plugin-new": "workspace:*",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "fast-glob": "3.3.2",
+    "file-loader": "6.2.0",
+    "find-up": "6.3.0",
+    "string-replace-loader": "3.1.0",
+    "ts-loader": "9.5.1",
+    "typescript": "4.6.4",
+    "webpack": "5.73.0",
+    "webpack-chain": "6.5.1"
+  },
+  "devDependencies": {
+    "@types/jest": "29.5.11",
+    "@types/node": "18.19.3",
+    "@types/protocol-buffers-schema": "3.4.3",
+    "@types/wait-for-localhost": "3.1.0",
+    "@types/webpack": "5.28.0",
+    "@yarnpkg/fslib": "3.0.1",
+    "wait-for-localhost": "4.0.1"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

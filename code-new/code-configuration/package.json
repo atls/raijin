@@ -1,0 +1,22 @@
+{
+  "name": "@atls/code-configuration-new",
+  "version": "0.0.10",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@yarnpkg/fslib": "latest"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@atls/webpack-start-server-plugin-new",
+  "version": "0.0.6",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "webpack": "5.73.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.19.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

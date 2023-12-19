@@ -30,9 +30,9 @@
     "@yarnpkg/cli": "latest",
     "@yarnpkg/core": "latest",
     "@yarnpkg/fslib": "latest",
-    "ink": "latest",
-    "react": "latest",
-    "typescript": "^4.6.2"
+    "ink": "^3.0.8",
+    "react": "16",
+    "typescript": "4.6.4"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

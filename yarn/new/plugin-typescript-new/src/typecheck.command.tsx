@@ -7,11 +7,11 @@ import { MessageName }          from '@yarnpkg/core'
 import React                    from 'react'
 import { Option }               from 'clipanion'
 
-import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
-import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptWorker }     from '@atls/code-typescript-worker'
+import { ErrorInfo }            from '@atls/cli-ui-error-info-component-new'
+import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component-new'
+import { TypeScriptWorker }     from '@atls/code-typescript-worker-new'
 import { SpinnerProgress }      from '@atls/yarn-run-utils-new'
-import { renderStatic }         from '@atls/cli-ui-renderer'
+import { renderStatic }         from '@atls/cli-ui-renderer-new'
 
 class TypeCheckCommand extends BaseCommand {
   static paths = [['typecheck']]
@@ -47,6 +47,7 @@ class TypeCheckCommand extends BaseCommand {
             progress.end()
 
             diagnostics.forEach((diagnostic) => {
+              // @ts-ignore
               const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
 
               output.split('\n').forEach((line) => report.reportError(MessageName.UNNAMED, line))
@@ -54,6 +55,7 @@ class TypeCheckCommand extends BaseCommand {
           } catch (error) {
             progress.end()
 
+            // @ts-ignore
             renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
               .split('\n')
               .forEach((line) => {

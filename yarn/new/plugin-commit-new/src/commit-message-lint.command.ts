@@ -1,7 +1,7 @@
 import { BaseCommand }  from '@yarnpkg/cli'
 
-import { CommitLinter } from '@atls/code-commit'
-import { read }         from '@atls/code-commit'
+import { CommitLinter } from '@atls/code-commit-new'
+import { read }         from '@atls/code-commit-new'
 
 class CommitMessageLintCommand extends BaseCommand {
   static paths = [['commit', 'message', 'lint']]

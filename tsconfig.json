@@ -8,8 +8,8 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": false,
     "isolatedModules": false,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "commonjs",
+    "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "noImplicitReturns": false,
@@ -21,18 +21,22 @@
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": false,
-    "target": "es2019",
+    "target": "ES2021",
     "jsx": "react"
   },
   "include": [
     "code/**/*",
+    "code-new/**/*",
     "utils/**/*",
+    "utils-new/**/*",
     "yarn/**/*",
     "github/**/*",
     "prettier/**/*",
     "eslint/**/*",
     "schematics/**/*",
     "jest/**/*",
-    "config/**/*"
+    "config/**/*",
+    "cli-new/**/*",
+    "webpack-new/**/*"
   ]
 }

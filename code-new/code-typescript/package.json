@@ -1,0 +1,27 @@
+{
+  "name": "@atls/code-typescript-new",
+  "version": "0.0.22",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/config-typescript-new": "workspace:*",
+    "deepmerge": "latest"
+  },
+  "devDependencies": {
+    "@types/deepmerge": "latest",
+    "@types/node": "18.19.3",
+    "typescript": "4.6.4"
+  },
+  "publishConfig": {
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}

@@ -20,14 +20,14 @@
     "@atls/yarn-pack-utils-new": "workspace:*",
     "@atls/yarn-run-utils-new": "workspace:*",
     "clipanion": "latest",
-    "react": "latest",
+    "react": "16",
     "rimraf": "latest"
   },
   "devDependencies": {
     "@yarnpkg/builder": "latest",
     "@yarnpkg/cli": "latest",
     "@yarnpkg/core": "latest",
-    "typescript": "^4.6.2"
+    "typescript": "4.6.4"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

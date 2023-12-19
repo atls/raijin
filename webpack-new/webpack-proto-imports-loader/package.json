@@ -1,0 +1,34 @@
+{
+  "name": "@atls/webpack-proto-imports-loader-new",
+  "version": "0.0.11",
+  "license": "BSD-3-Clause",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "file-loader": "latest",
+    "protocol-buffers-schema": "latest",
+    "tslib": "2.6.2"
+  },
+  "devDependencies": {
+    "@atls/config-typescript": "workspace:*",
+    "@monstrs/types-import-proto": "latest",
+    "@types/node": "18.19.3",
+    "memfs": "latest",
+    "ts-loader": "latest",
+    "typescript": "latest",
+    "webpack": "latest",
+    "webpack-chain": "latest"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
+  }
+}
