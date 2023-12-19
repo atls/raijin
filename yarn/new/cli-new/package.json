@@ -68,6 +68,7 @@
         "@atls/yarn-plugin-badges-new",
         "@atls/yarn-plugin-check-new",
         "@atls/yarn-plugin-test-new",
+        "@atls/yarn-plugin-files-new",
         "@yarnpkg/plugin-compat",
         "@yarnpkg/plugin-constraints",
         "@yarnpkg/plugin-dlx",

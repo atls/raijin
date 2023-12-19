@@ -16119,21 +16119,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"undici@npm:*, undici@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "undici@npm:6.0.1"
+  dependencies:
+    "@fastify/busboy": "npm:^2.0.0"
+  checksum: 16d5d3410bef921fd3e255a673b26292259d445fc390f832972800c0f45de1d57419348f3d3b56897fbf119d058fedf313d8795bec6925a76529e73fce5aaa72
+  languageName: node
+  linkType: hard
+
 "undici@npm:^5.25.4":
   version: 5.28.2
   resolution: "undici@npm:5.28.2"
   dependencies:
     "@fastify/busboy": "npm:^2.0.0"
   checksum: 34385ad9b3ba85309972ee3c1b426dcd19b94a5a6aa9c54499b5f48436c0ecc13a9b1e756a7c6a953eaefa9f4263890625ece5f2719fd774b0852204f5e4d5f9
-  languageName: node
-  linkType: hard
-
-"undici@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "undici@npm:6.0.1"
-  dependencies:
-    "@fastify/busboy": "npm:^2.0.0"
-  checksum: 16d5d3410bef921fd3e255a673b26292259d445fc390f832972800c0f45de1d57419348f3d3b56897fbf119d058fedf313d8795bec6925a76529e73fce5aaa72
   languageName: node
   linkType: hard
 
