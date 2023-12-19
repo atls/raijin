@@ -69,6 +69,7 @@
         "@atls/yarn-plugin-check-new",
         "@atls/yarn-plugin-test-new",
         "@atls/yarn-plugin-files-new",
+        "@atls/yarn-plugin-image-new",
         "@yarnpkg/plugin-compat",
         "@yarnpkg/plugin-constraints",
         "@yarnpkg/plugin-dlx",

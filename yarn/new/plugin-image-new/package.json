@@ -14,12 +14,12 @@
   },
   "dependencies": {
     "@atls/code-pack": "workspace:*",
-    "@atls/yarn-pack-utils-new": "workspace:*",
+    "@atls/yarn-pack-utils": "workspace:*",
     "@atls/yarn-run-utils-new": "workspace:*",
     "@iarna/toml": "latest",
     "@yarnpkg/plugin-patch": "latest",
     "clipanion": "latest",
-    "tempy": "latest"
+    "tempy": "1.0.1"
   },
   "devDependencies": {
     "@yarnpkg/builder": "latest",

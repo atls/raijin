@@ -1,6 +1,6 @@
 import { TagPolicy } from '@atls/code-pack'
 import { tagUtils }  from '@atls/code-pack'
-import { packUtils } from '@atls/yarn-pack-utils-new'
+import { packUtils } from '@atls/yarn-pack-utils'
 import { stringify } from '@iarna/toml'
 
 import { BaseCommand }   from '@yarnpkg/cli'
@@ -17,7 +17,7 @@ import { Option }        from 'clipanion'
 import { readFile }      from 'node:fs/promises'
 import { join }          from 'path'
 
-import { temporaryDirectory } from 'tempy'
+import { directory } from 'tempy'
 
 const forRepository = async (repo: string) => {
   const descriptor = {
@@ -61,7 +61,7 @@ class ImagePackCommand extends BaseCommand {
       },
       async (report) => {
         if (this.isWorkspaceAllowedForBundle(workspace)) {
-          const destination = temporaryDirectory() as PortablePath
+          const destination = directory() as PortablePath
 
           report.reportInfo(
             null,
