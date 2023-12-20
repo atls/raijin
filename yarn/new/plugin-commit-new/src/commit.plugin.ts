@@ -5,5 +5,5 @@ import { CommitMessageCommand }     from './commit-message.command'
 import { CommitStagedCommand }      from './commit-staged.command'
 
 export const plugin: Plugin = {
-  commands: [CommitMessageCommand],
+  commands: [CommitMessageCommand, CommitStagedCommand, CommitMessageLintCommand],
 }

@@ -12,10 +12,10 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "localtunnel": "latest"
+    "localtunnel": "2.0.2"
   },
   "devDependencies": {
-    "@types/localtunnel": "latest",
+    "@types/localtunnel": "2.0.4",
     "@types/node": "18.19.3"
   },
   "publishConfig": {

@@ -72,6 +72,7 @@
         "@atls/yarn-plugin-image-new",
         "@atls/yarn-plugin-workspaces-new",
         "@atls/yarn-plugin-format-new",
+        "@atls/yarn-plugin-typescript-new",
         "@yarnpkg/plugin-compat",
         "@yarnpkg/plugin-constraints",
         "@yarnpkg/plugin-dlx",
