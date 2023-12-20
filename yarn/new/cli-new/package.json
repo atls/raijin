@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build bundle --no-minify --source-map",
+    "build": "builder build bundle",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
@@ -73,6 +73,8 @@
         "@atls/yarn-plugin-workspaces-new",
         "@atls/yarn-plugin-typescript-new",
         "@atls/yarn-plugin-library-new",
+        "@atls/yarn-plugin-lint-new",
+        "@atls/yarn-plugin-commit-new",
         "@yarnpkg/plugin-compat",
         "@yarnpkg/plugin-constraints",
         "@yarnpkg/plugin-dlx",

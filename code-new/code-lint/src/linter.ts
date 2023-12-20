@@ -1,30 +1,21 @@
-import { readFile }           from 'node:fs/promises'
+import { eslintFlatConfig } from '@atls/config-eslint-new'
 
 import type { ESLint }        from 'eslint'
-
-import globby                 from 'globby'
-import ignorer                from 'ignore'
 import { Linter as ESLinter } from 'eslint'
-import { join }               from 'path'
-import { relative }           from 'path'
 
-import { eslintConfig }           from '@atls/config-eslint-new'
+import globby       from 'globby'
+import ignorer      from 'ignore'
+import { readFile } from 'node:fs/promises'
+import { join }     from 'path'
+import { relative } from 'path'
 
-import { ignore }             from './linter.patterns'
-import { createPatterns }     from './linter.patterns'
+import { ignore }         from './linter.patterns'
+import { createPatterns } from './linter.patterns'
 
 export class Linter {
   constructor(private readonly cwd: string) {}
 
-  private async getProjectIgnorePatterns(): Promise<Array<string>> {
-    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-
-    const { linterIgnorePatterns = [] } = JSON.parse(content)
-
-    return linterIgnorePatterns
-  }
-
-  async lint(files?: Array<string>): Promise<Array<ESLint.LintResult>> {
+  async lint(files?: string[]): Promise<Array<ESLint.LintResult>> {
     if (files && files.length > 0) {
       return this.lintFiles(files)
     }
@@ -33,17 +24,17 @@ export class Linter {
   }
 
   async lintProject(): Promise<Array<ESLint.LintResult>> {
-    // @ts-ignore
-    return this.lintFiles(await globby(createPatterns(this.cwd), { dot: true, nodir: true } as any))
+    return this.lintFiles(await globby(createPatterns(this.cwd), {
+      dot: true, nodir: true,
+    } as any) as unknown as string[])
   }
 
-  async lintFiles(files: Array<string> = []): Promise<Array<ESLint.LintResult>> {
+  async lintFiles(files: string[] = []): Promise<Array<ESLint.LintResult>> {
     const ignored = ignorer()
       .add(ignore)
       .add(await this.getProjectIgnorePatterns())
 
-    const linterConfig: any = { configType: 'flat' }
-    const linter = new ESLinter(linterConfig)
+    const linter = new ESLinter({ configType: 'flat' })
 
     // @ts-ignore
     const results: Array<ESLint.LintResult> = await Promise.all(
@@ -52,8 +43,7 @@ export class Linter {
         .map(async (filePath) => {
           const source = await readFile(filePath, 'utf8')
 
-          // @ts-ignore
-          const messages = linter.verify(source, eslintConfig, { filename: filePath })
+          const messages = linter.verify(source, eslintFlatConfig, { filename: filePath })
 
           return {
             filePath,
@@ -66,9 +56,17 @@ export class Linter {
             fixableWarningCount: 0,
             usedDeprecatedRules: [],
           }
-        })
+        }),
     )
 
     return results
+  }
+
+  private async getProjectIgnorePatterns(): Promise<Array<string>> {
+    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { linterIgnorePatterns = [] } = JSON.parse(content)
+
+    return linterIgnorePatterns
   }
 }

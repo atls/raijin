@@ -13,18 +13,19 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:*",
-    "@atls/cli-ui-eslint-result-component": "workspace:*",
-    "@atls/cli-ui-renderer": "workspace:*",
-    "@atls/code-lint-worker": "workspace:*",
+    "@atls/cli-ui-error-info-component-new": "workspace:*",
+    "@atls/cli-ui-eslint-result-component-new": "workspace:*",
+    "@atls/cli-ui-renderer-new": "workspace:*",
+    "@atls/code-lint-worker-new": "workspace:*",
     "@atls/yarn-run-utils-new": "workspace:*",
-    "clipanion": "latest",
-    "react": "16"
+    "clipanion": "4.0.0-rc.2",
+    "react": "16.14.0"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "latest",
-    "@yarnpkg/cli": "latest",
-    "@yarnpkg/core": "latest",
+    "@types/react": "16",
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
     "typescript": "4.6.4"
   },
   "peerDependencies": {

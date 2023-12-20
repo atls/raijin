@@ -1,11 +1,9 @@
 import { parse }          from '@atls/stack-trace'
+import { FC }             from 'react'
 
 import React              from 'react'
-// @ts-ignore
 import { Text }           from 'ink'
-// @ts-ignore
 import { Box }            from 'ink'
-// @ts-ignore
 import { Spacer }         from 'ink'
 import { useMemo }        from 'react'
 
@@ -17,7 +15,8 @@ export interface StackTraceProps {
   children: string
 }
 
-export const StackTrace = ({ children }: StackTraceProps) => {
+// @ts-ignore
+export const StackTrace: FC<StackTraceProps> = ({ children }) => {
   const stack = useMemo(() => parse(children), [children])
   const source = useMemo(() => (stack?.topFrame ? getFrameSource(stack.topFrame) : null), [stack])
 

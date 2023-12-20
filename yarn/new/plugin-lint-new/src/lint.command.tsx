@@ -7,11 +7,11 @@ import { Project }         from '@yarnpkg/core'
 import React               from 'react'
 import { Option }          from 'clipanion'
 
-import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
-import { ESLintResult }    from '@atls/cli-ui-eslint-result-component'
-import { LinterWorker }    from '@atls/code-lint-worker'
+import { ErrorInfo }       from '@atls/cli-ui-error-info-component-new'
+import { ESLintResult }    from '@atls/cli-ui-eslint-result-component-new'
+import { LinterWorker }    from '@atls/code-lint-worker-new'
 import { SpinnerProgress } from '@atls/yarn-run-utils-new'
-import { renderStatic }    from '@atls/cli-ui-renderer'
+import { renderStatic }    from '@atls/cli-ui-renderer-new'
 
 class LintCommand extends BaseCommand {
   static paths = [['lint']]
