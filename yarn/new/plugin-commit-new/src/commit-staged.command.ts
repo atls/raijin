@@ -1,6 +1,5 @@
 import { BaseCommand } from '@yarnpkg/cli'
 
-// @ts-ignore
 import lintStaged      from 'lint-staged'
 import { Option }      from 'clipanion'
 
@@ -18,7 +17,6 @@ export class CommitStagedCommand extends BaseCommand {
 
   async execute() {
     try {
-      // @ts-ignore
       const passed = await lintStaged({
         config,
         debug: false,
