@@ -76,6 +76,7 @@
         "@atls/yarn-plugin-library-new",
         "@atls/yarn-plugin-lint-new",
         "@atls/yarn-plugin-commit-new",
+        "@atls/yarn-plugin-service-new",
         "@yarnpkg/plugin-compat",
         "@yarnpkg/plugin-constraints",
         "@yarnpkg/plugin-dlx",

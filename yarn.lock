@@ -427,7 +427,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-log-record-component@workspace:*, @atls/cli-ui-log-record-component@workspace:0.0.8, @atls/cli-ui-log-record-component@workspace:cli/cli-ui-log-record-component":
+"@atls/cli-ui-log-record-component@workspace:0.0.8, @atls/cli-ui-log-record-component@workspace:cli/cli-ui-log-record-component":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-log-record-component@workspace:cli/cli-ui-log-record-component"
   dependencies:
@@ -966,7 +966,7 @@ __metadata:
     "@yarnpkg/fslib": "npm:3.0.1"
     fast-glob: "npm:3.3.2"
     file-loader: "npm:6.2.0"
-    find-up: "npm:6.3.0"
+    find-up: "npm:5.0.0"
     string-replace-loader: "npm:3.1.0"
     ts-loader: "npm:9.5.1"
     typescript: "npm:4.6.4"
@@ -976,26 +976,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-service-worker-new@workspace:code-new/code-service-worker":
+"@atls/code-service-worker-new@workspace:*, @atls/code-service-worker-new@workspace:code-new/code-service-worker":
   version: 0.0.0-use.local
   resolution: "@atls/code-service-worker-new@workspace:code-new/code-service-worker"
   dependencies:
     "@atls/code-service-new": "workspace:*"
     "@atls/code-worker-utils-new": "workspace:*"
-    "@rollup/plugin-commonjs": "npm:latest"
-    "@rollup/plugin-json": "npm:latest"
-    "@rollup/plugin-node-resolve": "npm:latest"
-    "@rollup/plugin-replace": "npm:latest"
+    "@rollup/plugin-commonjs": "npm:^22.0.0"
+    "@rollup/plugin-json": "npm:^4.1.0"
+    "@rollup/plugin-node-resolve": "npm:^13.3.0"
+    "@rollup/plugin-replace": "npm:5.0.5"
     "@types/node": "npm:18.19.3"
-    esbuild: "npm:latest"
+    esbuild: "npm:0.19.10"
     rollup: "npm:^2.59.0"
-    rollup-plugin-analyzer: "npm:latest"
-    rollup-plugin-esbuild: "npm:latest"
-    rollup-plugin-terser: "npm:latest"
+    rollup-plugin-analyzer: "npm:4.0.0"
+    rollup-plugin-esbuild: "npm:^4.9.1"
+    rollup-plugin-terser: "npm:7.0.2"
   languageName: unknown
   linkType: soft
 
-"@atls/code-service-worker@workspace:*, @atls/code-service-worker@workspace:0.0.18, @atls/code-service-worker@workspace:code/code-service-worker":
+"@atls/code-service-worker@workspace:0.0.18, @atls/code-service-worker@workspace:code/code-service-worker":
   version: 0.0.0-use.local
   resolution: "@atls/code-service-worker@workspace:code/code-service-worker"
   dependencies:
@@ -2090,18 +2090,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-service-new@workspace:yarn/new/plugin-service-new"
   dependencies:
-    "@atls/cli-ui-error-info-component": "workspace:*"
-    "@atls/cli-ui-log-record-component": "workspace:*"
-    "@atls/cli-ui-renderer": "workspace:*"
-    "@atls/code-service-worker": "workspace:*"
+    "@atls/cli-ui-error-info-component-new": "workspace:*"
+    "@atls/cli-ui-log-record-component-new": "workspace:*"
+    "@atls/cli-ui-renderer-new": "workspace:*"
+    "@atls/code-service-worker-new": "workspace:*"
     "@atls/yarn-pack-utils-new": "workspace:*"
     "@atls/yarn-run-utils-new": "workspace:*"
-    "@yarnpkg/builder": "npm:latest"
-    "@yarnpkg/cli": "npm:latest"
-    "@yarnpkg/core": "npm:latest"
-    clipanion: "npm:latest"
+    "@yarnpkg/builder": "npm:4.0.0"
+    "@yarnpkg/cli": "npm:4.0.2"
+    "@yarnpkg/core": "npm:4.0.2"
+    clipanion: "npm:4.0.0-rc.2"
     react: "npm:16"
-    rimraf: "npm:latest"
+    rimraf: "npm:5.0.5"
     typescript: "npm:4.6.4"
   peerDependencies:
     "@yarnpkg/cli": "*"
@@ -5842,7 +5842,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-replace@npm:5.0.5, @rollup/plugin-replace@npm:latest":
+"@rollup/plugin-replace@npm:5.0.5":
   version: 5.0.5
   resolution: "@rollup/plugin-replace@npm:5.0.5"
   dependencies:
@@ -12708,13 +12708,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-up@npm:6.3.0":
-  version: 6.3.0
-  resolution: "find-up@npm:6.3.0"
+"find-up@npm:5.0.0, find-up@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "find-up@npm:5.0.0"
   dependencies:
-    locate-path: "npm:^7.1.0"
-    path-exists: "npm:^5.0.0"
-  checksum: 4f3bdc30d41778c647e53f4923e72de5e5fb055157031f34501c5b36c2eb59f77b997edf9cb00165c6060cda7eaa2e3da82cb6be2e61d68ad3e07c4bc4cce67e
+    locate-path: "npm:^6.0.0"
+    path-exists: "npm:^4.0.0"
+  checksum: 07955e357348f34660bde7920783204ff5a26ac2cafcaa28bace494027158a97b9f56faaf2d89a6106211a8174db650dd9f503f9c0d526b1202d5554a00b9095
   languageName: node
   linkType: hard
 
@@ -12743,16 +12743,6 @@ __metadata:
     locate-path: "npm:^5.0.0"
     path-exists: "npm:^4.0.0"
   checksum: 4c172680e8f8c1f78839486e14a43ef82e9decd0e74145f40707cc42e7420506d5ec92d9a11c22bd2c48fb0c384ea05dd30e10dd152fefeec6f2f75282a8b844
-  languageName: node
-  linkType: hard
-
-"find-up@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "find-up@npm:5.0.0"
-  dependencies:
-    locate-path: "npm:^6.0.0"
-    path-exists: "npm:^4.0.0"
-  checksum: 07955e357348f34660bde7920783204ff5a26ac2cafcaa28bace494027158a97b9f56faaf2d89a6106211a8174db650dd9f503f9c0d526b1202d5554a00b9095
   languageName: node
   linkType: hard
 
@@ -16535,15 +16525,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"locate-path@npm:^7.1.0":
-  version: 7.2.0
-  resolution: "locate-path@npm:7.2.0"
-  dependencies:
-    p-locate: "npm:^6.0.0"
-  checksum: 1c6d269d4efec555937081be964e8a9b4a136319c79ca1d45ac6382212a8466113c75bd89e44521ca8ecd1c47fb08523b56eee5c0712bc7d14fec5f729deeb42
-  languageName: node
-  linkType: hard
-
 "lodash-es@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash-es@npm:4.17.21"
@@ -17752,15 +17733,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-limit@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "p-limit@npm:4.0.0"
-  dependencies:
-    yocto-queue: "npm:^1.0.0"
-  checksum: 01d9d70695187788f984226e16c903475ec6a947ee7b21948d6f597bed788e3112cc7ec2e171c1d37125057a5f45f3da21d8653e04a3a793589e12e9e80e756b
-  languageName: node
-  linkType: hard
-
 "p-locate@npm:^2.0.0":
   version: 2.0.0
   resolution: "p-locate@npm:2.0.0"
@@ -17794,15 +17766,6 @@ __metadata:
   dependencies:
     p-limit: "npm:^3.0.2"
   checksum: 1623088f36cf1cbca58e9b61c4e62bf0c60a07af5ae1ca99a720837356b5b6c5ba3eb1b2127e47a06865fee59dd0453cad7cc844cda9d5a62ac1a5a51b7c86d3
-  languageName: node
-  linkType: hard
-
-"p-locate@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "p-locate@npm:6.0.0"
-  dependencies:
-    p-limit: "npm:^4.0.0"
-  checksum: 2bfe5234efa5e7a4e74b30a5479a193fdd9236f8f6b4d2f3f69e3d286d9a7d7ab0c118a2a50142efcf4e41625def635bd9332d6cbf9cc65d85eb0718c579ab38
   languageName: node
   linkType: hard
 
@@ -17912,13 +17875,6 @@ __metadata:
   version: 4.0.0
   resolution: "path-exists@npm:4.0.0"
   checksum: 505807199dfb7c50737b057dd8d351b82c033029ab94cb10a657609e00c1bc53b951cfdbccab8de04c5584d5eff31128ce6afd3db79281874a5ef2adbba55ed1
-  languageName: node
-  linkType: hard
-
-"path-exists@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "path-exists@npm:5.0.0"
-  checksum: 8ca842868cab09423994596eb2c5ec2a971c17d1a3cb36dbf060592c730c725cd524b9067d7d2a1e031fef9ba7bd2ac6dc5ec9fb92aa693265f7be3987045254
   languageName: node
   linkType: hard
 
@@ -18932,6 +18888,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rimraf@npm:5.0.5, rimraf@npm:latest":
+  version: 5.0.5
+  resolution: "rimraf@npm:5.0.5"
+  dependencies:
+    glob: "npm:^10.3.7"
+  bin:
+    rimraf: dist/esm/bin.mjs
+  checksum: a612c7184f96258b7d1328c486b12ca7b60aa30e04229a08bbfa7e964486deb1e9a1b52d917809311bdc39a808a4055c0f950c0280fba194ba0a09e6f0d404f6
+  languageName: node
+  linkType: hard
+
 "rimraf@npm:^2.6.3":
   version: 2.7.1
   resolution: "rimraf@npm:2.7.1"
@@ -18940,17 +18907,6 @@ __metadata:
   bin:
     rimraf: ./bin.js
   checksum: 4586c296c736483e297da7cffd19475e4a3e41d07b1ae124aad5d687c79e4ffa716bdac8732ed1db942caf65271cee9dd39f8b639611de161a2753e2112ffe1d
-  languageName: node
-  linkType: hard
-
-"rimraf@npm:latest":
-  version: 5.0.5
-  resolution: "rimraf@npm:5.0.5"
-  dependencies:
-    glob: "npm:^10.3.7"
-  bin:
-    rimraf: dist/esm/bin.mjs
-  checksum: a612c7184f96258b7d1328c486b12ca7b60aa30e04229a08bbfa7e964486deb1e9a1b52d917809311bdc39a808a4055c0f950c0280fba194ba0a09e6f0d404f6
   languageName: node
   linkType: hard
 
@@ -21692,13 +21648,6 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
-  languageName: node
-  linkType: hard
-
-"yocto-queue@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "yocto-queue@npm:1.0.0"
-  checksum: 2cac84540f65c64ccc1683c267edce396b26b1e931aa429660aefac8fbe0188167b7aee815a3c22fa59a28a58d898d1a2b1825048f834d8d629f4c2a5d443801
   languageName: node
   linkType: hard
 
