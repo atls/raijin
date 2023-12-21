@@ -70,6 +70,7 @@
         "@atls/yarn-plugin-test-new",
         "@atls/yarn-plugin-files-new",
         "@atls/yarn-plugin-image-new",
+        "@atls/yarn-plugin-format-new",
         "@atls/yarn-plugin-workspaces-new",
         "@atls/yarn-plugin-typescript-new",
         "@atls/yarn-plugin-library-new",

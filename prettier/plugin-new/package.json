@@ -16,13 +16,14 @@
     "import-sort": "6.0.0",
     "import-sort-parser": "6.0.0",
     "import-sort-parser-typescript": "6.0.0",
-    "import-sort-style": "^6.0.0",
+    "import-sort-style": "6.0.0",
     "prettier": "3.1.1",
     "sort-package-json": "1.57.0"
   },
   "devDependencies": {
-    "@atls/config-prettier-new": "workspace:^",
-    "@types/node": "18.19.3"
+    "@atls/config-prettier-new": "workspace:*",
+    "@types/node": "18.19.3",
+    "@types/prettier": "3.0.0"
   },
   "publishConfig": {
     "main": "dist/index.js",

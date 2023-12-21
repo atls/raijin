@@ -12,7 +12,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-prettier-new": "workspace:*",
     "@typescript-eslint/eslint-plugin": "6.15.0",
     "@typescript-eslint/parser": "6.15.0",
     "eslint": "8.56.0",

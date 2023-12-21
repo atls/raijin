@@ -2804,7 +2804,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./config/eslint-new/",\
         "packageDependencies": [\
           ["@atls/config-eslint-new", "workspace:config/eslint-new"],\
-          ["@atls/config-prettier-new", "workspace:config/prettier-new"],\
           ["@types/eslint", "npm:8.56.0"],\
           ["@types/node", "npm:18.19.3"],\
           ["@typescript-eslint/eslint-plugin", "virtual:dbf15ea61d2ca49bd7ae8265dd2d012d2cb5bb14447637e52e89ca29870f3cf260c9f157f7f4e35246ce799383e5c6d6bcd693a54a8f012d4014f5bf0f670cf6#npm:6.15.0"],\
@@ -2926,6 +2925,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/prettier-plugin-new", "workspace:prettier/plugin-new"],\
           ["@atls/config-prettier-new", "workspace:config/prettier-new"],\
           ["@types/node", "npm:18.19.3"],\
+          ["@types/prettier", "npm:3.0.0"],\
           ["globby", "npm:11.1.0"],\
           ["import-sort", "npm:6.0.0"],\
           ["import-sort-parser", "npm:6.0.0"],\

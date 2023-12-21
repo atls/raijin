@@ -1191,7 +1191,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/config-eslint-new@workspace:config/eslint-new"
   dependencies:
-    "@atls/config-prettier-new": "workspace:*"
     "@types/eslint": "npm:8.56.0"
     "@types/node": "npm:18.19.3"
     "@typescript-eslint/eslint-plugin": "npm:6.15.0"
@@ -1246,7 +1245,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/config-prettier-new@workspace:*, @atls/config-prettier-new@workspace:^, @atls/config-prettier-new@workspace:config/prettier-new":
+"@atls/config-prettier-new@workspace:*, @atls/config-prettier-new@workspace:config/prettier-new":
   version: 0.0.0-use.local
   resolution: "@atls/config-prettier-new@workspace:config/prettier-new"
   dependencies:
@@ -1300,13 +1299,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/prettier-plugin-new@workspace:prettier/plugin-new"
   dependencies:
-    "@atls/config-prettier-new": "workspace:^"
+    "@atls/config-prettier-new": "workspace:*"
     "@types/node": "npm:18.19.3"
+    "@types/prettier": "npm:3.0.0"
     globby: "npm:11.1.0"
     import-sort: "npm:6.0.0"
     import-sort-parser: "npm:6.0.0"
     import-sort-parser-typescript: "npm:6.0.0"
-    import-sort-style: "npm:^6.0.0"
+    import-sort-style: "npm:6.0.0"
     prettier: "npm:3.1.1"
     sort-package-json: "npm:1.57.0"
   languageName: unknown
@@ -13792,7 +13792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"import-sort-style@npm:^6.0.0":
+"import-sort-style@npm:6.0.0, import-sort-style@npm:^6.0.0":
   version: 6.0.0
   resolution: "import-sort-style@npm:6.0.0"
   checksum: 8c65dd1cd99919f38d92b80bfbd3309d4950c23c50f742344162291273151993d61f027fea584007d1aa20db40b93452a30a51d29d05f72d10f1906767454b52
