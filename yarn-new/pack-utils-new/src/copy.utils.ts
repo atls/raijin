@@ -51,8 +51,6 @@ export const copyPlugins = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const yarnName = Filename
-
   const pluginDir = ppath.join('.yarn' as Filename, 'plugins' as Filename)
 
   if (await xfs.existsPromise(ppath.join(project.cwd, pluginDir))) {
