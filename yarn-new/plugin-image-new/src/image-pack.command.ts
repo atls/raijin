@@ -1,6 +1,6 @@
-import { TagPolicy } from '@atls/code-pack'
-import { tagUtils }  from '@atls/code-pack'
-import { packUtils } from '@atls/yarn-pack-utils'
+import { TagPolicy } from '@atls/code-pack-new'
+import { tagUtils }  from '@atls/code-pack-new'
+import { packUtils } from '@atls/yarn-pack-utils-new'
 import { stringify } from '@iarna/toml'
 
 import { BaseCommand }   from '@yarnpkg/cli'

@@ -2,7 +2,7 @@ import { StreamReport }              from '@yarnpkg/core'
 import { Configuration }             from '@yarnpkg/core'
 import { Project }                   from '@yarnpkg/core'
 
-import { TesterWorker }              from '@atls/code-test-worker'
+import { TesterWorker }              from '@atls/code-test-worker-new'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command'
 import { GitHubChecks }              from './github.checks'

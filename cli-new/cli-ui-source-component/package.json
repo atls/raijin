@@ -12,11 +12,11 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@babel/code-frame": "latest",
+    "@babel/code-frame": "7.23.5",
     "supports-color": "8"
   },
   "devDependencies": {
-    "@types/babel__code-frame": "latest",
+    "@types/babel__code-frame": "7.0.6",
     "@types/node": "18.19.3",
     "@types/react": "16.14.54",
     "ink": "^3.0.8"

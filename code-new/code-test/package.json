@@ -13,13 +13,13 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-jest": "workspace:*",
-    "@jest/core": "latest",
-    "@jest/test-result": "latest",
-    "@jest/types": "latest"
+    "@atls/config-jest-new": "workspace:*",
+    "@jest/core": "29.7.0",
+    "@jest/test-result": "29.7.0",
+    "@jest/types": "29.6.3"
   },
   "devDependencies": {
-    "@types/jest": "latest",
+    "@types/jest": "29.5.11",
     "@types/node": "18.19.3"
   },
   "peerDependenciesMeta": {

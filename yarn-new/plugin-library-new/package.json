@@ -20,16 +20,16 @@
     "@atls/cli-ui-typescript-diagnostic-component-new": "workspace:*",
     "@atls/code-typescript-worker-new": "workspace:*",
     "@atls/yarn-run-utils-new": "workspace:*",
-    "clipanion": "latest",
+    "clipanion": "4.0.0-rc.2",
     "react": "16.14.0",
     "react-devtools-core": "4.28.5",
-    "rimraf": "latest"
+    "rimraf": "5.0.5"
   },
   "devDependencies": {
     "@types/react": "18.2.45",
-    "@yarnpkg/builder": "latest",
-    "@yarnpkg/cli": "latest",
-    "@yarnpkg/core": "latest"
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

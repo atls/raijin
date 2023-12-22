@@ -8,8 +8,10 @@ import { Project }         from '@yarnpkg/core'
 import { VirtualFetcher }  from '@yarnpkg/core'
 import { Workspace }       from '@yarnpkg/core'
 import { MultiFetcher }    from '@yarnpkg/core'
-import { MultiResolver }   from '@yarnpkg/core/lib/MultiResolver'
-import { VirtualResolver } from '@yarnpkg/core/lib/VirtualResolver'
+// @ts-ignore
+import { MultiResolver }   from '@yarnpkg/core'
+// @ts-ignore
+import { VirtualResolver } from '@yarnpkg/core'
 import { CwdFS }           from '@yarnpkg/fslib'
 import { Filename }        from '@yarnpkg/fslib'
 import { PortablePath }    from '@yarnpkg/fslib'

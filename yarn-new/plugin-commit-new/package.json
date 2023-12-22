@@ -15,22 +15,22 @@
   "dependencies": {
     "@atls/cli-ui-git-commit-component-new": "workspace:*",
     "@atls/code-commit-new": "workspace:*",
-    "@yarnpkg/libui": "latest",
-    "clipanion": "latest",
-    "commitizen": "latest",
-    "force-stdin-tty": "latest",
+    "@yarnpkg/libui": "3.0.0",
+    "clipanion": "4.0.0-rc.2",
+    "commitizen": "4.3.0",
+    "force-stdin-tty": "0.0.1",
     "ink": "^3.0.8",
     "lint-staged": "11.2.6",
     "react": "16",
     "react-devtools-core": "4.28.5",
-    "word-wrap": "latest"
+    "word-wrap": "1.2.5"
   },
   "devDependencies": {
-    "@types/react": "^18.2.45",
-    "@yarnpkg/builder": "latest",
-    "@yarnpkg/cli": "latest",
-    "@yarnpkg/core": "latest",
-    "@yarnpkg/fslib": "latest"
+    "@types/react": "16.14.54",
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "@yarnpkg/fslib": "3.0.1"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

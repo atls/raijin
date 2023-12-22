@@ -14,16 +14,16 @@
   "dependencies": {
     "@atls/cli-ui-renderer-new": "workspace:*",
     "@atls/cli-ui-stack-trace-component-new": "workspace:*",
-    "@atls/logger": "latest",
-    "string-to-color": "latest"
+    "@atls/logger": "0.0.2",
+    "string-to-color": "2.2.2"
   },
   "devDependencies": {
-    "@types/jest": "latest",
+    "@types/jest": "29.5.11",
     "@types/node": "18.19.3",
     "@types/react": "16.14.54",
     "ink": "^3.0.8",
     "react": "16.14.0",
-    "strip-ansi": "latest"
+    "strip-ansi": "7.1.0"
   },
   "peerDependencies": {
     "ink": "*",

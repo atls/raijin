@@ -12,8 +12,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@yarnpkg/libui": "latest",
-    "figures": "latest",
+    "@yarnpkg/libui": "3.0.0",
+    "figures": "6.0.1",
     "ink": "^3.0.8",
     "react": "16.14.0"
   },

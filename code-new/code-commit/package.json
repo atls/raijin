@@ -12,18 +12,18 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@commitlint/format": "latest",
-    "@commitlint/is-ignored": "latest",
-    "@commitlint/lint": "latest",
-    "@commitlint/load": "latest",
-    "@commitlint/read": "latest",
-    "@commitlint/rules": "latest",
-    "@commitlint/types": "latest",
-    "conventional-changelog-angular": "latest",
-    "conventional-commits-parser": "latest"
+    "@commitlint/format": "18.4.3",
+    "@commitlint/is-ignored": "18.4.3",
+    "@commitlint/lint": "18.4.3",
+    "@commitlint/load": "18.4.3",
+    "@commitlint/read": "18.4.3",
+    "@commitlint/rules": "18.4.3",
+    "@commitlint/types": "18.4.3",
+    "conventional-changelog-angular": "7.0.0",
+    "conventional-commits-parser": "5.0.0"
   },
   "devDependencies": {
-    "@types/conventional-commits-parser": "^3.0.6",
+    "@types/conventional-commits-parser": "3.0.6",
     "@types/node": "18.19.3"
   },
   "publishConfig": {

@@ -12,7 +12,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-typescript": "workspace:*",
+    "@atls/config-typescript-new": "workspace:*",
     "@atls/jest-static-stubs": "workspace:*",
     "@emotion/jest": "11.9.1",
     "@monstrs/jest-pnp-resolver": "0.0.1",

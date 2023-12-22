@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@atls/config-typescript-new": "workspace:*",
-    "deepmerge": "latest"
+    "deepmerge": "4.3.1"
   },
   "devDependencies": {
-    "@types/deepmerge": "latest",
+    "@types/deepmerge": "2.2.0",
     "@types/node": "18.19.3",
     "typescript": "4.6.4"
   },

@@ -5,8 +5,8 @@ import { AggregatedResult } from '@jest/test-result'
 import { Config }           from '@jest/types'
 import { runCLI }           from '@jest/core'
 
-import { integration }      from '@atls/config-jest'
-import { unit }             from '@atls/config-jest'
+import { integration }      from '@atls/config-jest-new'
+import { unit }             from '@atls/config-jest-new'
 
 export class Tester {
   constructor(private readonly cwd: string) {}

@@ -8,7 +8,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@yarnpkg/core": "latest"
+    "@yarnpkg/core": "4.0.2"
   },
   "publishConfig": {
     "access": "public",

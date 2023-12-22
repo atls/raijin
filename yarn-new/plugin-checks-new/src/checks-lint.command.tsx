@@ -11,9 +11,9 @@ import { codeFrameColumns } from '@babel/code-frame'
 
 import React                from 'react'
 
-import { ESLintResult }     from '@atls/cli-ui-eslint-result-component'
-import { LinterWorker }     from '@atls/code-lint-worker'
-import { renderStatic }     from '@atls/cli-ui-renderer'
+import { ESLintResult }     from '@atls/cli-ui-eslint-result-component-new'
+import { LinterWorker }     from '@atls/code-lint-worker-new'
+import { renderStatic }     from '@atls/cli-ui-renderer-new'
 
 import { GitHubChecks }     from './github.checks'
 import { AnnotationLevel }  from './github.checks'

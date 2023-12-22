@@ -1,4 +1,4 @@
-import tsconfig from '@atls/config-typescript'
+import { tsConfig } from '@atls/config-typescript-new'
 
 export const unit = {
   transformIgnorePatterns: ['/node_modules/', '\\.pnp\\.[^\\/]+$'],
@@ -10,7 +10,7 @@ export const unit = {
   },
   globals: {
     'ts-jest': {
-      tsconfig: tsconfig.compilerOptions,
+      tsconfig: tsConfig.compilerOptions,
       isolatedModules: true,
       diagnostics: false,
     },
@@ -30,7 +30,7 @@ export const integration = {
   },
   globals: {
     'ts-jest': {
-      tsconfig: tsconfig.compilerOptions,
+      tsconfig: tsConfig.compilerOptions,
       isolatedModules: true,
       diagnostics: false,
     },

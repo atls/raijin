@@ -13,14 +13,14 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@actions/github": "latest",
-    "@octokit/types": "latest",
-    "clipanion": "latest"
+    "@actions/github": "6.0.0",
+    "@octokit/types": "12.4.0",
+    "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "latest",
-    "@yarnpkg/cli": "latest",
-    "@yarnpkg/core": "latest"
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

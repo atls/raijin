@@ -17,11 +17,11 @@
   },
   "devDependencies": {
     "@atls/cli-ui-renderer-new": "workspace:*",
-    "@types/jest": "latest",
+    "@types/jest": "29.5.11",
     "@types/react": "16.14.54",
     "ink": "^3.0.8",
     "react": "16.14.0",
-    "strip-ansi": "latest",
+    "strip-ansi": "7.1.0",
     "typescript": "4.6.4"
   },
   "peerDependencies": {
