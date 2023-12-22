@@ -11,8 +11,8 @@ import { Workspace }              from '@yarnpkg/core'
 import { structUtils }            from '@yarnpkg/core'
 import { miscUtils }              from '@yarnpkg/core'
 
-import { readFileAsync }          from 'fs-extra-promise'
-import { writeFileAsync }         from 'fs-extra-promise'
+import { readFileSync }           from 'fs'
+import { writeFileSync }          from 'fs'
 import { join }                   from 'path'
 import { stringify }              from 'querystring'
 
@@ -121,7 +121,7 @@ class BadgesCommand extends BaseCommand {
           }
 
           const readmePath = join(process.cwd(), 'README.md')
-          const readme = (await readFileAsync(readmePath)).toString('utf-8')
+          const readme = (await readFileSync(readmePath)).toString('utf-8')
 
           const parts = readme.split(BadgesCommand.VERSIONS_SEPARATOR)
 
@@ -176,7 +176,7 @@ class BadgesCommand extends BaseCommand {
           parts[1] = atlsVersions.reduce(versionsReducer, '')
           parts[1] = `\n\n${parts[1]}\n\n`
 
-          await writeFileAsync(readmePath, parts.join('[//]: # (VERSIONS)'))
+          await writeFileSync(readmePath, parts.join('[//]: # (VERSIONS)'))
 
           progress.end()
         })
