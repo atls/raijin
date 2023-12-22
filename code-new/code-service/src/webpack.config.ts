@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { readFile }                   from 'node:fs/promises'
 import { join }                       from 'node:path'
 

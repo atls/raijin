@@ -1,7 +1,6 @@
 import React            from 'react'
 import { EOL }          from 'os'
 import { Transform }    from 'stream'
-import { render }       from 'ink'
 
 import { LogRecord }    from '@atls/cli-ui-log-record-component-new'
 import { renderStatic } from '@atls/cli-ui-renderer-new'
@@ -29,9 +28,10 @@ export class PrettyLogsTransform extends Transform {
   }
 
   render(data = {}) {
-    return render(<LogRecord {...data} />)
+    return renderStatic(<LogRecord {...data} />)
   }
 
+  // eslint-disable-next-line no-underscore-dangle
   _transform(chunk, encoding, callback) {
     const parts = chunk.toString().split(/\r?\n/)
 

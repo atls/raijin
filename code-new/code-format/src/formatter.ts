@@ -5,7 +5,7 @@ import * as markdown      from 'prettier/plugins/markdown'
 import * as typescript    from 'prettier/plugins/typescript'
 import * as yaml          from 'prettier/plugins/yaml'
 
-import * as plugin        from '../../../prettier-new/plugin-new'
+import * as plugin        from '@atls/prettier-plugin-new'
 
 import { readFileSync }   from 'node:fs'
 import { writeFileSync }  from 'node:fs'

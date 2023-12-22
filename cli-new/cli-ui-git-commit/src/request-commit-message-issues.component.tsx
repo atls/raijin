@@ -8,6 +8,7 @@ export const RequestCommitMessageIssues = ({ onSubmit }) => (
   <Box flexDirection='column'>
     <Box>
       <Text bold color='cyanBright'>
+        {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
         {'Add issue references (e.g. "fix #123, re #124".):'}
       </Text>
     </Box>

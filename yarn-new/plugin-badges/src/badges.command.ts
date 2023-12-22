@@ -61,6 +61,7 @@ class BadgesCommand extends BaseCommand {
 
             while (pass.length > 0) {
               const hash = pass.shift()!
+              // eslint-disable-next-line no-continue
               if (seen.has(hash)) continue
 
               const pkg = project.storedPackages.get(hash)
@@ -72,6 +73,7 @@ class BadgesCommand extends BaseCommand {
               if (structUtils.isVirtualLocator(pkg))
                 pass.push(structUtils.devirtualizeLocator(pkg).locatorHash)
 
+              // eslint-disable-next-line no-continue
               if (hash !== initialHash) continue
 
               for (const dependency of pkg.dependencies.values()) {
@@ -102,9 +104,10 @@ class BadgesCommand extends BaseCommand {
           const getVersion = async (name) => {
             const expectedDescriptor = structUtils.parseDescriptor(name)
 
-            const selection = sortedLookup.filter((pkg) => {
-              return pkg.scope === expectedDescriptor.scope && pkg.name === expectedDescriptor.name
-            })
+            const selection = sortedLookup.filter(
+              (pkg) =>
+                pkg.scope === expectedDescriptor.scope && pkg.name === expectedDescriptor.name
+            )
 
             if (selection.length > 0) {
               return selection.shift()!.version

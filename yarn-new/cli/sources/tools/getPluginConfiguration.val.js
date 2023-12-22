@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 // Note that this file isn't the real export - it is run at build-time and its
 // return value is what's used within the bundle (cf val-loader).
 

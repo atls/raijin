@@ -15,7 +15,7 @@ export const eslintFlatConfig: Linter.FlatConfig[] = [
     rules: eslintrc,
     files: ['**'],
     plugins: {
-      react: react,
+      react,
       'jsx-a11y': jsxA11y,
       'react-hooks': reactHooks,
       '@typescript-eslint': typescriptEslint,

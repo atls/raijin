@@ -79,6 +79,7 @@ async function getCoreConfiguration({
 }) {
   // Since we only care about a few very specific settings we tolerate extra configuration key.
   // If we didn't, we wouldn't even be able to run `yarn config` (which is recommended in the invalid config error message)
+  // eslint-disable-next-line no-return-await
   return await Configuration.find(npath.toPortablePath(process.cwd()), pluginConfiguration, {
     strict: false,
     usePathCheck: selfPath,
@@ -135,6 +136,7 @@ function checkCwd(cli: YarnCli, argv: Array<string>) {
     postCwdArgv = argv.slice(0, argv.length - 2)
   }
 
+  // eslint-disable-next-line no-param-reassign
   cli.defaultContext.cwd = cwd !== null ? ppath.resolve(cwd) : ppath.cwd()
 
   return postCwdArgv
@@ -202,6 +204,7 @@ async function run(
 
   if (!command.help) Configuration.telemetry?.reportCommandName(command.path.join(` `))
 
+  // eslint-disable-next-line no-return-await
   return await cli.run(command, cli.defaultContext)
 }
 

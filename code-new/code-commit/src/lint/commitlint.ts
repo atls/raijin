@@ -176,7 +176,7 @@ export async function lint(
 
       const executableRule = rule as Rule<unknown>
 
-      // eslint-disable-next-line no-shadow
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       const [valid, message] = await executableRule(parsed, when, value)
 
       return {

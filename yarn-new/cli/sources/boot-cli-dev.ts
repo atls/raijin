@@ -3,6 +3,7 @@ const fs = require(`fs`)
 // Makes it possible to access our dependencies
 const pnpFile = `${__dirname}/../../../../../.pnp.cjs`
 if (fs.existsSync(pnpFile)) {
+  // eslint-disable-next-line no-console
   console.log('found it')
   require(pnpFile).setup()
 }
