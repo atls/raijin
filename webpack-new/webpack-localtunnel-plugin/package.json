@@ -15,7 +15,7 @@
     "localtunnel": "2.0.2"
   },
   "devDependencies": {
-    "@types/localtunnel": "2.0.4",
+    "@types/localtunnel": "2.0.1",
     "@types/node": "18.19.3"
   },
   "publishConfig": {

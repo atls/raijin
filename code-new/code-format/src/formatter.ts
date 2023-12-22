@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import prettierConfig from '@atls/config-prettier-new'
-import * as plugin        from '@atls/prettier-plugin-new'
+import * as plugin    from '../../../prettier-new/plugin-new'
 
 import globby  from 'globby'
 import ignorer from 'ignore'
