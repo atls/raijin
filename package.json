@@ -4,6 +4,7 @@
   "license": "BSD-3-Clause",
   "workspaces": [
     "schematics/**/*",
+    "schematics-new/**/*",
     "prettier/*",
     "code/**/*",
     "code-new/**/*",

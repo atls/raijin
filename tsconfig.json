@@ -34,6 +34,7 @@
     "prettier/**/*",
     "eslint/**/*",
     "schematics/**/*",
+    "schematics-new/**/*",
     "jest/**/*",
     "config/**/*",
     "cli-new/**/*",

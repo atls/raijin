@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  run:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.13'
+
+      - name: Install
+        run: yarn install
+
+      - name: Login to Google Docker Registry
+        run: echo -e $GCR_KEYFILE | docker login -u _json_key --password-stdin https://eu.gcr.io
+        env:
+          GCR_KEYFILE: ${{ secrets.GCR_KEYFILE }}
+
+      - name: Install Buildpack Cli
+        run: |
+          (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.18.0/pack-v0.18.0-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
+      - name: Release
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        run: |
+          yarn workspaces changed foreach run app pack \
+            --registry 'eu.gcr.io/${{ secrets.GCR_PROJECT_ID }}/<%= projectName %>-' \
+            --tag-policy hash-timestamp \
+            --publish

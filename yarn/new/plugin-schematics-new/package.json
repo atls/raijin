@@ -13,25 +13,26 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:*",
-    "@atls/cli-ui-parts": "workspace:*",
-    "@atls/cli-ui-renderer": "workspace:*",
-    "@atls/cli-ui-schematics-component": "workspace:*",
-    "@atls/code-schematics-worker": "workspace:*",
-    "@atls/schematics": "workspace:*",
+    "@atls/cli-ui-error-info-component-new": "workspace:*",
+    "@atls/cli-ui-parts-new": "workspace:*",
+    "@atls/cli-ui-renderer-new": "workspace:*",
+    "@atls/cli-ui-schematics-component-new": "workspace:*",
+    "@atls/code-schematics-worker-new": "workspace:*",
+    "@atls/schematics-new": "workspace:*",
     "@atls/yarn-run-utils-new": "workspace:*",
-    "@yarnpkg/libui": "latest",
-    "clipanion": "latest",
-    "force-stdin-tty": "latest",
-    "typanion": "latest"
+    "@yarnpkg/libui": "3.0.0",
+    "clipanion": "4.0.0-rc.2",
+    "force-stdin-tty": "0.0.1",
+    "typanion": "3.14.0"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "latest",
-    "@yarnpkg/cli": "latest",
-    "@yarnpkg/core": "latest",
-    "@yarnpkg/fslib": "latest",
+    "@types/react": "16.14.54",
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "@yarnpkg/fslib": "3.0.1",
     "ink": "^3.0.8",
-    "react": "16",
+    "react": "16.14.0",
     "typescript": "4.6.4"
   },
   "peerDependencies": {

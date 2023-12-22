@@ -10,13 +10,13 @@ import { renderForm }                     from '@yarnpkg/libui/sources/misc/rend
 import React                              from 'react'
 import { forceStdinTty }                  from 'force-stdin-tty'
 
-import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
-import { SubmitInjectedComponentFactory } from '@atls/cli-ui-parts'
-import { RequestProjectInformation }      from '@atls/cli-ui-schematics-component'
-import { ProjectInformationProperties }   from '@atls/cli-ui-schematics-component'
-import { SchematicsWorker }               from '@atls/code-schematics-worker'
+import { ErrorInfo }                      from '@atls/cli-ui-error-info-component-new'
+import { SubmitInjectedComponentFactory } from '@atls/cli-ui-parts-new'
+import { RequestProjectInformation }      from '@atls/cli-ui-schematics-component-new'
+import { ProjectInformationProperties }   from '@atls/cli-ui-schematics-component-new'
+import { SchematicsWorker }               from '@atls/code-schematics-worker-new'
 import { SpinnerProgress }                from '@atls/yarn-run-utils-new'
-import { renderStatic }                   from '@atls/cli-ui-renderer'
+import { renderStatic }                   from '@atls/cli-ui-renderer-new'
 
 class GenerateProjectCommand extends BaseCommand {
   static paths = [['generate', 'project']]
@@ -25,6 +25,7 @@ class GenerateProjectCommand extends BaseCommand {
     const overwroteStdin = forceStdinTty()
 
     const options: ProjectInformationProperties | undefined = await renderForm(
+    // @ts-ignore
       SubmitInjectedComponentFactory<ProjectInformationProperties>(RequestProjectInformation),
       {},
       {
