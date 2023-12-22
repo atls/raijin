@@ -42,7 +42,7 @@ class MigrationUpCommand extends BaseCommand {
             progress.end()
 
             events.forEach((event) => {
-              const eventPath = event.path.startsWith('/') ? event.path.substr(1) : event.path
+              const eventPath = event.path.startsWith('/') ? event.path.slice(1) : event.path
 
               if (event.kind === 'error') {
                 report.reportError(MessageName.UNNAMED, `${eventPath}: ${event.description}`)

@@ -11,11 +11,11 @@ import { template }             from '@angular-devkit/schematics'
 import { url }                  from '@angular-devkit/schematics'
 import { chain }                from '@angular-devkit/schematics'
 
-import tsconfig                 from '@atls/config-typescript'
+import { tsConfig }             from '@atls/config-typescript'
 import { updateTsConfigInTree } from '@atls/schematics-utils'
 
 const updateTsConfig = updateTsConfigInTree({
-  ...tsconfig.compilerOptions,
+  ...tsConfig.compilerOptions,
   module: 'esnext',
 })
 

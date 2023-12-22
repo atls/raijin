@@ -1,6 +1,5 @@
 import React               from 'react'
 import { Text }            from 'ink'
-import { FC }              from 'react'
 
 import { codeFrameSource } from './utils'
 
@@ -10,6 +9,6 @@ export interface SourcePreviewProps {
   column?: number
 }
 
-export const SourcePreview: FC<SourcePreviewProps> = ({ children, line, column }) => (
+export const SourcePreview = ({ children, line, column }: SourcePreviewProps) => (
   <Text>{codeFrameSource(children, line, column)}</Text>
 )

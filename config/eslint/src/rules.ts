@@ -1,6 +1,6 @@
 import type { Linter } from 'eslint'
 
-const eslintrc: Linter.RulesRecord = {
+export const eslintrc: Linter.RulesRecord = {
   'no-undef': ['off'],
   'brace-style': 'off',
   '@typescript-eslint/brace-style': 'off',
@@ -1382,5 +1382,3 @@ const eslintrc: Linter.RulesRecord = {
   'vars-on-top': ['error'],
   yoda: ['error'],
 }
-
-export default eslintrc

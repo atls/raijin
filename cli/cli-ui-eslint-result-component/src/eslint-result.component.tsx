@@ -10,11 +10,12 @@ import { ESLintResultMessageProps } from './eslint-result-message.component'
 import { ESLintResultMessage }      from './eslint-result-message.component'
 
 export interface ESLintResultProps {
-  messages: Array<ESLintResultMessageProps>
+  messages: ESLintResultMessageProps[]
   filePath: string
   source?: string
 }
 
+// @ts-ignore
 export const ESLintResult: FC<ESLintResultProps> = ({ filePath, source, messages }) => {
   const filepath = useMemo(() => {
     if (isAbsolute(filePath)) {

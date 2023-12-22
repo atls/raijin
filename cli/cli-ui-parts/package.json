@@ -12,10 +12,13 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@yarnpkg/libui": "^3.0.0-rc.36",
-    "figures": "^3.2.0",
-    "ink": "^3.2.0",
-    "react": "^18.1.0"
+    "@yarnpkg/libui": "3.0.0",
+    "figures": "6.0.1",
+    "ink": "^3.0.8",
+    "react": "16.14.0"
+  },
+  "devDependencies": {
+    "@types/react": "16.14.54"
   },
   "publishConfig": {
     "access": "public",

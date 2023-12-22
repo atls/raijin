@@ -1,5 +1,3 @@
-/* eslint-disable no-continue */
-
 import { BaseCommand }            from '@yarnpkg/cli'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
 import { StreamReport }           from '@yarnpkg/core'
@@ -14,7 +12,6 @@ import { miscUtils }              from '@yarnpkg/core'
 import { readFileSync }           from 'fs'
 import { writeFileSync }          from 'fs'
 import { join }                   from 'path'
-import { stringify }              from 'querystring'
 
 import { SpinnerProgress }        from '@atls/yarn-run-utils'
 
@@ -64,6 +61,7 @@ class BadgesCommand extends BaseCommand {
 
             while (pass.length > 0) {
               const hash = pass.shift()!
+              // eslint-disable-next-line no-continue
               if (seen.has(hash)) continue
 
               const pkg = project.storedPackages.get(hash)
@@ -75,6 +73,7 @@ class BadgesCommand extends BaseCommand {
               if (structUtils.isVirtualLocator(pkg))
                 pass.push(structUtils.devirtualizeLocator(pkg).locatorHash)
 
+              // eslint-disable-next-line no-continue
               if (hash !== initialHash) continue
 
               for (const dependency of pkg.dependencies.values()) {
@@ -105,13 +104,10 @@ class BadgesCommand extends BaseCommand {
           const getVersion = async (name) => {
             const expectedDescriptor = structUtils.parseDescriptor(name)
 
-            const selection = sortedLookup.filter((pkg) => {
-              if (pkg.scope === expectedDescriptor.scope && pkg.name === expectedDescriptor.name) {
-                return true
-              }
-
-              return false
-            })
+            const selection = sortedLookup.filter(
+              (pkg) =>
+                pkg.scope === expectedDescriptor.scope && pkg.name === expectedDescriptor.name
+            )
 
             if (selection.length > 0) {
               return selection.shift()!.version
@@ -121,7 +117,7 @@ class BadgesCommand extends BaseCommand {
           }
 
           const readmePath = join(process.cwd(), 'README.md')
-          const readme = (await readFileSync(readmePath)).toString('utf-8')
+          const readme = readFileSync(readmePath).toString('utf-8')
 
           const parts = readme.split(BadgesCommand.VERSIONS_SEPARATOR)
 
@@ -156,14 +152,16 @@ class BadgesCommand extends BaseCommand {
               const packageLink = `${BadgesCommand.REGISTRY_URL}${BadgesCommand.REGISTRY_PACKAGE_PATH}/${pkg.name}`
               join(BadgesCommand.REGISTRY_URL, BadgesCommand.REGISTRY_PACKAGE_PATH, pkg.name)
 
-              const queryStringParams = {
+              const newQueryStringParams = new URLSearchParams({
                 style: BadgesCommand.BADGE_STYLE,
                 label: pkg.name,
                 message: pkg.version,
                 ...getColors(),
-              }
+              })
 
-              const badge = `<img src="${BadgesCommand.BADGE_URL}?${stringify(queryStringParams)}">`
+              const badge = `<img src="${
+                BadgesCommand.BADGE_URL
+              }?${newQueryStringParams.toString()}" alt='badge'>`
 
               const wrapWithLink = (content: string, link: string) => `[${content}](${link})`
 
@@ -176,7 +174,7 @@ class BadgesCommand extends BaseCommand {
           parts[1] = atlsVersions.reduce(versionsReducer, '')
           parts[1] = `\n\n${parts[1]}\n\n`
 
-          await writeFileSync(readmePath, parts.join('[//]: # (VERSIONS)'))
+          writeFileSync(readmePath, parts.join('[//]: # (VERSIONS)'))
 
           progress.end()
         })

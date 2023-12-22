@@ -1,1 +1,1 @@
-export * from './request-commit-message'
+export * from './request-commit-message.component'

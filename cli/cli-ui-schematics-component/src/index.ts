@@ -1,1 +1,1 @@
-export * from './request-project-information'
+export * from './request-project-information.component'

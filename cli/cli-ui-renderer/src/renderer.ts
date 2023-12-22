@@ -13,7 +13,7 @@ export const renderStatic = (
 
   reconciler.updateContainer(target, container, null)
 
-  const { output } = render(rootNode, terminalWidth)
+  const { output } = render(rootNode!, terminalWidth)
 
   return output
 }

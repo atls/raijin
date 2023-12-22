@@ -1,5 +1,4 @@
-/* eslint-disable */
-
+/* eslint-disable no-void,no-param-reassign,no-else-return,vars-on-top,no-var,no-plusplus,@typescript-eslint/naming-convention,no-underscore-dangle,@typescript-eslint/no-use-before-define,no-redeclare,no-nested-ternary,no-bitwise,default-case */
 export const flattenDiagnosticMessageText = (diag, newLine, indent = 0) => {
   if (indent === void 0) {
     indent = 0

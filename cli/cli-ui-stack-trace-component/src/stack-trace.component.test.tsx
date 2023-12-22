@@ -20,6 +20,7 @@ const createStack = () => {
 
 describe('stack trace component', () => {
   it('render', () => {
+    // @ts-ignore
     const output = renderStatic(<StackTrace>{createStack()}</StackTrace>, 160)
 
     expect(stripAnsi(output)).toMatchSnapshot()

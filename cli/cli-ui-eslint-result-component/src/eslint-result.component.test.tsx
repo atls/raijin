@@ -42,6 +42,7 @@ describe('eslint result component', () => {
       ],
     }
 
+    // @ts-ignore
     const output = renderStatic(<ESLintResult {...value} />, 160)
 
     expect(stripAnsi(output)).toMatchSnapshot()

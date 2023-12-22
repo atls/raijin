@@ -12,12 +12,12 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "ink": "^3.2.0",
-    "react": "^18.1.0"
+    "ink": "^3.0.8",
+    "react": "16"
   },
   "devDependencies": {
-    "@types/node": "^17.0.38",
-    "@types/react": "^18.0.12"
+    "@types/node": "18.19.3",
+    "@types/react": "16.14.54"
   },
   "publishConfig": {
     "access": "public",

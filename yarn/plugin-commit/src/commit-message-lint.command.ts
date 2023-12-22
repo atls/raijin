@@ -18,7 +18,7 @@ class CommitMessageLintCommand extends BaseCommand {
       this.context.stdout.write(output)
     }
 
-    return results.some((result) => result.valid === false) ? 1 : 0
+    return results.some((result) => !result.valid) ? 1 : 0
   }
 }
 

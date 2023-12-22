@@ -7,7 +7,7 @@ import deepmerge                from 'deepmerge'
 import ts                       from 'typescript'
 import { join }                 from 'path'
 
-import tsconfig                 from '@atls/config-typescript'
+import { tsConfig }             from '@atls/config-typescript'
 
 class TypeScript {
   constructor(private readonly cwd: string) {}
@@ -39,8 +39,8 @@ class TypeScript {
     const projectIgnorePatterns = await this.getProjectIgnorePatterns()
 
     const config = deepmerge(
-      tsconfig,
-      { compilerOptions: override, exclude: [...tsconfig.exclude, ...projectIgnorePatterns] },
+      tsConfig,
+      { compilerOptions: override, exclude: [...tsConfig.exclude, ...projectIgnorePatterns] },
       {
         include,
       } as any

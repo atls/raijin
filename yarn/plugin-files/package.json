@@ -13,18 +13,18 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@actions/github": "^5.0.3",
-    "@octokit/types": "^6.34.0",
-    "clipanion": "^3.2.0-rc.14"
+    "@actions/github": "6.0.0",
+    "@octokit/types": "12.4.0",
+    "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "^4.0.0-rc.36",
-    "@yarnpkg/cli": "^4.0.0-rc.36",
-    "@yarnpkg/core": "^4.0.0-rc.36"
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2"
   },
   "peerDependencies": {
-    "@yarnpkg/cli": "^3.2.0-rc.8",
-    "@yarnpkg/core": "^3.2.0-rc.8"
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*"
   },
   "publishConfig": {
     "access": "public",

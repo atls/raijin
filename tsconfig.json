@@ -26,20 +26,13 @@
   },
   "include": [
     "code/**/*",
-    "code-new/**/*",
     "utils/**/*",
-    "utils-new/**/*",
     "yarn/**/*",
-    "yarn-new/**/*",
     "github/**/*",
     "prettier/**/*",
-    "prettier-new/**/*",
     "eslint/**/*",
     "schematics/**/*",
-    "schematics-new/**/*",
     "jest/**/*",
-    "config/**/*",
-    "cli-new/**/*",
-    "webpack-new/**/*"
+    "config/**/*"
   ]
 }

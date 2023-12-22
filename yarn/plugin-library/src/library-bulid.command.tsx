@@ -7,8 +7,8 @@ import { StreamReport }         from '@yarnpkg/core'
 import { MessageName }          from '@yarnpkg/core'
 
 import React                    from 'react'
-import rimraf                   from 'rimraf'
 import { Option }               from 'clipanion'
+import { rimrafSync }           from 'rimraf'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
 import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component'
@@ -49,6 +49,7 @@ class LibraryBuildCommand extends BaseCommand {
             progress.end()
 
             diagnostics.forEach((diagnostic) => {
+              // @ts-ignore
               const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
 
               output.split('\n').forEach((line) => report.reportError(MessageName.UNNAMED, line))
@@ -56,6 +57,7 @@ class LibraryBuildCommand extends BaseCommand {
           } catch (error) {
             progress.end()
 
+            // @ts-ignore
             renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
               .split('\n')
               .forEach((line) => {
@@ -73,7 +75,7 @@ class LibraryBuildCommand extends BaseCommand {
     try {
       await access(this.target)
 
-      rimraf.sync(this.target)
+      rimrafSync(this.target)
       // eslint-disable-next-line no-empty
     } catch {}
   }

@@ -4,25 +4,18 @@
   "license": "BSD-3-Clause",
   "workspaces": [
     "schematics/**/*",
-    "schematics-new/**/*",
     "prettier/**/*",
-    "prettier-new/**/*",
     "code/**/*",
-    "code-new/**/*",
     "webpack/*",
-    "webpack-new/*",
     "github/*",
     "config/**/*",
-    "config-new/**/*",
     "jest/*",
     "utils/*",
-    "utils-new/*",
     "yarn/**/*",
-    "yarn-new/**/*",
-    "cli/*",
-    "cli-new/*"
+    "cli/*"
   ],
   "resolutions": {
+    "@types/react": "16.14.54",
     "globby": "11",
     "ink": "patch:ink@npm%3A3.0.8#~/.yarn/patches/ink-npm-3.0.8-3a8005f59f.patch",
     "typescript": "4.6.4",
@@ -38,7 +31,7 @@
     "@atls/tools-setup-ts-execution": "workspace:0.0.1",
     "@jest/core": "^28.1.0",
     "@rushstack/eslint-patch": "1.6.0",
-    "@types/eslint": "^8.4.2",
+    "@types/eslint": "8.56.0",
     "@types/jest": "^27.5.2",
     "@types/node": "18.19.3",
     "@yarnpkg/builder": "4.0.0",
@@ -48,7 +41,7 @@
     "husky": "8.0.1",
     "readable-stream": "^3.6.0",
     "typescript": "4.6.4",
-    "webpack": "^5.73.0"
+    "webpack": "5.89.0"
   },
   "dependenciesMeta": {
     "@yarnpkg/core@4.0.0-rc.38": {

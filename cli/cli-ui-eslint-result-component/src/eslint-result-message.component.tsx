@@ -22,6 +22,7 @@ export const ESLintResultMessage: FC<ESLintResultMessageElProp> = ({
   filePath,
   message,
   source,
+  // @ts-ignore
 }) => (
   <Box flexDirection='column'>
     <Box marginBottom={1}>

@@ -12,10 +12,11 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "prettier": "^2.6.2"
+    "@types/prettier": "3.0.0",
+    "prettier": "3.1.1"
   },
   "devDependencies": {
-    "@types/node": "18.18.13"
+    "@types/node": "18.19.3"
   },
   "publishConfig": {
     "main": "dist/index.js",

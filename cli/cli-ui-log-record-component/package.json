@@ -12,22 +12,21 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-renderer": "workspace:0.0.7",
-    "@atls/cli-ui-stack-trace-component": "workspace:0.0.7",
-    "@atls/logger": "^0.0.2",
-    "string-to-color": "^2.2.2"
+    "@atls/cli-ui-renderer": "workspace:*",
+    "@atls/cli-ui-stack-trace-component": "workspace:*",
+    "@atls/logger": "0.0.2",
+    "string-to-color": "2.2.2"
   },
   "devDependencies": {
-    "@atls/logger": "^0.0.2",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^17.0.38",
-    "@types/react": "^18.0.12",
-    "ink": "^3.2.0",
-    "react": "^18.1.0",
-    "strip-ansi": "^6.0.1"
+    "@types/jest": "29.5.11",
+    "@types/node": "18.19.3",
+    "@types/react": "16.14.54",
+    "ink": "^3.0.8",
+    "react": "16.14.0",
+    "strip-ansi": "7.1.0"
   },
   "peerDependencies": {
-    "ink": "^3.0.8",
+    "ink": "*",
     "react": "*"
   },
   "publishConfig": {

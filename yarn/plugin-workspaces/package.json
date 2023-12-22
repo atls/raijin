@@ -13,19 +13,19 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/yarn-plugin-files": "workspace:0.0.1",
-    "@atls/yarn-workspace-utils": "workspace:0.0.1",
-    "clipanion": "^3.2.0-rc.14"
+    "@atls/yarn-plugin-files": "workspace:*",
+    "@atls/yarn-workspace-utils": "workspace:*",
+    "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "^4.0.0-rc.36",
-    "@yarnpkg/cli": "^4.0.0-rc.36",
-    "@yarnpkg/core": "^4.0.0-rc.36",
-    "typescript": "^4.6.2"
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "typescript": "4.6.4"
   },
   "peerDependencies": {
-    "@yarnpkg/cli": "^3.3.1",
-    "@yarnpkg/core": "^3.3.1"
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*"
   },
   "publishConfig": {
     "access": "public",

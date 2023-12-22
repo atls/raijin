@@ -1,7 +1,6 @@
 import React          from 'react'
 import { Box }        from 'ink'
 import { Text }       from 'ink'
-import { FC }         from 'react'
 
 import { StackTrace } from '@atls/cli-ui-stack-trace-component'
 
@@ -23,7 +22,7 @@ export const ErrorMessage = ({ children }) => {
   )
 }
 
-export const ErrorInfo: FC<ErrorProps> = ({ error }) => (
+export const ErrorInfo = ({ error }: ErrorProps) => (
   <Box flexDirection='column'>
     <ErrorMessage>{error.message}</ErrorMessage>
     {error.stack && (

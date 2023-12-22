@@ -8,19 +8,19 @@
   ],
   "scripts": {
     "build": "yarn library build",
-    "build:worker": "rollup -c",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@atls/config-prettier": "workspace:*",
-    "@atls/prettier-plugin": "workspace:0.0.7",
-    "globby": "^11.0.4",
-    "ignore": "^5.2.0",
-    "prettier": "^2.6.2"
+    "@atls/prettier-plugin": "workspace:*",
+    "globby": "11.1.0",
+    "ignore": "5.2.0",
+    "prettier": "3.1.1"
   },
   "devDependencies": {
-    "@types/node": "^17.0.38"
+    "@types/node": "18.19.3",
+    "@types/prettier": "3.0.0"
   },
   "publishConfig": {
     "main": "dist/index.js",

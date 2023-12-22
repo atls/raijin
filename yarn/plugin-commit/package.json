@@ -13,27 +13,29 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-git-commit-component": "workspace:0.0.8",
-    "@atls/code-commit": "workspace:0.0.7",
-    "@yarnpkg/libui": "^3.0.0-rc.36",
-    "clipanion": "^3.2.0-rc.14",
-    "commitizen": "^4.2.4",
-    "force-stdin-tty": "^0.0.1",
-    "ink": "^3.2.0",
-    "lint-staged": "^11.2.6",
-    "react": "^18.1.0",
-    "word-wrap": "^1.2.3"
+    "@atls/cli-ui-git-commit-component": "workspace:*",
+    "@atls/code-commit": "workspace:*",
+    "@yarnpkg/libui": "3.0.0",
+    "clipanion": "4.0.0-rc.2",
+    "commitizen": "4.3.0",
+    "force-stdin-tty": "0.0.1",
+    "ink": "^3.0.8",
+    "lint-staged": "11.2.6",
+    "react": "16",
+    "react-devtools-core": "4.28.5",
+    "word-wrap": "1.2.5"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "^4.0.0-rc.36",
-    "@yarnpkg/cli": "^4.0.0-rc.36",
-    "@yarnpkg/core": "^4.0.0-rc.36",
-    "@yarnpkg/fslib": "^3.0.0-rc.36"
+    "@types/react": "16.14.54",
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "@yarnpkg/fslib": "3.0.1"
   },
   "peerDependencies": {
-    "@yarnpkg/cli": "^3.2.0-rc.8",
-    "@yarnpkg/core": "^3.2.0-rc.8",
-    "@yarnpkg/fslib": "^2.6.1-rc.3"
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*",
+    "@yarnpkg/fslib": "*"
   },
   "publishConfig": {
     "access": "public",

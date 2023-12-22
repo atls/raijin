@@ -1,6 +1,5 @@
 import React    from 'react'
 import { Text } from 'ink'
-import { FC }   from 'react'
 
 const colors = {
   TRACE: 'gray',
@@ -17,7 +16,7 @@ export interface LogLevelProps {
   children: string
 }
 
-export const LogSeverity: FC<LogLevelProps> = ({ children }) => (
+export const LogSeverity = ({ children }: LogLevelProps) => (
   <Text color={color(children)} dimColor>
     ●
   </Text>

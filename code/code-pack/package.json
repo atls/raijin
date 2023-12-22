@@ -12,13 +12,13 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@actions/github": "^5.0.3",
-    "@iarna/toml": "^2.2.5",
-    "@yarnpkg/core": "^4.0.0-rc.36",
-    "@yarnpkg/fslib": "^3.0.0-rc.36"
+    "@actions/github": "6.0.0",
+    "@iarna/toml": "3.0.0",
+    "@yarnpkg/core": "4.0.2",
+    "@yarnpkg/fslib": "3.0.1"
   },
   "devDependencies": {
-    "@types/node": "^17.0.38"
+    "@types/node": "18.19.3"
   },
   "publishConfig": {
     "main": "dist/index.js",

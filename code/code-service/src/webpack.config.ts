@@ -1,99 +1,38 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { readFile }                   from 'node:fs/promises'
 import { join }                       from 'node:path'
 
-import Config                         from 'webpack-chain'
 import fg                             from 'fast-glob'
 import findUp                         from 'find-up'
-import { HotModuleReplacementPlugin } from 'webpack'
 import { Configuration }              from 'webpack'
+import { WebpackPluginInstance }      from 'webpack'
+import { HotModuleReplacementPlugin } from 'webpack'
 
-import tsconfig                       from '@atls/config-typescript'
+import { tsConfig }                   from '@atls/config-typescript'
 
 import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals'
 import { UNUSED_EXTERNALS }           from './webpack.externals'
-
-export type WebpackEnvironment = 'production' | 'development'
+import { WebpackEnvironment }         from './webpack.interfaces'
 
 export class WebpackConfig {
   constructor(private readonly cwd: string) {}
 
-  async build(
-    environment: WebpackEnvironment = 'production',
-    plugins: Array<any> = []
-  ): Promise<Configuration> {
-    const config = new Config()
+  async getWorkspaceExternals(): Promise<Set<string>> {
+    try {
+      const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
 
-    this.applyCommon(config, environment)
-    this.applyPlugins(config, environment)
-    this.applyModules(config)
+      const { externalDependencies = {} } = JSON.parse(content)
 
-    config.externals(await this.getExternals())
-
-    plugins.forEach((plugin) => {
-      config.plugin(plugin.name).use(plugin.use, plugin.args)
-    })
-
-    return config.toConfig()
-  }
-
-  private applyCommon(config: Config, environment: WebpackEnvironment) {
-    config
-      .mode(environment)
-      .bail(environment === 'production')
-      .target('async-node')
-      .optimization.minimize(false)
-
-    config.node.set('__dirname', false).set('__filename', false)
-
-    config.entry('index').add(join(this.cwd, 'src/index'))
-
-    config.output.path(join(this.cwd, 'dist')).filename('[name].js')
-
-    config.resolve.extensions.add('.tsx').add('.ts').add('.js')
-
-    config.devtool(
-      environment === 'production' ? 'source-map' : ('eval-cheap-module-source-map' as any)
-    )
-  }
-
-  private applyPlugins(config: Config, environment: WebpackEnvironment) {
-    config.when(environment === 'development', () => {
-      config.plugin('hot').use(HotModuleReplacementPlugin)
-    })
-  }
-
-  private applyModules(config: Config) {
-    config.module
-      .rule('ts')
-      .test(/.tsx?$/)
-      .use('ts')
-      .loader(require.resolve('ts-loader'))
-      .options({
-        transpileOnly: true,
-        experimentalWatchApi: true,
-        onlyCompileBundledFiles: true,
-        compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
-      })
-
-    config.module
-      .rule('protos')
-      .test(/\.proto$/)
-      .use('proto')
-      .loader(require.resolve('@atls/webpack-proto-imports-loader'))
-
-    config.module
-      .rule('fonts')
-      .test(/\.(woff|woff2|eot|ttf|otf)$/i)
-      .use('file-loader')
-      .loader(require.resolve('file-loader'))
+      return new Set(Object.keys(externalDependencies))
+    } catch {
+      return Promise.resolve(new Set())
+    }
   }
 
   async getUnpluggedDependencies(): Promise<Set<string>> {
     const yarnFolder = await findUp('.yarn')
 
-    if (!yarnFolder) {
-      return Promise.resolve(new Set())
-    }
+    if (!yarnFolder) return Promise.resolve(new Set())
 
     const pnpUnpluggedFolder = join(yarnFolder, 'unplugged')
     const dependenciesNames = new Set<string>()
@@ -119,18 +58,6 @@ export class WebpackConfig {
     return dependenciesNames
   }
 
-  async getWorkspaceExternals(): Promise<Set<string>> {
-    try {
-      const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-
-      const { externalDependencies = {} } = JSON.parse(content)
-
-      return new Set(Object.keys(externalDependencies))
-    } catch {
-      return Promise.resolve(new Set())
-    }
-  }
-
   async getExternals(): Promise<{ [key: string]: string }> {
     const workspaceExternals: Array<string> = Array.from(await this.getWorkspaceExternals())
 
@@ -145,5 +72,52 @@ export class WebpackConfig {
       }),
       {}
     )
+  }
+
+  async build(
+    environment: WebpackEnvironment = WebpackEnvironment.prod,
+    plugins: WebpackPluginInstance[] = []
+  ): Promise<Configuration> {
+    return {
+      mode: environment,
+      bail: environment === WebpackEnvironment.prod,
+      externals: await this.getExternals(),
+      target: 'async-node',
+      optimization: { minimize: false },
+      plugins: [
+        environment === WebpackEnvironment.dev ? new HotModuleReplacementPlugin() : () => {},
+        ...plugins,
+      ],
+      entry: join(this.cwd, 'src/index'),
+      node: { __dirname: false, __filename: false },
+      output: { path: join(this.cwd, 'dist'), filename: '[name].js' },
+      resolve: { extensions: ['.tsx', '.ts', '.js'] },
+      devtool:
+        environment === WebpackEnvironment.prod ? 'source-map' : 'eval-cheap-module-source-map',
+      module: {
+        rules: [
+          {
+            test: /.tsx?$/,
+            use: {
+              loader: require.resolve('ts-loader'),
+              options: {
+                transpileOnly: true,
+                experimentalWatchApi: true,
+                onlyCompileBundledFiles: true,
+                compilerOptions: { ...tsConfig.compilerOptions, sourceMap: true },
+              },
+            },
+          },
+          { test: /\.proto$/, use: require.resolve('@atls/webpack-proto-imports-loader') },
+          {
+            test: /\.css$/i,
+            use: [require.resolve('style-loader'), require.resolve('css-loader')],
+          },
+          { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
+          { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
+          { test: /\.ya?ml$/, use: require.resolve('yaml-loader') },
+        ],
+      },
+    }
   }
 }
