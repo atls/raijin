@@ -26,7 +26,7 @@ export const generateLockfile = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const filename = project.configuration.get('lockfileFilename') as Filename
+  const filename = 'yarn.lock' as Filename
   const dest = ppath.join(destination, filename)
 
   report.reportInfo(null, filename)
