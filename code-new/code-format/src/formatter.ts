@@ -1,21 +1,23 @@
-/* eslint-disable no-await-in-loop */
-import prettierConfig from '@atls/config-prettier-new'
-import * as plugin    from '../../../prettier-new/plugin-new'
-
-import globby  from 'globby'
-import ignorer from 'ignore'
-
-import { readFileSync }  from 'node:fs'
-import { writeFileSync }  from 'node:fs'
-import { join }      from 'node:path'
-import { relative }  from 'node:path'
 import * as babel         from 'prettier/plugins/babel'
 import * as estree        from 'prettier/plugins/estree'
 import * as graphql       from 'prettier/plugins/graphql'
 import * as markdown      from 'prettier/plugins/markdown'
 import * as typescript    from 'prettier/plugins/typescript'
 import * as yaml          from 'prettier/plugins/yaml'
-import { format }    from 'prettier/standalone'
+
+import * as plugin        from '../../../prettier-new/plugin-new'
+
+import { readFileSync }   from 'node:fs'
+import { writeFileSync }  from 'node:fs'
+import { join }           from 'node:path'
+import { relative }       from 'node:path'
+
+import globby             from 'globby'
+import ignorer            from 'ignore'
+import { format }         from 'prettier/standalone'
+
+/* eslint-disable no-await-in-loop */
+import prettierConfig     from '@atls/config-prettier-new'
 
 import { ignore }         from './formatter.patterns'
 import { createPatterns } from './formatter.patterns'

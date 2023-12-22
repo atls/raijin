@@ -17,12 +17,12 @@
     "ink": "^3.0.8",
     "react": "16.14.0"
   },
+  "devDependencies": {
+    "@types/react": "16.14.54"
+  },
   "publishConfig": {
     "access": "public",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts"
-  },
-  "devDependencies": {
-    "@types/react": "16.14.54"
   }
 }

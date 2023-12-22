@@ -1,8 +1,8 @@
+import { Filename }    from '@yarnpkg/fslib'
 import { stringify }   from '@iarna/toml'
 import { execUtils }   from '@yarnpkg/core'
 import { xfs }         from '@yarnpkg/fslib'
 import { ppath }       from '@yarnpkg/fslib'
-import { Filename }  from '@yarnpkg/fslib'
 
 import { PackOptions } from './pack.interfaces'
 import { PackOutputs } from './pack.interfaces'

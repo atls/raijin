@@ -7,7 +7,7 @@ import deepmerge                from 'deepmerge'
 import ts                       from 'typescript'
 import { join }                 from 'path'
 
-import { tsConfig }                 from '@atls/config-typescript-new'
+import { tsConfig }             from '@atls/config-typescript-new'
 
 class TypeScript {
   constructor(private readonly cwd: string) {}

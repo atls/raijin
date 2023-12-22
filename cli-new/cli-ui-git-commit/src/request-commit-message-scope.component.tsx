@@ -8,10 +8,10 @@ import { useState }              from 'react'
 import { useMemo }               from 'react'
 import { useCallback }           from 'react'
 
-import { COMMIT_SCOPE_ENUM } from '@atls/code-commit'
+import { COMMIT_SCOPE_ENUM }     from '@atls/code-commit'
 
-import { IndicatorComponent } from './select-indicator.component'
-import { ItemComponent }      from './select-item.component'
+import { IndicatorComponent }    from './select-indicator.component'
+import { ItemComponent }         from './select-item.component'
 
 const scopes = Object.keys(COMMIT_SCOPE_ENUM).map((key) => ({
   label: COMMIT_SCOPE_ENUM[key].description,

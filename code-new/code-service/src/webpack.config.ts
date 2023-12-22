@@ -1,16 +1,17 @@
-import { tsConfig } from '@atls/config-typescript-new'
+import { readFile }                   from 'node:fs/promises'
+import { join }                       from 'node:path'
 
 import fg                             from 'fast-glob'
 import findUp                         from 'find-up'
-import { readFile }                   from 'node:fs/promises'
-import { join }                       from 'node:path'
 import { Configuration }              from 'webpack'
 import { WebpackPluginInstance }      from 'webpack'
 import { HotModuleReplacementPlugin } from 'webpack'
 
-import { FORCE_UNPLUGGED_PACKAGES } from './webpack.externals'
-import { UNUSED_EXTERNALS }         from './webpack.externals'
-import { WebpackEnvironment }       from './webpack.interfaces'
+import { tsConfig }                   from '@atls/config-typescript-new'
+
+import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals'
+import { UNUSED_EXTERNALS }           from './webpack.externals'
+import { WebpackEnvironment }         from './webpack.interfaces'
 
 export class WebpackConfig {
   constructor(private readonly cwd: string) {}
@@ -49,14 +50,12 @@ export class WebpackConfig {
             if (name && !FORCE_UNPLUGGED_PACKAGES.has(name)) {
               dependenciesNames.add(name)
             }
-          } catch {
-          } // eslint-disable-line
-        }),
+          } catch {} // eslint-disable-line
+        })
     )
 
     return dependenciesNames
   }
-
 
   async getExternals(): Promise<{ [key: string]: string }> {
     const workspaceExternals: Array<string> = Array.from(await this.getWorkspaceExternals())
@@ -64,37 +63,43 @@ export class WebpackConfig {
     const unpluggedExternals: Array<string> = Array.from(await this.getUnpluggedDependencies())
 
     return Array.from(
-      new Set([...workspaceExternals, ...unpluggedExternals, ...UNUSED_EXTERNALS]),
+      new Set([...workspaceExternals, ...unpluggedExternals, ...UNUSED_EXTERNALS])
     ).reduce(
       (result, dependency) => ({
         ...result,
         [dependency]: `commonjs2 ${dependency}`,
       }),
-      {},
+      {}
     )
   }
 
   async build(
     environment: WebpackEnvironment = WebpackEnvironment.prod,
-    plugins: WebpackPluginInstance[] = [],
+    plugins: WebpackPluginInstance[] = []
   ): Promise<Configuration> {
-    return ({
+    return {
       mode: environment,
       bail: environment === WebpackEnvironment.prod,
       externals: await this.getExternals(),
       target: 'async-node',
       optimization: { minimize: false },
-      plugins: [environment === WebpackEnvironment.dev ? new HotModuleReplacementPlugin() : () => {}, ...plugins],
+      plugins: [
+        environment === WebpackEnvironment.dev ? new HotModuleReplacementPlugin() : () => {},
+        ...plugins,
+      ],
       entry: join(this.cwd, 'src/index'),
       node: { __dirname: false, __filename: false },
       output: { path: join(this.cwd, 'dist'), filename: '[name].js' },
       resolve: { extensions: ['.tsx', '.ts', '.js'] },
-      devtool: environment === WebpackEnvironment.prod ? 'source-map' : 'eval-cheap-module-source-map',
+      devtool:
+        environment === WebpackEnvironment.prod ? 'source-map' : 'eval-cheap-module-source-map',
       module: {
         rules: [
           {
-            test: /.tsx?$/, use: {
-              loader: require.resolve('ts-loader'), options: {
+            test: /.tsx?$/,
+            use: {
+              loader: require.resolve('ts-loader'),
+              options: {
                 transpileOnly: true,
                 experimentalWatchApi: true,
                 onlyCompileBundledFiles: true,
@@ -104,13 +109,14 @@ export class WebpackConfig {
           },
           { test: /\.proto$/, use: require.resolve('@atls/webpack-proto-imports-loader-new') },
           {
-            test: /\.css$/i, use: [require.resolve('style-loader'), require.resolve('css-loader')],
+            test: /\.css$/i,
+            use: [require.resolve('style-loader'), require.resolve('css-loader')],
           },
           { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
           { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
           { test: /\.ya?ml$/, use: require.resolve('yaml-loader') },
         ],
       },
-    })
+    }
   }
 }

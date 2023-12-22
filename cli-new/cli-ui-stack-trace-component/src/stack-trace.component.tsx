@@ -1,10 +1,10 @@
 import { parse }          from '@atls/stack-trace'
-import { FC }             from 'react'
 
 import React              from 'react'
 import { Text }           from 'ink'
 import { Box }            from 'ink'
 import { Spacer }         from 'ink'
+import { FC }             from 'react'
 import { useMemo }        from 'react'
 
 import { SourcePreview }  from '@atls/cli-ui-source-component-new'

@@ -35,8 +35,7 @@ describe('schematics', () => {
     })
 
     it('should remove run from version workflow', async () => {
-      const result = await schematicRunner
-        .runSchematic('library-workflows-remove-run', {}, tree)
+      const result = await schematicRunner.runSchematic('library-workflows-remove-run', {}, tree)
 
       expect(result.read('.github/workflows/version.yaml')!.toString()).toContain(
         'yarn workspaces changed foreach --no-private --verbose version patch --deferred'
@@ -44,8 +43,7 @@ describe('schematics', () => {
     })
 
     it('should remove run from publish workflow', async () => {
-      const result = await schematicRunner
-        .runSchematic('library-workflows-remove-run', {}, tree)
+      const result = await schematicRunner.runSchematic('library-workflows-remove-run', {}, tree)
 
       expect(result.read('.github/workflows/publish.yaml')!.toString()).toContain(
         'yarn workspaces changed foreach --verbose --topological --no-private npm publish --access public'

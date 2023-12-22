@@ -1,6 +1,6 @@
-import { StackFrame } from '@atls/stack-trace'
+import { StackFrame }   from '@atls/stack-trace'
 
-import { readFileSync }             from 'fs'
+import { readFileSync } from 'fs'
 
 export const getFrameSource = (frame: StackFrame): string | null => {
   if (frame.sourceMap) {

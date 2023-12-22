@@ -18,6 +18,7 @@ import { ParserOptions }      from '@commitlint/types'
 import { buildCommitMesage }  from '@commitlint/lint/lib/commit-message'
 
 import { sync }               from 'conventional-commits-parser'
+
 import { parserOptions }      from './parser-options'
 
 export async function parse(

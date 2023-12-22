@@ -19,11 +19,7 @@ export interface TypeScriptDiagnosticProps {
   start?: number
 }
 
-export const TypeScriptDiagnostic = ({
-  start,
-  file,
-  messageText,
-}: TypeScriptDiagnosticProps) => {
+export const TypeScriptDiagnostic = ({ start, file, messageText }: TypeScriptDiagnosticProps) => {
   const filepath = useMemo(() => {
     if (!file) {
       return null

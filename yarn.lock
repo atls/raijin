@@ -1220,9 +1220,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/config-eslint-new@workspace:*, @atls/config-eslint-new@workspace:config-new/eslint-new":
+"@atls/config-eslint-new@workspace:*, @atls/config-eslint-new@workspace:config-new/eslint":
   version: 0.0.0-use.local
-  resolution: "@atls/config-eslint-new@workspace:config-new/eslint-new"
+  resolution: "@atls/config-eslint-new@workspace:config-new/eslint"
   dependencies:
     "@types/eslint": "npm:8.56.0"
     "@types/node": "npm:18.19.3"
@@ -1263,9 +1263,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/config-jest-new@workspace:*, @atls/config-jest-new@workspace:config-new/jest-new":
+"@atls/config-jest-new@workspace:*, @atls/config-jest-new@workspace:config-new/jest":
   version: 0.0.0-use.local
-  resolution: "@atls/config-jest-new@workspace:config-new/jest-new"
+  resolution: "@atls/config-jest-new@workspace:config-new/jest"
   dependencies:
     "@atls/config-typescript-new": "workspace:*"
     "@atls/jest-static-stubs": "workspace:*"
@@ -1293,9 +1293,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/config-prettier-new@workspace:*, @atls/config-prettier-new@workspace:config-new/prettier-new":
+"@atls/config-prettier-new@workspace:*, @atls/config-prettier-new@workspace:config-new/prettier":
   version: 0.0.0-use.local
-  resolution: "@atls/config-prettier-new@workspace:config-new/prettier-new"
+  resolution: "@atls/config-prettier-new@workspace:config-new/prettier"
   dependencies:
     "@types/node": "npm:18.19.3"
     "@types/prettier": "npm:3.0.0"
@@ -1312,9 +1312,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/config-typescript-new@workspace:*, @atls/config-typescript-new@workspace:config-new/typescript-new":
+"@atls/config-typescript-new@workspace:*, @atls/config-typescript-new@workspace:config-new/typescript":
   version: 0.0.0-use.local
-  resolution: "@atls/config-typescript-new@workspace:config-new/typescript-new"
+  resolution: "@atls/config-typescript-new@workspace:config-new/typescript"
   dependencies:
     typescript: "npm:4.6.4"
   languageName: unknown
@@ -1343,9 +1343,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/prettier-plugin-new@workspace:*, @atls/prettier-plugin-new@workspace:prettier-new/plugin-new":
+"@atls/prettier-plugin-new@workspace:*, @atls/prettier-plugin-new@workspace:prettier-new/plugin":
   version: 0.0.0-use.local
-  resolution: "@atls/prettier-plugin-new@workspace:prettier-new/plugin-new"
+  resolution: "@atls/prettier-plugin-new@workspace:prettier-new/plugin"
   dependencies:
     "@atls/config-prettier-new": "workspace:*"
     "@types/node": "npm:18.19.3"
@@ -1566,9 +1566,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-cli-new@workspace:yarn-new/cli-new":
+"@atls/yarn-cli-new@workspace:yarn-new/cli":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-cli-new@workspace:yarn-new/cli-new"
+  resolution: "@atls/yarn-cli-new@workspace:yarn-new/cli"
   dependencies:
     "@atls/tools-setup-ts-execution-new": "workspace:*"
     "@atls/yarn-plugin-badges-new": "workspace:*"
@@ -1679,9 +1679,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-pack-utils-new@workspace:*, @atls/yarn-pack-utils-new@workspace:yarn-new/pack-utils-new":
+"@atls/yarn-pack-utils-new@workspace:*, @atls/yarn-pack-utils-new@workspace:yarn-new/pack-utils":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-pack-utils-new@workspace:yarn-new/pack-utils-new"
+  resolution: "@atls/yarn-pack-utils-new@workspace:yarn-new/pack-utils"
   dependencies:
     "@types/semver": "npm:7.5.6"
     "@yarnpkg/cli": "npm:4.0.2"
@@ -1710,9 +1710,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-badges-new@workspace:*, @atls/yarn-plugin-badges-new@workspace:yarn-new/plugin-badges-new":
+"@atls/yarn-plugin-badges-new@workspace:*, @atls/yarn-plugin-badges-new@workspace:yarn-new/plugin-badges":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-badges-new@workspace:yarn-new/plugin-badges-new"
+  resolution: "@atls/yarn-plugin-badges-new@workspace:yarn-new/plugin-badges"
   dependencies:
     "@atls/yarn-run-utils-new": "workspace:*"
     "@types/child-process-promise": "npm:2.2.6"
@@ -1742,9 +1742,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-check-new@workspace:*, @atls/yarn-plugin-check-new@workspace:yarn-new/plugin-check-new":
+"@atls/yarn-plugin-check-new@workspace:*, @atls/yarn-plugin-check-new@workspace:yarn-new/plugin-check":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-check-new@workspace:yarn-new/plugin-check-new"
+  resolution: "@atls/yarn-plugin-check-new@workspace:yarn-new/plugin-check"
   dependencies:
     "@yarnpkg/builder": "npm:4.0.0"
     "@yarnpkg/cli": "npm:4.0.2"
@@ -1768,9 +1768,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-checks-new@workspace:*, @atls/yarn-plugin-checks-new@workspace:yarn-new/plugin-checks-new":
+"@atls/yarn-plugin-checks-new@workspace:*, @atls/yarn-plugin-checks-new@workspace:yarn-new/plugin-checks":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-checks-new@workspace:yarn-new/plugin-checks-new"
+  resolution: "@atls/yarn-plugin-checks-new@workspace:yarn-new/plugin-checks"
   dependencies:
     "@actions/core": "npm:1.10.1"
     "@actions/github": "npm:6.0.0"
@@ -1839,9 +1839,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-commit-new@workspace:*, @atls/yarn-plugin-commit-new@workspace:yarn-new/plugin-commit-new":
+"@atls/yarn-plugin-commit-new@workspace:*, @atls/yarn-plugin-commit-new@workspace:yarn-new/plugin-commit":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-commit-new@workspace:yarn-new/plugin-commit-new"
+  resolution: "@atls/yarn-plugin-commit-new@workspace:yarn-new/plugin-commit"
   dependencies:
     "@atls/cli-ui-git-commit-component-new": "workspace:*"
     "@atls/code-commit-new": "workspace:*"
@@ -1891,9 +1891,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-files-new@workspace:*, @atls/yarn-plugin-files-new@workspace:yarn-new/plugin-files-new":
+"@atls/yarn-plugin-files-new@workspace:*, @atls/yarn-plugin-files-new@workspace:yarn-new/plugin-files":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-files-new@workspace:yarn-new/plugin-files-new"
+  resolution: "@atls/yarn-plugin-files-new@workspace:yarn-new/plugin-files"
   dependencies:
     "@actions/github": "npm:6.0.0"
     "@octokit/types": "npm:12.4.0"
@@ -1923,9 +1923,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-format-new@workspace:*, @atls/yarn-plugin-format-new@workspace:yarn-new/plugin-format-new":
+"@atls/yarn-plugin-format-new@workspace:*, @atls/yarn-plugin-format-new@workspace:yarn-new/plugin-format":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-format-new@workspace:yarn-new/plugin-format-new"
+  resolution: "@atls/yarn-plugin-format-new@workspace:yarn-new/plugin-format"
   dependencies:
     "@atls/cli-ui-error-info-component-new": "workspace:*"
     "@atls/cli-ui-renderer-new": "workspace:*"
@@ -1964,9 +1964,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-image-new@workspace:*, @atls/yarn-plugin-image-new@workspace:yarn-new/plugin-image-new":
+"@atls/yarn-plugin-image-new@workspace:*, @atls/yarn-plugin-image-new@workspace:yarn-new/plugin-image":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-image-new@workspace:yarn-new/plugin-image-new"
+  resolution: "@atls/yarn-plugin-image-new@workspace:yarn-new/plugin-image"
   dependencies:
     "@atls/code-pack-new": "workspace:*"
     "@atls/yarn-pack-utils-new": "workspace:*"
@@ -2010,9 +2010,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-library-new@workspace:*, @atls/yarn-plugin-library-new@workspace:yarn-new/plugin-library-new":
+"@atls/yarn-plugin-library-new@workspace:*, @atls/yarn-plugin-library-new@workspace:yarn-new/plugin-library":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-library-new@workspace:yarn-new/plugin-library-new"
+  resolution: "@atls/yarn-plugin-library-new@workspace:yarn-new/plugin-library"
   dependencies:
     "@atls/cli-ui-error-info-component-new": "workspace:*"
     "@atls/cli-ui-log-record-component-new": "workspace:*"
@@ -2058,9 +2058,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-lint-new@workspace:*, @atls/yarn-plugin-lint-new@workspace:yarn-new/plugin-lint-new":
+"@atls/yarn-plugin-lint-new@workspace:*, @atls/yarn-plugin-lint-new@workspace:yarn-new/plugin-lint":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-lint-new@workspace:yarn-new/plugin-lint-new"
+  resolution: "@atls/yarn-plugin-lint-new@workspace:yarn-new/plugin-lint"
   dependencies:
     "@atls/cli-ui-error-info-component-new": "workspace:*"
     "@atls/cli-ui-eslint-result-component-new": "workspace:*"
@@ -2101,9 +2101,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-schematics-new@workspace:*, @atls/yarn-plugin-schematics-new@workspace:yarn-new/plugin-schematics-new":
+"@atls/yarn-plugin-schematics-new@workspace:*, @atls/yarn-plugin-schematics-new@workspace:yarn-new/plugin-schematics":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-schematics-new@workspace:yarn-new/plugin-schematics-new"
+  resolution: "@atls/yarn-plugin-schematics-new@workspace:yarn-new/plugin-schematics"
   dependencies:
     "@atls/cli-ui-error-info-component-new": "workspace:*"
     "@atls/cli-ui-parts-new": "workspace:*"
@@ -2164,9 +2164,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-service-new@workspace:*, @atls/yarn-plugin-service-new@workspace:yarn-new/plugin-service-new":
+"@atls/yarn-plugin-service-new@workspace:*, @atls/yarn-plugin-service-new@workspace:yarn-new/plugin-service":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-service-new@workspace:yarn-new/plugin-service-new"
+  resolution: "@atls/yarn-plugin-service-new@workspace:yarn-new/plugin-service"
   dependencies:
     "@atls/cli-ui-error-info-component-new": "workspace:*"
     "@atls/cli-ui-log-record-component-new": "workspace:*"
@@ -2211,9 +2211,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-test-new@workspace:*, @atls/yarn-plugin-test-new@workspace:yarn-new/plugin-test-new":
+"@atls/yarn-plugin-test-new@workspace:*, @atls/yarn-plugin-test-new@workspace:yarn-new/plugin-test":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-test-new@workspace:yarn-new/plugin-test-new"
+  resolution: "@atls/yarn-plugin-test-new@workspace:yarn-new/plugin-test"
   dependencies:
     "@atls/code-test-worker": "workspace:*"
     "@yarnpkg/builder": "npm:4.0.0"
@@ -2243,9 +2243,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-typescript-new@workspace:*, @atls/yarn-plugin-typescript-new@workspace:yarn-new/plugin-typescript-new":
+"@atls/yarn-plugin-typescript-new@workspace:*, @atls/yarn-plugin-typescript-new@workspace:yarn-new/plugin-typescript":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-typescript-new@workspace:yarn-new/plugin-typescript-new"
+  resolution: "@atls/yarn-plugin-typescript-new@workspace:yarn-new/plugin-typescript"
   dependencies:
     "@atls/cli-ui-error-info-component-new": "workspace:*"
     "@atls/cli-ui-renderer-new": "workspace:*"
@@ -2286,9 +2286,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-workspaces-new@workspace:*, @atls/yarn-plugin-workspaces-new@workspace:yarn-new/plugin-workspaces-new":
+"@atls/yarn-plugin-workspaces-new@workspace:*, @atls/yarn-plugin-workspaces-new@workspace:yarn-new/plugin-workspaces":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-workspaces-new@workspace:yarn-new/plugin-workspaces-new"
+  resolution: "@atls/yarn-plugin-workspaces-new@workspace:yarn-new/plugin-workspaces"
   dependencies:
     "@atls/yarn-plugin-files-new": "workspace:*"
     "@atls/yarn-workspace-utils-new": "workspace:*"
@@ -2320,9 +2320,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-run-utils-new@workspace:*, @atls/yarn-run-utils-new@workspace:yarn-new/run-utils-new":
+"@atls/yarn-run-utils-new@workspace:*, @atls/yarn-run-utils-new@workspace:yarn-new/run-utils":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-run-utils-new@workspace:yarn-new/run-utils-new"
+  resolution: "@atls/yarn-run-utils-new@workspace:yarn-new/run-utils"
   dependencies:
     "@yarnpkg/core": "npm:4.0.2"
   languageName: unknown
@@ -2336,9 +2336,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-workspace-utils-new@workspace:*, @atls/yarn-workspace-utils-new@workspace:yarn-new/workspace-utils-new":
+"@atls/yarn-workspace-utils-new@workspace:*, @atls/yarn-workspace-utils-new@workspace:yarn-new/workspace-utils":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-workspace-utils-new@workspace:yarn-new/workspace-utils-new"
+  resolution: "@atls/yarn-workspace-utils-new@workspace:yarn-new/workspace-utils"
   dependencies:
     "@yarnpkg/core": "npm:4.0.2"
   languageName: unknown

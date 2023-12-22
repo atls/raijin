@@ -1,10 +1,10 @@
 import React            from 'react'
 import { EOL }          from 'os'
 import { Transform }    from 'stream'
+import { render }       from 'ink'
 
 import { LogRecord }    from '@atls/cli-ui-log-record-component-new'
 import { renderStatic } from '@atls/cli-ui-renderer-new'
-import { render } from 'ink'
 
 export class PrettyLogsTransform extends Transform {
   // eslint-disable-next-line consistent-return

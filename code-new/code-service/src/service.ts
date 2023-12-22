@@ -1,11 +1,13 @@
-import { StartServerPlugin }     from '@atls/webpack-start-server-plugin-new'
 import { PassThrough }           from 'node:stream'
-import { WebpackPluginInstance } from 'webpack'
+
 import webpack                   from 'webpack'
+import { WebpackPluginInstance } from 'webpack'
 import { Watching }              from 'webpack'
 
-import { WebpackConfig }      from './webpack.config'
-import { WebpackEnvironment } from './webpack.interfaces'
+import { StartServerPlugin }     from '@atls/webpack-start-server-plugin-new'
+
+import { WebpackConfig }         from './webpack.config'
+import { WebpackEnvironment }    from './webpack.interfaces'
 
 export interface ServiceBuildResultMessage {
   message: string

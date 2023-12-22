@@ -6,7 +6,7 @@ import { Box }                from 'ink'
 import { useState }           from 'react'
 import { useMemo }            from 'react'
 
-import { COMMIT_TYPE_ENUM } from '@atls/code-commit'
+import { COMMIT_TYPE_ENUM }   from '@atls/code-commit'
 
 import { IndicatorComponent } from './select-indicator.component'
 import { ItemComponent }      from './select-item.component'

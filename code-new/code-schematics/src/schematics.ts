@@ -6,6 +6,7 @@ import { NodeJsSyncHost }      from '@angular-devkit/core/node'
 import { DryRunEvent }         from '@angular-devkit/schematics'
 import { NodeWorkflow }        from '@angular-devkit/schematics/tools'
 import { virtualFs }           from '@angular-devkit/core'
+
 import { lastValueFrom }       from 'rxjs'
 
 import { MigrationEngineHost } from './migration-engine.host'
@@ -113,15 +114,17 @@ export class Schematics {
       //   })
       //   .toPromise()
       // eslint-disable-next-line no-await-in-loop
-      await lastValueFrom(workflow.execute({
-        collection: migration.collection,
-        schematic: migration.schematic,
-        debug: false,
-        options: {
-          ...options,
-          cwd: this.cwd,
-        },
-      }))
+      await lastValueFrom(
+        workflow.execute({
+          collection: migration.collection,
+          schematic: migration.schematic,
+          debug: false,
+          options: {
+            ...options,
+            cwd: this.cwd,
+          },
+        })
+      )
     }
 
     return events

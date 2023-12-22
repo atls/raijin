@@ -1,16 +1,17 @@
-import { eslintFlatConfig } from '@atls/config-eslint-new'
+import { readFile }           from 'node:fs/promises'
 
 import type { ESLint }        from 'eslint'
+
+import globby                 from 'globby'
+import ignorer                from 'ignore'
 import { Linter as ESLinter } from 'eslint'
+import { join }               from 'path'
+import { relative }           from 'path'
 
-import globby       from 'globby'
-import ignorer      from 'ignore'
-import { readFile } from 'node:fs/promises'
-import { join }     from 'path'
-import { relative } from 'path'
+import { eslintFlatConfig }   from '@atls/config-eslint-new'
 
-import { ignore }         from './linter.patterns'
-import { createPatterns } from './linter.patterns'
+import { ignore }             from './linter.patterns'
+import { createPatterns }     from './linter.patterns'
 
 export class Linter {
   constructor(private readonly cwd: string) {}
@@ -24,9 +25,12 @@ export class Linter {
   }
 
   async lintProject(): Promise<Array<ESLint.LintResult>> {
-    return this.lintFiles(await globby(createPatterns(this.cwd), {
-      dot: true, nodir: true,
-    } as any) as unknown as string[])
+    return this.lintFiles(
+      (await globby(createPatterns(this.cwd), {
+        dot: true,
+        nodir: true,
+      } as any)) as unknown as string[]
+    )
   }
 
   async lintFiles(files: string[] = []): Promise<Array<ESLint.LintResult>> {
@@ -56,7 +60,7 @@ export class Linter {
             fixableWarningCount: 0,
             usedDeprecatedRules: [],
           }
-        }),
+        })
     )
 
     return results
