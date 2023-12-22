@@ -921,11 +921,9 @@ __metadata:
   dependencies:
     "@atls/yarn-run-utils": "workspace:0.0.1"
     "@types/child-process-promise": "npm:^2"
-    "@types/fs-extra-promise": "npm:^1"
     "@yarnpkg/builder": "npm:^4.0.0-rc.36"
     "@yarnpkg/cli": "npm:^4.0.0-rc.36"
     "@yarnpkg/core": "npm:^4.0.0-rc.36"
-    fs-extra-promise: "npm:^1.0.1"
     typescript: "npm:^4.6.2"
   peerDependencies:
     "@yarnpkg/cli": ^3.2.0-rc.8
@@ -3623,13 +3621,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bluebird@npm:*":
-  version: 3.5.37
-  resolution: "@types/bluebird@npm:3.5.37"
-  checksum: cf183f3eb972d147488068ca07244df8ffae2f1ade0eaa978002a6af5b0b87d03f8a94ac570aa8dd8ab21d4b6578e888794991ebc030b74abdb63cb51ed45d94
-  languageName: node
-  linkType: hard
-
 "@types/cacheable-request@npm:^6.0.1":
   version: 6.0.1
   resolution: "@types/cacheable-request@npm:6.0.1"
@@ -3742,17 +3733,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/fs-extra-promise@npm:^1":
-  version: 1.0.10
-  resolution: "@types/fs-extra-promise@npm:1.0.10"
-  dependencies:
-    "@types/bluebird": "npm:*"
-    "@types/fs-extra": "npm:^4"
-    "@types/node": "npm:*"
-  checksum: bd1fb434227cc6a99a61372e78539a71cd298c267956464d1b0ccc8a49c5f9b2458c1d6f032da85a4598807bbbc92c5191e4d5b7809b0a44a446f86fd80fe31d
-  languageName: node
-  linkType: hard
-
 "@types/fs-extra@npm:^11":
   version: 11.0.1
   resolution: "@types/fs-extra@npm:11.0.1"
@@ -3760,15 +3740,6 @@ __metadata:
     "@types/jsonfile": "npm:*"
     "@types/node": "npm:*"
   checksum: aefb00f11b78b9c97987e734507f9f5d5f9713e73b3334d474e1e8248a2d55b7dbf822067e42622bb62191646c684500da182923673753baa408a21baf65e49e
-  languageName: node
-  linkType: hard
-
-"@types/fs-extra@npm:^4":
-  version: 4.0.12
-  resolution: "@types/fs-extra@npm:4.0.12"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: d21593c184032f0b5361b8c948e24b8d810d73a6e97221f27a2dcb9f7343da02ee72065b1f43d51f3d9653ed074f898ffe070d7ca6643229ec569478189e012e
   languageName: node
   linkType: hard
 
@@ -6017,7 +5988,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bluebird@npm:^3.5.0, bluebird@npm:^3.5.5":
+"bluebird@npm:^3.5.5":
   version: 3.7.2
   resolution: "bluebird@npm:3.7.2"
   checksum: 42df9603102ffbb71c0bc66056a66dce510ba136ab746fb2f783daa71843f14b6f22c2897cb224b556cc5546b9a524c224f6b1505e074310273a5ee5b222e072
@@ -9097,16 +9068,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra-promise@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "fs-extra-promise@npm:1.0.1"
-  dependencies:
-    bluebird: "npm:^3.5.0"
-    fs-extra: "npm:^2.1.2"
-  checksum: a05931a4cf057adcaddca71238d0a9da1f80be036e546e609114b587f4ad667c981ca8e9e846fcd402cbd8f151226675c1c4c1870cf611ca386bd098827e5d46
-  languageName: node
-  linkType: hard
-
 "fs-extra@npm:8.1.0":
   version: 8.1.0
   resolution: "fs-extra@npm:8.1.0"
@@ -9137,16 +9098,6 @@ __metadata:
     jsonfile: "npm:^6.0.1"
     universalify: "npm:^2.0.0"
   checksum: 20d9909070e7d9754cb651af067ae4343b5fc9b05fa9b8765a9348dab7dfa9b78c0f1ebe791774f06d4cca4231f4be9889a916d0457e8e87097a613e6bdd1746
-  languageName: node
-  linkType: hard
-
-"fs-extra@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "fs-extra@npm:2.1.2"
-  dependencies:
-    graceful-fs: "npm:^4.1.2"
-    jsonfile: "npm:^2.1.0"
-  checksum: 015f2e1b535ecde08e7928e0d9fb9fbe6ac1ac6d8a1c9bb8aa4effc90ba777f61a021eb4049b32e7467e56ac61af839cbccdcf7f0b75ebee41d0a6b8b4cfffba
   languageName: node
   linkType: hard
 
@@ -11579,18 +11530,6 @@ __metadata:
   version: 3.0.0
   resolution: "jsonc-parser@npm:3.0.0"
   checksum: f8b095759d1d46c45855094329eaab7809db309d9e8ff04c8a099959698296f6fbe44a4763277c2b34a702b3722d78b13b72b320600af9b4abf990b8cd001418
-  languageName: node
-  linkType: hard
-
-"jsonfile@npm:^2.1.0":
-  version: 2.4.0
-  resolution: "jsonfile@npm:2.4.0"
-  dependencies:
-    graceful-fs: "npm:^4.1.6"
-  dependenciesMeta:
-    graceful-fs:
-      optional: true
-  checksum: eb9be3becafbc8126bab889ad8fc163713c8c675003d8f70fd7f253652d7cfb4cf77f0f5534e7ca3871bb5d7ae503e9ccd0f4ab9e1687b65052b8438ab240283
   languageName: node
   linkType: hard
 

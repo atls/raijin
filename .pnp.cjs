@@ -1640,13 +1640,11 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-badges", "virtual:1962692e1e5883eb32fbb54beff31f14126a9101fe2cb49a09427664a0071b3fbcaea4c0cdfc80e63aae5c81e961ae260d6936bbe51f8564db0566d0c1d822df#workspace:yarn/plugin-badges"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@types/child-process-promise", "npm:2.2.2"],\
-          ["@types/fs-extra-promise", "npm:1.0.10"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@yarnpkg/builder", "npm:4.0.0-rc.36"],\
           ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:4.0.0-rc.36"],\
           ["@yarnpkg/core", "npm:4.0.0-rc.38"],\
-          ["fs-extra-promise", "npm:1.0.1"],\
           ["typescript", "patch:typescript@npm%3A4.6.2#optional!builtin<compat/typescript>::version=4.6.2&hash=5d3a66"]\
         ],\
         "packagePeers": [\
@@ -1663,11 +1661,9 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-badges", "workspace:yarn/plugin-badges"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@types/child-process-promise", "npm:2.2.2"],\
-          ["@types/fs-extra-promise", "npm:1.0.10"],\
           ["@yarnpkg/builder", "npm:4.0.0-rc.36"],\
           ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:4.0.0-rc.36"],\
           ["@yarnpkg/core", "npm:4.0.0-rc.38"],\
-          ["fs-extra-promise", "npm:1.0.1"],\
           ["typescript", "patch:typescript@npm%3A4.6.2#optional!builtin<compat/typescript>::version=4.6.2&hash=5d3a66"]\
         ],\
         "linkType": "SOFT"\
@@ -5523,15 +5519,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@types/bluebird", [\
-      ["npm:3.5.37", {\
-        "packageLocation": "./.yarn/cache/@types-bluebird-npm-3.5.37-eef4da5e7b-cf183f3eb9.zip/node_modules/@types/bluebird/",\
-        "packageDependencies": [\
-          ["@types/bluebird", "npm:3.5.37"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@types/cacheable-request", [\
       ["npm:6.0.1", {\
         "packageLocation": "./.yarn/cache/@types-cacheable-request-npm-6.0.1-067bf7714d-6a0dfbdae2.zip/node_modules/@types/cacheable-request/",\
@@ -5659,26 +5646,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/fs-extra", "npm:11.0.1"],\
           ["@types/jsonfile", "npm:6.1.1"],\
-          ["@types/node", "npm:16.9.6"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:4.0.12", {\
-        "packageLocation": "./.yarn/cache/@types-fs-extra-npm-4.0.12-ef65781a9b-d21593c184.zip/node_modules/@types/fs-extra/",\
-        "packageDependencies": [\
-          ["@types/fs-extra", "npm:4.0.12"],\
-          ["@types/node", "npm:16.9.6"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@types/fs-extra-promise", [\
-      ["npm:1.0.10", {\
-        "packageLocation": "./.yarn/cache/@types-fs-extra-promise-npm-1.0.10-2abfa71f8d-bd1fb43422.zip/node_modules/@types/fs-extra-promise/",\
-        "packageDependencies": [\
-          ["@types/fs-extra-promise", "npm:1.0.10"],\
-          ["@types/bluebird", "npm:3.5.37"],\
-          ["@types/fs-extra", "npm:4.0.12"],\
           ["@types/node", "npm:16.9.6"]\
         ],\
         "linkType": "HARD"\
@@ -12364,15 +12331,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:2.1.2", {\
-        "packageLocation": "./.yarn/cache/fs-extra-npm-2.1.2-ef1a5dd493-015f2e1b53.zip/node_modules/fs-extra/",\
-        "packageDependencies": [\
-          ["fs-extra", "npm:2.1.2"],\
-          ["graceful-fs", "npm:4.2.6"],\
-          ["jsonfile", "npm:2.4.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:8.1.0", {\
         "packageLocation": "./.yarn/cache/fs-extra-npm-8.1.0-197473387f-cfdc1f2b8d.zip/node_modules/fs-extra/",\
         "packageDependencies": [\
@@ -12380,17 +12338,6 @@ const RAW_RUNTIME_STATE =
           ["graceful-fs", "npm:4.2.6"],\
           ["jsonfile", "npm:4.0.0"],\
           ["universalify", "npm:0.1.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["fs-extra-promise", [\
-      ["npm:1.0.1", {\
-        "packageLocation": "./.yarn/cache/fs-extra-promise-npm-1.0.1-ed4924f7cc-a05931a4cf.zip/node_modules/fs-extra-promise/",\
-        "packageDependencies": [\
-          ["fs-extra-promise", "npm:1.0.1"],\
-          ["bluebird", "npm:3.7.2"],\
-          ["fs-extra", "npm:2.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15288,14 +15235,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["jsonfile", [\
-      ["npm:2.4.0", {\
-        "packageLocation": "./.yarn/cache/jsonfile-npm-2.4.0-5547489d6b-eb9be3beca.zip/node_modules/jsonfile/",\
-        "packageDependencies": [\
-          ["jsonfile", "npm:2.4.0"],\
-          ["graceful-fs", "npm:4.2.6"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:4.0.0", {\
         "packageLocation": "./.yarn/cache/jsonfile-npm-4.0.0-10ce3aea15-d85d544514.zip/node_modules/jsonfile/",\
         "packageDependencies": [\
