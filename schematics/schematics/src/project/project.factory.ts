@@ -17,6 +17,7 @@ import { updateTsConfigInTree } from '@atls/schematics-utils'
 const updateTsConfig = updateTsConfigInTree({
   ...tsConfig.compilerOptions,
   module: 'esnext',
+  moduleResolution: 'bundler',
 })
 
 const generateCommon = (options): Source =>
