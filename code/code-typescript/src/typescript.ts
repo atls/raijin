@@ -20,6 +20,12 @@ class TypeScript {
     return typecheckIgnorePatterns
   }
 
+  private async getProjectConfiguration(): Promise<Array<string>> {
+    const content = await readFile(join(this.cwd, 'tsconfig.json'), 'utf-8')
+
+    return JSON.parse(content)
+  }
+
   check(include: Array<string> = []): Promise<Array<Diagnostic>> {
     return this.run(include)
   }
