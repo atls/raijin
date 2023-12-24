@@ -10,8 +10,8 @@ import { useCallback }           from 'react'
 
 import { COMMIT_SCOPE_ENUM }     from '@atls/code-commit'
 
-import { IndicatorComponent }    from './select-indicator.component'
-import { ItemComponent }         from './select-item.component'
+import { IndicatorComponent }    from './select-indicator.component.js'
+import { ItemComponent }         from './select-item.component.js'
 
 const scopes = Object.keys(COMMIT_SCOPE_ENUM).map((key) => ({
   label: COMMIT_SCOPE_ENUM[key].description,
@@ -71,9 +71,11 @@ export const RequestCommitMessageScope = ({ onSubmit }) => {
             Type of scope:
           </Text>
         </Box>
+        {/* @ts-ignore */}
         <TextInput value={value} onChange={setValue} />
       </Box>
       {hasSuggestion && (
+        /* @ts-ignore */
         <Select
           items={matches}
           onSelect={onSubmitValue}

@@ -1,9 +1,10 @@
 import React                    from 'react'
-import stripAnsi                from 'strip-ansi'
 
 import { renderStatic }         from '@atls/cli-ui-renderer'
 
 import { TypeScriptDiagnostic } from './typescript-diagnostic.component'
+
+const stripAnsi = require('strip-ansi')
 
 describe('eslint result component', () => {
   it('render', () => {

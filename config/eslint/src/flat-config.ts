@@ -1,5 +1,4 @@
 import typescriptEslint       from '@typescript-eslint/eslint-plugin'
-// @ts-ignore
 import parser                 from '@typescript-eslint/parser'
 
 import jsxA11y                from 'eslint-plugin-jsx-a11y'
@@ -18,6 +17,7 @@ export const eslintFlatConfig: Linter.FlatConfig[] = [
       react,
       'jsx-a11y': jsxA11y,
       'react-hooks': reactHooks,
+      // @ts-ignore
       '@typescript-eslint': typescriptEslint,
       'eslint-plugin-react-hooks': eslintPluginReactHooks,
     },
@@ -35,6 +35,7 @@ export const eslintFlatConfig: Linter.FlatConfig[] = [
       ecmaVersion: 2020,
       sourceType: 'module',
       globals: {},
+      // @ts-ignore
       parser,
       parserOptions: {
         ecmaFeatures: {

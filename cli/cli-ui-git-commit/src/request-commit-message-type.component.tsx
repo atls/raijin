@@ -8,8 +8,8 @@ import { useMemo }            from 'react'
 
 import { COMMIT_TYPE_ENUM }   from '@atls/code-commit'
 
-import { IndicatorComponent } from './select-indicator.component'
-import { ItemComponent }      from './select-item.component'
+import { IndicatorComponent } from './select-indicator.component.js'
+import { ItemComponent }      from './select-item.component.js'
 
 const types = Object.keys(COMMIT_TYPE_ENUM).map((key) => ({
   label: COMMIT_TYPE_ENUM[key].description,
@@ -36,9 +36,11 @@ export const RequestCommitMessageType = ({ onSubmit }) => {
             Type of commit:
           </Text>
         </Box>
+        {/* @ts-ignore */}
         <TextInput value={value} onChange={setValue} />
       </Box>
       {hasSuggestion && (
+        /* @ts-ignore */
         <Select
           items={matches}
           onSelect={(v) => onSubmit(v.value)}

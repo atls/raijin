@@ -11,7 +11,7 @@ export const tsConfig = {
     forceConsistentCasingInFileNames: true,
     importHelpers: false,
     isolatedModules: false,
-    moduleResolution: 'node',
+    moduleResolution: 'NodeNext',
     noFallthroughCasesInSwitch: true,
 
     noImplicitAny: false,
@@ -30,7 +30,7 @@ export const tsConfig = {
 
     sourceMap: false,
 
-    module: 'commonjs',
+    module: 'NodeNext',
     target: 'es2021',
 
     jsx: 'react',

@@ -1,9 +1,10 @@
 import React            from 'react'
-import stripAnsi        from 'strip-ansi'
 
 import { renderStatic } from '@atls/cli-ui-renderer'
 
 import { LogRecord }    from './log-record.component'
+
+const stripAnsi = require('strip-ansi')
 
 const createStack = () => {
   const cwd = process.cwd()

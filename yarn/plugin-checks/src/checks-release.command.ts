@@ -4,8 +4,6 @@ import { Project }               from '@yarnpkg/core'
 import { Filename }              from '@yarnpkg/fslib'
 import { ppath }                 from '@yarnpkg/fslib'
 
-import stripAnsi                 from 'strip-ansi'
-
 import { PassThroughRunContext } from '@atls/yarn-run-utils'
 import { getChangedFiles }       from '@atls/yarn-plugin-files'
 import { getChangedWorkspaces }  from '@atls/yarn-workspace-utils'
@@ -13,6 +11,8 @@ import { getChangedWorkspaces }  from '@atls/yarn-workspace-utils'
 import { GitHubChecks }          from './github.checks'
 import { AnnotationLevel }       from './github.checks'
 import { Annotation }            from './github.checks'
+
+const stripAnsi = require('strip-ansi')
 
 class ChecksReleaseCommand extends BaseCommand {
   static paths = [['checks', 'release']]

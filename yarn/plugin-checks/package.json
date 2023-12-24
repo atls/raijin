@@ -28,9 +28,9 @@
     "@babel/code-frame": "7.23.5",
     "@jest/test-result": "29.7.0",
     "clipanion": "4.0.0-rc.2",
-    "react": "18.2.0",
+    "react": "16.14.0",
     "strip-ansi": "7.1.0",
-    "undici": "^6.0.1"
+    "undici": "6.2.1"
   },
   "devDependencies": {
     "@octokit/types": "12.4.0",

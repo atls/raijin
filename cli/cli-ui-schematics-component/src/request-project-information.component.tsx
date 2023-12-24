@@ -35,6 +35,7 @@ export const RequestProjectInformation = ({ onSubmit }: RequestProjectInformatio
             Type of project:
           </Text>
         </Box>
+        {/* @ts-ignore */}
         <Select
           items={[
             {

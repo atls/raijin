@@ -27,12 +27,14 @@ const RequestCommitMessageSubmit = ({ commit, useSubmit }) => {
   return null
 }
 
-// @ts-ignore
 const RequestCommitMessageApp: SubmitInjectedComponent<CommitProperties> = ({ useSubmit }) => {
   const [commit, setCommit] = useState<CommitProperties>()
 
   if (!commit) {
-    return <RequestCommitMessage onSubmit={setCommit} />
+    return (
+      // @ts-ignore
+      <RequestCommitMessage onSubmit={setCommit} />
+    )
   }
 
   return <RequestCommitMessageSubmit commit={commit} useSubmit={useSubmit} />

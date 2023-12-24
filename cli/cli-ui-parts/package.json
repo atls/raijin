@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@yarnpkg/libui": "3.0.0",
-    "figures": "6.0.1",
+    "figures": "3.2.0",
     "ink": "^3.0.8",
     "react": "16.14.0"
   },

@@ -22,7 +22,7 @@
     "ink": "^3.0.8",
     "react": "16.14.0",
     "strip-ansi": "7.1.0",
-    "typescript": "4.6.4"
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
     "ink": "*",

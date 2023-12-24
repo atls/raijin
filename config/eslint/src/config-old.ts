@@ -16,6 +16,7 @@ export const eslintConfig: Linter.Config = {
     propWrapperFunctions: ['forbidExtraProps', 'exact', 'Object.freeze'],
   },
   globals: {},
+  // @ts-ignore
   parser,
   parserOptions: {
     ecmaVersion: 2020,

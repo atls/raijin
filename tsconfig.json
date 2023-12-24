@@ -8,8 +8,8 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": false,
     "isolatedModules": false,
-    "module": "commonjs",
-    "moduleResolution": "Node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "noImplicitReturns": false,
@@ -32,6 +32,7 @@
     "prettier/**/*",
     "eslint/**/*",
     "schematics/**/*",
+    "cli/**/*",
     "jest/**/*",
     "config/**/*"
   ]

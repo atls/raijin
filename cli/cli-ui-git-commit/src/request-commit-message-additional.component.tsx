@@ -55,6 +55,7 @@ export const RequestCommitMessageAdditional = ({
   const onSubmitValues = useCallback(
     (values) => {
       onSubmit(
+        // @ts-ignore
         values.reduce(
           (result, value) => ({
             ...result,
