@@ -1,3 +1,4 @@
+// @ts-ignore
 import { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm'
 
 import React                       from 'react'
@@ -19,7 +20,9 @@ const SubmitProxy = ({ value, useSubmit }) => {
 }
 
 export const SubmitInjectedComponentFactory = <T,>(InjectedComponent) => {
+  // @ts-ignore
   const SubmitCmp: FC<SubmitInjectedComponent<T>> = ({ useSubmit }) => {
+    // @ts-ignore
     const [value, setValue] = useState<T>()
 
     if (!value) {

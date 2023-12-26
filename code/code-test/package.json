@@ -9,19 +9,18 @@
   ],
   "scripts": {
     "build": "yarn library build",
-    "build:worker": "rollup -c",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-jest": "workspace:0.0.9",
-    "@jest/core": "^28.1.0",
-    "@jest/test-result": "^28.1.0",
-    "@jest/types": "^28.1.0"
+    "@atls/config-jest": "workspace:*",
+    "@jest/core": "29.7.0",
+    "@jest/test-result": "29.7.0",
+    "@jest/types": "29.6.3"
   },
   "devDependencies": {
-    "@types/jest": "^27.5.2",
-    "@types/node": "^17.0.38"
+    "@types/jest": "29.5.11",
+    "@types/node": "18.19.3"
   },
   "peerDependenciesMeta": {
     "jest": {

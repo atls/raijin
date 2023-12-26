@@ -12,14 +12,14 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-log-record-component": "workspace:0.0.8",
-    "@atls/cli-ui-renderer": "workspace:0.0.7",
-    "ink": "^3.2.0",
-    "react": "^18.1.0"
+    "@atls/cli-ui-log-record-component": "workspace:*",
+    "@atls/cli-ui-renderer": "workspace:*",
+    "ink": "^3.0.8",
+    "react": "16.14.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.38",
-    "@types/react": "^18.0.12"
+    "@types/node": "18.19.3",
+    "@types/react": "16"
   },
   "publishConfig": {
     "access": "public",

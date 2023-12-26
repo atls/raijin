@@ -8,7 +8,7 @@ export class FormatterWorker {
   async run(files: Array<string>) {
     return EvalWorker.run(getContent(), {
       cwd: this.cwd,
-      files
+      files,
     })
   }
 }

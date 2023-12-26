@@ -16,7 +16,7 @@ class TestIntegrationCommand extends BaseCommand {
 
   findRelatedTests = Option.Boolean('--find-related-tests', false)
 
-  watchMode = Option.Boolean('--watch', false)
+  watchMode = Option.Boolean('--watch')
 
   watchAllMode = Option.Boolean('--watchAll')
 

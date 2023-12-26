@@ -1,9 +1,10 @@
 import React            from 'react'
-import stripAnsi        from 'strip-ansi'
 
 import { renderStatic } from '@atls/cli-ui-renderer'
 
 import { StackTrace }   from './stack-trace.component'
+
+const stripAnsi = require('strip-ansi')
 
 const createStack = () => {
   const cwd = process.cwd()
@@ -20,6 +21,7 @@ const createStack = () => {
 
 describe('stack trace component', () => {
   it('render', () => {
+    // @ts-ignore
     const output = renderStatic(<StackTrace>{createStack()}</StackTrace>, 160)
 
     expect(stripAnsi(output)).toMatchSnapshot()

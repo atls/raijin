@@ -8,18 +8,18 @@
   ],
   "scripts": {
     "build": "yarn library build",
-    "build:worker": "rollup -c",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-eslint": "workspace:0.0.11",
-    "eslint": "^8.17.0",
-    "globby": "^11.0.4",
-    "ignore": "^5.2.0"
+    "@atls/config-eslint": "workspace:*",
+    "@types/eslint": "8.56.0",
+    "eslint": "8.56.0",
+    "globby": "11.1.0",
+    "ignore": "5.3.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.38"
+    "@types/node": "18.19.3"
   },
   "peerDependencies": {
     "react": "*",

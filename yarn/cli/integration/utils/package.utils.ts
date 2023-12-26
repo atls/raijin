@@ -7,8 +7,11 @@ import { PortablePath }      from '@yarnpkg/fslib'
 import { Filename }          from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
+// @ts-ignore
 import { prepareForPack }    from '@yarnpkg/plugin-pack/lib/packUtils'
+// @ts-ignore
 import { genPackList }       from '@yarnpkg/plugin-pack/lib/packUtils'
+// @ts-ignore
 import { genPackStream }     from '@yarnpkg/plugin-pack/lib/packUtils'
 
 export class PackageUtils {

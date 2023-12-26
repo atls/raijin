@@ -1,4 +1,4 @@
-import tsconfig from '@atls/config-typescript'
+import { tsConfig } from '@atls/config-typescript'
 
 export const unit = {
   transformIgnorePatterns: ['/node_modules/', '\\.pnp\\.[^\\/]+$'],
@@ -6,11 +6,12 @@ export const unit = {
   modulePathIgnorePatterns: ['dist', 'integration'],
   snapshotSerializers: [require.resolve('@emotion/jest/serializer')],
   moduleNameMapper: {
-    '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid|ttf|woff|woff2|eot|otf)$': '@atls/jest-static-stubs/$1',
+    '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid|ttf|woff|woff2|eot|otf)$':
+      '@atls/jest-static-stubs/$1',
   },
   globals: {
     'ts-jest': {
-      tsconfig: tsconfig.compilerOptions,
+      tsconfig: tsConfig.compilerOptions,
       isolatedModules: true,
       diagnostics: false,
     },
@@ -26,11 +27,12 @@ export const integration = {
   modulePathIgnorePatterns: ['dist'],
   snapshotSerializers: [require.resolve('@emotion/jest/serializer')],
   moduleNameMapper: {
-    '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid|ttf|woff|woff2|eot|otf)$': '@atls/jest-static-stubs/$1',
+    '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid|ttf|woff|woff2|eot|otf)$':
+      '@atls/jest-static-stubs/$1',
   },
   globals: {
     'ts-jest': {
-      tsconfig: tsconfig.compilerOptions,
+      tsconfig: tsConfig.compilerOptions,
       isolatedModules: true,
       diagnostics: false,
     },

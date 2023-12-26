@@ -1,10 +1,9 @@
 import { parentPort } from 'node:worker_threads'
 import { workerData } from 'node:worker_threads'
 
-import { stringify }  from 'flatted'
-import { parse }      from 'flatted'
-
 import { TypeScript } from '@atls/code-typescript'
+
+const { stringify, parse } = require('flatted')
 
 const { type, cwd, include, override } = workerData
 

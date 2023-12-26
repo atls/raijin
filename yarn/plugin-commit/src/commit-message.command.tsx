@@ -28,10 +28,13 @@ const RequestCommitMessageSubmit = ({ commit, useSubmit }) => {
 }
 
 const RequestCommitMessageApp: SubmitInjectedComponent<CommitProperties> = ({ useSubmit }) => {
-  const [commit, setCommit] = useState()
+  const [commit, setCommit] = useState<CommitProperties>()
 
   if (!commit) {
-    return <RequestCommitMessage onSubmit={setCommit} />
+    return (
+      // @ts-ignore
+      <RequestCommitMessage onSubmit={setCommit} />
+    )
   }
 
   return <RequestCommitMessageSubmit commit={commit} useSubmit={useSubmit} />
@@ -70,10 +73,10 @@ export class CommitMessageCommand extends BaseCommand {
     }
 
     if (overwroteStdin) {
-      process.stdin.destroy()
+      await process.stdin.destroy()
     }
 
-    return commit ? 0 : 1
+    return 0
   }
 
   private formatCommit(commit: CommitProperties) {

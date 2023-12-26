@@ -1,8 +1,6 @@
 /* Copy/Paste https://github.com/kherock/yarn-plugins/tree/main/packages/plugin-workspaces-export */
 /* eslint-disable */
 
-// @ts-nocheck
-
 import { Cache }             from '@yarnpkg/core'
 import { Configuration }     from '@yarnpkg/core'
 import { Locator }           from '@yarnpkg/core'
@@ -12,7 +10,7 @@ import { FakeFS }            from '@yarnpkg/fslib'
 import { JailFS }            from '@yarnpkg/fslib'
 import { NodeFS }            from '@yarnpkg/fslib'
 import { PortablePath }      from '@yarnpkg/fslib'
-import { ZipFS }             from '@yarnpkg/fslib'
+import { ZipFS }             from '@yarnpkg/libzip'
 import { structUtils }       from '@yarnpkg/core'
 import { ppath }             from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
@@ -24,7 +22,7 @@ export class ExportCache extends Cache {
   private workspaceMutexes: Map<LocatorHash, Promise<PortablePath>> = new Map()
 
   static async find(configuration: Configuration, parentCache: Cache) {
-    const nodeLinker = configuration.get(`nodeLinker`)
+    const nodeLinker = configuration.get(`nodeLinker`) as string
     const cache = new ExportCache(configuration.get(`cacheFolder`), {
       configuration,
       nodeLinker,
@@ -106,6 +104,7 @@ export class ExportCache extends Cache {
     }
 
     if (!locator.reference.startsWith(WorkspaceResolver.protocol)) {
+      // @ts-ignore
       return await super.fetchPackageFromCache(locator, expectedChecksum, { loader })
     } else {
       for (let mutex; (mutex = this.workspaceMutexes.get(locator.locatorHash)); ) await mutex

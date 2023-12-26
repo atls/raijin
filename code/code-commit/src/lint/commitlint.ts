@@ -17,16 +17,18 @@ import { Parser }             from '@commitlint/types'
 import { ParserOptions }      from '@commitlint/types'
 import { buildCommitMesage }  from '@commitlint/lint/lib/commit-message'
 
-import defaultParserOpts      from 'conventional-changelog-angular/parser-opts'
 import { sync }               from 'conventional-commits-parser'
+
+import { parserOptions }      from './parser-options'
 
 export async function parse(
   message: string,
+  // @ts-ignore
   parser: Parser = sync,
   parserOpts?: ParserOptions
 ): Promise<Commit> {
-  const opts = {
-    ...defaultParserOpts,
+  const opts: ParserOptions = {
+    ...parserOptions,
     ...(parserOpts || {}),
   }
 
@@ -174,7 +176,7 @@ export async function lint(
 
       const executableRule = rule as Rule<unknown>
 
-      // eslint-disable-next-line no-shadow
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       const [valid, message] = await executableRule(parsed, when, value)
 
       return {

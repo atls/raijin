@@ -7,7 +7,7 @@ import deepmerge                from 'deepmerge'
 import ts                       from 'typescript'
 import { join }                 from 'path'
 
-import tsconfig                 from '@atls/config-typescript'
+import { tsConfig }             from '@atls/config-typescript'
 
 class TypeScript {
   constructor(private readonly cwd: string) {}
@@ -18,6 +18,12 @@ class TypeScript {
     const { typecheckIgnorePatterns = [] } = JSON.parse(content)
 
     return typecheckIgnorePatterns
+  }
+
+  private async getProjectConfiguration(): Promise<Array<string>> {
+    const content = await readFile(join(this.cwd, 'tsconfig.json'), 'utf-8')
+
+    return JSON.parse(content)
   }
 
   check(include: Array<string> = []): Promise<Array<Diagnostic>> {
@@ -39,8 +45,8 @@ class TypeScript {
     const projectIgnorePatterns = await this.getProjectIgnorePatterns()
 
     const config = deepmerge(
-      tsconfig,
-      { compilerOptions: override, exclude: [...tsconfig.exclude, ...projectIgnorePatterns] },
+      tsConfig,
+      { compilerOptions: override, exclude: [...tsConfig.exclude, ...projectIgnorePatterns] },
       {
         include,
       } as any

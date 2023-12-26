@@ -5,7 +5,7 @@ import { parse }  from 'protocol-buffers-schema'
 export const getProtoFileName = (resourcePath) => {
   const hash = Buffer.from(path.dirname(resourcePath)).toString('hex')
 
-  return `./${hash.substr(hash.length - 20)}-${path.basename(resourcePath)}`
+  return `./${hash.slice(hash.length - 20)}-${path.basename(resourcePath)}`
 }
 
 export const resolvePackageImportPath = (packageName: string, importPath: string) => {

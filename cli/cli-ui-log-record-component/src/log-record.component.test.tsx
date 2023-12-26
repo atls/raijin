@@ -1,9 +1,10 @@
 import React            from 'react'
-import stripAnsi        from 'strip-ansi'
 
 import { renderStatic } from '@atls/cli-ui-renderer'
 
 import { LogRecord }    from './log-record.component'
+
+const stripAnsi = require('strip-ansi')
 
 const createStack = () => {
   const cwd = process.cwd()
@@ -20,12 +21,14 @@ const createStack = () => {
 
 describe('log record component', () => {
   it('render', () => {
+    // @ts-ignore
     const output = renderStatic(<LogRecord name='test' body='message' />, 160)
 
     expect(stripAnsi(output)).toMatchSnapshot()
   })
 
   it('render body error stack', () => {
+    // @ts-ignore
     const output = renderStatic(<LogRecord name='test' body={{ stack: createStack() }} />, 160)
 
     expect(stripAnsi(output)).toMatchSnapshot()

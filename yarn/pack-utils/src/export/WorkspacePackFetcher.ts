@@ -1,8 +1,6 @@
 /* Copy/Paste https://github.com/kherock/yarn-plugins/tree/main/packages/plugin-workspaces-export */
 /* eslint-disable */
 
-// @ts-nocheck
-
 import { FetchOptions }        from '@yarnpkg/core'
 import { FetchResult }         from '@yarnpkg/core'
 import { Fetcher }             from '@yarnpkg/core'

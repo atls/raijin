@@ -7,7 +7,6 @@ import type { SourceFile }               from 'typescript'
 import React                             from 'react'
 import { Text }                          from 'ink'
 import { Box }                           from 'ink'
-import { FC }                            from 'react'
 import { useMemo }                       from 'react'
 
 import { SourcePreview }                 from '@atls/cli-ui-source-component'
@@ -20,11 +19,7 @@ export interface TypeScriptDiagnosticProps {
   start?: number
 }
 
-export const TypeScriptDiagnostic: FC<TypeScriptDiagnosticProps> = ({
-  start,
-  file,
-  messageText,
-}) => {
+export const TypeScriptDiagnostic = ({ start, file, messageText }: TypeScriptDiagnosticProps) => {
   const filepath = useMemo(() => {
     if (!file) {
       return null

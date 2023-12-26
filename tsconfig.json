@@ -8,8 +8,8 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": false,
     "isolatedModules": false,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "noImplicitReturns": false,
@@ -21,7 +21,7 @@
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": false,
-    "target": "es2019",
+    "target": "ES2021",
     "jsx": "react"
   },
   "include": [
@@ -32,6 +32,7 @@
     "prettier/**/*",
     "eslint/**/*",
     "schematics/**/*",
+    "cli/**/*",
     "jest/**/*",
     "config/**/*"
   ]

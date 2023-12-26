@@ -13,25 +13,25 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-pack": "workspace:0.0.18",
-    "@atls/yarn-pack-utils": "workspace:0.0.1",
-    "@atls/yarn-run-utils": "workspace:0.0.1",
-    "@iarna/toml": "^2.2.5",
-    "@yarnpkg/plugin-patch": "^4.0.0-rc.36",
-    "clipanion": "^3.2.0-rc.14",
-    "tempy": "^1.0.1"
+    "@atls/code-pack": "workspace:*",
+    "@atls/yarn-pack-utils": "workspace:*",
+    "@atls/yarn-run-utils": "workspace:*",
+    "@iarna/toml": "3.0.0",
+    "@yarnpkg/plugin-patch": "4.0.1",
+    "clipanion": "4.0.0-rc.2",
+    "tempy": "1.0.1"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "^4.0.0-rc.36",
-    "@yarnpkg/cli": "^4.0.0-rc.36",
-    "@yarnpkg/core": "^4.0.0-rc.36",
-    "@yarnpkg/fslib": "^3.0.0-rc.36",
-    "typescript": "^4.6.2"
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.0.2",
+    "@yarnpkg/core": "4.0.2",
+    "@yarnpkg/fslib": "3.0.1",
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
-    "@yarnpkg/cli": "^3.2.0-rc.8",
-    "@yarnpkg/core": "^3.2.0-rc.8",
-    "@yarnpkg/fslib": "^2.6.1-rc.3"
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*",
+    "@yarnpkg/fslib": "*"
   },
   "publishConfig": {
     "access": "public",

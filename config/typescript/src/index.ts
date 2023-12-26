@@ -1,4 +1,4 @@
-export default {
+export const tsConfig = {
   compilerOptions: {
     lib: ['dom', 'dom.iterable', 'esnext'],
 
@@ -11,7 +11,7 @@ export default {
     forceConsistentCasingInFileNames: true,
     importHelpers: false,
     isolatedModules: false,
-    moduleResolution: 'node',
+    moduleResolution: 'NodeNext',
     noFallthroughCasesInSwitch: true,
 
     noImplicitAny: false,
@@ -30,7 +30,7 @@ export default {
 
     sourceMap: false,
 
-    module: 'commonjs',
+    module: 'NodeNext',
     target: 'es2021',
 
     jsx: 'react',

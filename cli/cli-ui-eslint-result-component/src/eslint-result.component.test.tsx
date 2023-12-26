@@ -1,11 +1,12 @@
 import React            from 'react'
-import stripAnsi        from 'strip-ansi'
 
 import { renderStatic } from '@atls/cli-ui-renderer'
 
 import { ESLintResult } from './eslint-result.component'
 
-describe('eslint result component', () => {
+describe('eslint result component', async () => {
+  const { default: stripAnsi } = await import('strip-ansi')
+
   it('render', () => {
     const value = {
       filePath: `${process.cwd()}/yarn/cli/src/tools/getPluginConfiguration.ts`,
@@ -42,6 +43,7 @@ describe('eslint result component', () => {
       ],
     }
 
+    // @ts-ignore
     const output = renderStatic(<ESLintResult {...value} />, 160)
 
     expect(stripAnsi(output)).toMatchSnapshot()

@@ -19,6 +19,8 @@
 Для начала использования нашей сборки:
 
 - `yarn set version https://raw.githubusercontent.com/atls/tools/master/yarn/cli/bundles/yarn.js` - эта команда установит вместо стокового ярна наш и положит в папку .yarn/releases, если же наша сборка уже установленна - произойдёт обновление до актуальной версии
+- `yarn set version https://raw.githubusercontent. com/atls/tools/master/yarn/cli/bundles/legacy/yarn.js` - установит наш легаси бандл
+  (подробности в `/yarn/cli/README.md`)
 
 ## Основные скрипты `yarn` для нашей работы
 
@@ -59,7 +61,7 @@
   - `integration` - интеграционные тесты. Запускает тесты лежащие в папках `integration`
   - `unit` - юнит тесты
     - `название файла/теста` - запускает только тесты в названии которых или названии файлов
-      которых есть введенное название
+      есть введенное название
 
 В качестве параметров:
 
@@ -78,3 +80,6 @@
 [![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/prettier/src/index.ts)
 [![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/jest/src/index.ts)
 [![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)](https://github.com/atls/tools/blob/8537e2f78ca5a2bd925548efce21a2d5c4800543/code/code-service/src/webpack.config.ts)
+[//]: # (VERSIONS)
+
+[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=0.0.24&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/code-service) [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=0.0.19&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/schematics)

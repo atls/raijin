@@ -1,5 +1,3 @@
-/* eslint-disable react/no-array-index-key */
-
 import { parse }          from '@atls/stack-trace'
 
 import React              from 'react'
@@ -17,6 +15,7 @@ export interface StackTraceProps {
   children: string
 }
 
+// @ts-ignore
 export const StackTrace: FC<StackTraceProps> = ({ children }) => {
   const stack = useMemo(() => parse(children), [children])
   const source = useMemo(() => (stack?.topFrame ? getFrameSource(stack.topFrame) : null), [stack])
@@ -35,6 +34,7 @@ export const StackTrace: FC<StackTraceProps> = ({ children }) => {
         </Box>
       )}
       {stack.frames.map((frame: any, index) => (
+        // eslint-disable-next-line react/no-array-index-key
         <Box key={`${frame.file}-${frame.line}-${frame.column}-${index}`} justifyContent='flex-end'>
           <Text>{frame.function}</Text>
           <Spacer />

@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-
 import React            from 'react'
 import { EOL }          from 'os'
 import { Transform }    from 'stream'
@@ -8,6 +6,7 @@ import { LogRecord }    from '@atls/cli-ui-log-record-component'
 import { renderStatic } from '@atls/cli-ui-renderer'
 
 export class PrettyLogsTransform extends Transform {
+  // eslint-disable-next-line consistent-return
   parse(row) {
     try {
       if (row) {

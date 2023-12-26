@@ -5,7 +5,10 @@ import { EvalWorker }              from '@atls/code-worker-utils'
 import { getContent }              from './service.worker.content'
 
 export class ServiceWorker {
-  constructor(protected readonly cwd: string, protected readonly rootCwd: string) {}
+  constructor(
+    protected readonly cwd: string,
+    protected readonly rootCwd: string
+  ) {}
 
   async run(): Promise<ServiceBuildResult> {
     process.chdir(this.rootCwd)

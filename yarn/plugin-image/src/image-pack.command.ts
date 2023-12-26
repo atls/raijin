@@ -6,15 +6,15 @@ import { Configuration } from '@yarnpkg/core'
 import { Project }       from '@yarnpkg/core'
 import { StreamReport }  from '@yarnpkg/core'
 import { PortablePath }  from '@yarnpkg/fslib'
+import { Filename }      from '@yarnpkg/fslib'
 import { stringify }     from '@iarna/toml'
 import { execUtils }     from '@yarnpkg/core'
 import { xfs }           from '@yarnpkg/fslib'
 import { ppath }         from '@yarnpkg/fslib'
-import { toFilename }    from '@yarnpkg/fslib'
 
-import tempy             from 'tempy'
 import { Option }        from 'clipanion'
 import { join }          from 'path'
+import { directory }     from 'tempy'
 
 import { TagPolicy }     from '@atls/code-pack'
 import { tagUtils }      from '@atls/code-pack'
@@ -32,7 +32,7 @@ const forRepository = async (repo: string) => {
     },
   }
 
-  const descriptorPath = ppath.join(await xfs.mktempPromise(), toFilename('project.toml'))
+  const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml' as Filename)
 
   await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
 
@@ -62,7 +62,7 @@ class ImagePackCommand extends BaseCommand {
       },
       async (report) => {
         if (this.isWorkspaceAllowedForBundle(workspace)) {
-          const destination = tempy.directory() as PortablePath
+          const destination = directory() as PortablePath
 
           report.reportInfo(
             null,

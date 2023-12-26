@@ -1,4 +1,6 @@
-export default {
+import { Options } from 'prettier'
+
+const prettierConfig: Options = {
   semi: false,
   singleQuote: true,
   tabWidth: 2,
@@ -6,3 +8,5 @@ export default {
   trailingComma: 'es5',
   printWidth: 100,
 }
+
+export default prettierConfig
