@@ -1,7 +1,10 @@
 name: Publish
 
 on:
-  workflow_dispatch:
+  workflow_call:
+    secrets:
+      npmAuthToken:
+        required: true
 
 jobs:
   run:
@@ -17,7 +20,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.13'
+          node-version: 19
 
       - name: Install
         run: yarn install
@@ -25,16 +28,17 @@ jobs:
       - name: Npm Publish
         run: |
           yarn version apply --all
-          yarn workspaces changed foreach --verbose --topological --no-private npm publish --access public
+          yarn workspaces changed foreach --worktree --verbose --topological --no-private npm publish --access public
         env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.npmAuthToken }}
 
       - name: Commit changes
-        uses: EndBug/add-and-commit@v7
+        uses: EndBug/add-and-commit@v9
         env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          author_name: github-actions
+          default_author: github_actions
           author_email: github-bot@atls.team
           message: 'chore(common): publish'
-          branch: master
+          add: '["*.lock", "*.json", "*.yml"]'
+
