@@ -1,6 +1,7 @@
 name: Checks
 
-on: [pull_request]
+on:
+  workflow_call:
 
 jobs:
   run:
@@ -13,7 +14,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.13'
+          node-version: 19
 
       - name: Install
         run: yarn install
@@ -21,14 +22,27 @@ jobs:
       - name: Lint
         run: yarn checks lint
         env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: TypeCheck
         run: yarn checks typecheck
         env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: TestUnit
+        run: yarn checks test unit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: --experimental-vm-modules
+
+      - name: TestIntegration
+        run: yarn checks test integration
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: --experimental-vm-modules
 
       - name: Release
         run: yarn checks release
         env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
