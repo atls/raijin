@@ -21,11 +21,11 @@ class TypeScript {
   }
 
   private async getLibCheckOption(): Promise<boolean> {
-    const content = await readFile(join(this.cwd, 'tsconfig.json'), 'utf-8')
+    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
 
-    const { skipLibCheck = false } = JSON.parse(content).compilerOptions
+    const { typecheckSkipLibCheck = false } = JSON.parse(content)
 
-    return skipLibCheck
+    return typecheckSkipLibCheck
   }
 
   private async getProjectConfiguration(): Promise<Array<string>> {
