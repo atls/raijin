@@ -45,4 +45,3 @@ jobs:
         run: yarn checks release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
