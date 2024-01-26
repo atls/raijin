@@ -31,7 +31,7 @@ export const tsConfig = {
     sourceMap: false,
 
     module: 'NodeNext',
-    target: 'es2023',
+    target: 'es2022',
 
     jsx: 'react',
     outDir: './dist',
