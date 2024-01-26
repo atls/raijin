@@ -2,8 +2,8 @@ import { tsConfig } from '@atls/config-typescript'
 
 export const unit = {
   transformIgnorePatterns: ['/node_modules/', '\\.pnp\\.[^\\/]+$'],
-  testRegex: '\\.test\\.(ts|tsx)$',
   modulePathIgnorePatterns: ['dist', 'integration'],
+  testRegex: '\\.test\\.(ts|tsx)$',
   snapshotSerializers: [require.resolve('@emotion/jest/serializer')],
   moduleNameMapper: {
     '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid|ttf|woff|woff2|eot|otf)$':
