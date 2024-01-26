@@ -754,12 +754,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/config-typescript-json@workspace:config/typescript-json":
-  version: 0.0.0-use.local
-  resolution: "@atls/config-typescript-json@workspace:config/typescript-json"
-  languageName: unknown
-  linkType: soft
-
 "@atls/config-typescript@workspace:*, @atls/config-typescript@workspace:config/typescript":
   version: 0.0.0-use.local
   resolution: "@atls/config-typescript@workspace:config/typescript"

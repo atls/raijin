@@ -142,10 +142,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:config/typescript"\
     },\
     {\
-      "name": "@atls/config-typescript-json",\
-      "reference": "workspace:config/typescript-json"\
-    },\
-    {\
       "name": "@atls/jest-static-stubs",\
       "reference": "workspace:jest/static-stubs"\
     },\
@@ -284,7 +280,6 @@ const RAW_RUNTIME_STATE =
     ["@atls/config-jest", ["workspace:config/jest"]],\
     ["@atls/config-prettier", ["workspace:config/prettier"]],\
     ["@atls/config-typescript", ["workspace:config/typescript"]],\
-    ["@atls/config-typescript-json", ["workspace:config/typescript-json"]],\
     ["@atls/jest-static-stubs", ["workspace:jest/static-stubs"]],\
     ["@atls/prettier-plugin", ["workspace:prettier/plugin"]],\
     ["@atls/schematics", ["workspace:schematics/schematics"]],\
@@ -1429,15 +1424,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["typescript", "patch:typescript@npm%3A5.2.2#optional!builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/config-typescript-json", [\
-      ["workspace:config/typescript-json", {\
-        "packageLocation": "./config/typescript-json/",\
-        "packageDependencies": [\
-          ["@atls/config-typescript-json", "workspace:config/typescript-json"]\
         ],\
         "linkType": "SOFT"\
       }]\
