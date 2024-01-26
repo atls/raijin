@@ -20,6 +20,14 @@ class TypeScript {
     return typecheckIgnorePatterns
   }
 
+  private async getLibCheckOption(): Promise<boolean> {
+    const content = await readFile(join(this.cwd, 'tsconfig.json'), 'utf-8')
+
+    const { skipLibCheck = false } = JSON.parse(content).compilerOptions
+
+    return skipLibCheck
+  }
+
   private async getProjectConfiguration(): Promise<Array<string>> {
     const content = await readFile(join(this.cwd, 'tsconfig.json'), 'utf-8')
 
@@ -44,9 +52,11 @@ class TypeScript {
   ): Promise<Array<Diagnostic>> {
     const projectIgnorePatterns = await this.getProjectIgnorePatterns()
 
+    const skipLibCheck = await this.getLibCheckOption()
+
     const config = deepmerge(
       tsConfig,
-      { compilerOptions: override, exclude: [...tsConfig.exclude, ...projectIgnorePatterns] },
+      { compilerOptions: { ...override, skipLibCheck }, exclude: [...tsConfig.exclude, ...projectIgnorePatterns] },
       {
         include,
       } as any
