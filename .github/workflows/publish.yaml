@@ -41,4 +41,3 @@ jobs:
           author_email: github-bot@atls.team
           message: 'chore(common): publish'
           add: '["*.lock", "*.json", "*.yml"]'
-

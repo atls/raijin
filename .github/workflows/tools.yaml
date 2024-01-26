@@ -45,4 +45,3 @@ jobs:
           delete-branch: true
           body: |
             Update tools to ${{ inputs.version }}.
-            
