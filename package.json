@@ -26,7 +26,7 @@
     "@atls/code-service": "workspace:0.0.25",
     "@atls/config-eslint": "workspace:0.0.12",
     "@atls/config-jest": "workspace:0.0.11",
-    "@atls/schematics": "workspace:0.0.21",
+    "@atls/schematics": "workspace:0.0.22",
     "@atls/tools-setup-ts-execution": "workspace:0.0.1",
     "@jest/core": "29.7.0",
     "@rushstack/eslint-patch": "1.6.1",
