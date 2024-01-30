@@ -1,0 +1,35 @@
+name: Reusable tests
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node version to run this workflow. Default: 18.19 as it is in action cache'
+        default: '18.19'
+        required: false
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: Install
+        run: yarn install
+
+      - name: Test unit
+        run: yarn checks test unit
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Test integration
+        run: yarn checks test integration
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
