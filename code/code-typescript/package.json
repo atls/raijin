@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-typescript",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
