@@ -7,8 +7,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn library build",
-    "build:json": "ts-node -e 'const fs = require(\"fs\"); const config = require(\"./src/tsconfig.ts\"); fs.writeFileSync(\"./src/tsconfig.json\", JSON.stringify(config.tsConfig, null, 2))'",
+    "build": "yarn run build:json && yarn library build",
+    "build:json": "ts-node -e 'const fs = require(\"fs\"); const config = require(\"./src/config.ts\"); fs.writeFileSync(\"./src/tsconfig.json\", JSON.stringify(config.tsConfig, null, 2))'",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
