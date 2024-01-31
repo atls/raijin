@@ -1,8 +1,13 @@
-name: Tools
+name: Reusable tools
 
 on:
   workflow_call:
     inputs:
+      node-version:
+        description: 'Node version to run this workflow. Default: 18.19 as it is in action cache'
+        default: '18.19'
+        required: false
+        type: string
       version:
         description: 'Tools yarn version'
         type: string
@@ -18,14 +23,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 19
+          node-version: ${{ inputs.node-version }}
 
       - name: Install
         run: yarn install
@@ -38,7 +43,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'feat: update tools'
           title: 'feat: update tools'
           branch-suffix: random
