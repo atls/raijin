@@ -607,7 +607,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-service@workspace:*, @atls/code-service@workspace:0.0.26, @atls/code-service@workspace:code/code-service":
+"@atls/code-service@workspace:*, @atls/code-service@workspace:0.0.27, @atls/code-service@workspace:code/code-service":
   version: 0.0.0-use.local
   resolution: "@atls/code-service@workspace:code/code-service"
   dependencies:
@@ -729,7 +729,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/config-jest@workspace:*, @atls/config-jest@workspace:0.0.12, @atls/config-jest@workspace:config/jest":
+"@atls/config-jest@workspace:*, @atls/config-jest@workspace:0.0.13, @atls/config-jest@workspace:config/jest":
   version: 0.0.0-use.local
   resolution: "@atls/config-jest@workspace:config/jest"
   dependencies:
@@ -812,7 +812,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/schematics@workspace:*, @atls/schematics@workspace:0.0.23, @atls/schematics@workspace:schematics/schematics":
+"@atls/schematics@workspace:*, @atls/schematics@workspace:0.0.24, @atls/schematics@workspace:schematics/schematics":
   version: 0.0.0-use.local
   resolution: "@atls/schematics@workspace:schematics/schematics"
   dependencies:
@@ -12430,10 +12430,10 @@ __metadata:
   dependencies:
     "@angular-devkit/core": "npm:17.0.8"
     "@angular-devkit/schematics": "npm:17.0.8"
-    "@atls/code-service": "workspace:0.0.26"
+    "@atls/code-service": "workspace:0.0.27"
     "@atls/config-eslint": "workspace:0.0.12"
-    "@atls/config-jest": "workspace:0.0.12"
-    "@atls/schematics": "workspace:0.0.23"
+    "@atls/config-jest": "workspace:0.0.13"
+    "@atls/schematics": "workspace:0.0.24"
     "@atls/tools-setup-ts-execution": "workspace:0.0.1"
     "@jest/core": "npm:29.7.0"
     "@rushstack/eslint-patch": "npm:1.6.1"
