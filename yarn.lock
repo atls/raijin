@@ -264,13 +264,12 @@ __metadata:
   resolution: "@atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info-component"
   dependencies:
     "@atls/cli-ui-stack-trace-component": "workspace:*"
-    "@types/jest": "npm:29.5.11"
-    "@types/node": "npm:18.19.3"
-    "@types/react": "npm:16.14.54"
-    ink: "npm:^3.0.8"
-    react: "npm:16.14.0"
+    "@types/node": "npm:^20.10.5"
+    "@types/react": "npm:^18.2.45"
+    ink: "npm:^4.4.1"
+    react: "npm:^18.2.0"
   peerDependencies:
-    ink: "*"
+    ink: ^3.0.8
     react: "*"
   languageName: unknown
   linkType: soft
@@ -281,14 +280,13 @@ __metadata:
   dependencies:
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/cli-ui-source-component": "workspace:*"
-    "@types/jest": "npm:29.5.11"
-    "@types/node": "npm:18.19.3"
-    "@types/react": "npm:16.14.54"
-    ink: "npm:^3.0.8"
-    react: "npm:16.14.0"
-    strip-ansi: "npm:7.1.0"
+    "@jest/globals": "npm:^29.7.0"
+    "@types/react": "npm:^18.2.45"
+    ink: "npm:^4.4.1"
+    react: "npm:^18.2.0"
+    strip-ansi: "npm:^7.1.0"
   peerDependencies:
-    ink: "*"
+    ink: ^3.0.8
     react: "*"
   languageName: unknown
   linkType: soft
@@ -3408,6 +3406,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 10/cbd4bf49f6aa0e5e9b9d3dafd0f83cc21475f6fe846c8b59a264e508608aaad8cd48dfce95ee48cdf81d3139c35c03a9d4fcd613bf98cae7b61c7dc36bb6b195
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.10.5":
+  version: 20.11.17
+  resolution: "@types/node@npm:20.11.17"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: 3342df87258d1c56154bcd4b85180f48675427b235971e6e6e2e037353f5a2ae9aaa05ba5df0fe1e2d2f1022c8d856fd39056b9d7f50ea30c0ca3214137cae1d
   languageName: node
   linkType: hard
 
@@ -11302,7 +11309,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.2.0":
+"react@npm:18.2.0, react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:
@@ -12352,7 +12359,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strip-ansi@npm:7.1.0, strip-ansi@npm:^7.0.1":
+"strip-ansi@npm:7.1.0, strip-ansi@npm:^7.0.1, strip-ansi@npm:^7.1.0":
   version: 7.1.0
   resolution: "strip-ansi@npm:7.1.0"
   dependencies:
