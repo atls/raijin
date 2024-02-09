@@ -735,11 +735,11 @@ __metadata:
   dependencies:
     "@atls/config-typescript": "workspace:*"
     "@atls/jest-static-stubs": "workspace:*"
-    "@emotion/jest": "npm:11.9.1"
+    "@emotion/jest": "npm:11.11.0"
     "@monstrs/jest-pnp-resolver": "npm:0.0.1"
-    "@types/node": "npm:18.11.9"
+    "@types/node": "npm:18.19.15"
     jest: "npm:29.7.0"
-    ts-jest: "npm:29.1.1"
+    ts-jest: "npm:29.1.2"
     typescript: "npm:5.2.2"
   languageName: unknown
   linkType: soft
@@ -1939,12 +1939,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.23.6, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.23.2":
+"@babel/runtime@npm:7.23.6, @babel/runtime@npm:^7.23.2":
   version: 7.23.6
   resolution: "@babel/runtime@npm:7.23.6"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
   checksum: 4c4ab16f0361c59fb23956e4d0a29935f1f8a64aa8dd37876ce38355b6f4d8f0e54237aacb89c73b1532def60539ddde2d651523c8fa887b30b19a8cf0c465b0
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.18.3":
+  version: 7.23.9
+  resolution: "@babel/runtime@npm:7.23.9"
+  dependencies:
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 9a520fe1bf72249f7dd60ff726434251858de15cccfca7aa831bd19d0d3fb17702e116ead82724659b8da3844977e5e13de2bae01eb8a798f2823a669f122be6
   languageName: node
   linkType: hard
 
@@ -2170,7 +2179,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/css-prettifier@npm:^1.0.1":
+"@emotion/css-prettifier@npm:^1.1.3":
   version: 1.1.3
   resolution: "@emotion/css-prettifier@npm:1.1.3"
   dependencies:
@@ -2180,24 +2189,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/jest@npm:11.9.1":
-  version: 11.9.1
-  resolution: "@emotion/jest@npm:11.9.1"
+"@emotion/jest@npm:11.11.0":
+  version: 11.11.0
+  resolution: "@emotion/jest@npm:11.11.0"
   dependencies:
-    "@babel/runtime": "npm:^7.13.10"
-    "@emotion/css-prettifier": "npm:^1.0.1"
+    "@babel/runtime": "npm:^7.18.3"
+    "@emotion/css-prettifier": "npm:^1.1.3"
     chalk: "npm:^4.1.0"
     specificity: "npm:^0.4.1"
-    stylis: "npm:4.0.13"
+    stylis: "npm:4.2.0"
   peerDependencies:
-    "@types/jest": ^26.0.14 || ^27.0.0
+    "@types/jest": ^26.0.14 || ^27.0.0 || ^28.0.0 || ^29.0.0
     enzyme-to-json: ^3.2.1
   peerDependenciesMeta:
     "@types/jest":
       optional: true
     enzyme-to-json:
       optional: true
-  checksum: 538a9ce91cdba0a098a5387c7452a58db9bca50db7e15c25e5846a1bb9148030dbd11e43a3582486f3f8a286a43ee5453cdc9fb349aa81e27b99b5840fb9c7d5
+  checksum: 75a4f780c73b37564b1b61b311452c16b0b7bd34fe90801622925701e8985ce563b3a9341346bf2dd0aa7c9c591e1fa817ff09a18229f510b37ad789448ef235
   languageName: node
   linkType: hard
 
@@ -3393,10 +3402,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.11.9":
-  version: 18.11.9
-  resolution: "@types/node@npm:18.11.9"
-  checksum: d87a947519d8c1569b812a95cd18383f7a1500204c18454b69ba817f4aef2a563bb925432debcab25a3db1ba116c8ddb1ef79d8fded054fb3866424847325bae
+"@types/node@npm:18.19.15":
+  version: 18.19.15
+  resolution: "@types/node@npm:18.19.15"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: cbd4bf49f6aa0e5e9b9d3dafd0f83cc21475f6fe846c8b59a264e508608aaad8cd48dfce95ee48cdf81d3139c35c03a9d4fcd613bf98cae7b61c7dc36bb6b195
   languageName: node
   linkType: hard
 
@@ -12146,13 +12157,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylis@npm:4.0.13":
-  version: 4.0.13
-  resolution: "stylis@npm:4.0.13"
-  checksum: 0b1c3437e36b8c11e1a1d4b9a3d9ddeb92d5138d867d8384e66aabbbd7f6ca483166db9f9f3a1639b937ac1c22c0049aeaea68e3255df1fbade5bc0284c210bf
-  languageName: node
-  linkType: hard
-
 "stylis@npm:4.2.0":
   version: 4.2.0
   resolution: "stylis@npm:4.2.0"
@@ -12470,9 +12474,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:29.1.1":
-  version: 29.1.1
-  resolution: "ts-jest@npm:29.1.1"
+"ts-jest@npm:29.1.2":
+  version: 29.1.2
+  resolution: "ts-jest@npm:29.1.2"
   dependencies:
     bs-logger: "npm:0.x"
     fast-json-stable-stringify: "npm:2.x"
@@ -12499,7 +12503,7 @@ __metadata:
       optional: true
   bin:
     ts-jest: cli.js
-  checksum: 30e8259baba95dd786e64f7c18b864e904598f3ba07911be4d9bd29ca9c3c0024bad4ccf8ec0abd2a2fa14b06622cbbadff1b3be822189c657196442d33ee6ca
+  checksum: 5e40e7b933a1f3aa0d304d3c53913d1a7125fc79cd44e22b332f6e25dfe13008ddc7ac647066bb4f914d76083f7e8949f0bc156d793c30f3419f4ffd8180968b
   languageName: node
   linkType: hard
 
