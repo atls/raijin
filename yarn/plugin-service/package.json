@@ -26,8 +26,8 @@
   "devDependencies": {
     "@types/react": "16.14.54",
     "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.0.2",
-    "@yarnpkg/core": "4.0.2",
+    "@yarnpkg/cli": "4.1.0",
+    "@yarnpkg/core": "4.0.3",
     "typescript": "5.2.2"
   },
   "peerDependencies": {

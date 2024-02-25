@@ -28,9 +28,9 @@
   "devDependencies": {
     "@types/react": "16.14.54",
     "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.0.2",
-    "@yarnpkg/core": "4.0.2",
-    "@yarnpkg/fslib": "3.0.1",
+    "@yarnpkg/cli": "4.1.0",
+    "@yarnpkg/core": "4.0.3",
+    "@yarnpkg/fslib": "3.0.2",
     "ink": "^3.0.8",
     "react": "16.14.0",
     "typescript": "5.2.2"
