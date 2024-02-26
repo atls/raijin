@@ -14,8 +14,8 @@
   "dependencies": {
     "@actions/github": "6.0.0",
     "@iarna/toml": "3.0.0",
-    "@yarnpkg/core": "4.0.2",
-    "@yarnpkg/fslib": "3.0.1"
+    "@yarnpkg/core": "4.0.3",
+    "@yarnpkg/fslib": "3.0.2"
   },
   "devDependencies": {
     "@types/node": "18.19.3"
