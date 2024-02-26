@@ -1496,7 +1496,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/prettier-plugin", "workspace:prettier/plugin"],\
           ["@atls/config-prettier", "workspace:config/prettier"],\
-          ["@types/node", "npm:18.19.3"],\
+          ["@types/node", "npm:20.11.20"],\
           ["@types/prettier", "npm:3.0.0"],\
           ["globby", "npm:11.1.0"],\
           ["import-sort", "npm:6.0.0"],\

@@ -4,12 +4,13 @@ import { ParserOptions }                from 'prettier'
 import { parsers as babelParsers }      from 'prettier/plugins/babel'
 import { parsers as typescriptParsers } from 'prettier/plugins/typescript'
 
-import { ImportSortParser }             from './import-sort'
-import { style }                        from './import-sort'
+import { ImportSortParser }             from './import-sort/index.js'
+import { style }                        from './import-sort/index.js'
 
 type Preprocess = (sources: string, options: ParserOptions) => string
 
 const preprocess: Preprocess = (source, options) => {
+  // @ts-ignore
   const { code } = sortImports(
     source,
     new ImportSortParser(typescriptParsers.typescript.parse(source, options)),

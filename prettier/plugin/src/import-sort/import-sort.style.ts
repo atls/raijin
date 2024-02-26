@@ -1,10 +1,10 @@
 import { IStyleAPI }            from 'import-sort-style'
 import { IStyleItem }           from 'import-sort-style'
 
-import { isWorkspaceModule }    from './import-sort.api'
-import { isNodeModule }         from './import-sort.api'
-import { isOrganizationModule } from './import-sort.api'
-import { isImportType }         from './import-sort.api'
+import { isWorkspaceModule }    from './import-sort.api.js'
+import { isNodeModule }         from './import-sort.api.js'
+import { isOrganizationModule } from './import-sort.api.js'
+import { isImportType }         from './import-sort.api.js'
 
 export const style = (styleApi: IStyleAPI): IStyleItem[] => {
   const {
