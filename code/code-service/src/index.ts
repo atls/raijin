@@ -1,2 +1,2 @@
-export * from './webpack.config'
-export * from './service'
+export * from './webpack.config.js'
+export * from './service.js'

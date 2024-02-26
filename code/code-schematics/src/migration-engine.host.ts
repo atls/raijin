@@ -1,4 +1,4 @@
-import { NodePnpEngineHost } from './node-pnp-engine.host'
+import { NodePnpEngineHost } from './node-pnp-engine.host.js'
 
 export class MigrationEngineHost extends NodePnpEngineHost {
   // eslint-disable-next-line no-underscore-dangle

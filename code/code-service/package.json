@@ -1,8 +1,12 @@
 {
   "name": "@atls/code-service",
-  "version": "0.0.28",
+  "version": "1.0.0",
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "files": [
     "dist",
     "tsconfig.stub.json"
@@ -30,7 +34,7 @@
   },
   "devDependencies": {
     "@types/jest": "27.5.2",
-    "@types/node": "18.19.3",
+    "@types/node": "20.11.20",
     "@types/protocol-buffers-schema": "3.4.3",
     "@types/wait-for-localhost": "3.1.0",
     "@types/webpack": "5.28.5",
@@ -38,7 +42,14 @@
     "wait-for-localhost": "4.0.1"
   },
   "publishConfig": {
-    "main": "dist/index.js",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "typings": "dist/index.d.ts"
   }
 }

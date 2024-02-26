@@ -10,8 +10,8 @@ import { relative }           from 'path'
 
 import { eslintFlatConfig }   from '@atls/config-eslint'
 
-import { ignore }             from './linter.patterns'
-import { createPatterns }     from './linter.patterns'
+import { ignore }             from './linter.patterns.js'
+import { createPatterns }     from './linter.patterns.js'
 
 export class Linter {
   constructor(private readonly cwd: string) {}
@@ -34,6 +34,7 @@ export class Linter {
   }
 
   async lintFiles(files: string[] = []): Promise<Array<ESLint.LintResult>> {
+    // @ts-ignore
     const ignored = ignorer()
       .add(ignore)
       .add(await this.getProjectIgnorePatterns())

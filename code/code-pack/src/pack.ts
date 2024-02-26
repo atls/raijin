@@ -4,9 +4,9 @@ import { execUtils }   from '@yarnpkg/core'
 import { xfs }         from '@yarnpkg/fslib'
 import { ppath }       from '@yarnpkg/fslib'
 
-import { PackOptions } from './pack.interfaces'
-import { PackOutputs } from './pack.interfaces'
-import { getTag }      from './tag.utils'
+import { PackOptions } from './pack.interfaces.js'
+import { PackOutputs } from './pack.interfaces.js'
+import { getTag }      from './tag.utils.js'
 
 export const pack = async (
   { workspace, registry, publish, tagPolicy, builder, buildpack }: PackOptions,

@@ -15,11 +15,11 @@ import { RuleType }           from '@commitlint/types'
 import { Commit }             from '@commitlint/types'
 import { Parser }             from '@commitlint/types'
 import { ParserOptions }      from '@commitlint/types'
-import { buildCommitMesage }  from '@commitlint/lint/lib/commit-message'
+import { buildCommitMesage }  from '@commitlint/lint/lib/commit-message.js'
 
 import { sync }               from 'conventional-commits-parser'
 
-import { parserOptions }      from './parser-options'
+import { parserOptions }      from './parser-options.js'
 
 export async function parse(
   message: string,
@@ -49,6 +49,7 @@ export async function lint(
   const rulesConfig = rawRulesConfig || {}
 
   // Found a wildcard match, skip
+  // @ts-ignore
   if (isIgnored(message, { defaults: opts.defaultIgnores, ignores: opts.ignores })) {
     return {
       valid: true,
@@ -74,6 +75,7 @@ export async function lint(
     }
   }
 
+  // @ts-ignore
   const allRules: Map<string, BaseRule<never, RuleType>> = new Map(Object.entries(defaultRules))
 
   if (opts.plugins) {

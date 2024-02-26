@@ -1,6 +1,6 @@
 import path        from 'path'
 
-import { Service } from '../src'
+import { Service } from '../src/index.js'
 
 describe('service', () => {
   describe('build', () => {

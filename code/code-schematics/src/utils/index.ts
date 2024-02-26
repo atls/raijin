@@ -1,2 +1,2 @@
-export * from './collection.utils'
-export * from './resolve.utils'
+export * from './collection.utils.js'
+export * from './resolve.utils.js'

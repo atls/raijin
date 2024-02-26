@@ -1,4 +1,4 @@
-import { CommitLinter } from './commit.linter'
+import { CommitLinter } from './commit.linter.js'
 
 describe('code-commit', () => {
   it('lint', async () => {

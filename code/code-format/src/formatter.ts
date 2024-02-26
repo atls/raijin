@@ -1,5 +1,5 @@
 import * as babel         from 'prettier/plugins/babel'
-import * as estree        from 'prettier/plugins/estree'
+import estree        from 'prettier/plugins/estree'
 import * as graphql       from 'prettier/plugins/graphql'
 import * as markdown      from 'prettier/plugins/markdown'
 import * as typescript    from 'prettier/plugins/typescript'
@@ -19,13 +19,14 @@ import { format }         from 'prettier/standalone'
 /* eslint-disable no-await-in-loop */
 import prettierConfig     from '@atls/config-prettier'
 
-import { ignore }         from './formatter.patterns'
-import { createPatterns } from './formatter.patterns'
+import { ignore }         from './formatter.patterns.js'
+import { createPatterns } from './formatter.patterns.js'
 
 export class Formatter {
   constructor(private readonly cwd: string) {}
 
   async formatFiles(files: Array<string> = []) {
+    // @ts-ignore
     const formatFiles = ignorer()
       .add(ignore)
       .add(await this.getProjectIgnorePatterns())

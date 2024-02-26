@@ -10,9 +10,9 @@ import { HotModuleReplacementPlugin } from 'webpack'
 
 import { tsConfig }                   from '@atls/config-typescript'
 
-import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals'
-import { UNUSED_EXTERNALS }           from './webpack.externals'
-import { WebpackEnvironment }         from './webpack.interfaces'
+import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals.js'
+import { UNUSED_EXTERNALS }           from './webpack.externals.js'
+import { WebpackEnvironment }         from './webpack.interfaces.js'
 
 export class WebpackConfig {
   constructor(private readonly cwd: string) {}

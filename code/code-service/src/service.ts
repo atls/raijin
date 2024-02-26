@@ -6,8 +6,8 @@ import { Watching }              from 'webpack'
 
 import { StartServerPlugin }     from '@atls/webpack-start-server-plugin'
 
-import { WebpackConfig }         from './webpack.config'
-import { WebpackEnvironment }    from './webpack.interfaces'
+import { WebpackConfig }         from './webpack.config.js'
+import { WebpackEnvironment }    from './webpack.interfaces.js'
 
 export interface ServiceBuildResultMessage {
   message: string

@@ -2,7 +2,7 @@ import type { ESLint } from 'eslint'
 
 import { EvalWorker }  from '@atls/code-worker-utils'
 
-import { getContent }  from './linter.worker.content'
+import { getContent }  from './linter.worker.content.js'
 
 export class LinterWorker {
   constructor(private readonly cwd: string) {}

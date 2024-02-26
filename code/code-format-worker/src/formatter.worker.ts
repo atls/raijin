@@ -1,6 +1,6 @@
 import { EvalWorker } from '@atls/code-worker-utils'
 
-import { getContent } from './formatter.worker.content'
+import { getContent } from './formatter.worker.content.js'
 
 export class FormatterWorker {
   constructor(private readonly cwd: string) {}

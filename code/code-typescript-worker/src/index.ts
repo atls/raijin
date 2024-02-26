@@ -1,1 +1,1 @@
-export * from './typescript.worker'
+export * from './typescript.worker.js'

@@ -1,1 +1,1 @@
-export * from './tester.worker'
+export * from './tester.worker.js'

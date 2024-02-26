@@ -1,9 +1,10 @@
 import { parentPort } from 'node:worker_threads'
 import { workerData } from 'node:worker_threads'
 
-import { Tester }     from '@atls/code-test'
+import { stringify }  from 'flatted'
+import { parse }      from 'flatted'
 
-const { stringify, parse } = require('flatted')
+import { Tester }     from '@atls/code-test'
 
 const { type, cwd, options, files = [] } = workerData
 

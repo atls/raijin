@@ -1,1 +1,1 @@
-export * from './project.configuration'
+export * from './project.configuration.js'

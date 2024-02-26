@@ -1,1 +1,1 @@
-export * from './eval.worker'
+export * from './eval.worker.js'

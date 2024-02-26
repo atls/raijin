@@ -3,7 +3,7 @@ import type { Diagnostic }      from 'typescript'
 
 import { EvalWorker }           from '@atls/code-worker-utils'
 
-import { getContent }           from './typescript.worker.content'
+import { getContent }           from './typescript.worker.content.js'
 
 export class TypeScriptWorker {
   constructor(protected readonly cwd: string) {}

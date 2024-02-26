@@ -2,7 +2,7 @@ import type { ServiceBuildResult } from '@atls/code-service'
 
 import { EvalWorker }              from '@atls/code-worker-utils'
 
-import { getContent }              from './service.worker.content'
+import { getContent }              from './service.worker.content.js'
 
 export class ServiceWorker {
   constructor(

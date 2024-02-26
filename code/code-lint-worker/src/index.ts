@@ -1,1 +1,1 @@
-export * from './linter.worker'
+export * from './linter.worker.js'

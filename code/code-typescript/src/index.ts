@@ -1,2 +1,2 @@
-export * from './typescript.utils'
-export * from './typescript'
+export * from './typescript.utils.js'
+export * from './typescript.js'
