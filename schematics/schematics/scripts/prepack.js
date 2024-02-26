@@ -1,10 +1,10 @@
-const copydir = require('copy-dir')
-const globby = require('globby')
-const { join } = require('path')
-const { copyFileSync } = require('fs')
-const { writeFileSync } = require('fs')
+import copydir           from 'copy-dir'
+import globby            from 'globby'
+import { join }          from 'path'
+import { copyFileSync }  from 'fs'
+import { writeFileSync } from 'fs'
 
-const pkg = require('../package.json')
+import pkg from '../package.json'
 
 globby
   .sync('**/*.json', { cwd: join(__dirname, '../src') })
@@ -22,6 +22,6 @@ writeFileSync(
       schematics: './dist/collection.json',
     },
     null,
-    2
-  )
+    2,
+  ),
 )

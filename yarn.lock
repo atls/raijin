@@ -224,6 +224,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular-devkit/core@npm:17.2.1":
+  version: 17.2.1
+  resolution: "@angular-devkit/core@npm:17.2.1"
+  dependencies:
+    ajv: "npm:8.12.0"
+    ajv-formats: "npm:2.1.1"
+    jsonc-parser: "npm:3.2.1"
+    picomatch: "npm:4.0.1"
+    rxjs: "npm:7.8.1"
+    source-map: "npm:0.7.4"
+  peerDependencies:
+    chokidar: ^3.5.2
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  checksum: 10/6c9395bf2cf34d4ad2accc5283663174a42aacebc8101bafc262dccf74eb0f97c303a7d1af75a9fce872b735d6dc6bd78c7dd31b364d4f1ff61635d366469fd5
+  languageName: node
+  linkType: hard
+
 "@angular-devkit/schematics@npm:17.0.7":
   version: 17.0.7
   resolution: "@angular-devkit/schematics@npm:17.0.7"
@@ -247,6 +266,19 @@ __metadata:
     ora: "npm:5.4.1"
     rxjs: "npm:7.8.1"
   checksum: 10/dc7c9bfcb0da977f9c0bb6107e53d551d055d2c662c8243353e55973f711c6ff1c641072098b670796b03a2a090b9053c809146ed8d537b21c8d9735fd3ac5b5
+  languageName: node
+  linkType: hard
+
+"@angular-devkit/schematics@npm:17.2.1":
+  version: 17.2.1
+  resolution: "@angular-devkit/schematics@npm:17.2.1"
+  dependencies:
+    "@angular-devkit/core": "npm:17.2.1"
+    jsonc-parser: "npm:3.2.1"
+    magic-string: "npm:0.30.7"
+    ora: "npm:5.4.1"
+    rxjs: "npm:7.8.1"
+  checksum: 10/2e1d3c092f8fe01338725d0c499798f1fad926a1211d9db9342aa327deb3dbc0baa5cf032d9e847c6752e4aef11efe6ff5282da404f4426d91aa570b37ea1405
   languageName: node
   linkType: hard
 
@@ -799,10 +831,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/schematics-utils@workspace:schematics/schematics-utils"
   dependencies:
-    "@angular-devkit/core": "npm:17.0.8"
-    "@angular-devkit/schematics": "npm:17.0.8"
+    "@angular-devkit/core": "npm:17.2.1"
+    "@angular-devkit/schematics": "npm:17.2.1"
     "@types/js-yaml": "npm:4.0.9"
-    "@types/node": "npm:18.19.3"
+    "@types/node": "npm:20.11.20"
     js-yaml: "npm:4.1.0"
     rimraf: "npm:5.0.5"
     semver: "npm:7.5.4"
@@ -815,11 +847,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/schematics@workspace:schematics/schematics"
   dependencies:
-    "@angular-devkit/core": "npm:17.0.8"
-    "@angular-devkit/schematics": "npm:17.0.8"
+    "@angular-devkit/core": "npm:17.2.1"
+    "@angular-devkit/schematics": "npm:17.2.1"
     "@atls/config-typescript": "workspace:*"
     "@atls/schematics-utils": "workspace:*"
-    "@types/node": "npm:18.19.3"
+    "@types/node": "npm:20.11.20"
     copy-dir: "npm:1.3.0"
     globby: "npm:11.1.0"
   languageName: unknown
@@ -9594,6 +9626,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsonc-parser@npm:3.2.1":
+  version: 3.2.1
+  resolution: "jsonc-parser@npm:3.2.1"
+  checksum: 10/fe2df6f39e21653781d52cae20c5b9e0ab62461918d97f9430b216cea9b6500efc1d8b42c6584cc0a7548b4c996055e9cdc39f09b9782fa6957af2f45306c530
+  languageName: node
+  linkType: hard
+
 "jsonfile@npm:^6.0.1":
   version: 6.1.0
   resolution: "jsonfile@npm:6.1.0"
@@ -9984,6 +10023,15 @@ __metadata:
   dependencies:
     "@jridgewell/sourcemap-codec": "npm:^1.4.15"
   checksum: 10/c8a6b25f813215ca9db526f3a407d6dc0bf35429c2b8111d6f1c2cf6cf6afd5e2d9f9cd189416a0e3959e20ecd635f73639f9825c73de1074b29331fe36ace59
+  languageName: node
+  linkType: hard
+
+"magic-string@npm:0.30.7":
+  version: 0.30.7
+  resolution: "magic-string@npm:0.30.7"
+  dependencies:
+    "@jridgewell/sourcemap-codec": "npm:^1.4.15"
+  checksum: 10/883eaaf6792a3263e44f4bcdcd35ace272268e4b98ed5a770ad711947958d2f9fc683e474945e306e2bdc152b7e44d369ee312690d87025b9879fc63fbe1409c
   languageName: node
   linkType: hard
 
@@ -10859,6 +10907,13 @@ __metadata:
   version: 3.0.1
   resolution: "picomatch@npm:3.0.1"
   checksum: 10/65ac837fedbd0640586f7c214f6c7481e1e12f41cdcd22a95eb6a2914d1773707ed0f0b5bd2d1e39b5ec7860b43a4c9150152332a3884cd8dd1d419b2a2fa5b5
+  languageName: node
+  linkType: hard
+
+"picomatch@npm:4.0.1":
+  version: 4.0.1
+  resolution: "picomatch@npm:4.0.1"
+  checksum: 10/d5005bb1b4021260826d17f64666848bbdea2f449dbf97dd2df384d3253aac43a550f658a855a7a4fa6a2a88f36a832daa008ee3f71fe0bf10990c2672349c76
   languageName: node
   linkType: hard
 
