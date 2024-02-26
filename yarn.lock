@@ -860,8 +860,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/webpack-localtunnel-plugin@workspace:webpack/webpack-localtunnel-plugin"
   dependencies:
-    "@types/localtunnel": "npm:2.0.1"
-    "@types/node": "npm:18.19.3"
+    "@types/localtunnel": "npm:2.0.4"
+    "@types/node": "npm:20.11.20"
     localtunnel: "npm:2.0.2"
   languageName: unknown
   linkType: soft
@@ -872,15 +872,14 @@ __metadata:
   dependencies:
     "@atls/config-typescript": "workspace:*"
     "@monstrs/types-import-proto": "npm:0.0.1"
-    "@types/node": "npm:18.19.3"
+    "@types/node": "npm:20.11.20"
     file-loader: "npm:6.2.0"
-    memfs: "npm:4.6.0"
+    memfs: "npm:4.7.7"
     protocol-buffers-schema: "npm:3.6.0"
     ts-loader: "npm:9.5.1"
     tslib: "npm:2.6.2"
     typescript: "npm:5.2.2"
     webpack: "npm:5.89.0"
-    webpack-chain: "npm:6.5.1"
   languageName: unknown
   linkType: soft
 
@@ -895,7 +894,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/webpack-start-server-plugin@workspace:webpack/webpack-start-server-plugin"
   dependencies:
-    "@types/node": "npm:18.19.3"
+    "@types/node": "npm:20.11.20"
     webpack: "npm:5.89.0"
   languageName: unknown
   linkType: soft
@@ -3435,12 +3434,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/localtunnel@npm:2.0.1":
-  version: 2.0.1
-  resolution: "@types/localtunnel@npm:2.0.1"
+"@types/localtunnel@npm:2.0.4":
+  version: 2.0.4
+  resolution: "@types/localtunnel@npm:2.0.4"
   dependencies:
     "@types/node": "npm:*"
-  checksum: 10/96de263eab50ce50721f8520f2c5f97302200ecf086ca97097b31f6d80c9b571b71b768ae6cc0ec353571eeb41c7fa265306f82232558433bcbe099039955a97
+  checksum: 10/53dd793a88bb9766e8812796913c8409f27ab56f0dbb7480278906150d8097e9e7d4c04466c252bde8545553bc322db4ae8c9563b94f217303b0648c5c4b3651
   languageName: node
   linkType: hard
 
@@ -5004,13 +5003,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"arg@npm:^5.0.2":
-  version: 5.0.2
-  resolution: "arg@npm:5.0.2"
-  checksum: 10/92fe7de222054a060fd2329e92e867410b3ea260328147ee3fb7855f78efae005f4087e698d4e688a856893c56bb09951588c40f2c901cf6996cd8cd7bcfef2c
-  languageName: node
-  linkType: hard
-
 "argparse@npm:^1.0.7":
   version: 1.0.10
   resolution: "argparse@npm:1.0.10"
@@ -6272,13 +6264,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge@npm:^1.5.2":
-  version: 1.5.2
-  resolution: "deepmerge@npm:1.5.2"
-  checksum: 10/86ca1d1288e86a8b6912360bb7e1f815e0e70ac9c90ea46636e6a75d542859e68fd9811a238c15a6f9de16610e5fb4d40c6892169768b22da75b18a7d9308933
-  languageName: node
-  linkType: hard
-
 "defaults@npm:^1.0.3":
   version: 1.0.4
   resolution: "defaults@npm:1.0.4"
@@ -7255,7 +7240,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-diff@npm:^1.1.2, fast-diff@npm:^1.3.0":
+"fast-diff@npm:^1.1.2":
   version: 1.3.0
   resolution: "fast-diff@npm:1.3.0"
   checksum: 10/9e57415bc69cd6efcc720b3b8fe9fdaf42dcfc06f86f0f45378b1fa512598a8aac48aa3928c8751d58e2f01bb4ba4f07e4f3d9bc0d57586d45f1bd1e872c6cde
@@ -8142,13 +8127,6 @@ __metadata:
   bin:
     husky: lib/bin.js
   checksum: 10/0f4c1162845cd8c4ecf13af85fe62a1c9de3d4277053004a59dae90a36346fe7eeb7eff3bc7a8484c4f365f6eccf7fd17aa6935198028980c9d6e95306455f3c
-  languageName: node
-  linkType: hard
-
-"hyperdyperid@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "hyperdyperid@npm:1.2.0"
-  checksum: 10/64abb5568ff17aa08ac0175ae55e46e22831c5552be98acdd1692081db0209f36fff58b31432017b4e1772c178962676a2cc3c54e4d5d7f020d7710cec7ad7a6
   languageName: node
   linkType: hard
 
@@ -9561,29 +9539,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-joy@npm:^9.2.0":
-  version: 9.9.1
-  resolution: "json-joy@npm:9.9.1"
-  dependencies:
-    arg: "npm:^5.0.2"
-    hyperdyperid: "npm:^1.2.0"
-  peerDependencies:
-    quill-delta: ^5
-    rxjs: 7
-    tslib: 2
-  bin:
-    jj: bin/jj.js
-    json-pack: bin/json-pack.js
-    json-pack-test: bin/json-pack-test.js
-    json-patch: bin/json-patch.js
-    json-patch-test: bin/json-patch-test.js
-    json-pointer: bin/json-pointer.js
-    json-pointer-test: bin/json-pointer-test.js
-    json-unpack: bin/json-unpack.js
-  checksum: 10/580cf35465b838a4fe96dc90be1d8d9b95e3c495fb5e48ad4f5b048fc5173ec47c6fd58fb93728ede42b3f8bbce0344484ac0986f9c3fa9be2f1957c4eedd872
-  languageName: node
-  linkType: hard
-
 "json-parse-even-better-errors@npm:^2.3.0, json-parse-even-better-errors@npm:^2.3.1":
   version: 2.3.1
   resolution: "json-parse-even-better-errors@npm:2.3.1"
@@ -9843,13 +9798,6 @@ __metadata:
   version: 4.3.0
   resolution: "lodash.camelcase@npm:4.3.0"
   checksum: 10/c301cc379310441dc73cd6cebeb91fb254bea74e6ad3027f9346fc43b4174385153df420ffa521654e502fd34c40ef69ca4e7d40ee7129a99e06f306032bfc65
-  languageName: node
-  linkType: hard
-
-"lodash.clonedeep@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.clonedeep@npm:4.5.0"
-  checksum: 10/957ed243f84ba6791d4992d5c222ffffca339a3b79dbe81d2eaf0c90504160b500641c5a0f56e27630030b18b8e971ea10b44f928a977d5ced3c8948841b555f
   languageName: node
   linkType: hard
 
@@ -10114,15 +10062,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memfs@npm:4.6.0":
-  version: 4.6.0
-  resolution: "memfs@npm:4.6.0"
+"memfs@npm:4.7.7":
+  version: 4.7.7
+  resolution: "memfs@npm:4.7.7"
   dependencies:
-    json-joy: "npm:^9.2.0"
-    thingies: "npm:^1.11.1"
-  peerDependencies:
-    tslib: 2
-  checksum: 10/640071c277821a5a1564795caf2cc264e383733b94d259abebc5f21f6832789bdf13ce873468383111685d49657f2e9f29fc85c7bb64ff55757bed186cf074ff
+    tslib: "npm:^2.0.0"
+  checksum: 10/311633e5857c91f41021b43f00eda8d540fed2c2d9e02c780fe78de720cfb55d15ab2d5b5ce9f2576637589b82e84488f1b9ff503563e817ed65200ad24617fb
   languageName: node
   linkType: hard
 
@@ -11275,17 +11220,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"quill-delta@npm:*":
-  version: 5.1.0
-  resolution: "quill-delta@npm:5.1.0"
-  dependencies:
-    fast-diff: "npm:^1.3.0"
-    lodash.clonedeep: "npm:^4.5.0"
-    lodash.isequal: "npm:^4.5.0"
-  checksum: 10/6cd9a634dd729504b0d13b25718f3dfa6b54fc5144cc682d32f229c5da2e50726222858f9f6612a676f9e2b0a2ec3173d3d678fdc96b1040ba725bfc35af3fbe
-  languageName: node
-  linkType: hard
-
 "qunit@npm:^2.8.0":
   version: 2.20.0
   resolution: "qunit@npm:2.20.0"
@@ -11784,7 +11718,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:*, rxjs@npm:7.8.1, rxjs@npm:^7.5.1, rxjs@npm:^7.5.5":
+"rxjs@npm:7.8.1, rxjs@npm:^7.5.1, rxjs@npm:^7.5.5":
   version: 7.8.1
   resolution: "rxjs@npm:7.8.1"
   dependencies:
@@ -12685,15 +12619,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"thingies@npm:^1.11.1":
-  version: 1.15.0
-  resolution: "thingies@npm:1.15.0"
-  peerDependencies:
-    tslib: ^2
-  checksum: 10/c19fd69fe4772f039e2310d633f3c597bd1edb925f7d76233e2198c148ff5715272b1b493ecfcf0ebdecff195a885d80e5c9ed7c0c4348f288d885148ac4bdb7
-  languageName: node
-  linkType: hard
-
 "thread-stream@npm:^2.0.0":
   version: 2.4.1
   resolution: "thread-stream@npm:2.4.1"
@@ -12924,7 +12849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.6.2, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
+"tslib@npm:2.6.2, tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 10/bd26c22d36736513980091a1e356378e8b662ded04204453d353a7f34a4c21ed0afc59b5f90719d4ba756e581a162ecbf93118dc9c6be5acf70aa309188166ca
@@ -13332,16 +13257,6 @@ __metadata:
   dependencies:
     defaults: "npm:^1.0.3"
   checksum: 10/182ebac8ca0b96845fae6ef44afd4619df6987fe5cf552fdee8396d3daa1fb9b8ec5c6c69855acb7b3c1231571393bd1f0a4cdc4028d421575348f64bb0a8817
-  languageName: node
-  linkType: hard
-
-"webpack-chain@npm:6.5.1":
-  version: 6.5.1
-  resolution: "webpack-chain@npm:6.5.1"
-  dependencies:
-    deepmerge: "npm:^1.5.2"
-    javascript-stringify: "npm:^2.0.1"
-  checksum: 10/54172de36418e7eb4b3e24b1ad71c9ebdda1889a018fef6d2e8947be6ee309b327adcddb338a3a6a7ea1c7036423b897d6779b17b025b01cf85b301d85ed4903
   languageName: node
   linkType: hard
 

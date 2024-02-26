@@ -1,1 +1,1 @@
-export * from './webpack-localtunnel.plugin'
+export * from './webpack-localtunnel.plugin.js'

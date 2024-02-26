@@ -1,1 +1,1 @@
-export { default } from './proto-imports.loader'
+export { default } from './proto-imports.loader.js'
