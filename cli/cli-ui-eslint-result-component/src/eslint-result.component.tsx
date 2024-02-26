@@ -1,14 +1,13 @@
-import type { FC }                       from 'react'
-
-import type { ESLintResultMessageProps } from './eslint-result-message.component.jsx'
-
 import { isAbsolute }                    from 'node:path'
 import { relative }                      from 'node:path'
 
+import type { ESLintResultMessageProps } from './eslint-result-message.component.jsx'
+import type { FC }                       from 'react'
+
+import React                             from 'react'
 import { Box }                           from 'ink'
 import { nanoid }                        from 'nanoid'
 import { useMemo }                       from 'react'
-import React                             from 'react'
 
 import { ESLintResultMessage }           from './eslint-result-message.component.jsx'
 

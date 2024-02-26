@@ -2,7 +2,7 @@ import React            from 'react'
 
 import { renderStatic } from '@atls/cli-ui-renderer'
 
-import { StackTrace }   from './stack-trace.component'
+import { StackTrace }   from './stack-trace.component.js'
 
 const stripAnsi = require('strip-ansi')
 

@@ -5,8 +5,8 @@ import { Text }               from 'ink'
 import { Box }                from 'ink'
 import { useCallback }        from 'react'
 
-import { IndicatorComponent } from './select-indicator.component'
-import { ItemComponent }      from './select-item.component'
+import { IndicatorComponent } from './select-indicator.component.js'
+import { ItemComponent }      from './select-item.component.js'
 
 const COMMIT_ADDITIONAL = [
   {

@@ -1,1 +1,1 @@
-export * from './typescript-diagnostic.component'
+export * from './typescript-diagnostic.component.js'

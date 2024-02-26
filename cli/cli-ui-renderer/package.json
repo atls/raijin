@@ -1,8 +1,12 @@
 {
   "name": "@atls/cli-ui-renderer",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -16,12 +20,19 @@
     "react": "16"
   },
   "devDependencies": {
-    "@types/node": "18.19.3",
+    "@types/node": "20.11.20",
     "@types/react": "16.14.54"
   },
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.js",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "typings": "dist/index.d.ts"
   }
 }

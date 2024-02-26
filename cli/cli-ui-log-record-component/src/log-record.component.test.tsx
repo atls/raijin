@@ -2,7 +2,7 @@ import React            from 'react'
 
 import { renderStatic } from '@atls/cli-ui-renderer'
 
-import { LogRecord }    from './log-record.component'
+import { LogRecord }    from './log-record.component.js'
 
 const stripAnsi = require('strip-ansi')
 

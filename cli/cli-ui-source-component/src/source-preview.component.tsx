@@ -1,7 +1,7 @@
 import React               from 'react'
 import { Text }            from 'ink'
 
-import { codeFrameSource } from './utils'
+import { codeFrameSource } from './utils.js'
 
 export interface SourcePreviewProps {
   children: string

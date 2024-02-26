@@ -1,6 +1,9 @@
+// @ts-ignore
 import reconciler     from 'ink/build/reconciler'
+// @ts-ignore
 import render         from 'ink/build/renderer'
 import { ReactNode }  from 'react'
+// @ts-ignore
 import { createNode } from 'ink/build/dom'
 
 export const renderStatic = (

@@ -9,7 +9,7 @@ import { useMemo }        from 'react'
 
 import { SourcePreview }  from '@atls/cli-ui-source-component'
 
-import { getFrameSource } from './utils'
+import { getFrameSource } from './utils.js'
 
 export interface StackTraceProps {
   children: string

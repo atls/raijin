@@ -1,1 +1,1 @@
-export * from './pretty-logs.transform'
+export * from './pretty-logs.transform.js'

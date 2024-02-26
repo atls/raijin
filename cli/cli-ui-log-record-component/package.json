@@ -1,8 +1,12 @@
 {
   "name": "@atls/cli-ui-log-record-component",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -19,7 +23,7 @@
   },
   "devDependencies": {
     "@types/jest": "29.5.11",
-    "@types/node": "18.19.3",
+    "@types/node": "20.11.20",
     "@types/react": "16.14.54",
     "ink": "^3.0.8",
     "react": "16.14.0",
@@ -31,7 +35,14 @@
   },
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.js",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "typings": "dist/index.d.ts"
   }
 }

@@ -2,7 +2,7 @@ import React                    from 'react'
 
 import { renderStatic }         from '@atls/cli-ui-renderer'
 
-import { TypeScriptDiagnostic } from './typescript-diagnostic.component'
+import { TypeScriptDiagnostic } from './typescript-diagnostic.component.js'
 
 const stripAnsi = require('strip-ansi')
 
