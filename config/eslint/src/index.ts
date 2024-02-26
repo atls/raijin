@@ -1,2 +1,2 @@
-export * from './config-old'
-export * from './flat-config'
+export * from './config-old.js'
+export * from './flat-config.js'

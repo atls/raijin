@@ -1413,7 +1413,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/config-eslint", "workspace:config/eslint"],\
           ["@types/eslint", "npm:8.56.0"],\
-          ["@types/node", "npm:18.19.3"],\
+          ["@types/node", "npm:20.11.20"],\
           ["@typescript-eslint/eslint-plugin", "virtual:7aed8cf9106f781330fe216ac479d03159058250072e4818a5a6bc9d31f087c38678fde842724541ef0148411801d573460512fb69d87b320db4a931b99c5771#npm:6.15.0"],\
           ["@typescript-eslint/parser", "virtual:7aed8cf9106f781330fe216ac479d03159058250072e4818a5a6bc9d31f087c38678fde842724541ef0148411801d573460512fb69d87b320db4a931b99c5771#npm:6.15.0"],\
           ["eslint", "npm:8.56.0"],\
@@ -1439,7 +1439,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/jest-static-stubs", "workspace:jest/static-stubs"],\
           ["@emotion/jest", "virtual:2bbec827ae5f0cd14745b7fb4b1f63840ef7aa82a7732ebe5fe02d573fd075f05fdf02bac228735f4ec9d391e1990fe4b0ac46fe60c29d70138fb2948512e5dd#npm:11.11.0"],\
           ["@monstrs/jest-pnp-resolver", "npm:0.0.1"],\
-          ["@types/node", "npm:18.19.15"],\
+          ["@types/node", "npm:20.11.20"],\
           ["jest", "virtual:2bbec827ae5f0cd14745b7fb4b1f63840ef7aa82a7732ebe5fe02d573fd075f05fdf02bac228735f4ec9d391e1990fe4b0ac46fe60c29d70138fb2948512e5dd#npm:29.7.0"],\
           ["ts-jest", "virtual:2bbec827ae5f0cd14745b7fb4b1f63840ef7aa82a7732ebe5fe02d573fd075f05fdf02bac228735f4ec9d391e1990fe4b0ac46fe60c29d70138fb2948512e5dd#npm:29.1.2"],\
           ["typescript", "patch:typescript@npm%3A5.2.2#optional!builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
@@ -1452,7 +1452,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./config/prettier/",\
         "packageDependencies": [\
           ["@atls/config-prettier", "workspace:config/prettier"],\
-          ["@types/node", "npm:18.19.3"],\
+          ["@types/node", "npm:20.11.20"],\
           ["@types/prettier", "npm:3.0.0"],\
           ["prettier", "npm:3.1.1"]\
         ],\
@@ -1464,7 +1464,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./config/typescript/",\
         "packageDependencies": [\
           ["@atls/config-typescript", "workspace:config/typescript"],\
-          ["@types/node", "npm:18.19.3"],\
+          ["@types/node", "npm:20.11.20"],\
           ["ts-node", "virtual:1ee5620dbf4e8910ec44a9ba845b14f9a11a439a3d46ae87e0f920fe8841f8cc8efa0158b324640cef9d24998003c49fad9c794495f9d7cc8fbf0503d6ad3991#npm:10.9.2"],\
           ["typescript", "patch:typescript@npm%3A5.2.2#optional!builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
         ],\
@@ -5501,14 +5501,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@types/node", [\
-      ["npm:18.19.15", {\
-        "packageLocation": "./.yarn/cache/@types-node-npm-18.19.15-63d17b58ca-cbd4bf49f6.zip/node_modules/@types/node/",\
-        "packageDependencies": [\
-          ["@types/node", "npm:18.19.15"],\
-          ["undici-types", "npm:5.26.5"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:18.19.3", {\
         "packageLocation": "./.yarn/cache/@types-node-npm-18.19.3-9a233afc47-b95d0c0be3.zip/node_modules/@types/node/",\
         "packageDependencies": [\
@@ -17715,7 +17707,7 @@ const RAW_RUNTIME_STATE =
           ["@tsconfig/node12", "npm:1.0.11"],\
           ["@tsconfig/node14", "npm:1.0.3"],\
           ["@tsconfig/node16", "npm:1.0.4"],\
-          ["@types/node", "npm:18.19.3"],\
+          ["@types/node", "npm:20.11.20"],\
           ["@types/swc__core", null],\
           ["@types/swc__wasm", null],\
           ["@types/typescript", null],\

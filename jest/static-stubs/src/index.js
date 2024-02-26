@@ -1,46 +1,23 @@
-/* eslint-disable object-shorthand */
 // images
-const png   = require('./png');
-const jpg   = require('./jpg');
-const gif   = require('./gif');
-
+import png from './png.js'
+import jpg from './jpg'
+import gif from './gif'
 // video / media
-const avi   = require('./avi');
-const flv   = require('./flv');
-const mkv   = require('./mkv');
-const mp4   = require('./mp4');
-const webm  = require('./webm');
-
+import avi from './avi'
+import flv from './flv'
+import mkv from './mkv'
+import mp4 from './mp4'
+import webm from './webm'
 // audio
-const mid   = require('./mid');
-const wav   = require('./wav');
-
+import mid  from './mid'
+import wav from './wav'
 // flash
-const swf   = require('./swf');
-
+import swf from './swf'
 // fonts
-const ttf = require('./ttf')
-const woff = require('./woff')
-const woff2 = require('./woff2')
-const eot = require('./eot')
-const otf = require('./otf')
+import ttf from './ttf'
+import woff from './woff'
+import woff2 from './woff2'
+import eot from './eot'
+import otf from './otf'
 
-module.exports = {
-  png: png,
-  jpg: jpg,
-  jpeg: jpg,
-  gif: gif,
-  avi: avi,
-  flv: flv,
-  mkv: mkv,
-  mp4: mp4,
-  webm: webm,
-  mid: mid,
-  wav: wav,
-  swf: swf,
-  ttf: ttf,
-  woff: woff,
-  woff2: woff2,
-  eot: eot,
-  otf: otf,
-};
+export { png, avi, eot, flv, gif, jpg, mid, mkv, mp4, otf, swf, ttf, wav, webm, woff, woff2 }

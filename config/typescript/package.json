@@ -1,8 +1,12 @@
 {
   "name": "@atls/config-typescript",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -13,12 +17,20 @@
     "postpack": "rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "18.19.3",
+    "@types/node": "20.11.20",
     "ts-node": "10.9.2",
     "typescript": "5.2.2"
   },
   "publishConfig": {
-    "main": "dist/index.js",
+    "exports": {
+      "./package.json": "./package.json",
+      "./tsconfig.json": "./dist/tsconfig.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "typings": "dist/index.d.ts"
   }
 }

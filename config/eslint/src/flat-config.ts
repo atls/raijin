@@ -7,7 +7,7 @@ import reactHooks             from 'eslint-plugin-react-hooks'
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
 import { Linter }             from 'eslint'
 
-import { eslintrc }           from './rules'
+import { eslintrc }           from './rules.js'
 
 export const eslintFlatConfig: Linter.FlatConfig[] = [
   {

@@ -3,7 +3,7 @@ import parser       from '@typescript-eslint/parser'
 
 import { Linter }   from 'eslint'
 
-import { eslintrc } from './rules'
+import { eslintrc } from './rules.js'
 
 export const eslintConfig: Linter.Config = {
   rules: eslintrc,

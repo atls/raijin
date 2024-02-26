@@ -606,7 +606,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-service@workspace:*, @atls/code-service@workspace:0.0.28, @atls/code-service@workspace:code/code-service":
+"@atls/code-service@workspace:*, @atls/code-service@workspace:code/code-service":
   version: 0.0.0-use.local
   resolution: "@atls/code-service@workspace:code/code-service"
   dependencies:
@@ -707,12 +707,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/config-eslint@workspace:*, @atls/config-eslint@workspace:0.0.12, @atls/config-eslint@workspace:config/eslint":
+"@atls/config-eslint@workspace:*, @atls/config-eslint@workspace:config/eslint":
   version: 0.0.0-use.local
   resolution: "@atls/config-eslint@workspace:config/eslint"
   dependencies:
     "@types/eslint": "npm:8.56.0"
-    "@types/node": "npm:18.19.3"
+    "@types/node": "npm:20.11.20"
     "@typescript-eslint/eslint-plugin": "npm:6.15.0"
     "@typescript-eslint/parser": "npm:6.15.0"
     eslint: "npm:8.56.0"
@@ -728,7 +728,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/config-jest@workspace:*, @atls/config-jest@workspace:0.0.14, @atls/config-jest@workspace:config/jest":
+"@atls/config-jest@workspace:*, @atls/config-jest@workspace:config/jest":
   version: 0.0.0-use.local
   resolution: "@atls/config-jest@workspace:config/jest"
   dependencies:
@@ -736,7 +736,7 @@ __metadata:
     "@atls/jest-static-stubs": "workspace:*"
     "@emotion/jest": "npm:11.11.0"
     "@monstrs/jest-pnp-resolver": "npm:0.0.1"
-    "@types/node": "npm:18.19.15"
+    "@types/node": "npm:20.11.20"
     jest: "npm:29.7.0"
     ts-jest: "npm:29.1.2"
     typescript: "npm:5.2.2"
@@ -747,7 +747,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/config-prettier@workspace:config/prettier"
   dependencies:
-    "@types/node": "npm:18.19.3"
+    "@types/node": "npm:20.11.20"
     "@types/prettier": "npm:3.0.0"
     prettier: "npm:3.1.1"
   languageName: unknown
@@ -757,7 +757,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/config-typescript@workspace:config/typescript"
   dependencies:
-    "@types/node": "npm:18.19.3"
+    "@types/node": "npm:20.11.20"
     ts-node: "npm:10.9.2"
     typescript: "npm:5.2.2"
   languageName: unknown
@@ -811,7 +811,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/schematics@workspace:*, @atls/schematics@workspace:0.0.25, @atls/schematics@workspace:schematics/schematics":
+"@atls/schematics@workspace:*, @atls/schematics@workspace:schematics/schematics":
   version: 0.0.0-use.local
   resolution: "@atls/schematics@workspace:schematics/schematics"
   dependencies:
@@ -835,7 +835,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/tools-setup-ts-execution@workspace:*, @atls/tools-setup-ts-execution@workspace:0.0.1, @atls/tools-setup-ts-execution@workspace:utils/setup-ts-execution":
+"@atls/tools-setup-ts-execution@workspace:*, @atls/tools-setup-ts-execution@workspace:utils/setup-ts-execution":
   version: 0.0.0-use.local
   resolution: "@atls/tools-setup-ts-execution@workspace:utils/setup-ts-execution"
   dependencies:
@@ -3398,15 +3398,6 @@ __metadata:
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 10/b95d0c0be342275e27d882bb6ca73c0b757d1672a121cae1fc3249eda4f86a8abeb5745e5c5c1150914bcfda323a3fc51526cd34e2097f8355bf7cbf12fa6bcb
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:18.19.15":
-  version: 18.19.15
-  resolution: "@types/node@npm:18.19.15"
-  dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: 10/cbd4bf49f6aa0e5e9b9d3dafd0f83cc21475f6fe846c8b59a264e508608aaad8cd48dfce95ee48cdf81d3139c35c03a9d4fcd613bf98cae7b61c7dc36bb6b195
   languageName: node
   linkType: hard
 
@@ -12706,11 +12697,11 @@ __metadata:
   dependencies:
     "@angular-devkit/core": "npm:17.0.8"
     "@angular-devkit/schematics": "npm:17.0.8"
-    "@atls/code-service": "workspace:0.0.28"
-    "@atls/config-eslint": "workspace:0.0.12"
-    "@atls/config-jest": "workspace:0.0.14"
-    "@atls/schematics": "workspace:0.0.25"
-    "@atls/tools-setup-ts-execution": "workspace:0.0.1"
+    "@atls/code-service": "workspace:*"
+    "@atls/config-eslint": "workspace:*"
+    "@atls/config-jest": "workspace:*"
+    "@atls/schematics": "workspace:*"
+    "@atls/tools-setup-ts-execution": "workspace:*"
     "@jest/core": "npm:29.7.0"
     "@rushstack/eslint-patch": "npm:1.6.1"
     "@types/eslint": "npm:8.56.0"
