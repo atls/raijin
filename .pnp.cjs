@@ -1572,7 +1572,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/runtime", "npm:7.23.6"],\
           ["@babel/types", "npm:7.23.6"],\
           ["@types/babel__core", "npm:7.1.19"],\
-          ["@types/node", "npm:18.19.3"]\
+          ["@types/node", "npm:20.11.20"]\
         ],\
         "linkType": "SOFT"\
       }]\
