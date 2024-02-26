@@ -12,20 +12,17 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "6.15.0",
-    "@typescript-eslint/parser": "6.15.0",
-    "eslint": "8.56.0",
-    "eslint-import-resolver-node": "0.3.9",
-    "eslint-plugin-import": "2.26.0",
+    "eslint": "8.57.0",
     "eslint-plugin-jsx-a11y": "6.8.0",
-    "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-react": "7.30.2",
+    "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "globals": "14.0.0",
     "prettier": "3.1.1",
-    "react": "18.2.0"
+    "react": "18.2.0",
+    "typescript-eslint": "7.0.2"
   },
   "devDependencies": {
-    "@types/eslint": "8.56.0",
+    "@types/eslint": "8.56.3",
     "@types/node": "18.19.3",
     "typescript": "5.2.2"
   },

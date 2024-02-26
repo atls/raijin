@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build plugin",
+    "build": "builder build plugin --no-minify",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
