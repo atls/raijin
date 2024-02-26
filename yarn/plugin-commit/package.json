@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
   "files": [
     "dist"
   ],
@@ -36,10 +36,5 @@
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*",
     "@yarnpkg/fslib": "*"
-  },
-  "publishConfig": {
-    "access": "public",
-    "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
   }
 }

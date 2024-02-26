@@ -1,9 +1,9 @@
 /* Copy/Paste https://github.com/yarnpkg/berry/blob/master/packages/acceptance-tests/pkg-tests-core/sources/utils/exec.ts */
 /* eslint-disable */
 
-import * as exec     from './exec'
-import * as fs       from './fs'
-import * as tests    from './tests'
+import * as exec     from './exec.js'
+import * as fs       from './fs.js'
+import * as tests    from './tests.js'
 
 import { npath }     from '@yarnpkg/fslib'
 

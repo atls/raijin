@@ -1,7 +1,7 @@
 import { Project }                from '@yarnpkg/core'
 import { Workspace }              from '@yarnpkg/core'
 
-import { getWorkspaceDependents } from './get-workspace-dependents.util'
+import { getWorkspaceDependents } from './get-workspace-dependents.util.js'
 
 export const getChangedWorkspaces = (
   project: Project,

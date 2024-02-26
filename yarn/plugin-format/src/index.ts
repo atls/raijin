@@ -1,3 +1,3 @@
-export { plugin as default } from './format.plugin'
+export { plugin as default } from './format.plugin.js'
 
-export * from './format.command'
+export * from './format.command.js'

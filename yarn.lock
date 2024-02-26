@@ -1052,7 +1052,7 @@ __metadata:
     "@babel/code-frame": "npm:7.23.5"
     "@jest/test-result": "npm:29.7.0"
     "@octokit/types": "npm:12.4.0"
-    "@types/node": "npm:18.19.3"
+    "@types/node": "npm:20.11.20"
     "@yarnpkg/builder": "npm:4.0.0"
     "@yarnpkg/cli": "npm:4.1.0"
     "@yarnpkg/core": "npm:4.0.3"

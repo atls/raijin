@@ -1,12 +1,12 @@
 /* Copy/Paste https://github.com/yarnpkg/berry/blob/master/packages/acceptance-tests/pkg-tests-core/sources/utils/tests.ts */
 /* eslint-disable */
 
-import * as fsUtils     from './fs'
+import * as fsUtils     from './fs.js'
 
 import { PortablePath } from '@yarnpkg/fslib'
 import { npath }        from '@yarnpkg/fslib'
 
-import { ExecResult }   from './exec'
+import { ExecResult }   from './exec.js'
 
 const deepResolve = require(`super-resolve`)
 

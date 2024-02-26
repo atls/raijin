@@ -4,8 +4,8 @@ import { Project }                   from '@yarnpkg/core'
 
 import { TesterWorker }              from '@atls/code-test-worker'
 
-import { AbstractChecksTestCommand } from './abstract-checks-test.command'
-import { GitHubChecks }              from './github.checks'
+import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
+import { GitHubChecks }              from './github.checks.js'
 
 class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static paths = [['checks', 'test', 'unit']]

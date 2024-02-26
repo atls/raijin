@@ -1,4 +1,4 @@
-export { plugin as default } from './workspaces.plugin'
+export { plugin as default } from './workspaces.plugin.js'
 
-export * from './workspaces-changed-foreach.command'
-export * from './workspaces-changed-list.command'
+export * from './workspaces-changed-foreach.command.js'
+export * from './workspaces-changed-list.command.js'

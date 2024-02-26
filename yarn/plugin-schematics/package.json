@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -44,7 +48,6 @@
   },
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.js",
     "typings": "dist/index.d.ts"
   }
 }

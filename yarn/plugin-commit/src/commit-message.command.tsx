@@ -1,7 +1,9 @@
 import { BaseCommand }             from '@yarnpkg/cli'
 import { PortablePath }            from '@yarnpkg/fslib'
+// @ts-ignore
 import { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm'
 import { xfs }                     from '@yarnpkg/fslib'
+// @ts-ignore
 import { renderForm }              from '@yarnpkg/libui/sources/misc/renderForm'
 
 import React                       from 'react'

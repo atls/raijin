@@ -2,8 +2,8 @@ import type { AggregatedResult } from '@jest/test-result'
 
 import { BaseCommand }           from '@yarnpkg/cli'
 
-import { AnnotationLevel }       from './github.checks'
-import { Annotation }            from './github.checks'
+import { AnnotationLevel }       from './github.checks.js'
+import { Annotation }            from './github.checks.js'
 
 abstract class AbstractChecksTestCommand extends BaseCommand {
   formatResults(results: AggregatedResult, cwd?: string): Annotation[] {

@@ -5,6 +5,7 @@ import { MessageName }                    from '@yarnpkg/core'
 import { StreamReport }                   from '@yarnpkg/core'
 import { xfs }                            from '@yarnpkg/fslib'
 import { npath }                          from '@yarnpkg/fslib'
+// @ts-ignore
 import { renderForm }                     from '@yarnpkg/libui/sources/misc/renderForm'
 
 import React                              from 'react'

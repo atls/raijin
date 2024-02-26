@@ -1,7 +1,7 @@
 import { Workspace }                from '@yarnpkg/core'
 import { structUtils }              from '@yarnpkg/core'
 
-import { getWorkspaceDependencies } from './get-workspace-dependencies.util'
+import { getWorkspaceDependencies } from './get-workspace-dependencies.util.js'
 
 export const getWorkspaceDependents = (workspace: Workspace): readonly Workspace[] => {
   const dependents = new Set<Workspace>()

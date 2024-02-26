@@ -1,3 +1,3 @@
-export { plugin as default } from './check.plugin'
+export { plugin as default } from './check.plugin.js'
 
-export * from './check.command'
+export * from './check.command.js'

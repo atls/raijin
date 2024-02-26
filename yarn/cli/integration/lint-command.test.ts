@@ -1,7 +1,7 @@
 import { PortablePath }     from '@yarnpkg/fslib'
 import { xfs }              from '@yarnpkg/fslib'
 
-import { makeTemporaryEnv } from './utils'
+import { makeTemporaryEnv } from './utils/index.js'
 
 jest.setTimeout(150000)
 

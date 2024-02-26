@@ -14,12 +14,12 @@ import { ppath }           from '@yarnpkg/fslib'
 import { npath }           from '@yarnpkg/fslib'
 import { packUtils }       from '@yarnpkg/plugin-pack'
 
-import { ExportCache }     from './export/ExportCache'
-import { copyRcFile }      from './copy.utils'
-import { copyPlugins }     from './copy.utils'
-import { copyYarnRelease } from './copy.utils'
-import { genPackTgz }      from './export/exportUtils'
-import { makeFetcher }     from './export/exportUtils'
+import { ExportCache }     from './export/ExportCache.js'
+import { copyRcFile }      from './copy.utils.js'
+import { copyPlugins }     from './copy.utils.js'
+import { copyYarnRelease } from './copy.utils.js'
+import { genPackTgz }      from './export/exportUtils.js'
+import { makeFetcher }     from './export/exportUtils.js'
 
 export const generateLockfile = async (
   project: Project,

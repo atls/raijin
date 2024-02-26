@@ -1,6 +1,12 @@
-const { execSync } = require('child_process')
-const { readdirSync } = require('fs')
-const { join } = require('path')
+import { fileURLToPath } from 'url'
+import { execSync }      from 'child_process'
+import { readdirSync }   from 'fs'
+import { dirname }       from 'path'
+import { join }          from 'path'
+
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
 
 const patchesDir = join(__dirname, 'pre-build')
 const patches = readdirSync(patchesDir)

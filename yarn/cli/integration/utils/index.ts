@@ -1,2 +1,2 @@
-export * from './make-temporary-env'
-export * from './package.utils'
+export * from './make-temporary-env.js'
+export * from './package.utils.js'

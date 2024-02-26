@@ -1,4 +1,4 @@
-export { plugin as default } from './test.plugin'
+export { plugin as default } from './test.plugin.js'
 
-export * from './test-integration.command'
-export * from './test-unit.command'
+export * from './test-integration.command.js'
+export * from './test-unit.command.js'

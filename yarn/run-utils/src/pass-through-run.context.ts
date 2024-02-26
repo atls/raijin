@@ -1,4 +1,4 @@
-import { StreamOutput } from './stream.output'
+import { StreamOutput } from './stream.output.js'
 
 export class PassThroughRunContext {
   private readonly stdoutOutput = new StreamOutput()

@@ -11,7 +11,7 @@ import { WorkspaceResolver }   from '@yarnpkg/core'
 import { WorkspaceFetcher }    from '@yarnpkg/core'
 import { PortablePath }        from '@yarnpkg/fslib'
 
-import { genPackZip }          from './exportUtils'
+import { genPackZip }          from './exportUtils.js'
 
 /**
  * Fetcher that packs workspaces as cacheable packages

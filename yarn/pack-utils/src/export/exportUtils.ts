@@ -24,8 +24,8 @@ import { packUtils }             from '@yarnpkg/plugin-pack'
 import tar                       from 'tar-stream'
 import { createGzip }            from 'zlib'
 
-import { WorkspacePackFetcher }  from './WorkspacePackFetcher'
-import { WorkspacePackResolver } from './WorkspacePackResolver'
+import { WorkspacePackFetcher }  from './WorkspacePackFetcher.js'
+import { WorkspacePackResolver } from './WorkspacePackResolver.js'
 
 /**
  * Make a MultiFetcher that resolves workspaces using WorkspacePackFetcher

@@ -15,9 +15,9 @@ import { ESLintResult }     from '@atls/cli-ui-eslint-result-component'
 import { LinterWorker }     from '@atls/code-lint-worker'
 import { renderStatic }     from '@atls/cli-ui-renderer'
 
-import { GitHubChecks }     from './github.checks'
-import { AnnotationLevel }  from './github.checks'
-import { Annotation }       from './github.checks'
+import { GitHubChecks }     from './github.checks.js'
+import { AnnotationLevel }  from './github.checks.js'
+import { Annotation }       from './github.checks.js'
 
 class ChecksLintCommand extends BaseCommand {
   static paths = [['checks', 'lint']]

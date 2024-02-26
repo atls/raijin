@@ -1,1 +1,1 @@
-export { plugin as default } from './commit.plugin'
+export { plugin as default } from './commit.plugin.js'

@@ -6,7 +6,7 @@ import { StreamReport }           from '@yarnpkg/core'
 
 import { Option }                 from 'clipanion'
 
-import { getChangedFiles }        from './changed-files.util'
+import { getChangedFiles }        from './changed-files.util.js'
 
 class FilesChangedListCommand extends BaseCommand {
   static paths = [['files', 'changed', 'list']]

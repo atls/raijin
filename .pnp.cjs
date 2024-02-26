@@ -1828,7 +1828,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/code-frame", "npm:7.23.5"],\
           ["@jest/test-result", "npm:29.7.0"],\
           ["@octokit/types", "npm:12.4.0"],\
-          ["@types/node", "npm:18.19.3"],\
+          ["@types/node", "npm:20.11.20"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@types/yarnpkg__fslib", null],\
@@ -1871,7 +1871,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/code-frame", "npm:7.23.5"],\
           ["@jest/test-result", "npm:29.7.0"],\
           ["@octokit/types", "npm:12.4.0"],\
-          ["@types/node", "npm:18.19.3"],\
+          ["@types/node", "npm:20.11.20"],\
           ["@yarnpkg/builder", "npm:4.0.0"],\
           ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:4.1.0"],\
           ["@yarnpkg/core", "npm:4.0.3"],\

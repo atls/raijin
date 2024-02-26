@@ -1,3 +1,3 @@
-export { plugin as default } from './lint.plugin'
+export { plugin as default } from './lint.plugin.js'
 
-export * from './lint.command'
+export * from './lint.command.js'

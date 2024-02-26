@@ -8,9 +8,9 @@ import { PassThroughRunContext } from '@atls/yarn-run-utils'
 import { getChangedFiles }       from '@atls/yarn-plugin-files'
 import { getChangedWorkspaces }  from '@atls/yarn-workspace-utils'
 
-import { GitHubChecks }          from './github.checks'
-import { AnnotationLevel }       from './github.checks'
-import { Annotation }            from './github.checks'
+import { GitHubChecks }          from './github.checks.js'
+import { AnnotationLevel }       from './github.checks.js'
+import { Annotation }            from './github.checks.js'
 
 const stripAnsi = require('strip-ansi')
 

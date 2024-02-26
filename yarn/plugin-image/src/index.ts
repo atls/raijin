@@ -1,3 +1,3 @@
-export { plugin as default } from './image.plugin'
+export { plugin as default } from './image.plugin.js'
 
-export * from './image-pack.command'
+export * from './image-pack.command.js'

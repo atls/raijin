@@ -16,8 +16,8 @@ import { UsageError }             from 'clipanion'
 import { execFileSync }           from 'child_process'
 import { isCI }                   from 'ci-info'
 
-import { pluginCommands }         from './pluginCommands'
-import { getPluginConfiguration } from './tools/getPluginConfiguration'
+import { pluginCommands }         from './pluginCommands.js'
+import { getPluginConfiguration } from './tools/getPluginConfiguration.js'
 
 export type YarnCli = ReturnType<typeof getBaseCli>
 

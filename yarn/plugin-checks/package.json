@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -34,7 +38,7 @@
   },
   "devDependencies": {
     "@octokit/types": "12.4.0",
-    "@types/node": "18.19.3",
+    "@types/node": "20.11.20",
     "@yarnpkg/builder": "4.0.0",
     "@yarnpkg/cli": "4.1.0",
     "@yarnpkg/core": "4.0.3",
@@ -45,10 +49,5 @@
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*",
     "@yarnpkg/fslib": "*"
-  },
-  "publishConfig": {
-    "access": "public",
-    "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
   }
 }

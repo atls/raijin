@@ -1,3 +1,3 @@
-export { plugin as default } from './typescript.plugin'
+export { plugin as default } from './typescript.plugin.js'
 
-export * from './typecheck.command'
+export * from './typecheck.command.js'

@@ -15,8 +15,8 @@ import { join }                   from 'path'
 
 import { SpinnerProgress }        from '@atls/yarn-run-utils'
 
-import { BADGES }                 from './badges.constants'
-import { COLORS }                 from './badges.constants'
+import { BADGES }                 from './badges.constants.js'
+import { COLORS }                 from './badges.constants.js'
 
 class BadgesCommand extends BaseCommand {
   static paths = [['badges', 'generate']]

@@ -9,6 +9,7 @@ class CommitMessageLintCommand extends BaseCommand {
   async execute() {
     const linter = new CommitLinter()
 
+    // @ts-ignore
     const messages = await read({ edit: true })
     const results = await Promise.all(messages.map(linter.lint))
 
