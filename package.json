@@ -32,7 +32,7 @@
     "@rushstack/eslint-patch": "1.6.1",
     "@types/eslint": "8.56.0",
     "@types/jest": "29.5.11",
-    "@types/node": "18.19.3",
+    "@types/node": "20.11.20",
     "@yarnpkg/builder": "4.0.0",
     "eslint": "8.48.0",
     "eslint-import-resolver-node": "0.3.9",
