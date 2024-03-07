@@ -1,1 +1,1 @@
-export * from './error-info.component.js'
+export * from './error-info.component.jsx'
