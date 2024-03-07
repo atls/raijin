@@ -1,1 +1,1 @@
-export * from './request-commit-message.component.js'
+export * from './request-commit-message/index.js'
