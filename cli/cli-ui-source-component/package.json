@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -16,17 +17,17 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@babel/code-frame": "7.23.5",
-    "supports-color": "8"
+    "@babel/code-frame": "^7.23.5",
+    "supports-color": "^9.4.0"
   },
   "devDependencies": {
-    "@types/babel__code-frame": "7.0.6",
-    "@types/node": "20.11.20",
-    "@types/react": "16.14.54",
-    "ink": "^3.0.8"
+    "@types/babel__code-frame": "^7.0.6",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "ink": "^4.4.1"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {
@@ -39,6 +40,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }

@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -18,12 +19,12 @@
   "dependencies": {
     "@atls/cli-ui-log-record-component": "workspace:*",
     "@atls/cli-ui-renderer": "workspace:*",
-    "ink": "^3.0.8",
-    "react": "16.14.0"
+    "ink": "^4.4.1",
+    "react": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.11.20",
-    "@types/react": "16.14.54"
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45"
   },
   "publishConfig": {
     "access": "public",
@@ -35,6 +36,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }
