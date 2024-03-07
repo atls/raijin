@@ -1,8 +1,8 @@
 import type { FC }       from 'react'
 
-import React             from 'react'
 import { Text }          from 'ink'
 import { Box }           from 'ink'
+import React             from 'react'
 
 import { SourcePreview } from '@atls/cli-ui-source-component'
 
