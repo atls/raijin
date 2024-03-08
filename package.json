@@ -23,7 +23,7 @@
   "devDependencies": {
     "@angular-devkit/core": "17.0.8",
     "@angular-devkit/schematics": "17.0.8",
-    "@atls/code-service": "workspace:0.0.28",
+    "@atls/code-service": "workspace:*",
     "@atls/config-eslint": "workspace:0.0.12",
     "@atls/config-jest": "workspace:0.0.14",
     "@atls/schematics": "workspace:0.0.25",
