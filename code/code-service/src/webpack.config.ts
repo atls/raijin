@@ -88,7 +88,9 @@ export class WebpackConfig {
         environment === WebpackEnvironment.dev ? new HotModuleReplacementPlugin() : () => {},
         ...plugins,
       ],
-      entry: join(this.cwd, 'src/index'),
+      entry: {
+        index: join(this.cwd, 'src/index'),
+      },
       node: { __dirname: false, __filename: false },
       output: { path: join(this.cwd, 'dist'), filename: '[name].js' },
       resolve: { extensions: ['.tsx', '.ts', '.js'] },
