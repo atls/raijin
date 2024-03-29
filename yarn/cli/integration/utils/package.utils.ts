@@ -7,12 +7,9 @@ import { PortablePath }      from '@yarnpkg/fslib'
 import { Filename }          from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
-// @ts-ignore
-import { prepareForPack }    from '@yarnpkg/plugin-pack/lib/packUtils'
-// @ts-ignore
-import { genPackList }       from '@yarnpkg/plugin-pack/lib/packUtils'
-// @ts-ignore
-import { genPackStream }     from '@yarnpkg/plugin-pack/lib/packUtils'
+import { prepareForPack }    from '@yarnpkg/plugin-pack/lib/packUtils.js'
+import { genPackList }       from '@yarnpkg/plugin-pack/lib/packUtils.js'
+import { genPackStream }     from '@yarnpkg/plugin-pack/lib/packUtils.js'
 
 export class PackageUtils {
   private configuration!: Configuration
@@ -20,6 +17,10 @@ export class PackageUtils {
   private project!: Project
 
   private rootWorkspace!: Workspace
+
+  get cwd(): PortablePath {
+    return process.cwd() as PortablePath
+  }
 
   async getWorkspacePackage(name: string) {
     const workspace = (await this.getRootWorkspace())
@@ -31,7 +32,11 @@ export class PackageUtils {
 
   async getConfiguration() {
     if (!this.configuration) {
-      this.configuration = await Configuration.find(process.cwd() as PortablePath, null)
+      this.configuration = await Configuration.find(this.cwd, null, {
+        strict: false,
+      })
+
+      this.configuration.values.set('enableInlineBuilds', true)
     }
 
     return this.configuration
@@ -39,10 +44,7 @@ export class PackageUtils {
 
   async getProject() {
     if (!this.project) {
-      const { project, workspace } = await Project.find(
-        await this.getConfiguration(),
-        process.cwd() as PortablePath
-      )
+      const { project, workspace } = await Project.find(await this.getConfiguration(), this.cwd)
 
       this.project = project
       this.rootWorkspace = workspace!
@@ -60,8 +62,8 @@ export class PackageUtils {
   }
 
   async pack(workspaces: string) {
-    const configuration = await Configuration.find(process.cwd() as PortablePath, null)
-    const { project, workspace } = await Project.find(configuration, process.cwd() as PortablePath)
+    const configuration = await this.getConfiguration()
+    const { project, workspace } = await Project.find(configuration, this.cwd)
 
     const workspaceForPackage = workspace!
       .getRecursiveWorkspaceChildren()

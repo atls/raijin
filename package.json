@@ -1,24 +1,33 @@
 {
   "name": "tools",
   "private": true,
-  "license": "BSD-3-Clause",
   "workspaces": [
     "schematics/**/*",
     "prettier/**/*",
     "code/**/*",
     "webpack/*",
-    "github/*",
-    "config/**/*",
+    "config/*",
+    "yarn/*",
     "jest/*",
-    "utils/*",
-    "yarn/**/*",
     "cli/*"
   ],
+  "scripts": {
+    "cli:build": "yarn worker:format:build && yarn worker:lint:build && yarn worker:schematics:build && yarn worker:service:build && yarn worker:test:build && yarn worker:typescript:build && yarn yarn:cli:build && yarn yarn:cli:fix",
+    "worker:build": "yarn worker:format:build && yarn worker:lint:build && yarn worker:schematics:build && yarn worker:service:build && yarn worker:test:build && yarn worker:typescript:build",
+    "worker:format:build": "yarn workspace @atls/code-format-worker build:worker",
+    "worker:lint:build": "yarn workspace @atls/code-lint-worker build:worker",
+    "worker:schematics:build": "yarn workspace @atls/code-schematics-worker build:worker",
+    "worker:service:build": "yarn workspace @atls/code-service-worker build:worker",
+    "worker:test:build": "yarn workspace @atls/code-test-worker build:worker",
+    "worker:typescript:build": "yarn workspace @atls/code-typescript-worker build:worker",
+    "yarn:cli:build": "yarn workspace @atls/yarn-cli build",
+    "yarn:cli:fix": "yarn workspace @atls/yarn-cli fix"
+  },
   "resolutions": {
-    "@types/react": "16.14.54",
-    "globby": "11",
-    "ink": "patch:ink@npm%3A3.0.8#~/.yarn/patches/ink-npm-3.0.8-3a8005f59f.patch",
-    "yoga-layout-prebuilt@npm:^1.9.6": "patch:yoga-layout-prebuilt@npm%3A1.10.0#~/.yarn/patches/yoga-layout-prebuilt-npm-1.10.0-855b15449f.patch"
+    "@types/estree": "1.0.0",
+    "clipanion": "3.2.0-rc.6",
+    "globby": "11.0.3",
+    "prettier": "2.5.1"
   },
   "devDependencies": {
     "@angular-devkit/core": "17.0.8",
@@ -27,7 +36,6 @@
     "@atls/config-eslint": "workspace:*",
     "@atls/config-jest": "workspace:*",
     "@atls/schematics": "workspace:*",
-    "@atls/tools-setup-ts-execution": "workspace:*",
     "@jest/core": "29.7.0",
     "@rushstack/eslint-patch": "1.6.1",
     "@types/eslint": "8.56.0",

@@ -4,6 +4,7 @@
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -22,7 +23,6 @@
     "ink": "^3.0.8",
     "lint-staged": "11.2.6",
     "react": "16",
-    "react-devtools-core": "4.28.5",
     "word-wrap": "1.2.5"
   },
   "devDependencies": {
@@ -36,5 +36,10 @@
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*",
     "@yarnpkg/fslib": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
   }
 }

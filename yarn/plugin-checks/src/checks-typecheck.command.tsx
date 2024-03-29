@@ -18,9 +18,9 @@ import { renderStatic }                  from '@atls/cli-ui-renderer'
 import { flattenDiagnosticMessageText }  from '@atls/code-typescript'
 import { getLineAndCharacterOfPosition } from '@atls/code-typescript'
 
-import { GitHubChecks }                  from './github.checks.js'
-import { AnnotationLevel }               from './github.checks.js'
-import { Annotation }                    from './github.checks.js'
+import { GitHubChecks }                  from './github.checks.ts'
+import { AnnotationLevel }               from './github.checks.ts'
+import { Annotation }                    from './github.checks.ts'
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static paths = [['checks', 'typecheck']]

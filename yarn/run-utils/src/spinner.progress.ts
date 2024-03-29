@@ -5,16 +5,13 @@ import { formatUtils }   from '@yarnpkg/core'
 export class SpinnerProgress {
   static PROGRESS_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
 
-  static PROGRESS_INTERVAL = 90
+  static PROGRESS_INTERVAL = 120
 
   private running = false
 
   private position = 0
 
-  constructor(
-    private readonly stdout,
-    private readonly configuration: Configuration
-  ) {}
+  constructor(private readonly stdout, private readonly configuration: Configuration) {}
 
   start() {
     if (this.stdout.isTTY) {
@@ -37,8 +34,7 @@ export class SpinnerProgress {
         this.clear()
         this.write()
 
-        this.position =
-          this.position === SpinnerProgress.PROGRESS_FRAMES.length - 1 ? 0 : this.position + 1
+        this.position = this.position >= SpinnerProgress.length ? 0 : this.position + 1
 
         this.tick()
       }

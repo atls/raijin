@@ -7,8 +7,8 @@ import { StreamReport }         from '@yarnpkg/core'
 import { MessageName }          from '@yarnpkg/core'
 
 import React                    from 'react'
+import rimraf                   from 'rimraf'
 import { Option }               from 'clipanion'
-import { rimrafSync }           from 'rimraf'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
 import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component'
@@ -42,10 +42,7 @@ class LibraryBuildCommand extends BaseCommand {
 
             const diagnostics = await ts.build([join(this.context.cwd, './src')], {
               outDir: join(this.context.cwd, this.target),
-              module: 'nodenext' as any,
               declaration: true,
-              declarationMap: true,
-              sourceMap: true,
             })
 
             progress.end()
@@ -75,7 +72,7 @@ class LibraryBuildCommand extends BaseCommand {
     try {
       await access(this.target)
 
-      rimrafSync(this.target)
+      rimraf.sync(this.target)
       // eslint-disable-next-line no-empty
     } catch {}
   }

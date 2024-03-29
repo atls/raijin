@@ -30,7 +30,7 @@ export const makeTemporaryEnv = generatePkgDriver({
 
     const cwdArgs = typeof projectFolder !== `undefined` ? [projectFolder] : []
 
-    const yarnBinary = require.resolve(`${__dirname}/../../bundles/yarn.js`)
+    const yarnBinary = require.resolve(`${__dirname}/../../bundles/yarn.cjs`)
 
     const res = await execFile(process.execPath, [yarnBinary, ...cwdArgs, command, ...args], {
       cwd: cwd || path,
@@ -53,6 +53,7 @@ export const makeTemporaryEnv = generatePkgDriver({
         // Otherwise we would more often test the fallback rather than the real logic
         [`YARN_PNP_FALLBACK_MODE`]: `none`,
         [`YARN_ENABLE_GLOBAL_CACHE`]: `true`,
+        [`YARN_PNP_ENABLE_ESM_LOADER`]: `1`,
         // Older versions of Windows need this set to not have node throw an error
         [`NODE_SKIP_PLATFORM_CHECK`]: `1`,
         ...rcEnv,

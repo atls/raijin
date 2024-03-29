@@ -1,6 +1,8 @@
 /* Copy/Paste https://github.com/kherock/yarn-plugins/tree/main/packages/plugin-workspaces-export */
 /* eslint-disable */
 
+// @ts-nocheck
+
 import { FetchOptions }        from '@yarnpkg/core'
 import { FetchResult }         from '@yarnpkg/core'
 import { Fetcher }             from '@yarnpkg/core'
@@ -8,7 +10,7 @@ import { Locator }             from '@yarnpkg/core'
 import { MinimalFetchOptions } from '@yarnpkg/core'
 import { Project }             from '@yarnpkg/core'
 import { WorkspaceResolver }   from '@yarnpkg/core'
-import { WorkspaceFetcher }    from '@yarnpkg/core'
+import { WorkspaceFetcher }    from '@yarnpkg/core/lib/WorkspaceFetcher.js'
 import { PortablePath }        from '@yarnpkg/fslib'
 
 import { genPackZip }          from './exportUtils.js'

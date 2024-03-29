@@ -1,9 +1,12 @@
 {
-  "name": "@monstrs/cli-ui-renderer",
-  "version": "0.0.31",
-  "license": "MIT",
+  "name": "@atls/cli-ui-renderer",
+  "version": "1.0.0",
+  "license": "BSD-3-Clause",
   "type": "module",
-  "main": "src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -13,16 +16,23 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "ink": "^3.2.0",
-    "react": "^18.2.0"
+    "ink": "^3.0.8",
+    "react": "16"
   },
   "devDependencies": {
-    "@types/node": "^18.15.11",
-    "@types/react": "^18.0.31"
+    "@types/node": "20.11.20",
+    "@types/react": "16.14.54"
   },
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.js",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "typings": "dist/index.d.ts"
   }
 }

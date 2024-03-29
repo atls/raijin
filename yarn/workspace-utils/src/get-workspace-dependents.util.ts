@@ -8,7 +8,7 @@ export const getWorkspaceDependents = (workspace: Workspace): readonly Workspace
 
   for (const ws of workspace.project.workspaces) {
     const isDependency = getWorkspaceDependencies(ws).some((dependency) =>
-      structUtils.areLocatorsEqual(dependency.anchoredLocator, workspace.anchoredLocator))
+      structUtils.areLocatorsEqual(dependency.locator, workspace.locator))
 
     if (isDependency) {
       dependents.add(ws)

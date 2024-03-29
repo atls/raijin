@@ -18,10 +18,10 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/config-jest": "workspace:*",
     "@jest/core": "^29.5.0",
     "@jest/test-result": "^29.5.0",
-    "@jest/types": "^29.5.0",
-    "@atls/config-jest": "workspace:*"
+    "@jest/types": "^29.5.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

@@ -22,7 +22,7 @@ const wrapOutput = () => ({
 
 export default [
   {
-    external: ['pnpapi', 'typescript', '@jest/core', '@monstrs/config-jest'],
+    external: ['pnpapi', 'typescript', '@jest/core', '@atls/config-jest'],
     input: './src/tester.worker.source.ts',
     output: {
       file: './src/tester.worker.content.ts',

@@ -13,12 +13,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build bundle && run postbuild-patch",
+    "build": "builder build bundle && mv bundles/yarn.js bundles/yarn.cjs",
+    "fix": "./fix.sh",
     "prepack": "yarn run build",
-    "postbuild-patch": "node patches/post-build.hook.js"
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/tools-setup-ts-execution": "workspace:*",
+    "@atls/yarn-cli-tools": "workspace:*",
     "@atls/yarn-plugin-badges": "workspace:*",
     "@atls/yarn-plugin-check": "workspace:*",
     "@atls/yarn-plugin-checks": "workspace:*",
@@ -40,16 +41,12 @@
     "@yarnpkg/libzip": "3.0.1",
     "@yarnpkg/parsers": "3.0.0",
     "@yarnpkg/plugin-compat": "4.0.2",
-    "@yarnpkg/plugin-constraints": "4.0.2",
     "@yarnpkg/plugin-dlx": "4.0.0",
-    "@yarnpkg/plugin-essentials": "4.1.0",
-    "@yarnpkg/plugin-exec": "3.0.0",
     "@yarnpkg/plugin-file": "3.0.0",
     "@yarnpkg/plugin-git": "3.0.0",
     "@yarnpkg/plugin-github": "3.0.0",
     "@yarnpkg/plugin-http": "3.0.1",
     "@yarnpkg/plugin-init": "4.0.1",
-    "@yarnpkg/plugin-interactive-tools": "4.0.0",
     "@yarnpkg/plugin-link": "3.0.0",
     "@yarnpkg/plugin-nm": "4.0.2",
     "@yarnpkg/plugin-npm": "3.0.1",
@@ -66,10 +63,16 @@
     "ci-info": "4.0.0",
     "clipanion": "4.0.0-rc.2",
     "semver": "7.5.4",
-    "typanion": "3.14.0"
+    "typanion": "3.14.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@types/semver": "7.5.6"
+    "super-resolve": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
   },
   "@yarnpkg/builder": {
     "bundles": {
@@ -88,17 +91,18 @@
         "@atls/yarn-plugin-workspaces",
         "@atls/yarn-plugin-library",
         "@atls/yarn-plugin-service",
-        "@yarnpkg/plugin-compat",
-        "@yarnpkg/plugin-constraints",
-        "@yarnpkg/plugin-dlx",
+        "@yarnpkg/plugin-interactive-tools",
+        "@yarnpkg/plugin-workspace-tools",
+        "@yarnpkg/plugin-typescript",
+        "@yarnpkg/plugin-version",
         "@yarnpkg/plugin-essentials",
-        "@yarnpkg/plugin-exec",
+        "@yarnpkg/plugin-compat",
+        "@yarnpkg/plugin-dlx",
         "@yarnpkg/plugin-file",
         "@yarnpkg/plugin-git",
         "@yarnpkg/plugin-github",
         "@yarnpkg/plugin-http",
         "@yarnpkg/plugin-init",
-        "@yarnpkg/plugin-interactive-tools",
         "@yarnpkg/plugin-link",
         "@yarnpkg/plugin-nm",
         "@yarnpkg/plugin-npm",
@@ -106,11 +110,7 @@
         "@yarnpkg/plugin-pack",
         "@yarnpkg/plugin-patch",
         "@yarnpkg/plugin-pnp",
-        "@yarnpkg/plugin-pnpm",
-        "@yarnpkg/plugin-stage",
-        "@yarnpkg/plugin-typescript",
-        "@yarnpkg/plugin-version",
-        "@yarnpkg/plugin-workspace-tools"
+        "@yarnpkg/plugin-pnpm"
       ]
     }
   }

@@ -16,10 +16,6 @@ class TestIntegrationCommand extends BaseCommand {
 
   findRelatedTests = Option.Boolean('--find-related-tests', false)
 
-  watchMode = Option.Boolean('--watch')
-
-  watchAllMode = Option.Boolean('--watchAll')
-
   files: Array<string> = Option.Rest({ required: 0 })
 
   async execute() {
@@ -46,8 +42,6 @@ class TestIntegrationCommand extends BaseCommand {
             findRelatedTests: this.findRelatedTests,
             updateSnapshot: this.updateSnapshot,
             bail: this.bail,
-            watch: this.watchMode,
-            watchAll: this.watchAllMode,
           },
           args.concat(this.files)
         )

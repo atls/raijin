@@ -13,5 +13,10 @@
   ],
   "devDependencies": {
     "@yarnpkg/core": "4.0.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
   }
 }

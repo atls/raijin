@@ -13,7 +13,7 @@ describe('yarn', () => {
         makeTemporaryEnv(
           {
             dependencies: {
-              typescript: '^4.5.3',
+              typescript: '^5.0.3',
             },
           },
           async ({ path, run, source }) => {

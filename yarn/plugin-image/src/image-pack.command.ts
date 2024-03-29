@@ -1,20 +1,17 @@
-import { readFile }      from 'node:fs/promises'
-
 import { BaseCommand }   from '@yarnpkg/cli'
 import { Workspace }     from '@yarnpkg/core'
 import { Configuration } from '@yarnpkg/core'
 import { Project }       from '@yarnpkg/core'
 import { StreamReport }  from '@yarnpkg/core'
 import { PortablePath }  from '@yarnpkg/fslib'
-import { Filename }      from '@yarnpkg/fslib'
 import { stringify }     from '@iarna/toml'
 import { execUtils }     from '@yarnpkg/core'
 import { xfs }           from '@yarnpkg/fslib'
 import { ppath }         from '@yarnpkg/fslib'
+import { toFilename }    from '@yarnpkg/fslib'
 
+import tempy             from 'tempy'
 import { Option }        from 'clipanion'
-import { join }          from 'path'
-import { directory }     from 'tempy'
 
 import { TagPolicy }     from '@atls/code-pack'
 import { tagUtils }      from '@atls/code-pack'
@@ -32,7 +29,7 @@ const forRepository = async (repo: string) => {
     },
   }
 
-  const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml' as Filename)
+  const descriptorPath = ppath.join(await xfs.mktempPromise(), toFilename('project.toml'))
 
   await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
 
@@ -62,7 +59,7 @@ class ImagePackCommand extends BaseCommand {
       },
       async (report) => {
         if (this.isWorkspaceAllowedForBundle(workspace)) {
-          const destination = directory() as PortablePath
+          const destination = tempy.directory() as PortablePath
 
           report.reportInfo(
             null,
@@ -73,26 +70,19 @@ class ImagePackCommand extends BaseCommand {
 
           const repo = workspace.manifest.raw.name.replace('@', '').replace(/\//g, '-')
           const image = `${this.registry}${repo}`
-          const content = await readFile(join(this.context.cwd, 'package.json'), 'utf-8')
-
-          const { packConfiguration = {} } = JSON.parse(content)
 
           const tag = await tagUtils.getTag(this.tagPolicy || 'revision')
 
           const descriptorPath = await forRepository(repo)
 
-          const buildpackVersion = packConfiguration.buildpackVersion || '0.0.4'
-          const builderTag = packConfiguration.builderTag || 'buster-18.19'
-
           const args = [
             'build',
-            '--trust-builder',
             `${image}:${tag}`,
             '--verbose',
             '--buildpack',
-            `atlantislab/buildpack-yarn-workspace:${buildpackVersion}`,
+            'atls/buildpack-yarn-workspace:0.0.3',
             '--builder',
-            `atlantislab/builder-base:${builderTag}`,
+            'atls/builder-base:buster',
             '--descriptor',
             descriptorPath,
             '--tag',
@@ -129,8 +119,8 @@ class ImagePackCommand extends BaseCommand {
     const buildCommand = scripts.get('build')
 
     const hasAllowedBuildScript = [
-      'actl service build',
-      'actl renderer build',
+      'mctl service build',
+      'mctl renderer build',
       'build-storybook',
       'next build',
       'builder build library',

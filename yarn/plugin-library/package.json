@@ -26,7 +26,6 @@
     "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "react": "16.14.0",
-    "react-devtools-core": "4.28.5",
     "rimraf": "5.0.5"
   },
   "devDependencies": {
@@ -38,5 +37,10 @@
   "peerDependencies": {
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts"
   }
 }

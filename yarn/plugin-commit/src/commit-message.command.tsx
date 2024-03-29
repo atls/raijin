@@ -1,10 +1,8 @@
 import { BaseCommand }             from '@yarnpkg/cli'
 import { PortablePath }            from '@yarnpkg/fslib'
-// @ts-ignore
-import { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm'
+import { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
 import { xfs }                     from '@yarnpkg/fslib'
-// @ts-ignore
-import { renderForm }              from '@yarnpkg/libui/sources/misc/renderForm'
+import { renderForm }              from '@yarnpkg/libui/sources/misc/renderForm.js'
 
 import React                       from 'react'
 import wrap                        from 'word-wrap'
@@ -30,13 +28,10 @@ const RequestCommitMessageSubmit = ({ commit, useSubmit }) => {
 }
 
 const RequestCommitMessageApp: SubmitInjectedComponent<CommitProperties> = ({ useSubmit }) => {
-  const [commit, setCommit] = useState<CommitProperties>()
+  const [commit, setCommit] = useState()
 
   if (!commit) {
-    return (
-      // @ts-ignore
-      <RequestCommitMessage onSubmit={setCommit} />
-    )
+    return <RequestCommitMessage onSubmit={setCommit} />
   }
 
   return <RequestCommitMessageSubmit commit={commit} useSubmit={useSubmit} />
@@ -75,10 +70,10 @@ export class CommitMessageCommand extends BaseCommand {
     }
 
     if (overwroteStdin) {
-      await process.stdin.destroy()
+      process.stdin.destroy()
     }
 
-    return 0
+    return commit ? 0 : 1
   }
 
   private formatCommit(commit: CommitProperties) {

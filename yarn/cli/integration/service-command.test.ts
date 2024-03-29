@@ -24,7 +24,7 @@ describe('yarn', () => {
         makeTemporaryEnv(
           {
             dependencies: {
-              '@atls/code-service': await packageUtils.pack('@atls/schematics'),
+              '@atls/code-service': await packageUtils.pack('@atls/code-service'),
               express: '*',
             },
           },
@@ -50,7 +50,7 @@ describe('yarn', () => {
         makeTemporaryEnv(
           {
             dependencies: {
-              '@atls/code-service': await packageUtils.pack('@atls/schematics'),
+              '@atls/code-service': await packageUtils.pack('@atls/code-service'),
             },
           },
           async ({ path, run, source }) => {

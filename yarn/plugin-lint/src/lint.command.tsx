@@ -45,7 +45,7 @@ class LintCommand extends BaseCommand {
 
                 output.split('\n').forEach((line) => report.reportError(MessageName.UNNAMED, line))
               })
-          } catch (error) {
+          } catch (error: any) {
             progress.end()
 
             renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)

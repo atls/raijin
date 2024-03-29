@@ -47,7 +47,6 @@ class TypeCheckCommand extends BaseCommand {
             progress.end()
 
             diagnostics.forEach((diagnostic) => {
-              // @ts-ignore
               const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
 
               output.split('\n').forEach((line) => report.reportError(MessageName.UNNAMED, line))
@@ -55,7 +54,6 @@ class TypeCheckCommand extends BaseCommand {
           } catch (error) {
             progress.end()
 
-            // @ts-ignore
             renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
               .split('\n')
               .forEach((line) => {

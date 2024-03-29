@@ -5,8 +5,7 @@ import { MessageName }                    from '@yarnpkg/core'
 import { StreamReport }                   from '@yarnpkg/core'
 import { xfs }                            from '@yarnpkg/fslib'
 import { npath }                          from '@yarnpkg/fslib'
-// @ts-ignore
-import { renderForm }                     from '@yarnpkg/libui/sources/misc/renderForm'
+import { renderForm }                     from '@yarnpkg/libui/sources/misc/renderForm.js'
 
 import React                              from 'react'
 import { forceStdinTty }                  from 'force-stdin-tty'
@@ -26,7 +25,6 @@ class GenerateProjectCommand extends BaseCommand {
     const overwroteStdin = forceStdinTty()
 
     const options: ProjectInformationProperties | undefined = await renderForm(
-      // @ts-ignore
       SubmitInjectedComponentFactory<ProjectInformationProperties>(RequestProjectInformation),
       {},
       {
@@ -72,7 +70,7 @@ class GenerateProjectCommand extends BaseCommand {
             progress.end()
 
             events.forEach((event) => {
-              const eventPath = event.path.startsWith('/') ? event.path.slice(1) : event.path
+              const eventPath = event.path.startsWith('/') ? event.path.substr(1) : event.path
 
               if (event.kind === 'error') {
                 report.reportError(MessageName.UNNAMED, `${eventPath}: ${event.description}`)

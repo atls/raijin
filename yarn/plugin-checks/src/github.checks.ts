@@ -1,6 +1,7 @@
 import { getOctokit } from '@actions/github'
 import { context }    from '@actions/github'
 
+// eslint-disable-next-line no-shadow
 export enum AnnotationLevel {
   Warning = 'warning',
   Failure = 'failure',

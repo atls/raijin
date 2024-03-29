@@ -9,7 +9,6 @@ class CommitMessageLintCommand extends BaseCommand {
   async execute() {
     const linter = new CommitLinter()
 
-    // @ts-ignore
     const messages = await read({ edit: true })
     const results = await Promise.all(messages.map(linter.lint))
 
@@ -19,7 +18,7 @@ class CommitMessageLintCommand extends BaseCommand {
       this.context.stdout.write(output)
     }
 
-    return results.some((result) => !result.valid) ? 1 : 0
+    return results.some((result) => result.valid === false) ? 1 : 0
   }
 }
 

@@ -22,7 +22,7 @@ const wrapOutput = () => ({
 
 export default [
   {
-    external: ['pnpapi', '@monstrs/code-service', 'webpack'],
+    external: ['pnpapi', '@atls/code-service', 'webpack'],
     input: './src/service.worker.source.ts',
     output: {
       file: './src/service.worker.content.ts',

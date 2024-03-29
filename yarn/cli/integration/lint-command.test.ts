@@ -13,7 +13,7 @@ describe('yarn', () => {
         makeTemporaryEnv(
           {
             dependencies: {
-              typescript: '^4.5.4',
+              typescript: '^5.0.3',
               eslint: '^8.4.1',
             },
           },
@@ -42,7 +42,7 @@ n(5)
       makeTemporaryEnv(
         {
           dependencies: {
-            typescript: '^4.5.4',
+            typescript: '^5.0.3',
             eslint: '^8.4.1',
           },
         },

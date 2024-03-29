@@ -15,7 +15,7 @@ describe('yarn', () => {
             dependencies: {
               '@jest/core': '^27.4.4',
               '@atls/config-jest': '*',
-              typescript: '^4.5.3',
+              typescript: '^5.0.3',
             },
           },
           async ({ path, run, source }) => {
@@ -46,7 +46,7 @@ test('success', () => {
             dependencies: {
               '@jest/core': '^27.4.4',
               '@atls/config-jest': '*',
-              typescript: '^4.5.3',
+              typescript: '^5.0.3',
             },
           },
           async ({ path, run, source }) => {
@@ -77,7 +77,7 @@ test('success', () => {
             dependencies: {
               '@jest/core': '^27.4.4',
               '@atls/config-jest': '*',
-              typescript: '^4.5.3',
+              typescript: '^5.0.3',
             },
           },
           async ({ path, run, source }) => {
@@ -109,7 +109,7 @@ test('success', () => {
             dependencies: {
               '@jest/core': '^27.4.4',
               '@atls/config-jest': '*',
-              typescript: '^4.5.3',
+              typescript: '^5.0.3',
             },
           },
           async ({ path, run, source }) => {

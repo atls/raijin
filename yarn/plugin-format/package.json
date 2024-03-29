@@ -4,6 +4,7 @@
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -24,16 +25,15 @@
   "devDependencies": {
     "@yarnpkg/builder": "4.0.0",
     "@yarnpkg/cli": "4.1.0",
-    "@yarnpkg/core": "4.0.3",
-    "ink": "3"
+    "@yarnpkg/core": "4.0.3"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
-    "@yarnpkg/core": "*",
-    "ink": "*"
+    "@yarnpkg/core": "*"
   },
   "publishConfig": {
     "access": "public",
+    "main": "dist/index.js",
     "typings": "dist/index.d.ts"
   }
 }
