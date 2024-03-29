@@ -1,8 +1,7 @@
 {
-  "name": "@monstrs/cli-ui-renderer",
-  "version": "0.0.31",
-  "license": "MIT",
-  "type": "module",
+  "name": "@atls/cli-ui-parts",
+  "version": "0.0.5",
+  "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -13,12 +12,10 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@yarnpkg/libui": "^2.2.2",
+    "figures": "^3.2.0",
     "ink": "^3.2.0",
     "react": "^18.2.0"
-  },
-  "devDependencies": {
-    "@types/node": "^18.15.11",
-    "@types/react": "^18.0.31"
   },
   "publishConfig": {
     "access": "public",

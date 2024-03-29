@@ -1,17 +1,9 @@
-import type { JSX }              from 'react'
-
+import React                     from 'react'
 import { Text }                  from 'ink'
 import { Box }                   from 'ink'
 import { UncontrolledTextInput } from 'ink-text-input'
-import React                     from 'react'
 
-export interface RequestCommitMessageSubjectProps {
-  onSubmit: (value: string) => void
-}
-
-export const RequestCommitMessageSubject = ({
-  onSubmit,
-}: RequestCommitMessageSubjectProps): JSX.Element => (
+export const RequestCommitMessageSubject = ({ onSubmit }) => (
   <Box flexDirection='column'>
     <Box>
       <Text bold color='cyanBright'>

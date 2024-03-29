@@ -1,1 +1,1 @@
-export * from './stack-trace.component.js'
+export * from './stack-trace.component.jsx'

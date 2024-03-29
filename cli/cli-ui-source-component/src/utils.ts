@@ -1,11 +1,10 @@
-import type { WriteStream }    from 'node:tty'
+import { codeFrameColumns } from '@babel/code-frame'
 
-import { codeFrameColumns }    from '@babel/code-frame'
-import { createSupportsColor } from 'supports-color'
+import { supportsColor }    from 'supports-color'
 
-const { level } = createSupportsColor({ isTTY: true } as WriteStream) || { level: 0 }
+const { level } = supportsColor({ isTTY: true })
 
 export const forceColor = level >= 1
 
-export const codeFrameSource = (source: string, line: number, column?: number): string =>
+export const codeFrameSource = (source, line: number, column?: number) =>
   codeFrameColumns(source, { start: { column, line } }, { highlightCode: forceColor, forceColor })

@@ -1,10 +1,8 @@
-// @ts-ignore
-import reconciler     from 'ink/build/reconciler'
-// @ts-ignore
-import render         from 'ink/build/renderer'
 import { ReactNode }  from 'react'
-// @ts-ignore
-import { createNode } from 'ink/build/dom'
+
+import { reconciler } from './ink.js'
+import { render }     from './ink.js'
+import { createNode } from './ink.js'
 
 export const renderStatic = (
   target: ReactNode,
@@ -16,7 +14,7 @@ export const renderStatic = (
 
   reconciler.updateContainer(target, container, null)
 
-  const { output } = render(rootNode!, terminalWidth)
+  const { output } = render(rootNode, terminalWidth)
 
   return output
 }

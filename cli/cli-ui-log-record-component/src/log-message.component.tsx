@@ -2,6 +2,7 @@ import type { Body } from '@atls/logger'
 
 import React         from 'react'
 import { Text }      from 'ink'
+import { FC }        from 'react'
 
 const getMessage = (body: Body) => {
   if (typeof body === 'string') {
@@ -23,4 +24,4 @@ export interface MessageProps {
   children: Body
 }
 
-export const LogMessage = ({ children }: MessageProps) => <Text>{getMessage(children)}</Text>
+export const LogMessage: FC<MessageProps> = ({ children }) => <Text>{getMessage(children)}</Text>

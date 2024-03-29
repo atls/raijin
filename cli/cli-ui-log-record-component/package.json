@@ -1,12 +1,9 @@
 {
-  "name": "@atls/cli-ui-log-record-component",
-  "version": "1.0.0",
-  "license": "BSD-3-Clause",
+  "name": "@monstrs/cli-ui-log-record-component",
+  "version": "0.0.33",
+  "license": "MIT",
   "type": "module",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": "./src/index.ts"
-  },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -19,30 +16,24 @@
     "@atls/cli-ui-renderer": "workspace:*",
     "@atls/cli-ui-stack-trace-component": "workspace:*",
     "@atls/logger": "0.0.2",
-    "string-to-color": "2.2.2"
+    "string-to-color": "^2.2.2"
   },
   "devDependencies": {
-    "@types/jest": "29.5.11",
-    "@types/node": "20.11.20",
-    "@types/react": "16.14.54",
-    "ink": "^3.0.8",
-    "react": "16.14.0",
-    "strip-ansi": "7.1.0"
+    "@monstrs/logger": "^0.0.6",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.31",
+    "ink": "^3.2.0",
+    "react": "^18.2.0",
+    "strip-ansi": "^6.0.1"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {
     "access": "public",
-    "exports": {
-      "./package.json": "./package.json",
-      ".": {
-        "import": "./dist/index.js",
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    },
+    "main": "dist/index.js",
     "typings": "dist/index.d.ts"
   }
 }

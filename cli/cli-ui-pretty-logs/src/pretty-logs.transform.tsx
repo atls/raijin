@@ -1,41 +1,46 @@
-import { EOL }          from 'node:os'
-import { Transform }    from 'node:stream'
+/* eslint-disable consistent-return */
 
 import React            from 'react'
+import { EOL }          from 'os'
+import { Transform }    from 'stream'
 
 import { LogRecord }    from '@atls/cli-ui-log-record-component'
 import { renderStatic } from '@atls/cli-ui-renderer'
 
 export class PrettyLogsTransform extends Transform {
-  parse(row: string): object {
+  parse(row) {
     try {
       if (row) {
-        const data: { body?: string } = JSON.parse(row)
+        const data = JSON.parse(row)
 
-        if (data?.body) {
-          return data
+        if (data && !data.body) {
+          return {
+            body: data,
+          }
         }
-      }
-    } catch {} // eslint-disable-line
 
-    return {
-      body: row,
+        return data
+      }
+    } catch (error) {
+      return {
+        body: row,
+      }
     }
   }
 
-  render(data: object = {}): string {
+  render(data = {}) {
     return renderStatic(<LogRecord {...data} />)
   }
 
   // eslint-disable-next-line no-underscore-dangle
-  override _transform(chunk: Buffer, _: string, callback: () => void): void {
+  _transform(chunk, encoding, callback) {
     const parts = chunk.toString().split(/\r?\n/)
 
     parts
       .map(this.parse)
       .filter(Boolean)
-      .map((data: object) => this.render(data))
-      .forEach((row: string) => {
+      .map(this.render)
+      .forEach((row) => {
         this.push(`${row}${EOL}`)
       })
 

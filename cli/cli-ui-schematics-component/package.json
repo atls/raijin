@@ -1,8 +1,7 @@
 {
-  "name": "@atls/cli-ui-eslint-result-component",
-  "version": "1.0.0",
+  "name": "@atls/cli-ui-schematics-component",
+  "version": "0.0.26",
   "license": "BSD-3-Clause",
-  "type": "module",
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -12,17 +11,19 @@
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
-  "dependencies": {
-    "@atls/cli-ui-source-component": "workspace:*",
-    "nanoid": "5.0.6"
-  },
   "devDependencies": {
-    "@atls/cli-ui-renderer": "workspace:*",
-    "@types/jest": "^29.5.0",
+    "@atls/cli-ui-parts": "workspace:*",
+    "@atls/schematics": "workspace:*",
+    "@types/node": "^18.15.11",
     "@types/react": "^18.0.31",
+    "@yarnpkg/libui": "^2.2.2",
+    "camelcase": "^6.3.0",
+    "figures": "^3.2.0",
     "ink": "^3.2.0",
-    "react": "^18.2.0",
-    "strip-ansi": "^6.0.1"
+    "ink-autocomplete": "^0.0.0",
+    "ink-multi-select": "^2.0.0",
+    "ink-select-input": "^4.2.2",
+    "ink-text-input": "^4.0.3"
   },
   "peerDependencies": {
     "ink": "^3.0.8",

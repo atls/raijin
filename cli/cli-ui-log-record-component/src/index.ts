@@ -1,3 +1,3 @@
-export * from './log-message.component.js'
-export * from './log-namespace.component.js'
-export * from './log-record.component.js'
+export * from './log-message.component.jsx'
+export * from './log-namespace.component.jsx'
+export * from './log-record.component.jsx'
