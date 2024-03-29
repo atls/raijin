@@ -1,18 +1,24 @@
-import fileLoader from 'file-loader'
-import path       from 'path'
-import { parse }  from 'protocol-buffers-schema'
+import { existsSync } from 'node:fs'
+import { dirname }    from 'node:path'
+import { join }       from 'node:path'
+import { isAbsolute } from 'node:path'
+import { basename }   from 'node:path'
+import { relative }   from 'node:path'
+
+import fileLoader     from 'file-loader'
+import { parse }      from 'protocol-buffers-schema'
 
 export const getProtoFileName = (resourcePath) => {
-  const hash = Buffer.from(path.dirname(resourcePath)).toString('hex')
+  const hash = Buffer.from(dirname(resourcePath)).toString('hex')
 
-  return `./${hash.slice(hash.length - 20)}-${path.basename(resourcePath)}`
+  return `./${hash.substr(hash.length - 20)}-${basename(resourcePath)}`
 }
 
 export const resolvePackageImportPath = (packageName: string, importPath: string) => {
   const packagePath = packageName.replace(/\./g, '/')
 
   if (importPath.startsWith(packagePath)) {
-    return path.relative(packagePath, importPath)
+    return relative(packagePath, importPath)
   }
 
   return importPath
@@ -24,17 +30,20 @@ export default function protoImportsLoader(source) {
   const dependencies: Array<string> = []
 
   imports.forEach((importPath) => {
-    if (!path.isAbsolute(importPath)) {
+    if (!isAbsolute(importPath)) {
       const resolvedImportPath = resolvePackageImportPath(packageName, importPath)
-      const importAbsolutePath = path.join(path.dirname(this.resourcePath), resolvedImportPath)
-      const targetPath = getProtoFileName(importAbsolutePath)
+      const importAbsolutePath = join(dirname(this.resourcePath), resolvedImportPath)
 
-      // eslint-disable-next-line no-param-reassign
-      source = source.replace(importPath, targetPath)
+      if (existsSync(importAbsolutePath)) {
+        const targetPath = getProtoFileName(importAbsolutePath)
 
-      dependencies.push(`require('${importAbsolutePath}')`)
+        // eslint-disable-next-line no-param-reassign
+        source = source.replace(importPath, targetPath)
 
-      this.addDependency(importAbsolutePath)
+        dependencies.push(`require('${importAbsolutePath}')`)
+
+        this.addDependency(importAbsolutePath)
+      }
     }
   })
 

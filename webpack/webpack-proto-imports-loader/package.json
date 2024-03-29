@@ -16,9 +16,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "file-loader": "6.2.0",
-    "protocol-buffers-schema": "3.6.0",
-    "tslib": "2.6.2"
+    "file-loader": "^6.2.0",
+    "protocol-buffers-schema": "^3.6.0"
   },
   "devDependencies": {
     "@atls/config-typescript": "workspace:*",

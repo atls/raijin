@@ -16,7 +16,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "localtunnel": "2.0.2"
+    "localtunnel": "^2.0.2"
   },
   "devDependencies": {
     "@types/localtunnel": "2.0.4",
