@@ -332,7 +332,7 @@ const RAW_RUNTIME_STATE =
           ["eslint", "npm:8.48.0"],\
           ["eslint-import-resolver-node", "npm:0.3.9"],\
           ["espree", "npm:9.6.1"],\
-          ["husky", "npm:8.0.1"],\
+          ["husky", "npm:9.0.11"],\
           ["readable-stream", "npm:3.6.2"],\
           ["typescript", "patch:typescript@npm%3A5.2.2#optional!builtin<compat/typescript>::version=5.2.2&hash=f3b441"],\
           ["webpack", "virtual:a0bc915c153d5ff422ab909e9d6f033b3dd86f2ae1e865fd1b2c29932a554fe0a30358fbb65e84213aad5851f7bbdf303597798b16a80e9d5dcfc0569e5d66c5#npm:5.89.0"]\
@@ -11821,10 +11821,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["husky", [\
-      ["npm:8.0.1", {\
-        "packageLocation": "./.yarn/cache/husky-npm-8.0.1-85fede8470-0f4c116284.zip/node_modules/husky/",\
+      ["npm:9.0.11", {\
+        "packageLocation": "./.yarn/cache/husky-npm-9.0.11-227bb1e4e4-8a9b7cb9dc.zip/node_modules/husky/",\
         "packageDependencies": [\
-          ["husky", "npm:8.0.1"]\
+          ["husky", "npm:9.0.11"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -17422,7 +17422,7 @@ const RAW_RUNTIME_STATE =
           ["eslint", "npm:8.48.0"],\
           ["eslint-import-resolver-node", "npm:0.3.9"],\
           ["espree", "npm:9.6.1"],\
-          ["husky", "npm:8.0.1"],\
+          ["husky", "npm:9.0.11"],\
           ["readable-stream", "npm:3.6.2"],\
           ["typescript", "patch:typescript@npm%3A5.2.2#optional!builtin<compat/typescript>::version=5.2.2&hash=f3b441"],\
           ["webpack", "virtual:a0bc915c153d5ff422ab909e9d6f033b3dd86f2ae1e865fd1b2c29932a554fe0a30358fbb65e84213aad5851f7bbdf303597798b16a80e9d5dcfc0569e5d66c5#npm:5.89.0"]\

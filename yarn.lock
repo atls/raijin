@@ -8073,12 +8073,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:8.0.1":
-  version: 8.0.1
-  resolution: "husky@npm:8.0.1"
+"husky@npm:9.0.11":
+  version: 9.0.11
+  resolution: "husky@npm:9.0.11"
   bin:
-    husky: lib/bin.js
-  checksum: 10/0f4c1162845cd8c4ecf13af85fe62a1c9de3d4277053004a59dae90a36346fe7eeb7eff3bc7a8484c4f365f6eccf7fd17aa6935198028980c9d6e95306455f3c
+    husky: bin.mjs
+  checksum: 10/8a9b7cb9dc8494b470b3b47b386e65d579608c6206da80d3cc8b71d10e37947264af3dfe00092368dad9673b51d2a5ee87afb4b2291e77ba9e7ec1ac36e56cd1
   languageName: node
   linkType: hard
 
@@ -12703,7 +12703,7 @@ __metadata:
     eslint: "npm:8.48.0"
     eslint-import-resolver-node: "npm:0.3.9"
     espree: "npm:9.6.1"
-    husky: "npm:8.0.1"
+    husky: "npm:9.0.11"
     readable-stream: "npm:3.6.2"
     typescript: "npm:5.2.2"
     webpack: "npm:5.89.0"
