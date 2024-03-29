@@ -21,10 +21,10 @@
     "nanoid": "5.0.6"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
     "@atls/cli-ui-renderer": "workspace:*",
+    "@jest/globals": "^29.7.0",
     "@types/react": "^18.2.45",
-    "ink": "^4.4.1",
+    "ink": "^3.2.0",
     "react": "^18.2.0",
     "strip-ansi": "^7.1.0"
   },

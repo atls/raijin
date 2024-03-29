@@ -16,7 +16,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "ink": "^3.0.8",
+    "ink": "^3.2.0",
     "react": "16"
   },
   "devDependencies": {

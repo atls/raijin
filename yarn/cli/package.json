@@ -35,7 +35,7 @@
     "@atls/yarn-plugin-typescript": "workspace:*",
     "@atls/yarn-plugin-workspaces": "workspace:*",
     "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.1.0",
+    "@yarnpkg/cli": "^3.5.0",
     "@yarnpkg/core": "4.0.3",
     "@yarnpkg/fslib": "3.0.2",
     "@yarnpkg/libzip": "3.0.1",

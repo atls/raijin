@@ -28,6 +28,8 @@
     "rimraf": "5.0.5"
   },
   "devDependencies": {
+    "@atls/yarn-test-utils": "workspace:0.0.1",
+    "@jest/globals": "^29.5.0",
     "@types/react": "16.14.54",
     "@yarnpkg/builder": "4.0.0",
     "@yarnpkg/cli": "4.1.0",

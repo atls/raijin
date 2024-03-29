@@ -1,0 +1,13 @@
+diff --git a/lib/miscUtils.js b/lib/miscUtils.js
+index 0009782024e9f0b83dc0ceea408ba2fb2a5bc119..726bd770de4e57ac961e8f45d7d4385d19eb3175 100644
+--- a/lib/miscUtils.js
++++ b/lib/miscUtils.js
+@@ -218,7 +218,7 @@ function dynamicRequireNoCache(path) {
+         result = dynamicRequireNode(physicalPath);
+         const freshCacheEntry = realRequire.cache[physicalPath];
+         const dynamicModule = eval(`module`);
+-        const freshCacheIndex = dynamicModule.children.indexOf(freshCacheEntry);
++        const freshCacheIndex = dynamicModule.children ? dynamicModule.children.indexOf(freshCacheEntry) : -1;
+         if (freshCacheIndex !== -1) {
+             dynamicModule.children.splice(freshCacheIndex, 1);
+         }

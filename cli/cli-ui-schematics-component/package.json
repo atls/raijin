@@ -19,11 +19,11 @@
     "@yarnpkg/libui": "3.0.0",
     "camelcase": "8.0.0",
     "figures": "3.2.0",
-    "ink": "^3.0.8",
-    "ink-autocomplete": "0.0.0",
-    "ink-multi-select": "2.0.0",
-    "ink-select-input": "4.2.2",
-    "ink-text-input": "4.0.3"
+    "ink": "^3.2.0",
+    "ink-autocomplete": "^0.0.0",
+    "ink-multi-select": "^2.0.0",
+    "ink-select-input": "^4.2.2",
+    "ink-text-input": "^4.0.3"
   },
   "peerDependencies": {
     "ink": "*",

@@ -1,0 +1,13 @@
+diff --git a/sources/misc/renderForm.tsx b/sources/misc/renderForm.tsx
+index 8aad363d2a2d6c878bbd39ad7499636a87080163..88e8ceb8bb6f05b0225426dc1788b443504f4c63 100644
+--- a/sources/misc/renderForm.tsx
++++ b/sources/misc/renderForm.tsx
+@@ -36,7 +36,7 @@ export async function renderForm<T, C extends React.ComponentType = React.Compon
+ 
+   const {waitUntilExit} = render(
+     <Application>
+-      <UserComponent {...props} useSubmit={useSubmit}/>
++      <UserComponent {...props as any} useSubmit={useSubmit}/>
+     </Application>,
+     {
+       stdin: stdin as NodeJS.ReadStream,

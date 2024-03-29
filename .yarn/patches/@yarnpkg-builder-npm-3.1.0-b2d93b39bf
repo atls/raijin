@@ -1,0 +1,12 @@
+diff --git a/lib/commands/build/bundle.js b/lib/commands/build/bundle.js
+index d5d918580c08bf5a71aef5e3c913626d93e03ba9..f596dab3d89a8f5831fdb35c5b7b5084f79b3028 100644
+--- a/lib/commands/build/bundle.js
++++ b/lib/commands/build/bundle.js
+@@ -98,6 +98,7 @@ class BuildBundleCommand extends clipanion_1.Command {
+                     minify: !this.noMinify,
+                     sourcemap: this.sourceMap ? `inline` : false,
+                     target: `node12`,
++                    external: ['chokidar', 'webpack']
+                 });
+                 for (const warning of res.warnings) {
+                     if (warning.location !== null)

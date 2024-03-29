@@ -1,0 +1,13 @@
+diff --git a/lib/MultiFetcher.d.ts b/lib/MultiFetcher.d.ts
+index b2477068dbc08cef1d270961f44385d917b3114c..62a22f6b1872f508ceb5bb29b44638ce1997dfda 100644
+--- a/lib/MultiFetcher.d.ts
++++ b/lib/MultiFetcher.d.ts
+@@ -4,7 +4,7 @@ export declare class MultiFetcher implements Fetcher {
+     private readonly fetchers;
+     constructor(fetchers: Array<Fetcher>);
+     supports(locator: Locator, opts: MinimalFetchOptions): boolean;
+-    getLocalPath(locator: Locator, opts: FetchOptions): import("../../yarnpkg-fslib/sources").PortablePath | null;
++    getLocalPath(locator: Locator, opts: FetchOptions): import("@yarnpkg/fslib").PortablePath | null;
+     fetch(locator: Locator, opts: FetchOptions): Promise<import("./Fetcher").FetchResult>;
+     private tryFetcher;
+     private getFetcher;

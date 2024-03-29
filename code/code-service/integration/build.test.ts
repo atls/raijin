@@ -1,12 +1,17 @@
-import path        from 'path'
+import { join }          from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-import { Service } from '../src/index.js'
+import { describe }      from '@jest/globals'
+import { expect }        from '@jest/globals'
+import { it }            from '@jest/globals'
+
+import { Service }       from '../src/index.js'
 
 describe('service', () => {
   describe('build', () => {
     it('simple', async () => {
       const { errors, warnings } = await new Service(
-        path.join(__dirname, 'fixtures/simple')
+        join(fileURLToPath(new URL('.', import.meta.url)), 'fixtures/simple')
       ).build()
 
       expect(errors).toEqual([])

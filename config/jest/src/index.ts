@@ -17,7 +17,7 @@ export const unit = {
     '^.+\\.[tj]sx?$': [
       require.resolve('ts-jest'),
       {
-        tsconfig: tsconfig.compilerOptions,
+        tsconfig: { ...tsconfig.compilerOptions, moduleResolution: 'nodenext' },
         isolatedModules: true,
         diagnostics: false,
         useESM: true,
@@ -39,7 +39,7 @@ export const integration = {
     '^.+\\.[tj]sx?$': [
       require.resolve('ts-jest'),
       {
-        tsconfig: tsconfig.compilerOptions,
+        tsconfig: { ...tsconfig.compilerOptions, moduleResolution: 'nodenext' },
         isolatedModules: true,
         diagnostics: false,
         useESM: true,

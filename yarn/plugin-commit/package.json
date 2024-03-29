@@ -20,7 +20,7 @@
     "clipanion": "4.0.0-rc.2",
     "commitizen": "4.3.0",
     "force-stdin-tty": "0.0.1",
-    "ink": "^3.0.8",
+    "ink": "^3.2.0",
     "lint-staged": "11.2.6",
     "react": "16",
     "word-wrap": "1.2.5"

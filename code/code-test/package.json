@@ -19,13 +19,12 @@
   },
   "dependencies": {
     "@atls/config-jest": "workspace:*",
-    "@jest/core": "^29.5.0",
-    "@jest/test-result": "^29.5.0",
-    "@jest/types": "^29.5.0"
+    "@jest/core": "29.7.0",
+    "@jest/test-result": "29.7.0",
+    "@jest/types": "29.6.3"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.0",
-    "@types/node": "^18.15.11"
+    "@types/node": "20.11.20"
   },
   "peerDependenciesMeta": {
     "jest": {

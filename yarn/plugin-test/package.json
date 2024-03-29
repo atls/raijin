@@ -21,6 +21,8 @@
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
+    "@atls/yarn-test-utils": "workspace:0.0.1",
+    "@jest/globals": "^29.5.0",
     "@yarnpkg/builder": "4.0.0",
     "@yarnpkg/cli": "4.1.0",
     "@yarnpkg/core": "4.0.3",
