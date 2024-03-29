@@ -8,10 +8,9 @@ import { Configuration }              from 'webpack'
 import { WebpackPluginInstance }      from 'webpack'
 import { HotModuleReplacementPlugin } from 'webpack'
 
-import { tsConfig }                   from '@atls/config-typescript'
-
 import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals'
 import { UNUSED_EXTERNALS }           from './webpack.externals'
+import { ModuleTypes }                from './webpack.interfaces'
 import { WebpackEnvironment }         from './webpack.interfaces'
 
 export class WebpackConfig {
@@ -26,6 +25,18 @@ export class WebpackConfig {
       return new Set(Object.keys(externalDependencies))
     } catch {
       return Promise.resolve(new Set())
+    }
+  }
+
+  async getWorkspaceType(): Promise<ModuleTypes> {
+    try {
+      const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+
+      const { type = 'commonjs' } = JSON.parse(content)
+
+      return type
+    } catch {
+      return 'module'
     }
   }
 
@@ -84,6 +95,9 @@ export class WebpackConfig {
       externals: await this.getExternals(),
       target: 'async-node',
       optimization: { minimize: false },
+      experiments: {
+        outputModule: (await this.getWorkspaceType()) === 'module',
+      },
       plugins: [
         environment === WebpackEnvironment.dev ? new HotModuleReplacementPlugin() : () => {},
         ...plugins,
@@ -92,8 +106,16 @@ export class WebpackConfig {
         index: join(this.cwd, 'src/index'),
       },
       node: { __dirname: false, __filename: false },
-      output: { path: join(this.cwd, 'dist'), filename: '[name].js' },
-      resolve: { extensions: ['.tsx', '.ts', '.js'] },
+      output: {
+        path: join(this.cwd, 'dist'),
+        filename: '[name].js',
+        library: { type: await this.getWorkspaceType() },
+        chunkFormat: await this.getWorkspaceType(),
+      },
+      resolve: {
+        extensionAlias: { '.js': ['.tsx', '.ts', '.js'], '.jsx': ['.tsx', '.ts', '.js'] },
+        extensions: ['.tsx', '.ts', '.js'],
+      },
       devtool:
         environment === WebpackEnvironment.prod ? 'source-map' : 'eval-cheap-module-source-map',
       module: {
@@ -101,13 +123,37 @@ export class WebpackConfig {
           {
             test: /.tsx?$/,
             use: {
-              loader: require.resolve('ts-loader'),
+              loader: require.resolve('swc-core'),
               options: {
-                transpileOnly: true,
-                experimentalWatchApi: true,
-                onlyCompileBundledFiles: true,
-                compilerOptions: { ...tsConfig.compilerOptions, sourceMap: true },
+                minify: true,
+                jsc: {
+                  parser: {
+                    syntax: 'typescript',
+                    jsx: true,
+                    dynamicImport: true,
+                    privateMethod: true,
+                    functionBind: true,
+                    exportDefaultFrom: true,
+                    exportNamespaceFrom: true,
+                    decorators: true,
+                    decoratorsBeforeExport: true,
+                    topLevelAwait: true,
+                    importMeta: true,
+                  },
+                  transform: {
+                    legacyDecorator: true,
+                    decoratorMetadata: true,
+                  },
+                },
               },
+              // TODO: remove once confirmed swc is full replacement
+              // loader: require.resolve('ts-loader'),
+              // options: {
+              //   transpileOnly: true,
+              //   experimentalWatchApi: true,
+              //   onlyCompileBundledFiles: true,
+              //   compilerOptions: { ...tsConfig.compilerOptions, sourceMap: true },
+              // },
             },
           },
           { test: /\.proto$/, use: require.resolve('@atls/webpack-proto-imports-loader') },
