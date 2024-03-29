@@ -8,7 +8,7 @@
     ".": "./src/index.ts"
   },
   "files": [
-    "dist"
+    "src"
   ],
   "scripts": {
     "build": "yarn library build",
@@ -16,6 +16,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/config-prettier": "workspace:*",
     "@typescript-eslint/eslint-plugin": "6.15.0",
     "@typescript-eslint/parser": "6.15.0",
     "eslint": "8.56.0",
@@ -30,8 +31,7 @@
   },
   "devDependencies": {
     "@types/eslint": "8.56.0",
-    "@types/node": "20.11.20",
-    "typescript": "5.2.2"
+    "@types/node": "20.11.20"
   },
   "publishConfig": {
     "exports": {

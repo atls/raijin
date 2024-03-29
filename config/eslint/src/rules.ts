@@ -1,6 +1,6 @@
 import type { Linter } from 'eslint'
 
-export const eslintrc: Linter.RulesRecord = {
+const rules: Linter.RulesRecord = {
   'no-undef': ['off'],
   'brace-style': 'off',
   '@typescript-eslint/brace-style': 'off',
@@ -170,7 +170,7 @@ export const eslintrc: Linter.RulesRecord = {
   ],
   '@typescript-eslint/no-empty-function': ['error'],
   '@typescript-eslint/indent': 'off',
-  '@typescript-eslint/no-shadow': [
+  'no-shadow': [
     'error',
     {
       allow: ['ClientFactory', 'ServerBuilder'],
@@ -178,7 +178,6 @@ export const eslintrc: Linter.RulesRecord = {
       hoist: 'functions',
     },
   ],
-  'no-shadow': 'off',
   curly: 0,
   'lines-around-comment': 0,
   'max-len': 0,
@@ -567,6 +566,7 @@ export const eslintrc: Linter.RulesRecord = {
   'react/jsx-pascal-case': [
     'error',
     {
+      allowNamespace: true,
       allowAllCaps: true,
       ignore: [],
     },
@@ -1382,3 +1382,5 @@ export const eslintrc: Linter.RulesRecord = {
   'vars-on-top': ['error'],
   yoda: ['error'],
 }
+
+export default rules

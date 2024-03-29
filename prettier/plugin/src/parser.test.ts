@@ -1,7 +1,7 @@
 import * as plugin from './index.js'
 
-import babel       from 'prettier/plugins/babel'
-import typescript  from 'prettier/plugins/typescript'
+import babel       from 'prettier/parser-babel'
+import typescript  from 'prettier/parser-typescript'
 import { format }  from 'prettier/standalone'
 
 describe('some', () => {

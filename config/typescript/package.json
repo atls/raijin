@@ -16,11 +16,6 @@
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
-  "devDependencies": {
-    "@types/node": "20.11.20",
-    "ts-node": "10.9.2",
-    "typescript": "5.2.2"
-  },
   "publishConfig": {
     "exports": {
       "./package.json": "./package.json",
