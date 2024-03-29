@@ -123,7 +123,7 @@ export class WebpackConfig {
           {
             test: /.tsx?$/,
             use: {
-              loader: require.resolve('swc-core'),
+              loader: require.resolve('swc-loader'),
               options: {
                 minify: true,
                 jsc: {
