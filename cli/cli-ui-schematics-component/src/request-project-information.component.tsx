@@ -12,7 +12,6 @@ const Submit = ({ onSubmit, ...props }) => {
   useEffect(() => {
     onSubmit(props)
   }, [props, onSubmit])
-
   return null
 }
 
