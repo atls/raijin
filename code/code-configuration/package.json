@@ -16,7 +16,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@yarnpkg/fslib": "3.0.2"
+    "@yarnpkg/fslib": "^2.10.2"
   },
   "publishConfig": {
     "access": "public",

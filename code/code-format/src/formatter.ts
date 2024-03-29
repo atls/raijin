@@ -1,23 +1,19 @@
-import * as babel         from 'prettier/plugins/babel'
-import estree        from 'prettier/plugins/estree'
-import * as graphql       from 'prettier/plugins/graphql'
-import * as markdown      from 'prettier/plugins/markdown'
-import * as typescript    from 'prettier/plugins/typescript'
-import * as yaml          from 'prettier/plugins/yaml'
-
 import * as plugin        from '@atls/prettier-plugin'
 
-import { readFileSync }   from 'node:fs'
-import { writeFileSync }  from 'node:fs'
-import { join }           from 'node:path'
+import { writeFile }      from 'node:fs/promises'
+import { readFile }       from 'node:fs/promises'
 import { relative }       from 'node:path'
 
 import globby             from 'globby'
 import ignorer            from 'ignore'
+import babel              from 'prettier/parser-babel'
+import graphql            from 'prettier/parser-graphql'
+import markdown           from 'prettier/parser-markdown'
+import typescript         from 'prettier/parser-typescript'
+import yaml               from 'prettier/parser-yaml'
 import { format }         from 'prettier/standalone'
 
-/* eslint-disable no-await-in-loop */
-import prettierConfig     from '@atls/config-prettier'
+import config             from '@atls/config-prettier'
 
 import { ignore }         from './formatter.patterns.js'
 import { createPatterns } from './formatter.patterns.js'
@@ -26,21 +22,24 @@ export class Formatter {
   constructor(private readonly cwd: string) {}
 
   async formatFiles(files: Array<string> = []) {
-    // @ts-ignore
     const formatFiles = ignorer()
       .add(ignore)
-      .add(await this.getProjectIgnorePatterns())
       .filter(files.map((filepath) => relative(this.cwd, filepath)))
 
     for (const filename of formatFiles) {
-      const input = readFileSync(filename, 'utf8')
-      const output = await format(input, {
-        ...prettierConfig,
+      // eslint-disable-next-line no-await-in-loop
+      const input = await readFile(filename, 'utf8')
+
+      const output = format(input, {
+        ...config,
         filepath: filename,
-        plugins: [estree, yaml, markdown, graphql, babel, typescript, plugin],
+        plugins: [yaml, markdown, graphql, babel, typescript, plugin],
       })
 
-      if (output !== input && output) writeFileSync(filename, output, 'utf8')
+      if (output !== input && output) {
+        // eslint-disable-next-line no-await-in-loop
+        await writeFile(filename, output, 'utf8')
+      }
     }
   }
 
@@ -59,14 +58,5 @@ export class Formatter {
     })
 
     await this.formatFiles(files)
-  }
-
-  private async getProjectIgnorePatterns(): Promise<Array<string>> {
-    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
-
-    const { formatterIgnorePatterns = [] }: { formatterIgnorePatterns: string[] } =
-      JSON.parse(content)
-
-    return formatterIgnorePatterns
   }
 }

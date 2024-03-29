@@ -12,19 +12,19 @@
   ],
   "scripts": {
     "build": "yarn library build",
+    "build:worker": "rollup -c",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@atls/config-prettier": "workspace:*",
     "@atls/prettier-plugin": "workspace:*",
-    "globby": "11.1.0",
-    "ignore": "5.3.1",
-    "prettier": "3.2.5"
+    "globby": "^11.1.0",
+    "ignore": "^5.2.4",
+    "prettier": "^2.8.7"
   },
   "devDependencies": {
-    "@types/node": "20.11.20",
-    "@types/prettier": "3.0.0"
+    "@types/node": "^18.15.11"
   },
   "publishConfig": {
     "exports": {

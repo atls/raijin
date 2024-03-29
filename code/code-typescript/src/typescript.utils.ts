@@ -1,4 +1,5 @@
-/* eslint-disable no-void,no-param-reassign,no-else-return,vars-on-top,no-var,no-plusplus,@typescript-eslint/naming-convention,no-underscore-dangle,@typescript-eslint/no-use-before-define,no-redeclare,no-nested-ternary,no-bitwise,default-case */
+/* eslint-disable */
+
 export const flattenDiagnosticMessageText = (diag, newLine, indent = 0) => {
   if (indent === void 0) {
     indent = 0
@@ -74,12 +75,12 @@ function compareComparableValues(a: string | number | undefined, b: string | num
   return a === b
     ? Comparison.EqualTo
     : a === undefined
-      ? Comparison.LessThan
-      : b === undefined
-        ? Comparison.GreaterThan
-        : a < b
-          ? Comparison.LessThan
-          : Comparison.GreaterThan
+    ? Comparison.LessThan
+    : b === undefined
+    ? Comparison.GreaterThan
+    : a < b
+    ? Comparison.LessThan
+    : Comparison.GreaterThan
 }
 
 export function compareValues(a: number | undefined, b: number | undefined): Comparison {

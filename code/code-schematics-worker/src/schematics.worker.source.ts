@@ -1,3 +1,5 @@
+/* eslint-disable no-new */
+
 import { parentPort } from 'node:worker_threads'
 import { workerData } from 'node:worker_threads'
 
@@ -7,7 +9,7 @@ const { type, cwd, force, dryRun, schematicName, migrationVersion, options = {} 
 
 const runner = new Schematics(cwd, force, dryRun)
 
-// eslint-disable-next-line no-async-promise-executor,no-new
+// eslint-disable-next-line no-async-promise-executor
 new Promise(async (resolve, reject) => {
   try {
     if (type === 'generate') {

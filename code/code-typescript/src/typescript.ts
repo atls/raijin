@@ -1,46 +1,28 @@
-import { readFile }             from 'node:fs/promises'
+import type { Diagnostic }           from 'typescript'
+import type { CompilerOptions }      from 'typescript'
 
-import type { Diagnostic }      from 'typescript'
-import type { CompilerOptions } from 'typescript'
+import deepmerge                     from 'deepmerge'
+import ts                            from 'typescript'
 
-import deepmerge                from 'deepmerge'
-import ts                       from 'typescript'
-import { join }                 from 'path'
+import tsconfig                      from '@atls/config-typescript'
 
-import { tsConfig }             from '@atls/config-typescript'
+import { transformJsxToJsExtension } from './transformers/index.js'
+
+interface TypeScriptBuildOptions {
+  replaceJsxExt?: boolean
+}
 
 class TypeScript {
   constructor(private readonly cwd: string) {}
 
-  private async getProjectIgnorePatterns(): Promise<Array<string>> {
-    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-
-    const { typecheckIgnorePatterns = [] } = JSON.parse(content)
-
-    return typecheckIgnorePatterns
-  }
-
-  private async getLibCheckOption(): Promise<boolean> {
-    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-
-    const { typecheckSkipLibCheck = false } = JSON.parse(content)
-
-    return typecheckSkipLibCheck
-  }
-
-  private async getProjectConfiguration(): Promise<Array<string>> {
-    const content = await readFile(join(this.cwd, 'tsconfig.json'), 'utf-8')
-
-    return JSON.parse(content)
-  }
-
   check(include: Array<string> = []): Promise<Array<Diagnostic>> {
-    return this.run(include)
+    return this.run(include, { allowImportingTsExtensions: true })
   }
 
   build(
     include: Array<string> = [],
-    override: Partial<CompilerOptions> = {}
+    override: Partial<CompilerOptions> = {},
+    options?: TypeScriptBuildOptions
   ): Promise<Array<Diagnostic>> {
     return this.run(include, override, false)
   }
@@ -50,20 +32,9 @@ class TypeScript {
     override: Partial<CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<Diagnostic>> {
-    const projectIgnorePatterns = await this.getProjectIgnorePatterns()
-
-    const skipLibCheck = await this.getLibCheckOption()
-
-    const config = deepmerge(
-      tsConfig,
-      {
-        compilerOptions: { ...override, skipLibCheck },
-        exclude: [...tsConfig.exclude, ...projectIgnorePatterns],
-      },
-      {
-        include,
-      } as any
-    )
+    const config = deepmerge(tsconfig, { compilerOptions: override }, {
+      include,
+    } as any)
 
     const { fileNames, options, errors } = ts.parseJsonConfigFileContent(config, ts.sys, this.cwd)
 
@@ -76,7 +47,9 @@ class TypeScript {
       noEmit,
     })
 
-    const result = program.emit()
+    const result = program.emit(undefined, undefined, undefined, undefined, {
+      after: [transformJsxToJsExtension],
+    })
 
     return ts.getPreEmitDiagnostics(program).concat(result.diagnostics)
   }

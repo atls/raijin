@@ -1,4 +1,4 @@
-import commitFormat           from '@commitlint/format'
+import commitformat           from '@commitlint/format'
 import { LintOutcome }        from '@commitlint/types'
 
 import { rules }              from './commit.rules.js'
@@ -15,7 +15,6 @@ export class CommitLinter {
       helpUrl: 'https://github.com/conventional-changelog/commitlint/#what-is-commitlint',
     }
   ) {
-    // @ts-ignore
-    return commitFormat(report, options)
+    return commitformat(report, options)
   }
 }

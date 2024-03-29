@@ -1,8 +1,8 @@
-import { Filename }    from '@yarnpkg/fslib'
 import { stringify }   from '@iarna/toml'
 import { execUtils }   from '@yarnpkg/core'
 import { xfs }         from '@yarnpkg/fslib'
 import { ppath }       from '@yarnpkg/fslib'
+import { toFilename }  from '@yarnpkg/fslib'
 
 import { PackOptions } from './pack.interfaces.js'
 import { PackOutputs } from './pack.interfaces.js'
@@ -34,20 +34,19 @@ export const pack = async (
     },
   }
 
-  const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml' as Filename)
+  const descriptorPath = ppath.join(await xfs.mktempPromise(), toFilename('project.toml'))
 
   await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
 
   const args = [
     'build',
-    '--trust-builder',
     `${image}:${tag}`,
     '--descriptor',
     descriptorPath,
     '--buildpack',
-    buildpack || 'atlantislab/buildpack-yarn-workspace:0.0.4',
+    buildpack || 'atls/buildpack-yarn-workspace:0.0.3',
     '--builder',
-    builder || 'atlantislab/builder-base:buster',
+    builder || 'atls/builder-base:buster',
     '--tag',
     `${image}:latest`,
     '--verbose',

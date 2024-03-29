@@ -17,18 +17,16 @@ import { Parser }             from '@commitlint/types'
 import { ParserOptions }      from '@commitlint/types'
 import { buildCommitMesage }  from '@commitlint/lint/lib/commit-message.js'
 
+import defaultParserOpts      from 'conventional-changelog-angular/parser-opts.js'
 import { sync }               from 'conventional-commits-parser'
-
-import { parserOptions }      from './parser-options.js'
 
 export async function parse(
   message: string,
-  // @ts-ignore
   parser: Parser = sync,
   parserOpts?: ParserOptions
 ): Promise<Commit> {
-  const opts: ParserOptions = {
-    ...parserOptions,
+  const opts = {
+    ...defaultParserOpts,
     ...(parserOpts || {}),
   }
 
@@ -49,7 +47,6 @@ export async function lint(
   const rulesConfig = rawRulesConfig || {}
 
   // Found a wildcard match, skip
-  // @ts-ignore
   if (isIgnored(message, { defaults: opts.defaultIgnores, ignores: opts.ignores })) {
     return {
       valid: true,
@@ -75,7 +72,6 @@ export async function lint(
     }
   }
 
-  // @ts-ignore
   const allRules: Map<string, BaseRule<never, RuleType>> = new Map(Object.entries(defaultRules))
 
   if (opts.plugins) {
@@ -178,7 +174,7 @@ export async function lint(
 
       const executableRule = rule as Rule<unknown>
 
-      // eslint-disable-next-line @typescript-eslint/no-shadow
+      // eslint-disable-next-line no-shadow
       const [valid, message] = await executableRule(parsed, when, value)
 
       return {
