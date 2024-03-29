@@ -13,8 +13,8 @@
   ],
   "scripts": {
     "build": "yarn library build",
-    "prepack": "yarn run build && yarn node ./scripts/prepack.js",
-    "postpack": "rm -rf dist && yarn node ./scripts/postpack.js"
+    "prepack": "yarn run build && yarn node ./scripts/prepack.mjs",
+    "postpack": "rm -rf dist && yarn node ./scripts/postpack.mjs"
   },
   "dependencies": {
     "@angular-devkit/core": "17.2.1",

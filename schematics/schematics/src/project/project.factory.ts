@@ -11,13 +11,12 @@ import { template }             from '@angular-devkit/schematics'
 import { url }                  from '@angular-devkit/schematics'
 import { chain }                from '@angular-devkit/schematics'
 
-import { tsConfig }             from '@atls/config-typescript'
+import tsconfig                 from '@atls/config-typescript'
 import { updateTsConfigInTree } from '@atls/schematics-utils'
 
 const updateTsConfig = updateTsConfigInTree({
-  ...tsConfig.compilerOptions,
+  ...tsconfig.compilerOptions,
   module: 'esnext',
-  moduleResolution: 'bundler',
 })
 
 const generateCommon = (options): Source =>
