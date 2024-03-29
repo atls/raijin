@@ -1,8 +1,9 @@
-import sysPath          from 'path'
-import { ChildProcess } from 'child_process'
-import { Writable }     from 'stream'
-import { EntryPlugin }  from 'webpack'
-import { fork }         from 'child_process'
+import sysPath           from 'path'
+import webpack           from 'webpack'
+import { ChildProcess }  from 'child_process'
+import { Writable }      from 'stream'
+import { fork }          from 'child_process'
+import { createRequire } from 'module'
 
 export interface StartServerPluginOptions {
   verbose: boolean
@@ -46,7 +47,7 @@ export class StartServerPlugin {
 
     /* eslint-disable no-underscore-dangle */
 
-    const entryScript = EntryPlugin
+    const entryScript = webpack.EntryPlugin
       ? entry._runtimeChunk.files.values().next().value
       : entry.chunks[0].files[0]
 
@@ -168,7 +169,7 @@ export class StartServerPlugin {
   }
 
   getMonitor() {
-    const loaderPath = require.resolve('./monitor.loader')
+    const loaderPath = createRequire(import.meta.url).resolve('./monitor.loader')
 
     return `!!${loaderPath}!${loaderPath}`
   }
@@ -179,7 +180,7 @@ export class StartServerPlugin {
     compiler.hooks.make.tap(plugin, (compilation) => {
       compilation.addEntry(
         compilation.compiler.context,
-        EntryPlugin.createDependency(this.getMonitor(), {
+        webpack.EntryPlugin.createDependency(this.getMonitor(), {
           name: this.options.entryName,
         }),
         this.options.entryName,

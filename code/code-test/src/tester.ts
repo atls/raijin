@@ -25,12 +25,15 @@ export class Tester {
     process.env.TS_JEST_DISABLE_VER_CHECKER = 'true'
 
     const setup = {
-      globalSetup: this.isFileExists(join(this.cwd, '.config/test/unit/setup.ts'))
-        ? join(this.cwd, '.config/test/unit/setup.ts')
+      globalSetup: this.isFileExists(join(this.cwd, '.config/test/unit/global-setup.ts'))
+        ? join(this.cwd, '.config/test/unit/global-setup.ts')
         : undefined,
-      globalTeardown: this.isFileExists(join(this.cwd, '.config/test/unit/teardown.ts'))
-        ? join(this.cwd, '.config/test/unit/teardown.ts')
+      globalTeardown: this.isFileExists(join(this.cwd, '.config/test/unit/global-teardown.ts'))
+        ? join(this.cwd, '.config/test/unit/global-teardown.ts')
         : undefined,
+      setupFilesAfterEnv: this.isFileExists(join(this.cwd, '.config/test/unit/setup.ts'))
+        ? [join(this.cwd, '.config/test/unit/setup.ts')]
+        : [],
     }
 
     const argv: any = {
@@ -59,15 +62,20 @@ export class Tester {
     process.env.TS_JEST_DISABLE_VER_CHECKER = 'true'
 
     const setup = {
-      globalSetup: this.isFileExists(join(this.cwd, '.config/test/integration/setup.ts'))
-        ? join(this.cwd, '.config/test/integration/setup.ts')
+      globalSetup: this.isFileExists(join(this.cwd, '.config/test/integration/global-setup.ts'))
+        ? join(this.cwd, '.config/test/integration/global-setup.ts')
         : undefined,
-      globalTeardown: this.isFileExists(join(this.cwd, '.config/test/integration/teardown.ts'))
-        ? join(this.cwd, '.config/test/integration/teardown.ts')
+      globalTeardown: this.isFileExists(
+        join(this.cwd, '.config/test/integration/global-teardown.ts')
+      )
+        ? join(this.cwd, '.config/test/integration/global-teardown.ts')
         : undefined,
+      setupFilesAfterEnv: this.isFileExists(join(this.cwd, '.config/test/integration/setup.ts'))
+        ? [join(this.cwd, '.config/test/integration/setup.ts')]
+        : [],
     }
 
-    const argv: any = {
+    const argv = {
       rootDir: this.cwd,
       ci: false,
       detectLeaks: false,
@@ -82,6 +90,7 @@ export class Tester {
       notifyMode: 'failure-change',
       _: files || [],
       ...options,
+      $0: '',
     }
 
     const { results } = await runCLI(argv, [this.cwd])

@@ -1,7 +1,6 @@
 import { PassThrough }       from 'node:stream'
 
 import webpack               from 'webpack'
-import { Watching }          from 'webpack'
 
 import { StartServerPlugin } from '@atls/webpack-start-server-plugin'
 
@@ -58,7 +57,7 @@ export class Service {
     })
   }
 
-  async watch(callback?): Promise<Watching> {
+  async watch(callback?): Promise<webpack.Watching> {
     const config = new WebpackConfig(this.cwd)
 
     const pass = new PassThrough()

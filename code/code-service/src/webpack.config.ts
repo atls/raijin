@@ -1,18 +1,18 @@
-import { writeFileSync }              from 'node:fs'
-import { readFile }                   from 'node:fs/promises'
-import { join }                       from 'node:path'
+import { writeFileSync }            from 'node:fs'
+import { readFile }                 from 'node:fs/promises'
+import { createRequire }            from 'node:module'
+import { join }                     from 'node:path'
 
-import Config                         from 'webpack-chain'
-import fg                             from 'fast-glob'
-import findUp                         from 'find-up'
-import tempy                          from 'tempy'
-import { HotModuleReplacementPlugin } from 'webpack'
-import { Configuration }              from 'webpack'
+import Config                       from 'webpack-chain'
+import fg                           from 'fast-glob'
+import findUp                       from 'find-up'
+import tempy                        from 'tempy'
+import webpack                      from 'webpack'
 
 import tsconfig                       from '@atls/config-typescript'
 
-import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals.js'
-import { UNUSED_EXTERNALS }           from './webpack.externals.js'
+import { FORCE_UNPLUGGED_PACKAGES } from './webpack.externals.js'
+import { UNUSED_EXTERNALS }         from './webpack.externals.js'
 
 export type WebpackEnvironment = 'production' | 'development'
 
@@ -22,7 +22,7 @@ export class WebpackConfig {
   async build(
     environment: WebpackEnvironment = 'production',
     plugins: Array<any> = []
-  ): Promise<Configuration> {
+  ): Promise<webpack.Configuration> {
     const config = new Config()
 
     this.applyCommon(config, environment)
@@ -60,14 +60,16 @@ export class WebpackConfig {
 
   private applyPlugins(config: Config, environment: WebpackEnvironment) {
     config.when(environment === 'development', () => {
-      config.plugin('hot').use(HotModuleReplacementPlugin)
+      config.plugin('hot').use(webpack.HotModuleReplacementPlugin)
     })
   }
 
   private applyModules(config: Config) {
+    const require = createRequire(import.meta.url)
+
     const configFile = tempy.file()
 
-    writeFileSync(configFile, '{}')
+    writeFileSync(configFile, '{"include":["**/*"]}')
 
     config.module
       .rule('ts')
@@ -79,6 +81,7 @@ export class WebpackConfig {
         experimentalWatchApi: true,
         onlyCompileBundledFiles: true,
         compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
+        context: this.cwd,
         configFile,
       })
 
@@ -86,7 +89,7 @@ export class WebpackConfig {
       .rule('protos')
       .test(/\.proto$/)
       .use('proto')
-      .loader(require.resolve('@atls/webpack-proto-imports-loader'))
+      .loader(require.resolve('@monstrs/webpack-proto-imports-loader'))
   }
 
   async getUnpluggedDependencies(): Promise<Set<string>> {
