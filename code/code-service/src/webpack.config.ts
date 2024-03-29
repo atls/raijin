@@ -31,7 +31,6 @@ export class WebpackConfig {
   async getWorkspaceType(): Promise<ModuleTypes> {
     try {
       const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-
       const { type = 'commonjs' } = JSON.parse(content)
 
       return type
