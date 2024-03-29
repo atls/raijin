@@ -14,19 +14,19 @@
   "devDependencies": {
     "@atls/cli-ui-parts": "workspace:*",
     "@atls/schematics": "workspace:*",
-    "@types/node": "^18.15.11",
+    "@types/node": "18.19.3",
     "@types/react": "^18.0.31",
-    "@yarnpkg/libui": "^2.2.2",
-    "camelcase": "^6.3.0",
-    "figures": "^3.2.0",
-    "ink": "^3.2.0",
-    "ink-autocomplete": "^0.0.0",
-    "ink-multi-select": "^2.0.0",
-    "ink-select-input": "^4.2.2",
-    "ink-text-input": "^4.0.3"
+    "@yarnpkg/libui": "3.0.0",
+    "camelcase": "8.0.0",
+    "figures": "3.2.0",
+    "ink": "^3.0.8",
+    "ink-autocomplete": "0.0.0",
+    "ink-multi-select": "2.0.0",
+    "ink-select-input": "4.2.2",
+    "ink-text-input": "4.0.3"
   },
   "peerDependencies": {
-    "ink": "^3.0.8",
+    "ink": "*",
     "react": "*"
   },
   "publishConfig": {
