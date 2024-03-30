@@ -19,11 +19,11 @@
   "dependencies": {
     "@atls/config-eslint": "workspace:*",
     "eslint": "^8.37.0",
-    "globby": "^11.1.0",
+    "globby": "^14.0.1",
     "ignore": "^5.2.4"
   },
   "devDependencies": {
-    "@types/node": "^18.15.11"
+    "@types/node": "^20.12.2"
   },
   "peerDependencies": {
     "react": "*",

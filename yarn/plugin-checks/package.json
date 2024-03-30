@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@actions/core": "1.10.1",
-    "@actions/github": "^5.1.1",
+    "@actions/github": "^6.0.0",
     "@atls/cli-ui-eslint-result-component": "workspace:*",
     "@atls/cli-ui-renderer": "workspace:*",
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
@@ -29,14 +29,14 @@
     "@atls/yarn-plugin-files": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-workspace-utils": "workspace:*",
-    "@babel/code-frame": "^7.21.4",
-    "@jest/test-result": "^29.5.0",
+    "@babel/code-frame": "^7.24.2",
+    "@jest/test-result": "^29.7.0",
     "clipanion": "4.0.0-rc.2",
-    "react": "16.14.0",
+    "react": "18.2.0",
     "strip-ansi": "7.1.0"
   },
   "devDependencies": {
-    "@octokit/types": "12.4.0",
+    "@octokit/types": "12.6.0",
     "@types/node": "20.11.20",
     "@yarnpkg/builder": "4.0.0",
     "@yarnpkg/cli": "4.1.0",

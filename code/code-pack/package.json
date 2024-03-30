@@ -16,13 +16,13 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@actions/github": "^5.1.1",
+    "@actions/github": "^6.0.0",
     "@iarna/toml": "^2.2.5",
     "@yarnpkg/core": "^3.5.0",
     "@yarnpkg/fslib": "^2.10.2"
   },
   "devDependencies": {
-    "@types/node": "^18.15.11"
+    "@types/node": "^20.12.2"
   },
   "publishConfig": {
     "exports": {

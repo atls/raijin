@@ -17,8 +17,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@angular-devkit/core": "^15.2.4",
-    "@angular-devkit/schematics": "^15.2.4"
+    "@angular-devkit/core": "^17.3.2",
+    "@angular-devkit/schematics": "^17.3.2"
   },
   "devDependencies": {
     "rxjs": "7.8.0"

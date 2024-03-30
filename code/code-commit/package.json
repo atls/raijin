@@ -27,7 +27,7 @@
     "conventional-commits-parser": "^3.2.4"
   },
   "devDependencies": {
-    "@jest/globals": "29.5.0",
+    "@jest/globals": "29.7.0",
     "@types/node": "20.11.20"
   },
   "publishConfig": {

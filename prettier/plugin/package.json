@@ -16,7 +16,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "globby": "11.1.0",
+    "globby": "14.0.1",
     "import-sort": "6.0.0",
     "import-sort-parser": "6.0.0",
     "import-sort-parser-typescript": "6.0.0",

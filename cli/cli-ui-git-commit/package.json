@@ -18,16 +18,16 @@
   },
   "devDependencies": {
     "@atls/code-commit": "workspace:*",
-    "@types/node": "^18.15.11",
-    "@types/react": "^18.0.31",
+    "@types/node": "^20.12.2",
+    "@types/react": "^18.2.73",
     "@yarnpkg/libui": "^2.2.2",
-    "camelcase": "^6.3.0",
-    "figures": "^3.2.0",
-    "ink": "^3.2.0",
+    "camelcase": "^8.0.0",
+    "figures": "^6.1.0",
+    "ink": "^4.4.1",
     "ink-autocomplete": "^0.0.0",
     "ink-multi-select": "^2.0.0",
-    "ink-select-input": "^4.2.2",
-    "ink-text-input": "^4.0.3"
+    "ink-select-input": "^5.0.0",
+    "ink-text-input": "^5.0.1"
   },
   "peerDependencies": {
     "ink": "^3.0.8",

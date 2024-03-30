@@ -19,12 +19,12 @@
   "dependencies": {
     "@atls/config-prettier": "workspace:*",
     "@atls/prettier-plugin": "workspace:*",
-    "globby": "^11.1.0",
+    "globby": "^14.0.1",
     "ignore": "^5.2.4",
     "prettier": "^2.8.7"
   },
   "devDependencies": {
-    "@types/node": "^18.15.11"
+    "@types/node": "^20.12.2"
   },
   "publishConfig": {
     "exports": {
