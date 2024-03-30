@@ -24,12 +24,12 @@
     "@types/jest": "29.5.11",
     "@types/react": "16.14.54",
     "ink": "^3.2.0",
-    "react": "16.14.0",
-    "strip-ansi": "7.1.0",
-    "typescript": "5.2.2"
+    "react": "^18.2.0",
+    "strip-ansi": "^6.0.1",
+    "typescript": "^5.0.3"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {

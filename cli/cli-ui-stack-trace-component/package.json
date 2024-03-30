@@ -21,14 +21,14 @@
     "@atls/stack-trace": "0.0.2"
   },
   "devDependencies": {
-    "@jest/globals": "29.5.0",
+    "@jest/globals": "^29.5.0",
     "@types/react": "^18.0.31",
     "ink": "^3.2.0",
     "react": "^18.2.0",
-    "strip-ansi": "7.1.0"
+    "strip-ansi": "^6.0.1"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {

@@ -26,7 +26,7 @@
     "ink-text-input": "^4.0.3"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {

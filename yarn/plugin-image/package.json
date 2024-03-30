@@ -26,16 +26,16 @@
     "tempy": "1.0.1"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.1.0",
-    "@yarnpkg/core": "4.0.3",
-    "@yarnpkg/fslib": "3.0.2",
-    "typescript": "5.2.2"
+    "@yarnpkg/builder": "^3.2.7",
+    "@yarnpkg/cli": "^3.5.0",
+    "@yarnpkg/core": "^3.5.0",
+    "@yarnpkg/fslib": "^2.10.2",
+    "typescript": "^5.0.3"
   },
   "peerDependencies": {
-    "@yarnpkg/cli": "*",
-    "@yarnpkg/core": "*",
-    "@yarnpkg/fslib": "*"
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8",
+    "@yarnpkg/fslib": "^2.6.1-rc.3"
   },
   "publishConfig": {
     "access": "public",

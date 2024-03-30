@@ -26,17 +26,17 @@
     "react": "16.14.0"
   },
   "devDependencies": {
-    "@atls/yarn-test-utils": "workspace:0.0.1",
+    "@atls/yarn-test-utils": "workspace:*",
     "@jest/globals": "^29.5.0",
-    "@types/react": "16.14.54",
     "@yarnpkg/builder": "4.0.0",
     "@yarnpkg/cli": "4.1.0",
     "@yarnpkg/core": "4.0.3",
+    "@yarnpkg/fslib": "^2.10.2",
     "typescript": "5.2.2"
   },
   "peerDependencies": {
-    "@yarnpkg/cli": "*",
-    "@yarnpkg/core": "*"
+    "@yarnpkg/cli": "^3.2.0-rc.8",
+    "@yarnpkg/core": "^3.2.0-rc.8"
   },
   "publishConfig": {
     "access": "public",

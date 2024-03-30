@@ -1,3 +1,5 @@
+import { join }          from 'node:path'
+
 import { BaseCommand }   from '@yarnpkg/cli'
 import { StreamReport }  from '@yarnpkg/core'
 import { Configuration } from '@yarnpkg/core'
@@ -25,9 +27,18 @@ class TestUnitCommand extends BaseCommand {
     const args: Array<string> = []
 
     if (workspace) {
-      const scope = this.context.cwd.replace(project.cwd, '')
+      if (this.files?.length > 0) {
+        const scope = this.context.cwd.replace(project.cwd, '')
 
-      args.push(scope.startsWith('/') ? scope.substr(1) : scope)
+        this.files.forEach((file) =>
+          args.push(join(scope.startsWith('/') ? scope.substr(1) : scope, file)))
+      } else {
+        const scope = this.context.cwd.replace(project.cwd, '')
+
+        args.push(scope.startsWith('/') ? scope.substr(1) : scope)
+      }
+    } else if (this.files?.length > 0) {
+      this.files.forEach((file) => args.push(file))
     }
 
     const commandReport = await StreamReport.start(
@@ -43,7 +54,7 @@ class TestUnitCommand extends BaseCommand {
             updateSnapshot: this.updateSnapshot,
             bail: this.bail,
           },
-          args.concat(this.files)
+          args
         )
       }
     )

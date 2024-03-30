@@ -2,12 +2,9 @@
   "name": "@atls/yarn-plugin-library",
   "version": "0.0.1",
   "private": true,
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "type": "module",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": "./src/index.ts"
-  },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -25,16 +22,16 @@
     "@atls/code-typescript-worker": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "4.0.0-rc.2",
-    "react": "16.14.0",
+    "react": "^18.2.0",
     "rimraf": "5.0.5"
   },
   "devDependencies": {
-    "@atls/yarn-test-utils": "workspace:0.0.1",
+    "@atls/yarn-test-utils": "workspace:*",
     "@jest/globals": "^29.5.0",
-    "@types/react": "16.14.54",
     "@yarnpkg/builder": "4.0.0",
     "@yarnpkg/cli": "4.1.0",
-    "@yarnpkg/core": "4.0.3"
+    "@yarnpkg/core": "4.0.3",
+    "@yarnpkg/fslib": "^2.10.2"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
