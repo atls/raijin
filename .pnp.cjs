@@ -1625,11 +1625,11 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/pack-utils/",\
         "packageDependencies": [\
           ["@atls/yarn-pack-utils", "workspace:yarn/pack-utils"],\
-          ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:4.1.0"],\
-          ["@yarnpkg/core", "npm:4.0.3"],\
-          ["@yarnpkg/fslib", "npm:3.0.2"],\
-          ["@yarnpkg/plugin-pack", "virtual:7ba9ca08c243864d12f1b362c1bae0b37167f671e4439487459fdf59f2076d66db0c6d4bcd2caa994ea139085347f5758c4a13db20a196dbe5ed8e4eea99bb7a#npm:4.0.0"],\
-          ["@yarnpkg/plugin-patch", "virtual:7ba9ca08c243864d12f1b362c1bae0b37167f671e4439487459fdf59f2076d66db0c6d4bcd2caa994ea139085347f5758c4a13db20a196dbe5ed8e4eea99bb7a#npm:4.0.1"],\
+          ["@yarnpkg/cli", "virtual:a512683e6f1206e2ddc513cb9dfcf421e6ed2cd44ab9ea196fb0af1ffed1b1edb436a3cf6175effbfbeae7c17c82a71ca199e74204cf530cb0a7c3ed371371b9#npm:3.8.1"],\
+          ["@yarnpkg/core", "npm:3.7.0"],\
+          ["@yarnpkg/fslib", "npm:2.10.4"],\
+          ["@yarnpkg/plugin-pack", "virtual:bb75bc1661529a9b94f299fbbc0939d0a2b98f91b2db2c60a41ee5120cddafe04aab2e66ea234a03fb2c549a5be73f81d9062f3f80445b97c52ac2787157653c#npm:3.2.0"],\
+          ["@yarnpkg/plugin-patch", "virtual:bb75bc1661529a9b94f299fbbc0939d0a2b98f91b2db2c60a41ee5120cddafe04aab2e66ea234a03fb2c549a5be73f81d9062f3f80445b97c52ac2787157653c#npm:3.2.5"],\
           ["tar-stream", "npm:3.1.6"]\
         ],\
         "linkType": "SOFT"\

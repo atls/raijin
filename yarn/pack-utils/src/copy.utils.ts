@@ -9,7 +9,7 @@ import { PortablePath } from '@yarnpkg/fslib'
 import { structUtils }  from '@yarnpkg/core'
 import { xfs }          from '@yarnpkg/fslib'
 import { ppath }        from '@yarnpkg/fslib'
-import { toFilename }   from '@yarnpkg/fslib'
+import { Filename }   from '@yarnpkg/fslib'
 
 export const copyCacheMarkedFiles = async (
   project: Project,
@@ -51,7 +51,7 @@ export const copyPlugins = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const pluginDir = ppath.join(toFilename('.yarn'), toFilename('plugins'))
+  const pluginDir = ppath.join('.yarn' as Filename, 'plugins' as Filename)
 
   if (await xfs.existsPromise(ppath.join(project.cwd, pluginDir))) {
     report.reportInfo(null, pluginDir)
@@ -134,7 +134,7 @@ export const copyYarnRelease = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const src = project.configuration.get('yarnPath')
+  const src = project.configuration.get('yarnPath') as PortablePath
   const path = ppath.relative(project.cwd, src)
   const dest = ppath.join(destination, path)
 

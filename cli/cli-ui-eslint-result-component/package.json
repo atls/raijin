@@ -29,7 +29,7 @@
     "strip-ansi": "^7.1.0"
   },
   "peerDependencies": {
-    "ink": "^3.0.8",
+    "ink": "*",
     "react": "*"
   },
   "publishConfig": {
