@@ -1304,9 +1304,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@atls/code-pack", "workspace:code/code-pack"],\
             ["@actions/github", "npm:6.0.0"],\
-            ["@iarna/toml", "npm:2.2.5"],\
+            ["@iarna/toml", "npm:3.0.0"],\
             ["@types/node", "npm:20.12.2"],\
-            ["@yarnpkg/core", "patch:@yarnpkg/core@npm%3A3.5.0#./.yarn/patches/@yarnpkg-core-npm-3.5.0-6ad940becd.patch::version=3.5.0&hash=616bd3&locator=tools%40workspace%3A."],\
+            ["@yarnpkg/core", "npm:3.7.0"],\
             ["@yarnpkg/fslib", "npm:2.10.4"]\
           ],\
           "linkType": "SOFT"\
@@ -4011,13 +4011,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@iarna/toml", [\
-        ["npm:2.2.5", {\
-          "packageLocation": "./.yarn/cache/@iarna-toml-npm-2.2.5-6da1399e8e-b63b2b2c4f.zip/node_modules/@iarna/toml/",\
-          "packageDependencies": [\
-            ["@iarna/toml", "npm:2.2.5"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:3.0.0", {\
           "packageLocation": "./.yarn/cache/@iarna-toml-npm-3.0.0-e20641036f-03fb2b8d67.zip/node_modules/@iarna/toml/",\
           "packageDependencies": [\

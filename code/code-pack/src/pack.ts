@@ -40,13 +40,14 @@ export const pack = async (
 
   const args = [
     'build',
+    '--trust-builder',
     `${image}:${tag}`,
     '--descriptor',
     descriptorPath,
     '--buildpack',
-    buildpack || 'atls/buildpack-yarn-workspace:0.0.3',
+    buildpack || 'atlantislab/buildpack-yarn-workspace:0.0.4',
     '--builder',
-    builder || 'atls/builder-base:buster',
+    builder || 'atlantislab/builder-base:buster',
     '--tag',
     `${image}:latest`,
     '--verbose',

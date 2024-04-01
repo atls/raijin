@@ -22,7 +22,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@actions/github@npm:^6.0.0":
+"@actions/github@npm:6.0.0, @actions/github@npm:^6.0.0":
   version: 6.0.0
   resolution: "@actions/github@npm:6.0.0"
   dependencies:
@@ -512,11 +512,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-pack@workspace:code/code-pack"
   dependencies:
-    "@actions/github": ^6.0.0
-    "@iarna/toml": ^2.2.5
-    "@types/node": ^20.12.2
-    "@yarnpkg/core": ^3.5.0
-    "@yarnpkg/fslib": ^2.10.2
+    "@actions/github": 6.0.0
+    "@iarna/toml": 3.0.0
+    "@types/node": 20
+    "@yarnpkg/core": 3.7.0
+    "@yarnpkg/fslib": 2.10.4
   languageName: unknown
   linkType: soft
 
@@ -2228,13 +2228,6 @@ __metadata:
   version: 3.0.0
   resolution: "@iarna/toml@npm:3.0.0"
   checksum: 03fb2b8d67df9631437d1bff56f0474520b3b7256cefdc129306ea3cd79910aad877637e58808e88e53104fa387c7132c337385bf5d4801b51580829d2c91041
-  languageName: node
-  linkType: hard
-
-"@iarna/toml@npm:^2.2.5":
-  version: 2.2.5
-  resolution: "@iarna/toml@npm:2.2.5"
-  checksum: b63b2b2c4fd67969a6291543ada0303d45593801ee744b60f5390f183c03d9192bc67a217abb24be945158f1935f02840d9ffff40c0142aa171b5d3b6b6a3ea5
   languageName: node
   linkType: hard
 
