@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3623fe40-c30c-437f-95e6-d0a78a538f7a" name="Changes" comment="fix: swc loader typo" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="React Component Boilerplate.tsx.child.1" />
+        <option value="React Component Boilerplate.tsx.child.0" />
+        <option value="React Component Boilerplate.tsx.child.2" />
+        <option value="React Component Boilerplate.tsx.child.3" />
+        <option value="React Component Boilerplate" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
+    {
+      &quot;state&quot;: &quot;OPEN&quot;
+    }
+  ],
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GitRewordedCommitMessages">
+    <option name="commitMessagesMapping">
+      <RewordedCommitMessageMapping>
+        <option name="originalMessage" value="fix: webpack output to index.js instead of main.js" />
+        <option name="rewordedMessage" value="fix: webpack output to index.js instead of main.js" />
+      </RewordedCommitMessageMapping>
+    </option>
+    <option name="currentCommit" value="1" />
+    <option name="onto" value="7efb21dd7fc8757c483ae3ca95592ac49fdd0731" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="recentNewPullRequestHead">
+      <RepoCoordinatesHolder>
+        <option name="owner" value="atls" />
+        <option name="repository" value="tools" />
+      </RepoCoordinatesHolder>
+    </option>
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="733e2e95-fad1-4b98-812b-db959d5352cd" />
+        <option name="url" value="git@github.com:atls/tools.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="true" />
+  </component>
+  <component name="JsBowerSettings">
+    <bower-package value="" />
+    <bower.json value="" />
+  </component>
+  <component name="KubernetesApiProvider">{
+  &quot;contexts&quot;: [
+    {
+      &quot;name&quot;: &quot;yc-stage&quot;
+    }
+  ],
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="KubernetesSettings">
+    <option name="contextName" value="yc-stage" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2Rm0e40ik6fs0TtHrDQiRfrnY9E" />
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="1" id="Add" />
+    <ConfirmationsSetting value="1" id="Remove" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+    <option name="showScratchesAndConsoles" value="false" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "Shell Script.Rebuild workers.executor": "Run",
+    "ShowUsagesActions.previewPropertyKey": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "master",
+    "go.import.settings.migrated": "true",
+    "javascript.nodejs.core.library.configured.version": "20.12.0",
+    "javascript.nodejs.core.library.typings.version": "20.11.30",
+    "last_opened_file_path": "/Users/nikoroach/Documents/Typescript/atlantis/tools/.yarn/releases",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "yarn:package.json:eslint",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.stylelint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "/opt/homebrew/opt/node@18/bin/node",
+    "nodejs_package_manager_path": "/Users/nikoroach/Documents/Typescript/atlantis/tools/.yarn/releases/yarn.js",
+    "npm.Full CLI prepack.executor": "Run",
+    "npm.cli > prepack.executor": "Run",
+    "npm.cli-new > build.executor": "Run",
+    "npm.cli-new > prepack (1).executor": "Run",
+    "npm.cli-new > prepack.executor": "Run",
+    "npm.cli-ui-error-info-component > prepack.executor": "Run",
+    "npm.cli-ui-eslint-result-component > prepack.executor": "Run",
+    "npm.cli-ui-git-commit > prepack.executor": "Run",
+    "npm.cli-ui-log-record-component > prepack.executor": "Run",
+    "npm.cli-ui-parts > prepack.executor": "Run",
+    "npm.cli-ui-pretty-logs > prepack.executor": "Run",
+    "npm.cli-ui-renderer > prepack.executor": "Run",
+    "npm.cli-ui-schematics-component > prepack.executor": "Run",
+    "npm.cli-ui-source-component > prepack.executor": "Run",
+    "npm.cli-ui-stack-trace-component > prepack.executor": "Run",
+    "npm.cli-ui-typescript-diagnostic-component > prepack.executor": "Run",
+    "npm.code-commit > prepack.executor": "Run",
+    "npm.code-configuration > prepack.executor": "Run",
+    "npm.code-format > build.executor": "Run",
+    "npm.code-format > build:worker.executor": "Run",
+    "npm.code-format > prepack.executor": "Run",
+    "npm.code-format-worker > build:worker.executor": "Run",
+    "npm.code-format-worker > prepack.executor": "Run",
+    "npm.code-lint > prepack.executor": "Run",
+    "npm.code-lint-worker > build:worker.executor": "Run",
+    "npm.code-lint-worker > prepack.executor": "Run",
+    "npm.code-pack > prepack.executor": "Run",
+    "npm.code-schematics > prepack.executor": "Run",
+    "npm.code-schematics-worker > build:worker.executor": "Run",
+    "npm.code-schematics-worker > prepack.executor": "Run",
+    "npm.code-service > prepack (1).executor": "Run",
+    "npm.code-service > prepack.executor": "Run",
+    "npm.code-service-worker > build.executor": "Run",
+    "npm.code-service-worker > build:worker.executor": "Run",
+    "npm.code-service-worker > prepack.executor": "Run",
+    "npm.code-service-worker-vite > build:worker.executor": "Run",
+    "npm.code-service-worker-vite > prepack.executor": "Run",
+    "npm.code-test > prepack.executor": "Run",
+    "npm.code-test-worker > build:worker (1).executor": "Run",
+    "npm.code-test-worker > build:worker.executor": "Run",
+    "npm.code-test-worker > prepack.executor": "Run",
+    "npm.code-typescript > prepack.executor": "Run",
+    "npm.code-typescript-worker > build:worker.executor": "Run",
+    "npm.code-typescript-worker > prepack.executor": "Run",
+    "npm.code-worker-utils > prepack.executor": "Run",
+    "npm.jest > prepack.executor": "Run",
+    "npm.plugin > prepack.executor": "Run",
+    "npm.plugin-badges-new > postpack.executor": "Run",
+    "npm.plugin-badges-new > prepack (1).executor": "Run",
+    "npm.plugin-badges-new > prepack.executor": "Run",
+    "npm.plugin-check-new > prepack.executor": "Run",
+    "npm.plugin-checks-new > prepack.executor": "Run",
+    "npm.plugin-commit > prepack.executor": "Run",
+    "npm.plugin-commit-new > prepack.executor": "Run",
+    "npm.plugin-files > prepack.executor": "Run",
+    "npm.plugin-format > prepack.executor": "Run",
+    "npm.plugin-format-new > postpack.executor": "Run",
+    "npm.plugin-format-new > prepack.executor": "Run",
+    "npm.plugin-image > prepack.executor": "Run",
+    "npm.plugin-image-new > prepack.executor": "Run",
+    "npm.plugin-library-new > build:dev.executor": "Run",
+    "npm.plugin-library-new > prepack.executor": "Run",
+    "npm.plugin-lint > prepack.executor": "Run",
+    "npm.plugin-lint-new > prepack.executor": "Run",
+    "npm.plugin-new > prepack.executor": "Run",
+    "npm.plugin-service > prepack.executor": "Run",
+    "npm.plugin-service-new > prepack.executor": "Run",
+    "npm.plugin-typescript-new > prepack.executor": "Run",
+    "npm.plugin-workspaces > prepack.executor": "Run",
+    "npm.postpack (1).executor": "Run",
+    "npm.prepack (1).executor": "Run",
+    "npm.prettier > prepack.executor": "Run",
+    "npm.prettier-new > prepack.executor": "Run",
+    "npm.schematics > prepack.executor": "Run",
+    "npm.typescript > build.executor": "Run",
+    "npm.typescript > build:json.executor": "Run",
+    "npm.typescript > prepack.executor": "Run",
+    "npm.webpack-localtunnel-plugin > prepack.executor": "Run",
+    "npm.webpack-proto-imports-loader > prepack.executor": "Run",
+    "npm.webpack-start-server-plugin > prepack.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "yarn:package.json:prettier",
+    "settings.editor.selected.configurable": "settings.javascript.linters.eslint",
+    "tasks.open.task.update.state.enabled": "true",
+    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.yarn/releases" />
+      <recent name="$PROJECT_DIR$/.husky" />
+      <recent name="$PROJECT_DIR$/code" />
+      <recent name="$PROJECT_DIR$/code/code-service-vite/src" />
+      <recent name="$PROJECT_DIR$/.github/workflows" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/prettier-new" />
+      <recent name="$PROJECT_DIR$/code-new/code-service/src" />
+      <recent name="$PROJECT_DIR$/cli-new/cli-ui-git-commit/src" />
+      <recent name="$PROJECT_DIR$/cli-new/cli-ui-schematics-component/src" />
+      <recent name="$PROJECT_DIR$/yarn/cli-new/sources" />
+    </key>
+    <key name="es6.move.members.recent.items">
+      <recent name="$PROJECT_DIR$/code/code-service-swc/src/swc.config.ts" />
+      <recent name="$PROJECT_DIR$/config/typescript/src/tsconfig.ts" />
+      <recent name="$PROJECT_DIR$/config/eslint-new/src/flat-config.ts" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="yarn why camelcase" />
+      <command value="yarn why @atls/config-typescript" />
+      <command value="open reactjs" />
+      <command value="open garnet-team" />
+      <command value="open revealjs" />
+      <command value="open doc-web-infrastructure" />
+      <command value="open crossfi" />
+      <command value="cli-new &gt; prepack (1)" />
+      <command value="open yarn-berry" />
+      <command value="open hoh-web" />
+      <command value="open misik" />
+      <command value="open dream-team" />
+      <command value="open buildpacks" />
+      <command value="open frontend-tests" />
+      <command value="open nestjs" />
+      <command value="open hyperion" />
+      <command value="open ecoscreen" />
+      <command value="open tools" />
+      <command value="open good-gantt" />
+      <command value="yarn lint" />
+      <command value="open migration-bot" />
+      <command value="open doc-web" />
+      <command value="open nuym-web" />
+      <command value="open atls-common" />
+      <command value="open drum-in" />
+      <command value="open candify-web" />
+      <command value="yarn" />
+      <command value="yarn -v" />
+    </option>
+  </component>
+  <component name="RunManager" selected="npm.cli &gt; prepack">
+    <configuration name="Rebuild workers" type="ShConfigurationType">
+      <option name="SCRIPT_TEXT" value="yarn workspaces foreach --all run build:worker" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/bin/zsh" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="false" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="cli &gt; prepack" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/yarn/cli/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="prepack" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="code-format-worker &gt; build:worker" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/code/code-format-worker/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:worker" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="code-service &gt; prepack" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/code/code-service/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="prepack" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="code-service-worker &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/code/code-service-worker/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="typescript &gt; prepack" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/config/typescript/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="prepack" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="npm.code-format-worker &gt; build:worker" />
+      <item itemvalue="npm.cli &gt; prepack" />
+      <item itemvalue="npm.code-service &gt; prepack" />
+      <item itemvalue="npm.code-service-worker &gt; build" />
+      <item itemvalue="npm.typescript &gt; prepack" />
+      <item itemvalue="Shell Script.Rebuild workers" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.typescript &gt; prepack" />
+        <item itemvalue="npm.code-service-worker &gt; build" />
+        <item itemvalue="npm.code-service &gt; prepack" />
+        <item itemvalue="npm.cli &gt; prepack" />
+        <item itemvalue="npm.code-format-worker &gt; build:worker" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <branch name="master" repository="$PROJECT_DIR$" />
+      <changelist id="3623fe40-c30c-437f-95e6-d0a78a538f7a" name="Changes" comment="" />
+      <created>1687840040299</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1702561763716</updated>
+      <workItem from="1687840041382" duration="3456000" />
+      <workItem from="1687853802256" duration="1137000" />
+      <workItem from="1687857509243" duration="10000" />
+      <workItem from="1687865326097" duration="1456000" />
+      <workItem from="1687870708977" duration="4469000" />
+      <workItem from="1687877201137" duration="786000" />
+      <workItem from="1687933420189" duration="362000" />
+      <workItem from="1687940377603" duration="1264000" />
+      <workItem from="1687962517431" duration="358000" />
+      <workItem from="1687965943600" duration="684000" />
+      <workItem from="1687966635323" duration="77000" />
+      <workItem from="1687967203116" duration="6047000" />
+      <workItem from="1688049971427" duration="835000" />
+      <workItem from="1688129431223" duration="1099000" />
+      <workItem from="1688721300140" duration="35000" />
+      <workItem from="1689664839486" duration="670000" />
+      <workItem from="1689760664443" duration="1000" />
+      <workItem from="1691124083311" duration="64000" />
+      <workItem from="1691124697554" duration="551000" />
+      <workItem from="1691149283786" duration="18000" />
+      <workItem from="1691575938589" duration="582000" />
+      <workItem from="1692783717352" duration="1571000" />
+      <workItem from="1692794766775" duration="7000" />
+      <workItem from="1692794833374" duration="1034000" />
+      <workItem from="1693551721019" duration="1813000" />
+      <workItem from="1693646368456" duration="15000" />
+      <workItem from="1693995904084" duration="192000" />
+      <workItem from="1694066470225" duration="4027000" />
+      <workItem from="1694079658025" duration="15000" />
+      <workItem from="1694848231847" duration="22784000" />
+      <workItem from="1694976561412" duration="149000" />
+      <workItem from="1694977017423" duration="617000" />
+      <workItem from="1695019961813" duration="6216000" />
+      <workItem from="1695215936115" duration="991000" />
+      <workItem from="1695218236750" duration="236000" />
+      <workItem from="1695218887589" duration="272000" />
+      <workItem from="1695811795183" duration="1272000" />
+      <workItem from="1695892849947" duration="9419000" />
+      <workItem from="1695916613779" duration="3203000" />
+      <workItem from="1695970375721" duration="197000" />
+      <workItem from="1695996241113" duration="691000" />
+      <workItem from="1696002220073" duration="89000" />
+      <workItem from="1696333693061" duration="1015000" />
+      <workItem from="1696356445425" duration="11000" />
+      <workItem from="1697538787363" duration="19000" />
+      <workItem from="1697546753878" duration="619000" />
+      <workItem from="1697629201943" duration="282000" />
+      <workItem from="1697693538428" duration="222000" />
+      <workItem from="1697996175764" duration="1633000" />
+      <workItem from="1698253852421" duration="610000" />
+      <workItem from="1698256732224" duration="16000" />
+      <workItem from="1698296030497" duration="40000" />
+      <workItem from="1698298872106" duration="859000" />
+      <workItem from="1698300380462" duration="7000" />
+      <workItem from="1698300856458" duration="12000" />
+      <workItem from="1698763649338" duration="1145000" />
+      <workItem from="1699110007922" duration="592000" />
+      <workItem from="1699690219628" duration="620000" />
+      <workItem from="1699864518144" duration="1257000" />
+      <workItem from="1700038170060" duration="139000" />
+      <workItem from="1700038988078" duration="17000" />
+      <workItem from="1700056313984" duration="123000" />
+      <workItem from="1700206975380" duration="2027000" />
+      <workItem from="1700476056398" duration="258000" />
+      <workItem from="1702561764537" duration="1755000" />
+      <workItem from="1702564162630" duration="665000" />
+      <workItem from="1702568020816" duration="39000" />
+      <workItem from="1702643564721" duration="871000" />
+      <workItem from="1702644839496" duration="152000" />
+      <workItem from="1702645050011" duration="61000" />
+      <workItem from="1702645121628" duration="14000" />
+      <workItem from="1702645143451" duration="1520000" />
+      <workItem from="1702962688567" duration="741000" />
+      <workItem from="1702963438206" duration="2651000" />
+      <workItem from="1702970598028" duration="13000" />
+      <workItem from="1702974457218" duration="3221000" />
+      <workItem from="1702977783808" duration="2401000" />
+      <workItem from="1702980199686" duration="250000" />
+      <workItem from="1702980457720" duration="24867000" />
+      <workItem from="1703060247398" duration="5278000" />
+      <workItem from="1703069157873" duration="16715000" />
+      <workItem from="1703144851216" duration="624000" />
+      <workItem from="1703145570301" duration="151000" />
+      <workItem from="1703145736574" duration="9000" />
+      <workItem from="1703145753653" duration="21452000" />
+      <workItem from="1703168423067" duration="442000" />
+      <workItem from="1703168874848" duration="53000" />
+      <workItem from="1703168935597" duration="787000" />
+      <workItem from="1703169732360" duration="241000" />
+      <workItem from="1703169981891" duration="274000" />
+      <workItem from="1703170264991" duration="634000" />
+      <workItem from="1703170914078" duration="3777000" />
+      <workItem from="1703228501915" duration="97000" />
+      <workItem from="1703228612809" duration="93000" />
+      <workItem from="1703230595257" duration="13548000" />
+      <workItem from="1703245502869" duration="423000" />
+      <workItem from="1703246243330" duration="1963000" />
+      <workItem from="1703249721546" duration="13000" />
+      <workItem from="1703249744809" duration="10890000" />
+      <workItem from="1703271732401" duration="48000" />
+      <workItem from="1703272070498" duration="76000" />
+      <workItem from="1703320481957" duration="41000" />
+      <workItem from="1703321370022" duration="8000" />
+      <workItem from="1703323747547" duration="299000" />
+      <workItem from="1703324053280" duration="12000" />
+      <workItem from="1703324072832" duration="7878000" />
+      <workItem from="1703410675247" duration="529000" />
+      <workItem from="1703411224483" duration="13000" />
+      <workItem from="1703411244288" duration="10843000" />
+      <workItem from="1703869368112" duration="254000" />
+      <workItem from="1703921514592" duration="159000" />
+      <workItem from="1704640573915" duration="4000" />
+    </task>
+    <task id="LOCAL-00001" summary="fix: add typescript and eslint resolutions">
+      <created>1687842768467</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1687842768467</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fix: add typescript and eslint resolutions">
+      <created>1687842916821</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1687842916821</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feat: add webpack 4 config to load fonts">
+      <created>1687842940203</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1687842940203</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat: README.md version bump">
+      <created>1687843004506</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1687843004506</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat: yarn version bump">
+      <created>1687854556369</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1687854556369</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: yarn new bundle">
+      <created>1687877388481</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1687877388481</updated>
+    </task>
+    <task id="LOCAL-00007" summary="feat: new readme, bump yarn version">
+      <created>1694070296338</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1694070296338</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat: webpack 5 config, removed unnecessary deps">
+      <created>1694937179767</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1694937179767</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix: entry path, remove comments">
+      <created>1694966102943</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1694966102943</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fix: fallback for buildpack base builder version">
+      <created>1695908973897</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1695908973897</updated>
+    </task>
+    <task id="LOCAL-00011" summary="fix: order of args for pack">
+      <created>1695909058820</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1695909058820</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat: yarn bump">
+      <created>1695909082902</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1695909082902</updated>
+    </task>
+    <task id="LOCAL-00013" summary="chore: cache">
+      <created>1695909093892</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1695909093892</updated>
+    </task>
+    <task id="LOCAL-00014" summary="feat: add flag &quot;trust builder&quot;">
+      <created>1695918570864</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1695918570864</updated>
+    </task>
+    <task id="LOCAL-00015" summary="feat: release new yarn bundle">
+      <created>1695926294741</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1695926294741</updated>
+    </task>
+    <task id="LOCAL-00016" summary="feat: release new yarn bundle">
+      <created>1695996763660</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1695996763660</updated>
+    </task>
+    <task id="LOCAL-00017" summary="feat: new eslint rules">
+      <created>1698764446738</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1698764446738</updated>
+    </task>
+    <task id="LOCAL-00018" summary="feat: add flag --trust-builder to pack commands">
+      <created>1699110354087</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1699110354087</updated>
+    </task>
+    <task id="LOCAL-00019" summary="feat: new plugin image">
+      <created>1699110510788</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1699110510788</updated>
+    </task>
+    <task id="LOCAL-00020" summary="feat: new yarn bundle">
+      <created>1699110523471</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1699110523471</updated>
+    </task>
+    <task id="tools-264" summary="Ошибка `Buffer is deprecated`">
+      <branch name="master" repository="$PROJECT_DIR$" original="true" />
+      <branch name="fix/buffer-warning" repository="$PROJECT_DIR$" />
+      <changelist id="3623fe40-c30c-437f-95e6-d0a78a538f7a" name="Changes" comment="" />
+      <created>1700476252000</created>
+      <option name="issue" value="true" />
+      <url>https://github.com/atls/tools/issues/264</url>
+      <option name="number" value="264" />
+      <option name="presentableId" value="tools-264" />
+      <option name="project" value="tools" />
+      <option name="type" value="BUG" />
+      <updated>1702561763716</updated>
+      <workItem from="1700476315480" duration="2424000" />
+      <workItem from="1700479106020" duration="3245000" />
+      <workItem from="1700733082781" duration="95000" />
+      <workItem from="1700734585222" duration="134000" />
+      <workItem from="1700734861993" duration="36000" />
+      <workItem from="1700735588814" duration="130000" />
+      <workItem from="1701176571203" duration="846000" />
+      <workItem from="1701177894203" duration="7235000" />
+      <workItem from="1701256346662" duration="3328000" />
+      <workItem from="1701259793607" duration="152000" />
+      <workItem from="1701277661824" duration="6158000" />
+      <workItem from="1701331773614" duration="17000" />
+      <workItem from="1701338283334" duration="593000" />
+      <workItem from="1701355496212" duration="1568000" />
+      <workItem from="1701358155359" duration="53000" />
+      <workItem from="1701358214741" duration="42000" />
+      <workItem from="1701359120297" duration="403000" />
+      <workItem from="1701359538608" duration="160000" />
+      <workItem from="1701423953276" duration="139000" />
+      <workItem from="1701424654741" duration="551000" />
+      <workItem from="1701782502247" duration="921000" />
+      <workItem from="1701792456146" duration="440000" />
+      <workItem from="1701853954242" duration="429000" />
+      <workItem from="1701857805595" duration="2980000" />
+      <workItem from="1701863536553" duration="10000" />
+      <workItem from="1701871481562" duration="4980000" />
+      <workItem from="1701935879475" duration="100000" />
+      <workItem from="1701938887124" duration="3275000" />
+      <workItem from="1702016321053" duration="1092000" />
+      <workItem from="1702539484927" duration="364000" />
+      <workItem from="1702539852200" duration="13000" />
+      <workItem from="1702539872399" duration="1501000" />
+      <workItem from="1702542066370" duration="114000" />
+      <workItem from="1702542189335" duration="602000" />
+      <workItem from="1702544073454" duration="785000" />
+      <workItem from="1702561288814" duration="203000" />
+      <workItem from="1702561508476" duration="256000" />
+    </task>
+    <task id="LOCAL-00021" summary="feat: eslint publish config, script to create json and js file for ide consumption">
+      <created>1701184468834</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1701184468834</updated>
+    </task>
+    <task id="LOCAL-00022" summary="feat: tsconfig publish config, script to create json for ide consumption">
+      <created>1701184486580</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1701184486580</updated>
+    </task>
+    <task id="LOCAL-00023" summary="feat: prettier imports sort plugin, generating json file as well">
+      <created>1701185562573</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1701185562573</updated>
+    </task>
+    <task id="LOCAL-00024" summary="fix: exports">
+      <created>1701186085126</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1701186085126</updated>
+    </task>
+    <task id="LOCAL-00025" summary="fix: eslint shared config with readme">
+      <created>1701280802759</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1701280802759</updated>
+    </task>
+    <task id="LOCAL-00026" summary="fix: eslint shared config with readme">
+      <created>1701326424776</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1701326424776</updated>
+    </task>
+    <task id="LOCAL-00027" summary="fix: prettier config module, readme and build script">
+      <created>1701335840279</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1701335840279</updated>
+    </task>
+    <task id="LOCAL-00068" summary="fix: deprecation warning">
+      <option name="closed" value="true" />
+      <created>1703249055968</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1703249055968</updated>
+    </task>
+    <task id="LOCAL-00069" summary="feat: use legacy bundle">
+      <option name="closed" value="true" />
+      <created>1703249285915</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1703249285915</updated>
+    </task>
+    <task id="LOCAL-00070" summary="feat: respect new api of workspaces foreach plugin">
+      <option name="closed" value="true" />
+      <created>1703251825380</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1703251825381</updated>
+    </task>
+    <task id="LOCAL-00071" summary="fix: remove search for lockfileFilename as this attribute is deprecated">
+      <option name="closed" value="true" />
+      <created>1703252354573</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1703252354573</updated>
+    </task>
+    <task id="LOCAL-00072" summary="chore: remove redundant plugins">
+      <option name="closed" value="true" />
+      <created>1703252649419</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1703252649419</updated>
+    </task>
+    <task id="LOCAL-00073" summary="feat: add legacy yarn bundle, add readmes">
+      <option name="closed" value="true" />
+      <created>1703259573283</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1703259573283</updated>
+    </task>
+    <task id="LOCAL-00074" summary="feat: add legacy yarn bundle, add readmes">
+      <option name="closed" value="true" />
+      <created>1703260036809</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1703260036810</updated>
+    </task>
+    <task id="LOCAL-00075" summary="chore: merge new and old packages">
+      <option name="closed" value="true" />
+      <created>1703266238624</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1703266238624</updated>
+    </task>
+    <task id="LOCAL-00076" summary="feat: add legacy yarn bundle, add readmes">
+      <option name="closed" value="true" />
+      <created>1703266468186</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1703266468186</updated>
+    </task>
+    <task id="LOCAL-00077" summary="feat: add legacy yarn bundle, add readmes">
+      <option name="closed" value="true" />
+      <created>1703266620464</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1703266620464</updated>
+    </task>
+    <task id="LOCAL-00078" summary="fix: eslint and typecheck">
+      <option name="closed" value="true" />
+      <created>1703267692052</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1703267692052</updated>
+    </task>
+    <task id="LOCAL-00079" summary="fix: eslint and typecheck">
+      <option name="closed" value="true" />
+      <created>1703268331567</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1703268331567</updated>
+    </task>
+    <task id="LOCAL-00080" summary="chore: merge">
+      <option name="closed" value="true" />
+      <created>1703270135759</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1703270135759</updated>
+    </task>
+    <task id="LOCAL-00081" summary="chore: merge">
+      <option name="closed" value="true" />
+      <created>1703270439853</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1703270439853</updated>
+    </task>
+    <task id="LOCAL-00082" summary="chore: merge">
+      <option name="closed" value="true" />
+      <created>1703271201337</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1703271201338</updated>
+    </task>
+    <task id="LOCAL-00083" summary="chore: BREAKING CHANGE reassemble yarn.lock">
+      <option name="closed" value="true" />
+      <created>1703271770772</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1703271770773</updated>
+    </task>
+    <task id="LOCAL-00084" summary="feat: BREAKING CHANGE bump typescript to 5.2.2">
+      <option name="closed" value="true" />
+      <created>1703425537304</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1703425537305</updated>
+    </task>
+    <task id="LOCAL-00085" summary="refactor: schematics">
+      <option name="closed" value="true" />
+      <created>1703433128676</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1703433128677</updated>
+    </task>
+    <task id="LOCAL-00086" summary="chore: remove unused bundle">
+      <option name="closed" value="true" />
+      <created>1703433150235</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1703433150235</updated>
+    </task>
+    <task id="LOCAL-00087" summary="feat: add new method to check local tsconfig">
+      <option name="closed" value="true" />
+      <created>1703433348505</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1703433348505</updated>
+    </task>
+    <task id="LOCAL-00088" summary="chore: typescript version in readme">
+      <option name="closed" value="true" />
+      <created>1703433629656</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1703433629656</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
+    <option name="createChangelist" value="false" />
+    <servers>
+      <GitHub url="https://github.com">
+        <option name="preferredOpenTaskState">
+          <CustomTaskState id="OPEN" predefined="true" name="Open" />
+        </option>
+        <option name="repoAuthor" value="atls" />
+        <option name="repoName" value="tools" />
+        <option name="shouldFormatCommitMessage" value="true" />
+      </GitHub>
+    </servers>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/code/code-format-worker/src/formatter.worker.content.js" />
+        <option value="$PROJECT_DIR$/code/code-schematics-worker/src/schematics.worker.content.js" />
+        <option value="$PROJECT_DIR$/code/code-service-worker/src/service.worker.content.js" />
+        <option value="$PROJECT_DIR$/code/code-test-worker/src/tester.worker.content.js" />
+        <option value="$PROJECT_DIR$/code/code-lint-worker/src/linter.worker.content.js" />
+        <option value="$PROJECT_DIR$/code/code-typescript-worker/src/typescript.worker.content.js" />
+      </list>
+    </option>
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="package.json" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="feat/raijin" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="feat/new-bundle" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="feat/raijin" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
+    <MESSAGE value="feat: renew yarn bundle" />
+    <MESSAGE value="feat: generate tsconfig.json on prepack" />
+    <MESSAGE value="feat: swc init" />
+    <MESSAGE value="feat: added new reusables" />
+    <MESSAGE value="fix: remove --worktree flag as is default in workspaces changed" />
+    <MESSAGE value="fix: change jest config due to globals deprecation" />
+    <MESSAGE value="feat: yarn bump" />
+    <MESSAGE value="feat: typescript eslint flat config" />
+    <MESSAGE value="feat: cli ui to ecma modules, bump types/node" />
+    <MESSAGE value="feat: config to ecma modules, bump types/node" />
+    <MESSAGE value="feat: prettier to ecma modules, bump types/node" />
+    <MESSAGE value="feat: schematic to ecma modules, bump types/node" />
+    <MESSAGE value="feat: webpack to ecma modules, bump types/node" />
+    <MESSAGE value="feat: utils to ecma modules, bump types/node" />
+    <MESSAGE value="chore: cache" />
+    <MESSAGE value="feat: yarn to ecma modules, bump types/node" />
+    <MESSAGE value="feat: code to ecma modules, bump types/node" />
+    <MESSAGE value="fix: webpack output to index.js instead of main.js" />
+    <MESSAGE value="feat: webpack to support file extensions" />
+    <MESSAGE value="feat: husky init" />
+    <MESSAGE value="chore: remove eslint config" />
+    <MESSAGE value="feat: yarn prefer reuse" />
+    <MESSAGE value="feat: swap ts-loader for swc" />
+    <MESSAGE value="fix: swc loader typo" />
+    <MESSAGE value="chore: republish" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: republish" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>false</integration-enabled>
+    <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
