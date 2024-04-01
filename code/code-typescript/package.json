@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/deepmerge": "2.2.0",
     "@types/node": "^20.12.2",
-    "typescript": "^5.0.3"
+    "typescript": "5.2.2"
   },
   "publishConfig": {
     "exports": {

@@ -12,7 +12,7 @@
     "dist"
   ],
   "dependencies": {
-    "@yarnpkg/core": "3.7.0"
+    "@yarnpkg/core": "4.0.3"
   },
   "publishConfig": {
     "access": "public",

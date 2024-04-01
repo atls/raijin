@@ -82,4 +82,5 @@
 [![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)](https://github.com/atls/tools/blob/8537e2f78ca5a2bd925548efce21a2d5c4800543/code/code-service/src/webpack.config.ts)
 [//]: # (VERSIONS)
 
-[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=0.0.24&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/code-service) [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=0.0.19&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/schematics)
+[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/code-service)  [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/schematics)  
+
