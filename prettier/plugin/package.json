@@ -16,18 +16,18 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "globby": "14.0.1",
+    "globby": "11.0.3",
     "import-sort": "6.0.0",
     "import-sort-parser": "6.0.0",
     "import-sort-parser-typescript": "6.0.0",
     "import-sort-style": "6.0.0",
-    "prettier": "3.1.1",
+    "prettier": "3.2.5",
     "sort-package-json": "1.57.0"
   },
   "devDependencies": {
     "@atls/config-prettier": "workspace:*",
-    "@types/node": "20.11.20",
-    "@types/prettier": "3.0.0"
+    "@types/node": "20",
+    "@types/prettier": "3"
   },
   "publishConfig": {
     "exports": {

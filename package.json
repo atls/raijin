@@ -32,8 +32,7 @@
     "clipanion": "3.2.0-rc.6",
     "globby": "11.0.3",
     "pkg-tests-core": "patch:pkg-tests-core@file%3Ayarn/test-utils/cache/pkg-tests-core.tgz%3A%3Alocator=tools%2540workspace%253A.#./.yarn/patches/pkg-tests-core-file-918239efc9.patch",
-    "pkg-tests-fixtures": "file:yarn/test-utils/cache/pkg-tests-fixtures.tgz",
-    "prettier": "2.5.1"
+    "pkg-tests-fixtures": "file:yarn/test-utils/cache/pkg-tests-fixtures.tgz"
   },
   "devDependencies": {
     "@angular-devkit/core": "17.3.2",
