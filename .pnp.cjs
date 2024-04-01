@@ -1216,8 +1216,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/prettier-plugin", "workspace:prettier/plugin"],\
             ["@types/node", "npm:20.12.2"],\
             ["globby", "npm:11.0.3"],\
-            ["ignore", "npm:5.3.1"],\
-            ["prettier", "npm:2.8.8"]\
+            ["ignore", "npm:5.2.4"],\
+            ["prettier", "npm:3.2.5"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -13308,6 +13308,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["ignore", [\
+        ["npm:5.2.4", {\
+          "packageLocation": "./.yarn/cache/ignore-npm-5.2.4-fbe6e989e5-3d4c309c60.zip/node_modules/ignore/",\
+          "packageDependencies": [\
+            ["ignore", "npm:5.2.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:5.3.1", {\
           "packageLocation": "./.yarn/cache/ignore-npm-5.3.1-f6947c5df7-71d7bb4c1d.zip/node_modules/ignore/",\
           "packageDependencies": [\
@@ -17422,13 +17429,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["prettier", [\
-        ["npm:2.8.8", {\
-          "packageLocation": "./.yarn/cache/prettier-npm-2.8.8-430828a36c-b49e409431.zip/node_modules/prettier/",\
-          "packageDependencies": [\
-            ["prettier", "npm:2.8.8"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:3.2.5", {\
           "packageLocation": "./.yarn/unplugged/prettier-npm-3.2.5-6859110d6a/node_modules/prettier/",\
           "packageDependencies": [\

@@ -19,9 +19,9 @@
   "dependencies": {
     "@atls/config-prettier": "workspace:*",
     "@atls/prettier-plugin": "workspace:*",
-    "globby": "^14.0.1",
-    "ignore": "^5.2.4",
-    "prettier": "^2.8.7"
+    "globby": "11.0.3",
+    "ignore": "5.2.4",
+    "prettier": "3.2.5"
   },
   "devDependencies": {
     "@types/node": "^20.12.2"

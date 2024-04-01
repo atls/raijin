@@ -1,7 +1,7 @@
 import * as plugin        from '@atls/prettier-plugin'
+import { readFileSync }   from 'fs'
+import { writeFileSync }  from 'node:fs'
 
-import { writeFile }      from 'node:fs/promises'
-import { readFile }       from 'node:fs/promises'
 import { relative }       from 'node:path'
 
 import globby             from 'globby'
@@ -27,18 +27,16 @@ export class Formatter {
       .filter(files.map((filepath) => relative(this.cwd, filepath)))
 
     for (const filename of formatFiles) {
-      // eslint-disable-next-line no-await-in-loop
-      const input = await readFile(filename, 'utf8')
+      const input = readFileSync(filename, 'utf8')
 
-      const output = format(input, {
+      const output = await format(input, {
         ...config,
         filepath: filename,
         plugins: [yaml, markdown, graphql, babel, typescript, plugin],
       })
 
       if (output !== input && output) {
-        // eslint-disable-next-line no-await-in-loop
-        await writeFile(filename, output, 'utf8')
+        writeFileSync(filename, output, 'utf8')
       }
     }
   }
