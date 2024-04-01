@@ -19,8 +19,8 @@
     "prettier": "3.2.5"
   },
   "devDependencies": {
-    "@types/prettier": "3",
-    "@types/node": "20"
+    "@types/node": "20",
+    "@types/prettier": "3"
   },
   "publishConfig": {
     "exports": {

@@ -705,8 +705,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/config-prettier@workspace:config/prettier"
   dependencies:
-    "@types/node": 20.11.20
-    prettier: 3.1.1
+    "@types/node": 20
+    "@types/prettier": 3
+    prettier: 3.2.5
   languageName: unknown
   linkType: soft
 
@@ -720,7 +721,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/jest-resolver@workspace:jest/jest-resolver"
   dependencies:
-    ts-jest-resolver: ^2.0.1
+    ts-jest-resolver: 2.0.1
   languageName: unknown
   linkType: soft
 
@@ -3054,7 +3055,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:3.0.0":
+"@types/prettier@npm:3, @types/prettier@npm:3.0.0":
   version: 3.0.0
   resolution: "@types/prettier@npm:3.0.0"
   dependencies:
@@ -14929,7 +14930,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"ts-jest-resolver@npm:^2.0.1":
+"ts-jest-resolver@npm:2.0.1":
   version: 2.0.1
   resolution: "ts-jest-resolver@npm:2.0.1"
   dependencies:

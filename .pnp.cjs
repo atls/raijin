@@ -1536,7 +1536,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./config/prettier/",\
           "packageDependencies": [\
             ["@atls/config-prettier", "workspace:config/prettier"],\
-            ["@types/node", "npm:20.11.20"],\
+            ["@types/node", "npm:20.12.2"],\
+            ["@types/prettier", "npm:3.0.0"],\
             ["prettier", "npm:2.5.1"]\
           ],\
           "linkType": "SOFT"\
