@@ -3,10 +3,10 @@ import parser       from '@typescript-eslint/parser'
 
 import { Linter }   from 'eslint'
 
-import { eslintrc } from './rules.js'
+import rules from './rules.js'
 
 export const eslintConfig: Linter.Config = {
-  rules: eslintrc,
+  rules,
   plugins: ['react', 'jsx-a11y', 'react-hooks', '@typescript-eslint', 'eslint-plugin-react-hooks'],
   settings: {
     react: {

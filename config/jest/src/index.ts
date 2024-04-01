@@ -1,10 +1,12 @@
+import type { Config } from 'jest'
+
 import { createRequire } from 'node:module'
 
 import tsconfig          from '@atls/config-typescript'
 
 const require = createRequire(import.meta.url)
 
-export const unit = {
+export const unit: Config = {
   extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   transformIgnorePatterns: ['/node_modules/', '\\.pnp\\.[^\\/]+$'],
   testRegex: '\\.test\\.(ts|tsx|js|jsx)$',
@@ -27,7 +29,7 @@ export const unit = {
   resolver: require.resolve('@atls/jest-resolver'),
 }
 
-export const integration = {
+export const integration: Config = {
   extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   testRegex: '/integration/.*\\.test\\.(ts|tsx)$',
   modulePathIgnorePatterns: ['dist'],

@@ -16,10 +16,11 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "prettier": "3.1.1"
+    "prettier": "3.2.5"
   },
   "devDependencies": {
-    "@types/node": "20.11.20"
+    "@types/prettier": "3",
+    "@types/node": "20"
   },
   "publishConfig": {
     "exports": {

@@ -11,6 +11,7 @@ import rules                  from './rules.js'
 export default [
   {
     rules,
+    files: ['**'],
     plugins: {
       react,
       'jsx-a11y': jsxA11y,
@@ -24,12 +25,12 @@ export default [
     settings: {
       react: {
         pragma: 'React',
-        version: '17.0.2',
+        version: '18.2.0',
       },
       propWrapperFunctions: ['forbidExtraProps', 'exact', 'Object.freeze'],
     },
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
       sourceType: 'module',
       globals: {},
       parser,
@@ -39,7 +40,7 @@ export default [
           generators: false,
           objectLiteralDuplicateProperties: false,
         },
-        ecmaVersion: 2020,
+        ecmaVersion: 2022,
         sourceType: 'module',
       },
     },
