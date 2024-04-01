@@ -1,10 +1,12 @@
 import { PassThrough }       from 'node:stream'
+import { Watching, WebpackPluginInstance } from 'webpack'
 
 import webpack               from 'webpack'
 
 import { StartServerPlugin } from '@atls/webpack-start-server-plugin'
 
 import { WebpackConfig }     from './webpack.config.js'
+import { WebpackEnvironment } from './webpack.interfaces.ts'
 
 export interface ServiceBuildResultMessage {
   message: string
@@ -15,16 +17,10 @@ export interface ServiceBuildResult {
   warnings: ServiceBuildResultMessage[]
 }
 
-export interface WebpackConfigPlugin {
-  name: string
-  use: any
-  args: any[]
-}
-
 export class Service {
   constructor(private readonly cwd: string) {}
 
-  async build(plugins: Array<WebpackConfigPlugin> = []): Promise<ServiceBuildResult> {
+  async build(plugins: Array<WebpackPluginInstance> = []): Promise<ServiceBuildResult> {
     const config = new WebpackConfig(this.cwd)
 
     const compiler = webpack(await config.build())
@@ -57,7 +53,7 @@ export class Service {
     })
   }
 
-  async watch(callback?): Promise<webpack.Watching> {
+  async watch(callback?): Promise<Watching> {
     const config = new WebpackConfig(this.cwd)
 
     const pass = new PassThrough()
@@ -77,17 +73,8 @@ export class Service {
     })
 
     return webpack(
-      await config.build('development', [
-        {
-          name: 'start-server',
-          use: StartServerPlugin,
-          args: [
-            {
-              stdout: pass,
-              stderr: pass,
-            },
-          ],
-        },
+      await config.build(WebpackEnvironment.dev, [
+        new StartServerPlugin({ stdout: pass, stderr: pass }),
       ])
     ).watch({}, (error, stats) => {
       if (error) {
