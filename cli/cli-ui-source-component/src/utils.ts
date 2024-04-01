@@ -1,8 +1,9 @@
-import { codeFrameColumns } from '@babel/code-frame'
+import { codeFrameColumns }    from '@babel/code-frame'
 
-import { supportsColor }    from 'supports-color'
+// @ts-ignore
+import { createSupportsColor } from 'supports-color'
 
-const { level } = supportsColor({ isTTY: true })
+const { level } = createSupportsColor({ isTTY: true })
 
 export const forceColor = level >= 1
 

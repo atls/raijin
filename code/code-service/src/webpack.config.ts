@@ -9,7 +9,7 @@ import findUp                       from 'find-up'
 import tempy                        from 'tempy'
 import webpack                      from 'webpack'
 
-import tsconfig                       from '@atls/config-typescript'
+import tsconfig                     from '@atls/config-typescript'
 
 import { FORCE_UNPLUGGED_PACKAGES } from './webpack.externals.js'
 import { UNUSED_EXTERNALS }         from './webpack.externals.js'

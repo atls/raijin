@@ -6,10 +6,10 @@ import { Report }       from '@yarnpkg/core'
 import { Descriptor }   from '@yarnpkg/core'
 import { Locator }      from '@yarnpkg/core'
 import { PortablePath } from '@yarnpkg/fslib'
+import { Filename }     from '@yarnpkg/fslib'
 import { structUtils }  from '@yarnpkg/core'
 import { xfs }          from '@yarnpkg/fslib'
 import { ppath }        from '@yarnpkg/fslib'
-import { Filename }   from '@yarnpkg/fslib'
 
 export const copyCacheMarkedFiles = async (
   project: Project,

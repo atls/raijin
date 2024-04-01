@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-
 import React            from 'react'
 import { EOL }          from 'os'
 import { Transform }    from 'stream'

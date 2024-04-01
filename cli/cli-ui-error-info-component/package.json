@@ -7,7 +7,6 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
-  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -20,10 +19,10 @@
     "@atls/cli-ui-stack-trace-component": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^20.12.2",
-    "@types/react": "^18.2.73",
-    "ink": "^3.2.0",
-    "react": "^18.2.0"
+    "@types/node": "20",
+    "@types/react": "16",
+    "ink": "3.2.0",
+    "react": "16.14.0"
   },
   "peerDependencies": {
     "ink": "*",

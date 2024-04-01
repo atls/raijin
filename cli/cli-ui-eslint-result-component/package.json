@@ -7,7 +7,6 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
-  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -22,11 +21,11 @@
   },
   "devDependencies": {
     "@atls/cli-ui-renderer": "workspace:*",
-    "@jest/globals": "^29.7.0",
-    "@types/react": "^18.2.73",
-    "ink": "^3.2.0",
-    "react": "^18.2.0",
-    "strip-ansi": "^7.1.0"
+    "@jest/globals": "29.7.0",
+    "@types/react": "16",
+    "ink": "3.2.0",
+    "react": "16.14.0",
+    "strip-ansi": "7.1.0"
   },
   "peerDependencies": {
     "ink": "*",
