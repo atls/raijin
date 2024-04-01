@@ -186,7 +186,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:17.3.2, @angular-devkit/core@npm:^17.3.2":
+"@angular-devkit/core@npm:17.3.2":
   version: 17.3.2
   resolution: "@angular-devkit/core@npm:17.3.2"
   dependencies:
@@ -545,9 +545,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-schematics@workspace:code/code-schematics"
   dependencies:
-    "@angular-devkit/core": ^17.3.2
-    "@angular-devkit/schematics": ^17.3.2
-    rxjs: 7.8.0
+    "@angular-devkit/core": 17.3.2
+    "@angular-devkit/schematics": 17.3.2
+    rxjs: 7.8.1
   languageName: unknown
   linkType: soft
 

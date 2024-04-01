@@ -7,6 +7,8 @@ import { DryRunEvent }         from '@angular-devkit/schematics'
 import { NodeWorkflow }        from '@angular-devkit/schematics/tools'
 import { virtualFs }           from '@angular-devkit/core'
 
+import { lastValueFrom }       from 'rxjs'
+
 import { MigrationEngineHost } from './migration-engine.host.js'
 import { NodePnpEngineHost }   from './node-pnp-engine.host.js'
 import { expandCollections }   from './utils/index.js'
@@ -101,8 +103,8 @@ export class Schematics {
 
     for (const migration of migrations) {
       // eslint-disable-next-line no-await-in-loop
-      await workflow
-        .execute({
+      await lastValueFrom(
+        workflow.execute({
           collection: migration.collection,
           schematic: migration.schematic,
           debug: false,
@@ -111,7 +113,7 @@ export class Schematics {
             cwd: this.cwd,
           },
         })
-        .toPromise()
+      )
     }
 
     return events

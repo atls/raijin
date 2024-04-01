@@ -12,16 +12,15 @@
   ],
   "scripts": {
     "build": "yarn library build",
-    "build:worker": "rollup -c",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@angular-devkit/core": "^17.3.2",
-    "@angular-devkit/schematics": "^17.3.2"
+    "@angular-devkit/core": "17.3.2",
+    "@angular-devkit/schematics": "17.3.2"
   },
   "devDependencies": {
-    "rxjs": "7.8.0"
+    "rxjs": "7.8.1"
   },
   "publishConfig": {
     "exports": {

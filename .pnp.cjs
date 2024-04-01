@@ -1319,7 +1319,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/code-schematics", "workspace:code/code-schematics"],\
             ["@angular-devkit/core", "virtual:cf1c70de3b1f744b9e47b879df786489817849e8ed9cde90cf7edb5ebb1727fcb31ccad4fe8b8e965b83eb11992328859f03c44acca3ca38d090a4d900b6027b#npm:17.3.2"],\
             ["@angular-devkit/schematics", "npm:17.3.2"],\
-            ["rxjs", "npm:7.8.0"]\
+            ["rxjs", "npm:7.8.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
