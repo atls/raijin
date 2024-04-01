@@ -6,7 +6,7 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts"
+    ".": "./sources/index.ts"
   },
   "files": [
     "dist"
@@ -19,12 +19,12 @@
   "dependencies": {
     "@atls/yarn-plugin-files": "workspace:*",
     "@atls/yarn-workspace-utils": "workspace:*",
-    "clipanion": "4.0.0-rc.2"
+    "clipanion": "3.2.0-rc.6"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.1.0",
-    "@yarnpkg/core": "4.0.3",
+    "@yarnpkg/builder": "3.3.1",
+    "@yarnpkg/cli": "3.8.1",
+    "@yarnpkg/core": "3.7.0",
     "typescript": "5.2.2"
   },
   "peerDependencies": {

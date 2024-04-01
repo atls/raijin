@@ -6,7 +6,7 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts"
+    ".": "./sources/index.ts"
   },
   "files": [
     "dist"
@@ -31,7 +31,7 @@
     "@atls/yarn-workspace-utils": "workspace:*",
     "@babel/code-frame": "^7.24.2",
     "@jest/test-result": "^29.7.0",
-    "clipanion": "4.0.0-rc.2",
+    "clipanion": "3.2.0-rc.6",
     "react": "18.2.0",
     "strip-ansi": "7.1.0"
   },

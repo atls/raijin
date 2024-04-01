@@ -4,7 +4,10 @@
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
-  "main": "src/index.ts",
+  "exports": {
+    ".": "./sources/index.ts",
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
@@ -17,10 +20,10 @@
     "@atls/cli-ui-git-commit-component": "workspace:*",
     "@atls/code-commit": "workspace:*",
     "@yarnpkg/libui": "3.0.0",
-    "clipanion": "4.0.0-rc.2",
+    "clipanion": "3.2.0-rc.6",
     "commitizen": "4.3.0",
     "force-stdin-tty": "0.0.1",
-    "ink": "^4.4.1",
+    "ink": "3.2.0",
     "lint-staged": "11.2.6",
     "react": "18.2.0",
     "word-wrap": "1.2.5"

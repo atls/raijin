@@ -6,7 +6,7 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts"
+    ".": "./sources/index.ts"
   },
   "files": [
     "dist"
@@ -22,7 +22,7 @@
     "@atls/yarn-run-utils": "workspace:*",
     "@iarna/toml": "3.0.0",
     "@yarnpkg/plugin-patch": "4.0.1",
-    "clipanion": "4.0.0-rc.2",
+    "clipanion": "3.2.0-rc.6",
     "tempy": "1.0.1"
   },
   "devDependencies": {

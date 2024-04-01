@@ -6,7 +6,7 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts"
+    ".": "./sources/index.ts"
   },
   "files": [
     "dist"
@@ -19,7 +19,7 @@
   "dependencies": {
     "@actions/github": "^6.0.0",
     "@octokit/types": "12.6.0",
-    "clipanion": "4.0.0-rc.2"
+    "clipanion": "3.2.0-rc.6"
   },
   "devDependencies": {
     "@yarnpkg/builder": "4.0.0",
