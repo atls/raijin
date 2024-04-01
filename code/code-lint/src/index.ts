@@ -1,1 +1,1 @@
-export * from './lineter.js'
+export * from './linter.ts'
