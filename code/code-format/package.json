@@ -12,7 +12,6 @@
   ],
   "scripts": {
     "build": "yarn library build",
-    "build:worker": "rollup -c",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
@@ -24,7 +23,7 @@
     "prettier": "3.2.5"
   },
   "devDependencies": {
-    "@types/node": "^20.12.2"
+    "@types/node": "20"
   },
   "publishConfig": {
     "exports": {
