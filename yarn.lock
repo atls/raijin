@@ -1149,17 +1149,18 @@ __metadata:
     "@atls/code-lint-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
-    "@jest/globals": ^29.7.0
+    "@jest/globals": 29.7.0
+    "@types/react": 16
     "@yarnpkg/builder": 4.0.0
     "@yarnpkg/cli": 4.1.0
     "@yarnpkg/core": 4.0.3
-    "@yarnpkg/fslib": ^2.10.2
+    "@yarnpkg/fslib": 2.10.4
     clipanion: 3.2.0-rc.6
-    react: 18.2.0
+    react: 16.14.0
     typescript: 5.2.2
   peerDependencies:
-    "@yarnpkg/cli": ^3.2.0-rc.8
-    "@yarnpkg/core": ^3.2.0-rc.8
+    "@yarnpkg/cli": "*"
+    "@yarnpkg/core": "*"
   languageName: unknown
   linkType: soft
 
