@@ -16,17 +16,17 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "file-loader": "^6.2.0",
-    "protocol-buffers-schema": "^3.6.0"
+    "file-loader": "6.2.0",
+    "protocol-buffers-schema": "3.6.0"
   },
   "devDependencies": {
     "@atls/config-typescript": "workspace:*",
     "@monstrs/types-import-proto": "0.0.1",
-    "@types/node": "20.11.20",
+    "@types/node": "20",
     "memfs": "4.7.7",
     "ts-loader": "9.5.1",
     "typescript": "5.2.2",
-    "webpack": "5.89.0"
+    "webpack": "5.91.0"
   },
   "publishConfig": {
     "access": "public",
