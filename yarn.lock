@@ -1176,7 +1176,8 @@ __metadata:
     "@atls/schematics": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:0.0.1"
-    "@jest/globals": ^29.7.0
+    "@jest/globals": 29.7.0
+    "@types/react": 16
     "@yarnpkg/builder": 4.0.0
     "@yarnpkg/cli": 4.1.0
     "@yarnpkg/core": 4.0.3
@@ -1184,8 +1185,8 @@ __metadata:
     "@yarnpkg/libui": 3.0.0
     clipanion: 4.0.0-rc.2
     force-stdin-tty: 0.0.1
-    ink: ^3.2.0
-    react: ^18.2.0
+    ink: 3.2.0
+    react: 16.14.0
     typanion: 3.14.0
     typescript: 5.2.2
   peerDependencies:
@@ -8567,7 +8568,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink@npm:3.2.0, ink@npm:^3.0.8, ink@npm:^3.2.0":
+"ink@npm:3.2.0, ink@npm:^3.0.8":
   version: 3.2.0
   resolution: "ink@npm:3.2.0"
   dependencies:
@@ -11490,7 +11491,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"react@npm:*, react@npm:18.2.0, react@npm:^18.2.0":
+"react@npm:*, react@npm:18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:

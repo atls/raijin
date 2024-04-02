@@ -263,8 +263,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@atls/cli-ui-pretty-logs", ["workspace:cli/cli-ui-pretty-logs"]],\
       ["@atls/cli-ui-renderer", ["workspace:cli/cli-ui-renderer"]],\
       ["@atls/cli-ui-schematics-component", ["virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component", "workspace:cli/cli-ui-schematics-component"]],\
-      ["@atls/cli-ui-source-component", ["virtual:116c506c2daeb697652c3c020c1f786cb9d036c15768f4943023f27087a7945bd8967fc407fc5e4631c7973e45b64ace71c77733a8d662023d87a26b42dfbd40#workspace:cli/cli-ui-source-component", "virtual:ad4a778ec6cc82725bd1d4cf8f90210314f07c32474a1e815e6d404397631ffb98876caa0e0dd1a3462697501542c82aa879bb326ab6216c7a6b5ff0b9a37f1f#workspace:cli/cli-ui-source-component", "virtual:b5a25bac250da198e932b606ed776aae7d6baf262c379a7265b82606471fb0d942486b83b4e111d2d90831fcdcd35bc7d75ea3c68af0f7b757d4d2d18e8f351a#workspace:cli/cli-ui-source-component", "virtual:c4e6042f5a48b0a1346f9d6206ef51029c96fbd36376f6efeefe0b47c14deef0cd018fd521b9b0190a6872a5c4ad92387ec37879a7d834b8f8cac52c7c84438f#workspace:cli/cli-ui-source-component", "workspace:cli/cli-ui-source-component"]],\
-      ["@atls/cli-ui-stack-trace-component", ["virtual:07e6e55169bf43194af6f4cfeddb6526265038d565c1becab3046db8fe3a695dcc7448c0e3461398793638a9c707bd1def49c31cf50160e9c87aaf92703edcd2#workspace:cli/cli-ui-stack-trace-component", "virtual:2769eedb4f027d49ce8665a9700ba9f2c0b820e447d2fc2c7eb8fc21e402d0013f9bfde52cdf0de5680e2f2899daf92fb84fd79d9aad43a8f3d342cb0b24f382#workspace:cli/cli-ui-stack-trace-component", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#workspace:cli/cli-ui-stack-trace-component", "virtual:b1e983731fd5d2911e65f5c42864930398757f5402cb0ee87795705dd507b477284bfb6ed435862a878c0a9fa6df896d54d6affa6ddd55ab49b90368e0df6680#workspace:cli/cli-ui-stack-trace-component", "workspace:cli/cli-ui-stack-trace-component"]],\
+      ["@atls/cli-ui-source-component", ["virtual:116c506c2daeb697652c3c020c1f786cb9d036c15768f4943023f27087a7945bd8967fc407fc5e4631c7973e45b64ace71c77733a8d662023d87a26b42dfbd40#workspace:cli/cli-ui-source-component", "virtual:ad4a778ec6cc82725bd1d4cf8f90210314f07c32474a1e815e6d404397631ffb98876caa0e0dd1a3462697501542c82aa879bb326ab6216c7a6b5ff0b9a37f1f#workspace:cli/cli-ui-source-component", "virtual:c4e6042f5a48b0a1346f9d6206ef51029c96fbd36376f6efeefe0b47c14deef0cd018fd521b9b0190a6872a5c4ad92387ec37879a7d834b8f8cac52c7c84438f#workspace:cli/cli-ui-source-component", "workspace:cli/cli-ui-source-component"]],\
+      ["@atls/cli-ui-stack-trace-component", ["virtual:2769eedb4f027d49ce8665a9700ba9f2c0b820e447d2fc2c7eb8fc21e402d0013f9bfde52cdf0de5680e2f2899daf92fb84fd79d9aad43a8f3d342cb0b24f382#workspace:cli/cli-ui-stack-trace-component", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#workspace:cli/cli-ui-stack-trace-component", "virtual:b1e983731fd5d2911e65f5c42864930398757f5402cb0ee87795705dd507b477284bfb6ed435862a878c0a9fa6df896d54d6affa6ddd55ab49b90368e0df6680#workspace:cli/cli-ui-stack-trace-component", "workspace:cli/cli-ui-stack-trace-component"]],\
       ["@atls/cli-ui-typescript-diagnostic-component", ["virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:cli/cli-ui-typescript-diagnostic-component", "virtual:bf8425730ca6d0ea0b6f2271796f1e741fe31c4518230fe35b7162cd7c942f7f3ed9f20b9b8626b74d0f2368305c4503609f71032fcc1756de0dc3a1cf21100e#workspace:cli/cli-ui-typescript-diagnostic-component", "workspace:cli/cli-ui-typescript-diagnostic-component"]],\
       ["@atls/code-commit", ["workspace:code/code-commit"]],\
       ["@atls/code-configuration", ["workspace:code/code-configuration"]],\
@@ -610,15 +610,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@atls-cli-ui-error-info-component-virtual-07e6e55169/1/cli/cli-ui-error-info-component/",\
           "packageDependencies": [\
             ["@atls/cli-ui-error-info-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-error-info-component"],\
-            ["@atls/cli-ui-stack-trace-component", "virtual:07e6e55169bf43194af6f4cfeddb6526265038d565c1becab3046db8fe3a695dcc7448c0e3461398793638a9c707bd1def49c31cf50160e9c87aaf92703edcd2#workspace:cli/cli-ui-stack-trace-component"],\
+            ["@atls/cli-ui-stack-trace-component", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#workspace:cli/cli-ui-stack-trace-component"],\
             ["@types/ink", null],\
             ["@types/node", "npm:20.12.2"],\
             ["@types/react", "npm:16.14.60"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"]\
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
+            ["react", "npm:16.14.0"]\
           ],\
           "packagePeers": [\
             "@types/ink",\
+            "@types/react",\
             "ink",\
             "react"\
           ],\
@@ -913,18 +914,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/ink", null],\
             ["@types/node", "npm:20.12.2"],\
             ["@types/react", "npm:16.14.60"],\
-            ["@yarnpkg/libui", "virtual:1cb758f7f7f164f2de92e068b6ae53823c2b95b560a6e89897f1ddcfcf6d781f9b7b89ffb6f8764cf065ecae1d98f05e2b271f7b09414195b086a066aba4fe9f#npm:3.0.0"],\
+            ["@yarnpkg/libui", "virtual:ae5c57bfa6db99356c602f67aad3c174292a9118f1157fbd225ba9bc554605bfa73c6dc202ff170d8e6f17342ac5941f851747044ce19afe45ba3c975b6e1e94#npm:3.0.0"],\
             ["camelcase", "npm:8.0.0"],\
             ["figures", "npm:6.1.0"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
             ["ink-autocomplete", "npm:0.0.0"],\
             ["ink-multi-select", "npm:2.0.0"],\
-            ["ink-select-input", "virtual:1cb758f7f7f164f2de92e068b6ae53823c2b95b560a6e89897f1ddcfcf6d781f9b7b89ffb6f8764cf065ecae1d98f05e2b271f7b09414195b086a066aba4fe9f#npm:5.0.0"],\
-            ["ink-text-input", "virtual:1cb758f7f7f164f2de92e068b6ae53823c2b95b560a6e89897f1ddcfcf6d781f9b7b89ffb6f8764cf065ecae1d98f05e2b271f7b09414195b086a066aba4fe9f#npm:5.0.1"],\
-            ["react", "npm:18.2.0"]\
+            ["ink-select-input", "virtual:bb80211bcf8397e861c25dc4c738e1efb1d0cc0411728f9c56419979880d2430ae7afb9c91a961f8f6f812413a439361b4897f91e3e9fa862b6d8e75fadc32e0#npm:5.0.0"],\
+            ["ink-text-input", "virtual:bb80211bcf8397e861c25dc4c738e1efb1d0cc0411728f9c56419979880d2430ae7afb9c91a961f8f6f812413a439361b4897f91e3e9fa862b6d8e75fadc32e0#npm:5.0.1"],\
+            ["react", "npm:16.14.0"]\
           ],\
           "packagePeers": [\
             "@types/ink",\
+            "@types/react",\
             "ink",\
             "react"\
           ],\
@@ -993,27 +995,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:b5a25bac250da198e932b606ed776aae7d6baf262c379a7265b82606471fb0d942486b83b4e111d2d90831fcdcd35bc7d75ea3c68af0f7b757d4d2d18e8f351a#workspace:cli/cli-ui-source-component", {\
-          "packageLocation": "./.yarn/__virtual__/@atls-cli-ui-source-component-virtual-71178c9474/1/cli/cli-ui-source-component/",\
-          "packageDependencies": [\
-            ["@atls/cli-ui-source-component", "virtual:b5a25bac250da198e932b606ed776aae7d6baf262c379a7265b82606471fb0d942486b83b4e111d2d90831fcdcd35bc7d75ea3c68af0f7b757d4d2d18e8f351a#workspace:cli/cli-ui-source-component"],\
-            ["@babel/code-frame", "npm:7.24.2"],\
-            ["@types/babel__code-frame", "npm:7.0.6"],\
-            ["@types/ink", null],\
-            ["@types/node", "npm:20.12.2"],\
-            ["@types/react", "npm:16.14.60"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"],\
-            ["supports-color", "npm:9.4.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/ink",\
-            "@types/react",\
-            "ink",\
-            "react"\
-          ],\
-          "linkType": "SOFT"\
-        }],\
         ["virtual:c4e6042f5a48b0a1346f9d6206ef51029c96fbd36376f6efeefe0b47c14deef0cd018fd521b9b0190a6872a5c4ad92387ec37879a7d834b8f8cac52c7c84438f#workspace:cli/cli-ui-source-component", {\
           "packageLocation": "./.yarn/__virtual__/@atls-cli-ui-source-component-virtual-d5b69e2f87/1/cli/cli-ui-source-component/",\
           "packageDependencies": [\
@@ -1050,28 +1031,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@atls/cli-ui-stack-trace-component", [\
-        ["virtual:07e6e55169bf43194af6f4cfeddb6526265038d565c1becab3046db8fe3a695dcc7448c0e3461398793638a9c707bd1def49c31cf50160e9c87aaf92703edcd2#workspace:cli/cli-ui-stack-trace-component", {\
-          "packageLocation": "./.yarn/__virtual__/@atls-cli-ui-stack-trace-component-virtual-b5a25bac25/1/cli/cli-ui-stack-trace-component/",\
-          "packageDependencies": [\
-            ["@atls/cli-ui-stack-trace-component", "virtual:07e6e55169bf43194af6f4cfeddb6526265038d565c1becab3046db8fe3a695dcc7448c0e3461398793638a9c707bd1def49c31cf50160e9c87aaf92703edcd2#workspace:cli/cli-ui-stack-trace-component"],\
-            ["@atls/cli-ui-renderer", "workspace:cli/cli-ui-renderer"],\
-            ["@atls/cli-ui-source-component", "virtual:b5a25bac250da198e932b606ed776aae7d6baf262c379a7265b82606471fb0d942486b83b4e111d2d90831fcdcd35bc7d75ea3c68af0f7b757d4d2d18e8f351a#workspace:cli/cli-ui-source-component"],\
-            ["@atls/stack-trace", "npm:0.0.2"],\
-            ["@jest/globals", "npm:29.7.0"],\
-            ["@types/ink", null],\
-            ["@types/react", "npm:16.14.60"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"],\
-            ["strip-ansi", "npm:7.1.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/ink",\
-            "@types/react",\
-            "ink",\
-            "react"\
-          ],\
-          "linkType": "SOFT"\
-        }],\
         ["virtual:2769eedb4f027d49ce8665a9700ba9f2c0b820e447d2fc2c7eb8fc21e402d0013f9bfde52cdf0de5680e2f2899daf92fb84fd79d9aad43a8f3d342cb0b24f382#workspace:cli/cli-ui-stack-trace-component", {\
           "packageLocation": "./.yarn/__virtual__/@atls-cli-ui-stack-trace-component-virtual-116c506c2d/1/cli/cli-ui-stack-trace-component/",\
           "packageDependencies": [\
@@ -2343,7 +2302,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
             ["@jest/globals", "npm:29.7.0"],\
             ["@types/ink", null],\
-            ["@types/react", null],\
+            ["@types/react", "npm:16.14.60"],\
             ["@types/yarnpkg__cli", null],\
             ["@types/yarnpkg__core", null],\
             ["@types/yarnpkg__fslib", null],\
@@ -2351,17 +2310,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:3.8.1"],\
             ["@yarnpkg/core", "npm:3.7.0"],\
             ["@yarnpkg/fslib", "npm:2.10.4"],\
-            ["@yarnpkg/libui", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#npm:3.0.0"],\
+            ["@yarnpkg/libui", "virtual:ae5c57bfa6db99356c602f67aad3c174292a9118f1157fbd225ba9bc554605bfa73c6dc202ff170d8e6f17342ac5941f851747044ce19afe45ba3c975b6e1e94#npm:3.0.0"],\
             ["clipanion", "virtual:7948fe99019ab0938c87719dbe226cb3cad6ec4589f8d96391dfc950f4b6ca161dae3b0b9be6cbb64356461c859081ac7b8be325dac98aa83dc1003a6ae764e7#npm:3.2.0-rc.6"],\
             ["force-stdin-tty", "npm:0.0.1"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"],\
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
+            ["react", "npm:16.14.0"],\
             ["typanion", "npm:3.14.0"],\
             ["typescript", "patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
           ],\
           "packagePeers": [\
             "@types/ink",\
-            "@types/react",\
             "@types/yarnpkg__cli",\
             "@types/yarnpkg__core",\
             "@types/yarnpkg__fslib",\
@@ -2384,15 +2342,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
             ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
             ["@jest/globals", "npm:29.7.0"],\
+            ["@types/react", "npm:16.14.60"],\
             ["@yarnpkg/builder", "npm:4.0.0"],\
             ["@yarnpkg/cli", "virtual:1be968e10e852021717e39be5362e9ef161555fe60a16adbabe5315cf3f3fee6f4ee855a1f13adfbd9e1da4db65f29388d88e3b4b0a9cf0f1d12dbfcd8a1fa19#npm:4.1.0"],\
             ["@yarnpkg/core", "npm:4.0.3"],\
             ["@yarnpkg/fslib", "npm:3.0.2"],\
-            ["@yarnpkg/libui", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#npm:3.0.0"],\
+            ["@yarnpkg/libui", "virtual:ae5c57bfa6db99356c602f67aad3c174292a9118f1157fbd225ba9bc554605bfa73c6dc202ff170d8e6f17342ac5941f851747044ce19afe45ba3c975b6e1e94#npm:3.0.0"],\
             ["clipanion", "virtual:7948fe99019ab0938c87719dbe226cb3cad6ec4589f8d96391dfc950f4b6ca161dae3b0b9be6cbb64356461c859081ac7b8be325dac98aa83dc1003a6ae764e7#npm:3.2.0-rc.6"],\
             ["force-stdin-tty", "npm:0.0.1"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"],\
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
+            ["react", "npm:16.14.0"],\
             ["typanion", "npm:3.14.0"],\
             ["typescript", "patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
           ],\
@@ -6198,24 +6157,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#npm:3.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/@yarnpkg-libui-virtual-93422b668e/0/cache/@yarnpkg-libui-npm-3.0.0-d558e51d1a-66a0f117ee.zip/node_modules/@yarnpkg/libui/",\
-          "packageDependencies": [\
-            ["@yarnpkg/libui", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#npm:3.0.0"],\
-            ["@types/ink", null],\
-            ["@types/react", null],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"],\
-            ["tslib", "npm:2.6.2"]\
-          ],\
-          "packagePeers": [\
-            "@types/ink",\
-            "@types/react",\
-            "ink",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["virtual:17d09ba3a905380ebde5069cad318b6be1380b76dd41488b9d7267b9b2aa951207075d920f1083091d605d850e7cb0448af4148e7db2e3f5636152972c6e9e14#npm:2.2.3", {\
           "packageLocation": "./.yarn/__virtual__/@yarnpkg-libui-virtual-d534b75f94/0/cache/@yarnpkg-libui-npm-2.2.3-c2a7671949-335575636b.zip/node_modules/@yarnpkg/libui/",\
           "packageDependencies": [\
@@ -6225,24 +6166,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ink", "virtual:237c1e89b9433e032305e7f5120dda581c13c6d14e71968e75ef80f11a716a028b3eab660e38e979dedbd773a18063bb39802aa60c276e37d4ff49e701c8d07d#npm:3.2.0"],\
             ["react", "npm:16.14.0"],\
             ["tslib", "npm:1.14.1"]\
-          ],\
-          "packagePeers": [\
-            "@types/ink",\
-            "@types/react",\
-            "ink",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["virtual:1cb758f7f7f164f2de92e068b6ae53823c2b95b560a6e89897f1ddcfcf6d781f9b7b89ffb6f8764cf065ecae1d98f05e2b271f7b09414195b086a066aba4fe9f#npm:3.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/@yarnpkg-libui-virtual-c9c27ef21b/0/cache/@yarnpkg-libui-npm-3.0.0-d558e51d1a-66a0f117ee.zip/node_modules/@yarnpkg/libui/",\
-          "packageDependencies": [\
-            ["@yarnpkg/libui", "virtual:1cb758f7f7f164f2de92e068b6ae53823c2b95b560a6e89897f1ddcfcf6d781f9b7b89ffb6f8764cf065ecae1d98f05e2b271f7b09414195b086a066aba4fe9f#npm:3.0.0"],\
-            ["@types/ink", null],\
-            ["@types/react", "npm:16.14.60"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"],\
-            ["tslib", "npm:2.6.2"]\
           ],\
           "packagePeers": [\
             "@types/ink",\
@@ -12385,26 +12308,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:1cb758f7f7f164f2de92e068b6ae53823c2b95b560a6e89897f1ddcfcf6d781f9b7b89ffb6f8764cf065ecae1d98f05e2b271f7b09414195b086a066aba4fe9f#npm:5.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/ink-select-input-virtual-e880ce516d/0/cache/ink-select-input-npm-5.0.0-17b66dd61e-9e21351f7a.zip/node_modules/ink-select-input/",\
-          "packageDependencies": [\
-            ["ink-select-input", "virtual:1cb758f7f7f164f2de92e068b6ae53823c2b95b560a6e89897f1ddcfcf6d781f9b7b89ffb6f8764cf065ecae1d98f05e2b271f7b09414195b086a066aba4fe9f#npm:5.0.0"],\
-            ["@types/ink", null],\
-            ["@types/react", "npm:16.14.60"],\
-            ["arr-rotate", "npm:1.0.0"],\
-            ["figures", "npm:5.0.0"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["lodash.isequal", "npm:4.5.0"],\
-            ["react", "npm:18.2.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/ink",\
-            "@types/react",\
-            "ink",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:5.0.0", {\
           "packageLocation": "./.yarn/__virtual__/ink-select-input-virtual-9223aff8bf/0/cache/ink-select-input-npm-5.0.0-17b66dd61e-9e21351f7a.zip/node_modules/ink-select-input/",\
           "packageDependencies": [\
@@ -12469,25 +12372,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ink-text-input", "npm:5.0.1"]\
           ],\
           "linkType": "SOFT"\
-        }],\
-        ["virtual:1cb758f7f7f164f2de92e068b6ae53823c2b95b560a6e89897f1ddcfcf6d781f9b7b89ffb6f8764cf065ecae1d98f05e2b271f7b09414195b086a066aba4fe9f#npm:5.0.1", {\
-          "packageLocation": "./.yarn/__virtual__/ink-text-input-virtual-f3abf3a9a1/0/cache/ink-text-input-npm-5.0.1-40365f858f-045ade486e.zip/node_modules/ink-text-input/",\
-          "packageDependencies": [\
-            ["ink-text-input", "virtual:1cb758f7f7f164f2de92e068b6ae53823c2b95b560a6e89897f1ddcfcf6d781f9b7b89ffb6f8764cf065ecae1d98f05e2b271f7b09414195b086a066aba4fe9f#npm:5.0.1"],\
-            ["@types/ink", null],\
-            ["@types/react", "npm:16.14.60"],\
-            ["chalk", "npm:5.3.0"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"],\
-            ["type-fest", "npm:3.13.1"]\
-          ],\
-          "packagePeers": [\
-            "@types/ink",\
-            "@types/react",\
-            "ink",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
         }],\
         ["virtual:237c1e89b9433e032305e7f5120dda581c13c6d14e71968e75ef80f11a716a028b3eab660e38e979dedbd773a18063bb39802aa60c276e37d4ff49e701c8d07d#npm:4.0.3", {\
           "packageLocation": "./.yarn/__virtual__/ink-text-input-virtual-963e7e35ad/0/cache/ink-text-input-npm-4.0.3-388725c088-2d309ec8ca.zip/node_modules/ink-text-input/",\
