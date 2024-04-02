@@ -1254,13 +1254,13 @@ __metadata:
     "@atls/code-typescript-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:0.0.1"
-    "@jest/globals": ^29.7.0
-    "@types/react": 18.2.73
+    "@jest/globals": 29.7.0
+    "@types/react": 16
     "@yarnpkg/builder": 4.0.0
     "@yarnpkg/cli": 4.1.0
     "@yarnpkg/core": 4.0.3
     clipanion: 3.2.0-rc.6
-    react: 18.2.0
+    react: 16.14.0
     typescript: 5.2.2
   peerDependencies:
     "@yarnpkg/cli": "*"
@@ -3288,7 +3288,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:18.2.73":
+"@types/react@npm:*":
   version: 18.2.73
   resolution: "@types/react@npm:18.2.73"
   dependencies:
