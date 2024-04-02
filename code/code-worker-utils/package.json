@@ -25,5 +25,8 @@
       }
     },
     "typings": "dist/index.d.ts"
+  },
+  "devDependencies": {
+    "@types/node": "20"
   }
 }

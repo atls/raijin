@@ -644,7 +644,7 @@ __metadata:
     "@rollup/plugin-node-resolve": 15.2.3
     esbuild: 0.17.19
     flatted: 3.2.9
-    rollup: 3.20.2
+    rollup: 3.29.4
     rollup-plugin-esbuild: 5.0.0
     rollup-plugin-terser: 7.0.2
     typescript: 5.2.2
@@ -666,6 +666,8 @@ __metadata:
 "@atls/code-worker-utils@workspace:*, @atls/code-worker-utils@workspace:code/code-worker-utils":
   version: 0.0.0-use.local
   resolution: "@atls/code-worker-utils@workspace:code/code-worker-utils"
+  dependencies:
+    "@types/node": 20
   languageName: unknown
   linkType: soft
 
@@ -7966,7 +7968,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fsevents@patch:fsevents@npm%3A^2.3.2#~builtin<compat/fsevents>, fsevents@patch:fsevents@npm%3A~2.3.2#~builtin<compat/fsevents>, fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
+"fsevents@patch:fsevents@npm%3A^2.3.2#~builtin<compat/fsevents>, fsevents@patch:fsevents@npm%3A~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.3
   resolution: "fsevents@patch:fsevents@npm%3A2.3.3#~builtin<compat/fsevents>::version=2.3.3&hash=df0bf1"
   dependencies:
@@ -12102,20 +12104,6 @@ pem@dexus/pem:
   peerDependencies:
     rollup: ^2.0.0
   checksum: af84bb7a7a894cd00852b6486528dfb8653cf94df4c126f95f389a346f401d054b08c46bee519a2ab6a22b33804d1d6ac6d8c90b1b2bf8fffb097eed73fc3c72
-  languageName: node
-  linkType: hard
-
-"rollup@npm:3.20.2":
-  version: 3.20.2
-  resolution: "rollup@npm:3.20.2"
-  dependencies:
-    fsevents: ~2.3.2
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  bin:
-    rollup: dist/bin/rollup
-  checksum: 34b0932839b7c2a5d1742fb21ce95a47e0b49a0849f4abee2dccf25833187aa7babb898ca90d4fc761cffa4102b9ed0ac6ad7f6f6b96c8b8e2d67305abc5da65
   languageName: node
   linkType: hard
 
