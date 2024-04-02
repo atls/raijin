@@ -42,18 +42,17 @@
     "@atls/config-jest": "workspace:*",
     "@atls/schematics": "workspace:*",
     "@jest/core": "29.7.0",
-    "@rushstack/eslint-patch": "1.6.1",
-    "@types/eslint": "8.56.6",
-    "@types/node": "20.11.20",
+    "@types/eslint": "8.56",
+    "@types/node": "20",
     "@yarnpkg/builder": "4.0.0",
     "esbuild": "npm:esbuild-wasm@^0.15.18",
-    "eslint": "8.48.0",
+    "eslint": "8.57.0",
     "eslint-import-resolver-node": "0.3.9",
     "espree": "9.6.1",
     "husky": "8.0.1",
     "readable-stream": "3.6.2",
     "typescript": "5.2.2",
-    "webpack": "5.89.0"
+    "webpack": "5.91.0"
   },
   "packageManager": "yarn@4.1.1",
   "formatterIgnorePatterns": [
