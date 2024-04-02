@@ -605,16 +605,16 @@ __metadata:
   dependencies:
     "@atls/code-test": "workspace:*"
     "@atls/code-worker-utils": "workspace:*"
-    "@jest/test-result": ^29.7.0
-    "@jest/types": ^29.6.3
-    "@rollup/plugin-commonjs": ^24.1.0
-    "@rollup/plugin-json": ^6.1.0
-    "@rollup/plugin-node-resolve": ^15.2.3
-    esbuild: ^0.17.14
-    flatted: ^3.2.7
-    rollup: ^3.20.2
-    rollup-plugin-esbuild: ^5.0.0
-    rollup-plugin-terser: ^7.0.2
+    "@jest/test-result": 29.7.0
+    "@jest/types": 29
+    "@rollup/plugin-commonjs": 25.0.7
+    "@rollup/plugin-json": 6.1.0
+    "@rollup/plugin-node-resolve": 15.2.3
+    esbuild: 0.17.19
+    flatted: 3.2.9
+    rollup: 3.29.4
+    rollup-plugin-esbuild: 5.0.0
+    rollup-plugin-terser: 7.0.2
   languageName: unknown
   linkType: soft
 
@@ -7855,6 +7855,13 @@ __metadata:
     keyv: "npm:^4.5.3"
     rimraf: "npm:^3.0.2"
   checksum: e7e0f59801e288b54bee5cb9681e9ee21ee28ef309f886b312c9d08415b79fc0f24ac842f84356ce80f47d6a53de62197ce0e6e148dc42d5db005992e2a756ec
+  languageName: node
+  linkType: hard
+
+"flatted@npm:3.2.9":
+  version: 3.2.9
+  resolution: "flatted@npm:3.2.9"
+  checksum: f14167fbe26a9d20f6fca8d998e8f1f41df72c8e81f9f2c9d61ed2bea058248f5e1cbd05e7f88c0e5087a6a0b822a1e5e2b446e879f3cfbe0b07ba2d7f80b026
   languageName: node
   linkType: hard
 

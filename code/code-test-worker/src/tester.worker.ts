@@ -13,6 +13,8 @@ export class TesterWorker {
     options?: Partial<Config.Argv>,
     files?: Array<string>
   ): Promise<AggregatedResult> {
+    if (files?.[0] === '') files?.shift()
+
     return EvalWorker.run(getContent(), {
       cwd: this.cwd,
       type,
