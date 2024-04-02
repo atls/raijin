@@ -1458,7 +1458,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@atls/code-typescript", "workspace:code/code-typescript"],\
             ["@atls/config-typescript", "workspace:config/typescript"],\
-            ["@types/deepmerge", "npm:2.2.0"],\
+            ["@types/deepmerge", "npm:2.1.0"],\
             ["@types/node", "npm:20.12.2"],\
             ["deepmerge", "npm:4.3.1"],\
             ["typescript", "patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
@@ -5054,11 +5054,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/deepmerge", [\
-        ["npm:2.2.0", {\
-          "packageLocation": "./.yarn/cache/@types-deepmerge-npm-2.2.0-fdf10de75b-f68385937c.zip/node_modules/@types/deepmerge/",\
+        ["npm:2.1.0", {\
+          "packageLocation": "./.yarn/cache/@types-deepmerge-npm-2.1.0-384b205983-a85918a3e9.zip/node_modules/@types/deepmerge/",\
           "packageDependencies": [\
-            ["@types/deepmerge", "npm:2.2.0"],\
-            ["deepmerge", "npm:4.3.1"]\
+            ["@types/deepmerge", "npm:2.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\

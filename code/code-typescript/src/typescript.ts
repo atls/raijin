@@ -1,10 +1,12 @@
-import type { Diagnostic }           from 'typescript'
-import type { CompilerOptions }      from 'typescript'
+import { readFile }             from 'node:fs/promises'
+import { join }                 from 'node:path'
+import type { Diagnostic }      from 'typescript'
+import type { CompilerOptions } from 'typescript'
 
 import deepmerge                     from 'deepmerge'
 import ts                            from 'typescript'
 
-import tsconfig                      from '@atls/config-typescript'
+import tsConfig                      from '@atls/config-typescript'
 
 import { transformJsxToJsExtension } from './transformers/index.js'
 
@@ -14,6 +16,28 @@ interface TypeScriptBuildOptions {
 
 class TypeScript {
   constructor(private readonly cwd: string) {}
+
+  private async getProjectIgnorePatterns(): Promise<Array<string>> {
+    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { typecheckIgnorePatterns = [] } = JSON.parse(content)
+
+    return typecheckIgnorePatterns
+  }
+
+  private async getLibCheckOption(): Promise<boolean> {
+    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { typecheckSkipLibCheck = false } = JSON.parse(content)
+
+    return typecheckSkipLibCheck
+  }
+
+  private async getProjectConfiguration(): Promise<Array<string>> {
+    const content = await readFile(join(this.cwd, 'tsconfig.json'), 'utf-8')
+
+    return JSON.parse(content)
+  }
 
   check(include: Array<string> = []): Promise<Array<Diagnostic>> {
     return this.run(include, { allowImportingTsExtensions: true })
@@ -32,9 +56,20 @@ class TypeScript {
     override: Partial<CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<Diagnostic>> {
-    const config = deepmerge(tsconfig, { compilerOptions: override }, {
-      include,
-    } as any)
+    const projectIgnorePatterns = await this.getProjectIgnorePatterns()
+
+    const skipLibCheck = await this.getLibCheckOption()
+
+    const config = deepmerge(
+      tsConfig,
+      {
+        compilerOptions: { ...override, skipLibCheck },
+        exclude: [...tsConfig.exclude, ...projectIgnorePatterns],
+      },
+      {
+        include,
+      } as any
+    )
 
     const { fileNames, options, errors } = ts.parseJsonConfigFileContent(config, ts.sys, this.cwd)
 
