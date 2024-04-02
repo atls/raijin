@@ -1231,11 +1231,11 @@ __metadata:
   dependencies:
     "@atls/code-test-worker": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
-    "@jest/globals": ^29.7.0
+    "@jest/globals": 29.7.0
     "@yarnpkg/builder": 4.0.0
     "@yarnpkg/cli": 4.1.0
     "@yarnpkg/core": 4.0.3
-    "@yarnpkg/fslib": ^2.10.2
+    "@yarnpkg/fslib": 2.10.4
     clipanion: 3.2.0-rc.6
     typescript: 5.2.2
   peerDependencies:

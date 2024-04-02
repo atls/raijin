@@ -18,6 +18,10 @@ class TestIntegrationCommand extends BaseCommand {
 
   findRelatedTests = Option.Boolean('--find-related-tests', false)
 
+  watchMode = Option.Boolean('--watch')
+
+  watchAllMode = Option.Boolean('--watchAll')
+
   files: Array<string> = Option.Rest({ required: 0 })
 
   async execute() {
@@ -27,18 +31,9 @@ class TestIntegrationCommand extends BaseCommand {
     const args: Array<string> = []
 
     if (workspace) {
-      if (this.files?.length > 0) {
-        const scope = this.context.cwd.replace(project.cwd, '')
+      const scope = this.context.cwd.replace(project.cwd, '')
 
-        this.files.forEach((file) =>
-          args.push(join(scope.startsWith('/') ? scope.substr(1) : scope, file)))
-      } else {
-        const scope = this.context.cwd.replace(project.cwd, '')
-
-        args.push(scope.startsWith('/') ? scope.substr(1) : scope)
-      }
-    } else if (this.files?.length > 0) {
-      this.files.forEach((file) => args.push(file))
+      args.push(scope.startsWith('/') ? scope.substr(1) : scope)
     }
 
     const commandReport = await StreamReport.start(
@@ -53,8 +48,10 @@ class TestIntegrationCommand extends BaseCommand {
             findRelatedTests: this.findRelatedTests,
             updateSnapshot: this.updateSnapshot,
             bail: this.bail,
+            watch: this.watchMode,
+            watchAll: this.watchAllMode,
           },
-          args
+          args.concat(this.files)
         )
       }
     )
