@@ -22,7 +22,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@actions/github@npm:6.0.0, @actions/github@npm:^6.0.0":
+"@actions/github@npm:6.0.0":
   version: 6.0.0
   resolution: "@actions/github@npm:6.0.0"
   dependencies:
@@ -1054,7 +1054,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-files@workspace:yarn/plugin-files"
   dependencies:
-    "@actions/github": ^6.0.0
+    "@actions/github": 6.0.0
     "@octokit/types": 12.6.0
     "@yarnpkg/builder": 4.0.0
     "@yarnpkg/cli": 4.1.0
