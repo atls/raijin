@@ -1621,7 +1621,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@angular-devkit/core", "virtual:cf1c70de3b1f744b9e47b879df786489817849e8ed9cde90cf7edb5ebb1727fcb31ccad4fe8b8e965b83eb11992328859f03c44acca3ca38d090a4d900b6027b#npm:17.3.2"],\
             ["@angular-devkit/schematics", "npm:17.3.2"],\
             ["@types/js-yaml", "npm:4.0.9"],\
-            ["@types/node", "npm:20.11.20"],\
+            ["@types/node", "npm:20.12.2"],\
             ["js-yaml", "npm:4.1.0"],\
             ["rimraf", "npm:5.0.5"],\
             ["semver", "npm:7.5.4"],\
