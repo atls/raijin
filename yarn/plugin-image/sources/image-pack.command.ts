@@ -1,3 +1,5 @@
+import { readFile }      from 'node:fs/promises'
+
 import { BaseCommand }   from '@yarnpkg/cli'
 import { Workspace }     from '@yarnpkg/core'
 import { Configuration } from '@yarnpkg/core'
@@ -10,8 +12,9 @@ import { xfs }           from '@yarnpkg/fslib'
 import { ppath }         from '@yarnpkg/fslib'
 import { toFilename }    from '@yarnpkg/fslib'
 
-import tempy             from 'tempy'
 import { Option }        from 'clipanion'
+import { join }          from 'path'
+import { directory }     from 'tempy'
 
 import { TagPolicy }     from '@atls/code-pack'
 import { tagUtils }      from '@atls/code-pack'
@@ -59,7 +62,7 @@ class ImagePackCommand extends BaseCommand {
       },
       async (report) => {
         if (this.isWorkspaceAllowedForBundle(workspace)) {
-          const destination = tempy.directory() as PortablePath
+          const destination = directory() as PortablePath
 
           report.reportInfo(
             null,
@@ -70,19 +73,26 @@ class ImagePackCommand extends BaseCommand {
 
           const repo = workspace.manifest.raw.name.replace('@', '').replace(/\//g, '-')
           const image = `${this.registry}${repo}`
+          const content = await readFile(join(this.context.cwd, 'package.json'), 'utf-8')
+
+          const { packConfiguration = {} } = JSON.parse(content)
 
           const tag = await tagUtils.getTag(this.tagPolicy || 'revision')
 
           const descriptorPath = await forRepository(repo)
 
+          const buildpackVersion = packConfiguration.buildpackVersion || '0.0.4'
+          const builderTag = packConfiguration.builderTag || 'buster-18.19'
+
           const args = [
             'build',
+            '--trust-builder',
             `${image}:${tag}`,
             '--verbose',
             '--buildpack',
-            'atls/buildpack-yarn-workspace:0.0.3',
+            `atlantislab/buildpack-yarn-workspace:${buildpackVersion}`,
             '--builder',
-            'atls/builder-base:buster',
+            `atlantislab/builder-base:${builderTag}`,
             '--descriptor',
             descriptorPath,
             '--tag',
