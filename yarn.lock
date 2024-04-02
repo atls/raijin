@@ -625,8 +625,8 @@ __metadata:
     "@atls/config-jest": "workspace:*"
     "@jest/core": 29.7.0
     "@jest/test-result": 29.7.0
-    "@jest/types": 29.6.3
-    "@types/node": 20.11.20
+    "@jest/types": 29
+    "@types/node": 20
   peerDependenciesMeta:
     jest:
       optional: true
@@ -2484,7 +2484,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/types@npm:29.6.3, @jest/types@npm:^29.6.3":
+"@jest/types@npm:29, @jest/types@npm:^29.6.3":
   version: 29.6.3
   resolution: "@jest/types@npm:29.6.3"
   dependencies:

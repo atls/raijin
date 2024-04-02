@@ -1409,7 +1409,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/test-result", "npm:29.7.0"],\
             ["@jest/types", "npm:29.6.3"],\
             ["@types/jest", null],\
-            ["@types/node", "npm:20.11.20"],\
+            ["@types/node", "npm:20.12.2"],\
             ["jest", null]\
           ],\
           "packagePeers": [\
@@ -1426,7 +1426,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/core", "virtual:5be36bdcdd1c1187b7817d70921e2e36d7631ddb9a739362ae944318adcaaa63a00920ac778d226459efd58e33155eef378fa55f22eb3a9562f7220078766e5f#npm:29.7.0"],\
             ["@jest/test-result", "npm:29.7.0"],\
             ["@jest/types", "npm:29.6.3"],\
-            ["@types/node", "npm:20.11.20"]\
+            ["@types/node", "npm:20.12.2"]\
           ],\
           "linkType": "SOFT"\
         }]\
