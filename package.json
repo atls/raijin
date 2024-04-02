@@ -12,7 +12,7 @@
     "cli/*"
   ],
   "scripts": {
-    "cli:build": "yarn worker:format:build && yarn worker:lint:build && yarn worker:schematics:build && yarn worker:service:build && yarn worker:test:build && yarn worker:typescript:build && yarn yarn:cli:build && yarn yarn:cli:fix",
+    "cli:build": "yarn worker:format:build && yarn worker:lint:build && yarn worker:schematics:build && yarn worker:service:build && yarn worker:test:build && yarn worker:typescript:build && yarn yarn:cli:build",
     "worker:build": "yarn worker:format:build && yarn worker:lint:build && yarn worker:schematics:build && yarn worker:service:build && yarn worker:test:build && yarn worker:typescript:build",
     "worker:format:build": "yarn workspace @atls/code-format-worker build:worker",
     "worker:lint:build": "yarn workspace @atls/code-lint-worker build:worker",
@@ -20,8 +20,7 @@
     "worker:service:build": "yarn workspace @atls/code-service-worker build:worker",
     "worker:test:build": "yarn workspace @atls/code-test-worker build:worker",
     "worker:typescript:build": "yarn workspace @atls/code-typescript-worker build:worker",
-    "yarn:cli:build": "yarn workspace @atls/yarn-cli build",
-    "yarn:cli:fix": "yarn workspace @atls/yarn-cli fix"
+    "yarn:cli:build": "yarn workspace @atls/yarn-cli build"
   },
   "resolutions": {
     "@types/estree": "1.0.0",
@@ -29,7 +28,6 @@
     "@yarnpkg/core@^3.4.0": "patch:@yarnpkg/core@npm%3A3.5.0#./.yarn/patches/@yarnpkg-core-npm-3.5.0-6ad940becd.patch",
     "@yarnpkg/core@^3.5.0": "patch:@yarnpkg/core@npm%3A3.5.0#./.yarn/patches/@yarnpkg-core-npm-3.5.0-6ad940becd.patch",
     "@yarnpkg/libui@^2.2.2": "patch:@yarnpkg/libui@npm%3A2.2.2#./.yarn/patches/@yarnpkg-libui-npm-2.2.2-e780854c67.patch",
-    "clipanion": "3.2.0-rc.6",
     "globby": "11.0.3",
     "pkg-tests-core": "patch:pkg-tests-core@file%3Ayarn/test-utils/cache/pkg-tests-core.tgz%3A%3Alocator=tools%2540workspace%253A.#./.yarn/patches/pkg-tests-core-file-918239efc9.patch",
     "pkg-tests-fixtures": "file:yarn/test-utils/cache/pkg-tests-fixtures.tgz"

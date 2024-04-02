@@ -19,12 +19,12 @@
   "dependencies": {
     "@atls/yarn-plugin-files": "workspace:*",
     "@atls/yarn-workspace-utils": "workspace:*",
-    "clipanion": "3.2.0-rc.6"
+    "clipanion": "4.0.0-rc.3"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "3.3.1",
-    "@yarnpkg/cli": "3.8.1",
-    "@yarnpkg/core": "3.7.0",
+    "@yarnpkg/builder": "4.0.0",
+    "@yarnpkg/cli": "4.1.1",
+    "@yarnpkg/core": "4.0.3",
     "typescript": "5.2.2"
   },
   "peerDependencies": {

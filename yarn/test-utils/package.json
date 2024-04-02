@@ -12,9 +12,10 @@
     "yarn:download": "yarn node ./scripts/download-yarn-tests-packages.script.mjs"
   },
   "dependencies": {
-    "@yarnpkg/core": "3.7.0",
+    "@yarnpkg/cli": "4.1.1",
+    "@yarnpkg/core": "4.0.3",
     "@yarnpkg/fslib": "3.0.2",
-    "@yarnpkg/plugin-pack": "3.2.0",
+    "@yarnpkg/plugin-pack": "4.0.0",
     "pkg-tests-core": "*"
   },
   "publishConfig": {

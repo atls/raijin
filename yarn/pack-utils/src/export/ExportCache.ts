@@ -10,10 +10,11 @@ import { FakeFS }            from '@yarnpkg/fslib'
 import { JailFS }            from '@yarnpkg/fslib'
 import { NodeFS }            from '@yarnpkg/fslib'
 import { PortablePath }      from '@yarnpkg/fslib'
-import { ZipFS }             from '@yarnpkg/fslib'
 import { structUtils }       from '@yarnpkg/core'
 import { ppath }             from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
+
+type FetchAndCacheOptions = Parameters<Cache['fetchPackageFromCache']>[2]
 
 export class ExportCache extends Cache {
   private nodeLinker: string
@@ -71,8 +72,8 @@ export class ExportCache extends Cache {
   async fetchPackageFromCache(
     locator: Locator,
     expectedChecksum: string | null,
-    { loader }: { loader?: () => Promise<ZipFS> }
-  ): Promise<[FakeFS<PortablePath>, () => void, string]> {
+    { loader, ...opts }: FetchAndCacheOptions
+  ): Promise<[FakeFS<PortablePath>, () => void, string | null]> {
     const baseFs = new NodeFS()
 
     const loadWorkspaceThroughMutex = async () => {

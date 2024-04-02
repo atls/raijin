@@ -17,7 +17,7 @@ export const getDynamicLibs = () =>
     [`@yarnpkg/parsers`, parsers],
     [`@yarnpkg/shell`, shell],
 
-    // Those ones are always useful
+    // Those are always useful
     [`clipanion`, clipanion],
     [`semver`, semver],
     [`typanion`, typanion],

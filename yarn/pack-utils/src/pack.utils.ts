@@ -83,7 +83,7 @@ export const pack = async (
     tmpConfiguration.values.set(`globalFolder`, configuration.get(`globalFolder`))
     tmpConfiguration.values.set(`packageExtensions`, configuration.get(`packageExtensions`))
 
-    await tmpConfiguration.refreshPackageExtensions()
+    await tmpConfiguration.getPackageExtensions()
 
     const { project: tmpProject, workspace: tmpWorkspace } = await Project.find(
       tmpConfiguration,

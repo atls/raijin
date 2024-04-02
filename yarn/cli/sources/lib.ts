@@ -210,12 +210,14 @@ async function run(
 
 export async function getCli({
   cwd = ppath.cwd(),
-  pluginConfiguration = getPluginConfiguration(),
+  pluginConfiguration,
 }: { cwd?: PortablePath; pluginConfiguration?: PluginConfiguration } = {}) {
-  const cli = getBaseCli({ cwd, pluginConfiguration })
+  const pc = pluginConfiguration ? pluginConfiguration : await getPluginConfiguration()
+
+  const cli = getBaseCli({ cwd, pluginConfiguration: pc })
 
   const configuration = await getCoreConfiguration({
-    pluginConfiguration,
+    pluginConfiguration: pc,
     selfPath: null,
   })
 
