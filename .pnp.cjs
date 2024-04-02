@@ -737,16 +737,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/code-commit", "workspace:code/code-commit"],\
             ["@types/ink", null],\
             ["@types/node", "npm:20.12.2"],\
-            ["@types/react", "npm:18.2.73"],\
-            ["@yarnpkg/libui", "virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#npm:3.0.0"],\
+            ["@types/react", "npm:16.14.60"],\
+            ["@yarnpkg/libui", "virtual:ae5c57bfa6db99356c602f67aad3c174292a9118f1157fbd225ba9bc554605bfa73c6dc202ff170d8e6f17342ac5941f851747044ce19afe45ba3c975b6e1e94#npm:3.0.0"],\
             ["camelcase", "npm:8.0.0"],\
             ["figures", "npm:6.1.0"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
             ["ink-autocomplete", "npm:0.0.0"],\
             ["ink-multi-select", "npm:2.0.0"],\
             ["ink-select-input", "virtual:bb80211bcf8397e861c25dc4c738e1efb1d0cc0411728f9c56419979880d2430ae7afb9c91a961f8f6f812413a439361b4897f91e3e9fa862b6d8e75fadc32e0#npm:5.0.0"],\
             ["ink-text-input", "virtual:bb80211bcf8397e861c25dc4c738e1efb1d0cc0411728f9c56419979880d2430ae7afb9c91a961f8f6f812413a439361b4897f91e3e9fa862b6d8e75fadc32e0#npm:5.0.1"],\
-            ["react", "npm:18.2.0"]\
+            ["react", "npm:16.14.0"]\
           ],\
           "packagePeers": [\
             "@types/ink",\
@@ -2009,7 +2009,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/yarn-plugin-commit", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-commit"],\
             ["@atls/cli-ui-git-commit-component", "virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#workspace:cli/cli-ui-git-commit"],\
             ["@atls/code-commit", "workspace:code/code-commit"],\
-            ["@types/react", "npm:18.2.73"],\
+            ["@types/react", "npm:16.14.60"],\
             ["@types/yarnpkg__cli", null],\
             ["@types/yarnpkg__core", null],\
             ["@types/yarnpkg__fslib", null],\
@@ -2017,13 +2017,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/cli", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:3.8.1"],\
             ["@yarnpkg/core", "npm:3.7.0"],\
             ["@yarnpkg/fslib", "npm:2.10.4"],\
-            ["@yarnpkg/libui", "virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#npm:3.0.0"],\
+            ["@yarnpkg/libui", "virtual:ae5c57bfa6db99356c602f67aad3c174292a9118f1157fbd225ba9bc554605bfa73c6dc202ff170d8e6f17342ac5941f851747044ce19afe45ba3c975b6e1e94#npm:3.0.0"],\
             ["clipanion", "virtual:7948fe99019ab0938c87719dbe226cb3cad6ec4589f8d96391dfc950f4b6ca161dae3b0b9be6cbb64356461c859081ac7b8be325dac98aa83dc1003a6ae764e7#npm:3.2.0-rc.6"],\
             ["commitizen", "npm:4.3.0"],\
             ["force-stdin-tty", "npm:0.0.1"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
             ["lint-staged", "npm:11.2.6"],\
-            ["react", "npm:18.2.0"],\
+            ["react", "npm:16.14.0"],\
             ["word-wrap", "npm:1.2.5"]\
           ],\
           "packagePeers": [\
@@ -2042,18 +2042,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@atls/yarn-plugin-commit", "workspace:yarn/plugin-commit"],\
             ["@atls/cli-ui-git-commit-component", "virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#workspace:cli/cli-ui-git-commit"],\
             ["@atls/code-commit", "workspace:code/code-commit"],\
-            ["@types/react", "npm:18.2.73"],\
+            ["@types/react", "npm:16.14.60"],\
             ["@yarnpkg/builder", "npm:4.0.0"],\
             ["@yarnpkg/cli", "virtual:1be968e10e852021717e39be5362e9ef161555fe60a16adbabe5315cf3f3fee6f4ee855a1f13adfbd9e1da4db65f29388d88e3b4b0a9cf0f1d12dbfcd8a1fa19#npm:4.1.0"],\
             ["@yarnpkg/core", "npm:4.0.3"],\
             ["@yarnpkg/fslib", "npm:3.0.2"],\
-            ["@yarnpkg/libui", "virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#npm:3.0.0"],\
+            ["@yarnpkg/libui", "virtual:ae5c57bfa6db99356c602f67aad3c174292a9118f1157fbd225ba9bc554605bfa73c6dc202ff170d8e6f17342ac5941f851747044ce19afe45ba3c975b6e1e94#npm:3.0.0"],\
             ["clipanion", "virtual:7948fe99019ab0938c87719dbe226cb3cad6ec4589f8d96391dfc950f4b6ca161dae3b0b9be6cbb64356461c859081ac7b8be325dac98aa83dc1003a6ae764e7#npm:3.2.0-rc.6"],\
             ["commitizen", "npm:4.3.0"],\
             ["force-stdin-tty", "npm:0.0.1"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
             ["lint-staged", "npm:11.2.6"],\
-            ["react", "npm:18.2.0"],\
+            ["react", "npm:16.14.0"],\
             ["word-wrap", "npm:1.2.5"]\
           ],\
           "linkType": "SOFT"\
@@ -6377,24 +6377,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:16.14.60"],\
             ["ink", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:3.2.0"],\
             ["react", null],\
-            ["tslib", "npm:2.6.2"]\
-          ],\
-          "packagePeers": [\
-            "@types/ink",\
-            "@types/react",\
-            "ink",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#npm:3.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/@yarnpkg-libui-virtual-787ec5ba7f/0/cache/@yarnpkg-libui-npm-3.0.0-d558e51d1a-66a0f117ee.zip/node_modules/@yarnpkg/libui/",\
-          "packageDependencies": [\
-            ["@yarnpkg/libui", "virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#npm:3.0.0"],\
-            ["@types/ink", null],\
-            ["@types/react", "npm:18.2.73"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"],\
             ["tslib", "npm:2.6.2"]\
           ],\
           "packagePeers": [\
@@ -12958,12 +12940,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["ink-select-input", "virtual:bb80211bcf8397e861c25dc4c738e1efb1d0cc0411728f9c56419979880d2430ae7afb9c91a961f8f6f812413a439361b4897f91e3e9fa862b6d8e75fadc32e0#npm:5.0.0"],\
             ["@types/ink", null],\
-            ["@types/react", "npm:18.2.73"],\
+            ["@types/react", "npm:16.14.60"],\
             ["arr-rotate", "npm:1.0.0"],\
             ["figures", "npm:5.0.0"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
             ["lodash.isequal", "npm:4.5.0"],\
-            ["react", "npm:18.2.0"]\
+            ["react", "npm:16.14.0"]\
           ],\
           "packagePeers": [\
             "@types/ink",\
@@ -13060,10 +13042,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["ink-text-input", "virtual:bb80211bcf8397e861c25dc4c738e1efb1d0cc0411728f9c56419979880d2430ae7afb9c91a961f8f6f812413a439361b4897f91e3e9fa862b6d8e75fadc32e0#npm:5.0.1"],\
             ["@types/ink", null],\
-            ["@types/react", "npm:18.2.73"],\
+            ["@types/react", "npm:16.14.60"],\
             ["chalk", "npm:5.3.0"],\
-            ["ink", "virtual:2de6196846b61deb07658513ba2a1bf57d04c14e5cbcbbca60d92f6aaec8ddd5290c53390361cc0f703600dd0ad6da83b9151a0868597214482e2d3db303c9ef#npm:3.2.0"],\
-            ["react", "npm:18.2.0"],\
+            ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
+            ["react", "npm:16.14.0"],\
             ["type-fest", "npm:3.13.1"]\
           ],\
           "packagePeers": [\
