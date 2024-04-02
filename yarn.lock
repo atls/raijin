@@ -1075,14 +1075,14 @@ __metadata:
     "@atls/code-format-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:0.0.1"
-    "@jest/globals": ^29.7.0
-    "@types/react": 18.2.73
+    "@jest/globals": 29.7.0
+    "@types/react": 16
     "@yarnpkg/builder": 4.0.0
     "@yarnpkg/cli": 4.1.0
     "@yarnpkg/core": 4.0.3
-    "@yarnpkg/fslib": ^3.0.2
+    "@yarnpkg/fslib": 3.0.2
     clipanion: 3.2.0-rc.6
-    react: 18.2.0
+    react: 16.14.0
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
