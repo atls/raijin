@@ -1,4 +1,4 @@
-import { ReactNode }  from 'react'
+import { ReactNode }         from 'react'
 
 import { reconciler } from './ink.js'
 import { render }     from './ink.js'
@@ -6,7 +6,7 @@ import { createNode } from './ink.js'
 
 export const renderStatic = (
   target: ReactNode,
-  terminalWidth: number = process.stdout.columns || 80
+  terminalWidth: number = process.stdout.columns || 80,
 ) => {
   const rootNode = createNode('ink-root')
 
@@ -14,7 +14,10 @@ export const renderStatic = (
 
   reconciler.updateContainer(target, container, null)
 
-  const { output } = render(rootNode, terminalWidth)
+  const { output } = render(
+    rootNode,
+    terminalWidth,
+  )
 
   return output
 }
