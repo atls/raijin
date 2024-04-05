@@ -9,6 +9,7 @@ import { Filename }        from '@yarnpkg/fslib'
 import { CwdFS }           from '@yarnpkg/fslib'
 import { structUtils }     from '@yarnpkg/core'
 import { tgzUtils }        from '@yarnpkg/core'
+import { toFilename }      from '@yarnpkg/fslib'
 import { xfs }             from '@yarnpkg/fslib'
 import { ppath }           from '@yarnpkg/fslib'
 import { npath }           from '@yarnpkg/fslib'
@@ -27,7 +28,7 @@ export const generateLockfile = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const filename = 'yarn.lock' as Filename
+  const filename = toFilename(project.configuration.get('lockfileFilename'))
   const dest = ppath.join(destination, filename)
 
   report.reportInfo(null, filename)
@@ -80,11 +81,10 @@ export const pack = async (
     // tmpConfiguration.values.set(`enableNetwork`, false);
     // tmpConfiguration.values.set(`enableMirror`, false);
 
-    tmpConfiguration.values.set(`compressionLevel`, configuration.get(`compressionLevel`))
     tmpConfiguration.values.set(`globalFolder`, configuration.get(`globalFolder`))
     tmpConfiguration.values.set(`packageExtensions`, configuration.get(`packageExtensions`))
 
-    await tmpConfiguration.getPackageExtensions()
+    await tmpConfiguration.refreshPackageExtensions()
 
     const { project: tmpProject, workspace: tmpWorkspace } = await Project.find(
       tmpConfiguration,

@@ -4,20 +4,17 @@
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": "./src/index.ts"
-  },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
   "devDependencies": {
-    "@yarnpkg/cli": "4.1.1",
-    "@yarnpkg/core": "4.0.3",
-    "@yarnpkg/fslib": "3.0.2",
-    "@yarnpkg/plugin-pack": "4.0.0",
-    "@yarnpkg/plugin-patch": "4.0.1",
-    "tar-stream": "3.1.7"
+    "@yarnpkg/cli": "^3.5.0",
+    "@yarnpkg/core": "^3.5.0",
+    "@yarnpkg/fslib": "^2.10.2",
+    "@yarnpkg/plugin-pack": "^3.2.0",
+    "@yarnpkg/plugin-patch": "^3.2.4",
+    "tar-stream": "^3.0.0"
   },
   "publishConfig": {
     "access": "public",

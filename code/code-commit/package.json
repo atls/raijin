@@ -1,12 +1,9 @@
 {
   "name": "@atls/code-commit",
-  "version": "1.0.0",
+  "version": "0.0.7",
   "license": "BSD-3-Clause",
   "type": "module",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": "./src/index.ts"
-  },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -16,30 +13,22 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@commitlint/format": "18.4.3",
-    "@commitlint/is-ignored": "18.4.3",
-    "@commitlint/lint": "18.4.3",
-    "@commitlint/load": "18.4.3",
-    "@commitlint/read": "18.4.3",
-    "@commitlint/rules": "18.4.3",
-    "@commitlint/types": "18.4.3",
-    "conventional-changelog-angular": "7.0.0",
-    "conventional-commits-parser": "5.0.0"
+    "@commitlint/format": "^17.4.4",
+    "@commitlint/is-ignored": "^17.4.4",
+    "@commitlint/lint": "^17.4.4",
+    "@commitlint/load": "^17.5.0",
+    "@commitlint/read": "^17.5.1",
+    "@commitlint/rules": "^17.4.4",
+    "@commitlint/types": "^17.4.4",
+    "conventional-changelog-angular": "^5.0.13",
+    "conventional-commits-parser": "^3.2.4"
   },
   "devDependencies": {
-    "@jest/globals": "29.7.0",
-    "@types/conventional-commits-parser": "3",
-    "@types/node": "20"
+    "@jest/globals": "29.5.0",
+    "@types/node": "^18.15.11"
   },
   "publishConfig": {
-    "exports": {
-      "./package.json": "./package.json",
-      ".": {
-        "import": "./dist/index.js",
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    },
+    "main": "dist/index.js",
     "typings": "dist/index.d.ts"
   }
 }

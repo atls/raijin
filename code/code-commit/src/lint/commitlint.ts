@@ -2,8 +2,8 @@
 
 import util                   from 'node:util'
 
-import isIgnored              from '@commitlint/is-ignored'
-import defaultRules           from '@commitlint/rules'
+import isIgnoredPkg           from '@commitlint/is-ignored'
+import defaultRulesPkg        from '@commitlint/rules'
 import { BaseRule }           from '@commitlint/types'
 import { LintOptions }        from '@commitlint/types'
 import { LintOutcome }        from '@commitlint/types'
@@ -17,18 +17,21 @@ import { Parser }             from '@commitlint/types'
 import { ParserOptions }      from '@commitlint/types'
 import { buildCommitMesage }  from '@commitlint/lint/lib/commit-message.js'
 
+import defaultParserOpts      from 'conventional-changelog-angular/parser-opts.js'
 import { sync }               from 'conventional-commits-parser'
 
-import { parserOptions }      from './parser-options'
+// @ts-ignore
+const isIgnored = isIgnoredPkg.default || isIgnoredPkg
+// @ts-ignore
+const defaultRules = defaultRulesPkg.default || defaultRulesPkg
 
 export async function parse(
   message: string,
-  // @ts-ignore
   parser: Parser = sync,
   parserOpts?: ParserOptions
 ): Promise<Commit> {
-  const opts: ParserOptions = {
-    ...parserOptions,
+  const opts = {
+    ...defaultParserOpts,
     ...(parserOpts || {}),
   }
 

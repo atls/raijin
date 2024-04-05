@@ -20,7 +20,6 @@ const wrapOutput = () => ({
   },
 })
 
-/** @type {import('rollup').RollupOptions} */
 export default [
   {
     external: ['pnpapi'],
@@ -37,7 +36,7 @@ export default [
         jail: join(fileURLToPath(new URL('.', import.meta.url)), '../../'),
         preferBuiltins: true,
       }),
-      esbuild({ tsconfig: false, target: 'node18' }),
+      esbuild({ tsconfig: false, target: 'node14' }),
       cjs({ transformMixedEsModules: true, extensions: ['.js', '.ts'] }),
       json(),
       wrapOutput(),
