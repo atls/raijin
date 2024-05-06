@@ -1,0 +1,5 @@
+releases:
+  "@atls/cli-ui-schematics-component": patch
+
+undecided:
+  - "@atls/schematics"
