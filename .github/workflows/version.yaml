@@ -9,4 +9,5 @@ on:
 jobs:
   run:
     name: Version
-    uses: ./.github/workflows/reusable-version.yaml
+    uses: atls/shared/.github/workflows/version.yaml@master
+    permissions: write-all
