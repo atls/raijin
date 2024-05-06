@@ -45,5 +45,6 @@ export const tsConfig = {
     'src/**/*.stories.ts',
     '**/*/dist/**/*.d.ts',
     'integration/**/*.test.ts',
+    '.idea'
   ],
 }
