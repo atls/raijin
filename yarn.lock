@@ -814,7 +814,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/schematics@workspace:*, @atls/schematics@workspace:0.0.29, @atls/schematics@workspace:schematics/schematics":
+"@atls/schematics@workspace:*, @atls/schematics@workspace:schematics/schematics":
   version: 0.0.0-use.local
   resolution: "@atls/schematics@workspace:schematics/schematics"
   dependencies:
@@ -12838,7 +12838,7 @@ __metadata:
     "@atls/code-service": "workspace:*"
     "@atls/config-eslint": "workspace:0.0.12"
     "@atls/config-jest": "workspace:0.0.18"
-    "@atls/schematics": "workspace:0.0.29"
+    "@atls/schematics": "workspace:*"
     "@atls/tools-setup-ts-execution": "workspace:0.0.1"
     "@jest/core": "npm:29.7.0"
     "@rushstack/eslint-patch": "npm:1.6.1"

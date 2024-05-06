@@ -25,7 +25,6 @@ interface RequestProjectInformationProps {
 
 export const RequestProjectInformation = ({ onSubmit }: RequestProjectInformationProps) => {
   const [type, setType] = useState<ProjectType>()
-
   if (!type) {
     return (
       <Box flexDirection='column'>
