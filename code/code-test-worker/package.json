@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-test-worker",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [

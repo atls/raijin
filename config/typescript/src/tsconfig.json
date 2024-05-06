@@ -38,6 +38,7 @@
     "src/**/*.story.ts",
     "src/**/*.stories.ts",
     "**/*/dist/**/*.d.ts",
-    "integration/**/*.test.ts"
+    "integration/**/*.test.ts",
+    ".idea"
   ]
 }
