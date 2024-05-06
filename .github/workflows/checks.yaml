@@ -5,7 +5,9 @@ on: [pull_request]
 jobs:
   check:
     name: Lint, typecheck
-    uses: ./.github/workflows/reusable-checks.yaml
+    uses: atls/shared/.github/workflows/reusable-checks.yaml@master
+    permissions: write-all
   release:
     name: Release
-    uses: ./.github/workflows/reusable-release.yaml
+    uses: atls/shared/.github/workflows/reusable-release.yaml@master
+    permissions: write-all
