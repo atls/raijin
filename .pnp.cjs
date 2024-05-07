@@ -2456,8 +2456,8 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/core", "npm:4.0.3"],\
           ["@yarnpkg/fslib", "npm:3.0.1"],\
           ["@yarnpkg/plugin-pack", "virtual:2676aba5eb9ed4869a768c0c16b959aceeffb8c4d79440df336b4674273da1dd4365dc4f877f7213dbffb0030c50f73984f93169842ebb9e6b30c64f065f0313#npm:4.0.0"],\
-          ["pkg-tests-core", "file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=197da0&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"],\
-          ["pkg-tests-fixtures", "file:cache/pkg-tests-fixtures.tgz#cache/pkg-tests-fixtures.tgz::hash=ae5099&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"]\
+          ["pkg-tests-core", "virtual:2676aba5eb9ed4869a768c0c16b959aceeffb8c4d79440df336b4674273da1dd4365dc4f877f7213dbffb0030c50f73984f93169842ebb9e6b30c64f065f0313#file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=0387f3&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"],\
+          ["pkg-tests-fixtures", "file:cache/pkg-tests-fixtures.tgz#cache/pkg-tests-fixtures.tgz::hash=bdb706&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -7178,10 +7178,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["virtual:17c6821a6aa1b35759893b241185013f8e68c218f80241d4aec6b69143287593fa74225cfbb8140cfd8bee3dc96f29411516f8bc0a9c81e8bc1d30fa4995f62c#npm:4.0.1", {\
-        "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-npm-cli-virtual-794277f077/0/cache/@yarnpkg-plugin-npm-cli-npm-4.0.1-79de2d68da-aaa14518d2.zip/node_modules/@yarnpkg/plugin-npm-cli/",\
+      ["virtual:5a410a2466b0b62e6ec51043ac16383333db5427e836aa8db1acd8228620eeb68573728fede6dc64bffa3dfdc0111215aa97dbaa71ef803c1c7ef75548cb85aa#npm:4.0.1", {\
+        "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-npm-cli-virtual-35a71f6b16/0/cache/@yarnpkg-plugin-npm-cli-npm-4.0.1-79de2d68da-aaa14518d2.zip/node_modules/@yarnpkg/plugin-npm-cli/",\
         "packageDependencies": [\
-          ["@yarnpkg/plugin-npm-cli", "virtual:17c6821a6aa1b35759893b241185013f8e68c218f80241d4aec6b69143287593fa74225cfbb8140cfd8bee3dc96f29411516f8bc0a9c81e8bc1d30fa4995f62c#npm:4.0.1"],\
+          ["@yarnpkg/plugin-npm-cli", "virtual:5a410a2466b0b62e6ec51043ac16383333db5427e836aa8db1acd8228620eeb68573728fede6dc64bffa3dfdc0111215aa97dbaa71ef803c1c7ef75548cb85aa#npm:4.0.1"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@types/yarnpkg__plugin-npm", null],\
@@ -15564,36 +15564,50 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["pkg-tests-core", [\
-      ["file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=197da0&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils", {\
-        "packageLocation": "./.yarn/cache/pkg-tests-core-file-17c6821a6a-9b9878e522.zip/node_modules/pkg-tests-core/",\
+      ["file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=0387f3&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils", {\
+        "packageLocation": "./.yarn/cache/pkg-tests-core-file-bbea807f5d-1f57b25732.zip/node_modules/pkg-tests-core/",\
         "packageDependencies": [\
-          ["pkg-tests-core", "file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=197da0&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"],\
+          ["pkg-tests-core", "file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=0387f3&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:2676aba5eb9ed4869a768c0c16b959aceeffb8c4d79440df336b4674273da1dd4365dc4f877f7213dbffb0030c50f73984f93169842ebb9e6b30c64f065f0313#file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=0387f3&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils", {\
+        "packageLocation": "./.yarn/__virtual__/pkg-tests-core-virtual-5a410a2466/0/cache/pkg-tests-core-file-bbea807f5d-1f57b25732.zip/node_modules/pkg-tests-core/",\
+        "packageDependencies": [\
+          ["pkg-tests-core", "virtual:2676aba5eb9ed4869a768c0c16b959aceeffb8c4d79440df336b4674273da1dd4365dc4f877f7213dbffb0030c50f73984f93169842ebb9e6b30c64f065f0313#file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=0387f3&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/pem", "npm:1.14.4"],\
+          ["@types/pkg-tests-fixtures", null],\
           ["@yarnpkg/core", "npm:4.0.1"],\
           ["@yarnpkg/fslib", "npm:3.0.1"],\
           ["@yarnpkg/parsers", "npm:3.0.0"],\
-          ["@yarnpkg/plugin-npm-cli", "virtual:17c6821a6aa1b35759893b241185013f8e68c218f80241d4aec6b69143287593fa74225cfbb8140cfd8bee3dc96f29411516f8bc0a9c81e8bc1d30fa4995f62c#npm:4.0.1"],\
+          ["@yarnpkg/plugin-npm-cli", "virtual:5a410a2466b0b62e6ec51043ac16383333db5427e836aa8db1acd8228620eeb68573728fede6dc64bffa3dfdc0111215aa97dbaa71ef803c1c7ef75548cb85aa#npm:4.0.1"],\
           ["finalhandler", "npm:1.2.0"],\
           ["invariant", "npm:2.2.4"],\
           ["klaw", "npm:4.1.0"],\
           ["minimatch", "npm:9.0.4"],\
           ["pem", "https://github.com/dexus/pem.git#commit=fe487693b3daf227788dd9be777964f07906688c"],\
+          ["pkg-tests-fixtures", "file:cache/pkg-tests-fixtures.tgz#cache/pkg-tests-fixtures.tgz::hash=bdb706&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"],\
           ["semver", "npm:7.6.0"],\
           ["serve-static", "npm:1.15.0"],\
           ["super-resolve", "npm:1.0.0"],\
           ["tar-fs", "npm:3.0.5"],\
           ["tslib", "npm:2.6.2"],\
+          ["typanion", "npm:3.14.0"],\
           ["uuid", "npm:8.3.2"]\
+        ],\
+        "packagePeers": [\
+          "@types/pkg-tests-fixtures",\
+          "pkg-tests-fixtures"\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["pkg-tests-fixtures", [\
-      ["file:cache/pkg-tests-fixtures.tgz#cache/pkg-tests-fixtures.tgz::hash=ae5099&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils", {\
-        "packageLocation": "./.yarn/cache/pkg-tests-fixtures-file-0228168470-069f351677.zip/node_modules/pkg-tests-fixtures/",\
+      ["file:cache/pkg-tests-fixtures.tgz#cache/pkg-tests-fixtures.tgz::hash=bdb706&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils", {\
+        "packageLocation": "./.yarn/cache/pkg-tests-fixtures-file-62463b3206-cad2cacf9b.zip/node_modules/pkg-tests-fixtures/",\
         "packageDependencies": [\
-          ["pkg-tests-fixtures", "file:cache/pkg-tests-fixtures.tgz#cache/pkg-tests-fixtures.tgz::hash=ae5099&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"],\
+          ["pkg-tests-fixtures", "file:cache/pkg-tests-fixtures.tgz#cache/pkg-tests-fixtures.tgz::hash=bdb706&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"],\
           ["@yarnpkg/fslib", "npm:3.0.1"]\
         ],\
         "linkType": "HARD"\

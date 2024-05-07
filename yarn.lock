@@ -11477,17 +11477,20 @@ pem@dexus/pem:
 
 "pkg-tests-core@file:./cache/pkg-tests-core.tgz::locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils":
   version: 0.0.0
-  resolution: "pkg-tests-core@file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=197da0&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"
+  resolution: "pkg-tests-core@file:./cache/pkg-tests-core.tgz#./cache/pkg-tests-core.tgz::hash=0387f3&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"
   dependencies:
+    typanion: "npm:^3.14.0"
     uuid: "npm:^8.3.2"
-  checksum: 10/9b9878e522f4cd38610be13e31720a3fd8cd6fe09bf41a892374819eeb8cb31a1db5166b5cef9dd009586a7798728caa85b2cbcf6745339415c0ce9531c17968
+  peerDependencies:
+    pkg-tests-fixtures: ^0.0.0
+  checksum: 10/1f57b257320ce72c681a3ded6812161e799439011432710cb17ec7663003a12e382dbb05f1a39204a69f3f15faceaf86bde1b6eccbd869c32fe9973be8f2f27a
   languageName: node
   linkType: hard
 
 "pkg-tests-fixtures@file:cache/pkg-tests-fixtures.tgz::locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils":
   version: 0.0.0
-  resolution: "pkg-tests-fixtures@file:cache/pkg-tests-fixtures.tgz#cache/pkg-tests-fixtures.tgz::hash=ae5099&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"
-  checksum: 10/069f351677e27c999d56528f4a1566fd6042323dd8a2ea35f8b79d1040c406062c2d793c842e88d56e882fda2e561413c69223b418e628c2a014f029ae993551
+  resolution: "pkg-tests-fixtures@file:cache/pkg-tests-fixtures.tgz#cache/pkg-tests-fixtures.tgz::hash=bdb706&locator=%40atls%2Fyarn-test-utils%40workspace%3Ayarn%2Ftest-utils"
+  checksum: 10/cad2cacf9babc99c03cc40b9d2790fcb729f5e79c77244af569ed84476f856b59ceacde898eb6a0cbd661c430a3ece5fb82587b32c83caf335b58e269f7b7992
   languageName: node
   linkType: hard
 

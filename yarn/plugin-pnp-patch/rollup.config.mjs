@@ -15,7 +15,7 @@ const wrapOutput = () => ({
 
     const outputBundle = bundle[bundles[0]]
 
-    outputBundle.code = `/* eslint-disable n/no-sync */\nimport { brotliDecompressSync } from 'node:zlib';\n\nlet hook: string | undefined;\n\nexport const getContent = (): string => {\n  if (typeof hook === \`undefined\`)\n    hook = brotliDecompressSync(Buffer.from('${brotliCompressSync(
+    outputBundle.code = `/* eslint-disable n/no-sync */\nimport { brotliDecompressSync } from 'zlib';\n\nlet hook: string | undefined;\n\nexport const getContent = (): string => {\n  if (typeof hook === \`undefined\`)\n    hook = brotliDecompressSync(Buffer.from('${brotliCompressSync(
       outputBundle.code.replace(/\r\n/g, '\n')
     ).toString('base64')}', 'base64')).toString();\n\n  return hook;\n};\n`
   },

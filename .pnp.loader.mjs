@@ -2,16 +2,16 @@ import fs$1 from 'node:fs';
 import { fileURLToPath as fileURLToPath$1, pathToFileURL as pathToFileURL$1 } from 'node:url';
 import fs from 'fs';
 import path$1 from 'path';
-import require$$2, { URL as URL$1, fileURLToPath, pathToFileURL } from 'url';
-import moduleExports, { Module } from 'module';
 import require$$1 from 'util';
 import require$$1$1 from 'events';
 import require$$0$1, { createHash } from 'crypto';
 import require$$1$2, { EOL } from 'os';
 import require$$1$3 from 'buffer';
+import require$$2, { fileURLToPath, pathToFileURL } from 'url';
 import require$$0$2 from 'readline';
 import { createRequire } from 'node:module';
 import { extname } from 'node:path';
+import moduleExports, { isBuiltin } from 'module';
 import assert from 'assert';
 
 const [major, minor] = process.versions.node.split(`.`).map((value) => parseInt(value, 10));
@@ -25,14 +25,16 @@ const PortablePath = {
 const npath = Object.create(path$1);
 const ppath = Object.create(path$1.posix);
 npath.cwd = () => process.cwd();
-ppath.cwd = () => toPortablePath(process.cwd());
-ppath.resolve = (...segments) => {
-  if (segments.length > 0 && ppath.isAbsolute(segments[0])) {
-    return path$1.posix.resolve(...segments);
-  } else {
-    return path$1.posix.resolve(ppath.cwd(), ...segments);
-  }
-};
+ppath.cwd = process.platform === `win32` ? () => toPortablePath(process.cwd()) : process.cwd;
+if (process.platform === `win32`) {
+  ppath.resolve = (...segments) => {
+    if (segments.length > 0 && ppath.isAbsolute(segments[0])) {
+      return path$1.posix.resolve(...segments);
+    } else {
+      return path$1.posix.resolve(ppath.cwd(), ...segments);
+    }
+  };
+}
 const contains = function(pathUtils, from, to) {
   from = pathUtils.normalize(from);
   to = pathUtils.normalize(to);
@@ -46,17 +48,13 @@ const contains = function(pathUtils, from, to) {
     return null;
   }
 };
-npath.fromPortablePath = fromPortablePath;
-npath.toPortablePath = toPortablePath;
 npath.contains = (from, to) => contains(npath, from, to);
 ppath.contains = (from, to) => contains(ppath, from, to);
 const WINDOWS_PATH_REGEXP = /^([a-zA-Z]:.*)$/;
 const UNC_WINDOWS_PATH_REGEXP = /^\/\/(\.\/)?(.*)$/;
 const PORTABLE_PATH_REGEXP = /^\/([a-zA-Z]:.*)$/;
 const UNC_PORTABLE_PATH_REGEXP = /^\/unc\/(\.dot\/)?(.*)$/;
-function fromPortablePath(p) {
-  if (process.platform !== `win32`)
-    return p;
+function fromPortablePathWin32(p) {
   let portablePathMatch, uncPortablePathMatch;
   if (portablePathMatch = p.match(PORTABLE_PATH_REGEXP))
     p = portablePathMatch[1];
@@ -66,9 +64,7 @@ function fromPortablePath(p) {
     return p;
   return p.replace(/\//g, `\\`);
 }
-function toPortablePath(p) {
-  if (process.platform !== `win32`)
-    return p;
+function toPortablePathWin32(p) {
   p = p.replace(/\\/g, `/`);
   let windowsPathMatch, uncWindowsPathMatch;
   if (windowsPathMatch = p.match(WINDOWS_PATH_REGEXP))
@@ -77,12 +73,14 @@ function toPortablePath(p) {
     p = `/unc/${uncWindowsPathMatch[1] ? `.dot/` : ``}${uncWindowsPathMatch[2]}`;
   return p;
 }
+const toPortablePath = process.platform === `win32` ? toPortablePathWin32 : (p) => p;
+const fromPortablePath = process.platform === `win32` ? fromPortablePathWin32 : (p) => p;
+npath.fromPortablePath = fromPortablePath;
+npath.toPortablePath = toPortablePath;
 function convertPath(targetPathUtils, sourcePath) {
   return targetPathUtils === npath ? fromPortablePath(sourcePath) : toPortablePath(sourcePath);
 }
 
-const builtinModules = new Set(Module.builtinModules || Object.keys(process.binding(`natives`)));
-const isBuiltinModule = (request) => request.startsWith(`node:`) || builtinModules.has(request);
 function readPackageScope(checkPath) {
   const rootSeparatorIndex = checkPath.indexOf(npath.sep);
   let separatorIndex;
@@ -119,7 +117,7 @@ async function tryReadFile$1(path2) {
 }
 function tryParseURL(str, base) {
   try {
-    return new URL$1(str, base);
+    return new URL(str, base);
   } catch {
     return null;
   }
@@ -924,7 +922,7 @@ function requirePath () {
 	hasRequiredPath = 1;
 	(function (exports) {
 		Object.defineProperty(exports, "__esModule", { value: true });
-		exports.toFilename = exports.convertPath = exports.ppath = exports.npath = exports.Filename = exports.PortablePath = void 0;
+		exports.convertPath = exports.ppath = exports.npath = exports.Filename = exports.PortablePath = void 0;
 		const tslib_1 = require$$0;
 		const path_1 = tslib_1.__importDefault(path$1);
 		var PathType;
@@ -957,15 +955,19 @@ function requirePath () {
 		exports.npath = Object.create(path_1.default);
 		exports.ppath = Object.create(path_1.default.posix);
 		exports.npath.cwd = () => process.cwd();
-		exports.ppath.cwd = () => toPortablePath(process.cwd());
-		exports.ppath.resolve = (...segments) => {
-		    if (segments.length > 0 && exports.ppath.isAbsolute(segments[0])) {
-		        return path_1.default.posix.resolve(...segments);
-		    }
-		    else {
-		        return path_1.default.posix.resolve(exports.ppath.cwd(), ...segments);
-		    }
-		};
+		exports.ppath.cwd = process.platform === `win32`
+		    ? () => toPortablePath(process.cwd())
+		    : process.cwd;
+		if (process.platform === `win32`) {
+		    exports.ppath.resolve = (...segments) => {
+		        if (segments.length > 0 && exports.ppath.isAbsolute(segments[0])) {
+		            return path_1.default.posix.resolve(...segments);
+		        }
+		        else {
+		            return path_1.default.posix.resolve(exports.ppath.cwd(), ...segments);
+		        }
+		    };
+		}
 		const contains = function (pathUtils, from, to) {
 		    from = pathUtils.normalize(from);
 		    to = pathUtils.normalize(to);
@@ -980,8 +982,6 @@ function requirePath () {
 		        return null;
 		    }
 		};
-		exports.npath.fromPortablePath = fromPortablePath;
-		exports.npath.toPortablePath = toPortablePath;
 		exports.npath.contains = (from, to) => contains(exports.npath, from, to);
 		exports.ppath.contains = (from, to) => contains(exports.ppath, from, to);
 		const WINDOWS_PATH_REGEXP = /^([a-zA-Z]:.*)$/;
@@ -990,9 +990,7 @@ function requirePath () {
 		const UNC_PORTABLE_PATH_REGEXP = /^\/unc\/(\.dot\/)?(.*)$/;
 		// Path should look like "/N:/berry/scripts/plugin-pack.js"
 		// And transform to "N:\berry\scripts\plugin-pack.js"
-		function fromPortablePath(p) {
-		    if (process.platform !== `win32`)
-		        return p;
+		function fromPortablePathWin32(p) {
 		    let portablePathMatch, uncPortablePathMatch;
 		    if ((portablePathMatch = p.match(PORTABLE_PATH_REGEXP)))
 		        p = portablePathMatch[1];
@@ -1004,9 +1002,7 @@ function requirePath () {
 		}
 		// Path should look like "N:/berry/scripts/plugin-pack.js"
 		// And transform to "/N:/berry/scripts/plugin-pack.js"
-		function toPortablePath(p) {
-		    if (process.platform !== `win32`)
-		        return p;
+		function toPortablePathWin32(p) {
 		    p = p.replace(/\\/g, `/`);
 		    let windowsPathMatch, uncWindowsPathMatch;
 		    if ((windowsPathMatch = p.match(WINDOWS_PATH_REGEXP)))
@@ -1015,16 +1011,18 @@ function requirePath () {
 		        p = `/unc/${uncWindowsPathMatch[1] ? `.dot/` : ``}${uncWindowsPathMatch[2]}`;
 		    return p;
 		}
+		const toPortablePath = process.platform === `win32`
+		    ? toPortablePathWin32
+		    : (p) => p;
+		const fromPortablePath = process.platform === `win32`
+		    ? fromPortablePathWin32
+		    : (p) => p;
+		exports.npath.fromPortablePath = fromPortablePath;
+		exports.npath.toPortablePath = toPortablePath;
 		function convertPath(targetPathUtils, sourcePath) {
 		    return (targetPathUtils === exports.npath ? fromPortablePath(sourcePath) : toPortablePath(sourcePath));
 		}
-		exports.convertPath = convertPath;
-		function toFilename(filename) {
-		    if (exports.npath.parse(filename).dir !== `` || exports.ppath.parse(filename).dir !== ``)
-		        throw new Error(`Invalid filename: "${filename}"`);
-		    return filename;
-		}
-		exports.toFilename = toFilename; 
+		exports.convertPath = convertPath; 
 	} (path));
 	return path;
 }
@@ -2367,6 +2365,13 @@ function requireNodeFS () {
 	const fs_1 = tslib_1.__importDefault(fs);
 	const FakeFS_1 = requireFakeFS();
 	const path_1 = requirePath();
+	function direntToPortable(dirent) {
+	    // We don't need to return a copy, we can just reuse the object the real fs returned
+	    const portableDirent = dirent;
+	    if (typeof dirent.path === `string`)
+	        portableDirent.path = path_1.npath.toPortablePath(dirent.path);
+	    return portableDirent;
+	}
 	class NodeFS extends FakeFS_1.BasePortableFakeFS {
 	    constructor(realFs = fs_1.default) {
 	        super();
@@ -2729,16 +2734,36 @@ function requireNodeFS () {
 	    async readdirPromise(p, opts) {
 	        return await new Promise((resolve, reject) => {
 	            if (opts) {
-	                this.realFs.readdir(path_1.npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
+	                if (opts.recursive && process.platform === `win32`) {
+	                    if (opts.withFileTypes) {
+	                        this.realFs.readdir(path_1.npath.fromPortablePath(p), opts, this.makeCallback(results => resolve(results.map(direntToPortable)), reject));
+	                    }
+	                    else {
+	                        this.realFs.readdir(path_1.npath.fromPortablePath(p), opts, this.makeCallback(results => resolve(results.map(path_1.npath.toPortablePath)), reject));
+	                    }
+	                }
+	                else {
+	                    this.realFs.readdir(path_1.npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
+	                }
 	            }
 	            else {
-	                this.realFs.readdir(path_1.npath.fromPortablePath(p), this.makeCallback(value => resolve(value), reject));
+	                this.realFs.readdir(path_1.npath.fromPortablePath(p), this.makeCallback(resolve, reject));
 	            }
 	        });
 	    }
 	    readdirSync(p, opts) {
 	        if (opts) {
-	            return this.realFs.readdirSync(path_1.npath.fromPortablePath(p), opts);
+	            if (opts.recursive && process.platform === `win32`) {
+	                if (opts.withFileTypes) {
+	                    return this.realFs.readdirSync(path_1.npath.fromPortablePath(p), opts).map(direntToPortable);
+	                }
+	                else {
+	                    return this.realFs.readdirSync(path_1.npath.fromPortablePath(p), opts).map(path_1.npath.toPortablePath);
+	                }
+	            }
+	            else {
+	                return this.realFs.readdirSync(path_1.npath.fromPortablePath(p), opts);
+	            }
 	        }
 	        else {
 	            return this.realFs.readdirSync(path_1.npath.fromPortablePath(p));
@@ -4861,7 +4886,7 @@ function requireXfs () {
 
 (function (exports) {
 	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.xfs = exports.extendFs = exports.patchFs = exports.VirtualFS = exports.ProxiedFS = exports.PosixFS = exports.NodeFS = exports.NoFS = exports.MountFS = exports.LazyFS = exports.JailFS = exports.CwdFS = exports.BasePortableFakeFS = exports.FakeFS = exports.AliasFS = exports.toFilename = exports.ppath = exports.npath = exports.Filename = exports.PortablePath = exports.normalizeLineEndings = exports.unwatchAllFiles = exports.unwatchFile = exports.watchFile = exports.CustomDir = exports.opendir = exports.setupCopyIndex = exports.statUtils = exports.errors = exports.constants = void 0;
+	exports.xfs = exports.extendFs = exports.patchFs = exports.VirtualFS = exports.ProxiedFS = exports.PosixFS = exports.NodeFS = exports.NoFS = exports.MountFS = exports.LazyFS = exports.JailFS = exports.CwdFS = exports.BasePortableFakeFS = exports.FakeFS = exports.AliasFS = exports.ppath = exports.npath = exports.Filename = exports.PortablePath = exports.normalizeLineEndings = exports.unwatchAllFiles = exports.unwatchFile = exports.watchFile = exports.CustomDir = exports.opendir = exports.setupCopyIndex = exports.statUtils = exports.errors = exports.constants = void 0;
 	const tslib_1 = require$$0;
 	const constants = tslib_1.__importStar(requireConstants());
 	exports.constants = constants;
@@ -4886,7 +4911,6 @@ function requireXfs () {
 	var path_2 = requirePath();
 	Object.defineProperty(exports, "npath", { enumerable: true, get: function () { return path_2.npath; } });
 	Object.defineProperty(exports, "ppath", { enumerable: true, get: function () { return path_2.ppath; } });
-	Object.defineProperty(exports, "toFilename", { enumerable: true, get: function () { return path_2.toFilename; } });
 	var AliasFS_1 = requireAliasFS();
 	Object.defineProperty(exports, "AliasFS", { enumerable: true, get: function () { return AliasFS_1.AliasFS; } });
 	var FakeFS_2 = requireFakeFS();
@@ -4957,10 +4981,9 @@ async function copyImpl(prelayout, postlayout, destinationFs, destination, sourc
         updated = await copySymlink(prelayout, postlayout, destinationFs, destination, destinationStat, sourceFs, source, sourceStat, opts);
       }
       break;
-    default:
-      {
-        throw new Error(`Unsupported file type (${sourceStat.mode})`);
-      }
+    default: {
+      throw new Error(`Unsupported file type (${sourceStat.mode})`);
+    }
   }
   if (((_a = opts.linkStrategy) == null ? void 0 : _a.type) !== `HardlinkFromIndex` || !sourceStat.isFile()) {
     if (updated || ((_b = destinationStat == null ? void 0 : destinationStat.mtime) == null ? void 0 : _b.getTime()) !== mtime.getTime() || ((_c = destinationStat == null ? void 0 : destinationStat.atime) == null ? void 0 : _c.getTime()) !== atime.getTime()) {
@@ -5023,7 +5046,10 @@ async function copyFolder(prelayout, postlayout, destinationFs, destination, des
 }
 async function copyFileViaIndex(prelayout, postlayout, destinationFs, destination, destinationStat, sourceFs, source, sourceStat, opts, linkStrategy) {
   const sourceHash = await sourceFs.checksumFilePromise(source, { algorithm: `sha1` });
-  const indexPath = destinationFs.pathUtils.join(linkStrategy.indexPath, sourceHash.slice(0, 2), `${sourceHash}.dat`);
+  const defaultMode = 420;
+  const sourceMode = sourceStat.mode & 511;
+  const indexFileName = `${sourceHash}${sourceMode !== defaultMode ? sourceMode.toString(8) : ``}`;
+  const indexPath = destinationFs.pathUtils.join(linkStrategy.indexPath, sourceHash.slice(0, 2), `${indexFileName}.dat`);
   let AtomicBehavior;
   ((AtomicBehavior2) => {
     AtomicBehavior2[AtomicBehavior2["Lock"] = 0] = "Lock";
@@ -5079,8 +5105,12 @@ async function copyFileViaIndex(prelayout, postlayout, destinationFs, destinatio
     }
   });
   postlayout.push(async () => {
-    if (!indexStat)
+    if (!indexStat) {
       await destinationFs.lutimesPromise(indexPath, defaultTime, defaultTime);
+      if (sourceMode !== defaultMode) {
+        await destinationFs.chmodPromise(indexPath, sourceMode);
+      }
+    }
     if (tempPath && !tempPathCleaned) {
       await destinationFs.unlinkPromise(tempPath);
     }
@@ -5505,6 +5535,12 @@ function normalizeLineEndings(originalContent, newContent) {
   return newContent.replace(/\r?\n/g, getEndOfLine(originalContent));
 }
 
+function direntToPortable(dirent) {
+  const portableDirent = dirent;
+  if (typeof dirent.path === `string`)
+    portableDirent.path = npath.toPortablePath(dirent.path);
+  return portableDirent;
+}
 class NodeFS extends BasePortableFakeFS {
   constructor(realFs = fs) {
     super();
@@ -5831,15 +5867,31 @@ class NodeFS extends BasePortableFakeFS {
   async readdirPromise(p, opts) {
     return await new Promise((resolve, reject) => {
       if (opts) {
-        this.realFs.readdir(npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
+        if (opts.recursive && process.platform === `win32`) {
+          if (opts.withFileTypes) {
+            this.realFs.readdir(npath.fromPortablePath(p), opts, this.makeCallback((results) => resolve(results.map(direntToPortable)), reject));
+          } else {
+            this.realFs.readdir(npath.fromPortablePath(p), opts, this.makeCallback((results) => resolve(results.map(npath.toPortablePath)), reject));
+          }
+        } else {
+          this.realFs.readdir(npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
+        }
       } else {
-        this.realFs.readdir(npath.fromPortablePath(p), this.makeCallback((value) => resolve(value), reject));
+        this.realFs.readdir(npath.fromPortablePath(p), this.makeCallback(resolve, reject));
       }
     });
   }
   readdirSync(p, opts) {
     if (opts) {
-      return this.realFs.readdirSync(npath.fromPortablePath(p), opts);
+      if (opts.recursive && process.platform === `win32`) {
+        if (opts.withFileTypes) {
+          return this.realFs.readdirSync(npath.fromPortablePath(p), opts).map(direntToPortable);
+        } else {
+          return this.realFs.readdirSync(npath.fromPortablePath(p), opts).map(npath.toPortablePath);
+        }
+      } else {
+        return this.realFs.readdirSync(npath.fromPortablePath(p), opts);
+      }
     } else {
       return this.realFs.readdirSync(npath.fromPortablePath(p));
     }
@@ -6794,7 +6846,7 @@ async function resolvePrivateRequest(specifier, issuer, context, nextResolve) {
 async function resolve$1(originalSpecifier, context, nextResolve) {
   var _a, _b;
   const { findPnpApi } = moduleExports;
-  if (!findPnpApi || isBuiltinModule(originalSpecifier))
+  if (!findPnpApi || isBuiltin(originalSpecifier))
     return nextResolve(originalSpecifier, context, nextResolve);
   let specifier = originalSpecifier;
   const url = tryParseURL(specifier, isRelativeRegexp.test(specifier) ? context.parentURL : void 0);
