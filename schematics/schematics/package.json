@@ -1,6 +1,6 @@
 {
   "name": "@atls/schematics",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
@@ -27,5 +27,5 @@
     "main": "dist/index.js",
     "typings": "dist/index.d.ts"
   },
-  "schematics": "./dist/collection.json"
+  "schematics": "./src/collection.json"
 }
