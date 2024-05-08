@@ -1,0 +1,8 @@
+releases:
+  "@atls/cli-ui-schematics-component": patch
+  "@atls/cli-ui-typescript-diagnostic-component": patch
+  "@atls/code-format": patch
+  "@atls/code-format-worker": patch
+  "@atls/code-typescript": patch
+  "@atls/code-typescript-worker": patch
+  "@atls/schematics": patch
