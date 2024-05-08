@@ -57,7 +57,7 @@ class TypeScript {
     const config = deepmerge(
       tsConfig,
       {
-        compilerOptions: { ...override, skipLibCheck, rootDir: this.cwd },
+        compilerOptions: { ...override, skipLibCheck, rootDir: noEmit ? this.cwd : undefined },
         exclude: [...tsConfig.exclude, ...projectIgnorePatterns],
       },
       {

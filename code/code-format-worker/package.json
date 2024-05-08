@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-format-worker",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
