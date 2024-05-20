@@ -1,6 +1,2 @@
-export * from 'pkg-tests-core'
-
-export * from './package.utils'
-
-// eslint-disable-next-line prefer-destructuring
-export const makeTemporaryEnv = global.makeTemporaryEnv
+export * from './package.utils.js'
+export * from './tests.utils.js'

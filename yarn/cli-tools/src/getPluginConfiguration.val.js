@@ -11,7 +11,9 @@ module.exports = ({ modules, plugins }) => {
 
   const moduleSegment = `  modules: new Map([\n${modules
     .map((request, index) => {
-      return `    [${JSON.stringify(require(`${request}/package.json`).name)}, _${index}],\n`
+      return `    [${JSON.stringify(require(`${request}/package.json`).name)}, ${
+        request === `clipanion` ? `backportClipanionCompatibility` : ``
+      }(_${index})],\n`
     })
     .join(``)}  ]),\n`
 
@@ -23,6 +25,8 @@ module.exports = ({ modules, plugins }) => {
 
   return {
     code: [
+      `import {backportClipanionCompatibility} from '@yarnpkg/cli/lib/tools/backportClipanionCompatibility';\n`,
+      `\n`,
       importSegment,
       `export const getPluginConfiguration = () => ({\n`,
       moduleSegment,
