@@ -264,9 +264,9 @@ __metadata:
   dependencies:
     "@atls/cli-ui-stack-trace-component": "workspace:*"
     "@types/node": "npm:20"
-    "@types/react": "npm:16"
+    "@types/react": "npm:^18.0.33"
     ink: "npm:3.2.0"
-    react: "npm:16.14.0"
+    react: "npm:^18.2.0"
   peerDependencies:
     ink: "*"
     react: "*"
@@ -280,10 +280,9 @@ __metadata:
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/cli-ui-source-component": "workspace:*"
     "@jest/globals": "npm:29.7.0"
-    "@types/react": "npm:16"
+    "@types/react": "npm:^18.0.33"
     ink: "npm:3.2.0"
-    nanoid: "npm:5.0.6"
-    react: "npm:16.14.0"
+    react: "npm:^18.2.0"
     strip-ansi: "npm:7.1.0"
   peerDependencies:
     ink: "*"
@@ -297,7 +296,7 @@ __metadata:
   dependencies:
     "@atls/code-commit": "workspace:*"
     "@types/node": "npm:20"
-    "@types/react": "npm:16"
+    "@types/react": "npm:^18.0.33"
     "@yarnpkg/libui": "npm:3.0.0"
     camelcase: "npm:8.0.0"
     figures: "npm:6.1.0"
@@ -323,7 +322,7 @@ __metadata:
     "@types/node": "npm:20"
     "@types/react": "npm:16"
     ink: "npm:3.2.0"
-    react: "npm:16.14.0"
+    react: "npm:^18.2.0"
     string-to-color: "npm:2.2.2"
     strip-ansi: "npm:7.1.0"
   peerDependencies:
@@ -340,7 +339,7 @@ __metadata:
     "@yarnpkg/libui": "npm:3.0.0"
     figures: "npm:6.1.0"
     ink: "npm:3.2.0"
-    react: "npm:16.14.0"
+    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -351,9 +350,9 @@ __metadata:
     "@atls/cli-ui-log-record-component": "workspace:*"
     "@atls/cli-ui-renderer": "workspace:*"
     "@types/node": "npm:20"
-    "@types/react": "npm:16"
+    "@types/react": "npm:^18.0.33"
     ink: "npm:3.2.0"
-    react: "npm:16.14.0"
+    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -362,9 +361,9 @@ __metadata:
   resolution: "@atls/cli-ui-renderer@workspace:cli/cli-ui-renderer"
   dependencies:
     "@types/node": "npm:20"
-    "@types/react": "npm:16"
+    "@types/react": "npm:^18.0.33"
     ink: "npm:3.2.0"
-    react: "npm:16.14.0"
+    react: "npm:^18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -433,7 +432,7 @@ __metadata:
     "@atls/code-typescript": "workspace:*"
     "@jest/globals": "npm:29.7.0"
     "@types/jest": "npm:29"
-    "@types/react": "npm:16"
+    "@types/react": "npm:^18.0.33"
     ink: "npm:3.2.0"
     react: "npm:16.14.0"
     strip-ansi: "npm:7.1.0"
@@ -478,9 +477,9 @@ __metadata:
     "@atls/code-worker-utils": "workspace:*"
     "@rollup/plugin-commonjs": "npm:^24.0.1"
     "@rollup/plugin-json": "npm:^6.0.0"
-    "@rollup/plugin-node-resolve": "npm:^15.0.1"
+    "@rollup/plugin-node-resolve": "npm:^15.0.2"
     "@types/node": "npm:^18.15.11"
-    esbuild: "npm:^0.17.14"
+    esbuild: "npm:^0.17.15"
     rollup: "npm:^3.20.2"
     rollup-plugin-esbuild: "npm:^5.0.0"
     rollup-plugin-terser: "npm:^7.0.2"
@@ -494,7 +493,7 @@ __metadata:
     "@atls/config-prettier": "workspace:*"
     "@atls/prettier-plugin": "workspace:*"
     "@types/node": "npm:20"
-    globby: "npm:11.0.3"
+    globby: "npm:^13.1.3"
     ignore: "npm:5.2.4"
     prettier: "npm:3.2.5"
   languageName: unknown
@@ -505,16 +504,16 @@ __metadata:
   resolution: "@atls/code-lint-worker@workspace:code/code-lint-worker"
   dependencies:
     "@atls/code-lint": "workspace:*"
+    "@atls/code-runtime": "workspace:*"
     "@atls/code-worker-utils": "workspace:*"
-    "@rollup/plugin-commonjs": "npm:25.0.7"
-    "@rollup/plugin-json": "npm:6.1.0"
-    "@rollup/plugin-node-resolve": "npm:15.2.3"
+    "@rollup/plugin-commonjs": "npm:^24.0.1"
+    "@rollup/plugin-json": "npm:^6.0.0"
+    "@rollup/plugin-node-resolve": "npm:^15.0.2"
     "@types/node": "npm:20"
-    esbuild: "npm:0.17.19"
-    eslint: "npm:8.57.0"
-    rollup: "npm:3.29.4"
-    rollup-plugin-esbuild: "npm:5.0.0"
-    rollup-plugin-terser: "npm:7.0.2"
+    esbuild: "npm:^0.17.15"
+    rollup: "npm:^3.20.2"
+    rollup-plugin-esbuild: "npm:^5.0.0"
+    rollup-plugin-terser: "npm:^7.0.2"
   languageName: unknown
   linkType: soft
 
@@ -522,11 +521,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-lint@workspace:code/code-lint"
   dependencies:
-    "@atls/config-eslint": "workspace:*"
+    "@atls/code-runtime": "workspace:*"
     "@types/node": "npm:20"
-    eslint: "npm:8.57.0"
-    globby: "npm:11.0.3"
-    ignore: "npm:5.3.1"
+    globby: "npm:^13.1.3"
+    ignore: "npm:^5.2.4"
   peerDependencies:
     react: "*"
     typescript: "*"
@@ -547,6 +545,23 @@ __metadata:
     "@types/node": "npm:20"
     "@yarnpkg/core": "npm:4.0.3"
     "@yarnpkg/fslib": "npm:3.0.2"
+  languageName: unknown
+  linkType: soft
+
+"@atls/code-runtime@workspace:*, @atls/code-runtime@workspace:code/code-runtime":
+  version: 0.0.0-use.local
+  resolution: "@atls/code-runtime@workspace:code/code-runtime"
+  dependencies:
+    "@atls/config-eslint": "workspace:*"
+    "@atls/config-jest": "workspace:*"
+    "@atls/webpack-proto-imports-loader": "workspace:*"
+    "@atls/webpack-start-server-plugin": "workspace:*"
+    "@jest/core": "npm:^29.5.0"
+    "@types/node": "npm:^18.15.11"
+    eslint: "npm:^8.37.0"
+    ts-loader: "npm:^9.4.2"
+    typescript: "npm:^5.0.3"
+    webpack: "npm:^5.78.0"
   languageName: unknown
   linkType: soft
 
@@ -3028,7 +3043,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-node-resolve@npm:15.2.3, @rollup/plugin-node-resolve@npm:^15.0.1, @rollup/plugin-node-resolve@npm:^15.2.3":
+"@rollup/plugin-node-resolve@npm:15.2.3, @rollup/plugin-node-resolve@npm:^15.0.2, @rollup/plugin-node-resolve@npm:^15.2.3":
   version: 15.2.3
   resolution: "@rollup/plugin-node-resolve@npm:15.2.3"
   dependencies:
@@ -3600,6 +3615,16 @@ __metadata:
     "@types/scheduler": "npm:^0.16"
     csstype: "npm:^3.0.2"
   checksum: 10/ddb352d64ca8811464aeb531ed37bd80225140fb3ec307e20d6d3374fc69c477d1ba2c193efb0fac8d9c92e68f07595723e16a2283f2c2c3749c64c8c1cfa217
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^18.0.33":
+  version: 18.3.2
+  resolution: "@types/react@npm:18.3.2"
+  dependencies:
+    "@types/prop-types": "npm:*"
+    csstype: "npm:^3.0.2"
+  checksum: 10/a85eed82c1009dc9d979281d9ea1f5322255003de3378390f35d897b4bdaf1d34ea748636c03e9e9b4b7cc97c2f4582993d2d60e40846226ad497d97c7d8565a
   languageName: node
   linkType: hard
 
@@ -7144,7 +7169,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:0.17.19, esbuild@npm:^0.17.14":
+"esbuild@npm:0.17.19, esbuild@npm:^0.17.15":
   version: 0.17.19
   resolution: "esbuild@npm:0.17.19"
   dependencies:
@@ -7781,7 +7806,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.0.3, fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.2, fast-glob@npm:^3.2.9":
+"fast-glob@npm:^3.0.3, fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.2, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0":
   version: 3.3.2
   resolution: "fast-glob@npm:3.3.2"
   dependencies:
@@ -8430,6 +8455,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"globby@npm:^13.1.3":
+  version: 13.2.2
+  resolution: "globby@npm:13.2.2"
+  dependencies:
+    dir-glob: "npm:^3.0.1"
+    fast-glob: "npm:^3.3.0"
+    ignore: "npm:^5.2.4"
+    merge2: "npm:^1.4.1"
+    slash: "npm:^4.0.0"
+  checksum: 10/4494a9d2162a7e4d327988b26be66d8eab87d7f59a83219e74b065e2c3ced23698f68fb10482bf9337133819281803fb886d6ae06afbb2affa743623eb0b1949
+  languageName: node
+  linkType: hard
+
 "globrex@npm:^0.1.2":
   version: 0.1.2
   resolution: "globrex@npm:0.1.2"
@@ -8717,7 +8755,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ignore@npm:5.3.1, ignore@npm:^5.1.1, ignore@npm:^5.1.4, ignore@npm:^5.2.0, ignore@npm:^5.2.4":
+"ignore@npm:^5.1.1, ignore@npm:^5.1.4, ignore@npm:^5.2.0, ignore@npm:^5.2.4":
   version: 5.3.1
   resolution: "ignore@npm:5.3.1"
   checksum: 10/0a884c2fbc8c316f0b9f92beaf84464253b73230a4d4d286697be45fca081199191ca33e1c2e82d9e5f851f5e9a48a78e25a35c951e7eb41e59f150db3530065
@@ -10924,15 +10962,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:5.0.6":
-  version: 5.0.6
-  resolution: "nanoid@npm:5.0.6"
-  bin:
-    nanoid: bin/nanoid.js
-  checksum: 10/cd5d3eebd3b148b68b4b0238d94b1d8b4d955cc1a74b8e5217c1daecaed584d4b3701f41ce0f5e909ba4cd214592aff41fb53ac1955d77ea85d58df936726f29
-  languageName: node
-  linkType: hard
-
 "nanoid@npm:^3.3.7":
   version: 3.3.7
   resolution: "nanoid@npm:3.3.7"
@@ -11858,6 +11887,15 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
+"react@npm:^18.2.0":
+  version: 18.3.1
+  resolution: "react@npm:18.3.1"
+  dependencies:
+    loose-envify: "npm:^1.1.0"
+  checksum: 10/261137d3f3993eaa2368a83110466fc0e558bc2c7f7ae7ca52d94f03aac945f45146bd85e5f481044db1758a1dbb57879e2fcdd33924e2dde1bdc550ce73f7bf
+  languageName: node
+  linkType: hard
+
 "read-pkg-up@npm:^7.0.1":
   version: 7.0.1
   resolution: "read-pkg-up@npm:7.0.1"
@@ -12514,6 +12552,13 @@ pem@dexus/pem:
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
   checksum: 10/94a93fff615f25a999ad4b83c9d5e257a7280c90a32a7cb8b4a87996e4babf322e469c42b7f649fd5796edd8687652f3fb452a86dc97a816f01113183393f11c
+  languageName: node
+  linkType: hard
+
+"slash@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "slash@npm:4.0.0"
+  checksum: 10/da8e4af73712253acd21b7853b7e0dbba776b786e82b010a5bfc8b5051a1db38ed8aba8e1e8f400dd2c9f373be91eb1c42b66e91abb407ff42b10feece5e1d2d
   languageName: node
   linkType: hard
 
@@ -13365,7 +13410,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"ts-loader@npm:9.5.1":
+"ts-loader@npm:9.5.1, ts-loader@npm:^9.4.2":
   version: 9.5.1
   resolution: "ts-loader@npm:9.5.1"
   dependencies:
@@ -13821,7 +13866,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.91.0, webpack@npm:^5.77.0":
+"webpack@npm:5.91.0, webpack@npm:^5.77.0, webpack@npm:^5.78.0":
   version: 5.91.0
   resolution: "webpack@npm:5.91.0"
   dependencies:

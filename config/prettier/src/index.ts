@@ -1,6 +1,6 @@
-import { Options } from 'prettier'
+import { Config } from 'prettier'
 
-const prettierConfig: Options = {
+const config: Config = {
   semi: false,
   singleQuote: true,
   tabWidth: 2,
@@ -9,4 +9,4 @@ const prettierConfig: Options = {
   printWidth: 100,
 }
 
-export default prettierConfig
+export default config

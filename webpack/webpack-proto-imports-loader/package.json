@@ -1,6 +1,6 @@
 {
   "name": "@atls/webpack-proto-imports-loader",
-  "version": "1.0.0",
+  "version": "0.0.15",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -26,7 +26,8 @@
     "memfs": "4.7.7",
     "ts-loader": "9.5.1",
     "typescript": "5.2.2",
-    "webpack": "5.91.0"
+    "webpack": "5.91.0",
+    "webpack-chain": "^6.5.1"
   },
   "publishConfig": {
     "access": "public",

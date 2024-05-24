@@ -19,8 +19,7 @@
     "@yarnpkg/core": "^4.0.3",
     "@yarnpkg/fslib": "^3.0.2",
     "@yarnpkg/plugin-pack": "^4.0.0",
-    "pkg-tests-core": "file:./cache/pkg-tests-core.tgz",
-    "pkg-tests-fixtures": "file:cache/pkg-tests-fixtures.tgz"
+    "pkg-tests-core": "*"
   },
   "publishConfig": {
     "access": "public",

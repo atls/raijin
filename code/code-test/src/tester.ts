@@ -1,12 +1,12 @@
-import { accessSync }       from 'node:fs'
-import { join }             from 'node:path'
+import { accessSync }            from 'node:fs'
+import { join }                  from 'node:path'
 
-import { AggregatedResult } from '@jest/test-result'
-import { Config }           from '@jest/types'
-import { runCLI }           from '@jest/core'
+import type { AggregatedResult } from '@jest/test-result'
+import type { Config }           from '@jest/types'
 
-import { integration }      from '@atls/config-jest'
-import { unit }             from '@atls/config-jest'
+import { runCLI }                from '@atls/code-runtime/jest'
+import { integration }           from '@atls/code-runtime/jest'
+import { unit }                  from '@atls/code-runtime/jest'
 
 export class Tester {
   constructor(private readonly cwd: string) {}
@@ -36,7 +36,7 @@ export class Tester {
         : [],
     }
 
-    const argv: any = {
+    const argv = {
       rootDir: this.cwd,
       ci: false,
       detectLeaks: false,
@@ -50,6 +50,7 @@ export class Tester {
       maxConcurrency: 5,
       notifyMode: 'failure-change',
       _: files || [],
+      $0: '',
       ...options,
     }
 
@@ -89,8 +90,8 @@ export class Tester {
       maxConcurrency: 5,
       notifyMode: 'failure-change',
       _: files || [],
-      ...options,
       $0: '',
+      ...options,
     }
 
     const { results } = await runCLI(argv, [this.cwd])

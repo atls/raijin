@@ -22,7 +22,17 @@ const wrapOutput = () => ({
 
 export default [
   {
-    external: ['pnpapi', 'typescript'],
+    external(id) {
+      if (['pnpapi', 'typescript', '@atls/code-runtime'].includes(id)) {
+        return true
+      }
+
+      if (id.includes('/code-runtime/')) {
+        return true
+      }
+
+      return false
+    },
     input: './src/typescript.worker.source.ts',
     output: {
       file: './src/typescript.worker.content.ts',

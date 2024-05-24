@@ -1,0 +1,22 @@
+diff --git a/types.d.ts b/types.d.ts
+index d38b4a1b30abb08d28868ad85a3074a9f1832c10..fc5ceee57d40c1123bc43300c415a0af477a99f8 100644
+--- a/types.d.ts
++++ b/types.d.ts
+@@ -59,4 +59,15 @@ Flatted.stringify(a);
+ ```
+  */
+ declare const Flatted: Flatted;
+-export = Flatted;
++
++export function fromJSON(value: any) : any
++export function toJSON(value: any) : any 
++export function stringify(
++  value: any,
++  replacer?: (number | string)[] | null,
++  space?: string | number
++): string;
++export function parse(
++  text: string,
++  reviver?: (this: any, key: string, value: any) => any
++): any;
+\ No newline at end of file

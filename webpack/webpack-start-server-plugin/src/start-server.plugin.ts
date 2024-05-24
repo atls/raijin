@@ -1,5 +1,5 @@
 import sysPath           from 'path'
-import { EntryPlugin }           from 'webpack'
+import webpack           from 'webpack'
 import { ChildProcess }  from 'child_process'
 import { Writable }      from 'stream'
 import { fork }          from 'child_process'
@@ -47,7 +47,7 @@ export class StartServerPlugin {
 
     /* eslint-disable no-underscore-dangle */
 
-    const entryScript = EntryPlugin
+    const entryScript = webpack.EntryPlugin
       ? entry._runtimeChunk.files.values().next().value
       : entry.chunks[0].files[0]
 
@@ -180,7 +180,7 @@ export class StartServerPlugin {
     compiler.hooks.make.tap(plugin, (compilation) => {
       compilation.addEntry(
         compilation.compiler.context,
-        EntryPlugin.createDependency(this.getMonitor(), {
+        webpack.EntryPlugin.createDependency(this.getMonitor(), {
           name: this.options.entryName,
         }),
         this.options.entryName,

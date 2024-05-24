@@ -1,6 +1,6 @@
 import { StackFrame } from '@atls/stack-trace'
 
-import { readFileSync }             from 'fs'
+import fs             from 'fs'
 
 export const getFrameSource = (frame: StackFrame): string | null => {
   if (frame.sourceMap) {
@@ -9,7 +9,7 @@ export const getFrameSource = (frame: StackFrame): string | null => {
 
   if (frame.file) {
     try {
-      return readFileSync(frame.file, 'utf-8')
+      return fs.readFileSync(frame.file, 'utf-8')
       // eslint-disable-next-line
     } catch (error) {}
   }

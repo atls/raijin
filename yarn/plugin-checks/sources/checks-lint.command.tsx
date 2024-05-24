@@ -1,6 +1,6 @@
 import { readFileSync }     from 'node:fs'
 
-import type { ESLint }      from 'eslint'
+import type { ESLint }      from '@atls/code-runtime/eslint'
 
 import { BaseCommand }      from '@yarnpkg/cli'
 import { StreamReport }     from '@yarnpkg/core'
@@ -15,9 +15,9 @@ import { ESLintResult }     from '@atls/cli-ui-eslint-result-component'
 import { LinterWorker }     from '@atls/code-lint-worker'
 import { renderStatic }     from '@atls/cli-ui-renderer'
 
-import { GitHubChecks }     from './github.checks.js'
-import { AnnotationLevel }  from './github.checks.js'
-import { Annotation }       from './github.checks.js'
+import { GitHubChecks }     from './github.checks.ts'
+import { AnnotationLevel }  from './github.checks.ts'
+import { Annotation }       from './github.checks.ts'
 
 class ChecksLintCommand extends BaseCommand {
   static paths = [['checks', 'lint']]

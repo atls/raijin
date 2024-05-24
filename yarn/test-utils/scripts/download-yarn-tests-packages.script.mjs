@@ -1,14 +1,12 @@
-/* eslint-disable n/no-sync */
+import { execFileSync }       from 'node:child_process'
+import { mkdtemp }            from 'node:fs/promises'
+import { writeFile }          from 'node:fs/promises'
+import { readFile }           from 'node:fs/promises'
+import { tmpdir }             from 'node:os'
+import { join }               from 'node:path'
+import { fileURLToPath }      from 'node:url'
 
-import { execFileSync } from 'node:child_process'
-import { mkdtemp } from 'node:fs/promises'
-import { writeFile } from 'node:fs/promises'
-import { readFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-import pkg from '../package.json' assert { type: 'json' }
+import pkg                    from '../package.json' assert { type: "json" }
 
 const repo = await mkdtemp(join(tmpdir(), 'yarn-'))
 const cache = join(fileURLToPath(new URL('.', import.meta.url)), '../cache')
@@ -23,24 +21,17 @@ execFileSync('git', [
   repo,
 ])
 
-const pkgTestsCore = JSON.parse(
-  await readFile(join(repo, 'packages/acceptance-tests/pkg-tests-core/package.json'), 'utf-8')
+const pkgTestsCore = await readFile(
+  join(repo, 'packages/acceptance-tests/pkg-tests-core/package.json'),
+  'utf-8'
 )
-
 await writeFile(
   join(repo, 'packages/acceptance-tests/pkg-tests-core/package.json'),
   JSON.stringify({
-    ...pkgTestsCore,
+    ...JSON.parse(pkgTestsCore),
     scripts: {
       postpack: 'rm -rf lib',
       prepack: 'run build:compile "$(pwd)"',
-    },
-    peerDependencies: {
-      'pkg-tests-fixtures': pkgTestsCore.devDependencies['pkg-tests-fixtures'],
-    },
-    devDependencies: {
-      ...pkgTestsCore.devDependencies,
-      'pkg-tests-fixtures': undefined,
     },
     publishConfig: {
       main: './lib/index.js',
@@ -58,7 +49,6 @@ execFileSync(
   ['workspace', 'pkg-tests-fixtures', 'pack', '--out', join(cache, 'pkg-tests-fixtures.tgz')],
   { cwd: repo }
 )
-
 execFileSync(
   'yarn',
   ['workspace', 'pkg-tests-core', 'pack', '--out', join(cache, 'pkg-tests-core.tgz')],

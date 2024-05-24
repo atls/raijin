@@ -11,13 +11,10 @@ export class SpinnerProgress {
 
   private position = 0
 
-  constructor(
-    private readonly stdout,
-    private readonly configuration: Configuration
-  ) {}
+  constructor(private readonly stdout, private readonly configuration: Configuration) {}
 
   start() {
-    if (this.stdout.isTTY) {
+    if (this.stdout.isTTY && !process.env.TOOLS_DISABLE_PROGRESS) {
       this.running = true
       this.write()
       this.tick()
@@ -37,8 +34,7 @@ export class SpinnerProgress {
         this.clear()
         this.write()
 
-        this.position =
-          this.position === SpinnerProgress.PROGRESS_FRAMES.length - 1 ? 0 : this.position + 1
+        this.position = this.position >= SpinnerProgress.length ? 0 : this.position + 1
 
         this.tick()
       }

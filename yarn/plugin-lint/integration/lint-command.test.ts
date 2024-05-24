@@ -17,8 +17,8 @@ describe('yarn', () => {
         makeTemporaryEnv(
           {
             dependencies: {
-              typescript: '^5.0.3',
-              eslint: '^8.4.1',
+              typescript: '5.2.2',
+              '@atls/code-runtime': 'workspace:*',
             },
           },
           async ({ path, run, source }) => {
@@ -46,8 +46,8 @@ n(5)
       makeTemporaryEnv(
         {
           dependencies: {
-            typescript: '^5.0.3',
-            eslint: '^8.4.1',
+            typescript: '5.2.2',
+            '@atls/code-runtime': 'workspace:*',
           },
         },
         async ({ path, run, source }) => {

@@ -1,6 +1,6 @@
 {
   "name": "@atls/webpack-localtunnel-plugin",
-  "version": "1.0.0",
+  "version": "0.0.6",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -16,10 +16,10 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "localtunnel": "2.0.2"
+    "localtunnel": "^2.0.2"
   },
   "devDependencies": {
-    "@types/localtunnel": "2",
+    "@types/localtunnel": "2.0.1",
     "@types/node": "20"
   },
   "publishConfig": {

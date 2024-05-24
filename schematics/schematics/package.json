@@ -1,6 +1,6 @@
 {
   "name": "@atls/schematics",
-  "version": "1.0.0",
+  "version": "0.0.25",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

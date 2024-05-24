@@ -1,0 +1,10 @@
+diff --git a/index.d.ts b/index.d.ts
+index 5830793fdde1fb6ae6075c3b20ec4f94fcd1eb93..cdd33ad560c6a5fbe329b77afc682010842d887f 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -46,4 +46,4 @@ interface sortPackageJsonExports extends sortPackageJson.SortPackageJsonFn {
+ 
+ declare const sortPackageJsonExports: sortPackageJsonExports
+ 
+-export = sortPackageJsonExports
++export default sortPackageJsonExports.sortPackageJson

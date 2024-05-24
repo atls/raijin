@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-typescript-diagnostic-component",
-  "version": "1.0.0",
+  "version": "0.0.23",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -23,7 +23,7 @@
     "@atls/cli-ui-renderer": "workspace:*",
     "@jest/globals": "29.7.0",
     "@types/jest": "29",
-    "@types/react": "16",
+    "@types/react": "^18.0.33",
     "ink": "3.2.0",
     "react": "16.14.0",
     "strip-ansi": "7.1.0",

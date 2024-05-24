@@ -1,23 +1,6 @@
-import * as babel        from 'prettier/plugins/babel'
-import * as estree       from 'prettier/plugins/estree'
-import * as typescript   from 'prettier/plugins/typescript'
+import { extractPrinter } from './patch.js'
 
-import { AstPath }       from 'prettier'
-import { Doc }           from 'prettier'
-import { ParserOptions } from 'prettier'
-import { format } from 'prettier/standalone'
-
-;(async () => {
-  try {
-    await format('const n = 5;', {
-      plugins: [babel, typescript],
-      parser(text: string, { typescript: ts }, options: ParserOptions) {
-        return ts(text)
-      },
-    })
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
-})()
+const printer = await extractPrinter()
 
 const nodeImportSize = (node) => {
   if (node.specifiers.length === 0) {
@@ -31,16 +14,15 @@ const nodeImportSize = (node) => {
   return specifier.loc.end.column + offset
 }
 
-type Print = (path: AstPath, options: ParserOptions, prnt: (path: AstPath) => Doc) => Doc
-
-const print: Print = (path, options, prnt) => {
+export const print = (path, options, prnt) => {
   const node = path.getNode()
 
-  // @ts-ignore
-  let result = estree.printers.estree.print(path, options, prnt)
+  const plugin = options.plugins.find((p) => p?.printers?.estree)
 
-  if (node.type === 'ImportDeclaration' && Array.isArray(result)) {
-    result = result?.map((part) => {
+  let result = plugin.printers.estree.print(path, options, prnt)
+
+  if (node.type === 'ImportDeclaration') {
+    result = result.map((part) => {
       if (Array.isArray(part) && part[0] === ' from' && node.alignOffset > 0) {
         const fill = Array.apply(0, Array(node.alignOffset)).fill(' ').join('')
 
@@ -54,7 +36,7 @@ const print: Print = (path, options, prnt) => {
   return result
 }
 
-const preprocess = (ast, options: ParserOptions): Promise<any> | any => {
+export const preprocess = async (ast, options) => {
   const imports = ast.body.filter(
     (node) =>
       node.type === 'ImportDeclaration' && node.loc && node.loc.end.line === node.loc.start.line
@@ -83,8 +65,7 @@ const preprocess = (ast, options: ParserOptions): Promise<any> | any => {
 
 export const printers = {
   'typescript-custom': {
-    // @ts-ignore
-    ...estree.printers.estree,
+    ...printer,
     preprocess,
     print,
   },

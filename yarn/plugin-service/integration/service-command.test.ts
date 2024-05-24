@@ -5,7 +5,6 @@ import { expect }           from '@jest/globals'
 import { test }             from '@jest/globals'
 import { xfs }              from '@yarnpkg/fslib'
 
-import { packageUtils }     from '@atls/yarn-test-utils'
 import { makeTemporaryEnv } from '@atls/yarn-test-utils'
 
 jest.setTimeout(150000)
@@ -25,13 +24,12 @@ app.listen(port)`
 describe('yarn', () => {
   describe('commands', () => {
     describe('service', () => {
-      test('it should build withouth errors', async (...args) => {
-        const service = await packageUtils.pack('@atls/code-service')
-
-        return makeTemporaryEnv(
+      test(
+        'it should build without errors',
+        makeTemporaryEnv(
           {
             dependencies: {
-              '@atls/code-service': service,
+              '@atls/code-runtime': 'workspace:*',
               express: '*',
             },
           },
@@ -50,16 +48,15 @@ describe('yarn', () => {
               xfs.readFilePromise(`${path}/dist/index.js` as PortablePath, 'utf8')
             ).resolves.toContain('Hello World!')
           }
-        )(...args)
-      })
+        )
+      )
 
-      test('it should build with errors', async (...args) => {
-        const service = await packageUtils.pack('@atls/code-service')
-
-        return makeTemporaryEnv(
+      test(
+        'it should build with errors',
+        makeTemporaryEnv(
           {
             dependencies: {
-              '@atls/code-service': service,
+              '@atls/code-runtime': 'workspace:*',
             },
           },
           async ({ path, run, source }) => {
@@ -75,8 +72,8 @@ describe('yarn', () => {
               expect(error.stdout).toContain("Module not found: Error: Can't resolve 'express'")
             }
           }
-        )(...args)
-      })
+        )
+      )
     })
   })
 })

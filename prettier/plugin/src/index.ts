@@ -1,2 +1,9 @@
-export * from './printers.js'
-export * from './parsers.js'
+import { parsers }  from './parsers.js'
+import { printers } from './printers.js'
+
+const plugin = {
+  printers,
+  parsers,
+}
+
+export default plugin

@@ -11,7 +11,7 @@
     "importHelpers": false,
     "isolatedModules": false,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "noImplicitReturns": false,

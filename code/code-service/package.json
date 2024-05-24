@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-service",
-  "version": "1.0.0",
+  "version": "0.0.28",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -18,28 +18,23 @@
   },
   "dependencies": {
     "@atls/config-typescript": "workspace:*",
-    "@atls/webpack-proto-imports-loader": "workspace:*",
-    "@atls/webpack-start-server-plugin": "workspace:*",
-    "@swc/core": "1.4.11",
+    "@atls/code-runtime": "workspace:*",
     "@yarnpkg/cli": "4.1.1",
     "@yarnpkg/core": "4.0.3",
-    "css-loader": "6.8.1",
-    "fast-glob": "3.2.11",
-    "find-up": "5.0.0",
-    "string-replace-loader": "3.1.0",
-    "style-loader": "3.3.3",
-    "swc-loader": "0.2.6",
-    "webpack": "5.91.0",
-    "yaml-loader": "0.8.0"
+    "fast-glob": "^3.2.12",
+    "find-up": "^6.3.0",
+    "string-replace-loader": "^3.1.0",
+    "tempy": "^3.0.0",
+    "typescript": "^5.0.3",
+    "webpack-chain": "^6.5.1"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
-    "@types/jest": "29",
     "@types/node": "20",
     "@types/protocol-buffers-schema": "3.4.3",
     "@types/wait-for-localhost": "3.1.0",
+    "@types/webpack": "^5.28.1",
     "@yarnpkg/fslib": "3.0.2",
-    "typescript": "5.2.2",
     "wait-for-localhost": "4.0.1"
   },
   "publishConfig": {

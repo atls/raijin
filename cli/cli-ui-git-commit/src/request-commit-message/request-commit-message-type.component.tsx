@@ -1,5 +1,5 @@
-import Select                 from 'ink-select-input'
-import TextInput              from 'ink-text-input'
+import SelectPkg              from 'ink-select-input'
+import TextInputPkg           from 'ink-text-input'
 import React                  from 'react'
 import { Text }               from 'ink'
 import { Box }                from 'ink'
@@ -10,6 +10,11 @@ import { COMMIT_TYPE_ENUM }   from '@atls/code-commit'
 
 import { IndicatorComponent } from './select-indicator.component.jsx'
 import { ItemComponent }      from './select-item.component.jsx'
+
+// TODO: moduleResolution
+const Select = SelectPkg as any
+// TODO: moduleResolution
+const TextInput = TextInputPkg as any
 
 const types = Object.keys(COMMIT_TYPE_ENUM).map((key) => ({
   label: COMMIT_TYPE_ENUM[key].description,

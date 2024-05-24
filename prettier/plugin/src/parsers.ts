@@ -1,28 +1,30 @@
-import sortImports                      from 'import-sort'
-import sortPackageJson                  from 'sort-package-json'
-import { ParserOptions }                from 'prettier'
-import { parsers as babelParsers }      from 'prettier/plugins/babel'
-import { parsers as typescriptParsers } from 'prettier/plugins/typescript'
+import sortImportsPkg       from 'import-sort'
+import sortPackageJson      from 'sort-package-json'
 
-import { ImportSortParser }             from './import-sort'
-import { style }                        from './import-sort'
+import { ImportSortParser } from './import-sort/index.js'
+import { style }            from './import-sort/index.js'
+import { babel }            from './imports.js'
+import { typescript }       from './imports.js'
 
-type Preprocess = (sources: string, options: ParserOptions) => string
+// TODO: moduleResolution
+const sortImports = sortImportsPkg as any
 
-const preprocess: Preprocess = (source, options) => {
+const preprocess = (source, { plugins }) => {
+  const plugin = plugins.find((p) => p.parsers?.typescript)
+
   const { code } = sortImports(
     source,
-    new ImportSortParser(typescriptParsers.typescript.parse(source, options)),
+    new ImportSortParser(plugin.parsers.typescript.parse(source)),
     style
   )
 
   return code
 }
 
-type Parse = (sources: string, options: ParserOptions<any>) => Promise<string>
+const parse = async (source, { plugins }) => {
+  const plugin = plugins.find((p) => p.parsers?.typescript)
 
-const parse: Parse = (source, options) => {
-  const program = typescriptParsers.typescript.parse(source, options)
+  const program = plugin.parsers.typescript.parse(source)
 
   const bodyLength = program.body.length
 
@@ -35,10 +37,11 @@ const parse: Parse = (source, options) => {
 
         program.body.splice(index, 1)
 
-        node.specifiers.forEach((__, specifierIndex) => {
+        node.specifiers.forEach((_, specifierIndex) => {
           program.body.splice(index + specifierIndex, 0, {
             ...node,
-            specifiers: node.specifiers.filter((___, i) => specifierIndex === i),
+            // eslint-disable-next-line no-shadow
+            specifiers: node.specifiers.filter((_, i) => specifierIndex === i),
           })
         })
       }
@@ -50,23 +53,22 @@ const parse: Parse = (source, options) => {
 
 export const parsers = {
   typescript: {
-    ...typescriptParsers.typescript,
+    ...typescript.parsers!.typescript,
     astFormat: 'typescript-custom',
     preprocess,
     parse,
   },
   'json-stringify': {
-    ...babelParsers['json-stringify'],
-    preprocess(text: string, options: ParserOptions) {
-      const regex = /package.*json$/u
-
-      let source = text
-
-      if (babelParsers['json-stringify'].preprocess) {
-        source = babelParsers['json-stringify'].preprocess(text, options)
+    ...babel.parsers['json-stringify'],
+    preprocess(text, options) {
+      if (babel.parsers['json-stringify'].preprocess) {
+        // eslint-disable-next-line no-param-reassign
+        text = babel.parsers['json-stringify'].preprocess(text, options)
       }
 
-      return options.filepath && regex.test(options.filepath) ? sortPackageJson(source) : source
+      return options.filepath && /(^|\\|\/)package\.json$/.test(options.filepath)
+        ? sortPackageJson(text)
+        : text
     },
   },
 }

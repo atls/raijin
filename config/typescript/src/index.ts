@@ -2,16 +2,16 @@ export default {
   compilerOptions: {
     lib: ['dom', 'dom.iterable', 'esnext'],
 
-    emitDecoratorMetadata: true,
-
     declaration: false,
+
+    emitDecoratorMetadata: true,
     experimentalDecorators: true,
 
     esModuleInterop: true,
     forceConsistentCasingInFileNames: true,
     importHelpers: false,
     isolatedModules: false,
-    moduleResolution: 'NodeNext',
+    moduleResolution: 'nodenext',
     noFallthroughCasesInSwitch: true,
 
     noImplicitAny: false,
@@ -30,10 +30,11 @@ export default {
 
     sourceMap: false,
 
-    module: 'NodeNext',
+    module: 'esnext',
     target: 'es2022',
 
     jsx: 'react',
+
     outDir: './dist',
   },
   exclude: [

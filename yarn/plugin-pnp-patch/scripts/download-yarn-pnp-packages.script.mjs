@@ -1,14 +1,12 @@
-/* eslint-disable n/no-sync */
+import { execFileSync }       from 'node:child_process'
+import { execSync }           from 'node:child_process'
+import { mkdtemp }            from 'node:fs/promises'
+import { writeFile }          from 'node:fs/promises'
+import { tmpdir }             from 'node:os'
+import { join }               from 'node:path'
+import { fileURLToPath }      from 'node:url'
 
-import { execFileSync } from 'node:child_process'
-import { mkdtemp } from 'node:fs/promises'
-import { writeFile } from 'node:fs/promises'
-import { readFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-import pkg from '../package.json' assert { type: 'json' }
+import pkg                    from '../package.json' assert { type: 'json' }
 
 const repo = await mkdtemp(join(tmpdir(), 'yarn-pnp-'))
 const cache = join(fileURLToPath(new URL('.', import.meta.url)), '../cache')
@@ -21,12 +19,12 @@ import esbuild        from 'rollup-plugin-esbuild';
 import {defineConfig} from 'rollup';
 
 export default defineConfig({
-  input: './sources/esm-loader/loader.ts',
+  input: './src/esm-loader/loader.ts',
   output: {
     dir: 'lib',
     format: 'esm',
     preserveModules: true,
-    preserveModulesRoot: path.join(__dirname, 'sources'),
+    preserveModulesRoot: path.join(__dirname, 'src'),
     generatedCode: 'es2015',
   },
   plugins: [
@@ -48,7 +46,7 @@ export default defineConfig({
     cjs({requireReturnsDefault: 'preferred'}),
   ],
 });
-`
+`;
 
 execFileSync('git', [
   'clone',
@@ -60,30 +58,14 @@ execFileSync('git', [
   repo,
 ])
 
-const pkgJson = await readFile(join(repo, 'packages/yarnpkg-pnp/package.json'), 'utf-8')
-
-await writeFile(
-  join(repo, 'packages/yarnpkg-pnp/package.json'),
-  JSON.stringify({
-    ...JSON.parse(pkgJson),
-    publishConfig: {
-      main: './lib/index.js',
-      exports: {
-        '.': './lib/index.js',
-        './package.json': './package.json',
-        './lib/esm-loader/loaderUtils.js': './lib/esm-loader/loaderUtils.js',
-        './lib/esm-loader/loaderFlags.js': './lib/esm-loader/loaderFlags.js',
-        './lib/esm-loader/hooks/load.js': './lib/esm-loader/hooks/load.js',
-        './lib/loader/nodeUtils.js': './lib/loader/nodeUtils.js',
-        './lib/esm-loader/hooks/resolve.js': './lib/esm-loader/hooks/resolve.js',
-      },
-    },
-  })
-)
+execSync(`find ./ -iname "package.json" -type f | xargs sed -i -e 's/0\.15\.5/0\.17\.15/gi'`, { cwd: repo })
 
 execFileSync('yarn', ['install'], { cwd: repo })
 
-await writeFile(join(repo, 'packages/yarnpkg-pnp/rollup.config.js'), rollupConfig)
+await writeFile(
+  join(repo, 'packages/yarnpkg-pnp/rollup.config.js'),
+  rollupConfig
+)
 
 execFileSync(
   'yarn',

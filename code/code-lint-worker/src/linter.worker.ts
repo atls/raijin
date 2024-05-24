@@ -1,4 +1,4 @@
-import type { ESLint } from 'eslint'
+import type { ESLint } from '@atls/code-runtime/eslint'
 
 import { EvalWorker }  from '@atls/code-worker-utils'
 

@@ -23,7 +23,11 @@ const wrapOutput = () => ({
 export default [
   {
     external(id) {
-      if (['pnpapi', 'eslint', 'typescript'].includes(id)) {
+      if (['pnpapi', 'eslint', 'typescript', '@atls/code-runtime'].includes(id)) {
+        return true
+      }
+
+      if (id.includes('/code-runtime/')) {
         return true
       }
 

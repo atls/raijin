@@ -31,7 +31,6 @@ const RequestCommitMessageApp: SubmitInjectedComponent<CommitProperties> = ({ us
   const [commit, setCommit] = useState()
 
   if (!commit) {
-    // @ts-ignore
     return <RequestCommitMessage onSubmit={setCommit} />
   }
 

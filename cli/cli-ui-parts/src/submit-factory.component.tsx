@@ -19,7 +19,6 @@ const SubmitProxy = ({ value, useSubmit }) => {
 }
 
 export const SubmitInjectedComponentFactory = <T,>(InjectedComponent) => {
-  // @ts-ignore
   const SubmitCmp: FC<SubmitInjectedComponent<T>> = ({ useSubmit }) => {
     const [value, setValue] = useState<T>()
 

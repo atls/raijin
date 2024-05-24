@@ -1,6 +1,6 @@
 {
   "name": "@atls/prettier-plugin",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -22,10 +22,9 @@
     "import-sort-parser-typescript": "6.0.0",
     "import-sort-style": "6.0.0",
     "prettier": "3.2.5",
-    "sort-package-json": "1.57.0"
+    "sort-package-json": "^2.4.1"
   },
   "devDependencies": {
-    "@atls/config-prettier": "workspace:*",
     "@types/node": "20",
     "@types/prettier": "3"
   },

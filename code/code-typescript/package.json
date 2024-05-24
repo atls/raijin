@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-typescript",
-  "version": "1.0.0",
+  "version": "0.0.27",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -12,17 +12,19 @@
   ],
   "scripts": {
     "build": "yarn library build",
+    "build:worker": "rollup -c",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/code-runtime": "workspace:*",
     "@atls/config-typescript": "workspace:*",
-    "deepmerge": "4.3.1"
+    "deepmerge": "^4.3.1"
   },
   "devDependencies": {
-    "@types/deepmerge": "2",
+    "@types/deepmerge": "2.2.0",
     "@types/node": "20",
-    "typescript": "5.2.2"
+    "typescript": "^5.0.3"
   },
   "publishConfig": {
     "exports": {

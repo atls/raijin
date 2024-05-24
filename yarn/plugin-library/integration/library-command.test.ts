@@ -13,10 +13,11 @@ describe('yarn', () => {
   describe('commands', () => {
     describe('library', () => {
       test(
-        'it should build withouth errors',
+        'it should build without errors',
         makeTemporaryEnv(
           {
             dependencies: {
+              '@atls/code-runtime': 'workspace:*',
               typescript: '^5.0.3',
             },
           },

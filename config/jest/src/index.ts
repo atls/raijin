@@ -1,12 +1,10 @@
-import type { Config } from 'jest'
-
 import { createRequire } from 'node:module'
 
 import tsconfig          from '@atls/config-typescript'
 
 const require = createRequire(import.meta.url)
 
-export const unit: Config = {
+export const unit = {
   extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   transformIgnorePatterns: ['/node_modules/', '\\.pnp\\.[^\\/]+$'],
   testRegex: '\\.test\\.(ts|tsx|js|jsx)$',
@@ -19,7 +17,7 @@ export const unit: Config = {
     '^.+\\.[tj]sx?$': [
       require.resolve('ts-jest'),
       {
-        tsconfig: { ...tsconfig.compilerOptions, moduleResolution: 'nodenext' },
+        tsconfig: tsconfig.compilerOptions,
         isolatedModules: true,
         diagnostics: false,
         useESM: true,
@@ -29,7 +27,7 @@ export const unit: Config = {
   resolver: require.resolve('@atls/jest-resolver'),
 }
 
-export const integration: Config = {
+export const integration = {
   extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   testRegex: '/integration/.*\\.test\\.(ts|tsx)$',
   modulePathIgnorePatterns: ['dist'],
@@ -41,7 +39,7 @@ export const integration: Config = {
     '^.+\\.[tj]sx?$': [
       require.resolve('ts-jest'),
       {
-        tsconfig: { ...tsconfig.compilerOptions, moduleResolution: 'nodenext' },
+        tsconfig: tsconfig.compilerOptions,
         isolatedModules: true,
         diagnostics: false,
         useESM: true,

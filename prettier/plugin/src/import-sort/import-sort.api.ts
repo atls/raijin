@@ -1,5 +1,5 @@
-import globby           from 'globby'
 import { readFileSync } from 'fs'
+import { globbySync }   from 'globby'
 import { join }         from 'path'
 
 const loadWorkspaces = () => {
@@ -9,7 +9,7 @@ const loadWorkspaces = () => {
     const { workspaces } = JSON.parse(readFileSync(join(process.cwd(), '/package.json'), 'utf-8'))
 
     if (workspaces?.length > 0) {
-      const folders = globby.sync(workspaces, {
+      const folders = globbySync(workspaces, {
         cwd: process.cwd(),
         onlyDirectories: true,
         absolute: true,

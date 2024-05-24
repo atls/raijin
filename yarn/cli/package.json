@@ -12,7 +12,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build bundle && mv bundles/yarn.js bundles/yarn.cjs && yarn fix",
+    "build": "builder build bundle && mv bundles/yarn.js bundles/yarn.cjs",
     "fix": "./fix.sh",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
@@ -63,7 +63,7 @@
     "clipanion": "^3.2.0",
     "semver": "^7.3.8",
     "typanion": "^3.12.1",
-    "yup": "^0.32.11"
+    "yup": "^1.0.2"
   },
   "publishConfig": {
     "access": "public",
