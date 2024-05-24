@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist",
     "resolver.js"
@@ -18,12 +19,12 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-runtime": "workspace:*",
-    "@jest/test-result": "29.7.0",
-    "@jest/types": "29"
+    "@jest/test-result": "^29.6.1",
+    "@jest/types": "^29.6.1",
+    "@atls/code-runtime": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "20"
+    "@types/node": "^20.4.0"
   },
   "peerDependenciesMeta": {
     "jest": {
@@ -31,6 +32,7 @@
     }
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       "./package.json": "./package.json",
       ".": {
@@ -39,6 +41,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }

@@ -1,35 +1,40 @@
-import SelectPkg                 from 'ink-select-input'
-import TextInputPkg              from 'ink-text-input'
-import React                     from 'react'
+import type { JSX }              from 'react'
+
 import { Text }                  from 'ink'
 import { Box }                   from 'ink'
 import { UncontrolledTextInput } from 'ink-text-input'
 import { useState }              from 'react'
 import { useMemo }               from 'react'
 import { useCallback }           from 'react'
+import Select                    from 'ink-select-input'
+import TextInput                 from 'ink-text-input'
+import React                     from 'react'
 
 import { COMMIT_SCOPE_ENUM }     from '@atls/code-commit'
 
 import { IndicatorComponent }    from './select-indicator.component.jsx'
 import { ItemComponent }         from './select-item.component.jsx'
 
-// TODO: moduleResolution
-const Select = SelectPkg as any
-// TODO: moduleResolution
-const TextInput = TextInputPkg as any
-
 const scopes = Object.keys(COMMIT_SCOPE_ENUM).map((key) => ({
+  // @ts-expect-error
   label: COMMIT_SCOPE_ENUM[key].description,
   value: key,
 }))
 
-export const RequestCommitMessageScope = ({ onSubmit }) => {
+export interface RequestCommitMessageScopeProps {
+  onSubmit: (value: string) => void
+}
+
+export const RequestCommitMessageScope = ({
+  onSubmit,
+}: RequestCommitMessageScopeProps): JSX.Element => {
   const [custom, setCustom] = useState(false)
   const [value, setValue] = useState('')
 
   const matches = useMemo(() => {
     if (value.length > 0) {
-      return scopes.filter((item) => item.label.toLowerCase().includes(value.toLowerCase()))
+      return scopes.filter((item: { label: string; value: string }) =>
+        item.label.toLowerCase().includes(value.toLowerCase()))
     }
 
     return scopes
@@ -38,7 +43,7 @@ export const RequestCommitMessageScope = ({ onSubmit }) => {
   const hasSuggestion: boolean = useMemo(() => matches.length > 0, [matches])
 
   const onSubmitValue = useCallback(
-    (v) => {
+    (v: { value: string }) => {
       if (v.value === 'custom') {
         setCustom(true)
       } else {
@@ -78,12 +83,12 @@ export const RequestCommitMessageScope = ({ onSubmit }) => {
         </Box>
         <TextInput value={value} onChange={setValue} />
       </Box>
-      {hasSuggestion && (
+      {!!hasSuggestion && (
         <Select
           items={matches}
-          onSelect={onSubmitValue}
           indicatorComponent={IndicatorComponent}
           itemComponent={ItemComponent}
+          onSelect={onSubmitValue}
         />
       )}
     </Box>

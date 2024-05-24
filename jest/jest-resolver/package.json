@@ -4,9 +4,9 @@
   "license": "BSD-3-Clause",
   "main": "src/index.js",
   "files": [
-    "src"
+    "dist"
   ],
   "dependencies": {
-    "ts-jest-resolver": "2.0.1"
+    "ts-jest-resolver": "^2.0.1"
   }
 }

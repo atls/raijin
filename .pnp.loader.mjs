@@ -2,16 +2,16 @@ import fs$1 from 'node:fs';
 import { fileURLToPath as fileURLToPath$1, pathToFileURL as pathToFileURL$1 } from 'node:url';
 import fs from 'fs';
 import path$1 from 'path';
+import require$$2, { URL as URL$1, fileURLToPath, pathToFileURL } from 'url';
+import moduleExports, { Module } from 'module';
 import require$$1 from 'util';
 import require$$1$1 from 'events';
 import require$$0$1, { createHash } from 'crypto';
 import require$$1$2, { EOL } from 'os';
 import require$$1$3 from 'buffer';
-import require$$2, { fileURLToPath, pathToFileURL } from 'url';
 import require$$0$2 from 'readline';
 import { createRequire } from 'node:module';
 import { extname } from 'node:path';
-import moduleExports, { isBuiltin } from 'module';
 import assert from 'assert';
 
 const [major, minor] = process.versions.node.split(`.`).map((value) => parseInt(value, 10));
@@ -25,16 +25,14 @@ const PortablePath = {
 const npath = Object.create(path$1);
 const ppath = Object.create(path$1.posix);
 npath.cwd = () => process.cwd();
-ppath.cwd = process.platform === `win32` ? () => toPortablePath(process.cwd()) : process.cwd;
-if (process.platform === `win32`) {
-  ppath.resolve = (...segments) => {
-    if (segments.length > 0 && ppath.isAbsolute(segments[0])) {
-      return path$1.posix.resolve(...segments);
-    } else {
-      return path$1.posix.resolve(ppath.cwd(), ...segments);
-    }
-  };
-}
+ppath.cwd = () => toPortablePath(process.cwd());
+ppath.resolve = (...segments) => {
+  if (segments.length > 0 && ppath.isAbsolute(segments[0])) {
+    return path$1.posix.resolve(...segments);
+  } else {
+    return path$1.posix.resolve(ppath.cwd(), ...segments);
+  }
+};
 const contains = function(pathUtils, from, to) {
   from = pathUtils.normalize(from);
   to = pathUtils.normalize(to);
@@ -48,13 +46,17 @@ const contains = function(pathUtils, from, to) {
     return null;
   }
 };
+npath.fromPortablePath = fromPortablePath;
+npath.toPortablePath = toPortablePath;
 npath.contains = (from, to) => contains(npath, from, to);
 ppath.contains = (from, to) => contains(ppath, from, to);
 const WINDOWS_PATH_REGEXP = /^([a-zA-Z]:.*)$/;
 const UNC_WINDOWS_PATH_REGEXP = /^\/\/(\.\/)?(.*)$/;
 const PORTABLE_PATH_REGEXP = /^\/([a-zA-Z]:.*)$/;
 const UNC_PORTABLE_PATH_REGEXP = /^\/unc\/(\.dot\/)?(.*)$/;
-function fromPortablePathWin32(p) {
+function fromPortablePath(p) {
+  if (process.platform !== `win32`)
+    return p;
   let portablePathMatch, uncPortablePathMatch;
   if (portablePathMatch = p.match(PORTABLE_PATH_REGEXP))
     p = portablePathMatch[1];
@@ -64,7 +66,9 @@ function fromPortablePathWin32(p) {
     return p;
   return p.replace(/\//g, `\\`);
 }
-function toPortablePathWin32(p) {
+function toPortablePath(p) {
+  if (process.platform !== `win32`)
+    return p;
   p = p.replace(/\\/g, `/`);
   let windowsPathMatch, uncWindowsPathMatch;
   if (windowsPathMatch = p.match(WINDOWS_PATH_REGEXP))
@@ -73,14 +77,12 @@ function toPortablePathWin32(p) {
     p = `/unc/${uncWindowsPathMatch[1] ? `.dot/` : ``}${uncWindowsPathMatch[2]}`;
   return p;
 }
-const toPortablePath = process.platform === `win32` ? toPortablePathWin32 : (p) => p;
-const fromPortablePath = process.platform === `win32` ? fromPortablePathWin32 : (p) => p;
-npath.fromPortablePath = fromPortablePath;
-npath.toPortablePath = toPortablePath;
 function convertPath(targetPathUtils, sourcePath) {
   return targetPathUtils === npath ? fromPortablePath(sourcePath) : toPortablePath(sourcePath);
 }
 
+const builtinModules = new Set(Module.builtinModules || Object.keys(process.binding(`natives`)));
+const isBuiltinModule = (request) => request.startsWith(`node:`) || builtinModules.has(request);
 function readPackageScope(checkPath) {
   const rootSeparatorIndex = checkPath.indexOf(npath.sep);
   let separatorIndex;
@@ -117,7 +119,7 @@ async function tryReadFile$1(path2) {
 }
 function tryParseURL(str, base) {
   try {
-    return new URL(str, base);
+    return new URL$1(str, base);
   } catch {
     return null;
   }
@@ -183,7 +185,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol */
+/* global Reflect, Promise */
 
 var extendStatics = function(d, b) {
   extendStatics = Object.setPrototypeOf ||
@@ -458,53 +460,6 @@ function __classPrivateFieldIn(state, receiver) {
   return typeof state === "function" ? receiver === state : state.has(receiver);
 }
 
-function __addDisposableResource(env, value, async) {
-  if (value !== null && value !== void 0) {
-    if (typeof value !== "object" && typeof value !== "function") throw new TypeError("Object expected.");
-    var dispose;
-    if (async) {
-        if (!Symbol.asyncDispose) throw new TypeError("Symbol.asyncDispose is not defined.");
-        dispose = value[Symbol.asyncDispose];
-    }
-    if (dispose === void 0) {
-        if (!Symbol.dispose) throw new TypeError("Symbol.dispose is not defined.");
-        dispose = value[Symbol.dispose];
-    }
-    if (typeof dispose !== "function") throw new TypeError("Object not disposable.");
-    env.stack.push({ value: value, dispose: dispose, async: async });
-  }
-  else if (async) {
-    env.stack.push({ async: true });
-  }
-  return value;
-}
-
-var _SuppressedError = typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
-  var e = new Error(message);
-  return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
-};
-
-function __disposeResources(env) {
-  function fail(e) {
-    env.error = env.hasError ? new _SuppressedError(e, env.error, "An error was suppressed during disposal.") : e;
-    env.hasError = true;
-  }
-  function next() {
-    while (env.stack.length) {
-      var rec = env.stack.pop();
-      try {
-        var result = rec.dispose && rec.dispose.call(rec.value);
-        if (rec.async) return Promise.resolve(result).then(next, function(e) { fail(e); return next(); });
-      }
-      catch (e) {
-          fail(e);
-      }
-    }
-    if (env.hasError) throw env.error;
-  }
-  return next();
-}
-
 const tslib_es6 = {
   __extends,
   __assign,
@@ -531,13 +486,10 @@ const tslib_es6 = {
   __classPrivateFieldGet,
   __classPrivateFieldSet,
   __classPrivateFieldIn,
-  __addDisposableResource,
-  __disposeResources,
 };
 
 const tslib_es6$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  __addDisposableResource,
   get __assign () { return __assign; },
   __asyncDelegator,
   __asyncGenerator,
@@ -549,7 +501,6 @@ const tslib_es6$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   __classPrivateFieldSet,
   __createBinding,
   __decorate,
-  __disposeResources,
   __esDecorate,
   __exportStar,
   __extends,
@@ -810,7 +761,7 @@ function requireStatUtils () {
 		 */
 		function clearStats(stats) {
 		    for (const key in stats) {
-		        if (Object.hasOwn(stats, key)) {
+		        if (Object.prototype.hasOwnProperty.call(stats, key)) {
 		            const element = stats[key];
 		            if (typeof element === `number`) {
 		                // @ts-expect-error Typescript can't tell that stats[key] is a number
@@ -832,7 +783,7 @@ function requireStatUtils () {
 		function convertToBigIntStats(stats) {
 		    const bigintStats = new BigIntStatsEntry();
 		    for (const key in stats) {
-		        if (Object.hasOwn(stats, key)) {
+		        if (Object.prototype.hasOwnProperty.call(stats, key)) {
 		            const element = stats[key];
 		            if (typeof element === `number`) {
 		                // @ts-expect-error Typescript isn't able to tell this is valid
@@ -922,7 +873,7 @@ function requirePath () {
 	hasRequiredPath = 1;
 	(function (exports) {
 		Object.defineProperty(exports, "__esModule", { value: true });
-		exports.convertPath = exports.ppath = exports.npath = exports.Filename = exports.PortablePath = void 0;
+		exports.toFilename = exports.convertPath = exports.ppath = exports.npath = exports.Filename = exports.PortablePath = void 0;
 		const tslib_1 = require$$0;
 		const path_1 = tslib_1.__importDefault(path$1);
 		var PathType;
@@ -955,19 +906,15 @@ function requirePath () {
 		exports.npath = Object.create(path_1.default);
 		exports.ppath = Object.create(path_1.default.posix);
 		exports.npath.cwd = () => process.cwd();
-		exports.ppath.cwd = process.platform === `win32`
-		    ? () => toPortablePath(process.cwd())
-		    : process.cwd;
-		if (process.platform === `win32`) {
-		    exports.ppath.resolve = (...segments) => {
-		        if (segments.length > 0 && exports.ppath.isAbsolute(segments[0])) {
-		            return path_1.default.posix.resolve(...segments);
-		        }
-		        else {
-		            return path_1.default.posix.resolve(exports.ppath.cwd(), ...segments);
-		        }
-		    };
-		}
+		exports.ppath.cwd = () => toPortablePath(process.cwd());
+		exports.ppath.resolve = (...segments) => {
+		    if (segments.length > 0 && exports.ppath.isAbsolute(segments[0])) {
+		        return path_1.default.posix.resolve(...segments);
+		    }
+		    else {
+		        return path_1.default.posix.resolve(exports.ppath.cwd(), ...segments);
+		    }
+		};
 		const contains = function (pathUtils, from, to) {
 		    from = pathUtils.normalize(from);
 		    to = pathUtils.normalize(to);
@@ -982,6 +929,8 @@ function requirePath () {
 		        return null;
 		    }
 		};
+		exports.npath.fromPortablePath = fromPortablePath;
+		exports.npath.toPortablePath = toPortablePath;
 		exports.npath.contains = (from, to) => contains(exports.npath, from, to);
 		exports.ppath.contains = (from, to) => contains(exports.ppath, from, to);
 		const WINDOWS_PATH_REGEXP = /^([a-zA-Z]:.*)$/;
@@ -990,7 +939,9 @@ function requirePath () {
 		const UNC_PORTABLE_PATH_REGEXP = /^\/unc\/(\.dot\/)?(.*)$/;
 		// Path should look like "/N:/berry/scripts/plugin-pack.js"
 		// And transform to "N:\berry\scripts\plugin-pack.js"
-		function fromPortablePathWin32(p) {
+		function fromPortablePath(p) {
+		    if (process.platform !== `win32`)
+		        return p;
 		    let portablePathMatch, uncPortablePathMatch;
 		    if ((portablePathMatch = p.match(PORTABLE_PATH_REGEXP)))
 		        p = portablePathMatch[1];
@@ -1002,7 +953,9 @@ function requirePath () {
 		}
 		// Path should look like "N:/berry/scripts/plugin-pack.js"
 		// And transform to "/N:/berry/scripts/plugin-pack.js"
-		function toPortablePathWin32(p) {
+		function toPortablePath(p) {
+		    if (process.platform !== `win32`)
+		        return p;
 		    p = p.replace(/\\/g, `/`);
 		    let windowsPathMatch, uncWindowsPathMatch;
 		    if ((windowsPathMatch = p.match(WINDOWS_PATH_REGEXP)))
@@ -1011,18 +964,16 @@ function requirePath () {
 		        p = `/unc/${uncWindowsPathMatch[1] ? `.dot/` : ``}${uncWindowsPathMatch[2]}`;
 		    return p;
 		}
-		const toPortablePath = process.platform === `win32`
-		    ? toPortablePathWin32
-		    : (p) => p;
-		const fromPortablePath = process.platform === `win32`
-		    ? fromPortablePathWin32
-		    : (p) => p;
-		exports.npath.fromPortablePath = fromPortablePath;
-		exports.npath.toPortablePath = toPortablePath;
 		function convertPath(targetPathUtils, sourcePath) {
 		    return (targetPathUtils === exports.npath ? fromPortablePath(sourcePath) : toPortablePath(sourcePath));
 		}
-		exports.convertPath = convertPath; 
+		exports.convertPath = convertPath;
+		function toFilename(filename) {
+		    if (exports.npath.parse(filename).dir !== `` || exports.ppath.parse(filename).dir !== ``)
+		        throw new Error(`Invalid filename: "${filename}"`);
+		    return filename;
+		}
+		exports.toFilename = toFilename; 
 	} (path));
 	return path;
 }
@@ -1068,6 +1019,7 @@ function requireCopyPromise () {
 	}
 	copyPromise$1.copyPromise = copyPromise;
 	async function copyImpl(prelayout, postlayout, destinationFs, destination, sourceFs, source, opts) {
+	    var _a, _b, _c;
 	    const destinationStat = opts.didParentExist ? await maybeLStat(destinationFs, destination) : null;
 	    const sourceStat = await sourceFs.lstatPromise(source);
 	    const { atime, mtime } = opts.stableTime
@@ -1097,8 +1049,8 @@ function requireCopyPromise () {
 	    }
 	    // We aren't allowed to modify the destination if we work with the index,
 	    // since otherwise we'd accidentally propagate the changes to all projects.
-	    if (opts.linkStrategy?.type !== `HardlinkFromIndex` || !sourceStat.isFile()) {
-	        if (updated || destinationStat?.mtime?.getTime() !== mtime.getTime() || destinationStat?.atime?.getTime() !== atime.getTime()) {
+	    if (((_a = opts.linkStrategy) === null || _a === void 0 ? void 0 : _a.type) !== `HardlinkFromIndex` || !sourceStat.isFile()) {
+	        if (updated || ((_b = destinationStat === null || destinationStat === void 0 ? void 0 : destinationStat.mtime) === null || _b === void 0 ? void 0 : _b.getTime()) !== mtime.getTime() || ((_c = destinationStat === null || destinationStat === void 0 ? void 0 : destinationStat.atime) === null || _c === void 0 ? void 0 : _c.getTime()) !== atime.getTime()) {
 	            postlayout.push(() => destinationFs.lutimesPromise(destination, atime, mtime));
 	            updated = true;
 	        }
@@ -1172,7 +1124,7 @@ function requireCopyPromise () {
 	    let indexStat = await maybeLStat(destinationFs, indexPath);
 	    if (destinationStat) {
 	        const isDestinationHardlinkedFromIndex = indexStat && destinationStat.dev === indexStat.dev && destinationStat.ino === indexStat.ino;
-	        const isIndexModified = indexStat?.mtimeMs !== defaultTimeMs;
+	        const isIndexModified = (indexStat === null || indexStat === void 0 ? void 0 : indexStat.mtimeMs) !== defaultTimeMs;
 	        if (isDestinationHardlinkedFromIndex) {
 	            // If the index is modified, we will want to repair it. However, the
 	            // default logic ensuring atomicity (creating a file in a temporary
@@ -1274,7 +1226,8 @@ function requireCopyPromise () {
 	    return true;
 	}
 	async function copyFile(prelayout, postlayout, destinationFs, destination, destinationStat, sourceFs, source, sourceStat, opts) {
-	    if (opts.linkStrategy?.type === `HardlinkFromIndex`) {
+	    var _a;
+	    if (((_a = opts.linkStrategy) === null || _a === void 0 ? void 0 : _a.type) === `HardlinkFromIndex`) {
 	        return copyFileViaIndex(prelayout, postlayout, destinationFs, destination, destinationStat, sourceFs, source, sourceStat, opts, opts.linkStrategy);
 	    }
 	    else {
@@ -1351,8 +1304,9 @@ function requireOpendir () {
 	        return Promise.resolve();
 	    }
 	    closeSync() {
+	        var _a, _b;
 	        this.throwIfClosed();
-	        this.opts.onClose?.();
+	        (_b = (_a = this.opts).onClose) === null || _b === void 0 ? void 0 : _b.call(_a);
 	        this.closed = true;
 	    }
 	}
@@ -1362,8 +1316,7 @@ function requireOpendir () {
 	        const filename = entries.shift();
 	        if (typeof filename === `undefined`)
 	            return null;
-	        const entryPath = fakeFs.pathUtils.join(path, filename);
-	        return Object.assign(fakeFs.statSync(entryPath), {
+	        return Object.assign(fakeFs.statSync(fakeFs.pathUtils.join(path, filename)), {
 	            name: filename,
 	            path: undefined,
 	        });
@@ -1735,7 +1688,7 @@ function requireFakeFS () {
 	                        throw error;
 	                    }
 	                }
-	                createdDirectory ??= subPath;
+	                createdDirectory !== null && createdDirectory !== void 0 ? createdDirectory : (createdDirectory = subPath);
 	                if (chmod != null)
 	                    await this.chmodPromise(subPath, chmod);
 	                if (utimes != null) {
@@ -1769,7 +1722,7 @@ function requireFakeFS () {
 	                        throw error;
 	                    }
 	                }
-	                createdDirectory ??= subPath;
+	                createdDirectory !== null && createdDirectory !== void 0 ? createdDirectory : (createdDirectory = subPath);
 	                if (chmod != null)
 	                    this.chmodSync(subPath, chmod);
 	                if (utimes != null) {
@@ -2365,13 +2318,6 @@ function requireNodeFS () {
 	const fs_1 = tslib_1.__importDefault(fs);
 	const FakeFS_1 = requireFakeFS();
 	const path_1 = requirePath();
-	function direntToPortable(dirent) {
-	    // We don't need to return a copy, we can just reuse the object the real fs returned
-	    const portableDirent = dirent;
-	    if (typeof dirent.path === `string`)
-	        portableDirent.path = path_1.npath.toPortablePath(dirent.path);
-	    return portableDirent;
-	}
 	class NodeFS extends FakeFS_1.BasePortableFakeFS {
 	    constructor(realFs = fs_1.default) {
 	        super();
@@ -2403,44 +2349,14 @@ function requireNodeFS () {
 	                this.realFs.opendir(path_1.npath.fromPortablePath(p), this.makeCallback(resolve, reject));
 	            }
 	        }).then(dir => {
-	            // @ts-expect-error
-	            //
-	            // We need a way to tell TS that the values returned by the `read`
-	            // methods are compatible with `Dir`, especially the `name` field.
-	            //
-	            // We also can't use `Object.assign` to set the because the `path`
-	            // field to a Filename, because the property isn't writable, so
-	            // we need to use defineProperty instead.
-	            //
-	            const dirWithFixedPath = dir;
-	            Object.defineProperty(dirWithFixedPath, `path`, {
-	                value: p,
-	                configurable: true,
-	                writable: true,
-	            });
-	            return dirWithFixedPath;
+	            return Object.defineProperty(dir, `path`, { value: p, configurable: true, writable: true });
 	        });
 	    }
 	    opendirSync(p, opts) {
 	        const dir = typeof opts !== `undefined`
 	            ? this.realFs.opendirSync(path_1.npath.fromPortablePath(p), opts)
 	            : this.realFs.opendirSync(path_1.npath.fromPortablePath(p));
-	        // @ts-expect-error
-	        //
-	        // We need a way to tell TS that the values returned by the `read`
-	        // methods are compatible with `Dir`, especially the `name` field.
-	        //
-	        // We also can't use `Object.assign` to set the because the `path`
-	        // field to a Filename, because the property isn't writable, so
-	        // we need to use defineProperty instead.
-	        //
-	        const dirWithFixedPath = dir;
-	        Object.defineProperty(dirWithFixedPath, `path`, {
-	            value: p,
-	            configurable: true,
-	            writable: true,
-	        });
-	        return dirWithFixedPath;
+	        return Object.defineProperty(dir, `path`, { value: p, configurable: true, writable: true });
 	    }
 	    async readPromise(fd, buffer, offset = 0, length = 0, position = -1) {
 	        return await new Promise((resolve, reject) => {
@@ -2734,36 +2650,16 @@ function requireNodeFS () {
 	    async readdirPromise(p, opts) {
 	        return await new Promise((resolve, reject) => {
 	            if (opts) {
-	                if (opts.recursive && process.platform === `win32`) {
-	                    if (opts.withFileTypes) {
-	                        this.realFs.readdir(path_1.npath.fromPortablePath(p), opts, this.makeCallback(results => resolve(results.map(direntToPortable)), reject));
-	                    }
-	                    else {
-	                        this.realFs.readdir(path_1.npath.fromPortablePath(p), opts, this.makeCallback(results => resolve(results.map(path_1.npath.toPortablePath)), reject));
-	                    }
-	                }
-	                else {
-	                    this.realFs.readdir(path_1.npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
-	                }
+	                this.realFs.readdir(path_1.npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
 	            }
 	            else {
-	                this.realFs.readdir(path_1.npath.fromPortablePath(p), this.makeCallback(resolve, reject));
+	                this.realFs.readdir(path_1.npath.fromPortablePath(p), this.makeCallback(value => resolve(value), reject));
 	            }
 	        });
 	    }
 	    readdirSync(p, opts) {
 	        if (opts) {
-	            if (opts.recursive && process.platform === `win32`) {
-	                if (opts.withFileTypes) {
-	                    return this.realFs.readdirSync(path_1.npath.fromPortablePath(p), opts).map(direntToPortable);
-	                }
-	                else {
-	                    return this.realFs.readdirSync(path_1.npath.fromPortablePath(p), opts).map(path_1.npath.toPortablePath);
-	                }
-	            }
-	            else {
-	                return this.realFs.readdirSync(path_1.npath.fromPortablePath(p), opts);
-	            }
+	            return this.realFs.readdirSync(path_1.npath.fromPortablePath(p), opts);
 	        }
 	        else {
 	            return this.realFs.readdirSync(path_1.npath.fromPortablePath(p));
@@ -2998,19 +2894,21 @@ function requireMountFS () {
 	        return this.baseFs.getRealPath();
 	    }
 	    saveAndClose() {
+	        var _a;
 	        (0, watchFile_1.unwatchAllFiles)(this);
 	        if (this.mountInstances) {
 	            for (const [path, { childFs }] of this.mountInstances.entries()) {
-	                childFs.saveAndClose?.();
+	                (_a = childFs.saveAndClose) === null || _a === void 0 ? void 0 : _a.call(childFs);
 	                this.mountInstances.delete(path);
 	            }
 	        }
 	    }
 	    discardAndClose() {
+	        var _a;
 	        (0, watchFile_1.unwatchAllFiles)(this);
 	        if (this.mountInstances) {
 	            for (const [path, { childFs }] of this.mountInstances.entries()) {
-	                childFs.discardAndClose?.();
+	                (_a = childFs.discardAndClose) === null || _a === void 0 ? void 0 : _a.call(childFs);
 	                this.mountInstances.delete(path);
 	            }
 	        }
@@ -3710,17 +3608,18 @@ function requireMountFS () {
 	        }
 	    }
 	    limitOpenFiles(max) {
+	        var _a, _b, _c;
 	        if (this.mountInstances === null)
 	            return;
 	        const now = Date.now();
 	        let nextExpiresAt = now + this.maxAge;
 	        let closeCount = max === null ? 0 : this.mountInstances.size - max;
 	        for (const [path, { childFs, expiresAt, refCount }] of this.mountInstances.entries()) {
-	            if (refCount !== 0 || childFs.hasOpenFileHandles?.()) {
+	            if (refCount !== 0 || ((_a = childFs.hasOpenFileHandles) === null || _a === void 0 ? void 0 : _a.call(childFs))) {
 	                continue;
 	            }
 	            else if (now >= expiresAt) {
-	                childFs.saveAndClose?.();
+	                (_b = childFs.saveAndClose) === null || _b === void 0 ? void 0 : _b.call(childFs);
 	                this.mountInstances.delete(path);
 	                closeCount -= 1;
 	                continue;
@@ -3729,7 +3628,7 @@ function requireMountFS () {
 	                nextExpiresAt = expiresAt;
 	                break;
 	            }
-	            childFs.saveAndClose?.();
+	            (_c = childFs.saveAndClose) === null || _c === void 0 ? void 0 : _c.call(childFs);
 	            this.mountInstances.delete(path);
 	            closeCount -= 1;
 	        }
@@ -3741,6 +3640,7 @@ function requireMountFS () {
 	        }
 	    }
 	    async getMountPromise(p, accept) {
+	        var _a;
 	        if (this.mountInstances) {
 	            let cachedMountFs = this.mountInstances.get(p);
 	            if (!cachedMountFs) {
@@ -3776,11 +3676,12 @@ function requireMountFS () {
 	                return await accept(mountFs);
 	            }
 	            finally {
-	                mountFs.saveAndClose?.();
+	                (_a = mountFs.saveAndClose) === null || _a === void 0 ? void 0 : _a.call(mountFs);
 	            }
 	        }
 	    }
 	    getMountSync(p, accept) {
+	        var _a;
 	        if (this.mountInstances) {
 	            let cachedMountFs = this.mountInstances.get(p);
 	            if (!cachedMountFs) {
@@ -3804,7 +3705,7 @@ function requireMountFS () {
 	                return accept(childFs);
 	            }
 	            finally {
-	                childFs.saveAndClose?.();
+	                (_a = childFs.saveAndClose) === null || _a === void 0 ? void 0 : _a.call(childFs);
 	            }
 	        }
 	    }
@@ -4260,9 +4161,10 @@ function requireFileHandle () {
 	        return this[kFd];
 	    }
 	    async appendFile(data, options) {
+	        var _e;
 	        try {
 	            this[kRef](this.appendFile);
-	            const encoding = (typeof options === `string` ? options : options?.encoding) ?? undefined;
+	            const encoding = (_e = (typeof options === `string` ? options : options === null || options === void 0 ? void 0 : options.encoding)) !== null && _e !== void 0 ? _e : undefined;
 	            return await this[kBaseFs].appendFilePromise(this.fd, data, encoding ? { encoding } : undefined);
 	        }
 	        finally {
@@ -4302,21 +4204,22 @@ function requireFileHandle () {
 	        throw new Error(`Method not implemented.`);
 	    }
 	    async read(bufferOrOptions, offset, length, position) {
+	        var _e, _f, _g;
 	        try {
 	            this[kRef](this.read);
 	            let buffer;
 	            if (!Buffer.isBuffer(bufferOrOptions)) {
-	                bufferOrOptions ??= {};
-	                buffer = bufferOrOptions.buffer ?? Buffer.alloc(16384);
+	                bufferOrOptions !== null && bufferOrOptions !== void 0 ? bufferOrOptions : (bufferOrOptions = {});
+	                buffer = (_e = bufferOrOptions.buffer) !== null && _e !== void 0 ? _e : Buffer.alloc(16384);
 	                offset = bufferOrOptions.offset || 0;
-	                length = bufferOrOptions.length ?? buffer.byteLength;
-	                position = bufferOrOptions.position ?? null;
+	                length = (_f = bufferOrOptions.length) !== null && _f !== void 0 ? _f : buffer.byteLength;
+	                position = (_g = bufferOrOptions.position) !== null && _g !== void 0 ? _g : null;
 	            }
 	            else {
 	                buffer = bufferOrOptions;
 	            }
-	            offset ??= 0;
-	            length ??= 0;
+	            offset !== null && offset !== void 0 ? offset : (offset = 0);
+	            length !== null && length !== void 0 ? length : (length = 0);
 	            if (length === 0) {
 	                return {
 	                    bytesRead: length,
@@ -4334,9 +4237,10 @@ function requireFileHandle () {
 	        }
 	    }
 	    async readFile(options) {
+	        var _e;
 	        try {
 	            this[kRef](this.readFile);
-	            const encoding = (typeof options === `string` ? options : options?.encoding) ?? undefined;
+	            const encoding = (_e = (typeof options === `string` ? options : options === null || options === void 0 ? void 0 : options.encoding)) !== null && _e !== void 0 ? _e : undefined;
 	            return await this[kBaseFs].readFilePromise(this.fd, encoding);
 	        }
 	        finally {
@@ -4372,9 +4276,10 @@ function requireFileHandle () {
 	        throw new Error(`Method not implemented.`);
 	    }
 	    async writeFile(data, options) {
+	        var _e;
 	        try {
 	            this[kRef](this.writeFile);
-	            const encoding = (typeof options === `string` ? options : options?.encoding) ?? undefined;
+	            const encoding = (_e = (typeof options === `string` ? options : options === null || options === void 0 ? void 0 : options.encoding)) !== null && _e !== void 0 ? _e : undefined;
 	            await this[kBaseFs].writeFilePromise(this.fd, data, encoding);
 	        }
 	        finally {
@@ -4386,7 +4291,7 @@ function requireFileHandle () {
 	            this[kRef](this.write);
 	            if (ArrayBuffer.isView(args[0])) {
 	                const [buffer, offset, length, position] = args;
-	                const bytesWritten = await this[kBaseFs].writePromise(this.fd, buffer, offset ?? undefined, length ?? undefined, position ?? undefined);
+	                const bytesWritten = await this[kBaseFs].writePromise(this.fd, buffer, offset !== null && offset !== void 0 ? offset : undefined, length !== null && length !== void 0 ? length : undefined, position !== null && position !== void 0 ? position : undefined);
 	                return { bytesWritten, buffer };
 	            }
 	            else {
@@ -4566,7 +4471,7 @@ function requirePatchFs () {
 	        const orig = target[name];
 	        target[name] = replacement;
 	        // Preserve any util.promisify implementations
-	        if (typeof orig?.[util_1.promisify.custom] !== `undefined`) {
+	        if (typeof (orig === null || orig === void 0 ? void 0 : orig[util_1.promisify.custom]) !== `undefined`) {
 	            replacement[util_1.promisify.custom] = orig[util_1.promisify.custom];
 	        }
 	    };
@@ -4886,7 +4791,7 @@ function requireXfs () {
 
 (function (exports) {
 	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.xfs = exports.extendFs = exports.patchFs = exports.VirtualFS = exports.ProxiedFS = exports.PosixFS = exports.NodeFS = exports.NoFS = exports.MountFS = exports.LazyFS = exports.JailFS = exports.CwdFS = exports.BasePortableFakeFS = exports.FakeFS = exports.AliasFS = exports.ppath = exports.npath = exports.Filename = exports.PortablePath = exports.normalizeLineEndings = exports.unwatchAllFiles = exports.unwatchFile = exports.watchFile = exports.CustomDir = exports.opendir = exports.setupCopyIndex = exports.statUtils = exports.errors = exports.constants = void 0;
+	exports.xfs = exports.extendFs = exports.patchFs = exports.VirtualFS = exports.ProxiedFS = exports.PosixFS = exports.NodeFS = exports.NoFS = exports.MountFS = exports.LazyFS = exports.JailFS = exports.CwdFS = exports.BasePortableFakeFS = exports.FakeFS = exports.AliasFS = exports.toFilename = exports.ppath = exports.npath = exports.Filename = exports.PortablePath = exports.normalizeLineEndings = exports.unwatchAllFiles = exports.unwatchFile = exports.watchFile = exports.CustomDir = exports.opendir = exports.setupCopyIndex = exports.statUtils = exports.errors = exports.constants = void 0;
 	const tslib_1 = require$$0;
 	const constants = tslib_1.__importStar(requireConstants());
 	exports.constants = constants;
@@ -4911,6 +4816,7 @@ function requireXfs () {
 	var path_2 = requirePath();
 	Object.defineProperty(exports, "npath", { enumerable: true, get: function () { return path_2.npath; } });
 	Object.defineProperty(exports, "ppath", { enumerable: true, get: function () { return path_2.ppath; } });
+	Object.defineProperty(exports, "toFilename", { enumerable: true, get: function () { return path_2.toFilename; } });
 	var AliasFS_1 = requireAliasFS();
 	Object.defineProperty(exports, "AliasFS", { enumerable: true, get: function () { return AliasFS_1.AliasFS; } });
 	var FakeFS_2 = requireFakeFS();
@@ -4981,9 +4887,10 @@ async function copyImpl(prelayout, postlayout, destinationFs, destination, sourc
         updated = await copySymlink(prelayout, postlayout, destinationFs, destination, destinationStat, sourceFs, source, sourceStat, opts);
       }
       break;
-    default: {
-      throw new Error(`Unsupported file type (${sourceStat.mode})`);
-    }
+    default:
+      {
+        throw new Error(`Unsupported file type (${sourceStat.mode})`);
+      }
   }
   if (((_a = opts.linkStrategy) == null ? void 0 : _a.type) !== `HardlinkFromIndex` || !sourceStat.isFile()) {
     if (updated || ((_b = destinationStat == null ? void 0 : destinationStat.mtime) == null ? void 0 : _b.getTime()) !== mtime.getTime() || ((_c = destinationStat == null ? void 0 : destinationStat.atime) == null ? void 0 : _c.getTime()) !== atime.getTime()) {
@@ -5046,10 +4953,7 @@ async function copyFolder(prelayout, postlayout, destinationFs, destination, des
 }
 async function copyFileViaIndex(prelayout, postlayout, destinationFs, destination, destinationStat, sourceFs, source, sourceStat, opts, linkStrategy) {
   const sourceHash = await sourceFs.checksumFilePromise(source, { algorithm: `sha1` });
-  const defaultMode = 420;
-  const sourceMode = sourceStat.mode & 511;
-  const indexFileName = `${sourceHash}${sourceMode !== defaultMode ? sourceMode.toString(8) : ``}`;
-  const indexPath = destinationFs.pathUtils.join(linkStrategy.indexPath, sourceHash.slice(0, 2), `${indexFileName}.dat`);
+  const indexPath = destinationFs.pathUtils.join(linkStrategy.indexPath, sourceHash.slice(0, 2), `${sourceHash}.dat`);
   let AtomicBehavior;
   ((AtomicBehavior2) => {
     AtomicBehavior2[AtomicBehavior2["Lock"] = 0] = "Lock";
@@ -5105,12 +5009,8 @@ async function copyFileViaIndex(prelayout, postlayout, destinationFs, destinatio
     }
   });
   postlayout.push(async () => {
-    if (!indexStat) {
+    if (!indexStat)
       await destinationFs.lutimesPromise(indexPath, defaultTime, defaultTime);
-      if (sourceMode !== defaultMode) {
-        await destinationFs.chmodPromise(indexPath, sourceMode);
-      }
-    }
     if (tempPath && !tempPathCleaned) {
       await destinationFs.unlinkPromise(tempPath);
     }
@@ -5535,12 +5435,6 @@ function normalizeLineEndings(originalContent, newContent) {
   return newContent.replace(/\r?\n/g, getEndOfLine(originalContent));
 }
 
-function direntToPortable(dirent) {
-  const portableDirent = dirent;
-  if (typeof dirent.path === `string`)
-    portableDirent.path = npath.toPortablePath(dirent.path);
-  return portableDirent;
-}
 class NodeFS extends BasePortableFakeFS {
   constructor(realFs = fs) {
     super();
@@ -5571,24 +5465,12 @@ class NodeFS extends BasePortableFakeFS {
         this.realFs.opendir(npath.fromPortablePath(p), this.makeCallback(resolve, reject));
       }
     }).then((dir) => {
-      const dirWithFixedPath = dir;
-      Object.defineProperty(dirWithFixedPath, `path`, {
-        value: p,
-        configurable: true,
-        writable: true
-      });
-      return dirWithFixedPath;
+      return Object.defineProperty(dir, `path`, { value: p, configurable: true, writable: true });
     });
   }
   opendirSync(p, opts) {
     const dir = typeof opts !== `undefined` ? this.realFs.opendirSync(npath.fromPortablePath(p), opts) : this.realFs.opendirSync(npath.fromPortablePath(p));
-    const dirWithFixedPath = dir;
-    Object.defineProperty(dirWithFixedPath, `path`, {
-      value: p,
-      configurable: true,
-      writable: true
-    });
-    return dirWithFixedPath;
+    return Object.defineProperty(dir, `path`, { value: p, configurable: true, writable: true });
   }
   async readPromise(fd, buffer, offset = 0, length = 0, position = -1) {
     return await new Promise((resolve, reject) => {
@@ -5867,31 +5749,15 @@ class NodeFS extends BasePortableFakeFS {
   async readdirPromise(p, opts) {
     return await new Promise((resolve, reject) => {
       if (opts) {
-        if (opts.recursive && process.platform === `win32`) {
-          if (opts.withFileTypes) {
-            this.realFs.readdir(npath.fromPortablePath(p), opts, this.makeCallback((results) => resolve(results.map(direntToPortable)), reject));
-          } else {
-            this.realFs.readdir(npath.fromPortablePath(p), opts, this.makeCallback((results) => resolve(results.map(npath.toPortablePath)), reject));
-          }
-        } else {
-          this.realFs.readdir(npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
-        }
+        this.realFs.readdir(npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
       } else {
-        this.realFs.readdir(npath.fromPortablePath(p), this.makeCallback(resolve, reject));
+        this.realFs.readdir(npath.fromPortablePath(p), this.makeCallback((value) => resolve(value), reject));
       }
     });
   }
   readdirSync(p, opts) {
     if (opts) {
-      if (opts.recursive && process.platform === `win32`) {
-        if (opts.withFileTypes) {
-          return this.realFs.readdirSync(npath.fromPortablePath(p), opts).map(direntToPortable);
-        } else {
-          return this.realFs.readdirSync(npath.fromPortablePath(p), opts).map(npath.toPortablePath);
-        }
-      } else {
-        return this.realFs.readdirSync(npath.fromPortablePath(p), opts);
-      }
+      return this.realFs.readdirSync(npath.fromPortablePath(p), opts);
     } else {
       return this.realFs.readdirSync(npath.fromPortablePath(p));
     }
@@ -6297,7 +6163,7 @@ async function load$1(urlString, context, nextLoad) {
   }
   return {
     format,
-    source: format === `commonjs` ? void 0 : await fs.promises.readFile(filePath, `utf8`),
+    source: await fs.promises.readFile(filePath, `utf8`),
     shortCircuit: true
   };
 }
@@ -6341,14 +6207,12 @@ const transformSource = (source, format, ext) => {
 
 const loadHook = async (urlString, context, nextLoad) => load$1(urlString, context, async (urlString2, context2) => {
   const url = tryParseURL(urlString2);
-  if ((url == null ? void 0 : url.protocol) !== `file:`) {
+  if ((url == null ? void 0 : url.protocol) !== `file:`)
     return nextLoad(urlString2, context2, nextLoad);
-  }
   const filePath = fileURLToPath$1(url);
   const format = getFileFormat(filePath);
-  if (!format) {
+  if (!format)
     return nextLoad(urlString2, context2, nextLoad);
-  }
   if (process.env.WATCH_REPORT_DEPENDENCIES && process.send) {
     const pathToSend = pathToFileURL$1(
       lib.npath.fromPortablePath(lib.VirtualFS.resolveVirtual(lib.npath.toPortablePath(filePath)))
@@ -6846,7 +6710,7 @@ async function resolvePrivateRequest(specifier, issuer, context, nextResolve) {
 async function resolve$1(originalSpecifier, context, nextResolve) {
   var _a, _b;
   const { findPnpApi } = moduleExports;
-  if (!findPnpApi || isBuiltin(originalSpecifier))
+  if (!findPnpApi || isBuiltinModule(originalSpecifier))
     return nextResolve(originalSpecifier, context, nextResolve);
   let specifier = originalSpecifier;
   const url = tryParseURL(specifier, isRelativeRegexp.test(specifier) ? context.parentURL : void 0);

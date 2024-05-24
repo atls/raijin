@@ -1,8 +1,11 @@
-import path from 'path'
+import { join } from 'node:path'
 
 const ignore = [
   '.c9',
   '.pnp.js',
+  '.pnp.cjs',
+  '.pnp.loader.mjs',
+  '.pnp-ts.loader.mjs',
   '.git',
   'node_modules',
   'coverage',
@@ -15,6 +18,8 @@ const ignore = [
   '.next',
   '**/**/dist/*',
   '**/**/lib/*',
+  '**/**/build/*',
+  '**/**/.cache/*',
   '**/**/bundles/*',
   '**/**/templates/*.yaml',
   '**/templates/*.yaml',
@@ -22,9 +27,9 @@ const ignore = [
   '.terraform',
 ]
 
-const patterns: string[] = ['./**/*.{js,jsx,ts,tsx}']
+const patterns: Array<string> = ['./**/*.{js,mjs,cjs,jsx,ts,tsx}']
 
-const ignorePatterns: string[] = [
+const ignorePatterns: Array<string> = [
   '!**/node_modules/**',
   '!./node_modules/**',
   '!**/.{git,svn,hg}/**',
@@ -34,8 +39,8 @@ const ignorePatterns: string[] = [
   '!**/gen/**',
 ]
 
-const createPatterns = (cwd: string): string[] => [
-  ...patterns.map((pattern) => path.join(cwd, pattern)),
+const createPatterns = (cwd: string): Array<string> => [
+  ...patterns.map((pattern) => join(cwd, pattern)),
   ...ignorePatterns,
 ]
 

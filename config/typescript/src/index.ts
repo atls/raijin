@@ -14,9 +14,9 @@ export default {
     moduleResolution: 'nodenext',
     noFallthroughCasesInSwitch: true,
 
-    noImplicitAny: false,
-    noImplicitReturns: false,
-    noImplicitThis: false,
+    noImplicitAny: true,
+    noImplicitReturns: true,
+    noImplicitThis: true,
 
     noUnusedLocals: false,
     noUnusedParameters: false,
@@ -30,14 +30,15 @@ export default {
 
     sourceMap: false,
 
-    module: 'esnext',
-    target: 'es2022',
+    module: 'nodenext',
+    target: 'es2021',
 
     jsx: 'react',
 
     outDir: './dist',
   },
   exclude: [
+    '**/*/next-env.d.ts',
     'integration',
     'node_modules',
     'src/**/*.spec.ts',

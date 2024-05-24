@@ -1,0 +1,49 @@
+{
+  "name": "@atls/code-icons",
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "main": "src/index.ts",
+  "files": [
+    "dist",
+    "tsconfig.stub.json"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/config-typescript": "workspace:*",
+    "@atls/code-runtime": "workspace:*",
+    "@yarnpkg/cli": "^4.0.0-rc.48",
+    "@yarnpkg/core": "^4.0.0-rc.48",
+    "camelcase": "^7.0.1",
+    "typescript": "^5.1.6",
+    "webpack-chain-5": "^8.0.2"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.6.1",
+    "@atls/logger": "^0.0.2",
+    "@types/node": "^20.4.0",
+    "@types/webpack": "^5.28.1",
+    "@yarnpkg/fslib": "^3.0.0-rc.48"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
+  }
+}

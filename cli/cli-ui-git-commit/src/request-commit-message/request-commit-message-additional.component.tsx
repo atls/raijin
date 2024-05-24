@@ -1,13 +1,17 @@
-import MultiSelect            from 'ink-multi-select'
-import React                  from 'react'
-import figures                from 'figures'
+import type { JSX }           from 'react'
+
 import { Text }               from 'ink'
 import { Box }                from 'ink'
-import { FC }                 from 'react'
 import { useCallback }        from 'react'
+import MultiSelectPkg         from 'ink-multi-select'
+import React                  from 'react'
+import figures                from 'figures'
 
 import { IndicatorComponent } from './select-indicator.component.jsx'
 import { ItemComponent }      from './select-item.component.jsx'
+
+// TODO: moduleResolution
+const MultiSelect = (MultiSelectPkg as any).default || (MultiSelectPkg as any)
 
 const COMMIT_ADDITIONAL = [
   {
@@ -32,9 +36,13 @@ const COMMIT_ADDITIONAL = [
   },
 ]
 
-const CheckboxComponent = ({ isSelected }) => (
+interface CheckboxComponentProps {
+  isSelected: boolean
+}
+
+const CheckboxComponent = ({ isSelected }: CheckboxComponentProps): JSX.Element => (
   <Box marginRight={1}>
-    <Text>{isSelected ? figures.circleFilled : figures.circle}</Text>
+    <Text>{!!isSelected && figures.circleFilled}</Text>
   </Box>
 )
 
@@ -50,11 +58,11 @@ interface RequestCommitMessageAdditionalProps {
   onSubmit: (props: AdditionalProperties) => void
 }
 
-export const RequestCommitMessageAdditional: FC<RequestCommitMessageAdditionalProps> = ({
+export const RequestCommitMessageAdditional = ({
   onSubmit,
-}) => {
+}: RequestCommitMessageAdditionalProps): JSX.Element => {
   const onSubmitValues = useCallback(
-    (values) => {
+    (values: Array<{ value: string }>) => {
       onSubmit(
         values.reduce(
           (result, value) => ({
@@ -76,7 +84,6 @@ export const RequestCommitMessageAdditional: FC<RequestCommitMessageAdditionalPr
         </Text>
       </Box>
       <Box>
-        {/* @ts-ignore */}
         <MultiSelect
           items={COMMIT_ADDITIONAL}
           indicatorComponent={IndicatorComponent}

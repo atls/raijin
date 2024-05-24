@@ -1,12 +1,17 @@
-import { readFileSync } from 'fs'
-import { globbySync }   from 'globby'
-import { join }         from 'path'
+import type { IImport } from 'import-sort-parser'
 
-const loadWorkspaces = () => {
-  const exists = new Set()
+import { readFileSync } from 'node:fs'
+import { join }         from 'node:path'
+
+import { globbySync }   from 'globby'
+
+const loadWorkspaces = (): Array<string> => {
+  const exists = new Set<string>()
 
   try {
-    const { workspaces } = JSON.parse(readFileSync(join(process.cwd(), '/package.json'), 'utf-8'))
+    const { workspaces }: { workspaces: Array<string> } = JSON.parse(
+      readFileSync(join(process.cwd(), '/package.json'), 'utf-8')
+    )
 
     if (workspaces?.length > 0) {
       const folders = globbySync(workspaces, {
@@ -21,7 +26,9 @@ const loadWorkspaces = () => {
 
       folders.forEach((folder) => {
         try {
-          const { name } = JSON.parse(readFileSync(join(folder, 'package.json'), 'utf-8'))
+          const { name }: { name: string } = JSON.parse(
+            readFileSync(join(folder, 'package.json'), 'utf-8')
+          )
 
           if (name.startsWith('@')) {
             exists.add(name)
@@ -33,26 +40,14 @@ const loadWorkspaces = () => {
     console.log(error) // eslint-disable-line
   }
 
-  return exists
+  return Array.from(exists)
 }
 
 const workspaces = loadWorkspaces()
 
-export const isWorkspaceModule = (imported: any) => {
-  if (!(imported.moduleName.startsWith('@') && imported.moduleName.includes('/'))) {
-    return false
-  }
+export const isWorkspaceModule = (imported: IImport): boolean =>
+  workspaces.some((workspace) => imported.moduleName.startsWith(workspace))
 
-  const moduleParts = imported.moduleName.split('/')
+export const isNodeModule = (imported: IImport): boolean => imported.moduleName.startsWith('node:')
 
-  const moduleName =
-    moduleParts.length === 2 ? imported.moduleName : moduleParts.slice(0, 2).join('/')
-
-  return workspaces.has(moduleName)
-}
-
-export const isNodeModule = (imported: any, ...rest) => imported.moduleName.startsWith('node:')
-
-export const isOrganizationModule = (imported: any) => imported.moduleName.startsWith('@')
-
-export const isImportType = (imported: any) => imported.type === 'import-type'
+export const isImportType = (imported: IImport): boolean => imported.type === 'import-type'

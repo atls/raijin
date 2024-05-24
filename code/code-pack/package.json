@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -16,15 +17,16 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@actions/github": "6.0.0",
-    "@iarna/toml": "3.0.0",
-    "@yarnpkg/core": "4.0.3",
-    "@yarnpkg/fslib": "3.0.2"
+    "@actions/github": "^5.1.1",
+    "@iarna/toml": "^2.2.5",
+    "@yarnpkg/core": "^4.0.0-rc.48",
+    "@yarnpkg/fslib": "^3.0.0-rc.48"
   },
   "devDependencies": {
-    "@types/node": "20"
+    "@types/node": "^20.4.0"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       "./package.json": "./package.json",
       ".": {
@@ -33,6 +35,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }

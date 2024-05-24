@@ -28,6 +28,7 @@ export const unit = {
 }
 
 export const integration = {
+  testTimeout: 240_000,
   extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   testRegex: '/integration/.*\\.test\\.(ts|tsx)$',
   modulePathIgnorePatterns: ['dist'],

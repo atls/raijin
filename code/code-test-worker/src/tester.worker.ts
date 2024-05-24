@@ -9,12 +9,13 @@ export class TesterWorker {
   constructor(private readonly cwd: string) {}
 
   async run(
+    cwd: string,
     type: 'integration' | 'unit',
     options?: Partial<Config.Argv>,
     files?: Array<string>
   ): Promise<AggregatedResult> {
-    return EvalWorker.run(getContent(), {
-      cwd: this.cwd,
+    return EvalWorker.run(this.cwd, getContent(), {
+      cwd,
       type,
       options,
       files,

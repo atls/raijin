@@ -5,9 +5,9 @@ import { getContent } from './formatter.worker.content.js'
 export class FormatterWorker {
   constructor(private readonly cwd: string) {}
 
-  async run(files: Array<string>) {
-    return EvalWorker.run(getContent(), {
-      cwd: this.cwd,
+  async run(cwd: string, files: Array<string>): Promise<void> {
+    return EvalWorker.run(this.cwd, getContent(), {
+      cwd,
       files,
     })
   }

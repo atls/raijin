@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist",
     "tsconfig.stub.json"
@@ -17,27 +18,25 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/code-configuration": "workspace:*",
     "@atls/config-typescript": "workspace:*",
     "@atls/code-runtime": "workspace:*",
-    "@yarnpkg/cli": "4.1.1",
-    "@yarnpkg/core": "4.0.3",
-    "fast-glob": "^3.2.12",
-    "find-up": "^6.3.0",
-    "string-replace-loader": "^3.1.0",
-    "tempy": "^3.0.0",
-    "typescript": "^5.0.3",
-    "webpack-chain": "^6.5.1"
+    "@atls/webpack-start-server-plugin": "workspace:*",
+    "@yarnpkg/cli": "^4.0.0-rc.48",
+    "@yarnpkg/core": "^4.0.0-rc.48",
+    "typescript": "^5.1.6",
+    "webpack-chain-5": "^8.0.2"
   },
   "devDependencies": {
-    "@jest/globals": "29.7.0",
-    "@types/node": "20",
-    "@types/protocol-buffers-schema": "3.4.3",
-    "@types/wait-for-localhost": "3.1.0",
+    "@jest/globals": "^29.6.1",
+    "@atls/logger": "^0.0.2",
+    "@types/node": "^20.4.0",
     "@types/webpack": "^5.28.1",
-    "@yarnpkg/fslib": "3.0.2",
-    "wait-for-localhost": "4.0.1"
+    "@yarnpkg/fslib": "^3.0.0-rc.48",
+    "package-json-type": "^1.0.3"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       "./package.json": "./package.json",
       ".": {
@@ -46,6 +45,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }

@@ -1,11 +1,15 @@
-export enum WebpackEnvironment {
-  prod = 'production',
-  dev = 'development',
+import type { SeverityNumber } from '@atls/logger'
+import type { webpack }        from '@atls/code-runtime/webpack'
+
+export interface WebpackLogRecord {
+  record: webpack.StatsError
+  severityNumber: SeverityNumber.ERROR | SeverityNumber.WARN
 }
 
-const ModuleType = {
-  commonjs: 'commonjs',
-  module: 'module',
-} as const
+export type WebpackEnvironment = 'development' | 'production'
 
-export type ModuleTypes = (typeof ModuleType)[keyof typeof ModuleType]
+export interface WebpackConfigPlugin {
+  name: string
+  use: any
+  args: Array<any>
+}

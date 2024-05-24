@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -16,12 +17,12 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "ink": "3.2.0",
+    "ink": "^4.2.0",
     "react": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20",
-    "@types/react": "^18.0.33"
+    "@types/node": "^20.4.0",
+    "@types/react": "^18.2.14"
   },
   "publishConfig": {
     "access": "public",
@@ -33,6 +34,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }

@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -16,18 +17,19 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-source-component": "workspace:*"
+    "@atls/cli-ui-source-component": "workspace:*",
+    "nanoid": "^4.0.2"
   },
   "devDependencies": {
+    "@jest/globals": "^29.6.1",
     "@atls/cli-ui-renderer": "workspace:*",
-    "@jest/globals": "29.7.0",
-    "@types/react": "^18.0.33",
-    "ink": "3.2.0",
+    "@types/react": "^18.2.14",
+    "ink": "^4.2.0",
     "react": "^18.2.0",
-    "strip-ansi": "7.1.0"
+    "strip-ansi": "^7.1.0"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {

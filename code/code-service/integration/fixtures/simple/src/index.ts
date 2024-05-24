@@ -1,9 +1,8 @@
-const express = require('express')
+import { createServer } from 'node:http'
 
-const app = express()
-// @ts-ignore
 const port = 3000
 
-app.get('/', (req, res) => res.send('Content'))
-
-app.listen(port)
+createServer((req, res) => {
+  res.writeHead(200)
+  res.end('Content')
+}).listen(port)

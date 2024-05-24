@@ -1,48 +1,22 @@
-import { writeFileSync } from 'node:fs'
-import { existsSync }    from 'node:fs'
-import { mkdirSync }     from 'node:fs'
-import { join }          from 'node:path'
-import { dirname }       from 'node:path'
-import { Worker }        from 'node:worker_threads'
+import { writeFile }            from 'node:fs/promises'
+import { access }               from 'node:fs/promises'
+import { mkdir }                from 'node:fs/promises'
+import { join }                 from 'node:path'
+import { dirname }              from 'node:path'
+import { Worker }               from 'node:worker_threads'
+
+import { fastHashCode as hash } from 'fast-hash-code'
 
 export class EvalWorker {
-  private static build(content: string, workerData: object): Worker {
-    const file = join(process.cwd(), '.yarn/dist/worker.mjs')
+  static async run<T>(cwd: string, content: string, workerData: object): Promise<T> {
+    const worker = await EvalWorker.build(cwd, content, workerData)
 
-    const execArgv: Array<string> = []
-
-    if (existsSync(join(process.cwd(), '.pnp.cjs'))) {
-      execArgv.push('--require')
-      execArgv.push(join(process.cwd(), '.pnp.cjs'))
-    }
-
-    if (existsSync(join(process.cwd(), '.pnp.loader.mjs'))) {
-      execArgv.push('--loader')
-      execArgv.push(join(process.cwd(), '.pnp.loader.mjs'))
-    }
-
-    if (!existsSync(dirname(file))) {
-      mkdirSync(dirname(file))
-    }
-
-    writeFileSync(file, content)
-
-    return new Worker(file, {
-      execArgv: [...execArgv, ...process.execArgv],
-      workerData,
-      env: process.env,
-    })
-  }
-
-  static async run<T>(content: string, workerData: object): Promise<T> {
     return new Promise((resolve, reject) => {
-      const worker = EvalWorker.build(content, workerData)
-
-      const exitHandler = (code: number) => {
+      const exitHandler = (code: number): void => {
         if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`))
       }
 
-      worker.once('message', (result) => {
+      worker.once('message', (result: T) => {
         worker.off('error', reject)
         worker.off('exit', exitHandler)
 
@@ -54,22 +28,77 @@ export class EvalWorker {
     })
   }
 
-  static async watch(content: string, workerData: object, onMessage) {
-    return new Promise((resolve, reject) => {
-      const worker = EvalWorker.build(content, workerData)
+  static async watch<T>(
+    cwd: string,
+    content: string,
+    workerData: object,
+    callback: (logRecord: T) => void
+  ): Promise<void> {
+    const worker = await EvalWorker.build(cwd, content, workerData)
 
-      const exitHandler = (code: number) => {
-        if (code !== 0) {
-          reject(new Error(`Worker stopped with exit code ${code}`))
-        } else {
-          resolve(null)
+    return new Promise((resolve, reject) => {
+      const stdinHandler = (data: Buffer): void => {
+        if (worker.stdin) {
+          worker.stdin.write(data)
         }
       }
 
-      worker.on('message', onMessage)
+      const exitHandler = (code: number): void => {
+        process.stdin.off('data', stdinHandler)
+
+        if (code !== 0) {
+          reject(new Error(`Worker stopped with exit code ${code}`))
+        } else {
+          resolve()
+        }
+      }
+
+      process.stdin.on('data', stdinHandler)
+
+      worker.on('message', callback)
 
       worker.once('error', reject)
       worker.once('exit', exitHandler)
+    })
+  }
+
+  private static async build(cwd: string, content: string, workerData: object): Promise<Worker> {
+    const filename: number = hash(content, { forcePositive: true })
+    const file: string = join(cwd, `.yarn/dist/${filename}.mjs`)
+
+    try {
+      try {
+        await access(dirname(file))
+      } catch {
+        await mkdir(dirname(file), { recursive: true })
+      }
+
+      await access(file)
+    } catch {
+      await writeFile(file, content)
+    }
+
+    const execArgv: Array<string> = []
+
+    try {
+      await access(join(cwd, '.pnp.cjs'))
+
+      execArgv.push('--require')
+      execArgv.push(join(cwd, '.pnp.cjs'))
+    } catch {} // eslint-disable-line no-empty
+
+    try {
+      await access(join(cwd, '.pnp.cjs'))
+
+      execArgv.push('--loader')
+      execArgv.push(join(cwd, '.pnp.loader.mjs'))
+    } catch {} // eslint-disable-line no-empty
+
+    return new Worker(file, {
+      execArgv: [...execArgv, ...process.execArgv],
+      workerData,
+      env: process.env,
+      stdin: true,
     })
   }
 }

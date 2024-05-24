@@ -1,5 +1,5 @@
 diff --git a/index.d.ts b/index.d.ts
-index 5830793fdde1fb6ae6075c3b20ec4f94fcd1eb93..cdd33ad560c6a5fbe329b77afc682010842d887f 100644
+index 5830793fdde1fb6ae6075c3b20ec4f94fcd1eb93..d67c1075264737089e20882a63c3566139acd29b 100644
 --- a/index.d.ts
 +++ b/index.d.ts
 @@ -46,4 +46,4 @@ interface sortPackageJsonExports extends sortPackageJson.SortPackageJsonFn {
@@ -8,3 +8,32 @@ index 5830793fdde1fb6ae6075c3b20ec4f94fcd1eb93..cdd33ad560c6a5fbe329b77afc682010
  
 -export = sortPackageJsonExports
 +export default sortPackageJsonExports.sortPackageJson
+diff --git a/index.js b/index.js
+index 66ee62cb56d5e8dbbaacc4dd95b1cc0b2d7cb702..533f1875ce7b6ef4225b03adfed565a34f07df8a 100755
+--- a/index.js
++++ b/index.js
+@@ -1,7 +1,6 @@
+ import sortObjectKeys from 'sort-object-keys'
+ import detectIndent from 'detect-indent'
+ import { detectNewlineGraceful as detectNewline } from 'detect-newline'
+-import gitHooks from 'git-hooks-list'
+ import isPlainObject from 'is-plain-obj'
+ 
+ const hasOwn =
+@@ -52,7 +51,6 @@ const overProperty =
+     hasOwn(object, property)
+       ? { ...object, [property]: over(object[property], ...args) }
+       : object
+-const sortGitHooks = sortObjectBy(gitHooks)
+ 
+ // https://github.com/eslint/eslint/blob/acc0e47572a9390292b4e313b4a4bf360d236358/conf/config-schema.js
+ const eslintBaseConfigProperties = [
+@@ -249,8 +247,6 @@ const fields = [
+   { key: 'betterScripts', over: sortScripts },
+   /* vscode */ { key: 'contributes', over: sortObject },
+   /* vscode */ { key: 'activationEvents', over: uniq },
+-  { key: 'husky', over: overProperty('hooks', sortGitHooks) },
+-  { key: 'simple-git-hooks', over: sortGitHooks },
+   { key: 'pre-commit' },
+   { key: 'commitlint', over: sortObject },
+   { key: 'lint-staged' },

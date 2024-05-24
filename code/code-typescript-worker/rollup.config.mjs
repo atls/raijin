@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import json from '@rollup/plugin-json'
 import esbuild from 'rollup-plugin-esbuild'
 import { brotliCompressSync } from 'node:zlib'
-import { fileURLToPath} from 'node:url'
+import { fileURLToPath } from 'node:url'
 
 const wrapOutput = () => ({
   name: 'wrap-output',
@@ -14,7 +14,7 @@ const wrapOutput = () => ({
 
     const outputBundle = bundle[bundles[0]]
 
-    outputBundle.code = `import { brotliDecompressSync } from 'zlib';\n\nlet hook;\n\nexport const getContent = () => {\n  if (typeof hook === \`undefined\`)\n    hook = brotliDecompressSync(Buffer.from('${brotliCompressSync(
+    outputBundle.code = `import { brotliDecompressSync } from 'node:zlib';\n\nlet hook: string | undefined;\n\nexport const getContent = (): string => {\n  if (typeof hook === \`undefined\`)\n    hook = brotliDecompressSync(Buffer.from('${brotliCompressSync(
       outputBundle.code.replace(/\r\n/g, '\n')
     ).toString('base64')}', 'base64')).toString();\n\n  return hook;\n};\n`
   },
@@ -46,7 +46,7 @@ export default [
         jail: join(fileURLToPath(new URL('.', import.meta.url)), '../../'),
         preferBuiltins: true,
       }),
-      esbuild({ tsconfig: false, target: 'node14' }),
+      esbuild({ tsconfig: false, target: 'node20' }),
       cjs({ requireReturnsDefault: `preferred` }),
       json(),
       wrapOutput(),

@@ -10,12 +10,11 @@ import { Service }       from '../src/index.js'
 describe('service', () => {
   describe('build', () => {
     it('simple', async () => {
-      const { errors, warnings } = await new Service(
+      const logRecords = await new Service(
         join(fileURLToPath(new URL('.', import.meta.url)), 'fixtures/simple')
       ).build()
 
-      expect(errors).toEqual([])
-      expect(warnings).toEqual([])
+      expect(logRecords).toEqual([])
     })
   })
 })

@@ -2,14 +2,16 @@ import { writeFile }      from 'node:fs/promises'
 import { readFile }       from 'node:fs/promises'
 import { relative }       from 'node:path'
 
-import ignorerPkg         from 'ignore'
-import babel              from 'prettier/plugins/babel'
-import graphql            from 'prettier/plugins/graphql'
-import markdown           from 'prettier/plugins/markdown'
-import typescript         from 'prettier/plugins/typescript'
-import yaml               from 'prettier/plugins/yaml'
+import * as babel         from 'prettier/plugins/babel'
+import * as graphql       from 'prettier/plugins/graphql'
+import * as markdown      from 'prettier/plugins/markdown'
+import * as typescript    from 'prettier/plugins/typescript'
+import * as yaml          from 'prettier/plugins/yaml'
+// @ts-expect-error
+import * as estree        from 'prettier/plugins/estree'
 import { globby }         from 'globby'
 import { format }         from 'prettier/standalone'
+import ignorer            from 'ignore'
 
 import config             from '@atls/config-prettier'
 import plugin             from '@atls/prettier-plugin'
@@ -17,14 +19,12 @@ import plugin             from '@atls/prettier-plugin'
 import { ignore }         from './formatter.patterns.js'
 import { createPatterns } from './formatter.patterns.js'
 
-// TODO: moduleResolution
-const ignorer = ignorerPkg as any
-
 export class Formatter {
   constructor(private readonly cwd: string) {}
 
-  async formatFiles(files: Array<string> = []) {
-    const formatFiles = ignorer()
+  async formatFiles(files: Array<string> = []): Promise<void> {
+    const formatFiles = ignorer
+      .default()
       .add(ignore)
       .filter(files.map((filepath) => relative(this.cwd, filepath)))
 
@@ -36,14 +36,7 @@ export class Formatter {
       const output = await format(input, {
         ...config,
         filepath: filename,
-        plugins: [
-          yaml as any,
-          markdown as any,
-          graphql as any,
-          babel as any,
-          typescript as any,
-          plugin as any,
-        ],
+        plugins: [estree, yaml, markdown, graphql, babel, typescript, plugin],
       })
 
       if (output !== input && output) {
@@ -53,7 +46,7 @@ export class Formatter {
     }
   }
 
-  async format(files?: Array<string>) {
+  async format(files?: Array<string>): Promise<void> {
     if (files && files.length > 0) {
       await this.formatFiles(files)
     } else {
@@ -61,7 +54,7 @@ export class Formatter {
     }
   }
 
-  async formatProject() {
+  async formatProject(): Promise<void> {
     const files = await globby(createPatterns(this.cwd), {
       dot: true,
     })

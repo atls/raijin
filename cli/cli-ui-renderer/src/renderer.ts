@@ -1,4 +1,6 @@
-import { ReactNode }          from 'react'
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
+import type { ReactNode }     from 'react'
 
 import { Output }             from './ink.js'
 import { reconciler }         from './ink.js'
@@ -8,8 +10,9 @@ import { renderNodeToOutput } from './ink.js'
 export const renderStatic = (
   target: ReactNode,
   terminalWidth: number = process.stdout.columns || 80
-) => {
+): string => {
   const rootNode = createNode('ink-root')
+  // @ts-expect-error
   const container = reconciler.createContainer(rootNode, false, false)
 
   reconciler.updateContainer(target, container, null)
@@ -24,5 +27,5 @@ export const renderStatic = (
 
   renderNodeToOutput(rootNode, output, { skipStaticElements: false })
 
-  return output.get().output
+  return output.get().output as string
 }

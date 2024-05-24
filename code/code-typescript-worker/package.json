@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -20,19 +21,20 @@
   "dependencies": {
     "@atls/code-typescript": "workspace:*",
     "@atls/code-worker-utils": "workspace:*",
-    "flatted": "3.2.9"
+    "flatted": "patch:flatted@npm%3A3.2.7#~/.yarn/patches/flatted-npm-3.2.7-0da10b7c56.patch"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "25.0.7",
-    "@rollup/plugin-json": "6.1.0",
-    "@rollup/plugin-node-resolve": "15.2.3",
-    "esbuild": "0.17.19",
-    "rollup": "3.29.4",
-    "rollup-plugin-esbuild": "5.0.0",
-    "rollup-plugin-terser": "7.0.2",
-    "typescript": "5.2.2"
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "esbuild": "^0.17.19",
+    "rollup": "^3.26.2",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^5.1.6"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       "./package.json": "./package.json",
       ".": {
@@ -41,6 +43,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }

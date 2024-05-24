@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const tsJestResolver = require('ts-jest-resolver')
 
 module.exports = (request, options) => {

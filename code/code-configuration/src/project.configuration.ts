@@ -1,6 +1,7 @@
-import { PortablePath } from '@yarnpkg/fslib'
-import { ppath }        from '@yarnpkg/fslib'
-import { xfs }          from '@yarnpkg/fslib'
+import type { PortablePath } from '@yarnpkg/fslib'
+
+import { ppath }             from '@yarnpkg/fslib'
+import { xfs }               from '@yarnpkg/fslib'
 
 export interface ProjectConfigurationTunnel {
   host?: string
@@ -12,11 +13,11 @@ export class ProjectConfiguration {
   static async findRcFile(cwd: PortablePath): Promise<Partial<ProjectConfiguration>> {
     const rcPath = ppath.join(cwd, '.projectrc.json' as PortablePath)
 
-    if (xfs.existsSync(rcPath)) {
+    if (await xfs.existsPromise(rcPath)) {
       const content = await xfs.readFilePromise(rcPath, 'utf8')
 
       try {
-        return JSON.parse(content)
+        return JSON.parse(content) as Partial<ProjectConfiguration>
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)

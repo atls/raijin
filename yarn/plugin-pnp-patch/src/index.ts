@@ -1,9 +1,10 @@
-import { Hooks as CoreHooks } from '@yarnpkg/core'
-import { Plugin }             from '@yarnpkg/core'
-import { xfs }                from '@yarnpkg/fslib'
-import { getPnpPath }         from '@yarnpkg/plugin-pnp'
+import type { Hooks as CoreHooks } from '@yarnpkg/core'
+import type { Plugin }             from '@yarnpkg/core'
 
-import { getContent }         from './esm-loader/loader.content.js'
+import { xfs }                     from '@yarnpkg/fslib'
+import { getPnpPath }              from '@yarnpkg/plugin-pnp'
+
+import { getContent }              from './esm-loader/loader.content.js'
 
 const plugin: Plugin<CoreHooks> = {
   hooks: {

@@ -8,11 +8,11 @@ import { transformJsxToJsExtension } from './transformers/index.js'
 class TypeScript {
   constructor(private readonly cwd: string) {}
 
-  check(include: Array<string> = []): Promise<Array<ts.Diagnostic>> {
-    return this.run(include, { allowImportingTsExtensions: true })
+  async check(include: Array<string> = []): Promise<Array<ts.Diagnostic>> {
+    return this.run(include)
   }
 
-  build(
+  async build(
     include: Array<string> = [],
     override: Partial<ts.CompilerOptions> = {}
   ): Promise<Array<ts.Diagnostic>> {
@@ -27,11 +27,11 @@ class TypeScript {
     const config = deepmerge(tsconfig, { compilerOptions: override }, {
       compilerOptions: { rootDir: this.cwd },
       include,
-    } as any)
+    } as object)
 
     const { fileNames, options, errors } = ts.parseJsonConfigFileContent(config, ts.sys, this.cwd)
 
-    if (errors?.length > 0) {
+    if (errors.length > 0) {
       return errors
     }
 
@@ -44,10 +44,36 @@ class TypeScript {
       after: [transformJsxToJsExtension],
     })
 
-    return ts
-      .getPreEmitDiagnostics(program)
-      .filter((diagnostic) => ![2209].includes(diagnostic.code))
-      .concat(result.diagnostics)
+    return this.filterDiagnostics(ts.getPreEmitDiagnostics(program).concat(result.diagnostics))
+  }
+
+  private filterDiagnostics(diagnostics: Array<ts.Diagnostic>): Array<ts.Diagnostic> {
+    return diagnostics
+      .filter((diagnostic) => diagnostic.code !== 2209)
+      .filter(
+        (diagnostic) => !(diagnostic.code === 1479 && diagnostic.file?.fileName.includes('/.yarn/'))
+      )
+      .filter(
+        (diagnostic) => !(diagnostic.code === 2834 && diagnostic.file?.fileName.includes('/.yarn/'))
+      )
+      .filter(
+        (diagnostic) =>
+          !(diagnostic.code === 7016 && diagnostic.file?.fileName.includes('/lexical/'))
+      )
+      .filter(
+        (diagnostic) =>
+          !(
+            [2315, 2411, 2304, 7006, 7016].includes(diagnostic.code) &&
+            diagnostic.file?.fileName.includes('/@strapi/')
+          )
+      )
+      .filter(
+        (diagnostic) =>
+          !(
+            [2688, 2307, 2503].includes(diagnostic.code) &&
+            diagnostic.file?.fileName.includes('/pkg-tests-core/')
+          )
+      )
   }
 }
 

@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -18,14 +19,15 @@
   "dependencies": {
     "@atls/config-prettier": "workspace:*",
     "@atls/prettier-plugin": "workspace:*",
-    "globby": "^13.1.3",
-    "ignore": "5.2.4",
-    "prettier": "3.2.5"
+    "globby": "^13.2.2",
+    "ignore": "^5.2.4",
+    "prettier": "^3.0.0"
   },
   "devDependencies": {
-    "@types/node": "20"
+    "@types/node": "^20.4.0"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       "./package.json": "./package.json",
       ".": {
@@ -34,6 +36,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }

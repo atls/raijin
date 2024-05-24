@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -15,7 +16,11 @@
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
+  "dependencies": {
+    "fast-hash-code": "^2.1.0"
+  },
   "publishConfig": {
+    "access": "public",
     "exports": {
       "./package.json": "./package.json",
       ".": {
@@ -24,9 +29,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
-  },
-  "devDependencies": {
-    "@types/node": "20"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }

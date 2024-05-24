@@ -3,4 +3,6 @@ import { workerData } from 'node:worker_threads'
 
 import { Formatter }  from '@atls/code-format'
 
-new Formatter(workerData.cwd).format(workerData.files).then(() => parentPort!.postMessage(''))
+await new Formatter(workerData.cwd as string).format(workerData.files as Array<string>)
+
+parentPort!.postMessage('')

@@ -3,6 +3,10 @@
   "version": "0.0.7",
   "license": "BSD-3-Clause",
   "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -14,21 +18,31 @@
   },
   "dependencies": {
     "@commitlint/format": "^17.4.4",
-    "@commitlint/is-ignored": "^17.4.4",
-    "@commitlint/lint": "^17.4.4",
+    "@commitlint/is-ignored": "^17.6.6",
+    "@commitlint/lint": "^17.6.6",
     "@commitlint/load": "^17.5.0",
     "@commitlint/read": "^17.5.1",
-    "@commitlint/rules": "^17.4.4",
+    "@commitlint/rules": "^17.6.5",
     "@commitlint/types": "^17.4.4",
-    "conventional-changelog-angular": "^5.0.13",
-    "conventional-commits-parser": "^3.2.4"
+    "conventional-changelog-angular": "^6.0.0",
+    "conventional-commits-parser": "^4.0.0"
   },
   "devDependencies": {
-    "@jest/globals": "29.5.0",
-    "@types/node": "^18.15.11"
+    "@jest/globals": "^29.6.1",
+    "@types/conventional-commits-parser": "^3.0.3",
+    "@types/node": "^20.4.0"
   },
   "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

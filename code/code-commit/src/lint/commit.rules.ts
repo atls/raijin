@@ -1,4 +1,4 @@
-import { QualifiedRules } from '@commitlint/types'
+import type { QualifiedRules } from '@commitlint/types'
 
 export const rules: QualifiedRules = {
   'body-leading-blank': [1, 'always'],

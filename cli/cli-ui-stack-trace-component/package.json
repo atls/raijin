@@ -7,6 +7,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -18,17 +19,18 @@
   "dependencies": {
     "@atls/cli-ui-renderer": "workspace:*",
     "@atls/cli-ui-source-component": "workspace:*",
-    "@atls/stack-trace": "0.0.2"
+    "@atls/stack-trace": "0.0.2",
+    "nanoid": "^4.0.2"
   },
   "devDependencies": {
-    "@jest/globals": "29.7.0",
-    "@types/react": "16",
-    "ink": "3.2.0",
-    "react": "16.14.0",
-    "strip-ansi": "7.1.0"
+    "@jest/globals": "^29.6.1",
+    "@types/react": "^18.2.14",
+    "ink": "^4.2.0",
+    "react": "^18.2.0",
+    "strip-ansi": "^7.1.0"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {
@@ -41,6 +43,7 @@
         "default": "./dist/index.js"
       }
     },
-    "typings": "dist/index.d.ts"
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
   }
 }

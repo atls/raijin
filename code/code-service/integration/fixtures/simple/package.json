@@ -2,17 +2,10 @@
   "name": "@fixtures/service-simple",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "yarn service build",
+    "dev": "yarn service dev",
     "prepack": "run build"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
-  },
-  "devDependencies": {
-    "express": "^4.18.2"
-  },
-  "externalDependencies": {
-    "express": "*"
   }
 }

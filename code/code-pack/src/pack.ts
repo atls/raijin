@@ -1,16 +1,17 @@
-import { stringify }   from '@iarna/toml'
-import { execUtils }   from '@yarnpkg/core'
-import { xfs }         from '@yarnpkg/fslib'
-import { ppath }       from '@yarnpkg/fslib'
-import { toFilename }  from '@yarnpkg/fslib'
+import type { PackOptions } from './pack.interfaces.js'
+import type { PackOutputs } from './pack.interfaces.js'
 
-import { PackOptions } from './pack.interfaces.js'
-import { PackOutputs } from './pack.interfaces.js'
-import { getTag }      from './tag.utils.js'
+import { stringify }        from '@iarna/toml'
+import { execUtils }        from '@yarnpkg/core'
+import { xfs }              from '@yarnpkg/fslib'
+import { ppath }            from '@yarnpkg/fslib'
+import { toFilename }       from '@yarnpkg/fslib'
+
+import { getTag }           from './tag.utils.js'
 
 export const pack = async (
   { workspace, registry, publish, tagPolicy, builder, buildpack }: PackOptions,
-  context
+  context: execUtils.PipevpOptions
 ): Promise<PackOutputs> => {
   const repo = workspace.replace('@', '').replace(/\//g, '-')
   const image = `${registry}${repo}`

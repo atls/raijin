@@ -1,36 +1,36 @@
-import { writeFileSync }                 from 'node:fs'
-import { readFile }                      from 'node:fs/promises'
-import { join }                          from 'node:path'
+import type { WebpackEnvironment } from './webpack.interfaces.js'
 
-import Config                            from 'webpack-chain'
-import fg                                from 'fast-glob'
-import { findUp }                        from 'find-up'
-import { temporaryFile }                 from 'tempy'
+import { writeFile }               from 'node:fs/promises'
+import { mkdtemp }                 from 'node:fs/promises'
+import { join }                    from 'node:path'
+import { tmpdir }                  from 'node:os'
 
-import tsconfig                          from '@atls/config-typescript'
-import { webpack }                       from '@atls/code-runtime/webpack'
-import { tsLoaderPath }                  from '@atls/code-runtime/webpack'
-import { webpackProtoImportsLoaderPath } from '@atls/code-runtime/webpack'
+import Config                      from 'webpack-chain-5'
 
-import { FORCE_UNPLUGGED_PACKAGES }      from './webpack.externals.js'
-import { UNUSED_EXTERNALS }              from './webpack.externals.js'
+import { webpack }                 from '@atls/code-runtime/webpack'
+import { tsLoaderPath }            from '@atls/code-runtime/webpack'
+import { nodeLoaderPath }          from '@atls/code-runtime/webpack'
+import tsconfig                    from '@atls/config-typescript'
 
-export type WebpackEnvironment = 'production' | 'development'
+import { WebpackExternals }        from './webpack.externals.js'
+import { LAZY_IMPORTS }            from './webpack.ignore.js'
 
 export class WebpackConfig {
   constructor(private readonly cwd: string) {}
 
   async build(
     environment: WebpackEnvironment = 'production',
-    plugins: Array<any> = []
+    plugins: Array<{
+      use: Config.PluginClass<webpack.WebpackPluginInstance> | webpack.WebpackPluginInstance
+      args: Array<any>
+      name: string
+    }> = []
   ): Promise<webpack.Configuration> {
     const config = new Config()
 
-    this.applyCommon(config, environment)
-    this.applyPlugins(config, environment)
-    this.applyModules(config)
-
-    config.externals(await this.getExternals())
+    await this.applyCommon(config, environment)
+    await this.applyPlugins(config, environment)
+    await this.applyModules(config)
 
     plugins.forEach((plugin) => {
       config.plugin(plugin.name).use(plugin.use, plugin.args)
@@ -39,36 +39,71 @@ export class WebpackConfig {
     return config.toConfig()
   }
 
-  private applyCommon(config: Config, environment: WebpackEnvironment) {
+  private async applyCommon(config: Config, environment: WebpackEnvironment): Promise<void> {
     config
       .mode(environment)
       .bail(environment === 'production')
       .target('async-node')
       .optimization.minimize(false)
 
-    config.node.set('__dirname', false).set('__filename', false)
-
     config.entry('index').add(join(this.cwd, 'src/index'))
 
+    if (environment === 'development') {
+      config.entry('hot').add('webpack/hot/poll?100')
+    }
+
     config.output.path(join(this.cwd, 'dist')).filename('[name].js')
+    config.output.chunkFormat('module')
+    config.output.module(true)
 
     config.resolve.extensions.add('.tsx').add('.ts').add('.js')
+    config.resolve.extensionAlias
+      .set('.js', ['.js', '.ts'])
+      .set('.jsx', ['.jsx', '.tsx'])
+      .set('.cjs', ['.cjs', '.cts'])
+      .set('.mjs', ['.mjs', '.mts'])
 
-    config.devtool(
-      environment === 'production' ? 'source-map' : ('eval-cheap-module-source-map' as any)
-    )
+    config.resolve.alias.set('class-transformer/storage', 'class-transformer/cjs/storage')
+
+    config.externalsType('import')
+    config.externalsPresets({ node: true })
+    config.externals(['webpack/hot/poll?100', await new WebpackExternals(this.cwd).build()])
+
+    config.devtool(environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map')
+
+    config.experiments({ outputModule: true })
   }
 
-  private applyPlugins(config: Config, environment: WebpackEnvironment) {
-    config.when(environment === 'development', () => {
+  private async applyPlugins(config: Config, environment: WebpackEnvironment): Promise<void> {
+    if (environment === 'development') {
       config.plugin('hot').use(webpack.HotModuleReplacementPlugin)
-    })
+    }
+
+    config.plugin('ignore').use(webpack.IgnorePlugin, [
+      {
+        checkResource: (resource: string): boolean => {
+          if (!LAZY_IMPORTS.includes(resource)) {
+            return false
+          }
+
+          try {
+            require.resolve(resource, {
+              paths: [this.cwd],
+            })
+          } catch (err) {
+            return true
+          }
+
+          return false
+        },
+      },
+    ])
   }
 
-  private applyModules(config: Config) {
-    const configFile = temporaryFile()
+  private async applyModules(config: Config): Promise<void> {
+    const configFile = join(await mkdtemp(join(tmpdir(), 'code-service-')), 'tsconfig.json')
 
-    writeFileSync(configFile, '{"include":["**/*"]}')
+    await writeFile(configFile, '{"include":["**/*"]}')
 
     config.module
       .rule('ts')
@@ -85,68 +120,9 @@ export class WebpackConfig {
       })
 
     config.module
-      .rule('protos')
-      .test(/\.proto$/)
-      .use('proto')
-      .loader(webpackProtoImportsLoaderPath)
-  }
-
-  async getUnpluggedDependencies(): Promise<Set<string>> {
-    const yarnFolder = await findUp('.yarn')
-
-    if (!yarnFolder) {
-      return Promise.resolve(new Set())
-    }
-
-    const pnpUnpluggedFolder = join(yarnFolder, 'unplugged')
-    const dependenciesNames = new Set<string>()
-
-    const entries = await fg('*/node_modules/*/package.json', {
-      cwd: pnpUnpluggedFolder,
-    })
-
-    await Promise.all(
-      entries
-        .map((entry) => join(pnpUnpluggedFolder, entry))
-        .map(async (entry) => {
-          try {
-            const { name } = JSON.parse((await readFile(entry)).toString())
-
-            if (name && !FORCE_UNPLUGGED_PACKAGES.has(name)) {
-              dependenciesNames.add(name)
-            }
-          } catch {} // eslint-disable-line
-        })
-    )
-
-    return dependenciesNames
-  }
-
-  async getWorkspaceExternals(): Promise<Set<string>> {
-    try {
-      const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-
-      const { externalDependencies = {} } = JSON.parse(content)
-
-      return new Set(Object.keys(externalDependencies))
-    } catch {
-      return Promise.resolve(new Set())
-    }
-  }
-
-  async getExternals(): Promise<{ [key: string]: string }> {
-    const workspaceExternals: Array<string> = Array.from(await this.getWorkspaceExternals())
-
-    const unpluggedExternals: Array<string> = Array.from(await this.getUnpluggedDependencies())
-
-    return Array.from(
-      new Set([...workspaceExternals, ...unpluggedExternals, ...UNUSED_EXTERNALS])
-    ).reduce(
-      (result, dependency) => ({
-        ...result,
-        [dependency]: `commonjs2 ${dependency}`,
-      }),
-      {}
-    )
+      .rule('node')
+      .test(/\.node$/)
+      .use('node')
+      .loader(nodeLoaderPath)
   }
 }

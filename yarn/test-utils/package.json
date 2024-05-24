@@ -16,10 +16,11 @@
     "yarn:download": "yarn node ./scripts/download-yarn-tests-packages.script.mjs"
   },
   "dependencies": {
-    "@yarnpkg/core": "^4.0.3",
-    "@yarnpkg/fslib": "^3.0.2",
-    "@yarnpkg/plugin-pack": "^4.0.0",
-    "pkg-tests-core": "*"
+    "@yarnpkg/core": "^4.0.0-rc.48",
+    "@yarnpkg/fslib": "^3.0.0-rc.48",
+    "@yarnpkg/plugin-pack": "^4.0.0-rc.48",
+    "pkg-tests-core": "file:./cache/pkg-tests-core.tgz",
+    "pkg-tests-fixtures": "file:cache/pkg-tests-fixtures.tgz"
   },
   "publishConfig": {
     "access": "public",

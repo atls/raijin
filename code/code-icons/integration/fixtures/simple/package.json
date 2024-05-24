@@ -1,0 +1,13 @@
+{
+  "name": "@fixtures/icons-simple",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@babel/core": "*",
+    "@babel/template": "*",
+    "@fixtures/icons-theme": "workspace:^",
+    "@types/babel__core": "^7.20.1",
+    "@types/babel__template": "^7.4.1"
+  }
+}

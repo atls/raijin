@@ -1,15 +1,14 @@
-import { Workspace }         from '@yarnpkg/core'
+import type { Workspace }    from '@yarnpkg/core'
+import type { PortablePath } from '@yarnpkg/fslib'
+import type { Filename }     from '@yarnpkg/fslib'
+
 import { Configuration }     from '@yarnpkg/core'
 import { Project }           from '@yarnpkg/core'
 import { WorkspaceResolver } from '@yarnpkg/core'
 import { ThrowReport }       from '@yarnpkg/core'
-import { PortablePath }      from '@yarnpkg/fslib'
-import { Filename }          from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
-import { prepareForPack }    from '@yarnpkg/plugin-pack/lib/packUtils.js'
-import { genPackList }       from '@yarnpkg/plugin-pack/lib/packUtils.js'
-import { genPackStream }     from '@yarnpkg/plugin-pack/lib/packUtils.js'
+import { packUtils }         from '@yarnpkg/plugin-pack'
 
 export class PackageUtils {
   private configuration!: Configuration
@@ -22,7 +21,7 @@ export class PackageUtils {
     return process.cwd() as PortablePath
   }
 
-  async getWorkspacePackage(name: string) {
+  async getWorkspacePackage(name: string): Promise<PortablePath> {
     const workspace = (await this.getRootWorkspace())
       .getRecursiveWorkspaceChildren()
       .find((ws) => ws.manifest.raw.name === name)
@@ -30,7 +29,7 @@ export class PackageUtils {
     return ppath.resolve(workspace!.cwd, 'package.tgz' as Filename)
   }
 
-  async getConfiguration() {
+  async getConfiguration(): Promise<Configuration> {
     if (!this.configuration) {
       this.configuration = await Configuration.find(this.cwd, null, {
         strict: false,
@@ -42,7 +41,7 @@ export class PackageUtils {
     return this.configuration
   }
 
-  async getProject() {
+  async getProject(): Promise<Project> {
     if (!this.project) {
       const { project, workspace } = await Project.find(await this.getConfiguration(), this.cwd)
 
@@ -53,7 +52,7 @@ export class PackageUtils {
     return this.project
   }
 
-  async getRootWorkspace() {
+  async getRootWorkspace(): Promise<Workspace> {
     if (!this.rootWorkspace) {
       await this.getProject()
     }
@@ -85,7 +84,7 @@ export class PackageUtils {
       return target
     }
 
-    await prepareForPack(workspace, { report: new ThrowReport() }, async () => {
+    await packUtils.prepareForPack(workspace, { report: new ThrowReport() }, async () => {
       for (const descriptor of workspace.manifest.dependencies.values()) {
         if (descriptor.range.startsWith(WorkspaceResolver.protocol)) {
           const dependent = project.tryWorkspaceByDescriptor(descriptor)
@@ -132,9 +131,9 @@ export class PackageUtils {
         }
       }
 
-      const files = await genPackList(workspace)
+      const files = await packUtils.genPackList(workspace)
 
-      const pack = await genPackStream(workspace, files)
+      const pack = await packUtils.genPackStream(workspace, files)
       const write = xfs.createWriteStream(target)
 
       pack.pipe(write)

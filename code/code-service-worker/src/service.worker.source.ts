@@ -1,33 +1,39 @@
-import { parentPort } from 'node:worker_threads'
-import { workerData } from 'node:worker_threads'
+import type { webpack } from '@atls/code-runtime/webpack'
 
-import { Service }    from '@atls/code-service'
+import { parentPort }   from 'node:worker_threads'
+import { workerData }   from 'node:worker_threads'
 
-const { environment, cwd } = workerData
+import { Service }      from '@atls/code-service'
 
-const service = new Service(cwd)
+const { environment, cwd }: { environment: 'development' | 'production'; cwd: string } = workerData
 
-const waitSignals = (watcher): Promise<void> =>
+const waitSignals = async (watcher: webpack.Watching): Promise<void> =>
   new Promise((resolve) => {
     process.on('SIGINT', () => {
-      watcher.close(() => resolve())
+      watcher.close(() => {
+        resolve()
+      })
     })
 
     process.on('SIGTERM', () => {
-      watcher.close(() => resolve())
+      watcher.close(() => {
+        resolve()
+      })
     })
   })
 
-const execute = async () => {
+const execute = async (): Promise<void> => {
   if (environment === 'production') {
-    parentPort!.postMessage(await service.build())
+    parentPort!.postMessage(await new Service(cwd).build())
   }
 
   if (environment === 'development') {
-    const watcher = await service.watch((message) => parentPort!.postMessage(message))
+    const watcher = await new Service(cwd).watch((message) => {
+      parentPort!.postMessage(message)
+    })
 
     await waitSignals(watcher)
   }
 }
 
-execute()
+await execute()

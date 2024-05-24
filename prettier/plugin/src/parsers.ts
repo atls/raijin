@@ -1,28 +1,19 @@
-import sortImportsPkg       from 'import-sort'
-import sortPackageJson      from 'sort-package-json'
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { ImportSortParser } from './import-sort/index.js'
-import { style }            from './import-sort/index.js'
-import { babel }            from './imports.js'
-import { typescript }       from './imports.js'
+import type { Parser }                        from 'prettier'
 
-// TODO: moduleResolution
-const sortImports = sortImportsPkg as any
+import * as babel                             from 'prettier/plugins/babel'
+import * as typescript                        from 'prettier/plugins/typescript'
+import sortPackageJson                        from 'sort-package-json'
 
-const preprocess = (source, { plugins }) => {
-  const plugin = plugins.find((p) => p.parsers?.typescript)
+import { preprocess as importSortPreprocess } from './import-sort/index.js'
 
-  const { code } = sortImports(
-    source,
-    new ImportSortParser(plugin.parsers.typescript.parse(source)),
-    style
-  )
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
+const preprocess: Parser<any>['preprocess'] = (source, options): string =>
+  importSortPreprocess(source, options)
 
-  return code
-}
-
-const parse = async (source, { plugins }) => {
-  const plugin = plugins.find((p) => p.parsers?.typescript)
+const parse: Parser['parse'] = async (source, { plugins }) => {
+  const plugin: any = plugins.find((p: any) => p.parsers?.typescript)
 
   const program = plugin.parsers.typescript.parse(source)
 
@@ -30,28 +21,28 @@ const parse = async (source, { plugins }) => {
 
   const nodes = [...program.body].reverse()
 
-  nodes.forEach((node, nodeIndex) => {
+  nodes.forEach((node, nodeIndex: number) => {
     if (node.type === 'ImportDeclaration') {
       if (node.specifiers.length > 1) {
         const index = bodyLength - nodeIndex - 1
 
         program.body.splice(index, 1)
 
-        node.specifiers.forEach((_, specifierIndex) => {
+        node.specifiers.forEach((_: unknown, specifierIndex: number) => {
           program.body.splice(index + specifierIndex, 0, {
             ...node,
-            // eslint-disable-next-line no-shadow
-            specifiers: node.specifiers.filter((_, i) => specifierIndex === i),
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            specifiers: node.specifiers.filter((_: unknown, i: number) => specifierIndex === i),
           })
         })
       }
     }
   })
 
-  return program
+  return program // eslint-disable-line @typescript-eslint/no-unsafe-return
 }
 
-export const parsers = {
+export const parsers: Record<string, Parser> = {
   typescript: {
     ...typescript.parsers!.typescript,
     astFormat: 'typescript-custom',
