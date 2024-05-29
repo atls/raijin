@@ -17,9 +17,9 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@emotion/jest": "^11.11.0",
     "@atls/config-typescript": "workspace:*",
     "@atls/jest-resolver": "workspace:*",
+    "@emotion/jest": "^11.11.0",
     "jest-static-stubs": "^0.0.1",
     "ts-jest": "^29.1.1"
   },

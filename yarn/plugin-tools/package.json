@@ -18,8 +18,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-typescript": "workspace:*",
     "@atls/code-runtime": "workspace:*",
+    "@atls/config-typescript": "workspace:*",
     "clipanion": "^3.2.1",
     "deepmerge": "^4.3.1",
     "husky": "^8.0.3",

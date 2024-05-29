@@ -6,7 +6,6 @@
   "main": "src/getPluginConfiguration.ts",
   "dependencies": {
     "@atls/yarn-plugin-badges": "workspace:*",
-    "@atls/yarn-plugin-schematics": "workspace:*",
     "@atls/yarn-plugin-check": "workspace:*",
     "@atls/yarn-plugin-checks": "workspace:*",
     "@atls/yarn-plugin-cli-publish": "workspace:*",
@@ -18,6 +17,7 @@
     "@atls/yarn-plugin-library": "workspace:*",
     "@atls/yarn-plugin-lint": "workspace:*",
     "@atls/yarn-plugin-renderer": "workspace:*",
+    "@atls/yarn-plugin-schematics": "workspace:*",
     "@atls/yarn-plugin-service": "workspace:*",
     "@atls/yarn-plugin-test": "workspace:*",
     "@atls/yarn-plugin-tools": "workspace:*",

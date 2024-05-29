@@ -24,9 +24,9 @@
     "clipanion": "^3.2.1"
   },
   "devDependencies": {
-    "@jest/globals": "^29.6.1",
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-test-utils": "workspace:*",
+    "@jest/globals": "^29.6.1",
     "@yarnpkg/builder": "^4.0.0-rc.48",
     "@yarnpkg/cli": "^4.0.0-rc.48",
     "@yarnpkg/core": "^4.0.0-rc.48"

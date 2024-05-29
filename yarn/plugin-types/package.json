@@ -21,16 +21,16 @@
     "@atls/cli-ui-error-info-component": "workspace:*",
     "@atls/cli-ui-renderer": "workspace:*",
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
-    "@atls/code-typescript-worker": "workspace:*",
     "@atls/code-runtime": "workspace:*",
+    "@atls/code-typescript-worker": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "^3.2.1",
     "react": "^18.2.0",
     "semver": "^7.5.3"
   },
   "devDependencies": {
-    "@jest/globals": "^29.6.1",
     "@atls/yarn-test-utils": "workspace:*",
+    "@jest/globals": "^29.6.1",
     "@types/react": "^18.2.14",
     "@yarnpkg/builder": "^4.0.0-rc.48",
     "@yarnpkg/cli": "^4.0.0-rc.48",

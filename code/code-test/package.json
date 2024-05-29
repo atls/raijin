@@ -19,9 +19,9 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/code-runtime": "workspace:*",
     "@jest/test-result": "^29.6.1",
-    "@jest/types": "^29.6.1",
-    "@atls/code-runtime": "workspace:*"
+    "@jest/types": "^29.6.1"
   },
   "devDependencies": {
     "@types/node": "^20.4.0"

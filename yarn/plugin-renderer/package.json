@@ -23,9 +23,9 @@
     "localtunnel": "^2.0.2"
   },
   "devDependencies": {
-    "@jest/globals": "^29.6.1",
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-test-utils": "workspace:*",
+    "@jest/globals": "^29.6.1",
     "@types/cross-spawn": "^6.0.2",
     "@types/localtunnel": "^2.0.1",
     "@yarnpkg/builder": "^4.0.0-rc.48",

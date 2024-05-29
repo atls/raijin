@@ -1,21 +1,19 @@
 {
   "compilerOptions": {
-    "noEmit": true,
     "lib": ["dom", "dom.iterable", "esnext"],
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": false,
     "isolatedModules": false,
-    "module": "esnext",
+    "module": "nodenext",
     "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false,
-    "noImplicitReturns": false,
-    "noImplicitThis": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "pretty": true,
@@ -23,17 +21,20 @@
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": false,
-    "target": "es2019",
-    "jsx": "react"
+    "target": "es2021",
+    "jsx": "react",
+    "strictPropertyInitialization": false,
+    "outDir": "./dist"
   },
   "include": [
-    "cli/**/*",
-    "code/**/*",
-    "config/**/*",
-    "jest/**/*",
     "prettier/**/*",
-    "schematics/**/*",
+    "code/**/*",
     "webpack/**/*",
-    "yarn/**/*"
-  ]
+    "runtime/**/*",
+    "config/**/*",
+    "yarn/**/*",
+    "jest/**/*",
+    "cli/**/*"
+  ],
+  "types": ["@atls/code-runtime/types"]
 }

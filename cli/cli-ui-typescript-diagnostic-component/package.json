@@ -21,8 +21,8 @@
     "@atls/code-typescript": "workspace:*"
   },
   "devDependencies": {
-    "@jest/globals": "^29.6.1",
     "@atls/cli-ui-renderer": "workspace:*",
+    "@jest/globals": "^29.6.1",
     "@types/react": "^18.2.14",
     "ink": "^4.2.0",
     "react": "^18.2.0",

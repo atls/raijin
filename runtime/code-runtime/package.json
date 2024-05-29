@@ -25,9 +25,9 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@jest/core": "^29.6.1",
     "@atls/config-eslint": "workspace:*",
     "@atls/config-jest": "workspace:*",
+    "@jest/core": "^29.6.1",
     "@svgr/core": "^8.0.0",
     "@svgr/plugin-jsx": "^8.0.1",
     "eslint": "^8.44.0",
