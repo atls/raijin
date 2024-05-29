@@ -8,6 +8,8 @@ import { Configuration }              from 'webpack'
 import { WebpackPluginInstance }      from 'webpack'
 import { HotModuleReplacementPlugin } from 'webpack'
 
+import tsConfig                       from '@atls/config-typescript'
+
 import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals'
 import { UNUSED_EXTERNALS }           from './webpack.externals'
 import { ModuleTypes }                from './webpack.interfaces'
@@ -120,39 +122,15 @@ export class WebpackConfig {
       module: {
         rules: [
           {
-            test: /.tsx?$/,
+            test: /\.([cm]?ts|tsx)$/,
             use: {
-              loader: require.resolve('swc-loader'),
+              loader: require.resolve('ts-loader'),
               options: {
-                minify: true,
-                jsc: {
-                  parser: {
-                    syntax: 'typescript',
-                    jsx: true,
-                    dynamicImport: true,
-                    privateMethod: true,
-                    functionBind: true,
-                    exportDefaultFrom: true,
-                    exportNamespaceFrom: true,
-                    decorators: true,
-                    decoratorsBeforeExport: true,
-                    topLevelAwait: true,
-                    importMeta: true,
-                  },
-                  transform: {
-                    legacyDecorator: true,
-                    decoratorMetadata: true,
-                  },
-                },
+                transpileOnly: true,
+                experimentalWatchApi: true,
+                onlyCompileBundledFiles: true,
+                compilerOptions: { ...tsConfig.compilerOptions, sourceMap: true },
               },
-              // TODO: remove once confirmed swc is full replacement
-              // loader: require.resolve('ts-loader'),
-              // options: {
-              //   transpileOnly: true,
-              //   experimentalWatchApi: true,
-              //   onlyCompileBundledFiles: true,
-              //   compilerOptions: { ...tsConfig.compilerOptions, sourceMap: true },
-              // },
             },
           },
           { test: /\.proto$/, use: require.resolve('@atls/webpack-proto-imports-loader') },
