@@ -16,6 +16,7 @@
     "@atls/config-typescript": "workspace:*",
     "@atls/webpack-proto-imports-loader": "workspace:*",
     "@atls/webpack-start-server-plugin": "workspace:*",
+    "@swc/core": "1.5.7",
     "@yarnpkg/cli": "4.1.0",
     "@yarnpkg/core": "4.0.3",
     "css-loader": "6.8.1",
@@ -23,9 +24,9 @@
     "find-up": "5.0.0",
     "string-replace-loader": "3.1.0",
     "style-loader": "3.3.3",
-    "ts-loader": "9.5.1",
+    "swc-loader": "0.2.6",
     "typescript": "5.2.2",
-    "webpack": "5.89.0",
+    "webpack": "5.91.0",
     "yaml-loader": "0.8.0"
   },
   "devDependencies": {

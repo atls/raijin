@@ -8,8 +8,6 @@ import { Configuration }              from 'webpack'
 import { WebpackPluginInstance }      from 'webpack'
 import { HotModuleReplacementPlugin } from 'webpack'
 
-import tsConfig                       from '@atls/config-typescript'
-
 import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals'
 import { UNUSED_EXTERNALS }           from './webpack.externals'
 import { ModuleTypes }                from './webpack.interfaces'
@@ -122,14 +120,27 @@ export class WebpackConfig {
       module: {
         rules: [
           {
-            test: /\.([cm]?ts|tsx)$/,
-            use: {
-              loader: require.resolve('ts-loader'),
-              options: {
-                transpileOnly: true,
-                experimentalWatchApi: true,
-                onlyCompileBundledFiles: true,
-                compilerOptions: { ...tsConfig.compilerOptions, sourceMap: true },
+            loader: require.resolve('swc-loader'),
+            options: {
+              minify: false,
+              jsc: {
+                parser: {
+                  syntax: 'typescript',
+                  jsx: true,
+                  dynamicImport: true,
+                  privateMethod: true,
+                  functionBind: true,
+                  exportDefaultFrom: true,
+                  exportNamespaceFrom: true,
+                  decorators: true,
+                  decoratorsBeforeExport: true,
+                  topLevelAwait: true,
+                  importMeta: true,
+                },
+                transform: {
+                  legacyDecorator: true,
+                  decoratorMetadata: true,
+                },
               },
             },
           },

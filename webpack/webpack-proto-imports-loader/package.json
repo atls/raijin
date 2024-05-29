@@ -19,11 +19,11 @@
   "devDependencies": {
     "@atls/config-typescript": "workspace:*",
     "@monstrs/types-import-proto": "0.0.1",
-    "@types/node": "18.19.3",
+    "@types/node": "20",
     "memfs": "4.6.0",
     "ts-loader": "9.5.1",
     "typescript": "5.2.2",
-    "webpack": "5.89.0",
+    "webpack": "5.91.0",
     "webpack-chain": "6.5.1"
   },
   "publishConfig": {
