@@ -1,7 +1,5 @@
 import type { Config } from 'jest'
 
-import { tsConfig }    from '@atls/config-typescript'
-
 export const unit: Config = {
   transformIgnorePatterns: ['/node_modules/', '\\.pnp\\.[^\\/]+$'],
   modulePathIgnorePatterns: ['dist', 'integration'],
@@ -12,13 +10,31 @@ export const unit: Config = {
       '@atls/jest-static-stubs/$1',
   },
   globals: {},
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
   transform: {
     '^.+\\.[tj]sx?$': [
-      require.resolve('ts-jest'),
+      require.resolve('@swc/jest'),
       {
-        tsconfig: tsConfig.compilerOptions,
-        isolatedModules: true,
-        diagnostics: false,
+        minify: false,
+        jsc: {
+          parser: {
+            syntax: 'typescript',
+            jsx: true,
+            dynamicImport: true,
+            privateMethod: true,
+            functionBind: true,
+            exportDefaultFrom: true,
+            exportNamespaceFrom: true,
+            decorators: true,
+            decoratorsBeforeExport: true,
+            topLevelAwait: true,
+            importMeta: true,
+          },
+          transform: {
+            legacyDecorator: true,
+            decoratorMetadata: true,
+          },
+        },
       },
     ],
   },
@@ -34,13 +50,31 @@ export const integration: Config = {
       '@atls/jest-static-stubs/$1',
   },
   globals: {},
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
   transform: {
     '^.+\\.[tj]sx?$': [
-      require.resolve('ts-jest'),
+      require.resolve('@swc/jest'),
       {
-        tsconfig: tsConfig.compilerOptions,
-        isolatedModules: true,
-        diagnostics: false,
+        minify: false,
+        jsc: {
+          parser: {
+            syntax: 'typescript',
+            jsx: true,
+            dynamicImport: true,
+            privateMethod: true,
+            functionBind: true,
+            exportDefaultFrom: true,
+            exportNamespaceFrom: true,
+            decorators: true,
+            decoratorsBeforeExport: true,
+            topLevelAwait: true,
+            importMeta: true,
+          },
+          transform: {
+            legacyDecorator: true,
+            decoratorMetadata: true,
+          },
+        },
       },
     ],
   },
