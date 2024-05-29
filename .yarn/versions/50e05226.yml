@@ -1,0 +1,11 @@
+releases:
+  "@atls/code-service": patch
+  "@atls/code-service-worker": patch
+  "@atls/code-test": patch
+  "@atls/code-test-worker": patch
+  "@atls/config-jest": patch
+  "@atls/webpack-proto-imports-loader": patch
+  "@atls/webpack-start-server-plugin": patch
+
+undecided:
+  - "@atls/schematics"
