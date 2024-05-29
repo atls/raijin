@@ -120,26 +120,29 @@ export class WebpackConfig {
       module: {
         rules: [
           {
-            loader: require.resolve('swc-loader'),
-            options: {
-              minify: false,
-              jsc: {
-                parser: {
-                  syntax: 'typescript',
-                  jsx: true,
-                  dynamicImport: true,
-                  privateMethod: true,
-                  functionBind: true,
-                  exportDefaultFrom: true,
-                  exportNamespaceFrom: true,
-                  decorators: true,
-                  decoratorsBeforeExport: true,
-                  topLevelAwait: true,
-                  importMeta: true,
-                },
-                transform: {
-                  legacyDecorator: true,
-                  decoratorMetadata: true,
+            test: /\.([mc]?ts|tsx)$/,
+            use: {
+              loader: require.resolve('swc-loader'),
+              options: {
+                minify: false,
+                jsc: {
+                  parser: {
+                    syntax: 'typescript',
+                    jsx: true,
+                    dynamicImport: true,
+                    privateMethod: true,
+                    functionBind: true,
+                    exportDefaultFrom: true,
+                    exportNamespaceFrom: true,
+                    decorators: true,
+                    decoratorsBeforeExport: true,
+                    topLevelAwait: true,
+                    importMeta: true,
+                  },
+                  transform: {
+                    legacyDecorator: true,
+                    decoratorMetadata: true,
+                  },
                 },
               },
             },
