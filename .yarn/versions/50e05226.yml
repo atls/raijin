@@ -6,6 +6,8 @@ releases:
   "@atls/config-jest": patch
   "@atls/webpack-proto-imports-loader": patch
   "@atls/webpack-start-server-plugin": patch
+  "@atls/schematics": patch
+  "@atls/cli-ui-schematics-component": patch
 
 undecided:
   - "@atls/schematics"
