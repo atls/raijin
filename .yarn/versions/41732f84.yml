@@ -1,0 +1,5 @@
+releases:
+  "@atls/cli-ui-schematics-component": patch
+  "@atls/code-service": patch
+  "@atls/code-service-worker": patch
+  "@atls/schematics": patch
