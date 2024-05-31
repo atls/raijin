@@ -2,7 +2,6 @@ import { BaseCommand }           from '@yarnpkg/cli'
 import { Configuration }         from '@yarnpkg/core'
 import { Project }               from '@yarnpkg/core'
 import { ppath }                 from '@yarnpkg/fslib'
-import { toFilename }            from '@yarnpkg/fslib'
 
 import stripAnsi                 from 'strip-ansi'
 
@@ -52,7 +51,7 @@ class ChecksReleaseCommand extends BaseCommand {
               title: `Error release workspace ${workspace.manifest.raw.name}`,
               message: `Exit code ${code}`,
               raw_details: stripAnsi(context.output),
-              path: ppath.join(workspace.relativeCwd, toFilename('package.json')),
+              path: ppath.join(workspace.relativeCwd, 'package.json'),
               start_line: 1,
               end_line: 1,
             })

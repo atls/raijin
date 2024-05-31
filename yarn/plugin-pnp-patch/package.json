@@ -21,10 +21,10 @@
     "yarn:download": "yarn node ./scripts/download-yarn-pnp-packages.script.mjs"
   },
   "dependencies": {
-    "@yarnpkg/builder": "^4.0.0-rc.48",
-    "@yarnpkg/core": "^4.0.0-rc.48",
-    "@yarnpkg/fslib": "^3.0.0-rc.48",
-    "@yarnpkg/plugin-pnp": "^4.0.0-rc.48",
+    "@yarnpkg/builder": "^4.1.1",
+    "@yarnpkg/core": "^4.0.5",
+    "@yarnpkg/fslib": "^3.1.0",
+    "@yarnpkg/plugin-pnp": "^4.0.5",
     "@yarnpkg/pnp": "file:./cache/yarnpkg-pnp.tgz"
   },
   "devDependencies": {

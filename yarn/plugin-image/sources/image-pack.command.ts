@@ -8,10 +8,8 @@ import { stringify }          from '@iarna/toml'
 import { execUtils }          from '@yarnpkg/core'
 import { xfs }                from '@yarnpkg/fslib'
 import { ppath }              from '@yarnpkg/fslib'
-import { toFilename }         from '@yarnpkg/fslib'
 
 import { Option }             from 'clipanion'
-import { temporaryDirectory } from 'tempy'
 
 import { TagPolicy }     from '@atls/code-pack'
 import { tagUtils }      from '@atls/code-pack'
@@ -29,7 +27,7 @@ const forRepository = async (repo: string) => {
     },
   }
 
-  const descriptorPath = ppath.join(await xfs.mktempPromise(), toFilename('project.toml'))
+  const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml')
 
   await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
 
@@ -59,7 +57,7 @@ class ImagePackCommand extends BaseCommand {
       },
       async (report) => {
         if (this.isWorkspaceAllowedForBundle(workspace)) {
-          const destination = temporaryDirectory() as PortablePath
+          const destination = await xfs.mktempPromise()
 
           report.reportInfo(
             null,

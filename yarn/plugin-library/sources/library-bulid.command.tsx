@@ -7,7 +7,7 @@ import { StreamReport }         from '@yarnpkg/core'
 import { MessageName }          from '@yarnpkg/core'
 
 import React                    from 'react'
-import rimraf                   from 'rimraf'
+//import rimraf                   from 'rimraf'
 import { Option }               from 'clipanion'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'

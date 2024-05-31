@@ -18,7 +18,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "clipanion": "^3.2.1",
+    "clipanion": "^4.0.0-rc.3",
     "cross-spawn": "^7.0.3",
     "localtunnel": "^2.0.2"
   },
@@ -28,10 +28,10 @@
     "@jest/globals": "^29.6.1",
     "@types/cross-spawn": "^6.0.2",
     "@types/localtunnel": "^2.0.1",
-    "@yarnpkg/builder": "^4.0.0-rc.48",
-    "@yarnpkg/cli": "^4.0.0-rc.48",
-    "@yarnpkg/core": "^4.0.0-rc.48",
-    "@yarnpkg/fslib": "^3.0.0-rc.48"
+    "@yarnpkg/builder": "^4.1.1",
+    "@yarnpkg/cli": "^4.2.2",
+    "@yarnpkg/core": "^4.0.5",
+    "@yarnpkg/fslib": "^3.1.0"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "^4",

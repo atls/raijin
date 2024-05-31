@@ -24,7 +24,7 @@
     "@atls/code-runtime": "workspace:*",
     "@atls/code-typescript-worker": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
-    "clipanion": "^3.2.1",
+    "clipanion": "^4.0.0-rc.3",
     "react": "^18.2.0",
     "semver": "^7.5.3"
   },
@@ -32,10 +32,10 @@
     "@atls/yarn-test-utils": "workspace:*",
     "@jest/globals": "^29.6.1",
     "@types/react": "^18.2.14",
-    "@yarnpkg/builder": "^4.0.0-rc.48",
-    "@yarnpkg/cli": "^4.0.0-rc.48",
-    "@yarnpkg/core": "^4.0.0-rc.48",
-    "@yarnpkg/fslib": "^3.0.0-rc.48",
+    "@yarnpkg/builder": "^4.1.1",
+    "@yarnpkg/cli": "^4.2.2",
+    "@yarnpkg/core": "^4.0.5",
+    "@yarnpkg/fslib": "^3.1.0",
     "typescript": "^5.1.6"
   },
   "peerDependencies": {

@@ -21,15 +21,15 @@
     "@atls/code-format-worker": "workspace:*",
     "@atls/code-icons-worker": "workspace:*",
     "@atls/code-lint-worker": "workspace:*",
-    "clipanion": "^3.2.1"
+    "clipanion": "^4.0.0-rc.3"
   },
   "devDependencies": {
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-test-utils": "workspace:*",
     "@jest/globals": "^29.6.1",
-    "@yarnpkg/builder": "^4.0.0-rc.48",
-    "@yarnpkg/cli": "^4.0.0-rc.48",
-    "@yarnpkg/core": "^4.0.0-rc.48"
+    "@yarnpkg/builder": "^4.1.1",
+    "@yarnpkg/cli": "^4.2.2",
+    "@yarnpkg/core": "^4.0.5"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "^4",

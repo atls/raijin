@@ -8,12 +8,15 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "semver": "^7.6.2"
+  },
   "devDependencies": {
-    "@yarnpkg/cli": "^3.5.0",
-    "@yarnpkg/core": "^3.5.0",
-    "@yarnpkg/fslib": "^2.10.2",
-    "@yarnpkg/plugin-pack": "^3.2.0",
-    "@yarnpkg/plugin-patch": "^3.2.4",
+    "@yarnpkg/cli": "^4.2.2",
+    "@yarnpkg/core": "^4.0.5",
+    "@yarnpkg/fslib": "^2.10.4",
+    "@yarnpkg/plugin-pack": "^4.0.0",
+    "@yarnpkg/plugin-patch": "^3.2.5",
     "tar-stream": "^3.0.0"
   },
   "publishConfig": {

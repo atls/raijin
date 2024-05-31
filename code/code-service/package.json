@@ -22,8 +22,8 @@
     "@atls/code-runtime": "workspace:*",
     "@atls/config-typescript": "workspace:*",
     "@atls/webpack-start-server-plugin": "workspace:*",
-    "@yarnpkg/cli": "^4.0.0-rc.48",
-    "@yarnpkg/core": "^4.0.0-rc.48",
+    "@yarnpkg/cli": "^4.2.2",
+    "@yarnpkg/core": "^4.0.5",
     "typescript": "^5.1.6",
     "webpack-chain-5": "^8.0.2"
   },
@@ -32,7 +32,7 @@
     "@jest/globals": "^29.6.1",
     "@types/node": "^20.4.0",
     "@types/webpack": "^5.28.1",
-    "@yarnpkg/fslib": "^3.0.0-rc.48",
+    "@yarnpkg/fslib": "^3.1.0",
     "package-json-type": "^1.0.3"
   },
   "publishConfig": {

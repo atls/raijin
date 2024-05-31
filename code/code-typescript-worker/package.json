@@ -21,7 +21,7 @@
   "dependencies": {
     "@atls/code-typescript": "workspace:*",
     "@atls/code-worker-utils": "workspace:*",
-    "flatted": "patch:flatted@npm%3A3.2.7#~/.yarn/patches/flatted-npm-3.2.7-0da10b7c56.patch"
+    "flatted": "^3.2.7"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.1.0",

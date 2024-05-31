@@ -4,10 +4,10 @@ import { Project }         from '@yarnpkg/core'
 import { StreamReport }    from '@yarnpkg/core'
 import { MessageName }     from '@yarnpkg/core'
 
-import { FormatterWorker } from '@code-runtime/code-format-worker'
-import { LinterWorker }    from '@code-runtime/code-lint-worker'
-import { IconsWorker }     from '@code-runtime/code-icons-worker'
-import { SpinnerProgress } from '@code-runtime/yarn-run-utils'
+//import { FormatterWorker } from '@code-runtime/code-format-worker'
+//import { LinterWorker }    from '@code-runtime/code-lint-worker'
+//import { IconsWorker }     from '@code-runtime/code-icons-worker'
+//import { SpinnerProgress } from '@code-runtime/yarn-run-utils'
 
 export class UiIconsGenerateCommand extends BaseCommand {
   static paths = [['ui', 'icons', 'generate']]

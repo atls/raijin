@@ -27,10 +27,10 @@
   "devDependencies": {
     "@atls/yarn-test-utils": "workspace:0.0.1",
     "@jest/globals": "29.7.0",
-    "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.1.1",
-    "@yarnpkg/core": "4.0.3",
-    "@yarnpkg/fslib": "3.0.2"
+    "@yarnpkg/builder": "4.1.1",
+    "@yarnpkg/cli": "4.2.2",
+    "@yarnpkg/core": "4.0.5",
+    "@yarnpkg/fslib": "3.1.0"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

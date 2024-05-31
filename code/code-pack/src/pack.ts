@@ -5,7 +5,6 @@ import { stringify }        from '@iarna/toml'
 import { execUtils }        from '@yarnpkg/core'
 import { xfs }              from '@yarnpkg/fslib'
 import { ppath }            from '@yarnpkg/fslib'
-import { toFilename }       from '@yarnpkg/fslib'
 
 import { getTag }           from './tag.utils.js'
 
@@ -35,7 +34,7 @@ export const pack = async (
     },
   }
 
-  const descriptorPath = ppath.join(await xfs.mktempPromise(), toFilename('project.toml'))
+  const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml')
 
   await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
 

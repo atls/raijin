@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { YarnVersion }            from '@yarnpkg/core'
-import { main }                   from '@yarnpkg/cli'
+import { runExit }                from '@yarnpkg/cli'
+import { npath }                  from '@yarnpkg/fslib'
+import { ppath }                  from '@yarnpkg/fslib'
 
 // @ts-expect-error
 import { getPluginConfiguration } from '@atls/yarn-cli-tools'
@@ -12,13 +13,15 @@ const pc = getPluginConfiguration(packageJson['@yarnpkg/builder'].bundles.standa
 
 if (pc.then) {
   pc.then(async (pluginConfiguration: ReturnType<getPluginConfiguration>) =>
-    main({
-      binaryVersion: YarnVersion || '<unknown>',
+    runExit(process.argv.slice(2), {
+      cwd: ppath.cwd(),
+      selfPath: npath.toPortablePath(npath.resolve(process.argv[1])),
       pluginConfiguration,
     }))
 } else {
-  main({
-    binaryVersion: YarnVersion || '<unknown>',
+  runExit(process.argv.slice(2), {
+    cwd: ppath.cwd(),
+    selfPath: npath.toPortablePath(npath.resolve(process.argv[1])),
     pluginConfiguration: pc,
   })
 }
