@@ -15015,15 +15015,14 @@ const RAW_RUNTIME_STATE =
           ["@types/enquirer", null],\
           ["cli-truncate", "npm:3.1.0"],\
           ["colorette", "npm:2.0.20"],\
-          ["enquirer", null],\
+          ["enquirer", "npm:2.4.1"],\
           ["eventemitter3", "npm:5.0.1"],\
           ["log-update", "npm:5.0.1"],\
           ["rfdc", "npm:1.3.0"],\
           ["wrap-ansi", "npm:8.1.0"]\
         ],\
         "packagePeers": [\
-          "@types/enquirer",\
-          "enquirer"\
+          "@types/enquirer"\
         ],\
         "linkType": "HARD"\
       }]\
