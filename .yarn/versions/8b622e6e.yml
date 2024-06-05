@@ -2,6 +2,3 @@ releases:
   "@atls/code-test": patch
   "@atls/code-test-worker": patch
   "@atls/config-jest": patch
-
-undecided:
-  - "@atls/schematics"
