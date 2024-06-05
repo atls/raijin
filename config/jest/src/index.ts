@@ -38,7 +38,7 @@ export const unit: Config = {
       },
     ],
   },
-  resolver: require.resolve('@monstrs/jest-pnp-resolver'),
+  resolver: require.resolve('@monstrs/jest-resolver'),
 }
 
 export const integration: Config = {
@@ -78,5 +78,5 @@ export const integration: Config = {
       },
     ],
   },
-  resolver: require.resolve('@monstrs/jest-pnp-resolver'),
+  resolver: require.resolve('@monstrs/jest-resolver'),
 }
