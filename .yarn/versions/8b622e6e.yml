@@ -2,3 +2,5 @@ releases:
   "@atls/code-test": patch
   "@atls/code-test-worker": patch
   "@atls/config-jest": patch
+  "@atls/cli-ui-schematics-component": patch
+  "@atls/schematics": patch
