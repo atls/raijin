@@ -35,11 +35,11 @@ class TestIntegrationCommand extends BaseCommand {
         const scope = this.context.cwd.replace(project.cwd, '')
 
         this.files.forEach((file) =>
-          args.push(join(scope.startsWith('/') ? scope.substr(1) : scope, file)))
+          args.push(join(scope.startsWith('/') ? scope.slice(1) : scope, file)))
       } else {
         const scope = this.context.cwd.replace(project.cwd, '')
 
-        args.push(scope.startsWith('/') ? scope.substr(1) : scope)
+        args.push(scope.startsWith('/') ? scope.slice(1) : scope)
       }
     } else if (this.files?.length > 0) {
       this.files.forEach((file) => args.push(file))
