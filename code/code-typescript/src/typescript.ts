@@ -1,4 +1,6 @@
 import deepmerge                     from 'deepmerge'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 import tsconfig                      from '@atls/config-typescript'
 import { ts }                        from '@atls/code-runtime/typescript'
@@ -24,9 +26,14 @@ class TypeScript {
     override: Partial<ts.CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<ts.Diagnostic>> {
-    const config = deepmerge(tsconfig, { compilerOptions: override }, {
+    const projectIgnorePatterns = await this.getProjectIgnorePatterns()
+
+    const skipLibCheck = await this.getLibCheckOption()
+
+    const config = deepmerge(tsconfig, { compilerOptions: override, skipLibCheck }, {
       compilerOptions: { rootDir: this.cwd },
       include,
+      exclude: [...tsconfig.exclude, ...projectIgnorePatterns]
     } as object)
 
     const { fileNames, options, errors } = ts.parseJsonConfigFileContent(config, ts.sys, this.cwd)
@@ -75,6 +82,21 @@ class TypeScript {
           )
       )
   }
+
+  private getProjectIgnorePatterns(): Array<string> {
+    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { typecheckIgnorePatterns = [] } = JSON.parse(content)
+
+    return typecheckIgnorePatterns
+  }
+
+  private getLibCheckOption(): boolean {
+    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { typecheckSkipLibCheck = false } = JSON.parse(content)
+
+    return typecheckSkipLibCheck
 }
 
 export { TypeScript }
