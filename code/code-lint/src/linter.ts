@@ -1,6 +1,7 @@
 import type { ESLint }        from '@atls/code-runtime/eslint'
 
 import { readFile }           from 'node:fs/promises'
+import { readFileSync }           from 'node:fs'
 import { writeFile }          from 'node:fs/promises'
 import { relative }           from 'node:path'
 import { join }               from 'node:path'
@@ -33,7 +34,7 @@ export class Linter {
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     this.linter = new ESLinter({ configType: 'flat' } as any)
-    this.ignore = ignorer.default().add(ignore)
+    this.ignore = ignorer.default().add(ignore).add(this.getProjectIgnorePatterns())
   }
 
   protected get config(): Array<ESLinter.FlatConfig> {
@@ -104,5 +105,13 @@ export class Linter {
     }
 
     return this.lintProject(options)
+  }
+
+  private getProjectIgnorePatterns(): Array<string> {
+    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { linterIgnorePatterns = [] } = JSON.parse(content)
+
+    return linterIgnorePatterns
   }
 }
