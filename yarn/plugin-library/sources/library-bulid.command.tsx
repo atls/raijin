@@ -7,7 +7,7 @@ import { StreamReport }         from '@yarnpkg/core'
 import { MessageName }          from '@yarnpkg/core'
 
 import React                    from 'react'
-//import rimraf                   from 'rimraf'
+import rimraf                   from 'rimraf'
 import { Option }               from 'clipanion'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
@@ -42,6 +42,7 @@ class LibraryBuildCommand extends BaseCommand {
 
             const diagnostics = await ts.build([join(this.context.cwd, './src')], {
               outDir: join(this.context.cwd, this.target),
+              module: 'nodenext' as any,
               declaration: true,
             })
 
