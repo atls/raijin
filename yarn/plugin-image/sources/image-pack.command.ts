@@ -8,6 +8,8 @@ import { stringify }          from '@iarna/toml'
 import { execUtils }          from '@yarnpkg/core'
 import { xfs }                from '@yarnpkg/fslib'
 import { ppath }              from '@yarnpkg/fslib'
+import { readFileSync } from 'node:fs'
+import { join } from 'path'
 
 import { Option }             from 'clipanion'
 
@@ -68,6 +70,9 @@ class ImagePackCommand extends BaseCommand {
 
           const repo = workspace.manifest.raw.name.replace('@', '').replace(/\//g, '-')
           const image = `${this.registry}${repo}`
+          const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
+
+          const { packConfiguration = {} } = JSON.parse(content)
 
           const tag = await tagUtils.getTag(this.tagPolicy || 'revision')
 
