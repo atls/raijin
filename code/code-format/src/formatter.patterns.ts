@@ -18,6 +18,7 @@ export const ignore = [
   '**/**/templates/*.yaml',
   '**/templates/*.yaml',
   '.terraform',
+  '.idea'
 ]
 
 const patterns: Array<string> = ['./**/*.{js,mjs,cjs,ts,tsx,yml,yaml,json,graphql,md,mdx}']
@@ -29,6 +30,8 @@ const ignorePatterns: Array<string> = [
   '!./.{git,svn,hg}/**',
   '!**/.yarn/**',
   '!./.yarn/**',
+  '!**/.idea/**',
+  '!./.idea/**',
 ]
 
 export const createPatterns = (cwd: string): Array<string> => [

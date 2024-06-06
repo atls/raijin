@@ -26,6 +26,7 @@ export class Formatter {
     const formatFiles = ignorer
       .default()
       .add(ignore)
+      .add(await this.getProjectIgnorePatterns())
       .filter(files.map((filepath) => relative(this.cwd, filepath)))
 
     for (const filename of formatFiles) {
@@ -60,5 +61,14 @@ export class Formatter {
     })
 
     await this.formatFiles(files)
+  }
+
+  private getProjectIgnorePatterns(): Array<string> {
+    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { formatterIgnorePatterns = [] }: { formatterIgnorePatterns: string[] } =
+      JSON.parse(content)
+
+    return formatterIgnorePatterns
   }
 }
