@@ -13,14 +13,31 @@ export const unit = {
   moduleNameMapper: {
     '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid)$': 'jest-static-stubs/$1',
   },
+  globals: {},
   transform: {
     '^.+\\.[tj]sx?$': [
-      require.resolve('ts-jest'),
+      require.resolve('@swc/jest'),
       {
-        tsconfig: tsconfig.compilerOptions,
-        isolatedModules: true,
-        diagnostics: false,
-        useESM: true,
+        minify: false,
+        jsc: {
+          parser: {
+            syntax: 'typescript',
+            jsx: true,
+            dynamicImport: true,
+            privateMethod: true,
+            functionBind: true,
+            exportDefaultFrom: true,
+            exportNamespaceFrom: true,
+            decorators: true,
+            decoratorsBeforeExport: true,
+            topLevelAwait: true,
+            importMeta: true,
+          },
+          transform: {
+            legacyDecorator: true,
+            decoratorMetadata: true,
+          },
+        },
       },
     ],
   },
@@ -36,14 +53,31 @@ export const integration = {
   moduleNameMapper: {
     '^.+\\.(jpg|jpeg|gif|png|mp4|mkv|avi|webm|swf|wav|mid)$': 'jest-static-stubs/$1',
   },
+  globals: {},
   transform: {
     '^.+\\.[tj]sx?$': [
-      require.resolve('ts-jest'),
+      require.resolve('@swc/jest'),
       {
-        tsconfig: tsconfig.compilerOptions,
-        isolatedModules: true,
-        diagnostics: false,
-        useESM: true,
+        minify: false,
+        jsc: {
+          parser: {
+            syntax: 'typescript',
+            jsx: true,
+            dynamicImport: true,
+            privateMethod: true,
+            functionBind: true,
+            exportDefaultFrom: true,
+            exportNamespaceFrom: true,
+            decorators: true,
+            decoratorsBeforeExport: true,
+            topLevelAwait: true,
+            importMeta: true,
+          },
+          transform: {
+            legacyDecorator: true,
+            decoratorMetadata: true,
+          },
+        },
       },
     ],
   },
