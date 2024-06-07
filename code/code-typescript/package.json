@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-typescript",
-  "version": "0.0.27",
+  "version": "0.0.33",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

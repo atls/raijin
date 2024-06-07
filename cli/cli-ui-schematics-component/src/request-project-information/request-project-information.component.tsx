@@ -13,7 +13,6 @@ const Submit = ({ onSubmit, ...props }) => {
   useEffect(() => {
     onSubmit(props)
   }, [props, onSubmit])
-
   return null
 }
 
@@ -27,7 +26,6 @@ interface RequestProjectInformationProps {
 
 export const RequestProjectInformation: FC<RequestProjectInformationProps> = ({ onSubmit }) => {
   const [type, setType] = useState<ProjectType>()
-
   if (!type) {
     return (
       <Box flexDirection='column'>

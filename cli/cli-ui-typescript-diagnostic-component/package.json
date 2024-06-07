@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-typescript-diagnostic-component",
-  "version": "0.0.23",
+  "version": "0.0.29",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

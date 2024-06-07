@@ -13,3 +13,10 @@ export interface WebpackConfigPlugin {
   use: any
   args: Array<any>
 }
+
+const ModuleType = {
+  commonjs: 'commonjs',
+  module: 'module',
+} as const
+
+export type ModuleTypes = (typeof ModuleType)[keyof typeof ModuleType]

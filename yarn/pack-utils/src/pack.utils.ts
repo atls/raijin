@@ -81,6 +81,7 @@ export const pack = async (
     // tmpConfiguration.values.set(`enableNetwork`, false);
     // tmpConfiguration.values.set(`enableMirror`, false);
 
+    tmpConfiguration.values.set(`compressionLevel`, configuration.get(`compressionLevel`))
     tmpConfiguration.values.set(`globalFolder`, configuration.get(`globalFolder`))
     tmpConfiguration.values.set(`packageExtensions`, configuration.get(`packageExtensions`))
 
