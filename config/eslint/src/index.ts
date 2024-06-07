@@ -83,3 +83,5 @@ const config: Array<Linter.FlatConfig> = [
     },
   },
 ]
+
+export default config
