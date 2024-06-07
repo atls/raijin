@@ -7,7 +7,7 @@ import { StreamReport }         from '@yarnpkg/core'
 import { MessageName }          from '@yarnpkg/core'
 
 import React                    from 'react'
-import rimraf                   from 'rimraf'
+import { sync }                   from 'rimraf'
 import { Option }               from 'clipanion'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
@@ -73,7 +73,7 @@ class LibraryBuildCommand extends BaseCommand {
     try {
       await access(this.target)
 
-      rimraf.sync(this.target)
+      sync(this.target)
       // eslint-disable-next-line no-empty
     } catch {}
   }
