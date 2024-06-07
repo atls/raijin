@@ -97,6 +97,7 @@ class TypeScript {
     const { typecheckSkipLibCheck = false } = JSON.parse(content)
 
     return typecheckSkipLibCheck
+  }
 }
 
 export { TypeScript }
