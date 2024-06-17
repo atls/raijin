@@ -1,7 +1,7 @@
 import type { Config } from 'jest'
 
 export const unit: Config = {
-  transformIgnorePatterns: ['/node_modules/', '\\.pnp\\.[^\\/]+$'],
+  transformIgnorePatterns: ['/node_modules/?!(camelcase)', '\\.pnp\\.[^\\/]+$'],
   modulePathIgnorePatterns: ['dist', 'integration'],
   testRegex: '\\.test\\.(ts|tsx)$',
   snapshotSerializers: [require.resolve('@emotion/jest/serializer')],
@@ -10,7 +10,7 @@ export const unit: Config = {
       '@atls/jest-static-stubs/$1',
   },
   globals: {},
-  extensionsToTreatAsEsm: ['.ts', '.tsx', '.js', '.jsx'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx', '.jsx'],
   transform: {
     '^.+\\.[tj]sx?$': [
       require.resolve('@swc/jest'),
@@ -42,6 +42,7 @@ export const unit: Config = {
 }
 
 export const integration: Config = {
+  transformIgnorePatterns: ['/node_modules/?!(camelcase)'],
   testRegex: '/integration/.*\\.test\\.(ts|tsx)$',
   modulePathIgnorePatterns: ['dist'],
   snapshotSerializers: [require.resolve('@emotion/jest/serializer')],
@@ -50,7 +51,7 @@ export const integration: Config = {
       '@atls/jest-static-stubs/$1',
   },
   globals: {},
-  extensionsToTreatAsEsm: ['.ts', '.tsx', '.js', '.jsx'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx', '.jsx'],
   transform: {
     '^.+\\.[tj]sx?$': [
       require.resolve('@swc/jest'),
