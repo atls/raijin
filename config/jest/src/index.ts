@@ -10,7 +10,7 @@ export const unit: Config = {
       '@atls/jest-static-stubs/$1',
   },
   globals: {},
-  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx', '.js', 'jsx'],
   transform: {
     '^.+\\.[tj]sx?$': [
       require.resolve('@swc/jest'),
@@ -50,7 +50,7 @@ export const integration: Config = {
       '@atls/jest-static-stubs/$1',
   },
   globals: {},
-  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx', '.js', 'jsx'],
   transform: {
     '^.+\\.[tj]sx?$': [
       require.resolve('@swc/jest'),
