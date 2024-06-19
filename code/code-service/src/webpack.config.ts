@@ -155,7 +155,8 @@ export class WebpackConfig {
           { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
           { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
           { test: /\.ya?ml$/, use: require.resolve('yaml-loader') },
-          { test: /\.handlebars$/, use: require.resolve('handlebars-loader') },
+          { test: /\.(hbs|handlebars)$/, use: require.resolve('handlebars-loader') },
+          { test: /\.node$/, use: require.resolve('node-loader') },
         ],
       },
     }

@@ -1239,6 +1239,7 @@ const RAW_RUNTIME_STATE =
           ["find-up", "npm:5.0.0"],\
           ["handlebars", "npm:4.7.8"],\
           ["handlebars-loader", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:1.7.3"],\
+          ["node-loader", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:2.0.0"],\
           ["string-replace-loader", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:3.1.0"],\
           ["style-loader", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:3.3.3"],\
           ["swc-loader", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:0.2.6"],\
@@ -15203,6 +15204,29 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/node-int64-npm-0.4.0-0dc04ec3b2-b7afc2b65e.zip/node_modules/node-int64/",\
         "packageDependencies": [\
           ["node-int64", "npm:0.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["node-loader", [\
+      ["npm:2.0.0", {\
+        "packageLocation": "./.yarn/cache/node-loader-npm-2.0.0-61cb05ae91-3deae08203.zip/node_modules/node-loader/",\
+        "packageDependencies": [\
+          ["node-loader", "npm:2.0.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:2.0.0", {\
+        "packageLocation": "./.yarn/__virtual__/node-loader-virtual-af5ca23238/0/cache/node-loader-npm-2.0.0-61cb05ae91-3deae08203.zip/node_modules/node-loader/",\
+        "packageDependencies": [\
+          ["node-loader", "virtual:12b68e0fffa85ef3fa27aaead79e97671b689dabfa9f9211f9cf15bf07e497fa6dc0f21693743a8e26d5a5095aaa61b2edced72be805bab0087c7be63b03f547#npm:2.0.0"],\
+          ["@types/webpack", "npm:5.28.5"],\
+          ["loader-utils", "npm:2.0.4"],\
+          ["webpack", "virtual:a0bc915c153d5ff422ab909e9d6f033b3dd86f2ae1e865fd1b2c29932a554fe0a30358fbb65e84213aad5851f7bbdf303597798b16a80e9d5dcfc0569e5d66c5#npm:5.91.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/webpack",\
+          "webpack"\
         ],\
         "linkType": "HARD"\
       }]\
