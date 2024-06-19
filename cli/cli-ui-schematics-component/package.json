@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-schematics-component",
-  "version": "0.0.46",
+  "version": "0.0.47",
   "license": "BSD-3-Clause",
   "main": "src/index.ts",
   "files": [
