@@ -80,6 +80,8 @@ export class EvalWorker {
 
     const execArgv: Array<string> = []
 
+    this.silenceWarnings(execArgv)
+
     try {
       await access(join(cwd, '.pnp.cjs'))
 
@@ -100,5 +102,13 @@ export class EvalWorker {
       env: process.env,
       stdin: true,
     })
+  }
+
+  private static silenceWarnings(args: string[]) {
+    const noWarnings = '--no-warnings='
+
+    const experimentalWarnings = 'ExperimentalWarning'
+
+    args.push(noWarnings + experimentalWarnings)
   }
 }
