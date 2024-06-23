@@ -25,7 +25,7 @@ const ignore = [
   '**/templates/*.yaml',
   '**/types/**',
   '.terraform',
-  '.idea'
+  '.idea',
 ]
 
 const patterns: Array<string> = ['./**/*.{js,mjs,cjs,jsx,ts,tsx}']
@@ -38,7 +38,7 @@ const ignorePatterns: Array<string> = [
   '!**/.yarn/**',
   '!./.yarn/**',
   '!**/gen/**',
-  '!**/.idea/**'
+  '!**/.idea/**',
 ]
 
 const createPatterns = (cwd: string): Array<string> => [

@@ -1,7 +1,7 @@
 import type { ESLint }        from '@atls/code-runtime/eslint'
 
 import { readFile }           from 'node:fs/promises'
-import { readFileSync }           from 'node:fs'
+import { readFileSync }       from 'node:fs'
 import { writeFile }          from 'node:fs/promises'
 import { relative }           from 'node:path'
 import { join }               from 'node:path'

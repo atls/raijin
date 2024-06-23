@@ -3,9 +3,8 @@ import { StreamReport }    from '@yarnpkg/core'
 import { Configuration }   from '@yarnpkg/core'
 import { MessageName }     from '@yarnpkg/core'
 import { Project }         from '@yarnpkg/core'
-
-import React               from 'react'
 import { Option }          from 'clipanion'
+import React               from 'react'
 
 import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
 import { ESLintResult }    from '@atls/cli-ui-eslint-result-component'
@@ -34,7 +33,7 @@ class LintCommand extends BaseCommand {
           progress.start()
 
           try {
-            const results = await new LinterWorker(project.cwd).run(this.files)
+            const results = await new LinterWorker(project.cwd).run(this.context.cwd, this.files)
 
             progress.end()
 
