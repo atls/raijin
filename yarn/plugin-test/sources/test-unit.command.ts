@@ -52,6 +52,7 @@ class TestUnitCommand extends BaseCommand {
       },
       async () => {
         await new TesterWorker(project.cwd).run(
+          this.context.cwd,
           'unit',
           {
             findRelatedTests: this.findRelatedTests,

@@ -52,6 +52,7 @@ class TestIntegrationCommand extends BaseCommand {
       },
       async () => {
         await new TesterWorker(project.cwd).run(
+          this.context.cwd,
           'integration',
           {
             findRelatedTests: this.findRelatedTests,
