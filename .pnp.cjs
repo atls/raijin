@@ -354,7 +354,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/yarn-plugin-test", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-test", "workspace:yarn/plugin-test"]],\
     ["@atls/yarn-plugin-tools", ["workspace:yarn/plugin-tools"]],\
     ["@atls/yarn-plugin-types", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-types", "workspace:yarn/plugin-types"]],\
-    ["@atls/yarn-plugin-typescript", ["workspace:yarn/plugin-typescript"]],\
+    ["@atls/yarn-plugin-typescript", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-typescript", "workspace:yarn/plugin-typescript"]],\
     ["@atls/yarn-plugin-ui", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui", "workspace:yarn/plugin-ui"]],\
     ["@atls/yarn-plugin-workspaces", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-workspaces", "workspace:yarn/plugin-workspaces"]],\
     ["@atls/yarn-run-utils", ["workspace:yarn/run-utils"]],\
@@ -1885,6 +1885,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-test", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-test"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@atls/yarn-plugin-types", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-types"],\
+          ["@atls/yarn-plugin-typescript", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-typescript"],\
           ["@atls/yarn-plugin-ui", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui"],\
           ["@atls/yarn-plugin-workspaces", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-workspaces"],\
           ["@yarnpkg/builder", "npm:4.1.1"],\
@@ -1943,6 +1944,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-test", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-test"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@atls/yarn-plugin-types", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-types"],\
+          ["@atls/yarn-plugin-typescript", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-typescript"],\
           ["@atls/yarn-plugin-ui", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui"],\
           ["@atls/yarn-plugin-workspaces", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-workspaces"],\
           ["@yarnpkg/builder", "npm:4.1.1"],\
@@ -2825,6 +2827,34 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@atls/yarn-plugin-typescript", [\
+      ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-typescript", {\
+        "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-typescript-virtual-bf8425730c/1/yarn/plugin-typescript/",\
+        "packageDependencies": [\
+          ["@atls/yarn-plugin-typescript", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-typescript"],\
+          ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info-component"],\
+          ["@atls/cli-ui-renderer", "workspace:cli/cli-ui-renderer"],\
+          ["@atls/cli-ui-typescript-diagnostic-component", "virtual:cfd1d378f54fd81159858d6b376c9d8d7f9fe732664d0429ca1989ce499bbba36d2031641c5753b68e5a629b737a1c234868133c669f8507b82de4b421fb768f#workspace:cli/cli-ui-typescript-diagnostic-component"],\
+          ["@atls/code-typescript-worker", "workspace:code/code-typescript-worker"],\
+          ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
+          ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
+          ["@jest/globals", "npm:29.7.0"],\
+          ["@types/yarnpkg__cli", null],\
+          ["@types/yarnpkg__core", null],\
+          ["@yarnpkg/builder", "npm:4.1.1"],\
+          ["@yarnpkg/cli", "virtual:abb47d597956a5c8c66e96ac6e3e7eba8895d88d11e6f9ac42318175447fee1ae5c0bac239e8158d00d3d7eceb3ad08c25221ce683f68bdac02b2880822d7cc3#npm:4.2.2"],\
+          ["@yarnpkg/core", "npm:4.0.5"],\
+          ["clipanion", "virtual:79bd705dbf206d6bd5005d5f35924cece8938d35eed524c3106dd8d8c6d56228b3ffaf764b0b711713e3d2dfeba0155ac81f45b66f87f4323e61be254172e9b5#npm:4.0.0-rc.3"],\
+          ["react", "npm:18.3.1"],\
+          ["typescript", "patch:typescript@npm%3A5.2.2#optional!builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
+        ],\
+        "packagePeers": [\
+          "@types/yarnpkg__cli",\
+          "@types/yarnpkg__core",\
+          "@yarnpkg/cli",\
+          "@yarnpkg/core"\
+        ],\
+        "linkType": "SOFT"\
+      }],\
       ["workspace:yarn/plugin-typescript", {\
         "packageLocation": "./yarn/plugin-typescript/",\
         "packageDependencies": [\

@@ -905,6 +905,7 @@ __metadata:
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
     "@atls/yarn-plugin-types": "workspace:*"
+    "@atls/yarn-plugin-typescript": "workspace:*"
     "@atls/yarn-plugin-ui": "workspace:*"
     "@atls/yarn-plugin-workspaces": "workspace:*"
     "@yarnpkg/builder": "npm:^4.1.1"
@@ -962,6 +963,7 @@ __metadata:
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
     "@atls/yarn-plugin-types": "workspace:*"
+    "@atls/yarn-plugin-typescript": "workspace:*"
     "@atls/yarn-plugin-ui": "workspace:*"
     "@atls/yarn-plugin-workspaces": "workspace:*"
     "@yarnpkg/builder": "npm:^4.1.1"
@@ -1407,7 +1409,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-typescript@workspace:yarn/plugin-typescript":
+"@atls/yarn-plugin-typescript@workspace:*, @atls/yarn-plugin-typescript@workspace:yarn/plugin-typescript":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-typescript@workspace:yarn/plugin-typescript"
   dependencies:
