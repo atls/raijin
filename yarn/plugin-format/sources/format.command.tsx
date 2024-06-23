@@ -3,9 +3,8 @@ import { StreamReport }    from '@yarnpkg/core'
 import { MessageName }     from '@yarnpkg/core'
 import { Configuration }   from '@yarnpkg/core'
 import { Project }         from '@yarnpkg/core'
-
-import React               from 'react'
 import { Option }          from 'clipanion'
+import React               from 'react'
 
 import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
 import { FormatterWorker } from '@atls/code-format-worker'
@@ -33,7 +32,7 @@ class FormatCommand extends BaseCommand {
           progress.start()
 
           try {
-            await new FormatterWorker(project.cwd).run(this.files)
+            await new FormatterWorker(project.cwd).run(this.context.cwd, this.files)
 
             progress.end()
           } catch (error) {

@@ -1,6 +1,8 @@
 import { writeFile }      from 'node:fs/promises'
 import { readFile }       from 'node:fs/promises'
+import { readFileSync }   from 'node:fs'
 import { relative }       from 'node:path'
+import { join }           from 'node:path'
 
 import * as babel         from 'prettier/plugins/babel'
 import * as graphql       from 'prettier/plugins/graphql'
