@@ -3,7 +3,7 @@ import type { WebpackConfigPlugin } from './webpack.interfaces.js'
 
 import { PassThrough }              from 'node:stream'
 
-import { SeverityNumber }           from '@atls/logger'
+import { SeverityNumber }           from '@monstrs/logger'
 
 import { StartServerPlugin }        from '@atls/webpack-start-server-plugin'
 import { webpack }                  from '@atls/code-runtime/webpack'

@@ -65,8 +65,8 @@ export class Formatter {
     await this.formatFiles(files)
   }
 
-  private getProjectIgnorePatterns(): Array<string> {
-    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+  private async getProjectIgnorePatterns(): Promise<string[]> {
+    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
 
     const { formatterIgnorePatterns = [] }: { formatterIgnorePatterns: string[] } =
       JSON.parse(content)
