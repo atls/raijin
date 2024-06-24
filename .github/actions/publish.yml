@@ -1,0 +1,24 @@
+name: Publish composite action
+
+inputs:
+  NPM_TOKEN:
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: List changed workspaces
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn workspaces changed list
+
+    - name: Npm Publish
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn version apply --all
+        yarn workspaces changed foreach --verbose --topological --no-private npm publish --access public
+      env:
+        YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
