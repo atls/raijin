@@ -11,16 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERIONS }}
-
-      - name: Install
-        uses: atls/tools/.github/actions/install@master
+      - uses: atls/tools/.github/actions/setup@master
 
       - name: Lint and type check
         uses: atls/tools/.github/actions/checks/lint-typecheck@master

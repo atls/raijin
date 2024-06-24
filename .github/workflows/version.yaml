@@ -15,20 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: atls/tools/.github/actions/setup@master
         with:
-          ref: master
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install
-        uses: atls/tools/.github/actions/install@master
-        with:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          REF: master
 
       - name: Version
         uses: atls/tools/.github/actions/version@master
