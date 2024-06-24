@@ -3,9 +3,8 @@ import { Configuration }        from '@yarnpkg/core'
 import { Project }              from '@yarnpkg/core'
 import { StreamReport }         from '@yarnpkg/core'
 import { MessageName }          from '@yarnpkg/core'
-
-import React                    from 'react'
 import { Option }               from 'clipanion'
+import React                    from 'react'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
 import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component'
@@ -36,7 +35,8 @@ class TypeCheckCommand extends BaseCommand {
           try {
             const ts = new TypeScriptWorker(project.cwd)
 
-            const diagnostics = await ts.check(this.context.cwd,
+            const diagnostics = await ts.check(
+              this.context.cwd,
               this.args.length > 0
                 ? this.args
                 : project.topLevelWorkspace.manifest.workspaceDefinitions.map(

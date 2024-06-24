@@ -1,6 +1,6 @@
-import { readFileSync }     from 'node:fs'
-
 import type { ESLint }      from '@atls/code-runtime/eslint'
+
+import { readFileSync }     from 'node:fs'
 
 import { BaseCommand }      from '@yarnpkg/cli'
 import { StreamReport }     from '@yarnpkg/core'
@@ -8,7 +8,6 @@ import { Configuration }    from '@yarnpkg/core'
 import { MessageName }      from '@yarnpkg/core'
 import { Project }          from '@yarnpkg/core'
 import { codeFrameColumns } from '@babel/code-frame'
-
 import React                from 'react'
 
 import { ESLintResult }     from '@atls/cli-ui-eslint-result-component'

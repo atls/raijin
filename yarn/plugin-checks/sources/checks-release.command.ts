@@ -2,7 +2,6 @@ import { BaseCommand }           from '@yarnpkg/cli'
 import { Configuration }         from '@yarnpkg/core'
 import { Project }               from '@yarnpkg/core'
 import { ppath }                 from '@yarnpkg/fslib'
-
 import stripAnsi                 from 'strip-ansi'
 
 import { PassThroughRunContext } from '@atls/yarn-run-utils'

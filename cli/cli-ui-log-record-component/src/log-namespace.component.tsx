@@ -1,6 +1,6 @@
-import React    from 'react'
 import { Text } from 'ink'
 import { FC }   from 'react'
+import React    from 'react'
 
 export interface NamespaceProps {
   children: string

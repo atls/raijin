@@ -1,8 +1,8 @@
 import type { Record }  from '@atls/logger'
 
-import React            from 'react'
 import { Box }          from 'ink'
 import { FC }           from 'react'
+import React            from 'react'
 
 import { LogBody }      from './log-body.component.jsx'
 import { LogMessage }   from './log-message.component.jsx'

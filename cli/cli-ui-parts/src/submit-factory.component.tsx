@@ -1,10 +1,9 @@
 import { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
-
-import React                       from 'react'
 import { FC }                      from 'react'
 import { useStdin }                from 'ink'
 import { useEffect }               from 'react'
 import { useState }                from 'react'
+import React                       from 'react'
 
 const SubmitProxy = ({ value, useSubmit }) => {
   const { stdin } = useStdin()

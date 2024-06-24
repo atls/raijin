@@ -16,9 +16,8 @@ import { tgzUtils }              from '@yarnpkg/core'
 import { ppath }                 from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'
 import { packUtils }             from '@yarnpkg/plugin-pack'
-
-import tar                       from 'tar-stream'
 import { createGzip }            from 'zlib'
+import tar                       from 'tar-stream'
 
 import { MultiResolver }         from './MultiResolver.js'
 import { ProtocolResolver }      from './ProtocolResolver.js'

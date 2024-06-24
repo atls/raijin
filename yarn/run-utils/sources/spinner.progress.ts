@@ -11,7 +11,10 @@ export class SpinnerProgress {
 
   private position = 0
 
-  constructor(private readonly stdout, private readonly configuration: Configuration) {}
+  constructor(
+    private readonly stdout,
+    private readonly configuration: Configuration
+  ) {}
 
   start() {
     if (this.stdout.isTTY && !process.env.TOOLS_DISABLE_PROGRESS) {

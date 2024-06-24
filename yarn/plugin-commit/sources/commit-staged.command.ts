@@ -1,8 +1,7 @@
 import { BaseCommand } from '@yarnpkg/cli'
-
+import { Option }      from 'clipanion'
 // @ts-ignore
 import lintStaged      from 'lint-staged'
-import { Option }      from 'clipanion'
 
 const config = {
   '*.{yml,yaml,json,graphql,md}': 'yarn format',

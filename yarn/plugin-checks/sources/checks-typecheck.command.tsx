@@ -9,7 +9,6 @@ import { PortablePath }                  from '@yarnpkg/fslib'
 import { codeFrameColumns }              from '@babel/code-frame'
 import { xfs }                           from '@yarnpkg/fslib'
 import { ppath }                         from '@yarnpkg/fslib'
-
 import React                             from 'react'
 
 import { TypeScriptDiagnostic }          from '@atls/cli-ui-typescript-diagnostic-component'

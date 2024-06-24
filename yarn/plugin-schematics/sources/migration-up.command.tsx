@@ -5,7 +5,6 @@ import { MessageName }      from '@yarnpkg/core'
 import { StreamReport }     from '@yarnpkg/core'
 import { xfs }              from '@yarnpkg/fslib'
 import { npath }            from '@yarnpkg/fslib'
-
 import React                from 'react'
 
 import { ErrorInfo }        from '@atls/cli-ui-error-info-component'

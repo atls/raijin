@@ -1,7 +1,6 @@
 import { Tree }                from '@angular-devkit/schematics'
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing'
 import { UnitTestTree }        from '@angular-devkit/schematics/testing'
-
 import { join }                from 'path'
 
 const workflow = `

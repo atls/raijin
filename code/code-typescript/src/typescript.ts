@@ -1,9 +1,10 @@
-import deepmerge                     from 'deepmerge'
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { readFileSync }              from 'node:fs'
+import { join }                      from 'node:path'
 
-import tsconfig                      from '@atls/config-typescript'
+import deepmerge                     from 'deepmerge'
+
 import { ts }                        from '@atls/code-runtime/typescript'
+import tsconfig                      from '@atls/config-typescript'
 
 import { transformJsxToJsExtension } from './transformers/index.js'
 
@@ -33,7 +34,7 @@ class TypeScript {
     const config = deepmerge(tsconfig, { compilerOptions: override, skipLibCheck }, {
       compilerOptions: { rootDir: this.cwd },
       include,
-      exclude: [...tsconfig.exclude, ...projectIgnorePatterns]
+      exclude: [...tsconfig.exclude, ...projectIgnorePatterns],
     } as object)
 
     const { fileNames, options, errors } = ts.parseJsonConfigFileContent(config, ts.sys, this.cwd)

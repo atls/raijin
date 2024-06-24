@@ -11,8 +11,8 @@ import { template }             from '@angular-devkit/schematics'
 import { url }                  from '@angular-devkit/schematics'
 import { chain }                from '@angular-devkit/schematics'
 
-import tsconfig                 from '@atls/config-typescript'
 import { updateTsConfigInTree } from '@atls/schematics-utils'
+import tsconfig                 from '@atls/config-typescript'
 
 const updateTsConfig = updateTsConfigInTree({
   ...tsconfig.compilerOptions,

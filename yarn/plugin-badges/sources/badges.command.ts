@@ -8,7 +8,6 @@ import { Package }                from '@yarnpkg/core'
 import { Workspace }              from '@yarnpkg/core'
 import { structUtils }            from '@yarnpkg/core'
 import { miscUtils }              from '@yarnpkg/core'
-
 import { readFileSync }           from 'fs'
 import { writeFileSync }          from 'fs'
 import { join }                   from 'path'

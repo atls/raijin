@@ -1,6 +1,6 @@
 import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
-import { fileURLToPath} from 'node:url'
+import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
 import json from '@rollup/plugin-json'
 import esbuild from 'rollup-plugin-esbuild'

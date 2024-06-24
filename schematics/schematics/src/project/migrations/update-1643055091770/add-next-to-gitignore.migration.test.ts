@@ -24,8 +24,7 @@ describe('schematics', () => {
     })
 
     it('should add .next to gitignore', async () => {
-      const result = await schematicRunner
-        .runSchematic('add-next-output-to-gitignore', {}, tree)
+      const result = await schematicRunner.runSchematic('add-next-output-to-gitignore', {}, tree)
 
       expect(result.read('.gitignore')!.toString()).toContain('.next')
     })
