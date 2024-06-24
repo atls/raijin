@@ -11,19 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: atls/tools/.github/actions/setup@master
+      - uses: ./.github/actions/setup
 
       - name: Lint and type check
-        uses: atls/tools/.github/actions/checks/lint-typecheck@master
+        uses: ./.github/actions/lint-typecheck
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test unit and integration
-        uses: atls/tools/.github/actions/checks/test@master
+        uses: ./.github/actions/test
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release
-        uses: atls/tools/.github/actions/checks/release@master
+        uses: ./.github/actions/release
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

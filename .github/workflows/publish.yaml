@@ -11,16 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: atls/tools/.github/actions/setup@master
+      - uses: ./.github/actions/setup
         with:
           REF: master
 
       - name: Publish
-        uses: atls/tools/.github/actions/publish@master
+        uses: ./.github/actions/publish
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Commit changes
-        uses: atls/tools/.github/actions/commit@master
+        uses: ./.github/actions/commit
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
