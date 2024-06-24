@@ -30,7 +30,7 @@ describe('schematics', () => {
 
       schematicRunner = new SchematicTestRunner(
         '@atls/schematics',
-        join(__dirname, '../../migrations.json')
+        join(import.meta.url, '../../migrations.json')
       )
     })
 

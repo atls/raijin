@@ -34,7 +34,8 @@
     "config/**/*",
     "yarn/**/*",
     "jest/**/*",
-    "cli/**/*"
+    "cli/**/*",
+    "schematics/**/*"
   ],
   "types": ["@atls/code-runtime/types"]
 }
