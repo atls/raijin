@@ -1,0 +1,11 @@
+name: Install composite action
+
+runs:
+  using: composite
+
+  steps:
+    - name: Install
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn install --inline-builds

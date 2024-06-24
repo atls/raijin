@@ -1,0 +1,17 @@
+name: Tests composite action
+
+inputs:
+  GITHUB_TOKEN:
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Release
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn checks release
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
