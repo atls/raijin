@@ -25,7 +25,7 @@ class ChecksTestUnitCommand extends AbstractChecksTestCommand {
         const { id: checkId } = await checks.start()
 
         try {
-          const results = await new TesterWorker(project.cwd).run('unit')
+          const results = await new TesterWorker(project.cwd).run(this.context.cwd, 'unit')
 
           const annotations = this.formatResults(results, project.cwd)
 

@@ -21,17 +21,7 @@ jobs:
 
       - uses: ./.github/actions/install
 
-      - name: Lint and type check
-        uses: ./.github/actions/lint-typecheck
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Test unit and integration
-        uses: ./.github/actions/test
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Release
-        uses: ./.github/actions/release
+      - name: Checks
+        uses: ./.github/actions/checks
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

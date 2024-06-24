@@ -34,10 +34,10 @@ class ChecksReleaseCommand extends BaseCommand {
         if (workspace.manifest.scripts.get('build')) {
           const context = new PassThroughRunContext()
 
-          const outputWritter = (data) => this.context.stdout.write(data)
+          const outputWriter = (data) => this.context.stdout.write(data)
 
-          context.stdout.on('data', outputWritter)
-          context.stderr.on('data', outputWritter)
+          context.stdout.on('data', outputWriter)
+          context.stderr.on('data', outputWriter)
 
           const code = await this.cli.run(
             ['workspace', workspace.manifest.raw.name, 'build'],

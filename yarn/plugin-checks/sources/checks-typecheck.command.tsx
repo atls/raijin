@@ -43,6 +43,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
             const ts = new TypeScriptWorker(project.cwd)
 
             const diagnostics = await ts.check(
+              this.context.cwd,
               project.topLevelWorkspace.manifest.workspaceDefinitions.map(
                 (definition) => definition.pattern
               )

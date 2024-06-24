@@ -38,7 +38,7 @@ class ChecksLintCommand extends BaseCommand {
         // eslint-disable-next-line consistent-return
         const results = await report.startTimerPromise('Lint', async () => {
           try {
-            return await new LinterWorker(project.cwd).run()
+            return await new LinterWorker(project.cwd).run(this.context.cwd)
           } catch (error) {
             await checks.failure({
               title: 'Lint run failed',
