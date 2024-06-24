@@ -1,13 +1,41 @@
-name: Version
+name: Reusable version
 
 on:
   pull_request:
-    types: [closed]
+    types:
+      - closed
     branches:
       - master
 
 jobs:
   run:
     name: Version
-    uses: atls/shared/.github/workflows/version.yaml@master
-    permissions: write-all
+    env:
+      NODE_VERSION: '19'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install
+        uses: atls/tools/.github/actions/install@master
+        with:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Version
+        uses: atls/tools/.github/actions/version@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit changes
+        uses: atls/tools/.github/actions/commit@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
