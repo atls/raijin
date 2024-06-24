@@ -9,6 +9,7 @@ runs:
 
   steps:
     - name: Release
+      shell: bash
       run: |
         source .env
         export NODE_OPTIONS

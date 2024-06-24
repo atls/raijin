@@ -9,6 +9,7 @@ runs:
 
   steps:
     - name: Lint
+      shell: bash
       run: |
         source .env
         export NODE_OPTIONS
@@ -17,6 +18,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
     - name: TypeCheck
+      shell: bash
       run: |
         source .env
         export NODE_OPTIONS

@@ -11,9 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: ./.github/actions/setup
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          REF: master
+          ref: master
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+
+      - uses: ./.github/actions/install
 
       - name: Publish
         uses: ./.github/actions/publish

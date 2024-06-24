@@ -9,12 +9,14 @@ runs:
 
   steps:
     - name: List changed workspaces
+      shell: bash
       run: |
         source .env
         export NODE_OPTIONS
         yarn workspaces changed list
 
     - name: Npm Publish
+      shell: bash
       run: |
         source .env
         export NODE_OPTIONS
