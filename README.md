@@ -2,84 +2,72 @@
 
 # Atlantis Toolset
 
-[//]: # 'VERSIONS'
+Monorepo with a set of tools and utilities, developed by our team, to ease our day-to-day work on projects.
 
-[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=0.0.22&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/code-service) [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=0.0.17&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/schematics)
+Tools are designed to be used in projects with Javascript and Typescript and are designed to increase developer performance as well as unify development experience.
 
-[//]: # 'VERSIONS'
+## Start
 
-Монорепозиторий с набором инструментов и утилит, разработанных нашей командой, чтобы упростить разработку и работу над проектами.
+**IMPORTANT:** we use our [custom yarn bundle](https://yarnpkg.com/builder/cli/build/bundle) 
 
-Инструменты предназначены для использования в проектах на JavaScript и TypeScript и направлены на обеспечение согласованного опыта разработки и повышения производительности.
+To start using it:
 
-## Начало использования
+- `yarn set version https://raw.githubusercontent.com/atls/tools/master/yarn/cli/bundles/yarn.js` - installs our latest custom yarn bundle in the project scope.
 
-**ВАЖНО:** Мы используем [собственный бандл](https://yarnpkg.com/builder/cli/build/bundle) ярна для запуска собственных скриптов.
+## Commonly used scrips `yarn`
 
-Для начала использования нашей сборки:
+Besides standard `yarn` scripts we developed our custom ones for ease of work:
 
-- `yarn set version https://raw.githubusercontent.com/atls/tools/master/yarn/cli/bundles/yarn.js` - эта команда установит вместо стокового ярна наш и положит в папку .yarn/releases, если же наша сборка уже установленна - произойдёт обновление до актуальной версии
-- `yarn set version https://raw.githubusercontent. com/atls/tools/master/yarn/cli/bundles/legacy/yarn.js` - установит наш легаси бандл
-  (подробности в `/yarn/cli/README.md`)
+### General
 
-## Основные скрипты `yarn` для нашей работы
+- `yarn check` - executes `typecheck`, `lint`, `format`. Executes automatically on commits via `husky`. <span style="font-weight: bold">Execute before createing Pull Request</span>
+- `yarn files changed list` - print out list of changed files
+- `yarn commit ...` - work with git commits
+  - `message` - create commit message
+  - `staged` - move commit to stage
 
-Помимо стандартных скриптов `yarn` мы используем наши кастомные для облегчения работы:
+### Checks
 
-### Общие
+- `yarn typecheck` - executes type check
+- `yarn lint` - executes ESLint
 
-- `yarn check` - выполняет `typecheck`, `lint`, `format`. Выполняется так же автоматически при коммитах с помощью `husky`. <span style="font-weight: bold">Выполняем перед созданием Pull Request</span>
-- `yarn files changed list` - вывод списка измененных файлов
-- `yarn commit ...` - работа с коммитами
-  - `message` - сообщение коммита
-  - `staged` - стэйдж коммита
+### Code formatting
 
-### Основные проверки
+- `yarn format` - reformats whole project based on our `prettier` config 
 
-- `yarn typecheck` - проверяет тайпчеком проект
-- `yarn lint` - проверяет линтером проект
+### Generation
 
-### Форматирование
+- `yarn generate project` - generate project schematics
+- `yarn badges generate` - generates badges in root **README.md** based on version in root **package.json**
 
-- `yarn format` - форматирует весь проект по нашему конфигу `prettier`
+### Build
 
-### Генерация
+- `yarn service build` - build as service bundle
+- `yarn service dev` - run service in dev mode
+- `yarn library build` - build as library
+- `yarn image pack` - build as docker image via buildpacks
 
-- `yarn generate project` - генерация схематики проекта
-- `yarn badges generate` - генерирует бэйджи в корневом **README.md** по версиям в корневом **package.json**
+### Testing
 
-### Билд
+- `yarn test ...` - run tests
+  - `integration` - integration tests. Runs tests in `integration` folders
+  - `unit` - runs all tests besides ones in `integration` folders
+    - `name of file/test suite` - runs only tests matching pattern
 
-- `yarn service build` - билд проекта
-- `yarn service dev` - дев разработка проекта
-- `yarn library build`
-- `yarn image pack`
+Options:
 
-### Тестирование
+- `--watch` - run tests and rerun upon changes in linked files
+- `--watchAll` - run tests in **any** changes in repo
 
-- `yarn test ...` - тестирование
-  - `integration` - интеграционные тесты. Запускает тесты лежащие в папках `integration`
-  - `unit` - юнит тесты
-    - `название файла/теста` - запускает только тесты в названии которых или названии файлов
-      есть введенное название
+### Check project for build errors
 
-В качестве параметров:
+- `yarn workspaces changed foreach image pack --publish --tag-policy hash-timestamp --registry some` - build services with local changes
+- `yarn workspaces foreach image pack --publish --tag-policy hash-timestamp --registry some` - build all services
 
-- `--watch` - запуск тестов при изменении в связанных с ними файлов
-- `--watchAll` - запуск тестов при изменении в любых файлах
-
-### Проверка проекта на ошибки
-
-- `yarn workspaces changed foreach image pack --publish --tag-policy hash-timestamp --registry some` - билд пакетов с изменениями.
-- `yarn workspaces foreach image pack --publish --tag-policy hash-timestamp --registry some` - билд приложения целиком.
-
-## Наши файлы конфигурации
+## Our configs
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/typescript/src/index.ts)
 [![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/eslint/src/index.ts)
 [![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/prettier/src/index.ts)
 [![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/jest/src/index.ts)
 [![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)](https://github.com/atls/tools/blob/8537e2f78ca5a2bd925548efce21a2d5c4800543/code/code-service/src/webpack.config.ts)
-[//]: # (VERSIONS)
-
-[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/code-service) [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/schematics)
