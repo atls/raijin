@@ -73,12 +73,15 @@ export class WebpackConfig {
 
     const unpluggedExternals: Array<string> = Array.from(await this.getUnpluggedDependencies())
 
+    const type = await this.getWorkspaceType()
+    const prefix = type === 'commonjs' ? 'commonjs2 ' : ''
+
     return Array.from(
       new Set([...workspaceExternals, ...unpluggedExternals, ...UNUSED_EXTERNALS])
     ).reduce(
       (result, dependency) => ({
         ...result,
-        [dependency]: `commonjs2 ${dependency}`,
+        [dependency]: `${prefix}${dependency}`,
       }),
       {}
     )
