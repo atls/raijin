@@ -2,6 +2,11 @@
   "name": "@atls/code-pack",
   "version": "0.0.19",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -12,16 +17,25 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@actions/github": "6.0.0",
-    "@iarna/toml": "3.0.0",
-    "@yarnpkg/core": "4.0.3",
-    "@yarnpkg/fslib": "3.0.2"
+    "@actions/github": "^5.1.1",
+    "@iarna/toml": "^2.2.5",
+    "@yarnpkg/core": "^4.0.5",
+    "@yarnpkg/fslib": "^3.1.0"
   },
   "devDependencies": {
-    "@types/node": "18.19.3"
+    "@types/node": "^20.4.0"
   },
   "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

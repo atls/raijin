@@ -1,4 +1,4 @@
-name: Publish
+name: Publish to NPM
 
 on:
   workflow_dispatch:
@@ -6,7 +6,30 @@ on:
 jobs:
   run:
     name: Publish
-    uses: atls/shared/.github/workflows/publish.yaml@master
-    permissions: write-all
-    secrets:
-      npmAuthToken: ${{ secrets.NPM_TOKEN }}
+    env:
+      NODE_VERSION: '19'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install
+        uses: ./.github/actions/install
+
+      - name: Publish
+        uses: ./.github/actions/publish
+        with:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Commit changes
+        uses: ./.github/actions/commit
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

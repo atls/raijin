@@ -1,16 +1,11 @@
 import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
-import path from 'node:path'
-import json from '@rollup/plugin-json'
 import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
+import json from '@rollup/plugin-json'
 import esbuild from 'rollup-plugin-esbuild'
 import { brotliCompressSync } from 'node:zlib'
-import analyze from 'rollup-plugin-analyzer'
 import replace from '@rollup/plugin-replace'
-
-const __filename = fileURLToPath(import.meta.url)
-
-const __dirname = path.dirname(__filename)
 
 const wrapOutput = () => ({
   name: 'wrap-output',
@@ -20,7 +15,7 @@ const wrapOutput = () => ({
 
     const outputBundle = bundle[bundles[0]]
 
-    outputBundle.code = `let hook;\n\nmodule.exports.getContent = () => {\n  if (typeof hook === \`undefined\`)\n    hook = require('zlib').brotliDecompressSync(Buffer.from('${brotliCompressSync(
+    outputBundle.code = `import { brotliDecompressSync } from 'zlib';\n\nlet hook;\n\nexport const getContent = () => {\n  if (typeof hook === \`undefined\`)\n    hook = brotliDecompressSync(Buffer.from('${brotliCompressSync(
       outputBundle.code.replace(/\r\n/g, '\n')
     ).toString('base64')}', 'base64')).toString();\n\n  return hook;\n};\n`
   },
@@ -31,19 +26,15 @@ export default [
     external: ['pnpapi', 'fsevents'],
     input: './src/schematics.worker.source.ts',
     output: {
-      file: './src/schematics.worker.content.js',
-      format: 'cjs',
-      strict: false,
-      generatedCode: {
-        constBindings: true,
-      },
+      file: './src/schematics.worker.content.ts',
+      format: 'esm',
+      generatedCode: 'es2015',
     },
     plugins: [
-      analyze(),
       resolve({
         extensions: ['.mjs', '.js', '.ts', '.tsx', '.json'],
-        rootDir: path.join(__dirname, '../../'),
-        jail: path.join(__dirname, '../../'),
+        rootDir: join(fileURLToPath(new URL('.', import.meta.url)), '../../'),
+        jail: join(fileURLToPath(new URL('.', import.meta.url)), '../../'),
         preferBuiltins: true,
       }),
       replace({
@@ -54,12 +45,8 @@ export default [
           'readable-stream': 'stream',
         },
       }),
-      esbuild({ tsconfig: false, target: 'node18' }),
-      cjs({
-        transformMixedEsModules: true,
-        extensions: ['.js', '.ts'],
-        ignoreDynamicRequires: true,
-      }),
+      esbuild({ tsconfig: false, target: 'node14' }),
+      cjs({ requireReturnsDefault: `preferred` }),
       json(),
       wrapOutput(),
     ],

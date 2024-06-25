@@ -1,0 +1,82 @@
+{
+  "name": "@atls/code-runtime",
+  "version": "0.0.0",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    "./types": "./types/index.d.ts",
+    ".": "./src/index.ts",
+    "./eslint": "./src/eslint.ts",
+    "./webpack": "./src/webpack.ts",
+    "./jest": "./src/jest.ts",
+    "./typescript": "./src/typescript.ts",
+    "./svgr": "./src/svgr.ts"
+  },
+  "main": "src/index.ts",
+  "types": "types/index.d.ts",
+  "files": [
+    "types",
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/config-eslint": "workspace:*",
+    "@atls/config-jest": "workspace:*",
+    "@jest/core": "^29.6.1",
+    "@svgr/core": "^8.0.0",
+    "@svgr/plugin-jsx": "^8.0.1",
+    "eslint": "^8.44.0",
+    "node-loader": "^2.0.0",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.1"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.40.2",
+    "@types/node": "^20.4.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      "./types": "./types/index.d.ts",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./eslint": {
+        "import": "./dist/eslint.js",
+        "default": "./dist/eslint.js",
+        "types": "./dist/eslint.d.ts"
+      },
+      "./webpack": {
+        "import": "./dist/webpack.js",
+        "default": "./dist/webpack.js",
+        "types": "./dist/webpack.d.ts"
+      },
+      "./jest": {
+        "import": "./dist/jest.js",
+        "default": "./dist/jest.js",
+        "types": "./dist/jest.d.ts"
+      },
+      "./typescript": {
+        "import": "./dist/typescript.js",
+        "default": "./dist/typescript.js",
+        "types": "./dist/typescript.d.ts"
+      },
+      "./svgr": {
+        "import": "./dist/svgr.js",
+        "default": "./dist/svgr.js",
+        "types": "./dist/svgr.d.ts"
+      }
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
+  }
+}

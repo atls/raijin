@@ -1,0 +1,51 @@
+{
+  "name": "@atls/yarn-plugin-ui",
+  "version": "0.0.0",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build plugin",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/code-format-worker": "workspace:*",
+    "@atls/code-icons-worker": "workspace:*",
+    "@atls/code-lint-worker": "workspace:*",
+    "clipanion": "^4.0.0-rc.3"
+  },
+  "devDependencies": {
+    "@atls/yarn-run-utils": "workspace:*",
+    "@atls/yarn-test-utils": "workspace:*",
+    "@jest/globals": "^29.6.1",
+    "@yarnpkg/builder": "^4.1.1",
+    "@yarnpkg/cli": "^4.2.2",
+    "@yarnpkg/core": "^4.0.5"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "^4",
+    "@yarnpkg/core": "^4"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
+  }
+}

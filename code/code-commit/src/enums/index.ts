@@ -1,2 +1,2 @@
-export * from './commit-scope.enum'
-export * from './commit-type.enum'
+export * from './commit-scope.enum.js'
+export * from './commit-type.enum.js'

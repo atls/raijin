@@ -2,6 +2,11 @@
   "name": "@atls/code-configuration",
   "version": "0.0.11",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -12,11 +17,19 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@yarnpkg/fslib": "3.0.2"
+    "@yarnpkg/fslib": "^3.1.0"
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

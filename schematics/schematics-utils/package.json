@@ -2,7 +2,11 @@
   "name": "@atls/schematics-utils",
   "version": "0.0.8",
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -12,20 +16,27 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@angular-devkit/core": "17.0.8",
-    "@angular-devkit/schematics": "17.0.8",
+    "@angular-devkit/core": "17.3.2",
+    "@angular-devkit/schematics": "17.3.2",
     "js-yaml": "4.1.0",
     "semver": "7.5.4",
     "strip-json-comments": "3.1.1"
   },
   "devDependencies": {
     "@types/js-yaml": "4.0.9",
-    "@types/node": "18.19.3",
+    "@types/node": "20",
     "rimraf": "5.0.5",
     "typescript": "5.2.2"
   },
   "publishConfig": {
-    "main": "dist/index.js",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "typings": "dist/index.d.ts"
   }
 }

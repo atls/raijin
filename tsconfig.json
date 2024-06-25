@@ -8,12 +8,12 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": false,
     "isolatedModules": false,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false,
-    "noImplicitReturns": false,
-    "noImplicitThis": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "pretty": true,
@@ -21,19 +21,21 @@
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": false,
-    "target": "ES2021",
-    "jsx": "react"
+    "target": "es2021",
+    "jsx": "react",
+    "strictPropertyInitialization": false,
+    "outDir": "./dist"
   },
   "include": [
-    "code/**/*",
-    "utils/**/*",
-    "yarn/**/*",
-    "github/**/*",
     "prettier/**/*",
-    "eslint/**/*",
-    "schematics/**/*",
-    "cli/**/*",
+    "code/**/*",
+    "webpack/**/*",
+    "runtime/**/*",
+    "config/**/*",
+    "yarn/**/*",
     "jest/**/*",
-    "config/**/*"
-  ]
+    "cli/**/*",
+    "schematics/**/*"
+  ],
+  "types": ["@atls/code-runtime/types"]
 }

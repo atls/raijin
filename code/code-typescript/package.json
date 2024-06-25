@@ -2,26 +2,42 @@
   "name": "@atls/code-typescript",
   "version": "0.0.33",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "yarn library build",
+    "build:worker": "rollup -c",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/code-runtime": "workspace:*",
     "@atls/config-typescript": "workspace:*",
-    "deepmerge": "4.3.1"
+    "deepmerge": "^4.3.1"
   },
   "devDependencies": {
     "@types/deepmerge": "2.2.0",
-    "@types/node": "18.19.3",
-    "typescript": "5.2.2"
+    "@types/node": "^20.4.0",
+    "typescript": "^5.1.6"
   },
   "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

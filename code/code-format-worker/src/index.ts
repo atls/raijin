@@ -1,1 +1,1 @@
-export * from './formatter.worker'
+export * from './formatter.worker.js'

@@ -2,6 +2,11 @@
   "name": "@atls/cli-ui-typescript-diagnostic-component",
   "version": "0.0.29",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -17,20 +22,28 @@
   },
   "devDependencies": {
     "@atls/cli-ui-renderer": "workspace:*",
-    "@types/jest": "29.5.11",
-    "@types/react": "16.14.54",
-    "ink": "^3.0.8",
-    "react": "16.14.0",
-    "strip-ansi": "7.1.0",
-    "typescript": "5.2.2"
+    "@jest/globals": "^29.6.1",
+    "@types/react": "^18.2.14",
+    "ink": "^4.2.0",
+    "react": "^18.2.0",
+    "strip-ansi": "^7.1.0",
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

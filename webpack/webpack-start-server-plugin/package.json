@@ -1,7 +1,12 @@
 {
   "name": "@atls/webpack-start-server-plugin",
-  "version": "0.0.7",
+  "version": "0.0.6",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -12,14 +17,22 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "webpack": "5.91.0"
+    "webpack": "^5.88.1"
   },
   "devDependencies": {
-    "@types/node": "20"
+    "@types/node": "^20.4.0"
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

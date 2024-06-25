@@ -1,7 +1,8 @@
 /* Copy/Paste https://github.com/kherock/yarn-plugins/tree/main/packages/plugin-workspaces-export */
 /* eslint-disable */
 
-import { Package }               from '@yarnpkg/core'
+// @ts-nocheck
+
 import { Descriptor }            from '@yarnpkg/core'
 import { LinkType }              from '@yarnpkg/core'
 import { Locator }               from '@yarnpkg/core'
@@ -45,25 +46,20 @@ export class WorkspacePackResolver extends WorkspaceResolver implements Resolver
     return await super.getCandidates(descriptor, dependencies, this.rewriteOpts(descriptor, opts))
   }
 
-  // @ts-ignore
   async getSatisfying(descriptor: Descriptor, references: Array<string>, opts: ResolveOptions) {
-    // @ts-ignore
     return await super.getSatisfying(descriptor, references, this.rewriteOpts(descriptor, opts))
   }
 
-  // @ts-ignore
-  async resolve(locator: Locator, opts: ResolveOptions): Promise<Package> {
+  async resolve(locator: Locator, opts: ResolveOptions) {
     const path = locator.reference.slice(WorkspaceResolver.protocol.length) as PortablePath
 
     const { project } = this.rewriteOpts(locator, opts)
     const workspace = project.getWorkspaceByCwd(path)
 
-    const version = workspace.manifest.version ?? (`0.0.0` as string)
-
     return {
       ...locator,
 
-      version,
+      version: workspace.manifest.version || `0.0.0`,
 
       languageName: `unknown`,
       linkType: path === `.` ? LinkType.SOFT : LinkType.HARD,

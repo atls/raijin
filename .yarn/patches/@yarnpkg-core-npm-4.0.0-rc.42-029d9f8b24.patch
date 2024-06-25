@@ -1,0 +1,28 @@
+diff --git a/lib/index.d.ts b/lib/index.d.ts
+index a0f7093f908a296c09792379dbba59a1b1c59c53..53cc61cb1d30a3236cf5ccad07ac2b0d4028ec40 100644
+--- a/lib/index.d.ts
++++ b/lib/index.d.ts
+@@ -26,6 +26,8 @@ export { Manifest } from './Manifest';
+ export type { AllDependencies, HardDependencies, DependencyMeta, PeerDependencyMeta } from './Manifest';
+ export { MessageName, parseMessageName, stringifyMessageName } from './MessageName';
+ export { MultiFetcher } from './MultiFetcher';
++export { MultiResolver } from './MultiResolver';
++export { VirtualResolver } from './VirtualResolver';
+ export type { CommandContext, Hooks, Plugin, WrapNetworkRequestInfo } from './Plugin';
+ export type { PeerRequirement } from './Project';
+ export { Project, InstallMode } from './Project';
+diff --git a/lib/index.js b/lib/index.js
+index 3da952ef3182263929970fad15f9b2b49673a2a7..3bfa22d083f8ad8b244513a4f7d4dbc0dc9c67e2 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -54,6 +54,10 @@ Object.defineProperty(exports, "parseMessageName", { enumerable: true, get: func
+ Object.defineProperty(exports, "stringifyMessageName", { enumerable: true, get: function () { return MessageName_1.stringifyMessageName; } });
+ var MultiFetcher_1 = require("./MultiFetcher");
+ Object.defineProperty(exports, "MultiFetcher", { enumerable: true, get: function () { return MultiFetcher_1.MultiFetcher; } });
++var MultiResolver_1 = require("./MultiResolver");
++Object.defineProperty(exports, "MultiResolver", { enumerable: true, get: function () { return MultiResolver_1.MultiResolver; } });
++var VirtualResolver_1 = require("./VirtualResolver");
++Object.defineProperty(exports, "VirtualResolver", { enumerable: true, get: function () { return VirtualResolver_1.VirtualResolver; } });
+ var Project_1 = require("./Project");
+ Object.defineProperty(exports, "Project", { enumerable: true, get: function () { return Project_1.Project; } });
+ Object.defineProperty(exports, "InstallMode", { enumerable: true, get: function () { return Project_1.InstallMode; } });

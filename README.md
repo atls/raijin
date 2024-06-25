@@ -2,6 +2,12 @@
 
 # Atlantis Toolset
 
+[//]: # 'VERSIONS'
+
+[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=0.0.22&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/code-service) [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=0.0.17&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/schematics)
+
+[//]: # 'VERSIONS'
+
 Монорепозиторий с набором инструментов и утилит, разработанных нашей командой, чтобы упростить разработку и работу над проектами.
 
 Инструменты предназначены для использования в проектах на JavaScript и TypeScript и направлены на обеспечение согласованного опыта разработки и повышения производительности.
@@ -74,9 +80,6 @@
 [![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/prettier/src/index.ts)
 [![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/jest/src/index.ts)
 [![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)](https://github.com/atls/tools/blob/8537e2f78ca5a2bd925548efce21a2d5c4800543/code/code-service/src/webpack.config.ts)
-
 [//]: # (VERSIONS)
 
-[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=0.0.24&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/code-service) [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=0.0.19&labelColor=ECEEF5&color=D7DCEB">](https://npmjs.com/package/@atls/schematics)
-
-[//]: # (VERSIONS)
+[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/code-service) [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/schematics)

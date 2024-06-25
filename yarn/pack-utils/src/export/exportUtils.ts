@@ -1,31 +1,29 @@
 /* Copy/Paste https://github.com/kherock/yarn-plugins/tree/main/packages/plugin-workspaces-export */
 /* eslint-disable */
 
-import { Resolver }              from '@yarnpkg/core'
-import { Fetcher }               from '@yarnpkg/core'
+// @ts-nocheck
+
 import { Project }               from '@yarnpkg/core'
 import { VirtualFetcher }        from '@yarnpkg/core'
 import { Workspace }             from '@yarnpkg/core'
 import { MultiFetcher }          from '@yarnpkg/core'
-// @ts-ignore
-import { MultiResolver }         from '@yarnpkg/core'
-// @ts-ignore
-import { VirtualResolver }       from '@yarnpkg/core'
 import { CwdFS }                 from '@yarnpkg/fslib'
 import { Filename }              from '@yarnpkg/fslib'
 import { PortablePath }          from '@yarnpkg/fslib'
-import { ZipCompression }        from '@yarnpkg/libzip'
+import { ZipCompression }        from '@yarnpkg/fslib'
 import { structUtils }           from '@yarnpkg/core'
 import { tgzUtils }              from '@yarnpkg/core'
 import { ppath }                 from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'
 import { packUtils }             from '@yarnpkg/plugin-pack'
-
-import tar                       from 'tar-stream'
 import { createGzip }            from 'zlib'
+import tar                       from 'tar-stream'
 
-import { WorkspacePackFetcher }  from './WorkspacePackFetcher'
-import { WorkspacePackResolver } from './WorkspacePackResolver'
+import { MultiResolver }         from './MultiResolver.js'
+import { ProtocolResolver }      from './ProtocolResolver.js'
+import { VirtualResolver }       from './VirtualResolver.js'
+import { WorkspacePackFetcher }  from './WorkspacePackFetcher.js'
+import { WorkspacePackResolver } from './WorkspacePackResolver.js'
 
 /**
  * Make a MultiFetcher that resolves workspaces using WorkspacePackFetcher
@@ -33,7 +31,7 @@ import { WorkspacePackResolver } from './WorkspacePackResolver'
  * @param project The project this resolver should resolve workspace dependencies from
  */
 export const makeFetcher = (project: Project) => {
-  const pluginFetchers: Fetcher[] = []
+  const pluginFetchers = []
 
   for (const plugin of project.configuration.plugins.values())
     for (const fetcher of plugin.fetchers || []) pluginFetchers.push(new fetcher())
@@ -48,30 +46,29 @@ export const makeFetcher = (project: Project) => {
 
 /**
  * Make a MultiResolver that resolves workspaces using WorkspacePackResolver
+ *
+ * @param project The project this resolver should resolve workspace dependencies from
  */
 export const makeResolver = (project: Project) => {
-  const pluginResolvers: Resolver[] = []
+  const pluginResolvers = []
 
   for (const plugin of project.configuration.plugins.values())
     for (const resolver of plugin.resolvers || []) pluginResolvers.push(new resolver())
 
   return new MultiResolver([
     new VirtualResolver(),
-    // @ts-ignore
     new WorkspacePackResolver(project),
+    new ProtocolResolver(),
 
     ...pluginResolvers,
   ])
 }
 
-export const makeExportDir = async ({ anchoredLocator, project }: Workspace) => {
-  const exportCacheFolder = project.configuration.get(`exportCacheFolder`) as
-    | string
-    | PortablePath
-    | Filename
+export const makeExportDir = async ({ locator, project }: Workspace) => {
+  const exportCacheFolder = project.configuration.get(`exportCacheFolder`)
   const exportDir = ppath.resolve(
     exportCacheFolder,
-    structUtils.slugifyIdent(anchoredLocator) as PortablePath
+    structUtils.slugifyIdent(locator) as PortablePath
   )
   await xfs.mkdirPromise(exportDir, { recursive: true })
   return exportDir

@@ -1,15 +1,16 @@
 import type { Record }  from '@atls/logger'
 
-import React            from 'react'
 import { Box }          from 'ink'
+import { FC }           from 'react'
+import React            from 'react'
 
-import { LogBody }      from './log-body.component'
-import { LogMessage }   from './log-message.component'
-import { LogNamespace } from './log-namespace.component'
+import { LogBody }      from './log-body.component.jsx'
+import { LogMessage }   from './log-message.component.jsx'
+import { LogNamespace } from './log-namespace.component.jsx'
 
 export interface LogRecordProps extends Partial<Record> {}
 
-export const LogRecord = ({ severityText = 'TRACE', name, body }: LogRecordProps) => (
+export const LogRecord: FC<LogRecordProps> = ({ severityText = 'TRACE', name, body }) => (
   <Box flexDirection='column'>
     <Box flexDirection='row'>
       <Box flexGrow={1}>

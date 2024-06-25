@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./sources/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -17,18 +21,13 @@
   },
   "devDependencies": {
     "@types/child-process-promise": "2.2.6",
-    "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.1.0",
-    "@yarnpkg/core": "4.0.3",
+    "@yarnpkg/builder": "4.1.1",
+    "@yarnpkg/cli": "4.2.2",
+    "@yarnpkg/core": "4.0.5",
     "typescript": "5.2.2"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*"
-  },
-  "publishConfig": {
-    "access": "public",
-    "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
   }
 }

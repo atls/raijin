@@ -1,1 +1,1 @@
-export * from './source-preview.component'
+export * from './source-preview.component.jsx'

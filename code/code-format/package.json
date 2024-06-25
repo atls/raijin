@@ -2,6 +2,11 @@
   "name": "@atls/code-format",
   "version": "0.0.27",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -14,16 +19,24 @@
   "dependencies": {
     "@atls/config-prettier": "workspace:*",
     "@atls/prettier-plugin": "workspace:*",
-    "globby": "11.1.0",
-    "ignore": "5.2.0",
-    "prettier": "3.1.1"
+    "globby": "^13.2.2",
+    "ignore": "^5.2.4",
+    "prettier": "^3.0.0"
   },
   "devDependencies": {
-    "@types/node": "18.19.3",
-    "@types/prettier": "3.0.0"
+    "@types/node": "^20.4.0"
   },
   "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

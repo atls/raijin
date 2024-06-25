@@ -2,6 +2,11 @@
   "name": "@atls/config-eslint",
   "version": "0.0.12",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -12,25 +17,42 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "6.15.0",
-    "@typescript-eslint/parser": "6.15.0",
-    "eslint": "8.56.0",
-    "eslint-import-resolver-node": "0.3.9",
-    "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jsx-a11y": "6.8.0",
-    "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-react": "7.30.2",
-    "eslint-plugin-react-hooks": "4.6.0",
-    "prettier": "3.1.1",
-    "react": "18.2.0"
+    "@atls/config-prettier": "workspace:*",
+    "@next/eslint-plugin-next": "^13.4.8",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "eslint": "^8.44.0",
+    "eslint-import-resolver-node": "^0.3.7",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-security": "^1.7.1",
+    "prettier": "^3.0.0",
+    "react": "^18.2.0"
   },
   "devDependencies": {
-    "@types/eslint": "8.56.0",
-    "@types/node": "18.19.3",
-    "typescript": "5.2.2"
+    "@types/eslint": "^8.40.2",
+    "@types/node": "^20.4.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

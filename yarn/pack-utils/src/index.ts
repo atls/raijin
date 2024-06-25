@@ -1,5 +1,5 @@
-import * as workspacesUtils from './workspaces.utils'
-import * as copyUtils       from './copy.utils'
-import * as packUtils       from './pack.utils'
+import * as workspacesUtils from './workspaces.utils.js'
+import * as copyUtils       from './copy.utils.js'
+import * as packUtils       from './pack.utils.js'
 
 export { workspacesUtils, copyUtils, packUtils }

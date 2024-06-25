@@ -2,6 +2,11 @@
   "name": "@atls/code-lint",
   "version": "0.0.33",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -12,14 +17,13 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-eslint": "workspace:*",
-    "@types/eslint": "8.56.0",
-    "eslint": "8.56.0",
-    "globby": "11.1.0",
-    "ignore": "5.3.0"
+    "@atls/code-runtime": "workspace:*",
+    "deepmerge": "^4.3.1",
+    "globby": "^13.2.2",
+    "ignore": "^5.2.4"
   },
   "devDependencies": {
-    "@types/node": "18.19.3"
+    "@types/node": "^20.4.0"
   },
   "peerDependencies": {
     "react": "*",
@@ -34,7 +38,16 @@
     }
   },
   "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

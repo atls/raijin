@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./sources/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -25,21 +29,20 @@
     "@atls/yarn-plugin-files": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-workspace-utils": "workspace:*",
-    "@babel/code-frame": "7.23.5",
+    "@babel/code-frame": "7.24.2",
     "@jest/test-result": "29.7.0",
-    "clipanion": "4.0.0-rc.2",
+    "clipanion": "4.0.0-rc.3",
     "react": "16.14.0",
-    "strip-ansi": "7.1.0",
-    "undici": "6.2.1"
+    "strip-ansi": "7.1.0"
   },
   "devDependencies": {
-    "@octokit/types": "12.4.0",
-    "@types/node": "18.19.3",
-    "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.1.0",
-    "@yarnpkg/core": "4.0.3",
-    "@yarnpkg/fslib": "3.0.2",
-    "eslint": "8.56.0"
+    "@atls/code-runtime": "workspace:*",
+    "@octokit/types": "12",
+    "@types/node": "20",
+    "@yarnpkg/builder": "4.1.1",
+    "@yarnpkg/cli": "4.2.2",
+    "@yarnpkg/core": "4.0.5",
+    "@yarnpkg/fslib": "3.1.0"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

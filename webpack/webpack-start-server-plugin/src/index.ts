@@ -1,1 +1,1 @@
-export * from './start-server.plugin'
+export * from './start-server.plugin.js'

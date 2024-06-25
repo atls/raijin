@@ -3,33 +3,30 @@ import type { Diagnostic }      from 'typescript'
 
 import { EvalWorker }           from '@atls/code-worker-utils'
 
-import { getContent }           from './typescript.worker.content'
+import { getContent }           from './typescript.worker.content.js'
 
 export class TypeScriptWorker {
   constructor(protected readonly cwd: string) {}
 
-  async check(include: Array<string>): Promise<Array<Diagnostic>> {
-    const originalCwd = process.cwd()
-
+  async check(cwd: string, include: Array<string>): Promise<Array<Diagnostic>> {
     process.chdir(this.cwd)
 
-    return EvalWorker.run(getContent(), {
-      cwd: originalCwd,
+    return EvalWorker.run(this.cwd, getContent(), {
+      cwd,
       type: 'check',
       include,
     })
   }
 
   async build(
+    cwd: string,
     include: Array<string> = [],
     override: Partial<CompilerOptions> = {}
   ): Promise<Array<Diagnostic>> {
-    const originalCwd = process.cwd()
-
     process.chdir(this.cwd)
 
-    return EvalWorker.run(getContent(), {
-      cwd: originalCwd,
+    return EvalWorker.run(this.cwd, getContent(), {
+      cwd,
       type: 'build',
       include,
       override,

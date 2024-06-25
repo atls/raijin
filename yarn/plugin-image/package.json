@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./sources/index.ts"
+  },
   "files": [
     "dist"
   ],
@@ -16,16 +20,16 @@
     "@atls/code-pack": "workspace:*",
     "@atls/yarn-pack-utils": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
-    "@iarna/toml": "3.0.0",
+    "@iarna/toml": "^2.2.5",
     "@yarnpkg/plugin-patch": "4.0.1",
-    "clipanion": "4.0.0-rc.2",
+    "clipanion": "4.0.0-rc.3",
     "tempy": "1.0.1"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "4.0.0",
-    "@yarnpkg/cli": "4.1.0",
-    "@yarnpkg/core": "4.0.3",
-    "@yarnpkg/fslib": "3.0.2",
+    "@yarnpkg/builder": "4.1.1",
+    "@yarnpkg/cli": "4.2.2",
+    "@yarnpkg/core": "4.0.5",
+    "@yarnpkg/fslib": "3.1.0",
     "typescript": "5.2.2"
   },
   "peerDependencies": {

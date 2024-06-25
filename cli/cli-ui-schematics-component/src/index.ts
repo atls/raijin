@@ -1,1 +1,1 @@
-export * from './request-project-information.component'
+export * from './request-project-information/index.js'

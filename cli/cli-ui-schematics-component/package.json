@@ -1,8 +1,12 @@
 {
   "name": "@atls/cli-ui-schematics-component",
-  "version": "0.0.48",
+  "version": "0.0.47",
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
@@ -14,16 +18,16 @@
   "devDependencies": {
     "@atls/cli-ui-parts": "workspace:*",
     "@atls/schematics": "workspace:*",
-    "@types/node": "18.19.3",
-    "@types/react": "16.14.54",
+    "@types/node": "20",
+    "@types/react": "16",
     "@yarnpkg/libui": "3.0.0",
     "camelcase": "8.0.0",
-    "figures": "3.2.0",
-    "ink": "^3.0.8",
+    "figures": "6.1.0",
+    "ink": "3.2.0",
     "ink-autocomplete": "0.0.0",
     "ink-multi-select": "2.0.0",
-    "ink-select-input": "4.2.2",
-    "ink-text-input": "4.0.3"
+    "ink-select-input": "5.0.0",
+    "ink-text-input": "5.0.1"
   },
   "peerDependencies": {
     "ink": "*",
@@ -31,7 +35,14 @@
   },
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.js",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "typings": "dist/index.d.ts"
   }
 }

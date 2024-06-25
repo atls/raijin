@@ -2,6 +2,11 @@
   "name": "@atls/code-worker-utils",
   "version": "0.0.6",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -11,8 +16,20 @@
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
+  "dependencies": {
+    "fast-hash-code": "^2.1.0"
+  },
   "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

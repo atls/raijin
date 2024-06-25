@@ -1,24 +1,25 @@
-import { PortablePath } from '@yarnpkg/fslib'
-import { context }      from '@actions/github'
-import { execUtils }    from '@yarnpkg/core'
+import type { PortablePath } from '@yarnpkg/fslib'
 
-import { TagPolicy }    from './pack.interfaces'
+import type { TagPolicy }    from './pack.interfaces.js'
+
+import { context }           from '@actions/github'
+import { execUtils }         from '@yarnpkg/core'
 
 export const getPullRequestSha = (): string => {
   const event = context.payload
 
   return (
     process.env.GITHUB_PULL_REQUST_HEAD_SHA ||
-    event.after ||
-    event.pull_request?.head?.sha ||
-    process.env.GITHUB_SHA
+    (event.after as string) ||
+    (event.pull_request?.head?.sha as string) ||
+    process.env.GITHUB_SHA!
   )
 }
 
 export const getPullRequestId = (): string => {
   const event = context.payload
 
-  return event.pull_request?.id
+  return event.pull_request?.id as string
 }
 
 export const getPullRequestNumber = (): string => {
@@ -27,7 +28,7 @@ export const getPullRequestNumber = (): string => {
   return String(event.pull_request?.number)
 }
 
-export const getRevision = async () => {
+export const getRevision = async (): Promise<string> => {
   if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
     return getPullRequestSha()
   }
@@ -42,7 +43,7 @@ export const getRevision = async () => {
   return revision.replace(/"/g, '')
 }
 
-export const getContext = async () => {
+export const getContext = async (): Promise<string> => {
   if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
     return getPullRequestNumber()
   }
@@ -50,7 +51,7 @@ export const getContext = async () => {
   return 'local'
 }
 
-export const getTag = async (tagPolicy: TagPolicy) => {
+export const getTag = async (tagPolicy: TagPolicy): Promise<string> => {
   const revision = await getRevision()
   const hash = revision.substr(0, 7)
 

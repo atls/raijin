@@ -1,7 +1,8 @@
-import React             from 'react'
+import type { FC }       from 'react'
+
 import { Text }          from 'ink'
 import { Box }           from 'ink'
-import { FC }            from 'react'
+import React             from 'react'
 
 import { SourcePreview } from '@atls/cli-ui-source-component'
 
@@ -22,7 +23,6 @@ export const ESLintResultMessage: FC<ESLintResultMessageElProp> = ({
   filePath,
   message,
   source,
-  // @ts-ignore
 }) => (
   <Box flexDirection='column'>
     <Box marginBottom={1}>
@@ -40,7 +40,7 @@ export const ESLintResultMessage: FC<ESLintResultMessageElProp> = ({
       <Text color='white'>: {message.message}</Text>
       <Text color='gray'> {message.ruleId}</Text>
     </Box>
-    {source && (
+    {!!source && (
       <Box marginBottom={1}>
         <SourcePreview line={message.line} column={message.column}>
           {source}

@@ -1,0 +1,17 @@
+diff --git a/lib/resolveConfig.js b/lib/resolveConfig.js
+index cb4ab0bde520aff5a75f1c6ab7438ba15188915f..b14815142cf2a1d66c258737602ff65a5e88e858 100644
+--- a/lib/resolveConfig.js
++++ b/lib/resolveConfig.js
+@@ -4,10 +4,11 @@ import { createRequire } from 'node:module'
+  * require() does not exist for ESM, so we must create it to use require.resolve().
+  * @see https://nodejs.org/api/module.html#modulecreaterequirefilename
+  */
+-const require = createRequire(import.meta.url)
+ 
+ export function resolveConfig(configPath) {
+   try {
++    const require = createRequire(import.meta.url)
++
+     return require.resolve(configPath)
+   } catch {
+     return configPath

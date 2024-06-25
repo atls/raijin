@@ -1,167 +1,128 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import { readFile }                   from 'node:fs/promises'
-import { join }                       from 'node:path'
+import type { WebpackEnvironment } from './webpack.interfaces.js'
 
-import fg                             from 'fast-glob'
-import findUp                         from 'find-up'
-import { Configuration }              from 'webpack'
-import { WebpackPluginInstance }      from 'webpack'
-import { HotModuleReplacementPlugin } from 'webpack'
+import { writeFile }               from 'node:fs/promises'
+import { mkdtemp }                 from 'node:fs/promises'
+import { join }                    from 'node:path'
+import { tmpdir }                  from 'node:os'
 
-import { FORCE_UNPLUGGED_PACKAGES }   from './webpack.externals'
-import { UNUSED_EXTERNALS }           from './webpack.externals'
-import { ModuleTypes }                from './webpack.interfaces'
-import { WebpackEnvironment }         from './webpack.interfaces'
+import Config                      from 'webpack-chain-5'
+
+import { webpack }                 from '@atls/code-runtime/webpack'
+import { tsLoaderPath }            from '@atls/code-runtime/webpack'
+import { nodeLoaderPath }          from '@atls/code-runtime/webpack'
+import tsconfig                    from '@atls/config-typescript'
+
+import { WebpackExternals }        from './webpack.externals.js'
+import { LAZY_IMPORTS }            from './webpack.ignore.js'
 
 export class WebpackConfig {
   constructor(private readonly cwd: string) {}
 
-  async getWorkspaceExternals(): Promise<Set<string>> {
-    try {
-      const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+  async build(
+    environment: WebpackEnvironment = 'production',
+    plugins: Array<{
+      use: Config.PluginClass<webpack.WebpackPluginInstance> | webpack.WebpackPluginInstance
+      args: Array<any>
+      name: string
+    }> = []
+  ): Promise<webpack.Configuration> {
+    const config = new Config()
 
-      const { externalDependencies = {} } = JSON.parse(content)
+    await this.applyCommon(config, environment)
+    await this.applyPlugins(config, environment)
+    await this.applyModules(config)
 
-      return new Set(Object.keys(externalDependencies))
-    } catch {
-      return Promise.resolve(new Set())
-    }
-  }
-
-  async getWorkspaceType(): Promise<ModuleTypes> {
-    try {
-      const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-      const { type = 'commonjs' } = JSON.parse(content)
-
-      return type
-    } catch {
-      return 'module'
-    }
-  }
-
-  async getUnpluggedDependencies(): Promise<Set<string>> {
-    const yarnFolder = await findUp('.yarn')
-
-    if (!yarnFolder) return Promise.resolve(new Set())
-
-    const pnpUnpluggedFolder = join(yarnFolder, 'unplugged')
-    const dependenciesNames = new Set<string>()
-
-    const entries = await fg('*/node_modules/*/package.json', {
-      cwd: pnpUnpluggedFolder,
+    plugins.forEach((plugin) => {
+      config.plugin(plugin.name).use(plugin.use, plugin.args)
     })
 
-    await Promise.all(
-      entries
-        .map((entry) => join(pnpUnpluggedFolder, entry))
-        .map(async (entry) => {
-          try {
-            const { name } = JSON.parse((await readFile(entry)).toString())
-
-            if (name && !FORCE_UNPLUGGED_PACKAGES.has(name)) {
-              dependenciesNames.add(name)
-            }
-          } catch {} // eslint-disable-line
-        })
-    )
-
-    return dependenciesNames
+    return config.toConfig()
   }
 
-  async getExternals(): Promise<{ [key: string]: string }> {
-    const workspaceExternals: Array<string> = Array.from(await this.getWorkspaceExternals())
+  private async applyCommon(config: Config, environment: WebpackEnvironment): Promise<void> {
+    config
+      .mode(environment)
+      .bail(environment === 'production')
+      .target('async-node')
+      .optimization.minimize(false)
 
-    const unpluggedExternals: Array<string> = Array.from(await this.getUnpluggedDependencies())
+    config.entry('index').add(join(this.cwd, 'src/index'))
 
-    const type = await this.getWorkspaceType()
-    const prefix = type === 'commonjs' ? 'commonjs2 ' : ''
-
-    return Array.from(
-      new Set([...workspaceExternals, ...unpluggedExternals, ...UNUSED_EXTERNALS])
-    ).reduce(
-      (result, dependency) => ({
-        ...result,
-        [dependency]: `${prefix}${dependency}`,
-      }),
-      {}
-    )
-  }
-
-  async build(
-    environment: WebpackEnvironment = WebpackEnvironment.prod,
-    plugins: WebpackPluginInstance[] = []
-  ): Promise<Configuration> {
-    return {
-      mode: environment,
-      bail: environment === WebpackEnvironment.prod,
-      externals: await this.getExternals(),
-      target: 'async-node',
-      optimization: { minimize: false },
-      experiments: {
-        outputModule: (await this.getWorkspaceType()) === 'module',
-      },
-      plugins: [
-        environment === WebpackEnvironment.dev ? new HotModuleReplacementPlugin() : () => {},
-        ...plugins,
-      ],
-      entry: {
-        index: join(this.cwd, 'src/index'),
-      },
-      node: { __dirname: false, __filename: false },
-      output: {
-        path: join(this.cwd, 'dist'),
-        filename: '[name].js',
-        library: { type: await this.getWorkspaceType() },
-        chunkFormat: await this.getWorkspaceType(),
-      },
-      resolve: {
-        extensionAlias: { '.js': ['.tsx', '.ts', '.js'], '.jsx': ['.tsx', '.ts', '.js'] },
-        extensions: ['.tsx', '.ts', '.js'],
-      },
-      devtool:
-        environment === WebpackEnvironment.prod ? 'source-map' : 'eval-cheap-module-source-map',
-      module: {
-        rules: [
-          {
-            test: /\.([mc]?ts|tsx)$/,
-            use: {
-              loader: require.resolve('swc-loader'),
-              options: {
-                minify: false,
-                jsc: {
-                  parser: {
-                    syntax: 'typescript',
-                    jsx: true,
-                    dynamicImport: true,
-                    privateMethod: true,
-                    functionBind: true,
-                    exportDefaultFrom: true,
-                    exportNamespaceFrom: true,
-                    decorators: true,
-                    decoratorsBeforeExport: true,
-                    topLevelAwait: true,
-                    importMeta: true,
-                  },
-                  transform: {
-                    legacyDecorator: true,
-                    decoratorMetadata: true,
-                  },
-                },
-              },
-            },
-          },
-          { test: /\.proto$/, use: require.resolve('@atls/webpack-proto-imports-loader') },
-          {
-            test: /\.css$/i,
-            use: [require.resolve('style-loader'), require.resolve('css-loader')],
-          },
-          { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
-          { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
-          { test: /\.ya?ml$/, use: require.resolve('yaml-loader') },
-          { test: /\.(hbs|handlebars)$/, use: require.resolve('handlebars-loader') },
-          { test: /\.node$/, use: require.resolve('node-loader') },
-        ],
-      },
+    if (environment === 'development') {
+      config.entry('hot').add('webpack/hot/poll?100')
     }
+
+    config.output.path(join(this.cwd, 'dist')).filename('[name].js')
+    config.output.chunkFormat('module')
+    config.output.module(true)
+
+    config.resolve.extensions.add('.tsx').add('.ts').add('.js')
+    config.resolve.extensionAlias
+      .set('.js', ['.js', '.ts'])
+      .set('.jsx', ['.jsx', '.tsx'])
+      .set('.cjs', ['.cjs', '.cts'])
+      .set('.mjs', ['.mjs', '.mts'])
+
+    config.resolve.alias.set('class-transformer/storage', 'class-transformer/cjs/storage')
+
+    config.externalsType('import')
+    config.externalsPresets({ node: true })
+    config.externals(['webpack/hot/poll?100', await new WebpackExternals(this.cwd).build()])
+
+    config.devtool(environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map')
+
+    config.experiments({ outputModule: true })
+  }
+
+  private async applyPlugins(config: Config, environment: WebpackEnvironment): Promise<void> {
+    if (environment === 'development') {
+      config.plugin('hot').use(webpack.HotModuleReplacementPlugin)
+    }
+
+    config.plugin('ignore').use(webpack.IgnorePlugin, [
+      {
+        checkResource: (resource: string): boolean => {
+          if (!LAZY_IMPORTS.includes(resource)) {
+            return false
+          }
+
+          try {
+            require.resolve(resource, {
+              paths: [this.cwd],
+            })
+          } catch (err) {
+            return true
+          }
+
+          return false
+        },
+      },
+    ])
+  }
+
+  private async applyModules(config: Config): Promise<void> {
+    const configFile = join(await mkdtemp(join(tmpdir(), 'code-service-')), 'tsconfig.json')
+
+    await writeFile(configFile, '{"include":["**/*"]}')
+
+    config.module
+      .rule('ts')
+      .test(/.tsx?$/)
+      .use('ts')
+      .loader(tsLoaderPath)
+      .options({
+        transpileOnly: true,
+        experimentalWatchApi: true,
+        onlyCompileBundledFiles: true,
+        compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
+        context: this.cwd,
+        configFile,
+      })
+
+    config.module
+      .rule('node')
+      .test(/\.node$/)
+      .use('node')
+      .loader(nodeLoaderPath)
   }
 }

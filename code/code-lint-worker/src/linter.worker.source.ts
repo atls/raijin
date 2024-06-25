@@ -3,6 +3,9 @@ import { workerData } from 'node:worker_threads'
 
 import { Linter }     from '@atls/code-lint'
 
-new Linter(workerData.cwd)
-  .lint(workerData.files)
-  .then((results) => parentPort!.postMessage(results))
+parentPort!.postMessage(
+  await new Linter(workerData.cwd as string, workerData.rootCwd as string).lint(
+    workerData.files as Array<string>,
+    workerData.options as object
+  )
+)

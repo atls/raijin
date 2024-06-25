@@ -1,10 +1,12 @@
+import { describe }             from '@jest/globals'
+import { expect }               from '@jest/globals'
+import { it }                   from '@jest/globals'
 import React                    from 'react'
+import stripAnsi                from 'strip-ansi'
 
 import { renderStatic }         from '@atls/cli-ui-renderer'
 
-import { TypeScriptDiagnostic } from './typescript-diagnostic.component'
-
-const stripAnsi = require('strip-ansi')
+import { TypeScriptDiagnostic } from './typescript-diagnostic.component.jsx'
 
 describe('eslint result component', () => {
   it('render', () => {
@@ -19,7 +21,6 @@ describe('eslint result component', () => {
       messageText: "Argument of type 'string' is not assignable to parameter of type 'number'.",
     }
 
-    // @ts-ignore
     const output = renderStatic(<TypeScriptDiagnostic {...value} />, 160)
 
     expect(stripAnsi(output)).toMatchSnapshot()

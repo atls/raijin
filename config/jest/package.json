@@ -1,10 +1,15 @@
 {
   "name": "@atls/config-jest",
-  "version": "0.1.5",
+  "version": "0.0.14",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
-    "src"
+    "dist"
   ],
   "scripts": {
     "build": "yarn library build",
@@ -13,19 +18,34 @@
   },
   "dependencies": {
     "@atls/config-typescript": "workspace:*",
-    "@atls/jest-static-stubs": "workspace:*",
-    "@emotion/jest": "11.11.0",
-    "@monstrs/jest-resolver": "0.3.3",
+    "@atls/jest-resolver": "workspace:*",
+    "@emotion/jest": "^11.11.0",
     "@swc/core": "1.5.25",
-    "@swc/jest": "0.2.36"
+    "@swc/jest": "0.2.36",
+    "jest-static-stubs": "^0.0.1"
   },
   "devDependencies": {
-    "@types/node": "20",
-    "jest": "29.7.0",
-    "typescript": "5.2.2"
+    "@types/node": "^20.4.0"
+  },
+  "peerDependenciesMeta": {
+    "jest": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
   },
   "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

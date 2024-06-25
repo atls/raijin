@@ -1,73 +1,45 @@
-import { readFile }             from 'node:fs/promises'
+import { readFileSync }              from 'node:fs'
+import { join }                      from 'node:path'
 
-import type { Diagnostic }      from 'typescript'
-import type { CompilerOptions } from 'typescript'
+import deepmerge                     from 'deepmerge'
 
-import deepmerge                from 'deepmerge'
-import ts                       from 'typescript'
-import { join }                 from 'path'
+import { ts }                        from '@atls/code-runtime/typescript'
+import tsconfig                      from '@atls/config-typescript'
 
-import { tsConfig }             from '@atls/config-typescript'
+import { transformJsxToJsExtension } from './transformers/index.js'
 
 class TypeScript {
   constructor(private readonly cwd: string) {}
 
-  private async getProjectIgnorePatterns(): Promise<Array<string>> {
-    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-
-    const { typecheckIgnorePatterns = [] } = JSON.parse(content)
-
-    return typecheckIgnorePatterns
-  }
-
-  private async getLibCheckOption(): Promise<boolean> {
-    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-
-    const { typecheckSkipLibCheck = false } = JSON.parse(content)
-
-    return typecheckSkipLibCheck
-  }
-
-  private async getProjectConfiguration(): Promise<Array<string>> {
-    const content = await readFile(join(this.cwd, 'tsconfig.json'), 'utf-8')
-
-    return JSON.parse(content)
-  }
-
-  check(include: Array<string> = []): Promise<Array<Diagnostic>> {
+  async check(include: Array<string> = []): Promise<Array<ts.Diagnostic>> {
     return this.run(include)
   }
 
-  build(
+  async build(
     include: Array<string> = [],
-    override: Partial<CompilerOptions> = {}
-  ): Promise<Array<Diagnostic>> {
+    override: Partial<ts.CompilerOptions> = {}
+  ): Promise<Array<ts.Diagnostic>> {
     return this.run(include, override, false)
   }
 
   private async run(
     include: Array<string> = [],
-    override: Partial<CompilerOptions> = {},
+    override: Partial<ts.CompilerOptions> = {},
     noEmit = true
-  ): Promise<Array<Diagnostic>> {
+  ): Promise<Array<ts.Diagnostic>> {
     const projectIgnorePatterns = await this.getProjectIgnorePatterns()
 
     const skipLibCheck = await this.getLibCheckOption()
 
-    const config = deepmerge(
-      tsConfig,
-      {
-        compilerOptions: { ...override, skipLibCheck, rootDir: noEmit ? this.cwd : undefined },
-        exclude: [...tsConfig.exclude, ...projectIgnorePatterns],
-      },
-      {
-        include,
-      } as any
-    )
+    const config = deepmerge(tsconfig, { compilerOptions: override, skipLibCheck }, {
+      compilerOptions: { rootDir: this.cwd },
+      include,
+      exclude: [...tsconfig.exclude, ...projectIgnorePatterns],
+    } as object)
 
     const { fileNames, options, errors } = ts.parseJsonConfigFileContent(config, ts.sys, this.cwd)
 
-    if (errors?.length > 0) {
+    if (errors.length > 0) {
       return errors
     }
 
@@ -76,9 +48,56 @@ class TypeScript {
       noEmit,
     })
 
-    const result = program.emit()
+    const result = program.emit(undefined, undefined, undefined, undefined, {
+      after: [transformJsxToJsExtension],
+    })
 
-    return ts.getPreEmitDiagnostics(program).concat(result.diagnostics)
+    return this.filterDiagnostics(ts.getPreEmitDiagnostics(program).concat(result.diagnostics))
+  }
+
+  private filterDiagnostics(diagnostics: Array<ts.Diagnostic>): Array<ts.Diagnostic> {
+    return diagnostics
+      .filter((diagnostic) => diagnostic.code !== 2209)
+      .filter(
+        (diagnostic) => !(diagnostic.code === 1479 && diagnostic.file?.fileName.includes('/.yarn/'))
+      )
+      .filter(
+        (diagnostic) => !(diagnostic.code === 2834 && diagnostic.file?.fileName.includes('/.yarn/'))
+      )
+      .filter(
+        (diagnostic) =>
+          !(diagnostic.code === 7016 && diagnostic.file?.fileName.includes('/lexical/'))
+      )
+      .filter(
+        (diagnostic) =>
+          !(
+            [2315, 2411, 2304, 7006, 7016].includes(diagnostic.code) &&
+            diagnostic.file?.fileName.includes('/@strapi/')
+          )
+      )
+      .filter(
+        (diagnostic) =>
+          !(
+            [2688, 2307, 2503].includes(diagnostic.code) &&
+            diagnostic.file?.fileName.includes('/pkg-tests-core/')
+          )
+      )
+  }
+
+  private getProjectIgnorePatterns(): Array<string> {
+    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { typecheckIgnorePatterns = [] } = JSON.parse(content)
+
+    return typecheckIgnorePatterns
+  }
+
+  private getLibCheckOption(): boolean {
+    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { typecheckSkipLibCheck = false } = JSON.parse(content)
+
+    return typecheckSkipLibCheck
   }
 }
 

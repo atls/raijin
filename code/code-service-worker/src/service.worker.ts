@@ -1,34 +1,32 @@
-import type { ServiceBuildResult } from '@atls/code-service'
+import type { ServiceLogRecord } from '@atls/code-service'
 
-import { EvalWorker }              from '@atls/code-worker-utils'
+import { EvalWorker }            from '@atls/code-worker-utils'
 
-import { getContent }              from './service.worker.content'
+import { getContent }            from './service.worker.content.js'
 
 export class ServiceWorker {
-  constructor(
-    protected readonly cwd: string,
-    protected readonly rootCwd: string
-  ) {}
+  constructor(protected readonly cwd: string) {}
 
-  async run(): Promise<ServiceBuildResult> {
-    process.chdir(this.rootCwd)
+  async run(cwd: string): Promise<Array<ServiceLogRecord>> {
+    process.chdir(this.cwd)
 
-    return EvalWorker.run<ServiceBuildResult>(getContent(), {
-      cwd: this.cwd,
+    return EvalWorker.run<Array<ServiceLogRecord>>(this.cwd, getContent(), {
       environment: 'production',
+      cwd,
     })
   }
 
-  async watch(onMessage) {
-    process.chdir(this.rootCwd)
+  async watch(cwd: string, callback: (logRecord: ServiceLogRecord) => void): Promise<void> {
+    process.chdir(this.cwd)
 
-    return EvalWorker.watch(
+    return EvalWorker.watch<ServiceLogRecord>(
+      this.cwd,
       getContent(),
       {
         environment: 'development',
-        cwd: this.cwd,
+        cwd,
       },
-      onMessage
+      callback
     )
   }
 }

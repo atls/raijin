@@ -1,1 +1,1 @@
-export * from './project.interfaces'
+export * from './project.interfaces.js'

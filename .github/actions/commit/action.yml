@@ -1,0 +1,19 @@
+name: Commit composite action
+
+inputs:
+  GITHUB_TOKEN:
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v9
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+      with:
+        default_author: github_actions
+        author_email: github-bot@atls.team
+        message: 'chore(common): publish'
+        add: '["*.lock", "*.json", "*.yml"]'

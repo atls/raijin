@@ -1,1 +1,1 @@
-export * from './schematics.worker'
+export * from './schematics.worker.js'

@@ -1,8 +1,10 @@
-import commitformat           from '@commitlint/format'
-import { LintOutcome }        from '@commitlint/types'
+import type { LintOutcome }       from '@commitlint/types'
+import type { FormattableReport } from '@commitlint/types'
 
-import { rules }              from './commit.rules'
-import { lint as commitlint } from './commitlint'
+import { format }                 from '@commitlint/format/lib/format.js'
+
+import { rules }                  from './commit.rules.js'
+import { lint as commitlint }     from './commitlint.js'
 
 export class CommitLinter {
   async lint(message: string): Promise<LintOutcome> {
@@ -10,11 +12,11 @@ export class CommitLinter {
   }
 
   format(
-    report,
+    report: FormattableReport,
     options = {
       helpUrl: 'https://github.com/conventional-changelog/commitlint/#what-is-commitlint',
     }
-  ) {
-    return commitformat(report, options)
+  ): string {
+    return format(report, options)
   }
 }

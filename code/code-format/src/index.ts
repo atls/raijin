@@ -1,2 +1,2 @@
-export * from './formatter.patterns'
-export * from './formatter'
+export * from './formatter.js'
+export * from './formatter.patterns.js'

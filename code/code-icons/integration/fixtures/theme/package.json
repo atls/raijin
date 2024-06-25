@@ -1,0 +1,12 @@
+{
+  "name": "@fixtures/icons-theme",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@vanilla-extract/css": "^1.12.0"
+  }
+}

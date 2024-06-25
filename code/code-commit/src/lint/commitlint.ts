@@ -1,34 +1,39 @@
 // Copy/Paste https://github.com/conventional-changelog/commitlint/blob/32daec2277f3db2855996db57264bed36ed5db21/%40commitlint/lint/src/lint.ts
 
-import util                   from 'node:util'
+/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 
-import isIgnored              from '@commitlint/is-ignored'
-import defaultRules           from '@commitlint/rules'
-import { BaseRule }           from '@commitlint/types'
-import { LintOptions }        from '@commitlint/types'
-import { LintOutcome }        from '@commitlint/types'
-import { LintRuleOutcome }    from '@commitlint/types'
-import { QualifiedRules }     from '@commitlint/types'
-import { Rule }               from '@commitlint/types'
-import { RuleConfigSeverity } from '@commitlint/types'
-import { RuleType }           from '@commitlint/types'
-import { Commit }             from '@commitlint/types'
-import { Parser }             from '@commitlint/types'
-import { ParserOptions }      from '@commitlint/types'
-import { buildCommitMesage }  from '@commitlint/lint/lib/commit-message'
+import type { BaseRule }        from '@commitlint/types'
+import type { LintOptions }     from '@commitlint/types'
+import type { LintOutcome }     from '@commitlint/types'
+import type { LintRuleOutcome } from '@commitlint/types'
+import type { QualifiedRules }  from '@commitlint/types'
+import type { Rule }            from '@commitlint/types'
+import type { RuleType }        from '@commitlint/types'
+import type { Commit }          from '@commitlint/types'
+import type { Parser }          from '@commitlint/types'
+import type { ParserOptions }   from '@commitlint/types'
 
-import { sync }               from 'conventional-commits-parser'
+import util                     from 'node:util'
 
-import { parserOptions }      from './parser-options'
+import { RuleConfigSeverity }   from '@commitlint/types'
+import { buildCommitMesage }    from '@commitlint/lint/lib/commit-message.js'
+import isIgnoredPkg             from '@commitlint/is-ignored'
+import defaultRulesPkg          from '@commitlint/rules'
+import { sync }                 from 'conventional-commits-parser'
+// @ts-expect-error
+import defaultParserOpts        from 'conventional-changelog-angular/parser-opts.js'
+
+const isIgnored = isIgnoredPkg.default || isIgnoredPkg
+const defaultRules = defaultRulesPkg.default || defaultRulesPkg
 
 export async function parse(
   message: string,
-  // @ts-ignore
+  // @ts-expect-error
   parser: Parser = sync,
   parserOpts?: ParserOptions
 ): Promise<Commit> {
   const opts: ParserOptions = {
-    ...parserOptions,
+    ...defaultParserOpts,
     ...(parserOpts || {}),
   }
 
@@ -124,11 +129,11 @@ export async function lint(
         )
       }
 
-      if (config.length !== 2 && config.length !== 3) {
+      if (![2, 3].includes(config.length)) {
         return new Error(
           `config for rule ${name} must be 2 or 3 items long, received ${util.inspect(
             config
-          )} of length ${(config as any).length}`
+          )} of length ${config.length}`
         )
       }
 

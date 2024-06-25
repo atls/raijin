@@ -9,24 +9,26 @@ import { Filename }        from '@yarnpkg/fslib'
 import { CwdFS }           from '@yarnpkg/fslib'
 import { structUtils }     from '@yarnpkg/core'
 import { tgzUtils }        from '@yarnpkg/core'
+import { toFilename }      from '@yarnpkg/fslib'
 import { xfs }             from '@yarnpkg/fslib'
 import { ppath }           from '@yarnpkg/fslib'
 import { npath }           from '@yarnpkg/fslib'
 import { packUtils }       from '@yarnpkg/plugin-pack'
 
-import { ExportCache }     from './export/ExportCache'
-import { copyRcFile }      from './copy.utils'
-import { copyPlugins }     from './copy.utils'
-import { copyYarnRelease } from './copy.utils'
-import { genPackTgz }      from './export/exportUtils'
-import { makeFetcher }     from './export/exportUtils'
+import { ExportCache }     from './export/ExportCache.js'
+import { copyRcFile }      from './copy.utils.js'
+import { copyPlugins }     from './copy.utils.js'
+import { copyYarnRelease } from './copy.utils.js'
+import { genPackTgz }      from './export/exportUtils.js'
+import { makeFetcher }     from './export/exportUtils.js'
+import { makeResolver }    from './export/exportUtils.js'
 
 export const generateLockfile = async (
   project: Project,
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const filename = 'yarn.lock' as Filename
+  const filename = toFilename(project.configuration.get('lockfileFilename'))
   const dest = ppath.join(destination, filename)
 
   report.reportInfo(null, filename)
@@ -63,8 +65,6 @@ export const pack = async (
     workspace.manifest.devDependencies.clear()
 
     const baseFs = new CwdFS(destination)
-    baseFs.mkdirSync('.yarn' as PortablePath)
-    baseFs.mkdirSync('.yarn/cache' as PortablePath)
 
     const tgz = await genPackTgz(workspace)
 
@@ -85,7 +85,7 @@ export const pack = async (
     tmpConfiguration.values.set(`globalFolder`, configuration.get(`globalFolder`))
     tmpConfiguration.values.set(`packageExtensions`, configuration.get(`packageExtensions`))
 
-    await tmpConfiguration.getPackageExtensions()
+    await tmpConfiguration.refreshPackageExtensions()
 
     const { project: tmpProject, workspace: tmpWorkspace } = await Project.find(
       tmpConfiguration,
@@ -102,6 +102,7 @@ export const pack = async (
       // @ts-ignore
       cache: await ExportCache.find(tmpConfiguration, cache),
       fetcher: makeFetcher(project),
+      resolver: makeResolver(project),
       report,
       persistProject: false,
     })

@@ -1,15 +1,10 @@
 import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
-import path from 'node:path'
+import { join } from 'node:path'
 import json from '@rollup/plugin-json'
-import { fileURLToPath } from 'node:url'
 import esbuild from 'rollup-plugin-esbuild'
 import { brotliCompressSync } from 'node:zlib'
-import analyze from 'rollup-plugin-analyzer'
-
-const __filename = fileURLToPath(import.meta.url)
-
-const __dirname = path.dirname(__filename)
+import { fileURLToPath } from 'node:url'
 
 const wrapOutput = () => ({
   name: 'wrap-output',
@@ -19,7 +14,7 @@ const wrapOutput = () => ({
 
     const outputBundle = bundle[bundles[0]]
 
-    outputBundle.code = `let hook;\n\nmodule.exports.getContent = () => {\n  if (typeof hook === \`undefined\`)\n    hook = require('zlib').brotliDecompressSync(Buffer.from('${brotliCompressSync(
+    outputBundle.code = `import { brotliDecompressSync } from 'node:zlib';\n\nlet hook: string | undefined;\n\nexport const getContent = (): string => {\n  if (typeof hook === \`undefined\`)\n    hook = brotliDecompressSync(Buffer.from('${brotliCompressSync(
       outputBundle.code.replace(/\r\n/g, '\n')
     ).toString('base64')}', 'base64')).toString();\n\n  return hook;\n};\n`
   },
@@ -27,30 +22,36 @@ const wrapOutput = () => ({
 
 export default [
   {
-    external: ['pnpapi', 'eslint', 'typescript'],
+    external(id) {
+      if (['pnpapi', 'eslint', 'typescript', '@atls/code-runtime'].includes(id)) {
+        return true
+      }
+
+      if (id.includes('/code-runtime/')) {
+        return true
+      }
+
+      if (id.includes('/eslint/lib/')) {
+        return true
+      }
+
+      return false
+    },
     input: './src/linter.worker.source.ts',
     output: {
-      file: './src/linter.worker.content.js',
-      format: 'cjs',
-      strict: false,
-      generatedCode: {
-        constBindings: true,
-      }
+      file: './src/linter.worker.content.ts',
+      format: 'esm',
+      generatedCode: 'es2015',
     },
     plugins: [
-      analyze(),
       resolve({
         extensions: ['.mjs', '.js', '.ts', '.tsx', '.json'],
-        rootDir: path.join(__dirname, '../../'),
-        jail: path.join(__dirname, '../../'),
+        rootDir: join(fileURLToPath(new URL('.', import.meta.url)), '../../'),
+        jail: join(fileURLToPath(new URL('.', import.meta.url)), '../../'),
         preferBuiltins: true,
       }),
-      esbuild({ tsconfig: false, target: 'node18' }),
-      cjs({
-        transformMixedEsModules: true,
-        extensions: ['.js', '.ts'],
-        ignoreDynamicRequires: true,
-      }),
+      esbuild({ tsconfig: false, target: 'node20' }),
+      cjs({ requireReturnsDefault: `preferred` }),
       json(),
       wrapOutput(),
     ],

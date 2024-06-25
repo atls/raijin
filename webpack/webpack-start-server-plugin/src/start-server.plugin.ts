@@ -1,11 +1,11 @@
 import type { ChildProcess } from 'node:child_process'
-import { fork }              from 'node:child_process'
-import { join }              from 'node:path'
 import type { Writable }     from 'node:stream'
-
 import type webpack          from 'webpack'
 
-import { StartServerLogger } from './start-server.logger'
+import { fork }              from 'node:child_process'
+import { join }              from 'node:path'
+
+import { StartServerLogger } from './start-server.logger.js'
 
 export interface StartServerPluginOptions {
   stdout?: Writable

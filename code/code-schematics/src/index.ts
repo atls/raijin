@@ -1,1 +1,1 @@
-export * from './schematics'
+export * from './schematics.js'

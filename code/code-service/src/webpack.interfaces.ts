@@ -1,6 +1,17 @@
-export enum WebpackEnvironment {
-  prod = 'production',
-  dev = 'development',
+import type { SeverityNumber } from '@atls/logger'
+import type { webpack }        from '@atls/code-runtime/webpack'
+
+export interface WebpackLogRecord {
+  record: webpack.StatsError
+  severityNumber: SeverityNumber.ERROR | SeverityNumber.WARN
+}
+
+export type WebpackEnvironment = 'development' | 'production'
+
+export interface WebpackConfigPlugin {
+  name: string
+  use: any
+  args: Array<any>
 }
 
 const ModuleType = {

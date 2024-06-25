@@ -3,12 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "license": "BSD-3-Clause",
-  "main": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./sources/index.ts"
+  },
   "files": [
     "dist"
   ],
   "dependencies": {
-    "@yarnpkg/core": "4.0.3"
+    "@yarnpkg/core": "4.0.5"
   },
   "publishConfig": {
     "access": "public",

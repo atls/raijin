@@ -1,17 +1,26 @@
 import { parentPort } from 'node:worker_threads'
 import { workerData } from 'node:worker_threads'
 
+import { stringify }  from 'flatted'
+import { parse }      from 'flatted'
+
 import { TypeScript } from '@atls/code-typescript'
 
-const { stringify, parse } = require('flatted')
+const {
+  type,
+  cwd,
+  include,
+  override,
+}: { type: 'build' | 'check'; cwd: string; include: Array<string>; override: object } = workerData
 
-const { type, cwd, include, override } = workerData
+const execute = async (): Promise<void> => {
+  if (type === 'check') {
+    parentPort!.postMessage(parse(stringify(await new TypeScript(cwd).check(include))))
+  }
 
-const ts = new TypeScript(cwd)
-
-if (type === 'check') {
-  ts.check(include).then((diagnostics) => parentPort!.postMessage(parse(stringify(diagnostics))))
-} else {
-  ts.build(include, override).then((diagnostics) =>
-    parentPort!.postMessage(parse(stringify(diagnostics))))
+  if (type === 'build') {
+    parentPort!.postMessage(parse(stringify(await new TypeScript(cwd).build(include, override))))
+  }
 }
+
+await execute()

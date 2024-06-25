@@ -2,6 +2,11 @@
   "name": "@atls/cli-ui-stack-trace-component",
   "version": "0.0.7",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -14,23 +19,31 @@
   "dependencies": {
     "@atls/cli-ui-renderer": "workspace:*",
     "@atls/cli-ui-source-component": "workspace:*",
-    "@atls/stack-trace": "0.0.2"
+    "@atls/stack-trace": "0.0.2",
+    "nanoid": "^4.0.2"
   },
   "devDependencies": {
-    "@types/jest": "29.5.11",
-    "@types/node": "18.19.3",
-    "@types/react": "16.14.54",
-    "ink": "^3.0.8",
-    "react": "16",
-    "strip-ansi": "7.1.0"
+    "@jest/globals": "^29.6.1",
+    "@types/react": "^18.2.14",
+    "ink": "^4.2.0",
+    "react": "^18.2.0",
+    "strip-ansi": "^7.1.0"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

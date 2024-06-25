@@ -1,3 +1,3 @@
 export * from '@commitlint/types'
 
-export * from './commit.linter'
+export * from './commit.linter.js'

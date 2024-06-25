@@ -6,10 +6,10 @@ import { Report }       from '@yarnpkg/core'
 import { Descriptor }   from '@yarnpkg/core'
 import { Locator }      from '@yarnpkg/core'
 import { PortablePath } from '@yarnpkg/fslib'
-import { Filename }     from '@yarnpkg/fslib'
 import { structUtils }  from '@yarnpkg/core'
 import { xfs }          from '@yarnpkg/fslib'
 import { ppath }        from '@yarnpkg/fslib'
+import { toFilename }   from '@yarnpkg/fslib'
 
 export const copyCacheMarkedFiles = async (
   project: Project,
@@ -51,7 +51,7 @@ export const copyPlugins = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const pluginDir = ppath.join('.yarn' as Filename, 'plugins' as Filename)
+  const pluginDir = ppath.join(toFilename('.yarn'), toFilename('plugins'))
 
   if (await xfs.existsPromise(ppath.join(project.cwd, pluginDir))) {
     report.reportInfo(null, pluginDir)
@@ -62,7 +62,7 @@ export const copyPlugins = async (
   }
 }
 
-// https://github.com/yarnpkg/berry/blob/d38d573/packages/plugin-patch/sources/patchUtils.ts#L10
+// https://github.com/yarnpkg/berry/blob/d38d573/packages/plugin-patch/sources/patchUtils.js#L10
 const BUILTIN_REGEXP = /^builtin<([^>]+)>$/
 
 export const copyProtocolFiles = async (
@@ -134,7 +134,7 @@ export const copyYarnRelease = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const src = project.configuration.get('yarnPath') as PortablePath
+  const src = project.configuration.get('yarnPath')
   const path = ppath.relative(project.cwd, src)
   const dest = ppath.join(destination, path)
 

@@ -1,16 +1,16 @@
-import { Filename }    from '@yarnpkg/fslib'
-import { stringify }   from '@iarna/toml'
-import { execUtils }   from '@yarnpkg/core'
-import { xfs }         from '@yarnpkg/fslib'
-import { ppath }       from '@yarnpkg/fslib'
+import type { PackOptions } from './pack.interfaces.js'
+import type { PackOutputs } from './pack.interfaces.js'
 
-import { PackOptions } from './pack.interfaces'
-import { PackOutputs } from './pack.interfaces'
-import { getTag }      from './tag.utils'
+import { stringify }        from '@iarna/toml'
+import { execUtils }        from '@yarnpkg/core'
+import { xfs }              from '@yarnpkg/fslib'
+import { ppath }            from '@yarnpkg/fslib'
+
+import { getTag }           from './tag.utils.js'
 
 export const pack = async (
   { workspace, registry, publish, tagPolicy, builder, buildpack }: PackOptions,
-  context
+  context: execUtils.PipevpOptions
 ): Promise<PackOutputs> => {
   const repo = workspace.replace('@', '').replace(/\//g, '-')
   const image = `${registry}${repo}`
@@ -34,7 +34,7 @@ export const pack = async (
     },
   }
 
-  const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml' as Filename)
+  const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml')
 
   await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
 

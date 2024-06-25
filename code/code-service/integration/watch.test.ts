@@ -1,14 +1,15 @@
-/**
- * @jest-environment node
- */
+import type { webpack }  from '@atls/code-runtime/webpack'
 
-import path        from 'path'
+import { join }          from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-import { Service } from '../src'
+import { describe }      from '@jest/globals'
+import { expect }        from '@jest/globals'
+import { it }            from '@jest/globals'
 
-jest.setTimeout(10000)
+import { Service }       from '../src/index.js'
 
-const closeWatcher = (watcher): Promise<void> =>
+const closeWatcher = async (watcher: webpack.Watching): Promise<void> =>
   new Promise((resolve) => {
     watcher.close(() => {
       setTimeout(() => {
@@ -20,8 +21,9 @@ const closeWatcher = (watcher): Promise<void> =>
 describe('service', () => {
   describe('watch', () => {
     it('simple', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const watcher = await new Service(path.join(__dirname, 'fixtures/simple')).watch(() => {})
+      const watcher: webpack.Watching = await new Service(
+        join(fileURLToPath(new URL('.', import.meta.url)), 'fixtures/simple')
+      ).watch(() => {}) // eslint-disable-line @typescript-eslint/no-empty-function
 
       await closeWatcher(watcher)
 

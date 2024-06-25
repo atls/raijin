@@ -1,13 +1,28 @@
 name: Checks
 
-on: [pull_request]
+on:
+  pull_request:
 
 jobs:
   check:
-    name: Lint, typecheck
-    uses: atls/shared/.github/workflows/checks.yaml@master
-    permissions: write-all
-  release:
-    name: Release
-    uses: atls/shared/.github/workflows/release.yaml@master
-    permissions: write-all
+    name: Lint, type check
+    env:
+      NODE_VERSION: '19'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install
+        uses: ./.github/actions/install
+
+      - name: Checks
+        uses: ./.github/actions/checks
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

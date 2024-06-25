@@ -2,6 +2,11 @@
   "name": "@atls/prettier-plugin",
   "version": "0.0.8",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -12,21 +17,30 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "globby": "11.1.0",
-    "import-sort": "6.0.0",
-    "import-sort-parser": "6.0.0",
-    "import-sort-parser-typescript": "6.0.0",
-    "import-sort-style": "6.0.0",
-    "prettier": "3.1.1",
-    "sort-package-json": "1.57.0"
+    "globby": "^13.2.2",
+    "import-sort": "^6.0.0",
+    "import-sort-parser": "^6.0.0",
+    "import-sort-parser-typescript": "^6.0.0",
+    "import-sort-style": "^6.0.0",
+    "prettier": "^3.0.0",
+    "sort-package-json": "^2.4.1"
   },
   "devDependencies": {
-    "@atls/config-prettier": "workspace:*",
-    "@types/node": "18.19.3",
-    "@types/prettier": "3.0.0"
+    "@babel/types": "^7.22.5",
+    "@types/node": "^20.4.0",
+    "@types/prettier": "^2.7.3"
   },
   "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

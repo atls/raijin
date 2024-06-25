@@ -1,5 +1,12 @@
-/* eslint-disable no-void,no-param-reassign,no-else-return,vars-on-top,no-var,no-plusplus,@typescript-eslint/naming-convention,no-underscore-dangle,@typescript-eslint/no-use-before-define,no-redeclare,no-nested-ternary,no-bitwise,default-case */
-export const flattenDiagnosticMessageText = (diag, newLine, indent = 0) => {
+/* eslint-disable */
+
+import { ts } from '@atls/code-runtime/typescript'
+
+export const flattenDiagnosticMessageText = (
+  diag: string | ts.DiagnosticMessageChain,
+  newLine: string,
+  indent = 0
+) => {
   if (indent === void 0) {
     indent = 0
   }
@@ -32,8 +39,10 @@ export const flattenDiagnosticMessageText = (diag, newLine, indent = 0) => {
   return result
 }
 
-export const getLineAndCharacterOfPosition = (sourceFile, position: number) =>
-  computeLineAndCharacterOfPosition(getLineStarts(sourceFile), position)
+export const getLineAndCharacterOfPosition = (
+  sourceFile: ts.SourceFile | undefined,
+  position: number
+) => computeLineAndCharacterOfPosition(getLineStarts(sourceFile), position)
 
 export type Comparer<T> = (a: T, b: T) => Comparison
 
@@ -146,4 +155,4 @@ export const computeLineAndCharacterOfPosition = (lineStarts: Array<number>, pos
   }
 }
 
-export const getLineStarts = (sourceFile) => sourceFile.lineMap
+export const getLineStarts = (sourceFile: ts.SourceFile | undefined) => (sourceFile as any)?.lineMap

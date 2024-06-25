@@ -2,6 +2,11 @@
   "name": "@atls/cli-ui-git-commit-component",
   "version": "0.0.8",
   "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
   "main": "src/index.ts",
   "files": [
     "dist"
@@ -13,24 +18,32 @@
   },
   "devDependencies": {
     "@atls/code-commit": "workspace:*",
-    "@types/node": "18.19.3",
-    "@types/react": "16.14.54",
-    "@yarnpkg/libui": "3.0.0",
-    "camelcase": "8.0.0",
-    "figures": "3.2.0",
-    "ink": "^3.0.8",
-    "ink-autocomplete": "0.0.0",
-    "ink-multi-select": "2.0.0",
-    "ink-select-input": "4.2.2",
-    "ink-text-input": "4.0.3"
+    "@types/node": "^20.4.0",
+    "@types/react": "^18.2.14",
+    "@yarnpkg/libui": "^3.0.0",
+    "camelcase": "^7.0.1",
+    "figures": "^5.0.0",
+    "ink": "^4.2.0",
+    "ink-autocomplete": "^0.0.0",
+    "ink-multi-select": "^2.0.0",
+    "ink-select-input": "^5.0.0",
+    "ink-text-input": "^5.0.1"
   },
   "peerDependencies": {
-    "ink": "*",
+    "ink": "^3.0.8",
     "react": "*"
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

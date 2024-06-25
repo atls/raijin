@@ -1,6 +1,8 @@
 /* Copy/Paste https://github.com/kherock/yarn-plugins/tree/main/packages/plugin-workspaces-export */
 /* eslint-disable */
 
+// @ts-nocheck
+
 import { FetchOptions }        from '@yarnpkg/core'
 import { FetchResult }         from '@yarnpkg/core'
 import { Fetcher }             from '@yarnpkg/core'
@@ -11,7 +13,7 @@ import { WorkspaceResolver }   from '@yarnpkg/core'
 import { WorkspaceFetcher }    from '@yarnpkg/core'
 import { PortablePath }        from '@yarnpkg/fslib'
 
-import { genPackZip }          from './exportUtils'
+import { genPackZip }          from './exportUtils.js'
 
 /**
  * Fetcher that packs workspaces as cacheable packages
