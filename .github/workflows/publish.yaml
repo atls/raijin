@@ -47,3 +47,8 @@ jobs:
         uses: ./.github/actions/commit
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+
+      - name: Create release
+        uses: ./.github/actions/release
+        with:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
