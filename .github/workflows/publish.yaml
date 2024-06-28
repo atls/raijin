@@ -36,19 +36,23 @@ jobs:
         uses: ./.github/actions/version-apply
 
       - name: Publish to NPM
+        id: npm
         uses: ./.github/actions/publish-npm
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to JSR
+        id: jsr
         uses: ./.github/actions/publish-jsr
 
       - name: Create release
+        if: steps.npm.outcome == 'success' || steps.jsr.outcome == 'success'
         uses: ./.github/actions/release
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Commit changes
+        if: steps.npm.outcome == 'success' || steps.jsr.outcome == 'success'
         uses: ./.github/actions/commit
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
