@@ -18,7 +18,9 @@ runs:
         source .env
         export NODE_OPTIONS
         yarn workspaces changed foreach exec \
-        'bash -c "yarn pack; \
-        VERSION=$npm_package_version; \ 
+        'bash -c "VERSION=$npm_package_version; \ 
         NAME=$npm_package_name; \
-        gh release create \"\$NAME-v\$VERSION\" ./package.tgz --title=\$NAME-\$VERSION"'
+        if [ ! -z \"$VERSION\" ]; then \
+          yarn pack; \
+          gh release create \"\$NAME-v\$VERSION\" ./package.tgz --title=\$NAME-\$VERSION; \
+        fi"'
