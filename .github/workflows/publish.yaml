@@ -43,12 +43,12 @@ jobs:
       - name: Publish to JSR
         uses: ./.github/actions/publish-jsr
 
-      - name: Commit changes
-        uses: ./.github/actions/commit
+      - name: Create release
+        uses: ./.github/actions/release
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      - name: Create release
-        uses: ./.github/actions/release
+      - name: Commit changes
+        uses: ./.github/actions/commit
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
