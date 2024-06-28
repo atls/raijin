@@ -27,7 +27,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
-        repo: ${{ github.repo }}
+        repo: ${{ github.repository }}
         branch: ${{ inputs.BRANCH }}
         commit_message: ${{ inputs.COMMIT_MESSAGE }}
         file_pattern: ${{ inputs.PATTERN }}
