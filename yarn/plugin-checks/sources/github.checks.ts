@@ -36,7 +36,7 @@ export class GitHubChecks {
     })
   }
 
-  complete(id: number, output) {
+  complete(id: number, output: any) {
     const { payload } = context
 
     return this.octokit.rest.checks.create({
@@ -57,7 +57,7 @@ export class GitHubChecks {
     })
   }
 
-  failure(output) {
+  failure(output: any) {
     const { payload } = context
 
     return this.octokit.rest.checks.create({

@@ -19,7 +19,7 @@ const updateTsConfig = updateTsConfigInTree({
   module: 'esnext',
 })
 
-const generateCommon = (options): Source =>
+const generateCommon = (options: any): Source =>
   apply(url('./files/common'), [
     template({
       ...strings,
@@ -29,7 +29,7 @@ const generateCommon = (options): Source =>
     move('./'),
   ])
 
-const generateProjectSpecifiec = (options): Source => {
+const generateProjectSpecifiec = (options: any): Source => {
   const { name: projectName } = JSON.parse(readFileSync(join(options.cwd, 'package.json'), 'utf-8'))
 
   return apply(url(join('./files', options.type)), [
@@ -43,7 +43,8 @@ const generateProjectSpecifiec = (options): Source => {
   ])
 }
 
-export const main = (options) =>
+export const main = (options: any) =>
+  // @ts-ignore
   chain([
     mergeWith(generateCommon(options), MergeStrategy.Overwrite),
     mergeWith(generateProjectSpecifiec(options), MergeStrategy.Overwrite),

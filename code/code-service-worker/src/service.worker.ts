@@ -7,7 +7,7 @@ import { getContent }            from './service.worker.content.js'
 export class ServiceWorker {
   constructor(protected readonly cwd: string) {}
 
-  async run(cwd: string): Promise<Array<ServiceLogRecord>> {
+  async run(cwd: string = this.cwd): Promise<Array<ServiceLogRecord>> {
     process.chdir(this.cwd)
 
     return EvalWorker.run<Array<ServiceLogRecord>>(this.cwd, getContent(), {

@@ -22,7 +22,7 @@ export class SchematicsWorker {
   ) {}
 
   generate(schematicName: string, options = {}): Promise<Array<DryRunEvent>> {
-    return EvalWorker.run(getContent(), {
+    return EvalWorker.run(this.cwd, getContent(), {
       type: 'generate',
       cwd: this.cwd,
       force: this.force,
@@ -37,7 +37,7 @@ export class SchematicsWorker {
     migrationVersion: string,
     options = {}
   ): Promise<Array<DryRunEvent>> {
-    return EvalWorker.run(getContent(), {
+    return EvalWorker.run(this.cwd, getContent(), {
       type: 'migrate',
       cwd: this.cwd,
       force: this.force,

@@ -11,6 +11,7 @@ import { CollectionMissingSchematicsMapException } from '@angular-devkit/schemat
 import { FileSystemEngineHostBase }                from '@angular-devkit/schematics/tools'
 import { SchematicMissingFieldsException }         from '@angular-devkit/schematics/tools'
 import { NodePackageDoesNotSupportSchematics }     from '@angular-devkit/schematics/tools'
+// @ts-ignore
 import { readJsonFile }                            from '@angular-devkit/schematics/tools/file-system-utility'
 
 export class NodePnpEngineHost extends FileSystemEngineHostBase {

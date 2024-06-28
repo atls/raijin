@@ -9,7 +9,8 @@ import React                  from 'react'
 import { IndicatorComponent } from '@atls/cli-ui-parts'
 import { ProjectType }        from '@atls/schematics'
 
-const Submit = ({ onSubmit, ...props }) => {
+// @ts-ignore
+const Submit = ({ onSubmit, ...props }: any) => {
   useEffect(() => {
     onSubmit(props)
   }, [props, onSubmit])

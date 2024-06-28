@@ -4,6 +4,7 @@ import { Box }        from 'ink'
 import { Text }       from 'ink'
 import React          from 'react'
 
+// @ts-ignore
 import { StackTrace } from '@atls/cli-ui-stack-trace-component'
 
 export interface ErrorProps {

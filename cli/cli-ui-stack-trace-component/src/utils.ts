@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 
+// @ts-ignore
 import { StackFrame }   from '@atls/stack-trace'
 
 export const getFrameSource = (frame: StackFrame): string | null => {

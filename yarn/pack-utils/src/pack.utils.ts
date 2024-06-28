@@ -28,6 +28,7 @@ export const generateLockfile = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
+  // @ts-ignore
   const filename = toFilename(project.configuration.get('lockfileFilename'))
   const dest = ppath.join(destination, filename)
 
@@ -85,6 +86,7 @@ export const pack = async (
     tmpConfiguration.values.set(`globalFolder`, configuration.get(`globalFolder`))
     tmpConfiguration.values.set(`packageExtensions`, configuration.get(`packageExtensions`))
 
+    // @ts-ignore
     await tmpConfiguration.refreshPackageExtensions()
 
     const { project: tmpProject, workspace: tmpWorkspace } = await Project.find(

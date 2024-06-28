@@ -13,7 +13,7 @@ jest.setTimeout(150000)
 describe('yarn', () => {
   describe('commands', () => {
     describe('schematics', () => {
-      test('it should init project', async (...args) => {
+      test('it should init project', async (...args: any) => {
         const schematics = await packageUtils.pack('@atls/schematics')
 
         makeTemporaryEnv(
@@ -55,7 +55,7 @@ describe('yarn', () => {
         )(...args)
       })
 
-      test('it should init project libraries', async (...args) => {
+      test('it should init project libraries', async (...args: any) => {
         const schematics = await packageUtils.pack('@atls/schematics')
 
         makeTemporaryEnv(

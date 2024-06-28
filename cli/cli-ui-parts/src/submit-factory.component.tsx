@@ -5,7 +5,7 @@ import { useEffect }               from 'react'
 import { useState }                from 'react'
 import React                       from 'react'
 
-const SubmitProxy = ({ value, useSubmit }) => {
+const SubmitProxy = ({ value, useSubmit }: { value: any; useSubmit: Function }) => {
   const { stdin } = useStdin()
 
   useSubmit(value)
@@ -17,11 +17,13 @@ const SubmitProxy = ({ value, useSubmit }) => {
   return null
 }
 
-export const SubmitInjectedComponentFactory = <T,>(InjectedComponent) => {
+export const SubmitInjectedComponentFactory = <T,>(InjectedComponent: any) => {
+  // @ts-ignore
   const SubmitCmp: FC<SubmitInjectedComponent<T>> = ({ useSubmit }) => {
     const [value, setValue] = useState<T>()
 
     if (!value) {
+      // @ts-ignore
       return <InjectedComponent onSubmit={setValue} />
     }
 
