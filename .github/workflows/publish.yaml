@@ -1,4 +1,4 @@
-name: Publish to NPM
+name: Publish
 
 on:
   workflow_dispatch:
@@ -9,12 +9,20 @@ jobs:
     env:
       NODE_VERSION: '19'
     runs-on: ubuntu-latest
+    permissions: write-all
 
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.ATLANTIS_SUPER_BOT_APP_ID }}
+          private-key: ${{ secrets.ATLANTIS_SUPER_BOT_PRIVATE_KEY }}
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: master
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -24,12 +32,23 @@ jobs:
       - name: Install
         uses: ./.github/actions/install
 
-      - name: Publish
-        uses: ./.github/actions/publish
+      - name: Apply versions
+        uses: ./.github/actions/version-apply
+
+      - name: Publish to NPM
+        uses: ./.github/actions/publish-npm
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to JSR
+        uses: ./.github/actions/publish-jsr
 
       - name: Commit changes
         uses: ./.github/actions/commit
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+
+      - name: Create release
+        uses: ./.github/actions/release
+        with:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}

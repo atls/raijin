@@ -10,10 +10,31 @@ runs:
   using: composite
 
   steps:
-    - env:
+    - name: Checks
+      env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       shell: bash
       run: |
         source .env
         export NODE_OPTIONS
         yarn checks run
+
+    - name: Release
+      if: ${{ !cancelled() }}
+      shell: bash
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn checks release
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    - name: JSR publish dry run
+      if: ${{ !cancelled() }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+      shell: bash
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn workspaces changed foreach --verbose --topological --no-private dlx jsr publish --dry-run
