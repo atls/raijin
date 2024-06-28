@@ -1,0 +1,12 @@
+name: Apply versions composite action
+
+runs:
+  using: composite
+
+  steps:
+    - name: Version apply
+      shell: bash
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn version apply --all
