@@ -30,7 +30,7 @@
   "devDependencies": {
     "@jest/globals": "^29.6.1",
     "@types/conventional-commits-parser": "^3.0.3",
-    "@types/node": "^20.4.0"
+    "@types/node": "^20.14.9"
   },
   "publishConfig": {
     "access": "public",

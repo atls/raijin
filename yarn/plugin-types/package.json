@@ -36,7 +36,7 @@
     "@yarnpkg/cli": "^4.2.2",
     "@yarnpkg/core": "^4.0.5",
     "@yarnpkg/fslib": "^3.1.0",
-    "typescript": "^5.1.6"
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "^4",

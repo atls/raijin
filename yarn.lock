@@ -276,7 +276,7 @@ __metadata:
   resolution: "@atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info-component"
   dependencies:
     "@atls/cli-ui-stack-trace-component": "workspace:*"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@types/react": "npm:^18.3.3"
     ink: "npm:^4.2.0"
     react: "npm:^18.3.1"
@@ -309,7 +309,7 @@ __metadata:
   resolution: "@atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit"
   dependencies:
     "@atls/code-commit": "workspace:*"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@types/react": "npm:^18.3.3"
     "@yarnpkg/libui": "npm:^3.0.0"
     camelcase: "npm:^7.0.1"
@@ -333,7 +333,7 @@ __metadata:
     "@atls/cli-ui-stack-trace-component": "workspace:*"
     "@atls/logger": "npm:0.0.2"
     "@jest/globals": "npm:29.7.0"
-    "@types/node": "npm:20"
+    "@types/node": "npm:20.14.9"
     "@types/react": "npm:18.3.3"
     ink: "npm:3.2.0"
     react: "npm:^18.3.1"
@@ -363,7 +363,7 @@ __metadata:
   dependencies:
     "@atls/cli-ui-log-record-component": "workspace:*"
     "@atls/cli-ui-renderer": "workspace:*"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@types/react": "npm:^18.3.3"
     ink: "npm:^4.2.0"
     react: "npm:^18.3.1"
@@ -374,7 +374,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-renderer@workspace:cli/cli-ui-renderer"
   dependencies:
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@types/react": "npm:^18.3.3"
     ink: "npm:^4.2.0"
     react: "npm:^18.3.1"
@@ -387,7 +387,7 @@ __metadata:
   dependencies:
     "@atls/cli-ui-parts": "workspace:*"
     "@atls/schematics": "workspace:*"
-    "@types/node": "npm:20"
+    "@types/node": "npm:20.14.9"
     "@types/react": "npm:18.3.3"
     "@yarnpkg/libui": "npm:3.0.0"
     camelcase: "npm:8.0.0"
@@ -409,7 +409,7 @@ __metadata:
   dependencies:
     "@babel/code-frame": "npm:^7.22.5"
     "@types/babel__code-frame": "npm:7.0.3"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@types/react": "npm:^18.3.3"
     ink: "npm:^4.2.0"
     supports-color: "npm:^9.4.0"
@@ -450,7 +450,7 @@ __metadata:
     ink: "npm:^4.2.0"
     react: "npm:^18.3.1"
     strip-ansi: "npm:^7.1.0"
-    typescript: "npm:^5.1.6"
+    typescript: "npm:5.2.2"
   peerDependencies:
     ink: ^3.0.8
     react: "*"
@@ -470,7 +470,7 @@ __metadata:
     "@commitlint/types": "npm:^17.4.4"
     "@jest/globals": "npm:^29.6.1"
     "@types/conventional-commits-parser": "npm:^3.0.3"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     conventional-changelog-angular: "npm:^6.0.0"
     conventional-commits-parser: "npm:^4.0.0"
   languageName: unknown
@@ -493,7 +493,7 @@ __metadata:
     "@rollup/plugin-commonjs": "npm:^24.1.0"
     "@rollup/plugin-json": "npm:^6.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.1.0"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     esbuild: "npm:^0.17.19"
     rollup: "npm:^3.26.2"
     rollup-plugin-esbuild: "npm:^5.0.0"
@@ -508,7 +508,7 @@ __metadata:
   dependencies:
     "@atls/config-prettier": "workspace:*"
     "@atls/prettier-plugin": "workspace:*"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     globby: "npm:^13.2.2"
     ignore: "npm:^5.2.4"
     prettier: "npm:^3.0.0"
@@ -524,7 +524,7 @@ __metadata:
     "@rollup/plugin-commonjs": "npm:^24.1.0"
     "@rollup/plugin-json": "npm:^6.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.1.0"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     esbuild: "npm:^0.17.19"
     rollup: "npm:^3.26.2"
     rollup-plugin-esbuild: "npm:^5.0.0"
@@ -541,13 +541,13 @@ __metadata:
     "@atls/config-typescript": "workspace:*"
     "@atls/logger": "npm:^0.0.2"
     "@jest/globals": "npm:^29.6.1"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@types/webpack": "npm:^5.28.1"
     "@yarnpkg/cli": "npm:^4.2.2"
     "@yarnpkg/core": "npm:^4.0.5"
     "@yarnpkg/fslib": "npm:^3.1.0"
     camelcase: "npm:^7.0.1"
-    typescript: "npm:^5.1.6"
+    typescript: "npm:5.2.2"
     webpack-chain-5: "npm:^8.0.2"
   languageName: unknown
   linkType: soft
@@ -562,7 +562,7 @@ __metadata:
     "@rollup/plugin-commonjs": "npm:^24.1.0"
     "@rollup/plugin-json": "npm:^6.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.1.0"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     esbuild: "npm:^0.17.19"
     rollup: "npm:^3.26.2"
     rollup-plugin-esbuild: "npm:^5.0.0"
@@ -575,7 +575,7 @@ __metadata:
   resolution: "@atls/code-lint@workspace:code/code-lint"
   dependencies:
     "@atls/code-runtime": "workspace:*"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     deepmerge: "npm:^4.3.1"
     globby: "npm:^13.2.2"
     ignore: "npm:^5.2.4"
@@ -596,7 +596,7 @@ __metadata:
   dependencies:
     "@actions/github": "npm:^5.1.1"
     "@iarna/toml": "npm:^2.2.5"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@yarnpkg/core": "npm:^4.0.5"
     "@yarnpkg/fslib": "npm:^3.1.0"
   languageName: unknown
@@ -612,11 +612,11 @@ __metadata:
     "@svgr/core": "npm:^8.0.0"
     "@svgr/plugin-jsx": "npm:^8.0.1"
     "@types/eslint": "npm:^8.40.2"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     eslint: "npm:^8.44.0"
     node-loader: "npm:^2.0.0"
     ts-loader: "npm:^9.4.4"
-    typescript: "npm:^5.1.6"
+    typescript: "npm:5.2.2"
     webpack: "npm:^5.88.1"
   languageName: unknown
   linkType: soft
@@ -632,7 +632,7 @@ __metadata:
     "@rollup/plugin-json": "npm:6.1.0"
     "@rollup/plugin-node-resolve": "npm:15.2.3"
     "@rollup/plugin-replace": "npm:5.0.5"
-    "@types/node": "npm:20"
+    "@types/node": "npm:20.14.9"
     builtin-modules: "npm:3.3.0"
     esbuild: "npm:0.17.19"
     rollup: "npm:3.29.4"
@@ -663,7 +663,7 @@ __metadata:
     "@rollup/plugin-json": "npm:^6.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.1.0"
     "@rollup/plugin-replace": "npm:^5.0.2"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     esbuild: "npm:^0.17.19"
     rollup: "npm:^3.26.2"
     rollup-plugin-esbuild: "npm:^5.0.0"
@@ -681,13 +681,13 @@ __metadata:
     "@atls/webpack-start-server-plugin": "workspace:*"
     "@jest/globals": "npm:^29.6.1"
     "@monstrs/logger": "npm:latest"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@types/webpack": "npm:^5.28.1"
     "@yarnpkg/cli": "npm:^4.2.2"
     "@yarnpkg/core": "npm:^4.0.5"
     "@yarnpkg/fslib": "npm:^3.1.0"
     package-json-type: "npm:^1.0.3"
-    typescript: "npm:^5.1.6"
+    typescript: "npm:5.2.2"
     webpack-chain-5: "npm:^8.0.2"
   languageName: unknown
   linkType: soft
@@ -718,7 +718,7 @@ __metadata:
     "@atls/code-runtime": "workspace:*"
     "@jest/test-result": "npm:^29.6.1"
     "@jest/types": "npm:^29.6.1"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
   peerDependenciesMeta:
     jest:
       optional: true
@@ -739,7 +739,7 @@ __metadata:
     rollup: "npm:^3.26.2"
     rollup-plugin-esbuild: "npm:^5.0.0"
     rollup-plugin-terser: "npm:^7.0.2"
-    typescript: "npm:^5.1.6"
+    typescript: "npm:5.2.2"
   languageName: unknown
   linkType: soft
 
@@ -750,9 +750,9 @@ __metadata:
     "@atls/code-runtime": "workspace:*"
     "@atls/config-typescript": "workspace:*"
     "@types/deepmerge": "npm:2.2.0"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     deepmerge: "npm:^4.3.1"
-    typescript: "npm:^5.1.6"
+    typescript: "npm:5.2.2"
   languageName: unknown
   linkType: soft
 
@@ -771,7 +771,7 @@ __metadata:
     "@atls/config-prettier": "workspace:*"
     "@next/eslint-plugin-next": "npm:^13.4.8"
     "@types/eslint": "npm:^8.40.2"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@typescript-eslint/eslint-plugin": "npm:^5.61.0"
     "@typescript-eslint/parser": "npm:^5.61.0"
     eslint: "npm:^8.44.0"
@@ -800,7 +800,7 @@ __metadata:
     "@emotion/jest": "npm:^11.11.0"
     "@swc/core": "npm:1.5.25"
     "@swc/jest": "npm:0.2.36"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     jest-static-stubs: "npm:^0.0.1"
   peerDependenciesMeta:
     jest:
@@ -814,7 +814,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/config-prettier@workspace:config/prettier"
   dependencies:
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     prettier: "npm:^3.0.0"
   languageName: unknown
   linkType: soft
@@ -847,7 +847,7 @@ __metadata:
   resolution: "@atls/prettier-plugin@workspace:prettier/plugin"
   dependencies:
     "@babel/types": "npm:^7.22.5"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@types/prettier": "npm:^2.7.3"
     globby: "npm:^13.2.2"
     import-sort: "npm:^6.0.0"
@@ -866,7 +866,7 @@ __metadata:
     "@angular-devkit/core": "npm:17.3.2"
     "@angular-devkit/schematics": "npm:17.3.2"
     "@types/js-yaml": "npm:4.0.9"
-    "@types/node": "npm:20"
+    "@types/node": "npm:20.14.9"
     js-yaml: "npm:4.1.0"
     rimraf: "npm:5.0.5"
     semver: "npm:7.5.4"
@@ -885,7 +885,7 @@ __metadata:
     "@atls/schematics-utils": "workspace:*"
     "@jest/globals": "npm:29.7.0"
     "@types/jest": "npm:^29.5.12"
-    "@types/node": "npm:20"
+    "@types/node": "npm:20.14.9"
     copy-dir: "npm:1.3.0"
     globby: "npm:14.0.1"
   languageName: unknown
@@ -912,7 +912,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/webpack-start-server-plugin@workspace:webpack/webpack-start-server-plugin"
   dependencies:
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     webpack: "npm:^5.88.1"
   languageName: unknown
   linkType: soft
@@ -1096,7 +1096,7 @@ __metadata:
     "@jest/test-result": "npm:29.7.0"
     "@octokit/types": "npm:12"
     "@types/babel__code-frame": "npm:^7.0.6"
-    "@types/node": "npm:20"
+    "@types/node": "npm:20.14.9"
     "@types/react": "npm:^18.3.3"
     "@yarnpkg/builder": "npm:4.1.1"
     "@yarnpkg/cli": "npm:4.2.2"
@@ -1116,7 +1116,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-cli-publish@workspace:yarn/plugin-cli-publish"
   dependencies:
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@yarnpkg/builder": "npm:^4.1.1"
     "@yarnpkg/cli": "npm:^4.2.2"
     "@yarnpkg/core": "npm:^4.0.5"
@@ -1442,7 +1442,7 @@ __metadata:
     clipanion: "npm:^4.0.0-rc.3"
     react: "npm:^18.3.1"
     semver: "npm:^7.5.3"
-    typescript: "npm:^5.1.6"
+    typescript: "npm:5.2.2"
   peerDependencies:
     "@yarnpkg/cli": ^4
     "@yarnpkg/core": ^4
@@ -3912,10 +3912,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.16.4":
-  version: 18.16.4
-  resolution: "@types/node@npm:18.16.4"
-  checksum: 10/77b58c9acd881317127ed4c5d33108ec2f42effa5edf9e09a98875e9c3c1eefcc6f1775c11c34aff156bb57a0b18d168f99d1bdddbc542e8cbb299f424db986d
+"@types/node@npm:20.14.9":
+  version: 20.14.9
+  resolution: "@types/node@npm:20.14.9"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: 10/f313b06c79be92f5d3541159ef813b9fc606941f951ecf826e940658c6d4952755ca2f06277b746326cef0697ed79a04676ecde053d32e1121b3352c8168d2e9
   languageName: node
   linkType: hard
 
@@ -13131,10 +13133,10 @@ pem@dexus/pem:
   resolution: "tools@workspace:."
   dependencies:
     "@atls/code-runtime": "workspace:*"
-    "@types/node": "npm:^20.4.0"
+    "@types/node": "npm:^20.14.9"
     "@yarnpkg/builder": "npm:^4.1.1"
     esbuild: "npm:esbuild-wasm@^0.17.18"
-    typescript: "npm:^5.1.6"
+    typescript: "npm:5.2.2"
   languageName: unknown
   linkType: soft
 
@@ -13431,7 +13433,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.6.4 || ^5.2.2, typescript@npm:^5.1.6":
+"typescript@npm:^4.6.4 || ^5.2.2":
   version: 5.4.5
   resolution: "typescript@npm:5.4.5"
   bin:
@@ -13461,7 +13463,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^4.6.4 || ^5.2.2#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.1.6#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^4.6.4 || ^5.2.2#optional!builtin<compat/typescript>":
   version: 5.4.5
   resolution: "typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"
   bin:
@@ -13480,6 +13482,13 @@ pem@dexus/pem:
     has-symbols: "npm:^1.0.3"
     which-boxed-primitive: "npm:^1.0.2"
   checksum: 10/06e1ee41c1095e37281cb71a975cb3350f7cb470a0665d2576f02cc9564f623bd90cfc0183693b8a7fdf2d242963dcc3010b509fa3ac683f540c765c0f3e7e43
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~5.26.4":
+  version: 5.26.5
+  resolution: "undici-types@npm:5.26.5"
+  checksum: 10/0097779d94bc0fd26f0418b3a05472410408877279141ded2bd449167be1aed7ea5b76f756562cb3586a07f251b90799bab22d9019ceba49c037c76445f7cddd
   languageName: node
   linkType: hard
 

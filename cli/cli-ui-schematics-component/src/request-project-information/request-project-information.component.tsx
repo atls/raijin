@@ -10,7 +10,6 @@ import React                  from 'react'
 import { IndicatorComponent } from '@atls/cli-ui-parts'
 import { ProjectType }        from '@atls/schematics'
 
-// @ts-expect-error any
 const Submit = ({ onSubmit, ...props }: any) => {
   // eslint-disable-next-line
   useEffect(() => {

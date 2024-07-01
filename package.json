@@ -25,7 +25,7 @@
     "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download && yarn workspace @atls/yarn-test-utils yarn:download"
   },
   "resolutions": {
-    "@types/node": "18.16.4",
+    "@types/node": "20.14.9",
     "@yarnpkg/core@^4.0.0-rc.45": "patch:@yarnpkg/core@npm%3A4.0.0-rc.43#./.yarn/patches/@yarnpkg-core-npm-4.0.0-rc.42-029d9f8b24.patch",
     "@yarnpkg/libui@^3.0.0-rc.45": "patch:@yarnpkg/libui@npm%3A3.0.0-rc.43#./.yarn/patches/@yarnpkg-libui-npm-3.0.0-rc.42-329bd4139e.patch",
     "@yarnpkg/plugin-essentials@npm:^3.3.0": "patch:@yarnpkg/plugin-essentials@npm%3A4.0.0-rc.43#~/.yarn/patches/@yarnpkg-plugin-essentials-npm-4.0.0-rc.43-ae03fd5937.patch",
@@ -36,10 +36,10 @@
   },
   "devDependencies": {
     "@atls/code-runtime": "workspace:*",
-    "@types/node": "^20.4.0",
+    "@types/node": "^20.14.9",
     "@yarnpkg/builder": "^4.1.1",
     "esbuild": "npm:esbuild-wasm@^0.17.18",
-    "typescript": "^5.1.6"
+    "typescript": "5.2.2"
   },
   "packageManager": "yarn@4.2.2",
   "tools": {

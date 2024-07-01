@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@types/babel__code-frame": "7.0.3",
-    "@types/node": "^20.4.0",
+    "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "ink": "^4.2.0"
   },

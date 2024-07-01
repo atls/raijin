@@ -39,7 +39,6 @@ class LibraryBuildCommand extends BaseCommand {
           try {
             const ts = new TypeScriptWorker(configuration.projectCwd!)
 
-            // @ts-expect-error any
             const diagnostics = await ts.build(
               this.context.cwd,
               [join(this.context.cwd, './src')],

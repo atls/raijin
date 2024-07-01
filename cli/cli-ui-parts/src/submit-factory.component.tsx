@@ -24,7 +24,6 @@ export const SubmitInjectedComponentFactory = <T,>(InjectedComponent: any) => {
     const [value, setValue] = useState<T>()
 
     if (!value) {
-      // @ts-expect-error any
       return <InjectedComponent onSubmit={setValue} />
     }
 
