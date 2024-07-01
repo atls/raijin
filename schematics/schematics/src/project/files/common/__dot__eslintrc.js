@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('@rushstack/eslint-patch/modern-module-resolution')
 
 module.exports = {

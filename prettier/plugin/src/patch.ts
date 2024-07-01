@@ -10,7 +10,7 @@ export const extractPrinter = async (): Promise<any> => {
 
   await format('const n = 5;', {
     plugins: [
-      // @ts-ignore
+      // @ts-expect-error any
       estree,
       babel,
       {

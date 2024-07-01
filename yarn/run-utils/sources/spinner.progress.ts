@@ -1,8 +1,10 @@
 import type { Writable } from 'node:stream'
+
+import { WriteStream }   from 'node:tty'
+
 import { Configuration } from '@yarnpkg/core'
 import { MessageName }   from '@yarnpkg/core'
 import { formatUtils }   from '@yarnpkg/core'
-import { WriteStream }   from 'node:tty'
 
 export class SpinnerProgress {
   static PROGRESS_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']

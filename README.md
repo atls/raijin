@@ -8,7 +8,7 @@ Tools are designed to be used in projects with Javascript and Typescript and are
 
 ## Start
 
-**IMPORTANT:** we use our [custom yarn bundle](https://yarnpkg.com/builder/cli/build/bundle) 
+**IMPORTANT:** we use our [custom yarn bundle](https://yarnpkg.com/builder/cli/build/bundle)
 
 To start using it:
 
@@ -33,7 +33,7 @@ Besides standard `yarn` scripts we developed our custom ones for ease of work:
 
 ### Code formatting
 
-- `yarn format` - reformats whole project based on our `prettier` config 
+- `yarn format` - reformats whole project based on our `prettier` config
 
 ### Generation
 

@@ -25,17 +25,23 @@ export class UiIconsGenerateCommand extends BaseCommand {
         await report.startTimerPromise('Icons compile', async () => {
           const progress = new SpinnerProgress(this.context.stdout, configuration)
 
+          // eslint-disable-next-line
           progress.start()
 
           try {
+            // eslint-disable-next-line
             await new IconsWorker(project.cwd).run(this.context.cwd)
+            // eslint-disable-next-line
             await new FormatterWorker(project.cwd).run(this.context.cwd, [])
+            // eslint-disable-next-line
             await new LinterWorker(project.cwd).run(this.context.cwd, [], {
               fix: true,
             })
 
+            // eslint-disable-next-line
             progress.end()
           } catch (error) {
+            // eslint-disable-next-line
             progress.end()
 
             report.reportError(

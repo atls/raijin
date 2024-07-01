@@ -1,8 +1,9 @@
-import { Rule }             from '@angular-devkit/schematics'
-import { SchematicContext } from '@angular-devkit/schematics'
-import { Tree }             from '@angular-devkit/schematics'
-import { load }             from 'js-yaml'
-import { dump }             from 'js-yaml'
+import type { Rule }             from '@angular-devkit/schematics'
+import type { SchematicContext } from '@angular-devkit/schematics'
+import type { Tree }             from '@angular-devkit/schematics'
+
+import { load }                  from 'js-yaml'
+import { dump }                  from 'js-yaml'
 
 export const readYamlInTree = <T = any>(host: Tree, path: string): T => {
   if (!host.exists(path)) {

@@ -22,7 +22,7 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
       async () => {
         const checks = new GitHubChecks('Test:Integration')
 
-        // @ts-ignore
+        // @ts-expect-error any
         const { id: checkId } = await checks.start()
 
         try {

@@ -25,7 +25,7 @@ class ChecksReleaseCommand extends BaseCommand {
 
     const checks = new GitHubChecks('Release')
 
-    // @ts-ignore
+    // @ts-expect-error any
     const { id: checkId } = await checks.start()
 
     try {

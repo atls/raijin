@@ -67,7 +67,7 @@ class MigrationUpCommand extends BaseCommand {
           } catch (error) {
             progress.end()
 
-            // @ts-ignore
+            // @ts-expect-error any
             renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
               .split('\n')
               .forEach((line) => {

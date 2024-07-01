@@ -25,7 +25,7 @@ import { renderStatic }                   from '@atls/cli-ui-renderer'
 class GenerateProjectCommand extends BaseCommand {
   static paths = [['generate', 'project']]
 
-  // @ts-ignore
+  // @ts-expect-error any
   type = Option.String('-t,--type', {
     validator: isOptional(
       isOneOf([isLiteral(ProjectType.PROJECT), isLiteral(ProjectType.LIBRARIES)], {
@@ -37,7 +37,7 @@ class GenerateProjectCommand extends BaseCommand {
   private async requestOptions(): Promise<ProjectInformationProperties | undefined> {
     if (this.type) {
       return {
-        // @ts-ignore
+        // @ts-expect-error any
         type: this.type,
       }
     }
@@ -45,7 +45,7 @@ class GenerateProjectCommand extends BaseCommand {
     const overwroteStdin = forceStdinTty()
 
     const options: ProjectInformationProperties | undefined = await renderForm(
-      // @ts-ignore
+      // @ts-expect-error any
       SubmitInjectedComponentFactory<ProjectInformationProperties>(RequestProjectInformation),
       {},
       {
@@ -119,7 +119,7 @@ class GenerateProjectCommand extends BaseCommand {
           } catch (error) {
             progress.end()
 
-            // @ts-ignore
+            // @ts-expect-error any
             renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
               .split('\n')
               .forEach((line) => {

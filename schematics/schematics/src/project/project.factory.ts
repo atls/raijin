@@ -1,8 +1,9 @@
+import type { Source }          from '@angular-devkit/schematics'
+
 import { readFileSync }         from 'node:fs'
 import { join }                 from 'node:path'
 
 import { MergeStrategy }        from '@angular-devkit/schematics'
-import { Source }               from '@angular-devkit/schematics'
 import { strings }              from '@angular-devkit/core'
 import { apply }                from '@angular-devkit/schematics'
 import { mergeWith }            from '@angular-devkit/schematics'
@@ -30,8 +31,10 @@ const generateCommon = (options: any): Source =>
   ])
 
 const generateProjectSpecifiec = (options: any): Source => {
+  // eslint-disable-next-line
   const { name: projectName } = JSON.parse(readFileSync(join(options.cwd, 'package.json'), 'utf-8'))
 
+  // eslint-disable-next-line
   return apply(url(join('./files', options.type)), [
     template({
       ...strings,
@@ -43,8 +46,9 @@ const generateProjectSpecifiec = (options: any): Source => {
   ])
 }
 
+// eslint-disable-next-line
 export const main = (options: any) =>
-  // @ts-ignore
+  // @ts-expect-error any
   chain([
     mergeWith(generateCommon(options), MergeStrategy.Overwrite),
     mergeWith(generateProjectSpecifiec(options), MergeStrategy.Overwrite),

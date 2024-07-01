@@ -17,11 +17,11 @@ import { renderStatic }                  from '@atls/cli-ui-renderer'
 import { flattenDiagnosticMessageText }  from '@atls/code-typescript'
 import { getLineAndCharacterOfPosition } from '@atls/code-typescript'
 
-// @ts-ignore
+// @ts-expect-error any
 import { GitHubChecks }                  from './github.checks.ts'
-// @ts-ignore
+// @ts-expect-error any
 import { AnnotationLevel }               from './github.checks.ts'
-// @ts-ignore
+// @ts-expect-error any
 import { Annotation }                    from './github.checks.ts'
 
 class ChecksTypeCheckCommand extends BaseCommand {
@@ -40,7 +40,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
         await report.startTimerPromise('Type Check', async () => {
           const checks = new GitHubChecks('TypeCheck')
 
-          // @ts-ignore
+          // @ts-expect-error any
           const { id: checkId } = await checks.start()
 
           try {

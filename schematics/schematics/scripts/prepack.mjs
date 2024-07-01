@@ -11,6 +11,7 @@ const dirname = fileURLToPath(new URL('.', import.meta.url))
 
 globby
   .sync('**/*.json', { cwd: join(dirname, '../src') })
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   .map((file) => copyFileSync(join('src', file), join('dist', file)))
 
 globby

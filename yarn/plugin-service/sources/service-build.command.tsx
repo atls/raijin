@@ -33,10 +33,8 @@ class ServiceBuildCommand extends BaseCommand {
           try {
             progress.start()
 
-            // @ts-ignore
-            const { errors, warnings } = await new ServiceWorker(
-              this.context.cwd
-            ).run()
+            // @ts-expect-error any
+            const { errors, warnings } = await new ServiceWorker(this.context.cwd).run()
 
             progress.end()
 

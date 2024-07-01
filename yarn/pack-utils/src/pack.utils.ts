@@ -1,34 +1,35 @@
-import { Configuration }   from '@yarnpkg/core'
-import { Workspace }       from '@yarnpkg/core'
-import { Project }         from '@yarnpkg/core'
-import { Report }          from '@yarnpkg/core'
-import { Cache }           from '@yarnpkg/core'
-import { Locator }         from '@yarnpkg/core'
-import { PortablePath }    from '@yarnpkg/fslib'
-import { Filename }        from '@yarnpkg/fslib'
-import { CwdFS }           from '@yarnpkg/fslib'
-import { structUtils }     from '@yarnpkg/core'
-import { tgzUtils }        from '@yarnpkg/core'
-import { toFilename }      from '@yarnpkg/fslib'
-import { xfs }             from '@yarnpkg/fslib'
-import { ppath }           from '@yarnpkg/fslib'
-import { npath }           from '@yarnpkg/fslib'
-import { packUtils }       from '@yarnpkg/plugin-pack'
+import type { Configuration } from '@yarnpkg/core'
+import type { Workspace }     from '@yarnpkg/core'
+import type { Project }       from '@yarnpkg/core'
+import type { Report }        from '@yarnpkg/core'
+import type { Locator }       from '@yarnpkg/core'
+import type { PortablePath }  from '@yarnpkg/fslib'
+import type { Filename }      from '@yarnpkg/fslib'
 
-import { ExportCache }     from './export/ExportCache.js'
-import { copyRcFile }      from './copy.utils.js'
-import { copyPlugins }     from './copy.utils.js'
-import { copyYarnRelease } from './copy.utils.js'
-import { genPackTgz }      from './export/exportUtils.js'
-import { makeFetcher }     from './export/exportUtils.js'
-import { makeResolver }    from './export/exportUtils.js'
+import { Cache }              from '@yarnpkg/core'
+import { CwdFS }              from '@yarnpkg/fslib'
+import { structUtils }        from '@yarnpkg/core'
+import { tgzUtils }           from '@yarnpkg/core'
+import { toFilename }         from '@yarnpkg/fslib'
+import { xfs }                from '@yarnpkg/fslib'
+import { ppath }              from '@yarnpkg/fslib'
+import { npath }              from '@yarnpkg/fslib'
+import { packUtils }          from '@yarnpkg/plugin-pack'
+
+import { ExportCache }        from './export/ExportCache.js'
+import { copyRcFile }         from './copy.utils.js'
+import { copyPlugins }        from './copy.utils.js'
+import { copyYarnRelease }    from './copy.utils.js'
+import { genPackTgz }         from './export/exportUtils.js'
+import { makeFetcher }        from './export/exportUtils.js'
+import { makeResolver }       from './export/exportUtils.js'
 
 export const generateLockfile = async (
   project: Project,
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  // @ts-ignore
+  // @ts-expect-error
   const filename = toFilename(project.configuration.get('lockfileFilename'))
   const dest = ppath.join(destination, filename)
 
@@ -69,7 +70,7 @@ export const pack = async (
 
     const tgz = await genPackTgz(workspace)
 
-    // @ts-ignore
+    // @ts-expect-error any
     await tgzUtils.extractArchiveTo(tgz, baseFs, { stripComponents: 1 })
 
     const tmpConfiguration = Configuration.create(destination, destination, configuration.plugins)
@@ -86,7 +87,7 @@ export const pack = async (
     tmpConfiguration.values.set(`globalFolder`, configuration.get(`globalFolder`))
     tmpConfiguration.values.set(`packageExtensions`, configuration.get(`packageExtensions`))
 
-    // @ts-ignore
+    // @ts-expect-error any
     await tmpConfiguration.refreshPackageExtensions()
 
     const { project: tmpProject, workspace: tmpWorkspace } = await Project.find(
@@ -101,7 +102,7 @@ export const pack = async (
     tmpWorkspace!.manifest.devDependencies.clear()
 
     await tmpProject.install({
-      // @ts-ignore
+      // @ts-expect-error any
       cache: await ExportCache.find(tmpConfiguration, cache),
       fetcher: makeFetcher(project),
       resolver: makeResolver(project),

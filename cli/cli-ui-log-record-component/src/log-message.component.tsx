@@ -1,7 +1,7 @@
 import type { Body } from '@atls/logger'
+import type { FC }   from 'react'
 
 import { Text }      from 'ink'
-import { FC }        from 'react'
 import React         from 'react'
 
 const getMessage = (body: Body) => {

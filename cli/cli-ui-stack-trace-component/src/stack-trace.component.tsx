@@ -1,6 +1,6 @@
 import type { FC }        from 'react'
 
-// @ts-ignore
+// @ts-expect-error any
 import { parse }          from '@atls/stack-trace'
 import { Text }           from 'ink'
 import { Box }            from 'ink'

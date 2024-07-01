@@ -35,7 +35,7 @@ const config: Array<Linter.FlatConfig> = [
     },
     plugins: {
       'eslint-plugin-react-hooks': reactHooksPlugin,
-      // @ts-ignore
+      // @ts-expect-error any
       '@typescript-eslint': typescriptEslintPlugin,
       'react-hooks': reactHooksPlugin,
       '@next/next': nextjsPlugin,

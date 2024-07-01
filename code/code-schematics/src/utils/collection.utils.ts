@@ -57,6 +57,7 @@ export const expandCollections = (
   ) => {
     const schematic = collection.description.schematics[schematicName]
 
+    // eslint-disable-next-line
     if (schematic && schematic.extends) {
       const [extendsCollection, extendsSchematic] = schematic.extends.split(':')
 
