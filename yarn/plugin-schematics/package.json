@@ -1,6 +1,6 @@
 {
   "name": "@atls/yarn-plugin-schematics",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
@@ -30,7 +30,7 @@
     "typanion": "3.14.0"
   },
   "devDependencies": {
-    "@atls/yarn-test-utils": "workspace:0.0.1",
+    "@atls/yarn-test-utils": "workspace:1.0.0",
     "@jest/globals": "29.7.0",
     "@types/react": "18.3.3",
     "@yarnpkg/builder": "4.1.1",

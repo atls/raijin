@@ -20,7 +20,7 @@ runs:
         yarn workspaces changed foreach exec \
         'bash -c "VERSION=$npm_package_version; \ 
         NAME=$npm_package_name; \
-        if [ ! -z \"$VERSION\" ]; then \
+        if [ ! -z \"\$VERSION\" ]; then \
           yarn pack; \
           gh release create \"\$NAME-v\$VERSION\" ./package.tgz --title=\$NAME-\$VERSION; \
         fi"'

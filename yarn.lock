@@ -1162,7 +1162,7 @@ __metadata:
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/code-format-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:0.0.1"
+    "@atls/yarn-test-utils": "workspace:1.0.0"
     "@jest/globals": "npm:29.7.0"
     "@types/react": "npm:^18.3.3"
     "@yarnpkg/builder": "npm:4.1.1"
@@ -1303,7 +1303,7 @@ __metadata:
     "@atls/code-schematics-worker": "workspace:*"
     "@atls/schematics": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:0.0.1"
+    "@atls/yarn-test-utils": "workspace:1.0.0"
     "@jest/globals": "npm:29.7.0"
     "@types/react": "npm:18.3.3"
     "@yarnpkg/builder": "npm:4.1.1"
@@ -1426,7 +1426,7 @@ __metadata:
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
     "@atls/code-typescript-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:0.0.1"
+    "@atls/yarn-test-utils": "workspace:1.0.0"
     "@jest/globals": "npm:29.7.0"
     "@types/react": "npm:^18.3.3"
     "@yarnpkg/builder": "npm:4.1.1"
@@ -1487,7 +1487,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-test-utils@workspace:*, @atls/yarn-test-utils@workspace:0.0.1, @atls/yarn-test-utils@workspace:yarn/test-utils":
+"@atls/yarn-test-utils@workspace:*, @atls/yarn-test-utils@workspace:1.0.0, @atls/yarn-test-utils@workspace:yarn/test-utils":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-test-utils@workspace:yarn/test-utils"
   dependencies:
