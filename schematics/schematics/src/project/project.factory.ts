@@ -48,7 +48,6 @@ const generateProjectSpecifiec = (options: any): Source => {
 
 // eslint-disable-next-line
 export const main = (options: any) =>
-  // @ts-expect-error any
   chain([
     mergeWith(generateCommon(options), MergeStrategy.Overwrite),
     mergeWith(generateProjectSpecifiec(options), MergeStrategy.Overwrite),

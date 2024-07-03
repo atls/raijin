@@ -1,40 +1,7 @@
 releases:
-  "@atls/cli-ui-error-info-component": major
-  "@atls/cli-ui-eslint-result-component": major
-  "@atls/cli-ui-git-commit-component": major
-  "@atls/cli-ui-log-record-component": major
-  "@atls/cli-ui-parts": major
-  "@atls/cli-ui-pretty-logs": major
-  "@atls/cli-ui-renderer": major
-  "@atls/cli-ui-schematics-component": major
-  "@atls/cli-ui-source-component": major
-  "@atls/cli-ui-stack-trace-component": major
-  "@atls/cli-ui-typescript-diagnostic-component": major
-  "@atls/code-commit": major
-  "@atls/code-configuration": major
-  "@atls/code-format": major
-  "@atls/code-format-worker": major
-  "@atls/code-icons": major
-  "@atls/code-icons-worker": major
-  "@atls/code-lint": major
-  "@atls/code-lint-worker": major
-  "@atls/code-pack": major
-  "@atls/code-runtime": major
-  "@atls/code-schematics": major
-  "@atls/code-schematics-worker": major
   "@atls/code-service": major
   "@atls/code-service-worker": major
-  "@atls/code-test": major
-  "@atls/code-test-worker": major
-  "@atls/code-typescript": major
   "@atls/code-typescript-worker": major
-  "@atls/code-worker-utils": major
-  "@atls/config-eslint": major
-  "@atls/config-jest": major
-  "@atls/config-prettier": major
-  "@atls/config-typescript": major
-  "@atls/jest-resolver": major
-  "@atls/prettier-plugin": major
   "@atls/schematics": major
   "@atls/schematics-utils": major
   "@atls/webpack-start-server-plugin": major

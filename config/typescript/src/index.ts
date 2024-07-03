@@ -6,7 +6,6 @@ export default {
 
     emitDecoratorMetadata: true,
     experimentalDecorators: true,
-    allowImportingTsExtensions: true,
 
     esModuleInterop: true,
     forceConsistentCasingInFileNames: true,
