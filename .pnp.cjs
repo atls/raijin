@@ -616,10 +616,36 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
+      ["npm:18.0.6", {\
+        "packageLocation": "./.yarn/cache/@angular-devkit-core-npm-18.0.6-9fae0d6c85-1b0959ca46.zip/node_modules/@angular-devkit/core/",\
+        "packageDependencies": [\
+          ["@angular-devkit/core", "npm:18.0.6"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
       ["virtual:4e80ef3d86e17da972b58835241949f09352454b35889b896c3e891f6afda0fac5a264cf0a7650a591f7320ff3c6d7226ae81cb26310f0b2f3154c73b15d8999#npm:18.0.5", {\
         "packageLocation": "./.yarn/__virtual__/@angular-devkit-core-virtual-649e473364/0/cache/@angular-devkit-core-npm-18.0.5-59d04f62d4-b27b153521.zip/node_modules/@angular-devkit/core/",\
         "packageDependencies": [\
           ["@angular-devkit/core", "virtual:4e80ef3d86e17da972b58835241949f09352454b35889b896c3e891f6afda0fac5a264cf0a7650a591f7320ff3c6d7226ae81cb26310f0b2f3154c73b15d8999#npm:18.0.5"],\
+          ["@types/chokidar", null],\
+          ["ajv", "npm:8.13.0"],\
+          ["ajv-formats", "virtual:649e4733648b5c5e746c0bbb06dcc78c945eed0ada818c847afd46b9b3bd52be04d6d3374b4c6a732b93fbc895526468c11154cf6146a61cfc90c67e0c22a58a#npm:3.0.1"],\
+          ["chokidar", null],\
+          ["jsonc-parser", "npm:3.2.1"],\
+          ["picomatch", "npm:4.0.2"],\
+          ["rxjs", "npm:7.8.1"],\
+          ["source-map", "npm:0.7.4"]\
+        ],\
+        "packagePeers": [\
+          "@types/chokidar",\
+          "chokidar"\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6", {\
+        "packageLocation": "./.yarn/__virtual__/@angular-devkit-core-virtual-208d04addb/0/cache/@angular-devkit-core-npm-18.0.6-9fae0d6c85-1b0959ca46.zip/node_modules/@angular-devkit/core/",\
+        "packageDependencies": [\
+          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
           ["@types/chokidar", null],\
           ["ajv", "npm:8.13.0"],\
           ["ajv-formats", "virtual:649e4733648b5c5e746c0bbb06dcc78c945eed0ada818c847afd46b9b3bd52be04d6d3374b4c6a732b93fbc895526468c11154cf6146a61cfc90c67e0c22a58a#npm:3.0.1"],\
@@ -673,6 +699,18 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@angular-devkit/schematics", "npm:18.0.5"],\
           ["@angular-devkit/core", "virtual:4e80ef3d86e17da972b58835241949f09352454b35889b896c3e891f6afda0fac5a264cf0a7650a591f7320ff3c6d7226ae81cb26310f0b2f3154c73b15d8999#npm:18.0.5"],\
+          ["jsonc-parser", "npm:3.2.1"],\
+          ["magic-string", "npm:0.30.10"],\
+          ["ora", "npm:5.4.1"],\
+          ["rxjs", "npm:7.8.1"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:18.0.6", {\
+        "packageLocation": "./.yarn/cache/@angular-devkit-schematics-npm-18.0.6-a4d30b16e2-deb49126af.zip/node_modules/@angular-devkit/schematics/",\
+        "packageDependencies": [\
+          ["@angular-devkit/schematics", "npm:18.0.6"],\
+          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
           ["jsonc-parser", "npm:3.2.1"],\
           ["magic-string", "npm:0.30.10"],\
           ["ora", "npm:5.4.1"],\
@@ -1302,8 +1340,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-schematics/",\
         "packageDependencies": [\
           ["@atls/code-schematics", "workspace:code/code-schematics"],\
-          ["@angular-devkit/core", "virtual:cf1c70de3b1f744b9e47b879df786489817849e8ed9cde90cf7edb5ebb1727fcb31ccad4fe8b8e965b83eb11992328859f03c44acca3ca38d090a4d900b6027b#npm:17.3.2"],\
-          ["@angular-devkit/schematics", "npm:17.3.2"],\
+          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
+          ["@angular-devkit/schematics", "npm:18.0.6"],\
           ["rxjs", "npm:7.8.1"]\
         ],\
         "linkType": "SOFT"\
@@ -1314,7 +1352,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-schematics-worker/",\
         "packageDependencies": [\
           ["@atls/code-schematics-worker", "workspace:code/code-schematics-worker"],\
-          ["@angular-devkit/schematics", "npm:17.3.2"],\
+          ["@angular-devkit/schematics", "npm:18.0.6"],\
           ["@atls/code-schematics", "workspace:code/code-schematics"],\
           ["@atls/code-worker-utils", "workspace:code/code-worker-utils"],\
           ["@rollup/plugin-commonjs", "virtual:fddca280abd8b5379f88f9ba48723e07900c5bd703647a567be9e72ab59557f8b0439163b3330f7e7435934d12fdfea99f22ec539a10ae124cd21836535e9a74#npm:25.0.7"],\
