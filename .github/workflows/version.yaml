@@ -1,4 +1,4 @@
-name: Reusable version
+name: Version
 
 on:
   pull_request:
