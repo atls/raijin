@@ -20,11 +20,11 @@
     "@atls/cli-ui-log-record-component": "workspace:*",
     "@atls/cli-ui-renderer": "workspace:*",
     "ink": "^4.2.0",
-    "react": "^18.2.0"
+    "react": "^18.3.1"
   },
   "devDependencies": {
-    "@types/node": "^20.4.0",
-    "@types/react": "^18.2.14"
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3"
   },
   "publishConfig": {
     "access": "public",

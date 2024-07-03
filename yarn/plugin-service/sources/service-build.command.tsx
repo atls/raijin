@@ -33,15 +33,13 @@ class ServiceBuildCommand extends BaseCommand {
           try {
             progress.start()
 
-            const { errors, warnings } = await new ServiceWorker(
-              this.context.cwd,
-              project.cwd
-            ).run()
+            // @ts-expect-error any
+            const { errors, warnings } = await new ServiceWorker(this.context.cwd).run()
 
             progress.end()
 
             if (this.showWarnings) {
-              warnings.forEach((warning) => {
+              warnings.forEach((warning: any) => {
                 renderStatic(
                   <LogRecord name='webpack' body={warning} />,
                   process.stdout.columns - 12
@@ -53,7 +51,7 @@ class ServiceBuildCommand extends BaseCommand {
               })
             }
 
-            errors.forEach((error) => {
+            errors.forEach((error: any) => {
               renderStatic(<LogRecord name='webpack' body={error} />, process.stdout.columns - 12)
                 .split('\n')
                 .forEach((line) => {

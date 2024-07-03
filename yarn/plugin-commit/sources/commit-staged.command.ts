@@ -1,6 +1,6 @@
 import { BaseCommand } from '@yarnpkg/cli'
 import { Option }      from 'clipanion'
-// @ts-ignore
+// @ts-expect-error any
 import lintStaged      from 'lint-staged'
 
 const config = {

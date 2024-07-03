@@ -7,7 +7,6 @@ import { xfs }              from '@yarnpkg/fslib'
 import { npath }            from '@yarnpkg/fslib'
 import React                from 'react'
 
-import { ErrorInfo }        from '@atls/cli-ui-error-info-component'
 import { SchematicsWorker } from '@atls/code-schematics-worker'
 import { SpinnerProgress }  from '@atls/yarn-run-utils'
 import { renderStatic }     from '@atls/cli-ui-renderer'
@@ -68,6 +67,7 @@ class MigrationUpCommand extends BaseCommand {
           } catch (error) {
             progress.end()
 
+            // @ts-expect-error any
             renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
               .split('\n')
               .forEach((line) => {

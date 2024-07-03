@@ -104,7 +104,7 @@ export class EvalWorker {
     })
   }
 
-  private static silenceWarnings(args: string[]) {
+  private static silenceWarnings(args: Array<string>) {
     const noWarnings = '--no-warnings='
 
     const experimentalWarnings = 'ExperimentalWarning'

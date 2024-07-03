@@ -1,4 +1,5 @@
 export const parserOptions = {
+  // eslint-disable-next-line
   headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/,
   headerCorrespondence: ['type', 'scope', 'subject'],
   noteKeywords: ['BREAKING CHANGE'],

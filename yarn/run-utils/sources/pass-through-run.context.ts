@@ -1,11 +1,13 @@
-import { StreamOutput } from './stream.output.js'
+import type { Writable } from 'node:stream'
+
+import { StreamOutput }  from './stream.output.js'
 
 export class PassThroughRunContext {
   private readonly stdoutOutput = new StreamOutput()
 
   private readonly stderrOutput = new StreamOutput()
 
-  public readonly stdout
+  public readonly stdout: Writable
 
   public readonly stderr
 

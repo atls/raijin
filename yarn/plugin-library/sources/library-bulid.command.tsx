@@ -39,11 +39,15 @@ class LibraryBuildCommand extends BaseCommand {
           try {
             const ts = new TypeScriptWorker(configuration.projectCwd!)
 
-            const diagnostics = await ts.build(configuration.projectCwd, [join(this.context.cwd, './src')], {
-              outDir: join(this.context.cwd, this.target),
-              module: 'nodenext' as any,
-              declaration: true,
-            })
+            const diagnostics = await ts.build(
+              this.context.cwd,
+              [join(this.context.cwd, './src')],
+              {
+                outDir: join(this.context.cwd, this.target),
+                module: 'nodenext' as any,
+                declaration: true,
+              }
+            )
 
             progress.end()
 

@@ -25,6 +25,7 @@ class ChecksReleaseCommand extends BaseCommand {
 
     const checks = new GitHubChecks('Release')
 
+    // @ts-expect-error any
     const { id: checkId } = await checks.start()
 
     try {
@@ -34,7 +35,7 @@ class ChecksReleaseCommand extends BaseCommand {
         if (workspace.manifest.scripts.get('build')) {
           const context = new PassThroughRunContext()
 
-          const outputWriter = (data) => this.context.stdout.write(data)
+          const outputWriter = (data: any) => this.context.stdout.write(data)
 
           context.stdout.on('data', outputWriter)
           context.stderr.on('data', outputWriter)

@@ -24,6 +24,7 @@ export const loadHook: loadHookFn = async (
   context: { format: string | null | undefined },
   nextLoad: loadHookFn
 ): Promise<{ format: string; source: string; shortCircuit: boolean }> =>
+  // @ts-expect-error any
   loadBaseHook(urlString, context, async (urlString, context) => {
     const url = loaderUtils.tryParseURL(urlString)
     if (url?.protocol !== `file:`) return nextLoad(urlString, context, nextLoad)

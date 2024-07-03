@@ -1,4 +1,4 @@
-import type { SeverityNumber } from '@atls/logger'
+import type { SeverityNumber } from '@monstrs/logger'
 import type { webpack }        from '@atls/code-runtime/webpack'
 
 export interface WebpackLogRecord {

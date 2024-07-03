@@ -21,6 +21,7 @@ describe('eslint result component', () => {
       messageText: "Argument of type 'string' is not assignable to parameter of type 'number'.",
     }
 
+    // @ts-expect-error any
     const output = renderStatic(<TypeScriptDiagnostic {...value} />, 160)
 
     expect(stripAnsi(output)).toMatchSnapshot()

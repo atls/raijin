@@ -27,9 +27,9 @@ export const clearUnusedWorkspaces = (
 
 export const getRequiredWorkspaces = (
   project: Project,
-  workspaces: Workspace[],
+  workspaces: Array<Workspace>,
   production: boolean = false,
-  scopes: string[] = production ? ['dependencies'] : Manifest.hardDependencies
+  scopes: Array<string> = production ? ['dependencies'] : Manifest.hardDependencies
 ): Set<Workspace> => {
   const requiredWorkspaces = new Set([...workspaces])
 

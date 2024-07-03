@@ -32,9 +32,10 @@ class ChecksRunCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
-  private async runCheck(cwd, args: Array<string>, report: StreamReport) {
+  private async runCheck(cwd: string, args: Array<string>, report: StreamReport) {
     try {
       const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...args], {
+        // @ts-expect-error any
         cwd,
       })
 

@@ -1,7 +1,8 @@
-import { Workspace } from '@yarnpkg/core'
-import { Manifest }  from '@yarnpkg/core'
+import type { Workspace } from '@yarnpkg/core'
 
-export const getWorkspaceDependencies = (workspace: Workspace): readonly Workspace[] => {
+import { Manifest }       from '@yarnpkg/core'
+
+export const getWorkspaceDependencies = (workspace: Workspace): ReadonlyArray<Workspace> => {
   const { project } = workspace
   const dependencies = new Set<Workspace>()
 

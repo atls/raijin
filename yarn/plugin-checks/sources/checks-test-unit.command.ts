@@ -22,6 +22,7 @@ class ChecksTestUnitCommand extends AbstractChecksTestCommand {
       async () => {
         const checks = new GitHubChecks('Test:Unit')
 
+        // @ts-expect-error any
         const { id: checkId } = await checks.start()
 
         try {

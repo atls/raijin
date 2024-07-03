@@ -35,7 +35,7 @@ export const getCommitData = async (ref: string): Promise<GetCommitResponseData>
 export const getChangedCommmits = async (): Promise<Array<GetCommitResponseData>> => {
   const eventCommits = await getEventCommmits()
 
-  return Promise.all(eventCommits.map((commit) => getCommitData(commit.id || commit.sha)))
+  return Promise.all(eventCommits.map((commit: any) => getCommitData(commit.id || commit.sha)))
 }
 
 export const getGithubChangedFiles = async (): Promise<Array<string>> => {

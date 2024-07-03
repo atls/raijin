@@ -1,15 +1,16 @@
-import { Workspace }    from '@yarnpkg/core'
-import { Manifest }     from '@yarnpkg/core'
-import { Cache }        from '@yarnpkg/core'
-import { Project }      from '@yarnpkg/core'
-import { Report }       from '@yarnpkg/core'
-import { Descriptor }   from '@yarnpkg/core'
-import { Locator }      from '@yarnpkg/core'
-import { PortablePath } from '@yarnpkg/fslib'
-import { structUtils }  from '@yarnpkg/core'
-import { xfs }          from '@yarnpkg/fslib'
-import { ppath }        from '@yarnpkg/fslib'
-import { toFilename }   from '@yarnpkg/fslib'
+import type { Cache }        from '@yarnpkg/core'
+import type { Project }      from '@yarnpkg/core'
+import type { Report }       from '@yarnpkg/core'
+import type { Descriptor }   from '@yarnpkg/core'
+import type { Locator }      from '@yarnpkg/core'
+import type { PortablePath } from '@yarnpkg/fslib'
+
+import { Workspace }         from '@yarnpkg/core'
+import { Manifest }          from '@yarnpkg/core'
+import { structUtils }       from '@yarnpkg/core'
+import { xfs }               from '@yarnpkg/fslib'
+import { ppath }             from '@yarnpkg/fslib'
+import { toFilename }        from '@yarnpkg/fslib'
 
 export const copyCacheMarkedFiles = async (
   project: Project,
@@ -27,7 +28,7 @@ export const copyCacheMarkedFiles = async (
 }
 
 export const copyManifests = async (
-  workspaces: Workspace[],
+  workspaces: Array<Workspace>,
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
@@ -71,7 +72,7 @@ export const copyProtocolFiles = async (
   report: Report,
   parseDescriptor: (
     descriptor: Descriptor
-  ) => { parentLocator: Locator; paths: PortablePath[] } | undefined
+  ) => { parentLocator: Locator; paths: Array<PortablePath> } | undefined
 ): Promise<void> => {
   const copiedPaths = new Set<string>()
 
@@ -135,11 +136,13 @@ export const copyYarnRelease = async (
   report: Report
 ): Promise<void> => {
   const src = project.configuration.get('yarnPath')
+  // @ts-expect-error any
   const path = ppath.relative(project.cwd, src)
   const dest = ppath.join(destination, path)
 
   report.reportInfo(null, path)
 
+  // @ts-expect-error any
   await xfs.copyPromise(dest, src, {
     overwrite: true,
   })

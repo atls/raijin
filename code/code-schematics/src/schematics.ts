@@ -23,7 +23,7 @@ export class Schematics {
   async init(schematic: string, options = {}) {
     const host = new virtualFs.ScopedHost(new NodeJsSyncHost(), this.cwd as Path)
 
-    // @ts-ignore
+    // @ts-expect-error any
     const workflow = new NodeWorkflow(host, {
       force: this.force,
       dryRun: this.dryRun,
@@ -59,7 +59,7 @@ export class Schematics {
   async migrate(schematicName: string, migrationVersion: string, options = {}) {
     const host = new virtualFs.ScopedHost(new NodeJsSyncHost(), this.cwd as Path)
 
-    // @ts-ignore
+    // @ts-expect-error any
     const workflow = new NodeWorkflow(host, {
       force: true,
       dryRun: false,
@@ -88,6 +88,7 @@ export class Schematics {
           'migrations.json'
         )
 
+        // eslint-disable-next-line security/detect-non-literal-require
         const data = require(migrationsPath)
 
         return Object.keys(data.schematics)

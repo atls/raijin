@@ -23,7 +23,7 @@
     "ignore": "^5.2.4"
   },
   "devDependencies": {
-    "@types/node": "^20.4.0"
+    "@types/node": "^20.14.9"
   },
   "peerDependencies": {
     "react": "*",

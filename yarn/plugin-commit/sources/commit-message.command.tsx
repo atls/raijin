@@ -14,7 +14,13 @@ import wrap                        from 'word-wrap'
 import { RequestCommitMessage }    from '@atls/cli-ui-git-commit-component'
 import { CommitProperties }        from '@atls/cli-ui-git-commit-component'
 
-const RequestCommitMessageSubmit = ({ commit, useSubmit }) => {
+const RequestCommitMessageSubmit = ({
+  commit,
+  useSubmit,
+}: {
+  commit: any
+  useSubmit: Function
+}) => {
   const { stdin } = useStdin()
 
   useSubmit(commit)
@@ -30,6 +36,7 @@ const RequestCommitMessageApp: SubmitInjectedComponent<CommitProperties> = ({ us
   const [commit, setCommit] = useState()
 
   if (!commit) {
+    // @ts-expect-error any
     return <RequestCommitMessage onSubmit={setCommit} />
   }
 

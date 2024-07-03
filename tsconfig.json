@@ -24,7 +24,8 @@
     "target": "es2021",
     "jsx": "react",
     "strictPropertyInitialization": false,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "allowImportingTsExtensions": true
   },
   "include": [
     "prettier/**/*",

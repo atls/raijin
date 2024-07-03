@@ -28,6 +28,7 @@ export class ProtocolResolver implements Resolver {
   }
 
   supportsLocator(locator: Locator, opts: MinimalResolveOptions) {
+    // eslint-disable-next-line
     if (semver.valid(locator.reference)) return true
 
     if (TAG_REGEXP.test(locator.reference)) return true

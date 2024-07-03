@@ -22,12 +22,12 @@
     "@atls/code-worker-utils": "workspace:*"
   },
   "devDependencies": {
-    "@angular-devkit/schematics": "17.3.2",
+    "@angular-devkit/schematics": "18.0.6",
     "@rollup/plugin-commonjs": "25.0.7",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-replace": "5.0.5",
-    "@types/node": "20",
+    "@types/node": "20.14.9",
     "builtin-modules": "3.3.0",
     "esbuild": "0.17.19",
     "rollup": "3.29.4",

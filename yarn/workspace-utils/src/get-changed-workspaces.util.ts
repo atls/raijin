@@ -1,12 +1,12 @@
-import { Project }                from '@yarnpkg/core'
-import { Workspace }              from '@yarnpkg/core'
+import type { Project }           from '@yarnpkg/core'
+import type { Workspace }         from '@yarnpkg/core'
 
 import { getWorkspaceDependents } from './get-workspace-dependents.util.js'
 
 export const getChangedWorkspaces = (
   project: Project,
-  files: readonly string[]
-): readonly Workspace[] => {
+  files: ReadonlyArray<string>
+): ReadonlyArray<Workspace> => {
   const workspaces = new Set<Workspace>()
 
   for (const workspace of project.workspaces) {

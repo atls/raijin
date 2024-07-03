@@ -14,8 +14,11 @@ import { ESLintResult }     from '@atls/cli-ui-eslint-result-component'
 import { LinterWorker }     from '@atls/code-lint-worker'
 import { renderStatic }     from '@atls/cli-ui-renderer'
 
+// @ts-expect-error any
 import { GitHubChecks }     from './github.checks.ts'
+// @ts-expect-error any
 import { AnnotationLevel }  from './github.checks.ts'
+// @ts-expect-error any
 import { Annotation }       from './github.checks.ts'
 
 class ChecksLintCommand extends BaseCommand {
@@ -33,9 +36,10 @@ class ChecksLintCommand extends BaseCommand {
       async (report) => {
         const checks = new GitHubChecks('Lint')
 
+        // @ts-expect-error any
         const { id: checkId } = await checks.start()
 
-        // eslint-disable-next-line consistent-return
+        // @ts-expect-error any eslint-disable-next-line consistent-return
         const results = await report.startTimerPromise('Lint', async () => {
           try {
             return await new LinterWorker(project.cwd).run(this.context.cwd)
@@ -81,6 +85,7 @@ class ChecksLintCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
+  // @ts-expect-error any
   private getAnnotationLevel(severity: ESLint.Severity): AnnotationLevel {
     if (severity === 1) {
       return AnnotationLevel.Warning

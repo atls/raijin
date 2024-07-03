@@ -100,7 +100,7 @@ class BadgesCommand extends BaseCommand {
           const sortedLookup = miscUtils.sortMap([...lookupSet], (pkg) =>
             structUtils.stringifyLocator(pkg))
 
-          const getVersion = async (name) => {
+          const getVersion = async (name: any) => {
             const expectedDescriptor = structUtils.parseDescriptor(name)
 
             const selection = sortedLookup.filter(
@@ -127,9 +127,9 @@ class BadgesCommand extends BaseCommand {
             }))
           )
 
-          const versionsReducer = (badges, pkg) => {
+          const versionsReducer = (badges: any, pkg: any) => {
             const getColors = () => {
-              const extractColors = (colors) => ({
+              const extractColors = (colors: any) => ({
                 labelColor: colors.labelColor.replace('#', ''),
                 color: colors.color.replace('#', ''),
               })

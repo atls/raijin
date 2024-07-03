@@ -25,12 +25,13 @@
     "@atls/code-typescript-worker": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "4.0.0-rc.3",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "rimraf": "5.0.5"
   },
   "devDependencies": {
     "@atls/yarn-test-utils": "workspace:*",
     "@jest/globals": "29.7.0",
+    "@types/react": "^18.3.3",
     "@yarnpkg/builder": "4.1.1",
     "@yarnpkg/cli": "4.2.2",
     "@yarnpkg/core": "4.0.5",

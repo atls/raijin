@@ -1,11 +1,12 @@
+import type { FC }                 from 'react'
+
 import { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
-import { FC }                      from 'react'
 import { useStdin }                from 'ink'
 import { useEffect }               from 'react'
 import { useState }                from 'react'
 import React                       from 'react'
 
-const SubmitProxy = ({ value, useSubmit }) => {
+const SubmitProxy = ({ value, useSubmit }: { value: any; useSubmit: Function }) => {
   const { stdin } = useStdin()
 
   useSubmit(value)
@@ -17,7 +18,8 @@ const SubmitProxy = ({ value, useSubmit }) => {
   return null
 }
 
-export const SubmitInjectedComponentFactory = <T,>(InjectedComponent) => {
+export const SubmitInjectedComponentFactory = <T,>(InjectedComponent: any) => {
+  // @ts-expect-error any
   const SubmitCmp: FC<SubmitInjectedComponent<T>> = ({ useSubmit }) => {
     const [value, setValue] = useState<T>()
 

@@ -9,7 +9,6 @@ import * as graphql       from 'prettier/plugins/graphql'
 import * as markdown      from 'prettier/plugins/markdown'
 import * as typescript    from 'prettier/plugins/typescript'
 import * as yaml          from 'prettier/plugins/yaml'
-// @ts-expect-error
 import * as estree        from 'prettier/plugins/estree'
 import { globby }         from 'globby'
 import { format }         from 'prettier/standalone'
@@ -39,6 +38,7 @@ export class Formatter {
       const output = await format(input, {
         ...config,
         filepath: filename,
+        // @ts-expect-error any
         plugins: [estree, yaml, markdown, graphql, babel, typescript, plugin],
       })
 
@@ -65,10 +65,10 @@ export class Formatter {
     await this.formatFiles(files)
   }
 
-  private async getProjectIgnorePatterns(): Promise<string[]> {
+  private async getProjectIgnorePatterns(): Promise<Array<string>> {
     const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
 
-    const { formatterIgnorePatterns = [] }: { formatterIgnorePatterns: string[] } =
+    const { formatterIgnorePatterns = [] }: { formatterIgnorePatterns: Array<string> } =
       JSON.parse(content)
 
     return formatterIgnorePatterns

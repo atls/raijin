@@ -32,13 +32,15 @@
     "@babel/code-frame": "7.24.2",
     "@jest/test-result": "29.7.0",
     "clipanion": "4.0.0-rc.3",
-    "react": "16.14.0",
+    "react": "18.3.1",
     "strip-ansi": "7.1.0"
   },
   "devDependencies": {
     "@atls/code-runtime": "workspace:*",
     "@octokit/types": "12",
-    "@types/node": "20",
+    "@types/babel__code-frame": "^7.0.6",
+    "@types/node": "20.14.9",
+    "@types/react": "^18.3.3",
     "@yarnpkg/builder": "4.1.1",
     "@yarnpkg/cli": "4.2.2",
     "@yarnpkg/core": "4.0.5",

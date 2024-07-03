@@ -18,8 +18,8 @@
   },
   "devDependencies": {
     "@atls/code-commit": "workspace:*",
-    "@types/node": "^20.4.0",
-    "@types/react": "^18.2.14",
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
     "@yarnpkg/libui": "^3.0.0",
     "camelcase": "^7.0.1",
     "figures": "^5.0.0",

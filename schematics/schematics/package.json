@@ -17,14 +17,15 @@
     "postpack": "rm -rf dist && yarn node ./scripts/postpack.mjs"
   },
   "dependencies": {
-    "@angular-devkit/core": "18.0.5",
-    "@angular-devkit/schematics": "18.0.5",
+    "@angular-devkit/core": "18.0.6",
+    "@angular-devkit/schematics": "18.0.6",
     "@atls/config-typescript": "workspace:*",
     "@atls/schematics-utils": "workspace:*"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
-    "@types/node": "20",
+    "@types/jest": "^29.5.12",
+    "@types/node": "20.14.9",
     "copy-dir": "1.3.0",
     "globby": "14.0.1"
   },

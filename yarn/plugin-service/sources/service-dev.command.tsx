@@ -33,7 +33,7 @@ class ServiceDevCommand extends BaseCommand {
           progress.start()
 
           try {
-            await new ServiceWorker(this.context.cwd, project.cwd).watch((logRecord) => {
+            await new ServiceWorker(this.context.cwd).watch(this.context.cwd, (logRecord: any) => {
               progress.end()
 
               renderStatic(<LogRecord name='webpack' {...logRecord} />, process.stdout.columns - 12)

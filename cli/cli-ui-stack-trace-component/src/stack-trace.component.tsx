@@ -1,5 +1,6 @@
 import type { FC }        from 'react'
 
+// @ts-expect-error any
 import { parse }          from '@atls/stack-trace'
 import { Text }           from 'ink'
 import { Box }            from 'ink'
@@ -33,7 +34,7 @@ export const StackTrace: FC<StackTraceProps> = ({ children }) => {
           </SourcePreview>
         </Box>
       )}
-      {stack.frames.map((frame: any, index) => (
+      {stack.frames.map((frame: any, index: number) => (
         <Box key={nanoid()} justifyContent='flex-end'>
           <Text>{frame.function}</Text>
           <Spacer />
