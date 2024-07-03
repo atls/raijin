@@ -1993,7 +1993,7 @@ const RAW_RUNTIME_STATE =
           ["commitizen", "npm:4.3.0"],\
           ["force-stdin-tty", "npm:0.0.1"],\
           ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
-          ["lint-staged", "npm:13.3.0"],\
+          ["lint-staged", "patch:lint-staged@npm%3A13.3.0#~/.yarn/patches/lint-staged-npm-13.3.0-f729900eb4.patch::version=13.3.0&hash=30ac46"],\
           ["react", "npm:18.3.1"],\
           ["word-wrap", "npm:1.2.5"]\
         ],\
@@ -2023,7 +2023,7 @@ const RAW_RUNTIME_STATE =
           ["commitizen", "npm:4.3.0"],\
           ["force-stdin-tty", "npm:0.0.1"],\
           ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
-          ["lint-staged", "npm:13.3.0"],\
+          ["lint-staged", "patch:lint-staged@npm%3A13.3.0#~/.yarn/patches/lint-staged-npm-13.3.0-f729900eb4.patch::version=13.3.0&hash=30ac46"],\
           ["react", "npm:18.3.1"],\
           ["word-wrap", "npm:1.2.5"]\
         ],\
@@ -14282,16 +14282,16 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["lint-staged", [\
-      ["npm:13.3.0", {\
-        "packageLocation": "./.yarn/cache/lint-staged-npm-13.3.0-f729900eb4-6620f70a0e.zip/node_modules/lint-staged/",\
+      ["patch:lint-staged@npm%3A13.3.0#~/.yarn/patches/lint-staged-npm-13.3.0-f729900eb4.patch::version=13.3.0&hash=30ac46", {\
+        "packageLocation": "./.yarn/cache/lint-staged-patch-49436a0247-afe62cbc44.zip/node_modules/lint-staged/",\
         "packageDependencies": [\
-          ["lint-staged", "npm:13.3.0"],\
+          ["lint-staged", "patch:lint-staged@npm%3A13.3.0#~/.yarn/patches/lint-staged-npm-13.3.0-f729900eb4.patch::version=13.3.0&hash=30ac46"],\
           ["chalk", "npm:5.3.0"],\
           ["commander", "npm:11.0.0"],\
           ["debug", "virtual:e778dc10f79fdbbb66a331d5f573103061cb300ceef13038bb3c391f5294dce7b8f4cef344ac47ca986af1724a8068d2f4361769a6416b99ee691025d82bd0fb#npm:4.3.4"],\
           ["execa", "npm:7.2.0"],\
           ["lilconfig", "npm:2.1.0"],\
-          ["listr2", "virtual:f729900eb491a1667fe8fcb3c57aaab056a2d0c4f513c4e0834af077e9299fe100f72a90fbb9aca1473a2747eae5005280a3244d57de048bd5f5d4914a05dfff#npm:6.6.1"],\
+          ["listr2", "virtual:49436a0247fa9145ea053d4f1b2e588527aca60d909ce4d23346c1c336bff6d7acf13be34eb6f62bef5a5d4084712715dc2e52dfd19f04e11eb4b18555645ccd#npm:6.6.1"],\
           ["micromatch", "npm:4.0.5"],\
           ["pidtree", "npm:0.6.0"],\
           ["string-argv", "npm:0.3.2"],\
@@ -14308,10 +14308,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:f729900eb491a1667fe8fcb3c57aaab056a2d0c4f513c4e0834af077e9299fe100f72a90fbb9aca1473a2747eae5005280a3244d57de048bd5f5d4914a05dfff#npm:6.6.1", {\
-        "packageLocation": "./.yarn/__virtual__/listr2-virtual-39a82f82d7/0/cache/listr2-npm-6.6.1-74fafa58ff-3cc618d9de.zip/node_modules/listr2/",\
+      ["virtual:49436a0247fa9145ea053d4f1b2e588527aca60d909ce4d23346c1c336bff6d7acf13be34eb6f62bef5a5d4084712715dc2e52dfd19f04e11eb4b18555645ccd#npm:6.6.1", {\
+        "packageLocation": "./.yarn/__virtual__/listr2-virtual-6861a8db2a/0/cache/listr2-npm-6.6.1-74fafa58ff-3cc618d9de.zip/node_modules/listr2/",\
         "packageDependencies": [\
-          ["listr2", "virtual:f729900eb491a1667fe8fcb3c57aaab056a2d0c4f513c4e0834af077e9299fe100f72a90fbb9aca1473a2747eae5005280a3244d57de048bd5f5d4914a05dfff#npm:6.6.1"],\
+          ["listr2", "virtual:49436a0247fa9145ea053d4f1b2e588527aca60d909ce4d23346c1c336bff6d7acf13be34eb6f62bef5a5d4084712715dc2e52dfd19f04e11eb4b18555645ccd#npm:6.6.1"],\
           ["@types/enquirer", null],\
           ["cli-truncate", "npm:3.1.0"],\
           ["colorette", "npm:2.0.20"],\

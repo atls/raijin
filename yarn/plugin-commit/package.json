@@ -24,7 +24,7 @@
     "commitizen": "4.3.0",
     "force-stdin-tty": "0.0.1",
     "ink": "3.2.0",
-    "lint-staged": "^13.2.0",
+    "lint-staged": "patch:lint-staged@npm%3A13.3.0#~/.yarn/patches/lint-staged-npm-13.3.0-f729900eb4.patch",
     "react": "^18.3.1",
     "word-wrap": "1.2.5"
   },
