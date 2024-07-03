@@ -1112,7 +1112,7 @@ __metadata:
     commitizen: "npm:4.3.0"
     force-stdin-tty: "npm:0.0.1"
     ink: "npm:3.2.0"
-    lint-staged: "npm:^13.2.0"
+    lint-staged: "patch:lint-staged@npm%3A13.3.0#~/.yarn/patches/lint-staged-npm-13.3.0-f729900eb4.patch"
     react: "npm:^18.3.1"
     word-wrap: "npm:1.2.5"
   peerDependencies:
@@ -10072,7 +10072,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^13.2.0":
+"lint-staged@npm:13.3.0":
   version: 13.3.0
   resolution: "lint-staged@npm:13.3.0"
   dependencies:
@@ -10089,6 +10089,26 @@ __metadata:
   bin:
     lint-staged: bin/lint-staged.js
   checksum: 10/6620f70a0ea1060c5b153ae521a1fb5b6e7a36c81188600cda767961b52c6729e8caddba96e5209195c223fe6343c245afb602fdde4f2678827441430aba54fe
+  languageName: node
+  linkType: hard
+
+"lint-staged@patch:lint-staged@npm%3A13.3.0#~/.yarn/patches/lint-staged-npm-13.3.0-f729900eb4.patch":
+  version: 13.3.0
+  resolution: "lint-staged@patch:lint-staged@npm%3A13.3.0#~/.yarn/patches/lint-staged-npm-13.3.0-f729900eb4.patch::version=13.3.0&hash=30ac46"
+  dependencies:
+    chalk: "npm:5.3.0"
+    commander: "npm:11.0.0"
+    debug: "npm:4.3.4"
+    execa: "npm:7.2.0"
+    lilconfig: "npm:2.1.0"
+    listr2: "npm:6.6.1"
+    micromatch: "npm:4.0.5"
+    pidtree: "npm:0.6.0"
+    string-argv: "npm:0.3.2"
+    yaml: "npm:2.3.1"
+  bin:
+    lint-staged: bin/lint-staged.js
+  checksum: 10/afe62cbc440218dab69d42ab5d8670fbd86dc1addb98f81d8e01379df9b6fa0a79503a4587f153eb4019c6fdcbc001aae0ba4f071ff5b31f3eb005dca84ae2e1
   languageName: node
   linkType: hard
 

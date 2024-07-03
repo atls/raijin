@@ -1,0 +1,29 @@
+diff --git a/lib/resolveConfig.js b/lib/resolveConfig.js
+index cb4ab0bde520aff5a75f1c6ab7438ba15188915f..8ca27d5a652e12b081dfc826a2278cfcc6428ec2 100644
+--- a/lib/resolveConfig.js
++++ b/lib/resolveConfig.js
+@@ -4,10 +4,11 @@ import { createRequire } from 'node:module'
+  * require() does not exist for ESM, so we must create it to use require.resolve().
+  * @see https://nodejs.org/api/module.html#modulecreaterequirefilename
+  */
+-const require = createRequire(import.meta.url)
+ 
+ export function resolveConfig(configPath) {
+   try {
++    const require = createRequire(import.meta.url);
++
+     return require.resolve(configPath)
+   } catch {
+     return configPath
+diff --git a/package.json b/package.json
+index b1087a402b178693fc08c048f22e31b88a91fa82..0e49ada9dcc860d617eb1d71acbd0050f19bdc78 100644
+--- a/package.json
++++ b/package.json
+@@ -73,5 +73,6 @@
+     "check",
+     "format",
+     "validate"
+-  ]
++  ],
++  "packageManager": "yarn@4.3.1+sha512.af78262d7d125afbfeed740602ace8c5e4405cd7f4735c08feb327286b2fdb2390fbca01589bfd1f50b1240548b74806767f5a063c94b67e431aabd0d86f7774"
+ }
