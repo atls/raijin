@@ -1,6 +1,6 @@
 import { Configuration } from '@yarnpkg/core'
 import type { Workspace }     from '@yarnpkg/core'
-import type { Project }       from '@yarnpkg/core'
+import { Project }       from '@yarnpkg/core'
 import { Report }        from '@yarnpkg/core'
 import type { Locator }       from '@yarnpkg/core'
 import type { PortablePath }  from '@yarnpkg/fslib'
