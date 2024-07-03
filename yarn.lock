@@ -198,44 +198,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:17.3.2":
-  version: 17.3.2
-  resolution: "@angular-devkit/core@npm:17.3.2"
-  dependencies:
-    ajv: "npm:8.12.0"
-    ajv-formats: "npm:2.1.1"
-    jsonc-parser: "npm:3.2.1"
-    picomatch: "npm:4.0.1"
-    rxjs: "npm:7.8.1"
-    source-map: "npm:0.7.4"
-  peerDependencies:
-    chokidar: ^3.5.2
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  checksum: 10/0362e94df2993c790542b7b00c50034f1a4f80e78c5b845d5f1423d578c1b984b966ae6317f9c0b7c99166ef8362fd7b0be837b9af0f6feb19ff1127cbab4675
-  languageName: node
-  linkType: hard
-
-"@angular-devkit/core@npm:18.0.5":
-  version: 18.0.5
-  resolution: "@angular-devkit/core@npm:18.0.5"
-  dependencies:
-    ajv: "npm:8.13.0"
-    ajv-formats: "npm:3.0.1"
-    jsonc-parser: "npm:3.2.1"
-    picomatch: "npm:4.0.2"
-    rxjs: "npm:7.8.1"
-    source-map: "npm:0.7.4"
-  peerDependencies:
-    chokidar: ^3.5.2
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  checksum: 10/b27b1535211a901b7a53190f1e38dd40a66bcf2ec3335e4db898bea236edbaa02ab32d56d595f0a6bf681c2dd8e05ed67c0a4b17a03e96cf69d816b89cdb8d28
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/core@npm:18.0.6":
   version: 18.0.6
   resolution: "@angular-devkit/core@npm:18.0.6"
@@ -252,32 +214,6 @@ __metadata:
     chokidar:
       optional: true
   checksum: 10/1b0959ca46b9024355380ba3ad8da6036bc197e8790605ba70a0056cd6fd829d2a7429c9169b9266c7e2d5dccb7e659012375e0e5eb632694afed43d514657e4
-  languageName: node
-  linkType: hard
-
-"@angular-devkit/schematics@npm:17.3.2":
-  version: 17.3.2
-  resolution: "@angular-devkit/schematics@npm:17.3.2"
-  dependencies:
-    "@angular-devkit/core": "npm:17.3.2"
-    jsonc-parser: "npm:3.2.1"
-    magic-string: "npm:0.30.8"
-    ora: "npm:5.4.1"
-    rxjs: "npm:7.8.1"
-  checksum: 10/48c3828e545cb58a40ac0e8857b28e2744d27eb3496b6e4f27f1a04b2db56d99afc607af24aadf7d8c3d72e65824a074bcbb654f6bacfac5dd899f5c186d9ccf
-  languageName: node
-  linkType: hard
-
-"@angular-devkit/schematics@npm:18.0.5":
-  version: 18.0.5
-  resolution: "@angular-devkit/schematics@npm:18.0.5"
-  dependencies:
-    "@angular-devkit/core": "npm:18.0.5"
-    jsonc-parser: "npm:3.2.1"
-    magic-string: "npm:0.30.10"
-    ora: "npm:5.4.1"
-    rxjs: "npm:7.8.1"
-  checksum: 10/f34abf4ffcf27455511dcb87251235337e9345a11cafb0dfbc83b55b0cd05099b0154fb203213ff41588bc65c553a85e4d8e4779257c6e45c2f60ee7d6a2b448
   languageName: node
   linkType: hard
 
@@ -895,8 +831,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/schematics-utils@workspace:schematics/schematics-utils"
   dependencies:
-    "@angular-devkit/core": "npm:17.3.2"
-    "@angular-devkit/schematics": "npm:17.3.2"
+    "@angular-devkit/core": "npm:18.0.6"
+    "@angular-devkit/schematics": "npm:18.0.6"
     "@types/js-yaml": "npm:4.0.9"
     "@types/node": "npm:20.14.9"
     js-yaml: "npm:4.1.0"
@@ -911,8 +847,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/schematics@workspace:schematics/schematics"
   dependencies:
-    "@angular-devkit/core": "npm:18.0.5"
-    "@angular-devkit/schematics": "npm:18.0.5"
+    "@angular-devkit/core": "npm:18.0.6"
+    "@angular-devkit/schematics": "npm:18.0.6"
     "@atls/config-typescript": "workspace:*"
     "@atls/schematics-utils": "workspace:*"
     "@jest/globals": "npm:29.7.0"
@@ -5126,20 +5062,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv-formats@npm:2.1.1":
-  version: 2.1.1
-  resolution: "ajv-formats@npm:2.1.1"
-  dependencies:
-    ajv: "npm:^8.0.0"
-  peerDependencies:
-    ajv: ^8.0.0
-  peerDependenciesMeta:
-    ajv:
-      optional: true
-  checksum: 10/70c263ded219bf277ffd9127f793b625f10a46113b2e901e150da41931fcfd7f5592da6d66862f4449bb157ffe65867c3294a7df1d661cc232c4163d5a1718ed
-  languageName: node
-  linkType: hard
-
 "ajv-formats@npm:3.0.1":
   version: 3.0.1
   resolution: "ajv-formats@npm:3.0.1"
@@ -5160,18 +5082,6 @@ __metadata:
   peerDependencies:
     ajv: ^6.9.1
   checksum: 10/d57c9d5bf8849bddcbd801b79bc3d2ddc736c2adb6b93a6a365429589dd7993ddbd5d37c6025ed6a7f89c27506b80131d5345c5b1fa6a97e40cd10a96bcd228c
-  languageName: node
-  linkType: hard
-
-"ajv@npm:8.12.0":
-  version: 8.12.0
-  resolution: "ajv@npm:8.12.0"
-  dependencies:
-    fast-deep-equal: "npm:^3.1.1"
-    json-schema-traverse: "npm:^1.0.0"
-    require-from-string: "npm:^2.0.2"
-    uri-js: "npm:^4.2.2"
-  checksum: 10/b406f3b79b5756ac53bfe2c20852471b08e122bc1ee4cde08ae4d6a800574d9cd78d60c81c69c63ff81e4da7cd0b638fafbb2303ae580d49cf1600b9059efb85
   languageName: node
   linkType: hard
 
@@ -10447,15 +10357,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:0.30.8":
-  version: 0.30.8
-  resolution: "magic-string@npm:0.30.8"
-  dependencies:
-    "@jridgewell/sourcemap-codec": "npm:^1.4.15"
-  checksum: 10/72ab63817af600e92c19dc8489c1aa4a9599da00cfd59b2319709bd48fb0cf533fdf354bf140ac86e598dbd63e6b2cc83647fe8448f864a3eb6061c62c94e784
-  languageName: node
-  linkType: hard
-
 "magic-string@npm:^0.27.0":
   version: 0.27.0
   resolution: "magic-string@npm:0.27.0"
@@ -11414,13 +11315,6 @@ pem@dexus/pem:
   version: 1.0.0
   resolution: "picocolors@npm:1.0.0"
   checksum: 10/a2e8092dd86c8396bdba9f2b5481032848525b3dc295ce9b57896f931e63fc16f79805144321f72976383fc249584672a75cc18d6777c6b757603f372f745981
-  languageName: node
-  linkType: hard
-
-"picomatch@npm:4.0.1":
-  version: 4.0.1
-  resolution: "picomatch@npm:4.0.1"
-  checksum: 10/d5005bb1b4021260826d17f64666848bbdea2f449dbf97dd2df384d3253aac43a550f658a855a7a4fa6a2a88f36a832daa008ee3f71fe0bf10990c2672349c76
   languageName: node
   linkType: hard
 

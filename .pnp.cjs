@@ -602,20 +602,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@angular-devkit/core", [\
-      ["npm:17.3.2", {\
-        "packageLocation": "./.yarn/cache/@angular-devkit-core-npm-17.3.2-7263512703-0362e94df2.zip/node_modules/@angular-devkit/core/",\
-        "packageDependencies": [\
-          ["@angular-devkit/core", "npm:17.3.2"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["npm:18.0.5", {\
-        "packageLocation": "./.yarn/cache/@angular-devkit-core-npm-18.0.5-59d04f62d4-b27b153521.zip/node_modules/@angular-devkit/core/",\
-        "packageDependencies": [\
-          ["@angular-devkit/core", "npm:18.0.5"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["npm:18.0.6", {\
         "packageLocation": "./.yarn/cache/@angular-devkit-core-npm-18.0.6-9fae0d6c85-1b0959ca46.zip/node_modules/@angular-devkit/core/",\
         "packageDependencies": [\
@@ -623,54 +609,16 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:4e80ef3d86e17da972b58835241949f09352454b35889b896c3e891f6afda0fac5a264cf0a7650a591f7320ff3c6d7226ae81cb26310f0b2f3154c73b15d8999#npm:18.0.5", {\
-        "packageLocation": "./.yarn/__virtual__/@angular-devkit-core-virtual-649e473364/0/cache/@angular-devkit-core-npm-18.0.5-59d04f62d4-b27b153521.zip/node_modules/@angular-devkit/core/",\
-        "packageDependencies": [\
-          ["@angular-devkit/core", "virtual:4e80ef3d86e17da972b58835241949f09352454b35889b896c3e891f6afda0fac5a264cf0a7650a591f7320ff3c6d7226ae81cb26310f0b2f3154c73b15d8999#npm:18.0.5"],\
-          ["@types/chokidar", null],\
-          ["ajv", "npm:8.13.0"],\
-          ["ajv-formats", "virtual:649e4733648b5c5e746c0bbb06dcc78c945eed0ada818c847afd46b9b3bd52be04d6d3374b4c6a732b93fbc895526468c11154cf6146a61cfc90c67e0c22a58a#npm:3.0.1"],\
-          ["chokidar", null],\
-          ["jsonc-parser", "npm:3.2.1"],\
-          ["picomatch", "npm:4.0.2"],\
-          ["rxjs", "npm:7.8.1"],\
-          ["source-map", "npm:0.7.4"]\
-        ],\
-        "packagePeers": [\
-          "@types/chokidar",\
-          "chokidar"\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6", {\
         "packageLocation": "./.yarn/__virtual__/@angular-devkit-core-virtual-208d04addb/0/cache/@angular-devkit-core-npm-18.0.6-9fae0d6c85-1b0959ca46.zip/node_modules/@angular-devkit/core/",\
         "packageDependencies": [\
           ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
           ["@types/chokidar", null],\
           ["ajv", "npm:8.13.0"],\
-          ["ajv-formats", "virtual:649e4733648b5c5e746c0bbb06dcc78c945eed0ada818c847afd46b9b3bd52be04d6d3374b4c6a732b93fbc895526468c11154cf6146a61cfc90c67e0c22a58a#npm:3.0.1"],\
+          ["ajv-formats", "virtual:208d04addb7156a6b534cf54bd36d010fb06adb9f79f04d3fe9158d6b645794ff6e7696f6407f86e47f725f0b9e97b3cad68a5878aefe176ec5b832ff2e258e6#npm:3.0.1"],\
           ["chokidar", null],\
           ["jsonc-parser", "npm:3.2.1"],\
           ["picomatch", "npm:4.0.2"],\
-          ["rxjs", "npm:7.8.1"],\
-          ["source-map", "npm:0.7.4"]\
-        ],\
-        "packagePeers": [\
-          "@types/chokidar",\
-          "chokidar"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:cf1c70de3b1f744b9e47b879df786489817849e8ed9cde90cf7edb5ebb1727fcb31ccad4fe8b8e965b83eb11992328859f03c44acca3ca38d090a4d900b6027b#npm:17.3.2", {\
-        "packageLocation": "./.yarn/__virtual__/@angular-devkit-core-virtual-7c9877f793/0/cache/@angular-devkit-core-npm-17.3.2-7263512703-0362e94df2.zip/node_modules/@angular-devkit/core/",\
-        "packageDependencies": [\
-          ["@angular-devkit/core", "virtual:cf1c70de3b1f744b9e47b879df786489817849e8ed9cde90cf7edb5ebb1727fcb31ccad4fe8b8e965b83eb11992328859f03c44acca3ca38d090a4d900b6027b#npm:17.3.2"],\
-          ["@types/chokidar", null],\
-          ["ajv", "npm:8.12.0"],\
-          ["ajv-formats", "virtual:7c9877f793de4afd5ac50f09bf82aeb626d346e7971b55cd6f6ef78b0cb99b59d953734defbbced2826f46d2cc1cc86a7982945f99954a93b963fd6cfeab44d7#npm:2.1.1"],\
-          ["chokidar", null],\
-          ["jsonc-parser", "npm:3.2.1"],\
-          ["picomatch", "npm:4.0.1"],\
           ["rxjs", "npm:7.8.1"],\
           ["source-map", "npm:0.7.4"]\
         ],\
@@ -682,30 +630,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@angular-devkit/schematics", [\
-      ["npm:17.3.2", {\
-        "packageLocation": "./.yarn/cache/@angular-devkit-schematics-npm-17.3.2-cf1c70de3b-48c3828e54.zip/node_modules/@angular-devkit/schematics/",\
-        "packageDependencies": [\
-          ["@angular-devkit/schematics", "npm:17.3.2"],\
-          ["@angular-devkit/core", "virtual:cf1c70de3b1f744b9e47b879df786489817849e8ed9cde90cf7edb5ebb1727fcb31ccad4fe8b8e965b83eb11992328859f03c44acca3ca38d090a4d900b6027b#npm:17.3.2"],\
-          ["jsonc-parser", "npm:3.2.1"],\
-          ["magic-string", "npm:0.30.8"],\
-          ["ora", "npm:5.4.1"],\
-          ["rxjs", "npm:7.8.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:18.0.5", {\
-        "packageLocation": "./.yarn/cache/@angular-devkit-schematics-npm-18.0.5-4e80ef3d86-f34abf4ffc.zip/node_modules/@angular-devkit/schematics/",\
-        "packageDependencies": [\
-          ["@angular-devkit/schematics", "npm:18.0.5"],\
-          ["@angular-devkit/core", "virtual:4e80ef3d86e17da972b58835241949f09352454b35889b896c3e891f6afda0fac5a264cf0a7650a591f7320ff3c6d7226ae81cb26310f0b2f3154c73b15d8999#npm:18.0.5"],\
-          ["jsonc-parser", "npm:3.2.1"],\
-          ["magic-string", "npm:0.30.10"],\
-          ["ora", "npm:5.4.1"],\
-          ["rxjs", "npm:7.8.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:18.0.6", {\
         "packageLocation": "./.yarn/cache/@angular-devkit-schematics-npm-18.0.6-a4d30b16e2-deb49126af.zip/node_modules/@angular-devkit/schematics/",\
         "packageDependencies": [\
@@ -1670,8 +1594,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./schematics/schematics/",\
         "packageDependencies": [\
           ["@atls/schematics", "workspace:schematics/schematics"],\
-          ["@angular-devkit/core", "virtual:4e80ef3d86e17da972b58835241949f09352454b35889b896c3e891f6afda0fac5a264cf0a7650a591f7320ff3c6d7226ae81cb26310f0b2f3154c73b15d8999#npm:18.0.5"],\
-          ["@angular-devkit/schematics", "npm:18.0.5"],\
+          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
+          ["@angular-devkit/schematics", "npm:18.0.6"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
@@ -1688,8 +1612,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./schematics/schematics-utils/",\
         "packageDependencies": [\
           ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
-          ["@angular-devkit/core", "virtual:cf1c70de3b1f744b9e47b879df786489817849e8ed9cde90cf7edb5ebb1727fcb31ccad4fe8b8e965b83eb11992328859f03c44acca3ca38d090a4d900b6027b#npm:17.3.2"],\
-          ["@angular-devkit/schematics", "npm:17.3.2"],\
+          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
+          ["@angular-devkit/schematics", "npm:18.0.6"],\
           ["@types/js-yaml", "npm:4.0.9"],\
           ["@types/node", "npm:20.14.9"],\
           ["js-yaml", "npm:4.1.0"],\
@@ -8278,17 +8202,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:8.12.0", {\
-        "packageLocation": "./.yarn/cache/ajv-npm-8.12.0-3bf6e30741-b406f3b79b.zip/node_modules/ajv/",\
-        "packageDependencies": [\
-          ["ajv", "npm:8.12.0"],\
-          ["fast-deep-equal", "npm:3.1.3"],\
-          ["json-schema-traverse", "npm:1.0.0"],\
-          ["require-from-string", "npm:2.0.2"],\
-          ["uri-js", "npm:4.4.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:8.13.0", {\
         "packageLocation": "./.yarn/cache/ajv-npm-8.13.0-9ead80cc62-4ada268c9a.zip/node_modules/ajv/",\
         "packageDependencies": [\
@@ -8302,13 +8215,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["ajv-formats", [\
-      ["npm:2.1.1", {\
-        "packageLocation": "./.yarn/cache/ajv-formats-npm-2.1.1-3cec02eae9-70c263ded2.zip/node_modules/ajv-formats/",\
-        "packageDependencies": [\
-          ["ajv-formats", "npm:2.1.1"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["npm:3.0.1", {\
         "packageLocation": "./.yarn/cache/ajv-formats-npm-3.0.1-2662cf5b12-5679b9f9ce.zip/node_modules/ajv-formats/",\
         "packageDependencies": [\
@@ -8316,25 +8222,12 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:649e4733648b5c5e746c0bbb06dcc78c945eed0ada818c847afd46b9b3bd52be04d6d3374b4c6a732b93fbc895526468c11154cf6146a61cfc90c67e0c22a58a#npm:3.0.1", {\
-        "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-fea54cafed/0/cache/ajv-formats-npm-3.0.1-2662cf5b12-5679b9f9ce.zip/node_modules/ajv-formats/",\
+      ["virtual:208d04addb7156a6b534cf54bd36d010fb06adb9f79f04d3fe9158d6b645794ff6e7696f6407f86e47f725f0b9e97b3cad68a5878aefe176ec5b832ff2e258e6#npm:3.0.1", {\
+        "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-10f42d5ffb/0/cache/ajv-formats-npm-3.0.1-2662cf5b12-5679b9f9ce.zip/node_modules/ajv-formats/",\
         "packageDependencies": [\
-          ["ajv-formats", "virtual:649e4733648b5c5e746c0bbb06dcc78c945eed0ada818c847afd46b9b3bd52be04d6d3374b4c6a732b93fbc895526468c11154cf6146a61cfc90c67e0c22a58a#npm:3.0.1"],\
+          ["ajv-formats", "virtual:208d04addb7156a6b534cf54bd36d010fb06adb9f79f04d3fe9158d6b645794ff6e7696f6407f86e47f725f0b9e97b3cad68a5878aefe176ec5b832ff2e258e6#npm:3.0.1"],\
           ["@types/ajv", null],\
           ["ajv", "npm:8.13.0"]\
-        ],\
-        "packagePeers": [\
-          "@types/ajv",\
-          "ajv"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:7c9877f793de4afd5ac50f09bf82aeb626d346e7971b55cd6f6ef78b0cb99b59d953734defbbced2826f46d2cc1cc86a7982945f99954a93b963fd6cfeab44d7#npm:2.1.1", {\
-        "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-39141466ef/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-70c263ded2.zip/node_modules/ajv-formats/",\
-        "packageDependencies": [\
-          ["ajv-formats", "virtual:7c9877f793de4afd5ac50f09bf82aeb626d346e7971b55cd6f6ef78b0cb99b59d953734defbbced2826f46d2cc1cc86a7982945f99954a93b963fd6cfeab44d7#npm:2.1.1"],\
-          ["@types/ajv", null],\
-          ["ajv", "npm:8.12.0"]\
         ],\
         "packagePeers": [\
           "@types/ajv",\
@@ -14725,14 +14618,6 @@ const RAW_RUNTIME_STATE =
           ["@jridgewell/sourcemap-codec", "npm:1.4.15"]\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["npm:0.30.8", {\
-        "packageLocation": "./.yarn/cache/magic-string-npm-0.30.8-0378572eee-72ab63817a.zip/node_modules/magic-string/",\
-        "packageDependencies": [\
-          ["magic-string", "npm:0.30.8"],\
-          ["@jridgewell/sourcemap-codec", "npm:1.4.15"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["make-dir", [\
@@ -15823,13 +15708,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/picomatch-npm-2.3.1-c782cfd986-60c2595003.zip/node_modules/picomatch/",\
         "packageDependencies": [\
           ["picomatch", "npm:2.3.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:4.0.1", {\
-        "packageLocation": "./.yarn/cache/picomatch-npm-4.0.1-21ca88b704-d5005bb1b4.zip/node_modules/picomatch/",\
-        "packageDependencies": [\
-          ["picomatch", "npm:4.0.1"]\
         ],\
         "linkType": "HARD"\
       }],\
