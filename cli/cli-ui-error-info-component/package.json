@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-error-info-component",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
