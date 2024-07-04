@@ -11,8 +11,9 @@ import { LogRecord }       from '@atls/cli-ui-log-record-component'
 import { ServiceWorker }   from '@atls/code-service-worker'
 import { SpinnerProgress } from '@atls/yarn-run-utils'
 import { renderStatic }    from '@atls/cli-ui-renderer'
+import { AbstractServiceCommand } from './abstract-service.command.jsx'
 
-class ServiceDevCommand extends BaseCommand {
+class ServiceDevCommand extends AbstractServiceCommand {
   static paths = [['service', 'dev']]
 
   showWarnings = Option.Boolean('-w,--show-warnings', false)
@@ -33,31 +34,15 @@ class ServiceDevCommand extends BaseCommand {
           progress.start()
 
           try {
-            await new ServiceWorker(this.context.cwd).watch(this.context.cwd, (logRecord: any) => {
+            await new ServiceWorker(project.cwd).watch(this.context.cwd, (logRecord: any) => {
               progress.end()
 
-              renderStatic(<LogRecord name='webpack' {...logRecord} />, process.stdout.columns - 12)
-                .split('\n')
-                .forEach((line) => {
-                  if (logRecord.severityText === 'ERROR') {
-                    report.reportError(MessageName.UNNAMED, line)
-                  } else if (logRecord.severityText === 'WARN') {
-                    if (this.showWarnings) {
-                      report.reportWarning(MessageName.UNNAMED, line)
-                    }
-                  } else {
-                    report.reportInfo(MessageName.UNNAMED, line)
-                  }
-                })
+              this.renderLogRecord(logRecord, report)
             })
           } catch (error) {
             progress.end()
 
-            renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
-              .split('\n')
-              .forEach((line) => {
-                report.reportError(MessageName.UNNAMED, line)
-              })
+            this.renderLogRecord(error, report)
           }
         })
       }

@@ -28,7 +28,7 @@ export class StartServerPlugin {
     this.options = options
   }
 
-  apply = (compiler: webpack.Compiler): void => {
+  apply(compiler: webpack.Compiler): void  {
     compiler.hooks.afterEmit.tapAsync({ name: 'StartServerPlugin' }, this.afterEmit)
   }
 

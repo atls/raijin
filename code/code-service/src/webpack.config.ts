@@ -1,11 +1,11 @@
+import { readFile }                from 'node:fs/promises'
+import { ModuleTypes }             from './webpack.interfaces.js'
 import type { WebpackEnvironment } from './webpack.interfaces.js'
 
 import { writeFile }               from 'node:fs/promises'
 import { mkdtemp }                 from 'node:fs/promises'
 import { join }                    from 'node:path'
 import { tmpdir }                  from 'node:os'
-
-import Config                      from 'webpack-chain-5'
 
 import { webpack }                 from '@atls/code-runtime/webpack'
 import { tsLoaderPath }            from '@atls/code-runtime/webpack'
@@ -20,68 +20,101 @@ export class WebpackConfig {
 
   async build(
     environment: WebpackEnvironment = 'production',
-    plugins: Array<{
-      use: Config.PluginClass<webpack.WebpackPluginInstance> | webpack.WebpackPluginInstance
+    additionalPlugins: Array<{
+      use: webpack.WebpackPluginInstance
       args: Array<any>
       name: string
     }> = []
   ): Promise<webpack.Configuration> {
-    const config = new Config()
+    const configFile = join(await mkdtemp(join(tmpdir(), 'code-service-')), 'tsconfig.json')
 
-    await this.applyCommon(config, environment)
-    await this.applyPlugins(config, environment)
-    await this.applyModules(config)
+    await writeFile(configFile, '{"include":["**/*"]}')
 
-    plugins.forEach((plugin) => {
-      config.plugin(plugin.name).use(plugin.use, plugin.args)
-    })
+    const type = await this.getWorkspaceType()
 
-    return config.toConfig()
+    const webpackExternals = new WebpackExternals(this.cwd)
+    const externals = ['webpack/hot/poll?100', await webpackExternals.build()]
+
+    const plugins = this.createPlugins(environment, additionalPlugins)
+
+    return {
+      mode: environment,
+      bail: environment === 'production',
+      target: 'async-node',
+      optimization: { minimize: false },
+      experiments: {
+        outputModule: type === 'module',
+      },
+      plugins,
+      entry: {
+        index: join(this.cwd, 'src/index'),
+        ...(environment === 'development' && { hot: 'webpack/hot/poll?100'}),
+      },
+      node: { __dirname: false, __filename: false },
+      output: {
+        path: join(this.cwd, 'dist'),
+        filename: '[name].js',
+        library: { type },
+        chunkFormat: type,
+        module: type === 'module',
+      },
+      resolve: {
+        extensionAlias: { '.js': ['.tsx', '.ts', '.js'], '.jsx': ['.tsx', '.ts', '.js'], '.cjs': ['.cjs', '.cts'], '.mjs': ['.mjs', '.mts'] },
+        extensions: ['.tsx', '.ts', '.js'],
+        alias: {
+          'class-transformer/storage': 'class-transformer/cjs/storage',
+        }
+      },
+      externals,
+      externalsType: type === 'module' ? 'import' : 'commonjs',
+      externalsPresets: {
+        node: true,
+      },
+      devtool:
+        environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
+      module: {
+        rules: [
+          {
+            test: /(^.?|\.[^d]|[^.]d|[^.][^d])\.tsx?$/,
+            use: {
+              loader: tsLoaderPath,
+              options: {
+                transpileOnly: true,
+                experimentalWatchApi: true,
+                onlyCompileBundledFiles: true,
+                compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
+                context: this.cwd,
+                configFile,
+              }
+            },
+          },
+          { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
+          { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
+          { test: /\.node$/, use: nodeLoaderPath },
+        ],
+      },
+    }
   }
 
-  private async applyCommon(config: Config, environment: WebpackEnvironment): Promise<void> {
-    config
-      .mode(environment)
-      .bail(environment === 'production')
-      .target('async-node')
-      .optimization.minimize(false)
+  private async getWorkspaceType(): Promise<ModuleTypes> {
+    try {
+      const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+      const { type = 'commonjs' } = JSON.parse(content)
 
-    config.entry('index').add(join(this.cwd, 'src/index'))
-
-    if (environment === 'development') {
-      config.entry('hot').add('webpack/hot/poll?100')
+      return type
+    } catch {
+      return 'module'
     }
-
-    config.output.path(join(this.cwd, 'dist')).filename('[name].js')
-    config.output.chunkFormat('module')
-    config.output.module(true)
-
-    config.resolve.extensions.add('.tsx').add('.ts').add('.js')
-    config.resolve.extensionAlias
-      .set('.js', ['.js', '.ts'])
-      .set('.jsx', ['.jsx', '.tsx'])
-      .set('.cjs', ['.cjs', '.cts'])
-      .set('.mjs', ['.mjs', '.mts'])
-
-    config.resolve.alias.set('class-transformer/storage', 'class-transformer/cjs/storage')
-
-    config.externalsType('import')
-    config.externalsPresets({ node: true })
-    config.externals(['webpack/hot/poll?100', await new WebpackExternals(this.cwd).build()])
-
-    config.devtool(environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map')
-
-    config.experiments({ outputModule: true })
   }
 
-  private async applyPlugins(config: Config, environment: WebpackEnvironment): Promise<void> {
-    if (environment === 'development') {
-      config.plugin('hot').use(webpack.HotModuleReplacementPlugin)
-    }
-
-    config.plugin('ignore').use(webpack.IgnorePlugin, [
-      {
+  private createPlugins(environment: string, additionalPlugins: []) {
+    const plugins = [
+      new webpack.IgnorePlugin({
         checkResource: (resource: string): boolean => {
+          if (resource.endsWith('.js.map')) {
+            return true
+          }
+
           if (!LAZY_IMPORTS.includes(resource)) {
             return false
           }
@@ -96,33 +129,14 @@ export class WebpackConfig {
 
           return false
         },
-      },
-    ])
-  }
+      }),
+      ...additionalPlugins,
+    ]
 
-  private async applyModules(config: Config): Promise<void> {
-    const configFile = join(await mkdtemp(join(tmpdir(), 'code-service-')), 'tsconfig.json')
+    if (environment === 'development') {
+      plugins.push(new webpack.HotModuleReplacementPlugin())
+    }
 
-    await writeFile(configFile, '{"include":["**/*"]}')
-
-    config.module
-      .rule('ts')
-      .test(/.tsx?$/)
-      .use('ts')
-      .loader(tsLoaderPath)
-      .options({
-        transpileOnly: true,
-        experimentalWatchApi: true,
-        onlyCompileBundledFiles: true,
-        compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
-        context: this.cwd,
-        configFile,
-      })
-
-    config.module
-      .rule('node')
-      .test(/\.node$/)
-      .use('node')
-      .loader(nodeLoaderPath)
+    return plugins
   }
 }

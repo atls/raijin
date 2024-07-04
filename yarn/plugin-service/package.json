@@ -23,6 +23,7 @@
     "@atls/code-service-worker": "workspace:*",
     "@atls/yarn-pack-utils": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
+    "@monstrs/logger": "latest",
     "clipanion": "4.0.0-rc.3",
     "react": "18.3.1",
     "rimraf": "5.0.5"
