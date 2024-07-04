@@ -1,11 +1,12 @@
-import { Workspace }    from '@yarnpkg/core'
-import { Project }      from '@yarnpkg/core'
-import { Manifest }     from '@yarnpkg/core'
-import { Report }       from '@yarnpkg/core'
-import { PortablePath } from '@yarnpkg/fslib'
-import { ppath }        from '@yarnpkg/fslib'
-import { xfs }          from '@yarnpkg/fslib'
-import { packUtils }    from '@yarnpkg/plugin-pack'
+import type { Workspace }    from '@yarnpkg/core'
+import type { Project }      from '@yarnpkg/core'
+import type { PortablePath } from '@yarnpkg/fslib'
+
+import { Manifest }          from '@yarnpkg/core'
+import { Report }            from '@yarnpkg/core'
+import { ppath }             from '@yarnpkg/fslib'
+import { xfs }               from '@yarnpkg/fslib'
+import { packUtils }         from '@yarnpkg/plugin-pack'
 
 export const clearUnusedWorkspaces = (
   project: Project,

@@ -11,8 +11,9 @@ import { LogRecord }       from '@atls/cli-ui-log-record-component'
 import { ServiceWorker }   from '@atls/code-service-worker'
 import { SpinnerProgress } from '@atls/yarn-run-utils'
 import { renderStatic }    from '@atls/cli-ui-renderer'
+import { AbstractServiceCommand } from './abstract-service.command.jsx'
 
-class ServiceBuildCommand extends BaseCommand {
+class ServiceBuildCommand extends AbstractServiceCommand {
   static paths = [['service', 'build']]
 
   showWarnings = Option.Boolean('-w,--show-warnings', false)
@@ -34,38 +35,17 @@ class ServiceBuildCommand extends BaseCommand {
             progress.start()
 
             // @ts-expect-error any
-            const { errors, warnings } = await new ServiceWorker(this.context.cwd).run()
+            const result = await new ServiceWorker(project.cwd).run(this.context.cwd)
 
             progress.end()
 
-            if (this.showWarnings) {
-              warnings.forEach((warning: any) => {
-                renderStatic(
-                  <LogRecord name='webpack' body={warning} />,
-                  process.stdout.columns - 12
-                )
-                  .split('\n')
-                  .forEach((line) => {
-                    report.reportWarning(MessageName.UNNAMED, line)
-                  })
-              })
-            }
-
-            errors.forEach((error: any) => {
-              renderStatic(<LogRecord name='webpack' body={error} />, process.stdout.columns - 12)
-                .split('\n')
-                .forEach((line) => {
-                  report.reportError(MessageName.UNNAMED, line)
-                })
+            result.forEach((log) => {
+              this.renderLogRecord(log, report)
             })
           } catch (error) {
             progress.end()
 
-            renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
-              .split('\n')
-              .forEach((line) => {
-                report.reportError(MessageName.UNNAMED, line)
-              })
+            this.renderLogRecord(error, report)
           }
         })
       }

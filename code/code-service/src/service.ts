@@ -61,16 +61,10 @@ export class Service {
 
     return webpack(
       await config.build('development', [
-        {
-          name: 'start-server',
-          use: StartServerPlugin,
-          args: [
-            {
-              stdout: pass,
-              stderr: pass,
-            },
-          ],
-        },
+        new StartServerPlugin({
+          stdout: pass,
+          stderr: pass
+        })
       ])
     ).watch({}, (error, stats) => {
       if (error) {

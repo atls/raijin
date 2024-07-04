@@ -2469,6 +2469,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
+          ["@monstrs/logger", "npm:0.0.20"],\
           ["@types/react", "npm:18.3.3"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -2501,6 +2502,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
+          ["@monstrs/logger", "npm:0.0.20"],\
           ["@types/react", "npm:18.3.3"],\
           ["@yarnpkg/builder", "npm:4.1.1"],\
           ["@yarnpkg/cli", "virtual:abb47d597956a5c8c66e96ac6e3e7eba8895d88d11e6f9ac42318175447fee1ae5c0bac239e8158d00d3d7eceb3ad08c25221ce683f68bdac02b2880822d7cc3#npm:4.2.2"],\

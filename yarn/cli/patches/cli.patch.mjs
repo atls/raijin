@@ -12,6 +12,10 @@ const replacements = [
     from: ',_a=_typeModule(_typeModule),',
     to: ';var _a=_typeModule(_typeModule);',
   },
+  {
+    from: '_a = _typeModule(_typeModule),',
+    to: 'var _a = _typeModule(_typeModule);',
+  },
 ]
 
 const bundle = join(fileURLToPath(new URL('.', import.meta.url)), '../bundles/yarn.cjs')

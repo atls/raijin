@@ -1,3 +1,4 @@
+import type { Workspace }    from '@yarnpkg/core'
 import type { Cache }        from '@yarnpkg/core'
 import type { Project }      from '@yarnpkg/core'
 import type { Report }       from '@yarnpkg/core'
@@ -5,12 +6,10 @@ import type { Descriptor }   from '@yarnpkg/core'
 import type { Locator }      from '@yarnpkg/core'
 import type { PortablePath } from '@yarnpkg/fslib'
 
-import { Workspace }         from '@yarnpkg/core'
 import { Manifest }          from '@yarnpkg/core'
 import { structUtils }       from '@yarnpkg/core'
 import { xfs }               from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
-import { toFilename }        from '@yarnpkg/fslib'
 
 export const copyCacheMarkedFiles = async (
   project: Project,
@@ -52,7 +51,7 @@ export const copyPlugins = async (
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const pluginDir = ppath.join(toFilename('.yarn'), toFilename('plugins'))
+  const pluginDir = ppath.join('.yarn', 'plugins')
 
   if (await xfs.existsPromise(ppath.join(project.cwd, pluginDir))) {
     report.reportInfo(null, pluginDir)
@@ -136,14 +135,12 @@ export const copyYarnRelease = async (
   report: Report
 ): Promise<void> => {
   const src = project.configuration.get('yarnPath')
-  // @ts-expect-error any
-  const path = ppath.relative(project.cwd, src)
+  const path = ppath.relative(project.cwd, src!)
   const dest = ppath.join(destination, path)
 
   report.reportInfo(null, path)
 
-  // @ts-expect-error any
-  await xfs.copyPromise(dest, src, {
+  await xfs.copyPromise(dest, src!, {
     overwrite: true,
   })
 }
