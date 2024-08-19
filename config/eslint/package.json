@@ -18,24 +18,24 @@
   },
   "dependencies": {
     "@atls/config-prettier": "workspace:*",
-    "@next/eslint-plugin-next": "^13.4.8",
-    "@typescript-eslint/eslint-plugin": "^5.61.0",
-    "@typescript-eslint/parser": "^5.61.0",
-    "eslint": "^8.44.0",
-    "eslint-import-resolver-node": "^0.3.7",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-security": "^1.7.1",
-    "prettier": "^3.0.0",
-    "react": "^18.3.1"
+    "@next/eslint-plugin-next": "14.2.5",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "eslint": "8.57.0",
+    "eslint-import-resolver-node": "0.3.9",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-jsx-a11y": "6.9.0",
+    "eslint-plugin-n": "16.6.2",
+    "eslint-plugin-prettier": "5.2.1",
+    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-react-hooks": "4.6.2",
+    "eslint-plugin-security": "2.1.1",
+    "prettier": "3.3.3",
+    "react": "18.3.1"
   },
   "devDependencies": {
-    "@types/eslint": "^8.40.2",
-    "@types/node": "^20.14.9"
+    "@types/eslint": "8.56.10",
+    "@types/node": "22.4.1"
   },
   "peerDependenciesMeta": {
     "typescript": {

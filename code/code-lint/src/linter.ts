@@ -8,7 +8,6 @@ import { join }               from 'node:path'
 
 import { globby }             from 'globby'
 import ignorer                from 'ignore'
-import deepmerge              from 'deepmerge'
 
 import { Linter as ESLinter } from '@atls/code-runtime/eslint'
 import { eslintconfig }       from '@atls/code-runtime/eslint'
@@ -39,14 +38,16 @@ export class Linter {
 
   protected get config(): Array<ESLinter.FlatConfig> {
     if (!this.#config) {
-      this.#config = eslintconfig.map((config) =>
-        deepmerge(config, {
-          languageOptions: {
-            parserOptions: {
-              project: join(this.rootCwd, 'tsconfig.json'),
-            },
+      this.#config = eslintconfig.map((config) => ({
+        ...config,
+        languageOptions: {
+          ...(config.languageOptions || {}),
+          parserOptions: {
+            ...(config.languageOptions?.parserOptions || {}),
+            project: join(this.rootCwd, 'tsconfig.json'),
           },
-        }))
+        },
+      }))
     }
 
     return this.#config
@@ -88,11 +89,15 @@ export class Linter {
     files: Array<string> = [],
     options?: LintOptions
   ): Promise<Array<ESLint.LintResult>> {
-    return Promise.all(
-      files
-        .filter((file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0)
-        .map(async (filename) => this.lintFile(filename, options))
-    )
+    const results: Array<ESLint.LintResult> = []
+
+    for await (const file of files) {
+      if (this.ignore.filter([relative(this.cwd, file)]).length !== 0) {
+        results.push(await this.lintFile(file, options))
+      }
+    }
+
+    return results
   }
 
   async lintProject(options?: LintOptions): Promise<Array<ESLint.LintResult>> {
