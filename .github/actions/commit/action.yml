@@ -23,7 +23,7 @@ runs:
 
   steps:
     - name: Commit changes
-      uses: planetscale/ghcommit-action@v0.1.43
+      uses: planetscale/ghcommit-action@v0.1.44
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
