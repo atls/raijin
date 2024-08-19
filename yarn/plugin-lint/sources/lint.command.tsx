@@ -15,9 +15,11 @@ import { renderStatic }    from '@atls/cli-ui-renderer'
 class LintCommand extends BaseCommand {
   static paths = [['lint']]
 
+  fix = Option.Boolean('--fix')
+
   files: Array<string> = Option.Rest({ required: 0 })
 
-  async execute() {
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
@@ -33,7 +35,9 @@ class LintCommand extends BaseCommand {
           progress.start()
 
           try {
-            const results = await new LinterWorker(project.cwd).run(this.context.cwd, this.files)
+            const results = await new LinterWorker(project.cwd).run(this.context.cwd, this.files, {
+              fix: this.fix,
+            })
 
             progress.end()
 
@@ -42,7 +46,9 @@ class LintCommand extends BaseCommand {
               .forEach((result) => {
                 const output = renderStatic(<ESLintResult {...result} />)
 
-                output.split('\n').forEach((line) => report.reportError(MessageName.UNNAMED, line))
+                output.split('\n').forEach((line) => {
+                  report.reportError(MessageName.UNNAMED, line)
+                })
               })
           } catch (error: any) {
             progress.end()
