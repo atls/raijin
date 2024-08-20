@@ -990,13 +990,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-pack-utils@workspace:yarn/pack-utils"
   dependencies:
-    "@yarnpkg/cli": "npm:^4.2.2"
-    "@yarnpkg/core": "npm:^4.0.5"
-    "@yarnpkg/fslib": "npm:^2.10.4"
-    "@yarnpkg/plugin-pack": "npm:^4.0.0"
-    "@yarnpkg/plugin-patch": "npm:^3.2.5"
-    semver: "npm:^7.6.2"
-    tar-stream: "npm:^3.0.0"
+    "@types/semver": "npm:7.5.8"
+    "@yarnpkg/cli": "npm:4.4.0"
+    "@yarnpkg/core": "npm:4.1.2"
+    "@yarnpkg/fslib": "npm:3.1.0"
+    "@yarnpkg/plugin-pack": "npm:4.0.0"
+    "@yarnpkg/plugin-patch": "npm:4.0.1"
+    semver: "npm:7.6.3"
+    tar-stream: "npm:3.1.7"
   languageName: unknown
   linkType: soft
 
@@ -4502,7 +4503,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/semver@npm:^7.1.0, @types/semver@npm:^7.5.0":
+"@types/semver@npm:7.5.8, @types/semver@npm:^7.1.0, @types/semver@npm:^7.5.0":
   version: 7.5.8
   resolution: "@types/semver@npm:7.5.8"
   checksum: 10/3496808818ddb36deabfe4974fd343a78101fa242c4690044ccdc3b95dcf8785b494f5d628f2f47f38a702f8db9c53c67f47d7818f2be1b79f2efb09692e1178
@@ -5161,16 +5162,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/fslib@npm:^2.10.3, @yarnpkg/fslib@npm:^2.10.4":
-  version: 2.10.4
-  resolution: "@yarnpkg/fslib@npm:2.10.4"
-  dependencies:
-    "@yarnpkg/libzip": "npm:^2.3.0"
-    tslib: "npm:^1.13.0"
-  checksum: 10/c683b91a17138806f11db83af6e6aefd71f485570008effcd68cc39bf84e4243c0072c2a11d613c8289926bcd460e012b9476dd89e61018e21103bc3f42917ca
-  languageName: node
-  linkType: hard
-
 "@yarnpkg/libui@npm:3.0.0, @yarnpkg/libui@npm:^3.0.0":
   version: 3.0.0
   resolution: "@yarnpkg/libui@npm:3.0.0"
@@ -5193,16 +5184,6 @@ __metadata:
   peerDependencies:
     "@yarnpkg/fslib": ^3.1.0
   checksum: 10/d3113b362d24cea53a00afe30ca0a5589649317c25812251dd3dbc14d37779b20e00118f040dfa2fc3d9ab78f0341ed827ccc03cad859647f05eaf388a6f1890
-  languageName: node
-  linkType: hard
-
-"@yarnpkg/libzip@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "@yarnpkg/libzip@npm:2.3.0"
-  dependencies:
-    "@types/emscripten": "npm:^1.39.6"
-    tslib: "npm:^1.13.0"
-  checksum: 10/0eb147f39eab2830c29120d17e8bfba5aa15dedb940a7378070c67d4de08e9ba8d34068522e15e6b4db94ecaed4ad520e1e517588a36a348d1aa160bc36156ea
   languageName: node
   linkType: hard
 
@@ -5489,21 +5470,6 @@ __metadata:
     "@yarnpkg/cli": ^4.0.2
     "@yarnpkg/core": ^4.0.2
   checksum: 10/9dd326cc4c3859ea21ad4fd7678ed8f12bd0c360c5fb7b23a2f3c45e2c6127c0cf1420b95b80ceb9271c3a7aa05b59a2eb12d8f565d47264a0d32137ab0f9464
-  languageName: node
-  linkType: hard
-
-"@yarnpkg/plugin-patch@npm:^3.2.5":
-  version: 3.2.5
-  resolution: "@yarnpkg/plugin-patch@npm:3.2.5"
-  dependencies:
-    "@yarnpkg/fslib": "npm:^2.10.3"
-    "@yarnpkg/libzip": "npm:^2.3.0"
-    clipanion: "npm:3.2.0-rc.4"
-    tslib: "npm:^1.13.0"
-  peerDependencies:
-    "@yarnpkg/cli": ^3.7.0
-    "@yarnpkg/core": ^3.6.0
-  checksum: 10/df8234fe676b64434342c21be56bc76843d258132da5e78ccf537942b6cb31f2f25652528f201b8e96ac27ce80b45868ec0d178411eee28b5523fe581284e8d2
   languageName: node
   linkType: hard
 
@@ -6651,17 +6617,6 @@ __metadata:
   version: 3.0.0
   resolution: "cli-width@npm:3.0.0"
   checksum: 10/8730848b04fb189666ab037a35888d191c8f05b630b1d770b0b0e4c920b47bb5cc14bddf6b8ffe5bfc66cee97c8211d4d18e756c1ffcc75d7dbe7e1186cd7826
-  languageName: node
-  linkType: hard
-
-"clipanion@npm:3.2.0-rc.4":
-  version: 3.2.0-rc.4
-  resolution: "clipanion@npm:3.2.0-rc.4"
-  dependencies:
-    typanion: "npm:^3.3.1"
-  peerDependencies:
-    typanion: "*"
-  checksum: 10/1b28becb06fec9b2478d68b4aa0dad764a7a2f2d466cfa0bb68b74925c234c7fec955b720290bf1d84a59263785eede439d0bed7381a52b1fc1d9b1ef81670e5
   languageName: node
   linkType: hard
 
@@ -13115,7 +13070,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"semver@npm:*, semver@npm:7.6.3, semver@npm:^7.0.0, semver@npm:^7.1.2, semver@npm:^7.3.4, semver@npm:^7.3.5, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.0, semver@npm:^7.6.2":
+"semver@npm:*, semver@npm:7.6.3, semver@npm:^7.0.0, semver@npm:^7.1.2, semver@npm:^7.3.4, semver@npm:^7.3.5, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.0":
   version: 7.6.3
   resolution: "semver@npm:7.6.3"
   bin:
@@ -13833,6 +13788,17 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
+"tar-stream@npm:3.1.7, tar-stream@npm:^3.1.5":
+  version: 3.1.7
+  resolution: "tar-stream@npm:3.1.7"
+  dependencies:
+    b4a: "npm:^1.6.4"
+    fast-fifo: "npm:^1.2.0"
+    streamx: "npm:^2.15.0"
+  checksum: 10/b21a82705a72792544697c410451a4846af1f744176feb0ff11a7c3dd0896961552e3def5e1c9a6bbee4f0ae298b8252a1f4c9381e9f991553b9e4847976f05c
+  languageName: node
+  linkType: hard
+
 "tar-stream@npm:^2.0.1":
   version: 2.2.0
   resolution: "tar-stream@npm:2.2.0"
@@ -13843,17 +13809,6 @@ pem@dexus/pem:
     inherits: "npm:^2.0.3"
     readable-stream: "npm:^3.1.1"
   checksum: 10/1a52a51d240c118cbcd30f7368ea5e5baef1eac3e6b793fb1a41e6cd7319296c79c0264ccc5859f5294aa80f8f00b9239d519e627b9aade80038de6f966fec6a
-  languageName: node
-  linkType: hard
-
-"tar-stream@npm:^3.0.0, tar-stream@npm:^3.1.5":
-  version: 3.1.7
-  resolution: "tar-stream@npm:3.1.7"
-  dependencies:
-    b4a: "npm:^1.6.4"
-    fast-fifo: "npm:^1.2.0"
-    streamx: "npm:^2.15.0"
-  checksum: 10/b21a82705a72792544697c410451a4846af1f744176feb0ff11a7c3dd0896961552e3def5e1c9a6bbee4f0ae298b8252a1f4c9381e9f991553b9e4847976f05c
   languageName: node
   linkType: hard
 
@@ -14106,13 +14061,6 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.13.0":
-  version: 1.14.1
-  resolution: "tslib@npm:1.14.1"
-  checksum: 10/7dbf34e6f55c6492637adb81b555af5e3b4f9cc6b998fb440dac82d3b42bdc91560a35a5fb75e20e24a076c651438234da6743d139e4feabf0783f3cdfe1dddb
-  languageName: node
-  linkType: hard
-
 "tunnel@npm:^0.0.6":
   version: 0.0.6
   resolution: "tunnel@npm:0.0.6"
@@ -14120,7 +14068,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"typanion@npm:3.14.0, typanion@npm:^3.14.0, typanion@npm:^3.3.1, typanion@npm:^3.8.0":
+"typanion@npm:3.14.0, typanion@npm:^3.14.0, typanion@npm:^3.8.0":
   version: 3.14.0
   resolution: "typanion@npm:3.14.0"
   checksum: 10/5e88d9e6121ff0ec543f572152fdd1b70e9cca35406d79013ec8e08defa8ef96de5fec9e98da3afbd1eb4426b9e8e8fe423163d0b482e34a40103cab1ef29abd

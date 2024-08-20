@@ -1765,11 +1765,12 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/pack-utils/",\
         "packageDependencies": [\
           ["@atls/yarn-pack-utils", "workspace:yarn/pack-utils"],\
+          ["@types/semver", "npm:7.5.8"],\
           ["@yarnpkg/cli", "virtual:2648882e59a866eb9e673659ff7fe25024b0001421b490f0e22cd6210083f11133a2474394295c1eac5e7092bcfcde5ec787ae8196b302ddc238cb112c0b8035#npm:4.4.0"],\
           ["@yarnpkg/core", "npm:4.1.2"],\
-          ["@yarnpkg/fslib", "npm:2.10.4"],\
+          ["@yarnpkg/fslib", "npm:3.1.0"],\
           ["@yarnpkg/plugin-pack", "virtual:d95a8a1f3e8b517afb35651c68be734b4d0344d752b5fd3a0740bc8aa92b9ce4ea9430b5b74340ae39875632c0a4d1f6546a474377b7c5d66316c2ddd8e9fb3b#npm:4.0.0"],\
-          ["@yarnpkg/plugin-patch", "virtual:94a7577d6443f27f9c2124d632b9410afd563f79088c1c6b315e2bd505d59a80ad3b467e96bbd43f2bcffe9f65602b27f5b24e6fb83819466252b754d0740861#npm:3.2.5"],\
+          ["@yarnpkg/plugin-patch", "virtual:d95a8a1f3e8b517afb35651c68be734b4d0344d752b5fd3a0740bc8aa92b9ce4ea9430b5b74340ae39875632c0a4d1f6546a474377b7c5d66316c2ddd8e9fb3b#npm:4.0.1"],\
           ["semver", "npm:7.6.3"],\
           ["tar-stream", "npm:3.1.7"]\
         ],\
@@ -7814,15 +7815,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@yarnpkg/fslib", [\
-      ["npm:2.10.4", {\
-        "packageLocation": "./.yarn/cache/@yarnpkg-fslib-npm-2.10.4-183028824b-c683b91a17.zip/node_modules/@yarnpkg/fslib/",\
-        "packageDependencies": [\
-          ["@yarnpkg/fslib", "npm:2.10.4"],\
-          ["@yarnpkg/libzip", "npm:2.3.0"],\
-          ["tslib", "npm:1.14.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:3.1.0", {\
         "packageLocation": "./.yarn/cache/@yarnpkg-fslib-npm-3.1.0-821f4faf89-99537cff32.zip/node_modules/@yarnpkg/fslib/",\
         "packageDependencies": [\
@@ -7896,15 +7888,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@yarnpkg/libzip", [\
-      ["npm:2.3.0", {\
-        "packageLocation": "./.yarn/cache/@yarnpkg-libzip-npm-2.3.0-ea36e8470b-0eb147f39e.zip/node_modules/@yarnpkg/libzip/",\
-        "packageDependencies": [\
-          ["@yarnpkg/libzip", "npm:2.3.0"],\
-          ["@types/emscripten", "npm:1.39.10"],\
-          ["tslib", "npm:1.14.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:3.1.0", {\
         "packageLocation": "./.yarn/cache/@yarnpkg-libzip-npm-3.1.0-73edb40bfc-d3113b362d.zip/node_modules/@yarnpkg/libzip/",\
         "packageDependencies": [\
@@ -8834,13 +8817,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@yarnpkg/plugin-patch", [\
-      ["npm:3.2.5", {\
-        "packageLocation": "./.yarn/cache/@yarnpkg-plugin-patch-npm-3.2.5-d1782bb042-df8234fe67.zip/node_modules/@yarnpkg/plugin-patch/",\
-        "packageDependencies": [\
-          ["@yarnpkg/plugin-patch", "npm:3.2.5"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["npm:4.0.1", {\
         "packageLocation": "./.yarn/cache/@yarnpkg-plugin-patch-npm-4.0.1-ca1d5d6db7-9dd326cc4c.zip/node_modules/@yarnpkg/plugin-patch/",\
         "packageDependencies": [\
@@ -8860,27 +8836,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/libzip", "virtual:eb1af4e935c44961200e2fbd90f764021c5ee1503944ba311cc853ae04dda2f83d4528f4470ed93e9b377f611ca23b14f87abf92b2421b68b87276a95e34ad24#npm:3.1.0"],\
           ["clipanion", "virtual:79bd705dbf206d6bd5005d5f35924cece8938d35eed524c3106dd8d8c6d56228b3ffaf764b0b711713e3d2dfeba0155ac81f45b66f87f4323e61be254172e9b5#npm:4.0.0-rc.3"],\
           ["tslib", "npm:2.6.3"]\
-        ],\
-        "packagePeers": [\
-          "@types/yarnpkg__cli",\
-          "@types/yarnpkg__core",\
-          "@yarnpkg/cli",\
-          "@yarnpkg/core"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:94a7577d6443f27f9c2124d632b9410afd563f79088c1c6b315e2bd505d59a80ad3b467e96bbd43f2bcffe9f65602b27f5b24e6fb83819466252b754d0740861#npm:3.2.5", {\
-        "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-patch-virtual-da1d862058/0/cache/@yarnpkg-plugin-patch-npm-3.2.5-d1782bb042-df8234fe67.zip/node_modules/@yarnpkg/plugin-patch/",\
-        "packageDependencies": [\
-          ["@yarnpkg/plugin-patch", "virtual:94a7577d6443f27f9c2124d632b9410afd563f79088c1c6b315e2bd505d59a80ad3b467e96bbd43f2bcffe9f65602b27f5b24e6fb83819466252b754d0740861#npm:3.2.5"],\
-          ["@types/yarnpkg__cli", null],\
-          ["@types/yarnpkg__core", null],\
-          ["@yarnpkg/cli", "virtual:2648882e59a866eb9e673659ff7fe25024b0001421b490f0e22cd6210083f11133a2474394295c1eac5e7092bcfcde5ec787ae8196b302ddc238cb112c0b8035#npm:4.4.0"],\
-          ["@yarnpkg/core", "npm:4.1.2"],\
-          ["@yarnpkg/fslib", "npm:2.10.4"],\
-          ["@yarnpkg/libzip", "npm:2.3.0"],\
-          ["clipanion", "virtual:da1d862058ce91dfe10681a79020d8c85299ff68c9e09222ce0672bfac5ba13beeca0d65d6ef81f1522c4271f78c8457e37ca3dbac99ab844f8a48a8162bbf56#npm:3.2.0-rc.4"],\
-          ["tslib", "npm:1.14.1"]\
         ],\
         "packagePeers": [\
           "@types/yarnpkg__cli",\
@@ -10544,13 +10499,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["clipanion", [\
-      ["npm:3.2.0-rc.4", {\
-        "packageLocation": "./.yarn/cache/clipanion-npm-3.2.0-rc.4-8470d16306-1b28becb06.zip/node_modules/clipanion/",\
-        "packageDependencies": [\
-          ["clipanion", "npm:3.2.0-rc.4"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["npm:3.2.1", {\
         "packageLocation": "./.yarn/cache/clipanion-npm-3.2.1-fc9187f56c-fdc4d066e6.zip/node_modules/clipanion/",\
         "packageDependencies": [\
@@ -10581,18 +10529,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/clipanion-virtual-a05d028d3b/0/cache/clipanion-npm-4.0.0-rc.3-e62cc70585-31edbd69dc.zip/node_modules/clipanion/",\
         "packageDependencies": [\
           ["clipanion", "virtual:79bd705dbf206d6bd5005d5f35924cece8938d35eed524c3106dd8d8c6d56228b3ffaf764b0b711713e3d2dfeba0155ac81f45b66f87f4323e61be254172e9b5#npm:4.0.0-rc.3"],\
-          ["@types/typanion", null],\
-          ["typanion", "npm:3.14.0"]\
-        ],\
-        "packagePeers": [\
-          "@types/typanion"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:da1d862058ce91dfe10681a79020d8c85299ff68c9e09222ce0672bfac5ba13beeca0d65d6ef81f1522c4271f78c8457e37ca3dbac99ab844f8a48a8162bbf56#npm:3.2.0-rc.4", {\
-        "packageLocation": "./.yarn/__virtual__/clipanion-virtual-f80b22c12e/0/cache/clipanion-npm-3.2.0-rc.4-8470d16306-1b28becb06.zip/node_modules/clipanion/",\
-        "packageDependencies": [\
-          ["clipanion", "virtual:da1d862058ce91dfe10681a79020d8c85299ff68c9e09222ce0672bfac5ba13beeca0d65d6ef81f1522c4271f78c8457e37ca3dbac99ab844f8a48a8162bbf56#npm:3.2.0-rc.4"],\
           ["@types/typanion", null],\
           ["typanion", "npm:3.14.0"]\
         ],\
@@ -19070,13 +19006,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["tslib", [\
-      ["npm:1.14.1", {\
-        "packageLocation": "./.yarn/cache/tslib-npm-1.14.1-102499115e-7dbf34e6f5.zip/node_modules/tslib/",\
-        "packageDependencies": [\
-          ["tslib", "npm:1.14.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:2.6.3", {\
         "packageLocation": "./.yarn/cache/tslib-npm-2.6.3-0fd136b3be-52109bb681.zip/node_modules/tslib/",\
         "packageDependencies": [\
