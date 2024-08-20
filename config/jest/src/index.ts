@@ -1,7 +1,5 @@
 import { createRequire } from 'node:module'
 
-import tsconfig          from '@atls/config-typescript'
-
 const require = createRequire(import.meta.url)
 
 export const unit = {
@@ -15,6 +13,7 @@ export const unit = {
   },
   globals: {},
   transform: {
+    '\\.css\\.ts$': require.resolve('@vanilla-extract/jest-transform'),
     '^.+\\.[tj]sx?$': [
       require.resolve('@swc/jest'),
       {
@@ -56,6 +55,7 @@ export const integration = {
   },
   globals: {},
   transform: {
+    '\\.css\\.ts$': require.resolve('@vanilla-extract/jest-transform'),
     '^.+\\.[tj]sx?$': [
       require.resolve('@swc/jest'),
       {

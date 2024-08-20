@@ -63,8 +63,8 @@ export class Service {
       await config.build('development', [
         new StartServerPlugin({
           stdout: pass,
-          stderr: pass
-        })
+          stderr: pass,
+        }),
       ])
     ).watch({}, (error, stats) => {
       if (error) {

@@ -1,7 +1,6 @@
-import { readFile }                from 'node:fs/promises'
-import { ModuleTypes }             from './webpack.interfaces.js'
 import type { WebpackEnvironment } from './webpack.interfaces.js'
 
+import { readFile }                from 'node:fs/promises'
 import { writeFile }               from 'node:fs/promises'
 import { mkdtemp }                 from 'node:fs/promises'
 import { join }                    from 'node:path'
@@ -12,6 +11,7 @@ import { tsLoaderPath }            from '@atls/code-runtime/webpack'
 import { nodeLoaderPath }          from '@atls/code-runtime/webpack'
 import tsconfig                    from '@atls/config-typescript'
 
+import { ModuleTypes }             from './webpack.interfaces.js'
 import { WebpackExternals }        from './webpack.externals.js'
 import { LAZY_IMPORTS }            from './webpack.ignore.js'
 
@@ -48,7 +48,7 @@ export class WebpackConfig {
       plugins,
       entry: {
         index: join(this.cwd, 'src/index'),
-        ...(environment === 'development' && { hot: 'webpack/hot/poll?100'}),
+        ...(environment === 'development' && { hot: 'webpack/hot/poll?100' }),
       },
       node: { __dirname: false, __filename: false },
       output: {
@@ -59,19 +59,23 @@ export class WebpackConfig {
         module: type === 'module',
       },
       resolve: {
-        extensionAlias: { '.js': ['.tsx', '.ts', '.js'], '.jsx': ['.tsx', '.ts', '.js'], '.cjs': ['.cjs', '.cts'], '.mjs': ['.mjs', '.mts'] },
+        extensionAlias: {
+          '.js': ['.tsx', '.ts', '.js'],
+          '.jsx': ['.tsx', '.ts', '.js'],
+          '.cjs': ['.cjs', '.cts'],
+          '.mjs': ['.mjs', '.mts'],
+        },
         extensions: ['.tsx', '.ts', '.js'],
         alias: {
           'class-transformer/storage': 'class-transformer/cjs/storage',
-        }
+        },
       },
       externals,
       externalsType: type === 'module' ? 'import' : 'commonjs',
       externalsPresets: {
         node: true,
       },
-      devtool:
-        environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
+      devtool: environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
       module: {
         rules: [
           {
@@ -85,7 +89,7 @@ export class WebpackConfig {
                 compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
                 context: this.cwd,
                 configFile,
-              }
+              },
             },
           },
           { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
