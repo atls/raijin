@@ -6,7 +6,7 @@ import { read }         from '@atls/code-commit'
 class CommitMessageLintCommand extends BaseCommand {
   static paths = [['commit', 'message', 'lint']]
 
-  async execute() {
+  async execute(): Promise<number> {
     const linter = new CommitLinter()
 
     const messages = await read({ edit: true })

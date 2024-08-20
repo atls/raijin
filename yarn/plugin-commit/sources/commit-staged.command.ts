@@ -1,6 +1,5 @@
 import { BaseCommand } from '@yarnpkg/cli'
 import { Option }      from 'clipanion'
-// @ts-expect-error any
 import lintStaged      from 'lint-staged'
 
 const config = {
@@ -15,7 +14,7 @@ export class CommitStagedCommand extends BaseCommand {
 
   args: Array<string> = Option.Rest({ required: 0 })
 
-  async execute() {
+  async execute(): Promise<number> {
     try {
       const passed = await lintStaged({
         config,

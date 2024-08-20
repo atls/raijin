@@ -25,14 +25,14 @@
     "force-stdin-tty": "0.0.1",
     "ink": "3.2.0",
     "lint-staged": "patch:lint-staged@npm%3A13.3.0#~/.yarn/patches/lint-staged-npm-13.3.0-f729900eb4.patch",
-    "react": "^18.3.1",
+    "react": "18.3.1",
     "word-wrap": "1.2.5"
   },
   "devDependencies": {
-    "@types/react": "^18.3.3",
-    "@yarnpkg/builder": "4.1.1",
-    "@yarnpkg/cli": "4.2.2",
-    "@yarnpkg/core": "4.0.5",
+    "@types/react": "18.3.3",
+    "@yarnpkg/builder": "4.1.2",
+    "@yarnpkg/cli": "4.4.0",
+    "@yarnpkg/core": "4.1.2",
     "@yarnpkg/fslib": "3.1.0"
   },
   "peerDependencies": {
@@ -42,7 +42,15 @@
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

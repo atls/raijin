@@ -18,9 +18,9 @@ const RequestCommitMessageSubmit = ({
   commit,
   useSubmit,
 }: {
-  commit: any
-  useSubmit: Function
-}) => {
+  commit: CommitProperties
+  useSubmit: (commit: CommitProperties) => void
+}): null => {
   const { stdin } = useStdin()
 
   useSubmit(commit)
@@ -36,7 +36,6 @@ const RequestCommitMessageApp: SubmitInjectedComponent<CommitProperties> = ({ us
   const [commit, setCommit] = useState()
 
   if (!commit) {
-    // @ts-expect-error any
     return <RequestCommitMessage onSubmit={setCommit} />
   }
 
@@ -48,7 +47,7 @@ export class CommitMessageCommand extends BaseCommand {
 
   args: Array<string> = Option.Rest({ required: 0 })
 
-  async execute() {
+  async execute(): Promise<number> {
     const [commitMessageFile, source] = this.args
 
     if (source) {
@@ -62,10 +61,10 @@ export class CommitMessageCommand extends BaseCommand {
     const overwroteStdin = forceStdinTty()
 
     const commit: CommitProperties | undefined = await renderForm(
-      RequestCommitMessageApp,
+      RequestCommitMessageApp as SubmitInjectedComponent<CommitProperties>,
       {},
       {
-        stdin: this.context.stdin,
+        stdin: process.stdin,
         stdout: this.context.stdout,
         stderr: this.context.stderr,
       }
@@ -82,7 +81,7 @@ export class CommitMessageCommand extends BaseCommand {
     return commit ? 0 : 1
   }
 
-  private formatCommit(commit: CommitProperties) {
+  private formatCommit(commit: CommitProperties): string {
     const wrapOptions = {
       trim: true,
       cut: false,
