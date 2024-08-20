@@ -17,20 +17,20 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@commitlint/format": "^17.4.4",
-    "@commitlint/is-ignored": "^17.6.6",
-    "@commitlint/lint": "^17.6.6",
-    "@commitlint/load": "^17.5.0",
-    "@commitlint/read": "^17.5.1",
-    "@commitlint/rules": "^17.6.5",
-    "@commitlint/types": "^17.4.4",
-    "conventional-changelog-angular": "^6.0.0",
-    "conventional-commits-parser": "^4.0.0"
+    "@commitlint/format": "19.3.0",
+    "@commitlint/is-ignored": "19.2.2",
+    "@commitlint/lint": "19.2.2",
+    "@commitlint/load": "19.4.0",
+    "@commitlint/read": "19.4.0",
+    "@commitlint/rules": "19.0.3",
+    "@commitlint/types": "19.0.3",
+    "conventional-changelog-angular": "7.0.0",
+    "conventional-commits-parser": "5.0.0"
   },
   "devDependencies": {
-    "@jest/globals": "^29.6.1",
-    "@types/conventional-commits-parser": "^3.0.3",
-    "@types/node": "^20.14.9"
+    "@jest/globals": "29.7.0",
+    "@types/conventional-commits-parser": "5.0.0",
+    "@types/node": "22.4.1"
   },
   "publishConfig": {
     "access": "public",

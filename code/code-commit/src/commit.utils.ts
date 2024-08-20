@@ -1,5 +1,3 @@
-import readPkg from '@commitlint/read'
-
-const read = readPkg.default || readPkg
+import read from '@commitlint/read'
 
 export { read }
