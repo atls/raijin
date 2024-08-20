@@ -1,14 +1,16 @@
-import { BaseCommand }   from '@yarnpkg/cli'
-import { StreamReport }  from '@yarnpkg/core'
-import { Configuration } from '@yarnpkg/core'
-import { MessageName }   from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { execUtils }     from '@yarnpkg/core'
+import type { PortablePath } from '@yarnpkg/fslib'
+
+import { BaseCommand }       from '@yarnpkg/cli'
+import { StreamReport }      from '@yarnpkg/core'
+import { Configuration }     from '@yarnpkg/core'
+import { MessageName }       from '@yarnpkg/core'
+import { Project }           from '@yarnpkg/core'
+import { execUtils }         from '@yarnpkg/core'
 
 class ChecksRunCommand extends BaseCommand {
   static paths = [['checks', 'run']]
 
-  async execute() {
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
@@ -32,16 +34,24 @@ class ChecksRunCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
-  private async runCheck(cwd: string, args: Array<string>, report: StreamReport) {
+  private async runCheck(
+    cwd: PortablePath,
+    args: Array<string>,
+    report: StreamReport
+  ): Promise<void> {
     try {
       const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...args], {
-        // @ts-expect-error any
         cwd,
       })
 
       this.context.stdout.write(stdout || stderr)
-    } catch (error: any) {
-      report.reportError(MessageName.UNNAMED, `Run check ${args.join(' ')} error: ${error.message}`)
+    } catch (error) {
+      report.reportError(
+        MessageName.UNNAMED,
+        `Run check ${args.join(' ')} error: ${
+          error instanceof Error ? error.message : (error as string)
+        }`
+      )
     }
   }
 }

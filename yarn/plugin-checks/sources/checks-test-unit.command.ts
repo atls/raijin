@@ -10,7 +10,7 @@ import { GitHubChecks }              from './github.checks.js'
 class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static paths = [['checks', 'test', 'unit']]
 
-  async execute() {
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
@@ -22,11 +22,10 @@ class ChecksTestUnitCommand extends AbstractChecksTestCommand {
       async () => {
         const checks = new GitHubChecks('Test:Unit')
 
-        // @ts-expect-error any
         const { id: checkId } = await checks.start()
 
         try {
-          const results = await new TesterWorker(project.cwd).run(this.context.cwd, 'unit')
+          const results = await new TesterWorker(project.cwd).run(project.cwd, 'unit')
 
           const annotations = this.formatResults(results, project.cwd)
 
@@ -39,7 +38,7 @@ class ChecksTestUnitCommand extends AbstractChecksTestCommand {
         } catch (error) {
           await checks.failure({
             title: 'Test:Unit run failed',
-            summary: (error as any).message,
+            summary: error instanceof Error ? error.message : (error as string),
           })
         }
       }

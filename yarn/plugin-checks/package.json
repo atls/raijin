@@ -38,12 +38,12 @@
   "devDependencies": {
     "@atls/code-runtime": "workspace:*",
     "@octokit/types": "12",
-    "@types/babel__code-frame": "^7.0.6",
-    "@types/node": "20.14.9",
-    "@types/react": "^18.3.3",
-    "@yarnpkg/builder": "4.1.1",
-    "@yarnpkg/cli": "4.2.2",
-    "@yarnpkg/core": "4.0.5",
+    "@types/babel__code-frame": "7.0.6",
+    "@types/node": "22.4.1",
+    "@types/react": "18.3.3",
+    "@yarnpkg/builder": "4.1.2",
+    "@yarnpkg/cli": "4.4.0",
+    "@yarnpkg/core": "4.1.2",
     "@yarnpkg/fslib": "3.1.0"
   },
   "peerDependencies": {
@@ -53,7 +53,15 @@
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

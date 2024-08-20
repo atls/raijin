@@ -1050,12 +1050,12 @@ __metadata:
     "@babel/code-frame": "npm:7.24.2"
     "@jest/test-result": "npm:29.7.0"
     "@octokit/types": "npm:12"
-    "@types/babel__code-frame": "npm:^7.0.6"
-    "@types/node": "npm:20.14.9"
-    "@types/react": "npm:^18.3.3"
-    "@yarnpkg/builder": "npm:4.1.1"
-    "@yarnpkg/cli": "npm:4.2.2"
-    "@yarnpkg/core": "npm:4.0.5"
+    "@types/babel__code-frame": "npm:7.0.6"
+    "@types/node": "npm:22.4.1"
+    "@types/react": "npm:18.3.3"
+    "@yarnpkg/builder": "npm:4.1.2"
+    "@yarnpkg/cli": "npm:4.4.0"
+    "@yarnpkg/core": "npm:4.1.2"
     "@yarnpkg/fslib": "npm:3.1.0"
     clipanion: "npm:4.0.0-rc.3"
     react: "npm:18.3.1"
@@ -4170,7 +4170,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__code-frame@npm:7.0.6, @types/babel__code-frame@npm:^7.0.6":
+"@types/babel__code-frame@npm:7.0.6":
   version: 7.0.6
   resolution: "@types/babel__code-frame@npm:7.0.6"
   checksum: 10/5325ab85d95e58fe84279757788ddb0de68bfd6814bc636e868f9ff7b5229915873f28847c4baf48fd3a4a460a73b4ea87bc9e1d78a3a5a60cfc7ca627a722c5
