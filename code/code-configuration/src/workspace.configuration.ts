@@ -1,7 +1,7 @@
 import type { WorkspaceConfigurationOptions } from './configuration.interfaces.js'
 
-import { join }                               from 'node:path'
 import { readFile }                           from 'node:fs/promises'
+import { join }                               from 'node:path'
 
 export class WorkspaceConfiguration {
   static async find(cwd: string): Promise<WorkspaceConfigurationOptions> {

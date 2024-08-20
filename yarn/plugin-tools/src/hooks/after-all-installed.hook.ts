@@ -1,8 +1,8 @@
 import type { Project }          from '@yarnpkg/core'
 import type { SpawnSyncReturns } from 'node:child_process'
 
-import { platform }              from 'node:os'
 import { spawnSync }             from 'node:child_process'
+import { platform }              from 'node:os'
 
 import { ppath }                 from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'

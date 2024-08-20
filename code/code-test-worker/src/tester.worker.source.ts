@@ -1,7 +1,7 @@
+import { exit }       from 'node:process'
+import { setTimeout } from 'node:timers/promises'
 import { parentPort } from 'node:worker_threads'
 import { workerData } from 'node:worker_threads'
-import { setTimeout } from 'node:timers/promises'
-import { exit }       from 'node:process'
 
 import { stringify }  from 'flatted'
 import { parse }      from 'flatted'

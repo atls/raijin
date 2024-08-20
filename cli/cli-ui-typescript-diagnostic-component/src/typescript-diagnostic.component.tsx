@@ -1,6 +1,6 @@
+import type { FC }                       from 'react'
 import type { DiagnosticMessageChain }   from 'typescript'
 import type { SourceFile }               from 'typescript'
-import type { FC }                       from 'react'
 
 import { isAbsolute }                    from 'node:path'
 import { relative }                      from 'node:path'

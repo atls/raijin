@@ -3,17 +3,17 @@ import type { WebpackEnvironment } from './webpack.interfaces.js'
 import { readFile }                from 'node:fs/promises'
 import { writeFile }               from 'node:fs/promises'
 import { mkdtemp }                 from 'node:fs/promises'
-import { join }                    from 'node:path'
 import { tmpdir }                  from 'node:os'
+import { join }                    from 'node:path'
 
 import { webpack }                 from '@atls/code-runtime/webpack'
 import { tsLoaderPath }            from '@atls/code-runtime/webpack'
 import { nodeLoaderPath }          from '@atls/code-runtime/webpack'
 import tsconfig                    from '@atls/config-typescript'
 
-import { ModuleTypes }             from './webpack.interfaces.js'
 import { WebpackExternals }        from './webpack.externals.js'
 import { LAZY_IMPORTS }            from './webpack.ignore.js'
+import { ModuleTypes }             from './webpack.interfaces.js'
 
 export class WebpackConfig {
   constructor(private readonly cwd: string) {}
