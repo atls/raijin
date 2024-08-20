@@ -1,18 +1,18 @@
 import type { StackFrame } from '@monstrs/stack-trace'
-import type { FC }        from 'react'
+import type { FC }         from 'react'
 
 // @ts-expect-error any
-import { parse }          from '@atls/stack-trace'
-import { Text }           from 'ink'
-import { Box }            from 'ink'
-import { Spacer }         from 'ink'
-import { nanoid }         from 'nanoid'
-import { useMemo }        from 'react'
-import React              from 'react'
+import { parse }           from '@atls/stack-trace'
+import { Text }            from 'ink'
+import { Box }             from 'ink'
+import { Spacer }          from 'ink'
+import { nanoid }          from 'nanoid'
+import { useMemo }         from 'react'
+import React               from 'react'
 
-import { SourcePreview }  from '@atls/cli-ui-source-component'
+import { SourcePreview }   from '@atls/cli-ui-source-component'
 
-import { getFrameSource } from './utils.js'
+import { getFrameSource }  from './utils.js'
 
 export interface StackTraceProps {
   children: string
