@@ -2,10 +2,9 @@
 
 # Atlantis Toolset
 
-[//]: # (VERSIONS)
+[//]: # 'VERSIONS'
 
-[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/code-service)  [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/schematics)
-
+[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/code-service) [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/schematics)
 
 Monorepo with a set of tools and utilities, developed by our team, to ease our day-to-day work on projects.
 
