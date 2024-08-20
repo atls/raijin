@@ -20,11 +20,11 @@
   },
   "dependencies": {
     "@atls/code-runtime": "workspace:*",
-    "@jest/test-result": "^29.6.1",
-    "@jest/types": "^29.6.1"
+    "@jest/test-result": "29.7.0",
+    "@jest/types": "29.6.3"
   },
   "devDependencies": {
-    "@types/node": "^20.14.9"
+    "@types/node": "22.4.1"
   },
   "peerDependenciesMeta": {
     "jest": {
