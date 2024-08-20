@@ -2,6 +2,11 @@
 
 # Atlantis Toolset
 
+[//]: # (VERSIONS)
+
+[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/code-service)  [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/schematics)
+
+
 Monorepo with a set of tools and utilities, developed by our team, to ease our day-to-day work on projects.
 
 Tools are designed to be used in projects with Javascript and Typescript and are designed to increase developer performance as well as unify development experience.
