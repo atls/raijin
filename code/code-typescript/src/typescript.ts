@@ -27,9 +27,9 @@ class TypeScript {
     override: Partial<ts.CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<ts.Diagnostic>> {
-    const projectIgnorePatterns = await this.getProjectIgnorePatterns()
+    const projectIgnorePatterns = this.getProjectIgnorePatterns()
 
-    const skipLibCheck = await this.getLibCheckOption()
+    const skipLibCheck = this.getLibCheckOption()
 
     const config = deepmerge(tsconfig, { compilerOptions: override, skipLibCheck }, {
       compilerOptions: { rootDir: this.cwd },
@@ -70,6 +70,10 @@ class TypeScript {
       )
       .filter(
         (diagnostic) =>
+          !(diagnostic.code === 6133 && diagnostic.file?.fileName.includes('/@yarnpkg/libui/'))
+      )
+      .filter(
+        (diagnostic) =>
           !(
             [2315, 2411, 2304, 7006, 7016].includes(diagnostic.code) &&
             diagnostic.file?.fileName.includes('/@strapi/')
@@ -80,6 +84,13 @@ class TypeScript {
           !(
             [2688, 2307, 2503].includes(diagnostic.code) &&
             diagnostic.file?.fileName.includes('/pkg-tests-core/')
+          )
+      )
+      .filter(
+        (diagnostics) =>
+          !(
+            [2307].includes(diagnostics.code) &&
+            diagnostics.file?.fileName.includes('/@nestjs/testing/')
           )
       )
   }
