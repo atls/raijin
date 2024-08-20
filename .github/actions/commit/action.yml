@@ -22,6 +22,10 @@ runs:
   using: composite
 
   steps:
+    - name: Print changed files
+      run: |
+        echo $(git status)
+
     - name: Commit changes
       uses: planetscale/ghcommit-action@v0.1.44
       env:
