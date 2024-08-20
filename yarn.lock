@@ -685,15 +685,15 @@ __metadata:
   dependencies:
     "@atls/code-typescript": "workspace:*"
     "@atls/code-worker-utils": "workspace:*"
-    "@rollup/plugin-commonjs": "npm:^24.1.0"
-    "@rollup/plugin-json": "npm:^6.0.0"
-    "@rollup/plugin-node-resolve": "npm:^15.1.0"
-    esbuild: "npm:^0.17.19"
-    flatted: "npm:^3.2.7"
-    rollup: "npm:^3.26.2"
-    rollup-plugin-esbuild: "npm:^5.0.0"
-    rollup-plugin-terser: "npm:^7.0.2"
-    typescript: "npm:5.2.2"
+    "@rollup/plugin-commonjs": "npm:25.0.8"
+    "@rollup/plugin-json": "npm:6.1.0"
+    "@rollup/plugin-node-resolve": "npm:15.2.3"
+    esbuild: "npm:^0.19.9"
+    flatted: "npm:3.3.1"
+    rollup: "npm:3.29.4"
+    rollup-plugin-esbuild: "npm:5.0.0"
+    rollup-plugin-terser: "npm:7.0.2"
+    typescript: "npm:5.4.2"
   languageName: unknown
   linkType: soft
 
@@ -704,9 +704,9 @@ __metadata:
     "@atls/code-runtime": "workspace:*"
     "@atls/config-typescript": "workspace:*"
     "@types/deepmerge": "npm:2.2.0"
-    "@types/node": "npm:^20.14.9"
-    deepmerge: "npm:^4.3.1"
-    typescript: "npm:5.2.2"
+    "@types/node": "npm:22.4.1"
+    deepmerge: "npm:4.3.1"
+    typescript: "npm:5.4.2"
   languageName: unknown
   linkType: soft
 
@@ -3651,7 +3651,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-json@npm:6.1.0, @rollup/plugin-json@npm:^6.0.0":
+"@rollup/plugin-json@npm:6.1.0":
   version: 6.1.0
   resolution: "@rollup/plugin-json@npm:6.1.0"
   dependencies:
@@ -7231,7 +7231,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge@npm:*, deepmerge@npm:^4.2.2, deepmerge@npm:^4.3.1":
+"deepmerge@npm:*, deepmerge@npm:4.3.1, deepmerge@npm:^4.2.2, deepmerge@npm:^4.3.1":
   version: 4.3.1
   resolution: "deepmerge@npm:4.3.1"
   checksum: 10/058d9e1b0ff1a154468bf3837aea436abcfea1ba1d165ddaaf48ca93765fdd01a30d33c36173da8fbbed951dd0a267602bc782fe288b0fc4b7e1e7091afc4529
@@ -8913,24 +8913,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flatted@npm:3.2.7":
-  version: 3.2.7
-  resolution: "flatted@npm:3.2.7"
-  checksum: 10/427633049d55bdb80201c68f7eb1cbd533e03eac541f97d3aecab8c5526f12a20ccecaeede08b57503e772c769e7f8680b37e8d482d1e5f8d7e2194687f9ea35
-  languageName: node
-  linkType: hard
-
 "flatted@npm:3.3.1, flatted@npm:^3.2.9":
   version: 3.3.1
   resolution: "flatted@npm:3.3.1"
   checksum: 10/7b8376061d5be6e0d3658bbab8bde587647f68797cf6bfeae9dea0e5137d9f27547ab92aaff3512dd9d1299086a6d61be98e9d48a56d17531b634f77faadbc49
-  languageName: node
-  linkType: hard
-
-"flatted@patch:flatted@npm%3A3.2.7#./.yarn/patches/flatted-npm-3.2.7-0da10b7c56.patch::locator=tools%40workspace%3A.":
-  version: 3.2.7
-  resolution: "flatted@patch:flatted@npm%3A3.2.7#./.yarn/patches/flatted-npm-3.2.7-0da10b7c56.patch::version=3.2.7&hash=1c858b&locator=tools%40workspace%3A."
-  checksum: 10/3d0504412ec951690c17a236152a25d335f65b9717c2406ec293aca19e06ba75a848599bb82b57e33ed39ea24fc6f0cd60a04123d571335d7c0d245a17e15e2a
   languageName: node
   linkType: hard
 
@@ -12939,7 +12925,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"rollup-plugin-terser@npm:7.0.2, rollup-plugin-terser@npm:^7.0.2":
+"rollup-plugin-terser@npm:7.0.2":
   version: 7.0.2
   resolution: "rollup-plugin-terser@npm:7.0.2"
   dependencies:
