@@ -22,18 +22,17 @@
     "@atls/code-runtime": "workspace:*",
     "@atls/config-typescript": "workspace:*",
     "@atls/webpack-start-server-plugin": "workspace:*",
-    "@yarnpkg/cli": "^4.2.2",
-    "@yarnpkg/core": "^4.0.5",
-    "typescript": "5.2.2",
-    "webpack-chain-5": "^8.0.2"
+    "@yarnpkg/cli": "4.4.0",
+    "@yarnpkg/core": "4.1.2",
+    "typescript": "5.4.2"
   },
   "devDependencies": {
-    "@jest/globals": "^29.6.1",
+    "@jest/globals": "29.7.0",
     "@monstrs/logger": "latest",
-    "@types/node": "^20.14.9",
-    "@types/webpack": "^5.28.1",
-    "@yarnpkg/fslib": "^3.1.0",
-    "package-json-type": "^1.0.3"
+    "@types/node": "22.4.1",
+    "@types/webpack": "5.28.5",
+    "@yarnpkg/fslib": "3.1.0",
+    "package-json-type": "1.0.3"
   },
   "publishConfig": {
     "access": "public",
