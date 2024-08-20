@@ -13,6 +13,11 @@ const replacements = [
     to: ';var _a=_typeModule(_typeModule);',
   },
   {
+    from: ',q=Y1t.simplifyRanges(w),',
+    to: ';let q; try{q=Y1t.simplifyRanges(w)}catch{};let ',
+  },
+  /* Development builds with source maps */
+  {
     from: '_a = _typeModule(_typeModule),',
     to: 'var _a = _typeModule(_typeModule);',
   },
