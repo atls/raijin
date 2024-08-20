@@ -1573,9 +1573,9 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./prettier/plugin/",\
         "packageDependencies": [\
           ["@atls/prettier-plugin", "workspace:prettier/plugin"],\
-          ["@babel/types", "npm:7.24.6"],\
-          ["@types/node", "npm:20.16.1"],\
-          ["@types/prettier", "npm:2.7.3"],\
+          ["@babel/types", "npm:7.25.2"],\
+          ["@types/node", "npm:22.4.1"],\
+          ["@types/prettier", "npm:3.0.0"],\
           ["globby", "npm:13.2.2"],\
           ["import-sort", "npm:6.0.0"],\
           ["import-sort-parser", "npm:6.0.0"],\
@@ -7178,6 +7178,14 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-prettier-npm-2.7.3-497316f37c-cda84c19ac.zip/node_modules/@types/prettier/",\
         "packageDependencies": [\
           ["@types/prettier", "npm:2.7.3"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:3.0.0", {\
+        "packageLocation": "./.yarn/cache/@types-prettier-npm-3.0.0-6c770110eb-a2a512d304.zip/node_modules/@types/prettier/",\
+        "packageDependencies": [\
+          ["@types/prettier", "npm:3.0.0"],\
+          ["prettier", "npm:3.3.3"]\
         ],\
         "linkType": "HARD"\
       }]\

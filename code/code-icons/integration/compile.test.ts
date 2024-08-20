@@ -1,7 +1,7 @@
-import { join }          from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { readFile }      from 'node:fs/promises'
 import { rmdir }         from 'node:fs/promises'
+import { join }          from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { afterAll }      from '@jest/globals'
 import { describe }      from '@jest/globals'

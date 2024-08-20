@@ -1,6 +1,6 @@
+import { BaseCommand }   from '@yarnpkg/cli'
 import { Configuration } from '@yarnpkg/core'
 import { Project }       from '@yarnpkg/core'
-import { BaseCommand }   from '@yarnpkg/cli'
 import { StreamReport }  from '@yarnpkg/core'
 import { structUtils }   from '@yarnpkg/core'
 import semver            from 'semver'

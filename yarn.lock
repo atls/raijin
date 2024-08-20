@@ -813,15 +813,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/prettier-plugin@workspace:prettier/plugin"
   dependencies:
-    "@babel/types": "npm:^7.22.5"
-    "@types/node": "npm:^20.14.9"
-    "@types/prettier": "npm:^2.7.3"
-    globby: "npm:^13.2.2"
-    import-sort: "npm:^6.0.0"
-    import-sort-parser: "npm:^6.0.0"
-    import-sort-parser-typescript: "npm:^6.0.0"
-    import-sort-style: "npm:^6.0.0"
-    prettier: "npm:^3.0.0"
+    "@babel/types": "npm:7.25.2"
+    "@types/node": "npm:22.4.1"
+    "@types/prettier": "npm:3.0.0"
+    globby: "npm:13.2.2"
+    import-sort: "npm:6.0.0"
+    import-sort-parser: "npm:6.0.0"
+    import-sort-parser-typescript: "npm:6.0.0"
+    import-sort-style: "npm:6.0.0"
+    prettier: "npm:3.3.3"
     sort-package-json: "npm:^2.4.1"
   languageName: unknown
   linkType: soft
@@ -2098,18 +2098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/types@npm:^7.0.0, @babel/types@npm:^7.20.7, @babel/types@npm:^7.21.3, @babel/types@npm:^7.22.5, @babel/types@npm:^7.24.6, @babel/types@npm:^7.3.3, @babel/types@npm:^7.8.3":
-  version: 7.24.6
-  resolution: "@babel/types@npm:7.24.6"
-  dependencies:
-    "@babel/helper-string-parser": "npm:^7.24.6"
-    "@babel/helper-validator-identifier": "npm:^7.24.6"
-    to-fast-properties: "npm:^2.0.0"
-  checksum: 10/34552539cdc740513650cb3c7754f77a55cc5253dff9d45afd52292d366eb1c099939d5db066e458abcf4c9a7dedfe43467445f9c2208b3cb64866762dee5e9d
-  languageName: node
-  linkType: hard
-
-"@babel/types@npm:^7.24.7, @babel/types@npm:^7.25.0, @babel/types@npm:^7.25.2":
+"@babel/types@npm:7.25.2, @babel/types@npm:^7.24.7, @babel/types@npm:^7.25.0, @babel/types@npm:^7.25.2":
   version: 7.25.2
   resolution: "@babel/types@npm:7.25.2"
   dependencies:
@@ -2117,6 +2106,17 @@ __metadata:
     "@babel/helper-validator-identifier": "npm:^7.24.7"
     to-fast-properties: "npm:^2.0.0"
   checksum: 10/ccf5399db1dcd6dd87b84a6f7bc8dd241e04a326f4f038c973c26ccb69cd360c8f2276603f584c58fd94da95229313060b27baceb0d9b18a435742d3f616afd1
+  languageName: node
+  linkType: hard
+
+"@babel/types@npm:^7.0.0, @babel/types@npm:^7.20.7, @babel/types@npm:^7.21.3, @babel/types@npm:^7.24.6, @babel/types@npm:^7.3.3, @babel/types@npm:^7.8.3":
+  version: 7.24.6
+  resolution: "@babel/types@npm:7.24.6"
+  dependencies:
+    "@babel/helper-string-parser": "npm:^7.24.6"
+    "@babel/helper-validator-identifier": "npm:^7.24.6"
+    to-fast-properties: "npm:^2.0.0"
+  checksum: 10/34552539cdc740513650cb3c7754f77a55cc5253dff9d45afd52292d366eb1c099939d5db066e458abcf4c9a7dedfe43467445f9c2208b3cb64866762dee5e9d
   languageName: node
   linkType: hard
 
@@ -4771,10 +4771,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:*, @types/prettier@npm:^2.7.3":
+"@types/prettier@npm:*":
   version: 2.7.3
   resolution: "@types/prettier@npm:2.7.3"
   checksum: 10/cda84c19acc3bf327545b1ce71114a7d08efbd67b5030b9e8277b347fa57b05178045f70debe1d363ff7efdae62f237260713aafc2d7217e06fc99b048a88497
+  languageName: node
+  linkType: hard
+
+"@types/prettier@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@types/prettier@npm:3.0.0"
+  dependencies:
+    prettier: "npm:*"
+  checksum: 10/a2a512d304e5bcf78f38089dc88ad19215e6ab871d435a17aef3ce538a63b07c0e359c18db23989dc1ed9fff96d99eee1f680416080184df5c7e0e3bf767e165
   languageName: node
   linkType: hard
 
@@ -10064,7 +10073,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"import-sort-parser-typescript@npm:^6.0.0":
+"import-sort-parser-typescript@npm:6.0.0":
   version: 6.0.0
   resolution: "import-sort-parser-typescript@npm:6.0.0"
   dependencies:
@@ -10073,21 +10082,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"import-sort-parser@npm:*, import-sort-parser@npm:^6.0.0":
+"import-sort-parser@npm:*, import-sort-parser@npm:6.0.0, import-sort-parser@npm:^6.0.0":
   version: 6.0.0
   resolution: "import-sort-parser@npm:6.0.0"
   checksum: 10/fea00dad4331523a4137b569aba9a6f1c4808501ab11826536143f18b9736eeb1d63d632a73601fa54557f45791989fd4d99b5cf9a7ad7bfa6f076a1d5c4392b
   languageName: node
   linkType: hard
 
-"import-sort-style@npm:^6.0.0":
+"import-sort-style@npm:6.0.0, import-sort-style@npm:^6.0.0":
   version: 6.0.0
   resolution: "import-sort-style@npm:6.0.0"
   checksum: 10/8c65dd1cd99919f38d92b80bfbd3309d4950c23c50f742344162291273151993d61f027fea584007d1aa20db40b93452a30a51d29d05f72d10f1906767454b52
   languageName: node
   linkType: hard
 
-"import-sort@npm:^6.0.0":
+"import-sort@npm:6.0.0":
   version: 6.0.0
   resolution: "import-sort@npm:6.0.0"
   dependencies:

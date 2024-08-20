@@ -1,5 +1,5 @@
-import type { ESLint }      from '@atls/code-runtime/eslint'
 import type { LintOptions } from '@atls/code-lint'
+import type { ESLint }      from '@atls/code-runtime/eslint'
 
 import { EvalWorker }       from '@atls/code-worker-utils'
 

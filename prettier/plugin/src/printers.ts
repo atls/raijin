@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import type { Printer }           from 'prettier'
-import type { AST }               from 'prettier'
 import type { Node }              from '@babel/types'
 import type { ImportDeclaration } from '@babel/types'
+import type { Printer }           from 'prettier'
+import type { AST }               from 'prettier'
 
 import { extractPrinter }         from './patch.js'
 

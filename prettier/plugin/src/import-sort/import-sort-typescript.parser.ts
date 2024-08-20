@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
+import type { Node }              from '@babel/types'
+import type { Comment }           from '@babel/types'
+import type { ImportDeclaration } from '@babel/types'
 import type { IImport }           from 'import-sort-parser'
 import type { IParser }           from 'import-sort-parser'
 import type { NamedMember }       from 'import-sort-parser'
 import type { AST }               from 'prettier'
-import type { Node }              from '@babel/types'
-import type { Comment }           from '@babel/types'
-import type { ImportDeclaration } from '@babel/types'
 
 export class ImportSortTypeScriptParser implements IParser {
   constructor(private readonly program: AST) {}

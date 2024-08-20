@@ -1,5 +1,5 @@
-import type { JSX }            from 'react'
 import type { IndicatorProps } from 'ink-select-input'
+import type { JSX }            from 'react'
 
 import { Text }                from 'ink'
 import { Box }                 from 'ink'
