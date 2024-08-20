@@ -23,6 +23,7 @@ runs:
 
   steps:
     - name: Print changed files
+      shell: bash
       run: |
         echo $(git status)
 
