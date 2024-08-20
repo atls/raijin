@@ -9,39 +9,35 @@ import type { LintRuleOutcome } from '@commitlint/types'
 import type { QualifiedRules }  from '@commitlint/types'
 import type { Rule }            from '@commitlint/types'
 import type { RuleType }        from '@commitlint/types'
-import type { Commit }          from '@commitlint/types'
 import type { Parser }          from '@commitlint/types'
-import type { ParserOptions }   from '@commitlint/types'
+import type { Commit }          from 'conventional-commits-parser'
+import type { Options }         from 'conventional-commits-parser'
 
 import util                     from 'node:util'
 
 import { RuleConfigSeverity }   from '@commitlint/types'
-import { buildCommitMesage }    from '@commitlint/lint/lib/commit-message.js'
-import isIgnoredPkg             from '@commitlint/is-ignored'
-import defaultRulesPkg          from '@commitlint/rules'
+import { buildCommitMessage }   from '@commitlint/lint/lib/commit-message.js'
+import isIgnored                from '@commitlint/is-ignored'
+import defaultRules             from '@commitlint/rules'
 import { sync }                 from 'conventional-commits-parser'
 // @ts-expect-error
-import defaultParserOpts        from 'conventional-changelog-angular/parser-opts.js'
-
-const isIgnored = isIgnoredPkg.default || isIgnoredPkg
-const defaultRules = defaultRulesPkg.default || defaultRulesPkg
+import defaultParserOpts        from 'conventional-changelog-angular/parserOpts.js'
 
 export async function parse(
   message: string,
-  // @ts-expect-error
   parser: Parser = sync,
-  parserOpts?: ParserOptions
+  parserOpts?: Options
 ): Promise<Commit> {
-  const opts: ParserOptions = {
+  const opts: Options = {
     ...defaultParserOpts,
     ...(parserOpts || {}),
   }
 
-  const parsed = parser(message, opts) as Commit
+  const parsed = parser(message, opts)
 
   parsed.raw = message
 
-  return parsed
+  return parsed as Commit
 }
 
 export async function lint(
