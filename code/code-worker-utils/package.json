@@ -17,7 +17,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "fast-hash-code": "^2.1.0"
+    "fast-hash-code": "2.1.0"
   },
   "publishConfig": {
     "access": "public",
