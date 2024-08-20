@@ -17,9 +17,9 @@
     "postpack": "rm -rf dist"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "4.1.1",
-    "@yarnpkg/cli": "4.2.2",
-    "@yarnpkg/core": "4.0.5"
+    "@yarnpkg/builder": "4.1.2",
+    "@yarnpkg/cli": "4.4.0",
+    "@yarnpkg/core": "4.1.2"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
@@ -27,7 +27,15 @@
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }
