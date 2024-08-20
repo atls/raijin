@@ -1648,8 +1648,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./webpack/webpack-start-server-plugin/",\
         "packageDependencies": [\
           ["@atls/webpack-start-server-plugin", "workspace:webpack/webpack-start-server-plugin"],\
-          ["@types/node", "npm:20.16.1"],\
-          ["webpack", "virtual:247798b5838c2456951608c63a150c329cd75a7acf57c85035cc108ce508f385086501421c8207b0903367c501fc9f8d36f2f59e6674aa0ff7901c3fee661188#npm:5.91.0"]\
+          ["@types/node", "npm:22.4.1"],\
+          ["webpack", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#npm:5.93.0"]\
         ],\
         "linkType": "SOFT"\
       }]\

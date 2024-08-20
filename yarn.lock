@@ -879,8 +879,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/webpack-start-server-plugin@workspace:webpack/webpack-start-server-plugin"
   dependencies:
-    "@types/node": "npm:^20.14.9"
-    webpack: "npm:^5.88.1"
+    "@types/node": "npm:22.4.1"
+    webpack: "npm:5.93.0"
   languageName: unknown
   linkType: soft
 
@@ -15347,7 +15347,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"webpack@npm:*, webpack@npm:^5, webpack@npm:^5.88.1":
+"webpack@npm:*, webpack@npm:^5":
   version: 5.91.0
   resolution: "webpack@npm:5.91.0"
   dependencies:
