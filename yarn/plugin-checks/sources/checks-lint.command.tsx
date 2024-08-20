@@ -24,7 +24,7 @@ import { Annotation }       from './github.checks.ts'
 class ChecksLintCommand extends BaseCommand {
   static paths = [['checks', 'lint']]
 
-  async execute() {
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
@@ -36,7 +36,6 @@ class ChecksLintCommand extends BaseCommand {
       async (report) => {
         const checks = new GitHubChecks('Lint')
 
-        // @ts-expect-error any
         const { id: checkId } = await checks.start()
 
         // @ts-expect-error any eslint-disable-next-line consistent-return
@@ -113,7 +112,7 @@ class ChecksLintCommand extends BaseCommand {
               },
               { highlightCode: false }
             ),
-            title: `(${message.ruleId}): ${message.message}`,
+            title: `(${message.ruleId || 'unknown'}): ${message.message}`,
             message: message.message,
           }
         }))

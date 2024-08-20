@@ -17,17 +17,14 @@ import { renderStatic }                  from '@atls/cli-ui-renderer'
 import { flattenDiagnosticMessageText }  from '@atls/code-typescript'
 import { getLineAndCharacterOfPosition } from '@atls/code-typescript'
 
-// @ts-expect-error any
 import { GitHubChecks }                  from './github.checks.ts'
-// @ts-expect-error any
 import { AnnotationLevel }               from './github.checks.ts'
-// @ts-expect-error any
 import { Annotation }                    from './github.checks.ts'
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static paths = [['checks', 'typecheck']]
 
-  async execute() {
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
@@ -40,14 +37,13 @@ class ChecksTypeCheckCommand extends BaseCommand {
         await report.startTimerPromise('Type Check', async () => {
           const checks = new GitHubChecks('TypeCheck')
 
-          // @ts-expect-error any
           const { id: checkId } = await checks.start()
 
           try {
             const ts = new TypeScriptWorker(project.cwd)
 
             const diagnostics = await ts.check(
-              this.context.cwd,
+              project.cwd,
               project.topLevelWorkspace.manifest.workspaceDefinitions.map(
                 (definition) => definition.pattern
               )
@@ -104,7 +100,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
           } catch (error) {
             await checks.failure({
               title: 'TypeCheck run failed',
-              summary: (error as any).message,
+              summary: error instanceof Error ? error.message : (error as string),
             })
           }
         })

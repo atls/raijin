@@ -1,7 +1,9 @@
-import { getOctokit } from '@actions/github'
-import { context }    from '@actions/github'
+import type { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
+import type { RequestParameters }                     from '@octokit/types'
 
-// eslint-disable-next-line no-shadow
+import { getOctokit }                                 from '@actions/github'
+import { context }                                    from '@actions/github'
+
 export enum AnnotationLevel {
   Warning = 'warning',
   Failure = 'failure',
@@ -18,16 +20,26 @@ export interface Annotation {
 }
 
 export class GitHubChecks {
-  private octokit
+  private octokit: ReturnType<typeof getOctokit>
 
   constructor(private readonly name: string) {
     this.octokit = getOctokit(process.env.GITHUB_TOKEN!)
   }
 
-  start() {
+  async create(
+    params: RequestParameters & { owner: string; repo: string; name: string; head_sha: string }
+  ): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>> {
+    const response = await this.octokit.rest.checks.create(params)
+
+    return response.data
+  }
+
+  async start(): Promise<
+    GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>
+  > {
     const { payload } = context
 
-    return this.octokit.rest.checks.create({
+    return this.create({
       ...context.repo,
       name: this.name,
       head_sha: payload.after || payload.pull_request?.head.sha || (process.env.GITHUB_SHA as any),
@@ -36,10 +48,13 @@ export class GitHubChecks {
     })
   }
 
-  complete(id: number, output: any) {
+  async complete(
+    id: number,
+    output: { title: string; summary: string; annotations: Array<Annotation> }
+  ): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>> {
     const { payload } = context
 
-    return this.octokit.rest.checks.create({
+    return this.create({
       ...context.repo,
       check_run_id: id,
       name: this.name,
@@ -57,10 +72,14 @@ export class GitHubChecks {
     })
   }
 
-  failure(output: any) {
+  async failure(output: {
+    title: string
+    summary: string
+    annotations?: Array<Annotation>
+  }): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>> {
     const { payload } = context
 
-    return this.octokit.rest.checks.create({
+    return this.create({
       ...context.repo,
       name: this.name,
       head_sha: payload.after || payload.pull_request?.head.sha || (process.env.GITHUB_SHA as any),
@@ -68,7 +87,7 @@ export class GitHubChecks {
       status: 'completed',
       conclusion: 'failure',
       output:
-        output.annotations?.length > 50
+        output.annotations && output.annotations.length > 50
           ? {
               ...output,
               annotations: output.annotations.slice(0, 50),

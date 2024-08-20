@@ -15,7 +15,7 @@ import { Annotation }            from './github.checks.js'
 class ChecksReleaseCommand extends BaseCommand {
   static paths = [['checks', 'release']]
 
-  async execute() {
+  async execute(): Promise<void> {
     const { project } = await Project.find(
       await Configuration.find(this.context.cwd, this.context.plugins),
       this.context.cwd
@@ -25,7 +25,6 @@ class ChecksReleaseCommand extends BaseCommand {
 
     const checks = new GitHubChecks('Release')
 
-    // @ts-expect-error any
     const { id: checkId } = await checks.start()
 
     try {
@@ -35,20 +34,20 @@ class ChecksReleaseCommand extends BaseCommand {
         if (workspace.manifest.scripts.get('build')) {
           const context = new PassThroughRunContext()
 
-          const outputWriter = (data: any) => this.context.stdout.write(data)
+          const outputWriter = (data: Buffer) => this.context.stdout.write(data)
 
           context.stdout.on('data', outputWriter)
           context.stderr.on('data', outputWriter)
 
           const code = await this.cli.run(
-            ['workspace', workspace.manifest.raw.name, 'build'],
+            ['workspace', workspace.manifest.raw.name as string, 'build'],
             context
           )
 
           if (code > 0) {
             annotations.push({
               annotation_level: AnnotationLevel.Failure,
-              title: `Error release workspace ${workspace.manifest.raw.name}`,
+              title: `Error release workspace ${workspace.manifest.raw.name ?? workspace.relativeCwd}`,
               message: `Exit code ${code}`,
               raw_details: stripAnsi(context.output),
               path: ppath.join(workspace.relativeCwd, 'package.json'),
@@ -68,7 +67,7 @@ class ChecksReleaseCommand extends BaseCommand {
     } catch (error) {
       await checks.failure({
         title: 'Release run failed',
-        summary: (error as any).message,
+        summary: error instanceof Error ? error.message : (error as string),
       })
     }
   }
