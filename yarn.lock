@@ -1071,15 +1071,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-cli-publish@workspace:yarn/plugin-cli-publish"
   dependencies:
-    "@types/node": "npm:^20.14.9"
-    "@yarnpkg/builder": "npm:^4.1.1"
-    "@yarnpkg/cli": "npm:^4.2.2"
-    "@yarnpkg/core": "npm:^4.0.5"
-    "@yarnpkg/fslib": "npm:^3.1.0"
+    "@types/node": "npm:22.4.1"
+    "@yarnpkg/builder": "npm:4.1.2"
+    "@yarnpkg/cli": "npm:4.4.0"
+    "@yarnpkg/core": "npm:4.1.2"
+    "@yarnpkg/fslib": "npm:3.1.0"
   peerDependencies:
-    "@yarnpkg/cli": ^4
-    "@yarnpkg/core": ^4
-    "@yarnpkg/fslib": ^3
+    "@yarnpkg/cli": "*"
+    "@yarnpkg/core": "*"
+    "@yarnpkg/fslib": "*"
   languageName: unknown
   linkType: soft
 
@@ -4431,15 +4431,6 @@ __metadata:
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 10/978fdd68af65c8f8659037ef09456d41ef46a5f688c3b9550cd59266db2c4ac94e65ed7f08d1871ba909e5b7bdf4e8066c5269715a7dd83333aca34dfa6366db
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^20.14.9":
-  version: 20.16.1
-  resolution: "@types/node@npm:20.16.1"
-  dependencies:
-    undici-types: "npm:~6.19.2"
-  checksum: 10/9bae1dffd2094694147a91ebec51dc89a60a607d16d47a0d770320f1a75d3ba58663708fd93c37954a63acb701a4e0fd64245139c57ae810d3ad524e75481d4e
   languageName: node
   linkType: hard
 
