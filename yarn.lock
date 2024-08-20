@@ -244,12 +244,12 @@ __metadata:
   resolution: "@atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info-component"
   dependencies:
     "@atls/cli-ui-stack-trace-component": "workspace:*"
-    "@types/node": "npm:^20.14.9"
-    "@types/react": "npm:^18.3.3"
-    ink: "npm:^4.2.0"
-    react: "npm:^18.3.1"
+    "@types/node": "npm:22.4.1"
+    "@types/react": "npm:18.3.3"
+    ink: "npm:4.4.1"
+    react: "npm:18.3.1"
   peerDependencies:
-    ink: ^3.0.8
+    ink: "*3.0.8"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -277,18 +277,18 @@ __metadata:
   resolution: "@atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit"
   dependencies:
     "@atls/code-commit": "workspace:*"
-    "@types/node": "npm:^20.14.9"
-    "@types/react": "npm:^18.3.3"
-    "@yarnpkg/libui": "npm:^3.0.0"
-    camelcase: "npm:^7.0.1"
-    figures: "npm:^5.0.0"
-    ink: "npm:^4.2.0"
+    "@types/node": "npm:22.4.1"
+    "@types/react": "npm:18.3.3"
+    "@yarnpkg/libui": "npm:3.0.0"
+    camelcase: "npm:8.0.0"
+    figures: "npm:6.1.0"
+    ink: "npm:4.4.1"
     ink-autocomplete: "npm:^0.0.0"
     ink-multi-select: "npm:^2.0.0"
     ink-select-input: "npm:^5.0.0"
     ink-text-input: "npm:^5.0.1"
   peerDependencies:
-    ink: ^3.0.8
+    ink: "*3.0.8"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -301,14 +301,14 @@ __metadata:
     "@atls/cli-ui-stack-trace-component": "workspace:*"
     "@atls/logger": "npm:0.0.2"
     "@jest/globals": "npm:29.7.0"
-    "@types/node": "npm:20.14.9"
+    "@types/node": "npm:22.4.1"
     "@types/react": "npm:18.3.3"
-    ink: "npm:3.2.0"
-    react: "npm:^18.3.1"
+    ink: "npm:4.4.1"
+    react: "npm:18.3.1"
     string-to-color: "npm:2.2.2"
     strip-ansi: "npm:7.1.0"
   peerDependencies:
-    ink: "*"
+    ink: "*3.0.8"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -321,7 +321,7 @@ __metadata:
     "@yarnpkg/libui": "npm:3.0.0"
     figures: "npm:6.1.0"
     ink: "npm:3.2.0"
-    react: "npm:^18.3.1"
+    react: "npm:18.3.1"
   languageName: unknown
   linkType: soft
 
@@ -331,10 +331,10 @@ __metadata:
   dependencies:
     "@atls/cli-ui-log-record-component": "workspace:*"
     "@atls/cli-ui-renderer": "workspace:*"
-    "@types/node": "npm:^20.14.9"
-    "@types/react": "npm:^18.3.3"
-    ink: "npm:^4.2.0"
-    react: "npm:^18.3.1"
+    "@types/node": "npm:22.4.1"
+    "@types/react": "npm:18.3.3"
+    ink: "npm:4.4.1"
+    react: "npm:18.3.1"
   languageName: unknown
   linkType: soft
 
@@ -342,10 +342,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-renderer@workspace:cli/cli-ui-renderer"
   dependencies:
-    "@types/node": "npm:^20.14.9"
-    "@types/react": "npm:^18.3.3"
-    ink: "npm:^4.2.0"
-    react: "npm:^18.3.1"
+    "@types/node": "npm:22.4.1"
+    "@types/react": "npm:18.3.3"
+    ink: "npm:4.4.1"
+    react: "npm:18.3.1"
   languageName: unknown
   linkType: soft
 
@@ -355,7 +355,7 @@ __metadata:
   dependencies:
     "@atls/cli-ui-parts": "workspace:*"
     "@atls/schematics": "workspace:*"
-    "@types/node": "npm:20.14.9"
+    "@types/node": "npm:22.4.1"
     "@types/react": "npm:18.3.3"
     "@yarnpkg/libui": "npm:3.0.0"
     camelcase: "npm:8.0.0"
@@ -375,14 +375,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-source-component@workspace:cli/cli-ui-source-component"
   dependencies:
-    "@babel/code-frame": "npm:^7.22.5"
-    "@types/babel__code-frame": "npm:7.0.3"
-    "@types/node": "npm:^20.14.9"
-    "@types/react": "npm:^18.3.3"
-    ink: "npm:^4.2.0"
-    supports-color: "npm:^9.4.0"
+    "@babel/code-frame": "npm:7.24.7"
+    "@types/babel__code-frame": "npm:7.0.6"
+    "@types/node": "npm:22.4.1"
+    "@types/react": "npm:18.3.3"
+    ink: "npm:4.4.1"
+    supports-color: "npm:9.4.0"
   peerDependencies:
-    ink: ^3.0.8
+    ink: "*3.0.8"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -394,14 +394,14 @@ __metadata:
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/cli-ui-source-component": "workspace:*"
     "@atls/stack-trace": "npm:0.0.2"
-    "@jest/globals": "npm:^29.6.1"
-    "@types/react": "npm:^18.3.3"
-    ink: "npm:^4.2.0"
-    nanoid: "npm:^4.0.2"
-    react: "npm:^18.3.1"
-    strip-ansi: "npm:^7.1.0"
+    "@jest/globals": "npm:29.7.0"
+    "@types/react": "npm:18.3.3"
+    ink: "npm:4.4.1"
+    nanoid: "npm:5.0.7"
+    react: "npm:18.3.1"
+    strip-ansi: "npm:7.1.0"
   peerDependencies:
-    ink: ^3.0.8
+    ink: "*3.0.8"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -413,14 +413,14 @@ __metadata:
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/cli-ui-source-component": "workspace:*"
     "@atls/code-typescript": "workspace:*"
-    "@jest/globals": "npm:^29.6.1"
-    "@types/react": "npm:^18.3.3"
-    ink: "npm:^4.2.0"
-    react: "npm:^18.3.1"
-    strip-ansi: "npm:^7.1.0"
-    typescript: "npm:5.2.2"
+    "@jest/globals": "npm:29.7.0"
+    "@types/react": "npm:18.3.3"
+    ink: "npm:4.4.1"
+    react: "npm:18.3.1"
+    strip-ansi: "npm:7.1.0"
+    typescript: "npm:5.4.2"
   peerDependencies:
-    ink: ^3.0.8
+    ink: "*3.0.8"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -1517,7 +1517,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.22.5, @babel/code-frame@npm:^7.24.6":
+"@babel/code-frame@npm:7.24.7":
+  version: 7.24.7
+  resolution: "@babel/code-frame@npm:7.24.7"
+  dependencies:
+    "@babel/highlight": "npm:^7.24.7"
+    picocolors: "npm:^1.0.0"
+  checksum: 10/4812e94885ba7e3213d49583a155fdffb05292330f0a9b2c41b49288da70cf3c746a3fda0bf1074041a6d741c33f8d7be24be5e96f41ef77395eeddc5c9ff624
+  languageName: node
+  linkType: hard
+
+"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.24.6":
   version: 7.24.6
   resolution: "@babel/code-frame@npm:7.24.6"
   dependencies:
@@ -1671,6 +1681,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helper-validator-identifier@npm:^7.24.7":
+  version: 7.24.7
+  resolution: "@babel/helper-validator-identifier@npm:7.24.7"
+  checksum: 10/86875063f57361471b531dbc2ea10bbf5406e12b06d249b03827d361db4cad2388c6f00936bcd9dc86479f7e2c69ea21412c2228d4b3672588b754b70a449d4b
+  languageName: node
+  linkType: hard
+
 "@babel/helper-validator-option@npm:^7.24.6":
   version: 7.24.6
   resolution: "@babel/helper-validator-option@npm:7.24.6"
@@ -1697,6 +1714,18 @@ __metadata:
     js-tokens: "npm:^4.0.0"
     picocolors: "npm:^1.0.0"
   checksum: 10/e11cd39ceb01c9b5e4f2684a45caefe7b2d7bb74997c30922e6b4063a6f16aff88356091350f0af01f044e1a198579a6b5c4161a84d0a6090e63a41167569daf
+  languageName: node
+  linkType: hard
+
+"@babel/highlight@npm:^7.24.7":
+  version: 7.24.7
+  resolution: "@babel/highlight@npm:7.24.7"
+  dependencies:
+    "@babel/helper-validator-identifier": "npm:^7.24.7"
+    chalk: "npm:^2.4.2"
+    js-tokens: "npm:^4.0.0"
+    picocolors: "npm:^1.0.0"
+  checksum: 10/69b73f38cdd4f881b09b939a711e76646da34f4834f4ce141d7a49a6bb1926eab1c594148970a8aa9360398dff800f63aade4e81fafdd7c8d8a8489ea93bfec1
   languageName: node
   linkType: hard
 
@@ -3819,14 +3848,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__code-frame@npm:7.0.3":
-  version: 7.0.3
-  resolution: "@types/babel__code-frame@npm:7.0.3"
-  checksum: 10/543bd933e5ffdfbf75dfee0a36461c8a9d9283d5a95ceae0e021b2aef7fe774f1f251ea56f507faedf9d3574894b4774636f2b125f5cc5f6759503e1e56feb93
-  languageName: node
-  linkType: hard
-
-"@types/babel__code-frame@npm:^7.0.6":
+"@types/babel__code-frame@npm:7.0.6, @types/babel__code-frame@npm:^7.0.6":
   version: 7.0.6
   resolution: "@types/babel__code-frame@npm:7.0.6"
   checksum: 10/5325ab85d95e58fe84279757788ddb0de68bfd6814bc636e868f9ff7b5229915873f28847c4baf48fd3a4a460a73b4ea87bc9e1d78a3a5a60cfc7ca627a722c5
@@ -11075,12 +11097,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "nanoid@npm:4.0.2"
+"nanoid@npm:5.0.7":
+  version: 5.0.7
+  resolution: "nanoid@npm:5.0.7"
   bin:
     nanoid: bin/nanoid.js
-  checksum: 10/8c0c267de44cddcad79c3361d2cbd281694c36bf7ab6a163f36dd8f6e6ee43e9783561302c55fab2986a2fa847e7a6b30fedabd1e117fdb8aecc5ab21555428d
+  checksum: 10/25ab0b0cf9082ae6747f0f55cec930e6c1cc5975103aa3a5fda44be5720eff57d9b25a8a9850274bfdde8def964b49bf03def71c6aa7ad1cba32787819b79f60
   languageName: node
   linkType: hard
 
@@ -13031,7 +13053,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"strip-ansi@npm:7.1.0, strip-ansi@npm:^7.0.1, strip-ansi@npm:^7.1.0":
+"strip-ansi@npm:7.1.0, strip-ansi@npm:^7.0.1":
   version: 7.1.0
   resolution: "strip-ansi@npm:7.1.0"
   dependencies:
@@ -13103,6 +13125,13 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
+"supports-color@npm:9.4.0":
+  version: 9.4.0
+  resolution: "supports-color@npm:9.4.0"
+  checksum: 10/cb8ff8daeaf1db642156f69a9aa545b6c01dd9c4def4f90a49f46cbf24be0c245d392fcf37acd119cd1819b99dad2cc9b7e3260813f64bcfd7f5b18b5a1eefb8
+  languageName: node
+  linkType: hard
+
 "supports-color@npm:^5.3.0":
   version: 5.5.0
   resolution: "supports-color@npm:5.5.0"
@@ -13127,13 +13156,6 @@ pem@dexus/pem:
   dependencies:
     has-flag: "npm:^4.0.0"
   checksum: 10/157b534df88e39c5518c5e78c35580c1eca848d7dbaf31bbe06cdfc048e22c7ff1a9d046ae17b25691128f631a51d9ec373c1b740c12ae4f0de6e292037e4282
-  languageName: node
-  linkType: hard
-
-"supports-color@npm:^9.4.0":
-  version: 9.4.0
-  resolution: "supports-color@npm:9.4.0"
-  checksum: 10/cb8ff8daeaf1db642156f69a9aa545b6c01dd9c4def4f90a49f46cbf24be0c245d392fcf37acd119cd1819b99dad2cc9b7e3260813f64bcfd7f5b18b5a1eefb8
   languageName: node
   linkType: hard
 

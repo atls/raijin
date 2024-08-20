@@ -20,17 +20,17 @@
     "@atls/cli-ui-renderer": "workspace:*",
     "@atls/cli-ui-source-component": "workspace:*",
     "@atls/stack-trace": "0.0.2",
-    "nanoid": "^4.0.2"
+    "nanoid": "5.0.7"
   },
   "devDependencies": {
-    "@jest/globals": "^29.6.1",
-    "@types/react": "^18.3.3",
-    "ink": "^4.2.0",
-    "react": "^18.3.1",
-    "strip-ansi": "^7.1.0"
+    "@jest/globals": "29.7.0",
+    "@types/react": "18.3.3",
+    "ink": "4.4.1",
+    "react": "18.3.1",
+    "strip-ansi": "7.1.0"
   },
   "peerDependencies": {
-    "ink": "^3.0.8",
+    "ink": "*3.0.8",
     "react": "*"
   },
   "publishConfig": {
