@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 
 // @ts-expect-error any
-import { StackFrame }   from '@atls/stack-trace'
+import type { StackFrame }   from '@atls/stack-trace'
 
 export const getFrameSource = (frame: StackFrame): string | null => {
   if (frame.sourceMap) {

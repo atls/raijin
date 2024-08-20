@@ -1,3 +1,4 @@
+import type { StackFrame } from '@monstrs/stack-trace'
 import type { FC }        from 'react'
 
 // @ts-expect-error any
@@ -34,7 +35,7 @@ export const StackTrace: FC<StackTraceProps> = ({ children }) => {
           </SourcePreview>
         </Box>
       )}
-      {stack.frames.map((frame: any, index: number) => (
+      {stack.frames.map((frame: StackFrame) => (
         <Box key={nanoid()} justifyContent='flex-end'>
           <Text>{frame.function}</Text>
           <Spacer />
