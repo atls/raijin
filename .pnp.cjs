@@ -1927,7 +1927,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-cli-publish-virtual-ab28e3b0c6/1/yarn/plugin-cli-publish/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-cli-publish", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-cli-publish"],\
-          ["@types/node", "npm:20.16.1"],\
+          ["@types/node", "npm:22.4.1"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@types/yarnpkg__fslib", null],\
@@ -1950,7 +1950,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/plugin-cli-publish/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-cli-publish", "workspace:yarn/plugin-cli-publish"],\
-          ["@types/node", "npm:20.16.1"],\
+          ["@types/node", "npm:22.4.1"],\
           ["@yarnpkg/builder", "npm:4.1.2"],\
           ["@yarnpkg/cli", "virtual:2648882e59a866eb9e673659ff7fe25024b0001421b490f0e22cd6210083f11133a2474394295c1eac5e7092bcfcde5ec787ae8196b302ddc238cb112c0b8035#npm:4.4.0"],\
           ["@yarnpkg/core", "npm:4.1.2"],\
@@ -6818,14 +6818,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/node", "npm:20.14.9"],\
           ["undici-types", "npm:5.26.5"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:20.16.1", {\
-        "packageLocation": "./.yarn/cache/@types-node-npm-20.16.1-ba5fb07db1-9bae1dffd2.zip/node_modules/@types/node/",\
-        "packageDependencies": [\
-          ["@types/node", "npm:20.16.1"],\
-          ["undici-types", "npm:6.19.8"]\
         ],\
         "linkType": "HARD"\
       }],\
