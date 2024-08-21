@@ -12,7 +12,9 @@ export class RendererDevCommand extends BaseCommand {
 
   tunnel = Option.Boolean('--tunnel')
 
-  #tunnel: Tunnel
+  https = Option.Boolean('--https')
+
+  #tunnel!: Tunnel
 
   async runTunnel(host: string, port: number): Promise<void> {
     if (this.#tunnel) {
@@ -39,7 +41,23 @@ export class RendererDevCommand extends BaseCommand {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
-    spawn('yarn', ['next', 'dev', 'src'], { stdio: 'inherit', cwd: this.context.cwd })
+    const args = ['next', 'dev', 'src']
+
+    if (this.https) {
+      if (!(await xfs.existsPromise(ppath.join(project.cwd, '.config/certs/local/dev.key')))) {
+        throw new Error('Https key not found')
+      }
+
+      if (!(await xfs.existsPromise(ppath.join(project.cwd, '.config/certs/local/dev.crt')))) {
+        throw new Error('Https cert not found')
+      }
+
+      args.push('--experimental-https')
+      args.push('--experimental-https-key', ppath.join(project.cwd, '.config/certs/local/dev.key'))
+      args.push('--experimental-https-cert', ppath.join(project.cwd, '.config/certs/local/dev.crt'))
+    }
+
+    spawn('yarn', args, { stdio: 'inherit', cwd: this.context.cwd })
 
     if (this.tunnel) {
       const workspace = project.getWorkspaceByCwd(this.context.cwd)

@@ -1262,16 +1262,16 @@ __metadata:
   dependencies:
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
-    "@jest/globals": "npm:^29.6.1"
-    "@types/cross-spawn": "npm:^6.0.2"
-    "@types/localtunnel": "npm:^2.0.1"
-    "@yarnpkg/builder": "npm:^4.1.1"
-    "@yarnpkg/cli": "npm:^4.2.2"
-    "@yarnpkg/core": "npm:^4.0.5"
-    "@yarnpkg/fslib": "npm:^3.1.0"
-    clipanion: "npm:^4.0.0-rc.3"
-    cross-spawn: "npm:^7.0.3"
-    localtunnel: "npm:^2.0.2"
+    "@jest/globals": "npm:29.7.0"
+    "@types/cross-spawn": "npm:6.0.6"
+    "@types/localtunnel": "npm:2.0.4"
+    "@yarnpkg/builder": "npm:4.1.2"
+    "@yarnpkg/cli": "npm:4.4.0"
+    "@yarnpkg/core": "npm:4.1.2"
+    "@yarnpkg/fslib": "npm:3.1.0"
+    clipanion: "npm:4.0.0-rc.3"
+    cross-spawn: "npm:7.0.3"
+    localtunnel: "npm:2.0.2"
   peerDependencies:
     "@yarnpkg/cli": ^4
     "@yarnpkg/core": ^4
@@ -4212,7 +4212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cross-spawn@npm:^6.0.2":
+"@types/cross-spawn@npm:6.0.6":
   version: 6.0.6
   resolution: "@types/cross-spawn@npm:6.0.6"
   dependencies:
@@ -4355,7 +4355,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/localtunnel@npm:^2.0.1":
+"@types/localtunnel@npm:2.0.4":
   version: 2.0.4
   resolution: "@types/localtunnel@npm:2.0.4"
   dependencies:
@@ -11003,7 +11003,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"localtunnel@npm:^2.0.2":
+"localtunnel@npm:2.0.2":
   version: 2.0.2
   resolution: "localtunnel@npm:2.0.2"
   dependencies:
