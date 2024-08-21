@@ -1,10 +1,9 @@
-import type { Writable } from 'node:stream'
+import type { Configuration } from '@yarnpkg/core'
+import type { Writable }      from 'node:stream'
+import type { WriteStream }   from 'node:tty'
 
-import { WriteStream }   from 'node:tty'
-
-import { Configuration } from '@yarnpkg/core'
-import { MessageName }   from '@yarnpkg/core'
-import { formatUtils }   from '@yarnpkg/core'
+import { MessageName }        from '@yarnpkg/core'
+import { formatUtils }        from '@yarnpkg/core'
 
 export class SpinnerProgress {
   static PROGRESS_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
@@ -20,22 +19,26 @@ export class SpinnerProgress {
     private readonly configuration: Configuration
   ) {}
 
-  start() {
-    if ((this.stdout as WriteStream).isTTY && !process.env.TOOLS_DISABLE_PROGRESS) {
+  isEnabled(): boolean {
+    return (this.stdout as WriteStream).isTTY && !process.env.TOOLS_DISABLE_PROGRESS
+  }
+
+  start(): void {
+    if (this.isEnabled()) {
       this.running = true
       this.write()
       this.tick()
     }
   }
 
-  end() {
-    if ((this.stdout as WriteStream).isTTY && this.running) {
+  end(): void {
+    if (this.isEnabled() && this.running) {
       this.running = false
       this.clear(true)
     }
   }
 
-  private tick() {
+  private tick(): void {
     setTimeout(() => {
       if (this.running) {
         this.clear()
@@ -49,7 +52,7 @@ export class SpinnerProgress {
     }, SpinnerProgress.PROGRESS_INTERVAL)
   }
 
-  private write() {
+  private write(): void {
     const spinner = SpinnerProgress.PROGRESS_FRAMES[this.position]
 
     const name = formatUtils.pretty(
@@ -63,7 +66,7 @@ export class SpinnerProgress {
     )
   }
 
-  private clear(complete = false) {
+  private clear(complete = false): void {
     this.stdout.write(`\x1b[${0}A`)
 
     if (complete) {
