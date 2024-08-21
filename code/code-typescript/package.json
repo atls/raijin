@@ -19,8 +19,7 @@
   },
   "dependencies": {
     "@atls/code-runtime": "workspace:*",
-    "@atls/config-typescript": "workspace:*",
-    "deepmerge": "4.3.1"
+    "@atls/config-typescript": "workspace:*"
   },
   "devDependencies": {
     "@types/deepmerge": "2.2.0",

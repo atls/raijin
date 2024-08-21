@@ -58,6 +58,9 @@ export class WebpackConfig {
         library: { type },
         chunkFormat: type,
         module: type === 'module',
+        publicPath: './',
+        clean: true,
+        assetModuleFilename: 'assets/[name][ext]',
       },
       resolve: {
         extensionAlias: {

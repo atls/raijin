@@ -1387,7 +1387,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@types/deepmerge", "npm:2.2.0"],\
           ["@types/node", "npm:22.4.1"],\
-          ["deepmerge", "npm:4.3.1"],\
           ["typescript", "patch:typescript@npm%3A5.4.2#optional!builtin<compat/typescript>::version=5.4.2&hash=5adc0c"]\
         ],\
         "linkType": "SOFT"\
