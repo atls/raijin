@@ -3,9 +3,11 @@ import type { PortablePath } from '@yarnpkg/fslib'
 import type { Filename }     from '@yarnpkg/fslib'
 
 import { Configuration }     from '@yarnpkg/core'
+import { Manifest }          from '@yarnpkg/core'
 import { Project }           from '@yarnpkg/core'
 import { WorkspaceResolver } from '@yarnpkg/core'
 import { ThrowReport }       from '@yarnpkg/core'
+import { scriptUtils }       from '@yarnpkg/core'
 import { xfs }               from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
 import { packUtils }         from '@yarnpkg/plugin-pack'
@@ -84,8 +86,16 @@ export class PackageUtils {
       return target
     }
 
+    await scriptUtils.maybeExecuteWorkspaceLifecycleScript(workspace, 'prepack', {
+      report: new ThrowReport(),
+    })
+
+    const manifestPath = ppath.join(workspace.cwd, Manifest.fileName)
+
+    if (await xfs.existsPromise(manifestPath))
+      await workspace.manifest.loadFile(manifestPath, { baseFs: xfs })
     await packUtils.prepareForPack(workspace, { report: new ThrowReport() }, async () => {
-      for (const descriptor of workspace.manifest.dependencies.values()) {
+      for await (const descriptor of workspace.manifest.dependencies.values()) {
         if (descriptor.range.startsWith(WorkspaceResolver.protocol)) {
           const dependent = project.tryWorkspaceByDescriptor(descriptor)
 
@@ -101,7 +111,7 @@ export class PackageUtils {
         }
       }
 
-      for (const descriptor of workspace.manifest.devDependencies.values()) {
+      for await (const descriptor of workspace.manifest.devDependencies.values()) {
         if (descriptor.range.startsWith(WorkspaceResolver.protocol)) {
           const dependent = project.tryWorkspaceByDescriptor(descriptor)
 

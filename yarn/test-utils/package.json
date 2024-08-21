@@ -16,9 +16,9 @@
     "yarn:download": "yarn node ./scripts/download-yarn-tests-packages.script.mjs"
   },
   "dependencies": {
-    "@yarnpkg/core": "^4.0.5",
-    "@yarnpkg/fslib": "^3.1.0",
-    "@yarnpkg/plugin-pack": "^4.0.0",
+    "@yarnpkg/core": "4.1.2",
+    "@yarnpkg/fslib": "3.1.0",
+    "@yarnpkg/plugin-pack": "4.0.0",
     "pkg-tests-core": "file:./cache/pkg-tests-core.tgz",
     "pkg-tests-fixtures": "file:cache/pkg-tests-fixtures.tgz"
   },
