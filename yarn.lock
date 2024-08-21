@@ -1369,15 +1369,15 @@ __metadata:
   dependencies:
     "@atls/code-runtime": "workspace:*"
     "@atls/config-typescript": "workspace:*"
-    "@types/semver": "npm:^7.5.0"
-    "@yarnpkg/builder": "npm:^4.1.1"
-    "@yarnpkg/cli": "npm:^4.2.2"
-    "@yarnpkg/core": "npm:^4.0.5"
-    "@yarnpkg/fslib": "npm:^3.1.0"
-    clipanion: "npm:^4.0.0-rc.3"
-    deepmerge: "npm:^4.3.1"
-    husky: "npm:^8.0.3"
-    semver: "npm:^7.5.3"
+    "@types/semver": "npm:7.5.8"
+    "@yarnpkg/builder": "npm:4.1.2"
+    "@yarnpkg/cli": "npm:4.4.0"
+    "@yarnpkg/core": "npm:4.1.2"
+    "@yarnpkg/fslib": "npm:3.1.0"
+    clipanion: "npm:4.0.0-rc.3"
+    deepmerge: "npm:4.3.1"
+    husky: "npm:8.0.3"
+    semver: "npm:7.6.3"
   languageName: unknown
   linkType: soft
 
@@ -4270,7 +4270,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/semver@npm:7.5.8, @types/semver@npm:^7.1.0, @types/semver@npm:^7.5.0":
+"@types/semver@npm:7.5.8, @types/semver@npm:^7.1.0":
   version: 7.5.8
   resolution: "@types/semver@npm:7.5.8"
   checksum: 10/3496808818ddb36deabfe4974fd343a78101fa242c4690044ccdc3b95dcf8785b494f5d628f2f47f38a702f8db9c53c67f47d7818f2be1b79f2efb09692e1178
@@ -6851,7 +6851,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge@npm:*, deepmerge@npm:4.3.1, deepmerge@npm:^4.2.2, deepmerge@npm:^4.3.1":
+"deepmerge@npm:*, deepmerge@npm:4.3.1, deepmerge@npm:^4.2.2":
   version: 4.3.1
   resolution: "deepmerge@npm:4.3.1"
   checksum: 10/058d9e1b0ff1a154468bf3837aea436abcfea1ba1d165ddaaf48ca93765fdd01a30d33c36173da8fbbed951dd0a267602bc782fe288b0fc4b7e1e7091afc4529
@@ -9080,7 +9080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^8.0.3":
+"husky@npm:8.0.3":
   version: 8.0.3
   resolution: "husky@npm:8.0.3"
   bin:
