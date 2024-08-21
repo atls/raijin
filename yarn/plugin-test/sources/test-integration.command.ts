@@ -1,29 +1,17 @@
-import { join }          from 'node:path'
+import { join }                from 'node:path'
 
-import { BaseCommand }   from '@yarnpkg/cli'
-import { StreamReport }  from '@yarnpkg/core'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { Option }        from 'clipanion'
+import { StreamReport }        from '@yarnpkg/core'
+import { Configuration }       from '@yarnpkg/core'
+import { Project }             from '@yarnpkg/core'
 
-import { TesterWorker }  from '@atls/code-test-worker'
+import { TesterWorker }        from '@atls/code-test-worker'
 
-class TestIntegrationCommand extends BaseCommand {
+import { AbstractTestCommand } from './abstract-test.command.jsx'
+
+class TestIntegrationCommand extends AbstractTestCommand {
   static paths = [['test', 'integration']]
 
-  bail = Option.Boolean('-b,--bail', false)
-
-  updateSnapshot = Option.Boolean('-u,--update-shapshot', false)
-
-  findRelatedTests = Option.Boolean('--find-related-tests', false)
-
-  watchMode = Option.Boolean('--watch')
-
-  watchAllMode = Option.Boolean('--watchAll')
-
-  files: Array<string> = Option.Rest({ required: 0 })
-
-  async execute() {
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project, workspace } = await Project.find(configuration, this.context.cwd)
 
@@ -50,6 +38,8 @@ class TestIntegrationCommand extends BaseCommand {
         configuration,
       },
       async () => {
+        this.wrapOutput()
+
         await new TesterWorker(project.cwd).run(
           this.context.cwd,
           'integration',
