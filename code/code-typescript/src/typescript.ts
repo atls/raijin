@@ -1,8 +1,6 @@
 import { readFileSync }              from 'node:fs'
 import { join }                      from 'node:path'
 
-import deepmerge                     from 'deepmerge'
-
 import { ts }                        from '@atls/code-runtime/typescript'
 import tsconfig                      from '@atls/config-typescript'
 
@@ -31,11 +29,16 @@ class TypeScript {
 
     const skipLibCheck = this.getLibCheckOption()
 
-    const config = deepmerge(tsconfig, { compilerOptions: override, skipLibCheck }, {
-      compilerOptions: { rootDir: this.cwd },
+    const config = {
+      ...tsconfig,
+      compilerOptions: {
+        ...tsconfig.compilerOptions,
+        ...override,
+        skipLibCheck,
+      },
       include,
       exclude: [...tsconfig.exclude, ...projectIgnorePatterns],
-    } as object)
+    }
 
     const { fileNames, options, errors } = ts.parseJsonConfigFileContent(config, ts.sys, this.cwd)
 
