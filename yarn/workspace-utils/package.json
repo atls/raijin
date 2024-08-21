@@ -12,11 +12,19 @@
     "dist"
   ],
   "devDependencies": {
-    "@yarnpkg/core": "4.0.5"
+    "@yarnpkg/core": "4.1.2"
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

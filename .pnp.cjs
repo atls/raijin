@@ -2791,7 +2791,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/workspace-utils/",\
         "packageDependencies": [\
           ["@atls/yarn-workspace-utils", "workspace:yarn/workspace-utils"],\
-          ["@yarnpkg/core", "npm:4.0.5"]\
+          ["@yarnpkg/core", "npm:4.1.2"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -7560,40 +7560,6 @@ const RAW_RUNTIME_STATE =
           ["diff", "npm:5.1.0"],\
           ["dotenv", "npm:16.3.1"],\
           ["globby", "npm:11.1.0"],\
-          ["got", "npm:11.8.6"],\
-          ["lodash", "npm:4.17.21"],\
-          ["micromatch", "npm:4.0.5"],\
-          ["p-limit", "npm:2.3.0"],\
-          ["semver", "npm:7.6.3"],\
-          ["strip-ansi", "npm:6.0.1"],\
-          ["tar", "npm:6.2.0"],\
-          ["tinylogic", "npm:2.0.0"],\
-          ["treeify", "npm:1.1.0"],\
-          ["tslib", "npm:2.6.3"],\
-          ["tunnel", "npm:0.0.6"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:4.0.5", {\
-        "packageLocation": "./.yarn/cache/@yarnpkg-core-npm-4.0.5-dba111670a-ed2db44e6c.zip/node_modules/@yarnpkg/core/",\
-        "packageDependencies": [\
-          ["@yarnpkg/core", "npm:4.0.5"],\
-          ["@arcanis/slice-ansi", "npm:1.1.1"],\
-          ["@types/lodash", "npm:4.17.4"],\
-          ["@types/semver", "npm:7.5.8"],\
-          ["@types/treeify", "npm:1.0.3"],\
-          ["@yarnpkg/fslib", "npm:3.1.0"],\
-          ["@yarnpkg/libzip", "virtual:eb1af4e935c44961200e2fbd90f764021c5ee1503944ba311cc853ae04dda2f83d4528f4470ed93e9b377f611ca23b14f87abf92b2421b68b87276a95e34ad24#npm:3.1.0"],\
-          ["@yarnpkg/parsers", "npm:3.0.2"],\
-          ["@yarnpkg/shell", "npm:4.0.2"],\
-          ["camelcase", "npm:5.3.1"],\
-          ["chalk", "npm:3.0.0"],\
-          ["ci-info", "npm:3.9.0"],\
-          ["clipanion", "virtual:79bd705dbf206d6bd5005d5f35924cece8938d35eed524c3106dd8d8c6d56228b3ffaf764b0b711713e3d2dfeba0155ac81f45b66f87f4323e61be254172e9b5#npm:4.0.0-rc.3"],\
-          ["cross-spawn", "npm:7.0.3"],\
-          ["diff", "npm:5.1.0"],\
-          ["dotenv", "npm:16.3.1"],\
-          ["fast-glob", "npm:3.3.2"],\
           ["got", "npm:11.8.6"],\
           ["lodash", "npm:4.17.21"],\
           ["micromatch", "npm:4.0.5"],\
