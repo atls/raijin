@@ -570,6 +570,7 @@ __metadata:
     "@types/node": "npm:22.4.1"
     eslint: "npm:8.57.0"
     node-loader: "npm:2.0.0"
+    null-loader: "npm:4.0.1"
     ts-loader: "npm:9.5.1"
     typescript: "npm:5.4.2"
     webpack: "npm:5.93.0"
@@ -11644,6 +11645,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"null-loader@npm:4.0.1":
+  version: 4.0.1
+  resolution: "null-loader@npm:4.0.1"
+  dependencies:
+    loader-utils: "npm:^2.0.0"
+    schema-utils: "npm:^3.0.0"
+  peerDependencies:
+    webpack: ^4.0.0 || ^5.0.0
+  checksum: 10/eeb4c4dd2f8f41e46f5665e4500359109e95ec1028a178a60e0161984906572da7dd87644bcc3cb29f0125d77e2b2508fb4f3813cfb1c6604a15865beb4b987b
+  languageName: node
+  linkType: hard
+
 "object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
@@ -12874,7 +12887,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"schema-utils@npm:^3.1.1, schema-utils@npm:^3.2.0":
+"schema-utils@npm:^3.0.0, schema-utils@npm:^3.1.1, schema-utils@npm:^3.2.0":
   version: 3.3.0
   resolution: "schema-utils@npm:3.3.0"
   dependencies:
