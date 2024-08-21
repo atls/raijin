@@ -1416,16 +1416,16 @@ __metadata:
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
     "@atls/code-typescript-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:1.0.0"
+    "@atls/yarn-test-utils": "workspace:*"
     "@jest/globals": "npm:29.7.0"
-    "@types/react": "npm:^18.3.3"
-    "@yarnpkg/builder": "npm:4.1.1"
-    "@yarnpkg/cli": "npm:4.2.2"
-    "@yarnpkg/core": "npm:4.0.5"
-    "@yarnpkg/fslib": "npm:^3.1.0"
+    "@types/react": "npm:18.3.3"
+    "@yarnpkg/builder": "npm:4.1.2"
+    "@yarnpkg/cli": "npm:4.4.0"
+    "@yarnpkg/core": "npm:4.1.2"
+    "@yarnpkg/fslib": "npm:3.1.0"
     clipanion: "npm:4.0.0-rc.3"
-    react: "npm:^18.3.1"
-    typescript: "npm:5.2.2"
+    react: "npm:18.3.1"
+    typescript: "npm:5.4.2"
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
@@ -1477,7 +1477,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-test-utils@workspace:*, @atls/yarn-test-utils@workspace:1.0.0, @atls/yarn-test-utils@workspace:yarn/test-utils":
+"@atls/yarn-test-utils@workspace:*, @atls/yarn-test-utils@workspace:yarn/test-utils":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-test-utils@workspace:yarn/test-utils"
   dependencies:
@@ -4435,7 +4435,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:18.3.3, @types/react@npm:^18.3.3":
+"@types/react@npm:*, @types/react@npm:18.3.3":
   version: 18.3.3
   resolution: "@types/react@npm:18.3.3"
   dependencies:
@@ -12479,7 +12479,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"react@npm:*, react@npm:18.3.1, react@npm:^18.3.1":
+"react@npm:*, react@npm:18.3.1":
   version: 18.3.1
   resolution: "react@npm:18.3.1"
   dependencies:
