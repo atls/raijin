@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/atls-raijin.iml" filepath="$PROJECT_DIR$/.idea/atls-raijin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../Monstrs/monstrs-tools/.idea/monstrs-tools.iml" filepath="$PROJECT_DIR$/../../Monstrs/monstrs-tools/.idea/monstrs-tools.iml" />
+    </modules>
+  </component>
+</project>

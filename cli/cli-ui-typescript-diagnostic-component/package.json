@@ -30,7 +30,7 @@
     "typescript": "5.4.2"
   },
   "peerDependencies": {
-    "ink": "*3.0.8",
+    "ink": "*",
     "react": "*"
   },
   "publishConfig": {
