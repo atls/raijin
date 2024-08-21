@@ -1,12 +1,16 @@
-import { Endpoints }  from '@octokit/types'
-import { Project }    from '@yarnpkg/core'
-import { context }    from '@actions/github'
-import { getOctokit } from '@actions/github'
-import { execUtils }  from '@yarnpkg/core'
+import type { Endpoints } from '@octokit/types'
+import type { Project }   from '@yarnpkg/core'
+
+import { context }        from '@actions/github'
+import { getOctokit }     from '@actions/github'
+import { execUtils }      from '@yarnpkg/core'
 
 type GetCommitResponseData = Endpoints['GET /repos/{owner}/{repo}/commits/{ref}']['response']
+type GetCommitsResponseData = Endpoints['GET /repos/{owner}/{repo}/commits']['response']['data']
 
-export const getEventCommmits = async () => {
+export const getEventCommmits = async (): Promise<
+  GetCommitResponseData | GetCommitsResponseData
+> => {
   if (context.eventName === 'push') {
     return context.payload.commits
   }
@@ -52,7 +56,10 @@ export const getGithubChangedFiles = async (): Promise<Array<string>> => {
     .flat()
 }
 
-export const getChangedFiles = async (project: Project, gitRange?: string) => {
+export const getChangedFiles = async (
+  project: Project,
+  gitRange?: string
+): Promise<Array<string>> => {
   if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
     return getGithubChangedFiles()
   }
