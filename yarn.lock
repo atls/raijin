@@ -237,7 +237,7 @@ __metadata:
     ink: "npm:4.4.1"
     react: "npm:18.3.1"
   peerDependencies:
-    ink: "*3.0.8"
+    ink: "*"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -255,7 +255,7 @@ __metadata:
     react: "npm:18.3.1"
     strip-ansi: "npm:7.1.0"
   peerDependencies:
-    ink: "*3.0.8"
+    ink: "*"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -275,8 +275,9 @@ __metadata:
     ink-multi-select: "npm:^2.0.0"
     ink-select-input: "npm:^5.0.0"
     ink-text-input: "npm:^5.0.1"
+    react: "npm:18.3.1"
   peerDependencies:
-    ink: "*3.0.8"
+    ink: "*"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -296,7 +297,7 @@ __metadata:
     string-to-color: "npm:2.2.2"
     strip-ansi: "npm:7.1.0"
   peerDependencies:
-    ink: "*3.0.8"
+    ink: "*"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -353,6 +354,7 @@ __metadata:
     ink-multi-select: "npm:2.0.0"
     ink-select-input: "npm:5.0.0"
     ink-text-input: "npm:5.0.1"
+    react: "npm:18.3.1"
   peerDependencies:
     ink: "*"
     react: "*"
@@ -368,9 +370,10 @@ __metadata:
     "@types/node": "npm:22.4.1"
     "@types/react": "npm:18.3.3"
     ink: "npm:4.4.1"
+    react: "npm:18.3.1"
     supports-color: "npm:9.4.0"
   peerDependencies:
-    ink: "*3.0.8"
+    ink: "*"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -389,7 +392,7 @@ __metadata:
     react: "npm:18.3.1"
     strip-ansi: "npm:7.1.0"
   peerDependencies:
-    ink: "*3.0.8"
+    ink: "*"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -408,7 +411,7 @@ __metadata:
     strip-ansi: "npm:7.1.0"
     typescript: "npm:5.4.2"
   peerDependencies:
-    ink: "*3.0.8"
+    ink: "*"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -740,6 +743,7 @@ __metadata:
     eslint-plugin-security: "npm:2.1.1"
     prettier: "npm:3.3.3"
     react: "npm:18.3.1"
+    typescript: "npm:5.4.2"
   peerDependenciesMeta:
     typescript:
       optional: true
@@ -1118,6 +1122,7 @@ __metadata:
     "@yarnpkg/cli": "npm:4.4.0"
     "@yarnpkg/core": "npm:4.1.2"
     "@yarnpkg/plugin-essentials": "npm:4.2.2"
+    "@yarnpkg/plugin-git": "npm:3.1.0"
     clipanion: "npm:4.0.0-rc.3"
   peerDependencies:
     "@yarnpkg/cli": "*"
@@ -4687,7 +4692,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/builder@npm:4.1.2, @yarnpkg/builder@npm:^4.1.1":
+"@yarnpkg/builder@npm:4.1.2":
   version: 4.1.2
   resolution: "@yarnpkg/builder@npm:4.1.2"
   dependencies:
@@ -4705,7 +4710,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/cli@npm:*, @yarnpkg/cli@npm:4.4.0, @yarnpkg/cli@npm:^4.2.2, @yarnpkg/cli@npm:^4.4.0":
+"@yarnpkg/cli@npm:*, @yarnpkg/cli@npm:4.4.0, @yarnpkg/cli@npm:^4.4.0":
   version: 4.4.0
   resolution: "@yarnpkg/cli@npm:4.4.0"
   dependencies:
@@ -4748,25 +4753,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:4.0.0-rc.48":
-  version: 4.0.0-rc.48
-  resolution: "@yarnpkg/core@npm:4.0.0-rc.48"
+"@yarnpkg/core@npm:4.0.1":
+  version: 4.0.1
+  resolution: "@yarnpkg/core@npm:4.0.1"
   dependencies:
     "@arcanis/slice-ansi": "npm:^1.1.1"
     "@types/semver": "npm:^7.1.0"
     "@types/treeify": "npm:^1.0.0"
-    "@yarnpkg/fslib": "npm:^3.0.0-rc.48"
-    "@yarnpkg/libzip": "npm:^3.0.0-rc.48"
-    "@yarnpkg/parsers": "npm:^3.0.0-rc.48"
-    "@yarnpkg/shell": "npm:^4.0.0-rc.48"
+    "@yarnpkg/fslib": "npm:^3.0.1"
+    "@yarnpkg/libzip": "npm:^3.0.0"
+    "@yarnpkg/parsers": "npm:^3.0.0"
+    "@yarnpkg/shell": "npm:^4.0.0"
     camelcase: "npm:^5.3.1"
     chalk: "npm:^3.0.0"
     ci-info: "npm:^3.2.0"
-    clipanion: "npm:^3.2.1"
+    clipanion: "npm:^4.0.0-rc.2"
     cross-spawn: "npm:7.0.3"
     diff: "npm:^5.1.0"
     dotenv: "npm:^16.3.1"
-    globby: "npm:^11.0.1"
+    fast-glob: "npm:^3.2.2"
     got: "npm:^11.7.0"
     lodash: "npm:^4.17.15"
     micromatch: "npm:^4.0.2"
@@ -4778,11 +4783,11 @@ __metadata:
     treeify: "npm:^1.1.0"
     tslib: "npm:^2.4.0"
     tunnel: "npm:^0.0.6"
-  checksum: 10/07428390bf5714f3c7f8d6729577d5d0bf3c42d0a46a8f457a037887a1bc07e660771aed6ab2eee4378064452cf9c823e8cd4bafc860f3e2fa60617900da0c76
+  checksum: 10/52b014ef28a44228944c7ff5be45502b541259c9c1e16d2795433df43fe9720e97961d195b7b6c013cf742b5a4ae132d3f51946626d7189a48836766bc19e263
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:4.1.2, @yarnpkg/core@npm:^4.0.3, @yarnpkg/core@npm:^4.0.5, @yarnpkg/core@npm:^4.1.2":
+"@yarnpkg/core@npm:4.1.2, @yarnpkg/core@npm:^4.0.3, @yarnpkg/core@npm:^4.1.2":
   version: 4.1.2
   resolution: "@yarnpkg/core@npm:4.1.2"
   dependencies:
@@ -4825,7 +4830,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/fslib@npm:*, @yarnpkg/fslib@npm:3.1.0, @yarnpkg/fslib@npm:^3.0.0, @yarnpkg/fslib@npm:^3.0.0-rc.48, @yarnpkg/fslib@npm:^3.0.1, @yarnpkg/fslib@npm:^3.0.2, @yarnpkg/fslib@npm:^3.1.0":
+"@yarnpkg/fslib@npm:*, @yarnpkg/fslib@npm:3.1.0, @yarnpkg/fslib@npm:^3.0.0, @yarnpkg/fslib@npm:^3.0.1, @yarnpkg/fslib@npm:^3.0.2, @yarnpkg/fslib@npm:^3.1.0":
   version: 3.1.0
   resolution: "@yarnpkg/fslib@npm:3.1.0"
   dependencies:
@@ -4846,7 +4851,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/libzip@npm:3.1.0, @yarnpkg/libzip@npm:^3.0.0, @yarnpkg/libzip@npm:^3.0.0-rc.48, @yarnpkg/libzip@npm:^3.0.1, @yarnpkg/libzip@npm:^3.1.0":
+"@yarnpkg/libzip@npm:3.1.0, @yarnpkg/libzip@npm:^3.0.0, @yarnpkg/libzip@npm:^3.0.1, @yarnpkg/libzip@npm:^3.1.0":
   version: 3.1.0
   resolution: "@yarnpkg/libzip@npm:3.1.0"
   dependencies:
@@ -4870,7 +4875,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/parsers@npm:*, @yarnpkg/parsers@npm:3.0.2, @yarnpkg/parsers@npm:^3.0.0, @yarnpkg/parsers@npm:^3.0.0-rc.48, @yarnpkg/parsers@npm:^3.0.2":
+"@yarnpkg/parsers@npm:*, @yarnpkg/parsers@npm:3.0.2, @yarnpkg/parsers@npm:^3.0.0, @yarnpkg/parsers@npm:^3.0.2":
   version: 3.0.2
   resolution: "@yarnpkg/parsers@npm:3.0.2"
   dependencies:
@@ -5077,6 +5082,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@yarnpkg/plugin-npm-cli@npm:4.0.1":
+  version: 4.0.1
+  resolution: "@yarnpkg/plugin-npm-cli@npm:4.0.1"
+  dependencies:
+    "@yarnpkg/fslib": "npm:^3.0.1"
+    clipanion: "npm:^4.0.0-rc.2"
+    enquirer: "npm:^2.3.6"
+    micromatch: "npm:^4.0.2"
+    semver: "npm:^7.1.2"
+    tslib: "npm:^2.4.0"
+    typanion: "npm:^3.14.0"
+  peerDependencies:
+    "@yarnpkg/cli": ^4.0.1
+    "@yarnpkg/core": ^4.0.1
+    "@yarnpkg/plugin-npm": ^3.0.0
+    "@yarnpkg/plugin-pack": ^4.0.0
+  checksum: 10/aaa14518d2789cbc45608d45afd2539ad8a03dce5cab314629b497975a84b5f1d5b282f9d819916cc77f3b5d5e3e567ee72eabe3b3e93f12803ec0adf8ffa040
+  languageName: node
+  linkType: hard
+
 "@yarnpkg/plugin-npm-cli@npm:4.0.4, @yarnpkg/plugin-npm-cli@npm:^4.0.4":
   version: 4.0.4
   resolution: "@yarnpkg/plugin-npm-cli@npm:4.0.4"
@@ -5269,7 +5294,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/shell@npm:4.0.2, @yarnpkg/shell@npm:^4.0.0-rc.48, @yarnpkg/shell@npm:^4.0.2":
+"@yarnpkg/shell@npm:4.0.2, @yarnpkg/shell@npm:^4.0.0, @yarnpkg/shell@npm:^4.0.2":
   version: 4.0.2
   resolution: "@yarnpkg/shell@npm:4.0.2"
   dependencies:
@@ -6292,7 +6317,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clipanion@npm:4.0.0-rc.3, clipanion@npm:^4.0.0-rc.2, clipanion@npm:^4.0.0-rc.3":
+"clipanion@npm:4.0.0-rc.3, clipanion@npm:^4.0.0-rc.2":
   version: 4.0.0-rc.3
   resolution: "clipanion@npm:4.0.0-rc.3"
   dependencies:
@@ -6300,17 +6325,6 @@ __metadata:
   peerDependencies:
     typanion: "*"
   checksum: 10/31edbd69dc0c4a753dfade3be5b38b37490ea7ad6f85c2944defaaef28b441aceeff96ae6720b1e2253c4c17bb161d7abffe152b01be479a32a0685ba7b09dac
-  languageName: node
-  linkType: hard
-
-"clipanion@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "clipanion@npm:3.2.1"
-  dependencies:
-    typanion: "npm:^3.8.0"
-  peerDependencies:
-    typanion: "*"
-  checksum: 10/fdc4d066e6b4683a5264d22851039d41ffcd159eed6888e5aea9744a637effd7a19601fe630c1ab849f22e35620850c5681fe48f12e43c58db1f7ca93ef7bb72
   languageName: node
   linkType: hard
 
@@ -8845,7 +8859,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globby@npm:^11.0.1, globby@npm:^11.1.0":
+"globby@npm:^11.1.0":
   version: 11.1.0
   resolution: "globby@npm:11.1.0"
   dependencies:
@@ -13536,7 +13550,7 @@ pem@dexus/pem:
     "@types/node": "npm:22.4.1"
     "@yarnpkg/builder": "npm:4.1.2"
     esbuild: "npm:esbuild-wasm@^0.17.18"
-    typescript: "npm:5.2.2"
+    typescript: "npm:5.4.2"
   languageName: unknown
   linkType: soft
 

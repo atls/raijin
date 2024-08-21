@@ -34,7 +34,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
         author_name: ${{ steps.get-user-id.outputs.app-slug }}
-        author_email: "${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"
+        author_email: '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>'
         message: ${{ inputs.COMMIT_MESSAGE }}
         add: ${{ inputs.PATTERN }}
         commit: -S
