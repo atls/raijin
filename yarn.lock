@@ -1391,19 +1391,19 @@ __metadata:
     "@atls/code-typescript-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
-    "@jest/globals": "npm:^29.6.1"
-    "@types/react": "npm:^18.3.3"
-    "@yarnpkg/builder": "npm:^4.1.1"
-    "@yarnpkg/cli": "npm:^4.2.2"
-    "@yarnpkg/core": "npm:^4.0.5"
-    "@yarnpkg/fslib": "npm:^3.1.0"
-    clipanion: "npm:^4.0.0-rc.3"
-    react: "npm:^18.3.1"
-    semver: "npm:^7.5.3"
-    typescript: "npm:5.2.2"
+    "@jest/globals": "npm:29.7.0"
+    "@types/react": "npm:18.3.3"
+    "@yarnpkg/builder": "npm:4.1.2"
+    "@yarnpkg/cli": "npm:4.4.0"
+    "@yarnpkg/core": "npm:4.1.2"
+    "@yarnpkg/fslib": "npm:3.1.0"
+    clipanion: "npm:4.0.0-rc.3"
+    react: "npm:18.3.1"
+    semver: "npm:7.6.3"
+    typescript: "npm:5.4.2"
   peerDependencies:
-    "@yarnpkg/cli": ^4
-    "@yarnpkg/core": ^4
+    "@yarnpkg/cli": "*"
+    "@yarnpkg/core": "*"
   languageName: unknown
   linkType: soft
 
