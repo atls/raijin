@@ -21,19 +21,19 @@
     "@atls/code-format-worker": "workspace:*",
     "@atls/code-icons-worker": "workspace:*",
     "@atls/code-lint-worker": "workspace:*",
-    "clipanion": "^4.0.0-rc.3"
+    "clipanion": "4.0.0-rc.3"
   },
   "devDependencies": {
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-test-utils": "workspace:*",
-    "@jest/globals": "^29.6.1",
-    "@yarnpkg/builder": "^4.1.1",
-    "@yarnpkg/cli": "^4.2.2",
-    "@yarnpkg/core": "^4.0.5"
+    "@jest/globals": "29.7.0",
+    "@yarnpkg/builder": "4.1.2",
+    "@yarnpkg/cli": "4.4.0",
+    "@yarnpkg/core": "4.1.2"
   },
   "peerDependencies": {
-    "@yarnpkg/cli": "^4",
-    "@yarnpkg/core": "^4"
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*"
   },
   "publishConfig": {
     "access": "public",
