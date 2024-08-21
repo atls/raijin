@@ -34,7 +34,7 @@
     "react": "18.3.1"
   },
   "devDependencies": {
-    "@types/eslint": "8.56.10",
+    "@types/eslint": "8.56.11",
     "@types/node": "22.4.1"
   },
   "peerDependenciesMeta": {
