@@ -16,7 +16,7 @@ class FormatCommand extends BaseCommand {
 
   files: Array<string> = Option.Rest({ required: 0 })
 
-  async execute() {
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
