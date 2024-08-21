@@ -13,11 +13,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn run build:clean && yarn run build:bundle && yarn run build:fix && yarn run build:dist",
+    "build": "yarn run build:clean && yarn run build:bundle && yarn run build:fix && yarn run build:dist && yarn run build:releases",
     "build:bundle": "builder build bundle && mv bundles/yarn.js bundles/yarn.cjs",
     "build:clean": "rm -rf dist",
     "build:dist": "mv bundles dist",
     "build:fix": "yarn node patches/cli.patch.mjs",
+    "build:releases": "cp -f dist/yarn.cjs ../../.yarn/releases/yarn.cjs",
     "fix": "yarn run build:fix",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"

@@ -1,4 +1,4 @@
-import { access }               from 'node:fs/promises'
+import { rm }                   from 'node:fs/promises'
 import { join }                 from 'node:path'
 
 import { BaseCommand }          from '@yarnpkg/cli'
@@ -6,7 +6,7 @@ import { Configuration }        from '@yarnpkg/core'
 import { StreamReport }         from '@yarnpkg/core'
 import { MessageName }          from '@yarnpkg/core'
 import { Option }               from 'clipanion'
-import { sync }                 from 'rimraf'
+import { isEnum }               from 'typanion'
 import React                    from 'react'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
@@ -20,7 +20,11 @@ class LibraryBuildCommand extends BaseCommand {
 
   target = Option.String('-t,--target', './dist')
 
-  async execute() {
+  module: any = Option.String('-m,--module', 'nodenext', {
+    validator: isEnum(['nodenext', 'commonjs']),
+  })
+
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 
     const commandReport = await StreamReport.start(
@@ -44,7 +48,7 @@ class LibraryBuildCommand extends BaseCommand {
               [join(this.context.cwd, './src')],
               {
                 outDir: join(this.context.cwd, this.target),
-                module: 'nodenext' as any,
+                module: this.module,
                 declaration: true,
               }
             )
@@ -72,11 +76,9 @@ class LibraryBuildCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
-  protected async cleanTarget() {
+  protected async cleanTarget(): Promise<void> {
     try {
-      await access(this.target)
-
-      sync(this.target)
+      await rm(this.target, { recursive: true, force: true })
       // eslint-disable-next-line no-empty
     } catch {}
   }

@@ -18,7 +18,7 @@ describe('yarn', () => {
           {
             dependencies: {
               '@atls/code-runtime': 'workspace:*',
-              typescript: '^5.0.3',
+              typescript: '5.4.2',
             },
           },
           async ({ path, run, source }) => {
