@@ -2327,16 +2327,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/plugin-pnp-patch/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-pnp-patch", "workspace:yarn/plugin-pnp-patch"],\
-          ["@rollup/plugin-commonjs", "virtual:c7334dd9f443839368ec82382a1dba4341ee5cdc3b9891631f29420c090cf04beaa5bfd66afb9c4933228def42a84f812ae4f382d37cf2b562aeca15ea9eaeec#npm:24.1.0"],\
+          ["@rollup/plugin-commonjs", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:25.0.8"],\
           ["@rollup/plugin-node-resolve", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:15.2.3"],\
           ["@yarnpkg/builder", "npm:4.1.2"],\
           ["@yarnpkg/core", "npm:4.1.2"],\
           ["@yarnpkg/fslib", "npm:3.1.0"],\
           ["@yarnpkg/plugin-pnp", "virtual:c7334dd9f443839368ec82382a1dba4341ee5cdc3b9891631f29420c090cf04beaa5bfd66afb9c4933228def42a84f812ae4f382d37cf2b562aeca15ea9eaeec#npm:4.0.5"],\
           ["@yarnpkg/pnp", "file:./cache/yarnpkg-pnp.tgz#./cache/yarnpkg-pnp.tgz::hash=b7572f&locator=%40atls%2Fyarn-plugin-pnp-patch%40workspace%3Ayarn%2Fplugin-pnp-patch"],\
-          ["esbuild", "npm:0.17.19"],\
+          ["esbuild", "npm:0.19.12"],\
           ["rollup", "npm:3.29.4"],\
-          ["rollup-plugin-esbuild", "virtual:fddca280abd8b5379f88f9ba48723e07900c5bd703647a567be9e72ab59557f8b0439163b3330f7e7435934d12fdfea99f22ec539a10ae124cd21836535e9a74#npm:5.0.0"],\
+          ["rollup-plugin-esbuild", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:5.0.0"],\
           ["tslib", "npm:2.6.3"]\
         ],\
         "linkType": "SOFT"\
@@ -5547,13 +5547,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@rollup/plugin-commonjs", [\
-      ["npm:24.1.0", {\
-        "packageLocation": "./.yarn/cache/@rollup-plugin-commonjs-npm-24.1.0-9b38420ebf-5721c7470e.zip/node_modules/@rollup/plugin-commonjs/",\
-        "packageDependencies": [\
-          ["@rollup/plugin-commonjs", "npm:24.1.0"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["npm:25.0.7", {\
         "packageLocation": "./.yarn/cache/@rollup-plugin-commonjs-npm-25.0.7-f5b19139ea-89b108e245.zip/node_modules/@rollup/plugin-commonjs/",\
         "packageDependencies": [\
@@ -5579,25 +5572,6 @@ const RAW_RUNTIME_STATE =
           ["glob", "npm:8.1.0"],\
           ["is-reference", "npm:1.2.1"],\
           ["magic-string", "npm:0.30.10"],\
-          ["rollup", "npm:3.29.4"]\
-        ],\
-        "packagePeers": [\
-          "@types/rollup",\
-          "rollup"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:c7334dd9f443839368ec82382a1dba4341ee5cdc3b9891631f29420c090cf04beaa5bfd66afb9c4933228def42a84f812ae4f382d37cf2b562aeca15ea9eaeec#npm:24.1.0", {\
-        "packageLocation": "./.yarn/__virtual__/@rollup-plugin-commonjs-virtual-338b3ca912/0/cache/@rollup-plugin-commonjs-npm-24.1.0-9b38420ebf-5721c7470e.zip/node_modules/@rollup/plugin-commonjs/",\
-        "packageDependencies": [\
-          ["@rollup/plugin-commonjs", "virtual:c7334dd9f443839368ec82382a1dba4341ee5cdc3b9891631f29420c090cf04beaa5bfd66afb9c4933228def42a84f812ae4f382d37cf2b562aeca15ea9eaeec#npm:24.1.0"],\
-          ["@rollup/pluginutils", "virtual:ff91082e47a1f927ffdc9437948dca9470bd056fb7fb51ab7a0f1d9702799afb2cd66a0e251968d49721ae27670f4d8eef784811e3b2b8ef3c00ea0653a4b5c6#npm:5.1.0"],\
-          ["@types/rollup", null],\
-          ["commondir", "npm:1.0.1"],\
-          ["estree-walker", "npm:2.0.2"],\
-          ["glob", "npm:8.1.0"],\
-          ["is-reference", "npm:1.2.1"],\
-          ["magic-string", "npm:0.27.0"],\
           ["rollup", "npm:3.29.4"]\
         ],\
         "packagePeers": [\
@@ -15803,14 +15777,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["magic-string", [\
-      ["npm:0.27.0", {\
-        "packageLocation": "./.yarn/cache/magic-string-npm-0.27.0-a60a83c0b4-10a18a48d2.zip/node_modules/magic-string/",\
-        "packageDependencies": [\
-          ["magic-string", "npm:0.27.0"],\
-          ["@jridgewell/sourcemap-codec", "npm:1.4.15"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:0.30.10", {\
         "packageLocation": "./.yarn/cache/magic-string-npm-0.30.10-f4e92e6784-9f8bf6363a.zip/node_modules/magic-string/",\
         "packageDependencies": [\
