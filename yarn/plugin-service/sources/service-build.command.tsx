@@ -1,16 +1,11 @@
-import { BaseCommand }            from '@yarnpkg/cli'
 import { Configuration }          from '@yarnpkg/core'
 import { StreamReport }           from '@yarnpkg/core'
-import { MessageName }            from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
 import { Option }                 from 'clipanion'
 import React                      from 'react'
 
-import { ErrorInfo }              from '@atls/cli-ui-error-info-component'
-import { LogRecord }              from '@atls/cli-ui-log-record-component'
 import { ServiceWorker }          from '@atls/code-service-worker'
 import { SpinnerProgress }        from '@atls/yarn-run-utils'
-import { renderStatic }           from '@atls/cli-ui-renderer'
 
 import { AbstractServiceCommand } from './abstract-service.command.jsx'
 
@@ -19,7 +14,7 @@ class ServiceBuildCommand extends AbstractServiceCommand {
 
   showWarnings = Option.Boolean('-w,--show-warnings', false)
 
-  async execute() {
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
@@ -46,7 +41,7 @@ class ServiceBuildCommand extends AbstractServiceCommand {
           } catch (error) {
             progress.end()
 
-            this.renderLogRecord(error, report)
+            this.renderLogRecord(error as Error, report)
           }
         })
       }
