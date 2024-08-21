@@ -2767,7 +2767,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/run-utils/",\
         "packageDependencies": [\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
-          ["@yarnpkg/core", "npm:4.0.5"]\
+          ["@yarnpkg/core", "npm:4.1.2"]\
         ],\
         "linkType": "SOFT"\
       }]\
