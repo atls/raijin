@@ -9,6 +9,7 @@ import { join }                    from 'node:path'
 import { webpack }                 from '@atls/code-runtime/webpack'
 import { tsLoaderPath }            from '@atls/code-runtime/webpack'
 import { nodeLoaderPath }          from '@atls/code-runtime/webpack'
+import { nullLoaderPath }          from '@atls/code-runtime/webpack'
 import tsconfig                    from '@atls/config-typescript'
 
 import { WebpackExternals }        from './webpack.externals.js'
@@ -79,6 +80,12 @@ export class WebpackConfig {
       module: {
         rules: [
           {
+            test: /\.d\.ts$/,
+            use: {
+              loader: nullLoaderPath,
+            },
+          },
+          {
             test: /(^.?|\.[^d]|[^.]d|[^.][^d])\.tsx?$/,
             use: {
               loader: tsLoaderPath,
@@ -94,6 +101,7 @@ export class WebpackConfig {
           },
           { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
           { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
+          { test: /\.(md)$/i, type: 'asset/resource' },
           { test: /\.node$/, use: nodeLoaderPath },
         ],
       },
