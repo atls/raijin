@@ -20,17 +20,16 @@
     "@atls/code-pack": "workspace:*",
     "@atls/yarn-pack-utils": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
-    "@iarna/toml": "^2.2.5",
+    "@iarna/toml": "2.2.5",
     "@yarnpkg/plugin-patch": "4.0.1",
-    "clipanion": "4.0.0-rc.3",
-    "tempy": "1.0.1"
+    "clipanion": "4.0.0-rc.3"
   },
   "devDependencies": {
-    "@yarnpkg/builder": "4.1.1",
-    "@yarnpkg/cli": "4.2.2",
-    "@yarnpkg/core": "4.0.5",
+    "@yarnpkg/builder": "4.1.2",
+    "@yarnpkg/cli": "4.4.0",
+    "@yarnpkg/core": "4.1.2",
     "@yarnpkg/fslib": "3.1.0",
-    "typescript": "5.2.2"
+    "typescript": "5.4.2"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
@@ -39,7 +38,15 @@
   },
   "publishConfig": {
     "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "main": "dist/index.js",
-    "typings": "dist/index.d.ts"
+    "types": "dist/index.d.ts"
   }
 }

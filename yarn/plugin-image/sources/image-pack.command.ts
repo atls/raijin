@@ -1,23 +1,25 @@
-import { readFileSync }  from 'node:fs'
+import type { TagPolicy }    from '@atls/code-pack'
+import type { Workspace }    from '@yarnpkg/core'
+import type { PortablePath } from '@yarnpkg/fslib'
 
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Workspace }     from '@yarnpkg/core'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { StreamReport }  from '@yarnpkg/core'
-import { PortablePath }  from '@yarnpkg/fslib'
-import { stringify }     from '@iarna/toml'
-import { execUtils }     from '@yarnpkg/core'
-import { xfs }           from '@yarnpkg/fslib'
-import { ppath }         from '@yarnpkg/fslib'
-import { Option }        from 'clipanion'
-import { join }          from 'path'
+import { readFileSync }      from 'node:fs'
 
-import { TagPolicy }     from '@atls/code-pack'
-import { tagUtils }      from '@atls/code-pack'
-import { packUtils }     from '@atls/yarn-pack-utils'
+import { BaseCommand }       from '@yarnpkg/cli'
+import { Configuration }     from '@yarnpkg/core'
+import { Project }           from '@yarnpkg/core'
+import { StreamReport }      from '@yarnpkg/core'
+import { stringify }         from '@iarna/toml'
+import { structUtils }       from '@yarnpkg/core'
+import { execUtils }         from '@yarnpkg/core'
+import { xfs }               from '@yarnpkg/fslib'
+import { ppath }             from '@yarnpkg/fslib'
+import { Option }            from 'clipanion'
+import { join }              from 'path'
 
-const forRepository = async (repo: string) => {
+import { tagUtils }          from '@atls/code-pack'
+import { packUtils }         from '@atls/yarn-pack-utils'
+
+const forRepository = async (repo: string): Promise<PortablePath> => {
   const descriptor = {
     project: {
       id: repo,
@@ -45,12 +47,12 @@ class ImagePackCommand extends BaseCommand {
 
   publish: boolean = Option.Boolean('-p,--publish', false)
 
-  async execute() {
+  async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 
     const { project } = await Project.find(configuration, this.context.cwd)
 
-    const workspace = project.getWorkspaceByFilePath(this.context.cwd)
+    const workspace: Workspace = project.getWorkspaceByFilePath(this.context.cwd)
 
     const commandReport = await StreamReport.start(
       {
@@ -63,7 +65,11 @@ class ImagePackCommand extends BaseCommand {
 
           report.reportInfo(
             null,
-            `Package workspace ${workspace.manifest.raw.name} to ${destination}`
+            `Package workspace ${
+              workspace.manifest.name
+                ? structUtils.prettyIdent(configuration, workspace.manifest.name)
+                : workspace.relativeCwd
+            } to ${destination}`
           )
 
           await packUtils.pack(configuration, project, workspace, report, destination)
@@ -78,7 +84,7 @@ class ImagePackCommand extends BaseCommand {
 
           const descriptorPath = await forRepository(repo)
 
-          const buildpackVersion = packConfiguration.buildpackVersion || '0.0.4'
+          const buildpackVersion = packConfiguration.buildpackVersion || '0.0.5'
           const builderTag = packConfiguration.builderTag || 'buster-18.19'
 
           const args = [
@@ -111,7 +117,11 @@ class ImagePackCommand extends BaseCommand {
         } else {
           report.reportInfo(
             null,
-            `Workspace ${workspace.manifest.raw.name} not allowed for package.`
+            `Workspace ${
+              workspace.manifest.name
+                ? structUtils.prettyIdent(configuration, workspace.manifest.name)
+                : workspace.relativeCwd
+            } not allowed for package.`
           )
         }
       }
@@ -129,12 +139,14 @@ class ImagePackCommand extends BaseCommand {
       'actl service build',
       'actl renderer build',
       'build-storybook',
+      'storybook build',
       'next build',
       'builder build library',
       'app service build',
       'app renderer build',
       'service build',
       'renderer build',
+      'strapi build',
     ].some((command) => buildCommand?.includes(command))
 
     return hasAllowedBuildScript && Boolean(name)
