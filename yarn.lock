@@ -1343,15 +1343,19 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-test@workspace:yarn/plugin-test"
   dependencies:
+    "@atls/cli-ui-log-record-component": "workspace:*"
+    "@atls/cli-ui-renderer": "workspace:*"
     "@atls/code-test-worker": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@jest/globals": "npm:29.7.0"
-    "@yarnpkg/builder": "npm:4.1.1"
-    "@yarnpkg/cli": "npm:4.2.2"
-    "@yarnpkg/core": "npm:4.0.5"
+    "@types/react": "npm:18.3.3"
+    "@yarnpkg/builder": "npm:4.1.2"
+    "@yarnpkg/cli": "npm:4.4.0"
+    "@yarnpkg/core": "npm:4.1.2"
     "@yarnpkg/fslib": "npm:3.1.0"
     clipanion: "npm:4.0.0-rc.3"
-    typescript: "npm:5.2.2"
+    react: "npm:18.3.1"
+    typescript: "npm:5.4.2"
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
