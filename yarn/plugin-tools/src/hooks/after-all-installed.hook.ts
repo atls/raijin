@@ -60,8 +60,8 @@ const hook = (command: string): string =>
 ${command}
 `
 
-const git = (args: Array<string>): SpawnSyncReturns<Buffer> =>
-  spawnSync('git', args, { stdio: 'inherit' })
+const git = (args: Array<string>): SpawnSyncReturns<string> =>
+  spawnSync('git', args, { encoding: 'utf-8' })
 
 const hooksExists = (): boolean => {
   const { error, output } = git(['config', 'core.hooksPath'])
@@ -87,9 +87,11 @@ export const afterAllInstalled = async (project: Project): Promise<void> => {
         hook('yarn commit message lint'),
         { mode: 0o755 }
       )
+
       await xfs.writeFilePromise(ppath.join(target, 'pre-commit'), hook('yarn commit staged'), {
         mode: 0o755,
       })
+
       await xfs.writeFilePromise(
         ppath.join(target, 'prepare-commit-msg'),
         hook('yarn commit message $@'),

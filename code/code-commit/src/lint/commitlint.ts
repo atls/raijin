@@ -201,6 +201,6 @@ export async function lint(
     valid,
     errors,
     warnings,
-    input: buildCommitMesage(parsed),
+    input: buildCommitMessage(parsed),
   }
 }

@@ -4,7 +4,7 @@ import type { CommandContext } from '@yarnpkg/core'
 import { execUtils }           from '@yarnpkg/core'
 
 export const afterYarnVersionSet = async (
-  configuration: Configuration,
+  _: Configuration,
   context: CommandContext
 ): Promise<void> => {
   await execUtils.pipevp('yarn', ['tools', 'sync'], {
