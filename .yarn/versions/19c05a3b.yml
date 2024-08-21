@@ -1,4 +1,0 @@
-releases:
-  "@atls/code-runtime": minor
-  "@atls/code-service": minor
-  "@atls/code-service-worker": minor
