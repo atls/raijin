@@ -59,7 +59,7 @@ export class WebpackConfig {
         chunkFormat: type,
         module: type === 'module',
         publicPath: './',
-        clean: true,
+        clean: false,
         assetModuleFilename: 'assets/[name][ext]',
       },
       resolve: {
