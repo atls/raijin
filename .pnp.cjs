@@ -590,22 +590,22 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@angular-devkit/core", [\
-      ["npm:18.0.6", {\
-        "packageLocation": "./.yarn/cache/@angular-devkit-core-npm-18.0.6-9fae0d6c85-1b0959ca46.zip/node_modules/@angular-devkit/core/",\
+      ["npm:18.2.2", {\
+        "packageLocation": "./.yarn/cache/@angular-devkit-core-npm-18.2.2-5b399fd162-2a6161631b.zip/node_modules/@angular-devkit/core/",\
         "packageDependencies": [\
-          ["@angular-devkit/core", "npm:18.0.6"]\
+          ["@angular-devkit/core", "npm:18.2.2"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6", {\
-        "packageLocation": "./.yarn/__virtual__/@angular-devkit-core-virtual-208d04addb/0/cache/@angular-devkit-core-npm-18.0.6-9fae0d6c85-1b0959ca46.zip/node_modules/@angular-devkit/core/",\
+      ["virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2", {\
+        "packageLocation": "./.yarn/__virtual__/@angular-devkit-core-virtual-09fdbb7e5f/0/cache/@angular-devkit-core-npm-18.2.2-5b399fd162-2a6161631b.zip/node_modules/@angular-devkit/core/",\
         "packageDependencies": [\
-          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
+          ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
           ["@types/chokidar", null],\
-          ["ajv", "npm:8.13.0"],\
-          ["ajv-formats", "virtual:208d04addb7156a6b534cf54bd36d010fb06adb9f79f04d3fe9158d6b645794ff6e7696f6407f86e47f725f0b9e97b3cad68a5878aefe176ec5b832ff2e258e6#npm:3.0.1"],\
+          ["ajv", "npm:8.17.1"],\
+          ["ajv-formats", "virtual:09fdbb7e5f24e447fddb2852a50acf7e17e4c2d22179ea600b769b365cf59790b30d23112271df0c047e4a76fb4cbae994a2b8477c78c8c336efe8a7946ea663#npm:3.0.1"],\
           ["chokidar", null],\
-          ["jsonc-parser", "npm:3.2.1"],\
+          ["jsonc-parser", "npm:3.3.1"],\
           ["picomatch", "npm:4.0.2"],\
           ["rxjs", "npm:7.8.1"],\
           ["source-map", "npm:0.7.4"]\
@@ -618,13 +618,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@angular-devkit/schematics", [\
-      ["npm:18.0.6", {\
-        "packageLocation": "./.yarn/cache/@angular-devkit-schematics-npm-18.0.6-a4d30b16e2-deb49126af.zip/node_modules/@angular-devkit/schematics/",\
+      ["npm:18.2.2", {\
+        "packageLocation": "./.yarn/cache/@angular-devkit-schematics-npm-18.2.2-4714d23333-6fc2456222.zip/node_modules/@angular-devkit/schematics/",\
         "packageDependencies": [\
-          ["@angular-devkit/schematics", "npm:18.0.6"],\
-          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
-          ["jsonc-parser", "npm:3.2.1"],\
-          ["magic-string", "npm:0.30.10"],\
+          ["@angular-devkit/schematics", "npm:18.2.2"],\
+          ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
+          ["jsonc-parser", "npm:3.3.1"],\
+          ["magic-string", "npm:0.30.11"],\
           ["ora", "npm:5.4.1"],\
           ["rxjs", "npm:7.8.1"]\
         ],\
@@ -1059,10 +1059,10 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-commit", "workspace:code/code-commit"],\
           ["@commitlint/format", "npm:19.3.0"],\
           ["@commitlint/is-ignored", "npm:19.2.2"],\
-          ["@commitlint/lint", "npm:19.2.2"],\
+          ["@commitlint/lint", "npm:19.4.1"],\
           ["@commitlint/load", "npm:19.4.0"],\
           ["@commitlint/read", "npm:19.4.0"],\
-          ["@commitlint/rules", "npm:19.0.3"],\
+          ["@commitlint/rules", "npm:19.4.1"],\
           ["@commitlint/types", "npm:19.0.3"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/conventional-commits-parser", "npm:5.0.0"],\
@@ -1254,8 +1254,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-schematics/",\
         "packageDependencies": [\
           ["@atls/code-schematics", "workspace:code/code-schematics"],\
-          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
-          ["@angular-devkit/schematics", "npm:18.0.6"],\
+          ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
+          ["@angular-devkit/schematics", "npm:18.2.2"],\
           ["rxjs", "npm:7.8.1"]\
         ],\
         "linkType": "SOFT"\
@@ -1266,7 +1266,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-schematics-worker/",\
         "packageDependencies": [\
           ["@atls/code-schematics-worker", "workspace:code/code-schematics-worker"],\
-          ["@angular-devkit/schematics", "npm:18.0.6"],\
+          ["@angular-devkit/schematics", "npm:18.2.2"],\
           ["@atls/code-schematics", "workspace:code/code-schematics"],\
           ["@atls/code-worker-utils", "workspace:code/code-worker-utils"],\
           ["@rollup/plugin-commonjs", "virtual:341920ae91697cec1706201e0cf77b15fe6a80313611d53aeb2f9ae6aa2523545876ae1d0d6a9c20647f88c899540110d7546678b1d839d840fb5fd53ebb8498#npm:25.0.8"],\
@@ -1583,8 +1583,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./schematics/schematics/",\
         "packageDependencies": [\
           ["@atls/schematics", "workspace:schematics/schematics"],\
-          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
-          ["@angular-devkit/schematics", "npm:18.0.6"],\
+          ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
+          ["@angular-devkit/schematics", "npm:18.2.2"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
@@ -1601,8 +1601,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./schematics/schematics-utils/",\
         "packageDependencies": [\
           ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
-          ["@angular-devkit/core", "virtual:a4d30b16e22b79e74322c683383825ed2f067e13943925137c9e002c904ea88489dda2160f61f4d25eaf5a6e3551c0c88869a29c14fff5f2cb4ec0d37667615c#npm:18.0.6"],\
-          ["@angular-devkit/schematics", "npm:18.0.6"],\
+          ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
+          ["@angular-devkit/schematics", "npm:18.2.2"],\
           ["@types/js-yaml", "npm:4.0.9"],\
           ["@types/node", "npm:22.5.1"],\
           ["js-yaml", "npm:4.1.0"],\
@@ -3545,7 +3545,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@commitlint/config-validator", "npm:19.0.3"],\
           ["@commitlint/types", "npm:19.0.3"],\
-          ["ajv", "npm:8.13.0"]\
+          ["ajv", "npm:8.17.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3597,13 +3597,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@commitlint/lint", [\
-      ["npm:19.2.2", {\
-        "packageLocation": "./.yarn/cache/@commitlint-lint-npm-19.2.2-0724d922e2-9bf2ffa0f6.zip/node_modules/@commitlint/lint/",\
+      ["npm:19.4.1", {\
+        "packageLocation": "./.yarn/cache/@commitlint-lint-npm-19.4.1-b040193911-57f264eafb.zip/node_modules/@commitlint/lint/",\
         "packageDependencies": [\
-          ["@commitlint/lint", "npm:19.2.2"],\
+          ["@commitlint/lint", "npm:19.4.1"],\
           ["@commitlint/is-ignored", "npm:19.2.2"],\
           ["@commitlint/parse", "npm:19.0.3"],\
-          ["@commitlint/rules", "npm:19.0.3"],\
+          ["@commitlint/rules", "npm:19.4.1"],\
           ["@commitlint/types", "npm:19.0.3"]\
         ],\
         "linkType": "HARD"\
@@ -3679,10 +3679,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@commitlint/rules", [\
-      ["npm:19.0.3", {\
-        "packageLocation": "./.yarn/cache/@commitlint-rules-npm-19.0.3-9547d09d1e-218033d96b.zip/node_modules/@commitlint/rules/",\
+      ["npm:19.4.1", {\
+        "packageLocation": "./.yarn/cache/@commitlint-rules-npm-19.4.1-829008e759-c5626278aa.zip/node_modules/@commitlint/rules/",\
         "packageDependencies": [\
-          ["@commitlint/rules", "npm:19.0.3"],\
+          ["@commitlint/rules", "npm:19.4.1"],\
           ["@commitlint/ensure", "npm:19.0.3"],\
           ["@commitlint/message", "npm:19.0.0"],\
           ["@commitlint/to-lines", "npm:19.0.0"],\
@@ -4797,7 +4797,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@jridgewell/gen-mapping", "npm:0.3.5"],\
           ["@jridgewell/set-array", "npm:1.2.1"],\
-          ["@jridgewell/sourcemap-codec", "npm:1.4.15"],\
+          ["@jridgewell/sourcemap-codec", "npm:1.5.0"],\
           ["@jridgewell/trace-mapping", "npm:0.3.25"]\
         ],\
         "linkType": "HARD"\
@@ -4833,10 +4833,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@jridgewell/sourcemap-codec", [\
-      ["npm:1.4.15", {\
-        "packageLocation": "./.yarn/cache/@jridgewell-sourcemap-codec-npm-1.4.15-a055fb62cf-89960ac087.zip/node_modules/@jridgewell/sourcemap-codec/",\
+      ["npm:1.5.0", {\
+        "packageLocation": "./.yarn/cache/@jridgewell-sourcemap-codec-npm-1.5.0-dfd9126d71-4ed6123217.zip/node_modules/@jridgewell/sourcemap-codec/",\
         "packageDependencies": [\
-          ["@jridgewell/sourcemap-codec", "npm:1.4.15"]\
+          ["@jridgewell/sourcemap-codec", "npm:1.5.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4847,7 +4847,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@jridgewell/trace-mapping", "npm:0.3.25"],\
           ["@jridgewell/resolve-uri", "npm:3.1.2"],\
-          ["@jridgewell/sourcemap-codec", "npm:1.4.15"]\
+          ["@jridgewell/sourcemap-codec", "npm:1.5.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5237,7 +5237,7 @@ const RAW_RUNTIME_STATE =
           ["estree-walker", "npm:2.0.2"],\
           ["glob", "npm:8.1.0"],\
           ["is-reference", "npm:1.2.1"],\
-          ["magic-string", "npm:0.30.10"],\
+          ["magic-string", "npm:0.30.11"],\
           ["rollup", "npm:3.29.4"]\
         ],\
         "packagePeers": [\
@@ -5319,7 +5319,7 @@ const RAW_RUNTIME_STATE =
           ["@rollup/plugin-replace", "virtual:763b622b7a006ee8e232d1b5580b2882cf6fcd5b26246b6123da9ea2067eb378cded0faa49576e61db484745a2516cf36cfa68571ece9a6d5d7eaddb415ed842#npm:5.0.7"],\
           ["@rollup/pluginutils", "virtual:ff91082e47a1f927ffdc9437948dca9470bd056fb7fb51ab7a0f1d9702799afb2cd66a0e251968d49721ae27670f4d8eef784811e3b2b8ef3c00ea0653a4b5c6#npm:5.1.0"],\
           ["@types/rollup", null],\
-          ["magic-string", "npm:0.30.10"],\
+          ["magic-string", "npm:0.30.11"],\
           ["rollup", "npm:3.29.4"]\
         ],\
         "packagePeers": [\
@@ -5334,7 +5334,7 @@ const RAW_RUNTIME_STATE =
           ["@rollup/plugin-replace", "virtual:fddca280abd8b5379f88f9ba48723e07900c5bd703647a567be9e72ab59557f8b0439163b3330f7e7435934d12fdfea99f22ec539a10ae124cd21836535e9a74#npm:5.0.5"],\
           ["@rollup/pluginutils", "virtual:ff91082e47a1f927ffdc9437948dca9470bd056fb7fb51ab7a0f1d9702799afb2cd66a0e251968d49721ae27670f4d8eef784811e3b2b8ef3c00ea0653a4b5c6#npm:5.1.0"],\
           ["@types/rollup", null],\
-          ["magic-string", "npm:0.30.10"],\
+          ["magic-string", "npm:0.30.11"],\
           ["rollup", "npm:3.29.4"]\
         ],\
         "packagePeers": [\
@@ -6090,7 +6090,7 @@ const RAW_RUNTIME_STATE =
           ["@swc/core", "virtual:73f78220b762a8b3f9959c25380f5a194f70a3105d93910529610ef7171947ce75988011e7be7fd6a88382aeebcfeb82a2e9b5c224d60b8fa1e12fcd622c5a96#npm:1.7.14"],\
           ["@swc/counter", "npm:0.1.3"],\
           ["@types/swc__core", null],\
-          ["jsonc-parser", "npm:3.2.1"]\
+          ["jsonc-parser", "npm:3.3.1"]\
         ],\
         "packagePeers": [\
           "@swc/core",\
@@ -8821,14 +8821,14 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:8.13.0", {\
-        "packageLocation": "./.yarn/cache/ajv-npm-8.13.0-9ead80cc62-4ada268c9a.zip/node_modules/ajv/",\
+      ["npm:8.17.1", {\
+        "packageLocation": "./.yarn/cache/ajv-npm-8.17.1-12ade7edc6-ee3c62162c.zip/node_modules/ajv/",\
         "packageDependencies": [\
-          ["ajv", "npm:8.13.0"],\
+          ["ajv", "npm:8.17.1"],\
           ["fast-deep-equal", "npm:3.1.3"],\
+          ["fast-uri", "npm:3.0.1"],\
           ["json-schema-traverse", "npm:1.0.0"],\
-          ["require-from-string", "npm:2.0.2"],\
-          ["uri-js", "npm:4.4.1"]\
+          ["require-from-string", "npm:2.0.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -8841,12 +8841,12 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:208d04addb7156a6b534cf54bd36d010fb06adb9f79f04d3fe9158d6b645794ff6e7696f6407f86e47f725f0b9e97b3cad68a5878aefe176ec5b832ff2e258e6#npm:3.0.1", {\
-        "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-10f42d5ffb/0/cache/ajv-formats-npm-3.0.1-2662cf5b12-5679b9f9ce.zip/node_modules/ajv-formats/",\
+      ["virtual:09fdbb7e5f24e447fddb2852a50acf7e17e4c2d22179ea600b769b365cf59790b30d23112271df0c047e4a76fb4cbae994a2b8477c78c8c336efe8a7946ea663#npm:3.0.1", {\
+        "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-869bc6b096/0/cache/ajv-formats-npm-3.0.1-2662cf5b12-5679b9f9ce.zip/node_modules/ajv-formats/",\
         "packageDependencies": [\
-          ["ajv-formats", "virtual:208d04addb7156a6b534cf54bd36d010fb06adb9f79f04d3fe9158d6b645794ff6e7696f6407f86e47f725f0b9e97b3cad68a5878aefe176ec5b832ff2e258e6#npm:3.0.1"],\
+          ["ajv-formats", "virtual:09fdbb7e5f24e447fddb2852a50acf7e17e4c2d22179ea600b769b365cf59790b30d23112271df0c047e4a76fb4cbae994a2b8477c78c8c336efe8a7946ea663#npm:3.0.1"],\
           ["@types/ajv", null],\
-          ["ajv", "npm:8.13.0"]\
+          ["ajv", "npm:8.17.1"]\
         ],\
         "packagePeers": [\
           "@types/ajv",\
@@ -12040,6 +12040,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["fast-uri", [\
+      ["npm:3.0.1", {\
+        "packageLocation": "./.yarn/cache/fast-uri-npm-3.0.1-20477a5d16-e8ee471227.zip/node_modules/fast-uri/",\
+        "packageDependencies": [\
+          ["fast-uri", "npm:3.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["fastq", [\
       ["npm:1.16.0", {\
         "packageLocation": "./.yarn/cache/fastq-npm-1.16.0-88070bb399-de151543aa.zip/node_modules/fastq/",\
@@ -14558,10 +14567,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["jsonc-parser", [\
-      ["npm:3.2.1", {\
-        "packageLocation": "./.yarn/cache/jsonc-parser-npm-3.2.1-776f636a18-fe2df6f39e.zip/node_modules/jsonc-parser/",\
+      ["npm:3.3.1", {\
+        "packageLocation": "./.yarn/cache/jsonc-parser-npm-3.3.1-f57c3cdcf5-9b0dc391f2.zip/node_modules/jsonc-parser/",\
         "packageDependencies": [\
-          ["jsonc-parser", "npm:3.2.1"]\
+          ["jsonc-parser", "npm:3.3.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15005,11 +15014,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["magic-string", [\
-      ["npm:0.30.10", {\
-        "packageLocation": "./.yarn/cache/magic-string-npm-0.30.10-f4e92e6784-9f8bf6363a.zip/node_modules/magic-string/",\
+      ["npm:0.30.11", {\
+        "packageLocation": "./.yarn/cache/magic-string-npm-0.30.11-4e76dc2f30-b784d22402.zip/node_modules/magic-string/",\
         "packageDependencies": [\
-          ["magic-string", "npm:0.30.10"],\
-          ["@jridgewell/sourcemap-codec", "npm:1.4.15"]\
+          ["magic-string", "npm:0.30.11"],\
+          ["@jridgewell/sourcemap-codec", "npm:1.5.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -16822,7 +16831,7 @@ const RAW_RUNTIME_STATE =
           ["es-module-lexer", "npm:1.5.0"],\
           ["esbuild", "npm:0.19.12"],\
           ["joycon", "npm:3.1.1"],\
-          ["jsonc-parser", "npm:3.2.1"],\
+          ["jsonc-parser", "npm:3.3.1"],\
           ["rollup", "npm:3.29.4"]\
         ],\
         "packagePeers": [\
