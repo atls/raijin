@@ -19,7 +19,7 @@
   "dependencies": {
     "@atls/jest-resolver": "workspace:*",
     "@emotion/jest": "11.13.0",
-    "@swc/core": "1.7.14",
+    "@swc/core": "1.7.22",
     "@swc/jest": "0.2.36",
     "@vanilla-extract/jest-transform": "1.1.9",
     "jest-static-stubs": "0.0.1"
