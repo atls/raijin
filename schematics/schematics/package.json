@@ -17,8 +17,8 @@
     "postpack": "rm -rf dist && yarn node ./scripts/postpack.mjs"
   },
   "dependencies": {
-    "@angular-devkit/core": "18.0.6",
-    "@angular-devkit/schematics": "18.0.6",
+    "@angular-devkit/core": "18.2.2",
+    "@angular-devkit/schematics": "18.2.2",
     "@atls/config-typescript": "workspace:*",
     "@atls/schematics-utils": "workspace:*"
   },

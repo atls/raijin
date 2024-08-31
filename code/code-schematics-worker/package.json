@@ -22,7 +22,7 @@
     "@atls/code-worker-utils": "workspace:*"
   },
   "devDependencies": {
-    "@angular-devkit/schematics": "18.0.6",
+    "@angular-devkit/schematics": "18.2.2",
     "@rollup/plugin-commonjs": "25.0.8",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.2.3",
