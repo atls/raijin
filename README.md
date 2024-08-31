@@ -16,7 +16,7 @@ Tools are designed to be used in projects with Javascript and Typescript and are
 
 To start using it:
 
-- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.cjs` - installs our latest custom yarn bundle in the project scope.
+- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.cjs` - installs our latest custom yarn bundle in the project scope.
 
 ## Commonly used scrips `yarn`
 

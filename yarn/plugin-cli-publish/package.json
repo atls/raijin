@@ -18,9 +18,9 @@
     "postpack": "rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "22.4.1",
-    "@yarnpkg/builder": "4.1.2",
-    "@yarnpkg/cli": "4.4.0",
+    "@types/node": "22.5.1",
+    "@yarnpkg/builder": "4.2.0",
+    "@yarnpkg/cli": "4.4.1",
     "@yarnpkg/core": "4.1.2",
     "@yarnpkg/fslib": "3.1.0"
   },

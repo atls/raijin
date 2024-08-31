@@ -50,6 +50,7 @@ node_modules
 /.yarn/install-state.gz
 
 dist/
+!yarn/cli/dist
 
 package.tgz
 

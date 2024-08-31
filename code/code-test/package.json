@@ -24,7 +24,7 @@
     "@jest/types": "29.6.3"
   },
   "devDependencies": {
-    "@types/node": "22.4.1"
+    "@types/node": "22.5.1"
   },
   "peerDependenciesMeta": {
     "jest": {

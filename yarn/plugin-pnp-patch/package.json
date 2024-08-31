@@ -21,7 +21,7 @@
     "yarn:download": "yarn node ./scripts/download-yarn-pnp-packages.script.mjs"
   },
   "dependencies": {
-    "@yarnpkg/builder": "4.1.2",
+    "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/core": "4.1.2",
     "@yarnpkg/fslib": "3.1.0",
     "@yarnpkg/plugin-pnp": "4.0.5",

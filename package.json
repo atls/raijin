@@ -32,8 +32,8 @@
   },
   "devDependencies": {
     "@atls/code-runtime": "workspace:*",
-    "@types/node": "22.4.1",
-    "@yarnpkg/builder": "4.1.2",
+    "@types/node": "22.5.1",
+    "@yarnpkg/builder": "4.2.0",
     "esbuild": "npm:esbuild-wasm@^0.17.18",
     "typescript": "5.4.2"
   },

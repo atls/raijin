@@ -29,9 +29,9 @@
     "word-wrap": "1.2.5"
   },
   "devDependencies": {
-    "@types/react": "18.3.3",
-    "@yarnpkg/builder": "4.1.2",
-    "@yarnpkg/cli": "4.4.0",
+    "@types/react": "18.3.5",
+    "@yarnpkg/builder": "4.2.0",
+    "@yarnpkg/cli": "4.4.1",
     "@yarnpkg/core": "4.1.2",
     "@yarnpkg/fslib": "3.1.0"
   },

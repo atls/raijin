@@ -19,9 +19,9 @@
     "@atls/cli-ui-stack-trace-component": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "22.4.1",
-    "@types/react": "18.3.3",
-    "ink": "4.4.1",
+    "@types/node": "22.5.1",
+    "@types/react": "18.3.5",
+    "ink": "3.2.0",
     "react": "18.3.1"
   },
   "peerDependencies": {
