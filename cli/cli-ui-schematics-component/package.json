@@ -18,8 +18,8 @@
   "devDependencies": {
     "@atls/cli-ui-parts": "workspace:*",
     "@atls/schematics": "workspace:*",
-    "@types/node": "22.4.1",
-    "@types/react": "18.3.3",
+    "@types/node": "22.5.1",
+    "@types/react": "18.3.5",
     "@yarnpkg/libui": "3.0.0",
     "camelcase": "8.0.0",
     "figures": "6.1.0",

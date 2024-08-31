@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@atls/config-prettier": "workspace:*",
-    "@next/eslint-plugin-next": "14.2.5",
+    "@next/eslint-plugin-next": "14.2.7",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "eslint": "8.57.0",
@@ -34,8 +34,8 @@
     "react": "18.3.1"
   },
   "devDependencies": {
-    "@types/eslint": "8.56.11",
-    "@types/node": "22.4.1",
+    "@types/eslint": "8.56.12",
+    "@types/node": "22.5.1",
     "typescript": "5.4.2"
   },
   "peerDependenciesMeta": {
