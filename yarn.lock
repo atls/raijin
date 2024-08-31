@@ -600,7 +600,7 @@ __metadata:
     "@rollup/plugin-commonjs": "npm:25.0.8"
     "@rollup/plugin-json": "npm:6.1.0"
     "@rollup/plugin-node-resolve": "npm:15.2.3"
-    "@rollup/plugin-replace": "npm:5.0.5"
+    "@rollup/plugin-replace": "npm:5.0.7"
     "@types/node": "npm:22.5.1"
     builtin-modules: "npm:3.3.0"
     esbuild: "npm:^0.19.9"
@@ -823,7 +823,7 @@ __metadata:
     import-sort-parser-typescript: "npm:6.0.0"
     import-sort-style: "npm:6.0.0"
     prettier: "npm:3.3.3"
-    sort-package-json: "npm:^2.4.1"
+    sort-package-json: "npm:2.4.1"
   languageName: unknown
   linkType: soft
 
@@ -837,7 +837,7 @@ __metadata:
     "@types/node": "npm:22.5.1"
     js-yaml: "npm:4.1.0"
     rimraf: "npm:5.0.10"
-    semver: "npm:7.5.4"
+    semver: "npm:7.6.3"
     strip-json-comments: "npm:3.1.1"
     typescript: "npm:5.4.2"
   languageName: unknown
@@ -3327,21 +3327,6 @@ __metadata:
     rollup:
       optional: true
   checksum: 10/d36a6792fbe9d8673d3a7c7dc88920be669ac54fba02ac0093d3c00fc9463fce2e87da1906a2651016742709c3d202b367fb49a62acd0d98f18409343f27b8b4
-  languageName: node
-  linkType: hard
-
-"@rollup/plugin-replace@npm:5.0.5":
-  version: 5.0.5
-  resolution: "@rollup/plugin-replace@npm:5.0.5"
-  dependencies:
-    "@rollup/pluginutils": "npm:^5.0.1"
-    magic-string: "npm:^0.30.3"
-  peerDependencies:
-    rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-  peerDependenciesMeta:
-    rollup:
-      optional: true
-  checksum: 10/bcf106346f1990478a569cda6b375411dd27e0110238f8b10b424c55f09a2788a607e42fce713480c19ed942dcd67411b64c25471086de560da1e58d8f4e0740
   languageName: node
   linkType: hard
 
@@ -10612,15 +10597,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "lru-cache@npm:6.0.0"
-  dependencies:
-    yallist: "npm:^4.0.0"
-  checksum: 10/fc1fe2ee205f7c8855fa0f34c1ab0bcf14b6229e35579ec1fd1079f31d6fc8ef8eb6fd17f2f4d99788d7e339f50e047555551ebd5e434dda503696e7c6591825
-  languageName: node
-  linkType: hard
-
 "magic-string@npm:0.30.11, magic-string@npm:^0.30.3":
   version: 0.30.11
   resolution: "magic-string@npm:0.30.11"
@@ -12378,17 +12354,6 @@ pem@dexus/pem:
   bin:
     semver: bin/semver.js
   checksum: 10/36b1fbe1a2b6f873559cd57b238f1094a053dbfd997ceeb8757d79d1d2089c56d1321b9f1069ce263dc64cfa922fa1d2ad566b39426fe1ac6c723c1487589e10
-  languageName: node
-  linkType: hard
-
-"semver@npm:7.5.4":
-  version: 7.5.4
-  resolution: "semver@npm:7.5.4"
-  dependencies:
-    lru-cache: "npm:^6.0.0"
-  bin:
-    semver: bin/semver.js
-  checksum: 10/985dec0d372370229a262c737063860fabd4a1c730662c1ea3200a2f649117761a42184c96df62a0e885e76fbd5dace41087d6c1ac0351b13c0df5d6bcb1b5ac
   languageName: node
   linkType: hard
 

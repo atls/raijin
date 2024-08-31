@@ -19,7 +19,7 @@
     "@angular-devkit/core": "18.2.2",
     "@angular-devkit/schematics": "18.2.2",
     "js-yaml": "4.1.0",
-    "semver": "7.5.4",
+    "semver": "7.6.3",
     "strip-json-comments": "3.1.1"
   },
   "devDependencies": {
