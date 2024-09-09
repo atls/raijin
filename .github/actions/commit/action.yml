@@ -22,19 +22,28 @@ runs:
   using: composite
 
   steps:
-    - name: Get GitHub App User ID
-      id: get-user-id
-      run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> $GITHUB_OUTPUT
-      env:
-        GH_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+    - name: Compose commit message
+      id: commit_message
+      run: |
+        INITIAL_MESSAGE=$'chore(common): versions\n\n'
+        temp_file=$(mktemp)
+        yarn workspaces changed foreach exec "echo \"\$npm_package_name:\$npm_package_version \" >> $temp_file"
+        MESSAGE=$(cat $temp_file)
+        echo $(cat $temp_file)
+        INITIAL_MESSAGE+=$MESSAGE
+        INITIAL_MESSAGE="${INITIAL_MESSAGE//'%'/' '}"
+        INITIAL_MESSAGE="${INITIAL_MESSAGE//$'\n'/' '}"
+        INITIAL_MESSAGE="${INITIAL_MESSAGE//$'\r'/' '}"
+        echo "commitMessage=$INITIAL_MESSAGE" >> $GITHUB_OUTPUT
+        echo $INITIAL_MESSAGE
+        rm $temp_file
 
     - name: Commit changes
-      uses: EndBug/add-and-commit@v9
+      uses: planetscale/ghcommit-action@v0.1.44
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
-        author_name: ${{ steps.get-user-id.outputs.app-slug }}
-        author_email: '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>'
-        message: ${{ inputs.COMMIT_MESSAGE }}
-        add: ${{ inputs.PATTERN }}
-        commit: -S
+        repo: ${{ github.repository }}
+        branch: ${{ inputs.BRANCH }}
+        commit_message: ${{ inputs.COMMIT_MESSAGE }}
+        file_pattern: ${{ inputs.PATTERN }}

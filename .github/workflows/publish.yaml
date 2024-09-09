@@ -32,8 +32,10 @@ jobs:
       - name: Install
         uses: ./.github/actions/install
 
-      - name: Apply versions
-        uses: ./.github/actions/version-apply
+      - name: Version
+        uses: ./.github/actions/version
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
         id: npm
