@@ -27,4 +27,4 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach --verbose --topological --no-private dlx jsr publish --dry-run
+        yarn workspaces changed foreach -vtp --no-private dlx jsr publish --dry-run
