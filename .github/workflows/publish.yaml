@@ -44,23 +44,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
+        if: ${{ !cancelled() }}
         id: npm
         uses: ./.github/actions/publish-npm
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to JSR
+        if: ${{ !cancelled() }}
         id: jsr
         uses: ./.github/actions/publish-jsr
 
       - name: Create release
-        if: steps.npm.outcome == 'success' || steps.jsr.outcome == 'success'
+        if: ${{ !cancelled() }}
         uses: ./.github/actions/release
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Commit changes
-        if: steps.npm.outcome == 'success' || steps.jsr.outcome == 'success'
+        if: ${{ !cancelled() }}
         uses: ./.github/actions/commit
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}

@@ -20,8 +20,8 @@
   "dependencies": {
     "@atls/code-runtime": "workspace:*",
     "@atls/config-typescript": "workspace:*",
-    "@yarnpkg/cli": "4.4.1",
-    "@yarnpkg/core": "4.1.2",
+    "@yarnpkg/cli": "4.5.0",
+    "@yarnpkg/core": "4.1.3",
     "camelcase": "8.0.0",
     "typescript": "5.4.2",
     "webpack-chain-5": "8.0.2"
