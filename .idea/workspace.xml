@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3ff368de-6f23-4b35-9daf-77410acb0f19" name="Changes" comment="fix(github): commit file patterns">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/atls-raijin.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/git_toolbox_blame.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/releases/yarn.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/.yarn/releases/yarn.cjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn/cli/dist/yarn.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/yarn/cli/dist/yarn.cjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn/plugin-image/sources/image-pack.command.ts" beforeDir="false" afterPath="$PROJECT_DIR$/yarn/plugin-image/sources/image-pack.command.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="fix/code-service-clean" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
+    {
+      &quot;state&quot;: &quot;OPEN&quot;
+    }
+  ],
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
+    {
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOERuZ385z3lrG&quot;,
+        &quot;number&quot;: 344
+      },
+      &quot;lastSeen&quot;: 1719566579372
+    }
+  ]
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="master" />
+                    <option name="lastUsedInstant" value="1720086982" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="fix/service-plugin" />
+                    <option name="lastUsedInstant" value="1720072681" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:atls/raijin.git&quot;,
+    &quot;accountId&quot;: &quot;e4fc0772-2d8f-4ee5-8914-1dc789a7e131&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;atls&quot;,
+    &quot;repository&quot;: &quot;raijin&quot;
+  },
+  &quot;editorReviewEnabled&quot;: false
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2iUoZlX83L8w1WzvwjTg5mT2m5s" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+    <option name="showScratchesAndConsoles" value="false" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "feat/pack-defaults",
+    "javascript.nodejs.core.library.configured.version": "19.9.0",
+    "javascript.nodejs.core.library.typings.version": "22.4.1",
+    "last_opened_file_path": "/Users/nikoroach/Documents/Dev/Atlantis/atls-raijin",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_interpreter_path": "node",
+    "nodejs_package_manager_path": "/Users/nikoroach/Documents/Dev/Atlantis/atls-raijin/yarn/cli/src/cli.dev.mjs",
+    "npm.cli-ui-git-commit > prepack.executor": "Run",
+    "npm.plugin-pnp-patch > prepack.executor": "Run",
+    "npm.test-utils > yarn:download.executor": "Run",
+    "settings.editor.selected.configurable": "settings.nodejs",
+    "ts.external.directory.path": "/Users/nikoroach/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.yarn/releases" />
+      <recent name="$PROJECT_DIR$/yarn/pack-utils" />
+      <recent name="$PROJECT_DIR$/yarn/plugin-image" />
+      <recent name="$PROJECT_DIR$/yarn/pack-utils/src" />
+      <recent name="$PROJECT_DIR$/.github/actions" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/yarn/pack-utils" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="open shared" />
+      <command value="open rees-js-sdk" />
+      <command value="open atls-team-management" />
+      <command value="monstr" />
+      <command value="open rees-web-app" />
+      <command value="open rees-workflow" />
+      <command value="open rees-space-sync" />
+      <command value="open rees-shopify-app" />
+      <command value="open monstrs-tools" />
+      <command value="open rees-ios-sdk" />
+      <command value="open rees-workers" />
+      <command value="open atls-serverless-yandex" />
+      <command value="open atls-shared" />
+      <command value="open hyperion" />
+      <command value="open atls-hyperion" />
+      <command value="open shdvor" />
+      <command value="open atls-shdvor" />
+      <command value="open atls-nestjs" />
+      <command value="open rees-dashboard" />
+    </option>
+  </component>
+  <component name="RunManager" selected="npm.cli-ui-git-commit &gt; prepack">
+    <configuration name="cli-ui-git-commit &gt; prepack" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/cli/cli-ui-git-commit/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="prepack" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="plugin-pnp-patch &gt; prepack" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/yarn/plugin-pnp-patch/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="prepack" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="test-utils &gt; yarn:download" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/../../Monstrs/monstrs-tools/yarn/test-utils/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="yarn:download" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.plugin-pnp-patch &gt; prepack" />
+        <item itemvalue="npm.cli-ui-git-commit &gt; prepack" />
+        <item itemvalue="npm.plugin-pnp-patch &gt; prepack" />
+        <item itemvalue="npm.cli-ui-git-commit &gt; prepack" />
+        <item itemvalue="npm.test-utils &gt; yarn:download" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="GitHub.CommitStatus" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="5ee7efd8-58d9-4d8d-9fa5-787fc4251785" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="5ee7efd8-58d9-4d8d-9fa5-787fc4251785">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:/Users/nikoroach/Documents/Dev/Atlantis/atls-raijin/yarn/pack-utils" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
+    <MESSAGE value="feat(github): publish, check and version workflows" />
+    <MESSAGE value="feat(github): release" />
+    <MESSAGE value="fix(github): checks" />
+    <MESSAGE value="fix(github): commit action" />
+    <MESSAGE value="fix(github): commit action patterns" />
+    <MESSAGE value="fix(github): release" />
+    <MESSAGE value="fix(github): publish order" />
+    <MESSAGE value="feat(common): bump to major" />
+    <MESSAGE value="feat(common): publish flow" />
+    <MESSAGE value="fix(library-plugin): build" />
+    <MESSAGE value="fix: typecheck" />
+    <MESSAGE value="chore(github): version flow name" />
+    <MESSAGE value="fix(lint): update dependencies" />
+    <MESSAGE value="feat(lint): new bundle" />
+    <MESSAGE value="chore: yarn lock" />
+    <MESSAGE value="chore(github): commit action bump" />
+    <MESSAGE value="fix(github): commit file patterns" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(github): commit file patterns" />
+  </component>
+</project>
