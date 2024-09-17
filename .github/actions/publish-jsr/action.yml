@@ -17,4 +17,4 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach -vtp --no-private dlx jsr publish
+        yarn workspaces changed foreach -vtp --jobs=2 --no-private dlx jsr publish
