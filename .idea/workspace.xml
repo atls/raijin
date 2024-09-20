@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3ff368de-6f23-4b35-9daf-77410acb0f19" name="Changes" comment="fix(github): commit file patterns">
-      <change beforePath="$PROJECT_DIR$/.github/actions/checks/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/checks/action.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/actions/commit/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/commit/action.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/actions/publish-jsr/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/publish-jsr/action.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/actions/publish-npm/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/publish-npm/action.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/actions/release/action.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/release/action.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/actions/version/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/version/action.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/publish.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/publish.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/code-service/src/webpack.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/code/code-service/src/webpack.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,25 +105,25 @@
     <option name="showScratchesAndConsoles" value="false" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "#412 on feat/pack-defaults",
-    "javascript.nodejs.core.library.configured.version": "19.9.0",
-    "javascript.nodejs.core.library.typings.version": "22.4.1",
-    "last_opened_file_path": "/Users/nikoroach/Documents/Dev/Atlantis/atls-raijin",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "/Users/nikoroach/Documents/Dev/Atlantis/atls-raijin/yarn/cli/src/cli.dev.mjs",
-    "npm.cli-ui-git-commit > prepack.executor": "Run",
-    "npm.plugin-pnp-patch > prepack.executor": "Run",
-    "npm.test-utils > yarn:download.executor": "Run",
-    "settings.editor.selected.configurable": "settings.nodejs",
-    "ts.external.directory.path": "/Users/nikoroach/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;19.9.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.4.1&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/nikoroach/Documents/Dev/Atlantis/atls-raijin&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;/Users/nikoroach/Documents/Dev/Atlantis/atls-raijin/yarn/cli/src/cli.dev.mjs&quot;,
+    &quot;npm.cli-ui-git-commit &gt; prepack.executor&quot;: &quot;Run&quot;,
+    &quot;npm.plugin-pnp-patch &gt; prepack.executor&quot;: &quot;Run&quot;,
+    &quot;npm.test-utils &gt; yarn:download.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/nikoroach/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/.yarn/releases" />
@@ -159,10 +153,10 @@
       <command value="open atls-hyperion" />
       <command value="open shdvor" />
       <command value="open atls-shdvor" />
-      <command value="open atls-nestjs" />
       <command value="open rees-dashboard" />
       <command value="open atls-serverless-yandex" />
       <command value="open monstrs-tools" />
+      <command value="open atls-nestjs" />
     </option>
   </component>
   <component name="RunManager" selected="npm.cli-ui-git-commit &gt; prepack">

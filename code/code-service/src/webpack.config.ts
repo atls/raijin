@@ -56,7 +56,7 @@ export class WebpackConfig {
         path: join(this.cwd, 'dist'),
         filename: '[name].js',
         library: { type },
-        chunkFormat: type,
+        chunkFormat: environment === 'development' ? 'commonjs' : type,
         module: type === 'module',
         publicPath: './',
         clean: false,
