@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="3ff368de-6f23-4b35-9daf-77410acb0f19" name="Changes" comment="fix(github): commit file patterns">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/code-service/src/webpack.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/code/code-service/src/webpack.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/jest/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/jest/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runtime/code-runtime/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/code-runtime/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,6 +200,13 @@
         <item itemvalue="npm.test-utils &gt; yarn:download" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23339.15" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
