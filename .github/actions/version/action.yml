@@ -13,6 +13,6 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach -ptv --jobs=2 --no-private version patch -i
+        yarn workspaces changed foreach -pvj 2 --no-private version patch
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
