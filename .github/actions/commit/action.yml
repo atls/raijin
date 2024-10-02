@@ -40,12 +40,23 @@ runs:
         rm $temp_file
 
     - name: Commit changes
+      id: commit
       uses: planetscale/ghcommit-action@v0.1.45
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        NODE_OPTIONS: '-r $(pwd)/.pnp.cjs --loader $(pwd)/.pnp.loader.mjs --experimental-vm-modules --max-old-space-size=8192 --no-warnings=ExperimentalWarning'
       with:
         repo: ${{ github.repository }}
         branch: ${{ inputs.BRANCH }}
         commit_message: ${{ inputs.COMMIT_MESSAGE }}
         file_pattern: ${{ inputs.PATTERN }}
+
+    - name: Commit changes
+      if: ${{ steps.commit.conclusion == 'failure'}}
+      uses: EndBug/add-and-commit@v9
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+      with:
+        author_name: github-actions
+        author_email: 41898282+github-actions[bot]@users.noreply.github.com
+        message: ${{ steps.commit_message.outputs.commitMessage }}
+        branch: master
