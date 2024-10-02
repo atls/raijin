@@ -44,7 +44,7 @@ export const unit = {
 }
 
 export const integration = {
-  testTimeout: 240_000,
+  testTimeout: 230_000,
   extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   transformIgnorePatterns: ['/node_modules/?!(camelcase)'],
   testRegex: '/integration/.*\\.test\\.(ts|tsx)$',
