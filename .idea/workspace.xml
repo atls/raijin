@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3ff368de-6f23-4b35-9daf-77410acb0f19" name="Changes" comment="fix(github): commit file patterns">
-      <change beforePath="$PROJECT_DIR$/.github/actions/checks/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/checks/action.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/actions/commit/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/commit/action.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/actions/publish-jsr/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/publish-jsr/action.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/actions/publish-npm/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/publish-npm/action.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/actions/release/action.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/release/action.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/actions/version/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/version/action.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/jest/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/config/jest/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="chore/publish" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -113,7 +110,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "chore/publish",
+    "git-widget-placeholder": "master",
     "javascript.nodejs.core.library.configured.version": "19.9.0",
     "javascript.nodejs.core.library.typings.version": "22.4.1",
     "last_opened_file_path": "/Users/nikoroach/Documents/Dev/Atlantis/atls-raijin",

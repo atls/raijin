@@ -17,7 +17,7 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach -vtpj 2 exec \
+        yarn workspaces changed foreach -vpj 2 exec \
         'bash -c "VERSION=$npm_package_version; \ 
         NAME=$npm_package_name; \
         if [ ! -z \"\$VERSION\" ]; then \

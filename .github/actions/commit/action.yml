@@ -23,6 +23,7 @@ runs:
 
   steps:
     - name: Compose commit message
+      shell: bash
       id: commit_message
       run: |
         INITIAL_MESSAGE=$'chore(common): versions\n\n'
