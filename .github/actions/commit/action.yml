@@ -39,19 +39,8 @@ runs:
         echo $INITIAL_MESSAGE
         rm $temp_file
 
-    - name: Commit changes
-      id: commit
-      uses: planetscale/ghcommit-action@v0.1.45
-      env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-      with:
-        repo: ${{ github.repository }}
-        branch: ${{ inputs.BRANCH }}
-        commit_message: ${{ inputs.COMMIT_MESSAGE }}
-        file_pattern: ${{ inputs.PATTERN }}
 
     - name: Commit changes
-      if: ${{ steps.commit.conclusion == 'failure'}}
       uses: EndBug/add-and-commit@v9
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
@@ -60,3 +49,15 @@ runs:
         author_email: 41898282+github-actions[bot]@users.noreply.github.com
         message: ${{ steps.commit_message.outputs.commitMessage }}
         branch: master
+
+# TODO: enable once migrated to new bundle
+#    - name: Commit changes
+#      id: commit
+#      uses: planetscale/ghcommit-action@v0.1.45
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+#      with:
+#        repo: ${{ github.repository }}
+#        branch: ${{ inputs.BRANCH }}
+#        commit_message: ${{ inputs.COMMIT_MESSAGE }}
+#        file_pattern: ${{ inputs.PATTERN }}
