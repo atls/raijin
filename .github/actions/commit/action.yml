@@ -26,6 +26,8 @@ runs:
       shell: bash
       id: commit_message
       run: |
+        source .env
+        export NODE_OPTIONS
         INITIAL_MESSAGE=$'chore(common): versions\n\n'
         temp_file=$(mktemp)
         yarn workspaces changed foreach exec "echo \"\$npm_package_name:\$npm_package_version \" >> $temp_file"
@@ -39,25 +41,23 @@ runs:
         echo $INITIAL_MESSAGE
         rm $temp_file
 
-
     - name: Commit changes
-      uses: EndBug/add-and-commit@v9
+      id: commit
+      uses: planetscale/ghcommit-action@v0.1.45
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
-        author_name: github-actions
-        author_email: 41898282+github-actions[bot]@users.noreply.github.com
-        message: ${{ steps.commit_message.outputs.commitMessage }}
-        branch: master
+        repo: ${{ github.repository }}
+        branch: ${{ inputs.BRANCH }}
+        commit_message: ${{ steps.commit_message.outputs.commitMessage }}
+        file_pattern: ${{ inputs.PATTERN }}
 
-# TODO: enable once migrated to new bundle
 #    - name: Commit changes
-#      id: commit
-#      uses: planetscale/ghcommit-action@v0.1.45
+#      uses: EndBug/add-and-commit@v9
 #      env:
 #        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 #      with:
-#        repo: ${{ github.repository }}
-#        branch: ${{ inputs.BRANCH }}
-#        commit_message: ${{ inputs.COMMIT_MESSAGE }}
-#        file_pattern: ${{ inputs.PATTERN }}
+#        author_name: github-actions
+#        author_email: 41898282+github-actions[bot]@users.noreply.github.com
+#        message: ${{ steps.commit_message.outputs.commitMessage }}
+#        branch: master
