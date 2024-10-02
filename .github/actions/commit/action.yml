@@ -43,6 +43,7 @@ runs:
       uses: planetscale/ghcommit-action@v0.1.45
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        NODE_OPTIONS: '-r $(pwd)/.pnp.cjs --loader $(pwd)/.pnp.loader.mjs --experimental-vm-modules --max-old-space-size=8192 --no-warnings=ExperimentalWarning'
       with:
         repo: ${{ github.repository }}
         branch: ${{ inputs.BRANCH }}
