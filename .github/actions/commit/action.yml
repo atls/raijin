@@ -15,7 +15,7 @@ inputs:
     description: Branch to commit to
   PATTERN:
     required: false
-    default: '.'
+    default: '*.json *.md *.yaml *.yml *.lock'
     description: File pattern for adding to commits
 
 runs:
@@ -51,13 +51,3 @@ runs:
         branch: ${{ inputs.BRANCH }}
         commit_message: ${{ steps.commit_message.outputs.commitMessage }}
         file_pattern: ${{ inputs.PATTERN }}
-
-#    - name: Commit changes
-#      uses: EndBug/add-and-commit@v9
-#      env:
-#        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-#      with:
-#        author_name: github-actions
-#        author_email: 41898282+github-actions[bot]@users.noreply.github.com
-#        message: ${{ steps.commit_message.outputs.commitMessage }}
-#        branch: master
