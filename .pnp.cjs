@@ -2567,7 +2567,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/fslib", "npm:3.1.0"],\
           ["clipanion", "virtual:aef3630ccb920f27e72708392ff7fdef790d8b9c4716c04af21d6dfd50716a18ccca731012940d90b405f4d79eb1b017d2b7c8ffa8293485374613021748e40e#npm:4.0.0-rc.3"],\
           ["deepmerge", "npm:4.3.1"],\
-          ["husky", "npm:8.0.3"],\
+          ["husky", "npm:9.1.6"],\
           ["semver", "npm:7.6.3"]\
         ],\
         "linkType": "SOFT"\
@@ -12913,10 +12913,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["husky", [\
-      ["npm:8.0.3", {\
-        "packageLocation": "./.yarn/cache/husky-npm-8.0.3-b0b59c5127-b754cf70fd.zip/node_modules/husky/",\
+      ["npm:9.1.6", {\
+        "packageLocation": "./.yarn/cache/husky-npm-9.1.6-f05821288d-421ccd8850.zip/node_modules/husky/",\
         "packageDependencies": [\
-          ["husky", "npm:8.0.3"]\
+          ["husky", "npm:9.1.6"]\
         ],\
         "linkType": "HARD"\
       }]\
