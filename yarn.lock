@@ -895,6 +895,7 @@ __metadata:
     "@atls/yarn-plugin-cli-publish": "workspace:*"
     "@atls/yarn-plugin-commit": "workspace:*"
     "@atls/yarn-plugin-essentials": "workspace:*"
+    "@atls/yarn-plugin-export": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-format": "workspace:*"
     "@atls/yarn-plugin-image": "workspace:*"
@@ -953,6 +954,7 @@ __metadata:
     "@atls/yarn-plugin-cli-publish": "workspace:*"
     "@atls/yarn-plugin-commit": "workspace:*"
     "@atls/yarn-plugin-essentials": "workspace:*"
+    "@atls/yarn-plugin-export": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-format": "workspace:*"
     "@atls/yarn-plugin-image": "workspace:*"
@@ -1137,6 +1139,23 @@ __metadata:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
     "@yarnpkg/plugin-git": "*"
+  languageName: unknown
+  linkType: soft
+
+"@atls/yarn-plugin-export@workspace:*, @atls/yarn-plugin-export@workspace:yarn/plugin-export":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-export@workspace:yarn/plugin-export"
+  dependencies:
+    "@atls/yarn-pack-utils": "workspace:*"
+    "@yarnpkg/builder": "npm:4.2.0"
+    "@yarnpkg/cli": "npm:4.5.0"
+    "@yarnpkg/core": "npm:4.1.3"
+    "@yarnpkg/fslib": "npm:3.1.0"
+    clipanion: "npm:4.0.0-rc.3"
+    typescript: "npm:5.4.2"
+  peerDependencies:
+    "@yarnpkg/cli": "*"
+    "@yarnpkg/core": "*"
   languageName: unknown
   linkType: soft
 
