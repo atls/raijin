@@ -23,25 +23,29 @@ const hooksExists = (): boolean => {
 }
 
 export const afterAllInstalled = async (project: Project): Promise<void> => {
-  const target = ppath.join(project.cwd, '.config/husky')
+  if (process.env.IMAGE_PACK) return
 
-  await xfs.writeFilePromise(ppath.join(target, 'commit-msg'), hook('yarn commit message lint'), {
-    mode: 0o755,
-  })
+  try {
+    const target = ppath.join(project.cwd, '.config/husky')
 
-  await xfs.writeFilePromise(ppath.join(target, 'pre-commit'), hook('yarn commit staged'), {
-    mode: 0o755,
-  })
+    await xfs.writeFilePromise(ppath.join(target, 'commit-msg'), hook('yarn commit message lint'), {
+      mode: 0o755,
+    })
 
-  await xfs.writeFilePromise(
-    ppath.join(target, 'prepare-commit-msg'),
-    hook('yarn commit message $@'),
-    { mode: 0o755 }
-  )
+    await xfs.writeFilePromise(ppath.join(target, 'pre-commit'), hook('yarn commit staged'), {
+      mode: 0o755,
+    })
 
-  const { error } = git(['config', 'core.hooksPath', target])
+    await xfs.writeFilePromise(
+      ppath.join(target, 'prepare-commit-msg'),
+      hook('yarn commit message $@'),
+      { mode: 0o755 }
+    )
 
-  if (error) {
+    const { error } = git(['config', 'core.hooksPath', target])
+
+    if (error) throw error
+  } catch (error) {
     throw error
   }
 }

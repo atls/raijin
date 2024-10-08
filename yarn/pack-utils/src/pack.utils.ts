@@ -22,6 +22,8 @@ export const pack = async (
   report: Report,
   destination: PortablePath
 ): Promise<void> => {
+  process.env.IMAGE_PACK = true
+
   const cache = await Cache.find(configuration, { immutable: true })
 
   await project.restoreInstallState()
