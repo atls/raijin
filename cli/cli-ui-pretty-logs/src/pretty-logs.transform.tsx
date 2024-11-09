@@ -4,7 +4,7 @@ import { Transform }    from 'node:stream'
 import React            from 'react'
 
 import { LogRecord }    from '@atls/cli-ui-log-record-component'
-import { renderStatic } from '@atls/cli-ui-renderer'
+import { renderStatic } from '@atls/cli-ui-renderer-static-component'
 
 export class PrettyLogsTransform extends Transform {
   parse(row: string): object {
@@ -16,10 +16,14 @@ export class PrettyLogsTransform extends Transform {
           return data
         }
       }
-    } catch {} // eslint-disable-line
 
-    return {
-      body: row,
+      return {
+        body: row,
+      }
+    } catch {
+      return {
+        body: row,
+      }
     }
   }
 
@@ -28,7 +32,7 @@ export class PrettyLogsTransform extends Transform {
   }
 
   // eslint-disable-next-line no-underscore-dangle
-  _transform(chunk: Buffer, encoding: string, callback: () => void): void {
+  override _transform(chunk: Buffer, _: string, callback: () => void): void {
     const parts = chunk.toString().split(/\r?\n/)
 
     parts

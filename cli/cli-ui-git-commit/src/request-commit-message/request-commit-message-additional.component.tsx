@@ -1,11 +1,11 @@
 import type { ReactElement } from 'react'
 
-import { Text }               from 'ink'
-import { Box }                from 'ink'
-import { useCallback }        from 'react'
-import MultiSelectPkg         from 'ink-multi-select'
-import React                  from 'react'
-import figures                from 'figures'
+import { Text }              from 'ink'
+import { Box }               from 'ink'
+import { useCallback }       from 'react'
+import MultiSelectPkg        from 'ink-multi-select'
+import React                 from 'react'
+import figures               from 'figures'
 
 import { ItemComponent }     from './select-item.component.jsx'
 

@@ -1,8 +1,8 @@
 import type { ReactElement } from 'react'
 
-import { Text }     from 'ink'
-import { Box }      from 'ink'
-import React        from 'react'
+import { Text }              from 'ink'
+import { Box }               from 'ink'
+import React                 from 'react'
 
 export interface ItemComponentProps {
   label: string

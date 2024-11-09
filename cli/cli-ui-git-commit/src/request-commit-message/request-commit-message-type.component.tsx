@@ -8,7 +8,7 @@ import Select                 from 'ink-select-input'
 import TextInput              from 'ink-text-input'
 import React                  from 'react'
 
-import { COMMIT_TYPE_ENUM }   from '@atls/code-commit'
+import { COMMIT_TYPE_ENUM }   from '@monstrs/config-commitlint'
 
 import { IndicatorComponent } from './select-indicator.component.jsx'
 import { ItemComponent }      from './select-item.component.jsx'

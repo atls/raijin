@@ -1,5 +1,5 @@
 {
-  "name": "@atls/cli-ui-pretty-logs-component",
+  "name": "@atls/cli-ui-renderer-static-component",
   "version": "1.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
@@ -17,8 +17,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-log-record-component": "workspace:*",
-    "@atls/cli-ui-renderer-static-component": "workspace:*",
     "ink": "5.0.1",
     "react": "18.3.1"
   },

@@ -10,7 +10,7 @@ import Select                    from 'ink-select-input'
 import TextInput                 from 'ink-text-input'
 import React                     from 'react'
 
-import { COMMIT_SCOPE_ENUM }     from '@atls/code-commit'
+import { COMMIT_SCOPE_ENUM }     from '@atls/config-commitlint'
 
 import { IndicatorComponent }    from './select-indicator.component.jsx'
 import { ItemComponent }         from './select-item.component.jsx'
