@@ -11,7 +11,6 @@ import { codeFrameColumns } from '@babel/code-frame'
 import React                from 'react'
 
 import { ESLintResult }     from '@atls/cli-ui-eslint-result-component'
-import { LinterWorker }     from '@atls/code-lint-worker'
 import { renderStatic }     from '@atls/cli-ui-renderer'
 
 // @ts-expect-error any

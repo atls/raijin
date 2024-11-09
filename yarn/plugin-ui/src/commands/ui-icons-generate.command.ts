@@ -4,7 +4,6 @@ import { Project }         from '@yarnpkg/core'
 import { StreamReport }    from '@yarnpkg/core'
 import { MessageName }     from '@yarnpkg/core'
 
-import { LinterWorker }    from '@atls/code-lint-worker'
 import { SpinnerProgress } from '@atls/yarn-run-utils'
 
 export class UiIconsGenerateCommand extends BaseCommand {

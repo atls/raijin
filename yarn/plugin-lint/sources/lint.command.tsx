@@ -8,7 +8,6 @@ import React               from 'react'
 
 import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
 import { ESLintResult }    from '@atls/cli-ui-eslint-result-component'
-import { LinterWorker }    from '@atls/code-lint-worker'
 import { SpinnerProgress } from '@atls/yarn-run-utils'
 import { renderStatic }    from '@atls/cli-ui-renderer'
 

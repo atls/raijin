@@ -1814,7 +1814,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-eslint-result-component", "virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:cli/cli-ui-eslint-result-component"],\
           ["@atls/cli-ui-renderer", "workspace:cli/cli-ui-renderer"],\
           ["@atls/cli-ui-typescript-diagnostic-component", "virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:cli/cli-ui-typescript-diagnostic-component"],\
-          ["@atls/code-lint-worker", "workspace:code/code-lint-worker"],\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-test-worker", "workspace:code/code-test-worker"],\
           ["@atls/code-typescript", "workspace:code/code-typescript"],\
@@ -1858,7 +1857,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-eslint-result-component", "virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:cli/cli-ui-eslint-result-component"],\
           ["@atls/cli-ui-renderer", "workspace:cli/cli-ui-renderer"],\
           ["@atls/cli-ui-typescript-diagnostic-component", "virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:cli/cli-ui-typescript-diagnostic-component"],\
-          ["@atls/code-lint-worker", "workspace:code/code-lint-worker"],\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-test-worker", "workspace:code/code-test-worker"],\
           ["@atls/code-typescript", "workspace:code/code-typescript"],\
@@ -2253,7 +2251,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info-component"],\
           ["@atls/cli-ui-eslint-result-component", "virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:cli/cli-ui-eslint-result-component"],\
           ["@atls/cli-ui-renderer", "workspace:cli/cli-ui-renderer"],\
-          ["@atls/code-lint-worker", "workspace:code/code-lint-worker"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
@@ -2283,7 +2280,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info-component"],\
           ["@atls/cli-ui-eslint-result-component", "virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:cli/cli-ui-eslint-result-component"],\
           ["@atls/cli-ui-renderer", "workspace:cli/cli-ui-renderer"],\
-          ["@atls/code-lint-worker", "workspace:code/code-lint-worker"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
@@ -2683,7 +2679,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-ui-virtual-f85b19048c/1/yarn/plugin-ui/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-ui", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui"],\
-          ["@atls/code-lint-worker", "workspace:code/code-lint-worker"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
@@ -2706,7 +2701,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/plugin-ui/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-ui", "workspace:yarn/plugin-ui"],\
-          ["@atls/code-lint-worker", "workspace:code/code-lint-worker"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@jest/globals", "npm:29.7.0"],\

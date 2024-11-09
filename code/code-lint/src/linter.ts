@@ -1,6 +1,8 @@
 import type { ESLint }        from '@atls/code-runtime/eslint'
+import type { Linter as ESLinter }        from '@atls/code-runtime/eslint'
 
-import { readFileSync }       from 'node:fs'
+import EventEmitter from 'node:events'
+import { readFileSync }           from 'node:fs'
 import { readFile }           from 'node:fs/promises'
 import { writeFile }          from 'node:fs/promises'
 import { relative }           from 'node:path'
@@ -9,7 +11,6 @@ import { join }               from 'node:path'
 import { globby }             from 'globby'
 import ignorer                from 'ignore'
 
-import { Linter as ESLinter } from '@atls/code-runtime/eslint'
 import { eslintconfig }       from '@atls/code-runtime/eslint'
 
 import { ignore }             from './linter.patterns.js'
@@ -20,37 +21,39 @@ export interface LintOptions {
   fix?: boolean
 }
 
-export class Linter {
-  private linter: ESLinter
-
+export class Linter extends EventEmitter {
   private ignore: ignorer.Ignore
 
   #config: Array<ESLinter.FlatConfig>
 
   constructor(
+    private readonly linter: ESLinter,
+    private readonly config: Array<ESLinter.Config>,
     private readonly cwd: string,
-    private readonly rootCwd: string
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    this.linter = new ESLinter({ configType: 'flat' } as any)
+    super()
+
     this.ignore = ignorer.default().add(ignore).add(this.getProjectIgnorePatterns())
   }
 
-  protected get config(): Array<ESLinter.FlatConfig> {
-    if (!this.#config) {
-      this.#config = eslintconfig.map((config) => ({
-        ...config,
-        languageOptions: {
-          ...(config.languageOptions || {}),
-          parserOptions: {
-            ...(config.languageOptions?.parserOptions || {}),
-            project: join(this.rootCwd, 'tsconfig.json'),
-          },
-        },
-      }))
-    }
+  static async initialize(rootCwd: string, cwd: string): Promise<Linter> {
+    const { Linter: LinterConstructor } = await import('@atls/code-runtime/eslint')
+    const { eslintconfig } = await import('@atls/code-runtime/eslint')
 
-    return this.#config
+    const linter = new LinterConstructor({ configType: 'flat' })
+
+    const config = eslintconfig.map((item) => ({
+      ...item,
+      languageOptions: {
+        ...(item.languageOptions || {}),
+        parserOptions: {
+          ...(item.languageOptions?.parserOptions || {}),
+          tsconfigRootDir: rootCwd,
+        },
+      },
+    }))
+
+    return new Linter(linter, config, cwd)
   }
 
   async lintFile(filename: string, options?: LintOptions): Promise<ESLint.LintResult> {
@@ -91,11 +94,19 @@ export class Linter {
   ): Promise<Array<ESLint.LintResult>> {
     const results: Array<ESLint.LintResult> = []
 
+    this.emit('start', { files })
+
     for await (const file of files) {
+      this.emit('lint:start', { file })
+
       if (this.ignore.filter([relative(this.cwd, file)]).length !== 0) {
         results.push(await this.lintFile(file, options))
       }
+
+      this.emit('lint:end', { result })
     }
+
+    this.emit('end', { results })
 
     return results
   }
@@ -112,7 +123,7 @@ export class Linter {
     return this.lintProject(options)
   }
 
-  private getProjectIgnorePatterns(): Array<string> {
+  private async getProjectIgnorePatterns(): Array<string> {
     const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
 
     const { linterIgnorePatterns = [] } = JSON.parse(content)
