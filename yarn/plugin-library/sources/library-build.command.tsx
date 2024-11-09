@@ -3,76 +3,93 @@ import { join }                 from 'node:path'
 
 import { BaseCommand }          from '@yarnpkg/cli'
 import { Configuration }        from '@yarnpkg/core'
-import { StreamReport }         from '@yarnpkg/core'
-import { MessageName }          from '@yarnpkg/core'
+import { Project }              from '@yarnpkg/core'
+import { Filename }             from '@yarnpkg/fslib'
+import { scriptUtils }          from '@yarnpkg/core'
+import { execUtils }            from '@yarnpkg/core'
+import { xfs }                  from '@yarnpkg/fslib'
 import { Option }               from 'clipanion'
-import { isEnum }               from 'typanion'
+import { render }               from 'ink'
 import React                    from 'react'
 
-import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
-import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component'
-import { SpinnerProgress }      from '@atls/yarn-run-utils'
-import { renderStatic }         from '@atls/cli-ui-renderer'
+import { ErrorInfo }            from '@atls/cli-ui-error-info'
+import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic'
+import { TypeScriptProgress }   from '@atls/cli-ui-typescript-progress'
+import { TypeScript }           from '@atls/code-typescript'
+import { renderStatic }         from '@atls/cli-ui-renderer-static'
 
-class LibraryBuildCommand extends BaseCommand {
+export class LibraryBuildCommand extends BaseCommand {
   static paths = [['library', 'build']]
 
   target = Option.String('-t,--target', './dist')
 
-  module: any = Option.String('-m,--module', 'nodenext', {
-    validator: isEnum(['nodenext', 'commonjs']),
-  })
+  override async execute(): Promise<number> {
+    const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
-  async execute(): Promise<number> {
+    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    return this.executeProxy()
+  }
+
+  async executeProxy(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
 
-    const commandReport = await StreamReport.start(
-      {
-        stdout: this.context.stdout,
-        configuration,
-      },
-      async (report) => {
-        await this.cleanTarget()
+    const args: Array<string> = []
 
-        await report.startTimerPromise('Library Build', async () => {
-          const progress = new SpinnerProgress(this.context.stdout, configuration)
+    if (this.target) {
+      args.push('-t')
+      args.push(this.target)
+    }
 
-          progress.start()
+    const binFolder = await xfs.mktempPromise()
 
-          try {
-            const ts = new TypeScriptWorker(configuration.projectCwd!)
+    const { code } = await execUtils.pipevp('yarn', ['library', 'build', ...args], {
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+    })
 
-            const diagnostics = await ts.build(
-              this.context.cwd,
-              [join(this.context.cwd, './src')],
-              {
-                outDir: join(this.context.cwd, this.target),
-                module: this.module,
-                declaration: true,
-              }
-            )
+    return code
+  }
 
-            progress.end()
+  async executeRegular(): Promise<number> {
+    await this.cleanTarget()
 
-            diagnostics.forEach((diagnostic) => {
-              const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
+    const typescript = await TypeScript.initialize(this.context.cwd)
 
-              output.split('\n').forEach((line) => report.reportError(MessageName.UNNAMED, line))
-            })
-          } catch (error) {
-            progress.end()
+    const { clear } = render(<TypeScriptProgress typescript={typescript} />)
 
-            renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
-              .split('\n')
-              .forEach((line) => {
-                report.reportError(MessageName.UNNAMED, line)
-              })
-          }
+    try {
+      const diagnostics = await typescript.build([join(this.context.cwd, './src')], {
+        outDir: join(this.context.cwd, this.target),
+        declaration: true,
+      })
+
+      diagnostics.forEach((diagnostic) => {
+        const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
+
+        output.split('\n').forEach((line) => {
+          console.log(line) // eslint-disable-line no-console
         })
-      }
-    )
+      })
 
-    return commandReport.exitCode()
+      return diagnostics.length === 0 ? 0 : 1
+    } catch (error) {
+      renderStatic(<ErrorInfo error={error as Error} />)
+        .split('\n')
+        .forEach((line) => {
+          console.error(line) // eslint-disable-line no-console
+        })
+
+      return 1
+    } finally {
+      clear()
+    }
   }
 
   protected async cleanTarget(): Promise<void> {
@@ -82,5 +99,3 @@ class LibraryBuildCommand extends BaseCommand {
     } catch {}
   }
 }
-
-export { LibraryBuildCommand }
