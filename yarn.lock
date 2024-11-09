@@ -566,36 +566,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-test-worker@workspace:*, @atls/code-test-worker@workspace:code/code-test-worker":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-test-worker@workspace:code/code-test-worker"
-  dependencies:
-    "@atls/code-test": "workspace:*"
-    "@atls/code-worker-utils": "workspace:*"
-    "@jest/test-result": "npm:29.7.0"
-    "@jest/types": "npm:29.6.3"
-    "@rollup/plugin-commonjs": "npm:25.0.8"
-    "@rollup/plugin-json": "npm:6.1.0"
-    "@rollup/plugin-node-resolve": "npm:15.2.3"
-    esbuild: "npm:^0.19.9"
-    flatted: "npm:3.3.1"
-    rollup: "npm:3.29.4"
-    rollup-plugin-esbuild: "npm:5.0.0"
-    rollup-plugin-terser: "npm:7.0.2"
-  languageName: unknown
-  linkType: soft
-
-"@atls/code-test@workspace:*, @atls/code-test@workspace:code/code-test":
+"@atls/code-test@workspace:code/code-test":
   version: 0.0.0-use.local
   resolution: "@atls/code-test@workspace:code/code-test"
   dependencies:
     "@atls/code-runtime": "workspace:*"
-    "@jest/test-result": "npm:29.7.0"
-    "@jest/types": "npm:29.6.3"
     "@types/node": "npm:22.5.1"
-  peerDependenciesMeta:
-    jest:
-      optional: true
+    globby: "npm:13.2.2"
   languageName: unknown
   linkType: soft
 
@@ -962,7 +939,6 @@ __metadata:
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
     "@atls/code-runtime": "workspace:*"
-    "@atls/code-test-worker": "workspace:*"
     "@atls/code-typescript": "workspace:*"
     "@atls/code-typescript-worker": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
@@ -1280,7 +1256,6 @@ __metadata:
   dependencies:
     "@atls/cli-ui-log-record-component": "workspace:*"
     "@atls/cli-ui-renderer": "workspace:*"
-    "@atls/code-test-worker": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@jest/globals": "npm:29.7.0"
     "@types/react": "npm:18.3.5"
@@ -2862,7 +2837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/types@npm:29.6.3, @jest/types@npm:^29.6.3":
+"@jest/types@npm:^29.6.3":
   version: 29.6.3
   resolution: "@jest/types@npm:29.6.3"
   dependencies:

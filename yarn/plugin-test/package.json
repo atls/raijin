@@ -19,7 +19,6 @@
   "dependencies": {
     "@atls/cli-ui-log-record-component": "workspace:*",
     "@atls/cli-ui-renderer": "workspace:*",
-    "@atls/code-test-worker": "workspace:*",
     "clipanion": "4.0.0-rc.3",
     "react": "18.3.1"
   },

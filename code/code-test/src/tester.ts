@@ -1,103 +1,94 @@
-import type { AggregatedResult } from '@jest/test-result'
-import type { Config }           from '@jest/types'
+import type { TestEvent } from 'node:test/reporters'
 
-import { constants }             from 'node:fs'
-import { access }                from 'node:fs/promises'
-import { join }                  from 'node:path'
+import EventEmitter       from 'node:events'
+import { run }            from 'node:test'
 
-import { runCLI }                from '@atls/code-runtime/jest'
-import { integration }           from '@atls/code-runtime/jest'
-import { unit }                  from '@atls/code-runtime/jest'
+import { globby }         from 'globby'
 
-export class Tester {
-  constructor(private readonly cwd: string) {}
+import { Tests }          from './tests.js'
 
-  async unit(options?: Partial<Config.Argv>, files?: Array<string>): Promise<AggregatedResult> {
-    process.env.TS_JEST_DISABLE_VER_CHECKER = 'true'
+export type TestsStream = ReturnType<typeof run>
 
-    const setup = {
-      globalSetup: (await this.isConfigExists('.config/test/unit/global-setup.ts'))
-        ? join(this.cwd, '.config/test/unit/global-setup.ts')
-        : undefined,
-      globalTeardown: (await this.isConfigExists('.config/test/unit/global-teardown.ts'))
-        ? join(this.cwd, '.config/test/unit/global-teardown.ts')
-        : undefined,
-      setupFilesAfterEnv: (await this.isConfigExists('.config/test/unit/setup.ts'))
-        ? [join(this.cwd, '.config/test/unit/setup.ts')]
-        : [],
-    }
-
-    const argv = {
-      rootDir: this.cwd,
-      ci: false,
-      detectLeaks: false,
-      detectOpenHandles: false,
-      errorOnDeprecated: false,
-      listTests: false,
-      passWithNoTests: true,
-      runTestsByPath: false,
-      testLocationInResults: true,
-      config: JSON.stringify({ ...unit, ...setup }),
-      maxConcurrency: 5,
-      notifyMode: 'failure-change',
-      _: files || [],
-      $0: '',
-      ...options,
-    }
-
-    const { results } = await runCLI(argv, [this.cwd])
-
-    return results
+export class Tester extends EventEmitter {
+  constructor() {
+    super()
   }
 
-  async integration(
-    options?: Partial<Config.Argv>,
-    files?: Array<string>
-  ): Promise<AggregatedResult> {
-    process.env.TS_JEST_DISABLE_VER_CHECKER = 'true'
-
-    const setup = {
-      globalSetup: (await this.isConfigExists('.config/test/integration/global-setup.ts'))
-        ? join(this.cwd, '.config/test/integration/global-setup.ts')
-        : undefined,
-      globalTeardown: (await this.isConfigExists('.config/test/integration/global-teardown.ts'))
-        ? join(this.cwd, '.config/test/integration/global-teardown.ts')
-        : undefined,
-      setupFilesAfterEnv: (await this.isConfigExists('.config/test/integration/setup.ts'))
-        ? [join(this.cwd, '.config/test/integration/setup.ts')]
-        : [],
-    }
-
-    const argv = {
-      rootDir: this.cwd,
-      ci: false,
-      detectLeaks: false,
-      detectOpenHandles: false,
-      errorOnDeprecated: false,
-      listTests: false,
-      passWithNoTests: true,
-      runTestsByPath: false,
-      testLocationInResults: true,
-      config: JSON.stringify({ ...integration, ...setup }),
-      maxConcurrency: 5,
-      notifyMode: 'failure-change',
-      _: files || [],
-      $0: '',
-      ...options,
-    }
-
-    const { results } = await runCLI(argv, [this.cwd])
-
-    return results
+  static async initialize(): Promise<Tester> {
+    return new Tester()
   }
 
-  private async isConfigExists(file: string): Promise<boolean> {
+  async unit(cwd: string): Promise<Array<TestEvent>> {
+    return this.run(
+      await globby(['**/!(integration)/*.test.{ts,tsx,js,jsx}'], {
+        cwd,
+        dot: true,
+        absolute: true,
+        ignore: ['**/node_modules/**', '**/dist/**'],
+      }),
+      25_000,
+      true
+    )
+  }
+
+  async integration(cwd: string): Promise<Array<TestEvent>> {
+    return this.run(
+      await globby(['**/integration/**/*.test.{ts,tsx,js,jsx}'], {
+        cwd,
+        dot: true,
+        absolute: true,
+        ignore: ['**/node_modules/**', '**/dist/**'],
+      }),
+      240_000,
+      false
+    )
+  }
+
+  protected async run(
+    files: Array<string>,
+    timeout: number,
+    concurrency: boolean
+  ): Promise<Array<TestEvent>> {
+    const tests = await Tests.load(files)
+
+    this.emit('start', { tests })
+
+    const testsStream = run({
+      files,
+      timeout,
+      concurrency,
+    })
+
+    const onPass = (data: TestPass): void => {
+      this.emit('test:pass', data)
+    }
+
+    const onFail = (data: TestFail): void => {
+      this.emit('test:fail', data)
+    }
+
+    const onStdout = (data: TestStdout): void => {
+      this.emit('test:stdout', data)
+    }
+
+    const onStderr = (data: TestStderr): void => {
+      this.emit('test:stderr', data)
+    }
+
+    testsStream.on('test:pass', onPass)
+    testsStream.on('test:fail', onFail)
+    testsStream.on('test:stdout', onStdout)
+    testsStream.on('test:stderr', onStderr)
+
     try {
-      await access(join(this.cwd, file), constants.R_OK)
+      return (await testsStream.toArray()) as Array<TestEvent>
+    } finally {
+      this.emit('end')
 
-      return true
-    } catch {
-      return false
+      testsStream.off('test:pass', onPass)
+      testsStream.off('test:fail', onFail)
+      testsStream.off('test:stdout', onStdout)
+      testsStream.off('test:stderr', onStderr)
     }
   }
 }

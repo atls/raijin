@@ -4,8 +4,6 @@ import { StreamReport }        from '@yarnpkg/core'
 import { Configuration }       from '@yarnpkg/core'
 import { Project }             from '@yarnpkg/core'
 
-import { TesterWorker }        from '@atls/code-test-worker'
-
 import { AbstractTestCommand } from './abstract-test.command.jsx'
 
 class TestIntegrationCommand extends AbstractTestCommand {
