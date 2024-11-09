@@ -1,4 +1,4 @@
-import type { JSX }           from 'react'
+import type { ReactElement } from 'react'
 
 import { Text }               from 'ink'
 import { Box }                from 'ink'
@@ -7,10 +7,9 @@ import MultiSelectPkg         from 'ink-multi-select'
 import React                  from 'react'
 import figures                from 'figures'
 
-import { IndicatorComponent } from './select-indicator.component.jsx'
-import { ItemComponent }      from './select-item.component.jsx'
+import { ItemComponent }     from './select-item.component.jsx'
 
-// TODO: moduleResolution
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MultiSelect = (MultiSelectPkg as any).default || (MultiSelectPkg as any)
 
 const COMMIT_ADDITIONAL = [
@@ -40,9 +39,17 @@ interface CheckboxComponentProps {
   isSelected: boolean
 }
 
-const CheckboxComponent = ({ isSelected }: CheckboxComponentProps): JSX.Element => (
+const CheckboxComponent = ({ isSelected = false }: CheckboxComponentProps): ReactElement => (
+  <Box marginRight={1}>{isSelected ? <Text>{figures.circleFilled}</Text> : <Text> </Text>}</Box>
+)
+
+export const IndicatorComponent = ({
+  isHighlighted = false,
+}: {
+  isHighlighted: boolean
+}): ReactElement => (
   <Box marginRight={1}>
-    <Text>{!!isSelected && figures.circleFilled}</Text>
+    {isHighlighted ? <Text color='cyanBright'>{figures.pointer}</Text> : <Text> </Text>}
   </Box>
 )
 
@@ -60,7 +67,7 @@ interface RequestCommitMessageAdditionalProps {
 
 export const RequestCommitMessageAdditional = ({
   onSubmit,
-}: RequestCommitMessageAdditionalProps): JSX.Element => {
+}: RequestCommitMessageAdditionalProps): ReactElement => {
   const onSubmitValues = useCallback(
     (values: Array<{ value: string }>) => {
       onSubmit(
