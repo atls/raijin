@@ -23,7 +23,6 @@
     "@atls/cli-ui-renderer": "workspace:*",
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
     "@atls/code-typescript": "workspace:*",
-    "@atls/code-typescript-worker": "workspace:*",
     "@atls/yarn-plugin-files": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-workspace-utils": "workspace:*",

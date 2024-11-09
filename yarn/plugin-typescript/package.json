@@ -20,7 +20,6 @@
     "@atls/cli-ui-error-info-component": "workspace:*",
     "@atls/cli-ui-renderer": "workspace:*",
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
-    "@atls/code-typescript-worker": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "4.0.0-rc.3",
     "react": "18.3.1"

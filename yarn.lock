@@ -576,37 +576,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-typescript-worker@workspace:*, @atls/code-typescript-worker@workspace:code/code-typescript-worker":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-typescript-worker@workspace:code/code-typescript-worker"
-  dependencies:
-    "@atls/code-typescript": "workspace:*"
-    "@atls/code-worker-utils": "workspace:*"
-    "@rollup/plugin-commonjs": "npm:25.0.8"
-    "@rollup/plugin-json": "npm:6.1.0"
-    "@rollup/plugin-node-resolve": "npm:15.2.3"
-    esbuild: "npm:^0.19.9"
-    flatted: "npm:3.3.1"
-    rollup: "npm:3.29.4"
-    rollup-plugin-esbuild: "npm:5.0.0"
-    rollup-plugin-terser: "npm:7.0.2"
-    typescript: "npm:5.4.2"
-  languageName: unknown
-  linkType: soft
-
 "@atls/code-typescript@workspace:*, @atls/code-typescript@workspace:code/code-typescript":
   version: 0.0.0-use.local
   resolution: "@atls/code-typescript@workspace:code/code-typescript"
   dependencies:
     "@atls/code-runtime": "workspace:*"
     "@atls/config-typescript": "workspace:*"
-    "@types/deepmerge": "npm:2.2.0"
     "@types/node": "npm:22.5.1"
     typescript: "npm:5.4.2"
   languageName: unknown
   linkType: soft
 
-"@atls/code-worker-utils@workspace:*, @atls/code-worker-utils@workspace:code/code-worker-utils":
+"@atls/code-worker-utils@workspace:code/code-worker-utils":
   version: 0.0.0-use.local
   resolution: "@atls/code-worker-utils@workspace:code/code-worker-utils"
   dependencies:
@@ -940,7 +921,6 @@ __metadata:
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
     "@atls/code-runtime": "workspace:*"
     "@atls/code-typescript": "workspace:*"
-    "@atls/code-typescript-worker": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-workspace-utils": "workspace:*"
@@ -1109,7 +1089,6 @@ __metadata:
     "@atls/cli-ui-pretty-logs": "workspace:*"
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
-    "@atls/code-typescript-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@jest/globals": "npm:29.7.0"
@@ -1298,7 +1277,6 @@ __metadata:
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
     "@atls/code-runtime": "workspace:*"
-    "@atls/code-typescript-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@jest/globals": "npm:29.7.0"
@@ -1324,7 +1302,6 @@ __metadata:
     "@atls/cli-ui-error-info-component": "workspace:*"
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
-    "@atls/code-typescript-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@jest/globals": "npm:29.7.0"
@@ -1404,7 +1381,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@babel/code-frame@npm:7.24.7, @babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.24.7":
+"@babel/code-frame@npm:7.24.7, @babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/code-frame@npm:7.24.7"
   dependencies:
@@ -3189,20 +3166,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-json@npm:6.1.0":
-  version: 6.1.0
-  resolution: "@rollup/plugin-json@npm:6.1.0"
-  dependencies:
-    "@rollup/pluginutils": "npm:^5.1.0"
-  peerDependencies:
-    rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-  peerDependenciesMeta:
-    rollup:
-      optional: true
-  checksum: 10/cc018d20c80242a2b8b44fae61a968049cf31bb8406218187cc7cda35747616594e79452dd65722e7da6dd825b392e90d4599d43cd4461a02fefa2865945164e
-  languageName: node
-  linkType: hard
-
 "@rollup/plugin-node-resolve@npm:15.2.3":
   version: 15.2.3
   resolution: "@rollup/plugin-node-resolve@npm:15.2.3"
@@ -3222,7 +3185,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/pluginutils@npm:^5.0.1, @rollup/pluginutils@npm:^5.1.0":
+"@rollup/pluginutils@npm:^5.0.1":
   version: 5.1.0
   resolution: "@rollup/pluginutils@npm:5.1.0"
   dependencies:
@@ -3754,15 +3717,6 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10/b4172927cd1387cf037c3ade785ef46c87537b7bc2803d7f6663b4904d0c5d6f726415d1adb2fee4fecb21746738f11336076449265d46be4ce110cc3a8c8436
-  languageName: node
-  linkType: hard
-
-"@types/deepmerge@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@types/deepmerge@npm:2.2.0"
-  dependencies:
-    deepmerge: "npm:*"
-  checksum: 10/f68385937c649b39bcbf6be701f91293be46efb17885d4eb5b376753f661b0f90747abec5a8c2472abf8f7b8881ec15cfe5c9867bca43df6768ec3a7e835e0f0
   languageName: node
   linkType: hard
 
@@ -6556,7 +6510,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge@npm:*, deepmerge@npm:4.3.1, deepmerge@npm:^4.2.2":
+"deepmerge@npm:4.3.1, deepmerge@npm:^4.2.2":
   version: 4.3.1
   resolution: "deepmerge@npm:4.3.1"
   checksum: 10/058d9e1b0ff1a154468bf3837aea436abcfea1ba1d165ddaaf48ca93765fdd01a30d33c36173da8fbbed951dd0a267602bc782fe288b0fc4b7e1e7091afc4529
@@ -8066,7 +8020,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flatted@npm:3.3.1, flatted@npm:^3.2.9":
+"flatted@npm:^3.2.9":
   version: 3.3.1
   resolution: "flatted@npm:3.3.1"
   checksum: 10/7b8376061d5be6e0d3658bbab8bde587647f68797cf6bfeae9dea0e5137d9f27547ab92aaff3512dd9d1299086a6d61be98e9d48a56d17531b634f77faadbc49
@@ -9922,17 +9876,6 @@ __metadata:
     jest-util: "npm:^29.7.0"
     string-length: "npm:^4.0.1"
   checksum: 10/4f616e0345676631a7034b1d94971aaa719f0cd4a6041be2aa299be437ea047afd4fe05c48873b7963f5687a2f6c7cbf51244be8b14e313b97bfe32b1e127e55
-  languageName: node
-  linkType: hard
-
-"jest-worker@npm:^26.2.1":
-  version: 26.6.2
-  resolution: "jest-worker@npm:26.6.2"
-  dependencies:
-    "@types/node": "npm:*"
-    merge-stream: "npm:^2.0.0"
-    supports-color: "npm:^7.0.0"
-  checksum: 10/5f6b94cf0e8701392a9402fc7af34a1324d334fc6a440d4d55d2d9348114659c035b8d9b259930f9c9e40cbdda0ef9bfe4d7c780e1107057bbe1202672b38533
   languageName: node
   linkType: hard
 
@@ -12028,20 +11971,6 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"rollup-plugin-terser@npm:7.0.2":
-  version: 7.0.2
-  resolution: "rollup-plugin-terser@npm:7.0.2"
-  dependencies:
-    "@babel/code-frame": "npm:^7.10.4"
-    jest-worker: "npm:^26.2.1"
-    serialize-javascript: "npm:^4.0.0"
-    terser: "npm:^5.0.0"
-  peerDependencies:
-    rollup: ^2.0.0
-  checksum: 10/af84bb7a7a894cd00852b6486528dfb8653cf94df4c126f95f389a346f401d054b08c46bee519a2ab6a22b33804d1d6ac6d8c90b1b2bf8fffb097eed73fc3c72
-  languageName: node
-  linkType: hard
-
 "rollup@npm:3.29.4":
   version: 3.29.4
   resolution: "rollup@npm:3.29.4"
@@ -12254,15 +12183,6 @@ pem@dexus/pem:
     range-parser: "npm:~1.2.1"
     statuses: "npm:2.0.1"
   checksum: 10/ec66c0ad109680ad8141d507677cfd8b4e40b9559de23191871803ed241718e99026faa46c398dcfb9250676076573bd6bfe5d0ec347f88f4b7b8533d1d391cb
-  languageName: node
-  linkType: hard
-
-"serialize-javascript@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "serialize-javascript@npm:4.0.0"
-  dependencies:
-    randombytes: "npm:^2.1.0"
-  checksum: 10/df6809168973a84facade7d73e2d6dc418f5dee704d1e6cbe79e92fdb4c10af55237e99d2e67881ae3b29aa96ba596a0dfec4e609bd289ab8ec93c5ae78ede8e
   languageName: node
   linkType: hard
 
@@ -12835,7 +12755,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^7.0.0, supports-color@npm:^7.1.0":
+"supports-color@npm:^7.1.0":
   version: 7.2.0
   resolution: "supports-color@npm:7.2.0"
   dependencies:
@@ -12988,7 +12908,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"terser@npm:^5.0.0, terser@npm:^5.26.0":
+"terser@npm:^5.26.0":
   version: 5.30.1
   resolution: "terser@npm:5.30.1"
   dependencies:

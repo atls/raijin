@@ -11,7 +11,6 @@ import React                    from 'react'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
 import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptWorker }     from '@atls/code-typescript-worker'
 import { SpinnerProgress }      from '@atls/yarn-run-utils'
 import { renderStatic }         from '@atls/cli-ui-renderer'
 

@@ -12,7 +12,6 @@ import { ppath }                         from '@yarnpkg/fslib'
 import React                             from 'react'
 
 import { TypeScriptDiagnostic }          from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptWorker }              from '@atls/code-typescript-worker'
 import { renderStatic }                  from '@atls/cli-ui-renderer'
 import { flattenDiagnosticMessageText }  from '@atls/code-typescript'
 import { getLineAndCharacterOfPosition } from '@atls/code-typescript'

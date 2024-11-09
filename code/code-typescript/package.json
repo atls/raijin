@@ -22,7 +22,6 @@
     "@atls/config-typescript": "workspace:*"
   },
   "devDependencies": {
-    "@types/deepmerge": "2.2.0",
     "@types/node": "22.5.1",
     "typescript": "5.4.2"
   },
