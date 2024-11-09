@@ -16,7 +16,6 @@
   "scripts": {
     "cli:build": "yarn worker:build && yarn workspace @atls/yarn-cli build",
     "worker:build": "yarn worker:format:build && yarn worker:lint:build && yarn worker:service:build && yarn worker:test:build && yarn worker:typescript:build && yarn worker:icons:build",
-    "worker:format:build": "yarn workspace @atls/code-format-worker build:worker",
     "worker:icons:build": "yarn workspace @atls/code-icons-worker build:worker",
     "worker:lint:build": "yarn workspace @atls/code-lint-worker build:worker",
     "worker:service:build": "yarn workspace @atls/code-service-worker build:worker",

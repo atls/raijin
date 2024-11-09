@@ -18,7 +18,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-format-worker": "workspace:*",
     "@atls/code-icons-worker": "workspace:*",
     "@atls/code-lint-worker": "workspace:*",
     "clipanion": "4.0.0-rc.3"

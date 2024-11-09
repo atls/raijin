@@ -2147,7 +2147,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-format", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-format"],\
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info-component"],\
           ["@atls/cli-ui-renderer", "workspace:cli/cli-ui-renderer"],\
-          ["@atls/code-format-worker", "workspace:code/code-format-worker"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
@@ -2175,7 +2174,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-format", "workspace:yarn/plugin-format"],\
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info-component"],\
           ["@atls/cli-ui-renderer", "workspace:cli/cli-ui-renderer"],\
-          ["@atls/code-format-worker", "workspace:code/code-format-worker"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@jest/globals", "npm:29.7.0"],\
@@ -2735,7 +2733,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-ui-virtual-f85b19048c/1/yarn/plugin-ui/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-ui", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui"],\
-          ["@atls/code-format-worker", "workspace:code/code-format-worker"],\
           ["@atls/code-icons-worker", "workspace:code/code-icons-worker"],\
           ["@atls/code-lint-worker", "workspace:code/code-lint-worker"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
@@ -2760,7 +2757,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/plugin-ui/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-ui", "workspace:yarn/plugin-ui"],\
-          ["@atls/code-format-worker", "workspace:code/code-format-worker"],\
           ["@atls/code-icons-worker", "workspace:code/code-icons-worker"],\
           ["@atls/code-lint-worker", "workspace:code/code-lint-worker"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\

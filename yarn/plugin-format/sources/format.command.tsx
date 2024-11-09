@@ -7,7 +7,6 @@ import { Option }          from 'clipanion'
 import React               from 'react'
 
 import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
-import { FormatterWorker } from '@atls/code-format-worker'
 import { SpinnerProgress } from '@atls/yarn-run-utils'
 import { renderStatic }    from '@atls/cli-ui-renderer'
 

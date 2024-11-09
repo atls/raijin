@@ -453,7 +453,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-format-worker@workspace:*, @atls/code-format-worker@workspace:code/code-format-worker":
+"@atls/code-format-worker@workspace:code/code-format-worker":
   version: 0.0.0-use.local
   resolution: "@atls/code-format-worker@workspace:code/code-format-worker"
   dependencies:
@@ -1181,7 +1181,6 @@ __metadata:
   dependencies:
     "@atls/cli-ui-error-info-component": "workspace:*"
     "@atls/cli-ui-renderer": "workspace:*"
-    "@atls/code-format-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@jest/globals": "npm:29.7.0"
@@ -1470,7 +1469,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-ui@workspace:yarn/plugin-ui"
   dependencies:
-    "@atls/code-format-worker": "workspace:*"
     "@atls/code-icons-worker": "workspace:*"
     "@atls/code-lint-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
