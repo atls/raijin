@@ -1,0 +1,51 @@
+{
+  "name": "@atls/yarn-plugin-pnp-patch",
+  "version": "1.0.0",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn run build:loader && yarn run build:source",
+    "build:loader": "rollup -c",
+    "build:source": "builder build plugin && mv bundles/@yarnpkg/plugin-pnp-patch.js bundles/@yarnpkg/plugin-pnp-patch.cjs",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist",
+    "yarn:download": "yarn node ./scripts/download-yarn-pnp-packages.script.mjs"
+  },
+  "dependencies": {
+    "@yarnpkg/builder": "4.1.2",
+    "@yarnpkg/core": "4.1.2",
+    "@yarnpkg/fslib": "3.1.0",
+    "@yarnpkg/plugin-pnp": "4.0.5",
+    "@yarnpkg/pnp": "file:./cache/yarnpkg-pnp.tgz"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "26.0.1",
+    "@rollup/plugin-node-resolve": "15.2.3",
+    "esbuild": "0.23.1",
+    "rollup": "4.21.2",
+    "rollup-plugin-esbuild": "6.1.1",
+    "tslib": "2.7.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
+  }
+}
