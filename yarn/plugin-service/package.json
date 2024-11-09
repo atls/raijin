@@ -20,7 +20,6 @@
     "@atls/cli-ui-error-info-component": "workspace:*",
     "@atls/cli-ui-log-record-component": "workspace:*",
     "@atls/cli-ui-renderer": "workspace:*",
-    "@atls/code-service-worker": "workspace:*",
     "@atls/yarn-pack-utils": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@monstrs/logger": "latest",

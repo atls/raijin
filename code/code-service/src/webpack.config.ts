@@ -17,7 +17,15 @@ import { LAZY_IMPORTS }            from './webpack.ignore.js'
 import { ModuleTypes }             from './webpack.interfaces.js'
 
 export class WebpackConfig {
-  constructor(private readonly cwd: string) {}
+  constructor(
+    private readonly webpack: typeof webpack,
+    private readonly loaders: {
+      tsLoader: string
+      nodeLoader: string
+      nullLoader: string
+    },
+    private readonly cwd: string
+  ) {}
 
   async build(
     environment: WebpackEnvironment = 'production',

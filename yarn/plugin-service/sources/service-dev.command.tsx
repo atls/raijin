@@ -4,7 +4,6 @@ import { Project }                from '@yarnpkg/core'
 import { Option }                 from 'clipanion'
 import React                      from 'react'
 
-import { ServiceWorker }          from '@atls/code-service-worker'
 import { SpinnerProgress }        from '@atls/yarn-run-utils'
 
 import { AbstractServiceCommand } from './abstract-service.command.jsx'
