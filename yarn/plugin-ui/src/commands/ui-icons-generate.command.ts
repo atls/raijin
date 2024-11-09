@@ -4,7 +4,6 @@ import { Project }         from '@yarnpkg/core'
 import { StreamReport }    from '@yarnpkg/core'
 import { MessageName }     from '@yarnpkg/core'
 
-import { IconsWorker }     from '@atls/code-icons-worker'
 import { LinterWorker }    from '@atls/code-lint-worker'
 import { SpinnerProgress } from '@atls/yarn-run-utils'
 

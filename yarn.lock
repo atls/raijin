@@ -453,25 +453,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-format-worker@workspace:code/code-format-worker":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-format-worker@workspace:code/code-format-worker"
-  dependencies:
-    "@atls/code-format": "workspace:*"
-    "@atls/code-worker-utils": "workspace:*"
-    "@rollup/plugin-commonjs": "npm:25.0.8"
-    "@rollup/plugin-json": "npm:6.1.0"
-    "@rollup/plugin-node-resolve": "npm:15.2.3"
-    "@types/node": "npm:22.5.1"
-    esbuild: "npm:^0.19.9"
-    rollup: "npm:3.29.4"
-    rollup-plugin-esbuild: "npm:5.0.0"
-    rollup-plugin-pnp-resolve: "npm:2.0.0"
-    rollup-plugin-terser: "npm:7.0.2"
-  languageName: unknown
-  linkType: soft
-
-"@atls/code-format@workspace:*, @atls/code-format@workspace:code/code-format":
+"@atls/code-format@workspace:code/code-format":
   version: 0.0.0-use.local
   resolution: "@atls/code-format@workspace:code/code-format"
   dependencies:
@@ -484,25 +466,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-icons-worker@workspace:*, @atls/code-icons-worker@workspace:code/code-icons-worker":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-icons-worker@workspace:code/code-icons-worker"
-  dependencies:
-    "@atls/code-icons": "workspace:*"
-    "@atls/code-worker-utils": "workspace:*"
-    "@rollup/plugin-commonjs": "npm:25.0.8"
-    "@rollup/plugin-json": "npm:6.1.0"
-    "@rollup/plugin-node-resolve": "npm:15.2.3"
-    "@types/node": "npm:22.5.1"
-    esbuild: "npm:^0.19.9"
-    rollup: "npm:3.29.4"
-    rollup-plugin-esbuild: "npm:5.0.0"
-    rollup-plugin-pnp-resolve: "npm:2.0.0"
-    rollup-plugin-terser: "npm:7.0.2"
-  languageName: unknown
-  linkType: soft
-
-"@atls/code-icons@workspace:*, @atls/code-icons@workspace:code/code-icons":
+"@atls/code-icons@workspace:code/code-icons":
   version: 0.0.0-use.local
   resolution: "@atls/code-icons@workspace:code/code-icons"
   dependencies:
@@ -1469,7 +1433,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-ui@workspace:yarn/plugin-ui"
   dependencies:
-    "@atls/code-icons-worker": "workspace:*"
     "@atls/code-lint-worker": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
@@ -12165,13 +12128,6 @@ pem@dexus/pem:
     esbuild: ">=0.10.1"
     rollup: ^1.20.0 || ^2.0.0 || ^3.0.0
   checksum: 10/94b8dcad27eada7a7422aa8dbee4784452d2598fccc60555a3639d86e8872e9d440b5debcd26883389695cf03d61891ba8b076a7a35c6bf4beddbdd0be404642
-  languageName: node
-  linkType: hard
-
-"rollup-plugin-pnp-resolve@npm:2.0.0":
-  version: 2.0.0
-  resolution: "rollup-plugin-pnp-resolve@npm:2.0.0"
-  checksum: 10/eacde643b6cbb6099da3e398d7bf0e7598fa7366bd8e61195122c2702b456d78f52f0360275ea185d6590fa9c7d81f62adf703fc37cdca500f1bbfbb1edb7799
   languageName: node
   linkType: hard
 
