@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "@atls/config-eslint": "workspace:*",
-    "@atls/config-jest": "workspace:*",
     "@jest/core": "29.7.0",
     "@svgr/core": "8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
