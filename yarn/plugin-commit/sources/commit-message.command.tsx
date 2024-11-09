@@ -1,6 +1,9 @@
+import type { CommitProperties }        from '@atls/cli-ui-git-commit-component'
+import type { PortablePath }            from '@yarnpkg/fslib'
+import type { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
+import type { ReactElement }            from 'react'
+
 import { BaseCommand }             from '@yarnpkg/cli'
-import { PortablePath }            from '@yarnpkg/fslib'
-import { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
 import { xfs }                     from '@yarnpkg/fslib'
 import { renderForm }              from '@yarnpkg/libui/sources/misc/renderForm.js'
 import { Option }                  from 'clipanion'
@@ -12,7 +15,6 @@ import React                       from 'react'
 import wrap                        from 'word-wrap'
 
 import { RequestCommitMessage }    from '@atls/cli-ui-git-commit-component'
-import { CommitProperties }        from '@atls/cli-ui-git-commit-component'
 
 const RequestCommitMessageSubmit = ({
   commit,
@@ -32,8 +34,10 @@ const RequestCommitMessageSubmit = ({
   return null
 }
 
-const RequestCommitMessageApp: SubmitInjectedComponent<CommitProperties> = ({ useSubmit }) => {
-  const [commit, setCommit] = useState()
+const RequestCommitMessageApp = ({
+  useSubmit,
+}: CommitProperties & { useSubmit: (commit: CommitProperties) => void }): ReactElement => {
+  const [commit, setCommit] = useState<CommitProperties>()
 
   if (!commit) {
     return <RequestCommitMessage onSubmit={setCommit} />

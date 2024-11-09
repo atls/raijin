@@ -4,7 +4,7 @@ import lintStaged      from 'lint-staged'
 
 const config = {
   '*.{yml,yaml,json,graphql,md}': 'yarn format',
-  '*.{js,jsx,ts,tsx}': ['yarn format', 'yarn lint'],
+  '*.{js,mjs,cjs,jsx,ts,tsx}': ['yarn format', 'yarn lint'],
   '*.{ts,tsx}': ['yarn typecheck'],
   '*.{tsx,ts}': ['yarn test unit --bail --find-related-tests'],
 }
@@ -16,6 +16,7 @@ export class CommitStagedCommand extends BaseCommand {
 
   async execute(): Promise<number> {
     try {
+      // @ts-expect-error: Fix import
       const passed = await lintStaged({
         config,
         debug: false,
