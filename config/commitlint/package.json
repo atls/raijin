@@ -1,5 +1,5 @@
 {
-  "name": "@atls/code-commit",
+  "name": "@atls/config-commitlint",
   "version": "1.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
@@ -16,22 +16,8 @@
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
-  "dependencies": {
-    "@atls/config-commitlint": "workspace:*",
-    "@commitlint/format": "19.3.0",
-    "@commitlint/is-ignored": "19.2.2",
-    "@commitlint/lint": "19.4.1",
-    "@commitlint/load": "19.4.0",
-    "@commitlint/read": "19.4.0",
-    "@commitlint/rules": "19.4.1",
-    "@commitlint/types": "19.0.3",
-    "conventional-changelog-angular": "7.0.0",
-    "conventional-commits-parser": "5.0.0"
-  },
   "devDependencies": {
-    "@jest/globals": "29.7.0",
-    "@types/conventional-commits-parser": "5.0.0",
-    "@types/node": "22.5.1"
+    "@commitlint/types": "19.0.3"
   },
   "publishConfig": {
     "access": "public",

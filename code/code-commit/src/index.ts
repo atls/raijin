@@ -1,3 +1,4 @@
-export * from './commit.utils.js'
-export * from './enums/index.js'
-export * from './lint/index.js'
+import read from '@commitlint/read'
+
+export * from './commit.linter.js'
+export { read }
