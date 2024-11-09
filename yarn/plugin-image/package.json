@@ -22,7 +22,7 @@
     "@atls/yarn-run-utils": "workspace:*",
     "@iarna/toml": "2.2.5",
     "@yarnpkg/plugin-patch": "4.0.1",
-    "clipanion": "4.0.0-rc.3"
+    "clipanion": "4.0.0-rc.4"
   },
   "devDependencies": {
     "@yarnpkg/builder": "4.2.0",
