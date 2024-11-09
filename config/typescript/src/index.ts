@@ -45,6 +45,7 @@ export default {
     'src/**/*.test.ts',
     'src/**/*.story.ts',
     'src/**/*.stories.ts',
+    '**/*/dist/**/*.ts',
     '**/*/dist/**/*.d.ts',
     'integration/**/*.test.ts',
     '.idea',
