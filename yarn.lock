@@ -485,25 +485,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-lint-worker@workspace:code/code-lint-worker":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-lint-worker@workspace:code/code-lint-worker"
-  dependencies:
-    "@atls/code-lint": "workspace:*"
-    "@atls/code-runtime": "workspace:*"
-    "@atls/code-worker-utils": "workspace:*"
-    "@rollup/plugin-commonjs": "npm:25.0.8"
-    "@rollup/plugin-json": "npm:6.1.0"
-    "@rollup/plugin-node-resolve": "npm:15.2.3"
-    "@types/node": "npm:22.5.1"
-    esbuild: "npm:^0.19.9"
-    rollup: "npm:3.29.4"
-    rollup-plugin-esbuild: "npm:5.0.0"
-    rollup-plugin-terser: "npm:7.0.2"
-  languageName: unknown
-  linkType: soft
-
-"@atls/code-lint@workspace:*, @atls/code-lint@workspace:code/code-lint":
+"@atls/code-lint@workspace:code/code-lint":
   version: 0.0.0-use.local
   resolution: "@atls/code-lint@workspace:code/code-lint"
   dependencies:
@@ -554,28 +536,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-schematics-worker@workspace:*, @atls/code-schematics-worker@workspace:code/code-schematics-worker":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-schematics-worker@workspace:code/code-schematics-worker"
-  dependencies:
-    "@angular-devkit/schematics": "npm:18.2.2"
-    "@atls/code-schematics": "workspace:*"
-    "@atls/code-worker-utils": "workspace:*"
-    "@rollup/plugin-commonjs": "npm:25.0.8"
-    "@rollup/plugin-json": "npm:6.1.0"
-    "@rollup/plugin-node-resolve": "npm:15.2.3"
-    "@rollup/plugin-replace": "npm:5.0.7"
-    "@types/node": "npm:22.5.1"
-    builtin-modules: "npm:3.3.0"
-    esbuild: "npm:^0.19.9"
-    rollup: "npm:3.29.4"
-    rollup-plugin-esbuild: "npm:5.0.0"
-    rollup-plugin-terser: "npm:7.0.2"
-    rxjs: "npm:7.8.1"
-  languageName: unknown
-  linkType: soft
-
-"@atls/code-schematics@workspace:*, @atls/code-schematics@workspace:code/code-schematics":
+"@atls/code-schematics@workspace:code/code-schematics":
   version: 0.0.0-use.local
   resolution: "@atls/code-schematics@workspace:code/code-schematics"
   dependencies:
@@ -1281,7 +1242,6 @@ __metadata:
     "@atls/cli-ui-parts": "workspace:*"
     "@atls/cli-ui-renderer": "workspace:*"
     "@atls/cli-ui-schematics-component": "workspace:*"
-    "@atls/code-schematics-worker": "workspace:*"
     "@atls/schematics": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
@@ -5821,7 +5781,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"builtin-modules@npm:3.3.0, builtin-modules@npm:^3.3.0":
+"builtin-modules@npm:^3.3.0":
   version: 3.3.0
   resolution: "builtin-modules@npm:3.3.0"
   checksum: 10/62e063ab40c0c1efccbfa9ffa31873e4f9d57408cb396a2649981a0ecbce56aabc93c28feaccbc5658c95aab2703ad1d11980e62ec2e5e72637404e1eb60f39e

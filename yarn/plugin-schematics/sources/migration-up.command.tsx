@@ -7,7 +7,6 @@ import { xfs }              from '@yarnpkg/fslib'
 import { npath }            from '@yarnpkg/fslib'
 import React                from 'react'
 
-import { SchematicsWorker } from '@atls/code-schematics-worker'
 import { SpinnerProgress }  from '@atls/yarn-run-utils'
 import { renderStatic }     from '@atls/cli-ui-renderer'
 

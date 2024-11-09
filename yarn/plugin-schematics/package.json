@@ -21,7 +21,6 @@
     "@atls/cli-ui-parts": "workspace:*",
     "@atls/cli-ui-renderer": "workspace:*",
     "@atls/cli-ui-schematics-component": "workspace:*",
-    "@atls/code-schematics-worker": "workspace:*",
     "@atls/schematics": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@yarnpkg/libui": "3.0.0",

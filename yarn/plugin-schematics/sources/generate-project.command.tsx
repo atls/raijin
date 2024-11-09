@@ -17,7 +17,6 @@ import { ErrorInfo }                      from '@atls/cli-ui-error-info-componen
 import { SubmitInjectedComponentFactory } from '@atls/cli-ui-parts'
 import { RequestProjectInformation }      from '@atls/cli-ui-schematics-component'
 import { ProjectInformationProperties }   from '@atls/cli-ui-schematics-component'
-import { SchematicsWorker }               from '@atls/code-schematics-worker'
 import { ProjectType }                    from '@atls/schematics'
 import { SpinnerProgress }                from '@atls/yarn-run-utils'
 import { renderStatic }                   from '@atls/cli-ui-renderer'
