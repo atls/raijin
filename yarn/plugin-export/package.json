@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@atls/yarn-pack-utils": "workspace:*",
-    "clipanion": "4.0.0-rc.3"
+    "clipanion": "4.0.0-rc.4"
   },
   "devDependencies": {
     "@yarnpkg/builder": "4.2.0",
