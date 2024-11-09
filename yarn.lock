@@ -244,7 +244,7 @@ __metadata:
     "@atls/cli-ui-stack-trace-component": "workspace:*"
     "@types/node": "npm:22.5.1"
     "@types/react": "npm:18.3.5"
-    ink: "npm:3.2.0"
+    ink: "npm:5.0.1"
     react: "npm:18.3.1"
   peerDependencies:
     ink: "*"
@@ -262,6 +262,36 @@ __metadata:
     "@types/react": "npm:18.3.5"
     ink: "npm:3.2.0"
     nanoid: "npm:5.0.7"
+    react: "npm:18.3.1"
+    strip-ansi: "npm:7.1.0"
+  peerDependencies:
+    ink: "*"
+    react: "*"
+  languageName: unknown
+  linkType: soft
+
+"@atls/cli-ui-file-link-component@workspace:cli/cli-ui-file-link-component":
+  version: 0.0.0-use.local
+  resolution: "@atls/cli-ui-file-link-component@workspace:cli/cli-ui-file-link-component"
+  dependencies:
+    "@types/react": "npm:18.3.5"
+    ink: "npm:5.0.1"
+    ink-link: "npm:4.1.0"
+    react: "npm:18.3.1"
+  peerDependencies:
+    ink: "*"
+    react: "*"
+  languageName: unknown
+  linkType: soft
+
+"@atls/cli-ui-file-path-component@workspace:cli/cli-ui-file-path-component":
+  version: 0.0.0-use.local
+  resolution: "@atls/cli-ui-file-path-component@workspace:cli/cli-ui-file-path-component"
+  dependencies:
+    "@types/node": "npm:22.5.4"
+    "@types/react": "npm:18.3.5"
+    ink: "npm:5.0.1"
+    ink-testing-library: "npm:4.0.0"
     react: "npm:18.3.1"
     strip-ansi: "npm:7.1.0"
   peerDependencies:
@@ -3139,6 +3169,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.19.2"
   checksum: 10/adcec0e8a9ec9112a8cc9529b7d633356c2377fe69ca6e6de4ee39cacb8c86a18a9b7ba658e2456f8ad90d5b76767b268f517b0336c6db787cb056dcdfed107a
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:22.5.4":
+  version: 22.5.4
+  resolution: "@types/node@npm:22.5.4"
+  dependencies:
+    undici-types: "npm:~6.19.2"
+  checksum: 10/d46e0abf437b36bdf89011287aa43873d68ea6f2521a11b5c9a033056fd0d07af36daf51439010e8d41c62c55d0b00e9b5e09ed00bb2617723f73f28a873903a
   languageName: node
   linkType: hard
 
@@ -7749,6 +7788,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ink-link@npm:4.1.0":
+  version: 4.1.0
+  resolution: "ink-link@npm:4.1.0"
+  dependencies:
+    prop-types: "npm:^15.8.1"
+    terminal-link: "npm:^3.0.0"
+  peerDependencies:
+    ink: ">=4"
+  checksum: 10/94ead37ae72088e9dfc5a6fc4c6b86f7ec6367cb99045c2374b73feef5b5262a818c9abec4e615ee3ed7df47d4b5439bb0f579e4f92beb623da79e50efe6e2e1
+  languageName: node
+  linkType: hard
+
 "ink-multi-select@npm:2.0.0":
   version: 2.0.0
   resolution: "ink-multi-select@npm:2.0.0"
@@ -7784,6 +7835,18 @@ __metadata:
     lodash.isequal: "npm:^4.5.0"
     prop-types: "npm:^15.5.10"
   checksum: 10/a6dc385aefd76ac7176dbd2a3ba0a50046e65103964741251eb099a8b738d2a63ef291eda8341ab5816f84cf31a45c6d5e7ff91fa8cb9d711f55c6cdcde351d2
+  languageName: node
+  linkType: hard
+
+"ink-testing-library@npm:4.0.0":
+  version: 4.0.0
+  resolution: "ink-testing-library@npm:4.0.0"
+  peerDependencies:
+    "@types/react": ">=18.0.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10/f1f8549fe5ade85c4561adb548ab72586186b829184868e40ae1a77c608410d6898a24467a7f9fd7867c05b5a8a9bfc01bec7a1beff30932f1bfcf64bf893603
   languageName: node
   linkType: hard
 
@@ -11242,7 +11305,7 @@ pem@dexus/pem:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^7.1.0":
+"supports-color@npm:^7.0.0, supports-color@npm:^7.1.0":
   version: 7.2.0
   resolution: "supports-color@npm:7.2.0"
   dependencies:
@@ -11257,6 +11320,16 @@ pem@dexus/pem:
   dependencies:
     has-flag: "npm:^4.0.0"
   checksum: 10/157b534df88e39c5518c5e78c35580c1eca848d7dbaf31bbe06cdfc048e22c7ff1a9d046ae17b25691128f631a51d9ec373c1b740c12ae4f0de6e292037e4282
+  languageName: node
+  linkType: hard
+
+"supports-hyperlinks@npm:^2.2.0":
+  version: 2.3.0
+  resolution: "supports-hyperlinks@npm:2.3.0"
+  dependencies:
+    has-flag: "npm:^4.0.0"
+    supports-color: "npm:^7.0.0"
+  checksum: 10/3e7df6e9eaa177d7bfbbe065c91325e9b482f48de0f7c9133603e3ffa8af31cbceac104a0941cd0266a57f8e691de6eb58b79fec237852dc84ed7ad152b116b0
   languageName: node
   linkType: hard
 
@@ -11370,6 +11443,16 @@ pem@dexus/pem:
     qunit: "npm:^2.8.0"
     readline-sync: "npm:1.4.9"
   checksum: 10/b28f9064e454deb2fcb5b58953e14675a57508056ea62a21477775de4b742cd50841adae5ad2ddf19c37747f5e0c55b39c7befdab27aa8e13d3b933f2216bfac
+  languageName: node
+  linkType: hard
+
+"terminal-link@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "terminal-link@npm:3.0.0"
+  dependencies:
+    ansi-escapes: "npm:^5.0.0"
+    supports-hyperlinks: "npm:^2.2.0"
+  checksum: 10/85a78ae50a2cd3c43df25922e7572f1008c92b1ea98c6c4579bbbe02fa54677a487123c3cae44fecd1a36cac782d0be2cec212a916818abb2b4df6fbb8eed341
   languageName: node
   linkType: hard
 
