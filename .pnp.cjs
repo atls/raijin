@@ -39,6 +39,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:cli/cli-ui-git-commit"\
     },\
     {\
+      "name": "@atls/cli-ui-icons-progress",\
+      "reference": "workspace:cli/cli-ui-icons-progress-component"\
+    },\
+    {\
       "name": "@atls/cli-ui-log-record-component",\
       "reference": "workspace:cli/cli-ui-log-record-component"\
     },\
@@ -276,6 +280,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/cli-ui-file-path-component", ["workspace:cli/cli-ui-file-path-component"]],\
     ["@atls/cli-ui-format-progress-component", ["workspace:cli/cli-ui-format-progress-component"]],\
     ["@atls/cli-ui-git-commit-component", ["virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#workspace:cli/cli-ui-git-commit", "workspace:cli/cli-ui-git-commit"]],\
+    ["@atls/cli-ui-icons-progress", ["workspace:cli/cli-ui-icons-progress-component"]],\
     ["@atls/cli-ui-log-record-component", ["virtual:cfd1d378f54fd81159858d6b376c9d8d7f9fe732664d0429ca1989ce499bbba36d2031641c5753b68e5a629b737a1c234868133c669f8507b82de4b421fb768f#workspace:cli/cli-ui-log-record-component", "virtual:e0b391570ec9f8989915d797a4a0d1afc17ea70caf4c548de596fed02e7abe0ba2aca2addc79364ca4f7cd7ff1f030f76bbcb0df83a27863c64f68d671fbc484#workspace:cli/cli-ui-log-record-component", "workspace:cli/cli-ui-log-record-component"]],\
     ["@atls/cli-ui-parts", ["workspace:cli/cli-ui-parts"]],\
     ["@atls/cli-ui-pretty-logs", ["workspace:cli/cli-ui-pretty-logs"]],\
@@ -786,6 +791,20 @@ const RAW_RUNTIME_STATE =
           ["ink-multi-select", "npm:2.0.0"],\
           ["ink-select-input", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:6.0.0"],\
           ["ink-text-input", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:6.0.0"],\
+          ["react", "npm:18.3.1"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@atls/cli-ui-icons-progress", [\
+      ["workspace:cli/cli-ui-icons-progress-component", {\
+        "packageLocation": "./cli/cli-ui-icons-progress-component/",\
+        "packageDependencies": [\
+          ["@atls/cli-ui-icons-progress", "workspace:cli/cli-ui-icons-progress-component"],\
+          ["@inkjs/ui", "virtual:7a7127aa27a8e2180dfc7a56e357ddd157f039558b9b33ef867e387a4d67aefbe9f96df6ee573eca2fbf75479557be7d88df1c4740f5c13088b86805c99d649c#npm:2.0.0"],\
+          ["@types/react", "npm:18.3.5"],\
+          ["figures", "npm:6.1.0"],\
+          ["ink", "virtual:4c1b07290274931569530ca8aaa5a3a8cd1e504ba8dbdb4948523653fbea85147acd511574aba5cc1b2c66c08588dd93f8adfaeeb42b218f049113f61483eec1#npm:3.2.0"],\
           ["react", "npm:18.3.1"]\
         ],\
         "linkType": "SOFT"\
