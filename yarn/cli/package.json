@@ -13,12 +13,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn run build:clean && yarn run build:bundle && yarn run build:fix && yarn run build:dist && yarn run build:releases",
-    "build:bundle": "builder build bundle && mv bundles/yarn.js bundles/yarn.cjs",
+    "build": "yarn run build:clean && yarn run build:bundle && yarn run build:fix && yarn run build:dist",
+    "build:bundle": "builder build bundle && mv bundles/yarn.js bundles/yarn.mjs",
     "build:clean": "rm -rf dist",
     "build:dist": "mv bundles dist",
     "build:fix": "yarn node patches/cli.patch.mjs",
-    "build:releases": "cp -f dist/yarn.cjs ../../.yarn/releases/yarn.cjs",
     "fix": "yarn run build:fix",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
@@ -73,7 +72,7 @@
     "@yarnpkg/plugin-version": "4.0.3",
     "@yarnpkg/plugin-workspace-tools": "4.1.0",
     "@yarnpkg/shell": "4.1.0",
-    "clipanion": "4.0.0-rc.3",
+    "clipanion": "4.0.0-rc.4",
     "semver": "7.6.3",
     "typanion": "3.14.0"
   },
