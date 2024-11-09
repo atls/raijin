@@ -23,7 +23,11 @@ export class GitHubChecks {
   private octokit: ReturnType<typeof getOctokit>
 
   constructor(private readonly name: string) {
-    this.octokit = getOctokit(process.env.GITHUB_TOKEN!)
+    if (process.env.GITHUB_TOKEN == null) {
+      throw new Error('GITHUB_TOKEN is not defined')
+    }
+
+    this.octokit = getOctokit(process.env.GITHUB_TOKEN)
   }
 
   async create(

@@ -19,29 +19,31 @@
   "dependencies": {
     "@actions/core": "1.10.1",
     "@actions/github": "6.0.0",
-    "@atls/cli-ui-eslint-result-component": "workspace:*",
-    "@atls/cli-ui-renderer": "workspace:*",
+    "@atls/cli-ui-lint-result-component": "workspace:*",
+    "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
+    "@atls/code-lint": "workspace:*",
+    "@atls/code-test": "workspace:*",
     "@atls/code-typescript": "workspace:*",
     "@atls/yarn-plugin-files": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-workspace-utils": "workspace:*",
     "@babel/code-frame": "7.24.7",
-    "@jest/test-result": "29.7.0",
-    "clipanion": "4.0.0-rc.3",
+    "clipanion": "4.0.0-rc.4",
     "react": "18.3.1",
     "strip-ansi": "7.1.0"
   },
   "devDependencies": {
     "@atls/code-runtime": "workspace:*",
-    "@octokit/types": "12.6.0",
+    "@octokit/types": "13.5.0",
     "@types/babel__code-frame": "7.0.6",
     "@types/node": "22.5.1",
     "@types/react": "18.3.5",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.5.0",
     "@yarnpkg/core": "4.1.3",
-    "@yarnpkg/fslib": "3.1.0"
+    "@yarnpkg/fslib": "3.1.0",
+    "typescript": "5.4.2"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

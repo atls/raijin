@@ -1,27 +1,21 @@
-import type { AggregatedResult } from '@jest/test-result'
+import type { Annotation } from '../utils/index.js'
 
-import { BaseCommand }           from '@yarnpkg/cli'
+import { relative }        from 'node:path'
 
-import { AnnotationLevel }       from './github.checks.js'
-import { Annotation }            from './github.checks.js'
+import { BaseCommand }     from '@yarnpkg/cli'
 
-abstract class AbstractChecksTestCommand extends BaseCommand {
-  formatResults(results: AggregatedResult, cwd?: string): Annotation[] {
-    return results.testResults
-      .map(({ testResults, testFilePath }) =>
-        testResults
-          .filter((testResult) => testResult.status === 'failed')
-          .map((testResult) => ({
-            path: cwd ? testFilePath.substring(cwd.length + 1) : testFilePath,
-            start_line: testResult.location ? testResult.location.line + 1 : 1,
-            end_line: testResult.location ? testResult.location.line + 1 : 1,
-            annotation_level: AnnotationLevel.Failure,
-            raw_details: testResult.failureMessages.join('\n'),
-            title: testResult.ancestorTitles.join(' '),
-            message: testResult.title,
-          })))
-      .flat()
+import { AnnotationLevel } from '../utils/index.js'
+
+export abstract class AbstractChecksTestCommand extends BaseCommand {
+  formatResults(results: Array<TestFail>, cwd: string): Array<Annotation> {
+    return results.map((result) => ({
+      path: result.file ? relative(cwd, result.file) : cwd,
+      start_line: result.column ?? 1,
+      end_line: result.column ?? 1,
+      annotation_level: AnnotationLevel.Failure,
+      raw_details: result.details.error.stack || result.details.error.message,
+      title: result.details.error.message,
+      message: result.details.error.message,
+    }))
   }
 }
-
-export { AbstractChecksTestCommand }
