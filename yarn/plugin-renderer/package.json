@@ -6,9 +6,9 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts"
+    ".": "./sources/index.ts"
   },
-  "main": "src/index.ts",
+  "main": "sources/index.ts",
   "files": [
     "dist"
   ],
@@ -18,14 +18,13 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "clipanion": "4.0.0-rc.3",
+    "clipanion": "4.0.0-rc.4",
     "cross-spawn": "7.0.3",
     "localtunnel": "2.0.2"
   },
   "devDependencies": {
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-test-utils": "workspace:*",
-    "@jest/globals": "29.7.0",
     "@types/cross-spawn": "6.0.6",
     "@types/localtunnel": "2.0.4",
     "@yarnpkg/builder": "4.2.0",
