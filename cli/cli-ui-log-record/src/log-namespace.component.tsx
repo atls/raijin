@@ -1,5 +1,5 @@
-import type { LogAttributeValue } from '@atls/logger'
-import type { AttributeValue }    from '@atls/logger'
+import type { LogAttributeValue } from '@monstrs/logger'
+import type { AttributeValue }    from '@monstrs/logger'
 import type { ReactElement }      from 'react'
 
 import { Text }                   from 'ink'

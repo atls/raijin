@@ -66,7 +66,7 @@ export class ImportSortTypeScriptParser implements IParser {
 
           const parents = findLeadingComments(leadingComment.loc.start.line - 1)
 
-          return [...parents, leadingComment] // eslint-disable-line @typescript-eslint/no-unsafe-return
+          return [...parents, leadingComment]
         }
 
         const leadingComments: Array<any> = findLeadingComments(node.loc!.start.line - 1)

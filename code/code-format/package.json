@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-format",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -24,7 +24,7 @@
     "prettier": "3.3.3"
   },
   "devDependencies": {
-    "@types/node": "22.5.1"
+    "@types/node": "22.9.0"
   },
   "publishConfig": {
     "access": "public",

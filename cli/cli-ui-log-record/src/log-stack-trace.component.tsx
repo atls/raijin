@@ -1,4 +1,4 @@
-import type { LogAttributeValue } from '@atls/logger'
+import type { LogAttributeValue } from '@monstrs/logger'
 import type { ReactElement }      from 'react'
 
 import { Box }                    from 'ink'

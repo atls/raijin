@@ -1,4 +1,5 @@
 import type { WebpackEnvironment } from './webpack.interfaces.js'
+import type { ModuleTypes }        from './webpack.interfaces.js'
 
 import { readFile }                from 'node:fs/promises'
 import { writeFile }               from 'node:fs/promises'
@@ -6,7 +7,7 @@ import { mkdtemp }                 from 'node:fs/promises'
 import { tmpdir }                  from 'node:os'
 import { join }                    from 'node:path'
 
-import { webpack }                 from '@atls/code-runtime/webpack'
+import { webpack as wp }           from '@atls/code-runtime/webpack'
 import { tsLoaderPath }            from '@atls/code-runtime/webpack'
 import { nodeLoaderPath }          from '@atls/code-runtime/webpack'
 import { nullLoaderPath }          from '@atls/code-runtime/webpack'
@@ -14,11 +15,10 @@ import tsconfig                    from '@atls/config-typescript'
 
 import { WebpackExternals }        from './webpack.externals.js'
 import { LAZY_IMPORTS }            from './webpack.ignore.js'
-import { ModuleTypes }             from './webpack.interfaces.js'
 
 export class WebpackConfig {
   constructor(
-    private readonly webpack: typeof webpack,
+    private readonly webpack: typeof wp,
     private readonly loaders: {
       tsLoader: string
       nodeLoader: string
@@ -30,11 +30,11 @@ export class WebpackConfig {
   async build(
     environment: WebpackEnvironment = 'production',
     additionalPlugins: Array<{
-      use: webpack.WebpackPluginInstance
+      use: wp.WebpackPluginInstance
       args: Array<any>
       name: string
     }> = []
-  ): Promise<webpack.Configuration> {
+  ): Promise<wp.Configuration> {
     const configFile = join(await mkdtemp(join(tmpdir(), 'code-service-')), 'tsconfig.json')
 
     await writeFile(configFile, '{"include":["**/*"]}')
@@ -130,9 +130,13 @@ export class WebpackConfig {
     }
   }
 
-  private createPlugins(environment: string, additionalPlugins: []) {
-    const plugins = [
-      new webpack.IgnorePlugin({
+  private createPlugins(environment: string, additionalPlugins: Array<{
+    use: wp.WebpackPluginInstance
+    args: Array<any>
+    name: string
+  }>) {
+    const plugins: Array<wp.WebpackPluginInstance> = [
+      new wp.IgnorePlugin({
         checkResource: (resource: string): boolean => {
           if (resource.endsWith('.js.map')) {
             return true
@@ -153,11 +157,12 @@ export class WebpackConfig {
           return false
         },
       }),
+      // @ts-expect-error types mismatch
       ...additionalPlugins,
     ]
 
     if (environment === 'development') {
-      plugins.push(new webpack.HotModuleReplacementPlugin())
+      plugins.push(new wp.HotModuleReplacementPlugin())
     }
 
     return plugins

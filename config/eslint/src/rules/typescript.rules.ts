@@ -108,17 +108,23 @@ export const rules: Linter.RulesRecord = {
       ],
     },
   ],
-  '@typescript-eslint/ban-ts-comment': ['error', {
+  '@typescript-eslint/ban-ts-comment': [
+    'error',
+    {
       'ts-expect-error': 'allow-with-description',
       'ts-ignore': true,
       'ts-nocheck': true,
       'ts-check': false,
       minimumDescriptionLength: 10,
-  }],
-  '@typescript-eslint/no-explicit-any': ['error', {
-    fixToUnknown: false,
-    ignoreRestArgs: true,
-  }],
+    },
+  ],
+  '@typescript-eslint/no-explicit-any': [
+    'error',
+    {
+      fixToUnknown: false,
+      ignoreRestArgs: true,
+    },
+  ],
   '@typescript-eslint/no-non-null-assertion': 'error',
   '@typescript-eslint/explicit-module-boundary-types': 'error',
   '@typescript-eslint/explicit-function-return-type': 'error',
@@ -175,7 +181,6 @@ export const rules: Linter.RulesRecord = {
       checksSpreads: true,
     },
   ],
-  '@typescript-eslint/ban-types': ['error'],
   '@typescript-eslint/array-type': [
     'error',
     {

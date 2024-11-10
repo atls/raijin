@@ -4,6 +4,7 @@ import { Filename }               from '@yarnpkg/fslib'
 import { scriptUtils }            from '@yarnpkg/core'
 import { execUtils }              from '@yarnpkg/core'
 import { xfs }                    from '@yarnpkg/fslib'
+import { Option }                 from 'clipanion'
 import { render }                 from 'ink'
 import React                      from 'react'
 

@@ -17,10 +17,10 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@mikro-orm/sql-highlighter": "1.0.1",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/cli-ui-stack-trace-component": "workspace:*",
-    "@atls/logger": "0.0.2",
+    "@mikro-orm/sql-highlighter": "1.0.1",
+    "@monstrs/logger": "0.0.20",
     "@monstrs/mikro-orm-logger": "0.0.16",
     "decamelize": "6.0.0",
     "nanoid": "5.0.7",
@@ -28,14 +28,14 @@
     "uniqolor": "1.1.1"
   },
   "devDependencies": {
-    "@types/node": "22.5.4",
-    "@types/react": "18.3.5",
-    "ink": "5.0.1",
+    "@types/node": "22.9.0",
+    "@types/react": "18.3.12",
+    "ink": "3.2.0",
     "react": "18.3.1",
     "strip-ansi": "7.1.0"
   },
   "peerDependencies": {
-    "ink": "^5",
+    "ink": "^3",
     "react": "^18"
   },
   "publishConfig": {

@@ -1,7 +1,7 @@
-import type { LogRecord as Record }        from '@atls/logger'
+import type { LogRecord as Record }        from '@monstrs/logger'
 import type { ReactElement }               from 'react'
 
-import { LOGGER_NAMESPACE_ATTRIBUTE_NAME } from '@atls/logger'
+import { LOGGER_NAMESPACE_ATTRIBUTE_NAME } from '@monstrs/logger'
 import { Box }                             from 'ink'
 import React                               from 'react'
 

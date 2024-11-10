@@ -1,21 +1,21 @@
 import type { Config }                     from '@atls/code-runtime/svgr'
-import type { transform as svgrTransform }   from '@atls/code-runtime/svgr'
-import type { jsx as svgrJsx }   from '@atls/code-runtime/svgr'
-import type { webpack as wp }   from '@atls/code-runtime/webpack'
+import type { transform as svgrTransform } from '@atls/code-runtime/svgr'
+import type { jsx as svgrJsx }             from '@atls/code-runtime/svgr'
+import type { webpack as wp }              from '@atls/code-runtime/webpack'
 
-import EventEmitter from 'node:events'
-import { access }        from 'node:fs/promises'
-import { mkdtemp }       from 'node:fs/promises'
-import { readFile }      from 'node:fs/promises'
-import { readdir }       from 'node:fs/promises'
-import { writeFile }     from 'node:fs/promises'
-import { mkdir }         from 'node:fs/promises'
-import { tmpdir }        from 'node:os'
-import { join }          from 'node:path'
-import { basename }      from 'node:path'
-import { extname }       from 'node:path'
+import EventEmitter                        from 'node:events'
+import { access }                          from 'node:fs/promises'
+import { mkdtemp }                         from 'node:fs/promises'
+import { readFile }                        from 'node:fs/promises'
+import { readdir }                         from 'node:fs/promises'
+import { writeFile }                       from 'node:fs/promises'
+import { mkdir }                           from 'node:fs/promises'
+import { tmpdir }                          from 'node:os'
+import { join }                            from 'node:path'
+import { basename }                        from 'node:path'
+import { extname }                         from 'node:path'
 
-import camelcase         from 'camelcase'
+import camelcase                           from 'camelcase'
 
 import { WebpackConfig }                   from './webpack.config.js'
 
@@ -59,7 +59,7 @@ export class Icons extends EventEmitter {
   }
 
   protected async compileReplacementsAndTemplate(): Promise<{
-    replacements: Record<string, Record<string, any>>
+    replacements: Record<string, Record<string, string>>
     template: Config['template']
   }> {
     const target = await mkdtemp(join(tmpdir(), 'tools-icons-'))
@@ -128,7 +128,7 @@ export class Icons extends EventEmitter {
             componentName: `${icon.component}Icon`,
             caller: {
               name: '@atls/code-icons',
-              defaultPlugins: [this.svgr.jsx as any],
+              defaultPlugins: [this.svgr.jsx as any], // eslint-disable-line @typescript-eslint/no-explicit-any
             },
           }
         )

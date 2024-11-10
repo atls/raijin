@@ -1,1 +1,1 @@
-export { plugin as default } from './schematics.plugin.js'
+// export { plugin as default } from './schematics.plugin.js'

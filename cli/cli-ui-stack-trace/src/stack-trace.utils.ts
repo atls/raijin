@@ -1,6 +1,6 @@
 /* eslint-disable n/no-sync */
 
-import type { StackFrame } from '@atls/stack-trace'
+import type { StackFrame } from '@monstrs/stack-trace'
 
 import { readFileSync }    from 'node:fs'
 import { fileURLToPath }   from 'node:url'

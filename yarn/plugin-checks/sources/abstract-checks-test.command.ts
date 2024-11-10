@@ -1,10 +1,10 @@
-import type { Annotation } from '../utils/index.js'
+import type { Annotation } from './github.checks.js'
 
 import { relative }        from 'node:path'
 
 import { BaseCommand }     from '@yarnpkg/cli'
 
-import { AnnotationLevel } from '../utils/index.js'
+import { AnnotationLevel } from './github.checks.js'
 
 export abstract class AbstractChecksTestCommand extends BaseCommand {
   formatResults(results: Array<TestFail>, cwd: string): Array<Annotation> {

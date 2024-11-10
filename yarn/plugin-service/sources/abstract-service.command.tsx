@@ -38,7 +38,7 @@ export abstract class AbstractServiceCommand extends BaseCommand {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           if (logRecord.severityNumber! <= SeverityNumber.INFO) {
             console.log(line) // eslint-disable-line no-console
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           } else if (logRecord.severityNumber! <= SeverityNumber.WARN) {
             if (this.showWarnings) {
               console.log(line) // eslint-disable-line no-console

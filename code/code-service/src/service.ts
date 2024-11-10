@@ -1,8 +1,8 @@
-import type { webpack as wp } from '@atls/code-runtime/webpack'
-import type { ServiceLogRecord }    from './service.interfaces.js'
-import type { WebpackConfigPlugin } from './webpack.interfaces.js'
+import type { webpack as wp }       from '@atls/code-runtime/webpack'
 
-import EventEmitter from 'node:events'
+import type { ServiceLogRecord }    from './service.interfaces.js'
+
+import EventEmitter                 from 'node:events'
 import { PassThrough }              from 'node:stream'
 
 import { SeverityNumber }           from '@monstrs/logger'
@@ -22,7 +22,7 @@ export class Service extends EventEmitter {
   static async initialize(cwd: string): Promise<Service> {
     const { webpack, nullLoaderPath, tsLoaderPath, nodeLoaderPath } = await import(
       '@atls/code-runtime/webpack'
-      )
+    )
 
     const config = new WebpackConfig(
       webpack,
@@ -37,7 +37,7 @@ export class Service extends EventEmitter {
     return new Service(webpack, config)
   }
 
-  async build(plugins: Array<WebpackConfigPlugin> = []): Promise<Array<ServiceLogRecord>> {
+  async build(): Promise<Array<ServiceLogRecord>> {
     const compiler = this.webpack(
       await this.config.build('production', [
         {
@@ -95,10 +95,16 @@ export class Service extends EventEmitter {
 
     return this.webpack(
       await this.config.build('development', [
-        new StartServerPlugin({
-          stdout: pass,
-          stderr: pass,
-        }),
+        {
+          name: 'start-server',
+          use: StartServerPlugin,
+          args: [
+            {
+              stdout: pass,
+              stderr: pass,
+            },
+          ],
+        },
         {
           name: 'progress',
           use: this.webpack.ProgressPlugin,

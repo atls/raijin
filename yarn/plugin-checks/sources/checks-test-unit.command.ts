@@ -15,7 +15,7 @@ import { Tester }                    from '@atls/code-test'
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
 
-class ChecksTestUnitCommand extends AbstractChecksTestCommand {
+export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static paths = [['checks', 'test', 'unit']]
 
   override async execute(): Promise<number> {
@@ -36,10 +36,10 @@ class ChecksTestUnitCommand extends AbstractChecksTestCommand {
 
     const env = await scriptUtils.makeScriptEnv({ binFolder, project })
 
-    if (!env.NODE_OPTIONS?.includes('@monstrs/tools-runtime/ts-node-register')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @monstrs/tools-runtime/ts-node-register`
+    if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-node-register`
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${pathToFileURL(npath.fromPortablePath(ppath.join(project.cwd, Filename.pnpEsmLoader))).href}`
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @monstrs/tools-runtime/ts-ext-register`
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
     }
 
     if (!env.NODE_OPTIONS?.includes('--enable-source-maps')) {
@@ -99,5 +99,3 @@ class ChecksTestUnitCommand extends AbstractChecksTestCommand {
     return commandReport.exitCode()
   }
 }
-
-export { ChecksTestUnitCommand }

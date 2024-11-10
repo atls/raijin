@@ -1,4 +1,4 @@
-import { Plugin }                       from '@yarnpkg/core'
+import type { Plugin }                  from '@yarnpkg/core'
 
 import { ChecksLintCommand }            from './checks-lint.command.jsx'
 import { ChecksReleaseCommand }         from './checks-release.command.js'

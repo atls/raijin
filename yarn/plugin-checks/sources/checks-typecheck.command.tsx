@@ -1,29 +1,30 @@
 import type { PortablePath }            from '@yarnpkg/fslib'
 
-import type { Annotation }              from '../utils/index.js'
+import type { Annotation }              from './github.checks.js'
 
-import { EOL }                           from 'node:os'
+import { EOL }                          from 'node:os'
 
-import { BaseCommand }                   from '@yarnpkg/cli'
-import { Configuration }                 from '@yarnpkg/core'
-import { Project }                       from '@yarnpkg/core'
-import { StreamReport }                  from '@yarnpkg/core'
-import { MessageName }                   from '@yarnpkg/core'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Configuration }                from '@yarnpkg/core'
+import { Project }                      from '@yarnpkg/core'
+import { StreamReport }                 from '@yarnpkg/core'
+import { MessageName }                  from '@yarnpkg/core'
 import { Filename }                     from '@yarnpkg/fslib'
 import { codeFrameColumns }             from '@babel/code-frame'
 import { execUtils }                    from '@yarnpkg/core'
 import { scriptUtils }                  from '@yarnpkg/core'
-import { xfs }                           from '@yarnpkg/fslib'
-import { ppath }                         from '@yarnpkg/fslib'
+import { xfs }                          from '@yarnpkg/fslib'
+import { ppath }                        from '@yarnpkg/fslib'
 import { flattenDiagnosticMessageText } from 'typescript'
-import React                             from 'react'
+import React                            from 'react'
 
-import { TypeScriptDiagnostic }          from '@atls/cli-ui-typescript-diagnostic-component'
-import { Typescript }                    from '@atls/code-typescript'
-import { renderStatic }                  from '@atls/cli-ui-renderer-static-component'
+import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScript }                   from '@atls/code-typescript'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import type { ts }                           from '@atls/code-runtime/typescript'
 
-import { GitHubChecks }                  from './github.checks.ts'
-import { AnnotationLevel }               from './github.checks.ts'
+import { GitHubChecks }                 from './github.checks.js'
+import { AnnotationLevel }              from './github.checks.js'
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static paths = [['checks', 'typecheck']]
@@ -75,7 +76,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
             const diagnostics = await typescript.check(await this.getIncludes(project))
 
-            diagnostics.forEach((diagnostic) => {
+            diagnostics.forEach((diagnostic: ts.Diagnostic) => {
               const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
 
               output.split('\n').forEach((line) => {
@@ -85,12 +86,11 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
             const annotations: Array<Annotation> = []
 
-            diagnostics.forEach((diagnostic) => {
+            diagnostics.forEach((diagnostic: ts.Diagnostic) => {
               if (diagnostic.file) {
-                const position =
-                  diagnostic.start
-                    ? diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start)
-                    : null
+                const position = diagnostic.start
+                  ? diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start)
+                  : null
 
                 annotations.push({
                   path: ppath.normalize(

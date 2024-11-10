@@ -20,23 +20,23 @@
     "@atls/cli-ui-error-info-component": "workspace:*",
     "@atls/cli-ui-log-record-component": "workspace:*",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
-    "@atls/cli-ui-service-progress": "workspace:*",
+    "@atls/cli-ui-service-progress-component": "workspace:*",
     "@atls/code-service": "workspace:*",
     "@atls/yarn-pack-utils": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
-    "@monstrs/logger": "latest",
-    "clipanion": "4.0.0-rc.4",
-    "ink": "5.0.1",
+    "@monstrs/logger": "0.0.20",
+    "clipanion": "4.0.0-rc.2",
+    "ink": "3.2.0",
     "react": "18.3.1"
   },
   "devDependencies": {
     "@atls/yarn-test-utils": "workspace:*",
-    "@types/react": "18.3.5",
+    "@types/react": "18.3.12",
     "@yarnpkg/builder": "4.2.0",
-    "@yarnpkg/cli": "4.5.0",
-    "@yarnpkg/core": "4.1.3",
+    "@yarnpkg/cli": "4.5.1",
+    "@yarnpkg/core": "4.1.4",
     "@yarnpkg/fslib": "3.1.0",
-    "typescript": "5.4.2"
+    "typescript": "5.5.4"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

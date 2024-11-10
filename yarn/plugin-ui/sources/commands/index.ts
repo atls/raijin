@@ -1,1 +1,1 @@
-export * from './ui-icons-generate.command.js'
+export * from './ui-icons-generate.command.jsx'

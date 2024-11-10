@@ -1,4 +1,4 @@
-import EventEmitter from 'node:events'
+import EventEmitter       from 'node:events'
 import { writeFile }      from 'node:fs/promises'
 import { readFile }       from 'node:fs/promises'
 import { relative }       from 'node:path'
@@ -69,7 +69,6 @@ export class Formatter extends EventEmitter {
 
     this.emit('end')
   }
-
 
   protected async formatProject(): Promise<void> {
     const files = await globby(createPatterns(this.cwd), {

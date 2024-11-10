@@ -1,9 +1,10 @@
+import type { Path }           from '@angular-devkit/core'
+import type { DryRunEvent }    from '@angular-devkit/schematics'
+
 import { dirname }             from 'node:path'
 import { join }                from 'node:path'
 
-import { Path }                from '@angular-devkit/core'
 import { NodeJsSyncHost }      from '@angular-devkit/core/node'
-import { DryRunEvent }         from '@angular-devkit/schematics'
 import { NodeWorkflow }        from '@angular-devkit/schematics/tools'
 import { virtualFs }           from '@angular-devkit/core'
 import { lastValueFrom }       from 'rxjs'

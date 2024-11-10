@@ -1,5 +1,5 @@
-import type { LogAttributes }           from '@atls/logger'
-import type { LogAttributeValue }       from '@atls/logger'
+import type { LogAttributes }           from '@monstrs/logger'
+import type { LogAttributeValue }       from '@monstrs/logger'
 import type { ReactElement }            from 'react'
 
 import { SqlHighlighter }               from '@mikro-orm/sql-highlighter'

@@ -5,7 +5,7 @@ import { StreamReport }  from '@yarnpkg/core'
 import { structUtils }   from '@yarnpkg/core'
 import semver            from 'semver'
 
-import runtime           from '@atls/code-runtime/package.json' assert { type: 'json' }
+import runtime           from '@atls/code-runtime/package.json' with { type: 'json' }
 
 export class ToolsSyncRuntimeCommand extends BaseCommand {
   static paths = [['tools', 'sync', 'runtime']]

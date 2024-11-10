@@ -1,9 +1,7 @@
-import type { ts as typescript }                        from '@atls/code-runtime/typescript'
+import type { ts as typescript }     from '@atls/code-runtime/typescript'
 
-import EventEmitter from 'node:events'
-
+import EventEmitter                  from 'node:events'
 import { readFileSync }              from 'node:fs'
-
 import { join }                      from 'node:path'
 
 import tsconfig                      from '@atls/config-typescript'
@@ -24,22 +22,22 @@ export class TypeScript extends EventEmitter {
     return new TypeScript(ts, cwd)
   }
 
-  async check(include: Array<string> = []): Promise<Array<ts.Diagnostic>> {
+  async check(include: Array<string> = []): Promise<Array<typescript.Diagnostic>> {
     return this.run(include)
   }
 
   async build(
     include: Array<string> = [],
-    override: Partial<ts.CompilerOptions> = {}
-  ): Promise<Array<ts.Diagnostic>> {
+    override: Partial<typescript.CompilerOptions> = {}
+  ): Promise<Array<typescript.Diagnostic>> {
     return this.run(include, override, false)
   }
 
   private async run(
     include: Array<string> = [],
-    override: Partial<ts.CompilerOptions> = {},
+    override: Partial<typescript.CompilerOptions> = {},
     noEmit = true
-  ): Promise<Array<ts.Diagnostic>> {
+  ): Promise<Array<typescript.Diagnostic>> {
     const projectIgnorePatterns = this.getProjectIgnorePatterns()
 
     const skipLibCheck = this.getLibCheckOption()
@@ -103,7 +101,9 @@ export class TypeScript extends EventEmitter {
     return diagnostics
   }
 
-  private filterDiagnostics(diagnostics: Array<typescript.Diagnostic>): Array<typescript.Diagnostic> {
+  private filterDiagnostics(
+    diagnostics: Array<typescript.Diagnostic>
+  ): Array<typescript.Diagnostic> {
     return diagnostics
       .filter((diagnostic) => diagnostic.code !== 2209)
       .filter(

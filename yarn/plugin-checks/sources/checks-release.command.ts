@@ -1,4 +1,4 @@
-import type { Annotation }            from './github.checks.js'
+import type { Annotation }       from './github.checks.js'
 
 import { BaseCommand }           from '@yarnpkg/cli'
 import { Configuration }         from '@yarnpkg/core'
@@ -88,8 +88,8 @@ class ChecksReleaseCommand extends BaseCommand {
             })
           }
 
-          context.stdout.off('data', outputWritter)
-          context.stderr.off('data', outputWritter)
+          context.stdout.off('data', outputWriter)
+          context.stderr.off('data', outputWriter)
         }
       }
 

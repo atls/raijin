@@ -1,21 +1,19 @@
-import type { ESLint }        from '@atls/code-runtime/eslint'
-import type { Linter as ESLinter }        from '@atls/code-runtime/eslint'
+import type { ESLint }             from '@atls/code-runtime/eslint'
+import type { Linter as ESLinter } from '@atls/code-runtime/eslint'
 
-import EventEmitter from 'node:events'
-import { readFileSync }           from 'node:fs'
-import { readFile }           from 'node:fs/promises'
-import { writeFile }          from 'node:fs/promises'
-import { relative }           from 'node:path'
-import { join }               from 'node:path'
+import EventEmitter                from 'node:events'
+import { readFileSync }            from 'node:fs'
+import { readFile }                from 'node:fs/promises'
+import { writeFile }               from 'node:fs/promises'
+import { relative }                from 'node:path'
+import { join }                    from 'node:path'
 
-import { globby }             from 'globby'
-import ignorer                from 'ignore'
+import { globby }                  from 'globby'
+import ignorer                     from 'ignore'
 
-import { eslintconfig }       from '@atls/code-runtime/eslint'
-
-import { ignore }             from './linter.patterns.js'
-import { createPatterns }     from './linter.patterns.js'
-import { createLintResult }   from './linter.utils.js'
+import { ignore }                  from './linter.patterns.js'
+import { createPatterns }          from './linter.patterns.js'
+import { createLintResult }        from './linter.utils.js'
 
 export interface LintOptions {
   fix?: boolean
@@ -24,12 +22,10 @@ export interface LintOptions {
 export class Linter extends EventEmitter {
   private ignore: ignorer.Ignore
 
-  #config: Array<ESLinter.FlatConfig>
-
   constructor(
     private readonly linter: ESLinter,
     private readonly config: Array<ESLinter.Config>,
-    private readonly cwd: string,
+    private readonly cwd: string
   ) {
     super()
 
@@ -60,13 +56,9 @@ export class Linter extends EventEmitter {
     const source = await readFile(filename, 'utf8')
 
     if (options?.fix) {
-      const { messages, fixed, output } = this.linter.verifyAndFix(
-        source,
-        this.config as ESLinter.Config<ESLinter.RulesRecord, ESLinter.RulesRecord>,
-        {
-          filename,
-        }
-      )
+      const { messages, fixed, output } = this.linter.verifyAndFix(source, this.config, {
+        filename,
+      })
 
       if (fixed) {
         await writeFile(filename, output, 'utf8')
@@ -78,13 +70,9 @@ export class Linter extends EventEmitter {
     return createLintResult(
       filename,
       source,
-      this.linter.verify(
-        source,
-        this.config as ESLinter.Config<ESLinter.RulesRecord, ESLinter.RulesRecord>,
-        {
-          filename,
-        }
-      )
+      this.linter.verify(source, this.config, {
+        filename,
+      })
     )
   }
 
@@ -99,9 +87,9 @@ export class Linter extends EventEmitter {
     for await (const file of files) {
       this.emit('lint:start', { file })
 
-      if (this.ignore.filter([relative(this.cwd, file)]).length !== 0) {
-        results.push(await this.lintFile(file, options))
-      }
+      const result = await this.lintFile(file, options)
+
+      results.push(result)
 
       this.emit('lint:end', { result })
     }
@@ -123,7 +111,7 @@ export class Linter extends EventEmitter {
     return this.lintProject(options)
   }
 
-  private async getProjectIgnorePatterns(): Array<string> {
+  private getProjectIgnorePatterns(): Array<string> {
     const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
 
     const { linterIgnorePatterns = [] } = JSON.parse(content)

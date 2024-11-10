@@ -1,14 +1,14 @@
-import { BaseCommand }     from '@yarnpkg/cli'
-import { Configuration }   from '@yarnpkg/core'
-import { Project }         from '@yarnpkg/core'
-import { Option }          from 'clipanion'
+import { BaseCommand }    from '@yarnpkg/cli'
+import { Configuration }  from '@yarnpkg/core'
+import { Project }        from '@yarnpkg/core'
+import { Option }         from 'clipanion'
 import { render }         from 'ink'
-import React               from 'react'
+import React              from 'react'
 
-import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
-import { FormatProgress }       from '@atls/cli-ui-format-progress-component'
-import { Formatter } from '@atls/code-format'
-import { renderStatic }    from '@atls/cli-ui-renderer-static-component'
+import { ErrorInfo }      from '@atls/cli-ui-error-info-component'
+import { FormatProgress } from '@atls/cli-ui-format-progress-component'
+import { Formatter }      from '@atls/code-format'
+import { renderStatic }   from '@atls/cli-ui-renderer-static-component'
 
 export class FormatCommand extends BaseCommand {
   static paths = [['format']]

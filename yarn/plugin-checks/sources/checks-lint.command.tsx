@@ -1,30 +1,30 @@
 /* eslint-disable n/no-sync */
 
-import type { ESLint }             from '@monstrs/tools-runtime/eslint'
-import type { Linter as ESLinter } from '@monstrs/tools-runtime/eslint'
+import type { ESLint }             from '@atls/code-runtime/eslint'
+import type { Linter as ESLinter } from '@atls/code-runtime/eslint'
 
-import type { Annotation }       from './github.checks.ts'
+import type { Annotation }         from './github.checks.js'
 
-import { readFileSync }     from 'node:fs'
+import { readFileSync }            from 'node:fs'
 
-import { BaseCommand }      from '@yarnpkg/cli'
-import { StreamReport }     from '@yarnpkg/core'
-import { Configuration }    from '@yarnpkg/core'
-import { MessageName }      from '@yarnpkg/core'
-import { Project }          from '@yarnpkg/core'
+import { BaseCommand }             from '@yarnpkg/cli'
+import { StreamReport }            from '@yarnpkg/core'
+import { Configuration }           from '@yarnpkg/core'
+import { MessageName }             from '@yarnpkg/core'
+import { Project }                 from '@yarnpkg/core'
 import { Filename }                from '@yarnpkg/fslib'
 import { codeFrameColumns }        from '@babel/code-frame'
 import { execUtils }               from '@yarnpkg/core'
 import { scriptUtils }             from '@yarnpkg/core'
 import { xfs }                     from '@yarnpkg/fslib'
-import React                from 'react'
+import React                       from 'react'
 
-import { LintResult }     from '@atls/cli-ui-eslint-result-component'
+import { LintResult }              from '@atls/cli-ui-lint-result-component'
 import { Linter }                  from '@atls/code-lint'
-import { renderStatic }     from '@atls/cli-ui-renderer-static-component'
+import { renderStatic }            from '@atls/cli-ui-renderer-static-component'
 
-import { GitHubChecks }     from './github.checks.ts'
-import { AnnotationLevel }  from './github.checks.ts'
+import { GitHubChecks }            from './github.checks.js'
+import { AnnotationLevel }         from './github.checks.js'
 
 class ChecksLintCommand extends BaseCommand {
   static paths = [['checks', 'lint']]

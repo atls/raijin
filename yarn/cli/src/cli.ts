@@ -4,10 +4,10 @@ import { runExit }                from '@yarnpkg/cli'
 import { npath }                  from '@yarnpkg/fslib'
 import { ppath }                  from '@yarnpkg/fslib'
 
-// @ts-expect-error import
+// @ts-expect-error: Cjs export
 import { getPluginConfiguration } from '@atls/yarn-cli-tools'
 
-import packageJson                from '../package.json' assert { type: 'json' }
+import packageJson                from '../package.json' with { type: 'json' }
 
 const pc = getPluginConfiguration(packageJson['@yarnpkg/builder'].bundles.standard)
 

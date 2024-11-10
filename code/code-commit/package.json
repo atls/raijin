@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-commit",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -25,13 +25,12 @@
     "@commitlint/read": "19.4.0",
     "@commitlint/rules": "19.4.1",
     "@commitlint/types": "19.0.3",
-    "conventional-changelog-angular": "7.0.0",
-    "conventional-commits-parser": "5.0.0"
+    "conventional-changelog-angular": "8.0.0",
+    "conventional-commits-parser": "6.0.0"
   },
   "devDependencies": {
-    "@jest/globals": "29.7.0",
     "@types/conventional-commits-parser": "5.0.0",
-    "@types/node": "22.5.1"
+    "@types/node": "22.9.0"
   },
   "publishConfig": {
     "access": "public",

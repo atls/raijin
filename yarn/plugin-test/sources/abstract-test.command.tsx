@@ -18,13 +18,13 @@ import { render }        from 'ink'
 import { relative }      from 'path'
 import React             from 'react'
 
-import { ErrorInfo }     from '@monstrs/cli-ui-error-info'
-import { LogRecord }     from '@monstrs/cli-ui-log-record'
-import { RawOutput }     from '@monstrs/cli-ui-raw-output'
-import { TestFailure }   from '@monstrs/cli-ui-test-failure'
-import { TestProgress }  from '@monstrs/cli-ui-test-progress'
-import { Tester }        from '@monstrs/code-test'
-import { renderStatic }  from '@monstrs/cli-ui-renderer-static'
+import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
+import { LogRecord }     from '@atls/cli-ui-log-record-component'
+import { RawOutput }     from '@atls/cli-ui-raw-output-component'
+import { TestFailure }   from '@atls/cli-ui-test-failure-component'
+import { TestProgress }  from '@atls/cli-ui-test-progress-component'
+import { Tester }        from '@atls/code-test'
+import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
 
 export abstract class AbstractTestCommand extends BaseCommand {
   target = Option.String('-t,--target')
@@ -48,10 +48,10 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
     const env = await scriptUtils.makeScriptEnv({ binFolder, project })
 
-    if (!env.NODE_OPTIONS?.includes('@monstrs/tools-runtime/ts-node-register')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @monstrs/tools-runtime/ts-node-register`
+    if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-node-register`
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${pathToFileURL(npath.fromPortablePath(ppath.join(project.cwd, Filename.pnpEsmLoader))).href}`
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @monstrs/tools-runtime/ts-ext-register`
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
     }
 
     if (!env.NODE_OPTIONS?.includes('--enable-source-maps')) {

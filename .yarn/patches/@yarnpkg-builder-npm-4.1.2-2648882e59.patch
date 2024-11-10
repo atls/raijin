@@ -1,0 +1,66 @@
+diff --git a/lib/commands/build/bundle.js b/lib/commands/build/bundle.js
+index c5a58b9ddf1d74675917de75a51f26e19c88f450..c3b07b42c5b1ef210689f527dba5630cb81c886e 100644
+--- a/lib/commands/build/bundle.js
++++ b/lib/commands/build/bundle.js
+@@ -85,9 +85,32 @@ class BuildBundleCommand extends clipanion_1.Command {
+                         }));
+                     },
+                 };
++                const ESM_REQUIRE_SHIM = `
++                await (async () => {
++                  const { dirname } = await import("path");
++                  const { fileURLToPath } = await import("url");
++
++                  /**
++                   * Shim entry-point related paths.
++                   */
++                  if (typeof globalThis.__filename === "undefined") {
++                    globalThis.__filename = fileURLToPath(import.meta.url);
++                  }
++                  if (typeof globalThis.__dirname === "undefined") {
++                    globalThis.__dirname = dirname(globalThis.__filename);
++                  }
++                  /**
++                   * Shim require if needed.
++                   */
++                  if (typeof globalThis.require === "undefined") {
++                    const { default: module } = await import("module");
++                    globalThis.require = module.createRequire(import.meta.url);
++                  }
++                })();
++                `;
+                 const res = await (0, esbuild_1.build)({
+                     banner: {
+-                        js: `#!/usr/bin/env node\n/* eslint-disable */\n//prettier-ignore`,
++                        js: `#!/usr/bin/env node\n/* eslint-disable */\n//prettier-ignore\n${ESM_REQUIRE_SHIM}`,
+                     },
+                     entryPoints: [path_1.default.join(basedir, `sources/cli.ts`)],
+                     bundle: true,
+@@ -109,12 +132,13 @@ class BuildBundleCommand extends clipanion_1.Command {
+                     // Default extensions + .mjs
+                     resolveExtensions: [`.tsx`, `.ts`, `.jsx`, `.mjs`, `.js`, `.css`, `.json`],
+                     logLevel: `silent`,
+-                    format: `iife`,
++                    format: `esm`,
+                     platform: `node`,
+                     plugins: [valLoader],
+                     minify: !this.noMinify,
+                     sourcemap: this.sourceMap ? `inline` : false,
+-                    target: `node${semver_1.default.minVersion(package_json_1.default.engines.node).version}`,
++                    target: `esnext`,
++                    external: ['@atls/code-runtime']
+                 });
+                 for (const warning of res.warnings) {
+                     if (warning.location !== null)
+diff --git a/lib/commands/build/plugin.js b/lib/commands/build/plugin.js
+index 5a3b4099286bd8e0c768fa2d9ac287886c922e46..b7abb610c4a38ff302c7ef02b825f66374d7ce22 100644
+--- a/lib/commands/build/plugin.js
++++ b/lib/commands/build/plugin.js
+@@ -99,6 +99,7 @@ class BuildPluginCommand extends clipanion_1.Command {
+                     minify: !this.noMinify,
+                     sourcemap: this.sourceMap ? `inline` : false,
+                     target: `node${semver_1.default.minVersion(package_json_1.default.engines.node).version}`,
++                    external: ['@atls/code-runtime']
+                 });
+                 for (const warning of res.warnings) {
+                     if (warning.location !== null)

@@ -1,4 +1,4 @@
-import { Plugin }           from '@yarnpkg/core'
+import type { Plugin }      from '@yarnpkg/core'
 
 import { ImagePackCommand } from './image-pack.command.js'
 

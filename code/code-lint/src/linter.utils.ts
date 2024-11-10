@@ -14,6 +14,6 @@ export const createLintResult = (
   usedDeprecatedRules: [],
   suppressedMessages: [],
   errorCount: messages.filter((message) => message.severity === 1).length,
-  fatalErrorCount: messages.filter((message) => message.severity === 0).length,
+  fatalErrorCount: messages.filter((message) => message.fatal).length,
   warningCount: messages.filter((message) => message.severity === 2).length,
 })

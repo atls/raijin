@@ -1,4 +1,4 @@
-import { Plugin }                   from '@yarnpkg/core'
+import type { Plugin }              from '@yarnpkg/core'
 
 import { CommitMessageLintCommand } from './commit-message-lint.command.js'
 import { CommitMessageCommand }     from './commit-message.command.jsx'

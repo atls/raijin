@@ -44,7 +44,7 @@ const parse: Parser['parse'] = async (source, { plugins }) => {
 
 export const parsers: Record<string, Parser> = {
   typescript: {
-    ...typescript.parsers!.typescript,
+    ...typescript.parsers.typescript,
     astFormat: 'typescript-custom',
     preprocess,
     parse,

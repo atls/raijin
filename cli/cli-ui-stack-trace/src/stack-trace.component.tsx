@@ -1,7 +1,7 @@
-import type { StackFrame }   from '@atls/stack-trace'
+import type { StackFrame }   from '@monstrs/stack-trace'
 import type { ReactElement } from 'react'
 
-import { parse }             from '@atls/stack-trace'
+import { parse }             from '@monstrs/stack-trace'
 import { Text }              from 'ink'
 import { Box }               from 'ink'
 import { nanoid }            from 'nanoid'

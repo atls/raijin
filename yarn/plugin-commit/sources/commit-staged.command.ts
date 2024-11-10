@@ -6,7 +6,7 @@ const config = {
   '*.{yml,yaml,json,graphql,md}': 'yarn format',
   '*.{js,mjs,cjs,jsx,ts,tsx}': ['yarn format', 'yarn lint'],
   '*.{ts,tsx}': ['yarn typecheck'],
-  '*.{tsx,ts}': ['yarn test unit --bail --find-related-tests'],
+  '*.{tsx,ts}': ['yarn test unit'],
 }
 
 export class CommitStagedCommand extends BaseCommand {

@@ -1,4 +1,4 @@
-import { Plugin }      from '@yarnpkg/core'
+import type { Plugin } from '@yarnpkg/core'
 
 import { LintCommand } from './lint.command.jsx'
 
