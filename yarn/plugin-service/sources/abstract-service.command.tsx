@@ -1,54 +1,55 @@
 import type { ServiceLogRecord } from '@atls/code-service'
-import type { StreamReport }     from '@yarnpkg/core'
 
 import { SeverityNumber }        from '@monstrs/logger'
 import { BaseCommand }           from '@yarnpkg/cli'
-import { MessageName }           from '@yarnpkg/core'
 import { Option }                from 'clipanion'
 import React                     from 'react'
 
 import { ErrorInfo }             from '@atls/cli-ui-error-info-component'
 import { LogRecord }             from '@atls/cli-ui-log-record-component'
-import { renderStatic }          from '@atls/cli-ui-renderer'
+import { renderStatic }          from '@atls/cli-ui-renderer-static-component'
 
 export abstract class AbstractServiceCommand extends BaseCommand {
   showWarnings = Option.Boolean('-w,--show-warnings', false)
 
-  renderLogRecord(logRecord: ServiceLogRecord, report: StreamReport): void {
+  renderLogRecord(logRecord: ServiceLogRecord): void {
     if (logRecord instanceof Error) {
-      renderStatic(<ErrorInfo error={logRecord} />, process.stdout.columns - 12)
+      renderStatic(<ErrorInfo error={logRecord} />)
         .split('\n')
         .forEach((line) => {
-          report.reportError(MessageName.UNNAMED, line)
+          console.log(line) // eslint-disable-line no-console
         })
     } else if ('severityNumber' in logRecord && 'record' in logRecord) {
-      renderStatic(<ErrorInfo error={logRecord.record as Error} />, process.stdout.columns - 12)
+      renderStatic(<ErrorInfo error={logRecord.record as Error} />)
         .split('\n')
         .forEach((line) => {
           if (logRecord.severityNumber === SeverityNumber.WARN) {
             if (this.showWarnings) {
-              report.reportWarning(MessageName.UNNAMED, line)
+              console.log(line) // eslint-disable-line no-console
             }
           } else {
-            report.reportError(MessageName.UNNAMED, line)
+            console.log(line) // eslint-disable-line no-console
           }
         })
     } else if ('severityNumber' in logRecord) {
-      renderStatic(<LogRecord {...logRecord} />, process.stdout.columns - 12)
+      renderStatic(<LogRecord {...logRecord} />)
         .split('\n')
         .forEach((line) => {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           if (logRecord.severityNumber! <= SeverityNumber.INFO) {
-            report.reportInfo(MessageName.UNNAMED, line)
+            console.log(line) // eslint-disable-line no-console
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           } else if (logRecord.severityNumber! <= SeverityNumber.WARN) {
             if (this.showWarnings) {
-              report.reportWarning(MessageName.UNNAMED, line)
+              console.log(line) // eslint-disable-line no-console
             }
           } else {
-            report.reportError(MessageName.UNNAMED, line)
+            console.log(line) // eslint-disable-line no-console
           }
         })
     } else {
-      report.reportWarning(MessageName.UNNAMED, `Unknown record type: ${JSON.stringify(logRecord)}`)
+      // eslint-disable-next-line no-console
+      console.log(`Unknown record type: ${JSON.stringify(logRecord)}`)
     }
   }
 }
