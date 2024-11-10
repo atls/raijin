@@ -1,70 +1,103 @@
 import { BaseCommand }          from '@yarnpkg/cli'
 import { Configuration }        from '@yarnpkg/core'
 import { Project }              from '@yarnpkg/core'
-import { StreamReport }         from '@yarnpkg/core'
-import { MessageName }          from '@yarnpkg/core'
+import { Filename }             from '@yarnpkg/fslib'
+import { ppath }                from '@yarnpkg/fslib'
+import { scriptUtils }          from '@yarnpkg/core'
+import { execUtils }            from '@yarnpkg/core'
+import { xfs }                  from '@yarnpkg/fslib'
 import { Option }               from 'clipanion'
+import { render }               from 'ink'
 import React                    from 'react'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
 import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component'
-import { SpinnerProgress }      from '@atls/yarn-run-utils'
-import { renderStatic }         from '@atls/cli-ui-renderer'
+import { TypeScriptProgress }   from '@atls/cli-ui-typescript-progress-component'
+import { TypeScript }           from '@atls/code-typescript'
+import { renderStatic }         from '@atls/cli-ui-renderer-static-component'
 
-class TypeCheckCommand extends BaseCommand {
+export class TypeCheckCommand extends BaseCommand {
   static paths = [['typecheck']]
 
   args: Array<string> = Option.Rest({ required: 0 })
 
-  async execute() {
+  override async execute(): Promise<number> {
+    const nodeOptions = process.env.NODE_OPTIONS ?? ''
+
+    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    return this.executeProxy()
+  }
+
+  async executeProxy(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
-    const commandReport = await StreamReport.start(
-      {
-        stdout: this.context.stdout,
-        configuration,
-      },
-      async (report) => {
-        await report.startTimerPromise('Typecheck', async () => {
-          const progress = new SpinnerProgress(this.context.stdout, configuration)
+    const binFolder = await xfs.mktempPromise()
 
-          progress.start()
+    const { code } = await execUtils.pipevp('yarn', ['types', 'check', ...this.args], {
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+    })
 
-          try {
-            const ts = new TypeScriptWorker(project.cwd)
+    return code
+  }
 
-            const diagnostics = await ts.check(
-              this.context.cwd,
-              this.args.length > 0
-                ? this.args
-                : project.topLevelWorkspace.manifest.workspaceDefinitions.map(
-                    (definition) => definition.pattern
-                  )
-            )
+  async executeRegular(): Promise<number> {
+    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
 
-            progress.end()
+    const typescript = await TypeScript.initialize(project.cwd)
 
-            diagnostics.forEach((diagnostic) => {
-              const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
+    const { clear } = render(<TypeScriptProgress typescript={typescript} />)
 
-              output.split('\n').forEach((line) => report.reportError(MessageName.UNNAMED, line))
-            })
-          } catch (error) {
-            progress.end()
+    try {
+      const diagnostics = await typescript.check(await this.getIncludes(project))
 
-            renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
-              .split('\n')
-              .forEach((line) => {
-                report.reportError(MessageName.UNNAMED, line)
-              })
-          }
+      diagnostics.forEach((diagnostic) => {
+        renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
+          .split('\n')
+          .forEach((line) => {
+            console.log(line) // eslint-disable-line no-console
+          })
+      })
+
+      return diagnostics.length === 0 ? 0 : 1
+    } catch (error) {
+      renderStatic(<ErrorInfo error={error as Error} />)
+        .split('\n')
+        .forEach((line) => {
+          console.error(line) // eslint-disable-line no-console
         })
-      }
-    )
 
-    return commandReport.exitCode()
+      return 1
+    } finally {
+      clear()
+    }
+  }
+
+  protected async getIncludes(project: Project): Promise<Array<string>> {
+    if (this.args.length > 0) {
+      return this.args
+    }
+
+    if (await xfs.existsPromise(ppath.join(project.cwd, 'tsconfig.json'))) {
+      const tsconfig: { include?: Array<string> } = await xfs.readJsonPromise(
+        ppath.join(project.cwd, 'tsconfig.json')
+      )
+
+      if (tsconfig.include && tsconfig.include.length > 0) {
+        return tsconfig.include
+      }
+    }
+
+    return project.topLevelWorkspace.manifest.workspaceDefinitions.map(
+      (definition) => definition.pattern
+    )
   }
 }
-
-export { TypeCheckCommand }
