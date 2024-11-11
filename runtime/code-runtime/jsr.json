@@ -1,0 +1,15 @@
+{
+  "name": "@atls/code-runtime",
+  "version": "2.0.0",
+  "exports": {
+    "./package.json": "./package.json",
+    "./types": "./types/index.d.ts",
+    ".": "./src/index.ts",
+    "./eslint": "./src/eslint.ts",
+    "./webpack": "./src/webpack.ts",
+    "./typescript": "./src/typescript.ts",
+    "./svgr": "./src/svgr.ts",
+    "./ts-node-register": "./src/ts-node-register.ts",
+    "./ts-ext-register": "./src/ts-ext-register.ts"
+  }
+}
