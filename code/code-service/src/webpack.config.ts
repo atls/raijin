@@ -130,11 +130,14 @@ export class WebpackConfig {
     }
   }
 
-  private createPlugins(environment: string, additionalPlugins: Array<{
-    use: wp.WebpackPluginInstance
-    args: Array<any>
-    name: string
-  }>) {
+  private createPlugins(
+    environment: string,
+    additionalPlugins: Array<{
+      use: wp.WebpackPluginInstance
+      args: Array<any>
+      name: string
+    }>
+  ) {
     const plugins: Array<wp.WebpackPluginInstance> = [
       new wp.IgnorePlugin({
         checkResource: (resource: string): boolean => {

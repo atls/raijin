@@ -1,15 +1,15 @@
-import type { webpack as wp }       from '@atls/code-runtime/webpack'
+import type { webpack as wp }    from '@atls/code-runtime/webpack'
 
-import type { ServiceLogRecord }    from './service.interfaces.js'
+import type { ServiceLogRecord } from './service.interfaces.js'
 
-import EventEmitter                 from 'node:events'
-import { PassThrough }              from 'node:stream'
+import EventEmitter              from 'node:events'
+import { PassThrough }           from 'node:stream'
 
-import { SeverityNumber }           from '@monstrs/logger'
+import { SeverityNumber }        from '@monstrs/logger'
 
-import { StartServerPlugin }        from '@atls/webpack-start-server-plugin'
+import { StartServerPlugin }     from '@atls/webpack-start-server-plugin'
 
-import { WebpackConfig }            from './webpack.config.js'
+import { WebpackConfig }         from './webpack.config.js'
 
 export class Service extends EventEmitter {
   protected constructor(

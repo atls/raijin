@@ -15,6 +15,7 @@ import { NodePackageDoesNotSupportSchematics }     from '@angular-devkit/schemat
 // @ts-expect-error any
 import { readJsonFile }                            from '@angular-devkit/schematics/tools/file-system-utility'
 
+// TODO: refactor
 export class NodePnpEngineHost extends FileSystemEngineHostBase {
   constructor(private readonly paths?: Array<string>) {
     super()

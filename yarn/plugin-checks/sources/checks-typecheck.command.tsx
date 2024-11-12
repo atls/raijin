@@ -1,4 +1,5 @@
 import type { PortablePath }            from '@yarnpkg/fslib'
+import type { ts }                      from '@atls/code-runtime/typescript'
 
 import type { Annotation }              from './github.checks.js'
 
@@ -21,7 +22,6 @@ import React                            from 'react'
 import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
 import { TypeScript }                   from '@atls/code-typescript'
 import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
-import type { ts }                           from '@atls/code-runtime/typescript'
 
 import { GitHubChecks }                 from './github.checks.js'
 import { AnnotationLevel }              from './github.checks.js'
