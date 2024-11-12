@@ -200,6 +200,7 @@ export const rules: Linter.RulesRecord = {
   'react/jsx-wrap-multilines': 'off',
   'react/jsx-space-before-closing': ['off', 'always'],
   'react-hooks/rules-of-hooks': ['error'],
+  // TODO: fix error
   // 'react-hooks/exhaustive-deps': ['error'],
   'react/display-name': [
     'off',
