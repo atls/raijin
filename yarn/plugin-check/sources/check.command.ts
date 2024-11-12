@@ -1,6 +1,6 @@
 import { BaseCommand } from '@yarnpkg/cli'
 
-class CheckCommand extends BaseCommand {
+export class CheckCommand extends BaseCommand {
   static paths = [['check']]
 
   async execute() {
@@ -9,5 +9,3 @@ class CheckCommand extends BaseCommand {
     await this.cli.run(['lint'])
   }
 }
-
-export { CheckCommand }

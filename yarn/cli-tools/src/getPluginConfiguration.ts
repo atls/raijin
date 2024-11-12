@@ -3,16 +3,17 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
 const { getDynamicLibs } = require('@yarnpkg/cli')
 
-// eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
-module.exports.getPluginConfiguration = async (bundles = []) => {
-  const plugins = new Set()
+module.exports.getPluginConfiguration = async (
+  bundles: Array<string> = []
+): Promise<{ plugins: Set<string>; modules: Map<string, unknown> }> => {
+  const plugins = new Set<string>()
+
   for (const dependencyName of bundles) plugins.add(dependencyName)
 
-  const modules = getDynamicLibs()
+  const modules: Map<string, unknown> = getDynamicLibs()
 
-  for (const plugin of plugins) {
-    // @ts-expect-error
-    modules.set(plugin, (await import(plugin)).default) // eslint-disable-line no-await-in-loop
+  for await (const plugin of plugins) {
+    modules.set(plugin, (await import(plugin)).default)
   }
 
   return { plugins, modules }

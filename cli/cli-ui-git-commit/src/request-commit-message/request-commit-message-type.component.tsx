@@ -1,4 +1,4 @@
-import type { JSX }           from 'react'
+import type { ReactElement }  from 'react'
 
 import { Text }               from 'ink'
 import { Box }                from 'ink'
@@ -8,14 +8,13 @@ import Select                 from 'ink-select-input'
 import TextInput              from 'ink-text-input'
 import React                  from 'react'
 
-import { COMMIT_TYPE_ENUM }   from '@atls/code-commit'
+import { COMMIT_TYPE_ENUM }   from '@atls/config-commitlint'
 
 import { IndicatorComponent } from './select-indicator.component.jsx'
 import { ItemComponent }      from './select-item.component.jsx'
 
-const types = Object.keys(COMMIT_TYPE_ENUM).map((key) => ({
-  // @ts-expect-error
-  label: COMMIT_TYPE_ENUM[key].description,
+const types: Array<{ label: string; value: string }> = Object.keys(COMMIT_TYPE_ENUM).map((key) => ({
+  label: COMMIT_TYPE_ENUM[key as keyof typeof COMMIT_TYPE_ENUM].description,
   value: key,
 }))
 
@@ -25,7 +24,7 @@ export interface RequestCommitMessageTypeProps {
 
 export const RequestCommitMessageType = ({
   onSubmit,
-}: RequestCommitMessageTypeProps): JSX.Element => {
+}: RequestCommitMessageTypeProps): ReactElement => {
   const [value, setValue] = useState('')
 
   const matches = useMemo(() => {

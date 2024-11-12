@@ -1,16 +1,16 @@
-import { BaseCommand }      from '@yarnpkg/cli'
-import { Configuration }    from '@yarnpkg/core'
-import { Project }          from '@yarnpkg/core'
-import { MessageName }      from '@yarnpkg/core'
-import { StreamReport }     from '@yarnpkg/core'
-import { xfs }              from '@yarnpkg/fslib'
-import { npath }            from '@yarnpkg/fslib'
-import React                from 'react'
+import { BaseCommand }     from '@yarnpkg/cli'
+import { Configuration }   from '@yarnpkg/core'
+import { Project }         from '@yarnpkg/core'
+import { MessageName }     from '@yarnpkg/core'
+import { StreamReport }    from '@yarnpkg/core'
+import { xfs }             from '@yarnpkg/fslib'
+import { npath }           from '@yarnpkg/fslib'
+import React               from 'react'
 
-import { SchematicsWorker } from '@atls/code-schematics-worker'
-import { SpinnerProgress }  from '@atls/yarn-run-utils'
-import { renderStatic }     from '@atls/cli-ui-renderer'
+import { SpinnerProgress } from '@atls/yarn-run-utils'
+import { renderStatic }    from '@atls/cli-ui-renderer-static-component'
 
+// TODO: refactor
 class MigrationUpCommand extends BaseCommand {
   static paths = [['migration', 'up']]
 

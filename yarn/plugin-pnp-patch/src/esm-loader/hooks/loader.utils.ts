@@ -36,9 +36,10 @@ export const getFileFormat = (filepath: string): string | null => {
 }
 
 export const transformSource = (source: string, format: string, ext: 'ts' | 'tsx'): string => {
+  // eslint-disable-next-line n/no-sync
   const { transformSync } = require('esbuild')
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, n/no-sync
   const { code } = transformSync(source, {
     format: format === 'module' ? 'esm' : 'cjs',
     loader: ext === 'tsx' ? 'tsx' : 'ts',

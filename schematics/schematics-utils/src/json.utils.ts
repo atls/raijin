@@ -18,7 +18,6 @@ export const readJsonInTree = <T = any>(host: Tree, path: string): T => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return JSON.parse(contents)
   } catch (error: any) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     throw new Error(`Cannot parse ${path}: ${error.message}`)
   }
 }

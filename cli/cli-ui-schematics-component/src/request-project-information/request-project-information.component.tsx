@@ -1,17 +1,15 @@
-import type { FC }            from 'react'
+import type { FC }     from 'react'
 
-import { Text }               from 'ink'
-import { Box }                from 'ink'
-import { useEffect }          from 'react'
-import { useState }           from 'react'
-import Select                 from 'ink-select-input'
-import React                  from 'react'
+import { Text }        from 'ink'
+import { Box }         from 'ink'
+import { useEffect }   from 'react'
+import { useState }    from 'react'
+import Select          from 'ink-select-input'
+import React           from 'react'
 
-import { IndicatorComponent } from '@atls/cli-ui-parts'
-import { ProjectType }        from '@atls/schematics'
+import { ProjectType } from '@atls/schematics'
 
 const Submit = ({ onSubmit, ...props }: any) => {
-  // eslint-disable-next-line
   useEffect(() => {
     onSubmit(props)
   }, [props, onSubmit])
@@ -26,6 +24,7 @@ interface RequestProjectInformationProps {
   onSubmit: (props: ProjectInformationProperties) => void
 }
 
+// TODO: refactor for usage in new plugin
 export const RequestProjectInformation: FC<RequestProjectInformationProps> = ({ onSubmit }) => {
   const [type, setType] = useState<ProjectType>()
   if (!type) {

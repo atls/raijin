@@ -1,4 +1,4 @@
-import type { JSX }              from 'react'
+import type { ReactElement }     from 'react'
 
 import { Text }                  from 'ink'
 import { Box }                   from 'ink'
@@ -11,7 +11,7 @@ interface RequestCommitMessageBodyProps {
 
 export const RequestCommitMessageBody = ({
   onSubmit,
-}: RequestCommitMessageBodyProps): JSX.Element => (
+}: RequestCommitMessageBodyProps): ReactElement => (
   <Box flexDirection='column'>
     <Box>
       <Text bold color='cyanBright'>

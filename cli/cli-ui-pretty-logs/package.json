@@ -1,5 +1,5 @@
 {
-  "name": "@atls/cli-ui-pretty-logs",
+  "name": "@atls/cli-ui-pretty-logs-component",
   "version": "1.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
@@ -18,13 +18,13 @@
   },
   "dependencies": {
     "@atls/cli-ui-log-record-component": "workspace:*",
-    "@atls/cli-ui-renderer": "workspace:*",
+    "@atls/cli-ui-renderer-static-component": "workspace:*",
     "ink": "3.2.0",
     "react": "18.3.1"
   },
   "devDependencies": {
-    "@types/node": "22.5.1",
-    "@types/react": "18.3.5"
+    "@types/node": "22.9.0",
+    "@types/react": "18.3.12"
   },
   "publishConfig": {
     "access": "public",

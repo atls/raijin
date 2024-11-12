@@ -1,6 +1,6 @@
 {
   "name": "@atls/config-eslint",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -18,25 +18,25 @@
   },
   "dependencies": {
     "@atls/config-prettier": "workspace:*",
-    "@next/eslint-plugin-next": "14.2.7",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@typescript-eslint/parser": "7.18.0",
-    "eslint": "8.57.0",
+    "@next/eslint-plugin-next": "14.2.8",
+    "@typescript-eslint/eslint-plugin": "8.4.0",
+    "@typescript-eslint/parser": "8.4.0",
+    "eslint": "9.10.0",
     "eslint-import-resolver-node": "0.3.9",
-    "eslint-plugin-import": "2.29.1",
-    "eslint-plugin-jsx-a11y": "6.9.0",
-    "eslint-plugin-n": "16.6.2",
+    "eslint-plugin-import": "2.30.0",
+    "eslint-plugin-jsx-a11y": "6.10.0",
+    "eslint-plugin-n": "17.10.2",
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-hooks": "4.6.2",
-    "eslint-plugin-security": "2.1.1",
+    "eslint-plugin-security": "3.0.1",
     "prettier": "3.3.3",
     "react": "18.3.1"
   },
   "devDependencies": {
-    "@types/eslint": "8.56.12",
-    "@types/node": "22.5.1",
-    "typescript": "5.4.2"
+    "@types/eslint": "9.6.1",
+    "@types/node": "22.9.0",
+    "typescript": "5.5.4"
   },
   "peerDependenciesMeta": {
     "typescript": {

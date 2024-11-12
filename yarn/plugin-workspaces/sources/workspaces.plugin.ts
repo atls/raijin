@@ -1,4 +1,4 @@
-import { Plugin }                          from '@yarnpkg/core'
+import type { Plugin }                     from '@yarnpkg/core'
 
 import { WorkspacesChangedForeachCommand } from './workspaces-changed-foreach.command.js'
 import { WorkspacesChangedListCommand }    from './workspaces-changed-list.command.js'

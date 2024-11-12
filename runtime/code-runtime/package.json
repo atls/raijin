@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-runtime",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -9,9 +9,10 @@
     ".": "./src/index.ts",
     "./eslint": "./src/eslint.ts",
     "./webpack": "./src/webpack.ts",
-    "./jest": "./src/jest.ts",
     "./typescript": "./src/typescript.ts",
-    "./svgr": "./src/svgr.ts"
+    "./svgr": "./src/svgr.ts",
+    "./ts-node-register": "./src/ts-node-register.ts",
+    "./ts-ext-register": "./src/ts-ext-register.ts"
   },
   "main": "src/index.ts",
   "types": "types/index.d.ts",
@@ -26,20 +27,19 @@
   },
   "dependencies": {
     "@atls/config-eslint": "workspace:*",
-    "@atls/config-jest": "workspace:*",
-    "@jest/core": "29.7.0",
     "@svgr/core": "8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
-    "eslint": "8.57.0",
+    "eslint": "9.10.0",
     "node-loader": "2.0.0",
     "null-loader": "4.0.1",
     "ts-loader": "9.5.1",
-    "typescript": "5.4.2",
-    "webpack": "5.94.0"
+    "ts-node": "10.9.2",
+    "typescript": "5.5.4",
+    "webpack": "5.96.1"
   },
   "devDependencies": {
-    "@types/eslint": "8.56.12",
-    "@types/node": "22.5.1"
+    "@types/eslint": "9.6.1",
+    "@types/node": "22.9.0"
   },
   "publishConfig": {
     "access": "public",
@@ -61,11 +61,6 @@
         "default": "./dist/webpack.js",
         "types": "./dist/webpack.d.ts"
       },
-      "./jest": {
-        "import": "./dist/jest.js",
-        "default": "./dist/jest.js",
-        "types": "./dist/jest.d.ts"
-      },
       "./typescript": {
         "import": "./dist/typescript.js",
         "default": "./dist/typescript.js",
@@ -75,6 +70,16 @@
         "import": "./dist/svgr.js",
         "default": "./dist/svgr.js",
         "types": "./dist/svgr.d.ts"
+      },
+      "./ts-node-register": {
+        "import": "./dist/ts-node-register.js",
+        "default": "./dist/ts-node-register.js",
+        "types": "./dist/ts-node-register.d.ts"
+      },
+      "./ts-ext-register": {
+        "import": "./dist/ts-ext-register.js",
+        "default": "./dist/ts-ext-register.js",
+        "types": "./dist/ts-ext-register.d.ts"
       }
     },
     "main": "dist/index.js",

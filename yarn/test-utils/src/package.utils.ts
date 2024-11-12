@@ -28,7 +28,11 @@ export class PackageUtils {
       .getRecursiveWorkspaceChildren()
       .find((ws) => ws.manifest.raw.name === name)
 
-    return ppath.resolve(workspace!.cwd, 'package.tgz' as Filename)
+    if (!workspace) {
+      throw new Error('Workspace not found')
+    }
+
+    return ppath.resolve(workspace.cwd, 'package.tgz' as Filename)
   }
 
   async getConfiguration(): Promise<Configuration> {
@@ -47,8 +51,12 @@ export class PackageUtils {
     if (!this.project) {
       const { project, workspace } = await Project.find(await this.getConfiguration(), this.cwd)
 
+      if (!workspace) {
+        throw new Error('Root workspace not found')
+      }
+
       this.project = project
-      this.rootWorkspace = workspace!
+      this.rootWorkspace = workspace
     }
 
     return this.project
@@ -66,13 +74,21 @@ export class PackageUtils {
     const configuration = await this.getConfiguration()
     const { project, workspace } = await Project.find(configuration, this.cwd)
 
-    const workspaceForPackage = workspace!
+    if (!workspace) {
+      throw new Error('Root workspace not found')
+    }
+
+    const workspaceForPackage = workspace
       .getRecursiveWorkspaceChildren()
       .find((ws) => workspaces === ws.manifest.raw.name)
 
+    if (!workspaceForPackage) {
+      throw new Error('Workspace for package not found')
+    }
+
     await project.restoreInstallState()
 
-    return this.packWorkspace(project, configuration, workspaceForPackage!)
+    return this.packWorkspace(project, configuration, workspaceForPackage)
   }
 
   async packWorkspace(
@@ -94,63 +110,60 @@ export class PackageUtils {
 
     if (await xfs.existsPromise(manifestPath))
       await workspace.manifest.loadFile(manifestPath, { baseFs: xfs })
-    await packUtils.prepareForPack(workspace, { report: new ThrowReport() }, async () => {
-      for await (const descriptor of workspace.manifest.dependencies.values()) {
-        if (descriptor.range.startsWith(WorkspaceResolver.protocol)) {
-          const dependent = project.tryWorkspaceByDescriptor(descriptor)
 
-          if (dependent) {
-            // eslint-disable-next-line no-await-in-loop
-            const dt = await this.packWorkspace(project, configuration, dependent)
+    for await (const descriptor of workspace.manifest.dependencies.values()) {
+      if (descriptor.range.startsWith(WorkspaceResolver.protocol)) {
+        const dependent = project.tryWorkspaceByDescriptor(descriptor)
 
-            descriptor.range = `file:${dt}`
+        if (dependent) {
+          const dt = await this.packWorkspace(project, configuration, dependent)
 
-            // eslint-disable-next-line no-param-reassign
-            workspace.manifest.raw.dependencies[dependent.manifest.raw.name] = descriptor.range
-          }
-        }
-      }
+          descriptor.range = `file:${dt}`
 
-      for await (const descriptor of workspace.manifest.devDependencies.values()) {
-        if (descriptor.range.startsWith(WorkspaceResolver.protocol)) {
-          const dependent = project.tryWorkspaceByDescriptor(descriptor)
-
-          if (dependent) {
-            // eslint-disable-next-line no-await-in-loop
-            const dt = await this.packWorkspace(project, configuration, dependent)
-
-            descriptor.range = `file:${dt}`
-
-            // eslint-disable-next-line no-param-reassign
-            workspace.manifest.raw.devDependencies[dependent.manifest.raw.name] = descriptor.range
-          }
-        }
-      }
-
-      if (workspace.manifest.raw.publishConfig) {
-        if (workspace.manifest.raw.publishConfig.main) {
           // eslint-disable-next-line no-param-reassign
-          workspace.manifest.raw.main = workspace.manifest.raw.publishConfig.main
+          workspace.manifest.raw.dependencies[dependent.manifest.raw.name] = descriptor.range
         }
       }
+    }
 
-      if (workspace.manifest.raw.publishConfig) {
-        if (workspace.manifest.raw.publishConfig.exports) {
+    for await (const descriptor of workspace.manifest.devDependencies.values()) {
+      if (descriptor.range.startsWith(WorkspaceResolver.protocol)) {
+        const dependent = project.tryWorkspaceByDescriptor(descriptor)
+
+        if (dependent) {
+          const dt = await this.packWorkspace(project, configuration, dependent)
+
+          descriptor.range = `file:${dt}`
+
           // eslint-disable-next-line no-param-reassign
-          workspace.manifest.raw.exports = workspace.manifest.raw.publishConfig.exports
+          workspace.manifest.raw.devDependencies[dependent.manifest.raw.name] = descriptor.range
         }
       }
+    }
 
-      const files = await packUtils.genPackList(workspace)
+    if (workspace.manifest.raw.publishConfig) {
+      if (workspace.manifest.raw.publishConfig.main) {
+        // eslint-disable-next-line no-param-reassign
+        workspace.manifest.raw.main = workspace.manifest.raw.publishConfig.main
+      }
+    }
 
-      const pack = await packUtils.genPackStream(workspace, files)
-      const write = xfs.createWriteStream(target)
+    if (workspace.manifest.raw.publishConfig) {
+      if (workspace.manifest.raw.publishConfig.exports) {
+        // eslint-disable-next-line no-param-reassign
+        workspace.manifest.raw.exports = workspace.manifest.raw.publishConfig.exports
+      }
+    }
 
-      pack.pipe(write)
+    const files = await packUtils.genPackList(workspace)
 
-      await new Promise((resolve) => {
-        write.on('finish', resolve)
-      })
+    const pack = await packUtils.genPackStream(workspace, files)
+    const write = xfs.createWriteStream(target)
+
+    pack.pipe(write)
+
+    await new Promise((resolve) => {
+      write.on('finish', resolve)
     })
 
     return target

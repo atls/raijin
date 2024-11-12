@@ -7,11 +7,13 @@ import { join }         from 'node:path'
 
 import Config           from 'webpack-chain-5'
 
-import { tsLoaderPath } from '@atls/code-runtime/webpack'
 import tsconfig         from '@atls/config-typescript'
 
 export class WebpackConfig {
   constructor(
+    private readonly loaders: {
+      tsLoader: string
+    },
     private readonly cwd: string,
     private readonly target: string
   ) {}
@@ -58,7 +60,7 @@ export class WebpackConfig {
       .rule('ts')
       .test(/.tsx?$/)
       .use('ts')
-      .loader(tsLoaderPath)
+      .loader(this.loaders.tsLoader)
       .options({
         transpileOnly: true,
         experimentalWatchApi: true,

@@ -1,7 +1,13 @@
+import type { Annotation }       from './github.checks.js'
+
 import { BaseCommand }           from '@yarnpkg/cli'
 import { Configuration }         from '@yarnpkg/core'
 import { Project }               from '@yarnpkg/core'
+import { Filename }              from '@yarnpkg/fslib'
+import { execUtils }             from '@yarnpkg/core'
+import { scriptUtils }           from '@yarnpkg/core'
 import { ppath }                 from '@yarnpkg/fslib'
+import { xfs }                   from '@yarnpkg/fslib'
 import stripAnsi                 from 'strip-ansi'
 
 import { PassThroughRunContext } from '@atls/yarn-run-utils'
@@ -10,12 +16,38 @@ import { getChangedWorkspaces }  from '@atls/yarn-workspace-utils'
 
 import { GitHubChecks }          from './github.checks.js'
 import { AnnotationLevel }       from './github.checks.js'
-import { Annotation }            from './github.checks.js'
 
 class ChecksReleaseCommand extends BaseCommand {
   static paths = [['checks', 'release']]
 
-  async execute(): Promise<void> {
+  override async execute(): Promise<number> {
+    const nodeOptions = process.env.NODE_OPTIONS ?? ''
+
+    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    return this.executeProxy()
+  }
+
+  async executeProxy(): Promise<number> {
+    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
+
+    const binFolder = await xfs.mktempPromise()
+
+    const { code } = await execUtils.pipevp('yarn', ['checks', 'release'], {
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+    })
+
+    return code
+  }
+
+  async executeRegular(): Promise<number> {
     const { project } = await Project.find(
       await Configuration.find(this.context.cwd, this.context.plugins),
       this.context.cwd
@@ -55,6 +87,9 @@ class ChecksReleaseCommand extends BaseCommand {
               end_line: 1,
             })
           }
+
+          context.stdout.off('data', outputWriter)
+          context.stderr.off('data', outputWriter)
         }
       }
 
@@ -70,6 +105,8 @@ class ChecksReleaseCommand extends BaseCommand {
         summary: error instanceof Error ? error.message : (error as string),
       })
     }
+
+    return 0
   }
 }
 

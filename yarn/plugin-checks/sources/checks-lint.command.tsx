@@ -1,30 +1,62 @@
-import type { ESLint }      from '@atls/code-runtime/eslint'
+/* eslint-disable n/no-sync */
 
-import { readFileSync }     from 'node:fs'
+import type { ESLint }             from '@atls/code-runtime/eslint'
+import type { Linter as ESLinter } from '@atls/code-runtime/eslint'
 
-import { BaseCommand }      from '@yarnpkg/cli'
-import { StreamReport }     from '@yarnpkg/core'
-import { Configuration }    from '@yarnpkg/core'
-import { MessageName }      from '@yarnpkg/core'
-import { Project }          from '@yarnpkg/core'
-import { codeFrameColumns } from '@babel/code-frame'
-import React                from 'react'
+import type { Annotation }         from './github.checks.js'
 
-import { ESLintResult }     from '@atls/cli-ui-eslint-result-component'
-import { LinterWorker }     from '@atls/code-lint-worker'
-import { renderStatic }     from '@atls/cli-ui-renderer'
+import { readFileSync }            from 'node:fs'
 
-// @ts-expect-error any
-import { GitHubChecks }     from './github.checks.ts'
-// @ts-expect-error any
-import { AnnotationLevel }  from './github.checks.ts'
-// @ts-expect-error any
-import { Annotation }       from './github.checks.ts'
+import { BaseCommand }             from '@yarnpkg/cli'
+import { StreamReport }            from '@yarnpkg/core'
+import { Configuration }           from '@yarnpkg/core'
+import { MessageName }             from '@yarnpkg/core'
+import { Project }                 from '@yarnpkg/core'
+import { Filename }                from '@yarnpkg/fslib'
+import { codeFrameColumns }        from '@babel/code-frame'
+import { execUtils }               from '@yarnpkg/core'
+import { scriptUtils }             from '@yarnpkg/core'
+import { xfs }                     from '@yarnpkg/fslib'
+import React                       from 'react'
+
+import { LintResult }              from '@atls/cli-ui-lint-result-component'
+import { Linter }                  from '@atls/code-lint'
+import { renderStatic }            from '@atls/cli-ui-renderer-static-component'
+
+import { GitHubChecks }            from './github.checks.js'
+import { AnnotationLevel }         from './github.checks.js'
 
 class ChecksLintCommand extends BaseCommand {
   static paths = [['checks', 'lint']]
 
-  async execute(): Promise<number> {
+  override async execute(): Promise<number> {
+    const nodeOptions = process.env.NODE_OPTIONS ?? ''
+
+    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    return this.executeProxy()
+  }
+
+  async executeProxy(): Promise<number> {
+    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
+
+    const binFolder = await xfs.mktempPromise()
+
+    const { code } = await execUtils.pipevp('yarn', ['checks', 'lint'], {
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+    })
+
+    return code
+  }
+
+  async executeRegular(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
@@ -38,54 +70,54 @@ class ChecksLintCommand extends BaseCommand {
 
         const { id: checkId } = await checks.start()
 
-        // @ts-expect-error any eslint-disable-next-line consistent-return
-        const results = await report.startTimerPromise('Lint', async () => {
+        await report.startTimerPromise('Lint', async () => {
           try {
-            return await new LinterWorker(project.cwd).run(this.context.cwd)
+            const linter = await Linter.initialize(project.cwd, this.context.cwd)
+            const results = await linter.lint()
+
+            results
+              .filter((result) => result.messages.length > 0)
+              .forEach((result) => {
+                const output = renderStatic(<LintResult {...result} />)
+
+                output.split('\n').forEach((line) => {
+                  report.reportInfo(MessageName.UNNAMED, line)
+                })
+              })
+
+            const annotations = this.formatResults(results, project.cwd)
+
+            const warnings: number = annotations.filter(
+              (annotation) => annotation.annotation_level === AnnotationLevel.Warning
+            ).length
+
+            const errors: number = annotations.filter(
+              (annotation) => annotation.annotation_level === AnnotationLevel.Failure
+            ).length
+
+            await checks.complete(checkId, {
+              title:
+                annotations.length > 0 ? `Errors ${errors}, Warnings ${warnings}` : 'Successful',
+              summary:
+                annotations.length > 0
+                  ? `Found ${errors} errors and ${warnings} warnings`
+                  : 'All checks passed',
+              annotations,
+            })
           } catch (error) {
             await checks.failure({
               title: 'Lint run failed',
-              summary: (error as any).message,
+              summary: error instanceof Error ? error.message : (error as string),
             })
           }
         })
-
-        if (results) {
-          results
-            .filter((result) => result.messages.length > 0)
-            .forEach((result) => {
-              const output = renderStatic(<ESLintResult {...result} />)
-
-              output.split('\n').forEach((line) => report.reportInfo(MessageName.UNNAMED, line))
-            })
-
-          const annotations = this.formatResults(results, project.cwd)
-
-          const warnings: number = annotations.filter(
-            (annotation) => annotation.annotation_level === 'warning'
-          ).length
-
-          const errors: number = annotations.filter(
-            (annotation) => annotation.annotation_level === 'failure'
-          ).length
-
-          await checks.complete(checkId, {
-            title: annotations.length > 0 ? `Errors ${errors}, Warnings ${warnings}` : 'Successful',
-            summary:
-              annotations.length > 0
-                ? `Found ${errors} errors and ${warnings} warnings`
-                : 'All checks passed',
-            annotations,
-          })
-        }
       }
     )
 
     return commandReport.exitCode()
   }
 
-  // @ts-expect-error any
-  private getAnnotationLevel(severity: ESLint.Severity): AnnotationLevel {
+  private getAnnotationLevel(severity: ESLinter.Severity): AnnotationLevel {
     if (severity === 1) {
       return AnnotationLevel.Warning
     }

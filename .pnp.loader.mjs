@@ -11,11 +11,13 @@ import require$$2, { fileURLToPath, pathToFileURL } from 'url';
 import require$$0$2 from 'readline';
 import { createRequire } from 'node:module';
 import { extname } from 'node:path';
-import moduleExports, { isBuiltin } from 'module';
+import esmModule, { createRequire as createRequire$1, isBuiltin } from 'module';
 import assert from 'assert';
 
 const [major, minor] = process.versions.node.split(`.`).map((value) => parseInt(value, 10));
 const WATCH_MODE_MESSAGE_USES_ARRAYS = major > 19 || major === 19 && minor >= 2 || major === 18 && minor >= 13;
+const SUPPORTS_IMPORT_ATTRIBUTES = major >= 21 || major === 20 && minor >= 10 || major === 18 && minor >= 20;
+const SUPPORTS_IMPORT_ATTRIBUTES_ONLY = major >= 22;
 
 const PortablePath = {
   root: `/`,
@@ -183,7 +185,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol */
+/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
 
 var extendStatics = function(d, b) {
   extendStatics = Object.setPrototypeOf ||
@@ -290,8 +292,8 @@ function __awaiter(thisArg, _arguments, P, generator) {
 }
 
 function __generator(thisArg, body) {
-  var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-  return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+  var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
   function verb(n) { return function (v) { return step([n, v]); }; }
   function step(op) {
       if (f) throw new TypeError("Generator is already executing.");
@@ -395,8 +397,9 @@ function __await(v) {
 function __asyncGenerator(thisArg, _arguments, generator) {
   if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
   var g = generator.apply(thisArg, _arguments || []), i, q = [];
-  return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-  function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+  return i = Object.create((typeof AsyncIterator === "function" ? AsyncIterator : Object).prototype), verb("next"), verb("throw"), verb("return", awaitReturn), i[Symbol.asyncIterator] = function () { return this; }, i;
+  function awaitReturn(f) { return function (v) { return Promise.resolve(v).then(f, reject); }; }
+  function verb(n, f) { if (g[n]) { i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; if (f) i[n] = f(i[n]); } }
   function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
   function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
   function fulfill(value) { resume("next", value); }
@@ -428,10 +431,19 @@ var __setModuleDefault = Object.create ? (function(o, v) {
   o["default"] = v;
 };
 
+var ownKeys = function(o) {
+  ownKeys = Object.getOwnPropertyNames || function (o) {
+    var ar = [];
+    for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+    return ar;
+  };
+  return ownKeys(o);
+};
+
 function __importStar(mod) {
   if (mod && mod.__esModule) return mod;
   var result = {};
-  if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
   __setModuleDefault(result, mod);
   return result;
 }
@@ -461,16 +473,18 @@ function __classPrivateFieldIn(state, receiver) {
 function __addDisposableResource(env, value, async) {
   if (value !== null && value !== void 0) {
     if (typeof value !== "object" && typeof value !== "function") throw new TypeError("Object expected.");
-    var dispose;
+    var dispose, inner;
     if (async) {
-        if (!Symbol.asyncDispose) throw new TypeError("Symbol.asyncDispose is not defined.");
-        dispose = value[Symbol.asyncDispose];
+      if (!Symbol.asyncDispose) throw new TypeError("Symbol.asyncDispose is not defined.");
+      dispose = value[Symbol.asyncDispose];
     }
     if (dispose === void 0) {
-        if (!Symbol.dispose) throw new TypeError("Symbol.dispose is not defined.");
-        dispose = value[Symbol.dispose];
+      if (!Symbol.dispose) throw new TypeError("Symbol.dispose is not defined.");
+      dispose = value[Symbol.dispose];
+      if (async) inner = dispose;
     }
     if (typeof dispose !== "function") throw new TypeError("Object not disposable.");
+    if (inner) dispose = function() { try { inner.call(this); } catch (e) { return Promise.reject(e); } };
     env.stack.push({ value: value, dispose: dispose, async: async });
   }
   else if (async) {
@@ -489,20 +503,34 @@ function __disposeResources(env) {
     env.error = env.hasError ? new _SuppressedError(e, env.error, "An error was suppressed during disposal.") : e;
     env.hasError = true;
   }
+  var r, s = 0;
   function next() {
-    while (env.stack.length) {
-      var rec = env.stack.pop();
+    while (r = env.stack.pop()) {
       try {
-        var result = rec.dispose && rec.dispose.call(rec.value);
-        if (rec.async) return Promise.resolve(result).then(next, function(e) { fail(e); return next(); });
+        if (!r.async && s === 1) return s = 0, env.stack.push(r), Promise.resolve().then(next);
+        if (r.dispose) {
+          var result = r.dispose.call(r.value);
+          if (r.async) return s |= 2, Promise.resolve(result).then(next, function(e) { fail(e); return next(); });
+        }
+        else s |= 1;
       }
       catch (e) {
-          fail(e);
+        fail(e);
       }
     }
+    if (s === 1) return env.hasError ? Promise.reject(env.error) : Promise.resolve();
     if (env.hasError) throw env.error;
   }
   return next();
+}
+
+function __rewriteRelativeImportExtension(path, preserveJsx) {
+  if (typeof path === "string" && /^\.\.?\//.test(path)) {
+      return path.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function (m, tsx, d, ext, cm) {
+          return tsx ? preserveJsx ? ".jsx" : ".js" : d && (!ext || !cm) ? m : (d + ext + "." + cm.toLowerCase() + "js");
+      });
+  }
+  return path;
 }
 
 const tslib_es6 = {
@@ -511,6 +539,10 @@ const tslib_es6 = {
   __rest,
   __decorate,
   __param,
+  __esDecorate,
+  __runInitializers,
+  __propKey,
+  __setFunctionName,
   __metadata,
   __awaiter,
   __generator,
@@ -533,6 +565,7 @@ const tslib_es6 = {
   __classPrivateFieldIn,
   __addDisposableResource,
   __disposeResources,
+  __rewriteRelativeImportExtension,
 };
 
 const tslib_es6$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -562,6 +595,7 @@ const tslib_es6$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   __propKey,
   __read,
   __rest,
+  __rewriteRelativeImportExtension,
   __runInitializers,
   __setFunctionName,
   __spread,
@@ -5883,6 +5917,18 @@ class NodeFS extends BasePortableFakeFS {
   rmdirSync(p, opts) {
     return this.realFs.rmdirSync(npath.fromPortablePath(p), opts);
   }
+  async rmPromise(p, opts) {
+    return await new Promise((resolve, reject) => {
+      if (opts) {
+        this.realFs.rm(npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
+      } else {
+        this.realFs.rm(npath.fromPortablePath(p), this.makeCallback(resolve, reject));
+      }
+    });
+  }
+  rmSync(p, opts) {
+    return this.realFs.rmSync(npath.fromPortablePath(p), opts);
+  }
   async linkPromise(existingP, newP) {
     return await new Promise((resolve, reject) => {
       this.realFs.link(npath.fromPortablePath(existingP), npath.fromPortablePath(newP), this.makeCallback(resolve, reject));
@@ -6163,6 +6209,12 @@ class ProxiedFS extends FakeFS {
   rmdirSync(p, opts) {
     return this.baseFs.rmdirSync(this.mapToBase(p), opts);
   }
+  async rmPromise(p, opts) {
+    return this.baseFs.rmPromise(this.mapToBase(p), opts);
+  }
+  rmSync(p, opts) {
+    return this.baseFs.rmSync(this.mapToBase(p), opts);
+  }
   async linkPromise(existingP, newP) {
     return this.baseFs.linkPromise(this.mapToBase(existingP), this.mapToBase(newP));
   }
@@ -6317,7 +6369,7 @@ class VirtualFS extends ProxiedFS {
 }
 
 async function load$1(urlString, context, nextLoad) {
-  var _a;
+  var _a, _b, _c;
   const url = tryParseURL(urlString);
   if ((url == null ? void 0 : url.protocol) !== `file:`)
     return nextLoad(urlString, context, nextLoad);
@@ -6325,10 +6377,21 @@ async function load$1(urlString, context, nextLoad) {
   const format = getFileFormat$1(filePath);
   if (!format)
     return nextLoad(urlString, context, nextLoad);
-  if (format === `json` && ((_a = context.importAssertions) == null ? void 0 : _a.type) !== `json`) {
-    const err = new TypeError(`[ERR_IMPORT_ASSERTION_TYPE_MISSING]: Module "${urlString}" needs an import assertion of type "json"`);
-    err.code = `ERR_IMPORT_ASSERTION_TYPE_MISSING`;
-    throw err;
+  if (format === `json`) {
+    if (SUPPORTS_IMPORT_ATTRIBUTES_ONLY) {
+      if (((_a = context.importAttributes) == null ? void 0 : _a.type) !== `json`) {
+        const err = new TypeError(`[ERR_IMPORT_ATTRIBUTE_MISSING]: Module "${urlString}" needs an import attribute of "type: json"`);
+        err.code = `ERR_IMPORT_ATTRIBUTE_MISSING`;
+        throw err;
+      }
+    } else {
+      const type = `importAttributes` in context ? (_b = context.importAttributes) == null ? void 0 : _b.type : (_c = context.importAssertions) == null ? void 0 : _c.type;
+      if (type !== `json`) {
+        const err = new TypeError(`[ERR_IMPORT_ASSERTION_TYPE_MISSING]: Module "${urlString}" needs an import ${SUPPORTS_IMPORT_ATTRIBUTES ? `attribute` : `assertion`} of type "json"`);
+        err.code = `ERR_IMPORT_ASSERTION_TYPE_MISSING`;
+        throw err;
+      }
+    }
   }
   if (process.env.WATCH_REPORT_DEPENDENCIES && process.send) {
     const pathToSend = pathToFileURL(
@@ -6359,14 +6422,12 @@ const getFileFormat = (filepath) => {
     }
     case ".ts": {
       const pkg = readPackageScope(filepath);
-      if (!pkg)
-        return "commonjs";
+      if (!pkg) return "commonjs";
       return pkg.data.type ?? "commonjs";
     }
     case ".tsx": {
       const pkg = readPackageScope(filepath);
-      if (!pkg)
-        return "commonjs";
+      if (!pkg) return "commonjs";
       return pkg.data.type ?? "commonjs";
     }
     default: {
@@ -6384,36 +6445,35 @@ const transformSource = (source, format, ext) => {
   return code;
 };
 
-const loadHook = async (urlString, context, nextLoad) => (
-  // @ts-expect-error any
-  load$1(urlString, context, async (urlString2, context2) => {
-    const url = tryParseURL(urlString2);
-    if ((url == null ? void 0 : url.protocol) !== `file:`)
-      return nextLoad(urlString2, context2, nextLoad);
-    const filePath = fileURLToPath$1(url);
-    const format = getFileFormat(filePath);
-    if (!format)
-      return nextLoad(urlString2, context2, nextLoad);
-    if (process.env.WATCH_REPORT_DEPENDENCIES && process.send) {
-      const pathToSend = pathToFileURL$1(
-        lib.npath.fromPortablePath(lib.VirtualFS.resolveVirtual(lib.npath.toPortablePath(filePath)))
-      ).href;
-      process.send({
-        "watch:import": WATCH_MODE_MESSAGE_USES_ARRAYS ? [pathToSend] : pathToSend
-      });
-    }
-    const source = await fs$1.promises.readFile(filePath, `utf8`);
-    return {
+const loadHook = async (urlString, context, nextLoad) => load$1(urlString, context, async (urlString2, context2) => {
+  const url = tryParseURL(urlString2);
+  if ((url == null ? void 0 : url.protocol) !== `file:`) {
+    return nextLoad(urlString2, context2, nextLoad);
+  }
+  const filePath = fileURLToPath$1(url);
+  const format = getFileFormat(filePath);
+  if (!format) {
+    return nextLoad(urlString2, context2, nextLoad);
+  }
+  if (process.env.WATCH_REPORT_DEPENDENCIES && process.send) {
+    const pathToSend = pathToFileURL$1(
+      lib.npath.fromPortablePath(lib.VirtualFS.resolveVirtual(lib.npath.toPortablePath(filePath)))
+    ).href;
+    process.send({
+      "watch:import": WATCH_MODE_MESSAGE_USES_ARRAYS ? [pathToSend] : pathToSend
+    });
+  }
+  const source = await fs$1.promises.readFile(filePath, `utf8`);
+  return {
+    format,
+    source: transformSource(
+      source,
       format,
-      source: transformSource(
-        source,
-        format,
-        filePath.includes(".tsx") ? "tsx" : "ts"
-      ),
-      shortCircuit: true
-    };
-  })
-);
+      filePath.includes(".tsx") ? "tsx" : "ts"
+    ),
+    shortCircuit: true
+  };
+});
 
 const ArrayIsArray = Array.isArray;
 const JSONStringify = JSON.stringify;
@@ -6513,7 +6573,7 @@ function getPackageConfig(path, specifier, base, readFileSyncFn) {
   } catch (error) {
     throw new ERR_INVALID_PACKAGE_CONFIG(
       path,
-      (base ? `"${specifier}" from ` : "") + fileURLToPath(base || specifier),
+      ("") + fileURLToPath(specifier),
       error.message
     );
   }
@@ -6614,7 +6674,7 @@ function throwImportNotDefined(specifier, packageJSONUrl, base) {
   );
 }
 function throwInvalidSubpath(subpath, packageJSONUrl, internal, base) {
-  const reason = `request is not a valid subpath for the "${internal ? "imports" : "exports"}" resolution of ${fileURLToPath(packageJSONUrl)}`;
+  const reason = `request is not a valid subpath for the "${"imports" }" resolution of ${fileURLToPath(packageJSONUrl)}`;
   throw new ERR_INVALID_MODULE_SPECIFIER(
     subpath,
     reason,
@@ -6641,7 +6701,7 @@ function resolvePackageTargetString(target, subpath, match, packageJSONUrl, base
   if (subpath !== "" && !pattern && target[target.length - 1] !== "/")
     throwInvalidPackageTarget(match, target, packageJSONUrl, internal, base);
   if (!StringPrototypeStartsWith(target, "./")) {
-    if (internal && !StringPrototypeStartsWith(target, "../") && !StringPrototypeStartsWith(target, "/")) {
+    if (!StringPrototypeStartsWith(target, "../") && !StringPrototypeStartsWith(target, "/")) {
       let isURL = false;
       try {
         new URL(target);
@@ -6863,6 +6923,13 @@ function packageImportsResolve({ name, base, conditions, readFileSyncFn }) {
   throwImportNotDefined(name, packageJSONUrl, base);
 }
 
+let findPnpApi = esmModule.findPnpApi;
+if (!findPnpApi) {
+  const require = createRequire$1(import.meta.url);
+  const pnpApi = require(`./.pnp.cjs`);
+  pnpApi.setup();
+  findPnpApi = esmModule.findPnpApi;
+}
 const pathRegExp = /^(?![a-zA-Z]:[\\/]|\\\\|\.{0,2}(?:\/|$))((?:node:)?(?:@[^/]+\/)?[^/]+)\/*(.*|)$/;
 const isRelativeRegexp = /^\.{0,2}\//;
 function tryReadFile(filePath) {
@@ -6891,7 +6958,6 @@ async function resolvePrivateRequest(specifier, issuer, context, nextResolve) {
 }
 async function resolve$1(originalSpecifier, context, nextResolve) {
   var _a, _b;
-  const { findPnpApi } = moduleExports;
   if (!findPnpApi || isBuiltin(originalSpecifier))
     return nextResolve(originalSpecifier, context, nextResolve);
   let specifier = originalSpecifier;
@@ -6954,8 +7020,7 @@ const resolveHook = async (originalSpecifier, context, nextResolve) => {
   try {
     return await resolve$1(tsSpecifier, context, nextResolve);
   } catch (err) {
-    if (tsSpecifier === originalSpecifier)
-      throw err;
+    if (tsSpecifier === originalSpecifier) throw err;
     return resolve$1(originalSpecifier, context, nextResolve);
   }
 };

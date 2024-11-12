@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-shadow */
 
 import fs                                 from 'node:fs'
@@ -13,26 +12,24 @@ import { load as loadBaseHook }           from '@yarnpkg/pnp/lib/esm-loader/hook
 
 import * as tsLoaderUtils                 from './loader.utils.js'
 
-export type loadHookFn = (
+export const loadHook = async (
   urlString: string,
   context: { format: string | null | undefined },
-  nextLoad: loadHookFn
-) => Promise<{ format: string; source: string; shortCircuit: boolean }>
-
-export const loadHook: loadHookFn = async (
-  urlString: string,
-  context: { format: string | null | undefined },
-  nextLoad: loadHookFn
-): Promise<{ format: string; source: string; shortCircuit: boolean }> =>
-  // @ts-expect-error any
+  nextLoad: typeof loadBaseHook
+): ReturnType<typeof loadBaseHook> =>
   loadBaseHook(urlString, context, async (urlString, context) => {
     const url = loaderUtils.tryParseURL(urlString)
-    if (url?.protocol !== `file:`) return nextLoad(urlString, context, nextLoad)
+
+    if (url?.protocol !== `file:`) {
+      return nextLoad(urlString, context, nextLoad)
+    }
 
     const filePath = fileURLToPath(url)
-
     const format = tsLoaderUtils.getFileFormat(filePath)
-    if (!format) return nextLoad(urlString, context, nextLoad)
+
+    if (!format) {
+      return nextLoad(urlString, context, nextLoad)
+    }
 
     // https://github.com/nodejs/node/pull/44366/files#diff-f6796082f599554ec3a29c47cf026cb24fc5104884f2632e472c05fe622d778bR477-R479
     if (process.env.WATCH_REPORT_DEPENDENCIES && process.send) {

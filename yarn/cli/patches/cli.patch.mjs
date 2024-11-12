@@ -21,9 +21,13 @@ const replacements = [
     from: '_a = _typeModule(_typeModule),',
     to: 'var _a = _typeModule(_typeModule);',
   },
+  {
+    from: '}.cjs`),',
+    to: '}.mjs`),',
+  },
 ]
 
-const bundle = join(fileURLToPath(new URL('.', import.meta.url)), '../bundles/yarn.cjs')
+const bundle = join(fileURLToPath(new URL('.', import.meta.url)), '../bundles/yarn.mjs')
 const content = await readFile(bundle, 'utf-8')
 
 const patched = replacements.reduce(

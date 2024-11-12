@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-test",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -20,16 +20,10 @@
   },
   "dependencies": {
     "@atls/code-runtime": "workspace:*",
-    "@jest/test-result": "29.7.0",
-    "@jest/types": "29.6.3"
+    "globby": "13.2.2"
   },
   "devDependencies": {
-    "@types/node": "22.5.1"
-  },
-  "peerDependenciesMeta": {
-    "jest": {
-      "optional": true
-    }
+    "@types/node": "22.9.0"
   },
   "publishConfig": {
     "access": "public",

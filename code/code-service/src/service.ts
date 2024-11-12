@@ -1,25 +1,61 @@
-import type { ServiceLogRecord }    from './service.interfaces.js'
-import type { WebpackConfigPlugin } from './webpack.interfaces.js'
+import type { webpack as wp }    from '@atls/code-runtime/webpack'
 
-import { PassThrough }              from 'node:stream'
+import type { ServiceLogRecord } from './service.interfaces.js'
 
-import { SeverityNumber }           from '@monstrs/logger'
+import EventEmitter              from 'node:events'
+import { PassThrough }           from 'node:stream'
 
-import { StartServerPlugin }        from '@atls/webpack-start-server-plugin'
-import { webpack }                  from '@atls/code-runtime/webpack'
+import { SeverityNumber }        from '@monstrs/logger'
 
-import { WebpackConfig }            from './webpack.config.js'
+import { StartServerPlugin }     from '@atls/webpack-start-server-plugin'
 
-export class Service {
-  constructor(private readonly cwd: string) {}
+import { WebpackConfig }         from './webpack.config.js'
 
-  async build(plugins: Array<WebpackConfigPlugin> = []): Promise<Array<ServiceLogRecord>> {
-    const config = new WebpackConfig(this.cwd)
+export class Service extends EventEmitter {
+  protected constructor(
+    private readonly webpack: typeof wp,
+    private readonly config: WebpackConfig
+  ) {
+    super()
+  }
 
-    const compiler = webpack(await config.build())
+  static async initialize(cwd: string): Promise<Service> {
+    const { webpack, nullLoaderPath, tsLoaderPath, nodeLoaderPath } = await import(
+      '@atls/code-runtime/webpack'
+    )
+
+    const config = new WebpackConfig(
+      webpack,
+      {
+        nodeLoader: nodeLoaderPath,
+        nullLoader: nullLoaderPath,
+        tsLoader: tsLoaderPath,
+      },
+      cwd
+    )
+
+    return new Service(webpack, config)
+  }
+
+  async build(): Promise<Array<ServiceLogRecord>> {
+    const compiler = this.webpack(
+      await this.config.build('production', [
+        {
+          name: 'progress',
+          use: this.webpack.ProgressPlugin,
+          args: [
+            (percent: number, message: string): void => {
+              this.emit('build:progress', { percent: percent * 100, message })
+            },
+          ],
+        },
+      ])
+    )
 
     return new Promise((resolve, reject) => {
       compiler.run((error, stats) => {
+        this.emit('end', { error, stats })
+
         if (error) {
           if (!error.message) {
             reject(error)
@@ -40,9 +76,7 @@ export class Service {
     })
   }
 
-  async watch(callback: (logRecord: ServiceLogRecord) => void): Promise<webpack.Watching> {
-    const config = new WebpackConfig(this.cwd)
-
+  async watch(callback: (logRecord: ServiceLogRecord) => void): Promise<wp.Watching> {
     const pass = new PassThrough()
 
     pass.on('data', (chunk: Buffer) => {
@@ -59,14 +93,31 @@ export class Service {
         })
     })
 
-    return webpack(
-      await config.build('development', [
-        new StartServerPlugin({
-          stdout: pass,
-          stderr: pass,
-        }),
+    return this.webpack(
+      await this.config.build('development', [
+        {
+          name: 'start-server',
+          use: StartServerPlugin,
+          args: [
+            {
+              stdout: pass,
+              stderr: pass,
+            },
+          ],
+        },
+        {
+          name: 'progress',
+          use: this.webpack.ProgressPlugin,
+          args: [
+            (percent: number, message: string): void => {
+              this.emit('build:progress', { percent: percent * 100, message })
+            },
+          ],
+        },
       ])
     ).watch({}, (error, stats) => {
+      this.emit('end', { error, stats })
+
       if (error) {
         callback(error)
       } else if (stats) {

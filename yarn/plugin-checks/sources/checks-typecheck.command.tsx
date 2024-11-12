@@ -1,30 +1,62 @@
-import { EOL }                           from 'node:os'
+import type { PortablePath }            from '@yarnpkg/fslib'
+import type { ts }                      from '@atls/code-runtime/typescript'
 
-import { BaseCommand }                   from '@yarnpkg/cli'
-import { Configuration }                 from '@yarnpkg/core'
-import { Project }                       from '@yarnpkg/core'
-import { StreamReport }                  from '@yarnpkg/core'
-import { MessageName }                   from '@yarnpkg/core'
-import { PortablePath }                  from '@yarnpkg/fslib'
-import { codeFrameColumns }              from '@babel/code-frame'
-import { xfs }                           from '@yarnpkg/fslib'
-import { ppath }                         from '@yarnpkg/fslib'
-import React                             from 'react'
+import type { Annotation }              from './github.checks.js'
 
-import { TypeScriptDiagnostic }          from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptWorker }              from '@atls/code-typescript-worker'
-import { renderStatic }                  from '@atls/cli-ui-renderer'
-import { flattenDiagnosticMessageText }  from '@atls/code-typescript'
-import { getLineAndCharacterOfPosition } from '@atls/code-typescript'
+import { EOL }                          from 'node:os'
 
-import { GitHubChecks }                  from './github.checks.ts'
-import { AnnotationLevel }               from './github.checks.ts'
-import { Annotation }                    from './github.checks.ts'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Configuration }                from '@yarnpkg/core'
+import { Project }                      from '@yarnpkg/core'
+import { StreamReport }                 from '@yarnpkg/core'
+import { MessageName }                  from '@yarnpkg/core'
+import { Filename }                     from '@yarnpkg/fslib'
+import { codeFrameColumns }             from '@babel/code-frame'
+import { execUtils }                    from '@yarnpkg/core'
+import { scriptUtils }                  from '@yarnpkg/core'
+import { xfs }                          from '@yarnpkg/fslib'
+import { ppath }                        from '@yarnpkg/fslib'
+import { flattenDiagnosticMessageText } from 'typescript'
+import React                            from 'react'
+
+import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScript }                   from '@atls/code-typescript'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+
+import { GitHubChecks }                 from './github.checks.js'
+import { AnnotationLevel }              from './github.checks.js'
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static paths = [['checks', 'typecheck']]
 
-  async execute(): Promise<number> {
+  override async execute(): Promise<number> {
+    const nodeOptions = process.env.NODE_OPTIONS ?? ''
+
+    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    return this.executeProxy()
+  }
+
+  async executeProxy(): Promise<number> {
+    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
+
+    const binFolder = await xfs.mktempPromise()
+
+    const { code } = await execUtils.pipevp('yarn', ['checks', 'typecheck'], {
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+    })
+
+    return code
+  }
+
+  async executeRegular(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
@@ -40,42 +72,40 @@ class ChecksTypeCheckCommand extends BaseCommand {
           const { id: checkId } = await checks.start()
 
           try {
-            const ts = new TypeScriptWorker(project.cwd)
+            const typescript = await TypeScript.initialize(project.cwd)
 
-            const diagnostics = await ts.check(
-              project.cwd,
-              project.topLevelWorkspace.manifest.workspaceDefinitions.map(
-                (definition) => definition.pattern
-              )
-            )
+            const diagnostics = await typescript.check(await this.getIncludes(project))
 
-            diagnostics.forEach((diagnostic) => {
+            diagnostics.forEach((diagnostic: ts.Diagnostic) => {
               const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
 
-              output.split('\n').forEach((line) => report.reportInfo(MessageName.UNNAMED, line))
+              output.split('\n').forEach((line) => {
+                report.reportInfo(MessageName.UNNAMED, line)
+              })
             })
 
             const annotations: Array<Annotation> = []
 
-            diagnostics.forEach((diagnostic) => {
+            diagnostics.forEach((diagnostic: ts.Diagnostic) => {
               if (diagnostic.file) {
-                const position =
-                  (diagnostic.file as any).lineMap && diagnostic.start
-                    ? getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)
-                    : null
+                const position = diagnostic.start
+                  ? diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start)
+                  : null
 
                 annotations.push({
                   path: ppath.normalize(
                     ppath.relative(project.cwd, diagnostic.file.fileName as PortablePath)
                   ),
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   title: flattenDiagnosticMessageText(diagnostic.messageText, EOL)
                     .split(EOL)
-                    .at(0) as string,
+                    .at(0)!,
                   message: flattenDiagnosticMessageText(diagnostic.messageText, EOL),
                   start_line: position ? position.line + 1 : 0,
                   end_line: position ? position.line + 1 : 0,
                   raw_details: position
                     ? codeFrameColumns(
+                        // eslint-disable-next-line n/no-sync
                         xfs.readFileSync(diagnostic.file.fileName as PortablePath).toString(),
                         {
                           start: {
@@ -108,6 +138,22 @@ class ChecksTypeCheckCommand extends BaseCommand {
     )
 
     return commandReport.exitCode()
+  }
+
+  protected async getIncludes(project: Project): Promise<Array<string>> {
+    if (await xfs.existsPromise(ppath.join(project.cwd, 'tsconfig.json'))) {
+      const tsconfig: { include?: Array<string> } = await xfs.readJsonPromise(
+        ppath.join(project.cwd, 'tsconfig.json')
+      )
+
+      if (tsconfig.include && tsconfig.include.length > 0) {
+        return tsconfig.include
+      }
+    }
+
+    return project.topLevelWorkspace.manifest.workspaceDefinitions.map(
+      (definition) => definition.pattern
+    )
   }
 }
 

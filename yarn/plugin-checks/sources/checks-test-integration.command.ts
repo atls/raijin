@@ -1,8 +1,16 @@
+import { pathToFileURL }             from 'node:url'
+
 import { StreamReport }              from '@yarnpkg/core'
 import { Configuration }             from '@yarnpkg/core'
 import { Project }                   from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { execUtils }                 from '@yarnpkg/core'
+import { scriptUtils }               from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { ppath }                     from '@yarnpkg/fslib'
+import { npath }                     from '@yarnpkg/fslib'
 
-import { TesterWorker }              from '@atls/code-test-worker'
+import { Tester }                    from '@atls/code-test'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
@@ -10,7 +18,46 @@ import { GitHubChecks }              from './github.checks.js'
 class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
   static paths = [['checks', 'test', 'integration']]
 
-  async execute(): Promise<number> {
+  override async execute(): Promise<number> {
+    const nodeOptions = process.env.NODE_OPTIONS ?? ''
+
+    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    return this.executeProxy()
+  }
+
+  async executeProxy(): Promise<number> {
+    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
+
+    const binFolder = await xfs.mktempPromise()
+
+    const env = await scriptUtils.makeScriptEnv({ binFolder, project })
+
+    if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-node-register`
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${pathToFileURL(npath.fromPortablePath(ppath.join(project.cwd, Filename.pnpEsmLoader))).href}`
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
+    }
+
+    if (!env.NODE_OPTIONS?.includes('--enable-source-maps')) {
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --enable-source-maps`
+    }
+
+    const { code } = await execUtils.pipevp('yarn', ['checks', 'test', 'integration'], {
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      env,
+    })
+
+    return code
+  }
+
+  async executeRegular(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
@@ -25,9 +72,14 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
         const { id: checkId } = await checks.start()
 
         try {
-          const results = await new TesterWorker(project.cwd).run(project.cwd, 'integration')
+          const tester = await Tester.initialize()
 
-          const annotations = this.formatResults(results, project.cwd)
+          const results = await tester.integration(project.cwd)
+
+          const annotations = this.formatResults(
+            results.filter((result) => result.type === 'test:fail').map((result) => result.data),
+            project.cwd
+          )
 
           await checks.complete(checkId, {
             title: annotations.length > 0 ? `Errors ${annotations.length}` : 'Successful',

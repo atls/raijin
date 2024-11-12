@@ -6,38 +6,33 @@
     "schematics/**/*",
     "prettier/**/*",
     "code/**/*",
-    "webpack/*",
-    "runtime/*",
-    "config/*",
-    "yarn/*",
-    "jest/*",
-    "cli/*"
+    "webpack/**/*",
+    "runtime/**/*",
+    "config/**/*",
+    "yarn/**/*",
+    "cli/**/*"
   ],
   "scripts": {
-    "cli:build": "yarn worker:build && yarn workspace @atls/yarn-cli build",
-    "worker:build": "yarn worker:format:build && yarn worker:lint:build && yarn worker:service:build && yarn worker:test:build && yarn worker:typescript:build && yarn worker:icons:build",
-    "worker:format:build": "yarn workspace @atls/code-format-worker build:worker",
-    "worker:icons:build": "yarn workspace @atls/code-icons-worker build:worker",
-    "worker:lint:build": "yarn workspace @atls/code-lint-worker build:worker",
-    "worker:service:build": "yarn workspace @atls/code-service-worker build:worker",
-    "worker:test:build": "yarn workspace @atls/code-test-worker build:worker",
-    "worker:typescript:build": "yarn workspace @atls/code-typescript-worker build:worker",
+    "cli:build": "yarn workspace @atls/yarn-cli build",
     "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download && yarn workspace @atls/yarn-test-utils yarn:download"
   },
   "resolutions": {
-    "@yarnpkg/core@^4.0.0-rc.45": "patch:@yarnpkg/core@npm%3A4.0.0-rc.43#./.yarn/patches/@yarnpkg-core-npm-4.0.0-rc.42-029d9f8b24.patch",
+    "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch",
+    "clipanion": "4.0.0-rc.2",
+    "eslint": "9.10.0",
     "flatted@npm:^3.2.7": "patch:flatted@npm%3A3.2.7#./.yarn/patches/flatted-npm-3.2.7-0da10b7c56.patch",
-    "ink": "3.2.0",
-    "sort-package-json@2.4.1": "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch"
+    "ink": "3",
+    "sort-package-json@2.4.1": "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch",
+    "typescript": "5.5.4"
   },
   "devDependencies": {
     "@atls/code-runtime": "workspace:*",
-    "@types/node": "22.5.1",
-    "@yarnpkg/builder": "4.2.0",
-    "esbuild": "npm:esbuild-wasm@^0.17.18",
-    "typescript": "5.4.2"
+    "@types/node": "22.9.0",
+    "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch",
+    "esbuild": "npm:esbuild-wasm@^0.23.1",
+    "typescript": "5.5.4"
   },
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "yarn@4.5.1",
   "tools": {
     "schematic": {
       "collection": "@atls/schematics",
@@ -45,5 +40,6 @@
       "type": "libraries",
       "migration": "1645001973970"
     }
-  }
+  },
+  "typecheckSkipLibCheck": true
 }

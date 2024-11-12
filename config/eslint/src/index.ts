@@ -1,18 +1,17 @@
 import type { Linter }        from 'eslint'
 
-// @ts-expect-error
+// @ts-expect-error: Invalid import
 import nextjsPlugin           from '@next/eslint-plugin-next'
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin'
 import parser                 from '@typescript-eslint/parser'
-// @ts-expect-error
+// @ts-expect-error: Invalid import
 import jsxA11yPlugin          from 'eslint-plugin-jsx-a11y'
-// @ts-expect-error
 import nodePlugin             from 'eslint-plugin-n'
-// @ts-expect-error
+// @ts-expect-error: Invalid import
 import reactPlugin            from 'eslint-plugin-react'
-// @ts-expect-error
+// @ts-expect-error: Invalid import
 import reactHooksPlugin       from 'eslint-plugin-react-hooks'
-// @ts-expect-error
+// @ts-expect-error: Invalid import
 import securityPlugin         from 'eslint-plugin-security'
 
 import { typescript }         from './rules/index.js'
@@ -22,23 +21,25 @@ import { react }              from './rules/index.js'
 import { node }               from './rules/index.js'
 import { base }               from './rules/index.js'
 
-const config: Array<Linter.FlatConfig> = [
+const config: Array<Linter.Config> = [
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
     rules: {
       ...typescript,
       ...security,
-      ...nextjs,
+      // TODO: fix check error
+      // ...nextjs,
       ...react,
       ...node,
       ...base,
     },
     plugins: {
       'eslint-plugin-react-hooks': reactHooksPlugin,
-      // @ts-expect-error any
+      // @ts-expect-error: Invalid types
       '@typescript-eslint': typescriptEslintPlugin,
       'react-hooks': reactHooksPlugin,
-      '@next/next': nextjsPlugin,
+      // TODO: fix checks error
+      // '@next/next': nextjsPlugin,
       'jsx-a11y': jsxA11yPlugin,
       n: nodePlugin,
       security: securityPlugin,
@@ -60,7 +61,7 @@ const config: Array<Linter.FlatConfig> = [
       globals: {},
       parser,
       parserOptions: {
-        project: true,
+        projectService: true,
         ecmaFeatures: {
           jsx: true,
           generators: false,

@@ -1,11 +1,11 @@
+import type { RuleFactory }                        from '@angular-devkit/schematics/'
 import type { FileSystemSchematicDesc }            from '@angular-devkit/schematics/tools'
+import type { FileSystemCollectionDesc }           from '@angular-devkit/schematics/tools'
 
 import { dirname }                                 from 'node:path'
 import { join }                                    from 'node:path'
 import { resolve }                                 from 'node:path'
 
-import { RuleFactory }                             from '@angular-devkit/schematics/'
-import { FileSystemCollectionDesc }                from '@angular-devkit/schematics/tools'
 import { ExportStringRef }                         from '@angular-devkit/schematics/tools'
 import { CollectionCannotBeResolvedException }     from '@angular-devkit/schematics/tools'
 import { CollectionMissingSchematicsMapException } from '@angular-devkit/schematics/tools'
@@ -15,8 +15,9 @@ import { NodePackageDoesNotSupportSchematics }     from '@angular-devkit/schemat
 // @ts-expect-error any
 import { readJsonFile }                            from '@angular-devkit/schematics/tools/file-system-utility'
 
+// TODO: refactor
 export class NodePnpEngineHost extends FileSystemEngineHostBase {
-  constructor(private readonly paths?: string[]) {
+  constructor(private readonly paths?: Array<string>) {
     super()
   }
 

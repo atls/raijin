@@ -22,6 +22,7 @@ export const pack = async (
   report: Report,
   destination: PortablePath
 ): Promise<void> => {
+  // @ts-expect-error boolean to string
   process.env.IMAGE_PACK = true
 
   const cache = await Cache.find(configuration, { immutable: true })

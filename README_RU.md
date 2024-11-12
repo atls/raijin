@@ -18,7 +18,7 @@
 
 Для начала использования нашей сборки:
 
-- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.cjs` - эта команда установит вместо стокового ярна наш и положит в папку .yarn/releases, если же наша сборка уже установленна - произойдёт обновление до актуальной версии
+- `yarn set version original https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs` - эта команда установит вместо стокового ярна наш и положит в папку .yarn/releases, если же наша сборка уже установленна - произойдёт обновление до актуальной версии
 
 ## Основные скрипты `yarn` для нашей работы
 

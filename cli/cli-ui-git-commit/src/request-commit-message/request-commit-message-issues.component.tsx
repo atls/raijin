@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-curly-brace-presence */
 
-import type { JSX }              from 'react'
+import type { ReactElement }     from 'react'
 
 import { Text }                  from 'ink'
 import { Box }                   from 'ink'
@@ -14,7 +14,7 @@ export interface RequestCommitMessageIssuesProps {
 
 export const RequestCommitMessageIssues = ({
   onSubmit,
-}: RequestCommitMessageIssuesProps): JSX.Element => (
+}: RequestCommitMessageIssuesProps): ReactElement => (
   <Box flexDirection='column'>
     <Box>
       <Text bold color='cyanBright'>
