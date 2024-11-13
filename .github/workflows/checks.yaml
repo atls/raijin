@@ -9,7 +9,7 @@ jobs:
   check:
     name: Lint, type check
     env:
-      NODE_VERSION: '22'
+      NODE_VERSION: '22.5'
     runs-on: ubuntu-latest
     permissions: write-all
 
