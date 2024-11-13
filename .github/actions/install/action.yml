@@ -8,6 +8,4 @@ runs:
     - name: Install
       shell: bash
       run: |
-        source .env
-        export NODE_OPTIONS
-        yarn install --inline-builds
+        source .env && export NODE_OPTIONS && yarn install --inline-builds
