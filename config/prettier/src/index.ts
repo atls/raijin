@@ -5,8 +5,8 @@ const config: Config = {
   singleQuote: true,
   tabWidth: 2,
   jsxSingleQuote: true,
-  trailingComma: 'es5',
   printWidth: 100,
+  trailingComma: 'es5',
 }
 
 export default config

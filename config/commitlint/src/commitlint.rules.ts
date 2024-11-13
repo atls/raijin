@@ -15,5 +15,5 @@ export const rules: QualifiedRules = {
   'type-empty': [2, 'never'],
   'type-enum': [2, 'always', Object.keys(COMMIT_TYPE_ENUM)],
   'scope-case': [2, 'always', 'lower-case'],
-  'scope-empty': [2, 'never'],
+  'scope-empty': [2, 'never']
 }

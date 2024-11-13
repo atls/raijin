@@ -17,7 +17,6 @@ export default {
     noImplicitAny: true,
     noImplicitReturns: true,
     noImplicitThis: true,
-
     noUnusedLocals: false,
     noUnusedParameters: false,
 

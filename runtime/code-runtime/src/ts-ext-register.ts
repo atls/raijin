@@ -11,8 +11,8 @@ import { fileURLToPath }        from 'node:url'
 
 const mapping = new Map([
   ['.js', ['.js', '.ts', '.tsx', '.jsx']],
-  ['.cjs', ['.cjs', '.cts']],
   ['.mjs', ['.mjs', '.mts']],
+  ['.cjs', ['.cjs', '.cts']],
   ['.jsx', ['.jsx', '.tsx']],
 ])
 
