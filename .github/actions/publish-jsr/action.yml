@@ -17,4 +17,5 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
+        IMAGE_PACK=true
         yarn workspaces changed foreach -vpj 2 --no-private dlx jsr publish
