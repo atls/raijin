@@ -1,7 +1,6 @@
 import type { webpack as wp }      from '@atls/code-runtime/webpack'
 
 import type { WebpackEnvironment } from './webpack.interfaces.js'
-import type { ModuleTypes }        from './webpack.interfaces.js'
 
 import { readFile }                from 'node:fs/promises'
 import { writeFile }               from 'node:fs/promises'
@@ -27,11 +26,7 @@ export class WebpackConfig {
 
   async build(
     environment: WebpackEnvironment = 'production',
-    additionalPlugins: Array<{
-      use: wp.WebpackPluginInstance
-      args: Array<any>
-      name: string
-    }> = []
+    additionalPlugins: Array<wp.WebpackPluginInstance> = []
   ): Promise<wp.Configuration> {
     const configFile = join(await mkdtemp(join(tmpdir(), 'code-service-')), 'tsconfig.json')
 
@@ -57,14 +52,13 @@ export class WebpackConfig {
         index: join(this.cwd, 'src/index'),
         ...(environment === 'development' && { hot: 'webpack/hot/poll?100' }),
       },
-      node: { __dirname: false, __filename: false },
+      node: { __dirname: true, __filename: false },
       output: {
         path: join(this.cwd, 'dist'),
         filename: '[name].js',
         library: { type },
         chunkFormat: environment === 'development' ? 'commonjs' : type,
         module: type === 'module',
-        publicPath: './',
         clean: false,
         assetModuleFilename: 'assets/[name][ext]',
       },
@@ -91,13 +85,13 @@ export class WebpackConfig {
           {
             test: /\.d\.ts$/,
             use: {
-              loader: this.loaders.nullLoaderPath,
+              loader: this.loaders.nullLoader,
             },
           },
           {
             test: /(^.?|\.[^d]|[^.]d|[^.][^d])\.tsx?$/,
             use: {
-              loader: this.loaders.tsLoaderPath,
+              loader: this.loaders.tsLoader,
               options: {
                 transpileOnly: true,
                 experimentalWatchApi: true,
@@ -111,13 +105,13 @@ export class WebpackConfig {
           { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
           { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
           { test: /\.(md)$/i, type: 'asset/resource' },
-          { test: /\.node$/, use: this.loaders.nodeLoaderPath },
+          { test: /\.node$/, use: this.loaders.nodeLoader },
         ],
       },
     }
   }
 
-  private async getWorkspaceType(): Promise<ModuleTypes> {
+  private async getWorkspaceType(): Promise<string> {
     try {
       const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
       const { type = 'commonjs' } = JSON.parse(content)
@@ -128,14 +122,7 @@ export class WebpackConfig {
     }
   }
 
-  private createPlugins(
-    environment: string,
-    additionalPlugins: Array<{
-      use: wp.WebpackPluginInstance
-      args: Array<any>
-      name: string
-    }>
-  ) {
+  private createPlugins(environment: string, additionalPlugins: Array<wp.WebpackPluginInstance>) {
     const plugins: Array<wp.WebpackPluginInstance> = [
       new this.webpack.IgnorePlugin({
         checkResource: (resource: string): boolean => {
@@ -158,18 +145,17 @@ export class WebpackConfig {
           return false
         },
       }),
-      // @ts-expect-error types mismatch
       ...additionalPlugins,
     ]
 
     if (environment === 'development') {
       plugins.push(new this.webpack.HotModuleReplacementPlugin())
-      plugins.push(new this.webpack.BannerPlugin(
-        {
+      plugins.push(
+        new this.webpack.BannerPlugin({
           banner: `import { createRequire } from 'node:module'\nimport { fileURLToPath } from 'node:url'\nconst require = createRequire(import.meta.url)\nconst __filename = fileURLToPath(import.meta.url)\n`,
           raw: true,
-        }
-      ))
+        })
+      )
     }
 
     return plugins
