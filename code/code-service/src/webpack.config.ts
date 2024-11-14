@@ -1,3 +1,5 @@
+import type { webpack as wp }      from '@atls/code-runtime/webpack'
+
 import type { WebpackEnvironment } from './webpack.interfaces.js'
 import type { ModuleTypes }        from './webpack.interfaces.js'
 
@@ -7,10 +9,6 @@ import { mkdtemp }                 from 'node:fs/promises'
 import { tmpdir }                  from 'node:os'
 import { join }                    from 'node:path'
 
-import { webpack as wp }           from '@atls/code-runtime/webpack'
-import { tsLoaderPath }            from '@atls/code-runtime/webpack'
-import { nodeLoaderPath }          from '@atls/code-runtime/webpack'
-import { nullLoaderPath }          from '@atls/code-runtime/webpack'
 import tsconfig                    from '@atls/config-typescript'
 
 import { WebpackExternals }        from './webpack.externals.js'
@@ -93,13 +91,13 @@ export class WebpackConfig {
           {
             test: /\.d\.ts$/,
             use: {
-              loader: nullLoaderPath,
+              loader: this.loaders.nullLoaderPath,
             },
           },
           {
             test: /(^.?|\.[^d]|[^.]d|[^.][^d])\.tsx?$/,
             use: {
-              loader: tsLoaderPath,
+              loader: this.loaders.tsLoaderPath,
               options: {
                 transpileOnly: true,
                 experimentalWatchApi: true,
@@ -113,7 +111,7 @@ export class WebpackConfig {
           { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
           { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
           { test: /\.(md)$/i, type: 'asset/resource' },
-          { test: /\.node$/, use: nodeLoaderPath },
+          { test: /\.node$/, use: this.loaders.nodeLoaderPath },
         ],
       },
     }
@@ -139,7 +137,7 @@ export class WebpackConfig {
     }>
   ) {
     const plugins: Array<wp.WebpackPluginInstance> = [
-      new wp.IgnorePlugin({
+      new this.webpack.IgnorePlugin({
         checkResource: (resource: string): boolean => {
           if (resource.endsWith('.js.map')) {
             return true
@@ -165,7 +163,13 @@ export class WebpackConfig {
     ]
 
     if (environment === 'development') {
-      plugins.push(new wp.HotModuleReplacementPlugin())
+      plugins.push(new this.webpack.HotModuleReplacementPlugin())
+      plugins.push(new this.webpack.BannerPlugin(
+        {
+          banner: `import { createRequire } from 'node:module'\nimport { fileURLToPath } from 'node:url'\nconst require = createRequire(import.meta.url)\nconst __filename = fileURLToPath(import.meta.url)\n`,
+          raw: true,
+        }
+      ))
     }
 
     return plugins

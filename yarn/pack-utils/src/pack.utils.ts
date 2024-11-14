@@ -69,9 +69,13 @@ export const pack = async (
       destination
     )
 
-    tmpWorkspace!.manifest.dependencies = workspace.manifest.dependencies
-    tmpWorkspace!.manifest.resolutions = project.topLevelWorkspace.manifest.resolutions
-    tmpWorkspace!.manifest.devDependencies.clear()
+    if (!tmpWorkspace) {
+      throw new Error('Workspace not found')
+    }
+
+    tmpWorkspace.manifest.dependencies = workspace.manifest.dependencies
+    tmpWorkspace.manifest.resolutions = project.topLevelWorkspace.manifest.resolutions
+    tmpWorkspace.manifest.devDependencies.clear()
 
     await tmpProject.install({
       cache: await ExportCache.find(tmpConfiguration, cache),

@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "cli:build": "yarn workspace @atls/yarn-cli build",
-    "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download && yarn workspace @atls/yarn-test-utils yarn:download"
+    "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download"
   },
   "resolutions": {
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch",
