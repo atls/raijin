@@ -41,5 +41,10 @@
       "migration": "1645001973970"
     }
   },
+  "dependeciesMeta": {
+    "jsr": {
+      "unplugged": true
+    }
+  },
   "typecheckSkipLibCheck": true
 }
