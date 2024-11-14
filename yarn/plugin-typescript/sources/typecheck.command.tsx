@@ -37,7 +37,7 @@ export class TypeCheckCommand extends BaseCommand {
 
     const binFolder = await xfs.mktempPromise()
 
-    const { code } = await execUtils.pipevp('yarn', ['types', 'check', ...this.args], {
+    const { code } = await execUtils.pipevp('yarn', ['typecheck', ...this.args], {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,

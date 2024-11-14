@@ -26,6 +26,7 @@ const ignore = [
   '**/types/**',
   '.terraform',
   '.idea',
+  'yarn.mjs',
 ]
 
 const patterns: Array<string> = ['./**/*.{js,mjs,cjs,jsx,ts,tsx}']

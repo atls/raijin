@@ -89,7 +89,7 @@ export class TypeScript extends EventEmitter {
 
     const result = program.emit(undefined, undefined, undefined, undefined, {
       before: [beforeTransformer],
-      after: [afterTransformer, transformJsxToJsExtension],
+      after: [afterTransformer, transformJsxToJsExtension(this.ts)],
     })
 
     const diagnostics = this.filterDiagnostics(

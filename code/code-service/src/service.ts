@@ -40,15 +40,9 @@ export class Service extends EventEmitter {
   async build(): Promise<Array<ServiceLogRecord>> {
     const compiler = this.webpack(
       await this.config.build('production', [
-        {
-          name: 'progress',
-          use: this.webpack.ProgressPlugin,
-          args: [
-            (percent: number, message: string): void => {
-              this.emit('build:progress', { percent: percent * 100, message })
-            },
-          ],
-        },
+        new this.webpack.ProgressPlugin((percent: number, message: string): void => {
+          this.emit('build:progress', { percent: percent * 100, message })
+        }),
       ])
     )
 
@@ -95,25 +89,10 @@ export class Service extends EventEmitter {
 
     return this.webpack(
       await this.config.build('development', [
-        {
-          name: 'start-server',
-          use: StartServerPlugin,
-          args: [
-            {
-              stdout: pass,
-              stderr: pass,
-            },
-          ],
-        },
-        {
-          name: 'progress',
-          use: this.webpack.ProgressPlugin,
-          args: [
-            (percent: number, message: string): void => {
-              this.emit('build:progress', { percent: percent * 100, message })
-            },
-          ],
-        },
+        new StartServerPlugin({ stdout: pass, stderr: pass }),
+        new this.webpack.ProgressPlugin((percent: number, message: string): void => {
+          this.emit('build:progress', { percent: percent * 100, message })
+        }),
       ])
     ).watch({}, (error, stats) => {
       this.emit('end', { error, stats })

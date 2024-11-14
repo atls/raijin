@@ -23,7 +23,7 @@
     "@atls/schematics": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@yarnpkg/libui": "3.0.1",
-    "clipanion": "4.0.0-rc.3",
+    "clipanion": "4.0.0-rc.2",
     "force-stdin-tty": "0.0.1",
     "typanion": "3.14.0"
   },
