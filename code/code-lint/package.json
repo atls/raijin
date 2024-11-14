@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-lint",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
