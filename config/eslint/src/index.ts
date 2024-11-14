@@ -27,8 +27,7 @@ const config: Array<Linter.Config> = [
     rules: {
       ...typescript,
       ...security,
-      // TODO: fix check error
-      // ...nextjs,
+      ...nextjs,
       ...react,
       ...node,
       ...base,
@@ -38,8 +37,7 @@ const config: Array<Linter.Config> = [
       // @ts-expect-error: Invalid types
       '@typescript-eslint': typescriptEslintPlugin,
       'react-hooks': reactHooksPlugin,
-      // TODO: fix checks error
-      // '@next/next': nextjsPlugin,
+      '@next/next': nextjsPlugin,
       'jsx-a11y': jsxA11yPlugin,
       n: nodePlugin,
       security: securityPlugin,
