@@ -99,16 +99,14 @@ export class Linter extends EventEmitter {
     return results
   }
 
-  async lintProject(options?: LintOptions): Promise<Array<ESLint.LintResult>> {
-    return this.lintFiles(await globby(createPatterns(this.cwd), { dot: true }), options)
-  }
-
   async lint(files?: Array<string>, options?: LintOptions): Promise<Array<ESLint.LintResult>> {
-    if (files && files.length > 0) {
-      return this.lintFiles(files, options)
-    }
+    const filesForLint =
+      files && files.length > 0 ? files : await globby(createPatterns(this.cwd), { dot: true })
 
-    return this.lintProject(options)
+    return this.lintFiles(
+      filesForLint.filter((file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0),
+      options
+    )
   }
 
   private getProjectIgnorePatterns(): Array<string> {
