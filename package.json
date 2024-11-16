@@ -19,6 +19,7 @@
   "resolutions": {
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch",
     "clipanion": "4.0.0-rc.2",
+    "conventional-changelog-angular@npm:^7.0.0": "patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch",
     "eslint": "9.14.0",
     "flatted@npm:^3.2.7": "patch:flatted@npm%3A3.2.7#./.yarn/patches/flatted-npm-3.2.7-0da10b7c56.patch",
     "ink": "3",
