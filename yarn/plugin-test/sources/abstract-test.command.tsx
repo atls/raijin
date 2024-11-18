@@ -14,6 +14,7 @@ import { xfs }           from '@yarnpkg/fslib'
 import { ppath }         from '@yarnpkg/fslib'
 import { npath }         from '@yarnpkg/fslib'
 import { Option }        from 'clipanion'
+import { Command }       from 'clipanion'
 import { render }        from 'ink'
 import { relative }      from 'path'
 import React             from 'react'
@@ -29,6 +30,30 @@ import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
 export abstract class AbstractTestCommand extends BaseCommand {
   target = Option.String('-t,--target')
 
+  watch: boolean = Option.Boolean('-w,--watch', false)
+
+  files: Array<string> = Option.Rest({ required: 0 })
+
+  static usage = Command.Usage({
+    description: 'Run tests',
+    details: `
+    Run either integration or unit tests with Node.js built-in test runner.
+    
+    Integration tests are defined by placing *.test.[j|t]sx? in 'integration' folder anywhere.
+    
+    Unit tests are all *.test.[j|t]sx? except in 'integration' folder.
+    `,
+    examples: [
+      ['Run all unit tests', 'yarn test unit'],
+      ['Run all integration tests', 'yarn test integration'],
+      [`Run all integration tests which file names include 'menu'`, 'yarn test integration menu'],
+      [
+        `Run all unit tests in watch mode - reloading after any change in file`,
+        'yarn test unit -w',
+      ],
+    ],
+  })
+
   private std = new Map<string | undefined, Array<string>>()
 
   private bufferedStdTimeout: NodeJS.Timeout | undefined
@@ -39,6 +64,14 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
     const args: Array<string> = []
 
+    if (this.files && this.files.length) {
+      args.push(this.files.join(' '))
+    }
+
+    if (this.watch) {
+      args.push('-w')
+    }
+
     if (workspace) {
       args.push('-t')
       args.push(this.context.cwd)
@@ -47,6 +80,10 @@ export abstract class AbstractTestCommand extends BaseCommand {
     const binFolder = await xfs.mktempPromise()
 
     const env = await scriptUtils.makeScriptEnv({ binFolder, project })
+
+    if (!env.NODE_OPTIONS?.includes('--no-warnings')) {
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --no-warnings=DeprecationWarning`
+    }
 
     if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-node-register`
@@ -114,8 +151,11 @@ export abstract class AbstractTestCommand extends BaseCommand {
     try {
       const results =
         type === 'integration'
-          ? await tester.integration(this.target ?? project.cwd)
-          : await tester.unit(this.target ?? project.cwd)
+          ? await tester.integration(this.target ?? project.cwd, {
+              files: this.files,
+              watch: this.watch,
+            })
+          : await tester.unit(this.target ?? project.cwd, { files: this.files, watch: this.watch })
 
       return results.find((result) => result.type === 'test:fail') ? 1 : 0
     } catch (error) {

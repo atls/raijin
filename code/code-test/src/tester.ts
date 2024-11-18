@@ -9,6 +9,11 @@ import { Tests }          from './tests.js'
 
 export type TestsStream = ReturnType<typeof run>
 
+type TestOptions = {
+  files?: Array<string>
+  watch?: boolean
+}
+
 export class Tester extends EventEmitter {
   constructor() {
     super()
@@ -18,36 +23,52 @@ export class Tester extends EventEmitter {
     return new Tester()
   }
 
-  async unit(cwd: string): Promise<Array<TestEvent>> {
-    return this.run(
-      await globby(['**/!(integration)/*.test.{ts,tsx,js,jsx}'], {
+  private async collectTestFiles(
+    cwd: string,
+    type: 'integration' | 'unit',
+    patterns: Array<string> | undefined
+  ) {
+    const folderPattern = type === 'unit' ? '!(integration)' : 'integration'
+
+    if (!patterns || patterns.length < 1) {
+      return await globby([`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], {
         cwd,
         dot: true,
         absolute: true,
-        ignore: ['**/node_modules/**', '**/dist/**'],
+        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+      })
+    }
+
+    return await globby(
+      patterns.map((pattern) => {
+        return `**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`
       }),
-      25_000,
-      true
+      {
+        cwd,
+        dot: true,
+        absolute: true,
+        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+      }
     )
   }
 
-  async integration(cwd: string): Promise<Array<TestEvent>> {
-    return this.run(
-      await globby(['**/integration/**/*.test.{ts,tsx,js,jsx}'], {
-        cwd,
-        dot: true,
-        absolute: true,
-        ignore: ['**/node_modules/**', '**/dist/**'],
-      }),
-      240_000,
-      false
-    )
+  async unit(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
+    const testFiles = await this.collectTestFiles(cwd, 'unit', options?.files)
+
+    return this.run(testFiles, 25_000, true, options?.watch ?? false)
+  }
+
+  async integration(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
+    const testFiles = await this.collectTestFiles(cwd, 'integration', options?.files)
+
+    return this.run(testFiles, 240_000, false, options?.watch ?? false)
   }
 
   protected async run(
     files: Array<string>,
     timeout: number,
-    concurrency: boolean
+    concurrency: boolean,
+    watch: boolean
   ): Promise<Array<TestEvent>> {
     const tests = await Tests.load(files)
 
@@ -57,6 +78,7 @@ export class Tester extends EventEmitter {
       files,
       timeout,
       concurrency,
+      watch,
     })
 
     const onPass = (data: TestPass): void => {

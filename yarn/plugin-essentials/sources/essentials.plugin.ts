@@ -1,4 +1,3 @@
-import type { Plugin }       from '@yarnpkg/core'
+import type { Plugin } from '@yarnpkg/core'
 
-export const plugin: Plugin = {
-}
+export const plugin: Plugin = {}
