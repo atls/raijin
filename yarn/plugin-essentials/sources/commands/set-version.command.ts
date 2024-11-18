@@ -3,7 +3,7 @@ import { Configuration } from '@yarnpkg/core'
 import { Command }       from 'clipanion'
 
 export class SetVersionCommand extends BaseCommand {
-  static paths = [['set', 'version', 'atlantis']]
+  static paths = [['set', 'version', 'atls']]
 
   static usage = Command.Usage({
     description: 'lock the Yarn version used by the project',
