@@ -1,3 +1,5 @@
-import type { Plugin } from '@yarnpkg/core'
+import type { Plugin }       from '@yarnpkg/core'
 
-export const plugin: Plugin = {}
+import { SetVersionCommand } from './commands/index.js'
+
+export const plugin: Plugin = { commands: [SetVersionCommand] }

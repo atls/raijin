@@ -1,37 +1,24 @@
-import { BaseCommand }                                from '@yarnpkg/cli'
-import { Configuration }                              from '@yarnpkg/core'
-import { SetVersionCommand as BaseSetVersionCommand } from '@yarnpkg/plugin-essentials'
-import { Option }                                     from 'clipanion'
+import { BaseCommand }   from '@yarnpkg/cli'
+import { Configuration } from '@yarnpkg/core'
+import { Command }       from 'clipanion'
 
 export class SetVersionCommand extends BaseCommand {
-  static paths = [['set', 'version']]
+  static paths = [['set', 'version', 'atlantis']]
 
-  static usage = BaseSetVersionCommand.usage
-
-  useYarnPath = Option.Boolean(`--yarn-path`, {
-    description: `Set the yarnPath setting even if the version can be accessed by Corepack`,
+  static usage = Command.Usage({
+    description: 'lock the Yarn version used by the project',
+    details: `
+    This command will get latest Atlantis bundle from [Atlantis Raijin repo](https://github.com/atls/raijin) and bump \`@atls/code-runtime\` dependency
+    `,
   })
-
-  onlyIfNeeded = Option.Boolean(`--only-if-needed`, false, {
-    description: `Only lock the Yarn version if it isn't already locked`,
-  })
-
-  version = Option.String()
 
   async execute(): Promise<number> {
-    const args = ['set', 'version', 'original']
-
-    if (this.useYarnPath === true) {
-      args.push('--yarn-path')
-    }
-
-    if (this.onlyIfNeeded) {
-      args.push('--only-if-needed')
-    }
-
-    args.push(this.version)
-
+    const args = ['set', 'version']
+    args.push('https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs')
     const exitCode = await this.cli.run(args)
+
+    const bumpArgs = ['up', '@atls/code-runtime']
+    const bumpExitCode = await this.cli.run(bumpArgs)
 
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 
@@ -42,6 +29,6 @@ export class SetVersionCommand extends BaseCommand {
       this.context
     )
 
-    return exitCode
+    return bumpExitCode && exitCode
   }
 }

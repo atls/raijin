@@ -16,7 +16,13 @@ Tools are designed to be used in projects with Javascript and Typescript and are
 
 To start using it:
 
+First time:
+
 - `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs` - installs our latest custom yarn bundle in the project scope.
+
+Upgrade already installed bundle:
+
+- `yarn set version atlantis` - updates bundle to latest version and updates `@atls/code-runtime` dependency to latest
 
 ## Commonly used scrips `yarn`
 
