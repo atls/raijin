@@ -22,7 +22,7 @@ First time:
 
 Upgrade already installed bundle:
 
-- `yarn set version atlantis` - updates bundle to latest version and updates `@atls/code-runtime` dependency to latest
+- `yarn set version atls` - updates bundle to latest version and updates `@atls/code-runtime` dependency to latest
 
 ## Commonly used scrips `yarn`
 
