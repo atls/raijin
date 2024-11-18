@@ -34,17 +34,17 @@
     "typescript": "5.5.4"
   },
   "packageManager": "yarn@4.5.1",
+  "dependeciesMeta": {
+    "jsr": {
+      "unplugged": true
+    }
+  },
   "tools": {
     "schematic": {
       "collection": "@atls/schematics",
       "schematic": "project",
       "type": "libraries",
       "migration": "1645001973970"
-    }
-  },
-  "dependeciesMeta": {
-    "jsr": {
-      "unplugged": true
     }
   },
   "typecheckSkipLibCheck": true
