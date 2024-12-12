@@ -41,7 +41,15 @@ export class Tester extends EventEmitter {
 
     return await globby(
       patterns.map((pattern) => {
-        return `**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`
+        if (this.isFilename(pattern)) {
+          return `**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`
+        }
+
+        if (this.isRootPath(pattern)) {
+          return pattern
+        }
+
+        return `**/${pattern}`
       }),
       {
         cwd,
@@ -50,6 +58,18 @@ export class Tester extends EventEmitter {
         ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
       }
     )
+  }
+
+  private isFilename(pattern: string): boolean {
+    const hasPathSeparator = pattern.includes('/') || pattern.includes('\\')
+
+    const hasValidExtension = /\.(js|jsx|ts|tsx)$/.test(pattern)
+
+    return !hasPathSeparator && !hasValidExtension
+  }
+
+  private isRootPath(pattern: string): boolean {
+    return pattern.startsWith('/') || pattern.startsWith('\\')
   }
 
   async unit(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
