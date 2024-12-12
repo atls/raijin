@@ -66,11 +66,11 @@ class ChecksTypeCheckCommand extends BaseCommand {
         configuration,
       },
       async (report) => {
-        await report.startTimerPromise('Type Check', async () => {
-          const checks = new GitHubChecks('TypeCheck')
+        const checks = new GitHubChecks('TypeCheck')
 
-          const { id: checkId } = await checks.start()
+        const { id: checkId } = await checks.start()
 
+        await report.startTimerPromise('TypeCheck', async () => {
           try {
             const typescript = await TypeScript.initialize(project.cwd)
 
