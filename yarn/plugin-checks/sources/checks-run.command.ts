@@ -8,7 +8,7 @@ import { Project }           from '@yarnpkg/core'
 import { execUtils }         from '@yarnpkg/core'
 
 class ChecksRunCommand extends BaseCommand {
-  static paths = [['checks', 'run']]
+  static override paths = [['checks', 'run']]
 
   async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
@@ -20,7 +20,7 @@ class ChecksRunCommand extends BaseCommand {
         configuration,
       },
       async (report) => {
-        await Promise.all([
+        await Promise.allSettled([
           this.runCheck(project.cwd, ['lint'], report),
           this.runCheck(project.cwd, ['typecheck'], report),
           this.runCheck(project.cwd, ['test', 'unit'], report),
