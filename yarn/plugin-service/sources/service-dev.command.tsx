@@ -8,17 +8,15 @@ import { Option }                 from 'clipanion'
 import { render }                 from 'ink'
 import React                      from 'react'
 
-import { ErrorInfo }              from '@atls/cli-ui-error-info-component'
 import { ServiceProgress }        from '@atls/cli-ui-service-progress-component'
 import { Service }                from '@atls/code-service'
-import { renderStatic }           from '@atls/cli-ui-renderer-static-component'
 
 import { AbstractServiceCommand } from './abstract-service.command.jsx'
 
 export class ServiceDevCommand extends AbstractServiceCommand {
-  static paths = [['service', 'dev']]
+  static override paths = [['service', 'dev']]
 
-  showWarnings = Option.Boolean('-w,--show-warnings', false)
+  override showWarnings = Option.Boolean('-w,--show-warnings', false)
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
@@ -60,20 +58,13 @@ export class ServiceDevCommand extends AbstractServiceCommand {
 
     try {
       await service.watch((logRecord) => {
-        this.renderLogRecord(logRecord)
+        // @ts-expect-error body is undefined
+        console.log(logRecord?.body ?? logRecord) // eslint-disable-line no-console
       })
 
       return 0
     } catch (error) {
-      if (error instanceof Error) {
-        renderStatic(<ErrorInfo error={error} />)
-          .split('\n')
-          .forEach((line) => {
-            console.error(line) // eslint-disable-line no-console
-          })
-      } else {
-        console.error(error) // eslint-disable-line no-console
-      }
+      console.error(error) // eslint-disable-line no-console
 
       return 1
     } finally {
