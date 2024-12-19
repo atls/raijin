@@ -2,9 +2,10 @@ export interface PackOptions {
   workspace: string
   registry: string
   publish: boolean
-  builder?: string
-  buildpack?: string
+  builder: string
+  buildpack: string
   tagPolicy: TagPolicy
+  platform?: string
 }
 
 export type TagPolicy = 'ctx-hash-timestamp' | 'hash-timestamp' | 'revision'
