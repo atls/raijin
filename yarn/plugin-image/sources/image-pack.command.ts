@@ -1,51 +1,30 @@
-import type { TagPolicy }    from '@atls/code-pack'
-import type { Workspace }    from '@yarnpkg/core'
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { TagPolicy } from '@atls/code-pack'
+import type { Workspace } from '@yarnpkg/core'
 
-import { readFileSync }      from 'node:fs'
+import { readFileSync }   from 'node:fs'
 
-import { BaseCommand }       from '@yarnpkg/cli'
-import { Configuration }     from '@yarnpkg/core'
-import { Project }           from '@yarnpkg/core'
-import { StreamReport }      from '@yarnpkg/core'
-import { stringify }         from '@iarna/toml'
-import { structUtils }       from '@yarnpkg/core'
-import { execUtils }         from '@yarnpkg/core'
-import { xfs }               from '@yarnpkg/fslib'
-import { ppath }             from '@yarnpkg/fslib'
-import { Option }            from 'clipanion'
-import { join }              from 'path'
+import { BaseCommand }    from '@yarnpkg/cli'
+import { Configuration }  from '@yarnpkg/core'
+import { Project }        from '@yarnpkg/core'
+import { StreamReport }   from '@yarnpkg/core'
+import { structUtils }    from '@yarnpkg/core'
+import { xfs }            from '@yarnpkg/fslib'
+import { Option }         from 'clipanion'
+import { join }           from 'path'
 
-import { tagUtils }          from '@atls/code-pack'
-import { packUtils }         from '@atls/yarn-pack-utils'
-
-const forRepository = async (repo: string): Promise<PortablePath> => {
-  const descriptor = {
-    project: {
-      id: repo,
-      name: repo,
-      version: '0.0.1',
-    },
-    build: {
-      exclude: ['.git', '.yarn/unplugged'],
-    },
-  }
-
-  const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml')
-
-  await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
-
-  return descriptorPath
-}
+import { pack }           from '@atls/code-pack'
+import { packUtils }      from '@atls/yarn-pack-utils'
 
 class ImagePackCommand extends BaseCommand {
-  static paths = [['image', 'pack']]
+  static override paths = [['image', 'pack']]
 
-  registry: string = Option.String('-r,--registry', { required: true })
+  registry: string = Option.String('-r,--registry', '')
 
-  tagPolicy?: TagPolicy = Option.String('-t,--tag-policy')
+  tagPolicy: TagPolicy = Option.String('-t,--tag-policy', 'revision')
 
   publish: boolean = Option.Boolean('-p,--publish', false)
+
+  platform?: string = Option.String('--platform')
 
   async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
@@ -60,61 +39,7 @@ class ImagePackCommand extends BaseCommand {
         stdout: this.context.stdout,
       },
       async (report) => {
-        if (this.isWorkspaceAllowedForBundle(workspace)) {
-          const destination = await xfs.mktempPromise()
-
-          report.reportInfo(
-            null,
-            `Package workspace ${
-              workspace.manifest.name
-                ? structUtils.prettyIdent(configuration, workspace.manifest.name)
-                : workspace.relativeCwd
-            } to ${destination}`
-          )
-
-          await packUtils.pack(configuration, project, workspace, report, destination)
-
-          const repo = workspace.manifest.raw.name.replace('@', '').replace(/\//g, '-')
-          const image = `${this.registry}${repo}`
-          const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
-
-          const { packConfiguration = {} } = JSON.parse(content)
-
-          const tag = await tagUtils.getTag(this.tagPolicy || 'revision')
-
-          const descriptorPath = await forRepository(repo)
-
-          const buildpackVersion = packConfiguration.buildpackVersion || '0.1.0'
-          const builderTag = packConfiguration.builderTag || 'bookworm-20'
-
-          const args = [
-            'build',
-            '--trust-builder',
-            `${image}:${tag}`,
-            '--verbose',
-            '--buildpack',
-            `atlantislab/buildpack-yarn-workspace:${buildpackVersion}`,
-            '--builder',
-            `atlantislab/builder-base:${builderTag}`,
-            '--descriptor',
-            descriptorPath,
-            '--tag',
-            `${image}:latest`,
-          ]
-
-          if (this.publish) {
-            args.push('--publish')
-          }
-
-          await execUtils.pipevp('pack', args, {
-            cwd: destination,
-            env: process.env,
-            stdin: this.context.stdin,
-            stdout: this.context.stdout,
-            stderr: this.context.stderr,
-            end: execUtils.EndStrategy.ErrorCode,
-          })
-        } else {
+        if (!this.isWorkspaceAllowedForBundle(workspace)) {
           report.reportInfo(
             null,
             `Workspace ${
@@ -123,14 +48,46 @@ class ImagePackCommand extends BaseCommand {
                 : workspace.relativeCwd
             } not allowed for package.`
           )
+
+          return
         }
+        const destination = await xfs.mktempPromise()
+
+        report.reportInfo(
+          null,
+          `Package workspace ${
+            workspace.manifest.name
+              ? structUtils.prettyIdent(configuration, workspace.manifest.name)
+              : workspace.relativeCwd
+          } to ${destination}`
+        )
+
+        const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
+        const { packConfiguration = {} } = JSON.parse(content)
+        const buildpackVersion = packConfiguration.buildpackVersion ?? '0.1.1'
+        const builderTag = packConfiguration.builderTag ?? '22'
+
+        await packUtils.pack(configuration, project, workspace, report, destination)
+
+        await pack(
+          {
+            workspace: workspace.manifest.raw.name,
+            registry: this.registry,
+            publish: this.publish,
+            tagPolicy: this.tagPolicy,
+            buildpack: `atlantislab/buildpack-yarn-workspace:${buildpackVersion}`,
+            builder: `atlantislab/builder-base:${builderTag}`,
+            platform: this.platform,
+          },
+          this.context
+        )
       }
     )
 
     return commandReport.exitCode()
   }
 
-  isWorkspaceAllowedForBundle(workspace: Workspace): boolean {
+  private isWorkspaceAllowedForBundle(workspace: Workspace): boolean {
     const { scripts, name } = workspace.manifest
 
     const buildCommand = scripts.get('build')
