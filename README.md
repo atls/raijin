@@ -2,10 +2,6 @@
 
 # Atlantis Toolset
 
-[//]: # 'VERSIONS'
-
-[<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fcode-service&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/code-service) [<img src="https://img.shields.io/static/v1?style=for-the-badge&label=%40atls%2Fschematics&message=1.0.0&labelColor=ECEEF5&color=D7DCEB" alt='badge'>](https://npmjs.com/package/@atls/schematics)
-
 Monorepo with a set of tools and utilities, developed by our team, to ease our day-to-day work on projects.
 
 Tools are designed to be used in projects with Javascript and Typescript and are designed to increase developer performance as well as unify development experience.
@@ -40,15 +36,11 @@ Besides standard `yarn` scripts we developed our custom ones for ease of work:
 
 - `yarn typecheck` - executes type check
 - `yarn lint` - executes ESLint
+  - `--cache` - executes ESLint with cache
 
 ### Code formatting
 
 - `yarn format` - reformats whole project based on our `prettier` config
-
-### Generation
-
-- `yarn generate project` - generate project schematics
-- `yarn badges generate` - generates badges in root **README.md** based on version in root **package.json**
 
 ### Build
 
@@ -71,12 +63,17 @@ Options:
 
 ### Check project for build errors
 
-- `yarn workspaces changed foreach image pack --publish --tag-policy hash-timestamp --registry some` - build services with local changes
-- `yarn workspaces foreach image pack --publish --tag-policy hash-timestamp --registry some` - build all services
+- `yarn workspaces changed foreach image pack` - build services with local changes
+- `yarn workspaces foreach image pack` - build all services
+
+### Generation
+
+- `yarn generate project` - generate project schematics
+- `yarn badges generate` - generates badges in root **README.md** based on version in root **package.json**
 
 ## Our configs
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/typescript/src/index.ts)
-[![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/eslint/src/index.ts)
-[![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://github.com/atls/tools/blob/557cd9458c527b060e02316bc35469e208a800f2/config/prettier/src/index.ts)
-[![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)](https://github.com/atls/tools/blob/8537e2f78ca5a2bd925548efce21a2d5c4800543/code/code-service/src/webpack.config.ts)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://github.com/atls/raijin/blob/master/config/typescript/src/index.ts)
+[![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)](https://github.com/atls/raijin/blob/master/config/eslint/src/index.ts)
+[![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://github.com/atls/raijin/blob/master/config/prettier/src/index.ts)
+[![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)](https://github.com/atls/raijin/blob/master/code/code-service/src/webpack.config.ts)
