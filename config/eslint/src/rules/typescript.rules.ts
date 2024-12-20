@@ -257,4 +257,5 @@ export const rules: Linter.RulesRecord = {
   '@typescript-eslint/space-before-function-paren': 'off',
   '@typescript-eslint/space-infix-ops': 'off',
   '@typescript-eslint/type-annotation-spacing': 'off',
+  '@typescript-eslint/no-deprecated': 'error',
 }
