@@ -1,0 +1,48 @@
+{
+  "name": "@atls/webpack-proto-imports-loader",
+  "version": "1.0.0",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "file-loader": "6.2.0",
+    "protocol-buffers-schema": "3.6.0",
+    "tslib": "2.8.1"
+  },
+  "devDependencies": {
+    "@atls/config-typescript": "workspace:*",
+    "@monstrs/types-import-proto": "0.0.1",
+    "@types/file-loader": "5.0.4",
+    "@types/node": "22.9.0",
+    "@types/protocol-buffers-schema": "3.4.3",
+    "memfs": "4.6.0",
+    "ts-loader": "9.5.1",
+    "typescript": "5.5.4",
+    "webpack": "5.97.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
+  }
+}

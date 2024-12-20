@@ -27,12 +27,12 @@
   },
   "dependencies": {
     "@atls/config-eslint": "workspace:*",
+    "@atls/webpack-proto-imports-loader": "workspace:*",
     "@svgr/core": "8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
     "eslint": "9.17.0",
     "node-loader": "2.0.0",
     "null-loader": "4.0.1",
-    "protobufjs-loader": "3.0.0",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
