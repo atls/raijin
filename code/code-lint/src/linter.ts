@@ -17,6 +17,7 @@ import { createLintResult }        from './linter.utils.js'
 
 export interface LintOptions {
   fix?: boolean
+  cache?: boolean
 }
 
 export class Linter extends EventEmitter {
@@ -24,6 +25,7 @@ export class Linter extends EventEmitter {
 
   constructor(
     private readonly linter: ESLinter,
+    private readonly cacheLinter: ESLint,
     private readonly config: Array<ESLinter.Config>,
     private readonly cwd: string
   ) {
@@ -33,12 +35,12 @@ export class Linter extends EventEmitter {
   }
 
   static async initialize(rootCwd: string, cwd: string): Promise<Linter> {
-    const { Linter: LinterConstructor } = await import('@atls/code-runtime/eslint')
+    const { Linter: LinterConstructor, ESLint } = await import('@atls/code-runtime/eslint')
     const { eslintconfig } = await import('@atls/code-runtime/eslint')
 
     const linter = new LinterConstructor({ configType: 'flat' })
 
-    const config = eslintconfig.map((item) => ({
+    const config: Array<ESLinter.Config> = eslintconfig.map((item) => ({
       ...item,
       languageOptions: {
         ...(item.languageOptions || {}),
@@ -49,7 +51,15 @@ export class Linter extends EventEmitter {
       },
     }))
 
-    return new Linter(linter, config, cwd)
+    const eslint = new ESLint({
+      cache: true,
+      baseConfig: config,
+      overrideConfigFile: true,
+      cwd,
+      cacheLocation: join(rootCwd, '.config/eslint/.eslintcache'),
+    })
+
+    return new Linter(linter, eslint, config, cwd)
   }
 
   async lintFile(filename: string, options?: LintOptions): Promise<ESLint.LintResult> {
@@ -103,10 +113,29 @@ export class Linter extends EventEmitter {
     const filesForLint =
       files && files.length > 0 ? files : await globby(createPatterns(this.cwd), { dot: true })
 
-    return this.lintFiles(
-      filesForLint.filter((file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0),
-      options
+    const finalFiles = filesForLint.filter(
+      (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
     )
+
+    if (options?.cache) {
+      return this.lintWithCache(finalFiles)
+    }
+
+    return this.lintFiles(finalFiles, options)
+  }
+
+  private async lintWithCache(files: Array<string> = []): Promise<ESLint.LintResult[]> {
+    this.emit('start', { files })
+
+    const results = await this.cacheLinter?.lintFiles(files)
+
+    for (const result of results) {
+      this.emit('lint:end', { result })
+    }
+
+    this.emit('end', { results })
+
+    return results
   }
 
   private getProjectIgnorePatterns(): Array<string> {
