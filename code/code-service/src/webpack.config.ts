@@ -20,6 +20,7 @@ export class WebpackConfig {
       tsLoader: string
       nodeLoader: string
       nullLoader: string
+      protoLoader: string
     },
     private readonly cwd: string
   ) {}
@@ -106,6 +107,7 @@ export class WebpackConfig {
           { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
           { test: /\.(md)$/i, type: 'asset/resource' },
           { test: /\.node$/, use: this.loaders.nodeLoader },
+          { test: /\.proto$/, use: { loader: this.loaders.protoLoader } },
         ],
       },
     }
