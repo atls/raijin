@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-runtime",
-  "version": "2.0.9",
+  "version": "2.1.0",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -32,10 +32,11 @@
     "eslint": "9.17.0",
     "node-loader": "2.0.0",
     "null-loader": "4.0.1",
+    "protobufjs-loader": "3.0.0",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
-    "webpack": "5.96.1"
+    "webpack": "5.97.1"
   },
   "devDependencies": {
     "@types/eslint": "9.6.1",
