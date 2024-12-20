@@ -16,11 +16,13 @@ import { Linter }        from '@atls/code-lint'
 import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
 
 export class LintCommand extends BaseCommand {
-  static paths = [['lint']]
+  static override paths = [['lint']]
 
   fix = Option.Boolean('--fix')
 
   files: Array<string> = Option.Rest({ required: 0 })
+
+  cache: boolean = Option.Boolean('--cache', false)
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
@@ -42,6 +44,10 @@ export class LintCommand extends BaseCommand {
 
     if (this.fix) {
       args.push('--fix')
+    }
+
+    if (this.cache) {
+      args.push('--cache')
     }
 
     const { code } = await execUtils.pipevp('yarn', ['lint', ...args, ...this.files], {
@@ -76,6 +82,7 @@ export class LintCommand extends BaseCommand {
     try {
       const results = await linter.lint(this.files, {
         fix: this.fix,
+        cache: this.cache,
       })
 
       return results.find((result) => result.messages.length > 0) ? 1 : 0
