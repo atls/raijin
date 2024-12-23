@@ -99,6 +99,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:cli/cli-ui-typescript-diagnostic"\
     },\
     {\
+      "name": "@atls/code-changelog",\
+      "reference": "workspace:code/code-changelog"\
+    },\
+    {\
       "name": "@atls/code-commit",\
       "reference": "workspace:code/code-commit"\
     },\
@@ -193,6 +197,10 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@atls/yarn-plugin-badges",\
       "reference": "workspace:yarn/plugin-badges"\
+    },\
+    {\
+      "name": "@atls/yarn-plugin-changelog",\
+      "reference": "workspace:yarn/plugin-changelog"\
     },\
     {\
       "name": "@atls/yarn-plugin-check",\
@@ -311,6 +319,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/cli-ui-test-progress-component", ["virtual:c9cca177981ab8ae758413ed8e2c62aac7997e9f921fb7ffe93e264798eaff48c91de930ba59fb05dfcc4b8c1e4d55f34b86a73cb03b67968b44aa61c046f8e7#workspace:cli/cli-ui-test-progress", "workspace:cli/cli-ui-test-progress"]],\
     ["@atls/cli-ui-typescript-diagnostic-component", ["virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:cli/cli-ui-typescript-diagnostic", "virtual:cfd1d378f54fd81159858d6b376c9d8d7f9fe732664d0429ca1989ce499bbba36d2031641c5753b68e5a629b737a1c234868133c669f8507b82de4b421fb768f#workspace:cli/cli-ui-typescript-diagnostic", "workspace:cli/cli-ui-typescript-diagnostic"]],\
     ["@atls/cli-ui-typescript-progress-component", ["virtual:cfd1d378f54fd81159858d6b376c9d8d7f9fe732664d0429ca1989ce499bbba36d2031641c5753b68e5a629b737a1c234868133c669f8507b82de4b421fb768f#workspace:cli/cli-ui-types-check-progress", "workspace:cli/cli-ui-types-check-progress"]],\
+    ["@atls/code-changelog", ["workspace:code/code-changelog"]],\
     ["@atls/code-commit", ["workspace:code/code-commit"]],\
     ["@atls/code-configuration", ["workspace:code/code-configuration"]],\
     ["@atls/code-format", ["workspace:code/code-format"]],\
@@ -335,6 +344,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/yarn-cli-tools", ["workspace:yarn/cli-tools"]],\
     ["@atls/yarn-pack-utils", ["workspace:yarn/pack-utils"]],\
     ["@atls/yarn-plugin-badges", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-badges", "workspace:yarn/plugin-badges"]],\
+    ["@atls/yarn-plugin-changelog", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-changelog", "workspace:yarn/plugin-changelog"]],\
     ["@atls/yarn-plugin-check", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-check", "workspace:yarn/plugin-check"]],\
     ["@atls/yarn-plugin-checks", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-checks", "workspace:yarn/plugin-checks"]],\
     ["@atls/yarn-plugin-cli-publish", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-cli-publish", "workspace:yarn/plugin-cli-publish"]],\
@@ -1449,6 +1459,17 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
+    ["@atls/code-changelog", [\
+      ["workspace:code/code-changelog", {\
+        "packageLocation": "./code/code-changelog/",\
+        "packageDependencies": [\
+          ["@atls/code-changelog", "workspace:code/code-changelog"],\
+          ["@types/conventional-changelog", "npm:3.1.5"],\
+          ["conventional-changelog", "npm:6.0.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
     ["@atls/code-commit", [\
       ["workspace:code/code-commit", {\
         "packageLocation": "./code/code-commit/",\
@@ -1822,6 +1843,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-cli", "workspace:yarn/cli"],\
           ["@atls/yarn-cli-tools", "workspace:yarn/cli-tools"],\
           ["@atls/yarn-plugin-badges", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-badges"],\
+          ["@atls/yarn-plugin-changelog", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-changelog"],\
           ["@atls/yarn-plugin-check", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-check"],\
           ["@atls/yarn-plugin-checks", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-checks"],\
           ["@atls/yarn-plugin-cli-publish", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-cli-publish"],\
@@ -1880,6 +1902,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/yarn-cli-tools", "workspace:yarn/cli-tools"],\
           ["@atls/yarn-plugin-badges", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-badges"],\
+          ["@atls/yarn-plugin-changelog", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-changelog"],\
           ["@atls/yarn-plugin-check", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-check"],\
           ["@atls/yarn-plugin-checks", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-checks"],\
           ["@atls/yarn-plugin-cli-publish", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-cli-publish"],\
@@ -1981,6 +2004,40 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:cc0a970534b499add0064d8eb1fc3286f3c9be4bf3080c3e6e508964ea5232777f3e0009913a6a066796387e6b8a4b9e488b8a0d642735fad9419dc069d9dbde#npm:4.5.1"],\
           ["@yarnpkg/core", "npm:4.1.4"],\
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@atls/yarn-plugin-changelog", [\
+      ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-changelog", {\
+        "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-changelog-virtual-8b0b7a86c0/1/yarn/plugin-changelog/",\
+        "packageDependencies": [\
+          ["@atls/yarn-plugin-changelog", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-changelog"],\
+          ["@atls/code-changelog", "workspace:code/code-changelog"],\
+          ["@types/yarnpkg__cli", null],\
+          ["@types/yarnpkg__core", null],\
+          ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
+          ["@yarnpkg/cli", "virtual:cc0a970534b499add0064d8eb1fc3286f3c9be4bf3080c3e6e508964ea5232777f3e0009913a6a066796387e6b8a4b9e488b8a0d642735fad9419dc069d9dbde#npm:4.5.1"],\
+          ["@yarnpkg/core", "npm:4.1.4"],\
+          ["clipanion", "virtual:aef3630ccb920f27e72708392ff7fdef790d8b9c4716c04af21d6dfd50716a18ccca731012940d90b405f4d79eb1b017d2b7c8ffa8293485374613021748e40e#npm:4.0.0-rc.2"]\
+        ],\
+        "packagePeers": [\
+          "@types/yarnpkg__cli",\
+          "@types/yarnpkg__core",\
+          "@yarnpkg/cli",\
+          "@yarnpkg/core"\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["workspace:yarn/plugin-changelog", {\
+        "packageLocation": "./yarn/plugin-changelog/",\
+        "packageDependencies": [\
+          ["@atls/yarn-plugin-changelog", "workspace:yarn/plugin-changelog"],\
+          ["@atls/code-changelog", "workspace:code/code-changelog"],\
+          ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
+          ["@yarnpkg/cli", "virtual:cc0a970534b499add0064d8eb1fc3286f3c9be4bf3080c3e6e508964ea5232777f3e0009913a6a066796387e6b8a4b9e488b8a0d642735fad9419dc069d9dbde#npm:4.5.1"],\
+          ["@yarnpkg/core", "npm:4.1.4"],\
+          ["clipanion", "virtual:aef3630ccb920f27e72708392ff7fdef790d8b9c4716c04af21d6dfd50716a18ccca731012940d90b405f4d79eb1b017d2b7c8ffa8293485374613021748e40e#npm:4.0.0-rc.2"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -3390,6 +3447,33 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@conventional-changelog/git-client", [\
+      ["npm:1.0.1", {\
+        "packageLocation": "./.yarn/cache/@conventional-changelog-git-client-npm-1.0.1-913e8d2989-3f309c4a59.zip/node_modules/@conventional-changelog/git-client/",\
+        "packageDependencies": [\
+          ["@conventional-changelog/git-client", "npm:1.0.1"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:38cbe92ccbdbbc49a44f58e59899d2c1a3acbb90cd921ebbfb055447f52ffc3dad2de97d0ff24de66595056b40966d5342fc24af7747c339ad6bc144475eae33#npm:1.0.1", {\
+        "packageLocation": "./.yarn/__virtual__/@conventional-changelog-git-client-virtual-64269bfe0d/0/cache/@conventional-changelog-git-client-npm-1.0.1-913e8d2989-3f309c4a59.zip/node_modules/@conventional-changelog/git-client/",\
+        "packageDependencies": [\
+          ["@conventional-changelog/git-client", "virtual:38cbe92ccbdbbc49a44f58e59899d2c1a3acbb90cd921ebbfb055447f52ffc3dad2de97d0ff24de66595056b40966d5342fc24af7747c339ad6bc144475eae33#npm:1.0.1"],\
+          ["@types/conventional-commits-filter", null],\
+          ["@types/conventional-commits-parser", null],\
+          ["@types/semver", "npm:7.5.8"],\
+          ["conventional-changelog-writer", "npm:8.0.0"],\
+          ["conventional-commits-filter", "npm:5.0.0"],\
+          ["conventional-commits-parser", "npm:6.0.0"],\
+          ["semver", "npm:7.6.3"]\
+        ],\
+        "packagePeers": [\
+          "@types/conventional-commits-filter",\
+          "@types/conventional-commits-parser"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@cspotcode/source-map-support", [\
       ["npm:0.8.1", {\
         "packageLocation": "./.yarn/cache/@cspotcode-source-map-support-npm-0.8.1-964f2de99d-b6e38a1712.zip/node_modules/@cspotcode/source-map-support/",\
@@ -3779,6 +3863,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@humanwhocodes-retry-npm-0.4.1-44b0ee0d64-39fafc7319.zip/node_modules/@humanwhocodes/retry/",\
         "packageDependencies": [\
           ["@humanwhocodes/retry", "npm:0.4.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@hutson/parse-repository-url", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/@hutson-parse-repository-url-npm-5.0.0-fe5e75f4b5-040bc80dd1.zip/node_modules/@hutson/parse-repository-url/",\
+        "packageDependencies": [\
+          ["@hutson/parse-repository-url", "npm:5.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5139,12 +5232,71 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/conventional-changelog", [\
+      ["npm:3.1.5", {\
+        "packageLocation": "./.yarn/cache/@types-conventional-changelog-npm-3.1.5-a3ee08d14d-bd13d10420.zip/node_modules/@types/conventional-changelog/",\
+        "packageDependencies": [\
+          ["@types/conventional-changelog", "npm:3.1.5"],\
+          ["@types/conventional-changelog-core", "npm:4.2.8"],\
+          ["@types/conventional-changelog-writer", "npm:4.0.10"],\
+          ["@types/conventional-commits-parser", "npm:5.0.1"],\
+          ["@types/node", "npm:22.9.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/conventional-changelog-core", [\
+      ["npm:4.2.8", {\
+        "packageLocation": "./.yarn/cache/@types-conventional-changelog-core-npm-4.2.8-e3204b9a88-a78a10fa20.zip/node_modules/@types/conventional-changelog-core/",\
+        "packageDependencies": [\
+          ["@types/conventional-changelog-core", "npm:4.2.8"],\
+          ["@types/conventional-changelog-writer", "npm:4.0.10"],\
+          ["@types/conventional-commits-parser", "npm:5.0.1"],\
+          ["@types/conventional-recommended-bump", "npm:9.0.3"],\
+          ["@types/git-raw-commits", "npm:2.0.4"],\
+          ["@types/node", "npm:22.9.0"],\
+          ["@types/normalize-package-data", "npm:2.4.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/conventional-changelog-writer", [\
+      ["npm:4.0.10", {\
+        "packageLocation": "./.yarn/cache/@types-conventional-changelog-writer-npm-4.0.10-c0c45277b0-a7067d123a.zip/node_modules/@types/conventional-changelog-writer/",\
+        "packageDependencies": [\
+          ["@types/conventional-changelog-writer", "npm:4.0.10"],\
+          ["@types/conventional-commits-parser", "npm:5.0.1"],\
+          ["@types/node", "npm:22.9.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/conventional-commits-parser", [\
       ["npm:5.0.0", {\
         "packageLocation": "./.yarn/cache/@types-conventional-commits-parser-npm-5.0.0-cc661330d3-0992617c72.zip/node_modules/@types/conventional-commits-parser/",\
         "packageDependencies": [\
           ["@types/conventional-commits-parser", "npm:5.0.0"],\
           ["@types/node", "npm:22.9.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:5.0.1", {\
+        "packageLocation": "./.yarn/cache/@types-conventional-commits-parser-npm-5.0.1-3f074d40bc-ac98a31ed0.zip/node_modules/@types/conventional-commits-parser/",\
+        "packageDependencies": [\
+          ["@types/conventional-commits-parser", "npm:5.0.1"],\
+          ["@types/node", "npm:22.9.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/conventional-recommended-bump", [\
+      ["npm:9.0.3", {\
+        "packageLocation": "./.yarn/cache/@types-conventional-recommended-bump-npm-9.0.3-27c17ef189-727ba1230e.zip/node_modules/@types/conventional-recommended-bump/",\
+        "packageDependencies": [\
+          ["@types/conventional-recommended-bump", "npm:9.0.3"],\
+          ["@types/conventional-changelog-core", "npm:4.2.8"],\
+          ["@types/conventional-changelog-writer", "npm:4.0.10"],\
+          ["@types/conventional-commits-parser", "npm:5.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5212,6 +5364,16 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/file-loader", "npm:5.0.4"],\
           ["@types/webpack", "npm:4.41.40"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/git-raw-commits", [\
+      ["npm:2.0.4", {\
+        "packageLocation": "./.yarn/cache/@types-git-raw-commits-npm-2.0.4-f7b89979e6-953cfdc816.zip/node_modules/@types/git-raw-commits/",\
+        "packageDependencies": [\
+          ["@types/git-raw-commits", "npm:2.0.4"],\
+          ["@types/node", "npm:22.9.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5304,6 +5466,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/node", "npm:22.9.0"],\
           ["undici-types", "npm:6.19.8"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/normalize-package-data", [\
+      ["npm:2.4.4", {\
+        "packageLocation": "./.yarn/cache/@types-normalize-package-data-npm-2.4.4-676a8ba353-65dff72b54.zip/node_modules/@types/normalize-package-data/",\
+        "packageDependencies": [\
+          ["@types/normalize-package-data", "npm:2.4.4"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -6972,6 +7143,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["add-stream", [\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/add-stream-npm-1.0.0-a5a0c0498c-3e9e8b0b8f.zip/node_modules/add-stream/",\
+        "packageDependencies": [\
+          ["add-stream", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["agent-base", [\
       ["npm:7.1.1", {\
         "packageLocation": "./.yarn/cache/agent-base-npm-7.1.1-c9e1a4b59e-c478fec8f7.zip/node_modules/agent-base/",\
@@ -8071,11 +8251,39 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["conventional-changelog", [\
+      ["npm:6.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-npm-6.0.0-99d2c88140-78a2a74a19.zip/node_modules/conventional-changelog/",\
+        "packageDependencies": [\
+          ["conventional-changelog", "npm:6.0.0"],\
+          ["conventional-changelog-angular", "npm:8.0.0"],\
+          ["conventional-changelog-atom", "npm:5.0.0"],\
+          ["conventional-changelog-codemirror", "npm:5.0.0"],\
+          ["conventional-changelog-conventionalcommits", "npm:8.0.0"],\
+          ["conventional-changelog-core", "npm:8.0.0"],\
+          ["conventional-changelog-ember", "npm:5.0.0"],\
+          ["conventional-changelog-eslint", "npm:6.0.0"],\
+          ["conventional-changelog-express", "npm:5.0.0"],\
+          ["conventional-changelog-jquery", "npm:6.0.0"],\
+          ["conventional-changelog-jshint", "npm:5.0.0"],\
+          ["conventional-changelog-preset-loader", "npm:5.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["conventional-changelog-angular", [\
       ["npm:7.0.0", {\
         "packageLocation": "./.yarn/cache/conventional-changelog-angular-npm-7.0.0-de5edb79f0-e7966d2fee.zip/node_modules/conventional-changelog-angular/",\
         "packageDependencies": [\
           ["conventional-changelog-angular", "npm:7.0.0"],\
+          ["compare-func", "npm:2.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:8.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-angular-npm-8.0.0-80898aa2c5-856e465201.zip/node_modules/conventional-changelog-angular/",\
+        "packageDependencies": [\
+          ["conventional-changelog-angular", "npm:8.0.0"],\
           ["compare-func", "npm:2.0.0"]\
         ],\
         "linkType": "HARD"\
@@ -8089,11 +8297,136 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["conventional-changelog-atom", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-atom-npm-5.0.0-80e6a2baa7-51765007b4.zip/node_modules/conventional-changelog-atom/",\
+        "packageDependencies": [\
+          ["conventional-changelog-atom", "npm:5.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-codemirror", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-codemirror-npm-5.0.0-e36a1380ff-38dcc3fc3c.zip/node_modules/conventional-changelog-codemirror/",\
+        "packageDependencies": [\
+          ["conventional-changelog-codemirror", "npm:5.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-conventionalcommits", [\
+      ["npm:8.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-conventionalcommits-npm-8.0.0-b17be6f278-23122a76c6.zip/node_modules/conventional-changelog-conventionalcommits/",\
+        "packageDependencies": [\
+          ["conventional-changelog-conventionalcommits", "npm:8.0.0"],\
+          ["compare-func", "npm:2.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-core", [\
+      ["npm:8.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-core-npm-8.0.0-3fbb6b301e-6277c08655.zip/node_modules/conventional-changelog-core/",\
+        "packageDependencies": [\
+          ["conventional-changelog-core", "npm:8.0.0"],\
+          ["@hutson/parse-repository-url", "npm:5.0.0"],\
+          ["add-stream", "npm:1.0.0"],\
+          ["conventional-changelog-writer", "npm:8.0.0"],\
+          ["conventional-commits-parser", "npm:6.0.0"],\
+          ["git-raw-commits", "npm:5.0.0"],\
+          ["git-semver-tags", "npm:8.0.0"],\
+          ["hosted-git-info", "npm:7.0.2"],\
+          ["normalize-package-data", "npm:6.0.2"],\
+          ["read-package-up", "npm:11.0.0"],\
+          ["read-pkg", "npm:9.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-ember", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-ember-npm-5.0.0-c9f24000d7-a36f8f8073.zip/node_modules/conventional-changelog-ember/",\
+        "packageDependencies": [\
+          ["conventional-changelog-ember", "npm:5.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-eslint", [\
+      ["npm:6.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-eslint-npm-6.0.0-6dc0d97b11-1363405963.zip/node_modules/conventional-changelog-eslint/",\
+        "packageDependencies": [\
+          ["conventional-changelog-eslint", "npm:6.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-express", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-express-npm-5.0.0-24ec792468-f344f057a8.zip/node_modules/conventional-changelog-express/",\
+        "packageDependencies": [\
+          ["conventional-changelog-express", "npm:5.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-jquery", [\
+      ["npm:6.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-jquery-npm-6.0.0-39702717ac-845134cf5d.zip/node_modules/conventional-changelog-jquery/",\
+        "packageDependencies": [\
+          ["conventional-changelog-jquery", "npm:6.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-jshint", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-jshint-npm-5.0.0-518a0543a3-9db03b1661.zip/node_modules/conventional-changelog-jshint/",\
+        "packageDependencies": [\
+          ["conventional-changelog-jshint", "npm:5.0.0"],\
+          ["compare-func", "npm:2.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-preset-loader", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-preset-loader-npm-5.0.0-7bfc5d6ff9-7630c2826b.zip/node_modules/conventional-changelog-preset-loader/",\
+        "packageDependencies": [\
+          ["conventional-changelog-preset-loader", "npm:5.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-writer", [\
+      ["npm:8.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-writer-npm-8.0.0-356cbecdca-42daf5e8bf.zip/node_modules/conventional-changelog-writer/",\
+        "packageDependencies": [\
+          ["conventional-changelog-writer", "npm:8.0.0"],\
+          ["@types/semver", "npm:7.5.8"],\
+          ["conventional-commits-filter", "npm:5.0.0"],\
+          ["handlebars", "npm:4.7.8"],\
+          ["meow", "npm:13.2.0"],\
+          ["semver", "npm:7.6.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["conventional-commit-types", [\
       ["npm:3.0.0", {\
         "packageLocation": "./.yarn/cache/conventional-commit-types-npm-3.0.0-e12e37c124-1c6d9b9693.zip/node_modules/conventional-commit-types/",\
         "packageDependencies": [\
           ["conventional-commit-types", "npm:3.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-commits-filter", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-commits-filter-npm-5.0.0-32862a6db4-2345546ea9.zip/node_modules/conventional-commits-filter/",\
+        "packageDependencies": [\
+          ["conventional-commits-filter", "npm:5.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -9849,6 +10182,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["find-up-simple", [\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/find-up-simple-npm-1.0.0-81eb875be8-91c3d51c11.zip/node_modules/find-up-simple/",\
+        "packageDependencies": [\
+          ["find-up-simple", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["findup-sync", [\
       ["npm:4.0.0", {\
         "packageLocation": "./.yarn/cache/findup-sync-npm-4.0.0-3884c677a0-94131e1107.zip/node_modules/findup-sync/",\
@@ -10142,6 +10484,26 @@ const RAW_RUNTIME_STATE =
           ["split2", "npm:4.2.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/git-raw-commits-npm-5.0.0-38cbe92ccb-abb6361d10.zip/node_modules/git-raw-commits/",\
+        "packageDependencies": [\
+          ["git-raw-commits", "npm:5.0.0"],\
+          ["@conventional-changelog/git-client", "virtual:38cbe92ccbdbbc49a44f58e59899d2c1a3acbb90cd921ebbfb055447f52ffc3dad2de97d0ff24de66595056b40966d5342fc24af7747c339ad6bc144475eae33#npm:1.0.1"],\
+          ["meow", "npm:13.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["git-semver-tags", [\
+      ["npm:8.0.0", {\
+        "packageLocation": "./.yarn/cache/git-semver-tags-npm-8.0.0-df0b0f041f-c00a7e26c2.zip/node_modules/git-semver-tags/",\
+        "packageDependencies": [\
+          ["git-semver-tags", "npm:8.0.0"],\
+          ["@conventional-changelog/git-client", "virtual:38cbe92ccbdbbc49a44f58e59899d2c1a3acbb90cd921ebbfb055447f52ffc3dad2de97d0ff24de66595056b40966d5342fc24af7747c339ad6bc144475eae33#npm:1.0.1"],\
+          ["meow", "npm:13.2.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["git-up", [\
@@ -10392,6 +10754,20 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["handlebars", [\
+      ["npm:4.7.8", {\
+        "packageLocation": "./.yarn/cache/handlebars-npm-4.7.8-25244c2c82-bd528f4dd1.zip/node_modules/handlebars/",\
+        "packageDependencies": [\
+          ["handlebars", "npm:4.7.8"],\
+          ["minimist", "npm:1.2.8"],\
+          ["neo-async", "npm:2.6.2"],\
+          ["source-map", "npm:0.6.1"],\
+          ["uglify-js", "npm:3.19.3"],\
+          ["wordwrap", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["has-ansi", [\
       ["npm:3.0.0", {\
         "packageLocation": "./.yarn/cache/has-ansi-npm-3.0.0-f2c5029db5-a5d8db9c9e.zip/node_modules/has-ansi/",\
@@ -10481,6 +10857,16 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["homedir-polyfill", "npm:1.0.3"],\
           ["parse-passwd", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["hosted-git-info", [\
+      ["npm:7.0.2", {\
+        "packageLocation": "./.yarn/cache/hosted-git-info-npm-7.0.2-cd527dd33f-8f085df8a4.zip/node_modules/hosted-git-info/",\
+        "packageDependencies": [\
+          ["hosted-git-info", "npm:7.0.2"],\
+          ["lru-cache", "npm:10.4.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -10668,6 +11054,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/indent-string-npm-4.0.0-7b717435b2-cd3f5cbc9c.zip/node_modules/indent-string/",\
         "packageDependencies": [\
           ["indent-string", "npm:4.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["index-to-position", [\
+      ["npm:0.1.2", {\
+        "packageLocation": "./.yarn/cache/index-to-position-npm-0.1.2-0706eaf734-ae8e2304ed.zip/node_modules/index-to-position/",\
+        "packageDependencies": [\
+          ["index-to-position", "npm:0.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -12568,6 +12963,18 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["normalize-package-data", [\
+      ["npm:6.0.2", {\
+        "packageLocation": "./.yarn/cache/normalize-package-data-npm-6.0.2-dc1f732439-7c4216a242.zip/node_modules/normalize-package-data/",\
+        "packageDependencies": [\
+          ["normalize-package-data", "npm:6.0.2"],\
+          ["hosted-git-info", "npm:7.0.2"],\
+          ["semver", "npm:7.6.3"],\
+          ["validate-npm-package-license", "npm:3.0.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["normalize-path", [\
       ["npm:3.0.0", {\
         "packageLocation": "./.yarn/cache/normalize-path-npm-3.0.0-658ba7d77f-88eeb4da89.zip/node_modules/normalize-path/",\
@@ -12924,6 +13331,16 @@ const RAW_RUNTIME_STATE =
           ["error-ex", "npm:1.3.2"],\
           ["json-parse-even-better-errors", "npm:2.3.1"],\
           ["lines-and-columns", "npm:1.2.4"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:8.1.0", {\
+        "packageLocation": "./.yarn/cache/parse-json-npm-8.1.0-3bb3720119-efc4256c91.zip/node_modules/parse-json/",\
+        "packageDependencies": [\
+          ["parse-json", "npm:8.1.0"],\
+          ["@babel/code-frame", "npm:7.26.2"],\
+          ["index-to-position", "npm:0.1.2"],\
+          ["type-fest", "npm:4.30.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -13322,6 +13739,32 @@ const RAW_RUNTIME_STATE =
         "packagePeers": [\
           "@types/react",\
           "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["read-package-up", [\
+      ["npm:11.0.0", {\
+        "packageLocation": "./.yarn/cache/read-package-up-npm-11.0.0-e39aefc766-535b7554d4.zip/node_modules/read-package-up/",\
+        "packageDependencies": [\
+          ["read-package-up", "npm:11.0.0"],\
+          ["find-up-simple", "npm:1.0.0"],\
+          ["read-pkg", "npm:9.0.1"],\
+          ["type-fest", "npm:4.30.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["read-pkg", [\
+      ["npm:9.0.1", {\
+        "packageLocation": "./.yarn/cache/read-pkg-npm-9.0.1-a6051ad95a-5544bea2a5.zip/node_modules/read-pkg/",\
+        "packageDependencies": [\
+          ["read-pkg", "npm:9.0.1"],\
+          ["@types/normalize-package-data", "npm:2.4.4"],\
+          ["normalize-package-data", "npm:6.0.2"],\
+          ["parse-json", "npm:8.1.0"],\
+          ["type-fest", "npm:4.30.2"],\
+          ["unicorn-magic", "npm:0.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -13983,6 +14426,46 @@ const RAW_RUNTIME_STATE =
           ["source-map-support", "npm:0.5.21"],\
           ["buffer-from", "npm:1.1.2"],\
           ["source-map", "npm:0.6.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["spdx-correct", [\
+      ["npm:3.2.0", {\
+        "packageLocation": "./.yarn/cache/spdx-correct-npm-3.2.0-ffae008484-cc2e4dbef8.zip/node_modules/spdx-correct/",\
+        "packageDependencies": [\
+          ["spdx-correct", "npm:3.2.0"],\
+          ["spdx-expression-parse", "npm:3.0.1"],\
+          ["spdx-license-ids", "npm:3.0.20"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["spdx-exceptions", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/cache/spdx-exceptions-npm-2.5.0-718ed4b7d6-bb127d6e25.zip/node_modules/spdx-exceptions/",\
+        "packageDependencies": [\
+          ["spdx-exceptions", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["spdx-expression-parse", [\
+      ["npm:3.0.1", {\
+        "packageLocation": "./.yarn/cache/spdx-expression-parse-npm-3.0.1-b718cbb35a-a1c6e104a2.zip/node_modules/spdx-expression-parse/",\
+        "packageDependencies": [\
+          ["spdx-expression-parse", "npm:3.0.1"],\
+          ["spdx-exceptions", "npm:2.5.0"],\
+          ["spdx-license-ids", "npm:3.0.20"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["spdx-license-ids", [\
+      ["npm:3.0.20", {\
+        "packageLocation": "./.yarn/cache/spdx-license-ids-npm-3.0.20-f08e1eabc0-30e566ea74.zip/node_modules/spdx-license-ids/",\
+        "packageDependencies": [\
+          ["spdx-license-ids", "npm:3.0.20"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -14792,6 +15275,13 @@ const RAW_RUNTIME_STATE =
           ["type-fest", "npm:4.26.1"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:4.30.2", {\
+        "packageLocation": "./.yarn/cache/type-fest-npm-4.30.2-89dffa097c-c5168b159c.zip/node_modules/type-fest/",\
+        "packageDependencies": [\
+          ["type-fest", "npm:4.30.2"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["typed-array-buffer", [\
@@ -14855,6 +15345,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/typescript-patch-fe43cd9db9-746fdd0865.zip/node_modules/typescript/",\
         "packageDependencies": [\
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["uglify-js", [\
+      ["npm:3.19.3", {\
+        "packageLocation": "./.yarn/cache/uglify-js-npm-3.19.3-d73835bac2-6b9639c198.zip/node_modules/uglify-js/",\
+        "packageDependencies": [\
+          ["uglify-js", "npm:3.19.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15018,6 +15517,17 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/v8-compile-cache-lib-npm-3.0.1-4886071ece-88d3423a52.zip/node_modules/v8-compile-cache-lib/",\
         "packageDependencies": [\
           ["v8-compile-cache-lib", "npm:3.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["validate-npm-package-license", [\
+      ["npm:3.0.4", {\
+        "packageLocation": "./.yarn/cache/validate-npm-package-license-npm-3.0.4-7af8adc7a8-86242519b2.zip/node_modules/validate-npm-package-license/",\
+        "packageDependencies": [\
+          ["validate-npm-package-license", "npm:3.0.4"],\
+          ["spdx-correct", "npm:3.2.0"],\
+          ["spdx-expression-parse", "npm:3.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15213,6 +15723,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/word-wrap-npm-1.2.5-42d00c4b09-1ec6f6089f.zip/node_modules/word-wrap/",\
         "packageDependencies": [\
           ["word-wrap", "npm:1.2.5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["wordwrap", [\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/wordwrap-npm-1.0.0-ae57a645e8-497d40beb2.zip/node_modules/wordwrap/",\
+        "packageDependencies": [\
+          ["wordwrap", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
