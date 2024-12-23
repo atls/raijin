@@ -49,6 +49,27 @@ Besides standard `yarn` scripts we developed our custom ones for ease of work:
 - `yarn library build` - build as library
 - `yarn image pack` - build as docker image via buildpacks
 
+#### Image pack config
+
+In `package.json` of entrypoint you can add following options:
+
+```json
+  "packConfiguration": {
+    "builderTag": "22",
+    "buildpackVersion": "0.1.1",
+    "require": [
+      "curl",
+      "htop"
+    ]
+  }
+```
+
+Where:
+
+- `builderTag` - NodeJS version to use. [Available options](https://hub.docker.com/r/atlantislab/builder-base/tags)
+- `buildpackVersion` - buildpacks to use. [Available options](https://hub.docker.com/r/atlantislab/buildpack-yarn-workspace/tags)
+- `require` - array of additional dependencies to be available in final image. [Available options are here under `atlantislab/buildpack-extension-...`](https://hub.docker.com/u/atlantislab)
+
 ### Testing
 
 - `yarn test ...` - run tests

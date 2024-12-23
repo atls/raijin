@@ -1,3 +1,5 @@
+import { PortablePath } from '@yarnpkg/fslib'
+
 export interface PackOptions {
   workspace: string
   registry: string
@@ -6,6 +8,8 @@ export interface PackOptions {
   buildpack: string
   tagPolicy: TagPolicy
   platform?: string
+  require?: Array<string>
+  cwd?: PortablePath
 }
 
 export type TagPolicy = 'ctx-hash-timestamp' | 'hash-timestamp' | 'revision'
