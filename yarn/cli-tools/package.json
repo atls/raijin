@@ -6,6 +6,7 @@
   "main": "src/getPluginConfiguration.ts",
   "dependencies": {
     "@atls/yarn-plugin-badges": "workspace:*",
+    "@atls/yarn-plugin-changelog": "workspace:*",
     "@atls/yarn-plugin-check": "workspace:*",
     "@atls/yarn-plugin-checks": "workspace:*",
     "@atls/yarn-plugin-cli-publish": "workspace:*",
