@@ -66,6 +66,7 @@ class ImagePackCommand extends BaseCommand {
         const { packConfiguration = {} } = JSON.parse(content)
         const buildpackVersion = packConfiguration.buildpackVersion ?? '0.1.1'
         const builderTag = packConfiguration.builderTag ?? '22'
+        const { require } = packConfiguration
 
         await packUtils.pack(configuration, project, workspace, report, destination)
 
@@ -78,6 +79,8 @@ class ImagePackCommand extends BaseCommand {
             buildpack: `atlantislab/buildpack-yarn-workspace:${buildpackVersion}`,
             builder: `atlantislab/builder-base:${builderTag}`,
             platform: this.platform,
+            require,
+            cwd: destination,
           },
           this.context
         )

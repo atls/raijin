@@ -14,7 +14,7 @@
 
 Первая установка:
 
-- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs` - эта команда установит вместо стокового ярна наш и положит в папку .yarn/releases, если же наша сборка уже установлена - произойдёт обновление до актуальной версии
+- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs` - эта команда установит вместо стокового `yarn` наш и положит в папку .yarn/releases, если же наша сборка уже установлена - произойдёт обновление до актуальной версии
 
 Обновление бандла в уже установленном проекте:
 
@@ -48,6 +48,27 @@
 - `yarn service dev` - дев разработка проекта
 - `yarn library build`
 - `yarn image pack`
+
+#### Настройка `image pack`
+
+`package.json` энтрипоинта может содержать следующие параметры:
+
+```json
+  "packConfiguration": {
+    "builderTag": "22",
+    "buildpackVersion": "0.1.1",
+    "require": [
+      "curl",
+      "htop"
+    ]
+  }
+```
+
+Где:
+
+- `builderTag` - версия NodeJS для использования в образе. [Доступные опции](https://hub.docker.com/r/atlantislab/builder-base/tags)
+- `buildpackVersion` - buildpacks to use. [Доступные опции](https://hub.docker.com/r/atlantislab/buildpack-yarn-workspace/tags)
+- `require` - array of additional dependencies to be available in final image. [Доступные опции под префиксом `atlantislab/buildpack-extension-...`](https://hub.docker.com/u/atlantislab)
 
 ### Тестирование
 
