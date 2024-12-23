@@ -1,6 +1,9 @@
-import type { LintOutcome }       from '@commitlint/types'
 import type { FormattableReport } from '@commitlint/types'
+import type { LintOptions }       from '@commitlint/types'
 
+import { RuleConfigSeverity }     from '@commitlint/types'
+import { LintOutcome }            from '@commitlint/types'
+import { QualifiedRules }         from '@commitlint/types'
 import { format }                 from '@commitlint/format/lib/format.js'
 import commitlint                 from '@commitlint/lint'
 
@@ -15,11 +18,29 @@ const defaultParserOpts = {
   revertCorrespondence: ['header', 'hash'],
 }
 
+const options: LintOptions = {
+  parserOpts: defaultParserOpts,
+}
+
+interface CommitLinterOptions {
+  scopes?: Array<string>
+  workspaceNames?: Array<string>
+}
+
 export class CommitLinter {
+  readonly scopes?: Array<string>
+
+  readonly workspaceNames?: Array<string>
+
+  constructor({ scopes, workspaceNames }: CommitLinterOptions) {
+    this.scopes = scopes
+    this.workspaceNames = workspaceNames
+  }
+
   async lint(message: string): Promise<LintOutcome> {
-    return commitlint(message, rules, {
-      parserOpts: defaultParserOpts,
-    })
+    const lintRules = this.prepareConfig(rules)
+
+    return commitlint(message, lintRules, options)
   }
 
   format(
@@ -29,5 +50,25 @@ export class CommitLinter {
     }
   ): string {
     return format(report, options)
+  }
+
+  /**
+   * Prepares config, including scopes
+   */
+  private prepareConfig(rules: QualifiedRules) {
+    const allowedScopes = []
+
+    if (this.scopes) {
+      allowedScopes.push(...this.scopes.filter((scope) => scope && scope !== 'atls'))
+    }
+
+    if (this.workspaceNames) {
+      allowedScopes.push(...this.workspaceNames.filter((workspaceName) => workspaceName))
+    }
+
+    const possibleScopeValuesArray = ['common', 'github', ...allowedScopes]
+    rules['scope-enum'] = [RuleConfigSeverity.Error, 'always', possibleScopeValuesArray]
+
+    return rules
   }
 }
