@@ -35,7 +35,7 @@ export const installPack: InstallPack = async ({ context, cwd }) => {
   if (!isPackInstalled) {
     console.log('Buildpack CLI (pack) is not installed. Installing it...')
 
-    let downloadUrl = 'https://github.com/buildpacks/pack/releases/download/v0.36.1/pack-v0.36.1-'
+    let downloadUrl = 'https://github.com/buildpacks/pack/releases/download/v0.36.2/pack-v0.36.2-'
 
     const currentPlatform = platform()
     const currentArch = arch()
@@ -56,18 +56,25 @@ export const installPack: InstallPack = async ({ context, cwd }) => {
     if (currentPlatform === 'linux') {
     }
 
-    await execUtils.pipevp(
-      'curl',
-      ['-sSL', downloadUrl, '|', 'tar', '-C', '/usr/local/bin/', '--no-same-owner', '-xzv', 'pack'],
-      {
-        cwd: cwd ?? context.cwd,
-        env: process.env,
-        stdin: context.stdin,
-        stdout: context.stdout,
-        stderr: context.stderr,
-        end: execUtils.EndStrategy.ErrorCode,
-      }
-    )
+    const tempFile = `${cwd ?? context.cwd}/pack.tgz`
+
+    await execUtils.pipevp('curl', ['-sSL', '-o', tempFile, downloadUrl], {
+      cwd: cwd ?? context.cwd,
+      env: process.env,
+      stdin: context.stdin,
+      stdout: context.stdout,
+      stderr: context.stderr,
+      end: execUtils.EndStrategy.ErrorCode,
+    })
+
+    await execUtils.pipevp('tar', ['-C', '/usr/local/bin/', '--no-same-owner', '-xzv', tempFile], {
+      cwd: cwd ?? context.cwd,
+      env: process.env,
+      stdin: context.stdin,
+      stdout: context.stdout,
+      stderr: context.stderr,
+      end: execUtils.EndStrategy.ErrorCode,
+    })
 
     console.log('Buildpack CLI (pack) has been installed.')
   }
