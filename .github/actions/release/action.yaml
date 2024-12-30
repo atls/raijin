@@ -13,8 +13,8 @@ runs:
     - name: Create release
       shell: bash
       env:
-        GH_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspace changed foreach -vpj 2 release create
+        yarn workspaces changed foreach -vpj 2 release create
