@@ -44,7 +44,7 @@ runs:
     - name: Stage all files
       shell: bash
       run: |
-        git add .
+        git add '*.md'
 
     - name: Commit changes
       id: commit
