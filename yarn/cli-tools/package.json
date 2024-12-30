@@ -16,6 +16,7 @@
     "@atls/yarn-plugin-files": "workspace:*",
     "@atls/yarn-plugin-format": "workspace:*",
     "@atls/yarn-plugin-image": "workspace:*",
+    "@atls/yarn-plugin-jsr": "workspace:*",
     "@atls/yarn-plugin-library": "workspace:*",
     "@atls/yarn-plugin-lint": "workspace:*",
     "@atls/yarn-plugin-release": "workspace:*",
