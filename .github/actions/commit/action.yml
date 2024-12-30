@@ -43,7 +43,7 @@ runs:
 
     - name: Commit changes
       id: commit
-      uses: planetscale/ghcommit-action@v0.1.45
+      uses: planetscale/ghcommit-action@v0.2.0
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
