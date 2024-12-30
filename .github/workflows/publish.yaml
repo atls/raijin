@@ -44,6 +44,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Changelog
+        if: ${{ !cancelled() }}
         uses: ./.github/actions/changelog
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -59,6 +60,8 @@ jobs:
         if: ${{ !cancelled() }}
         id: jsr
         uses: ./.github/actions/publish-jsr
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release
         if: ${{ !cancelled() }}
