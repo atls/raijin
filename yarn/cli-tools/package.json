@@ -18,6 +18,7 @@
     "@atls/yarn-plugin-image": "workspace:*",
     "@atls/yarn-plugin-library": "workspace:*",
     "@atls/yarn-plugin-lint": "workspace:*",
+    "@atls/yarn-plugin-release": "workspace:*",
     "@atls/yarn-plugin-renderer": "workspace:*",
     "@atls/yarn-plugin-service": "workspace:*",
     "@atls/yarn-plugin-test": "workspace:*",

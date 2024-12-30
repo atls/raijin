@@ -1,3 +1,5 @@
+import { relative }               from 'node:path'
+
 import { BaseCommand }            from '@yarnpkg/cli'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
 import { Configuration }          from '@yarnpkg/core'
@@ -38,7 +40,7 @@ export class ChangelogGenerateCommand extends BaseCommand {
           }
           packageName += `${workspace.manifest.name?.name}`
 
-          const path = this.context.cwd
+          const path = relative(project.cwd, this.context.cwd)
 
           const changelog = new Changelog()
 
@@ -49,11 +51,13 @@ export class ChangelogGenerateCommand extends BaseCommand {
             file: !this.stdOut,
             tagPrefix: this.tagPrefix,
           })
+
+          if (this.stdOut) {
+            console.log(result)
+          }
         })
       }
     )
-
-    console.debug(result)
 
     return commandReport.exitCode()
   }
