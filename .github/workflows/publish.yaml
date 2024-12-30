@@ -43,6 +43,11 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Changelog
+        uses: ./.github/actions/changelog
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish to NPM
         if: ${{ !cancelled() }}
         id: npm
