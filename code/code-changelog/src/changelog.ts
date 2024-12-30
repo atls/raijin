@@ -1,7 +1,7 @@
 import type { Options }      from 'conventional-changelog'
 
-import { readFileSync }      from 'node:fs'
-import { writeFileSync }     from 'node:fs'
+import { readFile }          from 'node:fs/promises'
+import { writeFile }         from 'node:fs/promises'
 import { join }              from 'node:path'
 
 import conventionalChangelog from 'conventional-changelog'
@@ -49,44 +49,40 @@ export class Changelog {
     return this.generateToStdOut(config)
   }
 
-  private generateToStdOut(config: Options): string {
-    const changelogStream = conventionalChangelog(config)
+  private async generateToStdOut(config: Options): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const changelogStream = conventionalChangelog(config)
+      let newChangelog = ''
 
-    let newChangelog = ''
+      changelogStream.on('data', (chunk) => {
+        newChangelog += chunk.toString()
+      })
 
-    changelogStream.on('data', (record) => {
-      newChangelog += record.toString()
+      changelogStream.on('end', () => resolve(newChangelog))
+      changelogStream.on('error', (error) => reject(error))
     })
-
-    return newChangelog
   }
 
   private async generateToFile(config: Options, path: string): Promise<string> {
     const outFile = join(path, 'CHANGELOG.md')
 
-    let newChangelog = ''
-
-    const changelogStream = conventionalChangelog(config)
-    changelogStream.on('data', (record) => {
-      newChangelog += record.toString()
-    })
-
-    changelogStream.on('end', () => {
+    try {
+      const newChangelog = await this.generateToStdOut(config)
       let existingData = ''
 
       try {
-        existingData = readFileSync(outFile, 'utf8')
-      } catch (error) {
-        if (error instanceof Error && 'code' in error && error.code !== 'ENOENT') throw error
+        existingData = await readFile(outFile, 'utf8')
+      } catch (error: any) {
+        if (error.code !== 'ENOENT') throw error
       }
 
-      let updatedData = newChangelog
-      if (existingData) {
-        updatedData += `\n${existingData}`
-      }
-      writeFileSync(outFile, updatedData)
-    })
+      const updatedData = existingData ? `${newChangelog}\n${existingData}` : newChangelog
+      await writeFile(outFile, updatedData, 'utf8')
 
-    return ''
+      return updatedData
+    } catch (error) {
+      console.error('Error generating changelog:', error)
+      throw error
+    }
   }
 }

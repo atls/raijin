@@ -658,6 +658,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/code-github@workspace:*, @atls/code-github@workspace:code/code-github":
+  version: 0.0.0-use.local
+  resolution: "@atls/code-github@workspace:code/code-github"
+  dependencies:
+    "@octokit/auth-action": "npm:5.1.1"
+    "@octokit/rest": "npm:21.0.2"
+  languageName: unknown
+  linkType: soft
+
 "@atls/code-icons@workspace:*, @atls/code-icons@workspace:code/code-icons":
   version: 0.0.0-use.local
   resolution: "@atls/code-icons@workspace:code/code-icons"
@@ -673,6 +682,14 @@ __metadata:
     camelcase: "npm:8.0.0"
     typescript: "npm:5.5.4"
     webpack-chain-5: "npm:8.0.2"
+  languageName: unknown
+  linkType: soft
+
+"@atls/code-jsr@workspace:*, @atls/code-jsr@workspace:code/code-jsr":
+  version: 0.0.0-use.local
+  resolution: "@atls/code-jsr@workspace:code/code-jsr"
+  dependencies:
+    jsr: "npm:0.13.2"
   languageName: unknown
   linkType: soft
 
@@ -918,8 +935,10 @@ __metadata:
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-format": "workspace:*"
     "@atls/yarn-plugin-image": "workspace:*"
+    "@atls/yarn-plugin-jsr": "workspace:*"
     "@atls/yarn-plugin-library": "workspace:*"
     "@atls/yarn-plugin-lint": "workspace:*"
+    "@atls/yarn-plugin-release": "workspace:*"
     "@atls/yarn-plugin-renderer": "workspace:*"
     "@atls/yarn-plugin-service": "workspace:*"
     "@atls/yarn-plugin-test": "workspace:*"
@@ -976,8 +995,10 @@ __metadata:
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-format": "workspace:*"
     "@atls/yarn-plugin-image": "workspace:*"
+    "@atls/yarn-plugin-jsr": "workspace:*"
     "@atls/yarn-plugin-library": "workspace:*"
     "@atls/yarn-plugin-lint": "workspace:*"
+    "@atls/yarn-plugin-release": "workspace:*"
     "@atls/yarn-plugin-renderer": "workspace:*"
     "@atls/yarn-plugin-service": "workspace:*"
     "@atls/yarn-plugin-test": "workspace:*"
@@ -1252,6 +1273,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/yarn-plugin-jsr@workspace:*, @atls/yarn-plugin-jsr@workspace:yarn/plugin-jsr":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-jsr@workspace:yarn/plugin-jsr"
+  dependencies:
+    "@atls/code-jsr": "workspace:*"
+    "@yarnpkg/builder": "npm:4.2.0"
+    "@yarnpkg/cli": "npm:4.5.1"
+    "@yarnpkg/core": "npm:4.1.4"
+    "@yarnpkg/fslib": "npm:3.1.0"
+    clipanion: "npm:4.0.0-rc.2"
+  peerDependencies:
+    "@yarnpkg/cli": "*"
+    "@yarnpkg/core": "*"
+    "@yarnpkg/fslib": "*"
+  languageName: unknown
+  linkType: soft
+
 "@atls/yarn-plugin-library@workspace:*, @atls/yarn-plugin-library@workspace:yarn/plugin-library":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-library@workspace:yarn/plugin-library"
@@ -1320,6 +1358,22 @@ __metadata:
     rollup: "npm:4.21.2"
     rollup-plugin-esbuild: "npm:6.1.1"
     tslib: "npm:2.7.0"
+  languageName: unknown
+  linkType: soft
+
+"@atls/yarn-plugin-release@workspace:*, @atls/yarn-plugin-release@workspace:yarn/plugin-release":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-release@workspace:yarn/plugin-release"
+  dependencies:
+    "@atls/code-changelog": "workspace:*"
+    "@atls/code-github": "workspace:*"
+    "@yarnpkg/builder": "npm:4.2.0"
+    "@yarnpkg/cli": "npm:4.5.1"
+    "@yarnpkg/core": "npm:4.1.4"
+    clipanion: "npm:4.0.0-rc.2"
+  peerDependencies:
+    "@yarnpkg/cli": "*"
+    "@yarnpkg/core": "*"
   languageName: unknown
   linkType: soft
 
@@ -2504,6 +2558,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/auth-action@npm:5.1.1":
+  version: 5.1.1
+  resolution: "@octokit/auth-action@npm:5.1.1"
+  dependencies:
+    "@octokit/auth-token": "npm:^5.0.0"
+    "@octokit/types": "npm:^13.0.0"
+  checksum: 10/7c687cbb04229d99ac542dd3b385b924ca55d217940719278f7fb22e63e92fd39b53186c9d16f14250d10f6f1c4e6b289a28f61e3cfa3d74cc45dc0480340148
+  languageName: node
+  linkType: hard
+
 "@octokit/auth-token@npm:^4.0.0":
   version: 4.0.0
   resolution: "@octokit/auth-token@npm:4.0.0"
@@ -2518,7 +2582,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/core@npm:*":
+"@octokit/core@npm:*, @octokit/core@npm:^6.1.2":
   version: 6.1.2
   resolution: "@octokit/core@npm:6.1.2"
   dependencies:
@@ -2604,6 +2668,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/plugin-paginate-rest@npm:^11.0.0":
+  version: 11.3.6
+  resolution: "@octokit/plugin-paginate-rest@npm:11.3.6"
+  dependencies:
+    "@octokit/types": "npm:^13.6.2"
+  peerDependencies:
+    "@octokit/core": ">=6"
+  checksum: 10/72cda438919853dfbfe3dd02aecbe12cc91bb203a9799c5be4f8bd577775e1929fa2da08d32684789bbf3f3215b1c86d9456e26aeebd91b1030b227c229370ec
+  languageName: node
+  linkType: hard
+
 "@octokit/plugin-paginate-rest@npm:^9.0.0":
   version: 9.2.1
   resolution: "@octokit/plugin-paginate-rest@npm:9.2.1"
@@ -2615,6 +2690,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/plugin-request-log@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "@octokit/plugin-request-log@npm:5.3.1"
+  peerDependencies:
+    "@octokit/core": ">=6"
+  checksum: 10/a27e163282c8d0ba8feee4d3cbbd1b62e1aa89a892877f7a9876fc17ddde3e1e1af922e6664221a0cabae99b8a7a2a5215b9ec2ee5222edb50e06298e99022b0
+  languageName: node
+  linkType: hard
+
 "@octokit/plugin-rest-endpoint-methods@npm:^10.0.0":
   version: 10.4.1
   resolution: "@octokit/plugin-rest-endpoint-methods@npm:10.4.1"
@@ -2623,6 +2707,17 @@ __metadata:
   peerDependencies:
     "@octokit/core": 5
   checksum: 10/1090fc5a1bebb7b48c512e178f8ad69a3ef8332e583274972f3a3035e9be9200093e22a5dbfe0f71aa1a7a8817e54bb915af3c2a3f88db1311a2873cef176552
+  languageName: node
+  linkType: hard
+
+"@octokit/plugin-rest-endpoint-methods@npm:^13.0.0":
+  version: 13.2.6
+  resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.2.6"
+  dependencies:
+    "@octokit/types": "npm:^13.6.1"
+  peerDependencies:
+    "@octokit/core": ">=6"
+  checksum: 10/368aee8b3f638faefc1426e77c138a2784fb56d0bec4e71bb128c2a46f90903b800ac2c8373c217c364f0efc403f1504e041ddba2168803a27af5c55a9fd921e
   languageName: node
   linkType: hard
 
@@ -2670,6 +2765,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/rest@npm:21.0.2":
+  version: 21.0.2
+  resolution: "@octokit/rest@npm:21.0.2"
+  dependencies:
+    "@octokit/core": "npm:^6.1.2"
+    "@octokit/plugin-paginate-rest": "npm:^11.0.0"
+    "@octokit/plugin-request-log": "npm:^5.3.1"
+    "@octokit/plugin-rest-endpoint-methods": "npm:^13.0.0"
+  checksum: 10/f67fbb1b3e9568f352933c55703cd33354183e48710a146f6a1c5930419006d2d97c08f5b0a29a56fffc9e53f01b34bae2681a577f604172f4331644b85a9779
+  languageName: node
+  linkType: hard
+
 "@octokit/types@npm:13.5.0":
   version: 13.5.0
   resolution: "@octokit/types@npm:13.5.0"
@@ -2694,6 +2801,15 @@ __metadata:
   dependencies:
     "@octokit/openapi-types": "npm:^22.2.0"
   checksum: 10/9ea6189839439e1085799cc16ee699292538d9c14dd15e9e45462377287f863b6be93455d2ad9acffd561018a0c35adbb9d1437e92075c9058d6c6d69ff2f503
+  languageName: node
+  linkType: hard
+
+"@octokit/types@npm:^13.6.1, @octokit/types@npm:^13.6.2":
+  version: 13.6.2
+  resolution: "@octokit/types@npm:13.6.2"
+  dependencies:
+    "@octokit/openapi-types": "npm:^22.2.0"
+  checksum: 10/8e614796f3554d28dfb77c570e80ef52d68ef311bdd4614ec263f8ea2266b9c06d4f7963fe2989f32cbfe4ea0c05e13eba9a64a6e0f64afb997cd975af154d52
   languageName: node
   linkType: hard
 
@@ -8709,6 +8825,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsr@npm:0.13.2":
+  version: 0.13.2
+  resolution: "jsr@npm:0.13.2"
+  dependencies:
+    kolorist: "npm:^1.8.0"
+    node-stream-zip: "npm:^1.15.0"
+    semiver: "npm:^1.1.0"
+  bin:
+    jsr: dist/bin.js
+  checksum: 10/42a29be083ec9d8f4843430ef492edada85c3f46b21d19097b1630de3c704f2e704ab8ef94d7c0b0920e5763c6782de2b77d4195e575171b13302b66b28a62e0
+  languageName: node
+  linkType: hard
+
 "jsx-ast-utils@npm:^2.4.1 || ^3.0.0, jsx-ast-utils@npm:^3.3.5":
   version: 3.3.5
   resolution: "jsx-ast-utils@npm:3.3.5"
@@ -8727,6 +8856,13 @@ __metadata:
   dependencies:
     json-buffer: "npm:3.0.1"
   checksum: 10/167eb6ef64cc84b6fa0780ee50c9de456b422a1e18802209234f7c2cf7eae648c7741f32e50d7e24ccb22b24c13154070b01563d642755b156c357431a191e75
+  languageName: node
+  linkType: hard
+
+"kolorist@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "kolorist@npm:1.8.0"
+  checksum: 10/71d5d122951cc65f2f14c3e1d7f8fd91694b374647d4f6deec3816d018cd04a44edd9578d93e00c82c2053b925e5d30a0565746c4171f4ca9fce1a13bd5f3315
   languageName: node
   linkType: hard
 
@@ -9450,6 +9586,13 @@ __metadata:
   version: 2.0.18
   resolution: "node-releases@npm:2.0.18"
   checksum: 10/241e5fa9556f1c12bafb83c6c3e94f8cf3d8f2f8f904906ecef6e10bcaa1d59aa61212d4651bec70052015fc54bd3fdcdbe7fc0f638a17e6685aa586c076ec4e
+  languageName: node
+  linkType: hard
+
+"node-stream-zip@npm:^1.15.0":
+  version: 1.15.0
+  resolution: "node-stream-zip@npm:1.15.0"
+  checksum: 10/3fb56144d23456e1b42fe9d24656999e4ef6aeccce3cae43fc97ba6c341ee448aeceb4dc8fb57ee78eab1a6da49dd46c9650fdb2f16b137630a335df9560c647
   languageName: node
   linkType: hard
 
@@ -10551,6 +10694,13 @@ __metadata:
     ajv: "npm:^6.12.5"
     ajv-keywords: "npm:^3.5.2"
   checksum: 10/2c7bbb1da967fdfd320e6cea538949006ec6e8c13ea560a4f94ff2c56809a8486fa5ec419e023452501a6befe1ca381e409c2798c24f4993c7c4094d97fdb258
+  languageName: node
+  linkType: hard
+
+"semiver@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "semiver@npm:1.1.0"
+  checksum: 10/87e78c4fca6e082fed8905266341524b952a6d917397ca7e4feba469459e4165015fb25c0cd5b214f30ac4588e227e7c5b56ce91fd053893738d8a44a761ddb3
   languageName: node
   linkType: hard
 

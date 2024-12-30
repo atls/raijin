@@ -41,9 +41,14 @@ runs:
         echo $INITIAL_MESSAGE
         rm $temp_file
 
+    - name: Stage all files
+      shell: bash
+      run: |
+        git add '*.md'
+
     - name: Commit changes
       id: commit
-      uses: planetscale/ghcommit-action@v0.1.45
+      uses: planetscale/ghcommit-action@v0.2.0
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
