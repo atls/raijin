@@ -1,5 +1,9 @@
 ## (2025-01-01)
 
+- Merge pull request #476 from atls/fix/release ([de311a8](https://github.com/atls/raijin/commit/de311a8)), closes [#476](https://github.com/atls/raijin/issues/476)
+
+## (2025-01-01)
+
 - Merge pull request #475 from atls/fix/release ([a578cda](https://github.com/atls/raijin/commit/a578cda)), closes [#475](https://github.com/atls/raijin/issues/475)
 
 ## (2025-01-01)
