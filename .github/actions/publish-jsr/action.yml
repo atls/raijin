@@ -1,6 +1,10 @@
 name: Publish JSR composite action
 description: Publish packages to JSR
 
+inputs:
+  GITHUB_TOKEN:
+    required: true
+
 runs:
   using: composite
 
@@ -18,3 +22,5 @@ runs:
         source .env
         export NODE_OPTIONS
         yarn workspaces changed foreach -vptj 2 --no-private jsr publish
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
