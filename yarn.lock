@@ -1478,6 +1478,7 @@ __metadata:
     clipanion: "npm:4.0.0-rc.2"
     ink: "npm:3.2.0"
     react: "npm:18.3.1"
+    typanion: "npm:3.14.0"
     typescript: "npm:5.5.4"
   peerDependencies:
     "@yarnpkg/cli": "*"

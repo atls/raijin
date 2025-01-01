@@ -2,6 +2,7 @@ import type { TestEvent } from 'node:test/reporters'
 
 import EventEmitter       from 'node:events'
 import { run }            from 'node:test'
+import { tap }            from 'node:test/reporters'
 
 import { globby }         from 'globby'
 
@@ -12,6 +13,7 @@ export type TestsStream = ReturnType<typeof run>
 type TestOptions = {
   files?: Array<string>
   watch?: boolean
+  testReporter?: string
 }
 
 export class Tester extends EventEmitter {
@@ -25,13 +27,16 @@ export class Tester extends EventEmitter {
 
   private async collectTestFiles(
     cwd: string,
-    type: 'integration' | 'unit',
+    type: 'integration' | 'unit' | undefined,
     patterns: Array<string> | undefined
   ) {
-    const folderPattern = type === 'unit' ? '!(integration)' : 'integration'
+    let folderPattern = '*'
+    if (type !== undefined) {
+      folderPattern = type === 'unit' ? '!(integration)' : 'integration'
+    }
 
     if (!patterns || patterns.length < 1) {
-      return await globby([`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], {
+      return globby([`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], {
         cwd,
         dot: true,
         absolute: true,
@@ -39,7 +44,7 @@ export class Tester extends EventEmitter {
       })
     }
 
-    return await globby(
+    return globby(
       patterns.map((pattern) => {
         if (this.isFilename(pattern)) {
           return `**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`
@@ -75,21 +80,41 @@ export class Tester extends EventEmitter {
   async unit(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
     const testFiles = await this.collectTestFiles(cwd, 'unit', options?.files)
 
-    return this.run(testFiles, 25_000, true, options?.watch ?? false)
+    return this.run(testFiles, 25_000, true, options?.watch, options?.testReporter)
   }
 
   async integration(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
     const testFiles = await this.collectTestFiles(cwd, 'integration', options?.files)
 
-    return this.run(testFiles, 240_000, false, options?.watch ?? false)
+    return this.run(testFiles, 240_000, false, options?.watch, options?.testReporter)
+  }
+
+  async general(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
+    const testFiles = await this.collectTestFiles(cwd, undefined, options?.files)
+
+    return this.run(testFiles, 240_000, true, options?.watch, options?.testReporter)
   }
 
   protected async run(
     files: Array<string>,
     timeout: number,
     concurrency: boolean,
-    watch: boolean
+    watch = false,
+    testReporter?: string
   ): Promise<Array<TestEvent>> {
+    if (testReporter === 'tap') {
+      const result = run({
+        files,
+        timeout,
+        concurrency,
+        watch,
+      }).compose(tap)
+
+      result.pipe(process.stdout)
+
+      return result.toArray()
+    }
+
     const tests = await Tests.load(files)
 
     this.emit('start', { tests })
