@@ -17,6 +17,7 @@ import { Option }        from 'clipanion'
 import { Command }       from 'clipanion'
 import { render }        from 'ink'
 import { relative }      from 'path'
+import { isEnum }        from 'typanion'
 import React             from 'react'
 
 import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
@@ -34,7 +35,9 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
   files: Array<string> = Option.Rest({ required: 0 })
 
-  static usage = Command.Usage({
+  testReporter = Option.String('--test-reporter', { validator: isEnum(['tap']) })
+
+  static override usage = Command.Usage({
     description: 'Run tests',
     details: `
     Run either integration or unit tests with Node.js built-in test runner.
@@ -58,7 +61,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
   private bufferedStdTimeout: NodeJS.Timeout | undefined
 
-  async executeProxy(type: 'integration' | 'unit'): Promise<number> {
+  async executeProxy(type?: 'integration' | 'unit'): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project, workspace } = await Project.find(configuration, this.context.cwd)
 
@@ -75,6 +78,10 @@ export abstract class AbstractTestCommand extends BaseCommand {
     if (workspace) {
       args.push('-t')
       args.push(this.context.cwd)
+    }
+
+    if (this.testReporter) {
+      args.push(`--test-reporter=${this.testReporter}`)
     }
 
     const binFolder = await xfs.mktempPromise()
@@ -95,7 +102,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --enable-source-maps`
     }
 
-    const { code } = await execUtils.pipevp('yarn', ['test', type, ...args], {
+    const { code } = await execUtils.pipevp('yarn', ['test', type ?? '', ...args], {
       cwd: project.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,

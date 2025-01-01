@@ -2870,6 +2870,7 @@ const RAW_RUNTIME_STATE =
           ["clipanion", "virtual:aef3630ccb920f27e72708392ff7fdef790d8b9c4716c04af21d6dfd50716a18ccca731012940d90b405f4d79eb1b017d2b7c8ffa8293485374613021748e40e#npm:4.0.0-rc.2"],\
           ["ink", "virtual:41e75c4e884651becc23cd9371ff80957cda61af29333e93f2626446035dbe0bc3aae6938e95657a19bd4e897a1338289ce6044a41933fe389051ed80db43003#npm:3.2.0"],\
           ["react", "npm:18.3.1"],\
+          ["typanion", "npm:3.14.0"],\
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\
         "packagePeers": [\
@@ -2901,6 +2902,7 @@ const RAW_RUNTIME_STATE =
           ["clipanion", "virtual:aef3630ccb920f27e72708392ff7fdef790d8b9c4716c04af21d6dfd50716a18ccca731012940d90b405f4d79eb1b017d2b7c8ffa8293485374613021748e40e#npm:4.0.0-rc.2"],\
           ["ink", "virtual:41e75c4e884651becc23cd9371ff80957cda61af29333e93f2626446035dbe0bc3aae6938e95657a19bd4e897a1338289ce6044a41933fe389051ed80db43003#npm:3.2.0"],\
           ["react", "npm:18.3.1"],\
+          ["typanion", "npm:3.14.0"],\
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\
         "linkType": "SOFT"\
