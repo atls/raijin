@@ -63,6 +63,10 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Bundle yarn
+        if: ${{ !cancelled() }}
+        uses: ./.github/actions/bundle
+
       - name: Create release
         if: ${{ !cancelled() }}
         uses: ./.github/actions/release

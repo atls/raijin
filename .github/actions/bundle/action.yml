@@ -1,0 +1,15 @@
+name: Create yarn bundle composite action
+description: Create yarn bundle
+
+runs:
+  using: composite
+
+  steps:
+    - name: Bundle yarn
+      shell: bash
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn workspace @atls/yarn-cli version patch
+        yarn cli:build
+        yarn format
