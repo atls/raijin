@@ -1,8 +1,10 @@
 name: Changelog composite action
+description: Create changelog
 
 inputs:
   GITHUB_TOKEN:
     required: true
+    description: Token for committing
 
 runs:
   using: composite

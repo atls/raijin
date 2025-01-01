@@ -1,6 +1,11 @@
 name: Create yarn bundle composite action
 description: Create yarn bundle
 
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    description: Token for committing
+
 runs:
   using: composite
 
@@ -22,5 +27,5 @@ runs:
       with:
         repo: ${{ github.repository }}
         branch: master
-        commit_message: 'feat(yarn): new bundle'
-        file_pattern: '*.*js'
+        commit_message: 'feat(yarn-cli): new bundle'
+        file_pattern: 'yarn.mjs'
