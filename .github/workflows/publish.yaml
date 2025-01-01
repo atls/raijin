@@ -41,13 +41,13 @@ jobs:
       - name: Version
         uses: ./.github/actions/version
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Changelog
         if: ${{ !cancelled() }}
         uses: ./.github/actions/changelog
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Publish to NPM
         if: ${{ !cancelled() }}
@@ -61,7 +61,7 @@ jobs:
         id: jsr
         uses: ./.github/actions/publish-jsr
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Bundle yarn
         if: ${{ !cancelled() }}

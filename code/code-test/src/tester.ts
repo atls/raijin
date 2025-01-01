@@ -112,6 +112,7 @@ export class Tester extends EventEmitter {
 
       result.pipe(process.stdout)
 
+      // @ts-expect-error toArray is missing
       return result.toArray()
     }
 
