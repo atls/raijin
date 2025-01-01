@@ -52,9 +52,16 @@ export class ReleaseCreateCommand extends BaseCommand {
           const body = await changelog.generate({ packageName, version, path: this.context.cwd })
 
           const release = new Release({ token })
-          const { repository: repo, organization: owner } = parseGitHubUrl(
-            execSync('git remote get-url origin', { encoding: 'utf-8' })
-          )
+
+          let owner = ''
+          let repo = ''
+          try {
+            ({ repository: repo, organization: owner } = parseGitHubUrl(
+              execSync('git remote get-url origin', { encoding: 'utf-8' }))
+            )
+          } catch {
+            [owner, repo] = process.env.GITHUB_REPOSITORY?.split('/') ?? ['', ''];
+          }
 
           assert.ok(owner, 'Could not get url of the repo')
           assert.ok(repo, 'Could not get url of the repo')
