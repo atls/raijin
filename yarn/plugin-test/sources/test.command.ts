@@ -26,11 +26,11 @@ export class TestCommand extends AbstractTestCommand {
     const tester = await Tester.initialize()
 
     try {
-      const results = await tester.general(this.target ?? project.cwd, {
+      const results = (await tester.general(this.target ?? project.cwd, {
         files: this.files,
         watch: this.watch,
         testReporter: this.testReporter,
-      }) as unknown as Array<string>
+      })) as unknown as Array<string>
 
       return results.some((result) => {
         if (result.includes('# fail ')) {
