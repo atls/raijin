@@ -1,11 +1,6 @@
 name: Create yarn bundle composite action
 description: Create yarn bundle
 
-inputs:
-  GITHUB_TOKEN:
-    required: true
-    description: Token for committing
-
 runs:
   using: composite
 
@@ -18,14 +13,3 @@ runs:
         yarn workspace @atls/yarn-cli version patch
         yarn cli:build
         yarn format
-
-    - name: Commit changes
-      id: commit
-      uses: planetscale/ghcommit-action@v0.2.0
-      env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-      with:
-        repo: ${{ github.repository }}
-        branch: master
-        commit_message: 'feat(yarn-cli): new bundle'
-        file_pattern: 'yarn.mjs'
