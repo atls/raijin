@@ -56,11 +56,11 @@ export class ReleaseCreateCommand extends BaseCommand {
           let owner = ''
           let repo = ''
           try {
-            ({ repository: repo, organization: owner } = parseGitHubUrl(
-              execSync('git remote get-url origin', { encoding: 'utf-8' }))
-            )
+            ;({ repository: repo, organization: owner } = parseGitHubUrl(
+              execSync('git remote get-url origin', { encoding: 'utf-8' })
+            ))
           } catch {
-            [owner, repo] = process.env.GITHUB_REPOSITORY?.split('/') ?? ['', ''];
+            ;[owner, repo] = process.env.GITHUB_REPOSITORY?.split('/') ?? ['', '']
           }
 
           assert.ok(owner, 'Could not get url of the repo')

@@ -1,0 +1,292 @@
+diff --git a/lib/merge-config.js b/lib/merge-config.js
+index 8a45193134e75ac3ad11cbacfc857fd4799bd269..d9e307fb72a91312ae766e13f53bee35d5569541 100644
+--- a/lib/merge-config.js
++++ b/lib/merge-config.js
+@@ -1,20 +1,21 @@
+ import fs from 'fs/promises'
+-import path from 'path'
+ import { exec } from 'child_process'
+-import { URL, fileURLToPath } from 'url'
++import { URL } from 'url'
+ import hostedGitInfo from 'hosted-git-info'
+ import parseRepositoryUrl from '@hutson/parse-repository-url'
+ import { getSemverTags } from 'git-semver-tags'
+ import normalizePackageData from 'normalize-package-data'
++import github from '../hosts/github.json' with { type: 'json' }
++import gitlab from '../hosts/gitlab.json' with { type: 'json' }
++import bitbucket from '../hosts/bitbucket.json' with { type: 'json' }
+ 
+-const dirname = fileURLToPath(new URL('.', import.meta.url))
+ const rhosts = /github|bitbucket|gitlab/i
+ // sv-SEis used for yyyy-mm-dd format
+ const dateFormatter = Intl.DateTimeFormat('sv-SE', {
+-  timeZone: 'UTC'
++  timeZone: 'UTC',
+ })
+ 
+-function guessNextTag (previousTag, version) {
++function guessNextTag(previousTag, version) {
+   if (previousTag) {
+     if (previousTag[0] === 'v' && version[0] !== 'v') {
+       return 'v' + version
+@@ -34,7 +35,7 @@ function guessNextTag (previousTag, version) {
+   return version
+ }
+ 
+-function omitUndefinedValueProps (obj) {
++function omitUndefinedValueProps(obj) {
+   if (!obj) {
+     return {}
+   }
+@@ -50,7 +51,7 @@ function omitUndefinedValueProps (obj) {
+   return omittedObj
+ }
+ 
+-function getRemoteOriginUrl (cwd) {
++function getRemoteOriginUrl(cwd) {
+   return new Promise((resolve, reject) => {
+     exec('git config --get remote.origin.url', { cwd }, (err, stdout) => {
+       if (err) {
+@@ -62,7 +63,14 @@ function getRemoteOriginUrl (cwd) {
+   })
+ }
+ 
+-export default async function mergeConfig (options, context, gitRawCommitsOpts, parserOpts, writerOpts, gitRawExecOpts) {
++export default async function mergeConfig(
++  options,
++  context,
++  gitRawCommitsOpts,
++  parserOpts,
++  writerOpts,
++  gitRawExecOpts
++) {
+   let pkgPromise
+ 
+   options = omitUndefinedValueProps(options)
+@@ -70,10 +78,13 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+   gitRawCommitsOpts = gitRawCommitsOpts || {}
+   gitRawExecOpts = {
+     cwd: options?.cwd,
+-    ...gitRawExecOpts || {}
++    ...(gitRawExecOpts || {}),
+   }
+ 
+-  const rtag = options && options.tagPrefix ? new RegExp(`tag:\\s*[=]?${options.tagPrefix}(.+?)[,)]`, 'gi') : /tag:\s*[v=]?(.+?)[,)]/gi
++  const rtag =
++    options && options.tagPrefix
++      ? new RegExp(`tag:\\s*[=]?${options.tagPrefix}(.+?)[,)]`, 'gi')
++      : /tag:\s*[v=]?(.+?)[,)]/gi
+ 
+   options = {
+     append: false,
+@@ -91,7 +102,9 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+       }
+ 
+       if (commit.committerDate) {
+-        commit.committerDate = dateFormatter.format(new Date(commit.committerDate))
++        commit.committerDate = dateFormatter.format(
++          new Date(commit.committerDate)
++        )
+       }
+ 
+       cb(null, commit)
+@@ -102,8 +115,8 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+       transform: function (pkg) {
+         return pkg
+       },
+-      ...options?.pkg
+-    }
++      ...options?.pkg,
++    },
+   }
+ 
+   options.warn = options.warn || options.debug
+@@ -124,24 +137,21 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+     }
+   }
+ 
+-  const presetConfig = typeof options.config === 'function' ? options.config() : options.config
+-  const [
+-    configObj,
+-    pkgObj,
+-    tagsObj,
+-    gitRemoteOriginUrlObj
+-  ] = await Promise.allSettled([
+-    presetConfig,
+-    pkgPromise,
+-    getSemverTags({
+-      lernaTags: !!options.lernaPackage,
+-      package: options.lernaPackage,
+-      tagPrefix: options.tagPrefix,
+-      skipUnstable: options.skipUnstable,
+-      cwd: options.cwd
+-    }),
+-    getRemoteOriginUrl(options.cwd)
+-  ])
++  const presetConfig =
++    typeof options.config === 'function' ? options.config() : options.config
++  const [configObj, pkgObj, tagsObj, gitRemoteOriginUrlObj] =
++    await Promise.allSettled([
++      presetConfig,
++      pkgPromise,
++      getSemverTags({
++        lernaTags: !!options.lernaPackage,
++        package: options.lernaPackage,
++        tagPrefix: options.tagPrefix,
++        skipUnstable: options.skipUnstable,
++        cwd: options.cwd,
++      }),
++      getRemoteOriginUrl(options.cwd),
++    ])
+   let config
+   let pkg
+   let fromTag
+@@ -164,7 +174,7 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+ 
+   context = {
+     ...context,
+-    ...config.context
++    ...config.context,
+   }
+ 
+   if (options.pkg) {
+@@ -176,7 +186,10 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+     }
+   }
+ 
+-  if ((!pkg || !pkg.repository || !pkg.repository.url) && gitRemoteOriginUrlObj.status === 'fulfilled') {
++  if (
++    (!pkg || !pkg.repository || !pkg.repository.url) &&
++    gitRemoteOriginUrlObj.status === 'fulfilled'
++  ) {
+     pkg = pkg || {}
+     pkg.repository = pkg.repository || {}
+     pkg.repository.url = gitRemoteOriginUrlObj.value
+@@ -187,10 +200,13 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+     context.version = context.version || pkg.version
+ 
+     try {
+-      const repositoryURL = typeof pkg.repository === 'string' ? pkg.repository : pkg.repository.url
++      const repositoryURL =
++        typeof pkg.repository === 'string' ? pkg.repository : pkg.repository.url
+       if (repositoryURL) {
+         // Remove parseRepositoryUrl when https://github.com/npm/hosted-git-info/issues/39 is fixed
+-        repo = hostedGitInfo.fromUrl(repositoryURL) || parseRepositoryUrl(repositoryURL)
++        repo =
++          hostedGitInfo.fromUrl(repositoryURL) ||
++          parseRepositoryUrl(repositoryURL)
+       }
+     } catch (err) {
+       repo = {}
+@@ -242,7 +258,13 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+     options.outputUnreleased = true
+   }
+ 
+-  if (context.host && (!context.issue || !context.commit || !parserOpts || !parserOpts.referenceActions)) {
++  if (
++    context.host &&
++    (!context.issue ||
++      !context.commit ||
++      !parserOpts ||
++      !parserOpts.referenceActions)
++  ) {
+     let type
+ 
+     if (context.host) {
+@@ -255,12 +277,22 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+     }
+ 
+     if (type) {
+-      hostOpts = JSON.parse(await fs.readFile(path.join(dirname, '..', 'hosts', `${type}.json`), 'utf8'))
++      switch (type) {
++        case 'gitlab':
++          hostOpts = gitlab
++          break
++        case 'bitbucket':
++          hostOpts = bitbucket
++          break
++        default:
++          hostOpts = github
++          break
++      }
+ 
+       context = {
+         issue: hostOpts.issue,
+         commit: hostOpts.commit,
+-        ...context
++        ...context,
+       }
+     } else {
+       options.warn('Host: "' + context.host + '" does not exist')
+@@ -280,7 +312,7 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+     merges: false,
+     debug: options.debug,
+     ...config.commits,
+-    ...gitRawCommitsOpts
++    ...gitRawCommitsOpts,
+   }
+ 
+   if (options.append) {
+@@ -290,7 +322,7 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+   parserOpts = {
+     ...config.parser,
+     warn: options.warn,
+-    ...parserOpts
++    ...parserOpts,
+   }
+ 
+   if (hostOpts.referenceActions && parserOpts) {
+@@ -302,7 +334,13 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+   }
+ 
+   writerOpts = {
+-    finalizeContext: function (context, writerOpts, filteredCommits, keyCommit, originalCommits) {
++    finalizeContext: function (
++      context,
++      writerOpts,
++      filteredCommits,
++      keyCommit,
++      originalCommits
++    ) {
+       const firstCommit = originalCommits[0]
+       const lastCommit = originalCommits[originalCommits.length - 1]
+       const firstCommitHash = firstCommit ? firstCommit.hash : null
+@@ -318,7 +356,7 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+         if (index === -1) {
+           context.currentTag = currentTag || null
+         } else {
+-          const previousTag = context.previousTag = semverTags[index + 1]
++          const previousTag = (context.previousTag = semverTags[index + 1])
+ 
+           if (!previousTag) {
+             if (options.append) {
+@@ -348,7 +386,11 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+         }
+       }
+ 
+-      if (typeof context.linkCompare !== 'boolean' && context.previousTag && context.currentTag) {
++      if (
++        typeof context.linkCompare !== 'boolean' &&
++        context.previousTag &&
++        context.currentTag
++      ) {
+         context.linkCompare = true
+       }
+ 
+@@ -358,7 +400,7 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+     ...config.writer,
+     reverse: options.append,
+     doFlush: options.outputUnreleased,
+-    ...writerOpts
++    ...writerOpts,
+   }
+ 
+   return {
+@@ -367,6 +409,6 @@ export default async function mergeConfig (options, context, gitRawCommitsOpts,
+     gitRawCommitsOpts,
+     parserOpts,
+     writerOpts,
+-    gitRawExecOpts
++    gitRawExecOpts,
+   }
+ }
