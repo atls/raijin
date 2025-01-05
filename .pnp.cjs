@@ -1505,7 +1505,7 @@ const RAW_RUNTIME_STATE =
           ["@commitlint/types", "npm:19.0.3"],\
           ["@types/conventional-commits-parser", "npm:5.0.0"],\
           ["@types/node", "npm:22.9.0"],\
-          ["conventional-changelog-angular", "npm:7.0.0"],\
+          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=62f275"],\
           ["conventional-commits-parser", "npm:6.0.0"]\
         ],\
         "linkType": "SOFT"\
@@ -3470,7 +3470,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@commitlint/parse", "npm:19.5.0"],\
           ["@commitlint/types", "npm:19.5.0"],\
-          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch::version=7.0.0&hash=89143f"],\
+          ["conventional-changelog-angular", "npm:7.0.0"],\
           ["conventional-commits-parser", "npm:5.0.0"]\
         ],\
         "linkType": "HARD"\
@@ -8540,11 +8540,11 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/conventional-changelog-npm-6.0.0-99d2c88140-78a2a74a19.zip/node_modules/conventional-changelog/",\
         "packageDependencies": [\
           ["conventional-changelog", "npm:6.0.0"],\
-          ["conventional-changelog-angular", "npm:8.0.0"],\
+          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=62f275"],\
           ["conventional-changelog-atom", "npm:5.0.0"],\
           ["conventional-changelog-codemirror", "npm:5.0.0"],\
           ["conventional-changelog-conventionalcommits", "npm:8.0.0"],\
-          ["conventional-changelog-core", "npm:8.0.0"],\
+          ["conventional-changelog-core", "patch:conventional-changelog-core@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-core-npm-8.0.0-3fbb6b301e.patch::version=8.0.0&hash=c9e573"],\
           ["conventional-changelog-ember", "npm:5.0.0"],\
           ["conventional-changelog-eslint", "npm:6.0.0"],\
           ["conventional-changelog-express", "npm:5.0.0"],\
@@ -8564,18 +8564,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:8.0.0", {\
-        "packageLocation": "./.yarn/cache/conventional-changelog-angular-npm-8.0.0-80898aa2c5-856e465201.zip/node_modules/conventional-changelog-angular/",\
+      ["patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=62f275", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-angular-patch-49a8224597-614a7e5c82.zip/node_modules/conventional-changelog-angular/",\
         "packageDependencies": [\
-          ["conventional-changelog-angular", "npm:8.0.0"],\
-          ["compare-func", "npm:2.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch::version=7.0.0&hash=89143f", {\
-        "packageLocation": "./.yarn/cache/conventional-changelog-angular-patch-073dd937fa-3a1ad0a1dc.zip/node_modules/conventional-changelog-angular/",\
-        "packageDependencies": [\
-          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch::version=7.0.0&hash=89143f"],\
+          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=62f275"],\
           ["compare-func", "npm:2.0.0"]\
         ],\
         "linkType": "HARD"\
@@ -8610,13 +8602,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["conventional-changelog-core", [\
-      ["npm:8.0.0", {\
-        "packageLocation": "./.yarn/cache/conventional-changelog-core-npm-8.0.0-3fbb6b301e-6277c08655.zip/node_modules/conventional-changelog-core/",\
+      ["patch:conventional-changelog-core@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-core-npm-8.0.0-3fbb6b301e.patch::version=8.0.0&hash=c9e573", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-core-patch-7afcb096e1-ff018f8687.zip/node_modules/conventional-changelog-core/",\
         "packageDependencies": [\
-          ["conventional-changelog-core", "npm:8.0.0"],\
+          ["conventional-changelog-core", "patch:conventional-changelog-core@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-core-npm-8.0.0-3fbb6b301e.patch::version=8.0.0&hash=c9e573"],\
           ["@hutson/parse-repository-url", "npm:5.0.0"],\
           ["add-stream", "npm:1.0.0"],\
-          ["conventional-changelog-writer", "npm:8.0.0"],\
+          ["conventional-changelog-writer", "patch:conventional-changelog-writer@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-writer-npm-8.0.0-356cbecdca.patch::version=8.0.0&hash=1d6c62"],\
           ["conventional-commits-parser", "npm:6.0.0"],\
           ["git-raw-commits", "npm:5.0.0"],\
           ["git-semver-tags", "npm:8.0.0"],\
@@ -8688,6 +8680,18 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/conventional-changelog-writer-npm-8.0.0-356cbecdca-42daf5e8bf.zip/node_modules/conventional-changelog-writer/",\
         "packageDependencies": [\
           ["conventional-changelog-writer", "npm:8.0.0"],\
+          ["@types/semver", "npm:7.5.8"],\
+          ["conventional-commits-filter", "npm:5.0.0"],\
+          ["handlebars", "npm:4.7.8"],\
+          ["meow", "npm:13.2.0"],\
+          ["semver", "npm:7.6.3"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["patch:conventional-changelog-writer@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-writer-npm-8.0.0-356cbecdca.patch::version=8.0.0&hash=1d6c62", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-writer-patch-cc25bc4af4-4d7c6f24b0.zip/node_modules/conventional-changelog-writer/",\
+        "packageDependencies": [\
+          ["conventional-changelog-writer", "patch:conventional-changelog-writer@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-writer-npm-8.0.0-356cbecdca.patch::version=8.0.0&hash=1d6c62"],\
           ["@types/semver", "npm:7.5.8"],\
           ["conventional-commits-filter", "npm:5.0.0"],\
           ["handlebars", "npm:4.7.8"],\

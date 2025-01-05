@@ -17,8 +17,10 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@types/conventional-changelog": "3.1.5",
     "conventional-changelog": "6.0.0"
+  },
+  "devDependencies": {
+    "@types/conventional-changelog": "3.1.5"
   },
   "publishConfig": {
     "access": "public",

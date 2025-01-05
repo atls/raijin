@@ -632,7 +632,7 @@ __metadata:
     "@commitlint/types": "npm:19.0.3"
     "@types/conventional-commits-parser": "npm:5.0.0"
     "@types/node": "npm:22.9.0"
-    conventional-changelog-angular: "npm:7.0.0"
+    conventional-changelog-angular: "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch"
     conventional-commits-parser: "npm:6.0.0"
   languageName: unknown
   linkType: soft
@@ -5597,16 +5597,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-angular@npm:7.0.0":
-  version: 7.0.0
-  resolution: "conventional-changelog-angular@npm:7.0.0"
-  dependencies:
-    compare-func: "npm:^2.0.0"
-  checksum: 10/e7966d2fee5475e76263f30f8b714b2b592b5bf556df225b7091e5090831fc9a20b99598a7d2997e19c2ef8118c0a3150b1eba290786367b0f55a5ccfa804ec9
-  languageName: node
-  linkType: hard
-
-"conventional-changelog-angular@npm:^8.0.0":
+"conventional-changelog-angular@npm:8.0.0":
   version: 8.0.0
   resolution: "conventional-changelog-angular@npm:8.0.0"
   dependencies:
@@ -5615,12 +5606,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-angular@patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch":
+"conventional-changelog-angular@npm:^7.0.0":
   version: 7.0.0
-  resolution: "conventional-changelog-angular@patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch::version=7.0.0&hash=89143f"
+  resolution: "conventional-changelog-angular@npm:7.0.0"
   dependencies:
     compare-func: "npm:^2.0.0"
-  checksum: 10/3a1ad0a1dcf3c6484fb0fea0f7f8f2ab8e0bb224c082aabdd38dde63f18182ae0802aa71a0761ad3cc863b39d4354b7a3dcfbc80e2c998942ddde09628d432af
+  checksum: 10/e7966d2fee5475e76263f30f8b714b2b592b5bf556df225b7091e5090831fc9a20b99598a7d2997e19c2ef8118c0a3150b1eba290786367b0f55a5ccfa804ec9
+  languageName: node
+  linkType: hard
+
+"conventional-changelog-angular@patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch":
+  version: 8.0.0
+  resolution: "conventional-changelog-angular@patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=62f275"
+  dependencies:
+    compare-func: "npm:^2.0.0"
+  checksum: 10/614a7e5c82491ca6bbb06444b1e7ca21a1ab04f25c0e4237842f228ef743df8448cf0cbe89919dd8fa99482435a1e55fccfa7cdd179c53f79ee9cb717ac37cf4
   languageName: node
   linkType: hard
 
@@ -5647,7 +5647,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-core@npm:^8.0.0":
+"conventional-changelog-core@npm:8.0.0":
   version: 8.0.0
   resolution: "conventional-changelog-core@npm:8.0.0"
   dependencies:
@@ -5662,6 +5662,24 @@ __metadata:
     read-package-up: "npm:^11.0.0"
     read-pkg: "npm:^9.0.0"
   checksum: 10/6277c086554813d555019c374b578964f643a196d7a830afcbb23eed7e32e633b1419cb59232ee5cbd89cc852a465ea1cb2db4822e930fa064278a988f507f22
+  languageName: node
+  linkType: hard
+
+"conventional-changelog-core@patch:conventional-changelog-core@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-core-npm-8.0.0-3fbb6b301e.patch":
+  version: 8.0.0
+  resolution: "conventional-changelog-core@patch:conventional-changelog-core@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-core-npm-8.0.0-3fbb6b301e.patch::version=8.0.0&hash=c9e573"
+  dependencies:
+    "@hutson/parse-repository-url": "npm:^5.0.0"
+    add-stream: "npm:^1.0.0"
+    conventional-changelog-writer: "npm:^8.0.0"
+    conventional-commits-parser: "npm:^6.0.0"
+    git-raw-commits: "npm:^5.0.0"
+    git-semver-tags: "npm:^8.0.0"
+    hosted-git-info: "npm:^7.0.0"
+    normalize-package-data: "npm:^6.0.0"
+    read-package-up: "npm:^11.0.0"
+    read-pkg: "npm:^9.0.0"
+  checksum: 10/ff018f8687364840684b783acdc25f7b2e972bef0d673f4996187f3f315fd99261edb1ae87a9246b0bc3d75dba1276b8720356f9155b951396e86d1088d41355
   languageName: node
   linkType: hard
 
@@ -5709,7 +5727,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-writer@npm:*, conventional-changelog-writer@npm:^8.0.0":
+"conventional-changelog-writer@npm:*, conventional-changelog-writer@npm:8.0.0":
   version: 8.0.0
   resolution: "conventional-changelog-writer@npm:8.0.0"
   dependencies:
@@ -5721,6 +5739,21 @@ __metadata:
   bin:
     conventional-changelog-writer: dist/cli/index.js
   checksum: 10/42daf5e8bf12474a8cffb0b2244ada5939d70a0158b23eeea13250f1710f269cd99f60652eb5a6f86b852a7d93a0368da20ea42163ec3b6041d3b76ce16c497a
+  languageName: node
+  linkType: hard
+
+"conventional-changelog-writer@patch:conventional-changelog-writer@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-writer-npm-8.0.0-356cbecdca.patch":
+  version: 8.0.0
+  resolution: "conventional-changelog-writer@patch:conventional-changelog-writer@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-writer-npm-8.0.0-356cbecdca.patch::version=8.0.0&hash=1d6c62"
+  dependencies:
+    "@types/semver": "npm:^7.5.5"
+    conventional-commits-filter: "npm:^5.0.0"
+    handlebars: "npm:^4.7.7"
+    meow: "npm:^13.0.0"
+    semver: "npm:^7.5.2"
+  bin:
+    conventional-changelog-writer: dist/cli/index.js
+  checksum: 10/4d7c6f24b06df2edb104859d5ee8116349b7ab33ca5f2e3890cc2d2a4225adee9e71f99363c7d64a6c1bb3e5b2beab2d4cb482d1194d512ae984f0be049f8e56
   languageName: node
   linkType: hard
 

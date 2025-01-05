@@ -1,0 +1,228 @@
+diff --git a/src/writer.js b/src/writer.js
+index fe6755fc11a93ef16ed4587fd8e4bf8042787e20..12c6f8618013485343e1d0035e97468b85fe64f2 100644
+--- a/src/writer.js
++++ b/src/writer.js
+@@ -1,37 +1,143 @@
+-import { readFile } from 'fs/promises'
+-import { resolve } from 'path'
+-import { fileURLToPath } from 'url'
+ import compareFunc from 'compare-func'
+ 
+-const dirname = fileURLToPath(new URL('.', import.meta.url))
+-
+-export async function createWriterOpts () {
+-  const [template, header, commit, footer] = await Promise.all([
+-    readFile(resolve(dirname, './templates/template.hbs'), 'utf-8'),
+-    readFile(resolve(dirname, './templates/header.hbs'), 'utf-8'),
+-    readFile(resolve(dirname, './templates/commit.hbs'), 'utf-8'),
+-    readFile(resolve(dirname, './templates/footer.hbs'), 'utf-8')
+-  ])
++export async function createWriterOpts() {
+   const writerOpts = getWriterOpts()
+ 
+-  writerOpts.mainTemplate = template
+-  writerOpts.headerPartial = header
+-  writerOpts.commitPartial = commit
+-  writerOpts.footerPartial = footer
++  writerOpts.mainTemplate = `
++{{> header}}
++
++{{#each commitGroups}}
++
++{{#if title}}
++### {{title}}
++
++{{/if}}
++{{#each commits}}
++{{> commit root=@root}}
++{{/each}}
++
++{{/each}}
++{{> footer}}
++
++
++`
++  writerOpts.headerPartial = `
++{{#if isPatch~}}
++  ##
++{{~else~}}
++  #
++{{~/if}} {{#if @root.linkCompare~}}
++  [{{version}}](
++  {{~#if @root.repository~}}
++    {{~#if @root.host}}
++      {{~@root.host}}/
++    {{~/if}}
++    {{~#if @root.owner}}
++      {{~@root.owner}}/
++    {{~/if}}
++    {{~@root.repository}}
++  {{~else}}
++    {{~@root.repoUrl}}
++  {{~/if~}}
++  /compare/{{previousTag}}...{{currentTag}})
++{{~else}}
++  {{~version}}
++{{~/if}}
++{{~#if title}} "{{title}}"
++{{~/if}}
++{{~#if date}} ({{date}})
++{{/if}}
++`
++  writerOpts.commitPartial = `
++*{{#if scope}} **{{scope}}:**
++{{~/if}} {{#if subject}}
++  {{~subject}}
++{{~else}}
++  {{~header}}
++{{~/if}}
++
++{{~!-- commit link --}} {{#if @root.linkReferences~}}
++  ([{{shortHash}}](
++  {{~#if @root.repository}}
++    {{~#if @root.host}}
++      {{~@root.host}}/
++    {{~/if}}
++    {{~#if @root.owner}}
++      {{~@root.owner}}/
++    {{~/if}}
++    {{~@root.repository}}
++  {{~else}}
++    {{~@root.repoUrl}}
++  {{~/if}}/
++  {{~@root.commit}}/{{hash}}))
++{{~else}}
++  {{~shortHash}}
++{{~/if}}
++
++{{~!-- commit references --}}
++{{~#if references~}}
++  , closes
++  {{~#each references}} {{#if @root.linkReferences~}}
++    [
++    {{~#if this.owner}}
++      {{~this.owner}}/
++    {{~/if}}
++    {{~this.repository}}#{{this.issue}}](
++    {{~#if @root.repository}}
++      {{~#if @root.host}}
++        {{~@root.host}}/
++      {{~/if}}
++      {{~#if this.repository}}
++        {{~#if this.owner}}
++          {{~this.owner}}/
++        {{~/if}}
++        {{~this.repository}}
++      {{~else}}
++        {{~#if @root.owner}}
++          {{~@root.owner}}/
++        {{~/if}}
++          {{~@root.repository}}
++        {{~/if}}
++    {{~else}}
++      {{~@root.repoUrl}}
++    {{~/if}}/
++    {{~@root.issue}}/{{this.issue}})
++  {{~else}}
++    {{~#if this.owner}}
++      {{~this.owner}}/
++    {{~/if}}
++    {{~this.repository}}#{{this.issue}}
++  {{~/if}}{{/each}}
++{{~/if}}
++
++`
++  writerOpts.footerPartial = `
++{{#if noteGroups}}
++{{#each noteGroups}}
++
++### {{title}}
++
++{{#each notes}}
++* {{#if commit.scope}}**{{commit.scope}}:** {{/if}}{{text}}
++{{/each}}
++{{/each}}
++
++{{/if}}
++`
+ 
+   return writerOpts
+ }
+ 
+-function getWriterOpts () {
++function getWriterOpts() {
+   return {
+     transform: (commit, context) => {
+       let discard = true
+-      const notes = commit.notes.map(note => {
++      const notes = commit.notes.map((note) => {
+         discard = false
+ 
+         return {
+           ...note,
+-          title: 'BREAKING CHANGES'
++          title: 'BREAKING CHANGES',
+         }
+       })
+ 
+@@ -62,9 +168,10 @@ function getWriterOpts () {
+       }
+ 
+       const scope = commit.scope === '*' ? '' : commit.scope
+-      const shortHash = typeof commit.hash === 'string'
+-        ? commit.hash.substring(0, 7)
+-        : commit.shortHash
++      const shortHash =
++        typeof commit.hash === 'string'
++          ? commit.hash.substring(0, 7)
++          : commit.shortHash
+ 
+       const issues = []
+       let subject = commit.subject
+@@ -83,18 +190,23 @@ function getWriterOpts () {
+         }
+         if (context.host) {
+           // User URLs.
+-          subject = subject.replace(/\B@([a-z0-9](?:-?[a-z0-9/]){0,38})/g, (_, username) => {
+-            if (username.includes('/')) {
+-              return `@${username}`
+-            }
++          subject = subject.replace(
++            /\B@([a-z0-9](?:-?[a-z0-9/]){0,38})/g,
++            (_, username) => {
++              if (username.includes('/')) {
++                return `@${username}`
++              }
+ 
+-            return `[@${username}](${context.host}/${username})`
+-          })
++              return `[@${username}](${context.host}/${username})`
++            }
++          )
+         }
+       }
+ 
+       // remove references that already appear in the subject
+-      const references = commit.references.filter(reference => !issues.includes(reference.issue))
++      const references = commit.references.filter(
++        (reference) => !issues.includes(reference.issue)
++      )
+ 
+       return {
+         notes,
+@@ -102,13 +214,13 @@ function getWriterOpts () {
+         scope,
+         shortHash,
+         subject,
+-        references
++        references,
+       }
+     },
+     groupBy: 'type',
+     commitGroupsSort: 'title',
+     commitsSort: ['scope', 'subject'],
+     noteGroupsSort: 'title',
+-    notesSort: compareFunc
++    notesSort: compareFunc,
+   }
+ }
