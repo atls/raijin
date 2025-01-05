@@ -1,3 +1,9 @@
+## <small>1.0.8 (2025-01-05)</small>
+
+- chore(common): versions tools: @atls/yarn-cli:1.0.7 @atls/yarn-cli-tools:1.0.4 @atls/yarn-plugin ([c711a57](https://github.com/atls/raijin/commit/c711a57))
+- fix(actions): release (#477) ([317bc35](https://github.com/atls/raijin/commit/317bc35)), closes [#477](https://github.com/atls/raijin/issues/477)
+- fix(changelog): dependencies (#478) ([368ccbd](https://github.com/atls/raijin/commit/368ccbd)), closes [#478](https://github.com/atls/raijin/issues/478)
+
 ## <small>1.0.6 (2025-01-01)</small>
 
 - Merge pull request #476 from atls/fix/release ([de311a8](https://github.com/atls/raijin/commit/de311a8)), closes [#476](https://github.com/atls/raijin/issues/476)
