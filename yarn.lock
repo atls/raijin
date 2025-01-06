@@ -632,7 +632,7 @@ __metadata:
     "@commitlint/types": "npm:19.0.3"
     "@types/conventional-commits-parser": "npm:5.0.0"
     "@types/node": "npm:22.9.0"
-    conventional-changelog-angular: "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch"
+    conventional-changelog-angular: "patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch"
     conventional-commits-parser: "npm:6.0.0"
   languageName: unknown
   linkType: soft
@@ -5597,6 +5597,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"conventional-changelog-angular@npm:7.0.0":
+  version: 7.0.0
+  resolution: "conventional-changelog-angular@npm:7.0.0"
+  dependencies:
+    compare-func: "npm:^2.0.0"
+  checksum: 10/e7966d2fee5475e76263f30f8b714b2b592b5bf556df225b7091e5090831fc9a20b99598a7d2997e19c2ef8118c0a3150b1eba290786367b0f55a5ccfa804ec9
+  languageName: node
+  linkType: hard
+
 "conventional-changelog-angular@npm:8.0.0":
   version: 8.0.0
   resolution: "conventional-changelog-angular@npm:8.0.0"
@@ -5606,12 +5615,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-angular@npm:^7.0.0":
+"conventional-changelog-angular@patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch":
   version: 7.0.0
-  resolution: "conventional-changelog-angular@npm:7.0.0"
+  resolution: "conventional-changelog-angular@patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch::version=7.0.0&hash=89143f"
   dependencies:
     compare-func: "npm:^2.0.0"
-  checksum: 10/e7966d2fee5475e76263f30f8b714b2b592b5bf556df225b7091e5090831fc9a20b99598a7d2997e19c2ef8118c0a3150b1eba290786367b0f55a5ccfa804ec9
+  checksum: 10/3a1ad0a1dcf3c6484fb0fea0f7f8f2ab8e0bb224c082aabdd38dde63f18182ae0802aa71a0761ad3cc863b39d4354b7a3dcfbc80e2c998942ddde09628d432af
   languageName: node
   linkType: hard
 

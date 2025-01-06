@@ -1,0 +1,31 @@
+diff --git a/writerOpts.js b/writerOpts.js
+index 991947b85e2eac0e0ae246037624276882abb741..805d7e29d3472a8ce2f5b852871c546eecb86bfd 100644
+--- a/writerOpts.js
++++ b/writerOpts.js
+@@ -1,22 +1,14 @@
+ 'use strict'
+ 
+ const compareFunc = require('compare-func')
+-const { readFile } = require('fs').promises
+-const { resolve } = require('path')
+ 
+ async function createWriterOpts () {
+-  const [template, header, commit, footer] = await Promise.all([
+-    readFile(resolve(__dirname, './templates/template.hbs'), 'utf-8'),
+-    readFile(resolve(__dirname, './templates/header.hbs'), 'utf-8'),
+-    readFile(resolve(__dirname, './templates/commit.hbs'), 'utf-8'),
+-    readFile(resolve(__dirname, './templates/footer.hbs'), 'utf-8')
+-  ])
+   const writerOpts = getWriterOpts()
+ 
+-  writerOpts.mainTemplate = template
+-  writerOpts.headerPartial = header
+-  writerOpts.commitPartial = commit
+-  writerOpts.footerPartial = footer
++  writerOpts.mainTemplate = ''
++  writerOpts.headerPartial = ''
++  writerOpts.commitPartial = ''
++  writerOpts.footerPartial = ''
+ 
+   return writerOpts
+ }
