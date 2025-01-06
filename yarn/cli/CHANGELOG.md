@@ -1,3 +1,8 @@
+## <small>1.0.10 (2025-01-06)</small>
+
+- chore(common): versions tools: @atls/cli-ui-git-commit-component:1.0.6 @atls/code-commit:2.0.3 @ ([58e11cb](https://github.com/atls/raijin/commit/58e11cb))
+- fix(commit): commitlint template error (#479) ([572f508](https://github.com/atls/raijin/commit/572f508)), closes [#479](https://github.com/atls/raijin/issues/479)
+
 ## <small>1.0.8 (2025-01-05)</small>
 
 - chore(common): versions tools: @atls/yarn-cli:1.0.7 @atls/yarn-cli-tools:1.0.4 @atls/yarn-plugin ([c711a57](https://github.com/atls/raijin/commit/c711a57))

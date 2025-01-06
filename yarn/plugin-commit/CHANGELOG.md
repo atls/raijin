@@ -1,3 +1,8 @@
+## <small>1.0.2 (2025-01-06)</small>
+
+- chore(common): versions tools: @atls/cli-ui-git-commit-component:1.0.6 @atls/code-commit:2.0.3 @ ([58e11cb](https://github.com/atls/raijin/commit/58e11cb))
+- fix(commit): commitlint template error (#479) ([572f508](https://github.com/atls/raijin/commit/572f508)), closes [#479](https://github.com/atls/raijin/issues/479)
+
 ## <small>1.0.1 (2025-01-05)</small>
 
 - Create tools.yaml ([c7bbbad](https://github.com/atls/raijin/commit/c7bbbad))
