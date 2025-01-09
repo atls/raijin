@@ -25,7 +25,7 @@
     "@commitlint/read": "19.4.0",
     "@commitlint/rules": "19.4.1",
     "@commitlint/types": "19.0.3",
-    "conventional-changelog-angular": "patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch",
+    "conventional-changelog-angular": "^7.0.0",
     "conventional-commits-parser": "6.0.0"
   },
   "devDependencies": {

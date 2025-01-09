@@ -1485,7 +1485,8 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/code-changelog", "workspace:code/code-changelog"],\
           ["@types/conventional-changelog", "npm:3.1.5"],\
-          ["conventional-changelog", "npm:6.0.0"]\
+          ["conventional-changelog", "npm:6.0.0"],\
+          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=17f57b"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -8540,7 +8541,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/conventional-changelog-npm-6.0.0-99d2c88140-78a2a74a19.zip/node_modules/conventional-changelog/",\
         "packageDependencies": [\
           ["conventional-changelog", "npm:6.0.0"],\
-          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=62f275"],\
+          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=17f57b"],\
           ["conventional-changelog-atom", "npm:5.0.0"],\
           ["conventional-changelog-codemirror", "npm:5.0.0"],\
           ["conventional-changelog-conventionalcommits", "npm:8.0.0"],\
@@ -8564,10 +8565,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=62f275", {\
-        "packageLocation": "./.yarn/cache/conventional-changelog-angular-patch-49a8224597-614a7e5c82.zip/node_modules/conventional-changelog-angular/",\
+      ["patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=17f57b", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-angular-patch-f8af8527af-bc46e3b33c.zip/node_modules/conventional-changelog-angular/",\
         "packageDependencies": [\
-          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=62f275"],\
+          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A8.0.0#~/.yarn/patches/conventional-changelog-angular-npm-8.0.0-80898aa2c5.patch::version=8.0.0&hash=17f57b"],\
           ["compare-func", "npm:2.0.0"]\
         ],\
         "linkType": "HARD"\

@@ -3,8 +3,11 @@ import type { Options }      from 'conventional-changelog'
 import { readFile }          from 'node:fs/promises'
 import { writeFile }         from 'node:fs/promises'
 import { join }              from 'node:path'
+import { dirname }           from 'node:path'
 
 import conventionalChangelog from 'conventional-changelog'
+// @ts-expect-error missing types
+import preset                from 'conventional-changelog-angular'
 
 interface GenerateOptions {
   packageName: string
@@ -29,17 +32,13 @@ export class Changelog {
       lernaPackage: `${packageName}`,
       tagPrefix,
       debug: debug ? console.debug : undefined,
-      preset: 'angular',
+      warn: console.warn,
       append: true,
       releaseCount,
       pkg: {
         path: join(path, 'package.json'),
       },
-      config: {
-        gitRawCommitsOpts: {
-          path,
-        },
-      },
+      config: preset,
     }
 
     if (file) {
@@ -51,7 +50,9 @@ export class Changelog {
 
   private async generateToStdOut(config: Options): Promise<string> {
     return new Promise((resolve, reject) => {
-      const changelogStream = conventionalChangelog(config)
+      const changelogStream = conventionalChangelog(config, undefined, {
+        path: dirname(config.pkg?.path ?? './'),
+      })
       let newChangelog = ''
 
       changelogStream.on('data', (chunk) => {
