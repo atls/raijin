@@ -1,16 +1,15 @@
-import { BaseCommand } from '@yarnpkg/cli'
+import { AbstractToolsCommand } from './abstract-tools.command.js'
 
 const commands: Array<Array<string>> = [
-  ['tools', 'sync', 'runtime'],
   ['tools', 'sync', 'typescript'],
   ['tools', 'sync', 'tsconfig'],
   ['install'],
 ]
 
-export class ToolsSyncCommand extends BaseCommand {
-  static paths = [['tools', 'sync']]
+export class ToolsSyncCommand extends AbstractToolsCommand {
+  static override paths = [['tools', 'sync']]
 
-  async execute(): Promise<number> {
+  override async executeRegular(): Promise<number> {
     for (const command of commands) {
       // eslint-disable-next-line no-await-in-loop
       const exitCode = await this.cli.run(command)
