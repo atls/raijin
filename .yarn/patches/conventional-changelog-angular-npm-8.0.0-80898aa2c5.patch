@@ -1,8 +1,8 @@
 diff --git a/src/writer.js b/src/writer.js
-index fe6755fc11a93ef16ed4587fd8e4bf8042787e20..12c6f8618013485343e1d0035e97468b85fe64f2 100644
+index fe6755fc11a93ef16ed4587fd8e4bf8042787e20..197f4c712a8e291a324b057843ea0460a74b7f1e 100644
 --- a/src/writer.js
 +++ b/src/writer.js
-@@ -1,37 +1,143 @@
+@@ -1,17 +1,125 @@
 -import { readFile } from 'fs/promises'
 -import { resolve } from 'path'
 -import { fileURLToPath } from 'url'
@@ -10,21 +10,14 @@ index fe6755fc11a93ef16ed4587fd8e4bf8042787e20..12c6f8618013485343e1d0035e97468b
  
 -const dirname = fileURLToPath(new URL('.', import.meta.url))
 -
--export async function createWriterOpts () {
+ export async function createWriterOpts () {
 -  const [template, header, commit, footer] = await Promise.all([
 -    readFile(resolve(dirname, './templates/template.hbs'), 'utf-8'),
 -    readFile(resolve(dirname, './templates/header.hbs'), 'utf-8'),
 -    readFile(resolve(dirname, './templates/commit.hbs'), 'utf-8'),
 -    readFile(resolve(dirname, './templates/footer.hbs'), 'utf-8')
 -  ])
-+export async function createWriterOpts() {
-   const writerOpts = getWriterOpts()
- 
--  writerOpts.mainTemplate = template
--  writerOpts.headerPartial = header
--  writerOpts.commitPartial = commit
--  writerOpts.footerPartial = footer
-+  writerOpts.mainTemplate = `
++  const template = `
 +{{> header}}
 +
 +{{#each commitGroups}}
@@ -40,9 +33,8 @@ index fe6755fc11a93ef16ed4587fd8e4bf8042787e20..12c6f8618013485343e1d0035e97468b
 +{{/each}}
 +{{> footer}}
 +
-+
 +`
-+  writerOpts.headerPartial = `
++  const header = `
 +{{#if isPatch~}}
 +  ##
 +{{~else~}}
@@ -69,7 +61,7 @@ index fe6755fc11a93ef16ed4587fd8e4bf8042787e20..12c6f8618013485343e1d0035e97468b
 +{{~#if date}} ({{date}})
 +{{/if}}
 +`
-+  writerOpts.commitPartial = `
++  const commit = `
 +*{{#if scope}} **{{scope}}:**
 +{{~/if}} {{#if subject}}
 +  {{~subject}}
@@ -130,9 +122,8 @@ index fe6755fc11a93ef16ed4587fd8e4bf8042787e20..12c6f8618013485343e1d0035e97468b
 +    {{~this.repository}}#{{this.issue}}
 +  {{~/if}}{{/each}}
 +{{~/if}}
-+
 +`
-+  writerOpts.footerPartial = `
++    const footer = `
 +{{#if noteGroups}}
 +{{#each noteGroups}}
 +
@@ -145,84 +136,6 @@ index fe6755fc11a93ef16ed4587fd8e4bf8042787e20..12c6f8618013485343e1d0035e97468b
 +
 +{{/if}}
 +`
+   const writerOpts = getWriterOpts()
  
-   return writerOpts
- }
- 
--function getWriterOpts () {
-+function getWriterOpts() {
-   return {
-     transform: (commit, context) => {
-       let discard = true
--      const notes = commit.notes.map(note => {
-+      const notes = commit.notes.map((note) => {
-         discard = false
- 
-         return {
-           ...note,
--          title: 'BREAKING CHANGES'
-+          title: 'BREAKING CHANGES',
-         }
-       })
- 
-@@ -62,9 +168,10 @@ function getWriterOpts () {
-       }
- 
-       const scope = commit.scope === '*' ? '' : commit.scope
--      const shortHash = typeof commit.hash === 'string'
--        ? commit.hash.substring(0, 7)
--        : commit.shortHash
-+      const shortHash =
-+        typeof commit.hash === 'string'
-+          ? commit.hash.substring(0, 7)
-+          : commit.shortHash
- 
-       const issues = []
-       let subject = commit.subject
-@@ -83,18 +190,23 @@ function getWriterOpts () {
-         }
-         if (context.host) {
-           // User URLs.
--          subject = subject.replace(/\B@([a-z0-9](?:-?[a-z0-9/]){0,38})/g, (_, username) => {
--            if (username.includes('/')) {
--              return `@${username}`
--            }
-+          subject = subject.replace(
-+            /\B@([a-z0-9](?:-?[a-z0-9/]){0,38})/g,
-+            (_, username) => {
-+              if (username.includes('/')) {
-+                return `@${username}`
-+              }
- 
--            return `[@${username}](${context.host}/${username})`
--          })
-+              return `[@${username}](${context.host}/${username})`
-+            }
-+          )
-         }
-       }
- 
-       // remove references that already appear in the subject
--      const references = commit.references.filter(reference => !issues.includes(reference.issue))
-+      const references = commit.references.filter(
-+        (reference) => !issues.includes(reference.issue)
-+      )
- 
-       return {
-         notes,
-@@ -102,13 +214,13 @@ function getWriterOpts () {
-         scope,
-         shortHash,
-         subject,
--        references
-+        references,
-       }
-     },
-     groupBy: 'type',
-     commitGroupsSort: 'title',
-     commitsSort: ['scope', 'subject'],
-     noteGroupsSort: 'title',
--    notesSort: compareFunc
-+    notesSort: compareFunc,
-   }
- }
+   writerOpts.mainTemplate = template
