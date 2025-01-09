@@ -1,3 +1,33 @@
+## 1.1.0 (2025-01-09)
+
+- chore(common): versions tools: @atls/cli-ui-git-commit-component:1.0.7 @atls/code-commit:2.0.3 @ ([3908950](https://github.com/atls/raijin/commit/3908950))
+- feat(issue-templates): update ([7f061cd](https://github.com/atls/raijin/commit/7f061cd))
+- feat(issue-templates): update ([f1be3f7](https://github.com/atls/raijin/commit/f1be3f7))
+- feat(issue-templates): update ([e0a69b2](https://github.com/atls/raijin/commit/e0a69b2))
+- feat(issue-templates): update ([a9a4601](https://github.com/atls/raijin/commit/a9a4601))
+- feat(issue-templates): update ([c81d407](https://github.com/atls/raijin/commit/c81d407))
+- feat(issue-templates): update ([ba17375](https://github.com/atls/raijin/commit/ba17375))
+- feat(issue-templates): update ([d830c72](https://github.com/atls/raijin/commit/d830c72))
+- feat(issue-templates): update ([9297b1b](https://github.com/atls/raijin/commit/9297b1b))
+- feat(issue-templates): update ([765849e](https://github.com/atls/raijin/commit/765849e))
+- feat(issue-templates): update ([8cf38f3](https://github.com/atls/raijin/commit/8cf38f3))
+- feat(yarn-tools-plugin): enable commands (#481) ([9651680](https://github.com/atls/raijin/commit/9651680)), closes [#481](https://github.com/atls/raijin/issues/481)
+
+## 1.1.0 (2025-01-09)
+
+- chore(common): versions tools: @atls/cli-ui-git-commit-component:1.0.7 @atls/code-commit:2.0.3 @ ([3908950](https://github.com/atls/raijin/commit/3908950))
+- feat(issue-templates): update ([7f061cd](https://github.com/atls/raijin/commit/7f061cd))
+- feat(issue-templates): update ([f1be3f7](https://github.com/atls/raijin/commit/f1be3f7))
+- feat(issue-templates): update ([e0a69b2](https://github.com/atls/raijin/commit/e0a69b2))
+- feat(issue-templates): update ([a9a4601](https://github.com/atls/raijin/commit/a9a4601))
+- feat(issue-templates): update ([c81d407](https://github.com/atls/raijin/commit/c81d407))
+- feat(issue-templates): update ([ba17375](https://github.com/atls/raijin/commit/ba17375))
+- feat(issue-templates): update ([d830c72](https://github.com/atls/raijin/commit/d830c72))
+- feat(issue-templates): update ([9297b1b](https://github.com/atls/raijin/commit/9297b1b))
+- feat(issue-templates): update ([765849e](https://github.com/atls/raijin/commit/765849e))
+- feat(issue-templates): update ([8cf38f3](https://github.com/atls/raijin/commit/8cf38f3))
+- feat(yarn-tools-plugin): enable commands (#481) ([9651680](https://github.com/atls/raijin/commit/9651680)), closes [#481](https://github.com/atls/raijin/issues/481)
+
 ## <small>1.0.10 (2025-01-06)</small>
 
 - chore(common): versions tools: @atls/cli-ui-git-commit-component:1.0.6 @atls/code-commit:2.0.3 @ ([58e11cb](https://github.com/atls/raijin/commit/58e11cb))
