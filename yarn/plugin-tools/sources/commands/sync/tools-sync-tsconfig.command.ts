@@ -1,16 +1,18 @@
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { PortablePath }    from '@yarnpkg/fslib'
 
-import assert                from 'node:assert'
+import assert                   from 'node:assert'
 
-import { BaseCommand }       from '@yarnpkg/cli'
-import { Configuration }     from '@yarnpkg/core'
-import { Project }           from '@yarnpkg/core'
-import { StreamReport }      from '@yarnpkg/core'
-import { xfs }               from '@yarnpkg/fslib'
-import { ppath }             from '@yarnpkg/fslib'
-import deepmerge             from 'deepmerge'
+import { Configuration }        from '@yarnpkg/core'
+import { Project }              from '@yarnpkg/core'
+import { StreamReport }         from '@yarnpkg/core'
+import { Filename }             from '@yarnpkg/fslib'
+import { xfs }                  from '@yarnpkg/fslib'
+import { ppath }                from '@yarnpkg/fslib'
+import deepmerge                from 'deepmerge'
 
-import tsconfig              from '@atls/config-typescript'
+import tsconfig                 from '@atls/config-typescript'
+
+import { AbstractToolsCommand } from './abstract-tools.command.js'
 
 const combineMerge = (
   target: Array<any>,
@@ -46,10 +48,20 @@ const convertWorkspacesToIncludes = (workspaces: string): string => {
   return workspaces
 }
 
-export class ToolsSyncTSConfigCommand extends BaseCommand {
-  static paths = [['tools', 'sync', 'tsconfig']]
+export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
+  static override paths = [['tools', 'sync', 'tsconfig']]
 
-  async execute(): Promise<number> {
+  override async execute(): Promise<number> {
+    const nodeOptions = process.env.NODE_OPTIONS ?? ''
+
+    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    return this.executeProxy(['tools', 'sync', 'tsconfig'])
+  }
+
+  override async executeRegular(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
