@@ -1,3 +1,17 @@
+## [2.0.4](https://github.com/atls/raijin/compare/@atls/code-commit@2.0.3...@atls/code-commit@2.0.4) (2025-01-09)
+
+### Bug Fixes
+
+- **changelog:** angular preset, commits path parsing ([#482](https://github.com/atls/raijin/issues/482)) ([d81f4bd](https://github.com/atls/raijin/commit/d81f4bde2212b3082611e68673b448cb38fb7ffa))
+- **commit:** commitlint template error ([#479](https://github.com/atls/raijin/issues/479)) ([572f508](https://github.com/atls/raijin/commit/572f5081641ffbf6428c72d8b98a13c4432b2017))
+
+## [2.0.4](https://github.com/atls/raijin/compare/@atls/code-commit@2.0.3...@atls/code-commit@2.0.4) (2025-01-09)
+
+### Bug Fixes
+
+- **changelog:** angular preset, commits path parsing ([#482](https://github.com/atls/raijin/issues/482)) ([d81f4bd](https://github.com/atls/raijin/commit/d81f4bde2212b3082611e68673b448cb38fb7ffa))
+- **commit:** commitlint template error ([#479](https://github.com/atls/raijin/issues/479)) ([572f508](https://github.com/atls/raijin/commit/572f5081641ffbf6428c72d8b98a13c4432b2017))
+
 ## <small>2.0.3 (2025-01-06)</small>
 
 - chore(common): versions tools: @atls/cli-ui-git-commit-component:1.0.6 @atls/code-commit:2.0.3 @ ([58e11cb](https://github.com/atls/raijin/commit/58e11cb))

@@ -1,3 +1,15 @@
+## [0.0.3](https://github.com/atls/raijin/compare/@atls/code-changelog@0.0.2...@atls/code-changelog@0.0.3) (2025-01-09)
+
+### Bug Fixes
+
+- **changelog:** angular preset, commits path parsing ([#482](https://github.com/atls/raijin/issues/482)) ([d81f4bd](https://github.com/atls/raijin/commit/d81f4bde2212b3082611e68673b448cb38fb7ffa))
+
+## [0.0.3](https://github.com/atls/raijin/compare/@atls/code-changelog@0.0.2...@atls/code-changelog@0.0.3) (2025-01-09)
+
+### Bug Fixes
+
+- **changelog:** angular preset, commits path parsing ([#482](https://github.com/atls/raijin/issues/482)) ([d81f4bd](https://github.com/atls/raijin/commit/d81f4bde2212b3082611e68673b448cb38fb7ffa))
+
 ## <small>0.0.2 (2025-01-05)</small>
 
 - Create tools.yaml ([c7bbbad](https://github.com/atls/raijin/commit/c7bbbad))

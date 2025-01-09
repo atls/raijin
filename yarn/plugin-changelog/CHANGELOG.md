@@ -1,3 +1,7 @@
+## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-changelog@1.0.3...@atls/yarn-plugin-changelog@1.0.4) (2025-01-09)
+
+## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-changelog@1.0.3...@atls/yarn-plugin-changelog@1.0.4) (2025-01-09)
+
 ## <small>1.0.3 (2025-01-05)</small>
 
 - Create tools.yaml ([c7bbbad](https://github.com/atls/raijin/commit/c7bbbad))

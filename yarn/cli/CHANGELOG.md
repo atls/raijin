@@ -1,3 +1,15 @@
+## [1.1.2](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.1...@atls/yarn-cli@1.1.2) (2025-01-09)
+
+### Bug Fixes
+
+- **changelog:** angular preset, commits path parsing ([#482](https://github.com/atls/raijin/issues/482)) ([d81f4bd](https://github.com/atls/raijin/commit/d81f4bde2212b3082611e68673b448cb38fb7ffa))
+
+## [1.1.2](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.1...@atls/yarn-cli@1.1.2) (2025-01-09)
+
+### Bug Fixes
+
+- **changelog:** angular preset, commits path parsing ([#482](https://github.com/atls/raijin/issues/482)) ([d81f4bd](https://github.com/atls/raijin/commit/d81f4bde2212b3082611e68673b448cb38fb7ffa))
+
 ## 1.1.0 (2025-01-09)
 
 - chore(common): versions tools: @atls/cli-ui-git-commit-component:1.0.7 @atls/code-commit:2.0.3 @ ([3908950](https://github.com/atls/raijin/commit/3908950))

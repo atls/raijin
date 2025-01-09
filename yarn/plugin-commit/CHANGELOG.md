@@ -1,3 +1,7 @@
+## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.2...@atls/yarn-plugin-commit@1.0.3) (2025-01-09)
+
+## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.2...@atls/yarn-plugin-commit@1.0.3) (2025-01-09)
+
 ## <small>1.0.2 (2025-01-06)</small>
 
 - chore(common): versions tools: @atls/cli-ui-git-commit-component:1.0.6 @atls/code-commit:2.0.3 @ ([58e11cb](https://github.com/atls/raijin/commit/58e11cb))

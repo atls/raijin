@@ -1,3 +1,7 @@
+## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-release@1.0.4...@atls/yarn-plugin-release@1.0.5) (2025-01-09)
+
+## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-release@1.0.4...@atls/yarn-plugin-release@1.0.5) (2025-01-09)
+
 ## <small>1.0.4 (2025-01-05)</small>
 
 - chore: changelog ([6d5e66d](https://github.com/atls/raijin/commit/6d5e66d))
