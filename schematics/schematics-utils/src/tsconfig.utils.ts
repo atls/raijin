@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { updateJsonInTree } from './json.utils.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

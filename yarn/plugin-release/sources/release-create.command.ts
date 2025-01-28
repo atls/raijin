@@ -42,14 +42,18 @@ export class ReleaseCreateCommand extends BaseCommand {
 
           const workspaceName = workspace.manifest.name?.name
           assert.ok(workspaceName, 'Missing workspace name')
-          const version = workspace.manifest.version
+          const { version } = workspace.manifest
           assert.ok(version, 'Missing version')
 
           packageName += `${workspaceName}`
 
           const changelog = new Changelog()
 
-          const body = await changelog.generate({ packageName, version, path: this.context.cwd })
+          const body = await changelog.generate({
+            packageName,
+            version,
+            path: this.context.cwd,
+          })
 
           const release = new Release({ token })
 
@@ -57,6 +61,7 @@ export class ReleaseCreateCommand extends BaseCommand {
           let repo = ''
           try {
             ;({ repository: repo, organization: owner } = parseGitHubUrl(
+              // eslint-disable-next-line n/no-sync
               execSync('git remote get-url origin', { encoding: 'utf-8' })
             ))
           } catch {

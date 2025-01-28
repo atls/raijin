@@ -1,3 +1,5 @@
+/* eslint-disable n/no-sync */
+
 import copydir from 'copy-dir'
 import { globbySync } from 'globby'
 import { join } from 'path'

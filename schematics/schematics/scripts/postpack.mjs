@@ -1,3 +1,5 @@
+/* eslint-disable n/no-sync */
+
 import { join } from 'node:path'
 import { writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'

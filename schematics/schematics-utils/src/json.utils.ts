@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import type { Rule }             from '@angular-devkit/schematics'
 import type { SchematicContext } from '@angular-devkit/schematics'
 import type { Tree }             from '@angular-devkit/schematics'
@@ -5,19 +7,20 @@ import type { Tree }             from '@angular-devkit/schematics'
 import stripJsonComments         from 'strip-json-comments'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const serializeJson = (json: any): string => `${JSON.stringify(json, null, 2)}\n`
+export const serializeJson = (json: string): string => `${JSON.stringify(json, null, 2)}\n`
 
-export const readJsonInTree = <T = any>(host: Tree, path: string): T => {
+export const readJsonInTree = (host: Tree, path: string): void => {
   if (!host.exists(path)) {
     throw new Error(`Cannot find ${path}`)
   }
 
-  const contents = stripJsonComments(host.read(path)!.toString('utf-8'))
+  const contents = stripJsonComments(host.read(path)?.toString('utf-8') || '')
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return JSON.parse(contents)
-  } catch (error: any) {
+  } catch (e: unknown) {
+    const error = e as Error
     throw new Error(`Cannot parse ${path}: ${error.message}`)
   }
 }

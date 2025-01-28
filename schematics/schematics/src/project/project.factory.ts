@@ -30,6 +30,7 @@ const generateCommon = (options: any): Source =>
     move('./'),
   ])
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const generateProjectSpecifiec = (options: any): Source => {
   // eslint-disable-next-line
   const { name: projectName } = JSON.parse(readFileSync(join(options.cwd, 'package.json'), 'utf-8'))

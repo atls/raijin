@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import type { ProjectInformationProperties } from '@atls/cli-ui-schematics-component'
 
 import { BaseCommand }                       from '@yarnpkg/cli'

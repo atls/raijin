@@ -31,7 +31,7 @@ class BadgesCommand extends BaseCommand {
 
   static REGISTRY_PACKAGE_PATH = '/package'
 
-  async execute() {
+  async execute(): Promise<0 | 1> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project, workspace: projectWorkspace } = await Project.find(
       configuration,
@@ -53,42 +53,45 @@ class BadgesCommand extends BaseCommand {
 
           progress.start()
 
-          const traverseWorkspace = (workspace: Workspace) => {
+          const traverseWorkspace = (workspace: Workspace): IterableIterator<Package> => {
             const initialHash = workspace.anchoredLocator.locatorHash
 
             const seen = new Map<LocatorHash, Package>()
             const pass = [initialHash]
 
             while (pass.length > 0) {
-              const hash = pass.shift()!
-              // eslint-disable-next-line no-continue
-              if (seen.has(hash)) continue
+              const hash = pass.shift()
+              if (hash) {
+                // eslint-disable-next-line no-continue
+                if (seen.has(hash)) continue
 
-              const pkg = project.storedPackages.get(hash)
-              if (typeof pkg === `undefined`)
-                throw new Error(`Assertion failed: Expected the package to be registered`)
+                const pkg = project.storedPackages.get(hash)
+                if (typeof pkg === `undefined`)
+                  throw new Error(`Assertion failed: Expected the package to be registered`)
 
-              seen.set(hash, pkg)
+                seen.set(hash, pkg)
 
-              if (structUtils.isVirtualLocator(pkg))
-                pass.push(structUtils.devirtualizeLocator(pkg).locatorHash)
+                if (structUtils.isVirtualLocator(pkg))
+                  pass.push(structUtils.devirtualizeLocator(pkg).locatorHash)
 
-              // eslint-disable-next-line no-continue
-              if (hash !== initialHash) continue
+                // eslint-disable-next-line no-continue
+                // eslint-disable-next-line security/detect-possible-timing-attacks
+                if (hash !== initialHash) continue
 
-              for (const dependency of pkg.dependencies.values()) {
-                const resolution = project.storedResolutions.get(dependency.descriptorHash)
-                if (typeof resolution === `undefined`)
-                  throw new Error(`Assertion failed: Expected the resolution to be registered`)
+                for (const dependency of pkg.dependencies.values()) {
+                  const resolution = project.storedResolutions.get(dependency.descriptorHash)
+                  if (typeof resolution === `undefined`)
+                    throw new Error(`Assertion failed: Expected the resolution to be registered`)
 
-                pass.push(resolution)
+                  pass.push(resolution)
+                }
               }
             }
 
             return seen.values()
           }
 
-          const traverseAllWorkspaces = () => {
+          const traverseAllWorkspaces = (): IterableIterator<Package> => {
             const aggregate = new Map<LocatorHash, Package>()
 
             for (const workspace of project.workspaces)
@@ -101,7 +104,7 @@ class BadgesCommand extends BaseCommand {
           const sortedLookup = miscUtils.sortMap([...lookupSet], (pkg) =>
             structUtils.stringifyLocator(pkg))
 
-          const getVersion = async (name: any) => {
+          const getVersion = async (name: string): Promise<string> => {
             const expectedDescriptor = structUtils.parseDescriptor(name)
 
             const selection = sortedLookup.filter(
@@ -110,13 +113,14 @@ class BadgesCommand extends BaseCommand {
             )
 
             if (selection.length > 0) {
-              return selection.shift()!.version
+              return selection.shift()?.version || ''
             }
 
             return ''
           }
 
           const readmePath = join(process.cwd(), 'README.md')
+          // eslint-disable-next-line n/no-sync
           const readme = readFileSync(readmePath).toString('utf-8')
 
           const parts = readme.split(BadgesCommand.VERSIONS_SEPARATOR)
@@ -128,14 +132,20 @@ class BadgesCommand extends BaseCommand {
             }))
           )
 
-          const versionsReducer = (badges: any, pkg: any) => {
-            const getColors = () => {
-              const extractColors = (colors: any) => ({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const versionsReducer = (badges: any, pkg: any): any => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const getColors = (): any => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const extractColors = (colors: any): any => ({
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 labelColor: colors.labelColor.replace('#', ''),
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 color: colors.color.replace('#', ''),
               })
 
               const pair = Object.entries(COLORS).find(
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 ([pattern]) => pkg.name.search(pattern) !== -1
               )
 
@@ -150,7 +160,12 @@ class BadgesCommand extends BaseCommand {
 
             if (pkg.version) {
               const packageLink = `${BadgesCommand.REGISTRY_URL}${BadgesCommand.REGISTRY_PACKAGE_PATH}/${pkg.name}`
-              join(BadgesCommand.REGISTRY_URL, BadgesCommand.REGISTRY_PACKAGE_PATH, pkg.name)
+              join(
+                BadgesCommand.REGISTRY_URL,
+                BadgesCommand.REGISTRY_PACKAGE_PATH,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                pkg.name
+              )
 
               const newQueryStringParams = new URLSearchParams({
                 style: BadgesCommand.BADGE_STYLE,
@@ -163,17 +178,21 @@ class BadgesCommand extends BaseCommand {
                 BadgesCommand.BADGE_URL
               }?${newQueryStringParams.toString()}" alt='badge'>`
 
-              const wrapWithLink = (content: string, link: string) => `[${content}](${link})`
+              const wrapWithLink = (content: string, link: string): string =>
+                `[${content}](${link})`
 
               return `${badges}${wrapWithLink(badge, packageLink)}  `
             }
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return badges
           }
 
           parts[1] = atlsVersions.reduce(versionsReducer, '')
           parts[1] = `\n\n${parts[1]}\n\n`
 
+          // eslint-disable-next-line n/no-sync
           writeFileSync(readmePath, parts.join('[//]: # (VERSIONS)'))
 
           progress.end()

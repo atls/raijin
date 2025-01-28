@@ -31,7 +31,12 @@ export class GitHubChecks {
   }
 
   async create(
-    params: RequestParameters & { owner: string; repo: string; name: string; head_sha: string }
+    params: RequestParameters & {
+      owner: string
+      repo: string
+      name: string
+      head_sha: string
+    }
   ): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>> {
     const response = await this.octokit.rest.checks.create(params)
 
@@ -46,7 +51,7 @@ export class GitHubChecks {
     return this.create({
       ...context.repo,
       name: this.name,
-      head_sha: payload.after || payload.pull_request?.head.sha || (process.env.GITHUB_SHA as any),
+      head_sha: payload.after || payload.pull_request?.head.sha || process.env.GITHUB_SHA!,
       started_at: new Date().toISOString(),
       status: 'in_progress',
     })
@@ -86,7 +91,7 @@ export class GitHubChecks {
     return this.create({
       ...context.repo,
       name: this.name,
-      head_sha: payload.after || payload.pull_request?.head.sha || (process.env.GITHUB_SHA as any),
+      head_sha: payload.after || payload.pull_request?.head.sha || process.env.GITHUB_SHA!,
       completed_at: new Date().toISOString(),
       status: 'completed',
       conclusion: 'failure',
