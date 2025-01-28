@@ -1,81 +1,93 @@
-import type { ChildProcess } from 'node:child_process'
-import type { Writable }     from 'node:stream'
-import type webpack          from 'webpack'
+import type { ChildProcess } from "node:child_process";
+import type { Writable } from "node:stream";
+import type webpack from "webpack";
 
-import { fork }              from 'node:child_process'
-import { join }              from 'node:path'
+import { fork } from "node:child_process";
+import { join } from "node:path";
 
-import { StartServerLogger } from './start-server.logger.js'
+import { StartServerLogger } from "./start-server.logger.js";
 
 export interface StartServerPluginOptions {
-  stdout?: Writable
-  stderr?: Writable
+  stdout?: Writable;
+  stderr?: Writable;
 }
 
 export class StartServerPlugin {
-  options: StartServerPluginOptions
+  options: StartServerPluginOptions;
 
-  entryFile: string | null = null
+  entryFile: string | null = null;
 
-  worker: ChildProcess | null = null
+  worker: ChildProcess | null = null;
 
-  initialized: boolean = false
+  initialized: boolean = false;
 
-  logger: StartServerLogger
+  logger: StartServerLogger;
 
   constructor(options: Partial<StartServerPluginOptions> = {}) {
-    this.logger = new StartServerLogger(options)
-    this.options = options
+    this.logger = new StartServerLogger(options);
+    this.options = options;
   }
 
   apply(compiler: webpack.Compiler): void {
-    compiler.hooks.afterEmit.tapAsync({ name: 'StartServerPlugin' }, this.afterEmit)
+    compiler.hooks.afterEmit.tapAsync(
+      { name: "StartServerPlugin" },
+      this.afterEmit
+    );
   }
 
-  private afterEmit = (compilation: webpack.Compilation, callback: () => void): void => {
+  private afterEmit = (
+    compilation: webpack.Compilation,
+    callback: () => void
+  ): void => {
     if (!this.initialized) {
-      this.initialized = true
+      this.initialized = true;
 
-      callback()
+      callback();
     } else {
       if (this.worker?.connected && this.worker.pid) {
-        process.kill(this.worker.pid)
+        process.kill(this.worker.pid);
       }
 
-      this.startServer(compilation, callback)
+      this.startServer(compilation, callback);
     }
-  }
+  };
 
-  private startServer = (compilation: webpack.Compilation, callback: () => void): void => {
-    this.logger.info('Starting server...')
-    const path = compilation.compiler.options.output.path
+  private startServer = (
+    compilation: webpack.Compilation,
+    callback: () => void
+  ): void => {
+    this.logger.info("Starting server...");
+    const { path } = compilation.compiler.options.output;
 
     if (path) {
-      this.entryFile = join(path, 'index.js')
+      this.entryFile = join(path, "index.js");
 
       this.runWorker(this.entryFile, (worker) => {
-        this.worker = worker
+        this.worker = worker;
 
-        callback()
-      })
+        callback();
+      });
     }
-  }
+  };
 
-  private runWorker(entryFile: string, callback: (arg0: ChildProcess) => void): void {
+  private runWorker(
+    entryFile: string,
+    callback: (arg0: ChildProcess) => void
+  ): void {
     const worker = fork(entryFile, [], {
       silent: true,
-    })
+    });
 
     if (this.options.stdout) {
-      worker.stdout?.pipe(this.options.stdout, { end: false })
+      worker.stdout?.pipe(this.options.stdout, { end: false });
     }
 
     if (this.options.stderr) {
-      worker.stderr?.pipe(this.options.stderr, { end: false })
+      worker.stderr?.pipe(this.options.stderr, { end: false });
     }
 
     setTimeout(() => {
-      callback(worker)
-    }, 0)
+      callback(worker);
+    }, 0);
   }
 }

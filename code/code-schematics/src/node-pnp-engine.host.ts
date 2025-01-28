@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/member-ordering */
+
 import type { RuleFactory }                        from '@angular-devkit/schematics/'
 import type { FileSystemSchematicDesc }            from '@angular-devkit/schematics/tools'
 import type { FileSystemCollectionDesc }           from '@angular-devkit/schematics/tools'
@@ -89,7 +91,7 @@ export class NodePnpEngineHost extends FileSystemEngineHostBase {
     return collectionPath
   }
 
-  // eslint-disable-next-line no-underscore-dangle
+  // eslint-disable-next-line no-underscore-dangle, a@typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
   protected _resolveReferenceString(refString: string, parentPath: string) {
     const ref = new ExportStringRef<RuleFactory<{}>>(refString, parentPath)
     if (!ref.ref) {

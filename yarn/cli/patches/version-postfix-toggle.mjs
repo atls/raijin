@@ -27,8 +27,7 @@ export const addPostfix = (packageJson, postfix = POSTFIX) => {
 export const removePostfix = (packageJson, postfix = POSTFIX) => {
   if (packageJson.version.endsWith(postfix)) {
     const splitted = packageJson.version.split(postfix)
-    // eslint-disable-next-line no-param-reassign
-    // eslint-disable-next-line prefer-destructuring
+    // eslint-disable-next-line prefer-destructuring, no-param-reassign
     packageJson.version = splitted[0]
   }
 

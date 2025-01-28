@@ -77,8 +77,7 @@ export class ImportSortTypeScriptParser implements IParser {
           return [...parents, leadingComment]
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion
         const leadingComments: Array<any> = findLeadingComments(node.loc!.start.line - 1)
 
         if (leadingComments.length > 0) {
