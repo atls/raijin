@@ -15,7 +15,7 @@ import { forceStdinTty }                     from 'force-stdin-tty'
 import { isOneOf }                           from 'typanion'
 import { isLiteral }                         from 'typanion'
 import { isOptional }                        from 'typanion'
-import React                                 from 'react'
+import React                                from 'react'
 
 import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
 import { RequestProjectInformation }         from '@atls/cli-ui-schematics-component'
@@ -74,7 +74,9 @@ class GenerateProjectCommand extends BaseCommand {
       return 1
     }
 
-    const schematics = new SchematicsWorker(project.cwd)
+    // TODO component
+    const schematics = 'bla' as any
+    // const schematics = new SchematicsWorker(project.cwd)
 
     const commandReport = await StreamReport.start(
       {
@@ -92,7 +94,7 @@ class GenerateProjectCommand extends BaseCommand {
 
             progress.end()
 
-            events.forEach((event) => {
+            events.forEach((event: any) => {
               const eventPath = event.path.startsWith('/') ? event.path.slice(1) : event.path
 
               if (event.kind === 'error') {
@@ -121,7 +123,7 @@ class GenerateProjectCommand extends BaseCommand {
           } catch (error) {
             progress.end()
 
-            renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
+            renderStatic(<ErrorInfo error={error as Error} />)
               .split('\n')
               .forEach((line) => {
                 report.reportError(MessageName.UNNAMED, line)

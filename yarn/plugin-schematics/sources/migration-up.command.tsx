@@ -7,7 +7,7 @@ import { MessageName }     from '@yarnpkg/core'
 import { StreamReport }    from '@yarnpkg/core'
 import { xfs }             from '@yarnpkg/fslib'
 import { npath }           from '@yarnpkg/fslib'
-import React               from 'react'
+import React              from 'react'
 
 import { SpinnerProgress } from '@atls/yarn-run-utils'
 import { renderStatic }    from '@atls/cli-ui-renderer-static-component'
@@ -20,7 +20,8 @@ class MigrationUpCommand extends BaseCommand {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project, workspace } = await Project.find(configuration, this.context.cwd)
 
-    const schematics = new SchematicsWorker(project.cwd)
+    const schematics = 'bla' as any
+    // const schematics = new SchematicsWorker(project.cwd)
 
     const commandReport = await StreamReport.start(
       {
@@ -41,7 +42,7 @@ class MigrationUpCommand extends BaseCommand {
 
             progress.end()
 
-            events.forEach((event) => {
+            events.forEach((event: any) => {
               const eventPath = event.path.startsWith('/') ? event.path.slice(1) : event.path
 
               if (event.kind === 'error') {
