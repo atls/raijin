@@ -8,7 +8,6 @@ import sortPackageJson                        from 'sort-package-json'
 
 import { preprocess as importSortPreprocess } from './import-sort/index.js'
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
 const preprocess: Parser['preprocess'] = (source, options): string =>
   importSortPreprocess(source, options)
 
