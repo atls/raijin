@@ -1,7 +1,7 @@
 import type { ESLint }             from '@atls/code-runtime/eslint'
 import type { Linter as ESLinter } from '@atls/code-runtime/eslint'
 
-import EventEmitter                from 'node:events'
+import EventEmitter               from 'node:events'
 import { readFileSync }            from 'node:fs'
 import { readFile }                from 'node:fs/promises'
 import { writeFile }               from 'node:fs/promises'
@@ -9,7 +9,7 @@ import { relative }                from 'node:path'
 import { join }                    from 'node:path'
 
 import { globby }                  from 'globby'
-import ignorer                     from 'ignore'
+import ignorer                    from 'ignore'
 
 import { ignore }                  from './linter.patterns.js'
 import { createPatterns }          from './linter.patterns.js'
@@ -124,7 +124,7 @@ export class Linter extends EventEmitter {
     return this.lintFiles(finalFiles, options)
   }
 
-  private async lintWithCache(files: Array<string> = []): Promise<ESLint.LintResult[]> {
+  private async lintWithCache(files: Array<string> = []): Promise<Array<ESLint.LintResult>> {
     this.emit('start', { files })
 
     const results = await this.cacheLinter?.lintFiles(files)
@@ -139,10 +139,11 @@ export class Linter extends EventEmitter {
   }
 
   private getProjectIgnorePatterns(): Array<string> {
+    // eslint-disable-next-line n/no-sync
     const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
 
     const { linterIgnorePatterns = [] } = JSON.parse(content)
 
-    return linterIgnorePatterns
+    return linterIgnorePatterns as Array<string>
   }
 }

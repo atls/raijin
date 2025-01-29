@@ -1,13 +1,17 @@
-import type { FormattableReport } from '@commitlint/types'
-import type { LintOptions }       from '@commitlint/types'
+/* eslint-disable @typescript-eslint/no-shadow */
 
-import { RuleConfigSeverity }     from '@commitlint/types'
-import { LintOutcome }            from '@commitlint/types'
-import { QualifiedRules }         from '@commitlint/types'
-import { format }                 from '@commitlint/format/lib/format.js'
-import commitlint                 from '@commitlint/lint'
+import type { FormattableReport }                                 from '@commitlint/types'
+import type { RuleConfigQuality }              from '@commitlint/types'
+import type { RulesConfig } from '@commitlint/types'
+import type { LintOptions }                                       from '@commitlint/types'
+import type { RuleConfigSeverity }                                from '@commitlint/types'
+import type { LintOutcome }                                       from '@commitlint/types'
+import type { QualifiedRules }                                    from '@commitlint/types'
 
-import { rules }                  from '@atls/config-commitlint'
+import { format }                                                 from '@commitlint/format/lib/format.js'
+import commitlint                                                from '@commitlint/lint'
+
+import { rules }                                                  from '@atls/config-commitlint'
 
 const defaultParserOpts = {
   // eslint-disable-next-line security/detect-unsafe-regex
@@ -55,7 +59,7 @@ export class CommitLinter {
   /**
    * Prepares config, including scopes
    */
-  private prepareConfig(rules: QualifiedRules) {
+  private prepareConfig(rules: QualifiedRules): Partial<RulesConfig<RuleConfigQuality.Qualified>> {
     const allowedScopes = []
 
     if (this.scopes) {
@@ -67,6 +71,7 @@ export class CommitLinter {
     }
 
     const possibleScopeValuesArray = ['common', 'github', ...allowedScopes]
+    // eslint-disable-next-line no-param-reassign
     rules['scope-enum'] = [RuleConfigSeverity.Error, 'always', possibleScopeValuesArray]
 
     return rules

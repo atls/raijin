@@ -41,8 +41,8 @@ export class Tester extends EventEmitter {
 
       result.pipe(process.stdout)
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
       // @ts-expect-error toArray is missing
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
       return result.toArray()
     }
 
