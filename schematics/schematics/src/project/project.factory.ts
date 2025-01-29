@@ -1,50 +1,56 @@
-import type { Source }          from '@angular-devkit/schematics'
+/* eslint-disable */
 
-import { readFileSync }         from 'node:fs'
-import { join }                 from 'node:path'
+import type { Source } from "@angular-devkit/schematics";
 
-import { MergeStrategy }        from '@angular-devkit/schematics'
-import { strings }              from '@angular-devkit/core'
-import { apply }                from '@angular-devkit/schematics'
-import { mergeWith }            from '@angular-devkit/schematics'
-import { move }                 from '@angular-devkit/schematics'
-import { template }             from '@angular-devkit/schematics'
-import { url }                  from '@angular-devkit/schematics'
-import { chain }                from '@angular-devkit/schematics'
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
-import { updateTsConfigInTree } from '@atls/schematics-utils'
-import tsconfig                 from '@atls/config-typescript'
+import { MergeStrategy } from "@angular-devkit/schematics";
+import { strings } from "@angular-devkit/core";
+import { apply } from "@angular-devkit/schematics";
+import { mergeWith } from "@angular-devkit/schematics";
+import { move } from "@angular-devkit/schematics";
+import { template } from "@angular-devkit/schematics";
+import { url } from "@angular-devkit/schematics";
+import { chain } from "@angular-devkit/schematics";
+
+import { updateTsConfigInTree } from "@atls/schematics-utils";
+import tsconfig from "@atls/config-typescript";
 
 const updateTsConfig = updateTsConfigInTree({
   ...tsconfig.compilerOptions,
-  module: 'esnext',
-})
+  module: "esnext",
+});
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const generateCommon = (options: any): Source =>
-  apply(url('./files/common'), [
+  apply(url("./files/common"), [
     template({
       ...strings,
       ...options,
-      dot: '.',
+      dot: ".",
     }),
-    move('./'),
-  ])
+    move("./"),
+  ]);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const generateProjectSpecifiec = (options: any): Source => {
   // eslint-disable-next-line
-  const { name: projectName } = JSON.parse(readFileSync(join(options.cwd, 'package.json'), 'utf-8'))
+  const { name: projectName } = JSON.parse(
+    readFileSync(join(options.cwd, "package.json"), "utf-8")
+  );
 
   // eslint-disable-next-line
-  return apply(url(join('./files', options.type)), [
+  return apply(url(join("./files", options.type)), [
     template({
       ...strings,
       ...options,
       projectName,
-      dot: '.',
+      dot: ".",
     }),
-    move('./'),
-  ])
-}
+    move("./"),
+  ]);
+};
 
 // eslint-disable-next-line
 export const main = (options: any) =>
@@ -52,4 +58,4 @@ export const main = (options: any) =>
     mergeWith(generateCommon(options), MergeStrategy.Overwrite),
     mergeWith(generateProjectSpecifiec(options), MergeStrategy.Overwrite),
     updateTsConfig,
-  ])
+  ]);

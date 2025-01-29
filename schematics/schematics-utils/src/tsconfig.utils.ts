@@ -1,9 +1,9 @@
-import { updateJsonInTree } from './json.utils.js'
+/* eslint-disable */
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+import { updateJsonInTree } from "./json.utils.js";
+
 export const updateTsConfigInTree = (compilerOptions: object) =>
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  updateJsonInTree('tsconfig.json', (tsconfig) => ({
+  updateJsonInTree("tsconfig.json", (tsconfig) => ({
     ...tsconfig,
     compilerOptions,
-  }))
+  }));
