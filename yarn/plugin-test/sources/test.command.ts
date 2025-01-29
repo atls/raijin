@@ -34,7 +34,7 @@ export class TestCommand extends AbstractTestCommand {
 
       return results.some((result) => {
         if (result.includes('# fail ')) {
-          const failedNumber = parseInt(result.split('# fail ')[1])
+          const failedNumber = parseInt(result.split('# fail ')[1], 2)
 
           return failedNumber > 0
         }

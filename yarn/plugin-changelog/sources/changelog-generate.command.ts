@@ -53,6 +53,7 @@ export class ChangelogGenerateCommand extends BaseCommand {
           })
 
           if (this.stdOut) {
+            // eslint-disable-next-line no-console
             console.log(result)
           }
         })

@@ -66,7 +66,8 @@ class ChecksReleaseCommand extends BaseCommand {
         if (workspace.manifest.scripts.get('build')) {
           const context = new PassThroughRunContext()
 
-          const outputWriter = (data: Buffer) => this.context.stdout.write(data)
+          const outputWriter = (data: Buffer): ReturnType<typeof this.context.stdout.write> =>
+            this.context.stdout.write(data)
 
           context.stdout.on('data', outputWriter)
           context.stderr.on('data', outputWriter)
@@ -79,7 +80,9 @@ class ChecksReleaseCommand extends BaseCommand {
           if (code > 0) {
             annotations.push({
               annotation_level: AnnotationLevel.Failure,
-              title: `Error release workspace ${workspace.manifest.raw.name ?? workspace.relativeCwd}`,
+              title: `Error release workspace ${
+                workspace.manifest.raw.name ?? workspace.relativeCwd
+              }`,
               message: `Exit code ${code}`,
               raw_details: stripAnsi(context.output),
               path: ppath.join(workspace.relativeCwd, 'package.json'),

@@ -23,7 +23,7 @@ class CommitMessageLintCommand extends BaseCommand {
     })
 
     const messages = await read({ edit: true })
-    const results = await Promise.all(messages.map((message) => linter.lint(message)))
+    const results = await Promise.all(messages.map(async (message) => linter.lint(message)))
 
     const output = linter.format({ results })
 
