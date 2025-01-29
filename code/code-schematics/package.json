@@ -20,6 +20,7 @@
     "@angular-devkit/schematics": "18.2.2"
   },
   "devDependencies": {
+    "@types/node": "22.9.0",
     "rxjs": "7.8.1"
   },
   "publishConfig": {

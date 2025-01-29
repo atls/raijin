@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import type { Path }           from '@angular-devkit/core'
 import type { DryRunEvent }    from '@angular-devkit/schematics'
 

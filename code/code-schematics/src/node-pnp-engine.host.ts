@@ -12,7 +12,7 @@ import { CollectionMissingSchematicsMapException } from '@angular-devkit/schemat
 import { FileSystemEngineHostBase }                from '@angular-devkit/schematics/tools'
 import { SchematicMissingFieldsException }         from '@angular-devkit/schematics/tools'
 import { NodePackageDoesNotSupportSchematics }     from '@angular-devkit/schematics/tools'
-// @ts-expect-error any
+// @ts-expect-error any type
 import { readJsonFile }                            from '@angular-devkit/schematics/tools/file-system-utility'
 
 // TODO: refactor
@@ -21,69 +21,10 @@ export class NodePnpEngineHost extends FileSystemEngineHostBase {
     super()
   }
 
-  private resolve(name: string, requester?: string, references = new Set<string>()): string {
-    if (requester) {
-      if (references.has(requester)) {
-        references.add(requester)
-        throw new Error(
-          `Circular schematic reference detected: ${JSON.stringify(Array.from(references))}`
-        )
-      } else {
-        references.add(requester)
-      }
-    }
-
-    const relativeBase = requester ? dirname(requester) : process.cwd()
-
-    let collectionPath: string | undefined
-
-    if (name.startsWith('.')) {
-      // eslint-disable-next-line no-param-reassign
-      name = resolve(relativeBase, name)
-    }
-
-    const resolveOptions = {
-      paths: (requester ? [dirname(requester), ...(this.paths || [])] : this.paths)?.filter(
-        Boolean
-      ),
-    }
-
-    try {
-      const packageJsonPath = require.resolve(join(name, 'package.json'), resolveOptions)
-
-      const { schematics } = require(packageJsonPath)
-
-      if (!schematics || typeof schematics !== 'string') {
-        throw new NodePackageDoesNotSupportSchematics(name)
-      }
-
-      collectionPath = this.resolve(schematics, packageJsonPath, references)
-    } catch (e: any) {
-      if (e.code !== 'MODULE_NOT_FOUND') {
-        throw e
-      }
-    }
-
-    if (!collectionPath) {
-      try {
-        collectionPath = require.resolve(name, resolveOptions)
-      } catch (e: any) {
-        if (e.code !== 'MODULE_NOT_FOUND') {
-          throw e
-        }
-      }
-    }
-
-    if (!collectionPath) {
-      throw new CollectionCannotBeResolvedException(name)
-    }
-
-    return collectionPath
-  }
-
   // eslint-disable-next-line no-underscore-dangle
   protected _resolveCollectionPath(name: string, requester?: string): string {
     const collectionPath = this.resolve(name, requester)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     readJsonFile(collectionPath)
 
     return collectionPath
@@ -125,5 +66,70 @@ export class NodePnpEngineHost extends FileSystemEngineHostBase {
     }
 
     return desc as FileSystemSchematicDesc
+  }
+
+  private resolve(name: string, requester?: string, references = new Set<string>()): string {
+    if (requester) {
+      if (references.has(requester)) {
+        references.add(requester)
+        throw new Error(
+          `Circular schematic reference detected: ${JSON.stringify(Array.from(references))}`
+        )
+      } else {
+        references.add(requester)
+      }
+    }
+
+    const relativeBase = requester ? dirname(requester) : process.cwd()
+
+    let collectionPath: string | undefined
+
+    if (name.startsWith('.')) {
+      // eslint-disable-next-line no-param-reassign
+      name = resolve(relativeBase, name)
+    }
+
+    const resolveOptions = {
+      paths: (requester ? [dirname(requester), ...(this.paths || [])] : this.paths)?.filter(
+        Boolean
+      ),
+    }
+
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const packageJsonPath = require.resolve(join(name, 'package.json'), resolveOptions)
+
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { schematics } = require(packageJsonPath)
+
+      if (!schematics || typeof schematics !== 'string') {
+        throw new NodePackageDoesNotSupportSchematics(name)
+      }
+
+      collectionPath = this.resolve(schematics, packageJsonPath, references)
+    } catch (e: unknown) {
+      const error = e as Error & { code: string }
+      if (error.code !== 'MODULE_NOT_FOUND') {
+        throw e
+      }
+    }
+
+    if (!collectionPath) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        collectionPath = require.resolve(name, resolveOptions)
+      } catch (e: unknown) {
+        const error = e as Error & { code: string }
+        if (error.code !== 'MODULE_NOT_FOUND') {
+          throw e
+        }
+      }
+    }
+
+    if (!collectionPath) {
+      throw new CollectionCannotBeResolvedException(name)
+    }
+
+    return collectionPath
   }
 }

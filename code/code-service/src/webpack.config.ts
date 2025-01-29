@@ -118,13 +118,16 @@ export class WebpackConfig {
       const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
       const { type = 'commonjs' } = JSON.parse(content)
 
-      return type
+      return type as string
     } catch {
       return 'module'
     }
   }
 
-  private createPlugins(environment: string, additionalPlugins: Array<wp.WebpackPluginInstance>) {
+  private createPlugins(
+    environment: string,
+    additionalPlugins: Array<wp.WebpackPluginInstance>
+  ): Array<wp.WebpackPluginInstance> {
     const plugins: Array<wp.WebpackPluginInstance> = [
       new this.webpack.IgnorePlugin({
         checkResource: (resource: string): boolean => {
@@ -140,7 +143,7 @@ export class WebpackConfig {
             require.resolve(resource, {
               paths: [this.cwd],
             })
-          } catch (err) {
+          } catch {
             return true
           }
 

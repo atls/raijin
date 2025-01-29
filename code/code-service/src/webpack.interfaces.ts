@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 import type { SeverityNumber } from '@monstrs/logger'
 import type { webpack }        from '@atls/code-runtime/webpack'
 
@@ -14,9 +16,9 @@ export interface WebpackConfigPlugin {
   args: Array<any>
 }
 
-const ModuleType = {
-  commonjs: 'commonjs',
-  module: 'module',
-} as const
+type ModuleType = {
+  commonjs: 'commonjs'
+  module: 'module'
+}
 
-export type ModuleTypes = (typeof ModuleType)[keyof typeof ModuleType]
+export type ModuleTypes = ModuleType[keyof ModuleType]

@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/member-ordering */
+
 import type { TestEvent } from 'node:test/reporters'
 
-import EventEmitter       from 'node:events'
+import EventEmitter      from 'node:events'
 import { run }            from 'node:test'
 import { tap }            from 'node:test/reporters'
 
@@ -17,82 +19,9 @@ type TestOptions = {
 }
 
 export class Tester extends EventEmitter {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor() {
     super()
-  }
-
-  static async initialize(): Promise<Tester> {
-    return new Tester()
-  }
-
-  private async collectTestFiles(
-    cwd: string,
-    type: 'integration' | 'unit' | undefined,
-    patterns: Array<string> | undefined
-  ) {
-    let folderPattern = '*'
-    if (type !== undefined) {
-      folderPattern = type === 'unit' ? '!(integration)' : 'integration'
-    }
-
-    if (!patterns || patterns.length < 1) {
-      return globby([`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], {
-        cwd,
-        dot: true,
-        absolute: true,
-        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
-      })
-    }
-
-    return globby(
-      patterns.map((pattern) => {
-        if (this.isFilename(pattern)) {
-          return `**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`
-        }
-
-        if (this.isRootPath(pattern)) {
-          return pattern
-        }
-
-        return `**/${pattern}`
-      }),
-      {
-        cwd,
-        dot: true,
-        absolute: true,
-        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
-      }
-    )
-  }
-
-  private isFilename(pattern: string): boolean {
-    const hasPathSeparator = pattern.includes('/') || pattern.includes('\\')
-
-    const hasValidExtension = /\.(js|jsx|ts|tsx)$/.test(pattern)
-
-    return !hasPathSeparator && !hasValidExtension
-  }
-
-  private isRootPath(pattern: string): boolean {
-    return pattern.startsWith('/') || pattern.startsWith('\\')
-  }
-
-  async unit(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
-    const testFiles = await this.collectTestFiles(cwd, 'unit', options?.files)
-
-    return this.run(testFiles, 25_000, true, options?.watch, options?.testReporter)
-  }
-
-  async integration(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
-    const testFiles = await this.collectTestFiles(cwd, 'integration', options?.files)
-
-    return this.run(testFiles, 240_000, false, options?.watch, options?.testReporter)
-  }
-
-  async general(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
-    const testFiles = await this.collectTestFiles(cwd, undefined, options?.files)
-
-    return this.run(testFiles, 240_000, true, options?.watch, options?.testReporter)
   }
 
   protected async run(
@@ -112,6 +41,7 @@ export class Tester extends EventEmitter {
 
       result.pipe(process.stdout)
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
       // @ts-expect-error toArray is missing
       return result.toArray()
     }
@@ -158,5 +88,79 @@ export class Tester extends EventEmitter {
       testsStream.off('test:stdout', onStdout)
       testsStream.off('test:stderr', onStderr)
     }
+  }
+
+  static async initialize(): Promise<Tester> {
+    return new Tester()
+  }
+
+  async unit(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
+    const testFiles = await this.collectTestFiles(cwd, 'unit', options?.files)
+
+    return this.run(testFiles, 25_000, true, options?.watch, options?.testReporter)
+  }
+
+  async integration(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
+    const testFiles = await this.collectTestFiles(cwd, 'integration', options?.files)
+
+    return this.run(testFiles, 240_000, false, options?.watch, options?.testReporter)
+  }
+
+  async general(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
+    const testFiles = await this.collectTestFiles(cwd, undefined, options?.files)
+
+    return this.run(testFiles, 240_000, true, options?.watch, options?.testReporter)
+  }
+
+  private async collectTestFiles(
+    cwd: string,
+    type: 'integration' | 'unit' | undefined,
+    patterns: Array<string> | undefined
+  ): Promise<Array<string>> {
+    let folderPattern = '*'
+    if (type !== undefined) {
+      folderPattern = type === 'unit' ? '!(integration)' : 'integration'
+    }
+
+    if (!patterns || patterns.length < 1) {
+      return globby([`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], {
+        cwd,
+        dot: true,
+        absolute: true,
+        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+      })
+    }
+
+    return globby(
+      patterns.map((pattern) => {
+        if (this.isFilename(pattern)) {
+          return `**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`
+        }
+
+        if (this.isRootPath(pattern)) {
+          return pattern
+        }
+
+        return `**/${pattern}`
+      }),
+      {
+        cwd,
+        dot: true,
+        absolute: true,
+        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+      }
+    )
+  }
+
+  private isFilename(pattern: string): boolean {
+    const hasPathSeparator = pattern.includes('/') || pattern.includes('\\')
+
+    const hasValidExtension = /\.(js|jsx|ts|tsx)$/.test(pattern)
+
+    return !hasPathSeparator && !hasValidExtension
+  }
+
+  private isRootPath(pattern: string): boolean {
+    return pattern.startsWith('/') || pattern.startsWith('\\')
   }
 }
