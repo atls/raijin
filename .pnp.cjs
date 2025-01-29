@@ -1655,6 +1655,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-schematics", "workspace:code/code-schematics"],\
           ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
           ["@angular-devkit/schematics", "npm:18.2.2"],\
+          ["@types/node", "npm:22.9.0"],\
           ["rxjs", "npm:7.8.1"]\
         ],\
         "linkType": "SOFT"\
