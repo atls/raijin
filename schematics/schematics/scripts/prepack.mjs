@@ -7,7 +7,7 @@ import { copyFileSync } from 'node:fs'
 import { writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import pkg from '../package.json' assert { type: 'json' }
+import pkg from '../package.json' with { type: 'json' }
 
 const dirname = fileURLToPath(new URL('.', import.meta.url))
 

@@ -38,5 +38,6 @@
     },
     "typings": "dist/index.d.ts"
   },
-  "schematics": "./src/collection.json"
+  "schematics": "./dist/collection.json",
+  "typecheckSkipLibCheck": true
 }
