@@ -6,9 +6,9 @@ import type { ImportDeclaration } from '@babel/types'
 import type { Printer }           from 'prettier'
 import type { AST }               from 'prettier'
 
-import { extractPrinter }         from './patch.js'
+import type { GetPrintersReturn } from '../interfaces/index.js'
 
-const printer = extractPrinter()
+import { extractPrinter }         from '../patch.js'
 
 const nodeImportSize = (node: ImportDeclaration): number => {
   if (node.specifiers.length === 0) {
@@ -79,11 +79,16 @@ export const preprocess = async (ast: AST): Promise<AST> => {
   return ast
 }
 
-export const printers: Record<string, Printer> = {
-  'typescript-custom': {
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    ...printer,
-    preprocess,
-    print,
-  },
+export const getPrinters = async (): GetPrintersReturn => {
+  const printer = await extractPrinter()
+
+  const printers = {
+    'typescript-custom': {
+      ...printer,
+      preprocess,
+      print,
+    },
+  }
+
+  return printers
 }

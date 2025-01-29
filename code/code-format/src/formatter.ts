@@ -1,24 +1,24 @@
-import EventEmitter       from 'node:events'
-import { writeFile }      from 'node:fs/promises'
-import { readFile }       from 'node:fs/promises'
-import { relative }       from 'node:path'
-import { join }           from 'node:path'
+import EventEmitter          from 'node:events'
+import { writeFile }         from 'node:fs/promises'
+import { readFile }          from 'node:fs/promises'
+import { relative }          from 'node:path'
+import { join }              from 'node:path'
 
-import * as babel         from 'prettier/plugins/babel'
-import * as estree        from 'prettier/plugins/estree'
-import * as graphql       from 'prettier/plugins/graphql'
-import * as markdown      from 'prettier/plugins/markdown'
-import * as typescript    from 'prettier/plugins/typescript'
-import * as yaml          from 'prettier/plugins/yaml'
-import { globby }         from 'globby'
-import { format }         from 'prettier/standalone'
-import ignorer            from 'ignore'
+import * as babel            from 'prettier/plugins/babel'
+import * as estree           from 'prettier/plugins/estree'
+import * as graphql          from 'prettier/plugins/graphql'
+import * as markdown         from 'prettier/plugins/markdown'
+import * as typescript       from 'prettier/plugins/typescript'
+import * as yaml             from 'prettier/plugins/yaml'
+import { globby }            from 'globby'
+import { format }            from 'prettier/standalone'
+import ignorer               from 'ignore'
 
-import config             from '@atls/config-prettier'
-import plugin             from '@atls/prettier-plugin'
+import { getPrettierPlugin } from '@atls/prettier-plugin'
+import config                from '@atls/config-prettier'
 
-import { ignore }         from './formatter.patterns.js'
-import { createPatterns } from './formatter.patterns.js'
+import { ignore }            from './formatter.patterns.js'
+import { createPatterns }    from './formatter.patterns.js'
 
 export class Formatter extends EventEmitter {
   constructor(private readonly cwd: string) {
@@ -38,6 +38,8 @@ export class Formatter extends EventEmitter {
   }
 
   protected async formatFiles(files: Array<string> = []): Promise<void> {
+    const prettierPlugin = await getPrettierPlugin()
+
     const formatFiles = ignorer
       .default()
       .add(ignore)
@@ -55,7 +57,7 @@ export class Formatter extends EventEmitter {
         ...config,
         filepath: filename,
         // @ts-expect-error type not assignable
-        plugins: [estree, yaml, markdown, graphql, babel, typescript, plugin],
+        plugins: [estree, yaml, markdown, graphql, babel, typescript, prettierPlugin],
       })
 
       if (output !== input && output) {
