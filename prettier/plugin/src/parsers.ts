@@ -15,7 +15,7 @@ const preprocess: Parser['preprocess'] = (source, options): string =>
 const parse: Parser['parse'] = async (source, { plugins }) => {
   const plugin = plugins.find((p) => typeof p !== 'string' && p.parsers?.typescript)
 
-// @ts-expect-error possibly undefined
+  // @ts-expect-error possibly undefined
   const program = plugin.parsers.typescript.parse(source)
 
   const bodyLength = program.body.length
