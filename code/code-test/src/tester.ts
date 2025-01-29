@@ -2,7 +2,7 @@
 
 import type { TestEvent } from 'node:test/reporters'
 
-import EventEmitter      from 'node:events'
+import EventEmitter       from 'node:events'
 import { run }            from 'node:test'
 import { tap }            from 'node:test/reporters'
 

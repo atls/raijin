@@ -1,7 +1,7 @@
 import type { ESLint }             from '@atls/code-runtime/eslint'
 import type { Linter as ESLinter } from '@atls/code-runtime/eslint'
 
-import EventEmitter               from 'node:events'
+import EventEmitter                from 'node:events'
 import { readFileSync }            from 'node:fs'
 import { readFile }                from 'node:fs/promises'
 import { writeFile }               from 'node:fs/promises'
@@ -9,7 +9,7 @@ import { relative }                from 'node:path'
 import { join }                    from 'node:path'
 
 import { globby }                  from 'globby'
-import ignorer                    from 'ignore'
+import ignorer                     from 'ignore'
 
 import { ignore }                  from './linter.patterns.js'
 import { createPatterns }          from './linter.patterns.js'

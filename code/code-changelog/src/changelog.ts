@@ -1,91 +1,91 @@
-import type {Options} from 'conventional-changelog'
+import type { Options }       from 'conventional-changelog'
 
-import {readFile} from 'node:fs/promises'
-import {writeFile} from 'node:fs/promises'
-import {join} from 'node:path'
-import {dirname} from 'node:path'
+import { readFile }           from 'node:fs/promises'
+import { writeFile }          from 'node:fs/promises'
+import { join }               from 'node:path'
+import { dirname }            from 'node:path'
 
 import conventionalChangelog from 'conventional-changelog'
 // @ts-expect-error missing types
-import preset from 'conventional-changelog-angular'
+import preset                from 'conventional-changelog-angular'
 
 interface GenerateOptions {
-	packageName: string
-	path: string
-	debug?: boolean
-	tagPrefix?: string
-	version?: string
-	file?: boolean
-	releaseCount?: number
+  packageName: string
+  path: string
+  debug?: boolean
+  tagPrefix?: string
+  version?: string
+  file?: boolean
+  releaseCount?: number
 }
 
 export class Changelog {
-	async generate({
-		path,
-		packageName,
-		debug,
-		tagPrefix,
-		file,
-		releaseCount,
-	}: GenerateOptions): Promise<string> {
-		const config: Options = {
-			lernaPackage: `${packageName}`,
-			tagPrefix,
-			debug: debug ? console.debug : undefined,
-			warn: console.warn,
-			append: true,
-			releaseCount,
-			pkg: {
-				path: join(path, 'package.json'),
-			},
-			config: preset,
-		}
+  async generate({
+    path,
+    packageName,
+    debug,
+    tagPrefix,
+    file,
+    releaseCount,
+  }: GenerateOptions): Promise<string> {
+    const config: Options = {
+      lernaPackage: `${packageName}`,
+      tagPrefix,
+      debug: debug ? console.debug : undefined,
+      warn: console.warn,
+      append: true,
+      releaseCount,
+      pkg: {
+        path: join(path, 'package.json'),
+      },
+      config: preset,
+    }
 
-		if (file) {
-			return await this.generateToFile(config, path)
-		}
+    if (file) {
+      return await this.generateToFile(config, path)
+    }
 
-		return this.generateToStdOut(config)
-	}
+    return this.generateToStdOut(config)
+  }
 
-	private async generateToStdOut(config: Options): Promise<string> {
-		return new Promise((resolve, reject) => {
-			const changelogStream = conventionalChangelog(config, undefined, {
-				path: dirname(config.pkg?.path ?? './'),
-			})
-			let newChangelog = ''
+  private async generateToStdOut(config: Options): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const changelogStream = conventionalChangelog(config, undefined, {
+        path: dirname(config.pkg?.path ?? './'),
+      })
+      let newChangelog = ''
 
-			changelogStream.on('data', (chunk) => {
-				newChangelog += chunk.toString()
-			})
+      changelogStream.on('data', (chunk) => {
+        newChangelog += chunk.toString()
+      })
 
-			changelogStream.on('end', () => resolve(newChangelog))
-			changelogStream.on('error', (error) => reject(error))
-		})
-	}
+      changelogStream.on('end', () => resolve(newChangelog))
+      changelogStream.on('error', (error) => reject(error))
+    })
+  }
 
-	private async generateToFile(config: Options, path: string): Promise<string> {
-		const outFile = join(path, 'CHANGELOG.md')
+  private async generateToFile(config: Options, path: string): Promise<string> {
+    const outFile = join(path, 'CHANGELOG.md')
 
-		try {
-			const newChangelog = await this.generateToStdOut(config)
-			let existingData = ''
+    try {
+      const newChangelog = await this.generateToStdOut(config)
+      let existingData = ''
 
-			try {
-				existingData = await readFile(outFile, 'utf8')
-			} catch (e: unknown) {
-				const error = e as Error & {code: string}
-				if (error.code !== 'ENOENT') throw error
-			}
+      try {
+        existingData = await readFile(outFile, 'utf8')
+      } catch (e: unknown) {
+        const error = e as Error & { code: string }
+        if (error.code !== 'ENOENT') throw error
+      }
 
-			const updatedData = existingData ? `${newChangelog}\n${existingData}` : newChangelog
-			await writeFile(outFile, updatedData, 'utf8')
+      const updatedData = existingData ? `${newChangelog}\n${existingData}` : newChangelog
+      await writeFile(outFile, updatedData, 'utf8')
 
-			return updatedData
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error('Error generating changelog:', error)
-			throw error
-		}
-	}
+      return updatedData
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error generating changelog:', error)
+      throw error
+    }
+  }
 }
