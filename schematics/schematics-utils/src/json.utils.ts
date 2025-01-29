@@ -5,7 +5,6 @@ import type { Tree }             from '@angular-devkit/schematics'
 
 import stripJsonComments         from 'strip-json-comments'
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const serializeJson = (json: string): string => `${JSON.stringify(json, null, 2)}\n`
 
 export const readJsonInTree = (host: Tree, path: string): void => {
