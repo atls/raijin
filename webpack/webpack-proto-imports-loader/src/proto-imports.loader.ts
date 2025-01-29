@@ -1,21 +1,16 @@
 /* eslint-disable @typescript-eslint/sort-type-constituents */
 
-import path from "node:path";
+import path       from 'node:path'
 
-import { parse } from "protocol-buffers-schema";
-import fileLoader from "file-loader";
+
+export const getProtoFileName = (resourcePath: string): string => {
+  const hash = Buffer.from(path.dirname(resourcePath)).toString('hex')
 
 export const getProtoFileName = (resourcePath: string): string => {
   const hash = Buffer.from(path.dirname(resourcePath)).toString("hex");
 
-  return `./${hash.slice(hash.length - 20)}-${path.basename(resourcePath)}`;
-};
-
-export const resolvePackageImportPath = (
-  packageName: string,
-  importPath: string
-): string => {
-  const packagePath = packageName.replace(/\./g, "/");
+export const resolvePackageImportPath = (packageName: string, importPath: string): string => {
+  const packagePath = packageName.replace(/\./g, '/')
 
   if (importPath.startsWith(packagePath)) {
     return path.relative(packagePath, importPath);
@@ -35,24 +30,24 @@ export default function protoImportsLoader(source: string | Buffer): string {
         // @ts-expect-error null is not assignable
         packageName,
         importPath
-      );
+      )
       const importAbsolutePath = path.join(
         // @ts-expect-error this is undefined
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         path.dirname(this.resourcePath),
         resolvedImportPath
-      );
-      const targetPath = getProtoFileName(importAbsolutePath);
+      )
+      const targetPath = getProtoFileName(importAbsolutePath)
 
       // @ts-expect-error source can be buffer
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-param-reassign
-      source = source.replace(importPath, targetPath);
+      source = source.replace(importPath, targetPath)
 
       dependencies.push(`require('${importAbsolutePath}')`);
 
       // @ts-expect-error this is undefined
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      this.addDependency(importAbsolutePath);
+      this.addDependency(importAbsolutePath)
     }
   });
 

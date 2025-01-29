@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import type { Rule } from "@angular-devkit/schematics";
 import type { SchematicContext } from "@angular-devkit/schematics";
 import type { Tree } from "@angular-devkit/schematics";
