@@ -1,6 +1,6 @@
 import path       from 'node:path'
 
-import { parse }  from 'protocol-buffers-schema'
+import { parse }   from 'protocol-buffers-schema'
 import fileLoader from 'file-loader'
 
 export const getProtoFileName = (resourcePath: string): string => {
@@ -25,14 +25,18 @@ export default function protoImportsLoader(source: Buffer | string): string {
   const dependencies: Array<string> = []
 
   imports.forEach((importPath) => {
-    if (!path.isAbsolute(importPath)) {
+    if (!path.isAbsolute(importPath) && typeof packageName === 'string') {
       const resolvedImportPath = resolvePackageImportPath(packageName, importPath)
       // @ts-expect-error this is undefined
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const importAbsolutePath = path.join(path.dirname(this.resourcePath), resolvedImportPath)
       const targetPath = getProtoFileName(importAbsolutePath)
 
-      // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-unsafe-call
+      if (Buffer.isBuffer(source)) {
+        // eslint-disable-next-line no-param-reassign
+        source = source.toString()
+      }
+      // eslint-disable-next-line no-param-reassign
       source = source.replace(importPath, targetPath)
 
       dependencies.push(`require('${importAbsolutePath}')`)
