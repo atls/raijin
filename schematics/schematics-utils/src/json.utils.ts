@@ -28,12 +28,17 @@ export const updateJsonInTree = <T = any, O = T>(
   ): Rule =>
   (host: Tree, context: SchematicContext): Tree => {
     if (!host.exists(path)) {
-      host.create(path, serializeJson(callback({} as T, context)))
+      // TODO types
+      host.create(path, serializeJson(callback({} as T, context) as string))
 
       return host
     }
 
-    host.overwrite(path, serializeJson(callback(readJsonInTree(host, path), context)))
+    // TODO types
+    host.overwrite(
+      path,
+      serializeJson(callback(readJsonInTree(host, path) as T, context) as string)
+    )
 
     return host
   }
