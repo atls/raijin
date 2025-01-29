@@ -1,9 +1,9 @@
-import type { Options }       from 'conventional-changelog'
+import type { Options }      from 'conventional-changelog'
 
-import { readFile }           from 'node:fs/promises'
-import { writeFile }          from 'node:fs/promises'
-import { join }               from 'node:path'
-import { dirname }            from 'node:path'
+import { readFile }          from 'node:fs/promises'
+import { writeFile }         from 'node:fs/promises'
+import { join }              from 'node:path'
+import { dirname }           from 'node:path'
 
 import conventionalChangelog from 'conventional-changelog'
 // @ts-expect-error missing types
@@ -31,7 +31,9 @@ export class Changelog {
     const config: Options = {
       lernaPackage: `${packageName}`,
       tagPrefix,
+      // eslint-disable-next-line no-console
       debug: debug ? console.debug : undefined,
+      // eslint-disable-next-line no-console
       warn: console.warn,
       append: true,
       releaseCount,
@@ -42,7 +44,7 @@ export class Changelog {
     }
 
     if (file) {
-      return await this.generateToFile(config, path)
+      return this.generateToFile(config, path)
     }
 
     return this.generateToStdOut(config)
@@ -55,12 +57,16 @@ export class Changelog {
       })
       let newChangelog = ''
 
-      changelogStream.on('data', (chunk) => {
+      changelogStream.on('data', (chunk: Buffer) => {
         newChangelog += chunk.toString()
       })
 
-      changelogStream.on('end', () => resolve(newChangelog))
-      changelogStream.on('error', (error) => reject(error))
+      changelogStream.on('end', () => {
+        resolve(newChangelog)
+      })
+      changelogStream.on('error', (error) => {
+        reject(error)
+      })
     })
   }
 
