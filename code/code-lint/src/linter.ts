@@ -124,7 +124,7 @@ export class Linter extends EventEmitter {
     return this.lintFiles(finalFiles, options)
   }
 
-  private async lintWithCache(files: Array<string> = []): Promise<Array<ESLint.LintResult>> {
+  private async lintWithCache(files: Array<string> = []): Promise<ESLint.LintResult[]> {
     this.emit('start', { files })
 
     const results = await this.cacheLinter?.lintFiles(files)
@@ -139,11 +139,10 @@ export class Linter extends EventEmitter {
   }
 
   private getProjectIgnorePatterns(): Array<string> {
-    // eslint-disable-next-line n/no-sync
     const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
 
     const { linterIgnorePatterns = [] } = JSON.parse(content)
 
-    return linterIgnorePatterns as Array<string>
+    return linterIgnorePatterns
   }
 }

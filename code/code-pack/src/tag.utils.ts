@@ -53,8 +53,6 @@ export const getContext = async (): Promise<string> => {
 
 export const getTag = async (tagPolicy: TagPolicy): Promise<string> => {
   const revision = await getRevision()
-  // eslint-disable-next-line @typescript-eslint/no-deprecated
-  // @ts-expect-error deprecated
   const hash = revision.substr(0, 7)
 
   if (tagPolicy === 'hash-timestamp') {

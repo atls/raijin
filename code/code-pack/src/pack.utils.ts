@@ -1,12 +1,10 @@
-import type { PortablePath } from '@yarnpkg/fslib'
+import { platform }     from 'node:os'
+import { arch }         from 'node:os'
 
-import { platform }          from 'node:os'
-import { arch }              from 'node:os'
-
-import { execUtils }         from '@yarnpkg/core'
+import { PortablePath } from '@yarnpkg/fslib'
+import { execUtils }    from '@yarnpkg/core'
 
 interface InstallPackOptions {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   context: any
   cwd?: PortablePath
 }
@@ -35,7 +33,6 @@ export const installPack: InstallPack = async ({ context, cwd }) => {
   }
 
   if (!isPackInstalled) {
-    // eslint-disable-next-line no-console
     console.log('Buildpack CLI (pack) is not installed. Installing it...')
 
     let downloadUrl = 'https://github.com/buildpacks/pack/releases/download/v0.36.2/pack-v0.36.2-'
@@ -54,9 +51,9 @@ export const installPack: InstallPack = async ({ context, cwd }) => {
           downloadUrl += 'macos.tgz'
         }
         break
-      default:
-        downloadUrl += 'linux.tgz'
-        break
+    }
+
+    if (currentPlatform === 'linux') {
     }
 
     const tempFile = `${cwd ?? context.cwd}/pack.tgz`
@@ -79,7 +76,6 @@ export const installPack: InstallPack = async ({ context, cwd }) => {
       end: execUtils.EndStrategy.ErrorCode,
     })
 
-    // eslint-disable-next-line no-console
     console.log('Buildpack CLI (pack) has been installed.')
   }
 }

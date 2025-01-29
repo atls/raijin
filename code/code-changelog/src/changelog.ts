@@ -31,9 +31,7 @@ export class Changelog {
     const config: Options = {
       lernaPackage: `${packageName}`,
       tagPrefix,
-      // eslint-disable-next-line no-console
       debug: debug ? console.debug : undefined,
-      // eslint-disable-next-line no-console
       warn: console.warn,
       append: true,
       releaseCount,
@@ -44,7 +42,7 @@ export class Changelog {
     }
 
     if (file) {
-      return this.generateToFile(config, path)
+      return await this.generateToFile(config, path)
     }
 
     return this.generateToStdOut(config)
@@ -57,16 +55,12 @@ export class Changelog {
       })
       let newChangelog = ''
 
-      changelogStream.on('data', (chunk: Buffer) => {
+      changelogStream.on('data', (chunk) => {
         newChangelog += chunk.toString()
       })
 
-      changelogStream.on('end', (): void => {
-        resolve(newChangelog)
-      })
-      changelogStream.on('error', (error): void => {
-        reject(error)
-      })
+      changelogStream.on('end', () => resolve(newChangelog))
+      changelogStream.on('error', (error) => reject(error))
     })
   }
 
@@ -79,8 +73,7 @@ export class Changelog {
 
       try {
         existingData = await readFile(outFile, 'utf8')
-      } catch (e: unknown) {
-        const error = e as Error & { code: string }
+      } catch (error: any) {
         if (error.code !== 'ENOENT') throw error
       }
 
@@ -89,7 +82,6 @@ export class Changelog {
 
       return updatedData
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Error generating changelog:', error)
       throw error
     }

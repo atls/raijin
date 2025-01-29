@@ -54,7 +54,7 @@ export class Formatter extends EventEmitter {
       const output = await format(input, {
         ...config,
         filepath: filename,
-        // @ts-expect-error not assignable
+        // @ts-expect-error any
         plugins: [estree, yaml, markdown, graphql, babel, typescript, plugin],
       })
 

@@ -26,7 +26,6 @@ export class Release {
   }
 
   async create(options: CreateOptions): Promise<number> {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { owner, repo, tag_name, name, make_latest, draft, body } = options
 
     const result = await this.client.repos.createRelease({

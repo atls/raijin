@@ -1,93 +1,86 @@
-import type { webpack as wp } from "@atls/code-runtime/webpack";
+import type { webpack as wp }      from '@atls/code-runtime/webpack'
 
-import type { WebpackEnvironment } from "./webpack.interfaces.js";
-import type WebpackPluginInstance
+import type { WebpackEnvironment } from './webpack.interfaces.js'
 
-import { readFile } from "node:fs/promises";
-import { writeFile } from "node:fs/promises";
-import { mkdtemp } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { readFile }                from 'node:fs/promises'
+import { writeFile }               from 'node:fs/promises'
+import { mkdtemp }                 from 'node:fs/promises'
+import { tmpdir }                  from 'node:os'
+import { join }                    from 'node:path'
 
-import tsconfig from "@atls/config-typescript";
+import tsconfig                    from '@atls/config-typescript'
 
-import { WebpackExternals } from "./webpack.externals.js";
-import { LAZY_IMPORTS } from "./webpack.ignore.js";
+import { WebpackExternals }        from './webpack.externals.js'
+import { LAZY_IMPORTS }            from './webpack.ignore.js'
 
 export class WebpackConfig {
   constructor(
     private readonly webpack: typeof wp,
     private readonly loaders: {
-      tsLoader: string;
-      nodeLoader: string;
-      nullLoader: string;
-      protoLoader: string;
+      tsLoader: string
+      nodeLoader: string
+      nullLoader: string
+      protoLoader: string
     },
     private readonly cwd: string
   ) {}
 
   async build(
-    environment: WebpackEnvironment = "production",
+    environment: WebpackEnvironment = 'production',
     additionalPlugins: Array<wp.WebpackPluginInstance> = []
   ): Promise<wp.Configuration> {
-    const configFile = join(
-      await mkdtemp(join(tmpdir(), "code-service-")),
-      "tsconfig.json"
-    );
+    const configFile = join(await mkdtemp(join(tmpdir(), 'code-service-')), 'tsconfig.json')
 
-    await writeFile(configFile, '{"include":["**/*"]}');
+    await writeFile(configFile, '{"include":["**/*"]}')
 
-    const type = await this.getWorkspaceType();
+    const type = await this.getWorkspaceType()
 
-    const webpackExternals = new WebpackExternals(this.cwd);
-    const externals = ["webpack/hot/poll?100", await webpackExternals.build()];
+    const webpackExternals = new WebpackExternals(this.cwd)
+    const externals = ['webpack/hot/poll?100', await webpackExternals.build()]
 
-    const plugins = this.createPlugins(environment, additionalPlugins);
+    const plugins = this.createPlugins(environment, additionalPlugins)
 
     return {
       mode: environment,
-      bail: environment === "production",
-      target: "async-node",
+      bail: environment === 'production',
+      target: 'async-node',
       optimization: { minimize: false },
       experiments: {
-        outputModule: type === "module",
+        outputModule: type === 'module',
       },
       plugins,
       entry: {
-        index: join(this.cwd, "src/index"),
-        ...(environment === "development" && { hot: "webpack/hot/poll?100" }),
+        index: join(this.cwd, 'src/index'),
+        ...(environment === 'development' && { hot: 'webpack/hot/poll?100' }),
       },
       node: { __dirname: true, __filename: false },
       output: {
-        path: join(this.cwd, "dist"),
-        filename: "[name].js",
+        path: join(this.cwd, 'dist'),
+        filename: '[name].js',
         library: { type },
-        chunkFormat: environment === "development" ? "commonjs" : type,
-        module: type === "module",
+        chunkFormat: environment === 'development' ? 'commonjs' : type,
+        module: type === 'module',
         clean: false,
-        assetModuleFilename: "assets/[name][ext]",
+        assetModuleFilename: 'assets/[name][ext]',
       },
       resolve: {
         extensionAlias: {
-          ".js": [".tsx", ".ts", ".js"],
-          ".jsx": [".tsx", ".ts", ".js"],
-          ".cjs": [".cjs", ".cts"],
-          ".mjs": [".mjs", ".mts"],
+          '.js': ['.tsx', '.ts', '.js'],
+          '.jsx': ['.tsx', '.ts', '.js'],
+          '.cjs': ['.cjs', '.cts'],
+          '.mjs': ['.mjs', '.mts'],
         },
-        extensions: [".tsx", ".ts", ".js"],
+        extensions: ['.tsx', '.ts', '.js'],
         alias: {
-          "class-transformer/storage": "class-transformer/cjs/storage",
+          'class-transformer/storage': 'class-transformer/cjs/storage',
         },
       },
       externals,
-      externalsType: type === "module" ? "import" : "commonjs",
+      externalsType: type === 'module' ? 'import' : 'commonjs',
       externalsPresets: {
         node: true,
       },
-      devtool:
-        environment === "production"
-          ? "source-map"
-          : "eval-cheap-module-source-map",
+      devtool: environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
       module: {
         rules: [
           {
@@ -104,75 +97,69 @@ export class WebpackConfig {
                 transpileOnly: true,
                 experimentalWatchApi: true,
                 onlyCompileBundledFiles: true,
-                compilerOptions: {
-                  ...tsconfig.compilerOptions,
-                  sourceMap: true,
-                },
+                compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
                 context: this.cwd,
                 configFile,
               },
             },
           },
-          { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: "asset/resource" },
-          { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: "asset/resource" },
-          { test: /\.(md)$/i, type: "asset/resource" },
+          { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
+          { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
+          { test: /\.(md)$/i, type: 'asset/resource' },
           { test: /\.node$/, use: this.loaders.nodeLoader },
           { test: /\.proto$/, use: { loader: this.loaders.protoLoader } },
         ],
       },
-    };
+    }
   }
 
   private async getWorkspaceType(): Promise<string> {
     try {
-      const content = await readFile(join(this.cwd, "package.json"), "utf-8");
-      const { type = "commonjs" } = JSON.parse(content);
+      const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
+      const { type = 'commonjs' } = JSON.parse(content)
 
-      return type as string;
+      return type
     } catch {
-      return "module";
+      return 'module'
     }
   }
 
-  private createPlugins(
-    environment: string,
-    additionalPlugins: Array<wp.WebpackPluginInstance>
-  ): Array<wp.WebpackPluginInstance> {
+  private createPlugins(environment: string, additionalPlugins: Array<wp.WebpackPluginInstance>) {
     const plugins: Array<wp.WebpackPluginInstance> = [
       new this.webpack.IgnorePlugin({
         checkResource: (resource: string): boolean => {
-          if (resource.endsWith(".js.map")) {
-            return true;
+          if (resource.endsWith('.js.map')) {
+            return true
           }
 
           if (!LAZY_IMPORTS.includes(resource)) {
-            return false;
+            return false
           }
 
           try {
             require.resolve(resource, {
               paths: [this.cwd],
-            });
-          } catch {
-            return true;
+            })
+          } catch (err) {
+            return true
           }
 
-          return false;
+          return false
         },
       }),
       ...additionalPlugins,
-    ];
+    ]
 
-    if (environment === "development") {
-      plugins.push(new this.webpack.HotModuleReplacementPlugin());
+    if (environment === 'development') {
+      plugins.push(new this.webpack.HotModuleReplacementPlugin())
       plugins.push(
         new this.webpack.BannerPlugin({
           banner: `import { createRequire } from 'node:module'\nimport { fileURLToPath } from 'node:url'\nconst require = createRequire(import.meta.url)\nconst __filename = fileURLToPath(import.meta.url)\n`,
           raw: true,
         })
-      );
+      )
     }
 
-    return plugins;
+    return plugins
   }
 }

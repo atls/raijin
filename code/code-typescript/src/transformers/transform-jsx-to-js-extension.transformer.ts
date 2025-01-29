@@ -15,7 +15,6 @@ export const transformJsxToJsExtension = (ts: typeof typescript) =>
               node.modifiers,
               node.importClause,
               ctx.factory.createStringLiteral(moduleSpecifier.text.replace('.jsx', '.js')),
-              // eslint-disable-next-line @typescript-eslint/no-deprecated
               node.assertClause
             )
           }
@@ -28,7 +27,6 @@ export const transformJsxToJsExtension = (ts: typeof typescript) =>
             node.isTypeOnly,
             node.exportClause,
             ctx.factory.createStringLiteral(moduleSpecifier.text.replace('.jsx', '.js')),
-            // eslint-disable-next-line @typescript-eslint/no-deprecated
             node.assertClause
           )
         }

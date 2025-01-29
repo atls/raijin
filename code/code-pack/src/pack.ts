@@ -70,7 +70,6 @@ export const pack = async (
 
   await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
 
-  // eslint-disable-next-line n/no-sync, no-console
   console.debug('project.toml', readFileSync(descriptorPath, 'utf8'))
 
   const args = [
@@ -97,7 +96,6 @@ export const pack = async (
     args.push('--platform', platform)
   }
 
-  // eslint-disable-next-line no-console
   console.debug(`Packing with args:`, args)
 
   await installPack({ cwd, context })

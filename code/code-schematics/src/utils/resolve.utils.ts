@@ -3,7 +3,7 @@ import { join }    from 'node:path'
 
 const dynamicRequire = eval('require') // eslint-disable-line no-eval
 
-const findPnpApiPath = (cwd?: string): string => {
+const findPnpApiPath = (cwd?: string) => {
   if (process.versions.pnp) {
     // eslint-disable-next-line
     return require('module').findPnpApi(__filename).resolveRequest('pnpapi', null)
@@ -25,7 +25,7 @@ export const resolveSchematics = (cwd?: string) => {
   try {
     // eslint-disable-next-line
     return join(dirname(dynamicRequire.resolve('@atls/schematics')), '..')
-  } catch {
+  } catch (error) {
     setupPnp(cwd)
 
     // eslint-disable-next-line
