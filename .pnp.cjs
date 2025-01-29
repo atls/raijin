@@ -339,7 +339,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/code-commit", ["workspace:code/code-commit"]],\
     ["@atls/code-configuration", ["workspace:code/code-configuration"]],\
     ["@atls/code-format", ["workspace:code/code-format"]],\
-    ["@atls/code-github", ["workspace:code/code-github"]],\
+    ["@atls/code-github", ["virtual:bbcc09757fc2c8fe1988d3f27a93dfa46b1ad5c7cff2c229f3479d029379bde7a751f5aa608d45793b48a3281bd52e78a80f3bd1410fde26592afacb695b2ad3#workspace:code/code-github", "workspace:code/code-github"]],\
     ["@atls/code-icons", ["workspace:code/code-icons"]],\
     ["@atls/code-jsr", ["workspace:code/code-jsr"]],\
     ["@atls/code-lint", ["virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:code/code-lint", "workspace:code/code-lint"]],\
@@ -1538,12 +1538,27 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@atls/code-github", [\
+      ["virtual:bbcc09757fc2c8fe1988d3f27a93dfa46b1ad5c7cff2c229f3479d029379bde7a751f5aa608d45793b48a3281bd52e78a80f3bd1410fde26592afacb695b2ad3#workspace:code/code-github", {\
+        "packageLocation": "./.yarn/__virtual__/@atls-code-github-virtual-1acb0bbcc8/1/code/code-github/",\
+        "packageDependencies": [\
+          ["@atls/code-github", "virtual:bbcc09757fc2c8fe1988d3f27a93dfa46b1ad5c7cff2c229f3479d029379bde7a751f5aa608d45793b48a3281bd52e78a80f3bd1410fde26592afacb695b2ad3#workspace:code/code-github"],\
+          ["@octokit/auth-action", "npm:5.1.1"],\
+          ["@octokit/rest", "npm:21.0.2"],\
+          ["@octokit/types", "npm:13.5.0"],\
+          ["@types/octokit__types", null]\
+        ],\
+        "packagePeers": [\
+          "@types/octokit__types"\
+        ],\
+        "linkType": "SOFT"\
+      }],\
       ["workspace:code/code-github", {\
         "packageLocation": "./code/code-github/",\
         "packageDependencies": [\
           ["@atls/code-github", "workspace:code/code-github"],\
           ["@octokit/auth-action", "npm:5.1.1"],\
-          ["@octokit/rest", "npm:21.0.2"]\
+          ["@octokit/rest", "npm:21.0.2"],\
+          ["@octokit/types", "npm:13.5.0"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -2685,7 +2700,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/yarn-plugin-release", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-release"],\
           ["@atls/code-changelog", "workspace:code/code-changelog"],\
-          ["@atls/code-github", "workspace:code/code-github"],\
+          ["@atls/code-github", "virtual:bbcc09757fc2c8fe1988d3f27a93dfa46b1ad5c7cff2c229f3479d029379bde7a751f5aa608d45793b48a3281bd52e78a80f3bd1410fde26592afacb695b2ad3#workspace:code/code-github"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
@@ -2706,7 +2721,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/yarn-plugin-release", "workspace:yarn/plugin-release"],\
           ["@atls/code-changelog", "workspace:code/code-changelog"],\
-          ["@atls/code-github", "workspace:code/code-github"],\
+          ["@atls/code-github", "virtual:bbcc09757fc2c8fe1988d3f27a93dfa46b1ad5c7cff2c229f3479d029379bde7a751f5aa608d45793b48a3281bd52e78a80f3bd1410fde26592afacb695b2ad3#workspace:code/code-github"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["@yarnpkg/cli", "virtual:cc0a970534b499add0064d8eb1fc3286f3c9be4bf3080c3e6e508964ea5232777f3e0009913a6a066796387e6b8a4b9e488b8a0d642735fad9419dc069d9dbde#npm:4.5.1"],\
           ["@yarnpkg/core", "npm:4.1.4"],\

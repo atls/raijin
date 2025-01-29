@@ -665,6 +665,9 @@ __metadata:
   dependencies:
     "@octokit/auth-action": "npm:5.1.1"
     "@octokit/rest": "npm:21.0.2"
+    "@octokit/types": "npm:13.5.0"
+  peerDependencies:
+    "@octokit/types": "*"
   languageName: unknown
   linkType: soft
 
