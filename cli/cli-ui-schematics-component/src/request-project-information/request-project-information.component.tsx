@@ -9,7 +9,11 @@ import React           from 'react'
 
 import { ProjectType } from '@atls/schematics'
 
-const Submit = ({ onSubmit, ...props }: any) => {
+interface SubmitProps {
+  onSubmit: (props: ProjectInformationProperties) => void
+}
+
+const Submit = ({ onSubmit, ...props }: ProjectInformationProperties & SubmitProps): null => {
   useEffect(() => {
     onSubmit(props)
   }, [props, onSubmit])
