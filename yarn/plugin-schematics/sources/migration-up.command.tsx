@@ -7,7 +7,7 @@ import { MessageName }     from '@yarnpkg/core'
 import { StreamReport }    from '@yarnpkg/core'
 import { xfs }             from '@yarnpkg/fslib'
 import { npath }           from '@yarnpkg/fslib'
-import React              from 'react'
+import React               from 'react'
 
 import { SpinnerProgress } from '@atls/yarn-run-utils'
 import { renderStatic }    from '@atls/cli-ui-renderer-static-component'

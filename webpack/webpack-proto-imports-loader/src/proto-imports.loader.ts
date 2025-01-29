@@ -1,6 +1,6 @@
 import path       from 'node:path'
 
-import { parse }   from 'protocol-buffers-schema'
+import { parse }  from 'protocol-buffers-schema'
 import fileLoader from 'file-loader'
 
 export const getProtoFileName = (resourcePath: string): string => {

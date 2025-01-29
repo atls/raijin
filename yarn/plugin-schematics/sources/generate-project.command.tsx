@@ -15,7 +15,7 @@ import { forceStdinTty }                     from 'force-stdin-tty'
 import { isOneOf }                           from 'typanion'
 import { isLiteral }                         from 'typanion'
 import { isOptional }                        from 'typanion'
-import React                                from 'react'
+import React                                 from 'react'
 
 import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
 import { RequestProjectInformation }         from '@atls/cli-ui-schematics-component'
