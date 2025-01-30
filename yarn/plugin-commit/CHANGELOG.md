@@ -1,3 +1,5 @@
+## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.3...@atls/yarn-plugin-commit@1.0.4) (2025-01-30)
+
 ## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.2...@atls/yarn-plugin-commit@1.0.3) (2025-01-09)
 
 ## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.2...@atls/yarn-plugin-commit@1.0.3) (2025-01-09)
