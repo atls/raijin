@@ -32,10 +32,6 @@ interface RequestProjectInformationProps {
 export const RequestProjectInformation: FC<RequestProjectInformationProps> = ({ onSubmit }) => {
   const [type, setType] = useState<ProjectType>()
 
-  // TODO component
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const IndicatorComponent = 'bla' as any
-
   if (!type) {
     return (
       <Box flexDirection='column'>
@@ -57,7 +53,6 @@ export const RequestProjectInformation: FC<RequestProjectInformationProps> = ({ 
           ]}
           // eslint-disable-next-line
           onSelect={(v) => setType(v.value)}
-          indicatorComponent={IndicatorComponent}
         />
       </Box>
     )
