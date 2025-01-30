@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.1...@atls/yarn-plugin-tools@1.0.2) (2025-01-30)
+
+### Bug Fixes
+
+- **common:** yarn check ([#485](https://github.com/atls/raijin/issues/485)) ([b0c3cfa](https://github.com/atls/raijin/commit/b0c3cfad8f559c55691ca733c7a3a7b3cd00c4d8))
+
 ## <small>1.0.1 (2025-01-09)</small>
 
 - Create tools.yaml ([c7bbbad](https://github.com/atls/raijin/commit/c7bbbad))
