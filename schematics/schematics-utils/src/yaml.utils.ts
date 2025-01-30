@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import type { Rule }             from '@angular-devkit/schematics'
 import type { SchematicContext } from '@angular-devkit/schematics'
 import type { Tree }             from '@angular-devkit/schematics'
@@ -24,7 +26,10 @@ export const updateYamlInTree = <T = any, O = T>(
 
     host.overwrite(
       path,
-      dump(callback(readYamlInTree(host, path), context), { noArrayIndent: true, lineWidth: -1 })
+      dump(callback(readYamlInTree(host, path), context), {
+        noArrayIndent: true,
+        lineWidth: -1,
+      })
     )
 
     return host

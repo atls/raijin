@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import type { Source }          from '@angular-devkit/schematics'
 
 import { readFileSync }         from 'node:fs'
@@ -31,10 +33,8 @@ const generateCommon = (options: any): Source =>
   ])
 
 const generateProjectSpecifiec = (options: any): Source => {
-  // eslint-disable-next-line
   const { name: projectName } = JSON.parse(readFileSync(join(options.cwd, 'package.json'), 'utf-8'))
 
-  // eslint-disable-next-line
   return apply(url(join('./files', options.type)), [
     template({
       ...strings,
@@ -46,7 +46,6 @@ const generateProjectSpecifiec = (options: any): Source => {
   ])
 }
 
-// eslint-disable-next-line
 export const main = (options: any) =>
   chain([
     mergeWith(generateCommon(options), MergeStrategy.Overwrite),

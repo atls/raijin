@@ -1,3 +1,5 @@
+/* eslint-disable n/no-sync */
+
 import copydir from 'copy-dir'
 import { globbySync } from 'globby'
 import { join } from 'path'
@@ -5,7 +7,7 @@ import { copyFileSync } from 'node:fs'
 import { writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import pkg from '../package.json' assert { type: 'json' }
+import pkg from '../package.json' with { type: 'json' }
 
 const dirname = fileURLToPath(new URL('.', import.meta.url))
 

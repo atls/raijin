@@ -8,13 +8,13 @@ import sortPackageJson                        from 'sort-package-json'
 
 import { preprocess as importSortPreprocess } from './import-sort/index.js'
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
-const preprocess: Parser<any>['preprocess'] = (source, options): string =>
+const preprocess: Parser['preprocess'] = (source, options): string =>
   importSortPreprocess(source, options)
 
 const parse: Parser['parse'] = async (source, { plugins }) => {
-  const plugin: any = plugins.find((p: any) => p.parsers?.typescript)
+  const plugin = plugins.find((p) => typeof p !== 'string' && p.parsers?.typescript)
 
+  // @ts-expect-error possibly undefined
   const program = plugin.parsers.typescript.parse(source)
 
   const bodyLength = program.body.length

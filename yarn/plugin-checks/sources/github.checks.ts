@@ -31,7 +31,12 @@ export class GitHubChecks {
   }
 
   async create(
-    params: RequestParameters & { owner: string; repo: string; name: string; head_sha: string }
+    params: RequestParameters & {
+      owner: string
+      repo: string
+      name: string
+      head_sha: string
+    }
   ): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>> {
     const response = await this.octokit.rest.checks.create(params)
 
@@ -46,7 +51,11 @@ export class GitHubChecks {
     return this.create({
       ...context.repo,
       name: this.name,
-      head_sha: payload.after || payload.pull_request?.head.sha || (process.env.GITHUB_SHA as any),
+      head_sha:
+        payload.after ||
+        payload.pull_request?.head.sha ||
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        process.env.GITHUB_SHA!,
       started_at: new Date().toISOString(),
       status: 'in_progress',
     })
@@ -62,7 +71,11 @@ export class GitHubChecks {
       ...context.repo,
       check_run_id: id,
       name: this.name,
-      head_sha: payload.after || payload.pull_request?.head.sha || (process.env.GITHUB_SHA as any),
+      head_sha:
+        payload.after ||
+        payload.pull_request?.head.sha ||
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        process.env.GITHUB_SHA!,
       completed_at: new Date().toISOString(),
       status: 'completed',
       conclusion: output.annotations.length > 0 ? 'failure' : 'success',
@@ -86,7 +99,11 @@ export class GitHubChecks {
     return this.create({
       ...context.repo,
       name: this.name,
-      head_sha: payload.after || payload.pull_request?.head.sha || (process.env.GITHUB_SHA as any),
+      head_sha:
+        payload.after ||
+        payload.pull_request?.head.sha ||
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        process.env.GITHUB_SHA!,
       completed_at: new Date().toISOString(),
       status: 'completed',
       conclusion: 'failure',

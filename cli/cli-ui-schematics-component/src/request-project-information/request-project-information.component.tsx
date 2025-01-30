@@ -9,7 +9,11 @@ import React           from 'react'
 
 import { ProjectType } from '@atls/schematics'
 
-const Submit = ({ onSubmit, ...props }: any) => {
+interface SubmitProps {
+  onSubmit: (props: ProjectInformationProperties) => void
+}
+
+const Submit = ({ onSubmit, ...props }: ProjectInformationProperties & SubmitProps): null => {
   useEffect(() => {
     onSubmit(props)
   }, [props, onSubmit])
@@ -27,6 +31,7 @@ interface RequestProjectInformationProps {
 // TODO: refactor for usage in new plugin
 export const RequestProjectInformation: FC<RequestProjectInformationProps> = ({ onSubmit }) => {
   const [type, setType] = useState<ProjectType>()
+
   if (!type) {
     return (
       <Box flexDirection='column'>
@@ -48,7 +53,6 @@ export const RequestProjectInformation: FC<RequestProjectInformationProps> = ({ 
           ]}
           // eslint-disable-next-line
           onSelect={(v) => setType(v.value)}
-          indicatorComponent={IndicatorComponent}
         />
       </Box>
     )

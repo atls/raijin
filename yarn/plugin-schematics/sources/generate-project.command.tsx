@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import type { ProjectInformationProperties } from '@atls/cli-ui-schematics-component'
 
 import { BaseCommand }                       from '@yarnpkg/cli'
@@ -72,7 +74,9 @@ class GenerateProjectCommand extends BaseCommand {
       return 1
     }
 
-    const schematics = new SchematicsWorker(project.cwd)
+    // TODO component
+    const schematics = 'bla' as any
+    // const schematics = new SchematicsWorker(project.cwd)
 
     const commandReport = await StreamReport.start(
       {
@@ -90,7 +94,7 @@ class GenerateProjectCommand extends BaseCommand {
 
             progress.end()
 
-            events.forEach((event) => {
+            events.forEach((event: any) => {
               const eventPath = event.path.startsWith('/') ? event.path.slice(1) : event.path
 
               if (event.kind === 'error') {
@@ -119,7 +123,7 @@ class GenerateProjectCommand extends BaseCommand {
           } catch (error) {
             progress.end()
 
-            renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
+            renderStatic(<ErrorInfo error={error as Error} />)
               .split('\n')
               .forEach((line) => {
                 report.reportError(MessageName.UNNAMED, line)

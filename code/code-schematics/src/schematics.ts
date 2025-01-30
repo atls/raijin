@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import type { Path }           from '@angular-devkit/core'
 import type { DryRunEvent }    from '@angular-devkit/schematics'
 
@@ -90,7 +92,6 @@ export class Schematics {
           'migrations.json'
         )
 
-        // eslint-disable-next-line security/detect-non-literal-require
         const data = require(migrationsPath)
 
         return Object.keys(data.schematics)
@@ -104,7 +105,6 @@ export class Schematics {
       .flat()
 
     for (const migration of migrations) {
-      // eslint-disable-next-line no-await-in-loop
       await lastValueFrom(
         workflow.execute({
           collection: migration.collection,

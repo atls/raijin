@@ -12,6 +12,7 @@ export const getEventCommmits = async (): Promise<
   GetCommitResponseData | GetCommitsResponseData
 > => {
   if (context.eventName === 'push') {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return context.payload.commits
   }
 
@@ -41,9 +42,13 @@ export const getCommitData = async (ref: string): Promise<GetCommitResponseData>
 export const getChangedCommmits = async (): Promise<Array<GetCommitResponseData>> => {
   const eventCommits = await getEventCommmits()
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return Promise.all(
-    // @ts-expect-error types
-    eventCommits.map(async (commit: any) => getCommitData(commit.id || commit.sha))
+    // @ts-expect-error property does not exist
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    eventCommits.map(async (commit) =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      getCommitData(commit.id || commit.sha))
   )
 }
 

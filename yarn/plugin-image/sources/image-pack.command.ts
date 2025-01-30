@@ -62,6 +62,7 @@ class ImagePackCommand extends BaseCommand {
           } to ${destination}`
         )
 
+        // eslint-disable-next-line n/no-sync
         const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
         const { packConfiguration = {} } = JSON.parse(content)
         const buildpackVersion = packConfiguration.buildpackVersion ?? '0.1.1'

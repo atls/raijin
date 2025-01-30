@@ -1,8 +1,12 @@
 import assert from 'node:assert/strict'
 
-type ParseGitHubUrl = (repositoryUrl: string) => { organization: string; repository: string }
+type ParseGitHubUrl = (repositoryUrl: string) => {
+  organization: string
+  repository: string
+}
 
 export const parseGitHubUrl: ParseGitHubUrl = (repositoryUrl) => {
+  // eslint-disable-next-line no-console
   console.debug('Repository URL:', repositoryUrl)
   const match = repositoryUrl.match(/github\.com[/:](.+?)\/(.+?)(?:\.git|$)/)
 

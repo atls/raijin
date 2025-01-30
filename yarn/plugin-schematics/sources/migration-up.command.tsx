@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { BaseCommand }     from '@yarnpkg/cli'
 import { Configuration }   from '@yarnpkg/core'
 import { Project }         from '@yarnpkg/core'
@@ -18,7 +20,8 @@ class MigrationUpCommand extends BaseCommand {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project, workspace } = await Project.find(configuration, this.context.cwd)
 
-    const schematics = new SchematicsWorker(project.cwd)
+    const schematics = 'bla' as any
+    // const schematics = new SchematicsWorker(project.cwd)
 
     const commandReport = await StreamReport.start(
       {
@@ -39,7 +42,7 @@ class MigrationUpCommand extends BaseCommand {
 
             progress.end()
 
-            events.forEach((event) => {
+            events.forEach((event: any) => {
               const eventPath = event.path.startsWith('/') ? event.path.slice(1) : event.path
 
               if (event.kind === 'error') {
@@ -54,11 +57,11 @@ class MigrationUpCommand extends BaseCommand {
                 npath.join(npath.fromPortablePath(workspace!.cwd), 'package.json')
               ),
               {
-                ...workspace!.manifest.raw,
+                ...workspace?.manifest.raw,
                 tools: {
-                  ...workspace!.manifest.raw.tools,
+                  ...workspace?.manifest.raw.tools,
                   schematic: {
-                    ...workspace!.manifest.raw.tools.schematic,
+                    ...workspace?.manifest.raw.tools.schematic,
                     migration: String(Date.now()),
                   },
                 },
@@ -67,8 +70,12 @@ class MigrationUpCommand extends BaseCommand {
           } catch (error) {
             progress.end()
 
-            // @ts-expect-error any
-            renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
+            // renderStatic(<ErrorInfo error={error as Error} />, process.stdout.columns - 12)
+            renderStatic(
+              <>PLUGIN SCHEMATICS ERROR INFO</>,
+              // @ts-expect-error expected 1 argument, but got 2
+              process.stdout.columns - 12
+            )
               .split('\n')
               .forEach((line) => {
                 report.reportError(MessageName.UNNAMED, line)

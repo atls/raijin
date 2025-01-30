@@ -26,14 +26,14 @@ export class Release {
   }
 
   async create(options: CreateOptions): Promise<number> {
-    const { owner, repo, tag_name, name, make_latest, draft, body } = options
+    const { owner, repo, tag_name: tagName, name, make_latest: makeLatest, draft, body } = options
 
     const result = await this.client.repos.createRelease({
       owner,
       repo,
-      tag_name,
+      tag_name: tagName,
       draft,
-      make_latest: make_latest ? 'true' : 'false',
+      make_latest: makeLatest ? 'true' : 'false',
       name,
       body,
     })

@@ -1,9 +1,11 @@
 import type { Workspace } from '@yarnpkg/core'
 
 export interface RawManifest {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   exports: Record<string, any>
 
   publishConfig: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exports: Record<string, any>
   }
 }
