@@ -55,3 +55,4 @@ fsevents-patch-*.zip
 @esbuild-*-npm-*.zip
 @rollup-rollup-*-*-npm-*.zip
 .idea
+.vim
