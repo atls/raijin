@@ -1,1 +1,2 @@
-// export { plugin as default } from './schematics.plugin.js'
+export * from "./commands/index.js";
+export { schematicsPlugin as default } from "./plugins/index.js";

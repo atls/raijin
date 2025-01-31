@@ -222,6 +222,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular-devkit/core@npm:19.1.5":
+  version: 19.1.5
+  resolution: "@angular-devkit/core@npm:19.1.5"
+  dependencies:
+    ajv: "npm:8.17.1"
+    ajv-formats: "npm:3.0.1"
+    jsonc-parser: "npm:3.3.1"
+    picomatch: "npm:4.0.2"
+    rxjs: "npm:7.8.1"
+    source-map: "npm:0.7.4"
+  peerDependencies:
+    chokidar: ^4.0.0
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  checksum: 10/7d81fd1047e9171608674a0efc70e5bb3dbdd19fca484d9696ca61f9282359c87ece7ab60e2796bf0d078014293f96a5a35158caa8d0c90eaf331b5001788555
+  languageName: node
+  linkType: hard
+
 "@angular-devkit/schematics@npm:18.2.2":
   version: 18.2.2
   resolution: "@angular-devkit/schematics@npm:18.2.2"
@@ -237,6 +256,19 @@ __metadata:
     puppeteer:
       built: true
   checksum: 10/6fc245622204744a116b07c14b77d60ec42709638457433dc946d87d91ab834a9fcab5e179e4ec92923d55b5473256ce9369595a68f54dbd93a5c7ebda696ed4
+  languageName: node
+  linkType: hard
+
+"@angular-devkit/schematics@npm:19.1.5":
+  version: 19.1.5
+  resolution: "@angular-devkit/schematics@npm:19.1.5"
+  dependencies:
+    "@angular-devkit/core": "npm:19.1.5"
+    jsonc-parser: "npm:3.3.1"
+    magic-string: "npm:0.30.17"
+    ora: "npm:5.4.1"
+    rxjs: "npm:7.8.1"
+  checksum: 10/b5e2fd222f74ca595ef3d0b0f9287b5a7747b3c3e9855ba3bde9e4353d9b8bd42ddd708bfd85a9b0ed7f9b4c90a98d7b7228942f86332b91e9e4f51b91505f50
   languageName: node
   linkType: hard
 
@@ -945,6 +977,7 @@ __metadata:
     "@atls/yarn-plugin-lint": "workspace:*"
     "@atls/yarn-plugin-release": "workspace:*"
     "@atls/yarn-plugin-renderer": "workspace:*"
+    "@atls/yarn-plugin-schematics": "workspace:*"
     "@atls/yarn-plugin-service": "workspace:*"
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
@@ -1005,6 +1038,7 @@ __metadata:
     "@atls/yarn-plugin-lint": "workspace:*"
     "@atls/yarn-plugin-release": "workspace:*"
     "@atls/yarn-plugin-renderer": "workspace:*"
+    "@atls/yarn-plugin-schematics": "workspace:*"
     "@atls/yarn-plugin-service": "workspace:*"
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
@@ -1403,14 +1437,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics":
+"@atls/yarn-plugin-schematics@workspace:*, @atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics"
   dependencies:
+    "@angular-devkit/core": "npm:19.1.5"
+    "@angular-devkit/schematics": "npm:19.1.5"
     "@atls/cli-ui-error-info-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-schematics-component": "workspace:*"
-    "@atls/schematics": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.12"
@@ -9221,6 +9256,15 @@ __metadata:
   dependencies:
     "@jridgewell/sourcemap-codec": "npm:^1.5.0"
   checksum: 10/b784d2240252f5b1e755d487354ada4c672cbca16f045144f7185a75b059210e5fcca7be7be03ef1bac2ca754c4428b21d36ae64a9057ba429916f06b8c54eb2
+  languageName: node
+  linkType: hard
+
+"magic-string@npm:0.30.17":
+  version: 0.30.17
+  resolution: "magic-string@npm:0.30.17"
+  dependencies:
+    "@jridgewell/sourcemap-codec": "npm:^1.5.0"
+  checksum: 10/2f71af2b0afd78c2e9012a29b066d2c8ba45a9cd0c8070f7fd72de982fb1c403b4e3afdb1dae00691d56885ede66b772ef6bedf765e02e3a7066208fe2fec4aa
   languageName: node
   linkType: hard
 
