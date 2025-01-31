@@ -14,8 +14,7 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
     //   progress.start();
 
     try {
-      console.log("try schematics generate");
-      await runSchematicHelper("bla", {}, "../collection/collection.json");
+      await runSchematicHelper("project", {}, "./collection/collection.json");
 
       // const schematics = new SchematicsWorker(project.cwd);
 
@@ -61,6 +60,7 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
       //       }
       //     );
     } catch (error) {
+      console.error(error);
       //     progress.end();
       //
       //     renderStatic(<ErrorInfo error={error as Error} />)
