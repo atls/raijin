@@ -35,7 +35,7 @@ export const runSchematicHelper = async (
 
   const collection = workflow.engine.createCollection(
     // TODO path
-    "/home/operator/Projects/atls_raijin/yarn/plugin-schematics/sources/collection/dist/collection.json"
+    "/home/operator/Projects/atls_raijin/yarn/plugin-schematics/sources/collection/hello/collection.json"
   );
   console.log("agter collection");
 

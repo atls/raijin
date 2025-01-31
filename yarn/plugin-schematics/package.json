@@ -17,13 +17,13 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/schematics-utils": "workspace:*",
-    "@atls/config-typescript": "workspace:*",
     "@angular-devkit/core": "19.1.5",
     "@angular-devkit/schematics": "19.1.5",
     "@atls/cli-ui-error-info-component": "workspace:*",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/cli-ui-schematics-component": "workspace:*",
+    "@atls/config-typescript": "workspace:*",
+    "@atls/schematics-utils": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@yarnpkg/libui": "3.0.1",
     "clipanion": "4.0.0-rc.2",
