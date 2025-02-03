@@ -5,6 +5,7 @@ import { DryRunEvent } from "@angular-devkit/schematics";
 import { NodeJsSyncHost } from "@angular-devkit/core/node";
 import { existsSync } from "fs";
 import { virtualFs, normalize, schema } from "@angular-devkit/core";
+import { eventsLogHelper } from "./events-log.helper.js";
 
 const collectionPath =
   "/home/operator/Projects/atls_raijin/yarn/plugin-schematics/sources/collection/hello/collection.json";
@@ -15,56 +16,22 @@ export const runSchematicHelper = async (
   collectionName: string
 ) => {
   const workflow = new NodeWorkflow(process.cwd(), {
-    force: true,
-    dryRun: true,
+    force: false,
+    dryRun: false,
     resolvePaths: [process.cwd(), import.meta.dirname],
-    schemaValidation: true,
+    // schemaValidation: true,
     packageManager: "yarn",
   });
 
   let nothingDone = true;
-  let loggingQueue: string[] = [];
-  let error = false;
-  const debug = true;
+  const debug = false;
 
   const dryRun = false;
-  const dryRunPresent = true;
-  const allowPrivate = true;
+  const dryRunPresent = false;
 
   workflow.reporter.subscribe((event) => {
     nothingDone = false;
-    // Strip leading slash to prevent confusion.
-    // const eventPath = removeLeadingSlash(event.path);
-    const eventPath = event.path;
-
-    switch (event.kind) {
-      case "error":
-        error = true;
-        console.error(
-          `ERROR! ${eventPath} ${
-            event.description == "alreadyExist"
-              ? "already exists"
-              : "does not exist"
-          }.`
-        );
-        break;
-      case "update":
-        console.debug(
-          `${"UPDATE"} ${eventPath} (${event.content.length} bytes)`
-        );
-        break;
-      case "create":
-        console.debug(
-          `${"CREATE"} ${eventPath} (${event.content.length} bytes)`
-        );
-        break;
-      case "delete":
-        console.debug(`${"DELETE"} ${eventPath}`);
-        break;
-      case "rename":
-        console.debug(`${"RENAME"} ${eventPath} => ${event.to}`);
-        break;
-    }
+    eventsLogHelper(event);
   });
 
   try {
@@ -74,9 +41,8 @@ export const runSchematicHelper = async (
         collection: collectionPath,
         schematic: schematicName,
         options: {},
-        allowPrivate: allowPrivate,
-        debug: debug,
-        // logger: console.log,
+        allowPrivate: true,
+        debug: false,
       })
       .toPromise();
 
@@ -89,6 +55,8 @@ export const runSchematicHelper = async (
         }. No files written to disk.`
       );
     }
+
+    console.log("after schematic success run");
 
     return 0;
   } catch (err) {

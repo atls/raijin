@@ -102,6 +102,6 @@ export class GenerateProjectCommand extends BaseCommand {
       streamReportCallback
     );
 
-    // return commandReport.exitCode();
+    return commandReport.exitCode();
   }
 }
