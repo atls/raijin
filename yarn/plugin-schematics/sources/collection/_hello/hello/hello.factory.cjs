@@ -9,18 +9,6 @@ function main(options) {
   return (tree, context) => {
     const workflow = context.engine.workflow;
 
-    console.log(workflow);
-    console.log(context);
-
-    if (workflow._dryRun) {
-      console.info("🚀 Схема выполняется в dry-run!");
-    } else {
-      console.info("✅ Схема выполняется с реальными изменениями.");
-    }
-
-    const currentDir = process.cwd();
-    console.info("Current working directory:", currentDir);
-
     const fullPath = normalize(`${currentDir}/hi/hello.txt`);
     console.info("Normalized path:", fullPath);
 

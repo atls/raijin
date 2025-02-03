@@ -7,27 +7,21 @@ import { existsSync } from "fs";
 import { virtualFs, normalize, schema } from "@angular-devkit/core";
 import { eventsLogHelper } from "./events-log.helper.js";
 
-const collectionPath =
-  "/home/operator/Projects/atls_raijin/yarn/plugin-schematics/sources/collection/hello/collection.json";
-
 export const runSchematicHelper = async (
   schematicName: string,
   options: object,
-  collectionName: string
+  collectionPath: string
 ) => {
+  const dryRun = false;
+  const debug = false;
+  let nothingDone = true;
+
   const workflow = new NodeWorkflow(process.cwd(), {
     force: false,
-    dryRun: false,
+    dryRun,
     resolvePaths: [process.cwd(), import.meta.dirname],
-    // schemaValidation: true,
     packageManager: "yarn",
   });
-
-  let nothingDone = true;
-  const debug = false;
-
-  const dryRun = false;
-  const dryRunPresent = false;
 
   workflow.reporter.subscribe((event) => {
     nothingDone = false;
@@ -37,26 +31,19 @@ export const runSchematicHelper = async (
   try {
     await workflow
       .execute({
-        // collection: collectionName,
         collection: collectionPath,
         schematic: schematicName,
         options: {},
         allowPrivate: true,
-        debug: false,
+        debug,
       })
       .toPromise();
 
     if (nothingDone) {
       console.info("Nothing to be done.");
     } else if (dryRun) {
-      console.info(
-        `Dry run enabled${
-          dryRunPresent ? "" : " by default in debug mode"
-        }. No files written to disk.`
-      );
+      console.info("Dry run enabled. No files written to disk.");
     }
-
-    console.log("after schematic success run");
 
     return 0;
   } catch (err) {

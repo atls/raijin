@@ -3,6 +3,8 @@ import { runSchematicHelper } from "../helpers/run-schematics.helper.js";
 
 type StreamReportCallbackType = Parameters<typeof StreamReport.start>[1];
 
+import { join } from "node:path";
+
 export const getStreamReportCallback = (): StreamReportCallbackType => {
   const streamReportCallback = async (report: StreamReport): Promise<void> => {
     // TODO например у линта свой компонент для прогресса. как сделать тут?
@@ -13,8 +15,16 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
     //   );
     //   progress.start();
 
+    const collectionPath = join(
+      process.cwd(),
+      "schematics",
+      "schematics",
+      "dist",
+      "collection.json"
+    );
+
     try {
-      await runSchematicHelper("project", {}, "./collection/collection.json");
+      await runSchematicHelper("project", {}, collectionPath);
 
       // const schematics = new SchematicsWorker(project.cwd);
 

@@ -2827,6 +2827,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
@@ -2868,6 +2869,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\

@@ -1447,6 +1447,7 @@ __metadata:
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-schematics-component": "workspace:*"
     "@atls/config-typescript": "workspace:*"
+    "@atls/schematics": "workspace:*"
     "@atls/schematics-utils": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
