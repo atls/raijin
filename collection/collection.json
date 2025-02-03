@@ -1,0 +1,11 @@
+{
+  "name": "@atls/schematics",
+  "version": "0.1",
+  "schematics": {
+    "project": {
+      "factory": "./hello/hello.factory.cjs#main",
+      "schema": "./hello/schema.json",
+      "description": "Generate a hello.txt file."
+    }
+  }
+}

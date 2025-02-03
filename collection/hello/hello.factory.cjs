@@ -1,11 +1,15 @@
-const { apply, url, template, move } = require("@angular-devkit/schematics");
+const {
+  Rule,
+  apply,
+  url,
+  template,
+  move,
+} = require("@angular-devkit/schematics");
 
 function main(_options) {
   return (tree, _context) => {
+    // Генерация файла hello.txt
     const sourceTemplate = url("./files");
-
-    console.log(sourceTemplate);
-
     const sourceParametrizedTemplate = apply(sourceTemplate, [
       template({}), // Шаблонные параметры (пока пусто)
       move("./"), // Переместить файлы в корень проекта

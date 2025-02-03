@@ -1,65 +1,106 @@
 import { NodeWorkflow } from "@angular-devkit/schematics/tools";
-import angularSchematicsPkg from "@angular-devkit/schematics";
+import { UnsuccessfulWorkflowExecution } from "@angular-devkit/schematics";
+import { SchematicEngine } from "@angular-devkit/schematics";
+import { DryRunEvent } from "@angular-devkit/schematics";
 import { NodeJsSyncHost } from "@angular-devkit/core/node";
+import { existsSync } from "fs";
 import { virtualFs, normalize, schema } from "@angular-devkit/core";
-import path from "path";
-import { formats } from "@angular-devkit/schematics";
-import { CollectionDescription } from "@angular-devkit/schematics/src/engine/interface";
-import * as fs from "fs";
 
-import { dirname } from "node:path";
-import { join } from "node:path";
-
-const { SchematicEngine, DryRunEvent, workflow } = angularSchematicsPkg;
+const collectionPath =
+  "/home/operator/Projects/atls_raijin/yarn/plugin-schematics/sources/collection/hello/collection.json";
 
 export const runSchematicHelper = async (
   schematicName: string,
   options: object,
-  collectionPath: string
+  collectionName: string
 ) => {
-  // Создаём файловую систему
-  const fsHost = new virtualFs.ScopedHost(new NodeJsSyncHost());
-  // TODO перебросить сверху, кажется там объявляем аналогичную переменную
-  const root = normalize(process.cwd());
-
-  const workflow = new NodeWorkflow(fsHost, {
-    force: false,
+  const workflow = new NodeWorkflow(process.cwd(), {
+    force: true,
     dryRun: true,
+    resolvePaths: [process.cwd(), import.meta.dirname],
+    schemaValidation: true,
     packageManager: "yarn",
-    root: normalize(root),
-    // registry: new schema.CoreSchemaRegistry(formats.standardFormats),
   });
 
-  const engine = new SchematicEngine(fsHost, workflow);
-  console.log("engine");
+  let nothingDone = true;
+  let loggingQueue: string[] = [];
+  let error = false;
+  const debug = true;
 
-  const collection = workflow.engine.createCollection(
-    // TODO path
-    "/home/operator/Projects/atls_raijin/yarn/plugin-schematics/sources/collection/hello/collection.json"
-  );
-  console.log("agter collection");
+  const dryRun = true;
+  const dryRunPresent = true;
+  const allowPrivate = true;
 
-  // TODO ошибка здесь. не может импоритровать пакет, потомучто использует require esm-модуля
-  const schematic = collection.createSchematic(schematicName);
-  console.log("schematic");
+  workflow.reporter.subscribe((event) => {
+    nothingDone = false;
+    // Strip leading slash to prevent confusion.
+    // const eventPath = removeLeadingSlash(event.path);
+    const eventPath = event.path;
 
-  // console.log("run schematics helper 5");
-  // // Запускаем выполнение схемы
-  // const dryRun = false;
-  // const recorder = (event: DryRunEvent) => {
-  //   if (event.kind === "error") {
-  //     console.error(`ERROR: ${event.description}`);
-  //   } else if (event.kind === "update") {
-  //     console.log(`UPDATE: ${event.path}`);
-  //   }
-  // };
-  //
-  // console.log("run schematics helper 6");
-  // workflow.reporter.subscribe(recorder);
-  //
-  // console.log("run schematics helper 7");
-  // await schematic
-  //   .call(options, workflow)
-  //   .then(() => console.log("Схема успешно выполнена!"))
-  //   .catch((err) => console.error("Ошибка:", err));
+    switch (event.kind) {
+      case "error":
+        error = true;
+        console.error(
+          `ERROR! ${eventPath} ${
+            event.description == "alreadyExist"
+              ? "already exists"
+              : "does not exist"
+          }.`
+        );
+        break;
+      case "update":
+        console.debug(
+          `${"UPDATE"} ${eventPath} (${event.content.length} bytes)`
+        );
+        break;
+      case "create":
+        console.debug(
+          `${"CREATE"} ${eventPath} (${event.content.length} bytes)`
+        );
+        break;
+      case "delete":
+        console.debug(`${"DELETE"} ${eventPath}`);
+        break;
+      case "rename":
+        console.debug(`${"RENAME"} ${eventPath} => ${event.to}`);
+        break;
+    }
+  });
+
+  try {
+    await workflow
+      .execute({
+        // collection: collectionName,
+        collection: collectionPath,
+        schematic: schematicName,
+        options: {},
+        allowPrivate: allowPrivate,
+        debug: debug,
+        // logger: console.log,
+      })
+      .toPromise();
+
+    if (nothingDone) {
+      console.info("Nothing to be done.");
+    } else if (dryRun) {
+      console.info(
+        `Dry run enabled${
+          dryRunPresent ? "" : " by default in debug mode"
+        }. No files written to disk.`
+      );
+    }
+
+    return 0;
+  } catch (err) {
+    if (err instanceof UnsuccessfulWorkflowExecution) {
+      // "See above" because we already printed the error.
+      console.debug("The Schematic workflow failed. See above.");
+    } else if (debug && err instanceof Error) {
+      console.debug(`An error occured:\n${err.stack}`);
+    } else {
+      console.debug(`Error: ${err instanceof Error ? err.message : err}`);
+    }
+
+    return 1;
+  }
 };

@@ -1,0 +1,7 @@
+{
+  "$id": "HelloSchematics",
+  "title": "Hello Options Schema",
+  "type": "object",
+  "properties": {},
+  "required": []
+}

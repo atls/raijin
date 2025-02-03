@@ -1,7 +1,10 @@
-const { apply, url, template, move } = require("@angular-devkit/schematics");
+import type { Rule } from "@angular-devkit/schematics";
+import { apply, url, template, move } from "@angular-devkit/schematics";
 
-function main(_options) {
+function main(_options: any): Rule {
   return (tree, _context) => {
+    console.log("console on main");
+
     const sourceTemplate = url("./files");
 
     console.log(sourceTemplate);
@@ -12,6 +15,8 @@ function main(_options) {
     ]);
 
     return sourceParametrizedTemplate;
+
+    return tree;
   };
 }
 
