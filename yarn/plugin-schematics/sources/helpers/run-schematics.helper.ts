@@ -27,7 +27,7 @@ export const runSchematicHelper = async (
   let error = false;
   const debug = true;
 
-  const dryRun = true;
+  const dryRun = false;
   const dryRunPresent = true;
   const allowPrivate = true;
 

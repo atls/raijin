@@ -1,18 +1,21 @@
 const { apply, url, template, move } = require("@angular-devkit/schematics");
+const { strings } = require("@angular-devkit/core");
+const { chain } = require("@angular-devkit/schematics");
+const { mergeWith } = require("@angular-devkit/schematics");
+const { MergeStrategy } = require("@angular-devkit/schematics");
 
-function main(_options) {
-  return (tree, _context) => {
-    const sourceTemplate = url("./files");
+const generateCommon = (options) =>
+  apply(url("./files/common"), [
+    template({
+      ...strings,
+      ...options,
+      dot: ".",
+    }),
+    move("./"),
+  ]);
 
-    console.log(sourceTemplate);
-
-    const sourceParametrizedTemplate = apply(sourceTemplate, [
-      template({}), // Шаблонные параметры (пока пусто)
-      move("./"), // Переместить файлы в корень проекта
-    ]);
-
-    return sourceParametrizedTemplate;
-  };
+function main(options) {
+  return chain([mergeWith(generateCommon(options), MergeStrategy.Overwrite)]);
 }
 
 module.exports = { main };
