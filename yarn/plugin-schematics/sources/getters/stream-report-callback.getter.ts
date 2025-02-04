@@ -1,10 +1,10 @@
-import type { StreamReport }  from '@yarnpkg/core'
+import type { StreamReport } from "@yarnpkg/core";
 
-import { join }               from 'node:path'
+import { join } from "node:path";
 
-import { runSchematicHelper } from '../helpers/run-schematics.helper.js'
+import { runSchematicHelper } from "../helpers/run-schematics.helper.js";
 
-type StreamReportCallbackType = Parameters<typeof StreamReport.start>[1]
+type StreamReportCallbackType = Parameters<typeof StreamReport.start>[1];
 
 export const getStreamReportCallback = (): StreamReportCallbackType => {
   const streamReportCallback = async (report: StreamReport): Promise<void> => {
@@ -20,14 +20,14 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
     // const content = await readFile(join(this.cwd, "package.json"), "utf-8");
     const collectionPath = join(
       process.cwd(),
-      'schematics',
-      'schematics',
-      'dist',
-      'collection.json'
-    )
+      "schematics",
+      "schematics",
+      "dist",
+      "collection.json"
+    );
 
     try {
-      await runSchematicHelper('project', {}, collectionPath)
+      await runSchematicHelper("project", {}, collectionPath);
 
       // const schematics = new SchematicsWorker(project.cwd);
 
@@ -73,7 +73,7 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
       //       }
       //     );
     } catch (error) {
-      console.error(error)
+      console.error(error);
       //     progress.end();
       //
       //     renderStatic(<ErrorInfo error={error as Error} />)
@@ -83,7 +83,7 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
       //       });
     }
     // });
-  }
+  };
 
-  return streamReportCallback
-}
+  return streamReportCallback;
+};

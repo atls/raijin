@@ -1878,7 +1878,9 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:22.9.0"],\
           ["copy-dir", "npm:1.3.0"],\
           ["esbuild", "npm:0.24.2"],\
-          ["globby", "npm:13.2.2"]\
+          ["globby", "npm:13.2.2"],\
+          ["js-yaml", "npm:4.1.0"],\
+          ["strip-json-comments", "npm:3.1.1"]\
         ],\
         "linkType": "SOFT"\
       }]\
