@@ -5,15 +5,15 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./collection": "./dist/collection.json"
   },
   "files": [
     "collection.json",
     "dist"
   ],
   "scripts": {
-    "build": "yarn service build",
-    "build-test": "yarn node ./scripts/cjs-build.script.mjs",
+    "build": "rm -rf ./dist/ && yarn node ./scripts/cjs-build.script.mjs",
     "prepack": "yarn run build && yarn node ./scripts/prepack.mjs",
     "postpack": "rm -rf dist && yarn node ./scripts/postpack.mjs"
   },

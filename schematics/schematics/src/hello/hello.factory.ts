@@ -8,11 +8,11 @@ import { normalize } from "@angular-devkit/core";
 export const main = (options) => {
   return (tree, context) => {
     const workflow = context.engine.workflow;
-    // const currentDir = process.cwd();
+    const currentDir = process.cwd();
     // const currentDir = "./";
 
-    // const fullPath = normalize(`${currentDir}/hi/hello.txt`);
-    const fullPath = normalize(`./hi/hello.txt`);
+    const fullPath = normalize(`${currentDir}/hi/hello.txt`);
+    // const fullPath = normalize(`./hi/hello.txt`);
     console.info("Normalized path:", fullPath);
 
     tree.create(fullPath, "Hello, world123!");
