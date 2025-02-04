@@ -4,7 +4,7 @@
   "schematics": {
     "project": {
       "factory": "./project/project.factory.cjs#main",
-      "schema": "./hello/schema.json",
+      "schema": "./project/schema.json",
       "description": "Generate a hello.txt file."
     }
   }
