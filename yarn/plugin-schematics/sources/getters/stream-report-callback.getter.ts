@@ -6,6 +6,9 @@ import { runSchematicHelper } from "../helpers/run-schematics.helper.js";
 
 type StreamReportCallbackType = Parameters<typeof StreamReport.start>[1];
 
+import { dirname } from "node:path";
+import { fileURLToPath } from "url";
+
 export const getStreamReportCallback = (): StreamReportCallbackType => {
   const streamReportCallback = async (report: StreamReport): Promise<void> => {
     // TODO например у линта свой компонент для прогресса. как сделать тут?
@@ -18,13 +21,17 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
 
     // TODO можно както получить путь, импортировав файл из пакета?
     // const content = await readFile(join(this.cwd, "package.json"), "utf-8");
-    const collectionPath = join(
-      process.cwd(),
-      "schematics",
-      "schematics",
-      "dist",
-      "collection.json"
-    );
+
+    // const collectionPath = join(
+    //   process.cwd(),
+    //   "schematics",
+    //   "schematics",
+    //   "dist",
+    //   "collection.json"
+    // );
+
+    const collectionUrl = import.meta.resolve("@atls/schematics/collection");
+    const collectionPath = new URL(collectionUrl).pathname;
 
     try {
       await runSchematicHelper("project", {}, collectionPath);
