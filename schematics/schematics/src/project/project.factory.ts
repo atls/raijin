@@ -5,7 +5,7 @@ import { mergeWith } from "@angular-devkit/schematics";
 import { MergeStrategy } from "@angular-devkit/schematics";
 import { normalize } from "@angular-devkit/core";
 
-export const main = (options) => {
+const generateTestFile = () => {
   return (tree, context) => {
     const workflow = context.engine.workflow;
     const currentDir = process.cwd();
@@ -29,3 +29,7 @@ export const main = (options) => {
     return tree;
   };
 };
+
+export const main = (options) => [
+  mergeWith(generateTestFile(options), MergeStrategy.Overwrite),
+];
