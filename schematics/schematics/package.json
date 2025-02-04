@@ -12,19 +12,21 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn library build",
+    "build": "yarn service build",
+    "build-test": "yarn node ./scripts/cjs-build.script.mjs",
     "prepack": "yarn run build && yarn node ./scripts/prepack.mjs",
     "postpack": "rm -rf dist && yarn node ./scripts/postpack.mjs"
   },
   "dependencies": {
-    "@angular-devkit/core": "18.2.2",
-    "@angular-devkit/schematics": "18.2.2",
+    "@angular-devkit/core": "19.1.5",
+    "@angular-devkit/schematics": "19.1.5",
     "@atls/config-typescript": "workspace:*",
     "@atls/schematics-utils": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "22.9.0",
     "copy-dir": "1.3.0",
+    "esbuild": "0.24.2",
     "globby": "13.2.2"
   },
   "publishConfig": {
