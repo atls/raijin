@@ -1,1 +1,1 @@
-export * from "./generate-project.command.tsx";
+export * from './generate-project.command.tsx'
