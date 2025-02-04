@@ -1873,8 +1873,10 @@ const RAW_RUNTIME_STATE =
           ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
+          ["@atls/config-prettier", "workspace:config/prettier"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
+          ["@rushstack/eslint-patch", "npm:1.10.5"],\
           ["@types/node", "npm:22.9.0"],\
           ["copy-dir", "npm:1.3.0"],\
           ["esbuild", "npm:0.24.2"],\
@@ -5258,6 +5260,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@rtsao-scc-npm-1.1.0-f4ba9ceb2c-17d04adf40.zip/node_modules/@rtsao/scc/",\
         "packageDependencies": [\
           ["@rtsao/scc", "npm:1.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@rushstack/eslint-patch", [\
+      ["npm:1.10.5", {\
+        "packageLocation": "./.yarn/cache/@rushstack-eslint-patch-npm-1.10.5-f311e6cb39-769d130dfb.zip/node_modules/@rushstack/eslint-patch/",\
+        "packageDependencies": [\
+          ["@rushstack/eslint-patch", "npm:1.10.5"]\
         ],\
         "linkType": "HARD"\
       }]\
