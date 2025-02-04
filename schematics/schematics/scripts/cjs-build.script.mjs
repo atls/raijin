@@ -46,6 +46,7 @@ const tsJsFiles = allFiles.filter((file) =>
 // Компилируем их с помощью ESBuild
 console.log(tsJsFiles);
 await esbuild.build({
+  // bundle: true,
   entryPoints: tsJsFiles,
   outdir: outDir,
   outbase: "src",
@@ -79,7 +80,8 @@ getAllFiles(outDir).forEach((file) => {
     let content = readFileSync(file, "utf8");
 
     // Заменяем `import('./module.js')` на `import('./module.cjs')`
-    content = content.replace(/(import$['"]\.\/.*?)(\.js)(['"]$)/g, "$1.cjs$3");
+    // content = content.replace(/(import$['"]\.\/.*?)(\.js)(['"]$)/g, "$1.cjs$3");
+    content = content.replace(/\.js/g, ".cjs");
 
     writeFileSync(file, content);
   }
