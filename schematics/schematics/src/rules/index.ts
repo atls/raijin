@@ -1,1 +1,1 @@
-export * from "./update-ts-config.rule.js";
+export * from './update-ts-config.rule.js'

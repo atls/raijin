@@ -1,58 +1,57 @@
 /* eslint-disable */
 
-import type { Source } from "@angular-devkit/schematics";
+import type { Source }          from '@angular-devkit/schematics'
 
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync }         from 'node:fs'
+import { join }                 from 'node:path'
 
-import { MergeStrategy } from "@angular-devkit/schematics";
-import { strings } from "@angular-devkit/core";
-import { apply } from "@angular-devkit/schematics";
-import { mergeWith } from "@angular-devkit/schematics";
-import { move } from "@angular-devkit/schematics";
-import { template } from "@angular-devkit/schematics";
-import { url } from "@angular-devkit/schematics";
-import { chain } from "@angular-devkit/schematics";
+import { MergeStrategy }        from '@angular-devkit/schematics'
+import { strings }              from '@angular-devkit/core'
+import { apply }                from '@angular-devkit/schematics'
+import { mergeWith }            from '@angular-devkit/schematics'
+import { move }                 from '@angular-devkit/schematics'
+import { template }             from '@angular-devkit/schematics'
+import { url }                  from '@angular-devkit/schematics'
+import { chain }                from '@angular-devkit/schematics'
 
-import { updateTsConfigInTree } from "../utils/index.js";
-import tsconfig from "@atls/config-typescript";
+import tsconfig                 from '@atls/config-typescript'
 
-console.log(tsconfig.compilerOptions);
+import { updateTsConfigInTree } from '../utils/index.js'
+
+console.log(tsconfig.compilerOptions)
 
 const updateTsConfig = updateTsConfigInTree({
   ...tsconfig.compilerOptions,
-  module: "esnext",
-});
+  module: 'esnext',
+})
 
 const generateCommon = (options: any): Source =>
-  apply(url("./files/common"), [
+  apply(url('./files/common'), [
     template({
       ...strings,
       ...options,
-      dot: ".",
+      dot: '.',
     }),
-    move("./"),
-  ]);
+    move('./'),
+  ])
 
 const generateProjectSpecifiec = (options: any): Source => {
-  const { name: projectName } = JSON.parse(
-    readFileSync(join(options.cwd, "package.json"), "utf-8")
-  );
+  const { name: projectName } = JSON.parse(readFileSync(join(options.cwd, 'package.json'), 'utf-8'))
 
-  return apply(url(join("./files", options.type)), [
+  return apply(url(join('./files', options.type)), [
     template({
       ...strings,
       ...options,
       projectName,
-      dot: ".",
+      dot: '.',
     }),
-    move("./"),
-  ]);
-};
+    move('./'),
+  ])
+}
 
 export const main = (options: any) =>
   chain([
     mergeWith(generateCommon(options), MergeStrategy.Overwrite),
     mergeWith(generateProjectSpecifiec(options), MergeStrategy.Overwrite),
     updateTsConfig,
-  ]);
+  ])
