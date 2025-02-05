@@ -15,7 +15,7 @@ const dir = fileURLToPath(new URL(".", import.meta.url));
 const srcDir = join(dir, "../src/");
 const outDir = join(dir, "../dist/");
 
-function getAllFiles(dir, fileList = []) {
+function getAllFiles(dir: string, fileList: Array<string> = []): Array<string> {
   readdirSync(dir).forEach((file) => {
     const fullPath = join(dir, file);
     if (statSync(fullPath).isDirectory()) {
@@ -27,7 +27,7 @@ function getAllFiles(dir, fileList = []) {
   return fileList;
 }
 
-function ensureDirStructure(filePath) {
+function ensureDirStructure(filePath: string): void {
   const dir = dirname(filePath);
   mkdirSync(dir, { recursive: true });
 }
@@ -38,9 +38,8 @@ const tsJsFiles = allFiles.filter((file) =>
   [".ts", ".js"].includes(extname(file))
 );
 
-console.log(tsJsFiles);
 await esbuild.build({
-  // bundle: true,
+  logLevel: "error",
   entryPoints: tsJsFiles,
   outdir: outDir,
   outbase: "src",
