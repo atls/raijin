@@ -35,8 +35,7 @@ const generateTestFile = (): Rule => {
 };
 
 const updateTsConfig = updateTsConfigInTree({
-  ...tsconfig.compilerOptions,
-  module: "esnext",
+  ...tsconfig.default.compilerOptions,
 });
 
 export const main = (options): Rule => {
