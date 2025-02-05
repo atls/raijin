@@ -11,10 +11,12 @@ import { generateProjectSpecificSource } from "../sources/index.js";
 
 export const main = (options: any): Rule => {
   return chain([
-    updateTsConfigRule,
+    // updateTsConfigRule,
     // TODO эта функция добавляет в корень prettierrc & eslintrc. по всей видимости это уже не надо
     // этот скрипт должен добавлять все файлы из папки files/common - а это и gitignore и скрипты husky. в последнем запуске их не добавил
-    // mergeWith(generateCommonSource(options), MergeStrategy.Overwrite),
+		// сейчас скрипт перемещает в dist только файлы в формате js & json
+		// файлы-шаблоны для генерации не имеют расширения, но их тоже надо переместить
+    mergeWith(generateCommonSource(options), MergeStrategy.Overwrite),
     // mergeWith(generateProjectSpecificSource(options), MergeStrategy.Overwrite),
   ]);
 };

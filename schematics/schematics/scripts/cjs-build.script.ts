@@ -49,15 +49,27 @@ await esbuild.build({
   target: "esnext",
 });
 
+const checkTemplatesDir = (relativePath: string): boolean => {
+  return relativePath.split("/")[0] === "templates";
+};
+
+const checkTemplateFile = (dir: string, file: string) => {
+  const relativePath = relative(dir, file);
+  return checkTemplatesDir(relativePath);
+};
+
 getAllFiles(outDir).forEach((file) => {
-  if (extname(file) === ".js") {
+  const isTemplate = checkTemplateFile(outDir, file);
+  console.log(isTemplate, file);
+  if (extname(file) === ".js" && !isTemplate) {
     const newPath = join(dirname(file), `${basename(file, ".js")}.cjs`);
     renameSync(file, newPath);
   }
 });
 
 allFiles.forEach((file) => {
-  if (extname(file) === ".json") {
+  const isTemplate = checkTemplateFile(srcDir, file);
+  if (extname(file) === ".json" || isTemplate) {
     const relativePath = relative(srcDir, file);
     const destPath = join(outDir, relativePath);
     ensureDirStructure(destPath);

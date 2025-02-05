@@ -7,7 +7,7 @@ import { url } from "@angular-devkit/schematics";
 import { strings } from "@angular-devkit/core";
 
 export const generateCommonSource = (options: any): Source =>
-  apply(url("./files/common"), [
+  apply(url("../templates/common"), [
     template({
       ...strings,
       ...options,
