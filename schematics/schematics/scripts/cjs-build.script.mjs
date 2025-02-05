@@ -81,7 +81,8 @@ getAllFiles(outDir).forEach((file) => {
 
     // Заменяем `import('./module.js')` на `import('./module.cjs')`
     // content = content.replace(/(import$['"]\.\/.*?)(\.js)(['"]$)/g, "$1.cjs$3");
-    content = content.replace(/\.js/g, ".cjs");
+
+    content = content.replace(/(\.js)(['"])/g, ".cjs$2");
 
     writeFileSync(file, content);
   }
