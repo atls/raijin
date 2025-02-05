@@ -6,7 +6,15 @@ import { MergeStrategy } from "@angular-devkit/schematics";
 import { normalize } from "@angular-devkit/core";
 import type { Rule } from "@angular-devkit/schematics";
 import { updateTsConfigRule } from "../rules/index.js";
+import { generateCommonSource } from "../sources/index.js";
+import { generateProjectSpecificSource } from "../sources/index.js";
 
-export const main = (): Rule => {
-  return chain([updateTsConfigRule]);
+export const main = (options: any): Rule => {
+  return chain([
+    updateTsConfigRule,
+    // TODO эта функция добавляет в корень prettierrc & eslintrc. по всей видимости это уже не надо
+    // этот скрипт должен добавлять все файлы из папки files/common - а это и gitignore и скрипты husky. в последнем запуске их не добавил
+    // mergeWith(generateCommonSource(options), MergeStrategy.Overwrite),
+    // mergeWith(generateProjectSpecificSource(options), MergeStrategy.Overwrite),
+  ]);
 };
