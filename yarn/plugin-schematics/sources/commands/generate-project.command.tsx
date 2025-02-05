@@ -20,27 +20,40 @@ export class GenerateProjectCommand extends BaseCommand {
       this.context.plugins
     );
 
+    console.log("generate project command 1");
+
     // TODO is needed?
     // const { project, workspace } = await Project.find(configuration, this.context.cwd)
 
     const allowedTypes = ["libraries", "project"];
 
+    console.log("generate project command 2");
+
     if (!allowedTypes.includes(this.type)) {
       throw new Error(`Allowed only ${allowedTypes.join(", ")} types`);
     }
+
+    console.log("generate project command 3");
 
     const options = {
       type: this.type,
       cwd: process.cwd(),
     };
 
+    console.log("generate project command 4");
+
     const streamReportOptions = getStreamReportOptions(this, configuration);
+    console.log("generate project command 41");
     const streamReportCallback = getStreamReportCallback(options);
+
+    console.log("generate project command 5");
 
     const commandReport = await StreamReport.start(
       streamReportOptions,
       streamReportCallback
     );
+
+    console.log("generate project command 6");
 
     return commandReport.exitCode();
   }

@@ -24,7 +24,6 @@
     "@atls/cli-ui-schematics-component": "workspace:*",
     "@atls/config-typescript": "workspace:*",
     "@atls/schematics": "workspace:*",
-    "@atls/schematics-utils": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@yarnpkg/libui": "3.0.1",
     "clipanion": "4.0.0-rc.2",

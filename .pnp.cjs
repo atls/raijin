@@ -179,10 +179,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:schematics/schematics"\
     },\
     {\
-      "name": "@atls/schematics-utils",\
-      "reference": "workspace:schematics/schematics-utils"\
-    },\
-    {\
       "name": "@atls/webpack-proto-imports-loader",\
       "reference": "workspace:webpack/webpack-proto-imports-loader"\
     },\
@@ -355,7 +351,6 @@ const RAW_RUNTIME_STATE =
     ["@atls/config-typescript", ["workspace:config/typescript"]],\
     ["@atls/prettier-plugin", ["workspace:prettier/plugin"]],\
     ["@atls/schematics", ["workspace:schematics/schematics"]],\
-    ["@atls/schematics-utils", ["workspace:schematics/schematics-utils"]],\
     ["@atls/webpack-proto-imports-loader", ["workspace:webpack/webpack-proto-imports-loader"]],\
     ["@atls/webpack-start-server-plugin", ["workspace:webpack/webpack-start-server-plugin"]],\
     ["@atls/yarn-cli", ["workspace:yarn/cli"]],\
@@ -1875,7 +1870,6 @@ const RAW_RUNTIME_STATE =
           ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/config-prettier", "workspace:config/prettier"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
-          ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
           ["@rushstack/eslint-patch", "npm:1.10.5"],\
           ["@types/node", "npm:22.9.0"],\
           ["copy-dir", "npm:1.3.0"],\
@@ -1883,25 +1877,6 @@ const RAW_RUNTIME_STATE =
           ["globby", "npm:13.2.2"],\
           ["js-yaml", "npm:4.1.0"],\
           ["strip-json-comments", "npm:3.1.1"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/schematics-utils", [\
-      ["workspace:schematics/schematics-utils", {\
-        "packageLocation": "./schematics/schematics-utils/",\
-        "packageDependencies": [\
-          ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
-          ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
-          ["@angular-devkit/schematics", "npm:18.2.2"],\
-          ["@types/js-yaml", "npm:4.0.9"],\
-          ["@types/node", "npm:22.9.0"],\
-          ["esbuild", "npm:0.24.2"],\
-          ["js-yaml", "npm:4.1.0"],\
-          ["rimraf", "npm:5.0.10"],\
-          ["semver", "npm:7.6.3"],\
-          ["strip-json-comments", "npm:3.1.1"],\
-          ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -2834,7 +2809,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/schematics", "workspace:schematics/schematics"],\
-          ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@types/ink", null],\
@@ -2876,7 +2850,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/schematics", "workspace:schematics/schematics"],\
-          ["@atls/schematics-utils", "workspace:schematics/schematics-utils"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@types/react", "npm:18.3.12"],\
@@ -5955,15 +5928,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-http-cache-semantics-npm-4.0.4-6d4f413ddd-a59566cff6.zip/node_modules/@types/http-cache-semantics/",\
         "packageDependencies": [\
           ["@types/http-cache-semantics", "npm:4.0.4"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@types/js-yaml", [\
-      ["npm:4.0.9", {\
-        "packageLocation": "./.yarn/cache/@types-js-yaml-npm-4.0.9-6a16d01bd2-a0ce595db8.zip/node_modules/@types/js-yaml/",\
-        "packageDependencies": [\
-          ["@types/js-yaml", "npm:4.0.9"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -14637,16 +14601,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/rfdc-npm-1.4.1-1a1c63d052-2f3d11d3d8.zip/node_modules/rfdc/",\
         "packageDependencies": [\
           ["rfdc", "npm:1.4.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["rimraf", [\
-      ["npm:5.0.10", {\
-        "packageLocation": "./.yarn/cache/rimraf-npm-5.0.10-d0c6647697-f3b8ce81ee.zip/node_modules/rimraf/",\
-        "packageDependencies": [\
-          ["rimraf", "npm:5.0.10"],\
-          ["glob", "npm:10.4.5"]\
         ],\
         "linkType": "HARD"\
       }]\

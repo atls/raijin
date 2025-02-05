@@ -95,7 +95,6 @@
   "@yarnpkg/builder": {
     "bundles": {
       "standard": [
-        "@atls/yarn-plugin-schematics",
         "@atls/yarn-plugin-badges",
         "@atls/yarn-plugin-changelog",
         "@atls/yarn-plugin-check",
@@ -118,6 +117,7 @@
         "@atls/yarn-plugin-typescript",
         "@atls/yarn-plugin-workspaces",
         "@atls/yarn-plugin-ui",
+        "@atls/yarn-plugin-schematics",
         "@yarnpkg/plugin-interactive-tools",
         "@yarnpkg/plugin-workspace-tools",
         "@yarnpkg/plugin-typescript",
