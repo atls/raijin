@@ -7,9 +7,12 @@ import { StreamReport } from "@yarnpkg/core";
 
 import { getStreamReportCallback } from "../getters/index.js";
 import { getStreamReportOptions } from "../getters/index.js";
+import { Option } from "clipanion";
 
 export class GenerateProjectCommand extends BaseCommand {
-  static override paths = [["generate", "project"]];
+  static override paths = [["generate"]];
+
+  type = Option.String("-t,--type", "project");
 
   async execute() {
     const configuration = await Configuration.find(
@@ -20,8 +23,14 @@ export class GenerateProjectCommand extends BaseCommand {
     // TODO is needed?
     // const { project, workspace } = await Project.find(configuration, this.context.cwd)
 
+    const allowedTypes = ["libraries", "project"];
+
+    if (!allowedTypes.includes(this.type)) {
+      throw new Error(`Allowed only ${allowedTypes.join(", ")} types`);
+    }
+
     const options = {
-      type: "project",
+      type: this.type,
       cwd: process.cwd(),
     };
 

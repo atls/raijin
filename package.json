@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "cli:build": "yarn workspace @atls/yarn-cli build",
-    "generate:test": "yarn workspace @atls/schematics build && yarn generate project",
+    "generate:test": "yarn workspace @atls/schematics build && yarn generate -t project",
     "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download"
   },
   "resolutions": {
