@@ -1,15 +1,15 @@
-import type { StreamReport }  from '@yarnpkg/core'
+import type { StreamReport } from "@yarnpkg/core";
 
-import { join }               from 'node:path'
-import { dirname }            from 'node:path'
+import { join } from "node:path";
+import { dirname } from "node:path";
 
-import { fileURLToPath }      from 'url'
+import { fileURLToPath } from "url";
 
-import { runSchematicHelper } from '../helpers/run-schematics.helper.js'
+import { runSchematicHelper } from "../helpers/run-schematics.helper.js";
 
-type StreamReportCallbackType = Parameters<typeof StreamReport.start>[1]
+type StreamReportCallbackType = Parameters<typeof StreamReport.start>[1];
 
-export const getStreamReportCallback = (): StreamReportCallbackType => {
+export const getStreamReportCallback = (options): StreamReportCallbackType => {
   const streamReportCallback = async (report: StreamReport): Promise<void> => {
     // TODO например у линта свой компонент для прогресса. как сделать тут?
     // await report.startTimerPromise("Init Project", async () => {
@@ -30,11 +30,11 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
     //   "collection.json"
     // );
 
-    const collectionUrl = import.meta.resolve('@atls/schematics/collection')
-    const collectionPath = new URL(collectionUrl).pathname
+    const collectionUrl = import.meta.resolve("@atls/schematics/collection");
+    const collectionPath = new URL(collectionUrl).pathname;
 
     try {
-      await runSchematicHelper('project', {}, collectionPath)
+      await runSchematicHelper("project", options, collectionPath);
 
       // const schematics = new SchematicsWorker(project.cwd);
 
@@ -80,7 +80,7 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
       //       }
       //     );
     } catch (error) {
-      console.error(error)
+      console.error(error);
       //     progress.end();
       //
       //     renderStatic(<ErrorInfo error={error as Error} />)
@@ -90,7 +90,7 @@ export const getStreamReportCallback = (): StreamReportCallbackType => {
       //       });
     }
     // });
-  }
+  };
 
-  return streamReportCallback
-}
+  return streamReportCallback;
+};
