@@ -392,7 +392,6 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
-          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@types/node", "npm:22.9.0"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["esbuild", [\
@@ -643,7 +642,7 @@ const RAW_RUNTIME_STATE =
           ["ajv", "npm:8.17.1"],\
           ["ajv-formats", "virtual:c96c6e90093a2b296a7c8bb4e58bf023bdbf85d6d663018de529addeb630a5e4fd02e8889b4c2a077c6fe6d34f2a65c0e4902a22f372b460de8ceb3f45ce74e9#npm:3.0.1"],\
           ["chokidar", null],\
-          ["jsonc-parser", "npm:3.3.1"],\
+          ["jsonc-parser", "patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509"],\
           ["picomatch", "npm:4.0.2"],\
           ["rxjs", "npm:7.8.1"],\
           ["source-map", "npm:0.7.4"]\
@@ -662,7 +661,7 @@ const RAW_RUNTIME_STATE =
           ["ajv", "npm:8.17.1"],\
           ["ajv-formats", "virtual:c96c6e90093a2b296a7c8bb4e58bf023bdbf85d6d663018de529addeb630a5e4fd02e8889b4c2a077c6fe6d34f2a65c0e4902a22f372b460de8ceb3f45ce74e9#npm:3.0.1"],\
           ["chokidar", null],\
-          ["jsonc-parser", "npm:3.3.1"],\
+          ["jsonc-parser", "patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509"],\
           ["picomatch", "npm:4.0.2"],\
           ["rxjs", "npm:7.8.1"],\
           ["source-map", "npm:0.7.4"]\
@@ -680,7 +679,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@angular-devkit/schematics", "npm:18.2.2"],\
           ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
-          ["jsonc-parser", "npm:3.3.1"],\
+          ["jsonc-parser", "patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509"],\
           ["magic-string", "npm:0.30.11"],\
           ["ora", "npm:5.4.1"],\
           ["rxjs", "npm:7.8.1"]\
@@ -692,7 +691,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
-          ["jsonc-parser", "npm:3.3.1"],\
+          ["jsonc-parser", "patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509"],\
           ["magic-string", "npm:0.30.17"],\
           ["ora", "npm:5.4.1"],\
           ["rxjs", "npm:7.8.1"]\
@@ -1918,6 +1917,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/cli/",\
         "packageDependencies": [\
           ["@atls/yarn-cli", "workspace:yarn/cli"],\
+          ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@atls/yarn-cli-tools", "workspace:yarn/cli-tools"],\
           ["@atls/yarn-plugin-badges", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-badges"],\
           ["@atls/yarn-plugin-changelog", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-changelog"],\
@@ -12663,10 +12663,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["jsonc-parser", [\
-      ["npm:3.3.1", {\
-        "packageLocation": "./.yarn/cache/jsonc-parser-npm-3.3.1-f57c3cdcf5-9b0dc391f2.zip/node_modules/jsonc-parser/",\
+      ["patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509", {\
+        "packageLocation": "./.yarn/cache/jsonc-parser-patch-d20f671836-45d1ae6236.zip/node_modules/jsonc-parser/",\
         "packageDependencies": [\
-          ["jsonc-parser", "npm:3.3.1"]\
+          ["jsonc-parser", "patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15680,7 +15680,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["tools", "workspace:."],\
-          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@types/node", "npm:22.9.0"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["esbuild", [\

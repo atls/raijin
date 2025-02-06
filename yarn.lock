@@ -1009,6 +1009,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-cli@workspace:yarn/cli"
   dependencies:
+    "@atls/schematics": "workspace:*"
     "@atls/yarn-cli-tools": "workspace:*"
     "@atls/yarn-plugin-badges": "workspace:*"
     "@atls/yarn-plugin-changelog": "workspace:*"
@@ -9139,6 +9140,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsonc-parser@patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch":
+  version: 3.3.1
+  resolution: "jsonc-parser@patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509"
+  checksum: 10/45d1ae6236108e1f7dd2ccde240b50b73ee063075658515302f4721b4df041dda73ca8e3a100b2c81dbe1ecdcdb84e1c3bc48ac25500dcadbf9792e4e7343e02
+  languageName: node
+  linkType: hard
+
 "jsonfile@npm:^6.0.1":
   version: 6.1.0
   resolution: "jsonfile@npm:6.1.0"
@@ -11856,7 +11864,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tools@workspace:."
   dependencies:
-    "@atls/code-runtime": "workspace:*"
     "@types/node": "npm:22.9.0"
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch"
     esbuild: "npm:esbuild-wasm@^0.23.1"
