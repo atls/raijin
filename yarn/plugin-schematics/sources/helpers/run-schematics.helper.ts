@@ -1,12 +1,5 @@
-import { NodeJsSyncHost } from "@angular-devkit/core/node";
 import { UnsuccessfulWorkflowExecution } from "@angular-devkit/schematics";
-import { SchematicEngine } from "@angular-devkit/schematics";
-import { DryRunEvent } from "@angular-devkit/schematics";
 import { NodeWorkflow } from "@angular-devkit/schematics/tools";
-import { virtualFs } from "@angular-devkit/core";
-import { normalize } from "@angular-devkit/core";
-import { schema } from "@angular-devkit/core";
-import { existsSync } from "fs";
 
 import { eventsLogHelper } from "./events-log.helper.js";
 
