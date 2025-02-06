@@ -8,6 +8,7 @@ import { StreamReport } from "@yarnpkg/core";
 import { getStreamReportCallback } from "../getters/index.js";
 import { getStreamReportOptions } from "../getters/index.js";
 import { Option } from "clipanion";
+import { getCollectionPath } from "../getters/index.js";
 
 export class GenerateProjectCommand extends BaseCommand {
   static override paths = [["generate"]];
@@ -20,8 +21,8 @@ export class GenerateProjectCommand extends BaseCommand {
       this.context.plugins
     );
 
-    // TODO is needed?
-    // const { project, workspace } = await Project.find(configuration, this.context.cwd)
+    const { project } = await Project.find(configuration, this.context.cwd);
+    const collectionPath = getCollectionPath(project);
 
     const allowedTypes = ["libraries", "project"];
 
@@ -32,6 +33,7 @@ export class GenerateProjectCommand extends BaseCommand {
     const options = {
       type: this.type,
       cwd: process.cwd(),
+      collectionPath,
     };
 
     const streamReportOptions = getStreamReportOptions(this, configuration);

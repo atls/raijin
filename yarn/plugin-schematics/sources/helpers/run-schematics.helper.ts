@@ -5,8 +5,7 @@ import { eventsLogHelper } from "./events-log.helper.js";
 
 export const runSchematicHelper = async (
   schematicName: string,
-  options: object,
-  collectionPath: string
+  options: object
 ) => {
   const dryRun = false;
   const debug = false;
@@ -27,7 +26,7 @@ export const runSchematicHelper = async (
   try {
     await workflow
       .execute({
-        collection: collectionPath,
+        collection: options.collectionPath,
         schematic: schematicName,
         options,
         allowPrivate: true,
