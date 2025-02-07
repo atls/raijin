@@ -13,9 +13,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf ./dist/ && yarn node ./scripts/cjs-build.script.ts",
-    "prepack": "yarn run build && yarn node ./scripts/prepack.mjs",
-    "postpack": "rm -rf dist && yarn node ./scripts/postpack.mjs"
+    "build": " yarn node ./scripts/cjs-build.script.ts",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@angular-devkit/core": "19.1.5",
