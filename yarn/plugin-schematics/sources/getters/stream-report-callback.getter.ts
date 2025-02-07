@@ -1,20 +1,19 @@
-import type { StreamReport } from "@yarnpkg/core";
+import '@atls/schematics'
 
-import { runSchematicHelper } from "../helpers/run-schematics.helper.js";
-import "@atls/schematics";
+import type { StreamReport }  from '@yarnpkg/core'
 
-type StreamReportCallbackType = Parameters<typeof StreamReport.start>[1];
+import { runSchematicHelper } from '../helpers/run-schematics.helper.js'
 
-export const getStreamReportCallback = (
-  options: object
-): StreamReportCallbackType => {
+type StreamReportCallbackType = Parameters<typeof StreamReport.start>[1]
+
+export const getStreamReportCallback = (options: object): StreamReportCallbackType => {
   const streamReportCallback = async (report: StreamReport): Promise<void> => {
     try {
-      await runSchematicHelper("project", options);
+      await runSchematicHelper('project', options)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
-  return streamReportCallback;
-};
+  return streamReportCallback
+}

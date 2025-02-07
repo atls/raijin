@@ -1,1 +1,1 @@
-export * from "./generate-project.command.jsx";
+export * from './generate-project.command.jsx'
