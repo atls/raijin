@@ -1,3 +1,5 @@
+/* eslint-disable n/no-sync */
+
 import { statSync }    from 'fs'
 import { readdirSync } from 'fs'
 import { join }        from 'path'

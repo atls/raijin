@@ -6,7 +6,7 @@ import { template }    from '@angular-devkit/schematics'
 import { move }        from '@angular-devkit/schematics'
 import { url }         from '@angular-devkit/schematics'
 
-export const generateCommonSource = (options: any): Source =>
+export const generateCommonSource = (options: Record<string, string>): Source =>
   apply(url('../templates/common'), [
     template({
       ...strings,

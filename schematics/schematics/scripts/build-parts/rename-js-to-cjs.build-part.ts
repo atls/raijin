@@ -1,3 +1,5 @@
+/* eslint-disable n/no-sync */
+
 import { renameSync }            from 'fs'
 import { extname }               from 'path'
 import { join }                  from 'path'
@@ -11,10 +13,9 @@ type Props = {
   outDir: string
 }
 
-export const renameJsToCjsBuildPart = ({ outDir }: Props) => {
+export const renameJsToCjsBuildPart = ({ outDir }: Props): void => {
   getAllFiles(outDir).forEach((file) => {
     const isTemplate = checkTemplateFileUtil(outDir, file)
-    console.log(isTemplate, file)
     if (extname(file) === '.js' && !isTemplate) {
       const newPath = join(dirname(file), `${basename(file, '.js')}.cjs`)
       renameSync(file, newPath)

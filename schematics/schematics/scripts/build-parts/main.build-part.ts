@@ -6,7 +6,7 @@ type MainBuildPartProps = {
   outDir: string
 }
 
-export const mainBuildPart = async ({ allFiles, outDir }: MainBuildPartProps) => {
+export const mainBuildPart = async ({ allFiles, outDir }: MainBuildPartProps): Promise<void> => {
   const tsJsFiles = allFiles.filter((file) => ['.ts', '.js'].includes(extname(file)))
 
   await esbuild.build({

@@ -1,11 +1,15 @@
-export const eventsLogHelper = (event) => {
+/* eslint-disable no-console, default-case */
+
+import type { DryRunEvent } from '@angular-devkit/schematics'
+
+export const eventsLogHelper = (event: DryRunEvent): void => {
   const eventPath = event.path
 
   switch (event.kind) {
     case 'error':
       console.error(
         `ERROR! ${eventPath} ${
-          event.description == 'alreadyExist' ? 'already exists' : 'does not exist'
+          event.description === 'alreadyExist' ? 'already exists' : 'does not exist'
         }.`
       )
       break

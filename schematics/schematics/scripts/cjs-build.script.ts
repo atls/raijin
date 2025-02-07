@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { join }                              from 'path'
 import { fileURLToPath }                     from 'url'
 
@@ -18,4 +20,4 @@ renameJsToCjsBuildPart({ outDir })
 cpJsonAndTemplatesToDistBuildPart({ srcDir, outDir, allFiles })
 renameJsImportsBuildPart({ outDir })
 
-console.info('schematic build successed')
+console.info('Schematic build successed')

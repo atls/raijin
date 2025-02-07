@@ -4,7 +4,9 @@ import type { Rule }             from '@angular-devkit/schematics'
 import type { SchematicContext } from '@angular-devkit/schematics'
 import type { Tree }             from '@angular-devkit/schematics'
 
+// @ts-expect-error
 import { load }                  from 'js-yaml'
+// @ts-expect-error
 import { dump }                  from 'js-yaml'
 
 export const readYamlInTree = <T = any>(host: Tree, path: string): T => {

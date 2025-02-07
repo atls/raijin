@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions, no-console, @typescript-eslint/no-deprecated */
+
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics'
 import { NodeWorkflow }                  from '@angular-devkit/schematics/tools'
 
 import { eventsLogHelper }               from './events-log.helper.js'
 
-export const runSchematicHelper = async (schematicName: string, options: object) => {
+export const runSchematicHelper = async (
+  schematicName: string,
+  options: Record<string, string>
+): Promise<0 | 1> => {
   const dryRun = false
   const debug = false
   let nothingDone = true

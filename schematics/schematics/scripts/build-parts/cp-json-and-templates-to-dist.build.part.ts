@@ -1,3 +1,5 @@
+/* eslint-disable n/no-sync */
+
 import { copyFileSync }           from 'fs'
 import { extname }                from 'path'
 import { relative }               from 'path'
@@ -12,7 +14,7 @@ interface Props {
   allFiles: Array<string>
 }
 
-export const cpJsonAndTemplatesToDistBuildPart = ({ srcDir, outDir, allFiles }: Props) => {
+export const cpJsonAndTemplatesToDistBuildPart = ({ srcDir, outDir, allFiles }: Props): void => {
   allFiles.forEach((file) => {
     const isTemplate = checkTemplateFileUtil(srcDir, file)
     if (extname(file) === '.json' || isTemplate) {
