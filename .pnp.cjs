@@ -392,7 +392,7 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
-          ["@atls/schematics", "workspace:schematics/schematics"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@types/node", "npm:22.9.0"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["esbuild", [\
@@ -1870,7 +1870,6 @@ const RAW_RUNTIME_STATE =
           ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/config-prettier", "workspace:config/prettier"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
-          ["@rushstack/eslint-patch", "npm:1.10.5"],\
           ["@types/node", "npm:22.9.0"],\
           ["copy-dir", "npm:1.3.0"],\
           ["esbuild", "npm:0.24.2"],\
@@ -1918,7 +1917,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/cli/",\
         "packageDependencies": [\
           ["@atls/yarn-cli", "workspace:yarn/cli"],\
-          ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@atls/yarn-cli-tools", "workspace:yarn/cli-tools"],\
           ["@atls/yarn-plugin-badges", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-badges"],\
           ["@atls/yarn-plugin-changelog", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-changelog"],\
@@ -2803,12 +2801,9 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-schematics-virtual-0f3cc5eda5/1/yarn/plugin-schematics/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-schematics", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-schematics"],\
-          ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
-          ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
@@ -2844,12 +2839,9 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/plugin-schematics/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-schematics", "workspace:yarn/plugin-schematics"],\
-          ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
-          ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
@@ -5234,15 +5226,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@rtsao-scc-npm-1.1.0-f4ba9ceb2c-17d04adf40.zip/node_modules/@rtsao/scc/",\
         "packageDependencies": [\
           ["@rtsao/scc", "npm:1.1.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@rushstack/eslint-patch", [\
-      ["npm:1.10.5", {\
-        "packageLocation": "./.yarn/cache/@rushstack-eslint-patch-npm-1.10.5-f311e6cb39-769d130dfb.zip/node_modules/@rushstack/eslint-patch/",\
-        "packageDependencies": [\
-          ["@rushstack/eslint-patch", "npm:1.10.5"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15681,7 +15664,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["tools", "workspace:."],\
-          ["@atls/schematics", "workspace:schematics/schematics"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@types/node", "npm:22.9.0"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["esbuild", [\

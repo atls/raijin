@@ -17,8 +17,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@angular-devkit/core": "19.1.5",
-    "@angular-devkit/schematics": "19.1.5",
     "@atls/cli-ui-error-info-component": "workspace:*",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/cli-ui-schematics-component": "workspace:*",
