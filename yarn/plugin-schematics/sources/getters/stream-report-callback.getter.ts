@@ -2,15 +2,23 @@
 
 import '@atls/schematics'
 
-import type { StreamReport }  from '@yarnpkg/core'
+import type { StreamReport }       from '@yarnpkg/core'
 
-import { runSchematicHelper } from '../helpers/run-schematics.helper.js'
+import { PackageNotProvidedError } from '../errors/index.js'
 
 type StreamReportCallbackType = Parameters<typeof StreamReport.start>[1]
 
-export const getStreamReportCallback = (
+export const getStreamReportCallback = async (
   options: Record<string, string>
-): StreamReportCallbackType => {
+): Promise<StreamReportCallbackType> => {
+  const atlsSchematics = await import('@atls/schematics')
+
+  if (!atlsSchematics) {
+    throw new PackageNotProvidedError()
+  }
+
+  const { runSchematicHelper } = atlsSchematics
+
   const streamReportCallback = async (report: StreamReport): Promise<void> => {
     try {
       await runSchematicHelper('project', options)

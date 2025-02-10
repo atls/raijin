@@ -33,7 +33,7 @@ export class GenerateProjectCommand extends BaseCommand {
     }
 
     const streamReportOptions = getStreamReportOptions(this, configuration)
-    const streamReportCallback = getStreamReportCallback(options)
+    const streamReportCallback = await getStreamReportCallback(options)
 
     const commandReport = await StreamReport.start(streamReportOptions, streamReportCallback)
 
