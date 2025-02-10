@@ -914,6 +914,8 @@ __metadata:
     globby: "npm:13.2.2"
     js-yaml: "npm:4.1.0"
     strip-json-comments: "npm:3.1.1"
+  peerDependencies:
+    "@atls/code-runtime": "*"
   languageName: unknown
   linkType: soft
 
@@ -1448,6 +1450,7 @@ __metadata:
     typanion: "npm:3.14.0"
     typescript: "npm:5.5.4"
   peerDependencies:
+    "@atls/schematics": "*"
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
     "@yarnpkg/fslib": "*"

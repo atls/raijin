@@ -350,7 +350,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/config-prettier", ["workspace:config/prettier"]],\
     ["@atls/config-typescript", ["workspace:config/typescript"]],\
     ["@atls/prettier-plugin", ["workspace:prettier/plugin"]],\
-    ["@atls/schematics", ["workspace:schematics/schematics"]],\
+    ["@atls/schematics", ["virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:schematics/schematics", "workspace:schematics/schematics"]],\
     ["@atls/webpack-proto-imports-loader", ["workspace:webpack/webpack-proto-imports-loader"]],\
     ["@atls/webpack-start-server-plugin", ["workspace:webpack/webpack-start-server-plugin"]],\
     ["@atls/yarn-cli", ["workspace:yarn/cli"]],\
@@ -393,7 +393,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
-          ["@atls/schematics", "workspace:schematics/schematics"],\
+          ["@atls/schematics", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:schematics/schematics"],\
           ["@types/node", "npm:22.9.0"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["esbuild", [\
@@ -1184,7 +1184,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@atls-cli-ui-schematics-component-virtual-1cb758f7f7/1/cli/cli-ui-schematics-component/",\
         "packageDependencies": [\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/schematics", "workspace:schematics/schematics"],\
+          ["@atls/schematics", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:schematics/schematics"],\
           ["@types/ink", null],\
           ["@types/node", "npm:22.9.0"],\
           ["@types/react", "npm:18.3.12"],\
@@ -1210,7 +1210,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./cli/cli-ui-schematics-component/",\
         "packageDependencies": [\
           ["@atls/cli-ui-schematics-component", "workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/schematics", "workspace:schematics/schematics"],\
+          ["@atls/schematics", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:schematics/schematics"],\
           ["@types/node", "npm:22.9.0"],\
           ["@types/react", "npm:18.3.12"],\
           ["@yarnpkg/libui", "virtual:33124df847db9112050e8e6b252750b5defa386d019709cc306d62edda1a79fe8db9f4764f71df21c62829b17dc4045a9a8b6496dcccde16dcb23b5d78b3b5de#npm:3.0.1"],\
@@ -1865,6 +1865,27 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@atls/schematics", [\
+      ["virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:schematics/schematics", {\
+        "packageLocation": "./.yarn/__virtual__/@atls-schematics-virtual-23e18f34ed/1/schematics/schematics/",\
+        "packageDependencies": [\
+          ["@atls/schematics", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:schematics/schematics"],\
+          ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
+          ["@angular-devkit/schematics", "npm:19.1.5"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
+          ["@types/atls__code-runtime", null],\
+          ["@types/node", "npm:22.9.0"],\
+          ["copy-dir", "npm:1.3.0"],\
+          ["esbuild", "npm:0.24.2"],\
+          ["globby", "npm:13.2.2"],\
+          ["js-yaml", "npm:4.1.0"],\
+          ["strip-json-comments", "npm:3.1.1"]\
+        ],\
+        "packagePeers": [\
+          "@atls/code-runtime",\
+          "@types/atls__code-runtime"\
+        ],\
+        "linkType": "SOFT"\
+      }],\
       ["workspace:schematics/schematics", {\
         "packageLocation": "./schematics/schematics/",\
         "packageDependencies": [\
@@ -2806,9 +2827,10 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/schematics", "workspace:schematics/schematics"],\
+          ["@atls/schematics", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:schematics/schematics"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
+          ["@types/atls__schematics", null],\
           ["@types/ink", null],\
           ["@types/react", "npm:18.3.12"],\
           ["@types/yarnpkg__cli", null],\
@@ -2827,6 +2849,7 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\
         "packagePeers": [\
+          "@types/atls__schematics",\
           "@types/ink",\
           "@types/yarnpkg__cli",\
           "@types/yarnpkg__core",\
@@ -2844,7 +2867,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/schematics", "workspace:schematics/schematics"],\
+          ["@atls/schematics", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:schematics/schematics"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@types/react", "npm:18.3.12"],\
@@ -15667,7 +15690,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["tools", "workspace:."],\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
-          ["@atls/schematics", "workspace:schematics/schematics"],\
+          ["@atls/schematics", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:schematics/schematics"],\
           ["@types/node", "npm:22.9.0"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["esbuild", [\
