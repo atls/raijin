@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "build": " yarn node ./scripts/cjs-build.script.ts",
-    "prepack": "yarn run build",
+    "prepack": "yarn run build && yarn node ./scripts/prepack.script.ts",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
