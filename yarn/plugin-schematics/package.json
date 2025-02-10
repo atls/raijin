@@ -39,6 +39,7 @@
     "typescript": "5.5.4"
   },
   "peerDependencies": {
+    "@atls/schematics": "*",
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*",
     "@yarnpkg/fslib": "*",

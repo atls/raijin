@@ -11,7 +11,7 @@ import { getStreamReportOptions }  from '../getters/index.js'
 import { getCollectionPath }       from '../getters/index.js'
 
 export class GenerateProjectCommand extends BaseCommand {
-  static override paths = [['generate']]
+  static override paths = [['generate', 'project']]
 
   type = Option.String('-t,--type', 'project')
 
