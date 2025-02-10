@@ -13,8 +13,8 @@
     "dist"
   ],
   "scripts": {
-    "build": " yarn node ./scripts/cjs-build.script.ts",
-    "prepack": "yarn run build && yarn node ./scripts/prepack.script.ts",
+    "build": " yarn node ./src/scripts/cjs-build.script.ts",
+    "prepack": "yarn run build && yarn node ./src/scripts/prepack.script.ts",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
