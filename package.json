@@ -38,6 +38,9 @@
     "typescript": "5.5.4"
   },
   "packageManager": "yarn@4.5.1",
+  "dependencies": {
+    "@atls/schematics": "workspace:*"
+  },
   "dependeciesMeta": {
     "jsr": {
       "unplugged": true
