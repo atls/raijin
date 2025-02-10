@@ -1917,6 +1917,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/cli/",\
         "packageDependencies": [\
           ["@atls/yarn-cli", "workspace:yarn/cli"],\
+          ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@atls/yarn-cli-tools", "workspace:yarn/cli-tools"],\
           ["@atls/yarn-plugin-badges", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-badges"],\
           ["@atls/yarn-plugin-changelog", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-changelog"],\

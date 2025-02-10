@@ -1008,6 +1008,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-cli@workspace:yarn/cli"
   dependencies:
+    "@atls/schematics": "workspace:*"
     "@atls/yarn-cli-tools": "workspace:*"
     "@atls/yarn-plugin-badges": "workspace:*"
     "@atls/yarn-plugin-changelog": "workspace:*"
