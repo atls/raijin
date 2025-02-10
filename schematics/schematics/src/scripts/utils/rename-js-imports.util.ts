@@ -11,7 +11,7 @@ interface RenameJsImportsUtilProps {
   outDir: string
 }
 
-export const renameJsImportsUtil = ({ outDir }: RenameJsImportsUtilProps): void => {
+export const renameJsImportsUtil = ({ outDir }: RenameJsImportsUtilProps): boolean => {
   try {
     getAllFiles(outDir).forEach((file) => {
       if (extname(file) === '.cjs') {
@@ -20,6 +20,8 @@ export const renameJsImportsUtil = ({ outDir }: RenameJsImportsUtilProps): void 
         writeFileSync(file, content)
       }
     })
+
+    return true
   } catch {
     throw new RenameJsImportsError()
   }

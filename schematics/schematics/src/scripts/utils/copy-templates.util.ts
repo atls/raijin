@@ -15,7 +15,11 @@ interface CopyTemplatesUtilProps {
   allFiles: Array<string>
 }
 
-export const copyTemplatesUtil = ({ srcDir, outDir, allFiles }: CopyTemplatesUtilProps): void => {
+export const copyTemplatesUtil = ({
+  srcDir,
+  outDir,
+  allFiles,
+}: CopyTemplatesUtilProps): boolean => {
   try {
     allFiles.forEach((file) => {
       const isTemplate = checkTemplateFileUtil(srcDir, file)
@@ -26,6 +30,7 @@ export const copyTemplatesUtil = ({ srcDir, outDir, allFiles }: CopyTemplatesUti
         copyFileSync(file, destPath)
       }
     })
+    return true
   } catch {
     throw new CopyTemplatesError()
   }

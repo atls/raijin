@@ -14,7 +14,7 @@ type RenameJsToCjsUtilProps = {
   outDir: string
 }
 
-export const renameJsToCjsUtil = ({ outDir }: RenameJsToCjsUtilProps): void => {
+export const renameJsToCjsUtil = ({ outDir }: RenameJsToCjsUtilProps): boolean => {
   try {
     getAllFiles(outDir).forEach((file) => {
       const isTemplate = checkTemplateFileUtil(outDir, file)
@@ -23,6 +23,7 @@ export const renameJsToCjsUtil = ({ outDir }: RenameJsToCjsUtilProps): void => {
         renameSync(file, newPath)
       }
     })
+    return true
   } catch {
     throw new RenameJsToCjsError()
   }
