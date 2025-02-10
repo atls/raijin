@@ -1680,6 +1680,8 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/config-eslint", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#workspace:config/eslint"],\
+          ["@atls/config-prettier", "workspace:config/prettier"],\
+          ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/webpack-proto-imports-loader", "workspace:webpack/webpack-proto-imports-loader"],\
           ["@svgr/core", "npm:8.1.0"],\
           ["@svgr/plugin-jsx", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#npm:8.1.0"],\
@@ -1868,8 +1870,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/schematics", "workspace:schematics/schematics"],\
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
-          ["@atls/config-prettier", "workspace:config/prettier"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@types/node", "npm:22.9.0"],\
           ["copy-dir", "npm:1.3.0"],\
           ["esbuild", "npm:0.24.2"],\

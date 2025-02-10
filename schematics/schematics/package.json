@@ -20,8 +20,7 @@
   "dependencies": {
     "@angular-devkit/core": "19.1.5",
     "@angular-devkit/schematics": "19.1.5",
-    "@atls/config-prettier": "workspace:*",
-    "@atls/config-typescript": "workspace:*",
+    "@atls/code-runtime": "workspace:*",
     "js-yaml": "4.1.0",
     "strip-json-comments": "3.1.1"
   },
