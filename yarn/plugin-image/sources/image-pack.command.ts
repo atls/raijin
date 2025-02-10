@@ -1,37 +1,42 @@
-import type { TagPolicy } from '@atls/code-pack'
-import type { Workspace } from '@yarnpkg/core'
+import type { TagPolicy } from "@atls/code-pack";
+import type { Workspace } from "@yarnpkg/core";
 
-import { readFileSync }   from 'node:fs'
+import { readFileSync } from "node:fs";
 
-import { BaseCommand }    from '@yarnpkg/cli'
-import { Configuration }  from '@yarnpkg/core'
-import { Project }        from '@yarnpkg/core'
-import { StreamReport }   from '@yarnpkg/core'
-import { structUtils }    from '@yarnpkg/core'
-import { xfs }            from '@yarnpkg/fslib'
-import { Option }         from 'clipanion'
-import { join }           from 'path'
+import { BaseCommand } from "@yarnpkg/cli";
+import { Configuration } from "@yarnpkg/core";
+import { Project } from "@yarnpkg/core";
+import { StreamReport } from "@yarnpkg/core";
+import { structUtils } from "@yarnpkg/core";
+import { xfs } from "@yarnpkg/fslib";
+import { Option } from "clipanion";
+import { join } from "node:path";
 
-import { pack }           from '@atls/code-pack'
-import { packUtils }      from '@atls/yarn-pack-utils'
+import { pack } from "@atls/code-pack";
+import { packUtils } from "@atls/yarn-pack-utils";
 
 class ImagePackCommand extends BaseCommand {
-  static override paths = [['image', 'pack']]
+  static override paths = [["image", "pack"]];
 
-  registry: string = Option.String('-r,--registry', '')
+  registry: string = Option.String("-r,--registry", "");
 
-  tagPolicy: TagPolicy = Option.String('-t,--tag-policy', 'revision')
+  tagPolicy: TagPolicy = Option.String("-t,--tag-policy", "revision");
 
-  publish: boolean = Option.Boolean('-p,--publish', false)
+  publish: boolean = Option.Boolean("-p,--publish", false);
 
-  platform?: string = Option.String('--platform')
+  platform?: string = Option.String("--platform");
 
   async execute(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const configuration = await Configuration.find(
+      this.context.cwd,
+      this.context.plugins
+    );
 
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project } = await Project.find(configuration, this.context.cwd);
 
-    const workspace: Workspace = project.getWorkspaceByFilePath(this.context.cwd)
+    const workspace: Workspace = project.getWorkspaceByFilePath(
+      this.context.cwd
+    );
 
     const commandReport = await StreamReport.start(
       {
@@ -44,14 +49,17 @@ class ImagePackCommand extends BaseCommand {
             null,
             `Workspace ${
               workspace.manifest.name
-                ? structUtils.prettyIdent(configuration, workspace.manifest.name)
+                ? structUtils.prettyIdent(
+                    configuration,
+                    workspace.manifest.name
+                  )
                 : workspace.relativeCwd
             } not allowed for package.`
-          )
+          );
 
-          return
+          return;
         }
-        const destination = await xfs.mktempPromise()
+        const destination = await xfs.mktempPromise();
 
         report.reportInfo(
           null,
@@ -60,16 +68,25 @@ class ImagePackCommand extends BaseCommand {
               ? structUtils.prettyIdent(configuration, workspace.manifest.name)
               : workspace.relativeCwd
           } to ${destination}`
-        )
+        );
 
         // eslint-disable-next-line n/no-sync
-        const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
-        const { packConfiguration = {} } = JSON.parse(content)
-        const buildpackVersion = packConfiguration.buildpackVersion ?? '0.1.1'
-        const builderTag = packConfiguration.builderTag ?? '22'
-        const { require } = packConfiguration
+        const content = readFileSync(
+          join(this.context.cwd, "package.json"),
+          "utf-8"
+        );
+        const { packConfiguration = {} } = JSON.parse(content);
+        const buildpackVersion = packConfiguration.buildpackVersion ?? "0.1.1";
+        const builderTag = packConfiguration.builderTag ?? "22";
+        const { require } = packConfiguration;
 
-        await packUtils.pack(configuration, project, workspace, report, destination)
+        await packUtils.pack(
+          configuration,
+          project,
+          workspace,
+          report,
+          destination
+        );
 
         await pack(
           {
@@ -84,34 +101,34 @@ class ImagePackCommand extends BaseCommand {
             cwd: destination,
           },
           this.context
-        )
+        );
       }
-    )
+    );
 
-    return commandReport.exitCode()
+    return commandReport.exitCode();
   }
 
   private isWorkspaceAllowedForBundle(workspace: Workspace): boolean {
-    const { scripts, name } = workspace.manifest
+    const { scripts, name } = workspace.manifest;
 
-    const buildCommand = scripts.get('build')
+    const buildCommand = scripts.get("build");
 
     const hasAllowedBuildScript = [
-      'actl service build',
-      'actl renderer build',
-      'build-storybook',
-      'storybook build',
-      'next build',
-      'builder build library',
-      'app service build',
-      'app renderer build',
-      'service build',
-      'renderer build',
-      'strapi build',
-    ].some((command) => buildCommand?.includes(command))
+      "actl service build",
+      "actl renderer build",
+      "build-storybook",
+      "storybook build",
+      "next build",
+      "builder build library",
+      "app service build",
+      "app renderer build",
+      "service build",
+      "renderer build",
+      "strapi build",
+    ].some((command) => buildCommand?.includes(command));
 
-    return hasAllowedBuildScript && Boolean(name)
+    return hasAllowedBuildScript && Boolean(name);
   }
 }
 
-export { ImagePackCommand }
+export { ImagePackCommand };
