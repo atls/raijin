@@ -1,9 +1,9 @@
-import { relative } from "node:path";
+import { relative } from 'node:path'
 
 const checkTemplatesDir = (relativePath: string): boolean =>
-  relativePath.split("/")[0] === "templates";
+  relativePath.split('/')[0] === 'templates'
 
 export const checkTemplateFileUtil = (dir: string, file: string): boolean => {
-  const relativePath = relative(dir, file);
-  return checkTemplatesDir(relativePath);
-};
+  const relativePath = relative(dir, file)
+  return checkTemplatesDir(relativePath)
+}
