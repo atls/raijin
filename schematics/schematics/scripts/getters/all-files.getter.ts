@@ -1,17 +1,20 @@
 /* eslint-disable n/no-sync */
 
-import { statSync }    from 'fs'
-import { readdirSync } from 'fs'
-import { join }        from 'path'
+import { statSync } from "node:fs";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 
-export const getAllFiles = (dir: string, fileList: Array<string> = []): Array<string> => {
+export const getAllFiles = (
+  dir: string,
+  fileList: Array<string> = []
+): Array<string> => {
   readdirSync(dir).forEach((file) => {
-    const fullPath = join(dir, file)
+    const fullPath = join(dir, file);
     if (statSync(fullPath).isDirectory()) {
-      getAllFiles(fullPath, fileList)
+      getAllFiles(fullPath, fileList);
     } else {
-      fileList.push(fullPath)
+      fileList.push(fullPath);
     }
-  })
-  return fileList
-}
+  });
+  return fileList;
+};
