@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@atls/config-eslint": "workspace:*",
+    "@atls/config-prettier": "workspace:*",
+    "@atls/config-typescript": "workspace:*",
     "@atls/webpack-proto-imports-loader": "workspace:*",
     "@svgr/core": "8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
