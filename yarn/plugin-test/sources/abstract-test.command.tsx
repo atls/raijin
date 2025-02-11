@@ -2,6 +2,7 @@
 /* eslint-disable n/no-sync */
 
 import { readFileSync }  from 'node:fs'
+import { relative }      from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 import { BaseCommand }   from '@yarnpkg/cli'
@@ -16,7 +17,6 @@ import { npath }         from '@yarnpkg/fslib'
 import { Option }        from 'clipanion'
 import { Command }       from 'clipanion'
 import { render }        from 'ink'
-import { relative }      from 'path'
 import { isEnum }        from 'typanion'
 import React             from 'react'
 

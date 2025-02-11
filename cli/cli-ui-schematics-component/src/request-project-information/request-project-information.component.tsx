@@ -1,13 +1,16 @@
-import type { FC }     from 'react'
+import type { FC }   from 'react'
 
-import { Text }        from 'ink'
-import { Box }         from 'ink'
-import { useEffect }   from 'react'
-import { useState }    from 'react'
-import Select          from 'ink-select-input'
-import React           from 'react'
+import { Text }      from 'ink'
+import { Box }       from 'ink'
+import { useEffect } from 'react'
+import { useState }  from 'react'
+import Select        from 'ink-select-input'
+import React         from 'react'
 
-import { ProjectType } from '@atls/schematics'
+const enum ProjectType {
+  Project = 'project',
+  Libraries = 'libraries',
+}
 
 interface SubmitProps {
   onSubmit: (props: ProjectInformationProperties) => void
@@ -44,11 +47,11 @@ export const RequestProjectInformation: FC<RequestProjectInformationProps> = ({ 
           items={[
             {
               label: 'Project',
-              value: ProjectType.PROJECT,
+              value: ProjectType.Project,
             },
             {
               label: 'Libraries',
-              value: ProjectType.LIBRARIES,
+              value: ProjectType.Libraries,
             },
           ]}
           // eslint-disable-next-line

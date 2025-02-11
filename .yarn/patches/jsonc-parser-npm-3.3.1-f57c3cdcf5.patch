@@ -1,0 +1,2983 @@
+diff --git a/lib/umd/impl/edit.js b/lib/umd/impl/edit.js
+index f9aeefef667d8a725dba6954d5831bdc5ff145f8..44ee74dc4639558e93ae7e60b38a9df1e9cbe86c 100644
+--- a/lib/umd/impl/edit.js
++++ b/lib/umd/impl/edit.js
+@@ -1,201 +1,291 @@
++const format_1 = require("./format");
++const parser_1 = require("./parser");
++
+ (function (factory) {
+-    if (typeof module === "object" && typeof module.exports === "object") {
+-        var v = factory(require, exports);
+-        if (v !== undefined) module.exports = v;
+-    }
+-    else if (typeof define === "function" && define.amd) {
+-        define(["require", "exports", "./format", "./parser"], factory);
+-    }
++  if (typeof module === "object" && typeof module.exports === "object") {
++    var v = factory(require, exports);
++    if (v !== undefined) module.exports = v;
++  } else if (typeof define === "function" && define.amd) {
++    define(["require", "exports", "./format", "./parser"], factory);
++  }
+ })(function (require, exports) {
+-    /*---------------------------------------------------------------------------------------------
+-     *  Copyright (c) Microsoft Corporation. All rights reserved.
+-     *  Licensed under the MIT License. See License.txt in the project root for license information.
+-     *--------------------------------------------------------------------------------------------*/
+-    'use strict';
+-    Object.defineProperty(exports, "__esModule", { value: true });
+-    exports.isWS = exports.applyEdit = exports.setProperty = exports.removeProperty = void 0;
+-    const format_1 = require("./format");
+-    const parser_1 = require("./parser");
+-    function removeProperty(text, path, options) {
+-        return setProperty(text, path, void 0, options);
++  /*---------------------------------------------------------------------------------------------
++   *  Copyright (c) Microsoft Corporation. All rights reserved.
++   *  Licensed under the MIT License. See License.txt in the project root for license information.
++   *--------------------------------------------------------------------------------------------*/
++  "use strict";
++  Object.defineProperty(exports, "__esModule", { value: true });
++  exports.isWS =
++    exports.applyEdit =
++    exports.setProperty =
++    exports.removeProperty =
++      void 0;
++  function removeProperty(text, path, options) {
++    return setProperty(text, path, void 0, options);
++  }
++  exports.removeProperty = removeProperty;
++  function setProperty(text, originalPath, value, options) {
++    const path = originalPath.slice();
++    const errors = [];
++    const root = (0, parser_1.parseTree)(text, errors);
++    let parent = void 0;
++    let lastSegment = void 0;
++    while (path.length > 0) {
++      lastSegment = path.pop();
++      parent = (0, parser_1.findNodeAtLocation)(root, path);
++      if (parent === void 0 && value !== void 0) {
++        if (typeof lastSegment === "string") {
++          value = { [lastSegment]: value };
++        } else {
++          value = [value];
++        }
++      } else {
++        break;
++      }
+     }
+-    exports.removeProperty = removeProperty;
+-    function setProperty(text, originalPath, value, options) {
+-        const path = originalPath.slice();
+-        const errors = [];
+-        const root = (0, parser_1.parseTree)(text, errors);
+-        let parent = void 0;
+-        let lastSegment = void 0;
+-        while (path.length > 0) {
+-            lastSegment = path.pop();
+-            parent = (0, parser_1.findNodeAtLocation)(root, path);
+-            if (parent === void 0 && value !== void 0) {
+-                if (typeof lastSegment === 'string') {
+-                    value = { [lastSegment]: value };
+-                }
+-                else {
+-                    value = [value];
+-                }
+-            }
+-            else {
+-                break;
++    if (!parent) {
++      // empty document
++      if (value === void 0) {
++        // delete
++        throw new Error("Can not delete in empty document");
++      }
++      return withFormatting(
++        text,
++        {
++          offset: root ? root.offset : 0,
++          length: root ? root.length : 0,
++          content: JSON.stringify(value),
++        },
++        options
++      );
++    } else if (
++      parent.type === "object" &&
++      typeof lastSegment === "string" &&
++      Array.isArray(parent.children)
++    ) {
++      const existing = (0, parser_1.findNodeAtLocation)(parent, [lastSegment]);
++      if (existing !== void 0) {
++        if (value === void 0) {
++          // delete
++          if (!existing.parent) {
++            throw new Error("Malformed AST");
++          }
++          const propertyIndex = parent.children.indexOf(existing.parent);
++          let removeBegin;
++          let removeEnd = existing.parent.offset + existing.parent.length;
++          if (propertyIndex > 0) {
++            // remove the comma of the previous node
++            let previous = parent.children[propertyIndex - 1];
++            removeBegin = previous.offset + previous.length;
++          } else {
++            removeBegin = parent.offset + 1;
++            if (parent.children.length > 1) {
++              // remove the comma of the next node
++              let next = parent.children[1];
++              removeEnd = next.offset;
+             }
++          }
++          return withFormatting(
++            text,
++            {
++              offset: removeBegin,
++              length: removeEnd - removeBegin,
++              content: "",
++            },
++            options
++          );
++        } else {
++          // set value of existing property
++          return withFormatting(
++            text,
++            {
++              offset: existing.offset,
++              length: existing.length,
++              content: JSON.stringify(value),
++            },
++            options
++          );
+         }
+-        if (!parent) {
+-            // empty document
+-            if (value === void 0) { // delete
+-                throw new Error('Can not delete in empty document');
+-            }
+-            return withFormatting(text, { offset: root ? root.offset : 0, length: root ? root.length : 0, content: JSON.stringify(value) }, options);
++      } else {
++        if (value === void 0) {
++          // delete
++          return []; // property does not exist, nothing to do
+         }
+-        else if (parent.type === 'object' && typeof lastSegment === 'string' && Array.isArray(parent.children)) {
+-            const existing = (0, parser_1.findNodeAtLocation)(parent, [lastSegment]);
+-            if (existing !== void 0) {
+-                if (value === void 0) { // delete
+-                    if (!existing.parent) {
+-                        throw new Error('Malformed AST');
+-                    }
+-                    const propertyIndex = parent.children.indexOf(existing.parent);
+-                    let removeBegin;
+-                    let removeEnd = existing.parent.offset + existing.parent.length;
+-                    if (propertyIndex > 0) {
+-                        // remove the comma of the previous node
+-                        let previous = parent.children[propertyIndex - 1];
+-                        removeBegin = previous.offset + previous.length;
+-                    }
+-                    else {
+-                        removeBegin = parent.offset + 1;
+-                        if (parent.children.length > 1) {
+-                            // remove the comma of the next node
+-                            let next = parent.children[1];
+-                            removeEnd = next.offset;
+-                        }
+-                    }
+-                    return withFormatting(text, { offset: removeBegin, length: removeEnd - removeBegin, content: '' }, options);
+-                }
+-                else {
+-                    // set value of existing property
+-                    return withFormatting(text, { offset: existing.offset, length: existing.length, content: JSON.stringify(value) }, options);
+-                }
+-            }
+-            else {
+-                if (value === void 0) { // delete
+-                    return []; // property does not exist, nothing to do
+-                }
+-                const newProperty = `${JSON.stringify(lastSegment)}: ${JSON.stringify(value)}`;
+-                const index = options.getInsertionIndex ? options.getInsertionIndex(parent.children.map(p => p.children[0].value)) : parent.children.length;
+-                let edit;
+-                if (index > 0) {
+-                    let previous = parent.children[index - 1];
+-                    edit = { offset: previous.offset + previous.length, length: 0, content: ',' + newProperty };
+-                }
+-                else if (parent.children.length === 0) {
+-                    edit = { offset: parent.offset + 1, length: 0, content: newProperty };
+-                }
+-                else {
+-                    edit = { offset: parent.offset + 1, length: 0, content: newProperty + ',' };
+-                }
+-                return withFormatting(text, edit, options);
+-            }
++        const newProperty = `${JSON.stringify(lastSegment)}: ${JSON.stringify(
++          value
++        )}`;
++        const index = options.getInsertionIndex
++          ? options.getInsertionIndex(
++              parent.children.map((p) => p.children[0].value)
++            )
++          : parent.children.length;
++        let edit;
++        if (index > 0) {
++          let previous = parent.children[index - 1];
++          edit = {
++            offset: previous.offset + previous.length,
++            length: 0,
++            content: "," + newProperty,
++          };
++        } else if (parent.children.length === 0) {
++          edit = { offset: parent.offset + 1, length: 0, content: newProperty };
++        } else {
++          edit = {
++            offset: parent.offset + 1,
++            length: 0,
++            content: newProperty + ",",
++          };
+         }
+-        else if (parent.type === 'array' && typeof lastSegment === 'number' && Array.isArray(parent.children)) {
+-            const insertIndex = lastSegment;
+-            if (insertIndex === -1) {
+-                // Insert
+-                const newProperty = `${JSON.stringify(value)}`;
+-                let edit;
+-                if (parent.children.length === 0) {
+-                    edit = { offset: parent.offset + 1, length: 0, content: newProperty };
+-                }
+-                else {
+-                    const previous = parent.children[parent.children.length - 1];
+-                    edit = { offset: previous.offset + previous.length, length: 0, content: ',' + newProperty };
+-                }
+-                return withFormatting(text, edit, options);
+-            }
+-            else if (value === void 0 && parent.children.length >= 0) {
+-                // Removal
+-                const removalIndex = lastSegment;
+-                const toRemove = parent.children[removalIndex];
+-                let edit;
+-                if (parent.children.length === 1) {
+-                    // only item
+-                    edit = { offset: parent.offset + 1, length: parent.length - 2, content: '' };
+-                }
+-                else if (parent.children.length - 1 === removalIndex) {
+-                    // last item
+-                    let previous = parent.children[removalIndex - 1];
+-                    let offset = previous.offset + previous.length;
+-                    let parentEndOffset = parent.offset + parent.length;
+-                    edit = { offset, length: parentEndOffset - 2 - offset, content: '' };
+-                }
+-                else {
+-                    edit = { offset: toRemove.offset, length: parent.children[removalIndex + 1].offset - toRemove.offset, content: '' };
+-                }
+-                return withFormatting(text, edit, options);
+-            }
+-            else if (value !== void 0) {
+-                let edit;
+-                const newProperty = `${JSON.stringify(value)}`;
+-                if (!options.isArrayInsertion && parent.children.length > lastSegment) {
+-                    const toModify = parent.children[lastSegment];
+-                    edit = { offset: toModify.offset, length: toModify.length, content: newProperty };
+-                }
+-                else if (parent.children.length === 0 || lastSegment === 0) {
+-                    edit = { offset: parent.offset + 1, length: 0, content: parent.children.length === 0 ? newProperty : newProperty + ',' };
+-                }
+-                else {
+-                    const index = lastSegment > parent.children.length ? parent.children.length : lastSegment;
+-                    const previous = parent.children[index - 1];
+-                    edit = { offset: previous.offset + previous.length, length: 0, content: ',' + newProperty };
+-                }
+-                return withFormatting(text, edit, options);
+-            }
+-            else {
+-                throw new Error(`Can not ${value === void 0 ? 'remove' : (options.isArrayInsertion ? 'insert' : 'modify')} Array index ${insertIndex} as length is not sufficient`);
+-            }
+-        }
+-        else {
+-            throw new Error(`Can not add ${typeof lastSegment !== 'number' ? 'index' : 'property'} to parent of type ${parent.type}`);
+-        }
+-    }
+-    exports.setProperty = setProperty;
+-    function withFormatting(text, edit, options) {
+-        if (!options.formattingOptions) {
+-            return [edit];
++        return withFormatting(text, edit, options);
++      }
++    } else if (
++      parent.type === "array" &&
++      typeof lastSegment === "number" &&
++      Array.isArray(parent.children)
++    ) {
++      const insertIndex = lastSegment;
++      if (insertIndex === -1) {
++        // Insert
++        const newProperty = `${JSON.stringify(value)}`;
++        let edit;
++        if (parent.children.length === 0) {
++          edit = { offset: parent.offset + 1, length: 0, content: newProperty };
++        } else {
++          const previous = parent.children[parent.children.length - 1];
++          edit = {
++            offset: previous.offset + previous.length,
++            length: 0,
++            content: "," + newProperty,
++          };
+         }
+-        // apply the edit
+-        let newText = applyEdit(text, edit);
+-        // format the new text
+-        let begin = edit.offset;
+-        let end = edit.offset + edit.content.length;
+-        if (edit.length === 0 || edit.content.length === 0) { // insert or remove
+-            while (begin > 0 && !(0, format_1.isEOL)(newText, begin - 1)) {
+-                begin--;
+-            }
+-            while (end < newText.length && !(0, format_1.isEOL)(newText, end)) {
+-                end++;
+-            }
++        return withFormatting(text, edit, options);
++      } else if (value === void 0 && parent.children.length >= 0) {
++        // Removal
++        const removalIndex = lastSegment;
++        const toRemove = parent.children[removalIndex];
++        let edit;
++        if (parent.children.length === 1) {
++          // only item
++          edit = {
++            offset: parent.offset + 1,
++            length: parent.length - 2,
++            content: "",
++          };
++        } else if (parent.children.length - 1 === removalIndex) {
++          // last item
++          let previous = parent.children[removalIndex - 1];
++          let offset = previous.offset + previous.length;
++          let parentEndOffset = parent.offset + parent.length;
++          edit = { offset, length: parentEndOffset - 2 - offset, content: "" };
++        } else {
++          edit = {
++            offset: toRemove.offset,
++            length: parent.children[removalIndex + 1].offset - toRemove.offset,
++            content: "",
++          };
+         }
+-        const edits = (0, format_1.format)(newText, { offset: begin, length: end - begin }, { ...options.formattingOptions, keepLines: false });
+-        // apply the formatting edits and track the begin and end offsets of the changes
+-        for (let i = edits.length - 1; i >= 0; i--) {
+-            const edit = edits[i];
+-            newText = applyEdit(newText, edit);
+-            begin = Math.min(begin, edit.offset);
+-            end = Math.max(end, edit.offset + edit.length);
+-            end += edit.content.length - edit.length;
++        return withFormatting(text, edit, options);
++      } else if (value !== void 0) {
++        let edit;
++        const newProperty = `${JSON.stringify(value)}`;
++        if (!options.isArrayInsertion && parent.children.length > lastSegment) {
++          const toModify = parent.children[lastSegment];
++          edit = {
++            offset: toModify.offset,
++            length: toModify.length,
++            content: newProperty,
++          };
++        } else if (parent.children.length === 0 || lastSegment === 0) {
++          edit = {
++            offset: parent.offset + 1,
++            length: 0,
++            content:
++              parent.children.length === 0 ? newProperty : newProperty + ",",
++          };
++        } else {
++          const index =
++            lastSegment > parent.children.length
++              ? parent.children.length
++              : lastSegment;
++          const previous = parent.children[index - 1];
++          edit = {
++            offset: previous.offset + previous.length,
++            length: 0,
++            content: "," + newProperty,
++          };
+         }
+-        // create a single edit with all changes
+-        const editLength = text.length - (newText.length - end) - begin;
+-        return [{ offset: begin, length: editLength, content: newText.substring(begin, end) }];
++        return withFormatting(text, edit, options);
++      } else {
++        throw new Error(
++          `Can not ${
++            value === void 0
++              ? "remove"
++              : options.isArrayInsertion
++              ? "insert"
++              : "modify"
++          } Array index ${insertIndex} as length is not sufficient`
++        );
++      }
++    } else {
++      throw new Error(
++        `Can not add ${
++          typeof lastSegment !== "number" ? "index" : "property"
++        } to parent of type ${parent.type}`
++      );
++    }
++  }
++  exports.setProperty = setProperty;
++  function withFormatting(text, edit, options) {
++    if (!options.formattingOptions) {
++      return [edit];
+     }
+-    function applyEdit(text, edit) {
+-        return text.substring(0, edit.offset) + edit.content + text.substring(edit.offset + edit.length);
++    // apply the edit
++    let newText = applyEdit(text, edit);
++    // format the new text
++    let begin = edit.offset;
++    let end = edit.offset + edit.content.length;
++    if (edit.length === 0 || edit.content.length === 0) {
++      // insert or remove
++      while (begin > 0 && !(0, format_1.isEOL)(newText, begin - 1)) {
++        begin--;
++      }
++      while (end < newText.length && !(0, format_1.isEOL)(newText, end)) {
++        end++;
++      }
+     }
+-    exports.applyEdit = applyEdit;
+-    function isWS(text, offset) {
+-        return '\r\n \t'.indexOf(text.charAt(offset)) !== -1;
++    const edits = (0, format_1.format)(
++      newText,
++      { offset: begin, length: end - begin },
++      { ...options.formattingOptions, keepLines: false }
++    );
++    // apply the formatting edits and track the begin and end offsets of the changes
++    for (let i = edits.length - 1; i >= 0; i--) {
++      const edit = edits[i];
++      newText = applyEdit(newText, edit);
++      begin = Math.min(begin, edit.offset);
++      end = Math.max(end, edit.offset + edit.length);
++      end += edit.content.length - edit.length;
+     }
+-    exports.isWS = isWS;
++    // create a single edit with all changes
++    const editLength = text.length - (newText.length - end) - begin;
++    return [
++      {
++        offset: begin,
++        length: editLength,
++        content: newText.substring(begin, end),
++      },
++    ];
++  }
++  function applyEdit(text, edit) {
++    return (
++      text.substring(0, edit.offset) +
++      edit.content +
++      text.substring(edit.offset + edit.length)
++    );
++  }
++  exports.applyEdit = applyEdit;
++  function isWS(text, offset) {
++    return "\r\n \t".indexOf(text.charAt(offset)) !== -1;
++  }
++  exports.isWS = isWS;
+ });
+diff --git a/lib/umd/impl/format.js b/lib/umd/impl/format.js
+index 2b9f2bc54a9ad4ad38a99bbaab4da57f89d40f3d..3eeb30bf56c259c7ceb8804e8160eae0a622e33a 100644
+--- a/lib/umd/impl/format.js
++++ b/lib/umd/impl/format.js
+@@ -1,275 +1,326 @@
++const scanner_1 = require("./scanner");
++const string_intern_1 = require("./string-intern");
++
+ (function (factory) {
+-    if (typeof module === "object" && typeof module.exports === "object") {
+-        var v = factory(require, exports);
+-        if (v !== undefined) module.exports = v;
++  if (typeof module === "object" && typeof module.exports === "object") {
++    var v = factory(require, exports);
++    if (v !== undefined) module.exports = v;
++  } else if (typeof define === "function" && define.amd) {
++    define(["require", "exports", "./scanner", "./string-intern"], factory);
++  }
++})(function (require, exports) {
++  /*---------------------------------------------------------------------------------------------
++   *  Copyright (c) Microsoft Corporation. All rights reserved.
++   *  Licensed under the MIT License. See License.txt in the project root for license information.
++   *--------------------------------------------------------------------------------------------*/
++  "use strict";
++  Object.defineProperty(exports, "__esModule", { value: true });
++  exports.isEOL = exports.format = void 0;
++  function format(documentText, range, options) {
++    let initialIndentLevel;
++    let formatText;
++    let formatTextStart;
++    let rangeStart;
++    let rangeEnd;
++    if (range) {
++      rangeStart = range.offset;
++      rangeEnd = rangeStart + range.length;
++      formatTextStart = rangeStart;
++      while (formatTextStart > 0 && !isEOL(documentText, formatTextStart - 1)) {
++        formatTextStart--;
++      }
++      let endOffset = rangeEnd;
++      while (
++        endOffset < documentText.length &&
++        !isEOL(documentText, endOffset)
++      ) {
++        endOffset++;
++      }
++      formatText = documentText.substring(formatTextStart, endOffset);
++      initialIndentLevel = computeIndentLevel(formatText, options);
++    } else {
++      formatText = documentText;
++      initialIndentLevel = 0;
++      formatTextStart = 0;
++      rangeStart = 0;
++      rangeEnd = documentText.length;
+     }
+-    else if (typeof define === "function" && define.amd) {
+-        define(["require", "exports", "./scanner", "./string-intern"], factory);
++    const eol = getEOL(options, documentText);
++    const eolFastPathSupported = string_intern_1.supportedEols.includes(eol);
++    let numberLineBreaks = 0;
++    let indentLevel = 0;
++    let indentValue;
++    if (options.insertSpaces) {
++      indentValue =
++        string_intern_1.cachedSpaces[options.tabSize || 4] ??
++        repeat(string_intern_1.cachedSpaces[1], options.tabSize || 4);
++    } else {
++      indentValue = "\t";
+     }
+-})(function (require, exports) {
+-    /*---------------------------------------------------------------------------------------------
+-     *  Copyright (c) Microsoft Corporation. All rights reserved.
+-     *  Licensed under the MIT License. See License.txt in the project root for license information.
+-     *--------------------------------------------------------------------------------------------*/
+-    'use strict';
+-    Object.defineProperty(exports, "__esModule", { value: true });
+-    exports.isEOL = exports.format = void 0;
+-    const scanner_1 = require("./scanner");
+-    const string_intern_1 = require("./string-intern");
+-    function format(documentText, range, options) {
+-        let initialIndentLevel;
+-        let formatText;
+-        let formatTextStart;
+-        let rangeStart;
+-        let rangeEnd;
+-        if (range) {
+-            rangeStart = range.offset;
+-            rangeEnd = rangeStart + range.length;
+-            formatTextStart = rangeStart;
+-            while (formatTextStart > 0 && !isEOL(documentText, formatTextStart - 1)) {
+-                formatTextStart--;
+-            }
+-            let endOffset = rangeEnd;
+-            while (endOffset < documentText.length && !isEOL(documentText, endOffset)) {
+-                endOffset++;
+-            }
+-            formatText = documentText.substring(formatTextStart, endOffset);
+-            initialIndentLevel = computeIndentLevel(formatText, options);
++    const indentType = indentValue === "\t" ? "\t" : " ";
++    let scanner = (0, scanner_1.createScanner)(formatText, false);
++    let hasError = false;
++    function newLinesAndIndent() {
++      if (numberLineBreaks > 1) {
++        return (
++          repeat(eol, numberLineBreaks) +
++          repeat(indentValue, initialIndentLevel + indentLevel)
++        );
++      }
++      const amountOfSpaces =
++        indentValue.length * (initialIndentLevel + indentLevel);
++      if (
++        !eolFastPathSupported ||
++        amountOfSpaces >
++          string_intern_1.cachedBreakLinesWithSpaces[indentType][eol].length
++      ) {
++        return eol + repeat(indentValue, initialIndentLevel + indentLevel);
++      }
++      if (amountOfSpaces <= 0) {
++        return eol;
++      }
++      return string_intern_1
++        .cachedBreakLinesWithSpaces[indentType][eol][amountOfSpaces];
++    }
++    function scanNext() {
++      let token = scanner.scan();
++      numberLineBreaks = 0;
++      while (
++        token === 15 /* SyntaxKind.Trivia */ ||
++        token === 14 /* SyntaxKind.LineBreakTrivia */
++      ) {
++        if (
++          token === 14 /* SyntaxKind.LineBreakTrivia */ &&
++          options.keepLines
++        ) {
++          numberLineBreaks += 1;
++        } else if (token === 14 /* SyntaxKind.LineBreakTrivia */) {
++          numberLineBreaks = 1;
+         }
+-        else {
+-            formatText = documentText;
+-            initialIndentLevel = 0;
+-            formatTextStart = 0;
+-            rangeStart = 0;
+-            rangeEnd = documentText.length;
++        token = scanner.scan();
++      }
++      hasError =
++        token === 16 /* SyntaxKind.Unknown */ ||
++        scanner.getTokenError() !== 0 /* ScanError.None */;
++      return token;
++    }
++    const editOperations = [];
++    function addEdit(text, startOffset, endOffset) {
++      if (
++        !hasError &&
++        (!range || (startOffset < rangeEnd && endOffset > rangeStart)) &&
++        documentText.substring(startOffset, endOffset) !== text
++      ) {
++        editOperations.push({
++          offset: startOffset,
++          length: endOffset - startOffset,
++          content: text,
++        });
++      }
++    }
++    let firstToken = scanNext();
++    if (options.keepLines && numberLineBreaks > 0) {
++      addEdit(repeat(eol, numberLineBreaks), 0, 0);
++    }
++    if (firstToken !== 17 /* SyntaxKind.EOF */) {
++      let firstTokenStart = scanner.getTokenOffset() + formatTextStart;
++      let initialIndent =
++        indentValue.length * initialIndentLevel < 20 && options.insertSpaces
++          ? string_intern_1.cachedSpaces[
++              indentValue.length * initialIndentLevel
++            ]
++          : repeat(indentValue, initialIndentLevel);
++      addEdit(initialIndent, formatTextStart, firstTokenStart);
++    }
++    while (firstToken !== 17 /* SyntaxKind.EOF */) {
++      let firstTokenEnd =
++        scanner.getTokenOffset() + scanner.getTokenLength() + formatTextStart;
++      let secondToken = scanNext();
++      let replaceContent = "";
++      let needsLineBreak = false;
++      while (
++        numberLineBreaks === 0 &&
++        (secondToken === 12 /* SyntaxKind.LineCommentTrivia */ ||
++          secondToken === 13) /* SyntaxKind.BlockCommentTrivia */
++      ) {
++        let commentTokenStart = scanner.getTokenOffset() + formatTextStart;
++        addEdit(
++          string_intern_1.cachedSpaces[1],
++          firstTokenEnd,
++          commentTokenStart
++        );
++        firstTokenEnd =
++          scanner.getTokenOffset() + scanner.getTokenLength() + formatTextStart;
++        needsLineBreak = secondToken === 12 /* SyntaxKind.LineCommentTrivia */;
++        replaceContent = needsLineBreak ? newLinesAndIndent() : "";
++        secondToken = scanNext();
++      }
++      if (secondToken === 2 /* SyntaxKind.CloseBraceToken */) {
++        if (firstToken !== 1 /* SyntaxKind.OpenBraceToken */) {
++          indentLevel--;
+         }
+-        const eol = getEOL(options, documentText);
+-        const eolFastPathSupported = string_intern_1.supportedEols.includes(eol);
+-        let numberLineBreaks = 0;
+-        let indentLevel = 0;
+-        let indentValue;
+-        if (options.insertSpaces) {
+-            indentValue = string_intern_1.cachedSpaces[options.tabSize || 4] ?? repeat(string_intern_1.cachedSpaces[1], options.tabSize || 4);
++        if (
++          (options.keepLines && numberLineBreaks > 0) ||
++          (!options.keepLines &&
++            firstToken !== 1) /* SyntaxKind.OpenBraceToken */
++        ) {
++          replaceContent = newLinesAndIndent();
++        } else if (options.keepLines) {
++          replaceContent = string_intern_1.cachedSpaces[1];
+         }
+-        else {
+-            indentValue = '\t';
++      } else if (secondToken === 4 /* SyntaxKind.CloseBracketToken */) {
++        if (firstToken !== 3 /* SyntaxKind.OpenBracketToken */) {
++          indentLevel--;
+         }
+-        const indentType = indentValue === '\t' ? '\t' : ' ';
+-        let scanner = (0, scanner_1.createScanner)(formatText, false);
+-        let hasError = false;
+-        function newLinesAndIndent() {
+-            if (numberLineBreaks > 1) {
+-                return repeat(eol, numberLineBreaks) + repeat(indentValue, initialIndentLevel + indentLevel);
+-            }
+-            const amountOfSpaces = indentValue.length * (initialIndentLevel + indentLevel);
+-            if (!eolFastPathSupported || amountOfSpaces > string_intern_1.cachedBreakLinesWithSpaces[indentType][eol].length) {
+-                return eol + repeat(indentValue, initialIndentLevel + indentLevel);
+-            }
+-            if (amountOfSpaces <= 0) {
+-                return eol;
+-            }
+-            return string_intern_1.cachedBreakLinesWithSpaces[indentType][eol][amountOfSpaces];
++        if (
++          (options.keepLines && numberLineBreaks > 0) ||
++          (!options.keepLines &&
++            firstToken !== 3) /* SyntaxKind.OpenBracketToken */
++        ) {
++          replaceContent = newLinesAndIndent();
++        } else if (options.keepLines) {
++          replaceContent = string_intern_1.cachedSpaces[1];
+         }
+-        function scanNext() {
+-            let token = scanner.scan();
+-            numberLineBreaks = 0;
+-            while (token === 15 /* SyntaxKind.Trivia */ || token === 14 /* SyntaxKind.LineBreakTrivia */) {
+-                if (token === 14 /* SyntaxKind.LineBreakTrivia */ && options.keepLines) {
+-                    numberLineBreaks += 1;
+-                }
+-                else if (token === 14 /* SyntaxKind.LineBreakTrivia */) {
+-                    numberLineBreaks = 1;
+-                }
+-                token = scanner.scan();
++      } else {
++        switch (firstToken) {
++          case 3 /* SyntaxKind.OpenBracketToken */:
++          case 1 /* SyntaxKind.OpenBraceToken */:
++            indentLevel++;
++            if (
++              (options.keepLines && numberLineBreaks > 0) ||
++              !options.keepLines
++            ) {
++              replaceContent = newLinesAndIndent();
++            } else {
++              replaceContent = string_intern_1.cachedSpaces[1];
+             }
+-            hasError = token === 16 /* SyntaxKind.Unknown */ || scanner.getTokenError() !== 0 /* ScanError.None */;
+-            return token;
+-        }
+-        const editOperations = [];
+-        function addEdit(text, startOffset, endOffset) {
+-            if (!hasError && (!range || (startOffset < rangeEnd && endOffset > rangeStart)) && documentText.substring(startOffset, endOffset) !== text) {
+-                editOperations.push({ offset: startOffset, length: endOffset - startOffset, content: text });
++            break;
++          case 5 /* SyntaxKind.CommaToken */:
++            if (
++              (options.keepLines && numberLineBreaks > 0) ||
++              !options.keepLines
++            ) {
++              replaceContent = newLinesAndIndent();
++            } else {
++              replaceContent = string_intern_1.cachedSpaces[1];
+             }
+-        }
+-        let firstToken = scanNext();
+-        if (options.keepLines && numberLineBreaks > 0) {
+-            addEdit(repeat(eol, numberLineBreaks), 0, 0);
+-        }
+-        if (firstToken !== 17 /* SyntaxKind.EOF */) {
+-            let firstTokenStart = scanner.getTokenOffset() + formatTextStart;
+-            let initialIndent = (indentValue.length * initialIndentLevel < 20) && options.insertSpaces
+-                ? string_intern_1.cachedSpaces[indentValue.length * initialIndentLevel]
+-                : repeat(indentValue, initialIndentLevel);
+-            addEdit(initialIndent, formatTextStart, firstTokenStart);
+-        }
+-        while (firstToken !== 17 /* SyntaxKind.EOF */) {
+-            let firstTokenEnd = scanner.getTokenOffset() + scanner.getTokenLength() + formatTextStart;
+-            let secondToken = scanNext();
+-            let replaceContent = '';
+-            let needsLineBreak = false;
+-            while (numberLineBreaks === 0 && (secondToken === 12 /* SyntaxKind.LineCommentTrivia */ || secondToken === 13 /* SyntaxKind.BlockCommentTrivia */)) {
+-                let commentTokenStart = scanner.getTokenOffset() + formatTextStart;
+-                addEdit(string_intern_1.cachedSpaces[1], firstTokenEnd, commentTokenStart);
+-                firstTokenEnd = scanner.getTokenOffset() + scanner.getTokenLength() + formatTextStart;
+-                needsLineBreak = secondToken === 12 /* SyntaxKind.LineCommentTrivia */;
+-                replaceContent = needsLineBreak ? newLinesAndIndent() : '';
+-                secondToken = scanNext();
++            break;
++          case 12 /* SyntaxKind.LineCommentTrivia */:
++            replaceContent = newLinesAndIndent();
++            break;
++          case 13 /* SyntaxKind.BlockCommentTrivia */:
++            if (numberLineBreaks > 0) {
++              replaceContent = newLinesAndIndent();
++            } else if (!needsLineBreak) {
++              replaceContent = string_intern_1.cachedSpaces[1];
+             }
+-            if (secondToken === 2 /* SyntaxKind.CloseBraceToken */) {
+-                if (firstToken !== 1 /* SyntaxKind.OpenBraceToken */) {
+-                    indentLevel--;
+-                }
+-                ;
+-                if (options.keepLines && numberLineBreaks > 0 || !options.keepLines && firstToken !== 1 /* SyntaxKind.OpenBraceToken */) {
+-                    replaceContent = newLinesAndIndent();
+-                }
+-                else if (options.keepLines) {
+-                    replaceContent = string_intern_1.cachedSpaces[1];
+-                }
++            break;
++          case 6 /* SyntaxKind.ColonToken */:
++            if (options.keepLines && numberLineBreaks > 0) {
++              replaceContent = newLinesAndIndent();
++            } else if (!needsLineBreak) {
++              replaceContent = string_intern_1.cachedSpaces[1];
+             }
+-            else if (secondToken === 4 /* SyntaxKind.CloseBracketToken */) {
+-                if (firstToken !== 3 /* SyntaxKind.OpenBracketToken */) {
+-                    indentLevel--;
+-                }
+-                ;
+-                if (options.keepLines && numberLineBreaks > 0 || !options.keepLines && firstToken !== 3 /* SyntaxKind.OpenBracketToken */) {
+-                    replaceContent = newLinesAndIndent();
+-                }
+-                else if (options.keepLines) {
+-                    replaceContent = string_intern_1.cachedSpaces[1];
+-                }
++            break;
++          case 10 /* SyntaxKind.StringLiteral */:
++            if (options.keepLines && numberLineBreaks > 0) {
++              replaceContent = newLinesAndIndent();
++            } else if (
++              secondToken === 6 /* SyntaxKind.ColonToken */ &&
++              !needsLineBreak
++            ) {
++              replaceContent = "";
+             }
+-            else {
+-                switch (firstToken) {
+-                    case 3 /* SyntaxKind.OpenBracketToken */:
+-                    case 1 /* SyntaxKind.OpenBraceToken */:
+-                        indentLevel++;
+-                        if (options.keepLines && numberLineBreaks > 0 || !options.keepLines) {
+-                            replaceContent = newLinesAndIndent();
+-                        }
+-                        else {
+-                            replaceContent = string_intern_1.cachedSpaces[1];
+-                        }
+-                        break;
+-                    case 5 /* SyntaxKind.CommaToken */:
+-                        if (options.keepLines && numberLineBreaks > 0 || !options.keepLines) {
+-                            replaceContent = newLinesAndIndent();
+-                        }
+-                        else {
+-                            replaceContent = string_intern_1.cachedSpaces[1];
+-                        }
+-                        break;
+-                    case 12 /* SyntaxKind.LineCommentTrivia */:
+-                        replaceContent = newLinesAndIndent();
+-                        break;
+-                    case 13 /* SyntaxKind.BlockCommentTrivia */:
+-                        if (numberLineBreaks > 0) {
+-                            replaceContent = newLinesAndIndent();
+-                        }
+-                        else if (!needsLineBreak) {
+-                            replaceContent = string_intern_1.cachedSpaces[1];
+-                        }
+-                        break;
+-                    case 6 /* SyntaxKind.ColonToken */:
+-                        if (options.keepLines && numberLineBreaks > 0) {
+-                            replaceContent = newLinesAndIndent();
+-                        }
+-                        else if (!needsLineBreak) {
+-                            replaceContent = string_intern_1.cachedSpaces[1];
+-                        }
+-                        break;
+-                    case 10 /* SyntaxKind.StringLiteral */:
+-                        if (options.keepLines && numberLineBreaks > 0) {
+-                            replaceContent = newLinesAndIndent();
+-                        }
+-                        else if (secondToken === 6 /* SyntaxKind.ColonToken */ && !needsLineBreak) {
+-                            replaceContent = '';
+-                        }
+-                        break;
+-                    case 7 /* SyntaxKind.NullKeyword */:
+-                    case 8 /* SyntaxKind.TrueKeyword */:
+-                    case 9 /* SyntaxKind.FalseKeyword */:
+-                    case 11 /* SyntaxKind.NumericLiteral */:
+-                    case 2 /* SyntaxKind.CloseBraceToken */:
+-                    case 4 /* SyntaxKind.CloseBracketToken */:
+-                        if (options.keepLines && numberLineBreaks > 0) {
+-                            replaceContent = newLinesAndIndent();
+-                        }
+-                        else {
+-                            if ((secondToken === 12 /* SyntaxKind.LineCommentTrivia */ || secondToken === 13 /* SyntaxKind.BlockCommentTrivia */) && !needsLineBreak) {
+-                                replaceContent = string_intern_1.cachedSpaces[1];
+-                            }
+-                            else if (secondToken !== 5 /* SyntaxKind.CommaToken */ && secondToken !== 17 /* SyntaxKind.EOF */) {
+-                                hasError = true;
+-                            }
+-                        }
+-                        break;
+-                    case 16 /* SyntaxKind.Unknown */:
+-                        hasError = true;
+-                        break;
+-                }
+-                if (numberLineBreaks > 0 && (secondToken === 12 /* SyntaxKind.LineCommentTrivia */ || secondToken === 13 /* SyntaxKind.BlockCommentTrivia */)) {
+-                    replaceContent = newLinesAndIndent();
+-                }
++            break;
++          case 7 /* SyntaxKind.NullKeyword */:
++          case 8 /* SyntaxKind.TrueKeyword */:
++          case 9 /* SyntaxKind.FalseKeyword */:
++          case 11 /* SyntaxKind.NumericLiteral */:
++          case 2 /* SyntaxKind.CloseBraceToken */:
++          case 4 /* SyntaxKind.CloseBracketToken */:
++            if (options.keepLines && numberLineBreaks > 0) {
++              replaceContent = newLinesAndIndent();
++            } else {
++              if (
++                (secondToken === 12 /* SyntaxKind.LineCommentTrivia */ ||
++                  secondToken === 13) /* SyntaxKind.BlockCommentTrivia */ &&
++                !needsLineBreak
++              ) {
++                replaceContent = string_intern_1.cachedSpaces[1];
++              } else if (
++                secondToken !== 5 /* SyntaxKind.CommaToken */ &&
++                secondToken !== 17 /* SyntaxKind.EOF */
++              ) {
++                hasError = true;
++              }
+             }
+-            if (secondToken === 17 /* SyntaxKind.EOF */) {
+-                if (options.keepLines && numberLineBreaks > 0) {
+-                    replaceContent = newLinesAndIndent();
+-                }
+-                else {
+-                    replaceContent = options.insertFinalNewline ? eol : '';
+-                }
+-            }
+-            const secondTokenStart = scanner.getTokenOffset() + formatTextStart;
+-            addEdit(replaceContent, firstTokenEnd, secondTokenStart);
+-            firstToken = secondToken;
++            break;
++          case 16 /* SyntaxKind.Unknown */:
++            hasError = true;
++            break;
+         }
+-        return editOperations;
+-    }
+-    exports.format = format;
+-    function repeat(s, count) {
+-        let result = '';
+-        for (let i = 0; i < count; i++) {
+-            result += s;
++        if (
++          numberLineBreaks > 0 &&
++          (secondToken === 12 /* SyntaxKind.LineCommentTrivia */ ||
++            secondToken === 13) /* SyntaxKind.BlockCommentTrivia */
++        ) {
++          replaceContent = newLinesAndIndent();
+         }
+-        return result;
+-    }
+-    function computeIndentLevel(content, options) {
+-        let i = 0;
+-        let nChars = 0;
+-        const tabSize = options.tabSize || 4;
+-        while (i < content.length) {
+-            let ch = content.charAt(i);
+-            if (ch === string_intern_1.cachedSpaces[1]) {
+-                nChars++;
+-            }
+-            else if (ch === '\t') {
+-                nChars += tabSize;
+-            }
+-            else {
+-                break;
+-            }
+-            i++;
++      }
++      if (secondToken === 17 /* SyntaxKind.EOF */) {
++        if (options.keepLines && numberLineBreaks > 0) {
++          replaceContent = newLinesAndIndent();
++        } else {
++          replaceContent = options.insertFinalNewline ? eol : "";
+         }
+-        return Math.floor(nChars / tabSize);
++      }
++      const secondTokenStart = scanner.getTokenOffset() + formatTextStart;
++      addEdit(replaceContent, firstTokenEnd, secondTokenStart);
++      firstToken = secondToken;
+     }
+-    function getEOL(options, text) {
+-        for (let i = 0; i < text.length; i++) {
+-            const ch = text.charAt(i);
+-            if (ch === '\r') {
+-                if (i + 1 < text.length && text.charAt(i + 1) === '\n') {
+-                    return '\r\n';
+-                }
+-                return '\r';
+-            }
+-            else if (ch === '\n') {
+-                return '\n';
+-            }
+-        }
+-        return (options && options.eol) || '\n';
++    return editOperations;
++  }
++  exports.format = format;
++  function repeat(s, count) {
++    let result = "";
++    for (let i = 0; i < count; i++) {
++      result += s;
++    }
++    return result;
++  }
++  function computeIndentLevel(content, options) {
++    let i = 0;
++    let nChars = 0;
++    const tabSize = options.tabSize || 4;
++    while (i < content.length) {
++      let ch = content.charAt(i);
++      if (ch === string_intern_1.cachedSpaces[1]) {
++        nChars++;
++      } else if (ch === "\t") {
++        nChars += tabSize;
++      } else {
++        break;
++      }
++      i++;
+     }
+-    function isEOL(text, offset) {
+-        return '\r\n'.indexOf(text.charAt(offset)) !== -1;
++    return Math.floor(nChars / tabSize);
++  }
++  function getEOL(options, text) {
++    for (let i = 0; i < text.length; i++) {
++      const ch = text.charAt(i);
++      if (ch === "\r") {
++        if (i + 1 < text.length && text.charAt(i + 1) === "\n") {
++          return "\r\n";
++        }
++        return "\r";
++      } else if (ch === "\n") {
++        return "\n";
++      }
+     }
+-    exports.isEOL = isEOL;
++    return (options && options.eol) || "\n";
++  }
++  function isEOL(text, offset) {
++    return "\r\n".indexOf(text.charAt(offset)) !== -1;
++  }
++  exports.isEOL = isEOL;
+ });
+diff --git a/lib/umd/impl/parser.js b/lib/umd/impl/parser.js
+index b30bb9364def1b1a14d297a73e5f2e93ae49dac3..2be279d0f23905af5ed54fd856f53beaec904176 100644
+--- a/lib/umd/impl/parser.js
++++ b/lib/umd/impl/parser.js
+@@ -1,682 +1,826 @@
++const scanner_1 = require("./scanner");
++
+ (function (factory) {
+-    if (typeof module === "object" && typeof module.exports === "object") {
+-        var v = factory(require, exports);
+-        if (v !== undefined) module.exports = v;
+-    }
+-    else if (typeof define === "function" && define.amd) {
+-        define(["require", "exports", "./scanner"], factory);
+-    }
++  if (typeof module === "object" && typeof module.exports === "object") {
++    var v = factory(require, exports);
++    if (v !== undefined) module.exports = v;
++  } else if (typeof define === "function" && define.amd) {
++    define(["require", "exports", "./scanner"], factory);
++  }
+ })(function (require, exports) {
+-    /*---------------------------------------------------------------------------------------------
+-     *  Copyright (c) Microsoft Corporation. All rights reserved.
+-     *  Licensed under the MIT License. See License.txt in the project root for license information.
+-     *--------------------------------------------------------------------------------------------*/
+-    'use strict';
+-    Object.defineProperty(exports, "__esModule", { value: true });
+-    exports.getNodeType = exports.stripComments = exports.visit = exports.findNodeAtOffset = exports.contains = exports.getNodeValue = exports.getNodePath = exports.findNodeAtLocation = exports.parseTree = exports.parse = exports.getLocation = void 0;
+-    const scanner_1 = require("./scanner");
+-    var ParseOptions;
+-    (function (ParseOptions) {
+-        ParseOptions.DEFAULT = {
+-            allowTrailingComma: false
+-        };
+-    })(ParseOptions || (ParseOptions = {}));
+-    /**
+-     * For a given offset, evaluate the location in the JSON document. Each segment in the location path is either a property name or an array index.
+-     */
+-    function getLocation(text, position) {
+-        const segments = []; // strings or numbers
+-        const earlyReturnException = new Object();
+-        let previousNode = undefined;
+-        const previousNodeInst = {
+-            value: {},
+-            offset: 0,
+-            length: 0,
+-            type: 'object',
+-            parent: undefined
+-        };
+-        let isAtPropertyKey = false;
+-        function setPreviousNode(value, offset, length, type) {
+-            previousNodeInst.value = value;
+-            previousNodeInst.offset = offset;
+-            previousNodeInst.length = length;
+-            previousNodeInst.type = type;
+-            previousNodeInst.colonOffset = undefined;
+-            previousNode = previousNodeInst;
+-        }
+-        try {
+-            visit(text, {
+-                onObjectBegin: (offset, length) => {
+-                    if (position <= offset) {
+-                        throw earlyReturnException;
+-                    }
+-                    previousNode = undefined;
+-                    isAtPropertyKey = position > offset;
+-                    segments.push(''); // push a placeholder (will be replaced)
+-                },
+-                onObjectProperty: (name, offset, length) => {
+-                    if (position < offset) {
+-                        throw earlyReturnException;
+-                    }
+-                    setPreviousNode(name, offset, length, 'property');
+-                    segments[segments.length - 1] = name;
+-                    if (position <= offset + length) {
+-                        throw earlyReturnException;
+-                    }
+-                },
+-                onObjectEnd: (offset, length) => {
+-                    if (position <= offset) {
+-                        throw earlyReturnException;
+-                    }
+-                    previousNode = undefined;
+-                    segments.pop();
+-                },
+-                onArrayBegin: (offset, length) => {
+-                    if (position <= offset) {
+-                        throw earlyReturnException;
+-                    }
+-                    previousNode = undefined;
+-                    segments.push(0);
+-                },
+-                onArrayEnd: (offset, length) => {
+-                    if (position <= offset) {
+-                        throw earlyReturnException;
+-                    }
+-                    previousNode = undefined;
+-                    segments.pop();
+-                },
+-                onLiteralValue: (value, offset, length) => {
+-                    if (position < offset) {
+-                        throw earlyReturnException;
+-                    }
+-                    setPreviousNode(value, offset, length, getNodeType(value));
+-                    if (position <= offset + length) {
+-                        throw earlyReturnException;
+-                    }
+-                },
+-                onSeparator: (sep, offset, length) => {
+-                    if (position <= offset) {
+-                        throw earlyReturnException;
+-                    }
+-                    if (sep === ':' && previousNode && previousNode.type === 'property') {
+-                        previousNode.colonOffset = offset;
+-                        isAtPropertyKey = false;
+-                        previousNode = undefined;
+-                    }
+-                    else if (sep === ',') {
+-                        const last = segments[segments.length - 1];
+-                        if (typeof last === 'number') {
+-                            segments[segments.length - 1] = last + 1;
+-                        }
+-                        else {
+-                            isAtPropertyKey = true;
+-                            segments[segments.length - 1] = '';
+-                        }
+-                        previousNode = undefined;
+-                    }
+-                }
+-            });
+-        }
+-        catch (e) {
+-            if (e !== earlyReturnException) {
+-                throw e;
+-            }
+-        }
+-        return {
+-            path: segments,
+-            previousNode,
+-            isAtPropertyKey,
+-            matches: (pattern) => {
+-                let k = 0;
+-                for (let i = 0; k < pattern.length && i < segments.length; i++) {
+-                    if (pattern[k] === segments[i] || pattern[k] === '*') {
+-                        k++;
+-                    }
+-                    else if (pattern[k] !== '**') {
+-                        return false;
+-                    }
+-                }
+-                return k === pattern.length;
+-            }
+-        };
++  /*---------------------------------------------------------------------------------------------
++   *  Copyright (c) Microsoft Corporation. All rights reserved.
++   *  Licensed under the MIT License. See License.txt in the project root for license information.
++   *--------------------------------------------------------------------------------------------*/
++  "use strict";
++  Object.defineProperty(exports, "__esModule", { value: true });
++  exports.getNodeType =
++    exports.stripComments =
++    exports.visit =
++    exports.findNodeAtOffset =
++    exports.contains =
++    exports.getNodeValue =
++    exports.getNodePath =
++    exports.findNodeAtLocation =
++    exports.parseTree =
++    exports.parse =
++    exports.getLocation =
++      void 0;
++  var ParseOptions;
++  (function (ParseOptions) {
++    ParseOptions.DEFAULT = {
++      allowTrailingComma: false,
++    };
++  })(ParseOptions || (ParseOptions = {}));
++  /**
++   * For a given offset, evaluate the location in the JSON document. Each segment in the location path is either a property name or an array index.
++   */
++  function getLocation(text, position) {
++    const segments = []; // strings or numbers
++    const earlyReturnException = new Object();
++    let previousNode = undefined;
++    const previousNodeInst = {
++      value: {},
++      offset: 0,
++      length: 0,
++      type: "object",
++      parent: undefined,
++    };
++    let isAtPropertyKey = false;
++    function setPreviousNode(value, offset, length, type) {
++      previousNodeInst.value = value;
++      previousNodeInst.offset = offset;
++      previousNodeInst.length = length;
++      previousNodeInst.type = type;
++      previousNodeInst.colonOffset = undefined;
++      previousNode = previousNodeInst;
+     }
+-    exports.getLocation = getLocation;
+-    /**
+-     * Parses the given text and returns the object the JSON content represents. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
+-     * Therefore always check the errors list to find out if the input was valid.
+-     */
+-    function parse(text, errors = [], options = ParseOptions.DEFAULT) {
+-        let currentProperty = null;
+-        let currentParent = [];
+-        const previousParents = [];
+-        function onValue(value) {
+-            if (Array.isArray(currentParent)) {
+-                currentParent.push(value);
+-            }
+-            else if (currentProperty !== null) {
+-                currentParent[currentProperty] = value;
+-            }
+-        }
+-        const visitor = {
+-            onObjectBegin: () => {
+-                const object = {};
+-                onValue(object);
+-                previousParents.push(currentParent);
+-                currentParent = object;
+-                currentProperty = null;
+-            },
+-            onObjectProperty: (name) => {
+-                currentProperty = name;
+-            },
+-            onObjectEnd: () => {
+-                currentParent = previousParents.pop();
+-            },
+-            onArrayBegin: () => {
+-                const array = [];
+-                onValue(array);
+-                previousParents.push(currentParent);
+-                currentParent = array;
+-                currentProperty = null;
+-            },
+-            onArrayEnd: () => {
+-                currentParent = previousParents.pop();
+-            },
+-            onLiteralValue: onValue,
+-            onError: (error, offset, length) => {
+-                errors.push({ error, offset, length });
++    try {
++      visit(text, {
++        onObjectBegin: (offset, length) => {
++          if (position <= offset) {
++            throw earlyReturnException;
++          }
++          previousNode = undefined;
++          isAtPropertyKey = position > offset;
++          segments.push(""); // push a placeholder (will be replaced)
++        },
++        onObjectProperty: (name, offset, length) => {
++          if (position < offset) {
++            throw earlyReturnException;
++          }
++          setPreviousNode(name, offset, length, "property");
++          segments[segments.length - 1] = name;
++          if (position <= offset + length) {
++            throw earlyReturnException;
++          }
++        },
++        onObjectEnd: (offset, length) => {
++          if (position <= offset) {
++            throw earlyReturnException;
++          }
++          previousNode = undefined;
++          segments.pop();
++        },
++        onArrayBegin: (offset, length) => {
++          if (position <= offset) {
++            throw earlyReturnException;
++          }
++          previousNode = undefined;
++          segments.push(0);
++        },
++        onArrayEnd: (offset, length) => {
++          if (position <= offset) {
++            throw earlyReturnException;
++          }
++          previousNode = undefined;
++          segments.pop();
++        },
++        onLiteralValue: (value, offset, length) => {
++          if (position < offset) {
++            throw earlyReturnException;
++          }
++          setPreviousNode(value, offset, length, getNodeType(value));
++          if (position <= offset + length) {
++            throw earlyReturnException;
++          }
++        },
++        onSeparator: (sep, offset, length) => {
++          if (position <= offset) {
++            throw earlyReturnException;
++          }
++          if (sep === ":" && previousNode && previousNode.type === "property") {
++            previousNode.colonOffset = offset;
++            isAtPropertyKey = false;
++            previousNode = undefined;
++          } else if (sep === ",") {
++            const last = segments[segments.length - 1];
++            if (typeof last === "number") {
++              segments[segments.length - 1] = last + 1;
++            } else {
++              isAtPropertyKey = true;
++              segments[segments.length - 1] = "";
+             }
+-        };
+-        visit(text, visitor, options);
+-        return currentParent[0];
++            previousNode = undefined;
++          }
++        },
++      });
++    } catch (e) {
++      if (e !== earlyReturnException) {
++        throw e;
++      }
+     }
+-    exports.parse = parse;
+-    /**
+-     * Parses the given text and returns a tree representation the JSON content. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
+-     */
+-    function parseTree(text, errors = [], options = ParseOptions.DEFAULT) {
+-        let currentParent = { type: 'array', offset: -1, length: -1, children: [], parent: undefined }; // artificial root
+-        function ensurePropertyComplete(endOffset) {
+-            if (currentParent.type === 'property') {
+-                currentParent.length = endOffset - currentParent.offset;
+-                currentParent = currentParent.parent;
+-            }
+-        }
+-        function onValue(valueNode) {
+-            currentParent.children.push(valueNode);
+-            return valueNode;
+-        }
+-        const visitor = {
+-            onObjectBegin: (offset) => {
+-                currentParent = onValue({ type: 'object', offset, length: -1, parent: currentParent, children: [] });
+-            },
+-            onObjectProperty: (name, offset, length) => {
+-                currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
+-                currentParent.children.push({ type: 'string', value: name, offset, length, parent: currentParent });
+-            },
+-            onObjectEnd: (offset, length) => {
+-                ensurePropertyComplete(offset + length); // in case of a missing value for a property: make sure property is complete
+-                currentParent.length = offset + length - currentParent.offset;
+-                currentParent = currentParent.parent;
+-                ensurePropertyComplete(offset + length);
+-            },
+-            onArrayBegin: (offset, length) => {
+-                currentParent = onValue({ type: 'array', offset, length: -1, parent: currentParent, children: [] });
+-            },
+-            onArrayEnd: (offset, length) => {
+-                currentParent.length = offset + length - currentParent.offset;
+-                currentParent = currentParent.parent;
+-                ensurePropertyComplete(offset + length);
+-            },
+-            onLiteralValue: (value, offset, length) => {
+-                onValue({ type: getNodeType(value), offset, length, parent: currentParent, value });
+-                ensurePropertyComplete(offset + length);
+-            },
+-            onSeparator: (sep, offset, length) => {
+-                if (currentParent.type === 'property') {
+-                    if (sep === ':') {
+-                        currentParent.colonOffset = offset;
+-                    }
+-                    else if (sep === ',') {
+-                        ensurePropertyComplete(offset);
+-                    }
+-                }
+-            },
+-            onError: (error, offset, length) => {
+-                errors.push({ error, offset, length });
+-            }
+-        };
+-        visit(text, visitor, options);
+-        const result = currentParent.children[0];
+-        if (result) {
+-            delete result.parent;
++    return {
++      path: segments,
++      previousNode,
++      isAtPropertyKey,
++      matches: (pattern) => {
++        let k = 0;
++        for (let i = 0; k < pattern.length && i < segments.length; i++) {
++          if (pattern[k] === segments[i] || pattern[k] === "*") {
++            k++;
++          } else if (pattern[k] !== "**") {
++            return false;
++          }
+         }
+-        return result;
++        return k === pattern.length;
++      },
++    };
++  }
++  exports.getLocation = getLocation;
++  /**
++   * Parses the given text and returns the object the JSON content represents. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
++   * Therefore always check the errors list to find out if the input was valid.
++   */
++  function parse(text, errors = [], options = ParseOptions.DEFAULT) {
++    let currentProperty = null;
++    let currentParent = [];
++    const previousParents = [];
++    function onValue(value) {
++      if (Array.isArray(currentParent)) {
++        currentParent.push(value);
++      } else if (currentProperty !== null) {
++        currentParent[currentProperty] = value;
++      }
+     }
+-    exports.parseTree = parseTree;
+-    /**
+-     * Finds the node at the given path in a JSON DOM.
+-     */
+-    function findNodeAtLocation(root, path) {
+-        if (!root) {
+-            return undefined;
+-        }
+-        let node = root;
+-        for (let segment of path) {
+-            if (typeof segment === 'string') {
+-                if (node.type !== 'object' || !Array.isArray(node.children)) {
+-                    return undefined;
+-                }
+-                let found = false;
+-                for (const propertyNode of node.children) {
+-                    if (Array.isArray(propertyNode.children) && propertyNode.children[0].value === segment && propertyNode.children.length === 2) {
+-                        node = propertyNode.children[1];
+-                        found = true;
+-                        break;
+-                    }
+-                }
+-                if (!found) {
+-                    return undefined;
+-                }
+-            }
+-            else {
+-                const index = segment;
+-                if (node.type !== 'array' || index < 0 || !Array.isArray(node.children) || index >= node.children.length) {
+-                    return undefined;
+-                }
+-                node = node.children[index];
+-            }
++    const visitor = {
++      onObjectBegin: () => {
++        const object = {};
++        onValue(object);
++        previousParents.push(currentParent);
++        currentParent = object;
++        currentProperty = null;
++      },
++      onObjectProperty: (name) => {
++        currentProperty = name;
++      },
++      onObjectEnd: () => {
++        currentParent = previousParents.pop();
++      },
++      onArrayBegin: () => {
++        const array = [];
++        onValue(array);
++        previousParents.push(currentParent);
++        currentParent = array;
++        currentProperty = null;
++      },
++      onArrayEnd: () => {
++        currentParent = previousParents.pop();
++      },
++      onLiteralValue: onValue,
++      onError: (error, offset, length) => {
++        errors.push({ error, offset, length });
++      },
++    };
++    visit(text, visitor, options);
++    return currentParent[0];
++  }
++  exports.parse = parse;
++  /**
++   * Parses the given text and returns a tree representation the JSON content. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
++   */
++  function parseTree(text, errors = [], options = ParseOptions.DEFAULT) {
++    let currentParent = {
++      type: "array",
++      offset: -1,
++      length: -1,
++      children: [],
++      parent: undefined,
++    }; // artificial root
++    function ensurePropertyComplete(endOffset) {
++      if (currentParent.type === "property") {
++        currentParent.length = endOffset - currentParent.offset;
++        currentParent = currentParent.parent;
++      }
++    }
++    function onValue(valueNode) {
++      currentParent.children.push(valueNode);
++      return valueNode;
++    }
++    const visitor = {
++      onObjectBegin: (offset) => {
++        currentParent = onValue({
++          type: "object",
++          offset,
++          length: -1,
++          parent: currentParent,
++          children: [],
++        });
++      },
++      onObjectProperty: (name, offset, length) => {
++        currentParent = onValue({
++          type: "property",
++          offset,
++          length: -1,
++          parent: currentParent,
++          children: [],
++        });
++        currentParent.children.push({
++          type: "string",
++          value: name,
++          offset,
++          length,
++          parent: currentParent,
++        });
++      },
++      onObjectEnd: (offset, length) => {
++        ensurePropertyComplete(offset + length); // in case of a missing value for a property: make sure property is complete
++        currentParent.length = offset + length - currentParent.offset;
++        currentParent = currentParent.parent;
++        ensurePropertyComplete(offset + length);
++      },
++      onArrayBegin: (offset, length) => {
++        currentParent = onValue({
++          type: "array",
++          offset,
++          length: -1,
++          parent: currentParent,
++          children: [],
++        });
++      },
++      onArrayEnd: (offset, length) => {
++        currentParent.length = offset + length - currentParent.offset;
++        currentParent = currentParent.parent;
++        ensurePropertyComplete(offset + length);
++      },
++      onLiteralValue: (value, offset, length) => {
++        onValue({
++          type: getNodeType(value),
++          offset,
++          length,
++          parent: currentParent,
++          value,
++        });
++        ensurePropertyComplete(offset + length);
++      },
++      onSeparator: (sep, offset, length) => {
++        if (currentParent.type === "property") {
++          if (sep === ":") {
++            currentParent.colonOffset = offset;
++          } else if (sep === ",") {
++            ensurePropertyComplete(offset);
++          }
+         }
+-        return node;
++      },
++      onError: (error, offset, length) => {
++        errors.push({ error, offset, length });
++      },
++    };
++    visit(text, visitor, options);
++    const result = currentParent.children[0];
++    if (result) {
++      delete result.parent;
++    }
++    return result;
++  }
++  exports.parseTree = parseTree;
++  /**
++   * Finds the node at the given path in a JSON DOM.
++   */
++  function findNodeAtLocation(root, path) {
++    if (!root) {
++      return undefined;
+     }
+-    exports.findNodeAtLocation = findNodeAtLocation;
+-    /**
+-     * Gets the JSON path of the given JSON DOM node
+-     */
+-    function getNodePath(node) {
+-        if (!node.parent || !node.parent.children) {
+-            return [];
++    let node = root;
++    for (let segment of path) {
++      if (typeof segment === "string") {
++        if (node.type !== "object" || !Array.isArray(node.children)) {
++          return undefined;
+         }
+-        const path = getNodePath(node.parent);
+-        if (node.parent.type === 'property') {
+-            const key = node.parent.children[0].value;
+-            path.push(key);
++        let found = false;
++        for (const propertyNode of node.children) {
++          if (
++            Array.isArray(propertyNode.children) &&
++            propertyNode.children[0].value === segment &&
++            propertyNode.children.length === 2
++          ) {
++            node = propertyNode.children[1];
++            found = true;
++            break;
++          }
+         }
+-        else if (node.parent.type === 'array') {
+-            const index = node.parent.children.indexOf(node);
+-            if (index !== -1) {
+-                path.push(index);
+-            }
++        if (!found) {
++          return undefined;
+         }
+-        return path;
+-    }
+-    exports.getNodePath = getNodePath;
+-    /**
+-     * Evaluates the JavaScript object of the given JSON DOM node
+-     */
+-    function getNodeValue(node) {
+-        switch (node.type) {
+-            case 'array':
+-                return node.children.map(getNodeValue);
+-            case 'object':
+-                const obj = Object.create(null);
+-                for (let prop of node.children) {
+-                    const valueNode = prop.children[1];
+-                    if (valueNode) {
+-                        obj[prop.children[0].value] = getNodeValue(valueNode);
+-                    }
+-                }
+-                return obj;
+-            case 'null':
+-            case 'string':
+-            case 'number':
+-            case 'boolean':
+-                return node.value;
+-            default:
+-                return undefined;
++      } else {
++        const index = segment;
++        if (
++          node.type !== "array" ||
++          index < 0 ||
++          !Array.isArray(node.children) ||
++          index >= node.children.length
++        ) {
++          return undefined;
+         }
++        node = node.children[index];
++      }
+     }
+-    exports.getNodeValue = getNodeValue;
+-    function contains(node, offset, includeRightBound = false) {
+-        return (offset >= node.offset && offset < (node.offset + node.length)) || includeRightBound && (offset === (node.offset + node.length));
++    return node;
++  }
++  exports.findNodeAtLocation = findNodeAtLocation;
++  /**
++   * Gets the JSON path of the given JSON DOM node
++   */
++  function getNodePath(node) {
++    if (!node.parent || !node.parent.children) {
++      return [];
+     }
+-    exports.contains = contains;
+-    /**
+-     * Finds the most inner node at the given offset. If includeRightBound is set, also finds nodes that end at the given offset.
+-     */
+-    function findNodeAtOffset(node, offset, includeRightBound = false) {
+-        if (contains(node, offset, includeRightBound)) {
+-            const children = node.children;
+-            if (Array.isArray(children)) {
+-                for (let i = 0; i < children.length && children[i].offset <= offset; i++) {
+-                    const item = findNodeAtOffset(children[i], offset, includeRightBound);
+-                    if (item) {
+-                        return item;
+-                    }
+-                }
+-            }
+-            return node;
++    const path = getNodePath(node.parent);
++    if (node.parent.type === "property") {
++      const key = node.parent.children[0].value;
++      path.push(key);
++    } else if (node.parent.type === "array") {
++      const index = node.parent.children.indexOf(node);
++      if (index !== -1) {
++        path.push(index);
++      }
++    }
++    return path;
++  }
++  exports.getNodePath = getNodePath;
++  /**
++   * Evaluates the JavaScript object of the given JSON DOM node
++   */
++  function getNodeValue(node) {
++    switch (node.type) {
++      case "array":
++        return node.children.map(getNodeValue);
++      case "object":
++        const obj = Object.create(null);
++        for (let prop of node.children) {
++          const valueNode = prop.children[1];
++          if (valueNode) {
++            obj[prop.children[0].value] = getNodeValue(valueNode);
++          }
+         }
++        return obj;
++      case "null":
++      case "string":
++      case "number":
++      case "boolean":
++        return node.value;
++      default:
+         return undefined;
+     }
+-    exports.findNodeAtOffset = findNodeAtOffset;
+-    /**
+-     * Parses the given text and invokes the visitor functions for each object, array and literal reached.
+-     */
+-    function visit(text, visitor, options = ParseOptions.DEFAULT) {
+-        const _scanner = (0, scanner_1.createScanner)(text, false);
+-        // Important: Only pass copies of this to visitor functions to prevent accidental modification, and
+-        // to not affect visitor functions which stored a reference to a previous JSONPath
+-        const _jsonPath = [];
+-        // Depth of onXXXBegin() callbacks suppressed. onXXXEnd() decrements this if it isn't 0 already.
+-        // Callbacks are only called when this value is 0.
+-        let suppressedCallbacks = 0;
+-        function toNoArgVisit(visitFunction) {
+-            return visitFunction ? () => suppressedCallbacks === 0 && visitFunction(_scanner.getTokenOffset(), _scanner.getTokenLength(), _scanner.getTokenStartLine(), _scanner.getTokenStartCharacter()) : () => true;
+-        }
+-        function toOneArgVisit(visitFunction) {
+-            return visitFunction ? (arg) => suppressedCallbacks === 0 && visitFunction(arg, _scanner.getTokenOffset(), _scanner.getTokenLength(), _scanner.getTokenStartLine(), _scanner.getTokenStartCharacter()) : () => true;
+-        }
+-        function toOneArgVisitWithPath(visitFunction) {
+-            return visitFunction ? (arg) => suppressedCallbacks === 0 && visitFunction(arg, _scanner.getTokenOffset(), _scanner.getTokenLength(), _scanner.getTokenStartLine(), _scanner.getTokenStartCharacter(), () => _jsonPath.slice()) : () => true;
++  }
++  exports.getNodeValue = getNodeValue;
++  function contains(node, offset, includeRightBound = false) {
++    return (
++      (offset >= node.offset && offset < node.offset + node.length) ||
++      (includeRightBound && offset === node.offset + node.length)
++    );
++  }
++  exports.contains = contains;
++  /**
++   * Finds the most inner node at the given offset. If includeRightBound is set, also finds nodes that end at the given offset.
++   */
++  function findNodeAtOffset(node, offset, includeRightBound = false) {
++    if (contains(node, offset, includeRightBound)) {
++      const children = node.children;
++      if (Array.isArray(children)) {
++        for (
++          let i = 0;
++          i < children.length && children[i].offset <= offset;
++          i++
++        ) {
++          const item = findNodeAtOffset(children[i], offset, includeRightBound);
++          if (item) {
++            return item;
++          }
+         }
+-        function toBeginVisit(visitFunction) {
+-            return visitFunction ?
+-                () => {
+-                    if (suppressedCallbacks > 0) {
+-                        suppressedCallbacks++;
+-                    }
+-                    else {
+-                        let cbReturn = visitFunction(_scanner.getTokenOffset(), _scanner.getTokenLength(), _scanner.getTokenStartLine(), _scanner.getTokenStartCharacter(), () => _jsonPath.slice());
+-                        if (cbReturn === false) {
+-                            suppressedCallbacks = 1;
+-                        }
+-                    }
+-                }
+-                : () => true;
+-        }
+-        function toEndVisit(visitFunction) {
+-            return visitFunction ?
+-                () => {
+-                    if (suppressedCallbacks > 0) {
+-                        suppressedCallbacks--;
+-                    }
+-                    if (suppressedCallbacks === 0) {
+-                        visitFunction(_scanner.getTokenOffset(), _scanner.getTokenLength(), _scanner.getTokenStartLine(), _scanner.getTokenStartCharacter());
+-                    }
+-                }
+-                : () => true;
+-        }
+-        const onObjectBegin = toBeginVisit(visitor.onObjectBegin), onObjectProperty = toOneArgVisitWithPath(visitor.onObjectProperty), onObjectEnd = toEndVisit(visitor.onObjectEnd), onArrayBegin = toBeginVisit(visitor.onArrayBegin), onArrayEnd = toEndVisit(visitor.onArrayEnd), onLiteralValue = toOneArgVisitWithPath(visitor.onLiteralValue), onSeparator = toOneArgVisit(visitor.onSeparator), onComment = toNoArgVisit(visitor.onComment), onError = toOneArgVisit(visitor.onError);
+-        const disallowComments = options && options.disallowComments;
+-        const allowTrailingComma = options && options.allowTrailingComma;
+-        function scanNext() {
+-            while (true) {
+-                const token = _scanner.scan();
+-                switch (_scanner.getTokenError()) {
+-                    case 4 /* ScanError.InvalidUnicode */:
+-                        handleError(14 /* ParseErrorCode.InvalidUnicode */);
+-                        break;
+-                    case 5 /* ScanError.InvalidEscapeCharacter */:
+-                        handleError(15 /* ParseErrorCode.InvalidEscapeCharacter */);
+-                        break;
+-                    case 3 /* ScanError.UnexpectedEndOfNumber */:
+-                        handleError(13 /* ParseErrorCode.UnexpectedEndOfNumber */);
+-                        break;
+-                    case 1 /* ScanError.UnexpectedEndOfComment */:
+-                        if (!disallowComments) {
+-                            handleError(11 /* ParseErrorCode.UnexpectedEndOfComment */);
+-                        }
+-                        break;
+-                    case 2 /* ScanError.UnexpectedEndOfString */:
+-                        handleError(12 /* ParseErrorCode.UnexpectedEndOfString */);
+-                        break;
+-                    case 6 /* ScanError.InvalidCharacter */:
+-                        handleError(16 /* ParseErrorCode.InvalidCharacter */);
+-                        break;
+-                }
+-                switch (token) {
+-                    case 12 /* SyntaxKind.LineCommentTrivia */:
+-                    case 13 /* SyntaxKind.BlockCommentTrivia */:
+-                        if (disallowComments) {
+-                            handleError(10 /* ParseErrorCode.InvalidCommentToken */);
+-                        }
+-                        else {
+-                            onComment();
+-                        }
+-                        break;
+-                    case 16 /* SyntaxKind.Unknown */:
+-                        handleError(1 /* ParseErrorCode.InvalidSymbol */);
+-                        break;
+-                    case 15 /* SyntaxKind.Trivia */:
+-                    case 14 /* SyntaxKind.LineBreakTrivia */:
+-                        break;
+-                    default:
+-                        return token;
+-                }
++      }
++      return node;
++    }
++    return undefined;
++  }
++  exports.findNodeAtOffset = findNodeAtOffset;
++  /**
++   * Parses the given text and invokes the visitor functions for each object, array and literal reached.
++   */
++  function visit(text, visitor, options = ParseOptions.DEFAULT) {
++    const _scanner = (0, scanner_1.createScanner)(text, false);
++    // Important: Only pass copies of this to visitor functions to prevent accidental modification, and
++    // to not affect visitor functions which stored a reference to a previous JSONPath
++    const _jsonPath = [];
++    // Depth of onXXXBegin() callbacks suppressed. onXXXEnd() decrements this if it isn't 0 already.
++    // Callbacks are only called when this value is 0.
++    let suppressedCallbacks = 0;
++    function toNoArgVisit(visitFunction) {
++      return visitFunction
++        ? () =>
++            suppressedCallbacks === 0 &&
++            visitFunction(
++              _scanner.getTokenOffset(),
++              _scanner.getTokenLength(),
++              _scanner.getTokenStartLine(),
++              _scanner.getTokenStartCharacter()
++            )
++        : () => true;
++    }
++    function toOneArgVisit(visitFunction) {
++      return visitFunction
++        ? (arg) =>
++            suppressedCallbacks === 0 &&
++            visitFunction(
++              arg,
++              _scanner.getTokenOffset(),
++              _scanner.getTokenLength(),
++              _scanner.getTokenStartLine(),
++              _scanner.getTokenStartCharacter()
++            )
++        : () => true;
++    }
++    function toOneArgVisitWithPath(visitFunction) {
++      return visitFunction
++        ? (arg) =>
++            suppressedCallbacks === 0 &&
++            visitFunction(
++              arg,
++              _scanner.getTokenOffset(),
++              _scanner.getTokenLength(),
++              _scanner.getTokenStartLine(),
++              _scanner.getTokenStartCharacter(),
++              () => _jsonPath.slice()
++            )
++        : () => true;
++    }
++    function toBeginVisit(visitFunction) {
++      return visitFunction
++        ? () => {
++            if (suppressedCallbacks > 0) {
++              suppressedCallbacks++;
++            } else {
++              let cbReturn = visitFunction(
++                _scanner.getTokenOffset(),
++                _scanner.getTokenLength(),
++                _scanner.getTokenStartLine(),
++                _scanner.getTokenStartCharacter(),
++                () => _jsonPath.slice()
++              );
++              if (cbReturn === false) {
++                suppressedCallbacks = 1;
++              }
+             }
+-        }
+-        function handleError(error, skipUntilAfter = [], skipUntil = []) {
+-            onError(error);
+-            if (skipUntilAfter.length + skipUntil.length > 0) {
+-                let token = _scanner.getToken();
+-                while (token !== 17 /* SyntaxKind.EOF */) {
+-                    if (skipUntilAfter.indexOf(token) !== -1) {
+-                        scanNext();
+-                        break;
+-                    }
+-                    else if (skipUntil.indexOf(token) !== -1) {
+-                        break;
+-                    }
+-                    token = scanNext();
+-                }
++          }
++        : () => true;
++    }
++    function toEndVisit(visitFunction) {
++      return visitFunction
++        ? () => {
++            if (suppressedCallbacks > 0) {
++              suppressedCallbacks--;
+             }
+-        }
+-        function parseString(isValue) {
+-            const value = _scanner.getTokenValue();
+-            if (isValue) {
+-                onLiteralValue(value);
++            if (suppressedCallbacks === 0) {
++              visitFunction(
++                _scanner.getTokenOffset(),
++                _scanner.getTokenLength(),
++                _scanner.getTokenStartLine(),
++                _scanner.getTokenStartCharacter()
++              );
+             }
+-            else {
+-                onObjectProperty(value);
+-                // add property name afterwards
+-                _jsonPath.push(value);
++          }
++        : () => true;
++    }
++    const onObjectBegin = toBeginVisit(visitor.onObjectBegin),
++      onObjectProperty = toOneArgVisitWithPath(visitor.onObjectProperty),
++      onObjectEnd = toEndVisit(visitor.onObjectEnd),
++      onArrayBegin = toBeginVisit(visitor.onArrayBegin),
++      onArrayEnd = toEndVisit(visitor.onArrayEnd),
++      onLiteralValue = toOneArgVisitWithPath(visitor.onLiteralValue),
++      onSeparator = toOneArgVisit(visitor.onSeparator),
++      onComment = toNoArgVisit(visitor.onComment),
++      onError = toOneArgVisit(visitor.onError);
++    const disallowComments = options && options.disallowComments;
++    const allowTrailingComma = options && options.allowTrailingComma;
++    function scanNext() {
++      while (true) {
++        const token = _scanner.scan();
++        switch (_scanner.getTokenError()) {
++          case 4 /* ScanError.InvalidUnicode */:
++            handleError(14 /* ParseErrorCode.InvalidUnicode */);
++            break;
++          case 5 /* ScanError.InvalidEscapeCharacter */:
++            handleError(15 /* ParseErrorCode.InvalidEscapeCharacter */);
++            break;
++          case 3 /* ScanError.UnexpectedEndOfNumber */:
++            handleError(13 /* ParseErrorCode.UnexpectedEndOfNumber */);
++            break;
++          case 1 /* ScanError.UnexpectedEndOfComment */:
++            if (!disallowComments) {
++              handleError(11 /* ParseErrorCode.UnexpectedEndOfComment */);
+             }
+-            scanNext();
+-            return true;
++            break;
++          case 2 /* ScanError.UnexpectedEndOfString */:
++            handleError(12 /* ParseErrorCode.UnexpectedEndOfString */);
++            break;
++          case 6 /* ScanError.InvalidCharacter */:
++            handleError(16 /* ParseErrorCode.InvalidCharacter */);
++            break;
+         }
+-        function parseLiteral() {
+-            switch (_scanner.getToken()) {
+-                case 11 /* SyntaxKind.NumericLiteral */:
+-                    const tokenValue = _scanner.getTokenValue();
+-                    let value = Number(tokenValue);
+-                    if (isNaN(value)) {
+-                        handleError(2 /* ParseErrorCode.InvalidNumberFormat */);
+-                        value = 0;
+-                    }
+-                    onLiteralValue(value);
+-                    break;
+-                case 7 /* SyntaxKind.NullKeyword */:
+-                    onLiteralValue(null);
+-                    break;
+-                case 8 /* SyntaxKind.TrueKeyword */:
+-                    onLiteralValue(true);
+-                    break;
+-                case 9 /* SyntaxKind.FalseKeyword */:
+-                    onLiteralValue(false);
+-                    break;
+-                default:
+-                    return false;
++        switch (token) {
++          case 12 /* SyntaxKind.LineCommentTrivia */:
++          case 13 /* SyntaxKind.BlockCommentTrivia */:
++            if (disallowComments) {
++              handleError(10 /* ParseErrorCode.InvalidCommentToken */);
++            } else {
++              onComment();
+             }
+-            scanNext();
+-            return true;
++            break;
++          case 16 /* SyntaxKind.Unknown */:
++            handleError(1 /* ParseErrorCode.InvalidSymbol */);
++            break;
++          case 15 /* SyntaxKind.Trivia */:
++          case 14 /* SyntaxKind.LineBreakTrivia */:
++            break;
++          default:
++            return token;
+         }
+-        function parseProperty() {
+-            if (_scanner.getToken() !== 10 /* SyntaxKind.StringLiteral */) {
+-                handleError(3 /* ParseErrorCode.PropertyNameExpected */, [], [2 /* SyntaxKind.CloseBraceToken */, 5 /* SyntaxKind.CommaToken */]);
+-                return false;
+-            }
+-            parseString(false);
+-            if (_scanner.getToken() === 6 /* SyntaxKind.ColonToken */) {
+-                onSeparator(':');
+-                scanNext(); // consume colon
+-                if (!parseValue()) {
+-                    handleError(4 /* ParseErrorCode.ValueExpected */, [], [2 /* SyntaxKind.CloseBraceToken */, 5 /* SyntaxKind.CommaToken */]);
+-                }
+-            }
+-            else {
+-                handleError(5 /* ParseErrorCode.ColonExpected */, [], [2 /* SyntaxKind.CloseBraceToken */, 5 /* SyntaxKind.CommaToken */]);
+-            }
+-            _jsonPath.pop(); // remove processed property name
+-            return true;
++      }
++    }
++    function handleError(error, skipUntilAfter = [], skipUntil = []) {
++      onError(error);
++      if (skipUntilAfter.length + skipUntil.length > 0) {
++        let token = _scanner.getToken();
++        while (token !== 17 /* SyntaxKind.EOF */) {
++          if (skipUntilAfter.indexOf(token) !== -1) {
++            scanNext();
++            break;
++          } else if (skipUntil.indexOf(token) !== -1) {
++            break;
++          }
++          token = scanNext();
+         }
+-        function parseObject() {
+-            onObjectBegin();
+-            scanNext(); // consume open brace
+-            let needsComma = false;
+-            while (_scanner.getToken() !== 2 /* SyntaxKind.CloseBraceToken */ && _scanner.getToken() !== 17 /* SyntaxKind.EOF */) {
+-                if (_scanner.getToken() === 5 /* SyntaxKind.CommaToken */) {
+-                    if (!needsComma) {
+-                        handleError(4 /* ParseErrorCode.ValueExpected */, [], []);
+-                    }
+-                    onSeparator(',');
+-                    scanNext(); // consume comma
+-                    if (_scanner.getToken() === 2 /* SyntaxKind.CloseBraceToken */ && allowTrailingComma) {
+-                        break;
+-                    }
+-                }
+-                else if (needsComma) {
+-                    handleError(6 /* ParseErrorCode.CommaExpected */, [], []);
+-                }
+-                if (!parseProperty()) {
+-                    handleError(4 /* ParseErrorCode.ValueExpected */, [], [2 /* SyntaxKind.CloseBraceToken */, 5 /* SyntaxKind.CommaToken */]);
+-                }
+-                needsComma = true;
+-            }
+-            onObjectEnd();
+-            if (_scanner.getToken() !== 2 /* SyntaxKind.CloseBraceToken */) {
+-                handleError(7 /* ParseErrorCode.CloseBraceExpected */, [2 /* SyntaxKind.CloseBraceToken */], []);
+-            }
+-            else {
+-                scanNext(); // consume close brace
+-            }
+-            return true;
++      }
++    }
++    function parseString(isValue) {
++      const value = _scanner.getTokenValue();
++      if (isValue) {
++        onLiteralValue(value);
++      } else {
++        onObjectProperty(value);
++        // add property name afterwards
++        _jsonPath.push(value);
++      }
++      scanNext();
++      return true;
++    }
++    function parseLiteral() {
++      switch (_scanner.getToken()) {
++        case 11 /* SyntaxKind.NumericLiteral */:
++          const tokenValue = _scanner.getTokenValue();
++          let value = Number(tokenValue);
++          if (isNaN(value)) {
++            handleError(2 /* ParseErrorCode.InvalidNumberFormat */);
++            value = 0;
++          }
++          onLiteralValue(value);
++          break;
++        case 7 /* SyntaxKind.NullKeyword */:
++          onLiteralValue(null);
++          break;
++        case 8 /* SyntaxKind.TrueKeyword */:
++          onLiteralValue(true);
++          break;
++        case 9 /* SyntaxKind.FalseKeyword */:
++          onLiteralValue(false);
++          break;
++        default:
++          return false;
++      }
++      scanNext();
++      return true;
++    }
++    function parseProperty() {
++      if (_scanner.getToken() !== 10 /* SyntaxKind.StringLiteral */) {
++        handleError(
++          3 /* ParseErrorCode.PropertyNameExpected */,
++          [],
++          [2 /* SyntaxKind.CloseBraceToken */, 5 /* SyntaxKind.CommaToken */]
++        );
++        return false;
++      }
++      parseString(false);
++      if (_scanner.getToken() === 6 /* SyntaxKind.ColonToken */) {
++        onSeparator(":");
++        scanNext(); // consume colon
++        if (!parseValue()) {
++          handleError(
++            4 /* ParseErrorCode.ValueExpected */,
++            [],
++            [2 /* SyntaxKind.CloseBraceToken */, 5 /* SyntaxKind.CommaToken */]
++          );
+         }
+-        function parseArray() {
+-            onArrayBegin();
+-            scanNext(); // consume open bracket
+-            let isFirstElement = true;
+-            let needsComma = false;
+-            while (_scanner.getToken() !== 4 /* SyntaxKind.CloseBracketToken */ && _scanner.getToken() !== 17 /* SyntaxKind.EOF */) {
+-                if (_scanner.getToken() === 5 /* SyntaxKind.CommaToken */) {
+-                    if (!needsComma) {
+-                        handleError(4 /* ParseErrorCode.ValueExpected */, [], []);
+-                    }
+-                    onSeparator(',');
+-                    scanNext(); // consume comma
+-                    if (_scanner.getToken() === 4 /* SyntaxKind.CloseBracketToken */ && allowTrailingComma) {
+-                        break;
+-                    }
+-                }
+-                else if (needsComma) {
+-                    handleError(6 /* ParseErrorCode.CommaExpected */, [], []);
+-                }
+-                if (isFirstElement) {
+-                    _jsonPath.push(0);
+-                    isFirstElement = false;
+-                }
+-                else {
+-                    _jsonPath[_jsonPath.length - 1]++;
+-                }
+-                if (!parseValue()) {
+-                    handleError(4 /* ParseErrorCode.ValueExpected */, [], [4 /* SyntaxKind.CloseBracketToken */, 5 /* SyntaxKind.CommaToken */]);
+-                }
+-                needsComma = true;
+-            }
+-            onArrayEnd();
+-            if (!isFirstElement) {
+-                _jsonPath.pop(); // remove array index
+-            }
+-            if (_scanner.getToken() !== 4 /* SyntaxKind.CloseBracketToken */) {
+-                handleError(8 /* ParseErrorCode.CloseBracketExpected */, [4 /* SyntaxKind.CloseBracketToken */], []);
+-            }
+-            else {
+-                scanNext(); // consume close bracket
+-            }
+-            return true;
++      } else {
++        handleError(
++          5 /* ParseErrorCode.ColonExpected */,
++          [],
++          [2 /* SyntaxKind.CloseBraceToken */, 5 /* SyntaxKind.CommaToken */]
++        );
++      }
++      _jsonPath.pop(); // remove processed property name
++      return true;
++    }
++    function parseObject() {
++      onObjectBegin();
++      scanNext(); // consume open brace
++      let needsComma = false;
++      while (
++        _scanner.getToken() !== 2 /* SyntaxKind.CloseBraceToken */ &&
++        _scanner.getToken() !== 17 /* SyntaxKind.EOF */
++      ) {
++        if (_scanner.getToken() === 5 /* SyntaxKind.CommaToken */) {
++          if (!needsComma) {
++            handleError(4 /* ParseErrorCode.ValueExpected */, [], []);
++          }
++          onSeparator(",");
++          scanNext(); // consume comma
++          if (
++            _scanner.getToken() === 2 /* SyntaxKind.CloseBraceToken */ &&
++            allowTrailingComma
++          ) {
++            break;
++          }
++        } else if (needsComma) {
++          handleError(6 /* ParseErrorCode.CommaExpected */, [], []);
+         }
+-        function parseValue() {
+-            switch (_scanner.getToken()) {
+-                case 3 /* SyntaxKind.OpenBracketToken */:
+-                    return parseArray();
+-                case 1 /* SyntaxKind.OpenBraceToken */:
+-                    return parseObject();
+-                case 10 /* SyntaxKind.StringLiteral */:
+-                    return parseString(true);
+-                default:
+-                    return parseLiteral();
+-            }
++        if (!parseProperty()) {
++          handleError(
++            4 /* ParseErrorCode.ValueExpected */,
++            [],
++            [2 /* SyntaxKind.CloseBraceToken */, 5 /* SyntaxKind.CommaToken */]
++          );
+         }
+-        scanNext();
+-        if (_scanner.getToken() === 17 /* SyntaxKind.EOF */) {
+-            if (options.allowEmptyContent) {
+-                return true;
+-            }
++        needsComma = true;
++      }
++      onObjectEnd();
++      if (_scanner.getToken() !== 2 /* SyntaxKind.CloseBraceToken */) {
++        handleError(
++          7 /* ParseErrorCode.CloseBraceExpected */,
++          [2 /* SyntaxKind.CloseBraceToken */],
++          []
++        );
++      } else {
++        scanNext(); // consume close brace
++      }
++      return true;
++    }
++    function parseArray() {
++      onArrayBegin();
++      scanNext(); // consume open bracket
++      let isFirstElement = true;
++      let needsComma = false;
++      while (
++        _scanner.getToken() !== 4 /* SyntaxKind.CloseBracketToken */ &&
++        _scanner.getToken() !== 17 /* SyntaxKind.EOF */
++      ) {
++        if (_scanner.getToken() === 5 /* SyntaxKind.CommaToken */) {
++          if (!needsComma) {
+             handleError(4 /* ParseErrorCode.ValueExpected */, [], []);
+-            return false;
++          }
++          onSeparator(",");
++          scanNext(); // consume comma
++          if (
++            _scanner.getToken() === 4 /* SyntaxKind.CloseBracketToken */ &&
++            allowTrailingComma
++          ) {
++            break;
++          }
++        } else if (needsComma) {
++          handleError(6 /* ParseErrorCode.CommaExpected */, [], []);
+         }
+-        if (!parseValue()) {
+-            handleError(4 /* ParseErrorCode.ValueExpected */, [], []);
+-            return false;
++        if (isFirstElement) {
++          _jsonPath.push(0);
++          isFirstElement = false;
++        } else {
++          _jsonPath[_jsonPath.length - 1]++;
+         }
+-        if (_scanner.getToken() !== 17 /* SyntaxKind.EOF */) {
+-            handleError(9 /* ParseErrorCode.EndOfFileExpected */, [], []);
++        if (!parseValue()) {
++          handleError(
++            4 /* ParseErrorCode.ValueExpected */,
++            [],
++            [
++              4 /* SyntaxKind.CloseBracketToken */,
++              5 /* SyntaxKind.CommaToken */,
++            ]
++          );
+         }
++        needsComma = true;
++      }
++      onArrayEnd();
++      if (!isFirstElement) {
++        _jsonPath.pop(); // remove array index
++      }
++      if (_scanner.getToken() !== 4 /* SyntaxKind.CloseBracketToken */) {
++        handleError(
++          8 /* ParseErrorCode.CloseBracketExpected */,
++          [4 /* SyntaxKind.CloseBracketToken */],
++          []
++        );
++      } else {
++        scanNext(); // consume close bracket
++      }
++      return true;
++    }
++    function parseValue() {
++      switch (_scanner.getToken()) {
++        case 3 /* SyntaxKind.OpenBracketToken */:
++          return parseArray();
++        case 1 /* SyntaxKind.OpenBraceToken */:
++          return parseObject();
++        case 10 /* SyntaxKind.StringLiteral */:
++          return parseString(true);
++        default:
++          return parseLiteral();
++      }
++    }
++    scanNext();
++    if (_scanner.getToken() === 17 /* SyntaxKind.EOF */) {
++      if (options.allowEmptyContent) {
+         return true;
++      }
++      handleError(4 /* ParseErrorCode.ValueExpected */, [], []);
++      return false;
+     }
+-    exports.visit = visit;
+-    /**
+-     * Takes JSON with JavaScript-style comments and remove
+-     * them. Optionally replaces every none-newline character
+-     * of comments with a replaceCharacter
+-     */
+-    function stripComments(text, replaceCh) {
+-        let _scanner = (0, scanner_1.createScanner)(text), parts = [], kind, offset = 0, pos;
+-        do {
+-            pos = _scanner.getPosition();
+-            kind = _scanner.scan();
+-            switch (kind) {
+-                case 12 /* SyntaxKind.LineCommentTrivia */:
+-                case 13 /* SyntaxKind.BlockCommentTrivia */:
+-                case 17 /* SyntaxKind.EOF */:
+-                    if (offset !== pos) {
+-                        parts.push(text.substring(offset, pos));
+-                    }
+-                    if (replaceCh !== undefined) {
+-                        parts.push(_scanner.getTokenValue().replace(/[^\r\n]/g, replaceCh));
+-                    }
+-                    offset = _scanner.getPosition();
+-                    break;
+-            }
+-        } while (kind !== 17 /* SyntaxKind.EOF */);
+-        return parts.join('');
++    if (!parseValue()) {
++      handleError(4 /* ParseErrorCode.ValueExpected */, [], []);
++      return false;
+     }
+-    exports.stripComments = stripComments;
+-    function getNodeType(value) {
+-        switch (typeof value) {
+-            case 'boolean': return 'boolean';
+-            case 'number': return 'number';
+-            case 'string': return 'string';
+-            case 'object': {
+-                if (!value) {
+-                    return 'null';
+-                }
+-                else if (Array.isArray(value)) {
+-                    return 'array';
+-                }
+-                return 'object';
+-            }
+-            default: return 'null';
++    if (_scanner.getToken() !== 17 /* SyntaxKind.EOF */) {
++      handleError(9 /* ParseErrorCode.EndOfFileExpected */, [], []);
++    }
++    return true;
++  }
++  exports.visit = visit;
++  /**
++   * Takes JSON with JavaScript-style comments and remove
++   * them. Optionally replaces every none-newline character
++   * of comments with a replaceCharacter
++   */
++  function stripComments(text, replaceCh) {
++    let _scanner = (0, scanner_1.createScanner)(text),
++      parts = [],
++      kind,
++      offset = 0,
++      pos;
++    do {
++      pos = _scanner.getPosition();
++      kind = _scanner.scan();
++      switch (kind) {
++        case 12 /* SyntaxKind.LineCommentTrivia */:
++        case 13 /* SyntaxKind.BlockCommentTrivia */:
++        case 17 /* SyntaxKind.EOF */:
++          if (offset !== pos) {
++            parts.push(text.substring(offset, pos));
++          }
++          if (replaceCh !== undefined) {
++            parts.push(_scanner.getTokenValue().replace(/[^\r\n]/g, replaceCh));
++          }
++          offset = _scanner.getPosition();
++          break;
++      }
++    } while (kind !== 17 /* SyntaxKind.EOF */);
++    return parts.join("");
++  }
++  exports.stripComments = stripComments;
++  function getNodeType(value) {
++    switch (typeof value) {
++      case "boolean":
++        return "boolean";
++      case "number":
++        return "number";
++      case "string":
++        return "string";
++      case "object": {
++        if (!value) {
++          return "null";
++        } else if (Array.isArray(value)) {
++          return "array";
+         }
++        return "object";
++      }
++      default:
++        return "null";
+     }
+-    exports.getNodeType = getNodeType;
++  }
++  exports.getNodeType = getNodeType;
+ });
+diff --git a/lib/umd/main.js b/lib/umd/main.js
+index 2ed744665430578caebcb12053150fbf4d7e76da..e0fed5671e9613b63fa2fbf958e27d30776da365 100644
+--- a/lib/umd/main.js
++++ b/lib/umd/main.js
+@@ -1,194 +1,248 @@
++const formatter = require("./impl/format");
++const edit = require("./impl/edit");
++const scanner = require("./impl/scanner");
++const parser = require("./impl/parser");
++
+ (function (factory) {
+-    if (typeof module === "object" && typeof module.exports === "object") {
+-        var v = factory(require, exports);
+-        if (v !== undefined) module.exports = v;
+-    }
+-    else if (typeof define === "function" && define.amd) {
+-        define(["require", "exports", "./impl/format", "./impl/edit", "./impl/scanner", "./impl/parser"], factory);
+-    }
++  if (typeof module === "object" && typeof module.exports === "object") {
++    var v = factory(require, exports);
++    if (v !== undefined) module.exports = v;
++  } else if (typeof define === "function" && define.amd) {
++    define([
++      "require",
++      "exports",
++      "./impl/format",
++      "./impl/edit",
++      "./impl/scanner",
++      "./impl/parser",
++    ], factory);
++  }
+ })(function (require, exports) {
+-    /*---------------------------------------------------------------------------------------------
+-     *  Copyright (c) Microsoft Corporation. All rights reserved.
+-     *  Licensed under the MIT License. See License.txt in the project root for license information.
+-     *--------------------------------------------------------------------------------------------*/
+-    'use strict';
+-    Object.defineProperty(exports, "__esModule", { value: true });
+-    exports.applyEdits = exports.modify = exports.format = exports.printParseErrorCode = exports.ParseErrorCode = exports.stripComments = exports.visit = exports.getNodeValue = exports.getNodePath = exports.findNodeAtOffset = exports.findNodeAtLocation = exports.parseTree = exports.parse = exports.getLocation = exports.SyntaxKind = exports.ScanError = exports.createScanner = void 0;
+-    const formatter = require("./impl/format");
+-    const edit = require("./impl/edit");
+-    const scanner = require("./impl/scanner");
+-    const parser = require("./impl/parser");
+-    /**
+-     * Creates a JSON scanner on the given text.
+-     * If ignoreTrivia is set, whitespaces or comments are ignored.
+-     */
+-    exports.createScanner = scanner.createScanner;
+-    var ScanError;
+-    (function (ScanError) {
+-        ScanError[ScanError["None"] = 0] = "None";
+-        ScanError[ScanError["UnexpectedEndOfComment"] = 1] = "UnexpectedEndOfComment";
+-        ScanError[ScanError["UnexpectedEndOfString"] = 2] = "UnexpectedEndOfString";
+-        ScanError[ScanError["UnexpectedEndOfNumber"] = 3] = "UnexpectedEndOfNumber";
+-        ScanError[ScanError["InvalidUnicode"] = 4] = "InvalidUnicode";
+-        ScanError[ScanError["InvalidEscapeCharacter"] = 5] = "InvalidEscapeCharacter";
+-        ScanError[ScanError["InvalidCharacter"] = 6] = "InvalidCharacter";
+-    })(ScanError || (exports.ScanError = ScanError = {}));
+-    var SyntaxKind;
+-    (function (SyntaxKind) {
+-        SyntaxKind[SyntaxKind["OpenBraceToken"] = 1] = "OpenBraceToken";
+-        SyntaxKind[SyntaxKind["CloseBraceToken"] = 2] = "CloseBraceToken";
+-        SyntaxKind[SyntaxKind["OpenBracketToken"] = 3] = "OpenBracketToken";
+-        SyntaxKind[SyntaxKind["CloseBracketToken"] = 4] = "CloseBracketToken";
+-        SyntaxKind[SyntaxKind["CommaToken"] = 5] = "CommaToken";
+-        SyntaxKind[SyntaxKind["ColonToken"] = 6] = "ColonToken";
+-        SyntaxKind[SyntaxKind["NullKeyword"] = 7] = "NullKeyword";
+-        SyntaxKind[SyntaxKind["TrueKeyword"] = 8] = "TrueKeyword";
+-        SyntaxKind[SyntaxKind["FalseKeyword"] = 9] = "FalseKeyword";
+-        SyntaxKind[SyntaxKind["StringLiteral"] = 10] = "StringLiteral";
+-        SyntaxKind[SyntaxKind["NumericLiteral"] = 11] = "NumericLiteral";
+-        SyntaxKind[SyntaxKind["LineCommentTrivia"] = 12] = "LineCommentTrivia";
+-        SyntaxKind[SyntaxKind["BlockCommentTrivia"] = 13] = "BlockCommentTrivia";
+-        SyntaxKind[SyntaxKind["LineBreakTrivia"] = 14] = "LineBreakTrivia";
+-        SyntaxKind[SyntaxKind["Trivia"] = 15] = "Trivia";
+-        SyntaxKind[SyntaxKind["Unknown"] = 16] = "Unknown";
+-        SyntaxKind[SyntaxKind["EOF"] = 17] = "EOF";
+-    })(SyntaxKind || (exports.SyntaxKind = SyntaxKind = {}));
+-    /**
+-     * For a given offset, evaluate the location in the JSON document. Each segment in the location path is either a property name or an array index.
+-     */
+-    exports.getLocation = parser.getLocation;
+-    /**
+-     * Parses the given text and returns the object the JSON content represents. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
+-     * Therefore, always check the errors list to find out if the input was valid.
+-     */
+-    exports.parse = parser.parse;
+-    /**
+-     * Parses the given text and returns a tree representation the JSON content. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
+-     */
+-    exports.parseTree = parser.parseTree;
+-    /**
+-     * Finds the node at the given path in a JSON DOM.
+-     */
+-    exports.findNodeAtLocation = parser.findNodeAtLocation;
+-    /**
+-     * Finds the innermost node at the given offset. If includeRightBound is set, also finds nodes that end at the given offset.
+-     */
+-    exports.findNodeAtOffset = parser.findNodeAtOffset;
+-    /**
+-     * Gets the JSON path of the given JSON DOM node
+-     */
+-    exports.getNodePath = parser.getNodePath;
+-    /**
+-     * Evaluates the JavaScript object of the given JSON DOM node
+-     */
+-    exports.getNodeValue = parser.getNodeValue;
+-    /**
+-     * Parses the given text and invokes the visitor functions for each object, array and literal reached.
+-     */
+-    exports.visit = parser.visit;
+-    /**
+-     * Takes JSON with JavaScript-style comments and remove
+-     * them. Optionally replaces every none-newline character
+-     * of comments with a replaceCharacter
+-     */
+-    exports.stripComments = parser.stripComments;
+-    var ParseErrorCode;
+-    (function (ParseErrorCode) {
+-        ParseErrorCode[ParseErrorCode["InvalidSymbol"] = 1] = "InvalidSymbol";
+-        ParseErrorCode[ParseErrorCode["InvalidNumberFormat"] = 2] = "InvalidNumberFormat";
+-        ParseErrorCode[ParseErrorCode["PropertyNameExpected"] = 3] = "PropertyNameExpected";
+-        ParseErrorCode[ParseErrorCode["ValueExpected"] = 4] = "ValueExpected";
+-        ParseErrorCode[ParseErrorCode["ColonExpected"] = 5] = "ColonExpected";
+-        ParseErrorCode[ParseErrorCode["CommaExpected"] = 6] = "CommaExpected";
+-        ParseErrorCode[ParseErrorCode["CloseBraceExpected"] = 7] = "CloseBraceExpected";
+-        ParseErrorCode[ParseErrorCode["CloseBracketExpected"] = 8] = "CloseBracketExpected";
+-        ParseErrorCode[ParseErrorCode["EndOfFileExpected"] = 9] = "EndOfFileExpected";
+-        ParseErrorCode[ParseErrorCode["InvalidCommentToken"] = 10] = "InvalidCommentToken";
+-        ParseErrorCode[ParseErrorCode["UnexpectedEndOfComment"] = 11] = "UnexpectedEndOfComment";
+-        ParseErrorCode[ParseErrorCode["UnexpectedEndOfString"] = 12] = "UnexpectedEndOfString";
+-        ParseErrorCode[ParseErrorCode["UnexpectedEndOfNumber"] = 13] = "UnexpectedEndOfNumber";
+-        ParseErrorCode[ParseErrorCode["InvalidUnicode"] = 14] = "InvalidUnicode";
+-        ParseErrorCode[ParseErrorCode["InvalidEscapeCharacter"] = 15] = "InvalidEscapeCharacter";
+-        ParseErrorCode[ParseErrorCode["InvalidCharacter"] = 16] = "InvalidCharacter";
+-    })(ParseErrorCode || (exports.ParseErrorCode = ParseErrorCode = {}));
+-    function printParseErrorCode(code) {
+-        switch (code) {
+-            case 1 /* ParseErrorCode.InvalidSymbol */: return 'InvalidSymbol';
+-            case 2 /* ParseErrorCode.InvalidNumberFormat */: return 'InvalidNumberFormat';
+-            case 3 /* ParseErrorCode.PropertyNameExpected */: return 'PropertyNameExpected';
+-            case 4 /* ParseErrorCode.ValueExpected */: return 'ValueExpected';
+-            case 5 /* ParseErrorCode.ColonExpected */: return 'ColonExpected';
+-            case 6 /* ParseErrorCode.CommaExpected */: return 'CommaExpected';
+-            case 7 /* ParseErrorCode.CloseBraceExpected */: return 'CloseBraceExpected';
+-            case 8 /* ParseErrorCode.CloseBracketExpected */: return 'CloseBracketExpected';
+-            case 9 /* ParseErrorCode.EndOfFileExpected */: return 'EndOfFileExpected';
+-            case 10 /* ParseErrorCode.InvalidCommentToken */: return 'InvalidCommentToken';
+-            case 11 /* ParseErrorCode.UnexpectedEndOfComment */: return 'UnexpectedEndOfComment';
+-            case 12 /* ParseErrorCode.UnexpectedEndOfString */: return 'UnexpectedEndOfString';
+-            case 13 /* ParseErrorCode.UnexpectedEndOfNumber */: return 'UnexpectedEndOfNumber';
+-            case 14 /* ParseErrorCode.InvalidUnicode */: return 'InvalidUnicode';
+-            case 15 /* ParseErrorCode.InvalidEscapeCharacter */: return 'InvalidEscapeCharacter';
+-            case 16 /* ParseErrorCode.InvalidCharacter */: return 'InvalidCharacter';
+-        }
+-        return '<unknown ParseErrorCode>';
+-    }
+-    exports.printParseErrorCode = printParseErrorCode;
+-    /**
+-     * Computes the edit operations needed to format a JSON document.
+-     *
+-     * @param documentText The input text
+-     * @param range The range to format or `undefined` to format the full content
+-     * @param options The formatting options
+-     * @returns The edit operations describing the formatting changes to the original document following the format described in {@linkcode EditResult}.
+-     * To apply the edit operations to the input, use {@linkcode applyEdits}.
+-     */
+-    function format(documentText, range, options) {
+-        return formatter.format(documentText, range, options);
+-    }
+-    exports.format = format;
+-    /**
+-     * Computes the edit operations needed to modify a value in the JSON document.
+-     *
+-     * @param documentText The input text
+-     * @param path The path of the value to change. The path represents either to the document root, a property or an array item.
+-     * If the path points to an non-existing property or item, it will be created.
+-     * @param value The new value for the specified property or item. If the value is undefined,
+-     * the property or item will be removed.
+-     * @param options Options
+-     * @returns The edit operations describing the changes to the original document, following the format described in {@linkcode EditResult}.
+-     * To apply the edit operations to the input, use {@linkcode applyEdits}.
+-     */
+-    function modify(text, path, value, options) {
+-        return edit.setProperty(text, path, value, options);
++  /*---------------------------------------------------------------------------------------------
++   *  Copyright (c) Microsoft Corporation. All rights reserved.
++   *  Licensed under the MIT License. See License.txt in the project root for license information.
++   *--------------------------------------------------------------------------------------------*/
++  "use strict";
++  Object.defineProperty(exports, "__esModule", { value: true });
++  exports.applyEdits =
++    exports.modify =
++    exports.format =
++    exports.printParseErrorCode =
++    exports.ParseErrorCode =
++    exports.stripComments =
++    exports.visit =
++    exports.getNodeValue =
++    exports.getNodePath =
++    exports.findNodeAtOffset =
++    exports.findNodeAtLocation =
++    exports.parseTree =
++    exports.parse =
++    exports.getLocation =
++    exports.SyntaxKind =
++    exports.ScanError =
++    exports.createScanner =
++      void 0;
++  /**
++   * Creates a JSON scanner on the given text.
++   * If ignoreTrivia is set, whitespaces or comments are ignored.
++   */
++  exports.createScanner = scanner.createScanner;
++  var ScanError;
++  (function (ScanError) {
++    ScanError[(ScanError["None"] = 0)] = "None";
++    ScanError[(ScanError["UnexpectedEndOfComment"] = 1)] =
++      "UnexpectedEndOfComment";
++    ScanError[(ScanError["UnexpectedEndOfString"] = 2)] =
++      "UnexpectedEndOfString";
++    ScanError[(ScanError["UnexpectedEndOfNumber"] = 3)] =
++      "UnexpectedEndOfNumber";
++    ScanError[(ScanError["InvalidUnicode"] = 4)] = "InvalidUnicode";
++    ScanError[(ScanError["InvalidEscapeCharacter"] = 5)] =
++      "InvalidEscapeCharacter";
++    ScanError[(ScanError["InvalidCharacter"] = 6)] = "InvalidCharacter";
++  })(ScanError || (exports.ScanError = ScanError = {}));
++  var SyntaxKind;
++  (function (SyntaxKind) {
++    SyntaxKind[(SyntaxKind["OpenBraceToken"] = 1)] = "OpenBraceToken";
++    SyntaxKind[(SyntaxKind["CloseBraceToken"] = 2)] = "CloseBraceToken";
++    SyntaxKind[(SyntaxKind["OpenBracketToken"] = 3)] = "OpenBracketToken";
++    SyntaxKind[(SyntaxKind["CloseBracketToken"] = 4)] = "CloseBracketToken";
++    SyntaxKind[(SyntaxKind["CommaToken"] = 5)] = "CommaToken";
++    SyntaxKind[(SyntaxKind["ColonToken"] = 6)] = "ColonToken";
++    SyntaxKind[(SyntaxKind["NullKeyword"] = 7)] = "NullKeyword";
++    SyntaxKind[(SyntaxKind["TrueKeyword"] = 8)] = "TrueKeyword";
++    SyntaxKind[(SyntaxKind["FalseKeyword"] = 9)] = "FalseKeyword";
++    SyntaxKind[(SyntaxKind["StringLiteral"] = 10)] = "StringLiteral";
++    SyntaxKind[(SyntaxKind["NumericLiteral"] = 11)] = "NumericLiteral";
++    SyntaxKind[(SyntaxKind["LineCommentTrivia"] = 12)] = "LineCommentTrivia";
++    SyntaxKind[(SyntaxKind["BlockCommentTrivia"] = 13)] = "BlockCommentTrivia";
++    SyntaxKind[(SyntaxKind["LineBreakTrivia"] = 14)] = "LineBreakTrivia";
++    SyntaxKind[(SyntaxKind["Trivia"] = 15)] = "Trivia";
++    SyntaxKind[(SyntaxKind["Unknown"] = 16)] = "Unknown";
++    SyntaxKind[(SyntaxKind["EOF"] = 17)] = "EOF";
++  })(SyntaxKind || (exports.SyntaxKind = SyntaxKind = {}));
++  /**
++   * For a given offset, evaluate the location in the JSON document. Each segment in the location path is either a property name or an array index.
++   */
++  exports.getLocation = parser.getLocation;
++  /**
++   * Parses the given text and returns the object the JSON content represents. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
++   * Therefore, always check the errors list to find out if the input was valid.
++   */
++  exports.parse = parser.parse;
++  /**
++   * Parses the given text and returns a tree representation the JSON content. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
++   */
++  exports.parseTree = parser.parseTree;
++  /**
++   * Finds the node at the given path in a JSON DOM.
++   */
++  exports.findNodeAtLocation = parser.findNodeAtLocation;
++  /**
++   * Finds the innermost node at the given offset. If includeRightBound is set, also finds nodes that end at the given offset.
++   */
++  exports.findNodeAtOffset = parser.findNodeAtOffset;
++  /**
++   * Gets the JSON path of the given JSON DOM node
++   */
++  exports.getNodePath = parser.getNodePath;
++  /**
++   * Evaluates the JavaScript object of the given JSON DOM node
++   */
++  exports.getNodeValue = parser.getNodeValue;
++  /**
++   * Parses the given text and invokes the visitor functions for each object, array and literal reached.
++   */
++  exports.visit = parser.visit;
++  /**
++   * Takes JSON with JavaScript-style comments and remove
++   * them. Optionally replaces every none-newline character
++   * of comments with a replaceCharacter
++   */
++  exports.stripComments = parser.stripComments;
++  var ParseErrorCode;
++  (function (ParseErrorCode) {
++    ParseErrorCode[(ParseErrorCode["InvalidSymbol"] = 1)] = "InvalidSymbol";
++    ParseErrorCode[(ParseErrorCode["InvalidNumberFormat"] = 2)] =
++      "InvalidNumberFormat";
++    ParseErrorCode[(ParseErrorCode["PropertyNameExpected"] = 3)] =
++      "PropertyNameExpected";
++    ParseErrorCode[(ParseErrorCode["ValueExpected"] = 4)] = "ValueExpected";
++    ParseErrorCode[(ParseErrorCode["ColonExpected"] = 5)] = "ColonExpected";
++    ParseErrorCode[(ParseErrorCode["CommaExpected"] = 6)] = "CommaExpected";
++    ParseErrorCode[(ParseErrorCode["CloseBraceExpected"] = 7)] =
++      "CloseBraceExpected";
++    ParseErrorCode[(ParseErrorCode["CloseBracketExpected"] = 8)] =
++      "CloseBracketExpected";
++    ParseErrorCode[(ParseErrorCode["EndOfFileExpected"] = 9)] =
++      "EndOfFileExpected";
++    ParseErrorCode[(ParseErrorCode["InvalidCommentToken"] = 10)] =
++      "InvalidCommentToken";
++    ParseErrorCode[(ParseErrorCode["UnexpectedEndOfComment"] = 11)] =
++      "UnexpectedEndOfComment";
++    ParseErrorCode[(ParseErrorCode["UnexpectedEndOfString"] = 12)] =
++      "UnexpectedEndOfString";
++    ParseErrorCode[(ParseErrorCode["UnexpectedEndOfNumber"] = 13)] =
++      "UnexpectedEndOfNumber";
++    ParseErrorCode[(ParseErrorCode["InvalidUnicode"] = 14)] = "InvalidUnicode";
++    ParseErrorCode[(ParseErrorCode["InvalidEscapeCharacter"] = 15)] =
++      "InvalidEscapeCharacter";
++    ParseErrorCode[(ParseErrorCode["InvalidCharacter"] = 16)] =
++      "InvalidCharacter";
++  })(ParseErrorCode || (exports.ParseErrorCode = ParseErrorCode = {}));
++  function printParseErrorCode(code) {
++    switch (code) {
++      case 1 /* ParseErrorCode.InvalidSymbol */:
++        return "InvalidSymbol";
++      case 2 /* ParseErrorCode.InvalidNumberFormat */:
++        return "InvalidNumberFormat";
++      case 3 /* ParseErrorCode.PropertyNameExpected */:
++        return "PropertyNameExpected";
++      case 4 /* ParseErrorCode.ValueExpected */:
++        return "ValueExpected";
++      case 5 /* ParseErrorCode.ColonExpected */:
++        return "ColonExpected";
++      case 6 /* ParseErrorCode.CommaExpected */:
++        return "CommaExpected";
++      case 7 /* ParseErrorCode.CloseBraceExpected */:
++        return "CloseBraceExpected";
++      case 8 /* ParseErrorCode.CloseBracketExpected */:
++        return "CloseBracketExpected";
++      case 9 /* ParseErrorCode.EndOfFileExpected */:
++        return "EndOfFileExpected";
++      case 10 /* ParseErrorCode.InvalidCommentToken */:
++        return "InvalidCommentToken";
++      case 11 /* ParseErrorCode.UnexpectedEndOfComment */:
++        return "UnexpectedEndOfComment";
++      case 12 /* ParseErrorCode.UnexpectedEndOfString */:
++        return "UnexpectedEndOfString";
++      case 13 /* ParseErrorCode.UnexpectedEndOfNumber */:
++        return "UnexpectedEndOfNumber";
++      case 14 /* ParseErrorCode.InvalidUnicode */:
++        return "InvalidUnicode";
++      case 15 /* ParseErrorCode.InvalidEscapeCharacter */:
++        return "InvalidEscapeCharacter";
++      case 16 /* ParseErrorCode.InvalidCharacter */:
++        return "InvalidCharacter";
+     }
+-    exports.modify = modify;
+-    /**
+-     * Applies edits to an input string.
+-     * @param text The input text
+-     * @param edits Edit operations following the format described in {@linkcode EditResult}.
+-     * @returns The text with the applied edits.
+-     * @throws An error if the edit operations are not well-formed as described in {@linkcode EditResult}.
+-     */
+-    function applyEdits(text, edits) {
+-        let sortedEdits = edits.slice(0).sort((a, b) => {
+-            const diff = a.offset - b.offset;
+-            if (diff === 0) {
+-                return a.length - b.length;
+-            }
+-            return diff;
+-        });
+-        let lastModifiedOffset = text.length;
+-        for (let i = sortedEdits.length - 1; i >= 0; i--) {
+-            let e = sortedEdits[i];
+-            if (e.offset + e.length <= lastModifiedOffset) {
+-                text = edit.applyEdit(text, e);
+-            }
+-            else {
+-                throw new Error('Overlapping edit');
+-            }
+-            lastModifiedOffset = e.offset;
+-        }
+-        return text;
++    return "<unknown ParseErrorCode>";
++  }
++  exports.printParseErrorCode = printParseErrorCode;
++  /**
++   * Computes the edit operations needed to format a JSON document.
++   *
++   * @param documentText The input text
++   * @param range The range to format or `undefined` to format the full content
++   * @param options The formatting options
++   * @returns The edit operations describing the formatting changes to the original document following the format described in {@linkcode EditResult}.
++   * To apply the edit operations to the input, use {@linkcode applyEdits}.
++   */
++  function format(documentText, range, options) {
++    return formatter.format(documentText, range, options);
++  }
++  exports.format = format;
++  /**
++   * Computes the edit operations needed to modify a value in the JSON document.
++   *
++   * @param documentText The input text
++   * @param path The path of the value to change. The path represents either to the document root, a property or an array item.
++   * If the path points to an non-existing property or item, it will be created.
++   * @param value The new value for the specified property or item. If the value is undefined,
++   * the property or item will be removed.
++   * @param options Options
++   * @returns The edit operations describing the changes to the original document, following the format described in {@linkcode EditResult}.
++   * To apply the edit operations to the input, use {@linkcode applyEdits}.
++   */
++  function modify(text, path, value, options) {
++    return edit.setProperty(text, path, value, options);
++  }
++  exports.modify = modify;
++  /**
++   * Applies edits to an input string.
++   * @param text The input text
++   * @param edits Edit operations following the format described in {@linkcode EditResult}.
++   * @returns The text with the applied edits.
++   * @throws An error if the edit operations are not well-formed as described in {@linkcode EditResult}.
++   */
++  function applyEdits(text, edits) {
++    let sortedEdits = edits.slice(0).sort((a, b) => {
++      const diff = a.offset - b.offset;
++      if (diff === 0) {
++        return a.length - b.length;
++      }
++      return diff;
++    });
++    let lastModifiedOffset = text.length;
++    for (let i = sortedEdits.length - 1; i >= 0; i--) {
++      let e = sortedEdits[i];
++      if (e.offset + e.length <= lastModifiedOffset) {
++        text = edit.applyEdit(text, e);
++      } else {
++        throw new Error("Overlapping edit");
++      }
++      lastModifiedOffset = e.offset;
+     }
+-    exports.applyEdits = applyEdits;
++    return text;
++  }
++  exports.applyEdits = applyEdits;
+ });
