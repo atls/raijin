@@ -1437,7 +1437,7 @@ __metadata:
     typanion: "npm:3.14.0"
     typescript: "npm:5.5.4"
   peerDependencies:
-    "@atls/code-runtime": "workspace:*"
+    "@atls/code-runtime": "*"
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
     "@yarnpkg/fslib": "*"
