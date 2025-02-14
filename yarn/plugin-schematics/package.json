@@ -41,7 +41,7 @@
     "typescript": "5.5.4"
   },
   "peerDependencies": {
-    "@atls/code-runtime": "workspace:*",
+    "@atls/code-runtime": "*",
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*",
     "@yarnpkg/fslib": "*",
