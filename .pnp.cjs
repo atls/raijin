@@ -1680,6 +1680,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./runtime/code-runtime/",\
         "packageDependencies": [\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
+          ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
+          ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/config-eslint", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#workspace:config/eslint"],\
           ["@atls/config-prettier", "workspace:config/prettier"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
@@ -1688,9 +1690,11 @@ const RAW_RUNTIME_STATE =
           ["@svgr/plugin-jsx", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#npm:8.1.0"],\
           ["@types/eslint", "npm:9.6.1"],\
           ["@types/node", "npm:22.9.0"],\
+          ["esbuild", "npm:0.24.2"],\
           ["eslint", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#npm:9.14.0"],\
           ["node-loader", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#npm:2.0.0"],\
           ["null-loader", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#npm:4.0.1"],\
+          ["strip-json-comments", "npm:3.1.1"],\
           ["ts-loader", "virtual:a0bc915c153d5ff422ab909e9d6f033b3dd86f2ae1e865fd1b2c29932a554fe0a30358fbb65e84213aad5851f7bbdf303597798b16a80e9d5dcfc0569e5d66c5#npm:9.5.1"],\
           ["ts-node", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#npm:10.9.2"],\
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"],\
@@ -2844,13 +2848,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-schematics-virtual-0f3cc5eda5/1/yarn/plugin-schematics/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-schematics", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-schematics"],\
+          ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
+          ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/schematics", "virtual:33124df847db9112050e8e6b252750b5defa386d019709cc306d62edda1a79fe8db9f4764f71df21c62829b17dc4045a9a8b6496dcccde16dcb23b5d78b3b5de#workspace:schematics/schematics"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
-          ["@types/atls__schematics", null],\
+          ["@types/atls__code-runtime", null],\
           ["@types/ink", null],\
           ["@types/react", "npm:18.3.12"],\
           ["@types/yarnpkg__cli", null],\
@@ -2869,7 +2875,7 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\
         "packagePeers": [\
-          "@types/atls__schematics",\
+          "@types/atls__code-runtime",\
           "@types/ink",\
           "@types/yarnpkg__cli",\
           "@types/yarnpkg__core",\
@@ -2884,10 +2890,12 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/plugin-schematics/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-schematics", "workspace:yarn/plugin-schematics"],\
+          ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
+          ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/schematics", "virtual:33124df847db9112050e8e6b252750b5defa386d019709cc306d62edda1a79fe8db9f4764f71df21c62829b17dc4045a9a8b6496dcccde16dcb23b5d78b3b5de#workspace:schematics/schematics"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@types/react", "npm:18.3.12"],\

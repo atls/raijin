@@ -764,6 +764,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-runtime@workspace:runtime/code-runtime"
   dependencies:
+    "@angular-devkit/core": "npm:19.1.5"
+    "@angular-devkit/schematics": "npm:19.1.5"
     "@atls/config-eslint": "workspace:*"
     "@atls/config-prettier": "workspace:*"
     "@atls/config-typescript": "workspace:*"
@@ -772,9 +774,11 @@ __metadata:
     "@svgr/plugin-jsx": "npm:8.1.0"
     "@types/eslint": "npm:9.6.1"
     "@types/node": "npm:22.9.0"
+    esbuild: "npm:0.24.2"
     eslint: "npm:9.17.0"
     node-loader: "npm:2.0.0"
     null-loader: "npm:4.0.1"
+    strip-json-comments: "npm:3.1.1"
     ts-loader: "npm:9.5.1"
     ts-node: "npm:10.9.2"
     typescript: "npm:5.5.4"
@@ -1430,10 +1434,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics"
   dependencies:
+    "@angular-devkit/core": "npm:19.1.5"
+    "@angular-devkit/schematics": "npm:19.1.5"
     "@atls/cli-ui-error-info-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-schematics-component": "workspace:*"
-    "@atls/schematics": "workspace:*"
+    "@atls/code-runtime": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.12"
@@ -1449,7 +1455,7 @@ __metadata:
     typanion: "npm:3.14.0"
     typescript: "npm:5.5.4"
   peerDependencies:
-    "@atls/schematics": "*"
+    "@atls/code-runtime": "workspace:*"
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
     "@yarnpkg/fslib": "*"
