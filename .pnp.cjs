@@ -616,38 +616,12 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@angular-devkit/core", [\
-      ["npm:18.2.2", {\
-        "packageLocation": "./.yarn/cache/@angular-devkit-core-npm-18.2.2-5b399fd162-2a6161631b.zip/node_modules/@angular-devkit/core/",\
-        "packageDependencies": [\
-          ["@angular-devkit/core", "npm:18.2.2"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["npm:19.1.5", {\
         "packageLocation": "./.yarn/cache/@angular-devkit-core-npm-19.1.5-8cadb3875f-7d81fd1047.zip/node_modules/@angular-devkit/core/",\
         "packageDependencies": [\
           ["@angular-devkit/core", "npm:19.1.5"]\
         ],\
         "linkType": "SOFT"\
-      }],\
-      ["virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2", {\
-        "packageLocation": "./.yarn/__virtual__/@angular-devkit-core-virtual-09fdbb7e5f/0/cache/@angular-devkit-core-npm-18.2.2-5b399fd162-2a6161631b.zip/node_modules/@angular-devkit/core/",\
-        "packageDependencies": [\
-          ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
-          ["@types/chokidar", null],\
-          ["ajv", "npm:8.17.1"],\
-          ["ajv-formats", "virtual:c96c6e90093a2b296a7c8bb4e58bf023bdbf85d6d663018de529addeb630a5e4fd02e8889b4c2a077c6fe6d34f2a65c0e4902a22f372b460de8ceb3f45ce74e9#npm:3.0.1"],\
-          ["chokidar", null],\
-          ["jsonc-parser", "patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509"],\
-          ["picomatch", "npm:4.0.2"],\
-          ["rxjs", "npm:7.8.1"],\
-          ["source-map", "npm:0.7.4"]\
-        ],\
-        "packagePeers": [\
-          "@types/chokidar",\
-          "chokidar"\
-        ],\
-        "linkType": "HARD"\
       }],\
       ["virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5", {\
         "packageLocation": "./.yarn/__virtual__/@angular-devkit-core-virtual-c96c6e9009/0/cache/@angular-devkit-core-npm-19.1.5-8cadb3875f-7d81fd1047.zip/node_modules/@angular-devkit/core/",\
@@ -670,18 +644,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@angular-devkit/schematics", [\
-      ["npm:18.2.2", {\
-        "packageLocation": "./.yarn/cache/@angular-devkit-schematics-npm-18.2.2-4714d23333-6fc2456222.zip/node_modules/@angular-devkit/schematics/",\
-        "packageDependencies": [\
-          ["@angular-devkit/schematics", "npm:18.2.2"],\
-          ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
-          ["jsonc-parser", "patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509"],\
-          ["magic-string", "npm:0.30.11"],\
-          ["ora", "npm:5.4.1"],\
-          ["rxjs", "npm:7.8.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:19.1.5", {\
         "packageLocation": "./.yarn/cache/@angular-devkit-schematics-npm-19.1.5-d828b63554-b5e2fd222f.zip/node_modules/@angular-devkit/schematics/",\
         "packageDependencies": [\
@@ -1700,8 +1662,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-schematics/",\
         "packageDependencies": [\
           ["@atls/code-schematics", "workspace:code/code-schematics"],\
-          ["@angular-devkit/core", "virtual:4714d233331a06d9fd78f898e63666063fd535bf16c82e792f40caac5e79c8b8c761072796520e293fe924361727ee6a861f4093b71ee28a7a5bfc51b23e3ce3#npm:18.2.2"],\
-          ["@angular-devkit/schematics", "npm:18.2.2"],\
+          ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
+          ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@types/node", "npm:22.9.0"],\
           ["rxjs", "npm:7.8.1"]\
         ],\
@@ -2781,15 +2743,12 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-schematics-virtual-0f3cc5eda5/1/yarn/plugin-schematics/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-schematics", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-schematics"],\
-          ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
-          ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
+          ["@atls/code-schematics", "workspace:code/code-schematics"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
-          ["@types/atls__code-runtime", null],\
           ["@types/ink", null],\
           ["@types/react", "npm:18.3.12"],\
           ["@types/yarnpkg__cli", null],\
@@ -2808,7 +2767,6 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\
         "packagePeers": [\
-          "@types/atls__code-runtime",\
           "@types/ink",\
           "@types/yarnpkg__cli",\
           "@types/yarnpkg__core",\
@@ -2823,12 +2781,10 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/plugin-schematics/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-schematics", "workspace:yarn/plugin-schematics"],\
-          ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
-          ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
-          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
+          ["@atls/code-schematics", "workspace:code/code-schematics"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@types/react", "npm:18.3.12"],\
@@ -13019,14 +12975,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["magic-string", [\
-      ["npm:0.30.11", {\
-        "packageLocation": "./.yarn/cache/magic-string-npm-0.30.11-4e76dc2f30-b784d22402.zip/node_modules/magic-string/",\
-        "packageDependencies": [\
-          ["magic-string", "npm:0.30.11"],\
-          ["@jridgewell/sourcemap-codec", "npm:1.5.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:0.30.12", {\
         "packageLocation": "./.yarn/cache/magic-string-npm-0.30.12-31dd992ec2-98016180a5.zip/node_modules/magic-string/",\
         "packageDependencies": [\

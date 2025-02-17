@@ -198,30 +198,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:18.2.2":
-  version: 18.2.2
-  resolution: "@angular-devkit/core@npm:18.2.2"
-  dependencies:
-    ajv: "npm:8.17.1"
-    ajv-formats: "npm:3.0.1"
-    jsonc-parser: "npm:3.3.1"
-    picomatch: "npm:4.0.2"
-    rxjs: "npm:7.8.1"
-    source-map: "npm:0.7.4"
-  peerDependencies:
-    chokidar: ^3.5.2
-  dependenciesMeta:
-    esbuild:
-      built: true
-    puppeteer:
-      built: true
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  checksum: 10/2a6161631b226cade882c98bcde4ba0a4d8ec19e94d4f2abbad1396b3bc0a19d1577ea82cfd7d2de6ded97ae5c07f7f6dc211631ba22d3084f27601012c0da0d
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/core@npm:19.1.5":
   version: 19.1.5
   resolution: "@angular-devkit/core@npm:19.1.5"
@@ -238,24 +214,6 @@ __metadata:
     chokidar:
       optional: true
   checksum: 10/7d81fd1047e9171608674a0efc70e5bb3dbdd19fca484d9696ca61f9282359c87ece7ab60e2796bf0d078014293f96a5a35158caa8d0c90eaf331b5001788555
-  languageName: node
-  linkType: hard
-
-"@angular-devkit/schematics@npm:18.2.2":
-  version: 18.2.2
-  resolution: "@angular-devkit/schematics@npm:18.2.2"
-  dependencies:
-    "@angular-devkit/core": "npm:18.2.2"
-    jsonc-parser: "npm:3.3.1"
-    magic-string: "npm:0.30.11"
-    ora: "npm:5.4.1"
-    rxjs: "npm:7.8.1"
-  dependenciesMeta:
-    esbuild:
-      built: true
-    puppeteer:
-      built: true
-  checksum: 10/6fc245622204744a116b07c14b77d60ec42709638457433dc946d87d91ab834a9fcab5e179e4ec92923d55b5473256ce9369595a68f54dbd93a5c7ebda696ed4
   languageName: node
   linkType: hard
 
@@ -785,12 +743,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-schematics@workspace:code/code-schematics":
+"@atls/code-schematics@workspace:*, @atls/code-schematics@workspace:code/code-schematics":
   version: 0.0.0-use.local
   resolution: "@atls/code-schematics@workspace:code/code-schematics"
   dependencies:
-    "@angular-devkit/core": "npm:18.2.2"
-    "@angular-devkit/schematics": "npm:18.2.2"
+    "@angular-devkit/core": "npm:19.1.5"
+    "@angular-devkit/schematics": "npm:19.1.5"
     "@types/node": "npm:22.9.0"
     rxjs: "npm:7.8.1"
   languageName: unknown
@@ -1416,12 +1374,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics"
   dependencies:
-    "@angular-devkit/core": "npm:19.1.5"
-    "@angular-devkit/schematics": "npm:19.1.5"
     "@atls/cli-ui-error-info-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-schematics-component": "workspace:*"
-    "@atls/code-runtime": "workspace:*"
+    "@atls/code-schematics": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.12"
@@ -1437,7 +1393,6 @@ __metadata:
     typanion: "npm:3.14.0"
     typescript: "npm:5.5.4"
   peerDependencies:
-    "@atls/code-runtime": "*"
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
     "@yarnpkg/fslib": "*"
@@ -9478,15 +9433,6 @@ __metadata:
   dependencies:
     yallist: "npm:^3.0.2"
   checksum: 10/951d2673dcc64a7fb888bf3d13bc2fdf923faca97d89cdb405ba3dfff77e2b26e5798d405e78fcd7094c9e7b8b4dab2ddc5a4f8a11928af24a207b7c738ca3f8
-  languageName: node
-  linkType: hard
-
-"magic-string@npm:0.30.11":
-  version: 0.30.11
-  resolution: "magic-string@npm:0.30.11"
-  dependencies:
-    "@jridgewell/sourcemap-codec": "npm:^1.5.0"
-  checksum: 10/b784d2240252f5b1e755d487354ada4c672cbca16f045144f7185a75b059210e5fcca7be7be03ef1bac2ca754c4428b21d36ae64a9057ba429916f06b8c54eb2
   languageName: node
   linkType: hard
 

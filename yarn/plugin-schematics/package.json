@@ -17,11 +17,10 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@angular-devkit/core": "19.1.5",
-    "@angular-devkit/schematics": "19.1.5",
     "@atls/cli-ui-error-info-component": "workspace:*",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/cli-ui-schematics-component": "workspace:*",
+    "@atls/code-schematics": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@yarnpkg/libui": "3.0.1",
     "clipanion": "4.0.0-rc.2",
@@ -29,7 +28,6 @@
     "typanion": "3.14.0"
   },
   "devDependencies": {
-    "@atls/code-runtime": "workspace:*",
     "@atls/yarn-test-utils": "workspace:*",
     "@types/react": "18.3.12",
     "@yarnpkg/builder": "4.2.0",
@@ -41,7 +39,6 @@
     "typescript": "5.5.4"
   },
   "peerDependencies": {
-    "@atls/code-runtime": "*",
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*",
     "@yarnpkg/fslib": "*",
