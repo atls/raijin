@@ -21,7 +21,13 @@
   },
   "devDependencies": {
     "@types/node": "22.9.0",
+    "@yarnpkg/cli": "4.5.1",
+    "@yarnpkg/core": "4.1.4",
     "rxjs": "7.8.1"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*"
   },
   "publishConfig": {
     "exports": {
