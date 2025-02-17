@@ -22,8 +22,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn library build",
-    "prepack": "yarn run build && rm -rf ./dist/schematics && yarn node ./src/schematics/scripts/cjs-build.script.ts && yarn node ./src/schematics/scripts/prepack.script.ts",
+    "build": "yarn run build:library && yarn run build:clean && yarn run build:schematic && yarn run build:schematic-prepack",
+    "build:library": "yarn library build",
+    "build:clean": "rm -rf ./dist/schematics",
+    "build:schematic": "yarn node ./src/schematics/scripts/cjs-build.script.ts",
+    "build:schematic-prepack": "yarn node ./src/schematics/scripts/prepack.script.ts",
+    "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
