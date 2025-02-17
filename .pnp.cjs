@@ -1664,6 +1664,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-schematics", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:code/code-schematics"],\
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@types/node", "npm:22.9.0"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -1685,6 +1686,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-schematics", "workspace:code/code-schematics"],\
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@types/node", "npm:22.9.0"],\
           ["@yarnpkg/cli", "virtual:cc0a970534b499add0064d8eb1fc3286f3c9be4bf3080c3e6e508964ea5232777f3e0009913a6a066796387e6b8a4b9e488b8a0d642735fad9419dc069d9dbde#npm:4.5.1"],\
           ["@yarnpkg/core", "npm:4.1.4"],\
