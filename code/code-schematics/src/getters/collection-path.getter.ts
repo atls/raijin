@@ -25,12 +25,18 @@ const setupPnp = async (cwd = process.cwd()): Promise<void> => {
   pnp.setup()
 }
 
+const getPackageDir = async (): Promise<string> => {
+  const packagePath = fileURLToPath(await import.meta.resolve(PACKAGE_NAME))
+  const packageDir = dirname(packagePath)
+  return packageDir
+}
+
 export const resolveSchematics = async (cwd = process.cwd()): Promise<string> => {
   try {
-    return join(dirname(require.resolve(PACKAGE_NAME)))
+    return getPackageDir()
   } catch {
     await setupPnp(cwd)
-    return join(dirname(require.resolve(PACKAGE_NAME)))
+    return getPackageDir()
   }
 }
 
