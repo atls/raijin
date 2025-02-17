@@ -749,6 +749,7 @@ __metadata:
   dependencies:
     "@angular-devkit/core": "npm:19.1.5"
     "@angular-devkit/schematics": "npm:19.1.5"
+    "@atls/code-runtime": "workspace:*"
     "@types/node": "npm:22.9.0"
     "@yarnpkg/cli": "npm:4.5.1"
     "@yarnpkg/core": "npm:4.1.4"

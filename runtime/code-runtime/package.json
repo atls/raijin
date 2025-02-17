@@ -13,7 +13,7 @@
     "./svgr": "./src/svgr.ts",
     "./ts-node-register": "./src/ts-node-register.ts",
     "./ts-ext-register": "./src/ts-ext-register.ts",
-    "./collection": "./src/schematics/schematic/collection.json"
+    "./collection": "./dist/schematic/collection.json"
   },
   "main": "src/index.ts",
   "types": "types/index.d.ts",
