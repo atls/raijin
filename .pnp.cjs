@@ -1671,7 +1671,9 @@ const RAW_RUNTIME_STATE =
           ["@types/yarnpkg__core", null],\
           ["@yarnpkg/cli", "virtual:cc0a970534b499add0064d8eb1fc3286f3c9be4bf3080c3e6e508964ea5232777f3e0009913a6a066796387e6b8a4b9e488b8a0d642735fad9419dc069d9dbde#npm:4.5.1"],\
           ["@yarnpkg/core", "npm:4.1.4"],\
-          ["rxjs", "npm:7.8.1"]\
+          ["esbuild", "npm:0.24.2"],\
+          ["rxjs", "npm:7.8.1"],\
+          ["strip-json-comments", "npm:3.1.1"]\
         ],\
         "packagePeers": [\
           "@types/yarnpkg__cli",\
@@ -1691,7 +1693,9 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:22.9.0"],\
           ["@yarnpkg/cli", "virtual:cc0a970534b499add0064d8eb1fc3286f3c9be4bf3080c3e6e508964ea5232777f3e0009913a6a066796387e6b8a4b9e488b8a0d642735fad9419dc069d9dbde#npm:4.5.1"],\
           ["@yarnpkg/core", "npm:4.1.4"],\
-          ["rxjs", "npm:7.8.1"]\
+          ["esbuild", "npm:0.24.2"],\
+          ["rxjs", "npm:7.8.1"],\
+          ["strip-json-comments", "npm:3.1.1"]\
         ],\
         "linkType": "SOFT"\
       }]\
