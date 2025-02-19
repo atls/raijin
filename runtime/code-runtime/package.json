@@ -12,8 +12,7 @@
     "./typescript": "./src/typescript.ts",
     "./svgr": "./src/svgr.ts",
     "./ts-node-register": "./src/ts-node-register.ts",
-    "./ts-ext-register": "./src/ts-ext-register.ts",
-    "./collection": "./src/schematics/schematic/collection.json"
+    "./ts-ext-register": "./src/ts-ext-register.ts"
   },
   "main": "src/index.ts",
   "types": "types/index.d.ts",
@@ -22,11 +21,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn run build:library && yarn run build:clean && yarn run build:schematic && yarn run build:schematic-prepack",
-    "build:clean": "rm -rf ./dist/schematics",
+    "build": "yarn run build:schematic && yarn run build:library",
     "build:library": "yarn library build",
-    "build:schematic": "yarn node ./src/schematics/scripts/cjs-build.script.ts",
-    "build:schematic-prepack": "yarn node ./src/schematics/scripts/prepack.script.ts",
+    "build:schematic": "yarn node ./src/scripts/schematic-build.script.ts",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
