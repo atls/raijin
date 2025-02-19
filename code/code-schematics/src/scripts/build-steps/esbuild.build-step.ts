@@ -21,14 +21,41 @@ export const esbuildBuildStep = async (): Promise<void> => {
     logLevel: 'error',
     entryPoints: ['src/schematic/index.ts'],
     bundle: true,
-    packages: 'external',
+    // packages: "external",
+    // packages: "bundle",
     write: false,
+
     outfile: 'dist/schematic.cjs',
     outbase: 'src/schematic',
     format: 'cjs',
     platform: 'node',
     sourcemap: false,
     target: 'esnext',
+
+    // external: [],
+
+    plugins: [
+      {
+        name: 'yarn-pnp-resolver',
+        setup(build): void {
+          build.onResolve({ filter: /.*/ }, async (args) => {
+            if (args.path.startsWith('.')) {
+              // return { path: args.path, external: false };
+              return { namespace: args.path, external: false }
+            }
+
+            if (
+              args.path.startsWith('@angular-devkit/core') ||
+              args.path.startsWith('@angular-devkit/schematics')
+            ) {
+              return { namespace: args.path, external: false }
+            }
+
+            return { path: args.path, external: true }
+          })
+        },
+      },
+    ],
   })
 
   const cjsContent = result.outputFiles[0].text
