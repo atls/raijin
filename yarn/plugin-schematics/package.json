@@ -28,6 +28,7 @@
     "typanion": "3.14.0"
   },
   "devDependencies": {
+    "@atls/code-runtime": "workspace:*",
     "@atls/yarn-test-utils": "workspace:*",
     "@types/react": "18.3.12",
     "@yarnpkg/builder": "4.2.0",

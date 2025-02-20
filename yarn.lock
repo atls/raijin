@@ -753,6 +753,7 @@ __metadata:
     "@types/node": "npm:22.9.0"
     "@yarnpkg/cli": "npm:4.5.1"
     "@yarnpkg/core": "npm:4.1.4"
+    "@yarnpkg/esbuild-plugin-pnp": "npm:3.0.0-rc.15"
     esbuild: "npm:0.24.2"
     rxjs: "npm:7.8.1"
     strip-json-comments: "npm:3.1.1"
@@ -1385,6 +1386,7 @@ __metadata:
     "@atls/cli-ui-error-info-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-schematics-component": "workspace:*"
+    "@atls/code-runtime": "workspace:*"
     "@atls/code-schematics": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
@@ -4232,6 +4234,17 @@ __metadata:
     tslib: "npm:^2.4.0"
     tunnel: "npm:^0.0.6"
   checksum: 10/06f75e3fc282da04f6f4d7da1825d8863473f49b8b1f0e185b9400929ecb55099fab6dd87509fdd7cfb35ac0569a2fdc884560ed5fd31c27a4f1b6dcc876e51b
+  languageName: node
+  linkType: hard
+
+"@yarnpkg/esbuild-plugin-pnp@npm:3.0.0-rc.15":
+  version: 3.0.0-rc.15
+  resolution: "@yarnpkg/esbuild-plugin-pnp@npm:3.0.0-rc.15"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    esbuild: ">=0.10.0"
+  checksum: 10/454f521088c1fa24fda51f83ca4a50ba6e3bd147e5dee8c899e6bf24a7196186532c3abb18480e83395708ffb7238c9cac5b82595c3985ce93593b5afbd0a9f0
   languageName: node
   linkType: hard
 

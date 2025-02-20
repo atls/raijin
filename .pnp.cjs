@@ -1671,6 +1671,7 @@ const RAW_RUNTIME_STATE =
           ["@types/yarnpkg__core", null],\
           ["@yarnpkg/cli", "virtual:cc0a970534b499add0064d8eb1fc3286f3c9be4bf3080c3e6e508964ea5232777f3e0009913a6a066796387e6b8a4b9e488b8a0d642735fad9419dc069d9dbde#npm:4.5.1"],\
           ["@yarnpkg/core", "npm:4.1.4"],\
+          ["@yarnpkg/esbuild-plugin-pnp", "virtual:32a10b35cc34995eae53d5b04a22db29e81b09870cf31ec057bd8bad53db9c3e8d6d146431133879baa38a9f03106247219bb436c1415af3e58db80d08ab1bda#npm:3.0.0-rc.15"],\
           ["esbuild", "npm:0.24.2"],\
           ["rxjs", "npm:7.8.1"],\
           ["strip-json-comments", "npm:3.1.1"]\
@@ -1693,6 +1694,7 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:22.9.0"],\
           ["@yarnpkg/cli", "virtual:cc0a970534b499add0064d8eb1fc3286f3c9be4bf3080c3e6e508964ea5232777f3e0009913a6a066796387e6b8a4b9e488b8a0d642735fad9419dc069d9dbde#npm:4.5.1"],\
           ["@yarnpkg/core", "npm:4.1.4"],\
+          ["@yarnpkg/esbuild-plugin-pnp", "virtual:32a10b35cc34995eae53d5b04a22db29e81b09870cf31ec057bd8bad53db9c3e8d6d146431133879baa38a9f03106247219bb436c1415af3e58db80d08ab1bda#npm:3.0.0-rc.15"],\
           ["esbuild", "npm:0.24.2"],\
           ["rxjs", "npm:7.8.1"],\
           ["strip-json-comments", "npm:3.1.1"]\
@@ -2776,6 +2778,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-schematics", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:code/code-schematics"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
@@ -2814,6 +2817,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/cli-ui-schematics-component", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:cli/cli-ui-schematics-component"],\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-schematics", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:code/code-schematics"],\
           ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
@@ -6634,6 +6638,29 @@ const RAW_RUNTIME_STATE =
           ["treeify", "npm:1.1.0"],\
           ["tslib", "npm:2.8.1"],\
           ["tunnel", "npm:0.0.6"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@yarnpkg/esbuild-plugin-pnp", [\
+      ["npm:3.0.0-rc.15", {\
+        "packageLocation": "./.yarn/cache/@yarnpkg-esbuild-plugin-pnp-npm-3.0.0-rc.15-b916c218b3-454f521088.zip/node_modules/@yarnpkg/esbuild-plugin-pnp/",\
+        "packageDependencies": [\
+          ["@yarnpkg/esbuild-plugin-pnp", "npm:3.0.0-rc.15"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:32a10b35cc34995eae53d5b04a22db29e81b09870cf31ec057bd8bad53db9c3e8d6d146431133879baa38a9f03106247219bb436c1415af3e58db80d08ab1bda#npm:3.0.0-rc.15", {\
+        "packageLocation": "./.yarn/__virtual__/@yarnpkg-esbuild-plugin-pnp-virtual-52c06d465c/0/cache/@yarnpkg-esbuild-plugin-pnp-npm-3.0.0-rc.15-b916c218b3-454f521088.zip/node_modules/@yarnpkg/esbuild-plugin-pnp/",\
+        "packageDependencies": [\
+          ["@yarnpkg/esbuild-plugin-pnp", "virtual:32a10b35cc34995eae53d5b04a22db29e81b09870cf31ec057bd8bad53db9c3e8d6d146431133879baa38a9f03106247219bb436c1415af3e58db80d08ab1bda#npm:3.0.0-rc.15"],\
+          ["@types/esbuild", null],\
+          ["esbuild", "npm:0.24.2"],\
+          ["tslib", "npm:2.8.1"]\
+        ],\
+        "packagePeers": [\
+          "@types/esbuild",\
+          "esbuild"\
         ],\
         "linkType": "HARD"\
       }]\
