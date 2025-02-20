@@ -1,3 +1,6 @@
+import { resolve }   from 'node:path'
+
+import { pnpPlugin } from '@yarnpkg/esbuild-plugin-pnp'
 import { writeFile } from 'fs/promises'
 import esbuild       from 'esbuild'
 
@@ -21,40 +24,46 @@ export const esbuildBuildStep = async (): Promise<void> => {
     logLevel: 'error',
     entryPoints: ['src/schematic/index.ts'],
     bundle: true,
-    // packages: "external",
-    // packages: "bundle",
     write: false,
-
-    outfile: 'dist/schematic.cjs',
-    outbase: 'src/schematic',
+    // outfile: "dist/schematic.cjs",
+    // outbase: "src/schematic",
     format: 'cjs',
     platform: 'node',
     sourcemap: false,
     target: 'esnext',
-
-    // external: [],
-
+    external: ['node:*'], // Убедитесь, что нет исключений
     plugins: [
-      {
-        name: 'yarn-pnp-resolver',
-        setup(build): void {
-          build.onResolve({ filter: /.*/ }, async (args) => {
-            if (args.path.startsWith('.')) {
-              // return { path: args.path, external: false };
-              return { namespace: args.path, external: false }
+      pnpPlugin({
+        onResolve: async (args) => {
+          if (args.path.includes('.ts')) {
+            return {
+              path: resolve(args.resolveDir, args.path.replace(/\.js/, '')),
+              external: false,
             }
-
-            if (
-              args.path.startsWith('@angular-devkit/core') ||
-              args.path.startsWith('@angular-devkit/schematics')
-            ) {
-              return { namespace: args.path, external: false }
-            }
-
-            return { path: args.path, external: true }
-          })
+          }
+          return {
+            namespace: args.path,
+            external: false,
+          }
         },
-      },
+      }),
+      // {
+      //   name: "ts-resolver",
+      //   setup(build) {
+      //     // Добавляем резолвинг для TypeScript файлов
+      //     build.onResolve({ filter: /.*/ }, async (args) => {
+      //       const extension = args.path.endsWith(".js") ? "" : ".ts";
+      //       console.log(
+      //         extension,
+      //         resolve(args.resolveDir, args.path + extension)
+      //       );
+      //       return {
+      //         path: resolve(args.resolveDir, args.path.replace(/\.js/, ".ts")),
+      //         external: false,
+      //       };
+      //     });
+      //   },
+      // },
     ],
   })
 
