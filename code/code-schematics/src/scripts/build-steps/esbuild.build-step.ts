@@ -9,7 +9,7 @@ export const schematicFactoryCjsBase64 = "${encodedContent}";
 export const writeSchematicFactory = async (path: string) => {
   const content = Buffer.from(schematicFactoryCjsBase64, "base64").toString("utf-8");
   const fs = await import('fs/promises')
-  fs.writeFile(path, content);
+  await fs.writeFile(path, content);
 };
 `
 
