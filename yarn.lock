@@ -721,8 +721,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-runtime@workspace:runtime/code-runtime"
   dependencies:
-    "@angular-devkit/core": "npm:19.1.5"
-    "@angular-devkit/schematics": "npm:19.1.5"
+    "@atls/code-schematics": "workspace:*"
     "@atls/config-eslint": "workspace:*"
     "@atls/config-prettier": "workspace:*"
     "@atls/config-typescript": "workspace:*"

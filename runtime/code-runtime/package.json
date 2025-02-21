@@ -23,13 +23,11 @@
   "scripts": {
     "build": "yarn run build:schematic && yarn run build:library",
     "build:library": "yarn library build",
-    "build:schematic": "yarn node ./src/scripts/schematic-build.script.ts",
+    "build:schematic": "yarn node ./src/schematic-build.script.ts",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@angular-devkit/core": "19.1.5",
-    "@angular-devkit/schematics": "19.1.5",
     "@atls/config-eslint": "workspace:*",
     "@atls/config-prettier": "workspace:*",
     "@atls/config-typescript": "workspace:*",
@@ -46,9 +44,9 @@
     "webpack": "5.97.1"
   },
   "devDependencies": {
+    "@atls/code-schematics": "workspace:*",
     "@types/eslint": "9.6.1",
-    "@types/node": "22.9.0",
-    "esbuild": "0.24.2"
+    "@types/node": "22.9.0"
   },
   "publishConfig": {
     "access": "public",
