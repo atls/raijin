@@ -32,6 +32,7 @@
     "typescript": "5.5.4"
   },
   "devDependencies": {
+    "@atls/code-runtime": "workspace:*",
     "@types/node": "22.9.0",
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch",
     "esbuild": "npm:esbuild-wasm@^0.23.1",
