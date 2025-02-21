@@ -16,8 +16,6 @@ export class GenerateProjectCommand extends BaseCommand {
   async execute() {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
 
-    const collectionPath = './tmp/collection.json'
-
     const allowedTypes = ['libraries', 'project']
 
     if (!allowedTypes.includes(this.type)) {
@@ -27,7 +25,6 @@ export class GenerateProjectCommand extends BaseCommand {
     const options = {
       type: this.type,
       cwd: process.cwd(),
-      collectionPath,
     }
 
     const streamReportOptions = getStreamReportOptions(this, configuration)

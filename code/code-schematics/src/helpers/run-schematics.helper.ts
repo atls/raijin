@@ -7,10 +7,11 @@ import { eventsLogHelper }               from './events-log.helper.js'
 
 export const runSchematicHelper = async (
   schematicName: string,
-  options: Record<string, string>
+  options: Record<string, string>,
+  collectionPath: string
 ): Promise<0 | 1> => {
   const dryRun = false
-  const debug = false
+  const debug = true
   let nothingDone = true
 
   const workflow = new NodeWorkflow(process.cwd(), {
@@ -28,7 +29,7 @@ export const runSchematicHelper = async (
   try {
     await workflow
       .execute({
-        collection: options.collectionPath,
+        collection: collectionPath,
         schematic: schematicName,
         options,
         allowPrivate: true,

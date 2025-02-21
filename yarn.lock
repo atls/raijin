@@ -730,7 +730,6 @@ __metadata:
     "@svgr/plugin-jsx": "npm:8.1.0"
     "@types/eslint": "npm:9.6.1"
     "@types/node": "npm:22.9.0"
-    esbuild: "npm:0.24.2"
     eslint: "npm:9.17.0"
     node-loader: "npm:2.0.0"
     null-loader: "npm:4.0.1"
@@ -753,6 +752,7 @@ __metadata:
     "@yarnpkg/cli": "npm:4.5.1"
     "@yarnpkg/core": "npm:4.1.4"
     "@yarnpkg/esbuild-plugin-pnp": "npm:3.0.0-rc.15"
+    "@yarnpkg/fslib": "npm:3.1.0"
     esbuild: "npm:0.24.2"
     rxjs: "npm:7.8.1"
     strip-json-comments: "npm:3.1.1"
@@ -11801,7 +11801,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tools@workspace:."
   dependencies:
-    "@atls/code-runtime": "workspace:*"
     "@types/node": "npm:22.9.0"
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch"
     esbuild: "npm:esbuild-wasm@^0.23.1"
