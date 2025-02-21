@@ -7,8 +7,8 @@ try {
 } catch (e: unknown) {
   const error = e as Error
 
-  console.error('Schematic build error!')
+  console.error('SchematicFactory build error!')
   console.error(error.message)
 }
 
-console.info('Schematic build successed')
+console.info('SchematicFactory build successed')
