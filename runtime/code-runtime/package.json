@@ -23,7 +23,7 @@
   "scripts": {
     "build": "yarn run build:schematic && yarn run build:library",
     "build:library": "yarn library build",
-    "build:schematic": "yarn node ./src/schematic-build.script.ts",
+    "build:schematic": "yarn node ./src/scripts/schematic-build.script.ts",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },

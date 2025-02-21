@@ -1,53 +1,53 @@
-/* eslint-disable no-console, no-await-in-loop */
+/* eslint-disable no-await-in-loop */
 
-import { readdir } from "fs/promises";
-import { mkdir } from "fs/promises";
-import { writeFile } from "fs/promises";
-import { readFile } from "fs/promises";
-import { join } from "path";
-import { dirname } from "path";
+import { readdir }   from 'fs/promises'
+import { mkdir }     from 'fs/promises'
+import { writeFile } from 'fs/promises'
+import { readFile }  from 'fs/promises'
+import { join }      from 'path'
+import { dirname }   from 'path'
 
 type FileStructure = {
-  [key: string]: FileStructure | string;
-};
+  [key: string]: FileStructure | string
+}
 
 async function buildFileStructure(dirPath: string): Promise<FileStructure> {
-  const result: FileStructure = {};
-  const entries = await readdir(dirPath, { withFileTypes: true });
+  const result: FileStructure = {}
+  const entries = await readdir(dirPath, { withFileTypes: true })
 
   for (const entry of entries) {
-    const fullPath = join(dirPath, entry.name);
+    const fullPath = join(dirPath, entry.name)
 
     if (entry.isDirectory()) {
-      result[entry.name] = await buildFileStructure(fullPath);
+      result[entry.name] = await buildFileStructure(fullPath)
     } else {
-      const content = await readFile(fullPath, "utf-8");
-      result[entry.name] = Buffer.from(content).toString("base64");
+      const content = await readFile(fullPath, 'utf-8')
+      result[entry.name] = Buffer.from(content).toString('base64')
     }
   }
 
-  return result;
+  return result
 }
 
 function generateModuleContent(structure: FileStructure): string {
-  const createStructureCode = (obj: FileStructure, indent = ""): string => {
-    let code = "";
+  const createStructureCode = (obj: FileStructure, indent = ''): string => {
+    let code = ''
     for (const [key, value] of Object.entries(obj)) {
-      if (typeof value === "string") {
-        code += `${indent}'${key}': '${value}',\n`;
+      if (typeof value === 'string') {
+        code += `${indent}'${key}': '${value}',\n`
       } else {
-        code += `${indent}'${key}': {\n`;
-        code += createStructureCode(value, `${indent}  `);
-        code += `${indent}},\n`;
+        code += `${indent}'${key}': {\n`
+        code += createStructureCode(value, `${indent}  `)
+        code += `${indent}},\n`
       }
     }
-    return code;
-  };
+    return code
+  }
 
   return `// Auto-generated file
 /* eslint-disable */
 export const assetsStructure = {
-${createStructureCode(structure, "  ")}
+${createStructureCode(structure, '  ')}
 }
 
 export async function writeFiles(baseDir: string) {
@@ -72,16 +72,13 @@ export async function writeFiles(baseDir: string) {
 
   await writeRecursive(assetsStructure, baseDir)
 }
-`;
+`
 }
 
-export async function generateSchematic(
-  schematicDir: string,
-  outputFile: string
-): Promise<void> {
-  const structure = await buildFileStructure(schematicDir);
-  const moduleContent = generateModuleContent(structure);
+export async function generateSchematic(schematicDir: string, outputFile: string): Promise<void> {
+  const structure = await buildFileStructure(schematicDir)
+  const moduleContent = generateModuleContent(structure)
 
-  await mkdir(dirname(outputFile), { recursive: true });
-  await writeFile(outputFile, moduleContent);
+  await mkdir(dirname(outputFile), { recursive: true })
+  await writeFile(outputFile, moduleContent)
 }

@@ -1,1 +1,1 @@
-export * from "./schematic-build.script.js";
+export * from './schematic-build.script.js'

@@ -1,14 +1,18 @@
-import { generateSchematic } from "@atls/code-schematics";
+/* eslint-disable no-console */
 
-const SCHEMATIC_DIR = "src/schematic";
-const OUTPUT_FILE = "src/generated/schematic-export.ts";
+import { join }              from 'node:path'
+
+import { generateSchematic } from '@atls/code-schematics'
 
 try {
-  generateSchematic(SCHEMATIC_DIR, OUTPUT_FILE);
-  console.info("Schematic build successed");
-} catch (e: unknown) {
-  const error = e as Error;
+  const schematicDir = join(import.meta.dirname, '../schematic')
+  const outputFile = join(import.meta.dirname, '../generated/schematic-export.ts')
 
-  console.error("Schematic build error!");
-  console.error(error);
+  generateSchematic(schematicDir, outputFile)
+  console.info('Schematic build successed')
+} catch (e: unknown) {
+  const error = e as Error
+
+  console.error('Schematic build error!')
+  console.error(error)
 }
