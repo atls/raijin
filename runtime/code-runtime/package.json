@@ -21,24 +21,30 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn library build",
+    "build": "yarn run build:schematic && yarn run build:library",
+    "build:library": "yarn library build",
+    "build:schematic": "yarn node ./src/scripts/schematic-build.script.ts",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@atls/config-eslint": "workspace:*",
+    "@atls/config-prettier": "workspace:*",
+    "@atls/config-typescript": "workspace:*",
     "@atls/webpack-proto-imports-loader": "workspace:*",
     "@svgr/core": "8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
     "eslint": "9.17.0",
     "node-loader": "2.0.0",
     "null-loader": "4.0.1",
+    "strip-json-comments": "3.1.1",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
     "webpack": "5.97.1"
   },
   "devDependencies": {
+    "@atls/code-schematics": "workspace:*",
     "@types/eslint": "9.6.1",
     "@types/node": "22.9.0"
   },
@@ -46,6 +52,7 @@
     "access": "public",
     "exports": {
       "./package.json": "./package.json",
+      "./collection": "./dist/schematic/collection.json",
       "./types": "./types/index.d.ts",
       ".": {
         "import": "./dist/index.js",

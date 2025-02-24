@@ -198,9 +198,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:18.2.2":
-  version: 18.2.2
-  resolution: "@angular-devkit/core@npm:18.2.2"
+"@angular-devkit/core@npm:19.1.5":
+  version: 19.1.5
+  resolution: "@angular-devkit/core@npm:19.1.5"
   dependencies:
     ajv: "npm:8.17.1"
     ajv-formats: "npm:3.0.1"
@@ -209,34 +209,24 @@ __metadata:
     rxjs: "npm:7.8.1"
     source-map: "npm:0.7.4"
   peerDependencies:
-    chokidar: ^3.5.2
-  dependenciesMeta:
-    esbuild:
-      built: true
-    puppeteer:
-      built: true
+    chokidar: ^4.0.0
   peerDependenciesMeta:
     chokidar:
       optional: true
-  checksum: 10/2a6161631b226cade882c98bcde4ba0a4d8ec19e94d4f2abbad1396b3bc0a19d1577ea82cfd7d2de6ded97ae5c07f7f6dc211631ba22d3084f27601012c0da0d
+  checksum: 10/7d81fd1047e9171608674a0efc70e5bb3dbdd19fca484d9696ca61f9282359c87ece7ab60e2796bf0d078014293f96a5a35158caa8d0c90eaf331b5001788555
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:18.2.2":
-  version: 18.2.2
-  resolution: "@angular-devkit/schematics@npm:18.2.2"
+"@angular-devkit/schematics@npm:19.1.5":
+  version: 19.1.5
+  resolution: "@angular-devkit/schematics@npm:19.1.5"
   dependencies:
-    "@angular-devkit/core": "npm:18.2.2"
+    "@angular-devkit/core": "npm:19.1.5"
     jsonc-parser: "npm:3.3.1"
-    magic-string: "npm:0.30.11"
+    magic-string: "npm:0.30.17"
     ora: "npm:5.4.1"
     rxjs: "npm:7.8.1"
-  dependenciesMeta:
-    esbuild:
-      built: true
-    puppeteer:
-      built: true
-  checksum: 10/6fc245622204744a116b07c14b77d60ec42709638457433dc946d87d91ab834a9fcab5e179e4ec92923d55b5473256ce9369595a68f54dbd93a5c7ebda696ed4
+  checksum: 10/b5e2fd222f74ca595ef3d0b0f9287b5a7747b3c3e9855ba3bde9e4353d9b8bd42ddd708bfd85a9b0ed7f9b4c90a98d7b7228942f86332b91e9e4f51b91505f50
   languageName: node
   linkType: hard
 
@@ -469,7 +459,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component"
   dependencies:
-    "@atls/schematics": "workspace:*"
     "@types/node": "npm:22.9.0"
     "@types/react": "npm:18.3.12"
     "@yarnpkg/libui": "npm:3.0.1"
@@ -732,7 +721,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-runtime@workspace:runtime/code-runtime"
   dependencies:
+    "@atls/code-schematics": "workspace:*"
     "@atls/config-eslint": "workspace:*"
+    "@atls/config-prettier": "workspace:*"
+    "@atls/config-typescript": "workspace:*"
     "@atls/webpack-proto-imports-loader": "workspace:*"
     "@svgr/core": "npm:8.1.0"
     "@svgr/plugin-jsx": "npm:8.1.0"
@@ -741,6 +733,7 @@ __metadata:
     eslint: "npm:9.17.0"
     node-loader: "npm:2.0.0"
     null-loader: "npm:4.0.1"
+    strip-json-comments: "npm:3.1.1"
     ts-loader: "npm:9.5.1"
     ts-node: "npm:10.9.2"
     typescript: "npm:5.5.4"
@@ -748,14 +741,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-schematics@workspace:code/code-schematics":
+"@atls/code-schematics@workspace:*, @atls/code-schematics@workspace:code/code-schematics":
   version: 0.0.0-use.local
   resolution: "@atls/code-schematics@workspace:code/code-schematics"
   dependencies:
-    "@angular-devkit/core": "npm:18.2.2"
-    "@angular-devkit/schematics": "npm:18.2.2"
+    "@angular-devkit/core": "npm:19.1.5"
+    "@angular-devkit/schematics": "npm:19.1.5"
+    "@atls/code-runtime": "workspace:*"
     "@types/node": "npm:22.9.0"
+    "@yarnpkg/cli": "npm:4.5.1"
+    "@yarnpkg/core": "npm:4.1.4"
+    "@yarnpkg/esbuild-plugin-pnp": "npm:3.0.0-rc.15"
+    "@yarnpkg/fslib": "npm:3.1.0"
+    esbuild: "npm:0.24.2"
     rxjs: "npm:7.8.1"
+    strip-json-comments: "npm:3.1.1"
+  peerDependencies:
+    "@yarnpkg/cli": "*"
+    "@yarnpkg/core": "*"
   languageName: unknown
   linkType: soft
 
@@ -867,36 +870,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/schematics-utils@workspace:*, @atls/schematics-utils@workspace:schematics/schematics-utils":
-  version: 0.0.0-use.local
-  resolution: "@atls/schematics-utils@workspace:schematics/schematics-utils"
-  dependencies:
-    "@angular-devkit/core": "npm:18.2.2"
-    "@angular-devkit/schematics": "npm:18.2.2"
-    "@types/js-yaml": "npm:4.0.9"
-    "@types/node": "npm:22.9.0"
-    js-yaml: "npm:4.1.0"
-    rimraf: "npm:5.0.10"
-    semver: "npm:7.6.3"
-    strip-json-comments: "npm:3.1.1"
-    typescript: "npm:5.5.4"
-  languageName: unknown
-  linkType: soft
-
-"@atls/schematics@workspace:*, @atls/schematics@workspace:schematics/schematics":
-  version: 0.0.0-use.local
-  resolution: "@atls/schematics@workspace:schematics/schematics"
-  dependencies:
-    "@angular-devkit/core": "npm:18.2.2"
-    "@angular-devkit/schematics": "npm:18.2.2"
-    "@atls/config-typescript": "workspace:*"
-    "@atls/schematics-utils": "workspace:*"
-    "@types/node": "npm:22.9.0"
-    copy-dir: "npm:1.3.0"
-    globby: "npm:13.2.2"
-  languageName: unknown
-  linkType: soft
-
 "@atls/webpack-proto-imports-loader@workspace:*, @atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader":
   version: 0.0.0-use.local
   resolution: "@atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader"
@@ -945,6 +918,7 @@ __metadata:
     "@atls/yarn-plugin-lint": "workspace:*"
     "@atls/yarn-plugin-release": "workspace:*"
     "@atls/yarn-plugin-renderer": "workspace:*"
+    "@atls/yarn-plugin-schematics": "workspace:*"
     "@atls/yarn-plugin-service": "workspace:*"
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
@@ -1005,6 +979,7 @@ __metadata:
     "@atls/yarn-plugin-lint": "workspace:*"
     "@atls/yarn-plugin-release": "workspace:*"
     "@atls/yarn-plugin-renderer": "workspace:*"
+    "@atls/yarn-plugin-schematics": "workspace:*"
     "@atls/yarn-plugin-service": "workspace:*"
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
@@ -1403,14 +1378,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics":
+"@atls/yarn-plugin-schematics@workspace:*, @atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics"
   dependencies:
     "@atls/cli-ui-error-info-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-schematics-component": "workspace:*"
-    "@atls/schematics": "workspace:*"
+    "@atls/code-schematics": "workspace:*"
     "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.12"
@@ -2055,9 +2030,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/aix-ppc64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/aix-ppc64@npm:0.24.2"
+  conditions: os=aix & cpu=ppc64
+  languageName: node
+  linkType: hard
+
 "@esbuild/android-arm64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/android-arm64@npm:0.23.1"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@esbuild/android-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/android-arm64@npm:0.24.2"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
@@ -2069,9 +2058,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/android-arm@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/android-arm@npm:0.24.2"
+  conditions: os=android & cpu=arm
+  languageName: node
+  linkType: hard
+
 "@esbuild/android-x64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/android-x64@npm:0.23.1"
+  conditions: os=android & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/android-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/android-x64@npm:0.24.2"
   conditions: os=android & cpu=x64
   languageName: node
   linkType: hard
@@ -2083,9 +2086,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/darwin-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/darwin-arm64@npm:0.24.2"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@esbuild/darwin-x64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/darwin-x64@npm:0.23.1"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/darwin-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/darwin-x64@npm:0.24.2"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
@@ -2097,9 +2114,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/freebsd-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/freebsd-arm64@npm:0.24.2"
+  conditions: os=freebsd & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@esbuild/freebsd-x64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/freebsd-x64@npm:0.23.1"
+  conditions: os=freebsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/freebsd-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/freebsd-x64@npm:0.24.2"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
@@ -2111,9 +2142,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-arm64@npm:0.24.2"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@esbuild/linux-arm@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/linux-arm@npm:0.23.1"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@esbuild/linux-arm@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-arm@npm:0.24.2"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
@@ -2125,9 +2170,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-ia32@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-ia32@npm:0.24.2"
+  conditions: os=linux & cpu=ia32
+  languageName: node
+  linkType: hard
+
 "@esbuild/linux-loong64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/linux-loong64@npm:0.23.1"
+  conditions: os=linux & cpu=loong64
+  languageName: node
+  linkType: hard
+
+"@esbuild/linux-loong64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-loong64@npm:0.24.2"
   conditions: os=linux & cpu=loong64
   languageName: node
   linkType: hard
@@ -2139,9 +2198,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-mips64el@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-mips64el@npm:0.24.2"
+  conditions: os=linux & cpu=mips64el
+  languageName: node
+  linkType: hard
+
 "@esbuild/linux-ppc64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/linux-ppc64@npm:0.23.1"
+  conditions: os=linux & cpu=ppc64
+  languageName: node
+  linkType: hard
+
+"@esbuild/linux-ppc64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-ppc64@npm:0.24.2"
   conditions: os=linux & cpu=ppc64
   languageName: node
   linkType: hard
@@ -2153,9 +2226,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-riscv64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-riscv64@npm:0.24.2"
+  conditions: os=linux & cpu=riscv64
+  languageName: node
+  linkType: hard
+
 "@esbuild/linux-s390x@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/linux-s390x@npm:0.23.1"
+  conditions: os=linux & cpu=s390x
+  languageName: node
+  linkType: hard
+
+"@esbuild/linux-s390x@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-s390x@npm:0.24.2"
   conditions: os=linux & cpu=s390x
   languageName: node
   linkType: hard
@@ -2167,9 +2254,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-x64@npm:0.24.2"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/netbsd-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/netbsd-arm64@npm:0.24.2"
+  conditions: os=netbsd & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@esbuild/netbsd-x64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/netbsd-x64@npm:0.23.1"
+  conditions: os=netbsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/netbsd-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/netbsd-x64@npm:0.24.2"
   conditions: os=netbsd & cpu=x64
   languageName: node
   linkType: hard
@@ -2181,9 +2289,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/openbsd-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/openbsd-arm64@npm:0.24.2"
+  conditions: os=openbsd & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@esbuild/openbsd-x64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/openbsd-x64@npm:0.23.1"
+  conditions: os=openbsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/openbsd-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/openbsd-x64@npm:0.24.2"
   conditions: os=openbsd & cpu=x64
   languageName: node
   linkType: hard
@@ -2195,9 +2317,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/sunos-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/sunos-x64@npm:0.24.2"
+  conditions: os=sunos & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@esbuild/win32-arm64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/win32-arm64@npm:0.23.1"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@esbuild/win32-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/win32-arm64@npm:0.24.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
@@ -2209,9 +2345,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/win32-ia32@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/win32-ia32@npm:0.24.2"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
 "@esbuild/win32-x64@npm:0.23.1":
   version: 0.23.1
   resolution: "@esbuild/win32-x64@npm:0.23.1"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/win32-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/win32-x64@npm:0.24.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -3470,13 +3620,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/js-yaml@npm:4.0.9":
-  version: 4.0.9
-  resolution: "@types/js-yaml@npm:4.0.9"
-  checksum: 10/a0ce595db8a987904badd21fc50f9f444cb73069f4b95a76cc222e0a17b3ff180669059c763ec314bc4c3ce284379177a9da80e83c5f650c6c1310cafbfaa8e6
-  languageName: node
-  linkType: hard
-
 "@types/json-schema@npm:*, @types/json-schema@npm:^7.0.15, @types/json-schema@npm:^7.0.8":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
@@ -4089,6 +4232,17 @@ __metadata:
     tslib: "npm:^2.4.0"
     tunnel: "npm:^0.0.6"
   checksum: 10/06f75e3fc282da04f6f4d7da1825d8863473f49b8b1f0e185b9400929ecb55099fab6dd87509fdd7cfb35ac0569a2fdc884560ed5fd31c27a4f1b6dcc876e51b
+  languageName: node
+  linkType: hard
+
+"@yarnpkg/esbuild-plugin-pnp@npm:3.0.0-rc.15":
+  version: 3.0.0-rc.15
+  resolution: "@yarnpkg/esbuild-plugin-pnp@npm:3.0.0-rc.15"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    esbuild: ">=0.10.0"
+  checksum: 10/454f521088c1fa24fda51f83ca4a50ba6e3bd147e5dee8c899e6bf24a7196186532c3abb18480e83395708ffb7238c9cac5b82595c3985ce93593b5afbd0a9f0
   languageName: node
   linkType: hard
 
@@ -5843,13 +5997,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-dir@npm:1.3.0":
-  version: 1.3.0
-  resolution: "copy-dir@npm:1.3.0"
-  checksum: 10/ff3f53c3fddbeb626bca3ee1dd783586bb06752acb633a7d5cbed9cec540be44cf792d2b372c820d2e0cb016ab47f161f4c9c7551ea0579a69c3f1801b855d8c
-  languageName: node
-  linkType: hard
-
 "cosmiconfig-typescript-loader@npm:^5.0.0":
   version: 5.1.0
   resolution: "cosmiconfig-typescript-loader@npm:5.1.0"
@@ -6651,6 +6798,92 @@ __metadata:
   bin:
     esbuild: bin/esbuild
   checksum: 10/f55fbd0bfb0f86ce67a6d2c6f6780729d536c330999ecb9f5a38d578fb9fda820acbbc67d6d1d377eed8fed50fc38f14ff9cb014f86dafab94269a7fb2177018
+  languageName: node
+  linkType: hard
+
+"esbuild@npm:0.24.2":
+  version: 0.24.2
+  resolution: "esbuild@npm:0.24.2"
+  dependencies:
+    "@esbuild/aix-ppc64": "npm:0.24.2"
+    "@esbuild/android-arm": "npm:0.24.2"
+    "@esbuild/android-arm64": "npm:0.24.2"
+    "@esbuild/android-x64": "npm:0.24.2"
+    "@esbuild/darwin-arm64": "npm:0.24.2"
+    "@esbuild/darwin-x64": "npm:0.24.2"
+    "@esbuild/freebsd-arm64": "npm:0.24.2"
+    "@esbuild/freebsd-x64": "npm:0.24.2"
+    "@esbuild/linux-arm": "npm:0.24.2"
+    "@esbuild/linux-arm64": "npm:0.24.2"
+    "@esbuild/linux-ia32": "npm:0.24.2"
+    "@esbuild/linux-loong64": "npm:0.24.2"
+    "@esbuild/linux-mips64el": "npm:0.24.2"
+    "@esbuild/linux-ppc64": "npm:0.24.2"
+    "@esbuild/linux-riscv64": "npm:0.24.2"
+    "@esbuild/linux-s390x": "npm:0.24.2"
+    "@esbuild/linux-x64": "npm:0.24.2"
+    "@esbuild/netbsd-arm64": "npm:0.24.2"
+    "@esbuild/netbsd-x64": "npm:0.24.2"
+    "@esbuild/openbsd-arm64": "npm:0.24.2"
+    "@esbuild/openbsd-x64": "npm:0.24.2"
+    "@esbuild/sunos-x64": "npm:0.24.2"
+    "@esbuild/win32-arm64": "npm:0.24.2"
+    "@esbuild/win32-ia32": "npm:0.24.2"
+    "@esbuild/win32-x64": "npm:0.24.2"
+  dependenciesMeta:
+    "@esbuild/aix-ppc64":
+      optional: true
+    "@esbuild/android-arm":
+      optional: true
+    "@esbuild/android-arm64":
+      optional: true
+    "@esbuild/android-x64":
+      optional: true
+    "@esbuild/darwin-arm64":
+      optional: true
+    "@esbuild/darwin-x64":
+      optional: true
+    "@esbuild/freebsd-arm64":
+      optional: true
+    "@esbuild/freebsd-x64":
+      optional: true
+    "@esbuild/linux-arm":
+      optional: true
+    "@esbuild/linux-arm64":
+      optional: true
+    "@esbuild/linux-ia32":
+      optional: true
+    "@esbuild/linux-loong64":
+      optional: true
+    "@esbuild/linux-mips64el":
+      optional: true
+    "@esbuild/linux-ppc64":
+      optional: true
+    "@esbuild/linux-riscv64":
+      optional: true
+    "@esbuild/linux-s390x":
+      optional: true
+    "@esbuild/linux-x64":
+      optional: true
+    "@esbuild/netbsd-arm64":
+      optional: true
+    "@esbuild/netbsd-x64":
+      optional: true
+    "@esbuild/openbsd-arm64":
+      optional: true
+    "@esbuild/openbsd-x64":
+      optional: true
+    "@esbuild/sunos-x64":
+      optional: true
+    "@esbuild/win32-arm64":
+      optional: true
+    "@esbuild/win32-ia32":
+      optional: true
+    "@esbuild/win32-x64":
+      optional: true
+  bin:
+    esbuild: bin/esbuild
+  checksum: 10/95425071c9f24ff88bf61e0710b636ec0eb24ddf8bd1f7e1edef3044e1221104bbfa7bbb31c18018c8c36fa7902c5c0b843f829b981ebc89160cf5eebdaa58f4
   languageName: node
   linkType: hard
 
@@ -7615,7 +7848,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.3.7, glob@npm:^10.4.1":
+"glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.4.1":
   version: 10.4.5
   resolution: "glob@npm:10.4.5"
   dependencies:
@@ -8722,17 +8955,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:4.1.0, js-yaml@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "js-yaml@npm:4.1.0"
-  dependencies:
-    argparse: "npm:^2.0.1"
-  bin:
-    js-yaml: bin/js-yaml.js
-  checksum: 10/c138a34a3fd0d08ebaf71273ad4465569a483b8a639e0b118ff65698d257c2791d3199e3f303631f2cb98213fa7b5f5d6a4621fd0fff819421b990d30d967140
-  languageName: node
-  linkType: hard
-
 "js-yaml@npm:^3.10.0":
   version: 3.14.1
   resolution: "js-yaml@npm:3.14.1"
@@ -8742,6 +8964,17 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: 10/9e22d80b4d0105b9899135365f746d47466ed53ef4223c529b3c0f7a39907743fdbd3c4379f94f1106f02755b5e90b2faaf84801a891135544e1ea475d1a1379
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "js-yaml@npm:4.1.0"
+  dependencies:
+    argparse: "npm:^2.0.1"
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: 10/c138a34a3fd0d08ebaf71273ad4465569a483b8a639e0b118ff65698d257c2791d3199e3f303631f2cb98213fa7b5f5d6a4621fd0fff819421b990d30d967140
   languageName: node
   linkType: hard
 
@@ -8850,6 +9083,13 @@ __metadata:
   version: 3.3.1
   resolution: "jsonc-parser@npm:3.3.1"
   checksum: 10/9b0dc391f20b47378f843ef1e877e73ec652a5bdc3c5fa1f36af0f119a55091d147a86c1ee86a232296f55c929bba174538c2bf0312610e0817a22de131cc3f4
+  languageName: node
+  linkType: hard
+
+"jsonc-parser@patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch":
+  version: 3.3.1
+  resolution: "jsonc-parser@patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch::version=3.3.1&hash=b69509"
+  checksum: 10/45d1ae6236108e1f7dd2ccde240b50b73ee063075658515302f4721b4df041dda73ca8e3a100b2c81dbe1ecdcdb84e1c3bc48ac25500dcadbf9792e4e7343e02
   languageName: node
   linkType: hard
 
@@ -9215,12 +9455,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:0.30.11":
-  version: 0.30.11
-  resolution: "magic-string@npm:0.30.11"
+"magic-string@npm:0.30.17":
+  version: 0.30.17
+  resolution: "magic-string@npm:0.30.17"
   dependencies:
     "@jridgewell/sourcemap-codec": "npm:^1.5.0"
-  checksum: 10/b784d2240252f5b1e755d487354ada4c672cbca16f045144f7185a75b059210e5fcca7be7be03ef1bac2ca754c4428b21d36ae64a9057ba429916f06b8c54eb2
+  checksum: 10/2f71af2b0afd78c2e9012a29b066d2c8ba45a9cd0c8070f7fd72de982fb1c403b4e3afdb1dae00691d56885ede66b772ef6bedf765e02e3a7066208fe2fec4aa
   languageName: node
   linkType: hard
 
@@ -10564,17 +10804,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:5.0.10":
-  version: 5.0.10
-  resolution: "rimraf@npm:5.0.10"
-  dependencies:
-    glob: "npm:^10.3.7"
-  bin:
-    rimraf: dist/esm/bin.mjs
-  checksum: 10/f3b8ce81eecbde4628b07bdf9e2fa8b684e0caea4999acb1e3b0402c695cd41f28cd075609a808e61ce2672f528ca079f675ab1d8e8d5f86d56643a03e0b8d2e
-  languageName: node
-  linkType: hard
-
 "rollup-plugin-esbuild@npm:6.1.1":
   version: 6.1.1
   resolution: "rollup-plugin-esbuild@npm:6.1.1"
@@ -11576,6 +11805,7 @@ __metadata:
     "@types/node": "npm:22.9.0"
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch"
     esbuild: "npm:esbuild-wasm@^0.23.1"
+    prettier: "npm:3.4.2"
     typescript: "npm:5.5.4"
   languageName: unknown
   linkType: soft

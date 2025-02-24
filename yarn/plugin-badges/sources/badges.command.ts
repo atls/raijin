@@ -3,6 +3,10 @@ import type { LocatorHash }       from '@yarnpkg/core'
 import type { Package }           from '@yarnpkg/core'
 import type { Workspace }         from '@yarnpkg/core'
 
+import { readFileSync }           from 'node:fs'
+import { writeFileSync }          from 'node:fs'
+import { join }                   from 'node:path'
+
 import { BaseCommand }            from '@yarnpkg/cli'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
 import { StreamReport }           from '@yarnpkg/core'
@@ -10,9 +14,6 @@ import { Configuration }          from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
 import { structUtils }            from '@yarnpkg/core'
 import { miscUtils }              from '@yarnpkg/core'
-import { readFileSync }           from 'fs'
-import { writeFileSync }          from 'fs'
-import { join }                   from 'path'
 
 import { SpinnerProgress }        from '@atls/yarn-run-utils'
 

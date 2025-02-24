@@ -20,7 +20,7 @@
     "@atls/cli-ui-error-info-component": "workspace:*",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/cli-ui-schematics-component": "workspace:*",
-    "@atls/schematics": "workspace:*",
+    "@atls/code-schematics": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@yarnpkg/libui": "3.0.1",
     "clipanion": "4.0.0-rc.2",
