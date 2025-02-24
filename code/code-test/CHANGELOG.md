@@ -1,3 +1,9 @@
+## [2.0.15](https://github.com/atls/raijin/compare/@atls/code-test@2.0.14...@atls/code-test@2.0.15) (2025-02-24)
+
+### Bug Fixes
+
+- **common:** yarn check ([#485](https://github.com/atls/raijin/issues/485)) ([b0c3cfa](https://github.com/atls/raijin/commit/b0c3cfad8f559c55691ca733c7a3a7b3cd00c4d8))
+
 ## [2.0.14](https://github.com/atls/raijin/compare/@atls/code-test@2.0.14...@atls/code-test@2.0.14) (2025-01-30)
 
 ### Bug Fixes

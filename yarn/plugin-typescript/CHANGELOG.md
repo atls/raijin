@@ -1,3 +1,5 @@
+## [1.0.1](https://github.com/atls/raijin/compare/@atls/yarn-plugin-typescript@1.0.0...@atls/yarn-plugin-typescript@1.0.1) (2025-02-24)
+
 # 1.0.0 (2025-01-30)
 
 ### Bug Fixes

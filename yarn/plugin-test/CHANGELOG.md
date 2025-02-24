@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.2...@atls/yarn-plugin-test@1.0.3) (2025-02-24)
+
+### Bug Fixes
+
+- **common:** yarn check ([#485](https://github.com/atls/raijin/issues/485)) ([b0c3cfa](https://github.com/atls/raijin/commit/b0c3cfad8f559c55691ca733c7a3a7b3cd00c4d8))
+- **schematic:** generate ([#488](https://github.com/atls/raijin/issues/488)) ([c9289d8](https://github.com/atls/raijin/commit/c9289d8a675259a30beb2c0fd6103d98ae6189a1))
+
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.2...@atls/yarn-plugin-test@1.0.2) (2025-01-30)
 
 ### Bug Fixes

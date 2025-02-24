@@ -1,3 +1,5 @@
+## [2.0.13](https://github.com/atls/raijin/compare/@atls/code-typescript@2.0.12...@atls/code-typescript@2.0.13) (2025-02-24)
+
 ## 2.0.12 (2025-01-30)
 
 ### Bug Fixes

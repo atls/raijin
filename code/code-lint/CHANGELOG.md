@@ -1,3 +1,5 @@
+## [2.0.8](https://github.com/atls/raijin/compare/@atls/code-lint@2.0.7...@atls/code-lint@2.0.8) (2025-02-24)
+
 ## 2.0.7 (2025-01-30)
 
 ### Bug Fixes

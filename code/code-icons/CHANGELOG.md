@@ -1,3 +1,5 @@
+## [2.0.10](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.9...@atls/code-icons@2.0.10) (2025-02-24)
+
 ## 2.0.9 (2025-01-30)
 
 ### Bug Fixes

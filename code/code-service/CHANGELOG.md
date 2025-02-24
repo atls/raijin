@@ -1,3 +1,5 @@
+## [2.1.2](https://github.com/atls/raijin/compare/@atls/code-service@2.1.1...@atls/code-service@2.1.2) (2025-02-24)
+
 ## 2.1.1 (2025-01-30)
 
 ### Bug Fixes

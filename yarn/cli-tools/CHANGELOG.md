@@ -1,3 +1,9 @@
+## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-cli-tools@1.0.10...@atls/yarn-cli-tools@1.0.11) (2025-02-24)
+
+### Bug Fixes
+
+- **schematic:** generate ([#488](https://github.com/atls/raijin/issues/488)) ([c9289d8](https://github.com/atls/raijin/commit/c9289d8a675259a30beb2c0fd6103d98ae6189a1))
+
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-cli-tools@1.0.9...@atls/yarn-cli-tools@1.0.10) (2025-01-30)
 
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-cli-tools@1.0.8...@atls/yarn-cli-tools@1.0.9) (2025-01-30)
