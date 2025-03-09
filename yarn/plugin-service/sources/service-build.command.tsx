@@ -4,7 +4,6 @@ import { Filename }               from '@yarnpkg/fslib'
 import { scriptUtils }            from '@yarnpkg/core'
 import { execUtils }              from '@yarnpkg/core'
 import { xfs }                    from '@yarnpkg/fslib'
-import { Option }                 from 'clipanion'
 import { render }                 from 'ink'
 import React                      from 'react'
 
@@ -16,9 +15,7 @@ import { renderStatic }           from '@atls/cli-ui-renderer-static-component'
 import { AbstractServiceCommand } from './abstract-service.command.jsx'
 
 export class ServiceBuildCommand extends AbstractServiceCommand {
-  static paths = [['service', 'build']]
-
-  showWarnings = Option.Boolean('-w,--show-warnings', false)
+  static override paths = [['service', 'build']]
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''

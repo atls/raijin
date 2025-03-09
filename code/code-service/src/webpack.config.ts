@@ -76,7 +76,8 @@ export class WebpackConfig {
         },
       },
       externals,
-      externalsType: environment === 'production' ? (type === 'module' ? 'import' : 'commonjs') : 'commonjs2',
+      externalsType:
+        environment === 'production' ? (type === 'module' ? 'import' : 'commonjs') : 'commonjs2',
       externalsPresets: {
         node: true,
       },
