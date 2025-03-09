@@ -1,3 +1,9 @@
+## [2.1.5](https://github.com/atls/raijin/compare/@atls/code-service@2.1.4...@atls/code-service@2.1.5) (2025-03-09)
+
+### Bug Fixes
+
+- **service:** logs ([#496](https://github.com/atls/raijin/issues/496)) ([a6f51f7](https://github.com/atls/raijin/commit/a6f51f77ca0efff03e7d9a6f060d7d5faec5ae97))
+
 ## [2.1.4](https://github.com/atls/raijin/compare/@atls/code-service@2.1.3...@atls/code-service@2.1.4) (2025-03-09)
 
 ### Features
