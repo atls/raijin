@@ -17,7 +17,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "jsr": "0.13.2"
+    "jsr": "0.13.4"
   },
   "publishConfig": {
     "access": "public",

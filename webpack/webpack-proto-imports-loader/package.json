@@ -25,12 +25,12 @@
     "@atls/config-typescript": "workspace:*",
     "@monstrs/types-import-proto": "0.0.1",
     "@types/file-loader": "5.0.4",
-    "@types/node": "22.9.0",
+    "@types/node": "22.13.10",
     "@types/protocol-buffers-schema": "3.4.3",
     "memfs": "4.6.0",
-    "ts-loader": "9.5.1",
+    "ts-loader": "9.5.2",
     "typescript": "5.5.4",
-    "webpack": "5.97.1"
+    "webpack": "5.98.0"
   },
   "publishConfig": {
     "access": "public",

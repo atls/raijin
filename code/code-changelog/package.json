@@ -21,7 +21,7 @@
     "conventional-changelog-angular": "^8.0.0"
   },
   "devDependencies": {
-    "@types/conventional-changelog": "3.1.5"
+    "@types/conventional-changelog": "6.0.0"
   },
   "publishConfig": {
     "access": "public",

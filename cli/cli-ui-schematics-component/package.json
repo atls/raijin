@@ -16,8 +16,8 @@
     "postpack": "rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "22.9.0",
-    "@types/react": "18.3.12",
+    "@types/node": "22.13.10",
+    "@types/react": "18.3.18",
     "@yarnpkg/libui": "3.0.1",
     "camelcase": "8.0.0",
     "figures": "6.1.0",
