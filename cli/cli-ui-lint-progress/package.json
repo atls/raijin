@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-lint-progress-component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

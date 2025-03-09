@@ -1,3 +1,9 @@
+## [2.0.14](https://github.com/atls/raijin/compare/@atls/code-typescript@2.0.13...@atls/code-typescript@2.0.14) (2025-03-09)
+
+### Features
+
+- **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
 ## [2.0.13](https://github.com/atls/raijin/compare/@atls/code-typescript@2.0.12...@atls/code-typescript@2.0.13) (2025-02-24)
 
 ## 2.0.12 (2025-01-30)

@@ -1,3 +1,9 @@
+## [2.1.5](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.4...@atls/code-runtime@2.1.5) (2025-03-09)
+
+### Features
+
+- **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
 ## [2.1.4](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.3...@atls/code-runtime@2.1.4) (2025-02-24)
 
 ### Bug Fixes

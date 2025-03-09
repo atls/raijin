@@ -1,3 +1,9 @@
+## [2.1.3](https://github.com/atls/raijin/compare/@atls/code-service@2.1.2...@atls/code-service@2.1.3) (2025-03-09)
+
+### Features
+
+- **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
 ## [2.1.2](https://github.com/atls/raijin/compare/@atls/code-service@2.1.1...@atls/code-service@2.1.2) (2025-02-24)
 
 ## 2.1.1 (2025-01-30)

@@ -1,3 +1,9 @@
+## [2.0.6](https://github.com/atls/raijin/compare/@atls/code-pack@2.0.5...@atls/code-pack@2.0.6) (2025-03-09)
+
+### Features
+
+- **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
 ## 2.0.5 (2025-01-30)
 
 ### Bug Fixes
