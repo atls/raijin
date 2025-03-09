@@ -1,3 +1,9 @@
+## [2.1.4](https://github.com/atls/raijin/compare/@atls/code-service@2.1.3...@atls/code-service@2.1.4) (2025-03-09)
+
+### Features
+
+- **runtime:** update config ([#495](https://github.com/atls/raijin/issues/495)) ([a0d9d40](https://github.com/atls/raijin/commit/a0d9d40b1ddc15e194bbf7ebaa04cc01a50ff750))
+
 ## [2.1.3](https://github.com/atls/raijin/compare/@atls/code-service@2.1.2...@atls/code-service@2.1.3) (2025-03-09)
 
 ### Features

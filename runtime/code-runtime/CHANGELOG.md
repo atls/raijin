@@ -1,3 +1,9 @@
+## [2.1.7](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.5...@atls/code-runtime@2.1.7) (2025-03-09)
+
+### Features
+
+- **runtime:** update config ([#495](https://github.com/atls/raijin/issues/495)) ([a0d9d40](https://github.com/atls/raijin/commit/a0d9d40b1ddc15e194bbf7ebaa04cc01a50ff750))
+
 ## [2.1.5](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.4...@atls/code-runtime@2.1.5) (2025-03-09)
 
 ### Features

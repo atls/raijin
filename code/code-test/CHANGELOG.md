@@ -1,3 +1,9 @@
+## [2.0.16](https://github.com/atls/raijin/compare/@atls/code-test@2.0.15...@atls/code-test@2.0.16) (2025-03-09)
+
+### Features
+
+- **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
 ## [2.0.15](https://github.com/atls/raijin/compare/@atls/code-test@2.0.15...@atls/code-test@2.0.15) (2025-03-09)
 
 ### Features
