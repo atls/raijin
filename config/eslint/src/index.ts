@@ -8,7 +8,6 @@ import parser                 from '@typescript-eslint/parser'
 import jsxA11yPlugin          from 'eslint-plugin-jsx-a11y'
 import nodePlugin             from 'eslint-plugin-n'
 import reactPlugin            from 'eslint-plugin-react'
-// @ts-expect-error: Invalid import
 import reactHooksPlugin       from 'eslint-plugin-react-hooks'
 // @ts-expect-error: Invalid import
 import securityPlugin         from 'eslint-plugin-security'
@@ -40,7 +39,6 @@ const config: Array<Linter.Config> = [
       'jsx-a11y': jsxA11yPlugin,
       n: nodePlugin,
       security: securityPlugin,
-      // @ts-expect-error: Invalid types
       react: reactPlugin,
     },
     linterOptions: {
