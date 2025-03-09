@@ -22,7 +22,7 @@
     "ignore": "5.3.2"
   },
   "devDependencies": {
-    "@types/node": "22.9.0"
+    "@types/node": "22.13.10"
   },
   "peerDependencies": {
     "react": "*",

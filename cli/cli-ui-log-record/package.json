@@ -28,8 +28,8 @@
     "uniqolor": "1.1.1"
   },
   "devDependencies": {
-    "@types/node": "22.9.0",
-    "@types/react": "18.3.12",
+    "@types/node": "22.13.10",
+    "@types/react": "18.3.18",
     "ink": "3.2.0",
     "react": "18.3.1",
     "strip-ansi": "7.1.0"
