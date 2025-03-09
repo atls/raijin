@@ -43,7 +43,7 @@ export class WebpackConfig {
     return {
       mode: environment,
       bail: environment === 'production',
-      target: 'async-node',
+      target: 'node',
       optimization: { minimize: false },
       experiments: {
         outputModule: type === 'module',
@@ -76,7 +76,7 @@ export class WebpackConfig {
         },
       },
       externals,
-      externalsType: type === 'module' ? 'import' : 'commonjs',
+      externalsType: environment === 'production' ? (type === 'module' ? 'import' : 'commonjs') : 'commonjs2',
       externalsPresets: {
         node: true,
       },
@@ -107,7 +107,6 @@ export class WebpackConfig {
           { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
           { test: /\.(md)$/i, type: 'asset/resource' },
           { test: /\.node$/, use: this.loaders.nodeLoader },
-          { test: /\.proto$/, use: { loader: this.loaders.protoLoader } },
         ],
       },
     }
