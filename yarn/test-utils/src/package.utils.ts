@@ -163,6 +163,7 @@ export class PackageUtils {
     pack.pipe(write)
 
     await new Promise((resolve) => {
+      // @ts-expect-error missing args
       write.on('finish', resolve)
     })
 
