@@ -1,5 +1,3 @@
-import type { Options }      from 'conventional-changelog'
-
 import { readFile }          from 'node:fs/promises'
 import { writeFile }         from 'node:fs/promises'
 import { join }              from 'node:path'
@@ -28,7 +26,7 @@ export class Changelog {
     file,
     releaseCount,
   }: GenerateOptions): Promise<string> {
-    const config: Options = {
+    const config: conventionalChangelog.Options = {
       lernaPackage: `${packageName}`,
       tagPrefix,
       // eslint-disable-next-line no-console
@@ -50,7 +48,7 @@ export class Changelog {
     return this.generateToStdOut(config)
   }
 
-  private async generateToStdOut(config: Options): Promise<string> {
+  private async generateToStdOut(config: conventionalChangelog.Options): Promise<string> {
     return new Promise((resolve, reject) => {
       const changelogStream = conventionalChangelog(config, undefined, {
         path: dirname(config.pkg?.path ?? './'),
@@ -70,7 +68,10 @@ export class Changelog {
     })
   }
 
-  private async generateToFile(config: Options, path: string): Promise<string> {
+  private async generateToFile(
+    config: conventionalChangelog.Options,
+    path: string
+  ): Promise<string> {
     const outFile = join(path, 'CHANGELOG.md')
 
     try {
