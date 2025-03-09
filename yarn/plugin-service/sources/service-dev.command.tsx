@@ -4,7 +4,6 @@ import { Filename }               from '@yarnpkg/fslib'
 import { scriptUtils }            from '@yarnpkg/core'
 import { execUtils }              from '@yarnpkg/core'
 import { xfs }                    from '@yarnpkg/fslib'
-import { Option }                 from 'clipanion'
 import { render }                 from 'ink'
 import React                      from 'react'
 
@@ -15,8 +14,6 @@ import { AbstractServiceCommand } from './abstract-service.command.jsx'
 
 export class ServiceDevCommand extends AbstractServiceCommand {
   static override paths = [['service', 'dev']]
-
-  override showWarnings = Option.Boolean('-w,--show-warnings', false)
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
@@ -58,8 +55,7 @@ export class ServiceDevCommand extends AbstractServiceCommand {
 
     try {
       await service.watch((logRecord) => {
-        // @ts-expect-error body is undefined
-        console.log(logRecord?.body ?? logRecord) // eslint-disable-line no-console
+        this.renderLogRecord(logRecord)
       })
 
       return 0
