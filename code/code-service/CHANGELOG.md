@@ -1,3 +1,9 @@
+## [2.1.6](https://github.com/atls/raijin/compare/@atls/code-service@2.1.5...@atls/code-service@2.1.6) (2025-03-25)
+
+### Bug Fixes
+
+- **code-service:** webpack config to account for module type ([#498](https://github.com/atls/raijin/issues/498)) ([24314cc](https://github.com/atls/raijin/commit/24314ccd3767ed6e4c0b3f1cd1b4e7b5aa2d29e1))
+
 ## [2.1.5](https://github.com/atls/raijin/compare/@atls/code-service@2.1.4...@atls/code-service@2.1.5) (2025-03-09)
 
 ### Bug Fixes

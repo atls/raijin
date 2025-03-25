@@ -1,3 +1,9 @@
+## [1.1.12](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.11...@atls/yarn-cli@1.1.12) (2025-03-25)
+
+### Bug Fixes
+
+- **code-service:** webpack config to account for module type ([#498](https://github.com/atls/raijin/issues/498)) ([24314cc](https://github.com/atls/raijin/commit/24314ccd3767ed6e4c0b3f1cd1b4e7b5aa2d29e1))
+
 ## [1.1.10](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.10...@atls/yarn-cli@1.1.10) (2025-03-09)
 
 ## [1.1.9](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.8...@atls/yarn-cli@1.1.9) (2025-03-09)
