@@ -38,7 +38,7 @@ export class WebpackConfig {
     const webpackExternals = new WebpackExternals(this.cwd)
     const externals = ['webpack/hot/poll?100', await webpackExternals.build()]
 
-    const plugins = this.createPlugins(environment, additionalPlugins)
+    const plugins = this.createPlugins(environment, additionalPlugins, type === 'module')
 
     return {
       mode: environment,
@@ -126,7 +126,8 @@ export class WebpackConfig {
 
   private createPlugins(
     environment: string,
-    additionalPlugins: Array<wp.WebpackPluginInstance>
+    additionalPlugins: Array<wp.WebpackPluginInstance>,
+    isEsm: boolean,
   ): Array<wp.WebpackPluginInstance> {
     const plugins: Array<wp.WebpackPluginInstance> = [
       new this.webpack.IgnorePlugin({
@@ -153,14 +154,17 @@ export class WebpackConfig {
       ...additionalPlugins,
     ]
 
-    if (environment === 'development') {
-      plugins.push(new this.webpack.HotModuleReplacementPlugin())
+    if (isEsm) {
       plugins.push(
         new this.webpack.BannerPlugin({
           banner: `import { createRequire } from 'node:module'\nimport { fileURLToPath } from 'node:url'\nconst require = createRequire(import.meta.url)\nconst __filename = fileURLToPath(import.meta.url)\n`,
           raw: true,
         })
       )
+    }
+
+    if (environment === 'development') {
+      plugins.push(new this.webpack.HotModuleReplacementPlugin())
     }
 
     return plugins
