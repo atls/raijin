@@ -1,3 +1,9 @@
+## [2.0.18](https://github.com/atls/raijin/compare/@atls/code-test@2.0.17...@atls/code-test@2.0.18) (2025-03-31)
+
+### Bug Fixes
+
+- **code-test:** unit test timeout ([#500](https://github.com/atls/raijin/issues/500)) ([665baaf](https://github.com/atls/raijin/commit/665baafbea37fba66fb6ceedb1c415d7ef13cbb6))
+
 ## [2.0.17](https://github.com/atls/raijin/compare/@atls/code-test@2.0.16...@atls/code-test@2.0.17) (2025-03-25)
 
 ## [2.0.16](https://github.com/atls/raijin/compare/@atls/code-test@2.0.15...@atls/code-test@2.0.16) (2025-03-09)
