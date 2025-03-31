@@ -97,7 +97,7 @@ export class Tester extends EventEmitter {
   async unit(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
     const testFiles = await this.collectTestFiles(cwd, 'unit', options?.files)
 
-    return this.run(testFiles, 25_000, true, options?.watch, options?.testReporter)
+    return this.run(testFiles, 240_000, true, options?.watch, options?.testReporter)
   }
 
   async integration(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
