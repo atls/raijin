@@ -127,7 +127,7 @@ export class WebpackConfig {
   private createPlugins(
     environment: string,
     additionalPlugins: Array<wp.WebpackPluginInstance>,
-    isEsm: boolean,
+    isEsm: boolean
   ): Array<wp.WebpackPluginInstance> {
     const plugins: Array<wp.WebpackPluginInstance> = [
       new this.webpack.IgnorePlugin({

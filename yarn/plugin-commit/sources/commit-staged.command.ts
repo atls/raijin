@@ -1,7 +1,8 @@
+import { execSync }    from 'node:child_process'
+
 import { BaseCommand } from '@yarnpkg/cli'
 import { Option }      from 'clipanion'
 import lintStaged      from 'lint-staged'
-import { execSync } from 'node:child_process'
 
 const config: lintStaged.Config = {
   '*.{yml,yaml,json,graphql,md}': 'yarn format',
@@ -17,18 +18,18 @@ export class CommitStagedCommand extends BaseCommand {
 
   async execute(): Promise<number> {
     try {
-      let safeMaxArgLength = 8190;
+      let safeMaxArgLength = 8190
 
       try {
-        const ARG_MAX = parseInt(execSync('getconf ARG_MAX', { encoding: 'utf-8' }), 10);
+        const ARG_MAX = parseInt(execSync('getconf ARG_MAX', { encoding: 'utf-8' }), 10)
 
-        safeMaxArgLength = Math.floor(ARG_MAX * 0.5);
+        safeMaxArgLength = Math.floor(ARG_MAX * 0.5)
       } catch {}
 
       // @ts-expect-error: Fix import
       const passed = await lintStaged({
         config,
-        maxArgLength: safeMaxArgLength
+        maxArgLength: safeMaxArgLength,
       })
 
       return passed ? 0 : 1
