@@ -1,3 +1,9 @@
+## [2.1.6](https://github.com/atls/raijin/compare/@atls/code-service@2.1.6...@atls/code-service@2.1.6) (2025-04-09)
+
+### Bug Fixes
+
+- **code-commit:** max arg length ([#502](https://github.com/atls/raijin/issues/502)) ([31f95d1](https://github.com/atls/raijin/commit/31f95d1a36a787ec6f45c61a0004402219f3312b))
+
 ## [2.1.6](https://github.com/atls/raijin/compare/@atls/code-service@2.1.5...@atls/code-service@2.1.6) (2025-03-25)
 
 ### Bug Fixes

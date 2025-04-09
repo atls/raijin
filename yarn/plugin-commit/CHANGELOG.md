@@ -1,3 +1,14 @@
+## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.4...@atls/yarn-plugin-commit@1.0.5) (2025-04-09)
+
+### Bug Fixes
+
+- **code-commit:** max arg length ([#502](https://github.com/atls/raijin/issues/502)) ([31f95d1](https://github.com/atls/raijin/commit/31f95d1a36a787ec6f45c61a0004402219f3312b))
+- **common:** yarn check ([#485](https://github.com/atls/raijin/issues/485)) ([b0c3cfa](https://github.com/atls/raijin/commit/b0c3cfad8f559c55691ca733c7a3a7b3cd00c4d8))
+
+### Features
+
+- **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
 ## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.4...@atls/yarn-plugin-commit@1.0.4) (2025-03-09)
 
 ### Bug Fixes
