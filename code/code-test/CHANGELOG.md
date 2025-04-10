@@ -1,3 +1,9 @@
+## [2.0.19](https://github.com/atls/raijin/compare/@atls/code-test@2.0.18...@atls/code-test@2.0.19) (2025-04-10)
+
+### Bug Fixes
+
+- **plugin-checks:** checks run ([#503](https://github.com/atls/raijin/issues/503)) ([7fc5115](https://github.com/atls/raijin/commit/7fc5115dd1b7122e4edb14996ece7edf7cee98c8))
+
 ## [2.0.18](https://github.com/atls/raijin/compare/@atls/code-test@2.0.17...@atls/code-test@2.0.18) (2025-03-31)
 
 ### Bug Fixes
