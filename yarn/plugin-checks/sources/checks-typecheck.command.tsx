@@ -68,72 +68,80 @@ class ChecksTypeCheckCommand extends BaseCommand {
       async (report) => {
         const checks = new GitHubChecks('TypeCheck')
 
-        const { id: checkId } = await checks.start()
-
-        await report.startTimerPromise('TypeCheck', async () => {
-          try {
-            const typescript = await TypeScript.initialize(project.cwd)
-
-            const diagnostics = await typescript.check(await this.getIncludes(project))
-
-            diagnostics.forEach((diagnostic: ts.Diagnostic) => {
-              const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
-
-              output.split('\n').forEach((line) => {
-                report.reportInfo(MessageName.UNNAMED, line)
-              })
-            })
-
-            const annotations: Array<Annotation> = []
-
-            diagnostics.forEach((diagnostic: ts.Diagnostic) => {
-              if (diagnostic.file) {
-                const position = diagnostic.start
-                  ? diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start)
-                  : null
-
-                annotations.push({
-                  path: ppath.normalize(
-                    ppath.relative(project.cwd, diagnostic.file.fileName as PortablePath)
-                  ),
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  title: flattenDiagnosticMessageText(diagnostic.messageText, EOL)
-                    .split(EOL)
-                    .at(0)!,
-                  message: flattenDiagnosticMessageText(diagnostic.messageText, EOL),
-                  start_line: position ? position.line + 1 : 0,
-                  end_line: position ? position.line + 1 : 0,
-                  raw_details: position
-                    ? codeFrameColumns(
-                        // eslint-disable-next-line n/no-sync
-                        xfs.readFileSync(diagnostic.file.fileName as PortablePath).toString(),
-                        {
-                          start: {
-                            line: position.line + 1,
-                            column: position.character + 1,
-                          },
-                        },
-                        { highlightCode: false }
-                      )
-                    : flattenDiagnosticMessageText(diagnostic.messageText, EOL),
-                  annotation_level: AnnotationLevel.Failure,
+        try {
+          const { id: checkId } = await checks.start()
+  
+          await report.startTimerPromise('TypeCheck', async () => {
+            try {
+              const typescript = await TypeScript.initialize(project.cwd)
+  
+              const diagnostics = await typescript.check(await this.getIncludes(project))
+  
+              diagnostics.forEach((diagnostic: ts.Diagnostic) => {
+                const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
+  
+                output.split('\n').forEach((line) => {
+                  report.reportInfo(MessageName.UNNAMED, line)
                 })
-              }
-            })
+              })
+  
+              const annotations: Array<Annotation> = []
+  
+              diagnostics.forEach((diagnostic: ts.Diagnostic) => {
+                if (diagnostic.file) {
+                  const position = diagnostic.start
+                    ? diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start)
+                    : null
+  
+                  annotations.push({
+                    path: ppath.normalize(
+                      ppath.relative(project.cwd, diagnostic.file.fileName as PortablePath)
+                    ),
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    title: flattenDiagnosticMessageText(diagnostic.messageText, EOL)
+                      .split(EOL)
+                      .at(0)!,
+                    message: flattenDiagnosticMessageText(diagnostic.messageText, EOL),
+                    start_line: position ? position.line + 1 : 0,
+                    end_line: position ? position.line + 1 : 0,
+                    raw_details: position
+                      ? codeFrameColumns(
+                          // eslint-disable-next-line n/no-sync
+                          xfs.readFileSync(diagnostic.file.fileName as PortablePath).toString(),
+                          {
+                            start: {
+                              line: position.line + 1,
+                              column: position.character + 1,
+                            },
+                          },
+                          { highlightCode: false }
+                        )
+                      : flattenDiagnosticMessageText(diagnostic.messageText, EOL),
+                    annotation_level: AnnotationLevel.Failure,
+                  })
+                }
+              })
+  
+              await checks.complete(checkId, {
+                title: diagnostics.length > 0 ? `Errors ${annotations.length}` : 'Successful',
+                summary:
+                  diagnostics.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
+                annotations,
+              })
+            } catch (error) {
+              await checks.failure({
+                title: 'TypeCheck run failed',
+                summary: error instanceof Error ? error.message : (error as string),
+              })
+            }
+          })
+        } catch (error) {
+          await checks.failure({
+            title: 'TypeCheck start failed',
+            summary: error instanceof Error ? error.message : (error as string),
+          })
+        }
 
-            await checks.complete(checkId, {
-              title: diagnostics.length > 0 ? `Errors ${annotations.length}` : 'Successful',
-              summary:
-                diagnostics.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
-              annotations,
-            })
-          } catch (error) {
-            await checks.failure({
-              title: 'TypeCheck run failed',
-              summary: error instanceof Error ? error.message : (error as string),
-            })
-          }
-        })
       }
     )
 
