@@ -23,6 +23,9 @@ class ChecksRunCommand extends BaseCommand {
         await Promise.allSettled([
           this.runCheck(project.cwd, ['lint'], report),
           this.runCheck(project.cwd, ['typecheck'], report),
+        ])
+
+        await Promise.allSettled([
           this.runCheck(project.cwd, ['test', 'unit'], report),
           this.runCheck(project.cwd, ['test', 'integration'], report),
         ])
