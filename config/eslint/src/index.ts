@@ -8,6 +8,7 @@ import parser                 from '@typescript-eslint/parser'
 import jsxA11yPlugin          from 'eslint-plugin-jsx-a11y'
 import nodePlugin             from 'eslint-plugin-n'
 import reactPlugin            from 'eslint-plugin-react'
+import reactCompilerPlugin    from 'eslint-plugin-react-compiler'
 import reactHooksPlugin       from 'eslint-plugin-react-hooks'
 // @ts-expect-error: Invalid import
 import securityPlugin         from 'eslint-plugin-security'
@@ -32,6 +33,7 @@ const config: Array<Linter.Config> = [
     },
     plugins: {
       'eslint-plugin-react-hooks': reactHooksPlugin,
+      'eslint-plugin-react-compiler': reactCompilerPlugin,
       // @ts-expect-error: Invalid types
       '@typescript-eslint': typescriptEslintPlugin,
       'react-hooks': reactHooksPlugin,
