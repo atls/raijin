@@ -1,3 +1,9 @@
+## [2.0.8](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.7...@atls/config-eslint@2.0.8) (2025-05-05)
+
+### Features
+
+- **config-eslint:** add eslint-plugin-react-compiler ([c72c484](https://github.com/atls/raijin/commit/c72c4847cff0249da3369893d9091e37712a3e67))
+
 ## 2.0.7 (2025-03-09)
 
 ### Bug Fixes

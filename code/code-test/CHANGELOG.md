@@ -1,3 +1,5 @@
+## [2.0.20](https://github.com/atls/raijin/compare/@atls/code-test@2.0.19...@atls/code-test@2.0.20) (2025-05-05)
+
 ## [2.0.19](https://github.com/atls/raijin/compare/@atls/code-test@2.0.18...@atls/code-test@2.0.19) (2025-04-10)
 
 ### Bug Fixes
