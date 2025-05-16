@@ -58,7 +58,7 @@ export class WebpackConfig {
         path: join(this.cwd, 'dist'),
         filename: '[name].js',
         library: { type },
-        chunkFormat: type,
+        chunkFormat: environment === 'development' ? 'commonjs' : type, // WARNING: leave until HMR supports ESM for chunks import
         module: type === 'module',
         clean: false,
         assetModuleFilename: 'assets/[name][ext]',
