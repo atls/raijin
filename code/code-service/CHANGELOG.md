@@ -1,3 +1,9 @@
+## [2.1.8](https://github.com/atls/raijin/compare/@atls/code-service@2.1.7...@atls/code-service@2.1.8) (2025-05-16)
+
+### Bug Fixes
+
+- **code-service:** chunk output format ([#505](https://github.com/atls/raijin/issues/505)) ([0250172](https://github.com/atls/raijin/commit/0250172c580c814a4f4d393ebb1f490777c256ae))
+
 ## [2.1.7](https://github.com/atls/raijin/compare/@atls/code-service@2.1.6...@atls/code-service@2.1.7) (2025-05-05)
 
 ### Bug Fixes
