@@ -1,3 +1,9 @@
+## [2.1.9](https://github.com/atls/raijin/compare/@atls/code-service@2.1.8...@atls/code-service@2.1.9) (2025-05-16)
+
+### Reverts
+
+- **code-service:** hmr chunk format ([#506](https://github.com/atls/raijin/issues/506)) ([48c99ff](https://github.com/atls/raijin/commit/48c99ff7f933a05236a5b26fae9f13f8fd922546))
+
 ## [2.1.8](https://github.com/atls/raijin/compare/@atls/code-service@2.1.7...@atls/code-service@2.1.8) (2025-05-16)
 
 ### Bug Fixes
