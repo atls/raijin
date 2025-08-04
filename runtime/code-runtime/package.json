@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-runtime",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

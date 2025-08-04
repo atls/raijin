@@ -1,3 +1,9 @@
+## [2.0.12](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.12...@atls/code-icons@2.0.12) (2025-08-04)
+
+### Features
+
+- **common:** skiplibcheck ([765249d](https://github.com/atls/raijin/commit/765249d12ec7b7f932777892c331b58da6eb5bb2))
+
 ## [2.0.12](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.11...@atls/code-icons@2.0.12) (2025-05-05)
 
 ## [2.0.11](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.10...@atls/code-icons@2.0.11) (2025-03-25)

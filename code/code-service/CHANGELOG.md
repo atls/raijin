@@ -1,3 +1,9 @@
+## [2.1.10](https://github.com/atls/raijin/compare/@atls/code-service@2.1.9...@atls/code-service@2.1.10) (2025-08-04)
+
+### Features
+
+- **common:** skiplibcheck ([765249d](https://github.com/atls/raijin/commit/765249d12ec7b7f932777892c331b58da6eb5bb2))
+
 ## [2.1.9](https://github.com/atls/raijin/compare/@atls/code-service@2.1.8...@atls/code-service@2.1.9) (2025-05-16)
 
 ### Reverts

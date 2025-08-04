@@ -1,3 +1,9 @@
+## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.9...@atls/yarn-plugin-test@1.0.10) (2025-08-04)
+
+### Features
+
+- **code:** test ignore ([e51d8e7](https://github.com/atls/raijin/commit/e51d8e7896b890e582e718e37362c2ca09e5dabb))
+
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.8...@atls/yarn-plugin-test@1.0.9) (2025-05-05)
 
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.7...@atls/yarn-plugin-test@1.0.8) (2025-04-10)

@@ -1,3 +1,9 @@
+## [2.0.21](https://github.com/atls/raijin/compare/@atls/code-test@2.0.20...@atls/code-test@2.0.21) (2025-08-04)
+
+### Features
+
+- **code:** test ignore ([e51d8e7](https://github.com/atls/raijin/commit/e51d8e7896b890e582e718e37362c2ca09e5dabb))
+
 ## [2.0.20](https://github.com/atls/raijin/compare/@atls/code-test@2.0.19...@atls/code-test@2.0.20) (2025-05-05)
 
 ## [2.0.19](https://github.com/atls/raijin/compare/@atls/code-test@2.0.18...@atls/code-test@2.0.19) (2025-04-10)
