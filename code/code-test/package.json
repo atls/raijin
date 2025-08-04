@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@atls/code-runtime": "workspace:*",
-    "globby": "13.2.2"
+    "globby": "13.2.2",
+    "ignore": "5.3.2"
   },
   "devDependencies": {
     "@types/node": "22.13.10"

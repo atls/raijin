@@ -788,6 +788,7 @@ __metadata:
     "@atls/code-runtime": "workspace:*"
     "@types/node": "npm:22.13.10"
     globby: "npm:13.2.2"
+    ignore: "npm:5.3.2"
   languageName: unknown
   linkType: soft
 

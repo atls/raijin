@@ -1754,7 +1754,8 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-test", "workspace:code/code-test"],\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@types/node", "npm:22.13.10"],\
-          ["globby", "npm:13.2.2"]\
+          ["globby", "npm:13.2.2"],\
+          ["ignore", "npm:5.3.2"]\
         ],\
         "linkType": "SOFT"\
       }]\
