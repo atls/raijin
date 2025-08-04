@@ -21,9 +21,11 @@ export class CommitStagedCommand extends BaseCommand {
       let safeMaxArgLength = 8190
 
       try {
+        // eslint-disable-next-line n/no-sync
         const ARG_MAX = parseInt(execSync('getconf ARG_MAX', { encoding: 'utf-8' }), 10)
 
         safeMaxArgLength = Math.floor(ARG_MAX * 0.5)
+        // eslint-disable-next-line no-empty
       } catch {}
 
       // @ts-expect-error: Fix import

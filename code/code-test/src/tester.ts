@@ -1,12 +1,15 @@
-/* eslint-disable @typescript-eslint/member-ordering */
-
 import type { TestEvent } from 'node:test/reporters'
 
 import EventEmitter       from 'node:events'
+import { readFileSync }   from 'node:fs'
+/* eslint-disable @typescript-eslint/member-ordering */
+import { relative }       from 'node:path'
+import { join }           from 'node:path'
 import { run }            from 'node:test'
 import { tap }            from 'node:test/reporters'
 
 import { globby }         from 'globby'
+import ignorer            from 'ignore'
 
 import { Tests }          from './tests.js'
 
@@ -19,9 +22,12 @@ type TestOptions = {
 }
 
 export class Tester extends EventEmitter {
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-  constructor() {
+  private ignore: ignorer.Ignore
+
+  constructor(private readonly cwd: string) {
     super()
+
+    this.ignore = ignorer.default().add(this.getProjectIgnorePatterns())
   }
 
   protected async run(
@@ -90,26 +96,38 @@ export class Tester extends EventEmitter {
     }
   }
 
-  static async initialize(): Promise<Tester> {
-    return new Tester()
+  static async initialize(cwd: string): Promise<Tester> {
+    return new Tester(cwd)
   }
 
   async unit(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
     const testFiles = await this.collectTestFiles(cwd, 'unit', options?.files)
 
-    return this.run(testFiles, 240_000, true, options?.watch, options?.testReporter)
+    const finalFiles = testFiles.filter(
+      (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
+    )
+
+    return this.run(finalFiles, 240_000, true, options?.watch, options?.testReporter)
   }
 
   async integration(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
     const testFiles = await this.collectTestFiles(cwd, 'integration', options?.files)
 
-    return this.run(testFiles, 420_000, false, options?.watch, options?.testReporter)
+    const finalFiles = testFiles.filter(
+      (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
+    )
+
+    return this.run(finalFiles, 420_000, false, options?.watch, options?.testReporter)
   }
 
   async general(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
     const testFiles = await this.collectTestFiles(cwd, undefined, options?.files)
 
-    return this.run(testFiles, 420_000, true, options?.watch, options?.testReporter)
+    const finalFiles = testFiles.filter(
+      (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
+    )
+
+    return this.run(finalFiles, 420_000, true, options?.watch, options?.testReporter)
   }
 
   private async collectTestFiles(
@@ -162,5 +180,14 @@ export class Tester extends EventEmitter {
 
   private isRootPath(pattern: string): boolean {
     return pattern.startsWith('/') || pattern.startsWith('\\')
+  }
+
+  private getProjectIgnorePatterns(): Array<string> {
+    // eslint-disable-next-line n/no-sync
+    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+
+    const { testIgnorePatterns = [] } = JSON.parse(content)
+
+    return testIgnorePatterns as Array<string>
   }
 }

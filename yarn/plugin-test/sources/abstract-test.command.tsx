@@ -151,7 +151,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
         })
     }
 
-    const tester = await Tester.initialize()
+    const tester = await Tester.initialize(this.context.cwd)
 
     tester.on('test:stdout', onStdout)
     tester.on('test:stderr', onStderr)

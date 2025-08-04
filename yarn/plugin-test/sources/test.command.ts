@@ -23,7 +23,7 @@ export class TestCommand extends AbstractTestCommand {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
-    const tester = await Tester.initialize()
+    const tester = await Tester.initialize(this.context.cwd)
 
     try {
       const results = (await tester.general(this.target ?? project.cwd, {

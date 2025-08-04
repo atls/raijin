@@ -72,7 +72,7 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
         const { id: checkId } = await checks.start()
 
         try {
-          const tester = await Tester.initialize()
+          const tester = await Tester.initialize(this.context.cwd)
 
           const results = await tester.integration(project.cwd)
 

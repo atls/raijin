@@ -77,6 +77,7 @@ export class WebpackConfig {
       },
       externals,
       externalsType:
+        // eslint-disable-next-line no-nested-ternary
         environment === 'production' ? (type === 'module' ? 'import' : 'commonjs') : 'commonjs2',
       externalsPresets: {
         node: true,
@@ -98,7 +99,10 @@ export class WebpackConfig {
                 transpileOnly: true,
                 experimentalWatchApi: true,
                 onlyCompileBundledFiles: true,
-                compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
+                compilerOptions: {
+                  ...tsconfig.compilerOptions,
+                  sourceMap: true,
+                },
                 context: this.cwd,
                 configFile,
               },

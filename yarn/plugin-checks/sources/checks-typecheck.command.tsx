@@ -70,29 +70,29 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
         try {
           const { id: checkId } = await checks.start()
-  
+
           await report.startTimerPromise('TypeCheck', async () => {
             try {
               const typescript = await TypeScript.initialize(project.cwd)
-  
+
               const diagnostics = await typescript.check(await this.getIncludes(project))
-  
+
               diagnostics.forEach((diagnostic: ts.Diagnostic) => {
                 const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
-  
+
                 output.split('\n').forEach((line) => {
                   report.reportInfo(MessageName.UNNAMED, line)
                 })
               })
-  
+
               const annotations: Array<Annotation> = []
-  
+
               diagnostics.forEach((diagnostic: ts.Diagnostic) => {
                 if (diagnostic.file) {
                   const position = diagnostic.start
                     ? diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start)
                     : null
-  
+
                   annotations.push({
                     path: ppath.normalize(
                       ppath.relative(project.cwd, diagnostic.file.fileName as PortablePath)
@@ -121,11 +121,13 @@ class ChecksTypeCheckCommand extends BaseCommand {
                   })
                 }
               })
-  
+
               await checks.complete(checkId, {
                 title: diagnostics.length > 0 ? `Errors ${annotations.length}` : 'Successful',
                 summary:
-                  diagnostics.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
+                  diagnostics.length > 0
+                    ? `Found ${annotations.length} errors`
+                    : 'All checks passed',
                 annotations,
               })
             } catch (error) {
@@ -141,7 +143,6 @@ class ChecksTypeCheckCommand extends BaseCommand {
             summary: error instanceof Error ? error.message : (error as string),
           })
         }
-
       }
     )
 
