@@ -1,3 +1,9 @@
+## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.10...@atls/yarn-plugin-checks@1.0.11) (2025-09-15)
+
+### Bug Fixes
+
+- **yarn:** async typescript & linter runs ([#511](https://github.com/atls/raijin/issues/511)) ([511a83b](https://github.com/atls/raijin/commit/511a83b367a19fde9221aa83e35d875c29e52ece))
+
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.9...@atls/yarn-plugin-checks@1.0.10) (2025-08-04)
 
 ### Features
