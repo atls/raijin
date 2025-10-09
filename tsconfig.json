@@ -22,7 +22,7 @@
     "strict": true,
     "sourceMap": false,
     "target": "es2022",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strictPropertyInitialization": false,
     "outDir": "./dist",
     "noImplicitOverride": true,
