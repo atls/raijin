@@ -306,7 +306,6 @@ export const rules: Linter.RulesRecord = {
       ignoreCase: true,
     },
   ],
-  'react/jsx-uses-react': ['error'],
   'react/jsx-uses-vars': ['error'],
   'react/no-deprecated': ['error'],
   'react/no-did-mount-set-state': ['off'],
@@ -325,7 +324,6 @@ export const rules: Linter.RulesRecord = {
       ignorePureComponents: true,
     },
   ],
-  'react/react-in-jsx-scope': ['error'],
   'react/require-render-return': ['error'],
   'react/self-closing-comp': ['error'],
   'react/sort-comp': [
