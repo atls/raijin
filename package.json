@@ -39,7 +39,7 @@
     "prettier": "3.5.3",
     "typescript": "5.5.4"
   },
-  "packageManager": "yarn@4.5.1",
+  "packageManager": "yarn@4.10.3",
   "dependeciesMeta": {
     "jsr": {
       "unplugged": true
