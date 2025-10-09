@@ -15,6 +15,6 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach -pvj 2 --exclude . changelog generate
+        yarn workspaces changed foreach -v --exclude . changelog generate
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
