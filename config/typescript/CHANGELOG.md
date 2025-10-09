@@ -1,3 +1,5 @@
+## [2.0.3](https://github.com/atls/raijin/compare/@atls/config-typescript@2.0.1...@atls/config-typescript@2.0.3) (2025-10-09)
+
 ## 2.0.1 (2025-10-09)
 
 ### Bug Fixes
