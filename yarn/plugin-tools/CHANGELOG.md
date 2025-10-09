@@ -1,9 +1,4 @@
-
-
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.7...@atls/yarn-plugin-tools@1.0.7) (2025-10-09)
-
-
-
 
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.6...@atls/yarn-plugin-tools@1.0.7) (2025-08-04)
 
