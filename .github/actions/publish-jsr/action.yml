@@ -15,6 +15,6 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach -vptj 2 --no-private jsr publish
+        yarn workspaces changed foreach -vt --no-private jsr publish
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
