@@ -1,3 +1,20 @@
+
+
+## [1.0.16](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.15...@atls/yarn-plugin-checks@1.0.16) (2025-11-14)
+
+
+### Bug Fixes
+
+
+* **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
+
+### Reverts
+
+
+* **yarn:** remove react import ([4880057](https://github.com/atls/raijin/commit/4880057b1a563f12e659e8664e0411152e2bb36a))
+
+
+
 ## [1.0.15](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.14...@atls/yarn-plugin-checks@1.0.15) (2025-10-09)
 
 ## [1.0.14](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.13...@atls/yarn-plugin-checks@1.0.14) (2025-10-09)

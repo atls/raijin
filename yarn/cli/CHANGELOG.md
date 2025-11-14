@@ -1,3 +1,15 @@
+
+
+## [1.1.32](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.31...@atls/yarn-cli@1.1.32) (2025-11-14)
+
+
+### Bug Fixes
+
+
+* **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
+
+
+
 ## [1.1.30](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.29...@atls/yarn-cli@1.1.30) (2025-10-09)
 
 ## [1.1.28](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.27...@atls/yarn-cli@1.1.28) (2025-10-09)

@@ -1,3 +1,15 @@
+
+
+## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.9...@atls/yarn-plugin-tools@1.0.10) (2025-11-14)
+
+
+### Bug Fixes
+
+
+* **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
+
+
+
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.8...@atls/yarn-plugin-tools@1.0.9) (2025-10-09)
 
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.7...@atls/yarn-plugin-tools@1.0.8) (2025-10-09)

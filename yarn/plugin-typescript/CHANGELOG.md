@@ -1,3 +1,20 @@
+
+
+## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-typescript@1.0.8...@atls/yarn-plugin-typescript@1.0.9) (2025-11-14)
+
+
+### Bug Fixes
+
+
+* **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
+
+### Reverts
+
+
+* **yarn:** remove react import ([4880057](https://github.com/atls/raijin/commit/4880057b1a563f12e659e8664e0411152e2bb36a))
+
+
+
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-typescript@1.0.7...@atls/yarn-plugin-typescript@1.0.8) (2025-10-09)
 
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-typescript@1.0.6...@atls/yarn-plugin-typescript@1.0.7) (2025-10-09)
