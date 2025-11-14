@@ -11,7 +11,7 @@ import { Formatter }      from '@atls/code-format'
 import { renderStatic }   from '@atls/cli-ui-renderer-static-component'
 
 export class FormatCommand extends BaseCommand {
-  static paths = [['format']]
+  static override paths = [['format']]
 
   files: Array<string> = Option.Rest({ required: 0 })
 

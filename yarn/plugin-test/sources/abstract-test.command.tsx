@@ -91,20 +91,28 @@ export abstract class AbstractTestCommand extends BaseCommand {
     const env = await scriptUtils.makeScriptEnv({ binFolder, project })
 
     if (!env.NODE_OPTIONS?.includes('--no-warnings')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --no-warnings=DeprecationWarning`
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
     }
 
     if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-node-register`
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${
-        pathToFileURL(npath.fromPortablePath(ppath.join(project.cwd, Filename.pnpEsmLoader))).href
-      }`
+
+      const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
+
+      if (await xfs.existsPromise(pnpEsmLoaderPath)) {
+        env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${
+          pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
+        }`
+      }
+
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
     }
 
     if (!env.NODE_OPTIONS?.includes('--enable-source-maps')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --enable-source-maps`
     }
+
+    env.COMMAND_PROXY_EXECUTION = 'true'
 
     const { code } = await execUtils.pipevp('yarn', ['test', type ?? '', ...args], {
       cwd: project.cwd,

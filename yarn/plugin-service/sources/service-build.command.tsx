@@ -24,6 +24,10 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
       return this.executeRegular()
     }
 
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      return this.executeRegular()
+    }
+
     return this.executeProxy()
   }
 
@@ -44,7 +48,10 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+      env: {
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
     })
 
     return code

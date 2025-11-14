@@ -12,6 +12,10 @@ export class TestUnitCommand extends AbstractTestCommand {
       return this.executeRegular('unit')
     }
 
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      return this.executeRegular('unit')
+    }
+
     return this.executeProxy('unit')
   }
 }

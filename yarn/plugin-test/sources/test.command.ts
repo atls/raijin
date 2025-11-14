@@ -16,6 +16,10 @@ export class TestCommand extends AbstractTestCommand {
       return this.executeRegular()
     }
 
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      return this.executeRegular()
+    }
+
     return this.executeProxy()
   }
 
