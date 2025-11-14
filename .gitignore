@@ -41,6 +41,8 @@ node_modules
 
 # This is the Yarn install state cache, it can be rebuilt anytime
 /.yarn/install-state.gz
+/.yarn/sdks
+/.yarn/unplugged
 
 dist/
 !yarn/cli/dist
@@ -56,3 +58,4 @@ fsevents-patch-*.zip
 @rollup-rollup-*-*-npm-*.zip
 .idea
 .vim
+.vscode
