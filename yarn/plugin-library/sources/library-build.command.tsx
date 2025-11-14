@@ -10,7 +10,6 @@ import { execUtils }            from '@yarnpkg/core'
 import { xfs }                  from '@yarnpkg/fslib'
 import { Option }               from 'clipanion'
 import { render }               from 'ink'
-import React                    from 'react'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
 import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component'
@@ -19,7 +18,7 @@ import { TypeScript }           from '@atls/code-typescript'
 import { renderStatic }         from '@atls/cli-ui-renderer-static-component'
 
 export class LibraryBuildCommand extends BaseCommand {
-  static paths = [['library', 'build']]
+  static override paths = [['library', 'build']]
 
   target = Option.String('-t,--target', './dist')
 
@@ -27,6 +26,10 @@ export class LibraryBuildCommand extends BaseCommand {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
     if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
       return this.executeRegular()
     }
 
@@ -51,7 +54,10 @@ export class LibraryBuildCommand extends BaseCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+      env: {
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
     })
 
     return code

@@ -5,7 +5,6 @@ import { scriptUtils }            from '@yarnpkg/core'
 import { execUtils }              from '@yarnpkg/core'
 import { xfs }                    from '@yarnpkg/fslib'
 import { render }                 from 'ink'
-import React                      from 'react'
 
 import { ErrorInfo }              from '@atls/cli-ui-error-info-component'
 import { ServiceProgress }        from '@atls/cli-ui-service-progress-component'
@@ -21,6 +20,10 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
     if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
       return this.executeRegular()
     }
 
@@ -44,7 +47,10 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+      env: {
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
     })
 
     return code

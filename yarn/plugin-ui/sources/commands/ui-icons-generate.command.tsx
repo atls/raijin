@@ -11,7 +11,6 @@ import { xfs }           from '@yarnpkg/fslib'
 import { Option }        from 'clipanion'
 import { globby }        from 'globby'
 import { render }        from 'ink'
-import React             from 'react'
 
 import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
 import { IconsProgress } from '@atls/cli-ui-icons-progress-component'
@@ -19,7 +18,7 @@ import { Icons }         from '@atls/code-icons'
 import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
 
 export class UiIconsGenerateCommand extends BaseCommand {
-  static paths = [['ui', 'icons', 'generate']]
+  static override paths = [['ui', 'icons', 'generate']]
 
   native: boolean = Option.Boolean('-n, --native', false)
 
@@ -27,6 +26,10 @@ export class UiIconsGenerateCommand extends BaseCommand {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
     if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
       return this.executeRegular()
     }
 
@@ -50,7 +53,10 @@ export class UiIconsGenerateCommand extends BaseCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+      env: {
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
     })
 
     return code

@@ -3,7 +3,6 @@ import type { ServiceLogRecord } from '@atls/code-service'
 import { SeverityNumber }        from '@monstrs/logger'
 import { BaseCommand }           from '@yarnpkg/cli'
 import { Option }                from 'clipanion'
-import React                     from 'react'
 
 import { ErrorInfo }             from '@atls/cli-ui-error-info-component'
 import { LogRecord }             from '@atls/cli-ui-log-record-component'

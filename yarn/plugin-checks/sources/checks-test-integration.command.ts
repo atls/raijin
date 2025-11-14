@@ -16,12 +16,16 @@ import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
 
 class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
-  static paths = [['checks', 'test', 'integration']]
+  static override paths = [['checks', 'test', 'integration']]
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
     if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
       return this.executeRegular()
     }
 
@@ -37,14 +41,24 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
     const env = await scriptUtils.makeScriptEnv({ binFolder, project })
 
     if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-node-register`
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${pathToFileURL(npath.fromPortablePath(ppath.join(project.cwd, Filename.pnpEsmLoader))).href}`
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --loader @atls/code-runtime/ts-node-register`
+
+      const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
+
+      if (await xfs.existsPromise(pnpEsmLoaderPath)) {
+        env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${
+          pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
+        }`
+      }
+
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
     }
 
     if (!env.NODE_OPTIONS?.includes('--enable-source-maps')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --enable-source-maps`
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --enable-source-maps`
     }
+
+    env.COMMAND_PROXY_EXECUTION = 'true'
 
     const { code } = await execUtils.pipevp('yarn', ['checks', 'test', 'integration'], {
       cwd: this.context.cwd,

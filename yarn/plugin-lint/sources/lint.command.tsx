@@ -7,7 +7,6 @@ import { scriptUtils }   from '@yarnpkg/core'
 import { xfs }           from '@yarnpkg/fslib'
 import { Option }        from 'clipanion'
 import { render }        from 'ink'
-import React             from 'react'
 
 import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
 import { LintProgress }  from '@atls/cli-ui-lint-progress-component'
@@ -28,6 +27,10 @@ export class LintCommand extends BaseCommand {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
     if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
       return this.executeRegular()
     }
 
@@ -55,7 +58,10 @@ export class LintCommand extends BaseCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+      env: {
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
     })
 
     return code

@@ -17,7 +17,6 @@ import { scriptUtils }                  from '@yarnpkg/core'
 import { xfs }                          from '@yarnpkg/fslib'
 import { ppath }                        from '@yarnpkg/fslib'
 import { flattenDiagnosticMessageText } from 'typescript'
-import React                            from 'react'
 
 import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
 import { TypeScript }                   from '@atls/code-typescript'
@@ -27,12 +26,16 @@ import { GitHubChecks }                 from './github.checks.js'
 import { AnnotationLevel }              from './github.checks.js'
 
 class ChecksTypeCheckCommand extends BaseCommand {
-  static paths = [['checks', 'typecheck']]
+  static override paths = [['checks', 'typecheck']]
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
     if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
       return this.executeRegular()
     }
 
@@ -50,7 +53,10 @@ class ChecksTypeCheckCommand extends BaseCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+      env: {
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
     })
 
     return code

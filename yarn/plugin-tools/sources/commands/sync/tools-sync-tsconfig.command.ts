@@ -61,6 +61,10 @@ export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
       return this.executeRegular()
     }
 
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      return this.executeRegular()
+    }
+
     return this.executeProxy(['tools', 'sync', 'tsconfig'])
   }
 
