@@ -45,5 +45,8 @@
       "unplugged": true
     }
   },
+  "formatterIgnorePatterns": [
+    "CHANGELOG.md"
+  ],
   "typecheckSkipLibCheck": true
 }
