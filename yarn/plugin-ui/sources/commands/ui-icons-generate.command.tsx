@@ -11,6 +11,7 @@ import { xfs }           from '@yarnpkg/fslib'
 import { Option }        from 'clipanion'
 import { globby }        from 'globby'
 import { render }        from 'ink'
+import React             from 'react'
 
 import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
 import { IconsProgress } from '@atls/cli-ui-icons-progress-component'

@@ -18,6 +18,7 @@ import { Option }        from 'clipanion'
 import { Command }       from 'clipanion'
 import { render }        from 'ink'
 import { isEnum }        from 'typanion'
+import React             from 'react'
 
 import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
 import { LogRecord }     from '@atls/cli-ui-log-record-component'

@@ -8,6 +8,7 @@ import { ppath }                from '@yarnpkg/fslib'
 import { xfs }                  from '@yarnpkg/fslib'
 import { Option }               from 'clipanion'
 import { render }               from 'ink'
+import React                    from 'react'
 
 import { ErrorInfo }            from '@atls/cli-ui-error-info-component'
 import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-component'

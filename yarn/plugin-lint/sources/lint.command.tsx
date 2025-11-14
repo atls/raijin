@@ -7,6 +7,7 @@ import { scriptUtils }   from '@yarnpkg/core'
 import { xfs }           from '@yarnpkg/fslib'
 import { Option }        from 'clipanion'
 import { render }        from 'ink'
+import React             from 'react'
 
 import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
 import { LintProgress }  from '@atls/cli-ui-lint-progress-component'

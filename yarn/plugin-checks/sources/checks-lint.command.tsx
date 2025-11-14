@@ -17,6 +17,7 @@ import { codeFrameColumns }        from '@babel/code-frame'
 import { execUtils }               from '@yarnpkg/core'
 import { scriptUtils }             from '@yarnpkg/core'
 import { xfs }                     from '@yarnpkg/fslib'
+import React                       from 'react'
 
 import { LintResult }              from '@atls/cli-ui-lint-result-component'
 import { Linter }                  from '@atls/code-lint'

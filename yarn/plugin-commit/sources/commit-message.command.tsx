@@ -11,6 +11,7 @@ import { forceStdinTty }                from 'force-stdin-tty'
 import { useStdin }                     from 'ink'
 import { useEffect }                    from 'react'
 import { useState }                     from 'react'
+import React                            from 'react'
 import wrap                             from 'word-wrap'
 
 import { RequestCommitMessage }         from '@atls/cli-ui-git-commit-component'

@@ -5,6 +5,7 @@ import { scriptUtils }            from '@yarnpkg/core'
 import { execUtils }              from '@yarnpkg/core'
 import { xfs }                    from '@yarnpkg/fslib'
 import { render }                 from 'ink'
+import React                      from 'react'
 
 import { ErrorInfo }              from '@atls/cli-ui-error-info-component'
 import { ServiceProgress }        from '@atls/cli-ui-service-progress-component'

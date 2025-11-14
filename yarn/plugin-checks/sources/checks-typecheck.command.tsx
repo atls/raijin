@@ -17,6 +17,7 @@ import { scriptUtils }                  from '@yarnpkg/core'
 import { xfs }                          from '@yarnpkg/fslib'
 import { ppath }                        from '@yarnpkg/fslib'
 import { flattenDiagnosticMessageText } from 'typescript'
+import React                            from 'react'
 
 import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
 import { TypeScript }                   from '@atls/code-typescript'

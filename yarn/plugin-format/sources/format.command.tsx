@@ -3,6 +3,7 @@ import { Configuration }  from '@yarnpkg/core'
 import { Project }        from '@yarnpkg/core'
 import { Option }         from 'clipanion'
 import { render }         from 'ink'
+import React              from 'react'
 
 import { ErrorInfo }      from '@atls/cli-ui-error-info-component'
 import { FormatProgress } from '@atls/cli-ui-format-progress-component'
