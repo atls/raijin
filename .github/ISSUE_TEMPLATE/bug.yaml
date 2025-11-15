@@ -58,3 +58,5 @@ body:
         - Один из сервисов (например: recommender@1.2)
     validations:
       required: true
+
+projects: ['atls/11']
