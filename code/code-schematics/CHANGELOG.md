@@ -1,3 +1,10 @@
+
+
+## [2.0.9](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.8...@atls/code-schematics@2.0.9) (2025-11-15)
+
+
+
+
 ## [2.0.8](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.7...@atls/code-schematics@2.0.8) (2025-10-09)
 
 ## [2.0.7](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.5...@atls/code-schematics@2.0.7) (2025-10-09)

@@ -1,5 +1,12 @@
 
 
+## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-lint@1.0.11...@atls/yarn-plugin-lint@1.0.12) (2025-11-15)
+
+
+
+
+
+
 ## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-lint@1.0.10...@atls/yarn-plugin-lint@1.0.11) (2025-11-14)
 
 
