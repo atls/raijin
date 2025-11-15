@@ -19,3 +19,5 @@ body:
       label: Что изменится?
     validations:
       required: true
+
+projects: ['atls/11']
