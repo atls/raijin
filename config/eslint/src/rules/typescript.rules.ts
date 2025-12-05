@@ -23,6 +23,7 @@ export const rules: Linter.RulesRecord = {
   '@typescript-eslint/no-unsafe-return': 'error',
   '@typescript-eslint/no-unsafe-argument': 'error',
   '@typescript-eslint/no-unsafe-call': 'error',
+  '@typescript-eslint/no-unsafe-assignment': 'error',
   '@typescript-eslint/member-ordering': [
     'error',
     {
@@ -125,9 +126,9 @@ export const rules: Linter.RulesRecord = {
       ignoreRestArgs: true,
     },
   ],
-  '@typescript-eslint/no-non-null-assertion': 'error',
-  '@typescript-eslint/explicit-module-boundary-types': 'error',
-  '@typescript-eslint/explicit-function-return-type': 'error',
+  '@typescript-eslint/no-non-null-assertion': 'off',
+  '@typescript-eslint/explicit-module-boundary-types': 'off',
+  '@typescript-eslint/explicit-function-return-type': 'off',
   '@typescript-eslint/default-param-last': 'error',
   '@typescript-eslint/no-base-to-string': 'error',
   '@typescript-eslint/no-confusing-void-expression': 'error',
@@ -151,6 +152,12 @@ export const rules: Linter.RulesRecord = {
   '@typescript-eslint/no-unnecessary-qualifier': 'error',
   '@typescript-eslint/no-unnecessary-type-arguments': 'error',
   '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+  '@typescript-eslint/no-unnecessary-condition': [
+    'error',
+    {
+      allowConstantLoopConditions: true,
+    },
+  ],
   '@typescript-eslint/no-unnecessary-type-constraint': 'error',
   '@typescript-eslint/no-unsafe-declaration-merging': 'error',
   '@typescript-eslint/no-unsafe-enum-comparison': 'error',
@@ -164,6 +171,7 @@ export const rules: Linter.RulesRecord = {
   '@typescript-eslint/prefer-includes': 'error',
   '@typescript-eslint/prefer-literal-enum-member': 'error',
   '@typescript-eslint/prefer-optional-chain': 'error',
+  '@typescript-eslint/prefer-nullish-coalescing': 'error',
   '@typescript-eslint/prefer-reduce-type-parameter': 'error',
   '@typescript-eslint/prefer-string-starts-ends-with': 'error',
   '@typescript-eslint/prefer-ts-expect-error': 'error',

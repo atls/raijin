@@ -184,6 +184,7 @@ export const rules: Linter.RulesRecord = {
   'react/prop-types': ['off'],
   'react/no-danger': ['off'],
   'react/jsx-child-element-spacing': 'off',
+  'react/jsx-no-duplicate-classname': 'error',
   'react/jsx-closing-bracket-location': 'off',
   'react/jsx-closing-tag-location': 'off',
   'react/jsx-curly-newline': 'off',
@@ -200,8 +201,7 @@ export const rules: Linter.RulesRecord = {
   'react/jsx-wrap-multilines': 'off',
   'react/jsx-space-before-closing': ['off', 'always'],
   'react-hooks/rules-of-hooks': ['error'],
-  // TODO: fix error
-  // 'react-hooks/exhaustive-deps': ['error'],
+  'react-hooks/exhaustive-deps': ['error'],
   'react/display-name': [
     'off',
     {
@@ -237,7 +237,7 @@ export const rules: Linter.RulesRecord = {
     },
   ],
   'react/jsx-no-leaked-render': [
-    'error',
+    'off',
     {
       validStrategies: ['coerce'],
     },
