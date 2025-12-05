@@ -184,7 +184,6 @@ export const rules: Linter.RulesRecord = {
   'react/prop-types': ['off'],
   'react/no-danger': ['off'],
   'react/jsx-child-element-spacing': 'off',
-  'react/jsx-no-duplicate-classname': 'error',
   'react/jsx-closing-bracket-location': 'off',
   'react/jsx-closing-tag-location': 'off',
   'react/jsx-curly-newline': 'off',

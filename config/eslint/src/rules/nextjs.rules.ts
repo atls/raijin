@@ -24,5 +24,4 @@ export const rules: Linter.RulesRecord = {
   '@next/next/no-duplicate-head': 'error',
   '@next/next/no-head-import-in-document': 'error',
   '@next/next/no-script-component-in-head': 'error',
-  '@next/next/no-server-import-in-client-component': 'error',
 }
