@@ -39,7 +39,7 @@ export const runSchematicHelper = async (
 
     if (nothingDone as boolean) {
       console.info('Nothing to be done.')
-    } else {
+    } else if (dryRun as boolean) {
       console.info('Dry run enabled. No files written to disk.')
     }
 
