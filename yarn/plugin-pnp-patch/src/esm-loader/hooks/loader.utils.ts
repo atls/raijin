@@ -20,14 +20,14 @@ export const getFileFormat = (filepath: string): string | null => {
 
       if (!pkg) return 'commonjs'
 
-      return (pkg.data.type as string) ?? 'commonjs'
+      return (pkg.data.type as string | undefined) ?? 'commonjs'
     }
     case '.tsx': {
       const pkg = nodeUtils.readPackageScope(filepath)
 
       if (!pkg) return 'commonjs'
 
-      return (pkg.data.type as string) ?? 'commonjs'
+      return (pkg.data.type as string | undefined) ?? 'commonjs'
     }
     default: {
       return null

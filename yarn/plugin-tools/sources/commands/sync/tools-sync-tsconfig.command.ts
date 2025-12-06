@@ -99,7 +99,7 @@ export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
           >(exists, { compilerOptions: tsconfig.compilerOptions }, { arrayMerge: combineMerge })
 
           const includes: Array<string> = (
-            (project.topLevelWorkspace.manifest.raw.workspaces as Array<string>) || []
+            (project.topLevelWorkspace.manifest.raw.workspaces as Array<string> | undefined) || []
           ).map(convertWorkspacesToIncludes)
 
           const created = {

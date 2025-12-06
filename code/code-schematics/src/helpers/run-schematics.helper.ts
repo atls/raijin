@@ -37,9 +37,9 @@ export const runSchematicHelper = async (
       })
       .toPromise()
 
-    if (nothingDone) {
+    if (nothingDone as boolean) {
       console.info('Nothing to be done.')
-    } else if (dryRun) {
+    } else {
       console.info('Dry run enabled. No files written to disk.')
     }
 
@@ -48,7 +48,7 @@ export const runSchematicHelper = async (
     if (err instanceof UnsuccessfulWorkflowExecution) {
       // "See above" because we already printed the error.
       console.debug('The Schematic workflow failed. See above.')
-    } else if (debug && err instanceof Error) {
+    } else if (err instanceof Error) {
       console.debug(`An error occured:\n${err.stack}`)
     } else {
       console.debug(`Error: ${err instanceof Error ? err.message : err}`)

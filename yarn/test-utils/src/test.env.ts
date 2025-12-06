@@ -53,7 +53,6 @@ export class TestEnv {
     if (packageJSON.dependencies) {
       for await (const dep of Object.keys(packageJSON.dependencies)) {
         if (packageJSON.dependencies[dep].startsWith(WorkspaceResolver.protocol)) {
-          // eslint-disable-next-line no-param-reassign
           packageJSON.dependencies[dep] = await packageUtils.pack(dep)
         }
       }
@@ -62,7 +61,6 @@ export class TestEnv {
     if (packageJSON.devDependencies) {
       for await (const dep of Object.keys(packageJSON.devDependencies)) {
         if (packageJSON.devDependencies[dep].startsWith(WorkspaceResolver.protocol)) {
-          // eslint-disable-next-line no-param-reassign
           packageJSON.devDependencies[dep] = await packageUtils.pack(dep)
         }
       }
@@ -92,7 +90,7 @@ export class TestEnv {
         (error, stdout, stderr) => {
           if (error) {
             resolve({
-              code: error?.code,
+              code: error.code,
               stdout,
               stderr,
               error,

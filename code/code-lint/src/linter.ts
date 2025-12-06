@@ -127,7 +127,7 @@ export class Linter extends EventEmitter {
   private async lintWithCache(files: Array<string> = []): Promise<Array<ESLint.LintResult>> {
     this.emit('start', { files })
 
-    const results = await this.cacheLinter?.lintFiles(files)
+    const results = await this.cacheLinter.lintFiles(files)
 
     for (const result of results) {
       this.emit('lint:end', { result })

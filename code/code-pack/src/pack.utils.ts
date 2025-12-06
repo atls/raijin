@@ -17,7 +17,7 @@ type InstallPack = (options: InstallPackOptions) => Promise<void>
  * Installs pack if not present
  */
 export const installPack: InstallPack = async ({ context, cwd }) => {
-  let isPackInstalled = false
+  let isPackInstalled: boolean
 
   try {
     await execUtils.pipevp('pack', ['--version'], {

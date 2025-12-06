@@ -19,7 +19,6 @@ export const getEventCommmits = async (): Promise<
   if (context.eventName === 'pull_request' && context.payload.pull_request) {
     const url = context.payload.pull_request.commits_url
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return getOctokit(process.env.GITHUB_TOKEN!).paginate(`GET ${url}`, context.repo)
   }
 
@@ -30,7 +29,6 @@ export const getEventCommmits = async (): Promise<
 }
 
 export const getCommitData = async (ref: string): Promise<GetCommitResponseData> => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const commit = await getOctokit(process.env.GITHUB_TOKEN!).rest.repos.getCommit({
     ...context.repo,
     ref,
@@ -57,7 +55,7 @@ export const getGithubChangedFiles = async (): Promise<Array<string>> => {
 
   return commits
     .map((commit) => {
-      if (!commit?.data?.files) {
+      if (!commit.data.files) {
         return []
       }
 

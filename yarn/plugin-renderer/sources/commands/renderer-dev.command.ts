@@ -10,13 +10,13 @@ import spawn             from 'cross-spawn'
 import localtunnel       from 'localtunnel'
 
 export class RendererDevCommand extends BaseCommand {
-  static paths = [['renderer', 'dev']]
+  static override paths = [['renderer', 'dev']]
 
   tunnel = Option.Boolean('--tunnel')
 
   https = Option.Boolean('--https')
 
-  #tunnel!: Tunnel
+  #tunnel?: Tunnel
 
   async runTunnel(host: string, port: number): Promise<void> {
     if (this.#tunnel) {
@@ -64,7 +64,7 @@ export class RendererDevCommand extends BaseCommand {
     if (this.tunnel) {
       const workspace = project.getWorkspaceByCwd(this.context.cwd)
 
-      const { tunnel: config }: { tunnel: { host?: string; port?: number } } =
+      const { tunnel: config }: { tunnel?: { host?: string; port?: number } } =
         workspace.manifest.raw.tools || {}
 
       if (!config?.host) {

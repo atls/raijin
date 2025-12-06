@@ -23,10 +23,6 @@ export const StackTrace = ({ children, cwd }: StackTraceProps): ReactElement | n
   const topFrame = useMemo(() => stack.topFrame || stack.frames.at(0), [stack])
   const source = useMemo(() => (topFrame ? getFrameSource(topFrame) : null), [topFrame])
 
-  if (!stack) {
-    return null
-  }
-
   return (
     <Box flexDirection='column' flexGrow={1}>
       {!!source && !!stack.topFrame?.line && (

@@ -54,8 +54,8 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
     }
 
-    if (!env.NODE_OPTIONS?.includes('--enable-source-maps')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --enable-source-maps`
+    if (!env.NODE_OPTIONS.includes('--enable-source-maps')) {
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --enable-source-maps`
     }
 
     env.COMMAND_PROXY_EXECUTION = 'true'

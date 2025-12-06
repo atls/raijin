@@ -12,7 +12,7 @@ const POSTFIX = '-atls'
 export const addPostfix = (packageJson, postfix = POSTFIX) => {
   if (!packageJson.version.endsWith(postfix)) {
     const initialVersion = packageJson.version
-    // eslint-disable-next-line no-param-reassign
+
     packageJson.version = `${initialVersion}${postfix}`
   }
 
@@ -27,7 +27,7 @@ export const addPostfix = (packageJson, postfix = POSTFIX) => {
 export const removePostfix = (packageJson, postfix = POSTFIX) => {
   if (packageJson.version.endsWith(postfix)) {
     const splitted = packageJson.version.split(postfix)
-    // eslint-disable-next-line prefer-destructuring, no-param-reassign
+    // eslint-disable-next-line prefer-destructuring
     packageJson.version = splitted[0]
   }
 

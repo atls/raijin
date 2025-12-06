@@ -1,4 +1,5 @@
-import { writeFile }                     from 'fs/promises'
+import { writeFile }                     from 'node:fs/promises'
+
 import esbuild                           from 'esbuild'
 
 import { UndefinedBuildRedultException } from '../exceptions/index.js'

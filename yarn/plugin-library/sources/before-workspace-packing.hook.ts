@@ -2,18 +2,17 @@ import type { Workspace } from '@yarnpkg/core'
 
 export interface RawManifest {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  exports: Record<string, any>
+  exports?: Record<string, any>
 
-  publishConfig: {
+  publishConfig?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    exports: Record<string, any>
+    exports?: Record<string, any>
   }
 }
 
 export const beforeWorkspacePacking = (_: Workspace, rawManifest: RawManifest): void => {
   if (rawManifest.publishConfig) {
     if (rawManifest.publishConfig.exports) {
-      // eslint-disable-next-line no-param-reassign
       rawManifest.exports = rawManifest.publishConfig.exports
     }
   }

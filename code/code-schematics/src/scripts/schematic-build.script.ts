@@ -1,11 +1,11 @@
 /* eslint-disable no-await-in-loop */
 
-import { readdir }   from 'fs/promises'
-import { mkdir }     from 'fs/promises'
-import { writeFile } from 'fs/promises'
-import { readFile }  from 'fs/promises'
-import { join }      from 'path'
-import { dirname }   from 'path'
+import { readdir }   from 'node:fs/promises'
+import { mkdir }     from 'node:fs/promises'
+import { writeFile } from 'node:fs/promises'
+import { readFile }  from 'node:fs/promises'
+import { join }      from 'node:path'
+import { dirname }   from 'node:path'
 
 type FileStructure = {
   [key: string]: FileStructure | string

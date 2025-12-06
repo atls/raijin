@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { BaseCommand }             from '@yarnpkg/cli'
 import { Configuration }           from '@yarnpkg/core'
 import { StreamReport }            from '@yarnpkg/core'

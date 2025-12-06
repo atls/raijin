@@ -53,7 +53,6 @@ export const parsers: Record<string, Parser> = {
     ...babel.parsers['json-stringify'],
     preprocess(text, options) {
       if (babel.parsers['json-stringify'].preprocess) {
-        // eslint-disable-next-line no-param-reassign
         text = babel.parsers['json-stringify'].preprocess(text, options)
       }
 

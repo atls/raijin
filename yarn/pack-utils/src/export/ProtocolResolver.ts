@@ -1,7 +1,5 @@
 /* Copy/Paste https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-core/sources/ProtocolResolver.ts */
 
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 

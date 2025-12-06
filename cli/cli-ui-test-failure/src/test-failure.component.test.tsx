@@ -24,7 +24,7 @@ import React             from 'react'
   )
 
   assert.equal(
-    stripAnsi(lastFrame()!), // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    stripAnsi(lastFrame()!),
     `╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                                  │
 │  cli-ui/cli-ui-test-failure/src/test-failure.component.test.tsx:0:0                              │

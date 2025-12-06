@@ -64,7 +64,6 @@ class BadgesCommand extends BaseCommand {
             while (pass.length > 0) {
               const hash = pass.shift()
               if (hash) {
-                // eslint-disable-next-line no-continue
                 if (seen.has(hash)) continue
 
                 const pkg = project.storedPackages.get(hash)
@@ -76,7 +75,7 @@ class BadgesCommand extends BaseCommand {
                 if (structUtils.isVirtualLocator(pkg))
                   pass.push(structUtils.devirtualizeLocator(pkg).locatorHash)
 
-                // eslint-disable-next-line no-continue, security/detect-possible-timing-attacks
+                // eslint-disable-next-line security/detect-possible-timing-attacks
                 if (hash !== initialHash) continue
 
                 for (const dependency of pkg.dependencies.values()) {

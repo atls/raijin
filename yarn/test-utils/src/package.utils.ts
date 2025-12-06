@@ -13,11 +13,11 @@ import { ppath }             from '@yarnpkg/fslib'
 import { packUtils }         from '@yarnpkg/plugin-pack'
 
 export class PackageUtils {
-  private configuration!: Configuration
+  private configuration?: Configuration
 
-  private project!: Project
+  private project?: Project
 
-  private rootWorkspace!: Workspace
+  private rootWorkspace?: Workspace
 
   get cwd(): PortablePath {
     return process.cwd() as PortablePath
@@ -25,7 +25,7 @@ export class PackageUtils {
 
   async getWorkspacePackage(name: string): Promise<PortablePath> {
     const workspace = (await this.getRootWorkspace())
-      .getRecursiveWorkspaceChildren()
+      ?.getRecursiveWorkspaceChildren()
       .find((ws) => ws.manifest.raw.name === name)
 
     if (!workspace) {
@@ -62,7 +62,7 @@ export class PackageUtils {
     return this.project
   }
 
-  async getRootWorkspace(): Promise<Workspace> {
+  async getRootWorkspace(): Promise<Workspace | undefined> {
     if (!this.rootWorkspace) {
       await this.getProject()
     }
@@ -120,7 +120,6 @@ export class PackageUtils {
 
           descriptor.range = `file:${dt}`
 
-          // eslint-disable-next-line no-param-reassign
           workspace.manifest.raw.dependencies[dependent.manifest.raw.name] = descriptor.range
         }
       }
@@ -135,7 +134,6 @@ export class PackageUtils {
 
           descriptor.range = `file:${dt}`
 
-          // eslint-disable-next-line no-param-reassign
           workspace.manifest.raw.devDependencies[dependent.manifest.raw.name] = descriptor.range
         }
       }
@@ -143,14 +141,12 @@ export class PackageUtils {
 
     if (workspace.manifest.raw.publishConfig) {
       if (workspace.manifest.raw.publishConfig.main) {
-        // eslint-disable-next-line no-param-reassign
         workspace.manifest.raw.main = workspace.manifest.raw.publishConfig.main
       }
     }
 
     if (workspace.manifest.raw.publishConfig) {
       if (workspace.manifest.raw.publishConfig.exports) {
-        // eslint-disable-next-line no-param-reassign
         workspace.manifest.raw.exports = workspace.manifest.raw.publishConfig.exports
       }
     }
