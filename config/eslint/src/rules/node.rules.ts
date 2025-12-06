@@ -14,19 +14,19 @@ export const rules: Linter.RulesRecord = {
   'n/no-unsupported-features/es-builtins': [
     'error',
     {
-      version: '>=22.0.0',
+      version: '>=22.16.0',
     },
   ],
   'n/no-unsupported-features/es-syntax': [
     'error',
     {
-      version: '>=22.0.0',
+      version: '>=22.16.0',
     },
   ],
   'n/no-unsupported-features/node-builtins': [
     'error',
     {
-      version: '>=22.0.0',
+      version: '>=22.16.0',
     },
   ],
   'n/process-exit-as-throw': 'error',

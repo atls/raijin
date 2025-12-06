@@ -12332,6 +12332,7 @@ __metadata:
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch"
     esbuild: "npm:esbuild-wasm@^0.23.1"
     prettier: "npm:3.5.3"
+    react: "npm:18.3.1"
     typescript: "npm:5.5.4"
   languageName: unknown
   linkType: soft

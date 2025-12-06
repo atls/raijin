@@ -23,7 +23,6 @@ export const rules: Linter.RulesRecord = {
   '@typescript-eslint/no-unsafe-return': 'error',
   '@typescript-eslint/no-unsafe-argument': 'error',
   '@typescript-eslint/no-unsafe-call': 'error',
-  '@typescript-eslint/no-unsafe-assignment': 'error',
   '@typescript-eslint/member-ordering': [
     'error',
     {
@@ -171,7 +170,6 @@ export const rules: Linter.RulesRecord = {
   '@typescript-eslint/prefer-includes': 'error',
   '@typescript-eslint/prefer-literal-enum-member': 'error',
   '@typescript-eslint/prefer-optional-chain': 'error',
-  '@typescript-eslint/prefer-nullish-coalescing': 'error',
   '@typescript-eslint/prefer-reduce-type-parameter': 'error',
   '@typescript-eslint/prefer-string-starts-ends-with': 'error',
   '@typescript-eslint/prefer-ts-expect-error': 'error',

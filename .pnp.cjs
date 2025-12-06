@@ -395,6 +395,7 @@ const RAW_RUNTIME_STATE =
             "npm:0.23.1"\
           ]],\
           ["prettier", "npm:3.5.3"],\
+          ["react", "npm:18.3.1"],\
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\
         "linkType": "SOFT"\
@@ -16332,6 +16333,7 @@ const RAW_RUNTIME_STATE =
             "npm:0.23.1"\
           ]],\
           ["prettier", "npm:3.5.3"],\
+          ["react", "npm:18.3.1"],\
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\
         "linkType": "SOFT"\
