@@ -1,6 +1,6 @@
 {
   "name": "@atls/yarn-plugin-renderer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",

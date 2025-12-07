@@ -1,3 +1,15 @@
+
+
+## [1.0.9](https://github.com/atls/raijin/compare/@atls/cli-ui-git-commit-component@1.0.8...@atls/cli-ui-git-commit-component@1.0.9) (2025-12-07)
+
+
+### Features
+
+
+* **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
+
+
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/cli-ui-git-commit-component@1.0.8...@atls/cli-ui-git-commit-component@1.0.8) (2025-03-09)
 
 ### Features

@@ -1,6 +1,6 @@
 {
   "name": "@atls/cli-ui-git-commit-component",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

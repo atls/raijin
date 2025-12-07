@@ -1,3 +1,10 @@
+
+
+## [2.0.3](https://github.com/atls/raijin/compare/@atls/code-format@2.0.2...@atls/code-format@2.0.3) (2025-12-07)
+
+
+
+
 ## [2.0.2](https://github.com/atls/raijin/compare/@atls/code-format@2.0.1...@atls/code-format@2.0.2) (2025-03-09)
 
 ### Features

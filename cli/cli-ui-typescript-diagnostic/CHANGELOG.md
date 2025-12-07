@@ -1,3 +1,10 @@
+
+
+## [1.0.1](https://github.com/atls/raijin/compare/@atls/cli-ui-typescript-diagnostic-component@1.0.0...@atls/cli-ui-typescript-diagnostic-component@1.0.1) (2025-12-07)
+
+
+
+
 # 1.0.0 (2025-03-09)
 
 ### Features

@@ -1,3 +1,15 @@
+
+
+## [1.0.5](https://github.com/atls/raijin/compare/@atls/webpack-proto-imports-loader@1.0.4...@atls/webpack-proto-imports-loader@1.0.5) (2025-12-07)
+
+
+### Bug Fixes
+
+
+* **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
+
+
+
 ## [1.0.4](https://github.com/atls/raijin/compare/@atls/webpack-proto-imports-loader@1.0.1...@atls/webpack-proto-imports-loader@1.0.4) (2025-10-09)
 
 ### Features

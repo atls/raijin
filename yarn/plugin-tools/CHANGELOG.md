@@ -1,5 +1,17 @@
 
 
+## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.11...@atls/yarn-plugin-tools@1.0.12) (2025-12-07)
+
+
+### Bug Fixes
+
+
+* **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
+
+
+
+
+
 ## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.10...@atls/yarn-plugin-tools@1.0.11) (2025-11-15)
 
 

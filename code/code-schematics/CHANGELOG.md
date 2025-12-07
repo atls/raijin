@@ -1,5 +1,18 @@
 
 
+## [2.0.10](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.9...@atls/code-schematics@2.0.10) (2025-12-07)
+
+
+### Bug Fixes
+
+
+* **code:** helpers log ([e1042ba](https://github.com/atls/raijin/commit/e1042ba9112cd0e26bcc8f896bfe37bb7e5cd8f6))
+* **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
+
+
+
+
+
 ## [2.0.9](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.8...@atls/code-schematics@2.0.9) (2025-11-15)
 
 

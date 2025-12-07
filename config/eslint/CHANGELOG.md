@@ -1,3 +1,20 @@
+
+
+## [2.0.10](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.9...@atls/config-eslint@2.0.10) (2025-12-07)
+
+
+### Bug Fixes
+
+
+* **config:** remove eslint rules ([50dc0d8](https://github.com/atls/raijin/commit/50dc0d8491618a5937200e0ece180df05c37bcc0))
+
+### Features
+
+
+* **config:** eslint rules ([e33cb3a](https://github.com/atls/raijin/commit/e33cb3a1e7d2730ee05b9926a27e06733161a2f3))
+
+
+
 ## [2.0.9](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.8...@atls/config-eslint@2.0.9) (2025-10-09)
 
 ## [2.0.8](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.7...@atls/config-eslint@2.0.8) (2025-05-05)

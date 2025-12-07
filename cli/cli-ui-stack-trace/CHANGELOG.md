@@ -1,3 +1,16 @@
+
+
+## [1.0.1](https://github.com/atls/raijin/compare/@atls/cli-ui-stack-trace-component@1.0.0...@atls/cli-ui-stack-trace-component@1.0.1) (2025-12-07)
+
+
+### Bug Fixes
+
+
+* **cli:** release workspaces ([a392f32](https://github.com/atls/raijin/commit/a392f321b0469982488698f8a91bbc31e703dd11))
+* **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
+
+
+
 # 1.0.0 (2025-03-09)
 
 ### Features

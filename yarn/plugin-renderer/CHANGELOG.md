@@ -1,3 +1,15 @@
+
+
+## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.2...@atls/yarn-plugin-renderer@1.0.3) (2025-12-07)
+
+
+### Bug Fixes
+
+
+* **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
+
+
+
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.1...@atls/yarn-plugin-renderer@1.0.2) (2025-03-09)
 
 ## 1.0.1 (2025-01-30)
