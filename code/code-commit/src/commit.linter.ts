@@ -71,7 +71,7 @@ export class CommitLinter {
     }
 
     const possibleScopeValuesArray = ['common', 'github', ...allowedScopes]
-    // eslint-disable-next-line no-param-reassign
+
     rules['scope-enum'] = [RuleConfigSeverity.Error, 'always', possibleScopeValuesArray]
 
     return rules

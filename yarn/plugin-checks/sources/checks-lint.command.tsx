@@ -134,7 +134,7 @@ class ChecksLintCommand extends BaseCommand {
 
   private formatResults(results: Array<ESLint.LintResult>, cwd?: string): Array<Annotation> {
     return results
-      .filter((result) => result.messages?.length > 0)
+      .filter((result) => result.messages.length > 0)
       .map(({ filePath, messages = [] }) =>
         messages.map((message) => {
           const line = (message.line || 0) + 1

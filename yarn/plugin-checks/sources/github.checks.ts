@@ -51,11 +51,7 @@ export class GitHubChecks {
     return this.create({
       ...context.repo,
       name: this.name,
-      head_sha:
-        payload.after ||
-        payload.pull_request?.head.sha ||
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        process.env.GITHUB_SHA!,
+      head_sha: payload.after || payload.pull_request?.head.sha || process.env.GITHUB_SHA!,
       started_at: new Date().toISOString(),
       status: 'in_progress',
     })
@@ -71,16 +67,12 @@ export class GitHubChecks {
       ...context.repo,
       check_run_id: id,
       name: this.name,
-      head_sha:
-        payload.after ||
-        payload.pull_request?.head.sha ||
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        process.env.GITHUB_SHA!,
+      head_sha: payload.after || payload.pull_request?.head.sha || process.env.GITHUB_SHA!,
       completed_at: new Date().toISOString(),
       status: 'completed',
       conclusion: output.annotations.length > 0 ? 'failure' : 'success',
       output:
-        output.annotations?.length > 50
+        output.annotations.length > 50
           ? {
               ...output,
               annotations: output.annotations.slice(0, 50),
@@ -99,11 +91,7 @@ export class GitHubChecks {
     return this.create({
       ...context.repo,
       name: this.name,
-      head_sha:
-        payload.after ||
-        payload.pull_request?.head.sha ||
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        process.env.GITHUB_SHA!,
+      head_sha: payload.after || payload.pull_request?.head.sha || process.env.GITHUB_SHA!,
       completed_at: new Date().toISOString(),
       status: 'completed',
       conclusion: 'failure',

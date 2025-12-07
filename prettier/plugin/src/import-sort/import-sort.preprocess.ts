@@ -25,7 +25,7 @@ const findTypeScriptParser = (plugins: Array<Plugin<any>>): Parser<any> | null =
   return plugin?.parsers?.typescript || null
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const preprocess = (source: string, { plugins }: any): string => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const typescript = findTypeScriptParser(plugins as Array<Plugin<any>>)

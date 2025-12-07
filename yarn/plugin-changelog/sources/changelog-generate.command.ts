@@ -36,7 +36,7 @@ export class ChangelogGenerateCommand extends BaseCommand {
           let packageName = ''
 
           if (workspace.manifest.name?.scope) {
-            packageName += `@${workspace.manifest.name?.scope}/`
+            packageName += `@${workspace.manifest.name.scope}/`
           }
           packageName += `${workspace.manifest.name?.name}`
 

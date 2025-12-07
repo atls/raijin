@@ -104,7 +104,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
                     path: ppath.normalize(
                       ppath.relative(project.cwd, diagnostic.file.fileName as PortablePath)
                     ),
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
                     title: flattenDiagnosticMessageText(diagnostic.messageText, EOL)
                       .split(EOL)
                       .at(0)!,

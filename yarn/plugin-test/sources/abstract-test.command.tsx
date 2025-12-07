@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-leaked-render */
 /* eslint-disable n/no-sync */
 
 import { readFileSync }  from 'node:fs'
@@ -69,7 +68,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
     const args: Array<string> = []
 
-    if (this.files?.length) {
+    if (this.files.length) {
       args.push(this.files.join(' '))
     }
 
@@ -94,7 +93,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
     }
 
-    if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
+    if (!env.NODE_OPTIONS.includes('@atls/code-runtime/ts-node-register')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-node-register`
 
       const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
@@ -108,7 +107,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
     }
 
-    if (!env.NODE_OPTIONS?.includes('--enable-source-maps')) {
+    if (!env.NODE_OPTIONS.includes('--enable-source-maps')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --enable-source-maps`
     }
 

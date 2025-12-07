@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import * as babel      from 'prettier/plugins/babel'
 import * as estree     from 'prettier/plugins/estree'
 import * as typescript from 'prettier/plugins/typescript'

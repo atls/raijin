@@ -41,7 +41,7 @@ export const print: Printer<Node>['print'] = (path, options, prnt): any => {
         // @ts-expect-error type does not exist
         const fill = Array.apply(0, Array(node.alignOffset)).fill(' ').join('')
 
-        part[0] = `${fill} from` // eslint-disable-line no-param-reassign
+        part[0] = `${fill} from`
       }
 
       return part
@@ -67,11 +67,10 @@ export const preprocess = async (ast: AST): Promise<AST> => {
       node.loc &&
       node.loc.end.line === node.loc.start.line
     ) {
-      node.alignOffset = 0 // eslint-disable-line
+      node.alignOffset = 0
 
       const nodeLength = nodeImportSize(node)
 
-      // eslint-disable-next-line
       node.alignOffset = nodeLength < maxAlignLength ? maxAlignLength - nodeLength : 0
     }
   })

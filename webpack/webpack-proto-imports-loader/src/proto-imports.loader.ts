@@ -33,10 +33,9 @@ export default function protoImportsLoader(source: Buffer | string): string {
       const targetPath = getProtoFileName(importAbsolutePath)
 
       if (Buffer.isBuffer(source)) {
-        // eslint-disable-next-line no-param-reassign
         source = source.toString()
       }
-      // eslint-disable-next-line no-param-reassign
+
       source = source.replace(importPath, targetPath)
 
       dependencies.push(`require('${importAbsolutePath}')`)

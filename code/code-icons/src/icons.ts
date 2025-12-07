@@ -122,7 +122,7 @@ export class Icons extends EventEmitter {
             template,
             typescript: true,
             expandProps: true,
-            replaceAttrValues: replacements[`${icon.component}Icon`] || {},
+            replaceAttrValues: replacements[`${icon.component}Icon`],
           },
           {
             componentName: `${icon.component}Icon`,

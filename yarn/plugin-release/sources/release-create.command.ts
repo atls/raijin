@@ -57,8 +57,8 @@ export class ReleaseCreateCommand extends BaseCommand {
 
           const release = new Release({ token })
 
-          let owner = ''
-          let repo = ''
+          let owner: string
+          let repo: string
           try {
             ;({ repository: repo, organization: owner } = parseGitHubUrl(
               // eslint-disable-next-line n/no-sync

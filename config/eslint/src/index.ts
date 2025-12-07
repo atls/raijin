@@ -1,6 +1,5 @@
 import type { Linter }        from 'eslint'
 
-// @ts-expect-error: Invalid import
 import nextjsPlugin           from '@next/eslint-plugin-next'
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin'
 import parser                 from '@typescript-eslint/parser'
@@ -32,10 +31,12 @@ const config: Array<Linter.Config> = [
       ...base,
     },
     plugins: {
+      // @ts-expect-error: Invalid types
       'eslint-plugin-react-hooks': reactHooksPlugin,
       'eslint-plugin-react-compiler': reactCompilerPlugin,
       // @ts-expect-error: Invalid types
       '@typescript-eslint': typescriptEslintPlugin,
+      // @ts-expect-error: Invalid types
       'react-hooks': reactHooksPlugin,
       '@next/next': nextjsPlugin,
       'jsx-a11y': jsxA11yPlugin,
@@ -49,12 +50,12 @@ const config: Array<Linter.Config> = [
     settings: {
       react: {
         pragma: 'React',
-        version: '18',
+        version: 'detect',
       },
       propWrapperFunctions: ['forbidExtraProps', 'exact', 'Object.freeze'],
     },
     languageOptions: {
-      ecmaVersion: 2021,
+      ecmaVersion: 2022,
       sourceType: 'module',
       globals: {},
       parser,
@@ -66,7 +67,7 @@ const config: Array<Linter.Config> = [
           objectLiteralDuplicateProperties: false,
         },
         sourceType: 'module',
-        ecmaVersion: 2020,
+        ecmaVersion: 2022,
       },
     },
   },
@@ -78,6 +79,8 @@ const config: Array<Linter.Config> = [
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
     },
   },
 ]

@@ -19,6 +19,7 @@ export const rules: Linter.RulesRecord = {
   // errors
   '@next/next/inline-script-id': 'error',
   '@next/next/no-assign-module-variable': 'error',
+  '@next/next/no-async-client-component': 'error',
   '@next/next/no-document-import-in-page': 'error',
   '@next/next/no-duplicate-head': 'error',
   '@next/next/no-head-import-in-document': 'error',

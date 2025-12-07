@@ -15,14 +15,12 @@ export class ImportSortTypeScriptParser implements IParser {
       .filter((node: Node) => node.type === 'ImportDeclaration')
       .map((node: ImportDeclaration) => {
         const imp: IImport = {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           start: node.range![0],
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           end: node.range![1],
 
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           importStart: node.range![0],
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           importEnd: node.range![1],
 
           type: node.importKind === 'type' ? 'import-type' : 'import',
@@ -31,11 +29,11 @@ export class ImportSortTypeScriptParser implements IParser {
 
           defaultMember: node.specifiers.find(
             (specifier) => specifier.type === 'ImportDefaultSpecifier'
-          )?.local?.name,
+          )?.local.name,
 
           namespaceMember: node.specifiers.find(
             (specifier) => specifier.type === 'ImportNamespaceSpecifier'
-          )?.local?.name,
+          )?.local.name,
 
           namedMembers: node.specifiers
             .filter((specifier) => specifier.type === 'ImportSpecifier')
@@ -50,9 +48,7 @@ export class ImportSortTypeScriptParser implements IParser {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const lineComment = this.program.comments.find(
           (comment: Comment) =>
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             comment.loc!.start.line === node.loc!.start.line &&
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             comment.loc!.end.line === node.loc!.end.line
         )
 
@@ -64,7 +60,6 @@ export class ImportSortTypeScriptParser implements IParser {
         const findLeadingComments = (position: number): typeof this.program.comments => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           const leadingComment = this.program.comments.find(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             (comment: Comment) => comment.loc!.start.line === position
           )
 
@@ -77,7 +72,7 @@ export class ImportSortTypeScriptParser implements IParser {
           return [...parents, leadingComment]
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const leadingComments: Array<any> = findLeadingComments(node.loc!.start.line - 1)
 
         if (leadingComments.length > 0) {
