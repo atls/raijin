@@ -1,5 +1,17 @@
 
 
+## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.4...@atls/yarn-plugin-image@1.0.5) (2026-01-15)
+
+
+### Features
+
+
+* **yarn:** allow image pack astro services ([#527](https://github.com/atls/raijin/issues/527)) ([69d1f4e](https://github.com/atls/raijin/commit/69d1f4e8f2510069f3b6f2034c227ca483001acf))
+
+
+
+
+
 ## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.3...@atls/yarn-plugin-image@1.0.4) (2025-12-07)
 
 
