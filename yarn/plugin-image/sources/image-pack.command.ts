@@ -108,6 +108,7 @@ class ImagePackCommand extends BaseCommand {
       'service build',
       'renderer build',
       'strapi build',
+      'astro build',
     ].some((command) => buildCommand?.includes(command))
 
     return hasAllowedBuildScript && Boolean(name)
