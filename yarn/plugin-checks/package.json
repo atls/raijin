@@ -1,6 +1,6 @@
 {
   "name": "@atls/yarn-plugin-checks",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
