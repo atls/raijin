@@ -12,6 +12,7 @@ export const ignore = [
   '.yarn',
   '.vscode',
   '.next',
+  '.astro',
   '**/**/dist/*',
   '**/**/templates/*.yaml',
   '**/templates/*.yaml',

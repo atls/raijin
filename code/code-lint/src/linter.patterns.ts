@@ -15,6 +15,7 @@ const ignore = [
   '.yarn',
   '.vscode',
   '.next',
+  '.astro',
   '**/**/dist/*',
   '**/**/build/*',
   '**/**/.cache/*',
