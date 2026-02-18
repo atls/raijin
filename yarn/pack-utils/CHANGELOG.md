@@ -1,5 +1,17 @@
 
 
+## [1.0.2](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.1...@atls/yarn-pack-utils@1.0.2) (2026-02-18)
+
+
+### Features
+
+
+* **yarn:** image pack yarn-path configuration ([#531](https://github.com/atls/raijin/issues/531)) ([d938755](https://github.com/atls/raijin/commit/d9387551c12521107e07cb3696ab36cc6af78181))
+
+
+
+
+
 ## 1.0.1 (2025-12-07)
 
 
