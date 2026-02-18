@@ -21,6 +21,10 @@ export const afterAllInstalled = async (project: Project): Promise<void> => {
 
   if (process.env.IMAGE_PACK) return
 
+  const gitCheck = git(['--version'])
+
+  if ((gitCheck.error as NodeJS.ErrnoException | undefined)?.code === 'ENOENT') return
+
   const target = ppath.join(project.cwd, '.config/husky')
   const legacyTarget = ppath.join(target, '_')
 
