@@ -1,4 +1,5 @@
 # Tests
+
 - Фреймворк: `kotlin.test`
 - Покрывать в первую очередь `lib/` функции и вычислительную/бизнес-логику
 - `package` в тесте должен полностью совпадать с `package` тестируемого файла
@@ -7,5 +8,6 @@
 - Для асинхронного кода использовать тестовые dispatcher-ы и управляемый `CoroutineScope`
 
 ## Related
+
 - [Gradle modules](./gradle_modules.md)
 - [Coroutines](./coroutines.md)
