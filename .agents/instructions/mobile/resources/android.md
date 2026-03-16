@@ -1,4 +1,5 @@
 # Resources (Android)
+
 - Запрещены строковые литералы, хардкод иконок/изображений и другие запахи кода
 - Строки хранить в `res/values/strings.xml`
 - Цвета/темы хранить в `:ui/theme`
@@ -7,5 +8,6 @@
 - В Kotlin-коде обращаться к ресурсам только через `R` (`R.string.*`, `R.drawable.*`, `R.color.*`)
 
 ## Related
+
 - [UI](./../ui.md)
 - [Code style](./../code_style.md)
