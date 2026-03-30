@@ -447,8 +447,8 @@ const smokeFixture = {
     {
       id: 'generate-project-inactive',
       prompt: 'generate project scaffold',
-      expectedCommand: 'generate project',
-      expectedStatus: 'inactive',
+      expectedCommand: '',
+      expectedStatus: 'unavailable',
     },
   ],
 }
