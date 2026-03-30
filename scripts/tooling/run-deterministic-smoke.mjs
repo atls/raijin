@@ -60,6 +60,20 @@ const scoreRoute = (promptTokens, commandTokens, commandName) => {
   return score
 }
 
+const isBetterMatch = (candidate, best) => {
+  if (!best) return true
+
+  if (candidate.score !== best.score) {
+    return candidate.score > best.score
+  }
+
+  if (candidate.command.pathTokens.length !== best.command.pathTokens.length) {
+    return candidate.command.pathTokens.length < best.command.pathTokens.length
+  }
+
+  return candidate.command.command.localeCompare(best.command.command) < 0
+}
+
 const routePrompt = (prompt, commands) => {
   const promptTokens = tokenize(prompt)
 
@@ -72,13 +86,18 @@ const routePrompt = (prompt, commands) => {
 
     if (score <= 0) continue
 
-    if (
-      !best ||
-      score > best.score ||
-      (score === best.score && command.pathTokens.length < best.command.pathTokens.length) ||
-      (score === best.score && command.command.localeCompare(best.command.command) < 0)
-    ) {
-      best = { command, score }
+    const candidate = { command, score }
+
+    if (isBetterMatch(candidate, best)) {
+      best = candidate
+    }
+  }
+
+  if (best && best.command.status !== 'active') {
+    return {
+      command: '',
+      status: 'unavailable',
+      availabilityReason: `Best semantic match "${best.command.command}" is inactive`,
     }
   }
 
@@ -94,6 +113,23 @@ for (const testCase of fixture.cases) {
 
   if (!routed) {
     failures.push(`${testCase.id}: no route for prompt "${testCase.prompt}"`)
+    continue
+  }
+
+  if (testCase.expectedStatus === 'unavailable') {
+    if (routed.status !== 'unavailable') {
+      failures.push(
+        `${testCase.id}: expected status "${testCase.expectedStatus}", got "${routed.status || 'unknown'}"`
+      )
+      continue
+    }
+
+    if ((routed.command || '') !== testCase.expectedCommand) {
+      failures.push(
+        `${testCase.id}: expected command "${testCase.expectedCommand}", got "${routed.command || ''}"`
+      )
+    }
+
     continue
   }
 

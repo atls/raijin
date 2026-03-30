@@ -61,7 +61,7 @@ const callOpenAI = async (prompt, commands) => {
           {
             type: 'input_text',
             text:
-              'You route prompts to command list entries. Return only JSON object with keys command and status.',
+              'You route prompts to active command list entries. Return only JSON object with keys command and status.',
           },
         ],
       },
@@ -76,7 +76,8 @@ const callOpenAI = async (prompt, commands) => {
               '',
               `Prompt: ${prompt}`,
               '',
-              'Return exactly JSON: {"command":"...","status":"active|inactive"}',
+              'If best semantic match is inactive or no active command matches, return {"command":"","status":"unavailable"}.',
+              'Return exactly JSON: {"command":"...","status":"active|unavailable"}',
             ].join('\n'),
           },
         ],
@@ -122,7 +123,12 @@ for (const testCase of fixture.cases) {
     const parsed = parseJsonObject(rawText)
 
     const actualCommand = typeof parsed.command === 'string' ? parsed.command.trim() : ''
-    const actualStatus = typeof parsed.status === 'string' ? parsed.status.trim() : ''
+    const actualStatus =
+      typeof parsed.status === 'string'
+        ? parsed.status.trim() === 'inactive'
+          ? 'unavailable'
+          : parsed.status.trim()
+        : ''
 
     const passed =
       actualCommand === testCase.expectedCommand && actualStatus === testCase.expectedStatus
