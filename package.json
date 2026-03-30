@@ -13,14 +13,14 @@
     "cli/**/*"
   ],
   "scripts": {
-    "cli:build": "yarn workspace @atls/yarn-cli build",
-    "schematic:test": "yarn workspace @atls/code-runtime build:schematic && yarn workspace @atls/code-schematics build:schematic-factory && yarn generate project",
-    "tooling:check": "yarn tooling:check:drift && yarn tooling:check:localization && yarn tooling:smoke:deterministic",
     "tooling:check:drift": "node scripts/tooling/generate-artifacts.mjs && git diff --exit-code -- docs/tooling .agents",
     "tooling:check:localization": "node scripts/tooling/check-localization-sync.mjs",
+    "tooling:check": "yarn tooling:check:drift && yarn tooling:check:localization && yarn tooling:smoke:deterministic",
     "tooling:generate": "node scripts/tooling/generate-artifacts.mjs",
     "tooling:smoke:deterministic": "node scripts/tooling/run-deterministic-smoke.mjs",
     "tooling:smoke:llm": "node scripts/tooling/run-llm-smoke.mjs",
+    "cli:build": "yarn workspace @atls/yarn-cli build",
+    "schematic:test": "yarn workspace @atls/code-runtime build:schematic && yarn workspace @atls/code-schematics build:schematic-factory && yarn generate project",
     "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download"
   },
   "resolutions": {
