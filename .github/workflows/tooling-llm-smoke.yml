@@ -18,7 +18,7 @@ jobs:
       contents: read
     env:
       NODE_VERSION: '22'
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.OPENAI_SERVICE_ACCOUNT_KEY }}
       OPENAI_MODEL: ${{ inputs.model || vars.OPENAI_SMOKE_MODEL || 'gpt-4.1-mini' }}
       LLM_SMOKE_REPORT_PATH: artifacts/llm-smoke-report.json
 
@@ -43,7 +43,7 @@ jobs:
       - name: Skip when OPENAI_API_KEY is missing
         if: ${{ env.OPENAI_API_KEY == '' }}
         run: |
-          echo "OPENAI_API_KEY is not set. Skipping LLM smoke."
+          echo "OPENAI_API_KEY and OPENAI_SERVICE_ACCOUNT_KEY are not set. Skipping LLM smoke."
 
       - name: Run LLM smoke
         if: ${{ env.OPENAI_API_KEY != '' }}

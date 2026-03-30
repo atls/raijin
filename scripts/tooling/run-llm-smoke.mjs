@@ -3,13 +3,13 @@ import path from 'node:path'
 
 const repoRoot = process.cwd()
 
-const apiKey = process.env.OPENAI_API_KEY
+const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_SERVICE_ACCOUNT_KEY
 const baseUrl = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
 const model = process.env.OPENAI_MODEL || 'gpt-4.1-mini'
 const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 120000)
 
 if (!apiKey) {
-  console.error('OPENAI_API_KEY is required') // eslint-disable-line no-console
+  console.error('OPENAI_API_KEY or OPENAI_SERVICE_ACCOUNT_KEY is required') // eslint-disable-line no-console
   process.exit(1)
 }
 
