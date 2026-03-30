@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "check-before-pr",
+      "prompt": "run check before pull request",
+      "expectedCommand": "check",
+      "expectedStatus": "active"
+    },
+    {
+      "id": "files-changed-list",
+      "prompt": "list changed files in workspace",
+      "expectedCommand": "files changed list",
+      "expectedStatus": "active"
+    },
+    {
+      "id": "test-integration",
+      "prompt": "run integration tests",
+      "expectedCommand": "test integration",
+      "expectedStatus": "active"
+    },
+    {
+      "id": "test-unit",
+      "prompt": "run only unit tests",
+      "expectedCommand": "test unit",
+      "expectedStatus": "active"
+    },
+    {
+      "id": "service-build",
+      "prompt": "build service bundle",
+      "expectedCommand": "service build",
+      "expectedStatus": "active"
+    },
+    {
+      "id": "set-version-atls",
+      "prompt": "run set version atls for this project",
+      "expectedCommand": "set version atls",
+      "expectedStatus": "active"
+    },
+    {
+      "id": "generate-project-inactive",
+      "prompt": "generate project scaffold",
+      "expectedCommand": "generate project",
+      "expectedStatus": "inactive"
+    }
+  ]
+}

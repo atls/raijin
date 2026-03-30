@@ -1,0 +1,1876 @@
+{
+  "environment": {
+    "nodeVersion": "22",
+    "requiresSourceEnv": true,
+    "requiredEnv": [
+      "NODE_OPTIONS"
+    ],
+    "pnpEnableEsmLoader": true,
+    "yarnPath": "yarn/cli/src/cli.dev.mjs"
+  },
+  "bundle": {
+    "package": "@atls/yarn-cli",
+    "bundleName": "standard",
+    "pluginCount": 42,
+    "plugins": [
+      "@atls/yarn-plugin-badges",
+      "@atls/yarn-plugin-changelog",
+      "@atls/yarn-plugin-check",
+      "@atls/yarn-plugin-checks",
+      "@atls/yarn-plugin-cli-publish",
+      "@atls/yarn-plugin-commit",
+      "@atls/yarn-plugin-essentials",
+      "@atls/yarn-plugin-export",
+      "@atls/yarn-plugin-files",
+      "@atls/yarn-plugin-format",
+      "@atls/yarn-plugin-image",
+      "@atls/yarn-plugin-jsr",
+      "@atls/yarn-plugin-library",
+      "@atls/yarn-plugin-lint",
+      "@atls/yarn-plugin-release",
+      "@atls/yarn-plugin-renderer",
+      "@atls/yarn-plugin-service",
+      "@atls/yarn-plugin-test",
+      "@atls/yarn-plugin-tools",
+      "@atls/yarn-plugin-typescript",
+      "@atls/yarn-plugin-ui",
+      "@atls/yarn-plugin-workspaces",
+      "@yarnpkg/plugin-compat",
+      "@yarnpkg/plugin-dlx",
+      "@yarnpkg/plugin-essentials",
+      "@yarnpkg/plugin-file",
+      "@yarnpkg/plugin-git",
+      "@yarnpkg/plugin-github",
+      "@yarnpkg/plugin-http",
+      "@yarnpkg/plugin-init",
+      "@yarnpkg/plugin-interactive-tools",
+      "@yarnpkg/plugin-link",
+      "@yarnpkg/plugin-nm",
+      "@yarnpkg/plugin-npm",
+      "@yarnpkg/plugin-npm-cli",
+      "@yarnpkg/plugin-pack",
+      "@yarnpkg/plugin-patch",
+      "@yarnpkg/plugin-pnp",
+      "@yarnpkg/plugin-pnpm",
+      "@yarnpkg/plugin-typescript",
+      "@yarnpkg/plugin-version",
+      "@yarnpkg/plugin-workspace-tools"
+    ]
+  },
+  "commands": [
+    {
+      "command": "badges generate",
+      "pathTokens": [
+        "badges",
+        "generate"
+      ],
+      "className": "BadgesCommand",
+      "plugin": "@atls/yarn-plugin-badges",
+      "pluginDir": "plugin-badges",
+      "source": "yarn/plugin-badges/sources/badges.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "changelog generate",
+      "pathTokens": [
+        "changelog",
+        "generate"
+      ],
+      "className": "ChangelogGenerateCommand",
+      "plugin": "@atls/yarn-plugin-changelog",
+      "pluginDir": "plugin-changelog",
+      "source": "yarn/plugin-changelog/sources/changelog-generate.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "check",
+      "pathTokens": [
+        "check"
+      ],
+      "className": "CheckCommand",
+      "plugin": "@atls/yarn-plugin-check",
+      "pluginDir": "plugin-check",
+      "source": "yarn/plugin-check/sources/check.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "checks lint",
+      "pathTokens": [
+        "checks",
+        "lint"
+      ],
+      "className": "ChecksLintCommand",
+      "plugin": "@atls/yarn-plugin-checks",
+      "pluginDir": "plugin-checks",
+      "source": "yarn/plugin-checks/sources/checks-lint.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "checks release",
+      "pathTokens": [
+        "checks",
+        "release"
+      ],
+      "className": "ChecksReleaseCommand",
+      "plugin": "@atls/yarn-plugin-checks",
+      "pluginDir": "plugin-checks",
+      "source": "yarn/plugin-checks/sources/checks-release.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "checks run",
+      "pathTokens": [
+        "checks",
+        "run"
+      ],
+      "className": "ChecksRunCommand",
+      "plugin": "@atls/yarn-plugin-checks",
+      "pluginDir": "plugin-checks",
+      "source": "yarn/plugin-checks/sources/checks-run.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "checks test integration",
+      "pathTokens": [
+        "checks",
+        "test",
+        "integration"
+      ],
+      "className": "ChecksTestIntegrationCommand",
+      "plugin": "@atls/yarn-plugin-checks",
+      "pluginDir": "plugin-checks",
+      "source": "yarn/plugin-checks/sources/checks-test-integration.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "checks test unit",
+      "pathTokens": [
+        "checks",
+        "test",
+        "unit"
+      ],
+      "className": "ChecksTestUnitCommand",
+      "plugin": "@atls/yarn-plugin-checks",
+      "pluginDir": "plugin-checks",
+      "source": "yarn/plugin-checks/sources/checks-test-unit.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "checks typecheck",
+      "pathTokens": [
+        "checks",
+        "typecheck"
+      ],
+      "className": "ChecksTypeCheckCommand",
+      "plugin": "@atls/yarn-plugin-checks",
+      "pluginDir": "plugin-checks",
+      "source": "yarn/plugin-checks/sources/checks-typecheck.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "commit message",
+      "pathTokens": [
+        "commit",
+        "message"
+      ],
+      "className": "CommitMessageCommand",
+      "plugin": "@atls/yarn-plugin-commit",
+      "pluginDir": "plugin-commit",
+      "source": "yarn/plugin-commit/sources/commit-message.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "commit message lint",
+      "pathTokens": [
+        "commit",
+        "message",
+        "lint"
+      ],
+      "className": "CommitMessageLintCommand",
+      "plugin": "@atls/yarn-plugin-commit",
+      "pluginDir": "plugin-commit",
+      "source": "yarn/plugin-commit/sources/commit-message-lint.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "commit staged",
+      "pathTokens": [
+        "commit",
+        "staged"
+      ],
+      "className": "CommitStagedCommand",
+      "plugin": "@atls/yarn-plugin-commit",
+      "pluginDir": "plugin-commit",
+      "source": "yarn/plugin-commit/sources/commit-staged.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "export",
+      "pathTokens": [
+        "export"
+      ],
+      "className": "WorkspaceExportCommand",
+      "plugin": "@atls/yarn-plugin-export",
+      "pluginDir": "plugin-export",
+      "source": "yarn/plugin-export/sources/commands/workspace-export.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "files changed list",
+      "pathTokens": [
+        "files",
+        "changed",
+        "list"
+      ],
+      "className": "FilesChangedListCommand",
+      "plugin": "@atls/yarn-plugin-files",
+      "pluginDir": "plugin-files",
+      "source": "yarn/plugin-files/sources/files-changed-list.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "format",
+      "pathTokens": [
+        "format"
+      ],
+      "className": "FormatCommand",
+      "plugin": "@atls/yarn-plugin-format",
+      "pluginDir": "plugin-format",
+      "source": "yarn/plugin-format/sources/format.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "generate project",
+      "pathTokens": [
+        "generate",
+        "project"
+      ],
+      "className": "GenerateProjectCommand",
+      "plugin": "@atls/yarn-plugin-schematics",
+      "pluginDir": "plugin-schematics",
+      "source": "yarn/plugin-schematics/sources/generate-project.command.tsx",
+      "status": "inactive",
+      "availabilityReason": "plugin is not included in @atls/yarn-cli standard bundle"
+    },
+    {
+      "command": "image pack",
+      "pathTokens": [
+        "image",
+        "pack"
+      ],
+      "className": "ImagePackCommand",
+      "plugin": "@atls/yarn-plugin-image",
+      "pluginDir": "plugin-image",
+      "source": "yarn/plugin-image/sources/image-pack.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "jsr publish",
+      "pathTokens": [
+        "jsr",
+        "publish"
+      ],
+      "className": "JsrPublishCommand",
+      "plugin": "@atls/yarn-plugin-jsr",
+      "pluginDir": "plugin-jsr",
+      "source": "yarn/plugin-jsr/sources/jsr-publish.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "library build",
+      "pathTokens": [
+        "library",
+        "build"
+      ],
+      "className": "LibraryBuildCommand",
+      "plugin": "@atls/yarn-plugin-library",
+      "pluginDir": "plugin-library",
+      "source": "yarn/plugin-library/sources/library-build.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "lint",
+      "pathTokens": [
+        "lint"
+      ],
+      "className": "LintCommand",
+      "plugin": "@atls/yarn-plugin-lint",
+      "pluginDir": "plugin-lint",
+      "source": "yarn/plugin-lint/sources/lint.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "migration up",
+      "pathTokens": [
+        "migration",
+        "up"
+      ],
+      "className": "MigrationUpCommand",
+      "plugin": "@atls/yarn-plugin-schematics",
+      "pluginDir": "plugin-schematics",
+      "source": "yarn/plugin-schematics/sources/migration-up.command.tsx",
+      "status": "inactive",
+      "availabilityReason": "plugin is not included in @atls/yarn-cli standard bundle"
+    },
+    {
+      "command": "release create",
+      "pathTokens": [
+        "release",
+        "create"
+      ],
+      "className": "ReleaseCreateCommand",
+      "plugin": "@atls/yarn-plugin-release",
+      "pluginDir": "plugin-release",
+      "source": "yarn/plugin-release/sources/release-create.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "renderer build",
+      "pathTokens": [
+        "renderer",
+        "build"
+      ],
+      "className": "RendererBuildCommand",
+      "plugin": "@atls/yarn-plugin-renderer",
+      "pluginDir": "plugin-renderer",
+      "source": "yarn/plugin-renderer/sources/commands/renderer-build.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "renderer dev",
+      "pathTokens": [
+        "renderer",
+        "dev"
+      ],
+      "className": "RendererDevCommand",
+      "plugin": "@atls/yarn-plugin-renderer",
+      "pluginDir": "plugin-renderer",
+      "source": "yarn/plugin-renderer/sources/commands/renderer-dev.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "service build",
+      "pathTokens": [
+        "service",
+        "build"
+      ],
+      "className": "ServiceBuildCommand",
+      "plugin": "@atls/yarn-plugin-service",
+      "pluginDir": "plugin-service",
+      "source": "yarn/plugin-service/sources/service-build.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "service dev",
+      "pathTokens": [
+        "service",
+        "dev"
+      ],
+      "className": "ServiceDevCommand",
+      "plugin": "@atls/yarn-plugin-service",
+      "pluginDir": "plugin-service",
+      "source": "yarn/plugin-service/sources/service-dev.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "set version atls",
+      "pathTokens": [
+        "set",
+        "version",
+        "atls"
+      ],
+      "className": "SetVersionCommand",
+      "plugin": "@atls/yarn-plugin-essentials",
+      "pluginDir": "plugin-essentials",
+      "source": "yarn/plugin-essentials/sources/commands/set-version.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "test",
+      "pathTokens": [
+        "test"
+      ],
+      "className": "TestCommand",
+      "plugin": "@atls/yarn-plugin-test",
+      "pluginDir": "plugin-test",
+      "source": "yarn/plugin-test/sources/test.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "test integration",
+      "pathTokens": [
+        "test",
+        "integration"
+      ],
+      "className": "TestIntegrationCommand",
+      "plugin": "@atls/yarn-plugin-test",
+      "pluginDir": "plugin-test",
+      "source": "yarn/plugin-test/sources/test-integration.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "test unit",
+      "pathTokens": [
+        "test",
+        "unit"
+      ],
+      "className": "TestUnitCommand",
+      "plugin": "@atls/yarn-plugin-test",
+      "pluginDir": "plugin-test",
+      "source": "yarn/plugin-test/sources/test-unit.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "tools sync",
+      "pathTokens": [
+        "tools",
+        "sync"
+      ],
+      "className": "ToolsSyncCommand",
+      "plugin": "@atls/yarn-plugin-tools",
+      "pluginDir": "plugin-tools",
+      "source": "yarn/plugin-tools/sources/commands/sync/tools-sync.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "tools sync tsconfig",
+      "pathTokens": [
+        "tools",
+        "sync",
+        "tsconfig"
+      ],
+      "className": "ToolsSyncTSConfigCommand",
+      "plugin": "@atls/yarn-plugin-tools",
+      "pluginDir": "plugin-tools",
+      "source": "yarn/plugin-tools/sources/commands/sync/tools-sync-tsconfig.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "tools sync typescript",
+      "pathTokens": [
+        "tools",
+        "sync",
+        "typescript"
+      ],
+      "className": "ToolsSyncTypeScriptCommand",
+      "plugin": "@atls/yarn-plugin-tools",
+      "pluginDir": "plugin-tools",
+      "source": "yarn/plugin-tools/sources/commands/sync/tools-sync-typescript.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "typecheck",
+      "pathTokens": [
+        "typecheck"
+      ],
+      "className": "TypeCheckCommand",
+      "plugin": "@atls/yarn-plugin-typescript",
+      "pluginDir": "plugin-typescript",
+      "source": "yarn/plugin-typescript/sources/typecheck.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "ui icons generate",
+      "pathTokens": [
+        "ui",
+        "icons",
+        "generate"
+      ],
+      "className": "UiIconsGenerateCommand",
+      "plugin": "@atls/yarn-plugin-ui",
+      "pluginDir": "plugin-ui",
+      "source": "yarn/plugin-ui/sources/commands/ui-icons-generate.command.tsx",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "workspaces changed foreach",
+      "pathTokens": [
+        "workspaces",
+        "changed",
+        "foreach"
+      ],
+      "className": "WorkspacesChangedForeachCommand",
+      "plugin": "@atls/yarn-plugin-workspaces",
+      "pluginDir": "plugin-workspaces",
+      "source": "yarn/plugin-workspaces/sources/workspaces-changed-foreach.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "workspaces changed list",
+      "pathTokens": [
+        "workspaces",
+        "changed",
+        "list"
+      ],
+      "className": "WorkspacesChangedListCommand",
+      "plugin": "@atls/yarn-plugin-workspaces",
+      "pluginDir": "plugin-workspaces",
+      "source": "yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    }
+  ],
+  "workspaces": [
+    {
+      "name": "@atls/cli-ui-error-info-component",
+      "location": "cli/cli-ui-error-info",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 1,
+      "devDependencyCount": 4,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-file-link-component",
+      "location": "cli/cli-ui-file-link",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 1,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-file-path-component",
+      "location": "cli/cli-ui-file-path",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 0,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-format-progress-component",
+      "location": "cli/cli-ui-format-progress",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-git-commit-component",
+      "location": "cli/cli-ui-git-commit",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 0,
+      "devDependencyCount": 13,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-icons-progress-component",
+      "location": "cli/cli-ui-icons-progress",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-line-component",
+      "location": "cli/cli-ui-line",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 0,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-lint-progress-component",
+      "location": "cli/cli-ui-lint-progress",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-lint-result-component",
+      "location": "cli/cli-ui-lint-result",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 4,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-log-record-component",
+      "location": "cli/cli-ui-log-record",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 9,
+      "devDependencyCount": 5,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-pretty-logs-component",
+      "location": "cli/cli-ui-pretty-logs",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 4,
+      "devDependencyCount": 2,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/cli-ui-raw-output-component",
+      "location": "cli/cli-ui-raw-output",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 3,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-renderer-static-component",
+      "location": "cli/cli-ui-render-static",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 2,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/cli-ui-schematics-component",
+      "location": "cli/cli-ui-schematics-component",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 0,
+      "devDependencyCount": 12,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-service-progress-component",
+      "location": "cli/cli-ui-service-progress",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-source-preview-component",
+      "location": "cli/cli-ui-source-preview",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 7,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-stack-trace-component",
+      "location": "cli/cli-ui-stack-trace",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 5,
+      "devDependencyCount": 4,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-test-failure-component",
+      "location": "cli/cli-ui-test-failure",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 4,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-test-progress-component",
+      "location": "cli/cli-ui-test-progress",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-typescript-progress-component",
+      "location": "cli/cli-ui-types-check-progress",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/cli-ui-typescript-diagnostic-component",
+      "location": "cli/cli-ui-typescript-diagnostic",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 3,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/code-changelog",
+      "location": "code/code-changelog",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-commit",
+      "location": "code/code-commit",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 10,
+      "devDependencyCount": 2,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-configuration",
+      "location": "code/code-configuration",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 1,
+      "devDependencyCount": 0,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-format",
+      "location": "code/code-format",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 5,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-github",
+      "location": "code/code-github",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 0,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-icons",
+      "location": "code/code-icons",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 7,
+      "devDependencyCount": 4,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-jsr",
+      "location": "code/code-jsr",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 1,
+      "devDependencyCount": 0,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-lint",
+      "location": "code/code-lint",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 3,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/code-pack",
+      "location": "code/code-pack",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 4,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-schematics",
+      "location": "code/code-schematics",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-service",
+      "location": "code/code-service",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 7,
+      "devDependencyCount": 5,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-test",
+      "location": "code/code-test",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "build:worker",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-typescript",
+      "location": "code/code-typescript",
+      "group": "code",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "build:worker",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 2,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/config-commitlint",
+      "location": "config/commitlint",
+      "group": "config",
+      "private": false,
+      "description": "",
+      "purposeEn": "Shared tooling configuration package",
+      "purposeRu": "Пакет конфигурации для shared tooling",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 0,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/config-eslint",
+      "location": "config/eslint",
+      "group": "config",
+      "private": false,
+      "description": "",
+      "purposeEn": "Shared tooling configuration package",
+      "purposeRu": "Пакет конфигурации для shared tooling",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 15,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/config-prettier",
+      "location": "config/prettier",
+      "group": "config",
+      "private": false,
+      "description": "",
+      "purposeEn": "Shared tooling configuration package",
+      "purposeRu": "Пакет конфигурации для shared tooling",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 1,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/config-typescript",
+      "location": "config/typescript",
+      "group": "config",
+      "private": false,
+      "description": "",
+      "purposeEn": "Shared tooling configuration package",
+      "purposeRu": "Пакет конфигурации для shared tooling",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 0,
+      "devDependencyCount": 0,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/prettier-plugin",
+      "location": "prettier/plugin",
+      "group": "prettier",
+      "private": false,
+      "description": "",
+      "purposeEn": "Prettier plugin and formatting utilities",
+      "purposeRu": "Prettier-плагин и форматирование",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 7,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/code-runtime",
+      "location": "runtime/code-runtime",
+      "group": "runtime",
+      "private": false,
+      "description": "",
+      "purposeEn": "Code utility library used by raijin tooling",
+      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 11,
+      "devDependencyCount": 2,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/schematics-utils",
+      "location": "schematics/schematics-utils",
+      "group": "schematics",
+      "private": false,
+      "description": "",
+      "purposeEn": "Schematics and template generation package",
+      "purposeRu": "Пакет генерации схем и шаблонов",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 5,
+      "devDependencyCount": 4,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/schematics",
+      "location": "schematics/schematics",
+      "group": "schematics",
+      "private": false,
+      "description": "",
+      "purposeEn": "Schematics and template generation package",
+      "purposeRu": "Пакет генерации схем и шаблонов",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 4,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/webpack-proto-imports-loader",
+      "location": "webpack/webpack-proto-imports-loader",
+      "group": "webpack",
+      "private": false,
+      "description": "",
+      "purposeEn": "Webpack integration for tools ecosystem",
+      "purposeRu": "Webpack интеграция для экосистемы tools",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 3,
+      "devDependencyCount": 9,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/webpack-start-server-plugin",
+      "location": "webpack/webpack-start-server-plugin",
+      "group": "webpack",
+      "private": false,
+      "description": "",
+      "purposeEn": "Webpack integration for tools ecosystem",
+      "purposeRu": "Webpack интеграция для экосистемы tools",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 1,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/yarn-cli-tools",
+      "location": "yarn/cli-tools",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Entrypoint for custom yarn CLI and bundle configuration",
+      "purposeRu": "Входная точка кастомного yarn CLI и bundle-конфигурации",
+      "scripts": [],
+      "dependencyCount": 52,
+      "devDependencyCount": 0,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/yarn-cli",
+      "location": "yarn/cli",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Entrypoint for custom yarn CLI and bundle configuration",
+      "purposeRu": "Входная точка кастомного yarn CLI и bundle-конфигурации",
+      "scripts": [
+        "build",
+        "build:bundle",
+        "build:clean",
+        "build:dist",
+        "build:fix",
+        "build:version",
+        "fix",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 53,
+      "devDependencyCount": 0,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/yarn-pack-utils",
+      "location": "yarn/pack-utils",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Utility package for yarn ecosystem",
+      "purposeRu": "Вспомогательная утилита экосистемы yarn",
+      "scripts": [],
+      "dependencyCount": 1,
+      "devDependencyCount": 7,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/yarn-plugin-badges",
+      "location": "yarn/plugin-badges",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for badges domain",
+      "purposeRu": "Yarn-плагин для домена badges",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 1,
+      "devDependencyCount": 5,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-changelog",
+      "location": "yarn/plugin-changelog",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for changelog domain",
+      "purposeRu": "Yarn-плагин для домена changelog",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-check",
+      "location": "yarn/plugin-check",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for check domain",
+      "purposeRu": "Yarn-плагин для домена check",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 0,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-checks",
+      "location": "yarn/plugin-checks",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for checks domain",
+      "purposeRu": "Yarn-плагин для домена checks",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 15,
+      "devDependencyCount": 10,
+      "peerDependencyCount": 3
+    },
+    {
+      "name": "@atls/yarn-plugin-cli-publish",
+      "location": "yarn/plugin-cli-publish",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for cli-publish domain",
+      "purposeRu": "Yarn-плагин для домена cli-publish",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 0,
+      "devDependencyCount": 5,
+      "peerDependencyCount": 3
+    },
+    {
+      "name": "@atls/yarn-plugin-commit",
+      "location": "yarn/plugin-commit",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for commit domain",
+      "purposeRu": "Yarn-плагин для домена commit",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 10,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 3
+    },
+    {
+      "name": "@atls/yarn-plugin-essentials",
+      "location": "yarn/plugin-essentials",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for essentials domain",
+      "purposeRu": "Yarn-плагин для домена essentials",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 4,
+      "peerDependencyCount": 3
+    },
+    {
+      "name": "@atls/yarn-plugin-export",
+      "location": "yarn/plugin-export",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for export domain",
+      "purposeRu": "Yarn-плагин для домена export",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 5,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-files",
+      "location": "yarn/plugin-files",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for files domain",
+      "purposeRu": "Yarn-плагин для домена files",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 3,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-format",
+      "location": "yarn/plugin-format",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for format domain",
+      "purposeRu": "Yarn-плагин для домена format",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 8,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-image",
+      "location": "yarn/plugin-image",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for image domain",
+      "purposeRu": "Yarn-плагин для домена image",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 6,
+      "devDependencyCount": 5,
+      "peerDependencyCount": 3
+    },
+    {
+      "name": "@atls/yarn-plugin-jsr",
+      "location": "yarn/plugin-jsr",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for jsr domain",
+      "purposeRu": "Yarn-плагин для домена jsr",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 4,
+      "peerDependencyCount": 3
+    },
+    {
+      "name": "@atls/yarn-plugin-library",
+      "location": "yarn/plugin-library",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for library domain",
+      "purposeRu": "Yarn-плагин для домена library",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 11,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-lint",
+      "location": "yarn/plugin-lint",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for lint domain",
+      "purposeRu": "Yarn-плагин для домена lint",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 9,
+      "devDependencyCount": 7,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-pnp-patch",
+      "location": "yarn/plugin-pnp-patch",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for pnp-patch domain",
+      "purposeRu": "Yarn-плагин для домена pnp-patch",
+      "scripts": [
+        "build",
+        "build:loader",
+        "build:source",
+        "postpack",
+        "prepack",
+        "yarn:download"
+      ],
+      "dependencyCount": 5,
+      "devDependencyCount": 6,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/yarn-plugin-release",
+      "location": "yarn/plugin-release",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for release domain",
+      "purposeRu": "Yarn-плагин для домена release",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 3,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-renderer",
+      "location": "yarn/plugin-renderer",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for renderer domain",
+      "purposeRu": "Yarn-плагин для домена renderer",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 3,
+      "devDependencyCount": 8,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-schematics",
+      "location": "yarn/plugin-schematics",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for schematics domain",
+      "purposeRu": "Yarn-плагин для домена schematics",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 9,
+      "devDependencyCount": 9,
+      "peerDependencyCount": 5
+    },
+    {
+      "name": "@atls/yarn-plugin-service",
+      "location": "yarn/plugin-service",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for service domain",
+      "purposeRu": "Yarn-плагин для домена service",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 11,
+      "devDependencyCount": 7,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-test",
+      "location": "yarn/plugin-test",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for test domain",
+      "purposeRu": "Yarn-плагин для домена test",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 11,
+      "devDependencyCount": 8,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-tools",
+      "location": "yarn/plugin-tools",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for tools domain",
+      "purposeRu": "Yarn-плагин для домена tools",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 6,
+      "devDependencyCount": 5,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/yarn-plugin-typescript",
+      "location": "yarn/plugin-typescript",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for typescript domain",
+      "purposeRu": "Yarn-плагин для домена typescript",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 11,
+      "devDependencyCount": 7,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-ui",
+      "location": "yarn/plugin-ui",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for ui domain",
+      "purposeRu": "Yarn-плагин для домена ui",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 8,
+      "devDependencyCount": 7,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-plugin-workspaces",
+      "location": "yarn/plugin-workspaces",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Yarn plugin for workspaces domain",
+      "purposeRu": "Yarn-плагин для домена workspaces",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 3,
+      "devDependencyCount": 4,
+      "peerDependencyCount": 2
+    },
+    {
+      "name": "@atls/yarn-run-utils",
+      "location": "yarn/run-utils",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Utility package for yarn ecosystem",
+      "purposeRu": "Вспомогательная утилита экосистемы yarn",
+      "scripts": [],
+      "dependencyCount": 1,
+      "devDependencyCount": 0,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/yarn-test-utils",
+      "location": "yarn/test-utils",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Utility package for yarn ecosystem",
+      "purposeRu": "Вспомогательная утилита экосистемы yarn",
+      "scripts": [],
+      "dependencyCount": 3,
+      "devDependencyCount": 0,
+      "peerDependencyCount": 0
+    },
+    {
+      "name": "@atls/yarn-workspace-utils",
+      "location": "yarn/workspace-utils",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Utility package for yarn ecosystem",
+      "purposeRu": "Вспомогательная утилита экосистемы yarn",
+      "scripts": [],
+      "dependencyCount": 0,
+      "devDependencyCount": 1,
+      "peerDependencyCount": 0
+    }
+  ],
+  "availability": {
+    "activeCommands": [
+      "badges generate",
+      "changelog generate",
+      "check",
+      "checks lint",
+      "checks release",
+      "checks run",
+      "checks test integration",
+      "checks test unit",
+      "checks typecheck",
+      "commit message",
+      "commit message lint",
+      "commit staged",
+      "export",
+      "files changed list",
+      "format",
+      "image pack",
+      "jsr publish",
+      "library build",
+      "lint",
+      "release create",
+      "renderer build",
+      "renderer dev",
+      "service build",
+      "service dev",
+      "set version atls",
+      "test",
+      "test integration",
+      "test unit",
+      "tools sync",
+      "tools sync tsconfig",
+      "tools sync typescript",
+      "typecheck",
+      "ui icons generate",
+      "workspaces changed foreach",
+      "workspaces changed list"
+    ],
+    "inactiveCommands": [
+      "generate project",
+      "migration up"
+    ],
+    "activePlugins": [
+      "@atls/yarn-plugin-badges",
+      "@atls/yarn-plugin-changelog",
+      "@atls/yarn-plugin-check",
+      "@atls/yarn-plugin-checks",
+      "@atls/yarn-plugin-cli-publish",
+      "@atls/yarn-plugin-commit",
+      "@atls/yarn-plugin-essentials",
+      "@atls/yarn-plugin-export",
+      "@atls/yarn-plugin-files",
+      "@atls/yarn-plugin-format",
+      "@atls/yarn-plugin-image",
+      "@atls/yarn-plugin-jsr",
+      "@atls/yarn-plugin-library",
+      "@atls/yarn-plugin-lint",
+      "@atls/yarn-plugin-release",
+      "@atls/yarn-plugin-renderer",
+      "@atls/yarn-plugin-service",
+      "@atls/yarn-plugin-test",
+      "@atls/yarn-plugin-tools",
+      "@atls/yarn-plugin-typescript",
+      "@atls/yarn-plugin-ui",
+      "@atls/yarn-plugin-workspaces"
+    ],
+    "inactivePlugins": [
+      {
+        "name": "@atls/yarn-plugin-pnp-patch",
+        "reason": "plugin is not in bundle"
+      },
+      {
+        "name": "@atls/yarn-plugin-schematics",
+        "reason": "plugin is not in bundle"
+      }
+    ]
+  },
+  "lastGenerated": "2026-03-30T01:47:09.539Z"
+}

@@ -10,6 +10,14 @@ runs:
   using: composite
 
   steps:
+    - name: Tooling checks
+      shell: bash
+      run: |
+        node scripts/tooling/generate-artifacts.mjs
+        git diff --exit-code -- docs/tooling .agents
+        node scripts/tooling/check-localization-sync.mjs
+        node scripts/tooling/run-deterministic-smoke.mjs
+
     - name: Checks
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
