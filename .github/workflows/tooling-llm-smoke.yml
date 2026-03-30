@@ -1,0 +1,58 @@
+name: Tooling LLM Smoke
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      model:
+        description: OpenAI model name
+        required: false
+        default: gpt-4.1-mini
+
+jobs:
+  llm-smoke:
+    name: LLM routing smoke
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NODE_VERSION: '22'
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_MODEL: ${{ inputs.model || vars.OPENAI_SMOKE_MODEL || 'gpt-4.1-mini' }}
+      LLM_SMOKE_REPORT_PATH: artifacts/llm-smoke-report.json
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Generate tooling artifacts
+        run: node scripts/tooling/generate-artifacts.mjs
+
+      - name: Validate localization sync
+        run: node scripts/tooling/check-localization-sync.mjs
+
+      - name: Run deterministic smoke
+        run: node scripts/tooling/run-deterministic-smoke.mjs
+
+      - name: Skip when OPENAI_API_KEY is missing
+        if: ${{ env.OPENAI_API_KEY == '' }}
+        run: |
+          echo "OPENAI_API_KEY is not set. Skipping LLM smoke."
+
+      - name: Run LLM smoke
+        if: ${{ env.OPENAI_API_KEY != '' }}
+        run: node scripts/tooling/run-llm-smoke.mjs
+
+      - name: Upload LLM smoke report
+        if: ${{ always() && env.OPENAI_API_KEY != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tooling-llm-smoke-report
+          path: artifacts/llm-smoke-report.json
+          if-no-files-found: error
