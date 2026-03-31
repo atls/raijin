@@ -10,6 +10,7 @@ const normalizeValues = (values) => [...new Set(values)].sort((a, b) => a.locale
 const extractSyncMarkers = (content) =>
   [...content.matchAll(/<!--\s*sync:([a-z0-9._-]+)\s*-->/gi)].map((match) => match[1])
 
+// Level-3 headings are used as stable identifiers for command/package cards.
 const extractLevel3Headings = (content) =>
   content
     .split('\n')
