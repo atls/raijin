@@ -4,6 +4,7 @@ import type { ts }                      from '@atls/code-runtime/typescript'
 import type { Annotation }              from './github.checks.js'
 
 import { EOL }                          from 'node:os'
+import { resolve }                      from 'node:path'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { Configuration }                from '@yarnpkg/core'
@@ -15,19 +16,24 @@ import { codeFrameColumns }             from '@babel/code-frame'
 import { execUtils }                    from '@yarnpkg/core'
 import { scriptUtils }                  from '@yarnpkg/core'
 import { xfs }                          from '@yarnpkg/fslib'
+import { npath }                        from '@yarnpkg/fslib'
 import { ppath }                        from '@yarnpkg/fslib'
+import { Option }                       from 'clipanion'
 import { flattenDiagnosticMessageText } from 'typescript'
 import React                            from 'react'
 
 import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
 import { TypeScript }                   from '@atls/code-typescript'
 import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { getChangedFiles }              from '@atls/yarn-plugin-files'
 
 import { GitHubChecks }                 from './github.checks.js'
 import { AnnotationLevel }              from './github.checks.js'
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static paths = [['checks', 'typecheck']]
+
+  changed = Option.Boolean('--changed', false)
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
@@ -73,8 +79,10 @@ class ChecksTypeCheckCommand extends BaseCommand {
         await report.startTimerPromise('TypeCheck', async () => {
           try {
             const typescript = await TypeScript.initialize(project.cwd)
+            const includes = await this.getIncludes(project)
 
-            const diagnostics = await typescript.check(await this.getIncludes(project))
+            const diagnostics =
+              this.changed && includes.length === 0 ? [] : await typescript.check(includes)
 
             diagnostics.forEach((diagnostic: ts.Diagnostic) => {
               const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
@@ -141,6 +149,19 @@ class ChecksTypeCheckCommand extends BaseCommand {
   }
 
   protected async getIncludes(project: Project): Promise<Array<string>> {
+    if (this.changed) {
+      const includes = (await getChangedFiles(project))
+        .filter((file) => /\.(cts|mts|ts|tsx)$/.test(file))
+        .filter((file) => !file.endsWith('.d.ts'))
+
+      const existsMap = await Promise.all(
+        includes.map(async (file) =>
+          xfs.existsPromise(npath.toPortablePath(resolve(project.cwd, file))))
+      )
+
+      return includes.filter((_, index) => existsMap[index])
+    }
+
     if (await xfs.existsPromise(ppath.join(project.cwd, 'tsconfig.json'))) {
       const tsconfig: { include?: Array<string> } = await xfs.readJsonPromise(
         ppath.join(project.cwd, 'tsconfig.json')

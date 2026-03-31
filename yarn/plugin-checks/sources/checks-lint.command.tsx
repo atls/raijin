@@ -6,6 +6,7 @@ import type { Linter as ESLinter } from '@atls/code-runtime/eslint'
 import type { Annotation }         from './github.checks.js'
 
 import { readFileSync }            from 'node:fs'
+import { resolve }                 from 'node:path'
 
 import { BaseCommand }             from '@yarnpkg/cli'
 import { StreamReport }            from '@yarnpkg/core'
@@ -17,17 +18,22 @@ import { codeFrameColumns }        from '@babel/code-frame'
 import { execUtils }               from '@yarnpkg/core'
 import { scriptUtils }             from '@yarnpkg/core'
 import { xfs }                     from '@yarnpkg/fslib'
+import { npath }                   from '@yarnpkg/fslib'
+import { Option }                  from 'clipanion'
 import React                       from 'react'
 
 import { LintResult }              from '@atls/cli-ui-lint-result-component'
 import { Linter }                  from '@atls/code-lint'
 import { renderStatic }            from '@atls/cli-ui-renderer-static-component'
+import { getChangedFiles }         from '@atls/yarn-plugin-files'
 
 import { GitHubChecks }            from './github.checks.js'
 import { AnnotationLevel }         from './github.checks.js'
 
 class ChecksLintCommand extends BaseCommand {
   static paths = [['checks', 'lint']]
+
+  changed = Option.Boolean('--changed', false)
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
@@ -73,7 +79,14 @@ class ChecksLintCommand extends BaseCommand {
         await report.startTimerPromise('Lint', async () => {
           try {
             const linter = await Linter.initialize(project.cwd, this.context.cwd)
-            const results = await linter.lint()
+            const lintTargets = await this.getLintTargets(project)
+            let results: Array<ESLint.LintResult> = []
+
+            if (lintTargets === null) {
+              results = await linter.lint()
+            } else if (lintTargets.length > 0) {
+              results = await linter.lint(lintTargets)
+            }
 
             results
               .filter((result) => result.messages.length > 0)
@@ -115,6 +128,22 @@ class ChecksLintCommand extends BaseCommand {
     )
 
     return commandReport.exitCode()
+  }
+
+  private async getLintTargets(project: Project): Promise<Array<string> | null> {
+    if (!this.changed) {
+      return null
+    }
+
+    const lintTargets = (await getChangedFiles(project))
+      .filter((file) => /\.(cjs|mjs|js|jsx|ts|tsx)$/.test(file))
+      .map((file) => resolve(project.cwd, file))
+
+    const existsMap = await Promise.all(
+      lintTargets.map(async (file) => xfs.existsPromise(npath.toPortablePath(file)))
+    )
+
+    return lintTargets.filter((_, index) => existsMap[index])
   }
 
   private getAnnotationLevel(severity: ESLinter.Severity): AnnotationLevel {

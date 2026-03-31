@@ -3,7 +3,8 @@ import path from 'node:path'
 
 const repoRoot = process.cwd()
 
-const readJson = (relativePath) => JSON.parse(fs.readFileSync(path.join(repoRoot, relativePath), 'utf8'))
+const readJson = (relativePath) =>
+  JSON.parse(fs.readFileSync(path.join(repoRoot, relativePath), 'utf8'))
 
 const normalize = (value) =>
   value
@@ -42,7 +43,10 @@ const scoreRoute = (promptTokens, commandTokens, commandName) => {
       continue
     }
 
-    if (token.length >= 4 && promptTokens.some((promptToken) => promptToken.startsWith(token.slice(0, 4)))) {
+    if (
+      token.length >= 4 &&
+      promptTokens.some((promptToken) => promptToken.startsWith(token.slice(0, 4)))
+    ) {
       score += 1
     }
   }
@@ -76,8 +80,10 @@ const isBetterMatch = (candidate, best) => {
 
 const routePrompt = (prompt, commands) => {
   const promptTokens = tokenize(prompt)
+  const minimumActiveFallbackScore = 5
 
   let best = null
+  let bestActive = null
 
   for (const command of commands) {
     const commandTokens = command.pathTokens.map((token) => normalize(token)).filter(Boolean)
@@ -91,6 +97,10 @@ const routePrompt = (prompt, commands) => {
     if (isBetterMatch(candidate, best)) {
       best = candidate
     }
+
+    if (command.status === 'active' && isBetterMatch(candidate, bestActive)) {
+      bestActive = candidate
+    }
   }
 
   if (!best) {
@@ -101,15 +111,19 @@ const routePrompt = (prompt, commands) => {
     }
   }
 
-  if (best && best.command.status !== 'active') {
-    return {
-      command: '',
-      status: 'unavailable',
-      availabilityReason: `Best semantic match "${best.command.command}" is inactive`,
-    }
+  if (best.command.status === 'active') {
+    return best.command
   }
 
-  return best.command
+  if (bestActive && bestActive.score >= minimumActiveFallbackScore) {
+    return bestActive.command
+  }
+
+  return {
+    command: '',
+    status: 'unavailable',
+    availabilityReason: `Best semantic match "${best.command.command}" is inactive and no strong active match exists`,
+  }
 }
 
 const index = readJson('docs/tooling/index.v1.json')
@@ -137,12 +151,16 @@ for (const testCase of fixture.cases) {
   }
 
   if (routed.command !== testCase.expectedCommand) {
-    failures.push(`${testCase.id}: expected command "${testCase.expectedCommand}", got "${routed.command}"`)
+    failures.push(
+      `${testCase.id}: expected command "${testCase.expectedCommand}", got "${routed.command}"`
+    )
     continue
   }
 
   if (routed.status !== testCase.expectedStatus) {
-    failures.push(`${testCase.id}: expected status "${testCase.expectedStatus}", got "${routed.status}"`)
+    failures.push(
+      `${testCase.id}: expected status "${testCase.expectedStatus}", got "${routed.status}"`
+    )
   }
 }
 

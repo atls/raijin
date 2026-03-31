@@ -46,9 +46,7 @@ const parseJsonObject = (text) => {
 }
 
 const callOpenAI = async (prompt, commands) => {
-  const commandLines = commands
-    .map((command) => `${command.command}|${command.status}`)
-    .join('\n')
+  const commandLines = commands.map((command) => `${command.command}|${command.status}`).join('\n')
 
   const body = {
     model,
@@ -60,8 +58,7 @@ const callOpenAI = async (prompt, commands) => {
         content: [
           {
             type: 'input_text',
-            text:
-              'You route prompts to active command list entries. Return only JSON object with keys command and status.',
+            text: 'You route prompts to active command list entries. Return only JSON object with keys command and status.',
           },
         ],
       },
@@ -76,7 +73,8 @@ const callOpenAI = async (prompt, commands) => {
               '',
               `Prompt: ${prompt}`,
               '',
-              'If best semantic match is inactive or no active command matches, return {"command":"","status":"unavailable"}.',
+              'If multiple commands match semantically, prefer the best active command when it is a clear match.',
+              'Return unavailable when no command matches, or when the strongest match is inactive and active matches are only weak overlaps.',
               'Return exactly JSON: {"command":"...","status":"active|unavailable"}',
             ].join('\n'),
           },
@@ -149,7 +147,7 @@ for (const testCase of fixture.cases) {
       )
     }
   } catch (error) {
-    failures.push(`${testCase.id}: ${(error instanceof Error ? error.message : String(error))}`)
+    failures.push(`${testCase.id}: ${error instanceof Error ? error.message : String(error)}`)
   }
 }
 
