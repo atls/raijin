@@ -450,6 +450,12 @@ const smokeFixture = {
       expectedCommand: '',
       expectedStatus: 'unavailable',
     },
+    {
+      id: 'no-route-unavailable',
+      prompt: 'summarize yesterday meeting notes',
+      expectedCommand: '',
+      expectedStatus: 'unavailable',
+    },
   ],
 }
 
