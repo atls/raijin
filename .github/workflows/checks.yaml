@@ -46,3 +46,8 @@ jobs:
           fi
           node scripts/tooling/check-localization-sync.mjs
           node scripts/tooling/run-deterministic-smoke.mjs
+
+      - name: Checks
+        uses: ./.github/actions/checks
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
