@@ -33,8 +33,6 @@ import { AnnotationLevel }              from './github.checks.js'
 class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
 
-  changed = Option.Boolean('--changed', false)
-
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
@@ -88,9 +86,8 @@ class ChecksTypeCheckCommand extends BaseCommand {
           await report.startTimerPromise('TypeCheck', async () => {
             try {
               const typescript = await TypeScript.initialize(project.cwd)
-              const includes = await this.getIncludes(project)
-              const diagnostics =
-                this.changed && includes.length === 0 ? [] : await typescript.check(includes)
+
+              const diagnostics = await typescript.check(await this.getIncludes(project))
 
               diagnostics.forEach((diagnostic: ts.Diagnostic) => {
                 const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
@@ -112,11 +109,10 @@ class ChecksTypeCheckCommand extends BaseCommand {
                     path: ppath.normalize(
                       ppath.relative(project.cwd, diagnostic.file.fileName as PortablePath)
                     ),
-
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    title: flattenDiagnosticMessageText(diagnostic.messageText, EOL)
-                      .split(EOL)
-                      .at(0)!,
+                    title:
+                      flattenDiagnosticMessageText(diagnostic.messageText, EOL)
+                        .split(EOL)
+                        .at(0) ?? flattenDiagnosticMessageText(diagnostic.messageText, EOL),
                     message: flattenDiagnosticMessageText(diagnostic.messageText, EOL),
                     start_line: position ? position.line + 1 : 0,
                     end_line: position ? position.line + 1 : 0,
@@ -164,6 +160,9 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
     return commandReport.exitCode()
   }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  changed = Option.Boolean('--changed', false)
 
   protected async getIncludes(project: Project): Promise<Array<string>> {
     if (this.changed) {

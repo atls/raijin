@@ -23,11 +23,8 @@ class ChecksRunCommand extends BaseCommand {
         configuration,
       },
       async (report) => {
-        const lintArgs = this.changed ? ['lint', '--changed'] : ['lint']
-        const typecheckArgs = this.changed ? ['typecheck', '--changed'] : ['typecheck']
-
-        await this.runCheck(project.cwd, typecheckArgs, report)
-        await this.runCheck(project.cwd, lintArgs, report)
+        await this.runCheck(project.cwd, ['typecheck'], report)
+        await this.runCheck(project.cwd, ['lint'], report)
 
         await Promise.allSettled([
           this.runCheck(project.cwd, ['test', 'unit'], report),
@@ -47,7 +44,13 @@ class ChecksRunCommand extends BaseCommand {
     report: StreamReport
   ): Promise<void> {
     try {
-      const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...args], {
+      const shouldAppendChanged =
+        this.changed &&
+        (args[0] === 'lint' || args[0] === 'typecheck') &&
+        !args.includes('--changed')
+      const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
+
+      const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...checkArgs], {
         cwd,
       })
 
