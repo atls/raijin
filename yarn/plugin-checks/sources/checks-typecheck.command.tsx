@@ -50,8 +50,9 @@ class ChecksTypeCheckCommand extends BaseCommand {
     const { project } = await Project.find(configuration, this.context.cwd)
 
     const binFolder = await xfs.mktempPromise()
+    const args = ['checks', 'typecheck', ...(this.changed ? ['--changed'] : [])]
 
-    const { code } = await execUtils.pipevp('yarn', ['checks', 'typecheck'], {
+    const { code } = await execUtils.pipevp('yarn', args, {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
