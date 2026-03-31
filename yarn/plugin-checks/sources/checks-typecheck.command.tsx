@@ -151,9 +151,8 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
   protected async getIncludes(project: Project): Promise<Array<string>> {
     if (this.changed) {
-      const includes = (await getChangedFiles(project))
-        .filter((file) => /\.(cts|mts|ts|tsx)$/.test(file))
-        .filter((file) => !file.endsWith('.d.ts'))
+      const includes = (await getChangedFiles(project)).filter((file) =>
+        /\.(cts|mts|ts|tsx)$/.test(file))
 
       const existsMap = await Promise.all(
         includes.map(async (file) =>
