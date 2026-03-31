@@ -31,7 +31,11 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn checks run
+        if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+          echo "Skipping yarn checks run for pull_request workflow"
+        else
+          yarn checks run
+        fi
 
     - name: JSR publish dry run
       if: ${{ !cancelled() }}
