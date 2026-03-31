@@ -166,10 +166,10 @@ for (const testCase of fixture.cases) {
 
 if (failures.length > 0) {
   for (const failure of failures) {
-    console.error(failure) // eslint-disable-line no-console
+    console.error(failure)
   }
 
   process.exit(1)
 }
 
-console.log(`Deterministic smoke passed (${fixture.cases.length} cases)`) // eslint-disable-line no-console
+console.log(`Deterministic smoke passed (${fixture.cases.length} cases)`)

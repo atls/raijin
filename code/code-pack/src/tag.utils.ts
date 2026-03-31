@@ -12,7 +12,8 @@ export const getPullRequestSha = (): string => {
     process.env.GITHUB_PULL_REQUST_HEAD_SHA ||
     (event.after as string) ||
     (event.pull_request?.head?.sha as string) ||
-    process.env.GITHUB_SHA!
+    // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+    (process.env.GITHUB_SHA as string)
   )
 }
 
@@ -53,6 +54,7 @@ export const getContext = async (): Promise<string> => {
 
 export const getTag = async (tagPolicy: TagPolicy): Promise<string> => {
   const revision = await getRevision()
+  // eslint-disable-next-line @typescript-eslint/no-deprecated
   const hash = revision.substr(0, 7)
 
   if (tagPolicy === 'hash-timestamp') {

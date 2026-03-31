@@ -8,7 +8,7 @@ import type { AST }               from 'prettier'
 
 import { extractPrinter }         from './patch.js'
 
-const printer = await extractPrinter()
+const printer = extractPrinter()
 
 const nodeImportSize = (node: ImportDeclaration): number => {
   if (node.specifiers.length === 0) {
@@ -17,28 +17,31 @@ const nodeImportSize = (node: ImportDeclaration): number => {
 
   const specifier = node.specifiers[node.specifiers.length - 1]
 
-  // @ts-expect-error
+  // @ts-expect-error does not exist
   const offset = specifier.imported ? 8 : 6
 
-  return specifier.loc!.end.column + offset
+  // @ts-expect-error possibly null
+  return specifier.loc.end.column + offset
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const print: Printer<Node>['print'] = (path, options, prnt): any => {
   const node = path.getNode()
 
-  const plugin: any = options.plugins.find((p: any) => p?.printers?.estree)
+  const plugin = options.plugins.find((p) => typeof p !== 'string' && p.printers?.estree)
 
+  // @ts-expect-error possibly undefined
   let result = plugin.printers.estree.print(path, options, prnt)
 
   if (node?.type === 'ImportDeclaration') {
-    // @ts-expect-error
+    // @ts-expect-error explicit any type
     result = result.map((part) => {
-      // @ts-expect-error
+      // @ts-expect-error type does not exist
       if (Array.isArray(part) && part[0] === ' from' && node.alignOffset > 0) {
-        // @ts-expect-error
+        // @ts-expect-error type does not exist
         const fill = Array.apply(0, Array(node.alignOffset)).fill(' ').join('')
 
-        part[0] = `${fill} from` // eslint-disable-line no-param-reassign
+        part[0] = `${fill} from`
       }
 
       return part
@@ -64,11 +67,10 @@ export const preprocess = async (ast: AST): Promise<AST> => {
       node.loc &&
       node.loc.end.line === node.loc.start.line
     ) {
-      node.alignOffset = 0 // eslint-disable-line
+      node.alignOffset = 0
 
       const nodeLength = nodeImportSize(node)
 
-      // eslint-disable-next-line
       node.alignOffset = nodeLength < maxAlignLength ? maxAlignLength - nodeLength : 0
     }
   })
@@ -78,6 +80,7 @@ export const preprocess = async (ast: AST): Promise<AST> => {
 
 export const printers: Record<string, Printer> = {
   'typescript-custom': {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     ...printer,
     preprocess,
     print,

@@ -1,4 +1,4 @@
-import { PortablePath } from '@yarnpkg/fslib'
+import type { PortablePath } from '@yarnpkg/fslib'
 
 export interface PackOptions {
   workspace: string

@@ -1,6 +1,6 @@
 {
   "name": "@atls/yarn-plugin-test",
-  "version": "1.0.2",
+  "version": "1.0.16",
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
@@ -32,7 +32,7 @@
   "devDependencies": {
     "@atls/config-typescript": "workspace:*",
     "@atls/yarn-test-utils": "workspace:*",
-    "@types/react": "18.3.12",
+    "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.5.1",
     "@yarnpkg/core": "4.1.4",

@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-test",
-  "version": "2.0.14",
+  "version": "2.0.26",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -20,10 +20,11 @@
   },
   "dependencies": {
     "@atls/code-runtime": "workspace:*",
-    "globby": "13.2.2"
+    "globby": "13.2.2",
+    "ignore": "5.3.2"
   },
   "devDependencies": {
-    "@types/node": "22.9.0"
+    "@types/node": "22.13.10"
   },
   "publishConfig": {
     "access": "public",

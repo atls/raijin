@@ -1,5 +1,3 @@
-import type { Options }      from 'conventional-changelog'
-
 import { readFile }          from 'node:fs/promises'
 import { writeFile }         from 'node:fs/promises'
 import { join }              from 'node:path'
@@ -28,10 +26,12 @@ export class Changelog {
     file,
     releaseCount,
   }: GenerateOptions): Promise<string> {
-    const config: Options = {
+    const config: conventionalChangelog.Options = {
       lernaPackage: `${packageName}`,
       tagPrefix,
+      // eslint-disable-next-line no-console
       debug: debug ? console.debug : undefined,
+      // eslint-disable-next-line no-console
       warn: console.warn,
       append: true,
       releaseCount,
@@ -42,29 +42,36 @@ export class Changelog {
     }
 
     if (file) {
-      return await this.generateToFile(config, path)
+      return this.generateToFile(config, path)
     }
 
     return this.generateToStdOut(config)
   }
 
-  private async generateToStdOut(config: Options): Promise<string> {
+  private async generateToStdOut(config: conventionalChangelog.Options): Promise<string> {
     return new Promise((resolve, reject) => {
       const changelogStream = conventionalChangelog(config, undefined, {
         path: dirname(config.pkg?.path ?? './'),
       })
       let newChangelog = ''
 
-      changelogStream.on('data', (chunk) => {
+      changelogStream.on('data', (chunk: Buffer) => {
         newChangelog += chunk.toString()
       })
 
-      changelogStream.on('end', () => resolve(newChangelog))
-      changelogStream.on('error', (error) => reject(error))
+      changelogStream.on('end', () => {
+        resolve(newChangelog)
+      })
+      changelogStream.on('error', (error) => {
+        reject(error)
+      })
     })
   }
 
-  private async generateToFile(config: Options, path: string): Promise<string> {
+  private async generateToFile(
+    config: conventionalChangelog.Options,
+    path: string
+  ): Promise<string> {
     const outFile = join(path, 'CHANGELOG.md')
 
     try {
@@ -73,7 +80,8 @@ export class Changelog {
 
       try {
         existingData = await readFile(outFile, 'utf8')
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Error & { code: string }
         if (error.code !== 'ENOENT') throw error
       }
 
@@ -82,6 +90,7 @@ export class Changelog {
 
       return updatedData
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error generating changelog:', error)
       throw error
     }

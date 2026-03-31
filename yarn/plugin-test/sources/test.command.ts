@@ -16,6 +16,10 @@ export class TestCommand extends AbstractTestCommand {
       return this.executeRegular()
     }
 
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      return this.executeRegular()
+    }
+
     return this.executeProxy()
   }
 
@@ -23,7 +27,7 @@ export class TestCommand extends AbstractTestCommand {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
-    const tester = await Tester.initialize()
+    const tester = await Tester.initialize(this.context.cwd)
 
     try {
       const results = (await tester.general(this.target ?? project.cwd, {
@@ -34,7 +38,7 @@ export class TestCommand extends AbstractTestCommand {
 
       return results.some((result) => {
         if (result.includes('# fail ')) {
-          const failedNumber = parseInt(result.split('# fail ')[1])
+          const failedNumber = parseInt(result.split('# fail ')[1], 2)
 
           return failedNumber > 0
         }

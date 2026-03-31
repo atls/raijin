@@ -31,7 +31,7 @@ import { GitHubChecks }            from './github.checks.js'
 import { AnnotationLevel }         from './github.checks.js'
 
 class ChecksLintCommand extends BaseCommand {
-  static paths = [['checks', 'lint']]
+  static override paths = [['checks', 'lint']]
 
   changed = Option.Boolean('--changed', false)
 
@@ -39,6 +39,10 @@ class ChecksLintCommand extends BaseCommand {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
     if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
       return this.executeRegular()
     }
 
@@ -57,7 +61,10 @@ class ChecksLintCommand extends BaseCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+      env: {
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
     })
 
     return code
@@ -157,7 +164,7 @@ class ChecksLintCommand extends BaseCommand {
 
   private formatResults(results: Array<ESLint.LintResult>, cwd?: string): Array<Annotation> {
     return results
-      .filter((result) => result.messages?.length > 0)
+      .filter((result) => result.messages.length > 0)
       .map(({ filePath, messages = [] }) =>
         messages.map((message) => {
           const line = (message.line || 0) + 1

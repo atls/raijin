@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-jsr",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -17,7 +17,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "jsr": "0.13.2"
+    "jsr": "0.13.4"
   },
   "publishConfig": {
     "access": "public",

@@ -1,15 +1,22 @@
-import type { FC }     from 'react'
+import type { FC }   from 'react'
 
-import { Text }        from 'ink'
-import { Box }         from 'ink'
-import { useEffect }   from 'react'
-import { useState }    from 'react'
-import Select          from 'ink-select-input'
-import React           from 'react'
+import { Text }      from 'ink'
+import { Box }       from 'ink'
+import { useEffect } from 'react'
+import { useState }  from 'react'
+import Select        from 'ink-select-input'
+import React         from 'react'
 
-import { ProjectType } from '@atls/schematics'
+const enum ProjectType {
+  Project = 'project',
+  Libraries = 'libraries',
+}
 
-const Submit = ({ onSubmit, ...props }: any) => {
+interface SubmitProps {
+  onSubmit: (props: ProjectInformationProperties) => void
+}
+
+const Submit = ({ onSubmit, ...props }: ProjectInformationProperties & SubmitProps): null => {
   useEffect(() => {
     onSubmit(props)
   }, [props, onSubmit])
@@ -27,6 +34,7 @@ interface RequestProjectInformationProps {
 // TODO: refactor for usage in new plugin
 export const RequestProjectInformation: FC<RequestProjectInformationProps> = ({ onSubmit }) => {
   const [type, setType] = useState<ProjectType>()
+
   if (!type) {
     return (
       <Box flexDirection='column'>
@@ -39,16 +47,15 @@ export const RequestProjectInformation: FC<RequestProjectInformationProps> = ({ 
           items={[
             {
               label: 'Project',
-              value: ProjectType.PROJECT,
+              value: ProjectType.Project,
             },
             {
               label: 'Libraries',
-              value: ProjectType.LIBRARIES,
+              value: ProjectType.Libraries,
             },
           ]}
           // eslint-disable-next-line
           onSelect={(v) => setType(v.value)}
-          indicatorComponent={IndicatorComponent}
         />
       </Box>
     )

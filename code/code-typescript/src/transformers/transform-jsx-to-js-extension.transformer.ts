@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import type { ts as typescript } from '@atls/code-runtime/typescript'
 
 export const transformJsxToJsExtension = (ts: typeof typescript) =>

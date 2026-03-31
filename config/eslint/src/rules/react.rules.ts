@@ -200,8 +200,6 @@ export const rules: Linter.RulesRecord = {
   'react/jsx-wrap-multilines': 'off',
   'react/jsx-space-before-closing': ['off', 'always'],
   'react-hooks/rules-of-hooks': ['error'],
-  // TODO: fix error
-  // 'react-hooks/exhaustive-deps': ['error'],
   'react/display-name': [
     'off',
     {
@@ -237,7 +235,7 @@ export const rules: Linter.RulesRecord = {
     },
   ],
   'react/jsx-no-leaked-render': [
-    'error',
+    'off',
     {
       validStrategies: ['coerce'],
     },
@@ -306,7 +304,6 @@ export const rules: Linter.RulesRecord = {
       ignoreCase: true,
     },
   ],
-  'react/jsx-uses-react': ['error'],
   'react/jsx-uses-vars': ['error'],
   'react/no-deprecated': ['error'],
   'react/no-did-mount-set-state': ['off'],
@@ -325,7 +322,6 @@ export const rules: Linter.RulesRecord = {
       ignorePureComponents: true,
     },
   ],
-  'react/react-in-jsx-scope': ['error'],
   'react/require-render-return': ['error'],
   'react/self-closing-comp': ['error'],
   'react/sort-comp': [

@@ -9,11 +9,13 @@ const loadWorkspaces = (): Array<string> => {
   const exists = new Set<string>()
 
   try {
-    const { workspaces }: { workspaces: Array<string> } = JSON.parse(
+    const { workspaces }: { workspaces: Array<string> | undefined } = JSON.parse(
+      // eslint-disable-next-line n/no-sync
       readFileSync(join(process.cwd(), '/package.json'), 'utf-8')
     )
 
-    if (workspaces?.length > 0) {
+    if (workspaces && workspaces.length > 0) {
+      // eslint-disable-next-line n/no-sync
       const folders = globbySync(workspaces, {
         cwd: process.cwd(),
         onlyDirectories: true,
@@ -27,6 +29,7 @@ const loadWorkspaces = (): Array<string> => {
       folders.forEach((folder) => {
         try {
           const { name }: { name: string } = JSON.parse(
+            // eslint-disable-next-line n/no-sync
             readFileSync(join(folder, 'package.json'), 'utf-8')
           )
 

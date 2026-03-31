@@ -12,6 +12,10 @@ export class TestIntegrationCommand extends AbstractTestCommand {
       return this.executeRegular('integration')
     }
 
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      return this.executeRegular('integration')
+    }
+
     return this.executeProxy('integration')
   }
 }

@@ -1,6 +1,5 @@
 import type { Linter }        from 'eslint'
 
-// @ts-expect-error: Invalid import
 import nextjsPlugin           from '@next/eslint-plugin-next'
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin'
 import parser                 from '@typescript-eslint/parser'
@@ -8,7 +7,7 @@ import parser                 from '@typescript-eslint/parser'
 import jsxA11yPlugin          from 'eslint-plugin-jsx-a11y'
 import nodePlugin             from 'eslint-plugin-n'
 import reactPlugin            from 'eslint-plugin-react'
-// @ts-expect-error: Invalid import
+import reactCompilerPlugin    from 'eslint-plugin-react-compiler'
 import reactHooksPlugin       from 'eslint-plugin-react-hooks'
 // @ts-expect-error: Invalid import
 import securityPlugin         from 'eslint-plugin-security'
@@ -32,15 +31,17 @@ const config: Array<Linter.Config> = [
       ...base,
     },
     plugins: {
+      // @ts-expect-error: Invalid types
       'eslint-plugin-react-hooks': reactHooksPlugin,
+      'eslint-plugin-react-compiler': reactCompilerPlugin,
       // @ts-expect-error: Invalid types
       '@typescript-eslint': typescriptEslintPlugin,
+      // @ts-expect-error: Invalid types
       'react-hooks': reactHooksPlugin,
       '@next/next': nextjsPlugin,
       'jsx-a11y': jsxA11yPlugin,
       n: nodePlugin,
       security: securityPlugin,
-      // @ts-expect-error: Invalid types
       react: reactPlugin,
     },
     linterOptions: {
@@ -49,24 +50,26 @@ const config: Array<Linter.Config> = [
     settings: {
       react: {
         pragma: 'React',
-        version: '18',
+        version: 'detect',
       },
       propWrapperFunctions: ['forbidExtraProps', 'exact', 'Object.freeze'],
     },
     languageOptions: {
-      ecmaVersion: 2021,
+      ecmaVersion: 2022,
       sourceType: 'module',
       globals: {},
       parser,
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ['scripts/tooling/*.mjs'],
+        },
         ecmaFeatures: {
           jsx: true,
           generators: false,
           objectLiteralDuplicateProperties: false,
         },
         sourceType: 'module',
-        ecmaVersion: 2020,
+        ecmaVersion: 2022,
       },
     },
   },
@@ -78,6 +81,20 @@ const config: Array<Linter.Config> = [
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
+    },
+  },
+  {
+    files: ['scripts/tooling/*.mjs'],
+    rules: {
+      'n/no-sync': 'off',
+      'n/no-process-exit': 'off',
+      'no-nested-ternary': 'off',
+      'no-console': 'off',
+      'security/detect-unsafe-regex': 'off',
+      'no-await-in-loop': 'off',
+      '@typescript-eslint/no-confusing-void-expression': 'off',
     },
   },
 ]

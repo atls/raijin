@@ -7,3 +7,4 @@ const plugin = {
 }
 
 export default plugin
+export * from './getters/index.js'

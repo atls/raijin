@@ -32,7 +32,7 @@ export default {
     module: 'NodeNext',
     target: 'es2022',
 
-    jsx: 'react',
+    jsx: 'react-jsx',
 
     outDir: './dist',
   },

@@ -43,8 +43,8 @@ export class WebpackExternals {
   private externals = (
     { request }: webpack.ExternalItemFunctionData,
     callback: (
-      error?: Error | undefined,
-      result?: string | undefined,
+      error?: Error,
+      result?: string,
       type?: webpack.Configuration['externalsType']
     ) => void
   ): void => {

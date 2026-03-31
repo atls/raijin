@@ -127,7 +127,7 @@ export const TestProgressFiles = ({ cwd, tester }: TestProgressFilesProps): Reac
           <Text> </Text>
           <Text color='white'>{total} Total</Text>
           <Text> </Text>
-          <Text color='gray'>{tests?.length || 0} Files</Text>
+          <Text color='gray'>{tests.length || 0} Files</Text>
           <Text> </Text>
         </Box>
       </Box>

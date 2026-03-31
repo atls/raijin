@@ -57,13 +57,6 @@ jobs:
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish to JSR
-        if: ${{ !cancelled() }}
-        id: jsr
-        uses: ./.github/actions/publish-jsr
-        with:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-
       - name: Bundle yarn
         if: ${{ !cancelled() }}
         uses: ./.github/actions/bundle

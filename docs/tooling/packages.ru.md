@@ -115,7 +115,7 @@
 - Видимость: `public`
 - Назначение: CLI UI-компонент для терминального интерфейса
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 0, devDeps 12, peerDeps 2
+- Зависимости: deps 0, devDeps 11, peerDeps 2
 
 ### @atls/cli-ui-service-progress-component
 - Локация: `cli/cli-ui-service-progress`
@@ -211,7 +211,7 @@
 - Видимость: `public`
 - Назначение: Библиотека code-утилит для инструментов raijin
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 2, devDeps 0, peerDeps 0
+- Зависимости: deps 2, devDeps 1, peerDeps 1
 
 ### @atls/code-icons
 - Локация: `code/code-icons`
@@ -250,8 +250,8 @@
 - Группа: `code`
 - Видимость: `public`
 - Назначение: Библиотека code-утилит для инструментов raijin
-- Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 2, devDeps 1, peerDeps 0
+- Скрипты: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`
+- Зависимости: deps 3, devDeps 8, peerDeps 2
 
 ### @atls/code-service
 - Локация: `code/code-service`
@@ -267,7 +267,7 @@
 - Видимость: `public`
 - Назначение: Библиотека code-утилит для инструментов raijin
 - Скрипты: `build`, `build:worker`, `postpack`, `prepack`
-- Зависимости: deps 2, devDeps 1, peerDeps 0
+- Зависимости: deps 3, devDeps 1, peerDeps 0
 
 ### @atls/code-typescript
 - Локация: `code/code-typescript`
@@ -291,7 +291,7 @@
 - Видимость: `public`
 - Назначение: Пакет конфигурации для shared tooling
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 15, devDeps 3, peerDeps 0
+- Зависимости: deps 16, devDeps 3, peerDeps 0
 
 ### @atls/config-prettier
 - Локация: `config/prettier`
@@ -322,24 +322,8 @@
 - Группа: `runtime`
 - Видимость: `public`
 - Назначение: Библиотека code-утилит для инструментов raijin
-- Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 11, devDeps 2, peerDeps 0
-
-### @atls/schematics-utils
-- Локация: `schematics/schematics-utils`
-- Группа: `schematics`
-- Видимость: `public`
-- Назначение: Пакет генерации схем и шаблонов
-- Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 5, devDeps 4, peerDeps 0
-
-### @atls/schematics
-- Локация: `schematics/schematics`
-- Группа: `schematics`
-- Видимость: `public`
-- Назначение: Пакет генерации схем и шаблонов
-- Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 4, devDeps 3, peerDeps 0
+- Скрипты: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
+- Зависимости: deps 14, devDeps 3, peerDeps 0
 
 ### @atls/webpack-proto-imports-loader
 - Локация: `webpack/webpack-proto-imports-loader`
@@ -363,15 +347,15 @@
 - Видимость: `private`
 - Назначение: Входная точка кастомного yarn CLI и bundle-конфигурации
 - Скрипты: отсутствуют
-- Зависимости: deps 52, devDeps 0, peerDeps 0
+- Зависимости: deps 53, devDeps 0, peerDeps 0
 
 ### @atls/yarn-cli
 - Локация: `yarn/cli`
 - Группа: `yarn`
 - Видимость: `private`
 - Назначение: Входная точка кастомного yarn CLI и bundle-конфигурации
-- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:version`, `fix`, `postpack`, `prepack`
-- Зависимости: deps 53, devDeps 0, peerDeps 0
+- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:schemaic`, `build:version`, `fix`, `postpack`, `prepack`
+- Зависимости: deps 54, devDeps 0, peerDeps 0
 
 ### @atls/yarn-pack-utils
 - Локация: `yarn/pack-utils`

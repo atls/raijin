@@ -2,6 +2,7 @@ import type { TagPolicy } from '@atls/code-pack'
 import type { Workspace } from '@yarnpkg/core'
 
 import { readFileSync }   from 'node:fs'
+import { join }           from 'node:path'
 
 import { BaseCommand }    from '@yarnpkg/cli'
 import { Configuration }  from '@yarnpkg/core'
@@ -10,7 +11,6 @@ import { StreamReport }   from '@yarnpkg/core'
 import { structUtils }    from '@yarnpkg/core'
 import { xfs }            from '@yarnpkg/fslib'
 import { Option }         from 'clipanion'
-import { join }           from 'path'
 
 import { pack }           from '@atls/code-pack'
 import { packUtils }      from '@atls/yarn-pack-utils'
@@ -62,6 +62,7 @@ class ImagePackCommand extends BaseCommand {
           } to ${destination}`
         )
 
+        // eslint-disable-next-line n/no-sync
         const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
         const { packConfiguration = {} } = JSON.parse(content)
         const buildpackVersion = packConfiguration.buildpackVersion ?? '0.1.1'
@@ -107,6 +108,7 @@ class ImagePackCommand extends BaseCommand {
       'service build',
       'renderer build',
       'strapi build',
+      'astro build',
     ].some((command) => buildCommand?.includes(command))
 
     return hasAllowedBuildScript && Boolean(name)

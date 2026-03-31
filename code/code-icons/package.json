@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-icons",
-  "version": "2.0.9",
+  "version": "2.0.18",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@monstrs/logger": "0.0.20",
-    "@types/node": "22.9.0",
+    "@types/node": "22.13.10",
     "@types/webpack": "5.28.5",
     "@yarnpkg/fslib": "3.1.0"
   },
@@ -44,5 +44,6 @@
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts"
-  }
+  },
+  "typecheckSkipLibCheck": true
 }

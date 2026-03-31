@@ -48,14 +48,17 @@ export class StartServerPlugin {
 
   private startServer = (compilation: webpack.Compilation, callback: () => void): void => {
     this.logger.info('Starting server...')
+    const { path } = compilation.compiler.options.output
 
-    this.entryFile = join(compilation.compiler.options.output.path!, 'index.js')
+    if (path) {
+      this.entryFile = join(path, 'index.js')
 
-    this.runWorker(this.entryFile, (worker) => {
-      this.worker = worker
+      this.runWorker(this.entryFile, (worker) => {
+        this.worker = worker
 
-      callback()
-    })
+        callback()
+      })
+    }
   }
 
   private runWorker(entryFile: string, callback: (arg0: ChildProcess) => void): void {

@@ -1,3 +1,32 @@
+
+
+## [2.0.6](https://github.com/atls/raijin/compare/@atls/code-commit@2.0.5...@atls/code-commit@2.0.6) (2025-12-07)
+
+
+### Bug Fixes
+
+
+* **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
+
+### Features
+
+
+* **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
+
+
+## [2.0.5](https://github.com/atls/raijin/compare/@atls/code-commit@2.0.5...@atls/code-commit@2.0.5) (2025-03-09)
+
+### Features
+
+- **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
+## [2.0.5](https://github.com/atls/raijin/compare/@atls/code-commit@2.0.4...@atls/code-commit@2.0.5) (2025-01-30)
+
+### Bug Fixes
+
+- **common:** yarn check ([#485](https://github.com/atls/raijin/issues/485)) ([b0c3cfa](https://github.com/atls/raijin/commit/b0c3cfad8f559c55691ca733c7a3a7b3cd00c4d8))
+
 ## [2.0.4](https://github.com/atls/raijin/compare/@atls/code-commit@2.0.3...@atls/code-commit@2.0.4) (2025-01-09)
 
 ### Bug Fixes

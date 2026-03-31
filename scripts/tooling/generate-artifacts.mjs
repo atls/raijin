@@ -49,13 +49,6 @@ const walkFiles = (dirPath, predicate, output = []) => {
   return output
 }
 
-const normalize = (value) =>
-  value
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-
 const inferPurpose = (packageName, group, language) => {
   const isRu = language === 'ru'
   const name = packageName || ''
@@ -600,4 +593,4 @@ writeText('.agents/tooling-routing.md', renderAgentRouting())
 
 console.log(
   `Generated tooling artifacts: ${commands.length} commands, ${workspaces.length} workspace packages (${activeCommands.length} active, ${inactiveCommands.length} inactive)`
-) // eslint-disable-line no-console
+)

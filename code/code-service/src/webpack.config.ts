@@ -38,12 +38,12 @@ export class WebpackConfig {
     const webpackExternals = new WebpackExternals(this.cwd)
     const externals = ['webpack/hot/poll?100', await webpackExternals.build()]
 
-    const plugins = this.createPlugins(environment, additionalPlugins)
+    const plugins = this.createPlugins(environment, additionalPlugins, type === 'module')
 
     return {
       mode: environment,
       bail: environment === 'production',
-      target: 'async-node',
+      target: 'node',
       optimization: { minimize: false },
       experiments: {
         outputModule: type === 'module',
@@ -58,7 +58,7 @@ export class WebpackConfig {
         path: join(this.cwd, 'dist'),
         filename: '[name].js',
         library: { type },
-        chunkFormat: environment === 'development' ? 'commonjs' : type,
+        chunkFormat: environment === 'development' ? 'commonjs' : type, // WARNING: leave until HMR supports ESM for chunks import
         module: type === 'module',
         clean: false,
         assetModuleFilename: 'assets/[name][ext]',
@@ -76,7 +76,9 @@ export class WebpackConfig {
         },
       },
       externals,
-      externalsType: type === 'module' ? 'import' : 'commonjs',
+      externalsType:
+        // eslint-disable-next-line no-nested-ternary
+        environment === 'production' ? (type === 'module' ? 'import' : 'commonjs') : 'commonjs2',
       externalsPresets: {
         node: true,
       },
@@ -97,7 +99,10 @@ export class WebpackConfig {
                 transpileOnly: true,
                 experimentalWatchApi: true,
                 onlyCompileBundledFiles: true,
-                compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
+                compilerOptions: {
+                  ...tsconfig.compilerOptions,
+                  sourceMap: true,
+                },
                 context: this.cwd,
                 configFile,
               },
@@ -107,7 +112,6 @@ export class WebpackConfig {
           { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
           { test: /\.(md)$/i, type: 'asset/resource' },
           { test: /\.node$/, use: this.loaders.nodeLoader },
-          { test: /\.proto$/, use: { loader: this.loaders.protoLoader } },
         ],
       },
     }
@@ -118,13 +122,17 @@ export class WebpackConfig {
       const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
       const { type = 'commonjs' } = JSON.parse(content)
 
-      return type
+      return type as string
     } catch {
       return 'module'
     }
   }
 
-  private createPlugins(environment: string, additionalPlugins: Array<wp.WebpackPluginInstance>) {
+  private createPlugins(
+    environment: string,
+    additionalPlugins: Array<wp.WebpackPluginInstance>,
+    isEsm: boolean
+  ): Array<wp.WebpackPluginInstance> {
     const plugins: Array<wp.WebpackPluginInstance> = [
       new this.webpack.IgnorePlugin({
         checkResource: (resource: string): boolean => {
@@ -140,7 +148,7 @@ export class WebpackConfig {
             require.resolve(resource, {
               paths: [this.cwd],
             })
-          } catch (err) {
+          } catch {
             return true
           }
 
@@ -150,14 +158,17 @@ export class WebpackConfig {
       ...additionalPlugins,
     ]
 
-    if (environment === 'development') {
-      plugins.push(new this.webpack.HotModuleReplacementPlugin())
+    if (isEsm) {
       plugins.push(
         new this.webpack.BannerPlugin({
           banner: `import { createRequire } from 'node:module'\nimport { fileURLToPath } from 'node:url'\nconst require = createRequire(import.meta.url)\nconst __filename = fileURLToPath(import.meta.url)\n`,
           raw: true,
         })
       )
+    }
+
+    if (environment === 'development') {
+      plugins.push(new this.webpack.HotModuleReplacementPlugin())
     }
 
     return plugins

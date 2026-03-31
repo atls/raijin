@@ -192,6 +192,7 @@ export const rules: Linter.RulesRecord = {
   'no-dupe-class-members': ['error'],
   'no-duplicate-imports': ['off'],
   'no-new-symbol': ['error'],
+  'no-new-native-nonconstructor': ['error'],
   'no-restricted-exports': [
     'error',
     {
@@ -441,7 +442,7 @@ export const rules: Linter.RulesRecord = {
   'newline-after-var': ['off'],
   'newline-before-return': ['off'],
   'no-bitwise': ['error'],
-  'no-continue': ['error'],
+  'no-continue': ['off'],
   'no-inline-comments': ['off'],
   'no-lonely-if': ['error'],
   'no-multi-assign': ['error'],
@@ -478,6 +479,7 @@ export const rules: Linter.RulesRecord = {
   'operator-assignment': ['error', 'always'],
   'padding-line-between-statements': ['off'],
   'prefer-exponentiation-operator': ['error'],
+  'prefer-object-has-own': ['error'],
   'prefer-object-spread': ['error'],
   'require-jsdoc': ['off'],
   'sort-keys': [
@@ -526,6 +528,7 @@ export const rules: Linter.RulesRecord = {
   'no-await-in-loop': ['error'],
   'no-compare-neg-zero': ['error'],
   'no-cond-assign': ['error', 'always'],
+  'no-constant-binary-expression': ['error'],
   'no-console': ['warn'],
   'no-constant-condition': ['warn'],
   'no-control-regex': ['error'],
@@ -670,7 +673,7 @@ export const rules: Linter.RulesRecord = {
   'no-octal': ['error'],
   'no-octal-escape': ['error'],
   'no-param-reassign': [
-    'error',
+    'off',
     {
       props: true,
       ignorePropertyModificationsFor: [
@@ -756,6 +759,7 @@ export const rules: Linter.RulesRecord = {
   'no-unmodified-loop-condition': ['off'],
   'no-unused-labels': ['error'],
   'no-useless-call': ['off'],
+  'no-useless-assignment': ['error'],
   'no-useless-catch': ['error'],
   'no-useless-concat': ['error'],
   'no-useless-escape': ['error'],

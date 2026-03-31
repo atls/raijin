@@ -20,6 +20,6 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach -vptj 2 --no-private npm publish --access public
+        yarn workspaces changed foreach -vt --no-private npm publish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}

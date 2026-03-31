@@ -1,0 +1,53 @@
+
+
+## [2.0.10](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.9...@atls/code-schematics@2.0.10) (2025-12-07)
+
+
+### Bug Fixes
+
+
+* **code:** helpers log ([e1042ba](https://github.com/atls/raijin/commit/e1042ba9112cd0e26bcc8f896bfe37bb7e5cd8f6))
+* **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
+
+
+
+
+
+## [2.0.9](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.8...@atls/code-schematics@2.0.9) (2025-11-15)
+
+
+
+
+## [2.0.8](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.7...@atls/code-schematics@2.0.8) (2025-10-09)
+
+## [2.0.7](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.5...@atls/code-schematics@2.0.7) (2025-10-09)
+
+## [2.0.5](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.5...@atls/code-schematics@2.0.5) (2025-10-09)
+
+## [2.0.5](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.4...@atls/code-schematics@2.0.5) (2025-08-04)
+
+## [2.0.4](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.3...@atls/code-schematics@2.0.4) (2025-05-05)
+
+## [2.0.3](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.2...@atls/code-schematics@2.0.3) (2025-03-25)
+
+### Bug Fixes
+
+- **code-service:** webpack config to account for module type ([#498](https://github.com/atls/raijin/issues/498)) ([24314cc](https://github.com/atls/raijin/commit/24314ccd3767ed6e4c0b3f1cd1b4e7b5aa2d29e1))
+
+## [2.0.2](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.1...@atls/code-schematics@2.0.2) (2025-03-09)
+
+### Features
+
+- **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
+## [2.0.1](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.1...@atls/code-schematics@2.0.1) (2025-03-09)
+
+### Features
+
+- **common:** bump ([#494](https://github.com/atls/raijin/issues/494)) ([381d535](https://github.com/atls/raijin/commit/381d5357c2818e157330933edb9256936d251ca3))
+
+## [2.0.1](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.0...@atls/code-schematics@2.0.1) (2025-02-24)
+
+### Bug Fixes
+
+- **schematic:** generate ([#488](https://github.com/atls/raijin/issues/488)) ([c9289d8](https://github.com/atls/raijin/commit/c9289d8a675259a30beb2c0fd6103d98ae6189a1))

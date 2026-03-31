@@ -17,6 +17,10 @@ export class ToolsSyncTypeScriptCommand extends AbstractToolsCommand {
       return this.executeRegular()
     }
 
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      return this.executeRegular()
+    }
+
     return this.executeProxy(['tools', 'sync', 'typescript'])
   }
 
@@ -24,8 +28,11 @@ export class ToolsSyncTypeScriptCommand extends AbstractToolsCommand {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
-    const runtime = (await import('@atls/code-runtime/package.json', { with: { type: 'json' } }))
-      .default
+    const runtime = (
+      await import('@atls/code-runtime/package.json', {
+        with: { type: 'json' },
+      })
+    ).default
 
     const commandReport = await StreamReport.start(
       {
@@ -51,8 +58,8 @@ export class ToolsSyncTypeScriptCommand extends AbstractToolsCommand {
             ) {
               if (
                 !semver.eq(
-                  semver.coerce(descriptor.range)!,
-                  semver.coerce(runtime.dependencies.typescript)!
+                  semver.coerce(descriptor.range) || '',
+                  semver.coerce(runtime.dependencies.typescript) || ''
                 )
               ) {
                 descriptor.range = runtime.dependencies.typescript

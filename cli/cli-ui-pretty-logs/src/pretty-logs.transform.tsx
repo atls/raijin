@@ -10,7 +10,7 @@ export class PrettyLogsTransform extends Transform {
   parse(row: string): object {
     try {
       if (row) {
-        const data: { body?: string } = JSON.parse(row)
+        const data: { body?: string } | undefined = JSON.parse(row)
 
         if (data?.body) {
           return data

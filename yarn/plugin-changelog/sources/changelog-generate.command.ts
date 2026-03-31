@@ -36,7 +36,7 @@ export class ChangelogGenerateCommand extends BaseCommand {
           let packageName = ''
 
           if (workspace.manifest.name?.scope) {
-            packageName += `@${workspace.manifest.name?.scope}/`
+            packageName += `@${workspace.manifest.name.scope}/`
           }
           packageName += `${workspace.manifest.name?.name}`
 
@@ -53,6 +53,7 @@ export class ChangelogGenerateCommand extends BaseCommand {
           })
 
           if (this.stdOut) {
+            // eslint-disable-next-line no-console
             console.log(result)
           }
         })

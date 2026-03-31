@@ -70,7 +70,9 @@ export class RendererBuildCommand extends BaseCommand {
 
         await report.startTimerPromise('Copy standalone files', async () => {
           if (await xfs.existsPromise(ppath.join(this.context.cwd, 'dist'))) {
-            await xfs.rmdirPromise(ppath.join(this.context.cwd, 'dist'), { recursive: true })
+            await xfs.rmdirPromise(ppath.join(this.context.cwd, 'dist'), {
+              recursive: true,
+            })
           }
 
           await xfs.copyPromise(
@@ -78,7 +80,7 @@ export class RendererBuildCommand extends BaseCommand {
             ppath.join(
               this.context.cwd,
               'src/.next/standalone',
-              this.context.cwd.replace(`${configuration.projectCwd!}/`, '') as PortablePath,
+              this.context.cwd.replace(`${configuration.projectCwd || ''}/`, '') as PortablePath,
               'src'
             )
           )

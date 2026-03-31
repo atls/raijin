@@ -10,13 +10,15 @@ export type WebpackEnvironment = 'development' | 'production'
 
 export interface WebpackConfigPlugin {
   name: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   use: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: Array<any>
 }
 
-const ModuleType = {
-  commonjs: 'commonjs',
-  module: 'module',
-} as const
+type ModuleType = {
+  commonjs: 'commonjs'
+  module: 'module'
+}
 
-export type ModuleTypes = (typeof ModuleType)[keyof typeof ModuleType]
+export type ModuleTypes = ModuleType[keyof ModuleType]

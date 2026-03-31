@@ -82,23 +82,19 @@ export const copyProtocolFiles = async (
 
     const parsed = parseDescriptor(resolvedDescriptor)
 
-    // eslint-disable-next-line no-continue
     if (!parsed) continue
 
     const { parentLocator, paths } = parsed
 
     for await (const path of paths) {
-      // eslint-disable-next-line no-continue
       if (BUILTIN_REGEXP.test(path)) continue
 
-      // eslint-disable-next-line no-continue
       if (ppath.isAbsolute(path)) continue
 
       const parentWorkspace = project.getWorkspaceByLocator(parentLocator)
 
       const relativePath = ppath.join(parentWorkspace.relativeCwd, path)
 
-      // eslint-disable-next-line no-continue
       if (copiedPaths.has(relativePath)) continue
 
       copiedPaths.add(relativePath)

@@ -20,14 +20,14 @@ export const getFileFormat = (filepath: string): string | null => {
 
       if (!pkg) return 'commonjs'
 
-      return (pkg.data.type as string) ?? 'commonjs'
+      return (pkg.data.type as string | undefined) ?? 'commonjs'
     }
     case '.tsx': {
       const pkg = nodeUtils.readPackageScope(filepath)
 
       if (!pkg) return 'commonjs'
 
-      return (pkg.data.type as string) ?? 'commonjs'
+      return (pkg.data.type as string | undefined) ?? 'commonjs'
     }
     default: {
       return null
@@ -36,7 +36,6 @@ export const getFileFormat = (filepath: string): string | null => {
 }
 
 export const transformSource = (source: string, format: string, ext: 'ts' | 'tsx'): string => {
-  // eslint-disable-next-line n/no-sync
   const { transformSync } = require('esbuild')
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, n/no-sync

@@ -1,3 +1,5 @@
+/* eslint-disable n/no-sync, @typescript-eslint/no-shadow */
+
 import type { ts as typescript }     from '@atls/code-runtime/typescript'
 
 import EventEmitter                  from 'node:events'
@@ -148,7 +150,7 @@ export class TypeScript extends EventEmitter {
 
     const { typecheckIgnorePatterns = [] } = JSON.parse(content)
 
-    return typecheckIgnorePatterns
+    return typecheckIgnorePatterns as Array<string>
   }
 
   private getLibCheckOption(): boolean {
@@ -156,6 +158,6 @@ export class TypeScript extends EventEmitter {
 
     const { typecheckSkipLibCheck = false } = JSON.parse(content)
 
-    return typecheckSkipLibCheck
+    return typecheckSkipLibCheck as boolean
   }
 }

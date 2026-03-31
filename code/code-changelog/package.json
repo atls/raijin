@@ -1,6 +1,6 @@
 {
   "name": "@atls/code-changelog",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -21,7 +21,7 @@
     "conventional-changelog-angular": "^8.0.0"
   },
   "devDependencies": {
-    "@types/conventional-changelog": "3.1.5"
+    "@types/conventional-changelog": "6.0.0"
   },
   "publishConfig": {
     "access": "public",

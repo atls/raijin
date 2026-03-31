@@ -221,14 +221,7 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### generate project
 - Plugin: `@atls/yarn-plugin-schematics`
 - Status: `inactive`
-- Reason: plugin is not included in @atls/yarn-cli standard bundle
+- Reason: plugin is in bundle but not exported from plugin index
 - Class: `GenerateProjectCommand`
-- Source: `yarn/plugin-schematics/sources/generate-project.command.tsx`
-
-### migration up
-- Plugin: `@atls/yarn-plugin-schematics`
-- Status: `inactive`
-- Reason: plugin is not included in @atls/yarn-cli standard bundle
-- Class: `MigrationUpCommand`
-- Source: `yarn/plugin-schematics/sources/migration-up.command.tsx`
+- Source: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
 

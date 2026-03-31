@@ -115,7 +115,7 @@ Short cards for all workspace packages
 - Visibility: `public`
 - Purpose: CLI UI component for terminal rendering
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 0, devDeps 12, peerDeps 2
+- Dependencies: deps 0, devDeps 11, peerDeps 2
 
 ### @atls/cli-ui-service-progress-component
 - Location: `cli/cli-ui-service-progress`
@@ -211,7 +211,7 @@ Short cards for all workspace packages
 - Visibility: `public`
 - Purpose: Code utility library used by raijin tooling
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 2, devDeps 0, peerDeps 0
+- Dependencies: deps 2, devDeps 1, peerDeps 1
 
 ### @atls/code-icons
 - Location: `code/code-icons`
@@ -250,8 +250,8 @@ Short cards for all workspace packages
 - Group: `code`
 - Visibility: `public`
 - Purpose: Code utility library used by raijin tooling
-- Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 2, devDeps 1, peerDeps 0
+- Scripts: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`
+- Dependencies: deps 3, devDeps 8, peerDeps 2
 
 ### @atls/code-service
 - Location: `code/code-service`
@@ -267,7 +267,7 @@ Short cards for all workspace packages
 - Visibility: `public`
 - Purpose: Code utility library used by raijin tooling
 - Scripts: `build`, `build:worker`, `postpack`, `prepack`
-- Dependencies: deps 2, devDeps 1, peerDeps 0
+- Dependencies: deps 3, devDeps 1, peerDeps 0
 
 ### @atls/code-typescript
 - Location: `code/code-typescript`
@@ -291,7 +291,7 @@ Short cards for all workspace packages
 - Visibility: `public`
 - Purpose: Shared tooling configuration package
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 15, devDeps 3, peerDeps 0
+- Dependencies: deps 16, devDeps 3, peerDeps 0
 
 ### @atls/config-prettier
 - Location: `config/prettier`
@@ -322,24 +322,8 @@ Short cards for all workspace packages
 - Group: `runtime`
 - Visibility: `public`
 - Purpose: Code utility library used by raijin tooling
-- Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 11, devDeps 2, peerDeps 0
-
-### @atls/schematics-utils
-- Location: `schematics/schematics-utils`
-- Group: `schematics`
-- Visibility: `public`
-- Purpose: Schematics and template generation package
-- Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 5, devDeps 4, peerDeps 0
-
-### @atls/schematics
-- Location: `schematics/schematics`
-- Group: `schematics`
-- Visibility: `public`
-- Purpose: Schematics and template generation package
-- Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 4, devDeps 3, peerDeps 0
+- Scripts: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
+- Dependencies: deps 14, devDeps 3, peerDeps 0
 
 ### @atls/webpack-proto-imports-loader
 - Location: `webpack/webpack-proto-imports-loader`
@@ -363,15 +347,15 @@ Short cards for all workspace packages
 - Visibility: `private`
 - Purpose: Entrypoint for custom yarn CLI and bundle configuration
 - Scripts: none
-- Dependencies: deps 52, devDeps 0, peerDeps 0
+- Dependencies: deps 53, devDeps 0, peerDeps 0
 
 ### @atls/yarn-cli
 - Location: `yarn/cli`
 - Group: `yarn`
 - Visibility: `private`
 - Purpose: Entrypoint for custom yarn CLI and bundle configuration
-- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:version`, `fix`, `postpack`, `prepack`
-- Dependencies: deps 53, devDeps 0, peerDeps 0
+- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:schemaic`, `build:version`, `fix`, `postpack`, `prepack`
+- Dependencies: deps 54, devDeps 0, peerDeps 0
 
 ### @atls/yarn-pack-utils
 - Location: `yarn/pack-utils`

@@ -4,7 +4,6 @@ import { Filename }               from '@yarnpkg/fslib'
 import { scriptUtils }            from '@yarnpkg/core'
 import { execUtils }              from '@yarnpkg/core'
 import { xfs }                    from '@yarnpkg/fslib'
-import { Option }                 from 'clipanion'
 import { render }                 from 'ink'
 import React                      from 'react'
 
@@ -16,12 +15,14 @@ import { AbstractServiceCommand } from './abstract-service.command.jsx'
 export class ServiceDevCommand extends AbstractServiceCommand {
   static override paths = [['service', 'dev']]
 
-  override showWarnings = Option.Boolean('-w,--show-warnings', false)
-
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
     if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
       return this.executeRegular()
     }
 
@@ -45,7 +46,10 @@ export class ServiceDevCommand extends AbstractServiceCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+      env: {
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
     })
 
     return code
@@ -58,8 +62,7 @@ export class ServiceDevCommand extends AbstractServiceCommand {
 
     try {
       await service.watch((logRecord) => {
-        // @ts-expect-error body is undefined
-        console.log(logRecord?.body ?? logRecord) // eslint-disable-line no-console
+        this.renderLogRecord(logRecord)
       })
 
       return 0

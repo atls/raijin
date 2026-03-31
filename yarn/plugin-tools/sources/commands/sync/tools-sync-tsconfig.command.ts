@@ -15,14 +15,17 @@ import tsconfig                 from '@atls/config-typescript'
 import { AbstractToolsCommand } from './abstract-tools.command.js'
 
 const combineMerge = (
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   target: Array<any>,
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   source: Array<any>,
   options?: deepmerge.ArrayMergeOptions
+  /* eslint-disable @typescript-eslint/no-explicit-any */
 ): Array<any> => {
   const destination = target.slice()
 
   /* eslint-disable @typescript-eslint/no-unsafe-argument */
-  source.forEach((item: any, index: number) => {
+  source.forEach((item, index: number) => {
     if (typeof destination[index] === 'undefined') {
       destination[index] = options?.cloneUnlessOtherwiseSpecified(item, options)
     } else if (options?.isMergeableObject(item)) {
@@ -58,6 +61,10 @@ export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
       return this.executeRegular()
     }
 
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      return this.executeRegular()
+    }
+
     return this.executeProxy(['tools', 'sync', 'tsconfig'])
   }
 
@@ -86,21 +93,18 @@ export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
             '/// <reference types="@atls/code-runtime/types" />\n'
           )
 
-          const config = deepmerge(
-            exists,
-            { compilerOptions: tsconfig.compilerOptions },
-            { arrayMerge: combineMerge }
-          )
+          const config = deepmerge<
+            typeof exists & { include: any },
+            { compilerOptions: typeof tsconfig.compilerOptions }
+          >(exists, { compilerOptions: tsconfig.compilerOptions }, { arrayMerge: combineMerge })
 
           const includes: Array<string> = (
-            (project.topLevelWorkspace.manifest.raw.workspaces as Array<string>) || []
+            (project.topLevelWorkspace.manifest.raw.workspaces as Array<string> | undefined) || []
           ).map(convertWorkspacesToIncludes)
 
           const created = {
             ...config,
-            include: Array.from(
-              new Set(['project.types.d.ts', ...((config as any).include || []), ...includes])
-            ),
+            include: Array.from(new Set(['project.types.d.ts', ...config.include, ...includes])),
           }
 
           try {

@@ -18,12 +18,16 @@ import { GitHubChecks }          from './github.checks.js'
 import { AnnotationLevel }       from './github.checks.js'
 
 class ChecksReleaseCommand extends BaseCommand {
-  static paths = [['checks', 'release']]
+  static override paths = [['checks', 'release']]
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
 
     if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
+      return this.executeRegular()
+    }
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
       return this.executeRegular()
     }
 
@@ -41,7 +45,10 @@ class ChecksReleaseCommand extends BaseCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: await scriptUtils.makeScriptEnv({ binFolder, project }),
+      env: {
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
     })
 
     return code
@@ -66,7 +73,8 @@ class ChecksReleaseCommand extends BaseCommand {
         if (workspace.manifest.scripts.get('build')) {
           const context = new PassThroughRunContext()
 
-          const outputWriter = (data: Buffer) => this.context.stdout.write(data)
+          const outputWriter = (data: Buffer): ReturnType<typeof this.context.stdout.write> =>
+            this.context.stdout.write(data)
 
           context.stdout.on('data', outputWriter)
           context.stderr.on('data', outputWriter)
@@ -79,7 +87,9 @@ class ChecksReleaseCommand extends BaseCommand {
           if (code > 0) {
             annotations.push({
               annotation_level: AnnotationLevel.Failure,
-              title: `Error release workspace ${workspace.manifest.raw.name ?? workspace.relativeCwd}`,
+              title: `Error release workspace ${
+                workspace.manifest.raw.name ?? workspace.relativeCwd
+              }`,
               message: `Exit code ${code}`,
               raw_details: stripAnsi(context.output),
               path: ppath.join(workspace.relativeCwd, 'package.json'),

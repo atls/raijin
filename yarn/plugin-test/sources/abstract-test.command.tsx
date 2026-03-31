@@ -1,7 +1,7 @@
-/* eslint-disable react/jsx-no-leaked-render */
 /* eslint-disable n/no-sync */
 
 import { readFileSync }  from 'node:fs'
+import { relative }      from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 import { BaseCommand }   from '@yarnpkg/cli'
@@ -16,7 +16,6 @@ import { npath }         from '@yarnpkg/fslib'
 import { Option }        from 'clipanion'
 import { Command }       from 'clipanion'
 import { render }        from 'ink'
-import { relative }      from 'path'
 import { isEnum }        from 'typanion'
 import React             from 'react'
 
@@ -29,14 +28,6 @@ import { Tester }        from '@atls/code-test'
 import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
 
 export abstract class AbstractTestCommand extends BaseCommand {
-  target = Option.String('-t,--target')
-
-  watch: boolean = Option.Boolean('-w,--watch', false)
-
-  files: Array<string> = Option.Rest({ required: 0 })
-
-  testReporter = Option.String('--test-reporter', { validator: isEnum(['tap']) })
-
   static override usage = Command.Usage({
     description: 'Run tests',
     details: `
@@ -57,6 +48,16 @@ export abstract class AbstractTestCommand extends BaseCommand {
     ],
   })
 
+  target = Option.String('-t,--target')
+
+  watch: boolean = Option.Boolean('-w,--watch', false)
+
+  files: Array<string> = Option.Rest({ required: 0 })
+
+  testReporter = Option.String('--test-reporter', {
+    validator: isEnum(['tap']),
+  })
+
   private std = new Map<string | undefined, Array<string>>()
 
   private bufferedStdTimeout: NodeJS.Timeout | undefined
@@ -67,7 +68,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
     const args: Array<string> = []
 
-    if (this.files && this.files.length) {
+    if (this.files.length) {
       args.push(this.files.join(' '))
     }
 
@@ -89,18 +90,28 @@ export abstract class AbstractTestCommand extends BaseCommand {
     const env = await scriptUtils.makeScriptEnv({ binFolder, project })
 
     if (!env.NODE_OPTIONS?.includes('--no-warnings')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --no-warnings=DeprecationWarning`
+      env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
     }
 
-    if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
+    if (!env.NODE_OPTIONS.includes('@atls/code-runtime/ts-node-register')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-node-register`
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${pathToFileURL(npath.fromPortablePath(ppath.join(project.cwd, Filename.pnpEsmLoader))).href}`
+
+      const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
+
+      if (await xfs.existsPromise(pnpEsmLoaderPath)) {
+        env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${
+          pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
+        }`
+      }
+
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
     }
 
-    if (!env.NODE_OPTIONS?.includes('--enable-source-maps')) {
+    if (!env.NODE_OPTIONS.includes('--enable-source-maps')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS} --enable-source-maps`
     }
+
+    env.COMMAND_PROXY_EXECUTION = 'true'
 
     const { code } = await execUtils.pipevp('yarn', ['test', type ?? '', ...args], {
       cwd: project.cwd,
@@ -147,7 +158,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
         })
     }
 
-    const tester = await Tester.initialize()
+    const tester = await Tester.initialize(this.context.cwd)
 
     tester.on('test:stdout', onStdout)
     tester.on('test:stderr', onStderr)
@@ -162,7 +173,10 @@ export abstract class AbstractTestCommand extends BaseCommand {
               files: this.files,
               watch: this.watch,
             })
-          : await tester.unit(this.target ?? project.cwd, { files: this.files, watch: this.watch })
+          : await tester.unit(this.target ?? project.cwd, {
+              files: this.files,
+              watch: this.watch,
+            })
 
       return results.find((result) => result.type === 'test:fail') ? 1 : 0
     } catch (error) {

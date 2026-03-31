@@ -1,5 +1,6 @@
 export const LAZY_IMPORTS = [
   // @nestjs/microservices
+  '@grpc/grpc-js',
   'mqtt',
   'nats',
 

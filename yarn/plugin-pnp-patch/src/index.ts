@@ -8,6 +8,7 @@ import { getContent }              from './esm-loader/loader.content.js'
 
 const plugin: Plugin<CoreHooks> = {
   hooks: {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     async afterAllInstalled(project) {
       const { esmLoader } = getPnpPath(project)
 

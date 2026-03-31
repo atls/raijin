@@ -221,14 +221,7 @@
 ### generate project
 - Плагин: `@atls/yarn-plugin-schematics`
 - Статус: `inactive`
-- Причина: plugin is not included in @atls/yarn-cli standard bundle
+- Причина: plugin is in bundle but not exported from plugin index
 - Класс: `GenerateProjectCommand`
-- Исходник: `yarn/plugin-schematics/sources/generate-project.command.tsx`
-
-### migration up
-- Плагин: `@atls/yarn-plugin-schematics`
-- Статус: `inactive`
-- Причина: plugin is not included in @atls/yarn-cli standard bundle
-- Класс: `MigrationUpCommand`
-- Исходник: `yarn/plugin-schematics/sources/migration-up.command.tsx`
+- Исходник: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
 
