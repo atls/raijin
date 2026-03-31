@@ -13,15 +13,15 @@
     "cli/**/*"
   ],
   "scripts": {
-    "cli:build": "yarn workspace @atls/yarn-cli build",
-    "schematic:test": "yarn workspace @atls/code-runtime build:schematic && yarn workspace @atls/code-schematics build:schematic-factory && yarn generate project",
-    "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download",
-    "tooling:generate": "node scripts/tooling/generate-artifacts.mjs",
-    "tooling:check:drift": "node scripts/tooling/generate-artifacts.mjs && git diff --exit-code -- docs/tooling .agents",
+    "tooling:check": "yarn tooling:check:drift && yarn tooling:check:localization && yarn tooling:smoke:deterministic",
+    "tooling:check:drift": "node scripts/tooling/generate-artifacts.mjs && git diff --exit-code -- docs/tooling .agents && test -z \"$(git ls-files --others --exclude-standard -- docs/tooling .agents)\"",
     "tooling:check:localization": "node scripts/tooling/check-localization-sync.mjs",
+    "tooling:generate": "node scripts/tooling/generate-artifacts.mjs",
     "tooling:smoke:deterministic": "node scripts/tooling/run-deterministic-smoke.mjs",
     "tooling:smoke:llm": "node scripts/tooling/run-llm-smoke.mjs",
-    "tooling:check": "yarn tooling:check:drift && yarn tooling:check:localization && yarn tooling:smoke:deterministic"
+    "cli:build": "yarn workspace @atls/yarn-cli build",
+    "schematic:test": "yarn workspace @atls/code-runtime build:schematic && yarn workspace @atls/code-schematics build:schematic-factory && yarn generate project",
+    "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download"
   },
   "resolutions": {
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch",

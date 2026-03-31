@@ -38,6 +38,12 @@
       "expectedStatus": "active"
     },
     {
+      "id": "prefer-active-over-inactive",
+      "prompt": "generate project and run check",
+      "expectedCommand": "check",
+      "expectedStatus": "active"
+    },
+    {
       "id": "generate-project-inactive",
       "prompt": "generate project scaffold",
       "expectedCommand": "",

@@ -28,7 +28,12 @@ const walkFiles = (dirPath, predicate, output = []) => {
     const fullPath = path.join(dirPath, entry.name)
 
     if (entry.isDirectory()) {
-      if (entry.name === '.git' || entry.name === '.idea' || entry.name === '.yarn' || entry.name === 'dist') {
+      if (
+        entry.name === '.git' ||
+        entry.name === '.idea' ||
+        entry.name === '.yarn' ||
+        entry.name === 'dist'
+      ) {
         continue
       }
 
@@ -71,11 +76,15 @@ const inferPurpose = (packageName, group, language) => {
   }
 
   if (name.includes('/code-')) {
-    return isRu ? 'Библиотека code-утилит для инструментов raijin' : 'Code utility library used by raijin tooling'
+    return isRu
+      ? 'Библиотека code-утилит для инструментов raijin'
+      : 'Code utility library used by raijin tooling'
   }
 
   if (name.includes('/cli-ui-')) {
-    return isRu ? 'CLI UI-компонент для терминального интерфейса' : 'CLI UI component for terminal rendering'
+    return isRu
+      ? 'CLI UI-компонент для терминального интерфейса'
+      : 'CLI UI component for terminal rendering'
   }
 
   if (group === 'config') {
@@ -91,7 +100,9 @@ const inferPurpose = (packageName, group, language) => {
   }
 
   if (group === 'webpack') {
-    return isRu ? 'Webpack интеграция для экосистемы tools' : 'Webpack integration for tools ecosystem'
+    return isRu
+      ? 'Webpack интеграция для экосистемы tools'
+      : 'Webpack integration for tools ecosystem'
   }
 
   if (group === 'prettier') {
@@ -104,7 +115,9 @@ const inferPurpose = (packageName, group, language) => {
 const loadWorkspacePackages = () => {
   const rootPackage = readJson('package.json')
 
-  const workspaceRoots = [...new Set((rootPackage.workspaces || []).map((item) => item.split('/**')[0]))]
+  const workspaceRoots = [
+    ...new Set((rootPackage.workspaces || []).map((item) => item.split('/**')[0])),
+  ]
 
   const workspacePackageJsonFiles = workspaceRoots
     .flatMap((workspaceRoot) =>
@@ -123,7 +136,8 @@ const loadWorkspacePackages = () => {
       location,
       group,
       private: Boolean(packageJson.private),
-      description: typeof packageJson.description === 'string' ? packageJson.description.trim() : '',
+      description:
+        typeof packageJson.description === 'string' ? packageJson.description.trim() : '',
       purposeEn: inferPurpose(packageJson.name, group, 'en'),
       purposeRu: inferPurpose(packageJson.name, group, 'ru'),
       scripts: Object.keys(packageJson.scripts || {}).sort((a, b) => a.localeCompare(b)),
@@ -197,9 +211,10 @@ const parseCommandFile = (filePath) => {
 }
 
 const loadCommands = (pluginRegistry) => {
-  const commandFiles = walkFiles(
-    path.join(repoRoot, 'yarn'),
-    (filePath) => /yarn\/plugin-[^/]+\/sources\/.+\.command\.(ts|tsx)$/.test(toPosix(path.relative(repoRoot, filePath)))
+  const commandFiles = walkFiles(path.join(repoRoot, 'yarn'), (filePath) =>
+    /yarn\/plugin-[^/]+\/sources\/.+\.command\.(ts|tsx)$/.test(
+      toPosix(path.relative(repoRoot, filePath))
+    )
   )
 
   const commands = []
@@ -259,7 +274,9 @@ const renderQuickstart = (language) => {
       : '- Inside `raijin`, run `source .env` and `export NODE_OPTIONS` before `yarn` commands',
     '',
     '<!-- sync:bundle-install -->',
-    isRu ? '## 2. Установка бандла в проект-потребитель' : '## 2. Install bundle in a consumer project',
+    isRu
+      ? '## 2. Установка бандла в проект-потребитель'
+      : '## 2. Install bundle in a consumer project',
     '',
     '- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs`',
     '',
@@ -315,7 +332,9 @@ const renderCommandsDoc = (commands, language) => {
     lines.push(`### ${command.command}`)
     lines.push(isRu ? `- Плагин: \`${command.plugin}\`` : `- Plugin: \`${command.plugin}\``)
     lines.push(isRu ? `- Статус: \`${command.status}\`` : `- Status: \`${command.status}\``)
-    lines.push(isRu ? `- Причина: ${command.availabilityReason}` : `- Reason: ${command.availabilityReason}`)
+    lines.push(
+      isRu ? `- Причина: ${command.availabilityReason}` : `- Reason: ${command.availabilityReason}`
+    )
     lines.push(isRu ? `- Класс: \`${command.className}\`` : `- Class: \`${command.className}\``)
     lines.push(isRu ? `- Исходник: \`${command.source}\`` : `- Source: \`${command.source}\``)
     lines.push('')
@@ -330,9 +349,7 @@ const renderPackagesDoc = (workspaces, language) => {
   const lines = [
     '# Tooling Packages',
     '',
-    isRu
-      ? 'Короткие карточки всех workspace-пакетов'
-      : 'Short cards for all workspace packages',
+    isRu ? 'Короткие карточки всех workspace-пакетов' : 'Short cards for all workspace packages',
     '',
     '<!-- sync:workspace-packages -->',
     '## Workspace packages',
@@ -341,7 +358,9 @@ const renderPackagesDoc = (workspaces, language) => {
 
   for (const workspace of workspaces) {
     lines.push(`### ${workspace.name}`)
-    lines.push(isRu ? `- Локация: \`${workspace.location}\`` : `- Location: \`${workspace.location}\``)
+    lines.push(
+      isRu ? `- Локация: \`${workspace.location}\`` : `- Location: \`${workspace.location}\``
+    )
     lines.push(isRu ? `- Группа: \`${workspace.group}\`` : `- Group: \`${workspace.group}\``)
     lines.push(
       isRu
@@ -445,6 +464,12 @@ const smokeFixture = {
       expectedStatus: 'active',
     },
     {
+      id: 'prefer-active-over-inactive',
+      prompt: 'generate project and run check',
+      expectedCommand: 'check',
+      expectedStatus: 'active',
+    },
+    {
       id: 'generate-project-inactive',
       prompt: 'generate project scaffold',
       expectedCommand: '',
@@ -469,13 +494,19 @@ const rootPackage = readJson('package.json')
 const yarnCliPackage = readJson('yarn/cli/package.json')
 const yarnRc = fs.readFileSync(path.join(repoRoot, '.yarnrc.yml'), 'utf8')
 
-const bundlePlugins = [...yarnCliPackage['@yarnpkg/builder'].bundles.standard].sort((a, b) => a.localeCompare(b))
+const bundlePlugins = [...yarnCliPackage['@yarnpkg/builder'].bundles.standard].sort((a, b) =>
+  a.localeCompare(b)
+)
 const pluginRegistry = loadPluginRegistry(bundlePlugins)
 const commands = loadCommands(pluginRegistry)
 const workspaces = loadWorkspacePackages()
 
-const activeCommands = commands.filter((command) => command.status === 'active').map((command) => command.command)
-const inactiveCommands = commands.filter((command) => command.status === 'inactive').map((command) => command.command)
+const activeCommands = commands
+  .filter((command) => command.status === 'active')
+  .map((command) => command.command)
+const inactiveCommands = commands
+  .filter((command) => command.status === 'inactive')
+  .map((command) => command.command)
 
 const activePlugins = [...pluginRegistry.values()]
   .filter((plugin) => plugin.inBundle && plugin.exported)
@@ -486,7 +517,9 @@ const inactivePlugins = [...pluginRegistry.values()]
   .filter((plugin) => !plugin.inBundle || !plugin.exported)
   .map((plugin) => ({
     name: plugin.packageName,
-    reason: plugin.inBundle ? 'plugin is in bundle but not exported from index' : 'plugin is not in bundle',
+    reason: plugin.inBundle
+      ? 'plugin is in bundle but not exported from index'
+      : 'plugin is not in bundle',
   }))
   .sort((a, b) => a.name.localeCompare(b.name))
 
@@ -522,8 +555,11 @@ let lastGenerated = new Date().toISOString()
 if (fs.existsSync(indexPath)) {
   const previous = JSON.parse(fs.readFileSync(indexPath, 'utf8'))
 
-  if (JSON.stringify(stripLastGenerated(previous)) === JSON.stringify(stripLastGenerated(draftIndex))) {
-    lastGenerated = typeof previous.lastGenerated === 'string' ? previous.lastGenerated : lastGenerated
+  if (
+    JSON.stringify(stripLastGenerated(previous)) === JSON.stringify(stripLastGenerated(draftIndex))
+  ) {
+    lastGenerated =
+      typeof previous.lastGenerated === 'string' ? previous.lastGenerated : lastGenerated
   }
 }
 
@@ -536,7 +572,10 @@ writeJson('docs/tooling/index.v1.json', index)
 writeJson('docs/tooling/index.meta.v1.json', {
   schemaVersion: 1,
   generatedBy: 'scripts/tooling/generate-artifacts.mjs',
-  contentSha256: crypto.createHash('sha256').update(JSON.stringify(stripLastGenerated(index))).digest('hex'),
+  contentSha256: crypto
+    .createHash('sha256')
+    .update(JSON.stringify(stripLastGenerated(index)))
+    .digest('hex'),
   packageManager: rootPackage.packageManager,
   workspaceCount: workspaces.length,
   commandCount: commands.length,
@@ -545,7 +584,10 @@ writeJson('docs/tooling/index.meta.v1.json', {
   lastGenerated,
 })
 
-writeText('docs/tooling/README.md', '# Tooling Docs\n\nGenerated by `node scripts/tooling/generate-artifacts.mjs`\n')
+writeText(
+  'docs/tooling/README.md',
+  '# Tooling Docs\n\nGenerated by `node scripts/tooling/generate-artifacts.mjs`\n'
+)
 writeText('docs/tooling/quickstart.md', renderQuickstart('en'))
 writeText('docs/tooling/quickstart.ru.md', renderQuickstart('ru'))
 writeText('docs/tooling/commands.md', renderCommandsDoc(commands, 'en'))
