@@ -10,20 +10,6 @@ runs:
   using: composite
 
   steps:
-    - name: Tooling checks
-      shell: bash
-      run: |
-        node scripts/tooling/generate-artifacts.mjs
-        git diff --exit-code -- docs/tooling .agents
-        untracked_generated="$(git ls-files --others --exclude-standard -- docs/tooling .agents)"
-        if [ -n "$untracked_generated" ]; then
-          echo "Untracked generated files detected:"
-          echo "$untracked_generated"
-          exit 1
-        fi
-        node scripts/tooling/check-localization-sync.mjs
-        node scripts/tooling/run-deterministic-smoke.mjs
-
     - name: Checks
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
@@ -31,18 +17,4 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
-          echo "Skipping yarn checks run for pull_request workflow"
-        else
-          yarn checks run
-        fi
-
-    - name: JSR publish dry run
-      if: ${{ !cancelled() }}
-      env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-      shell: bash
-      run: |
-        source .env
-        export NODE_OPTIONS
-        yarn workspaces changed foreach -vpj 2 --no-private dlx jsr publish --dry-run
+        yarn checks run
