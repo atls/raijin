@@ -26,9 +26,10 @@ class ChecksRunCommand extends BaseCommand {
         const lintArgs = this.changed ? ['lint', '--changed'] : ['lint']
         const typecheckArgs = this.changed ? ['typecheck', '--changed'] : ['typecheck']
 
+        await this.runCheck(project.cwd, typecheckArgs, report)
+        await this.runCheck(project.cwd, lintArgs, report)
+
         await Promise.allSettled([
-          this.runCheck(project.cwd, lintArgs, report),
-          this.runCheck(project.cwd, typecheckArgs, report),
           this.runCheck(project.cwd, ['test', 'unit'], report),
           this.runCheck(project.cwd, ['test', 'integration'], report),
         ])
