@@ -93,6 +93,14 @@ const routePrompt = (prompt, commands) => {
     }
   }
 
+  if (!best) {
+    return {
+      command: '',
+      status: 'unavailable',
+      availabilityReason: 'No semantic match for prompt',
+    }
+  }
+
   if (best && best.command.status !== 'active') {
     return {
       command: '',
@@ -101,7 +109,7 @@ const routePrompt = (prompt, commands) => {
     }
   }
 
-  return best ? best.command : null
+  return best.command
 }
 
 const index = readJson('docs/tooling/index.v1.json')
@@ -110,11 +118,6 @@ const failures = []
 
 for (const testCase of fixture.cases) {
   const routed = routePrompt(testCase.prompt, index.commands)
-
-  if (!routed) {
-    failures.push(`${testCase.id}: no route for prompt "${testCase.prompt}"`)
-    continue
-  }
 
   if (testCase.expectedStatus === 'unavailable') {
     if (routed.status !== 'unavailable') {
