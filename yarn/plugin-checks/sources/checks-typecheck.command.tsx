@@ -30,6 +30,7 @@ import { getChangedFiles }              from '@atls/yarn-plugin-files'
 import { GitHubChecks }                 from './github.checks.js'
 import { AnnotationLevel }              from './github.checks.js'
 
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
 
@@ -109,10 +110,10 @@ class ChecksTypeCheckCommand extends BaseCommand {
                     path: ppath.normalize(
                       ppath.relative(project.cwd, diagnostic.file.fileName as PortablePath)
                     ),
-                    title:
-                      flattenDiagnosticMessageText(diagnostic.messageText, EOL)
-                        .split(EOL)
-                        .at(0) ?? flattenDiagnosticMessageText(diagnostic.messageText, EOL),
+
+                    title: flattenDiagnosticMessageText(diagnostic.messageText, EOL)
+                      .split(EOL)
+                      .at(0)!,
                     message: flattenDiagnosticMessageText(diagnostic.messageText, EOL),
                     start_line: position ? position.line + 1 : 0,
                     end_line: position ? position.line + 1 : 0,
