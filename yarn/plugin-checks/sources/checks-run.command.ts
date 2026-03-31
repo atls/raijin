@@ -6,9 +6,12 @@ import { Configuration }     from '@yarnpkg/core'
 import { MessageName }       from '@yarnpkg/core'
 import { Project }           from '@yarnpkg/core'
 import { execUtils }         from '@yarnpkg/core'
+import { Option }            from 'clipanion'
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
+
+  changed = Option.Boolean('--changed', false)
 
   async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
@@ -20,9 +23,12 @@ class ChecksRunCommand extends BaseCommand {
         configuration,
       },
       async (report) => {
+        const lintArgs = this.changed ? ['lint', '--changed'] : ['lint']
+        const typecheckArgs = this.changed ? ['typecheck', '--changed'] : ['typecheck']
+
         await Promise.allSettled([
-          this.runCheck(project.cwd, ['lint', '--changed'], report),
-          this.runCheck(project.cwd, ['typecheck', '--changed'], report),
+          this.runCheck(project.cwd, lintArgs, report),
+          this.runCheck(project.cwd, typecheckArgs, report),
           this.runCheck(project.cwd, ['test', 'unit'], report),
           this.runCheck(project.cwd, ['test', 'integration'], report),
         ])
