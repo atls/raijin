@@ -9,7 +9,7 @@ const model = process.env.OPENAI_MODEL || 'gpt-4.1-mini'
 const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 120000)
 
 if (!apiKey) {
-  console.error('OPENAI_API_KEY or OPENAI_SERVICE_ACCOUNT_KEY is required') // eslint-disable-line no-console
+  console.error('OPENAI_API_KEY or OPENAI_SERVICE_ACCOUNT_KEY is required')
   process.exit(1)
 }
 
@@ -166,12 +166,12 @@ if (process.env.LLM_SMOKE_REPORT_PATH) {
 }
 
 if (failures.length > 0) {
-  console.error('LLM smoke failed') // eslint-disable-line no-console
+  console.error('LLM smoke failed')
   for (const failure of failures) {
-    console.error(`- ${failure}`) // eslint-disable-line no-console
+    console.error(`- ${failure}`)
   }
 
   process.exit(1)
 }
 
-console.log(`LLM smoke passed (${fixture.cases.length} cases, model=${model})`) // eslint-disable-line no-console
+console.log(`LLM smoke passed (${fixture.cases.length} cases, model=${model})`)

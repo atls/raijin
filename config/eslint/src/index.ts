@@ -60,7 +60,9 @@ const config: Array<Linter.Config> = [
       globals: {},
       parser,
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ['scripts/tooling/*.mjs'],
+        },
         ecmaFeatures: {
           jsx: true,
           generators: false,
@@ -81,6 +83,18 @@ const config: Array<Linter.Config> = [
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
+    },
+  },
+  {
+    files: ['scripts/tooling/*.mjs'],
+    rules: {
+      'n/no-sync': 'off',
+      'n/no-process-exit': 'off',
+      'no-nested-ternary': 'off',
+      'no-console': 'off',
+      'security/detect-unsafe-regex': 'off',
+      'no-await-in-loop': 'off',
+      '@typescript-eslint/no-confusing-void-expression': 'off',
     },
   },
 ]

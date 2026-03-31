@@ -60,10 +60,10 @@ const errors = [
 
 if (errors.length > 0) {
   for (const error of errors) {
-    console.error(error) // eslint-disable-line no-console
+    console.error(error)
   }
 
   process.exit(1)
 }
 
-console.log('Localization sync check passed') // eslint-disable-line no-console
+console.log('Localization sync check passed')

@@ -30,7 +30,6 @@ import { getChangedFiles }              from '@atls/yarn-plugin-files'
 import { GitHubChecks }                 from './github.checks.js'
 import { AnnotationLevel }              from './github.checks.js'
 
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
 
