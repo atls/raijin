@@ -54,7 +54,7 @@ jobs:
           export NODE_OPTIONS
           yarn npm whoami --publish
         env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPMAUTHTOKEN }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
 
       - name: Changelog
@@ -68,7 +68,7 @@ jobs:
         id: npm
         uses: ./.github/actions/publish-npm
         with:
-          NPM_TOKEN: ${{ secrets.NPMAUTHTOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Bundle yarn
         if: ${{ !cancelled() && github.event.pull_request.merged == true }}
