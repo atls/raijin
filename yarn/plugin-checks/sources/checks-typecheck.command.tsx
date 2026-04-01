@@ -85,9 +85,23 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
           await report.startTimerPromise('TypeCheck', async () => {
             try {
+              const includes = await this.getIncludes(project)
+
+              if (this.changed && includes.length === 0) {
+                report.reportInfo(MessageName.UNNAMED, 'No TypeScript files changed')
+
+                await checks.complete(checkId, {
+                  title: 'Successful',
+                  summary: 'No TypeScript files changed',
+                  annotations: [],
+                })
+
+                return
+              }
+
               const typescript = await TypeScript.initialize(project.cwd)
 
-              const diagnostics = await typescript.check(await this.getIncludes(project))
+              const diagnostics = await typescript.check(includes)
 
               diagnostics.forEach((diagnostic: ts.Diagnostic) => {
                 const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
