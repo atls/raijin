@@ -47,6 +47,7 @@ export const pack = async (
     tmpConfiguration.values.set('enableGlobalCache', false)
     tmpConfiguration.values.set('enableMirror', false)
     tmpConfiguration.values.set('globalFolder', configuration.get('globalFolder'))
+    tmpConfiguration.values.set('packageExtensions', configuration.get('packageExtensions'))
     tmpConfiguration.values.set('pnpEnableEsmLoader', configuration.get('pnpEnableEsmLoader'))
     tmpConfiguration.values.set(
       `cacheFolder`,
@@ -61,7 +62,7 @@ export const pack = async (
       enableNetwork: tmpConfiguration.get(`enableNetwork`),
       enableMirror: tmpConfiguration.get(`enableMirror`),
       globalFolder: `.yarn/berry` as PortablePath,
-      nodeLinker: project.configuration.get('nodeLinker'),
+      nodeLinker: () => project.configuration.get('nodeLinker'),
       yarnPath: await getYarnPathFromDestination(destination),
     })
 
