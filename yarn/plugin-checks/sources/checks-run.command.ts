@@ -6,9 +6,12 @@ import { Configuration }     from '@yarnpkg/core'
 import { MessageName }       from '@yarnpkg/core'
 import { Project }           from '@yarnpkg/core'
 import { execUtils }         from '@yarnpkg/core'
+import { Option }            from 'clipanion'
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
+
+  changed = Option.Boolean('--changed', false)
 
   async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
@@ -41,7 +44,13 @@ class ChecksRunCommand extends BaseCommand {
     report: StreamReport
   ): Promise<void> {
     try {
-      const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...args], {
+      const shouldAppendChanged =
+        this.changed &&
+        (args[0] === 'lint' || args[0] === 'typecheck') &&
+        !args.includes('--changed')
+      const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
+
+      const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...checkArgs], {
         cwd,
       })
 

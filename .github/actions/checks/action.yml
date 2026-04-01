@@ -5,6 +5,10 @@ inputs:
   GITHUB_TOKEN:
     required: true
     description: GitHub token
+  CHANGED:
+    required: false
+    description: Run lint and typecheck only for changed files
+    default: 'false'
 
 runs:
   using: composite
@@ -17,4 +21,8 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn checks run
+        if [ "${{ inputs.CHANGED }}" = "true" ]; then
+          yarn checks run --changed
+        else
+          yarn checks run
+        fi

@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -33,7 +34,21 @@ jobs:
       - name: Install
         uses: ./.github/actions/install
 
+      - name: Tooling checks
+        run: |
+          node scripts/tooling/generate-artifacts.mjs
+          git diff --exit-code -- docs/tooling .agents
+          untracked_generated="$(git ls-files --others --exclude-standard -- docs/tooling .agents)"
+          if [ -n "$untracked_generated" ]; then
+            echo "Untracked generated files detected:"
+            echo "$untracked_generated"
+            exit 1
+          fi
+          node scripts/tooling/check-localization-sync.mjs
+          node scripts/tooling/run-deterministic-smoke.mjs
+
       - name: Checks
         uses: ./.github/actions/checks
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGED: 'true'
