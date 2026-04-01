@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "generatedBy": "scripts/tooling/generate-artifacts.mjs",
-  "contentSha256": "19ee1736f477bd261009c685531727a8c8a578c8e7c951fc82e46c46a1f7098c",
+  "contentSha256": "ace37ce4b8b1ab4818c58b322c766ae044d881ec684824e6c00b436fef0d8b31",
   "packageManager": "yarn@4.10.3",
-  "workspaceCount": 74,
-  "commandCount": 37,
+  "workspaceCount": 72,
+  "commandCount": 36,
   "activeCommandCount": 35,
-  "inactiveCommandCount": 2,
-  "lastGenerated": "2026-03-30T01:47:09.539Z"
+  "inactiveCommandCount": 1,
+  "lastGenerated": "2026-04-01T00:46:16.155Z"
 }

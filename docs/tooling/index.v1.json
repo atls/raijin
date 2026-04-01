@@ -2,16 +2,14 @@
   "environment": {
     "nodeVersion": "22",
     "requiresSourceEnv": true,
-    "requiredEnv": [
-      "NODE_OPTIONS"
-    ],
+    "requiredEnv": ["NODE_OPTIONS"],
     "pnpEnableEsmLoader": true,
-    "yarnPath": "yarn/cli/src/cli.dev.mjs"
+    "yarnPath": ".yarn/releases/yarn.mjs"
   },
   "bundle": {
     "package": "@atls/yarn-cli",
     "bundleName": "standard",
-    "pluginCount": 42,
+    "pluginCount": 43,
     "plugins": [
       "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-changelog",
@@ -29,6 +27,7 @@
       "@atls/yarn-plugin-lint",
       "@atls/yarn-plugin-release",
       "@atls/yarn-plugin-renderer",
+      "@atls/yarn-plugin-schematics",
       "@atls/yarn-plugin-service",
       "@atls/yarn-plugin-test",
       "@atls/yarn-plugin-tools",
@@ -60,10 +59,7 @@
   "commands": [
     {
       "command": "badges generate",
-      "pathTokens": [
-        "badges",
-        "generate"
-      ],
+      "pathTokens": ["badges", "generate"],
       "className": "BadgesCommand",
       "plugin": "@atls/yarn-plugin-badges",
       "pluginDir": "plugin-badges",
@@ -73,10 +69,7 @@
     },
     {
       "command": "changelog generate",
-      "pathTokens": [
-        "changelog",
-        "generate"
-      ],
+      "pathTokens": ["changelog", "generate"],
       "className": "ChangelogGenerateCommand",
       "plugin": "@atls/yarn-plugin-changelog",
       "pluginDir": "plugin-changelog",
@@ -86,9 +79,7 @@
     },
     {
       "command": "check",
-      "pathTokens": [
-        "check"
-      ],
+      "pathTokens": ["check"],
       "className": "CheckCommand",
       "plugin": "@atls/yarn-plugin-check",
       "pluginDir": "plugin-check",
@@ -98,10 +89,7 @@
     },
     {
       "command": "checks lint",
-      "pathTokens": [
-        "checks",
-        "lint"
-      ],
+      "pathTokens": ["checks", "lint"],
       "className": "ChecksLintCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
@@ -111,10 +99,7 @@
     },
     {
       "command": "checks release",
-      "pathTokens": [
-        "checks",
-        "release"
-      ],
+      "pathTokens": ["checks", "release"],
       "className": "ChecksReleaseCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
@@ -124,10 +109,7 @@
     },
     {
       "command": "checks run",
-      "pathTokens": [
-        "checks",
-        "run"
-      ],
+      "pathTokens": ["checks", "run"],
       "className": "ChecksRunCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
@@ -137,11 +119,7 @@
     },
     {
       "command": "checks test integration",
-      "pathTokens": [
-        "checks",
-        "test",
-        "integration"
-      ],
+      "pathTokens": ["checks", "test", "integration"],
       "className": "ChecksTestIntegrationCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
@@ -151,11 +129,7 @@
     },
     {
       "command": "checks test unit",
-      "pathTokens": [
-        "checks",
-        "test",
-        "unit"
-      ],
+      "pathTokens": ["checks", "test", "unit"],
       "className": "ChecksTestUnitCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
@@ -165,10 +139,7 @@
     },
     {
       "command": "checks typecheck",
-      "pathTokens": [
-        "checks",
-        "typecheck"
-      ],
+      "pathTokens": ["checks", "typecheck"],
       "className": "ChecksTypeCheckCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
@@ -178,10 +149,7 @@
     },
     {
       "command": "commit message",
-      "pathTokens": [
-        "commit",
-        "message"
-      ],
+      "pathTokens": ["commit", "message"],
       "className": "CommitMessageCommand",
       "plugin": "@atls/yarn-plugin-commit",
       "pluginDir": "plugin-commit",
@@ -191,11 +159,7 @@
     },
     {
       "command": "commit message lint",
-      "pathTokens": [
-        "commit",
-        "message",
-        "lint"
-      ],
+      "pathTokens": ["commit", "message", "lint"],
       "className": "CommitMessageLintCommand",
       "plugin": "@atls/yarn-plugin-commit",
       "pluginDir": "plugin-commit",
@@ -205,10 +169,7 @@
     },
     {
       "command": "commit staged",
-      "pathTokens": [
-        "commit",
-        "staged"
-      ],
+      "pathTokens": ["commit", "staged"],
       "className": "CommitStagedCommand",
       "plugin": "@atls/yarn-plugin-commit",
       "pluginDir": "plugin-commit",
@@ -218,9 +179,7 @@
     },
     {
       "command": "export",
-      "pathTokens": [
-        "export"
-      ],
+      "pathTokens": ["export"],
       "className": "WorkspaceExportCommand",
       "plugin": "@atls/yarn-plugin-export",
       "pluginDir": "plugin-export",
@@ -230,11 +189,7 @@
     },
     {
       "command": "files changed list",
-      "pathTokens": [
-        "files",
-        "changed",
-        "list"
-      ],
+      "pathTokens": ["files", "changed", "list"],
       "className": "FilesChangedListCommand",
       "plugin": "@atls/yarn-plugin-files",
       "pluginDir": "plugin-files",
@@ -244,9 +199,7 @@
     },
     {
       "command": "format",
-      "pathTokens": [
-        "format"
-      ],
+      "pathTokens": ["format"],
       "className": "FormatCommand",
       "plugin": "@atls/yarn-plugin-format",
       "pluginDir": "plugin-format",
@@ -256,23 +209,17 @@
     },
     {
       "command": "generate project",
-      "pathTokens": [
-        "generate",
-        "project"
-      ],
+      "pathTokens": ["generate", "project"],
       "className": "GenerateProjectCommand",
       "plugin": "@atls/yarn-plugin-schematics",
       "pluginDir": "plugin-schematics",
-      "source": "yarn/plugin-schematics/sources/generate-project.command.tsx",
+      "source": "yarn/plugin-schematics/sources/commands/generate-project.command.tsx",
       "status": "inactive",
-      "availabilityReason": "plugin is not included in @atls/yarn-cli standard bundle"
+      "availabilityReason": "plugin is in bundle but not exported from plugin index"
     },
     {
       "command": "image pack",
-      "pathTokens": [
-        "image",
-        "pack"
-      ],
+      "pathTokens": ["image", "pack"],
       "className": "ImagePackCommand",
       "plugin": "@atls/yarn-plugin-image",
       "pluginDir": "plugin-image",
@@ -282,10 +229,7 @@
     },
     {
       "command": "jsr publish",
-      "pathTokens": [
-        "jsr",
-        "publish"
-      ],
+      "pathTokens": ["jsr", "publish"],
       "className": "JsrPublishCommand",
       "plugin": "@atls/yarn-plugin-jsr",
       "pluginDir": "plugin-jsr",
@@ -295,10 +239,7 @@
     },
     {
       "command": "library build",
-      "pathTokens": [
-        "library",
-        "build"
-      ],
+      "pathTokens": ["library", "build"],
       "className": "LibraryBuildCommand",
       "plugin": "@atls/yarn-plugin-library",
       "pluginDir": "plugin-library",
@@ -308,9 +249,7 @@
     },
     {
       "command": "lint",
-      "pathTokens": [
-        "lint"
-      ],
+      "pathTokens": ["lint"],
       "className": "LintCommand",
       "plugin": "@atls/yarn-plugin-lint",
       "pluginDir": "plugin-lint",
@@ -319,24 +258,8 @@
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
     {
-      "command": "migration up",
-      "pathTokens": [
-        "migration",
-        "up"
-      ],
-      "className": "MigrationUpCommand",
-      "plugin": "@atls/yarn-plugin-schematics",
-      "pluginDir": "plugin-schematics",
-      "source": "yarn/plugin-schematics/sources/migration-up.command.tsx",
-      "status": "inactive",
-      "availabilityReason": "plugin is not included in @atls/yarn-cli standard bundle"
-    },
-    {
       "command": "release create",
-      "pathTokens": [
-        "release",
-        "create"
-      ],
+      "pathTokens": ["release", "create"],
       "className": "ReleaseCreateCommand",
       "plugin": "@atls/yarn-plugin-release",
       "pluginDir": "plugin-release",
@@ -346,10 +269,7 @@
     },
     {
       "command": "renderer build",
-      "pathTokens": [
-        "renderer",
-        "build"
-      ],
+      "pathTokens": ["renderer", "build"],
       "className": "RendererBuildCommand",
       "plugin": "@atls/yarn-plugin-renderer",
       "pluginDir": "plugin-renderer",
@@ -359,10 +279,7 @@
     },
     {
       "command": "renderer dev",
-      "pathTokens": [
-        "renderer",
-        "dev"
-      ],
+      "pathTokens": ["renderer", "dev"],
       "className": "RendererDevCommand",
       "plugin": "@atls/yarn-plugin-renderer",
       "pluginDir": "plugin-renderer",
@@ -372,10 +289,7 @@
     },
     {
       "command": "service build",
-      "pathTokens": [
-        "service",
-        "build"
-      ],
+      "pathTokens": ["service", "build"],
       "className": "ServiceBuildCommand",
       "plugin": "@atls/yarn-plugin-service",
       "pluginDir": "plugin-service",
@@ -385,10 +299,7 @@
     },
     {
       "command": "service dev",
-      "pathTokens": [
-        "service",
-        "dev"
-      ],
+      "pathTokens": ["service", "dev"],
       "className": "ServiceDevCommand",
       "plugin": "@atls/yarn-plugin-service",
       "pluginDir": "plugin-service",
@@ -398,11 +309,7 @@
     },
     {
       "command": "set version atls",
-      "pathTokens": [
-        "set",
-        "version",
-        "atls"
-      ],
+      "pathTokens": ["set", "version", "atls"],
       "className": "SetVersionCommand",
       "plugin": "@atls/yarn-plugin-essentials",
       "pluginDir": "plugin-essentials",
@@ -412,9 +319,7 @@
     },
     {
       "command": "test",
-      "pathTokens": [
-        "test"
-      ],
+      "pathTokens": ["test"],
       "className": "TestCommand",
       "plugin": "@atls/yarn-plugin-test",
       "pluginDir": "plugin-test",
@@ -424,10 +329,7 @@
     },
     {
       "command": "test integration",
-      "pathTokens": [
-        "test",
-        "integration"
-      ],
+      "pathTokens": ["test", "integration"],
       "className": "TestIntegrationCommand",
       "plugin": "@atls/yarn-plugin-test",
       "pluginDir": "plugin-test",
@@ -437,10 +339,7 @@
     },
     {
       "command": "test unit",
-      "pathTokens": [
-        "test",
-        "unit"
-      ],
+      "pathTokens": ["test", "unit"],
       "className": "TestUnitCommand",
       "plugin": "@atls/yarn-plugin-test",
       "pluginDir": "plugin-test",
@@ -450,10 +349,7 @@
     },
     {
       "command": "tools sync",
-      "pathTokens": [
-        "tools",
-        "sync"
-      ],
+      "pathTokens": ["tools", "sync"],
       "className": "ToolsSyncCommand",
       "plugin": "@atls/yarn-plugin-tools",
       "pluginDir": "plugin-tools",
@@ -463,11 +359,7 @@
     },
     {
       "command": "tools sync tsconfig",
-      "pathTokens": [
-        "tools",
-        "sync",
-        "tsconfig"
-      ],
+      "pathTokens": ["tools", "sync", "tsconfig"],
       "className": "ToolsSyncTSConfigCommand",
       "plugin": "@atls/yarn-plugin-tools",
       "pluginDir": "plugin-tools",
@@ -477,11 +369,7 @@
     },
     {
       "command": "tools sync typescript",
-      "pathTokens": [
-        "tools",
-        "sync",
-        "typescript"
-      ],
+      "pathTokens": ["tools", "sync", "typescript"],
       "className": "ToolsSyncTypeScriptCommand",
       "plugin": "@atls/yarn-plugin-tools",
       "pluginDir": "plugin-tools",
@@ -491,9 +379,7 @@
     },
     {
       "command": "typecheck",
-      "pathTokens": [
-        "typecheck"
-      ],
+      "pathTokens": ["typecheck"],
       "className": "TypeCheckCommand",
       "plugin": "@atls/yarn-plugin-typescript",
       "pluginDir": "plugin-typescript",
@@ -503,11 +389,7 @@
     },
     {
       "command": "ui icons generate",
-      "pathTokens": [
-        "ui",
-        "icons",
-        "generate"
-      ],
+      "pathTokens": ["ui", "icons", "generate"],
       "className": "UiIconsGenerateCommand",
       "plugin": "@atls/yarn-plugin-ui",
       "pluginDir": "plugin-ui",
@@ -517,11 +399,7 @@
     },
     {
       "command": "workspaces changed foreach",
-      "pathTokens": [
-        "workspaces",
-        "changed",
-        "foreach"
-      ],
+      "pathTokens": ["workspaces", "changed", "foreach"],
       "className": "WorkspacesChangedForeachCommand",
       "plugin": "@atls/yarn-plugin-workspaces",
       "pluginDir": "plugin-workspaces",
@@ -531,11 +409,7 @@
     },
     {
       "command": "workspaces changed list",
-      "pathTokens": [
-        "workspaces",
-        "changed",
-        "list"
-      ],
+      "pathTokens": ["workspaces", "changed", "list"],
       "className": "WorkspacesChangedListCommand",
       "plugin": "@atls/yarn-plugin-workspaces",
       "pluginDir": "plugin-workspaces",
@@ -553,11 +427,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 1,
       "devDependencyCount": 4,
       "peerDependencyCount": 2
@@ -570,11 +440,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 1,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -587,11 +453,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 0,
       "devDependencyCount": 6,
       "peerDependencyCount": 2
@@ -604,11 +466,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -621,11 +479,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 0,
       "devDependencyCount": 13,
       "peerDependencyCount": 2
@@ -638,11 +492,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -655,11 +505,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 0,
       "devDependencyCount": 6,
       "peerDependencyCount": 2
@@ -672,11 +518,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -689,11 +531,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 4,
       "devDependencyCount": 6,
       "peerDependencyCount": 2
@@ -706,11 +544,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 9,
       "devDependencyCount": 5,
       "peerDependencyCount": 2
@@ -723,11 +557,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 4,
       "devDependencyCount": 2,
       "peerDependencyCount": 0
@@ -740,11 +570,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 3,
       "devDependencyCount": 6,
       "peerDependencyCount": 2
@@ -757,11 +583,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 2,
       "peerDependencyCount": 0
@@ -774,13 +596,9 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 0,
-      "devDependencyCount": 12,
+      "devDependencyCount": 11,
       "peerDependencyCount": 2
     },
     {
@@ -791,11 +609,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -808,11 +622,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 7,
       "peerDependencyCount": 2
@@ -825,11 +635,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 5,
       "devDependencyCount": 4,
       "peerDependencyCount": 2
@@ -842,11 +648,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 4,
       "devDependencyCount": 6,
       "peerDependencyCount": 2
@@ -859,11 +661,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -876,11 +674,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -893,11 +687,7 @@
       "description": "",
       "purposeEn": "CLI UI component for terminal rendering",
       "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 3,
       "devDependencyCount": 6,
       "peerDependencyCount": 2
@@ -910,11 +700,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 1,
       "peerDependencyCount": 0
@@ -927,11 +713,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 10,
       "devDependencyCount": 2,
       "peerDependencyCount": 0
@@ -944,11 +726,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 1,
       "devDependencyCount": 0,
       "peerDependencyCount": 0
@@ -961,11 +739,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 5,
       "devDependencyCount": 1,
       "peerDependencyCount": 0
@@ -978,14 +752,10 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
-      "devDependencyCount": 0,
-      "peerDependencyCount": 0
+      "devDependencyCount": 1,
+      "peerDependencyCount": 1
     },
     {
       "name": "@atls/code-icons",
@@ -995,11 +765,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 7,
       "devDependencyCount": 4,
       "peerDependencyCount": 0
@@ -1012,11 +778,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 1,
       "devDependencyCount": 0,
       "peerDependencyCount": 0
@@ -1029,11 +791,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 3,
       "devDependencyCount": 1,
       "peerDependencyCount": 2
@@ -1046,11 +804,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 4,
       "devDependencyCount": 1,
       "peerDependencyCount": 0
@@ -1063,14 +817,10 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
-      "dependencyCount": 2,
-      "devDependencyCount": 1,
-      "peerDependencyCount": 0
+      "scripts": ["build", "build:library", "build:schematic-factory", "postpack", "prepack"],
+      "dependencyCount": 3,
+      "devDependencyCount": 8,
+      "peerDependencyCount": 2
     },
     {
       "name": "@atls/code-service",
@@ -1080,11 +830,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 7,
       "devDependencyCount": 5,
       "peerDependencyCount": 0
@@ -1097,13 +843,8 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "build:worker",
-        "postpack",
-        "prepack"
-      ],
-      "dependencyCount": 2,
+      "scripts": ["build", "build:worker", "postpack", "prepack"],
+      "dependencyCount": 3,
       "devDependencyCount": 1,
       "peerDependencyCount": 0
     },
@@ -1115,12 +856,7 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "build:worker",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "build:worker", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 2,
       "peerDependencyCount": 0
@@ -1133,11 +869,7 @@
       "description": "",
       "purposeEn": "Shared tooling configuration package",
       "purposeRu": "Пакет конфигурации для shared tooling",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 0,
       "devDependencyCount": 1,
       "peerDependencyCount": 0
@@ -1150,12 +882,8 @@
       "description": "",
       "purposeEn": "Shared tooling configuration package",
       "purposeRu": "Пакет конфигурации для shared tooling",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
-      "dependencyCount": 15,
+      "scripts": ["build", "postpack", "prepack"],
+      "dependencyCount": 16,
       "devDependencyCount": 3,
       "peerDependencyCount": 0
     },
@@ -1167,11 +895,7 @@
       "description": "",
       "purposeEn": "Shared tooling configuration package",
       "purposeRu": "Пакет конфигурации для shared tooling",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 1,
       "devDependencyCount": 1,
       "peerDependencyCount": 0
@@ -1184,11 +908,7 @@
       "description": "",
       "purposeEn": "Shared tooling configuration package",
       "purposeRu": "Пакет конфигурации для shared tooling",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 0,
       "devDependencyCount": 0,
       "peerDependencyCount": 0
@@ -1201,11 +921,7 @@
       "description": "",
       "purposeEn": "Prettier plugin and formatting utilities",
       "purposeRu": "Prettier-плагин и форматирование",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 7,
       "devDependencyCount": 3,
       "peerDependencyCount": 0
@@ -1218,46 +934,8 @@
       "description": "",
       "purposeEn": "Code utility library used by raijin tooling",
       "purposeRu": "Библиотека code-утилит для инструментов raijin",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
-      "dependencyCount": 11,
-      "devDependencyCount": 2,
-      "peerDependencyCount": 0
-    },
-    {
-      "name": "@atls/schematics-utils",
-      "location": "schematics/schematics-utils",
-      "group": "schematics",
-      "private": false,
-      "description": "",
-      "purposeEn": "Schematics and template generation package",
-      "purposeRu": "Пакет генерации схем и шаблонов",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
-      "dependencyCount": 5,
-      "devDependencyCount": 4,
-      "peerDependencyCount": 0
-    },
-    {
-      "name": "@atls/schematics",
-      "location": "schematics/schematics",
-      "group": "schematics",
-      "private": false,
-      "description": "",
-      "purposeEn": "Schematics and template generation package",
-      "purposeRu": "Пакет генерации схем и шаблонов",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
-      "dependencyCount": 4,
+      "scripts": ["build", "build:library", "build:schematic", "postpack", "prepack"],
+      "dependencyCount": 14,
       "devDependencyCount": 3,
       "peerDependencyCount": 0
     },
@@ -1269,11 +947,7 @@
       "description": "",
       "purposeEn": "Webpack integration for tools ecosystem",
       "purposeRu": "Webpack интеграция для экосистемы tools",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 3,
       "devDependencyCount": 9,
       "peerDependencyCount": 0
@@ -1286,11 +960,7 @@
       "description": "",
       "purposeEn": "Webpack integration for tools ecosystem",
       "purposeRu": "Webpack интеграция для экосистемы tools",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 1,
       "devDependencyCount": 1,
       "peerDependencyCount": 0
@@ -1304,7 +974,7 @@
       "purposeEn": "Entrypoint for custom yarn CLI and bundle configuration",
       "purposeRu": "Входная точка кастомного yarn CLI и bundle-конфигурации",
       "scripts": [],
-      "dependencyCount": 52,
+      "dependencyCount": 53,
       "devDependencyCount": 0,
       "peerDependencyCount": 0
     },
@@ -1322,12 +992,13 @@
         "build:clean",
         "build:dist",
         "build:fix",
+        "build:schemaic",
         "build:version",
         "fix",
         "postpack",
         "prepack"
       ],
-      "dependencyCount": 53,
+      "dependencyCount": 54,
       "devDependencyCount": 0,
       "peerDependencyCount": 0
     },
@@ -1352,11 +1023,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for badges domain",
       "purposeRu": "Yarn-плагин для домена badges",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 1,
       "devDependencyCount": 5,
       "peerDependencyCount": 2
@@ -1369,11 +1036,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for changelog domain",
       "purposeRu": "Yarn-плагин для домена changelog",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -1386,11 +1049,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for check domain",
       "purposeRu": "Yarn-плагин для домена check",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 0,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -1403,11 +1062,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for checks domain",
       "purposeRu": "Yarn-плагин для домена checks",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 15,
       "devDependencyCount": 10,
       "peerDependencyCount": 3
@@ -1420,11 +1075,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for cli-publish domain",
       "purposeRu": "Yarn-плагин для домена cli-publish",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 0,
       "devDependencyCount": 5,
       "peerDependencyCount": 3
@@ -1437,11 +1088,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for commit domain",
       "purposeRu": "Yarn-плагин для домена commit",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 10,
       "devDependencyCount": 6,
       "peerDependencyCount": 3
@@ -1454,11 +1101,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for essentials domain",
       "purposeRu": "Yarn-плагин для домена essentials",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 4,
       "peerDependencyCount": 3
@@ -1471,11 +1114,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for export domain",
       "purposeRu": "Yarn-плагин для домена export",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 5,
       "peerDependencyCount": 2
@@ -1488,11 +1127,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for files domain",
       "purposeRu": "Yarn-плагин для домена files",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 3,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -1505,11 +1140,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for format domain",
       "purposeRu": "Yarn-плагин для домена format",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 8,
       "devDependencyCount": 6,
       "peerDependencyCount": 2
@@ -1522,11 +1153,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for image domain",
       "purposeRu": "Yarn-плагин для домена image",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 6,
       "devDependencyCount": 5,
       "peerDependencyCount": 3
@@ -1539,11 +1166,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for jsr domain",
       "purposeRu": "Yarn-плагин для домена jsr",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 2,
       "devDependencyCount": 4,
       "peerDependencyCount": 3
@@ -1556,11 +1179,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for library domain",
       "purposeRu": "Yarn-плагин для домена library",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 11,
       "devDependencyCount": 6,
       "peerDependencyCount": 2
@@ -1573,11 +1192,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for lint domain",
       "purposeRu": "Yarn-плагин для домена lint",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 9,
       "devDependencyCount": 7,
       "peerDependencyCount": 2
@@ -1590,14 +1205,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for pnp-patch domain",
       "purposeRu": "Yarn-плагин для домена pnp-patch",
-      "scripts": [
-        "build",
-        "build:loader",
-        "build:source",
-        "postpack",
-        "prepack",
-        "yarn:download"
-      ],
+      "scripts": ["build", "build:loader", "build:source", "postpack", "prepack", "yarn:download"],
       "dependencyCount": 5,
       "devDependencyCount": 6,
       "peerDependencyCount": 0
@@ -1610,11 +1218,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for release domain",
       "purposeRu": "Yarn-плагин для домена release",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 3,
       "devDependencyCount": 3,
       "peerDependencyCount": 2
@@ -1627,11 +1231,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for renderer domain",
       "purposeRu": "Yarn-плагин для домена renderer",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 3,
       "devDependencyCount": 8,
       "peerDependencyCount": 2
@@ -1644,11 +1244,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for schematics domain",
       "purposeRu": "Yarn-плагин для домена schematics",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 9,
       "devDependencyCount": 9,
       "peerDependencyCount": 5
@@ -1661,11 +1257,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for service domain",
       "purposeRu": "Yarn-плагин для домена service",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 11,
       "devDependencyCount": 7,
       "peerDependencyCount": 2
@@ -1678,11 +1270,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for test domain",
       "purposeRu": "Yarn-плагин для домена test",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 11,
       "devDependencyCount": 8,
       "peerDependencyCount": 2
@@ -1695,11 +1283,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for tools domain",
       "purposeRu": "Yarn-плагин для домена tools",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 6,
       "devDependencyCount": 5,
       "peerDependencyCount": 0
@@ -1712,11 +1296,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for typescript domain",
       "purposeRu": "Yarn-плагин для домена typescript",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 11,
       "devDependencyCount": 7,
       "peerDependencyCount": 2
@@ -1729,11 +1309,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for ui domain",
       "purposeRu": "Yarn-плагин для домена ui",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 8,
       "devDependencyCount": 7,
       "peerDependencyCount": 2
@@ -1746,11 +1322,7 @@
       "description": "",
       "purposeEn": "Yarn plugin for workspaces domain",
       "purposeRu": "Yarn-плагин для домена workspaces",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
+      "scripts": ["build", "postpack", "prepack"],
       "dependencyCount": 3,
       "devDependencyCount": 4,
       "peerDependencyCount": 2
@@ -1833,10 +1405,7 @@
       "workspaces changed foreach",
       "workspaces changed list"
     ],
-    "inactiveCommands": [
-      "generate project",
-      "migration up"
-    ],
+    "inactiveCommands": ["generate project"],
     "activePlugins": [
       "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-changelog",
@@ -1868,9 +1437,9 @@
       },
       {
         "name": "@atls/yarn-plugin-schematics",
-        "reason": "plugin is not in bundle"
+        "reason": "plugin is in bundle but not exported from index"
       }
     ]
   },
-  "lastGenerated": "2026-03-30T01:47:09.539Z"
+  "lastGenerated": "2026-04-01T00:46:16.155Z"
 }
