@@ -15,11 +15,22 @@ runs:
         export NODE_OPTIONS
         yarn workspaces changed list
 
+    - name: Verify NPM auth
+      shell: bash
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn npm whoami --publish
+      env:
+        YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+        YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
+
     - name: Npm Publish
       shell: bash
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach -vt --no-private npm publish --access public
+        yarn workspaces changed foreach -vt --no-private npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+        YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org

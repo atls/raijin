@@ -12,6 +12,7 @@ on:
 jobs:
   run:
     name: Publish
+    if: ${{ github.event.pull_request.merged == true }}
     env:
       NODE_VERSION: '22'
     runs-on: ubuntu-latest
