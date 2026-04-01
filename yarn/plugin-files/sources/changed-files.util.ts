@@ -7,6 +7,8 @@ import { execUtils }      from '@yarnpkg/core'
 
 type GetCommitResponseData = Endpoints['GET /repos/{owner}/{repo}/commits/{ref}']['response']
 type GetCommitsResponseData = Endpoints['GET /repos/{owner}/{repo}/commits']['response']['data']
+type GetPullFilesResponseData =
+  Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/files']['response']['data']
 
 export const getEventCommmits = async (): Promise<
   GetCommitResponseData | GetCommitsResponseData
@@ -51,6 +53,17 @@ export const getChangedCommmits = async (): Promise<Array<GetCommitResponseData>
 }
 
 export const getGithubChangedFiles = async (): Promise<Array<string>> => {
+  if (context.eventName === 'pull_request' && context.payload.pull_request) {
+    const octokit = getOctokit(process.env.GITHUB_TOKEN!)
+    const files = (await octokit.paginate(octokit.rest.pulls.listFiles, {
+      ...context.repo,
+      pull_number: context.payload.pull_request.number,
+      per_page: 100,
+    })) as GetPullFilesResponseData
+
+    return files.map((file) => file.filename).filter(Boolean)
+  }
+
   const commits = await getChangedCommmits()
 
   return commits
