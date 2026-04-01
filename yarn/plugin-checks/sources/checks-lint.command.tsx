@@ -144,7 +144,7 @@ class ChecksLintCommand extends BaseCommand {
     }
 
     const lintTargets = (await getChangedFiles(project))
-      .filter((file) => /\.(cjs|mjs|js|jsx|ts|tsx)$/.test(file))
+      .filter((file) => /\.(c|m)?(j|t)sx?$/.test(file))
       .map((file) => resolve(project.cwd, file))
 
     const existsMap = await Promise.all(
