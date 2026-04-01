@@ -117,10 +117,15 @@ export const copyRcFile = async (
   report: Report
 ): Promise<void> => {
   const filename = project.configuration.get('rcFilename')
+  const src = ppath.join(project.cwd, filename)
+
+  if (!(await xfs.existsPromise(src))) {
+    return
+  }
 
   report.reportInfo(null, filename)
 
-  await xfs.copyPromise(ppath.join(destination, filename), ppath.join(project.cwd, filename), {
+  await xfs.copyPromise(ppath.join(destination, filename), src, {
     overwrite: true,
   })
 }
