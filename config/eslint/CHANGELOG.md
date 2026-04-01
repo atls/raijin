@@ -1,5 +1,17 @@
 
 
+## [2.0.11](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.10...@atls/config-eslint@2.0.11) (2026-04-01)
+
+
+### Bug Fixes
+
+
+* **common:** stabilize pr checks for changed files ([29e5e18](https://github.com/atls/raijin/commit/29e5e18c690feaedc7906bf8e29b8cbfbe7bfea4))
+
+
+
+
+
 ## [2.0.10](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.9...@atls/config-eslint@2.0.10) (2025-12-07)
 
 

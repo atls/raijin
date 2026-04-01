@@ -1,5 +1,12 @@
 
 
+## [2.0.18](https://github.com/atls/raijin/compare/@atls/code-lint@2.0.17...@atls/code-lint@2.0.18) (2026-04-01)
+
+
+
+
+
+
 ## [2.0.17](https://github.com/atls/raijin/compare/@atls/code-lint@2.0.16...@atls/code-lint@2.0.17) (2026-03-16)
 
 

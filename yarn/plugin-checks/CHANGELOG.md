@@ -1,5 +1,23 @@
 
 
+## [1.0.21](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.20...@atls/yarn-plugin-checks@1.0.21) (2026-04-01)
+
+
+### Bug Fixes
+
+
+* **common:** lint only effective pr changes ([f12a431](https://github.com/atls/raijin/commit/f12a4319258054d0928437b2adf17794dfbf6461))
+* **common:** make package and typecheck merge-friendly ([5d08459](https://github.com/atls/raijin/commit/5d08459610411965a4dc5924706179a77f5bcb84))
+* **common:** remove inactive schematic helper and unblock checks ([ef3bd6f](https://github.com/atls/raijin/commit/ef3bd6f15084017ecf569fb74e2a6226154e7f78))
+* **common:** skip changed typecheck when ts includes are empty ([32fb223](https://github.com/atls/raijin/commit/32fb223a83078036caf2d061abe67f82cf1a8445))
+* **common:** stabilize pr checks for changed files ([29e5e18](https://github.com/atls/raijin/commit/29e5e18c690feaedc7906bf8e29b8cbfbe7bfea4))
+* **tools:** address tooling review comments and stabilize checks ([21c83ce](https://github.com/atls/raijin/commit/21c83ce1aff77f2206efec2fdbfbdd1dee8cc3c7))
+* **yarn-plugin-checks:** forward changed flag in proxy mode ([948f611](https://github.com/atls/raijin/commit/948f611c54aa9ff81a76b28f48e43cc2e9de87cb))
+
+
+
+
+
 ## [1.0.20](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.19...@atls/yarn-plugin-checks@1.0.20) (2026-03-16)
 
 
