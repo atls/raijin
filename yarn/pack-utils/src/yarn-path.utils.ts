@@ -4,8 +4,7 @@ import { ppath }             from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
 
 export const getYarnPathFromDestination = async (
-  destination: PortablePath,
-  configuredYarnPath: PortablePath | null
+  destination: PortablePath
 ): Promise<PortablePath | undefined> => {
   const releasesDir = ppath.join(destination, '.yarn', 'releases')
 
@@ -13,26 +12,13 @@ export const getYarnPathFromDestination = async (
     return undefined
   }
 
-  const releases = (await xfs.readdirPromise(releasesDir))
-    .filter((name) => name.endsWith('.cjs') || name.endsWith('.mjs'))
+  const release = (await xfs.readdirPromise(releasesDir))
     .sort()
+    .find((name) => name.endsWith('.cjs') || name.endsWith('.mjs'))
 
-  if (releases.length === 0) {
+  if (!release) {
     return undefined
   }
 
-  if (configuredYarnPath) {
-    const configuredRelease = ppath.basename(configuredYarnPath)
-    const matchedRelease = releases.find((release) => release === configuredRelease)
-
-    if (matchedRelease) {
-      return ppath.join('.yarn', 'releases', matchedRelease as PortablePath)
-    }
-  }
-
-  if (releases.length === 1) {
-    return ppath.join('.yarn', 'releases', releases[0] as PortablePath)
-  }
-
-  return undefined
+  return ppath.join('.yarn', 'releases', release as PortablePath)
 }

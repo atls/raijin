@@ -63,10 +63,7 @@ export const pack = async (
       enableMirror: tmpConfiguration.get(`enableMirror`),
       globalFolder: `.yarn/berry` as PortablePath,
       nodeLinker: () => project.configuration.get('nodeLinker'),
-      yarnPath: await getYarnPathFromDestination(
-        destination,
-        project.configuration.get('yarnPath')
-      ),
+      yarnPath: await getYarnPathFromDestination(destination),
     })
 
     await tmpConfiguration.getPackageExtensions()
