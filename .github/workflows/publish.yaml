@@ -42,35 +42,46 @@ jobs:
         uses: ./.github/actions/install
 
       - name: Version
+        if: ${{ github.event.pull_request.merged == true }}
         uses: ./.github/actions/version
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
+      - name: Verify NPM auth
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          source .env
+          export NODE_OPTIONS
+          yarn npm whoami --publish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPMAUTHTOKEN }}
+          YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
+
       - name: Changelog
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/changelog
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Publish to NPM
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
         id: npm
         uses: ./.github/actions/publish-npm
         with:
           NPM_TOKEN: ${{ secrets.NPMAUTHTOKEN }}
 
       - name: Bundle yarn
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/bundle
 
       - name: Create release
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/release
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Commit changes
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/commit
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
