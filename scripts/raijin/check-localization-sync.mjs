@@ -5,15 +5,16 @@ const repoRoot = process.cwd()
 
 const readText = (relativePath) => fs.readFileSync(path.join(repoRoot, relativePath), 'utf8')
 
-const normalizeValues = (values) => [...new Set(values)].sort((left, right) => left.localeCompare(right))
+const normalizeValues = (values) =>
+  [...new Set(values)].sort((left, right) => left.localeCompare(right))
 
 const extractSyncMarkers = (content) =>
   [...content.matchAll(/<!--\s*sync:([a-z0-9._:-]+)\s*-->/gi)].map((match) => match[1])
 
 const extractScopedMarkers = (content, scope) =>
-  [...content.matchAll(new RegExp(`<!--\\s*sync:${scope}:([a-z0-9._-]+)\\s*-->`, 'gi'))].map(
-    (match) => match[1]
-  )
+  [...content.matchAll(/<!--\s*sync:([a-z0-9._-]+):([a-z0-9._-]+)\s*-->/gi)]
+    .filter((match) => match[1] === scope)
+    .map((match) => match[2])
 
 const compareSets = (label, left, right) => {
   const onlyLeft = left.filter((item) => !right.includes(item))
