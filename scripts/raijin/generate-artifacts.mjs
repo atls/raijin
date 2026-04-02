@@ -22,7 +22,7 @@ const writeJson = (relativePath, value) => {
   writeText(relativePath, `${JSON.stringify(value, null, 2)}\n`)
 }
 
-const formatMarkdownFiles = (paths) => {
+const formatGeneratedFiles = (paths) => {
   try {
     execFileSync('yarn', ['format', ...paths], {
       cwd: repoRoot,
@@ -43,7 +43,7 @@ const formatMarkdownFiles = (paths) => {
           : ''
 
     throw new Error(
-      ['Failed to format generated markdown files', stderr || stdout || String(error)].join('\n')
+      ['Failed to format generated files', stderr || stdout || String(error)].join('\n')
     )
   }
 }
@@ -1199,7 +1199,10 @@ writeText(`${AGENTS_DIR}/README.md`, renderAgentReadme())
 writeText(`${AGENTS_DIR}/raijin-routing.md`, renderAgentRouting())
 writeText(`${AGENTS_DIR}/AGENTS.md`, renderAgentsMd())
 
-formatMarkdownFiles([
+formatGeneratedFiles([
+  `${DOCS_DIR}/index.v1.json`,
+  `${DOCS_DIR}/index.meta.v1.json`,
+  `${DOCS_DIR}/smoke-prompts.json`,
   'README.md',
   'README_RU.md',
   'docs/README.md',
