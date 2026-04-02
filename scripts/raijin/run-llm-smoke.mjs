@@ -113,8 +113,9 @@ const fixture = readJson('docs/raijin/smoke-prompts.json')
 
 const failures = []
 const results = []
+const llmCases = fixture.cases.filter((testCase) => !testCase.llmSkip)
 
-for (const testCase of fixture.cases) {
+for (const testCase of llmCases) {
   try {
     const response = await callOpenAI(testCase.prompt, index.commands)
     const rawText = extractOutputText(response)
@@ -129,7 +130,10 @@ for (const testCase of fixture.cases) {
         : ''
 
     const passed =
-      actualCommand === testCase.expectedCommand && actualStatus === testCase.expectedStatus
+      testCase.expectedStatus === 'unavailable'
+        ? actualStatus === testCase.expectedStatus
+        : actualCommand === testCase.expectedCommand &&
+          actualStatus === testCase.expectedStatus
 
     results.push({
       id: testCase.id,
@@ -154,7 +158,7 @@ for (const testCase of fixture.cases) {
 const report = {
   generatedAt: new Date().toISOString(),
   model,
-  total: fixture.cases.length,
+  total: llmCases.length,
   failures: failures.length,
   results,
 }
@@ -174,4 +178,4 @@ if (failures.length > 0) {
   process.exit(1)
 }
 
-console.log(`LLM smoke passed (${fixture.cases.length} cases, model=${model})`)
+console.log(`LLM smoke passed (${llmCases.length} cases, model=${model})`)

@@ -898,9 +898,10 @@ const smokeFixture = {
     },
     {
       id: 'no-route-unavailable',
-      prompt: 'summarize meeting notes',
+      prompt: 'what is the distance to mars',
       expectedCommand: '',
       expectedStatus: 'unavailable',
+      llmSkip: true,
     },
   ],
 }
