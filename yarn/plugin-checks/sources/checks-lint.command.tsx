@@ -143,12 +143,12 @@ class ChecksLintCommand extends BaseCommand {
       return null
     }
 
-    const lintTargets = (await getChangedFiles(project))
-      .filter((file) => /\.(cjs|mjs|js|jsx|ts|tsx)$/.test(file))
-      .map((file) => resolve(project.cwd, file))
+    const lintTargets = (await getChangedFiles(project)).filter((file) =>
+      /\.(c|m)?(j|t)sx?$/.test(file))
 
     const existsMap = await Promise.all(
-      lintTargets.map(async (file) => xfs.existsPromise(npath.toPortablePath(file)))
+      lintTargets.map(async (file) =>
+        xfs.existsPromise(npath.toPortablePath(resolve(project.cwd, file))))
     )
 
     return lintTargets.filter((_, index) => existsMap[index])

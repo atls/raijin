@@ -1,5 +1,32 @@
 
 
+## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.3...@atls/yarn-pack-utils@1.0.4) (2026-04-01)
+
+
+
+
+
+
+## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.2...@atls/yarn-pack-utils@1.0.3) (2026-04-01)
+
+
+### Bug Fixes
+
+
+* **common:** align merge-conflicting yarn sources ([61f18cb](https://github.com/atls/raijin/commit/61f18cb6bbc8bf372feadf7da288ca5fd6dc46b8))
+* **common:** harden pack rc and yarnPath selection ([82fe472](https://github.com/atls/raijin/commit/82fe4721cae1a696baa285ed0cf75f1c31016916))
+* **common:** preserve packageExtensions in image pack config ([2c73f9d](https://github.com/atls/raijin/commit/2c73f9d407c8bc7b340785d95e473f542c051dd2))
+* **common:** type nodeLinker without merge-conflicting comments ([a66b63f](https://github.com/atls/raijin/commit/a66b63f1c9083d7dd0a3d4993c332a204d01eba3))
+
+### Features
+
+
+* **yarn:** image pack yarn-path configuration ([#531](https://github.com/atls/raijin/issues/531)) ([b470284](https://github.com/atls/raijin/commit/b4702843c7c0897588c41ed182f0b02ef9da7ef0))
+
+
+
+
+
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.1...@atls/yarn-pack-utils@1.0.2) (2026-02-18)
 
 

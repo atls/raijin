@@ -22,7 +22,6 @@
     "raijin:smoke:deterministic": "node scripts/raijin/run-deterministic-smoke.mjs",
     "raijin:smoke:llm": "node scripts/raijin/run-llm-smoke.mjs",
     "cli:build": "yarn workspace @atls/yarn-cli build",
-    "schematic:test": "yarn workspace @atls/code-runtime build:schematic && yarn workspace @atls/code-schematics build:schematic-factory && yarn generate project",
     "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download"
   },
   "resolutions": {
