@@ -8,9 +8,45 @@ Grouped cards for workspace packages
 
 Custom Yarn CLI, plugin, and bundle infrastructure packages
 
+Compact list:
+
+- `@atls/yarn-cli` — Private Yarn CLI implementation for repository automation and release workflows.
+- `@atls/yarn-cli-tools` — Supporting tools and helpers used by the internal Yarn CLI.
+- `@atls/yarn-pack-utils` — Utilities for packaging, packing, and publish preparation in Yarn workflows.
+- `@atls/yarn-plugin-badges` — Yarn plugin for generating and managing repository badges.
+- `@atls/yarn-plugin-changelog` — Yarn plugin for changelog generation and release notes workflows.
+- `@atls/yarn-plugin-check` — Yarn plugin for repository checks and validation commands.
+- `@atls/yarn-plugin-checks` — Extended checks plugin for multiple validation routines in Yarn.
+- `@atls/yarn-plugin-cli-publish` — Yarn plugin for CLI-driven publishing and release automation.
+- `@atls/yarn-plugin-commit` — Yarn plugin for commit-related automation and conventions.
+- `@atls/yarn-plugin-essentials` — Core Yarn plugin with essential shared functionality.
+- `@atls/yarn-plugin-export` — Yarn plugin for exporting project artifacts or metadata.
+- `@atls/yarn-plugin-files` — Yarn plugin for file handling and file-based workflows.
+- `@atls/yarn-plugin-format` — Yarn plugin for formatting code and project files.
+- `@atls/yarn-plugin-image` — Yarn plugin for image-related processing and assets.
+- `@atls/yarn-plugin-jsr` — Yarn plugin for JSR publishing or integration workflows.
+- `@atls/yarn-plugin-library` — Yarn plugin for library-oriented project workflows.
+- `@atls/yarn-plugin-lint` — Yarn plugin for linting and code quality checks.
+- `@atls/yarn-plugin-pnp-patch` — Yarn plugin for patching Plug'n'Play behavior and related loaders.
+- `@atls/yarn-plugin-release` — Yarn plugin for release automation and publishing workflows.
+- `@atls/yarn-plugin-renderer` — Yarn plugin for rendering output such as templates or reports.
+- `@atls/yarn-plugin-schematics` — Yarn plugin for schematics and project scaffolding.
+- `@atls/yarn-plugin-service` — Yarn plugin for service-oriented raijin and orchestration.
+- `@atls/yarn-plugin-test` — Yarn plugin for testing workflows and test automation.
+- `@atls/yarn-plugin-tools` — Yarn plugin for shared developer tools and utilities.
+- `@atls/yarn-plugin-typescript` — Yarn plugin for TypeScript-specific build and integration support.
+- `@atls/yarn-plugin-ui` — Yarn plugin for UI-related workflows and interface raijin.
+- `@atls/yarn-plugin-workspaces` — Yarn plugin for workspace management and monorepo coordination.
+- `@atls/yarn-run-utils` — Utility package for running commands and process helpers in Yarn workflows.
+- `@atls/yarn-test-utils` — Utility package for testing helpers and test setup in Yarn projects.
+- `@atls/yarn-workspace-utils` — Utility package for workspace and monorepo helper functions.
+
+<details>
+<summary>Group details: `yarn`</summary>
+
 <!-- sync:package-card:atls-yarn-cli -->
 
-### `@atls/yarn-cli`
+#### `@atls/yarn-cli`
 
 - Location: `yarn/cli`
 - Group: `yarn`
@@ -24,7 +60,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
 
-### `@atls/yarn-cli-tools`
+#### `@atls/yarn-cli-tools`
 
 - Location: `yarn/cli-tools`
 - Group: `yarn`
@@ -38,7 +74,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
 
-### `@atls/yarn-pack-utils`
+#### `@atls/yarn-pack-utils`
 
 - Location: `yarn/pack-utils`
 - Group: `yarn`
@@ -52,7 +88,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-badges -->
 
-### `@atls/yarn-plugin-badges`
+#### `@atls/yarn-plugin-badges`
 
 - Location: `yarn/plugin-badges`
 - Group: `yarn`
@@ -66,7 +102,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-changelog -->
 
-### `@atls/yarn-plugin-changelog`
+#### `@atls/yarn-plugin-changelog`
 
 - Location: `yarn/plugin-changelog`
 - Group: `yarn`
@@ -80,7 +116,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-check -->
 
-### `@atls/yarn-plugin-check`
+#### `@atls/yarn-plugin-check`
 
 - Location: `yarn/plugin-check`
 - Group: `yarn`
@@ -94,7 +130,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-checks -->
 
-### `@atls/yarn-plugin-checks`
+#### `@atls/yarn-plugin-checks`
 
 - Location: `yarn/plugin-checks`
 - Group: `yarn`
@@ -108,7 +144,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-cli-publish -->
 
-### `@atls/yarn-plugin-cli-publish`
+#### `@atls/yarn-plugin-cli-publish`
 
 - Location: `yarn/plugin-cli-publish`
 - Group: `yarn`
@@ -122,7 +158,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-commit -->
 
-### `@atls/yarn-plugin-commit`
+#### `@atls/yarn-plugin-commit`
 
 - Location: `yarn/plugin-commit`
 - Group: `yarn`
@@ -136,7 +172,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-essentials -->
 
-### `@atls/yarn-plugin-essentials`
+#### `@atls/yarn-plugin-essentials`
 
 - Location: `yarn/plugin-essentials`
 - Group: `yarn`
@@ -150,7 +186,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-export -->
 
-### `@atls/yarn-plugin-export`
+#### `@atls/yarn-plugin-export`
 
 - Location: `yarn/plugin-export`
 - Group: `yarn`
@@ -164,7 +200,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-files -->
 
-### `@atls/yarn-plugin-files`
+#### `@atls/yarn-plugin-files`
 
 - Location: `yarn/plugin-files`
 - Group: `yarn`
@@ -178,7 +214,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-format -->
 
-### `@atls/yarn-plugin-format`
+#### `@atls/yarn-plugin-format`
 
 - Location: `yarn/plugin-format`
 - Group: `yarn`
@@ -192,7 +228,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-image -->
 
-### `@atls/yarn-plugin-image`
+#### `@atls/yarn-plugin-image`
 
 - Location: `yarn/plugin-image`
 - Group: `yarn`
@@ -206,7 +242,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-jsr -->
 
-### `@atls/yarn-plugin-jsr`
+#### `@atls/yarn-plugin-jsr`
 
 - Location: `yarn/plugin-jsr`
 - Group: `yarn`
@@ -220,7 +256,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-library -->
 
-### `@atls/yarn-plugin-library`
+#### `@atls/yarn-plugin-library`
 
 - Location: `yarn/plugin-library`
 - Group: `yarn`
@@ -234,7 +270,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-lint -->
 
-### `@atls/yarn-plugin-lint`
+#### `@atls/yarn-plugin-lint`
 
 - Location: `yarn/plugin-lint`
 - Group: `yarn`
@@ -248,7 +284,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-pnp-patch -->
 
-### `@atls/yarn-plugin-pnp-patch`
+#### `@atls/yarn-plugin-pnp-patch`
 
 - Location: `yarn/plugin-pnp-patch`
 - Group: `yarn`
@@ -262,7 +298,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-release -->
 
-### `@atls/yarn-plugin-release`
+#### `@atls/yarn-plugin-release`
 
 - Location: `yarn/plugin-release`
 - Group: `yarn`
@@ -276,7 +312,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-renderer -->
 
-### `@atls/yarn-plugin-renderer`
+#### `@atls/yarn-plugin-renderer`
 
 - Location: `yarn/plugin-renderer`
 - Group: `yarn`
@@ -290,7 +326,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-schematics -->
 
-### `@atls/yarn-plugin-schematics`
+#### `@atls/yarn-plugin-schematics`
 
 - Location: `yarn/plugin-schematics`
 - Group: `yarn`
@@ -304,7 +340,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-service -->
 
-### `@atls/yarn-plugin-service`
+#### `@atls/yarn-plugin-service`
 
 - Location: `yarn/plugin-service`
 - Group: `yarn`
@@ -318,7 +354,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-test -->
 
-### `@atls/yarn-plugin-test`
+#### `@atls/yarn-plugin-test`
 
 - Location: `yarn/plugin-test`
 - Group: `yarn`
@@ -332,7 +368,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-tools -->
 
-### `@atls/yarn-plugin-tools`
+#### `@atls/yarn-plugin-tools`
 
 - Location: `yarn/plugin-tools`
 - Group: `yarn`
@@ -346,7 +382,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-typescript -->
 
-### `@atls/yarn-plugin-typescript`
+#### `@atls/yarn-plugin-typescript`
 
 - Location: `yarn/plugin-typescript`
 - Group: `yarn`
@@ -360,7 +396,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-ui -->
 
-### `@atls/yarn-plugin-ui`
+#### `@atls/yarn-plugin-ui`
 
 - Location: `yarn/plugin-ui`
 - Group: `yarn`
@@ -374,7 +410,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-plugin-workspaces -->
 
-### `@atls/yarn-plugin-workspaces`
+#### `@atls/yarn-plugin-workspaces`
 
 - Location: `yarn/plugin-workspaces`
 - Group: `yarn`
@@ -388,7 +424,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-run-utils -->
 
-### `@atls/yarn-run-utils`
+#### `@atls/yarn-run-utils`
 
 - Location: `yarn/run-utils`
 - Group: `yarn`
@@ -402,7 +438,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-test-utils -->
 
-### `@atls/yarn-test-utils`
+#### `@atls/yarn-test-utils`
 
 - Location: `yarn/test-utils`
 - Group: `yarn`
@@ -416,7 +452,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-workspace-utils -->
 
-### `@atls/yarn-workspace-utils`
+#### `@atls/yarn-workspace-utils`
 
 - Location: `yarn/workspace-utils`
 - Group: `yarn`
@@ -428,13 +464,34 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Scripts: none
 - Dependencies: deps 0, devDeps 1, peerDeps 0
 
+</details>
+
 ## Group `code`
 
 Core code libraries for build, checks, and utilities
 
+Compact list:
+
+- `@atls/code-changelog` — Provides utilities for generating and managing changelogs.
+- `@atls/code-commit` — Handles commit-related code workflows and conventions.
+- `@atls/code-configuration` — Manages code configuration loading, validation, and defaults.
+- `@atls/code-format` — Supports code formatting operations and formatting rules.
+- `@atls/code-github` — GitHub-related code utilities and integrations used across packages.
+- `@atls/code-icons` — Shared icon assets and icon-related code for the platform.
+- `@atls/code-jsr` — Code for JSR publishing and JSR-compatible package workflows.
+- `@atls/code-lint` — Linting utilities, rules, and shared validation logic.
+- `@atls/code-pack` — Packaging helpers for building and preparing distributable artifacts.
+- `@atls/code-schematics` — Schematics and generators for scaffolding projects and libraries.
+- `@atls/code-service` — Service-layer code and shared runtime service abstractions.
+- `@atls/code-test` — Testing utilities, workers, and shared test infrastructure.
+- `@atls/code-typescript` — TypeScript-specific helpers, build support, and shared TS raijin.
+
+<details>
+<summary>Group details: `code`</summary>
+
 <!-- sync:package-card:atls-code-changelog -->
 
-### `@atls/code-changelog`
+#### `@atls/code-changelog`
 
 - Location: `code/code-changelog`
 - Group: `code`
@@ -448,7 +505,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-commit -->
 
-### `@atls/code-commit`
+#### `@atls/code-commit`
 
 - Location: `code/code-commit`
 - Group: `code`
@@ -462,7 +519,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-configuration -->
 
-### `@atls/code-configuration`
+#### `@atls/code-configuration`
 
 - Location: `code/code-configuration`
 - Group: `code`
@@ -476,7 +533,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-format -->
 
-### `@atls/code-format`
+#### `@atls/code-format`
 
 - Location: `code/code-format`
 - Group: `code`
@@ -490,7 +547,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-github -->
 
-### `@atls/code-github`
+#### `@atls/code-github`
 
 - Location: `code/code-github`
 - Group: `code`
@@ -504,7 +561,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-icons -->
 
-### `@atls/code-icons`
+#### `@atls/code-icons`
 
 - Location: `code/code-icons`
 - Group: `code`
@@ -518,7 +575,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-jsr -->
 
-### `@atls/code-jsr`
+#### `@atls/code-jsr`
 
 - Location: `code/code-jsr`
 - Group: `code`
@@ -532,7 +589,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-lint -->
 
-### `@atls/code-lint`
+#### `@atls/code-lint`
 
 - Location: `code/code-lint`
 - Group: `code`
@@ -546,7 +603,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-pack -->
 
-### `@atls/code-pack`
+#### `@atls/code-pack`
 
 - Location: `code/code-pack`
 - Group: `code`
@@ -560,7 +617,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-schematics -->
 
-### `@atls/code-schematics`
+#### `@atls/code-schematics`
 
 - Location: `code/code-schematics`
 - Group: `code`
@@ -574,7 +631,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-service -->
 
-### `@atls/code-service`
+#### `@atls/code-service`
 
 - Location: `code/code-service`
 - Group: `code`
@@ -588,7 +645,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-test -->
 
-### `@atls/code-test`
+#### `@atls/code-test`
 
 - Location: `code/code-test`
 - Group: `code`
@@ -602,7 +659,7 @@ Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-typescript -->
 
-### `@atls/code-typescript`
+#### `@atls/code-typescript`
 
 - Location: `code/code-typescript`
 - Group: `code`
@@ -614,13 +671,25 @@ Core code libraries for build, checks, and utilities
 - Scripts: `build`, `build:worker`, `postpack`, `prepack`
 - Dependencies: deps 2, devDeps 2, peerDeps 0
 
+</details>
+
 ## Group `config`
 
 Configuration packages and shared presets
 
+Compact list:
+
+- `@atls/config-commitlint` — Shared Commitlint configuration for commit message validation.
+- `@atls/config-eslint` — Shared ESLint configuration and presets.
+- `@atls/config-prettier` — Shared Prettier configuration for formatting consistency.
+- `@atls/config-typescript` — Shared TypeScript configuration presets and compiler settings.
+
+<details>
+<summary>Group details: `config`</summary>
+
 <!-- sync:package-card:atls-config-commitlint -->
 
-### `@atls/config-commitlint`
+#### `@atls/config-commitlint`
 
 - Location: `config/commitlint`
 - Group: `config`
@@ -634,7 +703,7 @@ Configuration packages and shared presets
 
 <!-- sync:package-card:atls-config-eslint -->
 
-### `@atls/config-eslint`
+#### `@atls/config-eslint`
 
 - Location: `config/eslint`
 - Group: `config`
@@ -648,7 +717,7 @@ Configuration packages and shared presets
 
 <!-- sync:package-card:atls-config-prettier -->
 
-### `@atls/config-prettier`
+#### `@atls/config-prettier`
 
 - Location: `config/prettier`
 - Group: `config`
@@ -662,7 +731,7 @@ Configuration packages and shared presets
 
 <!-- sync:package-card:atls-config-typescript -->
 
-### `@atls/config-typescript`
+#### `@atls/config-typescript`
 
 - Location: `config/typescript`
 - Group: `config`
@@ -674,13 +743,22 @@ Configuration packages and shared presets
 - Scripts: `build`, `postpack`, `prepack`
 - Dependencies: deps 0, devDeps 0, peerDeps 0
 
+</details>
+
 ## Group `runtime`
 
 Runtime modules and execution infrastructure
 
+Compact list:
+
+- `@atls/code-runtime` — Runtime abstractions and shared execution-layer code.
+
+<details>
+<summary>Group details: `runtime`</summary>
+
 <!-- sync:package-card:atls-code-runtime -->
 
-### `@atls/code-runtime`
+#### `@atls/code-runtime`
 
 - Location: `runtime/code-runtime`
 - Group: `runtime`
@@ -692,13 +770,23 @@ Runtime modules and execution infrastructure
 - Scripts: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
 - Dependencies: deps 14, devDeps 3, peerDeps 0
 
+</details>
+
 ## Group `webpack`
 
 Webpack integrations and build adapters
 
+Compact list:
+
+- `@atls/webpack-proto-imports-loader` — Webpack loader for proto import handling and build-time import transformation.
+- `@atls/webpack-start-server-plugin` — Webpack plugin for starting and coordinating a development server.
+
+<details>
+<summary>Group details: `webpack`</summary>
+
 <!-- sync:package-card:atls-webpack-proto-imports-loader -->
 
-### `@atls/webpack-proto-imports-loader`
+#### `@atls/webpack-proto-imports-loader`
 
 - Location: `webpack/webpack-proto-imports-loader`
 - Group: `webpack`
@@ -712,7 +800,7 @@ Webpack integrations and build adapters
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
 
-### `@atls/webpack-start-server-plugin`
+#### `@atls/webpack-start-server-plugin`
 
 - Location: `webpack/webpack-start-server-plugin`
 - Group: `webpack`
@@ -724,13 +812,22 @@ Webpack integrations and build adapters
 - Scripts: `build`, `postpack`, `prepack`
 - Dependencies: deps 1, devDeps 1, peerDeps 0
 
+</details>
+
 ## Group `prettier`
 
 Formatting and Prettier integrations
 
+Compact list:
+
+- `@atls/prettier-plugin` — Custom Prettier plugin for formatting project-specific syntax or files.
+
+<details>
+<summary>Group details: `prettier`</summary>
+
 <!-- sync:package-card:atls-prettier-plugin -->
 
-### `@atls/prettier-plugin`
+#### `@atls/prettier-plugin`
 
 - Location: `prettier/plugin`
 - Group: `prettier`
@@ -742,15 +839,44 @@ Formatting and Prettier integrations
 - Scripts: `build`, `postpack`, `prepack`
 - Dependencies: deps 7, devDeps 3, peerDeps 0
 
+</details>
+
 ## Group `cli`
 
 Compact list of CLI packages and their role
 
-_Compact format: short cards without extended details_
+Compact list:
+
+- `@atls/cli-ui-error-info-component` — Renders a compact error summary for CLI output.
+- `@atls/cli-ui-file-link-component` — Displays a clickable or styled link to a file path in terminal UI.
+- `@atls/cli-ui-file-path-component` — Formats file system paths for consistent CLI presentation.
+- `@atls/cli-ui-format-progress-component` — Shows progress for formatting tasks in CLI output.
+- `@atls/cli-ui-git-commit-component` — Presents git commit information in a terminal-friendly format.
+- `@atls/cli-ui-icons-progress-component` — Provides icon-based progress indicators for CLI states.
+- `@atls/cli-ui-line-component` — Renders a single formatted line for CLI messages.
+- `@atls/cli-ui-lint-progress-component` — Displays linting progress in CLI output.
+- `@atls/cli-ui-lint-result-component` — Summarizes lint results with warnings and errors.
+- `@atls/cli-ui-log-record-component` — Formats a single log record for terminal display.
+- `@atls/cli-ui-pretty-logs-component` — Turns raw logs into a readable, styled CLI log view.
+- `@atls/cli-ui-raw-output-component` — Outputs unformatted raw text for CLI consumers.
+- `@atls/cli-ui-renderer-static-component` — Renders static CLI content that does not change over time.
+- `@atls/cli-ui-schematics-component` — Shows schematics or generator-related information in CLI.
+- `@atls/cli-ui-service-progress-component` — Displays progress for service-related operations.
+- `@atls/cli-ui-source-preview-component` — Previews source code snippets in terminal output.
+- `@atls/cli-ui-stack-trace-component` — Formats stack traces for readable CLI error output.
+- `@atls/cli-ui-test-failure-component` — Summarizes failed test results in CLI output.
+- `@atls/cli-ui-test-progress-component` — Shows progress while tests are running.
+- `@atls/cli-ui-typescript-diagnostic-component` — Displays TypeScript diagnostics in a readable CLI format.
+- `@atls/cli-ui-typescript-progress-component` — Shows progress for TypeScript type-checking tasks.
+
+<details>
+<summary>Group details: `cli`</summary>
+
+_Compact cards for this group_
 
 <!-- sync:package-card:atls-cli-ui-error-info-component -->
 
-### `@atls/cli-ui-error-info-component`
+#### `@atls/cli-ui-error-info-component`
 
 - Purpose: Renders a compact error summary for CLI output.
 - Scripts: `build`, `postpack`, `prepack`
@@ -758,7 +884,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-file-link-component -->
 
-### `@atls/cli-ui-file-link-component`
+#### `@atls/cli-ui-file-link-component`
 
 - Purpose: Displays a clickable or styled link to a file path in terminal UI.
 - Scripts: `build`, `postpack`, `prepack`
@@ -766,7 +892,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-file-path-component -->
 
-### `@atls/cli-ui-file-path-component`
+#### `@atls/cli-ui-file-path-component`
 
 - Purpose: Formats file system paths for consistent CLI presentation.
 - Scripts: `build`, `postpack`, `prepack`
@@ -774,7 +900,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-format-progress-component -->
 
-### `@atls/cli-ui-format-progress-component`
+#### `@atls/cli-ui-format-progress-component`
 
 - Purpose: Shows progress for formatting tasks in CLI output.
 - Scripts: `build`, `postpack`, `prepack`
@@ -782,7 +908,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-git-commit-component -->
 
-### `@atls/cli-ui-git-commit-component`
+#### `@atls/cli-ui-git-commit-component`
 
 - Purpose: Presents git commit information in a terminal-friendly format.
 - Scripts: `build`, `postpack`, `prepack`
@@ -790,7 +916,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-icons-progress-component -->
 
-### `@atls/cli-ui-icons-progress-component`
+#### `@atls/cli-ui-icons-progress-component`
 
 - Purpose: Provides icon-based progress indicators for CLI states.
 - Scripts: `build`, `postpack`, `prepack`
@@ -798,7 +924,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-line-component -->
 
-### `@atls/cli-ui-line-component`
+#### `@atls/cli-ui-line-component`
 
 - Purpose: Renders a single formatted line for CLI messages.
 - Scripts: `build`, `postpack`, `prepack`
@@ -806,7 +932,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-lint-progress-component -->
 
-### `@atls/cli-ui-lint-progress-component`
+#### `@atls/cli-ui-lint-progress-component`
 
 - Purpose: Displays linting progress in CLI output.
 - Scripts: `build`, `postpack`, `prepack`
@@ -814,7 +940,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-lint-result-component -->
 
-### `@atls/cli-ui-lint-result-component`
+#### `@atls/cli-ui-lint-result-component`
 
 - Purpose: Summarizes lint results with warnings and errors.
 - Scripts: `build`, `postpack`, `prepack`
@@ -822,7 +948,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-log-record-component -->
 
-### `@atls/cli-ui-log-record-component`
+#### `@atls/cli-ui-log-record-component`
 
 - Purpose: Formats a single log record for terminal display.
 - Scripts: `build`, `postpack`, `prepack`
@@ -830,7 +956,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-pretty-logs-component -->
 
-### `@atls/cli-ui-pretty-logs-component`
+#### `@atls/cli-ui-pretty-logs-component`
 
 - Purpose: Turns raw logs into a readable, styled CLI log view.
 - Scripts: `build`, `postpack`, `prepack`
@@ -838,7 +964,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-raw-output-component -->
 
-### `@atls/cli-ui-raw-output-component`
+#### `@atls/cli-ui-raw-output-component`
 
 - Purpose: Outputs unformatted raw text for CLI consumers.
 - Scripts: `build`, `postpack`, `prepack`
@@ -846,7 +972,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-renderer-static-component -->
 
-### `@atls/cli-ui-renderer-static-component`
+#### `@atls/cli-ui-renderer-static-component`
 
 - Purpose: Renders static CLI content that does not change over time.
 - Scripts: `build`, `postpack`, `prepack`
@@ -854,7 +980,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-schematics-component -->
 
-### `@atls/cli-ui-schematics-component`
+#### `@atls/cli-ui-schematics-component`
 
 - Purpose: Shows schematics or generator-related information in CLI.
 - Scripts: `build`, `postpack`, `prepack`
@@ -862,7 +988,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-service-progress-component -->
 
-### `@atls/cli-ui-service-progress-component`
+#### `@atls/cli-ui-service-progress-component`
 
 - Purpose: Displays progress for service-related operations.
 - Scripts: `build`, `postpack`, `prepack`
@@ -870,7 +996,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-source-preview-component -->
 
-### `@atls/cli-ui-source-preview-component`
+#### `@atls/cli-ui-source-preview-component`
 
 - Purpose: Previews source code snippets in terminal output.
 - Scripts: `build`, `postpack`, `prepack`
@@ -878,7 +1004,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-stack-trace-component -->
 
-### `@atls/cli-ui-stack-trace-component`
+#### `@atls/cli-ui-stack-trace-component`
 
 - Purpose: Formats stack traces for readable CLI error output.
 - Scripts: `build`, `postpack`, `prepack`
@@ -886,7 +1012,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-test-failure-component -->
 
-### `@atls/cli-ui-test-failure-component`
+#### `@atls/cli-ui-test-failure-component`
 
 - Purpose: Summarizes failed test results in CLI output.
 - Scripts: `build`, `postpack`, `prepack`
@@ -894,7 +1020,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-test-progress-component -->
 
-### `@atls/cli-ui-test-progress-component`
+#### `@atls/cli-ui-test-progress-component`
 
 - Purpose: Shows progress while tests are running.
 - Scripts: `build`, `postpack`, `prepack`
@@ -902,7 +1028,7 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-typescript-diagnostic-component -->
 
-### `@atls/cli-ui-typescript-diagnostic-component`
+#### `@atls/cli-ui-typescript-diagnostic-component`
 
 - Purpose: Displays TypeScript diagnostics in a readable CLI format.
 - Scripts: `build`, `postpack`, `prepack`
@@ -910,8 +1036,10 @@ _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-typescript-progress-component -->
 
-### `@atls/cli-ui-typescript-progress-component`
+#### `@atls/cli-ui-typescript-progress-component`
 
 - Purpose: Shows progress for TypeScript type-checking tasks.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-types-check-progress`
+
+</details>

@@ -51,6 +51,9 @@ const WORKSPACE_GROUP_ORDER = [
 
 const DETAILED_GROUPS = new Set(WORKSPACE_GROUP_ORDER.filter((group) => group !== 'cli'))
 
+const COVER_IMAGE_URL =
+  'https://user-images.githubusercontent.com/102182195/234980835-78ed0fdb-c692-4b0e-ac95-b46c8cbd17a4.png'
+
 const walkFiles = (dirPath, predicate, output = []) => {
   if (!fs.existsSync(dirPath)) return output
 
@@ -408,45 +411,123 @@ const getWorkspaceSemantics = (workspace, lookup) => {
 
 const languageField = (value, language) => (language === 'ru' ? value.ru : value.en)
 
+const linkByLanguage = (basePath, language) => `${basePath}${language === 'ru' ? '.ru' : ''}.md`
+
+const renderRootReadme = (language) => {
+  const isRu = language === 'ru'
+  const docsRouterRu = 'docs/README.ru.md'
+  const docsRouterEn = 'docs/README.md'
+  const quickstartPath = linkByLanguage('docs/raijin/quickstart', language)
+  const commandsPath = linkByLanguage('docs/raijin/commands', language)
+  const packagesPath = linkByLanguage('docs/raijin/packages', language)
+
+  return [
+    `![raijin-github-cover](${COVER_IMAGE_URL})`,
+    '',
+    '# Atlantis Raijin',
+    '',
+    `[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](${docsRouterRu})`,
+    `[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](${docsRouterEn})`,
+    '',
+    isRu
+      ? 'Монорепозиторий инструментов `Raijin` с кастомным `Yarn`-бандлом `atls`'
+      : 'Monorepo of `Raijin` tools with custom `atls` `Yarn` bundle',
+    '',
+    '<!-- sync:root-docs-entry -->',
+    isRu ? '## Документация' : '## Documentation',
+    '',
+    isRu
+      ? `- Русская версия: [docs/README.ru.md](${docsRouterRu})`
+      : `- RU (default): [docs/README.ru.md](${docsRouterRu})`,
+    isRu
+      ? `- Английская версия: [docs/README.md](${docsRouterEn})`
+      : `- EN: [docs/README.md](${docsRouterEn})`,
+    isRu
+      ? `- Быстрый старт: [${quickstartPath}](${quickstartPath})`
+      : `- Quickstart: [${quickstartPath}](${quickstartPath})`,
+    isRu
+      ? `- Карта команд: [${commandsPath}](${commandsPath})`
+      : `- Commands map: [${commandsPath}](${commandsPath})`,
+    isRu
+      ? `- Карта пакетов: [${packagesPath}](${packagesPath})`
+      : `- Packages map: [${packagesPath}](${packagesPath})`,
+    '',
+    '<!-- sync:root-quickstart -->',
+    isRu ? '## Быстрый старт' : '## Quick start',
+    '',
+    '- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs`',
+    '- `yarn set version atls`',
+    '',
+  ].join('\n')
+}
+
+const renderDocsRootReadme = (language) => {
+  const isRu = language === 'ru'
+  const raijinRouterPath = linkByLanguage('raijin/README', language)
+  const quickstartPath = linkByLanguage('raijin/quickstart', language)
+  const commandsPath = linkByLanguage('raijin/commands', language)
+  const packagesPath = linkByLanguage('raijin/packages', language)
+
+  return [
+    '# Atlantis Raijin Docs',
+    '',
+    isRu
+      ? 'Маршрутизатор документации по набору инструментов `Raijin`'
+      : 'Documentation router for `Raijin`',
+    '',
+    '<!-- sync:docs-router-links -->',
+    isRu ? '## Версии документации' : '## Documentation versions',
+    '',
+    isRu
+      ? '- Русская версия: [README.ru.md](./README.ru.md)'
+      : '- RU (default): [README.ru.md](./README.ru.md)',
+    isRu ? '- Английская версия: [README.md](./README.md)' : '- EN: [README.md](./README.md)',
+    '',
+    '<!-- sync:docs-router-read-order -->',
+    isRu ? '## Порядок чтения' : '## Read order',
+    '',
+    `1. [${raijinRouterPath}](./${raijinRouterPath})`,
+    `2. [${quickstartPath}](./${quickstartPath})`,
+    `3. [${commandsPath}](./${commandsPath})`,
+    `4. [${packagesPath}](./${packagesPath})`,
+    '',
+  ].join('\n')
+}
+
 const renderRaijinReadme = (index, language) => {
   const isRu = language === 'ru'
+  const quickstartPath = linkByLanguage('quickstart', language)
+  const commandsPath = linkByLanguage('commands', language)
+  const packagesPath = linkByLanguage('packages', language)
 
   return [
     '# Raijin Docs',
     '',
     isRu
-      ? 'Роутер для работы с кастомным Yarn-бандлом `atls` в чистом треде'
-      : 'Router for working with custom `atls` Yarn bundle in a clean thread',
+      ? 'Навигация по документации кастомного Yarn-бандла `atls`'
+      : 'Navigation for custom `atls` Yarn bundle docs',
     '',
     '<!-- sync:router-read-order -->',
     isRu ? '## Порядок чтения' : '## Read order',
     '',
-    `1. \`${DOCS_DIR}/quickstart${isRu ? '.ru' : ''}.md\``,
-    `2. \`${DOCS_DIR}/commands${isRu ? '.ru' : ''}.md\``,
-    `3. \`${DOCS_DIR}/packages${isRu ? '.ru' : ''}.md\``,
-    `4. \`${DOCS_DIR}/index.v1.json\``,
-    `5. \`${DOCS_DIR}/semantics.v1.json\``,
+    `1. [${quickstartPath}](./${quickstartPath})`,
+    `2. [${commandsPath}](./${commandsPath})`,
+    `3. [${packagesPath}](./${packagesPath})`,
     '',
     '<!-- sync:router-quick-rules -->',
-    isRu ? '## Правила маршрутизации' : '## Routing rules',
+    isRu ? '## Правила использования' : '## Usage rules',
     '',
     isRu
-      ? '- Модели маршрутизируют только команды со `status = active`'
-      : '- Models route only commands with `status = active`',
+      ? '- Используйте команды только со статусом `active`'
+      : '- Use only commands with `active` status',
     isRu
-      ? '- `inactive` команды считаются недоступными и не рекомендуются'
-      : '- `inactive` commands are treated as unavailable and not recommended',
-    isRu
-      ? '- Источник фактов: `index.v1.json`; источник смысла: `semantics.v1.json`'
-      : '- Facts source: `index.v1.json`; semantics source: `semantics.v1.json`',
+      ? '- `inactive` команды считаются недоступными'
+      : '- `inactive` commands are treated as unavailable',
     '',
     '<!-- sync:router-generation -->',
     isRu ? '## Генерация и проверки' : '## Generation and checks',
     '',
     '- `yarn raijin:generate`',
-    isRu
-      ? '- `yarn raijin:generate:semantics` (on-demand, нужен `OPENAI_API_KEY`)'
-      : '- `yarn raijin:generate:semantics` (on-demand, requires `OPENAI_API_KEY`)',
     '- `yarn raijin:check`',
     '',
     '<!-- sync:router-coverage -->',
@@ -528,8 +609,6 @@ const renderCommandCard = (command, semantics, language) => {
     `<!-- sync:command-card:${slugify(command.command)} -->`,
     `#### \`${command.command}\``,
     isRu ? `- Статус: \`${command.status}\`` : `- Status: \`${command.status}\``,
-    isRu ? `- Плагин: \`${command.plugin}\`` : `- Plugin: \`${command.plugin}\``,
-    isRu ? `- Класс: \`${command.className}\`` : `- Class: \`${command.className}\``,
     isRu
       ? `- Назначение: ${languageField(semantics.purpose, 'ru')}`
       : `- Purpose: ${languageField(semantics.purpose, 'en')}`,
@@ -539,9 +618,7 @@ const renderCommandCard = (command, semantics, language) => {
     isRu
       ? `- Пример: \`${languageField(semantics.example, 'ru')}\``
       : `- Example: \`${languageField(semantics.example, 'en')}\``,
-    isRu
-      ? `- Теги: ${semantics.groupTags.map((tag) => `\`${tag}\``).join(', ')}`
-      : `- Tags: ${semantics.groupTags.map((tag) => `\`${tag}\``).join(', ')}`,
+    isRu ? `- Плагин: \`${command.plugin}\`` : `- Plugin: \`${command.plugin}\``,
     isRu ? `- Исходник: \`${command.source}\`` : `- Source: \`${command.source}\``,
   ]
 }
@@ -565,15 +642,45 @@ const renderCommandsDoc = (commands, semanticsLookup, language) => {
     '',
   ]
 
+  if (activeGroups.length === 0) {
+    lines.push(isRu ? '_Нет активных команд_' : '_No active commands_')
+    lines.push('')
+  }
+
   for (const [domain, domainCommands] of activeGroups) {
     lines.push(`### ${domainLabel(domain, language)}`)
     lines.push('')
+    lines.push(
+      isRu
+        ? `- Команды: ${domainCommands.map((command) => `\`${command.command}\``).join(', ')}`
+        : `- Commands: ${domainCommands.map((command) => `\`${command.command}\``).join(', ')}`
+    )
+    lines.push('')
+    lines.push('<details>')
+    lines.push(
+      isRu
+        ? `<summary>Подробности домена \`${domain}\`</summary>`
+        : `<summary>Domain details: \`${domain}\`</summary>`
+    )
+    lines.push('')
+
+    if (domain === 'checks') {
+      lines.push(
+        isRu
+          ? '> Важно: `checks` рассчитан на запуск в раннерах GitHub Actions, требует `GITHUB_TOKEN` и контекст проверки (`context.repo`, `GITHUB_SHA`)'
+          : '> Important: `checks` targets GitHub Actions runners, requires `GITHUB_TOKEN`, and relies on check context (`context.repo`, `GITHUB_SHA`)'
+      )
+      lines.push('')
+    }
 
     for (const command of domainCommands) {
       const semantics = getCommandSemantics(command, semanticsLookup)
       lines.push(...renderCommandCard(command, semantics, language))
       lines.push('')
     }
+
+    lines.push('</details>')
+    lines.push('')
   }
 
   lines.push('<!-- sync:commands-inactive -->')
@@ -587,6 +694,19 @@ const renderCommandsDoc = (commands, semanticsLookup, language) => {
     for (const [domain, domainCommands] of inactiveGroups) {
       lines.push(`### ${domainLabel(domain, language)}`)
       lines.push('')
+      lines.push(
+        isRu
+          ? `- Команды: ${domainCommands.map((command) => `\`${command.command}\``).join(', ')}`
+          : `- Commands: ${domainCommands.map((command) => `\`${command.command}\``).join(', ')}`
+      )
+      lines.push('')
+      lines.push('<details>')
+      lines.push(
+        isRu
+          ? `<summary>Подробности домена \`${domain}\`</summary>`
+          : `<summary>Domain details: \`${domain}\`</summary>`
+      )
+      lines.push('')
 
       for (const command of domainCommands) {
         const semantics = getCommandSemantics(command, semanticsLookup)
@@ -598,6 +718,9 @@ const renderCommandsDoc = (commands, semanticsLookup, language) => {
         )
         lines.push('')
       }
+
+      lines.push('</details>')
+      lines.push('')
     }
   }
 
@@ -647,7 +770,7 @@ const renderWorkspaceCard = (workspace, semantics, language, compact) => {
   const isRu = language === 'ru'
   const lines = [
     `<!-- sync:package-card:${slugify(workspace.name)} -->`,
-    `### \`${workspace.name}\``,
+    `#### \`${workspace.name}\``,
   ]
 
   if (compact) {
@@ -738,15 +861,31 @@ const renderPackagesDoc = (workspaces, semanticsLookup, language) => {
     lines.push('')
     lines.push(workspaceGroupIntro(group, language))
     lines.push('')
+    lines.push(isRu ? 'Короткий список:' : 'Compact list:')
+    lines.push('')
+
+    for (const workspace of groupItems) {
+      const semantics = getWorkspaceSemantics(workspace, semanticsLookup)
+      lines.push(
+        isRu
+          ? `- \`${workspace.name}\` — ${languageField(semantics.purpose, 'ru')}`
+          : `- \`${workspace.name}\` — ${languageField(semantics.purpose, 'en')}`
+      )
+    }
+
+    lines.push('')
+    lines.push('<details>')
+    lines.push(
+      isRu
+        ? `<summary>Подробности группы \`${group}\`</summary>`
+        : `<summary>Group details: \`${group}\`</summary>`
+    )
+    lines.push('')
 
     const compact = !DETAILED_GROUPS.has(group)
 
     if (compact) {
-      lines.push(
-        isRu
-          ? '_Компактный формат: короткие карточки без расширенной детализации_'
-          : '_Compact format: short cards without extended details_'
-      )
+      lines.push(isRu ? '_Компактные карточки для этой группы_' : '_Compact cards for this group_')
       lines.push('')
     }
 
@@ -755,6 +894,9 @@ const renderPackagesDoc = (workspaces, semanticsLookup, language) => {
       lines.push(...renderWorkspaceCard(workspace, semantics, language, compact))
       lines.push('')
     }
+
+    lines.push('</details>')
+    lines.push('')
   }
 
   return `${lines.join('\n')}\n`
@@ -996,6 +1138,10 @@ writeJson(`${DOCS_DIR}/index.meta.v1.json`, {
   lastGenerated,
 })
 
+writeText('README.md', `${renderRootReadme('en')}\n`)
+writeText('README_RU.md', `${renderRootReadme('ru')}\n`)
+writeText('docs/README.md', `${renderDocsRootReadme('en')}\n`)
+writeText('docs/README.ru.md', `${renderDocsRootReadme('ru')}\n`)
 writeText(`${DOCS_DIR}/README.md`, `${renderRaijinReadme(index, 'en')}\n`)
 writeText(`${DOCS_DIR}/README.ru.md`, `${renderRaijinReadme(index, 'ru')}\n`)
 writeText(`${DOCS_DIR}/quickstart.md`, `${renderQuickstart('en')}\n`)

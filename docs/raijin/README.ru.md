@@ -1,31 +1,27 @@
 # Raijin Docs
 
-Роутер для работы с кастомным Yarn-бандлом `atls` в чистом треде
+Навигация по документации кастомного Yarn-бандла `atls`
 
 <!-- sync:router-read-order -->
 
 ## Порядок чтения
 
-1. `docs/raijin/quickstart.ru.md`
-2. `docs/raijin/commands.ru.md`
-3. `docs/raijin/packages.ru.md`
-4. `docs/raijin/index.v1.json`
-5. `docs/raijin/semantics.v1.json`
+1. [quickstart.ru.md](./quickstart.ru.md)
+2. [commands.ru.md](./commands.ru.md)
+3. [packages.ru.md](./packages.ru.md)
 
 <!-- sync:router-quick-rules -->
 
-## Правила маршрутизации
+## Правила использования
 
-- Модели маршрутизируют только команды со `status = active`
-- `inactive` команды считаются недоступными и не рекомендуются
-- Источник фактов: `index.v1.json`; источник смысла: `semantics.v1.json`
+- Используйте команды только со статусом `active`
+- `inactive` команды считаются недоступными
 
 <!-- sync:router-generation -->
 
 ## Генерация и проверки
 
 - `yarn raijin:generate`
-- `yarn raijin:generate:semantics` (on-demand, нужен `OPENAI_API_KEY`)
 - `yarn raijin:check`
 
 <!-- sync:router-coverage -->
