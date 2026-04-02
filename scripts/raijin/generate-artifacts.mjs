@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -19,6 +20,32 @@ const writeText = (relativePath, content) => {
 
 const writeJson = (relativePath, value) => {
   writeText(relativePath, `${JSON.stringify(value, null, 2)}\n`)
+}
+
+const formatMarkdownFiles = (paths) => {
+  try {
+    execFileSync('yarn', ['format', ...paths], {
+      cwd: repoRoot,
+      stdio: 'pipe',
+    })
+  } catch (error) {
+    const stderr =
+      typeof error?.stderr === 'string'
+        ? error.stderr
+        : Buffer.isBuffer(error?.stderr)
+          ? error.stderr.toString()
+          : ''
+    const stdout =
+      typeof error?.stdout === 'string'
+        ? error.stdout
+        : Buffer.isBuffer(error?.stdout)
+          ? error.stdout.toString()
+          : ''
+
+    throw new Error(
+      ['Failed to format generated markdown files', stderr || stdout || String(error)].join('\n')
+    )
+  }
 }
 
 const toPosix = (value) => value.split(path.sep).join('/')
@@ -434,6 +461,7 @@ const renderRootReadme = (language) => {
       : 'Monorepo of `Raijin` tools with custom `atls` `Yarn` bundle',
     '',
     '<!-- sync:root-docs-entry -->',
+    '',
     isRu ? '## Документация' : '## Documentation',
     '',
     isRu
@@ -453,6 +481,7 @@ const renderRootReadme = (language) => {
       : `- Packages map: [${packagesPath}](${packagesPath})`,
     '',
     '<!-- sync:root-quickstart -->',
+    '',
     isRu ? '## Быстрый старт' : '## Quick start',
     '',
     '- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs`',
@@ -476,6 +505,7 @@ const renderDocsRootReadme = (language) => {
       : 'Documentation router for `Raijin`',
     '',
     '<!-- sync:docs-router-links -->',
+    '',
     isRu ? '## Версии документации' : '## Documentation versions',
     '',
     isRu
@@ -484,6 +514,7 @@ const renderDocsRootReadme = (language) => {
     isRu ? '- Английская версия: [README.md](./README.md)' : '- EN: [README.md](./README.md)',
     '',
     '<!-- sync:docs-router-read-order -->',
+    '',
     isRu ? '## Порядок чтения' : '## Read order',
     '',
     `1. [${raijinRouterPath}](./${raijinRouterPath})`,
@@ -508,6 +539,7 @@ const renderRaijinReadme = (index, language) => {
       : 'Navigation for custom `atls` Yarn bundle docs',
     '',
     '<!-- sync:router-read-order -->',
+    '',
     isRu ? '## Порядок чтения' : '## Read order',
     '',
     `1. [${quickstartPath}](./${quickstartPath})`,
@@ -515,6 +547,7 @@ const renderRaijinReadme = (index, language) => {
     `3. [${packagesPath}](./${packagesPath})`,
     '',
     '<!-- sync:router-quick-rules -->',
+    '',
     isRu ? '## Правила использования' : '## Usage rules',
     '',
     isRu
@@ -525,12 +558,14 @@ const renderRaijinReadme = (index, language) => {
       : '- `inactive` commands are treated as unavailable',
     '',
     '<!-- sync:router-generation -->',
+    '',
     isRu ? '## Генерация и проверки' : '## Generation and checks',
     '',
     '- `yarn raijin:generate`',
     '- `yarn raijin:check`',
     '',
     '<!-- sync:router-coverage -->',
+    '',
     isRu ? '## Покрытие текущей версии' : '## Coverage snapshot',
     '',
     isRu
@@ -607,7 +642,9 @@ const renderCommandCard = (command, semantics, language) => {
 
   return [
     `<!-- sync:command-card:${slugify(command.command)} -->`,
+    '',
     `#### \`${command.command}\``,
+    '',
     isRu ? `- Статус: \`${command.status}\`` : `- Status: \`${command.status}\``,
     isRu
       ? `- Назначение: ${languageField(semantics.purpose, 'ru')}`
@@ -638,6 +675,7 @@ const renderCommandsDoc = (commands, semanticsLookup, language) => {
       : 'Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle',
     '',
     '<!-- sync:commands-active -->',
+    '',
     isRu ? '## Active (можно маршрутизировать)' : '## Active (safe to route)',
     '',
   ]
@@ -684,6 +722,7 @@ const renderCommandsDoc = (commands, semanticsLookup, language) => {
   }
 
   lines.push('<!-- sync:commands-inactive -->')
+  lines.push('')
   lines.push(isRu ? '## Inactive (не маршрутизировать)' : '## Inactive (do not route)')
   lines.push('')
 
@@ -770,7 +809,9 @@ const renderWorkspaceCard = (workspace, semantics, language, compact) => {
   const isRu = language === 'ru'
   const lines = [
     `<!-- sync:package-card:${slugify(workspace.name)} -->`,
+    '',
     `#### \`${workspace.name}\``,
+    '',
   ]
 
   if (compact) {
@@ -848,6 +889,7 @@ const renderPackagesDoc = (workspaces, semanticsLookup, language) => {
     isRu ? 'Сгруппированные карточки workspace-пакетов' : 'Grouped cards for workspace packages',
     '',
     '<!-- sync:packages-groups -->',
+    '',
   ]
 
   for (const group of orderedWorkspaceGroups(workspaces)) {
@@ -1156,6 +1198,24 @@ cleanupAgentsDirectory()
 writeText(`${AGENTS_DIR}/README.md`, renderAgentReadme())
 writeText(`${AGENTS_DIR}/raijin-routing.md`, renderAgentRouting())
 writeText(`${AGENTS_DIR}/AGENTS.md`, renderAgentsMd())
+
+formatMarkdownFiles([
+  'README.md',
+  'README_RU.md',
+  'docs/README.md',
+  'docs/README.ru.md',
+  `${DOCS_DIR}/README.md`,
+  `${DOCS_DIR}/README.ru.md`,
+  `${DOCS_DIR}/quickstart.md`,
+  `${DOCS_DIR}/quickstart.ru.md`,
+  `${DOCS_DIR}/commands.md`,
+  `${DOCS_DIR}/commands.ru.md`,
+  `${DOCS_DIR}/packages.md`,
+  `${DOCS_DIR}/packages.ru.md`,
+  `${AGENTS_DIR}/README.md`,
+  `${AGENTS_DIR}/raijin-routing.md`,
+  `${AGENTS_DIR}/AGENTS.md`,
+])
 
 console.log(
   [
