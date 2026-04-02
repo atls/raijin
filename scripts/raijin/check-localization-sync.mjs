@@ -37,6 +37,10 @@ const compareSets = (label, left, right) => {
   return errors
 }
 
+const rootEn = readText('README.md')
+const rootRu = readText('README_RU.md')
+const docsRouterEn = readText('docs/README.md')
+const docsRouterRu = readText('docs/README.ru.md')
 const routerEn = readText('docs/raijin/README.md')
 const routerRu = readText('docs/raijin/README.ru.md')
 const quickstartEn = readText('docs/raijin/quickstart.md')
@@ -46,6 +50,10 @@ const commandsRu = readText('docs/raijin/commands.ru.md')
 const packagesEn = readText('docs/raijin/packages.md')
 const packagesRu = readText('docs/raijin/packages.ru.md')
 
+const rootMarkersEn = normalizeValues(extractSyncMarkers(rootEn))
+const rootMarkersRu = normalizeValues(extractSyncMarkers(rootRu))
+const docsRouterMarkersEn = normalizeValues(extractSyncMarkers(docsRouterEn))
+const docsRouterMarkersRu = normalizeValues(extractSyncMarkers(docsRouterRu))
 const routerMarkersEn = normalizeValues(extractSyncMarkers(routerEn))
 const routerMarkersRu = normalizeValues(extractSyncMarkers(routerRu))
 const quickstartMarkersEn = normalizeValues(extractSyncMarkers(quickstartEn))
@@ -56,6 +64,8 @@ const packageMarkersEn = normalizeValues(extractScopedMarkers(packagesEn, 'packa
 const packageMarkersRu = normalizeValues(extractScopedMarkers(packagesRu, 'package-card'))
 
 const errors = [
+  ...compareSets('root readme sync markers', rootMarkersEn, rootMarkersRu),
+  ...compareSets('docs router sync markers', docsRouterMarkersEn, docsRouterMarkersRu),
   ...compareSets('router sync markers', routerMarkersEn, routerMarkersRu),
   ...compareSets('quickstart sync markers', quickstartMarkersEn, quickstartMarkersRu),
   ...compareSets('command cards', commandMarkersEn, commandMarkersRu),
