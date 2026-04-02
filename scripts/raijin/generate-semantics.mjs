@@ -8,7 +8,7 @@ const semanticsPath = path.join(repoRoot, 'docs/raijin/semantics.v1.json')
 
 const apiKey = process.env.OPENAI_API_KEY
 const baseUrl = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
-const model = process.env.OPENAI_TOOLING_MODEL || 'gpt-5.4-mini'
+const model = process.env.OPENAI_MODEL || process.env.OPENAI_TOOLING_MODEL || 'gpt-5.4-mini'
 const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 180000)
 const fallbackOnly = process.argv.includes('--fallback')
 
@@ -21,14 +21,8 @@ const normalizeTags = (tags, fallbackTags) => {
 }
 
 const normalizeLocalePair = (value, fallbackEn, fallbackRu) => ({
-  en:
-    typeof value?.en === 'string' && value.en.trim().length > 0
-      ? value.en.trim()
-      : fallbackEn,
-  ru:
-    typeof value?.ru === 'string' && value.ru.trim().length > 0
-      ? value.ru.trim()
-      : fallbackRu,
+  en: typeof value?.en === 'string' && value.en.trim().length > 0 ? value.en.trim() : fallbackEn,
+  ru: typeof value?.ru === 'string' && value.ru.trim().length > 0 ? value.ru.trim() : fallbackRu,
 })
 
 const extractOutputText = (response) => {
@@ -126,11 +120,12 @@ const fallbackWorkspaceEntry = (workspace) => ({
   id: workspace.name,
   groupTags: [workspace.group, workspace.private ? 'private' : 'public'],
   purpose: {
-    en: workspace.description || workspace.purposeEn || `Workspace package in ${workspace.group} group`,
-    ru:
+    en:
       workspace.description ||
-      workspace.purposeRu ||
-      `Workspace-пакет в группе ${workspace.group}`,
+      workspace.purposeEn ||
+      `Workspace package in ${workspace.group} group`,
+    ru:
+      workspace.description || workspace.purposeRu || `Workspace-пакет в группе ${workspace.group}`,
   },
   whenToUse: {
     en: `Use when working with ${workspace.group} workspace package`,
@@ -199,13 +194,7 @@ const generateCommandEntries = async (commands) => {
                 'Generate semantics for command rows:',
                 'row format: id|plugin|domain|status|source',
                 toRows(batch, (entry) =>
-                  [
-                    entry.command,
-                    entry.plugin,
-                    entry.domain,
-                    entry.status,
-                    entry.source,
-                  ].join('|')
+                  [entry.command, entry.plugin, entry.domain, entry.status, entry.source].join('|')
                 ),
               ].join('\n'),
             },
@@ -321,9 +310,7 @@ const commands = index.commands
   .map((command) => {
     const fallback = fallbackCommandEntry(command)
     return normalizeCommandEntry(
-      llmCommandMap.get(command.command) ||
-        existingCommandMap.get(command.command) ||
-        fallback,
+      llmCommandMap.get(command.command) || existingCommandMap.get(command.command) || fallback,
       fallback
     )
   })
@@ -333,9 +320,7 @@ const workspaces = index.workspaces
   .map((workspace) => {
     const fallback = fallbackWorkspaceEntry(workspace)
     return normalizeWorkspaceEntry(
-      llmWorkspaceMap.get(workspace.name) ||
-        existingWorkspaceMap.get(workspace.name) ||
-        fallback,
+      llmWorkspaceMap.get(workspace.name) || existingWorkspaceMap.get(workspace.name) || fallback,
       fallback
     )
   })
