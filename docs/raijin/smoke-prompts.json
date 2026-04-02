@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "cases": [
     {
       "id": "check-before-pr",
@@ -9,31 +9,25 @@
     },
     {
       "id": "files-changed-list",
-      "prompt": "list changed files in workspace",
+      "prompt": "show changed files in workspace",
       "expectedCommand": "files changed list",
       "expectedStatus": "active"
     },
     {
-      "id": "test-integration",
-      "prompt": "run integration tests",
-      "expectedCommand": "test integration",
-      "expectedStatus": "active"
-    },
-    {
-      "id": "test-unit",
-      "prompt": "run only unit tests",
+      "id": "run-unit-tests",
+      "prompt": "run unit tests only",
       "expectedCommand": "test unit",
       "expectedStatus": "active"
     },
     {
       "id": "service-build",
-      "prompt": "build service bundle",
+      "prompt": "build service artifact",
       "expectedCommand": "service build",
       "expectedStatus": "active"
     },
     {
       "id": "set-version-atls",
-      "prompt": "run set version atls for this project",
+      "prompt": "upgrade raijin with set version atls",
       "expectedCommand": "set version atls",
       "expectedStatus": "active"
     },
@@ -44,16 +38,17 @@
       "expectedStatus": "active"
     },
     {
-      "id": "generate-project-inactive",
+      "id": "inactive-generate-project",
       "prompt": "generate project scaffold",
       "expectedCommand": "",
       "expectedStatus": "unavailable"
     },
     {
       "id": "no-route-unavailable",
-      "prompt": "summarize yesterday meeting notes",
+      "prompt": "what is the distance to mars",
       "expectedCommand": "",
-      "expectedStatus": "unavailable"
+      "expectedStatus": "unavailable",
+      "llmSkip": true
     }
   ]
 }

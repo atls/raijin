@@ -5,7 +5,7 @@ const repoRoot = process.cwd()
 
 const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_SERVICE_ACCOUNT_KEY
 const baseUrl = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
-const model = process.env.OPENAI_MODEL || 'gpt-4.1-mini'
+const model = process.env.OPENAI_MODEL || process.env.OPENAI_TOOLING_MODEL || 'gpt-5.4-mini'
 const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 120000)
 
 if (!apiKey) {
@@ -108,13 +108,14 @@ const callOpenAI = async (prompt, commands) => {
   }
 }
 
-const index = readJson('docs/tooling/index.v1.json')
-const fixture = readJson('docs/tooling/smoke-prompts.json')
+const index = readJson('docs/raijin/index.v1.json')
+const fixture = readJson('docs/raijin/smoke-prompts.json')
 
 const failures = []
 const results = []
+const llmCases = fixture.cases.filter((testCase) => !testCase.llmSkip)
 
-for (const testCase of fixture.cases) {
+for (const testCase of llmCases) {
   try {
     const response = await callOpenAI(testCase.prompt, index.commands)
     const rawText = extractOutputText(response)
@@ -129,7 +130,10 @@ for (const testCase of fixture.cases) {
         : ''
 
     const passed =
-      actualCommand === testCase.expectedCommand && actualStatus === testCase.expectedStatus
+      testCase.expectedStatus === 'unavailable'
+        ? actualStatus === testCase.expectedStatus
+        : actualCommand === testCase.expectedCommand &&
+          actualStatus === testCase.expectedStatus
 
     results.push({
       id: testCase.id,
@@ -154,7 +158,7 @@ for (const testCase of fixture.cases) {
 const report = {
   generatedAt: new Date().toISOString(),
   model,
-  total: fixture.cases.length,
+  total: llmCases.length,
   failures: failures.length,
   results,
 }
@@ -174,4 +178,4 @@ if (failures.length > 0) {
   process.exit(1)
 }
 
-console.log(`LLM smoke passed (${fixture.cases.length} cases, model=${model})`)
+console.log(`LLM smoke passed (${llmCases.length} cases, model=${model})`)

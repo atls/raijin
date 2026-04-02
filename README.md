@@ -1,6 +1,9 @@
-![toolset-github-cover](https://user-images.githubusercontent.com/102182195/234980835-78ed0fdb-c692-4b0e-ac95-b46c8cbd17a4.png)
+![raijin-github-cover](https://user-images.githubusercontent.com/102182195/234980835-78ed0fdb-c692-4b0e-ac95-b46c8cbd17a4.png)
 
-# Atlantis Toolset
+# Atlantis Raijin
+
+[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](docs/raijin/README.ru.md)
+[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](docs/raijin/README.md)
 
 Monorepo with a set of tools and utilities, developed by our team, to ease our day-to-day work on projects.
 
@@ -19,6 +22,13 @@ First time:
 Upgrade already installed bundle:
 
 - `yarn set version atls` - updates bundle to latest version and updates `@atls/code-runtime` dependency to latest
+
+## AI / Raijin docs entry
+
+- RU (default): [`docs/raijin/README.ru.md`](docs/raijin/README.ru.md)
+- EN: [`docs/raijin/README.md`](docs/raijin/README.md)
+- Machine facts: [`docs/raijin/index.v1.json`](docs/raijin/index.v1.json)
+- Machine semantics: [`docs/raijin/semantics.v1.json`](docs/raijin/semantics.v1.json)
 
 ## Commonly used scrips `yarn`
 

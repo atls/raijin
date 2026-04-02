@@ -1,4 +1,4 @@
-name: Tooling LLM Smoke
+name: Raijin LLM Smoke
 
 on:
   schedule:
@@ -8,7 +8,7 @@ on:
       model:
         description: OpenAI model name
         required: false
-        default: gpt-4.1-mini
+        default: gpt-5.4-mini
 
 jobs:
   llm-smoke:
@@ -19,7 +19,7 @@ jobs:
     env:
       NODE_VERSION: '22'
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.OPENAI_SERVICE_ACCOUNT_KEY }}
-      OPENAI_MODEL: ${{ inputs.model || vars.OPENAI_SMOKE_MODEL || 'gpt-4.1-mini' }}
+      OPENAI_MODEL: ${{ inputs.model || vars.OPENAI_SMOKE_MODEL || 'gpt-5.4-mini' }}
       LLM_SMOKE_REPORT_PATH: artifacts/llm-smoke-report.json
 
     steps:
@@ -31,14 +31,17 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Generate tooling artifacts
-        run: node scripts/tooling/generate-artifacts.mjs
+      - name: Generate raijin artifacts
+        run: node scripts/raijin/generate-artifacts.mjs
 
       - name: Validate localization sync
-        run: node scripts/tooling/check-localization-sync.mjs
+        run: node scripts/raijin/check-localization-sync.mjs
+
+      - name: Validate semantics coverage
+        run: node scripts/raijin/check-semantics-coverage.mjs
 
       - name: Run deterministic smoke
-        run: node scripts/tooling/run-deterministic-smoke.mjs
+        run: node scripts/raijin/run-deterministic-smoke.mjs
 
       - name: Skip when OPENAI_API_KEY is missing
         if: ${{ env.OPENAI_API_KEY == '' }}
@@ -47,12 +50,12 @@ jobs:
 
       - name: Run LLM smoke
         if: ${{ env.OPENAI_API_KEY != '' }}
-        run: node scripts/tooling/run-llm-smoke.mjs
+        run: node scripts/raijin/run-llm-smoke.mjs
 
       - name: Upload LLM smoke report
         if: ${{ always() && env.OPENAI_API_KEY != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: tooling-llm-smoke-report
+          name: raijin-llm-smoke-report
           path: artifacts/llm-smoke-report.json
           if-no-files-found: error

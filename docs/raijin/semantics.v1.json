@@ -1,0 +1,1993 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-04-02T02:33:11.533Z",
+  "model": "fallback-template",
+  "sourceDigest": "4ea7957eb860ec7ccf13ae18726d89557b7ec94813ebe7779eddaa411d0af1f3",
+  "commands": [
+    {
+      "id": "badges generate",
+      "groupTags": [
+        "badges"
+      ],
+      "purpose": {
+        "en": "Generate badge assets or badge-related output for the repository.",
+        "ru": "Сгенерировать бейджи или связанные с ними артефакты для репозитория."
+      },
+      "whenToUse": {
+        "en": "Use when you need to refresh project badges after metadata or status changes.",
+        "ru": "Используйте, когда нужно обновить бейджи проекта после изменения метаданных или статуса."
+      },
+      "example": {
+        "en": "yarn badges generate",
+        "ru": "yarn badges generate"
+      }
+    },
+    {
+      "id": "changelog generate",
+      "groupTags": [
+        "changelog"
+      ],
+      "purpose": {
+        "en": "Generate a changelog entry or changelog content from project changes.",
+        "ru": "Сгенерировать запись или содержимое changelog на основе изменений в проекте."
+      },
+      "whenToUse": {
+        "en": "Use before releasing when you need an updated changelog for recent work.",
+        "ru": "Используйте перед релизом, когда нужен обновленный changelog по последним изменениям."
+      },
+      "example": {
+        "en": "yarn changelog generate",
+        "ru": "yarn changelog generate"
+      }
+    },
+    {
+      "id": "check",
+      "groupTags": [
+        "check"
+      ],
+      "purpose": {
+        "en": "Run the repository's general validation checks.",
+        "ru": "Запустить общие проверки валидации репозитория."
+      },
+      "whenToUse": {
+        "en": "Use to quickly verify that the workspace is in a healthy state.",
+        "ru": "Используйте для быстрой проверки, что рабочее пространство в корректном состоянии."
+      },
+      "example": {
+        "en": "yarn check",
+        "ru": "yarn check"
+      }
+    },
+    {
+      "id": "checks lint",
+      "groupTags": [
+        "checks"
+      ],
+      "purpose": {
+        "en": "Run lint checks as part of the checks suite.",
+        "ru": "Запустить lint-проверки в составе набора checks."
+      },
+      "whenToUse": {
+        "en": "Use when you want to validate code style and lint rules for the project.",
+        "ru": "Используйте, когда нужно проверить стиль кода и lint-правила проекта."
+      },
+      "example": {
+        "en": "yarn checks lint",
+        "ru": "yarn checks lint"
+      }
+    },
+    {
+      "id": "checks release",
+      "groupTags": [
+        "checks"
+      ],
+      "purpose": {
+        "en": "Run release-related checks before publishing or tagging.",
+        "ru": "Запустить проверки, связанные с релизом, перед публикацией или созданием тега."
+      },
+      "whenToUse": {
+        "en": "Use to confirm release readiness and catch release-blocking issues early.",
+        "ru": "Используйте, чтобы подтвердить готовность релиза и заранее найти блокирующие проблемы."
+      },
+      "example": {
+        "en": "yarn checks release",
+        "ru": "yarn checks release"
+      }
+    },
+    {
+      "id": "checks run",
+      "groupTags": [
+        "checks"
+      ],
+      "purpose": {
+        "en": "Run the full checks pipeline for the repository.",
+        "ru": "Запустить полный пайплайн checks для репозитория."
+      },
+      "whenToUse": {
+        "en": "Use when you need a broad pre-merge or pre-release verification pass.",
+        "ru": "Используйте, когда нужна широкая проверка перед merge или релизом."
+      },
+      "example": {
+        "en": "yarn checks run",
+        "ru": "yarn checks run"
+      }
+    },
+    {
+      "id": "checks test integration",
+      "groupTags": [
+        "checks"
+      ],
+      "purpose": {
+        "en": "Run integration tests for the project.",
+        "ru": "Запустить интеграционные тесты проекта."
+      },
+      "whenToUse": {
+        "en": "Use when you need to validate interactions between modules, services, or external dependencies.",
+        "ru": "Используйте для проверки взаимодействия модулей, сервисов или внешних зависимостей."
+      },
+      "example": {
+        "en": "yarn checks test integration",
+        "ru": "yarn checks test integration"
+      }
+    },
+    {
+      "id": "checks test unit",
+      "groupTags": [
+        "checks"
+      ],
+      "purpose": {
+        "en": "Run unit tests for the project.",
+        "ru": "Запустить модульные тесты проекта."
+      },
+      "whenToUse": {
+        "en": "Use when you want to verify isolated functions, components, or modules.",
+        "ru": "Используйте для проверки отдельных функций, компонентов или модулей."
+      },
+      "example": {
+        "en": "yarn checks test unit",
+        "ru": "yarn checks test unit"
+      }
+    },
+    {
+      "id": "checks typecheck",
+      "groupTags": [
+        "checks"
+      ],
+      "purpose": {
+        "en": "Run TypeScript type checking.",
+        "ru": "Запустить проверку типов TypeScript."
+      },
+      "whenToUse": {
+        "en": "Use when you need to catch type errors without running the full test suite.",
+        "ru": "Используйте, когда нужно найти ошибки типов без запуска полного набора тестов."
+      },
+      "example": {
+        "en": "yarn checks typecheck",
+        "ru": "yarn checks typecheck"
+      }
+    },
+    {
+      "id": "commit message",
+      "groupTags": [
+        "commit"
+      ],
+      "purpose": {
+        "en": "Create or assist with generating a commit message.",
+        "ru": "Создать или помочь с генерацией сообщения коммита."
+      },
+      "whenToUse": {
+        "en": "Use when you want a commit message based on the current staged changes.",
+        "ru": "Используйте, когда нужно сообщение коммита на основе текущих staged-изменений."
+      },
+      "example": {
+        "en": "yarn commit message",
+        "ru": "yarn commit message"
+      }
+    },
+    {
+      "id": "commit message lint",
+      "groupTags": [
+        "commit"
+      ],
+      "purpose": {
+        "en": "Validate commit message format and conventions.",
+        "ru": "Проверить формат и соглашения сообщения коммита."
+      },
+      "whenToUse": {
+        "en": "Use before committing or in CI to ensure commit messages follow project rules.",
+        "ru": "Используйте перед коммитом или в CI, чтобы убедиться, что сообщения соответствуют правилам проекта."
+      },
+      "example": {
+        "en": "yarn commit message lint",
+        "ru": "yarn commit message lint"
+      }
+    },
+    {
+      "id": "commit staged",
+      "groupTags": [
+        "commit"
+      ],
+      "purpose": {
+        "en": "Commit the currently staged changes.",
+        "ru": "Закоммитить текущие staged-изменения."
+      },
+      "whenToUse": {
+        "en": "Use after staging files when you are ready to create a commit.",
+        "ru": "Используйте после подготовки файлов, когда готовы создать коммит."
+      },
+      "example": {
+        "en": "yarn commit staged",
+        "ru": "yarn commit staged"
+      }
+    },
+    {
+      "id": "export",
+      "groupTags": [
+        "export"
+      ],
+      "purpose": {
+        "en": "Export workspace or package artifacts for downstream use.",
+        "ru": "Экспортировать артефакты workspace или пакета для дальнейшего использования."
+      },
+      "whenToUse": {
+        "en": "Use when you need to produce distributable output from a workspace.",
+        "ru": "Используйте, когда нужно получить распространяемый результат из workspace."
+      },
+      "example": {
+        "en": "yarn export",
+        "ru": "yarn export"
+      }
+    },
+    {
+      "id": "files changed list",
+      "groupTags": [
+        "files"
+      ],
+      "purpose": {
+        "en": "List files changed in the repository or workspace.",
+        "ru": "Вывести список измененных файлов в репозитории или workspace."
+      },
+      "whenToUse": {
+        "en": "Use when you need to inspect the scope of recent changes.",
+        "ru": "Используйте, когда нужно оценить объем последних изменений."
+      },
+      "example": {
+        "en": "yarn files changed list",
+        "ru": "yarn files changed list"
+      }
+    },
+    {
+      "id": "format",
+      "groupTags": [
+        "format"
+      ],
+      "purpose": {
+        "en": "Format source files according to project formatting rules.",
+        "ru": "Отформатировать исходные файлы по правилам проекта."
+      },
+      "whenToUse": {
+        "en": "Use before committing to keep code style consistent.",
+        "ru": "Используйте перед коммитом, чтобы сохранить единый стиль кода."
+      },
+      "example": {
+        "en": "yarn format",
+        "ru": "yarn format"
+      }
+    },
+    {
+      "id": "generate project",
+      "groupTags": [
+        "schematics"
+      ],
+      "purpose": {
+        "en": "Generate a new project from schematics templates.",
+        "ru": "Сгенерировать новый проект из шаблонов schematics."
+      },
+      "whenToUse": {
+        "en": "Use when scaffolding a new project structure from predefined templates.",
+        "ru": "Используйте при создании новой структуры проекта из готовых шаблонов."
+      },
+      "example": {
+        "en": "yarn generate project",
+        "ru": "yarn generate project"
+      }
+    },
+    {
+      "id": "image pack",
+      "groupTags": [
+        "image"
+      ],
+      "purpose": {
+        "en": "Pack or bundle image assets for the project.",
+        "ru": "Упаковать или собрать image-ресурсы проекта."
+      },
+      "whenToUse": {
+        "en": "Use when image assets need to be prepared for distribution or deployment.",
+        "ru": "Используйте, когда изображения нужно подготовить для распространения или деплоя."
+      },
+      "example": {
+        "en": "yarn image pack",
+        "ru": "yarn image pack"
+      }
+    },
+    {
+      "id": "jsr publish",
+      "groupTags": [
+        "jsr"
+      ],
+      "purpose": {
+        "en": "Publish a package to JSR.",
+        "ru": "Опубликовать пакет в JSR."
+      },
+      "whenToUse": {
+        "en": "Use when the package is ready to be released to the JSR registry.",
+        "ru": "Используйте, когда пакет готов к публикации в реестр JSR."
+      },
+      "example": {
+        "en": "yarn jsr publish",
+        "ru": "yarn jsr publish"
+      }
+    },
+    {
+      "id": "library build",
+      "groupTags": [
+        "library"
+      ],
+      "purpose": {
+        "en": "Build the library package or library artifacts.",
+        "ru": "Собрать библиотеку или артефакты библиотеки."
+      },
+      "whenToUse": {
+        "en": "Use when preparing a library for testing, packaging, or release.",
+        "ru": "Используйте при подготовке библиотеки к тестированию, упаковке или релизу."
+      },
+      "example": {
+        "en": "yarn library build",
+        "ru": "yarn library build"
+      }
+    },
+    {
+      "id": "lint",
+      "groupTags": [
+        "lint"
+      ],
+      "purpose": {
+        "en": "Run the project's linting workflow.",
+        "ru": "Запустить lint-процесс проекта."
+      },
+      "whenToUse": {
+        "en": "Use to detect code quality and style issues across the codebase.",
+        "ru": "Используйте для поиска проблем качества кода и стиля во всей кодовой базе."
+      },
+      "example": {
+        "en": "yarn lint",
+        "ru": "yarn lint"
+      }
+    },
+    {
+      "id": "release create",
+      "groupTags": [
+        "release"
+      ],
+      "purpose": {
+        "en": "Create a new release for the project.",
+        "ru": "Создать новый релиз проекта."
+      },
+      "whenToUse": {
+        "en": "Use when all checks are complete and you are ready to publish a release.",
+        "ru": "Используйте, когда все проверки завершены и вы готовы опубликовать релиз."
+      },
+      "example": {
+        "en": "yarn release create",
+        "ru": "yarn release create"
+      }
+    },
+    {
+      "id": "renderer build",
+      "groupTags": [
+        "renderer"
+      ],
+      "purpose": {
+        "en": "Build the renderer application or renderer assets.",
+        "ru": "Собрать renderer-приложение или его артефакты."
+      },
+      "whenToUse": {
+        "en": "Use when preparing the renderer for deployment or packaging.",
+        "ru": "Используйте при подготовке renderer к деплою или упаковке."
+      },
+      "example": {
+        "en": "yarn renderer build",
+        "ru": "yarn renderer build"
+      }
+    },
+    {
+      "id": "renderer dev",
+      "groupTags": [
+        "renderer"
+      ],
+      "purpose": {
+        "en": "Start the renderer in development mode.",
+        "ru": "Запустить renderer в режиме разработки."
+      },
+      "whenToUse": {
+        "en": "Use during active development when you need a live-running renderer.",
+        "ru": "Используйте во время активной разработки, когда нужен запущенный renderer."
+      },
+      "example": {
+        "en": "yarn renderer dev",
+        "ru": "yarn renderer dev"
+      }
+    },
+    {
+      "id": "service build",
+      "groupTags": [
+        "service"
+      ],
+      "purpose": {
+        "en": "Build the service application or service artifacts.",
+        "ru": "Собрать сервисное приложение или его артефакты."
+      },
+      "whenToUse": {
+        "en": "Use when preparing a service for deployment, testing, or packaging.",
+        "ru": "Используйте при подготовке сервиса к деплою, тестированию или упаковке."
+      },
+      "example": {
+        "en": "yarn service build",
+        "ru": "yarn service build"
+      }
+    },
+    {
+      "id": "service dev",
+      "groupTags": [
+        "development",
+        "service"
+      ],
+      "purpose": {
+        "en": "Start the service in development mode with live iteration support.",
+        "ru": "Запустить сервис в режиме разработки с поддержкой быстрого цикла изменений."
+      },
+      "whenToUse": {
+        "en": "Use when you need to run the service locally while actively developing or debugging it.",
+        "ru": "Используйте, когда нужно запустить сервис локально во время активной разработки или отладки."
+      },
+      "example": {
+        "en": "yarn service dev",
+        "ru": "yarn service dev"
+      }
+    },
+    {
+      "id": "set version atls",
+      "groupTags": [
+        "essentials"
+      ],
+      "purpose": {
+        "en": "Set or update the ATLS project version.",
+        "ru": "Установить или обновить версию ATLS-проекта."
+      },
+      "whenToUse": {
+        "en": "Use when preparing a version bump for the repository or package set.",
+        "ru": "Используйте при подготовке повышения версии репозитория или набора пакетов."
+      },
+      "example": {
+        "en": "yarn set version atls",
+        "ru": "yarn set version atls"
+      }
+    },
+    {
+      "id": "test",
+      "groupTags": [
+        "quality",
+        "test"
+      ],
+      "purpose": {
+        "en": "Run the default test suite for the project.",
+        "ru": "Запустить стандартный набор тестов для проекта."
+      },
+      "whenToUse": {
+        "en": "Use for a general verification pass before committing or after changes that may affect behavior.",
+        "ru": "Используйте для общей проверки перед коммитом или после изменений, которые могут повлиять на поведение."
+      },
+      "example": {
+        "en": "yarn test",
+        "ru": "yarn test"
+      }
+    },
+    {
+      "id": "test integration",
+      "groupTags": [
+        "integration",
+        "test"
+      ],
+      "purpose": {
+        "en": "Run integration tests that verify interactions between components or external dependencies.",
+        "ru": "Запустить интеграционные тесты, проверяющие взаимодействие компонентов или внешних зависимостей."
+      },
+      "whenToUse": {
+        "en": "Use when you need to validate end-to-end flows, API contracts, or multi-module behavior.",
+        "ru": "Используйте, когда нужно проверить сквозные сценарии, API-контракты или поведение нескольких модулей."
+      },
+      "example": {
+        "en": "yarn test integration",
+        "ru": "yarn test integration"
+      }
+    },
+    {
+      "id": "test unit",
+      "groupTags": [
+        "test",
+        "unit"
+      ],
+      "purpose": {
+        "en": "Run unit tests for isolated functions, modules, or classes.",
+        "ru": "Запустить модульные тесты для изолированных функций, модулей или классов."
+      },
+      "whenToUse": {
+        "en": "Use when you want fast feedback on small code changes or to verify logic in isolation.",
+        "ru": "Используйте для быстрой проверки небольших изменений кода или логики в изоляции."
+      },
+      "example": {
+        "en": "yarn test unit",
+        "ru": "yarn test unit"
+      }
+    },
+    {
+      "id": "tools sync",
+      "groupTags": [
+        "sync",
+        "tools"
+      ],
+      "purpose": {
+        "en": "Synchronize project raijin configuration and related generated files.",
+        "ru": "Синхронизировать конфигурацию инструментов проекта и связанные сгенерированные файлы."
+      },
+      "whenToUse": {
+        "en": "Use after updating shared raijin settings or when generated tool configs may be out of date.",
+        "ru": "Используйте после изменения общих настроек инструментов или когда сгенерированные конфиги могли устареть."
+      },
+      "example": {
+        "en": "yarn tools sync",
+        "ru": "yarn tools sync"
+      }
+    },
+    {
+      "id": "tools sync tsconfig",
+      "groupTags": [
+        "sync",
+        "tools",
+        "tsconfig",
+        "typescript"
+      ],
+      "purpose": {
+        "en": "Synchronize TypeScript configuration files such as tsconfig variants.",
+        "ru": "Синхронизировать файлы конфигурации TypeScript, например варианты tsconfig."
+      },
+      "whenToUse": {
+        "en": "Use when TypeScript project settings change and tsconfig files need to be regenerated or aligned.",
+        "ru": "Используйте, когда меняются настройки TypeScript-проекта и нужно пересоздать или выровнять tsconfig-файлы."
+      },
+      "example": {
+        "en": "yarn tools sync tsconfig",
+        "ru": "yarn tools sync tsconfig"
+      }
+    },
+    {
+      "id": "tools sync typescript",
+      "groupTags": [
+        "sync",
+        "tools",
+        "typescript"
+      ],
+      "purpose": {
+        "en": "Synchronize TypeScript-related raijin and generated setup.",
+        "ru": "Синхронизировать инструменты и сгенерированную настройку, связанную с TypeScript."
+      },
+      "whenToUse": {
+        "en": "Use after changes to TypeScript infrastructure, templates, or shared compiler-related settings.",
+        "ru": "Используйте после изменений в инфраструктуре TypeScript, шаблонах или общих настройках компилятора."
+      },
+      "example": {
+        "en": "yarn tools sync typescript",
+        "ru": "yarn tools sync typescript"
+      }
+    },
+    {
+      "id": "typecheck",
+      "groupTags": [
+        "quality",
+        "typescript"
+      ],
+      "purpose": {
+        "en": "Run TypeScript type checking without producing build artifacts.",
+        "ru": "Запустить проверку типов TypeScript без создания артефактов сборки."
+      },
+      "whenToUse": {
+        "en": "Use to catch typing issues during development or in CI before build and release steps.",
+        "ru": "Используйте для поиска ошибок типов во время разработки или в CI перед сборкой и релизом."
+      },
+      "example": {
+        "en": "yarn typecheck",
+        "ru": "yarn typecheck"
+      }
+    },
+    {
+      "id": "ui icons generate",
+      "groupTags": [
+        "generate",
+        "icons",
+        "ui"
+      ],
+      "purpose": {
+        "en": "Generate UI icon assets or icon-related source files.",
+        "ru": "Сгенерировать ассеты и/или исходные файлы, связанные с UI-иконками."
+      },
+      "whenToUse": {
+        "en": "Use when icon sources change or when you need to refresh generated icon outputs.",
+        "ru": "Используйте, когда меняются исходники иконок или нужно обновить сгенерированные результаты."
+      },
+      "example": {
+        "en": "yarn ui icons generate",
+        "ru": "yarn ui icons generate"
+      }
+    },
+    {
+      "id": "workspaces changed foreach",
+      "groupTags": [
+        "changed",
+        "foreach",
+        "workspaces"
+      ],
+      "purpose": {
+        "en": "Run a command across workspaces that have changed.",
+        "ru": "Запустить команду по всем изменённым workspace-пакетам."
+      },
+      "whenToUse": {
+        "en": "Use to target only affected workspaces for checks, builds, or other repeated operations.",
+        "ru": "Используйте, чтобы применять проверки, сборку или другие повторяющиеся операции только к затронутым workspace."
+      },
+      "example": {
+        "en": "yarn workspaces changed foreach",
+        "ru": "yarn workspaces changed foreach"
+      }
+    },
+    {
+      "id": "workspaces changed list",
+      "groupTags": [
+        "changed",
+        "list",
+        "workspaces"
+      ],
+      "purpose": {
+        "en": "List workspaces that have changed.",
+        "ru": "Вывести список изменённых workspace-пакетов."
+      },
+      "whenToUse": {
+        "en": "Use when you need to inspect which packages are affected before running scoped workspace commands.",
+        "ru": "Используйте, когда нужно понять, какие пакеты затронуты, прежде чем запускать команды по workspace."
+      },
+      "example": {
+        "en": "yarn workspaces changed list",
+        "ru": "yarn workspaces changed list"
+      }
+    }
+  ],
+  "workspaces": [
+    {
+      "id": "@atls/cli-ui-error-info-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Renders a compact error summary for CLI output.",
+        "ru": "Отображает краткую сводку ошибки для вывода в CLI."
+      },
+      "whenToUse": {
+        "en": "Use when a command needs to show a readable error block with key details.",
+        "ru": "Используйте, когда команда должна показать читаемый блок ошибки с ключевыми деталями."
+      },
+      "example": {
+        "en": "Show validation errors after a failed config check.",
+        "ru": "Показать ошибки валидации после неудачной проверки конфигурации."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-file-link-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Displays a clickable or styled link to a file path in terminal UI.",
+        "ru": "Показывает кликабельную или стилизованную ссылку на путь к файлу в терминальном интерфейсе."
+      },
+      "whenToUse": {
+        "en": "Use when output should point the user to a specific file location.",
+        "ru": "Используйте, когда вывод должен указывать пользователю на конкретное расположение файла."
+      },
+      "example": {
+        "en": "Link to the file that contains a lint error.",
+        "ru": "Ссылка на файл, в котором находится ошибка линтинга."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-file-path-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Formats file system paths for consistent CLI presentation.",
+        "ru": "Форматирует пути файловой системы для единообразного отображения в CLI."
+      },
+      "whenToUse": {
+        "en": "Use when you need to print a path clearly and consistently.",
+        "ru": "Используйте, когда нужно вывести путь ясно и единообразно."
+      },
+      "example": {
+        "en": "Print the source file path in a build report.",
+        "ru": "Вывести путь к исходному файлу в отчёте сборки."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-format-progress-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Shows progress for formatting tasks in CLI output.",
+        "ru": "Показывает прогресс задач форматирования в выводе CLI."
+      },
+      "whenToUse": {
+        "en": "Use during code formatting runs to indicate current status.",
+        "ru": "Используйте во время запуска форматирования кода, чтобы показывать текущий статус."
+      },
+      "example": {
+        "en": "Display progress while formatting a project.",
+        "ru": "Показать прогресс во время форматирования проекта."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-git-commit-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Presents git commit information in a terminal-friendly format.",
+        "ru": "Показывает информацию о git-коммите в удобном для терминала формате."
+      },
+      "whenToUse": {
+        "en": "Use when a CLI command needs to summarize commit metadata or messages.",
+        "ru": "Используйте, когда команда CLI должна кратко показать метаданные или сообщение коммита."
+      },
+      "example": {
+        "en": "Render the latest commit in a release note command.",
+        "ru": "Отобразить последний коммит в команде для заметок релиза."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-icons-progress-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Provides icon-based progress indicators for CLI states.",
+        "ru": "Предоставляет индикаторы прогресса на основе иконок для состояний CLI."
+      },
+      "whenToUse": {
+        "en": "Use when you want lightweight visual feedback for ongoing operations.",
+        "ru": "Используйте, когда нужен лёгкий визуальный индикатор выполняющейся операции."
+      },
+      "example": {
+        "en": "Show a spinner while waiting for a network request.",
+        "ru": "Показать спиннер во время ожидания сетевого запроса."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-line-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Renders a single formatted line for CLI messages.",
+        "ru": "Отображает одну форматированную строку для сообщений CLI."
+      },
+      "whenToUse": {
+        "en": "Use for simple status, label, or summary lines.",
+        "ru": "Используйте для простых строк статуса, меток или сводок."
+      },
+      "example": {
+        "en": "Print a one-line success message after a task completes.",
+        "ru": "Вывести однострочное сообщение об успехе после завершения задачи."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-lint-progress-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Displays linting progress in CLI output.",
+        "ru": "Показывает прогресс линтинга в выводе CLI."
+      },
+      "whenToUse": {
+        "en": "Use while linting files to show how far the process has advanced.",
+        "ru": "Используйте во время линтинга файлов, чтобы показывать ход процесса."
+      },
+      "example": {
+        "en": "Track progress across a large lint run.",
+        "ru": "Отслеживать прогресс при большом запуске линтера."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-lint-result-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Summarizes lint results with warnings and errors.",
+        "ru": "Сводит результаты линтинга с предупреждениями и ошибками."
+      },
+      "whenToUse": {
+        "en": "Use after linting to present the final outcome clearly.",
+        "ru": "Используйте после линтинга, чтобы наглядно показать итоговый результат."
+      },
+      "example": {
+        "en": "Show the number of files with lint issues.",
+        "ru": "Показать количество файлов с проблемами линтинга."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-log-record-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Formats a single log record for terminal display.",
+        "ru": "Форматирует одну запись лога для отображения в терминале."
+      },
+      "whenToUse": {
+        "en": "Use when streaming or printing structured logs in CLI.",
+        "ru": "Используйте при потоковом выводе или печати структурированных логов в CLI."
+      },
+      "example": {
+        "en": "Render one build log entry with level and message.",
+        "ru": "Отобразить одну запись лога сборки с уровнем и сообщением."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-pretty-logs-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Turns raw logs into a readable, styled CLI log view.",
+        "ru": "Преобразует сырые логи в читаемый, стилизованный вид для CLI."
+      },
+      "whenToUse": {
+        "en": "Use when logs need grouping, coloring, or improved readability.",
+        "ru": "Используйте, когда логи нужно сгруппировать, раскрасить или сделать более читаемыми."
+      },
+      "example": {
+        "en": "Display formatted logs during a long-running build.",
+        "ru": "Показать форматированные логи во время длительной сборки."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-raw-output-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Outputs unformatted raw text for CLI consumers.",
+        "ru": "Выводит неформатированный сырой текст для потребителей CLI."
+      },
+      "whenToUse": {
+        "en": "Use when machine-readable or plain output is required.",
+        "ru": "Используйте, когда нужен машинно-читаемый или простой текстовый вывод."
+      },
+      "example": {
+        "en": "Print raw JSON from a command result.",
+        "ru": "Вывести сырой JSON из результата команды."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-renderer-static-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Renders static CLI content that does not change over time.",
+        "ru": "Отображает статический контент CLI, который не меняется со временем."
+      },
+      "whenToUse": {
+        "en": "Use for fixed screens, summaries, or final reports.",
+        "ru": "Используйте для фиксированных экранов, сводок или финальных отчётов."
+      },
+      "example": {
+        "en": "Render a final summary screen after deployment.",
+        "ru": "Отобразить финальный экран-сводку после деплоя."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-schematics-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Shows schematics or generator-related information in CLI.",
+        "ru": "Показывает информацию о схематиках или генераторах в CLI."
+      },
+      "whenToUse": {
+        "en": "Use when a command describes or runs scaffolding steps.",
+        "ru": "Используйте, когда команда описывает или запускает шаги генерации структуры."
+      },
+      "example": {
+        "en": "Display the selected schematic before generation starts.",
+        "ru": "Показать выбранную схему перед началом генерации."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-service-progress-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Displays progress for service-related operations.",
+        "ru": "Показывает прогресс операций, связанных с сервисами."
+      },
+      "whenToUse": {
+        "en": "Use when starting, stopping, or checking services in CLI.",
+        "ru": "Используйте при запуске, остановке или проверке сервисов в CLI."
+      },
+      "example": {
+        "en": "Show progress while starting local services.",
+        "ru": "Показать прогресс при запуске локальных сервисов."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-source-preview-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Previews source code snippets in terminal output.",
+        "ru": "Предпросматривает фрагменты исходного кода в выводе терминала."
+      },
+      "whenToUse": {
+        "en": "Use when you need to show a code excerpt or source context.",
+        "ru": "Используйте, когда нужно показать фрагмент кода или контекст исходника."
+      },
+      "example": {
+        "en": "Preview the changed lines in a patch summary.",
+        "ru": "Показать изменённые строки в сводке патча."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-stack-trace-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Formats stack traces for readable CLI error output.",
+        "ru": "Форматирует stack trace для читаемого вывода ошибок в CLI."
+      },
+      "whenToUse": {
+        "en": "Use when an exception needs a clear call stack presentation.",
+        "ru": "Используйте, когда исключению нужно понятное отображение стека вызовов."
+      },
+      "example": {
+        "en": "Print a stack trace after an unexpected crash.",
+        "ru": "Вывести stack trace после неожиданного сбоя."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-test-failure-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Summarizes failed test results in CLI output.",
+        "ru": "Сводит результаты упавших тестов в выводе CLI."
+      },
+      "whenToUse": {
+        "en": "Use after test execution to highlight failures and their context.",
+        "ru": "Используйте после запуска тестов, чтобы выделить падения и их контекст."
+      },
+      "example": {
+        "en": "Show failed assertions with file and line number.",
+        "ru": "Показать упавшие проверки с файлом и номером строки."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-test-progress-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Shows progress while tests are running.",
+        "ru": "Показывает прогресс во время выполнения тестов."
+      },
+      "whenToUse": {
+        "en": "Use to indicate how many tests have completed or remain.",
+        "ru": "Используйте, чтобы показать, сколько тестов завершено или осталось."
+      },
+      "example": {
+        "en": "Track progress through a test suite.",
+        "ru": "Отслеживать прогресс прохождения набора тестов."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-typescript-diagnostic-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Displays TypeScript diagnostics in a readable CLI format.",
+        "ru": "Отображает диагностические сообщения TypeScript в читаемом формате CLI."
+      },
+      "whenToUse": {
+        "en": "Use when compiling or type-checking TypeScript code.",
+        "ru": "Используйте при компиляции или проверке типов TypeScript-кода."
+      },
+      "example": {
+        "en": "Show type errors after a failed build.",
+        "ru": "Показать ошибки типов после неудачной сборки."
+      }
+    },
+    {
+      "id": "@atls/cli-ui-typescript-progress-component",
+      "groupTags": [
+        "cli"
+      ],
+      "purpose": {
+        "en": "Shows progress for TypeScript type-checking tasks.",
+        "ru": "Показывает прогресс задач проверки типов TypeScript."
+      },
+      "whenToUse": {
+        "en": "Use during type-check runs to communicate current progress.",
+        "ru": "Используйте во время проверки типов, чтобы сообщать текущий прогресс."
+      },
+      "example": {
+        "en": "Display progress while checking project types.",
+        "ru": "Показать прогресс при проверке типов проекта."
+      }
+    },
+    {
+      "id": "@atls/code-changelog",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Provides utilities for generating and managing changelogs.",
+        "ru": "Предоставляет утилиты для генерации и управления changelog."
+      },
+      "whenToUse": {
+        "en": "Use when release notes or change history need to be produced automatically.",
+        "ru": "Используйте, когда нужно автоматически сформировать заметки релиза или историю изменений."
+      },
+      "example": {
+        "en": "Generate a changelog from recent commits.",
+        "ru": "Сгенерировать changelog из последних коммитов."
+      }
+    },
+    {
+      "id": "@atls/code-commit",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Handles commit-related code workflows and conventions.",
+        "ru": "Обрабатывает рабочие процессы и соглашения, связанные с коммитами."
+      },
+      "whenToUse": {
+        "en": "Use when a tool needs to create, validate, or format commit data.",
+        "ru": "Используйте, когда инструмент должен создавать, проверять или форматировать данные коммита."
+      },
+      "example": {
+        "en": "Build a commit message from a release task.",
+        "ru": "Сформировать сообщение коммита из задачи релиза."
+      }
+    },
+    {
+      "id": "@atls/code-configuration",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Manages code configuration loading, validation, and defaults.",
+        "ru": "Управляет загрузкой, проверкой и значениями по умолчанию для конфигурации кода."
+      },
+      "whenToUse": {
+        "en": "Use when an app needs to read or validate project configuration.",
+        "ru": "Используйте, когда приложению нужно читать или проверять конфигурацию проекта."
+      },
+      "example": {
+        "en": "Load workspace settings from a config file.",
+        "ru": "Загрузить настройки workspace из файла конфигурации."
+      }
+    },
+    {
+      "id": "@atls/code-format",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Supports code formatting operations and formatting rules.",
+        "ru": "Поддерживает операции форматирования кода и правила форматирования."
+      },
+      "whenToUse": {
+        "en": "Use when code must be formatted consistently across a project.",
+        "ru": "Используйте, когда код нужно единообразно форматировать в проекте."
+      },
+      "example": {
+        "en": "Format source files before committing changes.",
+        "ru": "Отформатировать исходные файлы перед коммитом изменений."
+      }
+    },
+    {
+      "id": "@atls/code-github",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "GitHub-related code utilities and integrations used across packages.",
+        "ru": "Утилиты и интеграции для GitHub, используемые в разных пакетах."
+      },
+      "whenToUse": {
+        "en": "Use when you need GitHub API helpers, repository metadata handling, or GitHub-focused raijin.",
+        "ru": "Используйте для работы с GitHub API, метаданными репозиториев и GitHub-ориентированными инструментами."
+      },
+      "example": {
+        "en": "Add a helper for generating GitHub release links.",
+        "ru": "Добавить хелпер для генерации ссылок на релизы GitHub."
+      }
+    },
+    {
+      "id": "@atls/code-icons",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Shared icon assets and icon-related code for the platform.",
+        "ru": "Общие иконки и код, связанный с иконками, для платформы."
+      },
+      "whenToUse": {
+        "en": "Use when building or exporting reusable icons for UI packages.",
+        "ru": "Используйте при создании или экспорте переиспользуемых иконок для UI-пакетов."
+      },
+      "example": {
+        "en": "Publish a new SVG icon set for application menus.",
+        "ru": "Опубликовать новый набор SVG-иконок для меню приложения."
+      }
+    },
+    {
+      "id": "@atls/code-jsr",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Code for JSR publishing and JSR-compatible package workflows.",
+        "ru": "Код для публикации в JSR и рабочих процессов, совместимых с JSR."
+      },
+      "whenToUse": {
+        "en": "Use when preparing packages or raijin for JSR distribution.",
+        "ru": "Используйте при подготовке пакетов или инструментов для распространения через JSR."
+      },
+      "example": {
+        "en": "Generate JSR package metadata from source files.",
+        "ru": "Сгенерировать метаданные JSR-пакета из исходных файлов."
+      }
+    },
+    {
+      "id": "@atls/code-lint",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Linting utilities, rules, and shared validation logic.",
+        "ru": "Утилиты линтинга, правила и общая логика проверки."
+      },
+      "whenToUse": {
+        "en": "Use when creating reusable lint rules or lint-related helpers.",
+        "ru": "Используйте для создания переиспользуемых правил линтера или вспомогательных функций."
+      },
+      "example": {
+        "en": "Implement a custom rule for import ordering.",
+        "ru": "Реализовать кастомное правило для порядка импортов."
+      }
+    },
+    {
+      "id": "@atls/code-pack",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Packaging helpers for building and preparing distributable artifacts.",
+        "ru": "Помощники для упаковки, сборки и подготовки артефактов к распространению."
+      },
+      "whenToUse": {
+        "en": "Use when you need shared logic for pack, publish, or artifact preparation.",
+        "ru": "Используйте для общей логики pack, publish или подготовки артефактов."
+      },
+      "example": {
+        "en": "Create a helper that assembles package tarball contents.",
+        "ru": "Создать хелпер, который собирает содержимое tarball пакета."
+      }
+    },
+    {
+      "id": "@atls/code-runtime",
+      "groupTags": [
+        "runtime"
+      ],
+      "purpose": {
+        "en": "Runtime abstractions and shared execution-layer code.",
+        "ru": "Абстракции runtime и общий код уровня исполнения."
+      },
+      "whenToUse": {
+        "en": "Use when building shared runtime libraries, schematics, or execution helpers.",
+        "ru": "Используйте при создании общих runtime-библиотек, схем или хелперов исполнения."
+      },
+      "example": {
+        "en": "Implement a runtime helper for bootstrapping services.",
+        "ru": "Реализовать runtime-хелпер для запуска сервисов."
+      }
+    },
+    {
+      "id": "@atls/code-schematics",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Schematics and generators for scaffolding projects and libraries.",
+        "ru": "Схематики и генераторы для создания проектов и библиотек."
+      },
+      "whenToUse": {
+        "en": "Use when building templates, generators, or schematic factories.",
+        "ru": "Используйте при создании шаблонов, генераторов или фабрик схем."
+      },
+      "example": {
+        "en": "Add a schematic that scaffolds a new workspace package.",
+        "ru": "Добавить схему, которая создаёт новый workspace-пакет."
+      }
+    },
+    {
+      "id": "@atls/code-service",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Service-layer code and shared runtime service abstractions.",
+        "ru": "Код сервисного слоя и общие абстракции runtime-сервисов."
+      },
+      "whenToUse": {
+        "en": "Use when implementing reusable services, adapters, or service contracts.",
+        "ru": "Используйте при реализации переиспользуемых сервисов, адаптеров или контрактов сервисов."
+      },
+      "example": {
+        "en": "Define a service for fetching remote configuration.",
+        "ru": "Определить сервис для получения удалённой конфигурации."
+      }
+    },
+    {
+      "id": "@atls/code-test",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "Testing utilities, workers, and shared test infrastructure.",
+        "ru": "Тестовые утилиты, воркеры и общая тестовая инфраструктура."
+      },
+      "whenToUse": {
+        "en": "Use when creating helpers for unit, integration, or worker-based tests.",
+        "ru": "Используйте для хелперов unit-, integration- или worker-тестов."
+      },
+      "example": {
+        "en": "Provide a worker that runs browser-like test scenarios.",
+        "ru": "Предоставить воркер для запуска сценариев тестов в браузероподобной среде."
+      }
+    },
+    {
+      "id": "@atls/code-typescript",
+      "groupTags": [
+        "code"
+      ],
+      "purpose": {
+        "en": "TypeScript-specific helpers, build support, and shared TS raijin.",
+        "ru": "TypeScript-специфичные хелперы, поддержка сборки и общие TS-инструменты."
+      },
+      "whenToUse": {
+        "en": "Use when you need shared TypeScript configuration, transforms, or worker raijin.",
+        "ru": "Используйте для общей TypeScript-конфигурации, трансформаций или инструментов воркера."
+      },
+      "example": {
+        "en": "Add a worker that validates tsconfig compatibility.",
+        "ru": "Добавить воркер, который проверяет совместимость tsconfig."
+      }
+    },
+    {
+      "id": "@atls/config-commitlint",
+      "groupTags": [
+        "config"
+      ],
+      "purpose": {
+        "en": "Shared Commitlint configuration for commit message validation.",
+        "ru": "Общая конфигурация Commitlint для проверки сообщений коммитов."
+      },
+      "whenToUse": {
+        "en": "Use when standardizing commit message rules across repositories.",
+        "ru": "Используйте для стандартизации правил сообщений коммитов в репозиториях."
+      },
+      "example": {
+        "en": "Extend the shared commitlint preset in a package.",
+        "ru": "Подключить общий preset commitlint в пакете."
+      }
+    },
+    {
+      "id": "@atls/config-eslint",
+      "groupTags": [
+        "config"
+      ],
+      "purpose": {
+        "en": "Shared ESLint configuration and presets.",
+        "ru": "Общая конфигурация ESLint и пресеты."
+      },
+      "whenToUse": {
+        "en": "Use when you need consistent linting rules across packages.",
+        "ru": "Используйте для единых правил линтинга во всех пакетах."
+      },
+      "example": {
+        "en": "Import the base ESLint config for a React package.",
+        "ru": "Импортировать базовую ESLint-конфигурацию для React-пакета."
+      }
+    },
+    {
+      "id": "@atls/config-prettier",
+      "groupTags": [
+        "config"
+      ],
+      "purpose": {
+        "en": "Shared Prettier configuration for formatting consistency.",
+        "ru": "Общая конфигурация Prettier для единообразного форматирования."
+      },
+      "whenToUse": {
+        "en": "Use when aligning formatting rules across the monorepo.",
+        "ru": "Используйте для выравнивания правил форматирования во всём монорепозитории."
+      },
+      "example": {
+        "en": "Apply the shared Prettier config to a new workspace.",
+        "ru": "Применить общую конфигурацию Prettier к новому workspace."
+      }
+    },
+    {
+      "id": "@atls/config-typescript",
+      "groupTags": [
+        "config"
+      ],
+      "purpose": {
+        "en": "Shared TypeScript configuration presets and compiler settings.",
+        "ru": "Общие пресеты TypeScript и настройки компилятора."
+      },
+      "whenToUse": {
+        "en": "Use when packages should inherit the same TS compiler options.",
+        "ru": "Используйте, когда пакетам нужно наследовать одинаковые опции компилятора TS."
+      },
+      "example": {
+        "en": "Reference the base tsconfig from a library package.",
+        "ru": "Сослаться на базовый tsconfig из пакета библиотеки."
+      }
+    },
+    {
+      "id": "@atls/prettier-plugin",
+      "groupTags": [
+        "prettier"
+      ],
+      "purpose": {
+        "en": "Custom Prettier plugin for formatting project-specific syntax or files.",
+        "ru": "Кастомный плагин Prettier для форматирования специфичного синтаксиса или файлов."
+      },
+      "whenToUse": {
+        "en": "Use when Prettier needs custom parsing or printing behavior.",
+        "ru": "Используйте, когда Prettier требуется кастомное поведение парсинга или вывода."
+      },
+      "example": {
+        "en": "Format a custom config file format with the plugin.",
+        "ru": "Отформатировать кастомный формат конфигурационного файла с помощью плагина."
+      }
+    },
+    {
+      "id": "@atls/webpack-proto-imports-loader",
+      "groupTags": [
+        "webpack"
+      ],
+      "purpose": {
+        "en": "Webpack loader for proto import handling and build-time import transformation.",
+        "ru": "Webpack-loader для обработки proto-импортов и преобразования импортов на этапе сборки."
+      },
+      "whenToUse": {
+        "en": "Use when webpack builds need custom import resolution or proto-based imports.",
+        "ru": "Используйте, когда сборке webpack нужна кастомная резолюция импортов или proto-импорты."
+      },
+      "example": {
+        "en": "Transform proto imports during bundle compilation.",
+        "ru": "Преобразовать proto-импорты во время сборки бандла."
+      }
+    },
+    {
+      "id": "@atls/webpack-start-server-plugin",
+      "groupTags": [
+        "webpack"
+      ],
+      "purpose": {
+        "en": "Webpack plugin for starting and coordinating a development server.",
+        "ru": "Webpack-плагин для запуска и координации dev-сервера."
+      },
+      "whenToUse": {
+        "en": "Use when a webpack build should automatically start or manage a server process.",
+        "ru": "Используйте, когда сборка webpack должна автоматически запускать или управлять сервером."
+      },
+      "example": {
+        "en": "Start a local preview server after compilation.",
+        "ru": "Запустить локальный preview-сервер после компиляции."
+      }
+    },
+    {
+      "id": "@atls/yarn-cli",
+      "groupTags": [
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Private Yarn CLI implementation for repository automation and release workflows.",
+        "ru": "Приватная реализация Yarn CLI для автоматизации репозитория и релизных процессов."
+      },
+      "whenToUse": {
+        "en": "Use when extending internal CLI commands for build, fix, version, or release tasks.",
+        "ru": "Используйте при расширении внутренних CLI-команд для build, fix, version или release-задач."
+      },
+      "example": {
+        "en": "Add a command that bumps package versions and updates changelogs.",
+        "ru": "Добавить команду, которая повышает версии пакетов и обновляет changelog."
+      }
+    },
+    {
+      "id": "@atls/yarn-cli-tools",
+      "groupTags": [
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Supporting tools and helpers used by the internal Yarn CLI.",
+        "ru": "Вспомогательные инструменты и хелперы, используемые внутренним Yarn CLI."
+      },
+      "whenToUse": {
+        "en": "Use when implementing shared utilities for CLI commands and automation.",
+        "ru": "Используйте для общих утилит команд CLI и автоматизации."
+      },
+      "example": {
+        "en": "Create a helper for parsing CLI flags and workspace paths.",
+        "ru": "Создать хелпер для разбора CLI-флагов и путей workspace."
+      }
+    },
+    {
+      "id": "@atls/yarn-pack-utils",
+      "groupTags": [
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Utilities for packaging, packing, and publish preparation in Yarn workflows.",
+        "ru": "Утилиты для упаковки, pack и подготовки публикации в Yarn-процессах."
+      },
+      "whenToUse": {
+        "en": "Use when you need reusable logic for package archives or publish checks.",
+        "ru": "Используйте для переиспользуемой логики архивов пакетов или проверок публикации."
+      },
+      "example": {
+        "en": "Build a utility that verifies files included in a package tarball.",
+        "ru": "Сделать утилиту, которая проверяет файлы, попадающие в tarball пакета."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-badges",
+      "groupTags": [
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for generating and managing repository badges.",
+        "ru": "Yarn-плагин для генерации и управления бейджами репозитория."
+      },
+      "whenToUse": {
+        "en": "Use when automating badge creation or badge metadata updates.",
+        "ru": "Используйте для автоматизации создания бейджей или обновления их метаданных."
+      },
+      "example": {
+        "en": "Generate README badges for build status and package version.",
+        "ru": "Сгенерировать бейджи README для статуса сборки и версии пакета."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-changelog",
+      "groupTags": [
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for changelog generation and release notes workflows.",
+        "ru": "Yarn-плагин для генерации changelog и работы с релиз-нотами."
+      },
+      "whenToUse": {
+        "en": "Use when automating changelog updates during releases.",
+        "ru": "Используйте для автоматического обновления changelog во время релизов."
+      },
+      "example": {
+        "en": "Create release notes from merged commits.",
+        "ru": "Создать релиз-ноты из слитых коммитов."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-check",
+      "groupTags": [
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for repository checks and validation commands.",
+        "ru": "Yarn-плагин для проверок репозитория и команд валидации."
+      },
+      "whenToUse": {
+        "en": "Use when adding commands that validate workspace health or policy compliance.",
+        "ru": "Используйте при добавлении команд, проверяющих состояние workspace или соответствие политикам."
+      },
+      "example": {
+        "en": "Run a check that ensures package manifests are consistent.",
+        "ru": "Запустить проверку согласованности package manifests."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-checks",
+      "groupTags": [
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Extended checks plugin for multiple validation routines in Yarn.",
+        "ru": "Плагин расширенных проверок для нескольких сценариев валидации в Yarn."
+      },
+      "whenToUse": {
+        "en": "Use when you need a bundle of validation commands for CI or local verification.",
+        "ru": "Используйте, когда нужен набор команд валидации для CI или локальной проверки."
+      },
+      "example": {
+        "en": "Execute a suite of workspace integrity checks.",
+        "ru": "Выполнить набор проверок целостности workspace."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-cli-publish",
+      "groupTags": [
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for CLI-driven publishing and release automation.",
+        "ru": "Yarn-плагин для публикации через CLI и автоматизации релизов."
+      },
+      "whenToUse": {
+        "en": "Use when publishing packages should be controlled from internal CLI commands.",
+        "ru": "Используйте, когда публикация пакетов должна управляться внутренними CLI-командами."
+      },
+      "example": {
+        "en": "Publish a package to the registry with a single command.",
+        "ru": "Опубликовать пакет в registry одной командой."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-commit",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for commit-related automation and conventions.",
+        "ru": "Плагин Yarn для автоматизации и правил, связанных с коммитами."
+      },
+      "whenToUse": {
+        "en": "Use when you need commit workflow helpers inside the Yarn plugin ecosystem.",
+        "ru": "Используйте, когда нужны помощники для процесса коммитов в экосистеме плагинов Yarn."
+      },
+      "example": {
+        "en": "Build the commit plugin before packaging it for distribution.",
+        "ru": "Соберите плагин commit перед упаковкой для распространения."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-essentials",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Core Yarn plugin with essential shared functionality.",
+        "ru": "Основной плагин Yarn с базовой общей функциональностью."
+      },
+      "whenToUse": {
+        "en": "Use for common capabilities reused by other Yarn plugins.",
+        "ru": "Используйте для общих возможностей, которые переиспользуются другими плагинами Yarn."
+      },
+      "example": {
+        "en": "Include essentials as a dependency for multiple plugin features.",
+        "ru": "Подключите essentials как зависимость для нескольких возможностей плагинов."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-export",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for exporting project artifacts or metadata.",
+        "ru": "Плагин Yarn для экспорта артефактов или метаданных проекта."
+      },
+      "whenToUse": {
+        "en": "Use when a plugin needs to export generated files or structured output.",
+        "ru": "Используйте, когда плагину нужно экспортировать сгенерированные файлы или структурированный вывод."
+      },
+      "example": {
+        "en": "Export workspace configuration into a consumable format.",
+        "ru": "Экспортируйте конфигурацию workspace в удобный для использования формат."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-files",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for file handling and file-based workflows.",
+        "ru": "Плагин Yarn для работы с файлами и файловыми сценариями."
+      },
+      "whenToUse": {
+        "en": "Use when a plugin needs to read, write, copy, or transform files.",
+        "ru": "Используйте, когда плагину нужно читать, записывать, копировать или преобразовывать файлы."
+      },
+      "example": {
+        "en": "Generate files during build and package them afterward.",
+        "ru": "Сгенерируйте файлы во время сборки и упакуйте их затем."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-format",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for formatting code and project files.",
+        "ru": "Плагин Yarn для форматирования кода и файлов проекта."
+      },
+      "whenToUse": {
+        "en": "Use when you need formatting rules or formatting automation in the workspace.",
+        "ru": "Используйте, когда нужны правила форматирования или автоматизация форматирования в workspace."
+      },
+      "example": {
+        "en": "Run formatting checks before publishing the plugin.",
+        "ru": "Запускайте проверку форматирования перед публикацией плагина."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-image",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for image-related processing and assets.",
+        "ru": "Плагин Yarn для обработки изображений и графических ресурсов."
+      },
+      "whenToUse": {
+        "en": "Use when a plugin works with image assets, optimization, or generation.",
+        "ru": "Используйте, когда плагин работает с изображениями, оптимизацией или генерацией."
+      },
+      "example": {
+        "en": "Process image assets as part of the build pipeline.",
+        "ru": "Обрабатывайте изображения как часть сборочного пайплайна."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-jsr",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for JSR publishing or integration workflows.",
+        "ru": "Плагин Yarn для публикации в JSR или интеграции с ним."
+      },
+      "whenToUse": {
+        "en": "Use when you need to prepare packages for JSR-compatible distribution.",
+        "ru": "Используйте, когда нужно подготовить пакеты для распространения через JSR."
+      },
+      "example": {
+        "en": "Build and package a plugin for JSR release.",
+        "ru": "Соберите и упакуйте плагин для релиза в JSR."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-library",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for library-oriented project workflows.",
+        "ru": "Плагин Yarn для рабочих процессов библиотечных проектов."
+      },
+      "whenToUse": {
+        "en": "Use when the workspace provides reusable library raijin or conventions.",
+        "ru": "Используйте, когда workspace предоставляет инструменты или соглашения для библиотек."
+      },
+      "example": {
+        "en": "Use the library plugin to standardize package structure.",
+        "ru": "Используйте плагин library для стандартизации структуры пакета."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-lint",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for linting and code quality checks.",
+        "ru": "Плагин Yarn для линтинга и проверок качества кода."
+      },
+      "whenToUse": {
+        "en": "Use when you need lint rules, lint commands, or quality gates.",
+        "ru": "Используйте, когда нужны правила линтинга, команды lint или контроль качества."
+      },
+      "example": {
+        "en": "Run lint before building and publishing the plugin.",
+        "ru": "Запускайте lint перед сборкой и публикацией плагина."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-pnp-patch",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for patching Plug'n'Play behavior and related loaders.",
+        "ru": "Плагин Yarn для патчинга поведения Plug'n'Play и связанных загрузчиков."
+      },
+      "whenToUse": {
+        "en": "Use when you need custom PnP fixes, loader builds, or Yarn download support.",
+        "ru": "Используйте, когда нужны кастомные исправления PnP, сборка загрузчиков или поддержка загрузки Yarn."
+      },
+      "example": {
+        "en": "Build the source and loader variants before packaging the PnP patch plugin.",
+        "ru": "Соберите варианты source и loader перед упаковкой плагина PnP patch."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-release",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for release automation and publishing workflows.",
+        "ru": "Плагин Yarn для автоматизации релизов и публикации."
+      },
+      "whenToUse": {
+        "en": "Use when you need versioning, changelog, or release orchestration.",
+        "ru": "Используйте, когда нужны версионирование, changelog или управление релизом."
+      },
+      "example": {
+        "en": "Prepare a release plugin to automate publishing steps.",
+        "ru": "Подготовьте плагин release для автоматизации шагов публикации."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-renderer",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for rendering output such as templates or reports.",
+        "ru": "Плагин Yarn для рендеринга вывода, например шаблонов или отчетов."
+      },
+      "whenToUse": {
+        "en": "Use when a plugin needs to render structured content into final output.",
+        "ru": "Используйте, когда плагину нужно преобразовать структурированный контент в итоговый вывод."
+      },
+      "example": {
+        "en": "Render documentation assets during the build.",
+        "ru": "Рендерьте документационные артефакты во время сборки."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-schematics",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for schematics and project scaffolding.",
+        "ru": "Плагин Yarn для схем и генерации каркаса проекта."
+      },
+      "whenToUse": {
+        "en": "Use when you need generators for new files, modules, or project setups.",
+        "ru": "Используйте, когда нужны генераторы новых файлов, модулей или настроек проекта."
+      },
+      "example": {
+        "en": "Generate a new workspace scaffold with the schematics plugin.",
+        "ru": "Сгенерируйте каркас нового workspace с помощью плагина schematics."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-service",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for service-oriented raijin and orchestration.",
+        "ru": "Плагин Yarn для сервисных инструментов и оркестрации."
+      },
+      "whenToUse": {
+        "en": "Use when a plugin coordinates service lifecycle or service utilities.",
+        "ru": "Используйте, когда плагин координирует жизненный цикл сервисов или сервисные утилиты."
+      },
+      "example": {
+        "en": "Start service helpers as part of a workspace command.",
+        "ru": "Запускайте сервисные помощники как часть команды workspace."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-test",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for testing workflows and test automation.",
+        "ru": "Плагин Yarn для тестирования и автоматизации тестов."
+      },
+      "whenToUse": {
+        "en": "Use when you need test commands, test setup, or test orchestration.",
+        "ru": "Используйте, когда нужны команды тестирования, настройка тестов или их запуск."
+      },
+      "example": {
+        "en": "Run plugin tests before packaging and release.",
+        "ru": "Запускайте тесты плагина перед упаковкой и релизом."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-tools",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for shared developer tools and utilities.",
+        "ru": "Плагин Yarn для общих инструментов и утилит разработчика."
+      },
+      "whenToUse": {
+        "en": "Use when a plugin bundles reusable raijin for other workspaces.",
+        "ru": "Используйте, когда плагин объединяет переиспользуемые инструменты для других workspace."
+      },
+      "example": {
+        "en": "Reuse tools helpers across multiple Yarn plugins.",
+        "ru": "Переиспользуйте helpers из tools в нескольких плагинах Yarn."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-typescript",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for TypeScript-specific build and integration support.",
+        "ru": "Плагин Yarn для поддержки TypeScript-сборки и интеграции."
+      },
+      "whenToUse": {
+        "en": "Use when you need TypeScript compilation, typing, or TS-aware raijin.",
+        "ru": "Используйте, когда нужна компиляция TypeScript, типизация или TS-ориентированные инструменты."
+      },
+      "example": {
+        "en": "Compile TypeScript sources before publishing the plugin.",
+        "ru": "Скомпилируйте исходники TypeScript перед публикацией плагина."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-ui",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for UI-related workflows and interface raijin.",
+        "ru": "Плагин Yarn для UI-сценариев и инструментов интерфейса."
+      },
+      "whenToUse": {
+        "en": "Use when a plugin supports UI generation, components, or interface assets.",
+        "ru": "Используйте, когда плагин поддерживает генерацию UI, компоненты или интерфейсные ресурсы."
+      },
+      "example": {
+        "en": "Build UI assets as part of the plugin release process.",
+        "ru": "Соберите UI-артефакты как часть процесса релиза плагина."
+      }
+    },
+    {
+      "id": "@atls/yarn-plugin-workspaces",
+      "groupTags": [
+        "plugin",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Yarn plugin for workspace management and monorepo coordination.",
+        "ru": "Плагин Yarn для управления workspace и координации монорепозитория."
+      },
+      "whenToUse": {
+        "en": "Use when you need workspace discovery, orchestration, or monorepo helpers.",
+        "ru": "Используйте, когда нужны обнаружение workspace, оркестрация или помощники для монорепозитория."
+      },
+      "example": {
+        "en": "Use workspace utilities to coordinate builds across packages.",
+        "ru": "Используйте утилиты workspace для координации сборок между пакетами."
+      }
+    },
+    {
+      "id": "@atls/yarn-run-utils",
+      "groupTags": [
+        "utils",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Utility package for running commands and process helpers in Yarn workflows.",
+        "ru": "Утилитарный пакет для запуска команд и работы с процессами в сценариях Yarn."
+      },
+      "whenToUse": {
+        "en": "Use when scripts or plugins need shared execution helpers.",
+        "ru": "Используйте, когда скриптам или плагинам нужны общие помощники для выполнения команд."
+      },
+      "example": {
+        "en": "Use run utilities to execute a build command consistently.",
+        "ru": "Используйте run-utils для единообразного запуска команды сборки."
+      }
+    },
+    {
+      "id": "@atls/yarn-test-utils",
+      "groupTags": [
+        "utils",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Utility package for testing helpers and test setup in Yarn projects.",
+        "ru": "Утилитарный пакет для тестовых помощников и настройки тестов в проектах Yarn."
+      },
+      "whenToUse": {
+        "en": "Use when tests need shared fixtures, mocks, or setup helpers.",
+        "ru": "Используйте, когда тестам нужны общие фикстуры, моки или помощники настройки."
+      },
+      "example": {
+        "en": "Import test utilities to simplify plugin unit tests.",
+        "ru": "Импортируйте test-utils, чтобы упростить модульные тесты плагина."
+      }
+    },
+    {
+      "id": "@atls/yarn-workspace-utils",
+      "groupTags": [
+        "utils",
+        "yarn"
+      ],
+      "purpose": {
+        "en": "Utility package for workspace and monorepo helper functions.",
+        "ru": "Утилитарный пакет для функций-помощников workspace и монорепозитория."
+      },
+      "whenToUse": {
+        "en": "Use when packages need shared logic for workspace paths, metadata, or orchestration.",
+        "ru": "Используйте, когда пакетам нужна общая логика для путей workspace, метаданных или оркестрации."
+      },
+      "example": {
+        "en": "Use workspace utilities to resolve package locations.",
+        "ru": "Используйте workspace-utils для определения расположения пакетов."
+      }
+    }
+  ]
+}
