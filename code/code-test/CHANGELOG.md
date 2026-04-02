@@ -1,5 +1,12 @@
 
 
+## [2.0.29](https://github.com/atls/raijin/compare/@atls/code-test@2.0.28...@atls/code-test@2.0.29) (2026-04-02)
+
+
+
+
+
+
 ## [2.0.28](https://github.com/atls/raijin/compare/@atls/code-test@2.0.27...@atls/code-test@2.0.28) (2026-04-01)
 
 

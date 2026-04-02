@@ -1,5 +1,12 @@
 
 
+## [2.0.27](https://github.com/atls/raijin/compare/@atls/code-typescript@2.0.26...@atls/code-typescript@2.0.27) (2026-04-02)
+
+
+
+
+
+
 ## [2.0.26](https://github.com/atls/raijin/compare/@atls/code-typescript@2.0.25...@atls/code-typescript@2.0.26) (2026-04-01)
 
 

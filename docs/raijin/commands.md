@@ -3,12 +3,15 @@
 Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 <!-- sync:commands-active -->
+
 ## Active (safe to route)
 
 ### Domain `badges`
 
 <!-- sync:command-card:badges-generate -->
+
 #### `badges generate`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-badges`
 - Class: `BadgesCommand`
@@ -21,7 +24,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `changelog`
 
 <!-- sync:command-card:changelog-generate -->
+
 #### `changelog generate`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-changelog`
 - Class: `ChangelogGenerateCommand`
@@ -34,7 +39,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `check`
 
 <!-- sync:command-card:check -->
+
 #### `check`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-check`
 - Class: `CheckCommand`
@@ -47,7 +54,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `checks`
 
 <!-- sync:command-card:checks-lint -->
+
 #### `checks lint`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-checks`
 - Class: `ChecksLintCommand`
@@ -58,7 +67,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-checks/sources/checks-lint.command.tsx`
 
 <!-- sync:command-card:checks-release -->
+
 #### `checks release`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-checks`
 - Class: `ChecksReleaseCommand`
@@ -69,7 +80,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-checks/sources/checks-release.command.ts`
 
 <!-- sync:command-card:checks-run -->
+
 #### `checks run`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-checks`
 - Class: `ChecksRunCommand`
@@ -80,7 +93,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-checks/sources/checks-run.command.ts`
 
 <!-- sync:command-card:checks-test-integration -->
+
 #### `checks test integration`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-checks`
 - Class: `ChecksTestIntegrationCommand`
@@ -91,7 +106,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-checks/sources/checks-test-integration.command.ts`
 
 <!-- sync:command-card:checks-test-unit -->
+
 #### `checks test unit`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-checks`
 - Class: `ChecksTestUnitCommand`
@@ -102,7 +119,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-checks/sources/checks-test-unit.command.ts`
 
 <!-- sync:command-card:checks-typecheck -->
+
 #### `checks typecheck`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-checks`
 - Class: `ChecksTypeCheckCommand`
@@ -115,7 +134,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `commit`
 
 <!-- sync:command-card:commit-message -->
+
 #### `commit message`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-commit`
 - Class: `CommitMessageCommand`
@@ -126,7 +147,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-commit/sources/commit-message.command.tsx`
 
 <!-- sync:command-card:commit-message-lint -->
+
 #### `commit message lint`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-commit`
 - Class: `CommitMessageLintCommand`
@@ -137,7 +160,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-commit/sources/commit-message-lint.command.ts`
 
 <!-- sync:command-card:commit-staged -->
+
 #### `commit staged`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-commit`
 - Class: `CommitStagedCommand`
@@ -150,7 +175,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `essentials`
 
 <!-- sync:command-card:set-version-atls -->
+
 #### `set version atls`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-essentials`
 - Class: `SetVersionCommand`
@@ -163,7 +190,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `export`
 
 <!-- sync:command-card:export -->
+
 #### `export`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-export`
 - Class: `WorkspaceExportCommand`
@@ -176,7 +205,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `files`
 
 <!-- sync:command-card:files-changed-list -->
+
 #### `files changed list`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-files`
 - Class: `FilesChangedListCommand`
@@ -189,7 +220,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `format`
 
 <!-- sync:command-card:format -->
+
 #### `format`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-format`
 - Class: `FormatCommand`
@@ -202,7 +235,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `image`
 
 <!-- sync:command-card:image-pack -->
+
 #### `image pack`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-image`
 - Class: `ImagePackCommand`
@@ -215,7 +250,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `jsr`
 
 <!-- sync:command-card:jsr-publish -->
+
 #### `jsr publish`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-jsr`
 - Class: `JsrPublishCommand`
@@ -228,7 +265,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `library`
 
 <!-- sync:command-card:library-build -->
+
 #### `library build`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-library`
 - Class: `LibraryBuildCommand`
@@ -241,7 +280,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `lint`
 
 <!-- sync:command-card:lint -->
+
 #### `lint`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-lint`
 - Class: `LintCommand`
@@ -254,7 +295,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `release`
 
 <!-- sync:command-card:release-create -->
+
 #### `release create`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-release`
 - Class: `ReleaseCreateCommand`
@@ -267,7 +310,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `renderer`
 
 <!-- sync:command-card:renderer-build -->
+
 #### `renderer build`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-renderer`
 - Class: `RendererBuildCommand`
@@ -278,7 +323,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-renderer/sources/commands/renderer-build.command.ts`
 
 <!-- sync:command-card:renderer-dev -->
+
 #### `renderer dev`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-renderer`
 - Class: `RendererDevCommand`
@@ -291,7 +338,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `service`
 
 <!-- sync:command-card:service-build -->
+
 #### `service build`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-service`
 - Class: `ServiceBuildCommand`
@@ -302,7 +351,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-service/sources/service-build.command.tsx`
 
 <!-- sync:command-card:service-dev -->
+
 #### `service dev`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-service`
 - Class: `ServiceDevCommand`
@@ -315,7 +366,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `test`
 
 <!-- sync:command-card:test -->
+
 #### `test`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-test`
 - Class: `TestCommand`
@@ -326,7 +379,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-test/sources/test.command.ts`
 
 <!-- sync:command-card:test-integration -->
+
 #### `test integration`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-test`
 - Class: `TestIntegrationCommand`
@@ -337,7 +392,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-test/sources/test-integration.command.ts`
 
 <!-- sync:command-card:test-unit -->
+
 #### `test unit`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-test`
 - Class: `TestUnitCommand`
@@ -350,7 +407,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `tools`
 
 <!-- sync:command-card:tools-sync -->
+
 #### `tools sync`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-tools`
 - Class: `ToolsSyncCommand`
@@ -361,7 +420,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-tools/sources/commands/sync/tools-sync.command.ts`
 
 <!-- sync:command-card:tools-sync-tsconfig -->
+
 #### `tools sync tsconfig`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-tools`
 - Class: `ToolsSyncTSConfigCommand`
@@ -372,7 +433,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-tools/sources/commands/sync/tools-sync-tsconfig.command.ts`
 
 <!-- sync:command-card:tools-sync-typescript -->
+
 #### `tools sync typescript`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-tools`
 - Class: `ToolsSyncTypeScriptCommand`
@@ -385,7 +448,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `typescript`
 
 <!-- sync:command-card:typecheck -->
+
 #### `typecheck`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-typescript`
 - Class: `TypeCheckCommand`
@@ -398,7 +463,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `ui`
 
 <!-- sync:command-card:ui-icons-generate -->
+
 #### `ui icons generate`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-ui`
 - Class: `UiIconsGenerateCommand`
@@ -411,7 +478,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 ### Domain `workspaces`
 
 <!-- sync:command-card:workspaces-changed-foreach -->
+
 #### `workspaces changed foreach`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-workspaces`
 - Class: `WorkspacesChangedForeachCommand`
@@ -422,7 +491,9 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-workspaces/sources/workspaces-changed-foreach.command.ts`
 
 <!-- sync:command-card:workspaces-changed-list -->
+
 #### `workspaces changed list`
+
 - Status: `active`
 - Plugin: `@atls/yarn-plugin-workspaces`
 - Class: `WorkspacesChangedListCommand`
@@ -433,12 +504,15 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts`
 
 <!-- sync:commands-inactive -->
+
 ## Inactive (do not route)
 
 ### Domain `schematics`
 
 <!-- sync:command-card:generate-project -->
+
 #### `generate project`
+
 - Status: `inactive`
 - Plugin: `@atls/yarn-plugin-schematics`
 - Class: `GenerateProjectCommand`
@@ -448,4 +522,3 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Tags: `schematics`
 - Source: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
 - Routing: do not use (plugin is in bundle but not exported from plugin index)
-

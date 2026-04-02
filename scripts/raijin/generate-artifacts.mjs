@@ -49,9 +49,7 @@ const WORKSPACE_GROUP_ORDER = [
   'schematics',
 ]
 
-const DETAILED_GROUPS = new Set(
-  WORKSPACE_GROUP_ORDER.filter((group) => group !== 'cli')
-)
+const DETAILED_GROUPS = new Set(WORKSPACE_GROUP_ORDER.filter((group) => group !== 'cli'))
 
 const walkFiles = (dirPath, predicate, output = []) => {
   if (!fs.existsSync(dirPath)) return output
@@ -165,9 +163,7 @@ const loadWorkspacePackages = () => {
 
   const workspacePackageJsonFiles = workspaceRoots
     .flatMap((workspaceRoot) =>
-      walkFiles(path.join(repoRoot, workspaceRoot), (filePath) =>
-        filePath.endsWith('package.json')
-      )
+      walkFiles(path.join(repoRoot, workspaceRoot), (filePath) => filePath.endsWith('package.json'))
     )
     .map((filePath) => toPosix(path.relative(repoRoot, filePath)))
     .sort(sortByLocale)
@@ -392,11 +388,7 @@ const getCommandSemantics = (command, lookup) => {
     id: command.command,
     groupTags: normalizeTags(raw?.groupTags, fallback.groupTags),
     purpose: normalizeLocalePair(raw?.purpose, fallback.purpose.en, fallback.purpose.ru),
-    whenToUse: normalizeLocalePair(
-      raw?.whenToUse,
-      fallback.whenToUse.en,
-      fallback.whenToUse.ru
-    ),
+    whenToUse: normalizeLocalePair(raw?.whenToUse, fallback.whenToUse.en, fallback.whenToUse.ru),
     example: normalizeLocalePair(raw?.example, fallback.example.en, fallback.example.ru),
   }
 }
@@ -409,11 +401,7 @@ const getWorkspaceSemantics = (workspace, lookup) => {
     id: workspace.name,
     groupTags: normalizeTags(raw?.groupTags, fallback.groupTags),
     purpose: normalizeLocalePair(raw?.purpose, fallback.purpose.en, fallback.purpose.ru),
-    whenToUse: normalizeLocalePair(
-      raw?.whenToUse,
-      fallback.whenToUse.en,
-      fallback.whenToUse.ru
-    ),
+    whenToUse: normalizeLocalePair(raw?.whenToUse, fallback.whenToUse.en, fallback.whenToUse.ru),
     example: normalizeLocalePair(raw?.example, fallback.example.en, fallback.example.ru),
   }
 }
@@ -649,7 +637,10 @@ const workspaceGroupIntro = (group, language) => {
   }
 
   const dict = language === 'ru' ? ru : en
-  return dict[group] || (language === 'ru' ? 'Прочая группа workspace-пакетов' : 'Other workspace packages')
+  return (
+    dict[group] ||
+    (language === 'ru' ? 'Прочая группа workspace-пакетов' : 'Other workspace packages')
+  )
 }
 
 const renderWorkspaceCard = (workspace, semantics, language, compact) => {
@@ -671,9 +662,7 @@ const renderWorkspaceCard = (workspace, semantics, language, compact) => {
         : `- Scripts: ${workspace.scripts.length > 0 ? workspace.scripts.map((script) => `\`${script}\``).join(', ') : 'none'}`
     )
     lines.push(
-      isRu
-        ? `- Локация: \`${workspace.location}\``
-        : `- Location: \`${workspace.location}\``
+      isRu ? `- Локация: \`${workspace.location}\`` : `- Location: \`${workspace.location}\``
     )
     return lines
   }
@@ -733,9 +722,7 @@ const renderPackagesDoc = (workspaces, semanticsLookup, language) => {
   const lines = [
     '# Raijin Packages',
     '',
-    isRu
-      ? 'Сгруппированные карточки workspace-пакетов'
-      : 'Grouped cards for workspace packages',
+    isRu ? 'Сгруппированные карточки workspace-пакетов' : 'Grouped cards for workspace packages',
     '',
     '<!-- sync:packages-groups -->',
   ]

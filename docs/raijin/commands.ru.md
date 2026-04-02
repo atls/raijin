@@ -3,12 +3,15 @@
 Карта команд из `yarn/plugin-*` и bundle `@atls/yarn-cli`
 
 <!-- sync:commands-active -->
+
 ## Active (можно маршрутизировать)
 
 ### Домен `badges`
 
 <!-- sync:command-card:badges-generate -->
+
 #### `badges generate`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-badges`
 - Класс: `BadgesCommand`
@@ -21,7 +24,9 @@
 ### Домен `changelog`
 
 <!-- sync:command-card:changelog-generate -->
+
 #### `changelog generate`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-changelog`
 - Класс: `ChangelogGenerateCommand`
@@ -34,7 +39,9 @@
 ### Домен `check`
 
 <!-- sync:command-card:check -->
+
 #### `check`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-check`
 - Класс: `CheckCommand`
@@ -47,7 +54,9 @@
 ### Домен `checks`
 
 <!-- sync:command-card:checks-lint -->
+
 #### `checks lint`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-checks`
 - Класс: `ChecksLintCommand`
@@ -58,7 +67,9 @@
 - Исходник: `yarn/plugin-checks/sources/checks-lint.command.tsx`
 
 <!-- sync:command-card:checks-release -->
+
 #### `checks release`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-checks`
 - Класс: `ChecksReleaseCommand`
@@ -69,7 +80,9 @@
 - Исходник: `yarn/plugin-checks/sources/checks-release.command.ts`
 
 <!-- sync:command-card:checks-run -->
+
 #### `checks run`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-checks`
 - Класс: `ChecksRunCommand`
@@ -80,7 +93,9 @@
 - Исходник: `yarn/plugin-checks/sources/checks-run.command.ts`
 
 <!-- sync:command-card:checks-test-integration -->
+
 #### `checks test integration`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-checks`
 - Класс: `ChecksTestIntegrationCommand`
@@ -91,7 +106,9 @@
 - Исходник: `yarn/plugin-checks/sources/checks-test-integration.command.ts`
 
 <!-- sync:command-card:checks-test-unit -->
+
 #### `checks test unit`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-checks`
 - Класс: `ChecksTestUnitCommand`
@@ -102,7 +119,9 @@
 - Исходник: `yarn/plugin-checks/sources/checks-test-unit.command.ts`
 
 <!-- sync:command-card:checks-typecheck -->
+
 #### `checks typecheck`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-checks`
 - Класс: `ChecksTypeCheckCommand`
@@ -115,7 +134,9 @@
 ### Домен `commit`
 
 <!-- sync:command-card:commit-message -->
+
 #### `commit message`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-commit`
 - Класс: `CommitMessageCommand`
@@ -126,7 +147,9 @@
 - Исходник: `yarn/plugin-commit/sources/commit-message.command.tsx`
 
 <!-- sync:command-card:commit-message-lint -->
+
 #### `commit message lint`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-commit`
 - Класс: `CommitMessageLintCommand`
@@ -137,7 +160,9 @@
 - Исходник: `yarn/plugin-commit/sources/commit-message-lint.command.ts`
 
 <!-- sync:command-card:commit-staged -->
+
 #### `commit staged`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-commit`
 - Класс: `CommitStagedCommand`
@@ -150,7 +175,9 @@
 ### Домен `essentials`
 
 <!-- sync:command-card:set-version-atls -->
+
 #### `set version atls`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-essentials`
 - Класс: `SetVersionCommand`
@@ -163,7 +190,9 @@
 ### Домен `export`
 
 <!-- sync:command-card:export -->
+
 #### `export`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-export`
 - Класс: `WorkspaceExportCommand`
@@ -176,7 +205,9 @@
 ### Домен `files`
 
 <!-- sync:command-card:files-changed-list -->
+
 #### `files changed list`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-files`
 - Класс: `FilesChangedListCommand`
@@ -189,7 +220,9 @@
 ### Домен `format`
 
 <!-- sync:command-card:format -->
+
 #### `format`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-format`
 - Класс: `FormatCommand`
@@ -202,7 +235,9 @@
 ### Домен `image`
 
 <!-- sync:command-card:image-pack -->
+
 #### `image pack`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-image`
 - Класс: `ImagePackCommand`
@@ -215,7 +250,9 @@
 ### Домен `jsr`
 
 <!-- sync:command-card:jsr-publish -->
+
 #### `jsr publish`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-jsr`
 - Класс: `JsrPublishCommand`
@@ -228,7 +265,9 @@
 ### Домен `library`
 
 <!-- sync:command-card:library-build -->
+
 #### `library build`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-library`
 - Класс: `LibraryBuildCommand`
@@ -241,7 +280,9 @@
 ### Домен `lint`
 
 <!-- sync:command-card:lint -->
+
 #### `lint`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-lint`
 - Класс: `LintCommand`
@@ -254,7 +295,9 @@
 ### Домен `release`
 
 <!-- sync:command-card:release-create -->
+
 #### `release create`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-release`
 - Класс: `ReleaseCreateCommand`
@@ -267,7 +310,9 @@
 ### Домен `renderer`
 
 <!-- sync:command-card:renderer-build -->
+
 #### `renderer build`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-renderer`
 - Класс: `RendererBuildCommand`
@@ -278,7 +323,9 @@
 - Исходник: `yarn/plugin-renderer/sources/commands/renderer-build.command.ts`
 
 <!-- sync:command-card:renderer-dev -->
+
 #### `renderer dev`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-renderer`
 - Класс: `RendererDevCommand`
@@ -291,7 +338,9 @@
 ### Домен `service`
 
 <!-- sync:command-card:service-build -->
+
 #### `service build`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-service`
 - Класс: `ServiceBuildCommand`
@@ -302,7 +351,9 @@
 - Исходник: `yarn/plugin-service/sources/service-build.command.tsx`
 
 <!-- sync:command-card:service-dev -->
+
 #### `service dev`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-service`
 - Класс: `ServiceDevCommand`
@@ -315,7 +366,9 @@
 ### Домен `test`
 
 <!-- sync:command-card:test -->
+
 #### `test`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-test`
 - Класс: `TestCommand`
@@ -326,7 +379,9 @@
 - Исходник: `yarn/plugin-test/sources/test.command.ts`
 
 <!-- sync:command-card:test-integration -->
+
 #### `test integration`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-test`
 - Класс: `TestIntegrationCommand`
@@ -337,7 +392,9 @@
 - Исходник: `yarn/plugin-test/sources/test-integration.command.ts`
 
 <!-- sync:command-card:test-unit -->
+
 #### `test unit`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-test`
 - Класс: `TestUnitCommand`
@@ -350,7 +407,9 @@
 ### Домен `tools`
 
 <!-- sync:command-card:tools-sync -->
+
 #### `tools sync`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-tools`
 - Класс: `ToolsSyncCommand`
@@ -361,7 +420,9 @@
 - Исходник: `yarn/plugin-tools/sources/commands/sync/tools-sync.command.ts`
 
 <!-- sync:command-card:tools-sync-tsconfig -->
+
 #### `tools sync tsconfig`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-tools`
 - Класс: `ToolsSyncTSConfigCommand`
@@ -372,7 +433,9 @@
 - Исходник: `yarn/plugin-tools/sources/commands/sync/tools-sync-tsconfig.command.ts`
 
 <!-- sync:command-card:tools-sync-typescript -->
+
 #### `tools sync typescript`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-tools`
 - Класс: `ToolsSyncTypeScriptCommand`
@@ -385,7 +448,9 @@
 ### Домен `typescript`
 
 <!-- sync:command-card:typecheck -->
+
 #### `typecheck`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-typescript`
 - Класс: `TypeCheckCommand`
@@ -398,7 +463,9 @@
 ### Домен `ui`
 
 <!-- sync:command-card:ui-icons-generate -->
+
 #### `ui icons generate`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-ui`
 - Класс: `UiIconsGenerateCommand`
@@ -411,7 +478,9 @@
 ### Домен `workspaces`
 
 <!-- sync:command-card:workspaces-changed-foreach -->
+
 #### `workspaces changed foreach`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-workspaces`
 - Класс: `WorkspacesChangedForeachCommand`
@@ -422,7 +491,9 @@
 - Исходник: `yarn/plugin-workspaces/sources/workspaces-changed-foreach.command.ts`
 
 <!-- sync:command-card:workspaces-changed-list -->
+
 #### `workspaces changed list`
+
 - Статус: `active`
 - Плагин: `@atls/yarn-plugin-workspaces`
 - Класс: `WorkspacesChangedListCommand`
@@ -433,12 +504,15 @@
 - Исходник: `yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts`
 
 <!-- sync:commands-inactive -->
+
 ## Inactive (не маршрутизировать)
 
 ### Домен `schematics`
 
 <!-- sync:command-card:generate-project -->
+
 #### `generate project`
+
 - Статус: `inactive`
 - Плагин: `@atls/yarn-plugin-schematics`
 - Класс: `GenerateProjectCommand`
@@ -448,4 +522,3 @@
 - Теги: `schematics`
 - Исходник: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
 - Маршрутизация: не использовать (plugin is in bundle but not exported from plugin index)
-

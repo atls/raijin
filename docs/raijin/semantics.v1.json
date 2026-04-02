@@ -6,9 +6,7 @@
   "commands": [
     {
       "id": "badges generate",
-      "groupTags": [
-        "badges"
-      ],
+      "groupTags": ["badges"],
       "purpose": {
         "en": "Generate badge assets or badge-related output for the repository.",
         "ru": "Сгенерировать бейджи или связанные с ними артефакты для репозитория."
@@ -24,9 +22,7 @@
     },
     {
       "id": "changelog generate",
-      "groupTags": [
-        "changelog"
-      ],
+      "groupTags": ["changelog"],
       "purpose": {
         "en": "Generate a changelog entry or changelog content from project changes.",
         "ru": "Сгенерировать запись или содержимое changelog на основе изменений в проекте."
@@ -42,9 +38,7 @@
     },
     {
       "id": "check",
-      "groupTags": [
-        "check"
-      ],
+      "groupTags": ["check"],
       "purpose": {
         "en": "Run the repository's general validation checks.",
         "ru": "Запустить общие проверки валидации репозитория."
@@ -60,9 +54,7 @@
     },
     {
       "id": "checks lint",
-      "groupTags": [
-        "checks"
-      ],
+      "groupTags": ["checks"],
       "purpose": {
         "en": "Run lint checks as part of the checks suite.",
         "ru": "Запустить lint-проверки в составе набора checks."
@@ -78,9 +70,7 @@
     },
     {
       "id": "checks release",
-      "groupTags": [
-        "checks"
-      ],
+      "groupTags": ["checks"],
       "purpose": {
         "en": "Run release-related checks before publishing or tagging.",
         "ru": "Запустить проверки, связанные с релизом, перед публикацией или созданием тега."
@@ -96,9 +86,7 @@
     },
     {
       "id": "checks run",
-      "groupTags": [
-        "checks"
-      ],
+      "groupTags": ["checks"],
       "purpose": {
         "en": "Run the full checks pipeline for the repository.",
         "ru": "Запустить полный пайплайн checks для репозитория."
@@ -114,9 +102,7 @@
     },
     {
       "id": "checks test integration",
-      "groupTags": [
-        "checks"
-      ],
+      "groupTags": ["checks"],
       "purpose": {
         "en": "Run integration tests for the project.",
         "ru": "Запустить интеграционные тесты проекта."
@@ -132,9 +118,7 @@
     },
     {
       "id": "checks test unit",
-      "groupTags": [
-        "checks"
-      ],
+      "groupTags": ["checks"],
       "purpose": {
         "en": "Run unit tests for the project.",
         "ru": "Запустить модульные тесты проекта."
@@ -150,9 +134,7 @@
     },
     {
       "id": "checks typecheck",
-      "groupTags": [
-        "checks"
-      ],
+      "groupTags": ["checks"],
       "purpose": {
         "en": "Run TypeScript type checking.",
         "ru": "Запустить проверку типов TypeScript."
@@ -168,9 +150,7 @@
     },
     {
       "id": "commit message",
-      "groupTags": [
-        "commit"
-      ],
+      "groupTags": ["commit"],
       "purpose": {
         "en": "Create or assist with generating a commit message.",
         "ru": "Создать или помочь с генерацией сообщения коммита."
@@ -186,9 +166,7 @@
     },
     {
       "id": "commit message lint",
-      "groupTags": [
-        "commit"
-      ],
+      "groupTags": ["commit"],
       "purpose": {
         "en": "Validate commit message format and conventions.",
         "ru": "Проверить формат и соглашения сообщения коммита."
@@ -204,9 +182,7 @@
     },
     {
       "id": "commit staged",
-      "groupTags": [
-        "commit"
-      ],
+      "groupTags": ["commit"],
       "purpose": {
         "en": "Commit the currently staged changes.",
         "ru": "Закоммитить текущие staged-изменения."
@@ -222,9 +198,7 @@
     },
     {
       "id": "export",
-      "groupTags": [
-        "export"
-      ],
+      "groupTags": ["export"],
       "purpose": {
         "en": "Export workspace or package artifacts for downstream use.",
         "ru": "Экспортировать артефакты workspace или пакета для дальнейшего использования."
@@ -240,9 +214,7 @@
     },
     {
       "id": "files changed list",
-      "groupTags": [
-        "files"
-      ],
+      "groupTags": ["files"],
       "purpose": {
         "en": "List files changed in the repository or workspace.",
         "ru": "Вывести список измененных файлов в репозитории или workspace."
@@ -258,9 +230,7 @@
     },
     {
       "id": "format",
-      "groupTags": [
-        "format"
-      ],
+      "groupTags": ["format"],
       "purpose": {
         "en": "Format source files according to project formatting rules.",
         "ru": "Отформатировать исходные файлы по правилам проекта."
@@ -276,9 +246,7 @@
     },
     {
       "id": "generate project",
-      "groupTags": [
-        "schematics"
-      ],
+      "groupTags": ["schematics"],
       "purpose": {
         "en": "Generate a new project from schematics templates.",
         "ru": "Сгенерировать новый проект из шаблонов schematics."
@@ -294,9 +262,7 @@
     },
     {
       "id": "image pack",
-      "groupTags": [
-        "image"
-      ],
+      "groupTags": ["image"],
       "purpose": {
         "en": "Pack or bundle image assets for the project.",
         "ru": "Упаковать или собрать image-ресурсы проекта."
@@ -312,9 +278,7 @@
     },
     {
       "id": "jsr publish",
-      "groupTags": [
-        "jsr"
-      ],
+      "groupTags": ["jsr"],
       "purpose": {
         "en": "Publish a package to JSR.",
         "ru": "Опубликовать пакет в JSR."
@@ -330,9 +294,7 @@
     },
     {
       "id": "library build",
-      "groupTags": [
-        "library"
-      ],
+      "groupTags": ["library"],
       "purpose": {
         "en": "Build the library package or library artifacts.",
         "ru": "Собрать библиотеку или артефакты библиотеки."
@@ -348,9 +310,7 @@
     },
     {
       "id": "lint",
-      "groupTags": [
-        "lint"
-      ],
+      "groupTags": ["lint"],
       "purpose": {
         "en": "Run the project's linting workflow.",
         "ru": "Запустить lint-процесс проекта."
@@ -366,9 +326,7 @@
     },
     {
       "id": "release create",
-      "groupTags": [
-        "release"
-      ],
+      "groupTags": ["release"],
       "purpose": {
         "en": "Create a new release for the project.",
         "ru": "Создать новый релиз проекта."
@@ -384,9 +342,7 @@
     },
     {
       "id": "renderer build",
-      "groupTags": [
-        "renderer"
-      ],
+      "groupTags": ["renderer"],
       "purpose": {
         "en": "Build the renderer application or renderer assets.",
         "ru": "Собрать renderer-приложение или его артефакты."
@@ -402,9 +358,7 @@
     },
     {
       "id": "renderer dev",
-      "groupTags": [
-        "renderer"
-      ],
+      "groupTags": ["renderer"],
       "purpose": {
         "en": "Start the renderer in development mode.",
         "ru": "Запустить renderer в режиме разработки."
@@ -420,9 +374,7 @@
     },
     {
       "id": "service build",
-      "groupTags": [
-        "service"
-      ],
+      "groupTags": ["service"],
       "purpose": {
         "en": "Build the service application or service artifacts.",
         "ru": "Собрать сервисное приложение или его артефакты."
@@ -438,10 +390,7 @@
     },
     {
       "id": "service dev",
-      "groupTags": [
-        "development",
-        "service"
-      ],
+      "groupTags": ["development", "service"],
       "purpose": {
         "en": "Start the service in development mode with live iteration support.",
         "ru": "Запустить сервис в режиме разработки с поддержкой быстрого цикла изменений."
@@ -457,9 +406,7 @@
     },
     {
       "id": "set version atls",
-      "groupTags": [
-        "essentials"
-      ],
+      "groupTags": ["essentials"],
       "purpose": {
         "en": "Set or update the ATLS project version.",
         "ru": "Установить или обновить версию ATLS-проекта."
@@ -475,10 +422,7 @@
     },
     {
       "id": "test",
-      "groupTags": [
-        "quality",
-        "test"
-      ],
+      "groupTags": ["quality", "test"],
       "purpose": {
         "en": "Run the default test suite for the project.",
         "ru": "Запустить стандартный набор тестов для проекта."
@@ -494,10 +438,7 @@
     },
     {
       "id": "test integration",
-      "groupTags": [
-        "integration",
-        "test"
-      ],
+      "groupTags": ["integration", "test"],
       "purpose": {
         "en": "Run integration tests that verify interactions between components or external dependencies.",
         "ru": "Запустить интеграционные тесты, проверяющие взаимодействие компонентов или внешних зависимостей."
@@ -513,10 +454,7 @@
     },
     {
       "id": "test unit",
-      "groupTags": [
-        "test",
-        "unit"
-      ],
+      "groupTags": ["test", "unit"],
       "purpose": {
         "en": "Run unit tests for isolated functions, modules, or classes.",
         "ru": "Запустить модульные тесты для изолированных функций, модулей или классов."
@@ -532,10 +470,7 @@
     },
     {
       "id": "tools sync",
-      "groupTags": [
-        "sync",
-        "tools"
-      ],
+      "groupTags": ["sync", "tools"],
       "purpose": {
         "en": "Synchronize project raijin configuration and related generated files.",
         "ru": "Синхронизировать конфигурацию инструментов проекта и связанные сгенерированные файлы."
@@ -551,12 +486,7 @@
     },
     {
       "id": "tools sync tsconfig",
-      "groupTags": [
-        "sync",
-        "tools",
-        "tsconfig",
-        "typescript"
-      ],
+      "groupTags": ["sync", "tools", "tsconfig", "typescript"],
       "purpose": {
         "en": "Synchronize TypeScript configuration files such as tsconfig variants.",
         "ru": "Синхронизировать файлы конфигурации TypeScript, например варианты tsconfig."
@@ -572,11 +502,7 @@
     },
     {
       "id": "tools sync typescript",
-      "groupTags": [
-        "sync",
-        "tools",
-        "typescript"
-      ],
+      "groupTags": ["sync", "tools", "typescript"],
       "purpose": {
         "en": "Synchronize TypeScript-related raijin and generated setup.",
         "ru": "Синхронизировать инструменты и сгенерированную настройку, связанную с TypeScript."
@@ -592,10 +518,7 @@
     },
     {
       "id": "typecheck",
-      "groupTags": [
-        "quality",
-        "typescript"
-      ],
+      "groupTags": ["quality", "typescript"],
       "purpose": {
         "en": "Run TypeScript type checking without producing build artifacts.",
         "ru": "Запустить проверку типов TypeScript без создания артефактов сборки."
@@ -611,11 +534,7 @@
     },
     {
       "id": "ui icons generate",
-      "groupTags": [
-        "generate",
-        "icons",
-        "ui"
-      ],
+      "groupTags": ["generate", "icons", "ui"],
       "purpose": {
         "en": "Generate UI icon assets or icon-related source files.",
         "ru": "Сгенерировать ассеты и/или исходные файлы, связанные с UI-иконками."
@@ -631,11 +550,7 @@
     },
     {
       "id": "workspaces changed foreach",
-      "groupTags": [
-        "changed",
-        "foreach",
-        "workspaces"
-      ],
+      "groupTags": ["changed", "foreach", "workspaces"],
       "purpose": {
         "en": "Run a command across workspaces that have changed.",
         "ru": "Запустить команду по всем изменённым workspace-пакетам."
@@ -651,11 +566,7 @@
     },
     {
       "id": "workspaces changed list",
-      "groupTags": [
-        "changed",
-        "list",
-        "workspaces"
-      ],
+      "groupTags": ["changed", "list", "workspaces"],
       "purpose": {
         "en": "List workspaces that have changed.",
         "ru": "Вывести список изменённых workspace-пакетов."
@@ -673,9 +584,7 @@
   "workspaces": [
     {
       "id": "@atls/cli-ui-error-info-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Renders a compact error summary for CLI output.",
         "ru": "Отображает краткую сводку ошибки для вывода в CLI."
@@ -691,9 +600,7 @@
     },
     {
       "id": "@atls/cli-ui-file-link-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Displays a clickable or styled link to a file path in terminal UI.",
         "ru": "Показывает кликабельную или стилизованную ссылку на путь к файлу в терминальном интерфейсе."
@@ -709,9 +616,7 @@
     },
     {
       "id": "@atls/cli-ui-file-path-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Formats file system paths for consistent CLI presentation.",
         "ru": "Форматирует пути файловой системы для единообразного отображения в CLI."
@@ -727,9 +632,7 @@
     },
     {
       "id": "@atls/cli-ui-format-progress-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Shows progress for formatting tasks in CLI output.",
         "ru": "Показывает прогресс задач форматирования в выводе CLI."
@@ -745,9 +648,7 @@
     },
     {
       "id": "@atls/cli-ui-git-commit-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Presents git commit information in a terminal-friendly format.",
         "ru": "Показывает информацию о git-коммите в удобном для терминала формате."
@@ -763,9 +664,7 @@
     },
     {
       "id": "@atls/cli-ui-icons-progress-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Provides icon-based progress indicators for CLI states.",
         "ru": "Предоставляет индикаторы прогресса на основе иконок для состояний CLI."
@@ -781,9 +680,7 @@
     },
     {
       "id": "@atls/cli-ui-line-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Renders a single formatted line for CLI messages.",
         "ru": "Отображает одну форматированную строку для сообщений CLI."
@@ -799,9 +696,7 @@
     },
     {
       "id": "@atls/cli-ui-lint-progress-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Displays linting progress in CLI output.",
         "ru": "Показывает прогресс линтинга в выводе CLI."
@@ -817,9 +712,7 @@
     },
     {
       "id": "@atls/cli-ui-lint-result-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Summarizes lint results with warnings and errors.",
         "ru": "Сводит результаты линтинга с предупреждениями и ошибками."
@@ -835,9 +728,7 @@
     },
     {
       "id": "@atls/cli-ui-log-record-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Formats a single log record for terminal display.",
         "ru": "Форматирует одну запись лога для отображения в терминале."
@@ -853,9 +744,7 @@
     },
     {
       "id": "@atls/cli-ui-pretty-logs-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Turns raw logs into a readable, styled CLI log view.",
         "ru": "Преобразует сырые логи в читаемый, стилизованный вид для CLI."
@@ -871,9 +760,7 @@
     },
     {
       "id": "@atls/cli-ui-raw-output-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Outputs unformatted raw text for CLI consumers.",
         "ru": "Выводит неформатированный сырой текст для потребителей CLI."
@@ -889,9 +776,7 @@
     },
     {
       "id": "@atls/cli-ui-renderer-static-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Renders static CLI content that does not change over time.",
         "ru": "Отображает статический контент CLI, который не меняется со временем."
@@ -907,9 +792,7 @@
     },
     {
       "id": "@atls/cli-ui-schematics-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Shows schematics or generator-related information in CLI.",
         "ru": "Показывает информацию о схематиках или генераторах в CLI."
@@ -925,9 +808,7 @@
     },
     {
       "id": "@atls/cli-ui-service-progress-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Displays progress for service-related operations.",
         "ru": "Показывает прогресс операций, связанных с сервисами."
@@ -943,9 +824,7 @@
     },
     {
       "id": "@atls/cli-ui-source-preview-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Previews source code snippets in terminal output.",
         "ru": "Предпросматривает фрагменты исходного кода в выводе терминала."
@@ -961,9 +840,7 @@
     },
     {
       "id": "@atls/cli-ui-stack-trace-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Formats stack traces for readable CLI error output.",
         "ru": "Форматирует stack trace для читаемого вывода ошибок в CLI."
@@ -979,9 +856,7 @@
     },
     {
       "id": "@atls/cli-ui-test-failure-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Summarizes failed test results in CLI output.",
         "ru": "Сводит результаты упавших тестов в выводе CLI."
@@ -997,9 +872,7 @@
     },
     {
       "id": "@atls/cli-ui-test-progress-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Shows progress while tests are running.",
         "ru": "Показывает прогресс во время выполнения тестов."
@@ -1015,9 +888,7 @@
     },
     {
       "id": "@atls/cli-ui-typescript-diagnostic-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Displays TypeScript diagnostics in a readable CLI format.",
         "ru": "Отображает диагностические сообщения TypeScript в читаемом формате CLI."
@@ -1033,9 +904,7 @@
     },
     {
       "id": "@atls/cli-ui-typescript-progress-component",
-      "groupTags": [
-        "cli"
-      ],
+      "groupTags": ["cli"],
       "purpose": {
         "en": "Shows progress for TypeScript type-checking tasks.",
         "ru": "Показывает прогресс задач проверки типов TypeScript."
@@ -1051,9 +920,7 @@
     },
     {
       "id": "@atls/code-changelog",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Provides utilities for generating and managing changelogs.",
         "ru": "Предоставляет утилиты для генерации и управления changelog."
@@ -1069,9 +936,7 @@
     },
     {
       "id": "@atls/code-commit",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Handles commit-related code workflows and conventions.",
         "ru": "Обрабатывает рабочие процессы и соглашения, связанные с коммитами."
@@ -1087,9 +952,7 @@
     },
     {
       "id": "@atls/code-configuration",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Manages code configuration loading, validation, and defaults.",
         "ru": "Управляет загрузкой, проверкой и значениями по умолчанию для конфигурации кода."
@@ -1105,9 +968,7 @@
     },
     {
       "id": "@atls/code-format",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Supports code formatting operations and formatting rules.",
         "ru": "Поддерживает операции форматирования кода и правила форматирования."
@@ -1123,9 +984,7 @@
     },
     {
       "id": "@atls/code-github",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "GitHub-related code utilities and integrations used across packages.",
         "ru": "Утилиты и интеграции для GitHub, используемые в разных пакетах."
@@ -1141,9 +1000,7 @@
     },
     {
       "id": "@atls/code-icons",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Shared icon assets and icon-related code for the platform.",
         "ru": "Общие иконки и код, связанный с иконками, для платформы."
@@ -1159,9 +1016,7 @@
     },
     {
       "id": "@atls/code-jsr",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Code for JSR publishing and JSR-compatible package workflows.",
         "ru": "Код для публикации в JSR и рабочих процессов, совместимых с JSR."
@@ -1177,9 +1032,7 @@
     },
     {
       "id": "@atls/code-lint",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Linting utilities, rules, and shared validation logic.",
         "ru": "Утилиты линтинга, правила и общая логика проверки."
@@ -1195,9 +1048,7 @@
     },
     {
       "id": "@atls/code-pack",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Packaging helpers for building and preparing distributable artifacts.",
         "ru": "Помощники для упаковки, сборки и подготовки артефактов к распространению."
@@ -1213,9 +1064,7 @@
     },
     {
       "id": "@atls/code-runtime",
-      "groupTags": [
-        "runtime"
-      ],
+      "groupTags": ["runtime"],
       "purpose": {
         "en": "Runtime abstractions and shared execution-layer code.",
         "ru": "Абстракции runtime и общий код уровня исполнения."
@@ -1231,9 +1080,7 @@
     },
     {
       "id": "@atls/code-schematics",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Schematics and generators for scaffolding projects and libraries.",
         "ru": "Схематики и генераторы для создания проектов и библиотек."
@@ -1249,9 +1096,7 @@
     },
     {
       "id": "@atls/code-service",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Service-layer code and shared runtime service abstractions.",
         "ru": "Код сервисного слоя и общие абстракции runtime-сервисов."
@@ -1267,9 +1112,7 @@
     },
     {
       "id": "@atls/code-test",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "Testing utilities, workers, and shared test infrastructure.",
         "ru": "Тестовые утилиты, воркеры и общая тестовая инфраструктура."
@@ -1285,9 +1128,7 @@
     },
     {
       "id": "@atls/code-typescript",
-      "groupTags": [
-        "code"
-      ],
+      "groupTags": ["code"],
       "purpose": {
         "en": "TypeScript-specific helpers, build support, and shared TS raijin.",
         "ru": "TypeScript-специфичные хелперы, поддержка сборки и общие TS-инструменты."
@@ -1303,9 +1144,7 @@
     },
     {
       "id": "@atls/config-commitlint",
-      "groupTags": [
-        "config"
-      ],
+      "groupTags": ["config"],
       "purpose": {
         "en": "Shared Commitlint configuration for commit message validation.",
         "ru": "Общая конфигурация Commitlint для проверки сообщений коммитов."
@@ -1321,9 +1160,7 @@
     },
     {
       "id": "@atls/config-eslint",
-      "groupTags": [
-        "config"
-      ],
+      "groupTags": ["config"],
       "purpose": {
         "en": "Shared ESLint configuration and presets.",
         "ru": "Общая конфигурация ESLint и пресеты."
@@ -1339,9 +1176,7 @@
     },
     {
       "id": "@atls/config-prettier",
-      "groupTags": [
-        "config"
-      ],
+      "groupTags": ["config"],
       "purpose": {
         "en": "Shared Prettier configuration for formatting consistency.",
         "ru": "Общая конфигурация Prettier для единообразного форматирования."
@@ -1357,9 +1192,7 @@
     },
     {
       "id": "@atls/config-typescript",
-      "groupTags": [
-        "config"
-      ],
+      "groupTags": ["config"],
       "purpose": {
         "en": "Shared TypeScript configuration presets and compiler settings.",
         "ru": "Общие пресеты TypeScript и настройки компилятора."
@@ -1375,9 +1208,7 @@
     },
     {
       "id": "@atls/prettier-plugin",
-      "groupTags": [
-        "prettier"
-      ],
+      "groupTags": ["prettier"],
       "purpose": {
         "en": "Custom Prettier plugin for formatting project-specific syntax or files.",
         "ru": "Кастомный плагин Prettier для форматирования специфичного синтаксиса или файлов."
@@ -1393,9 +1224,7 @@
     },
     {
       "id": "@atls/webpack-proto-imports-loader",
-      "groupTags": [
-        "webpack"
-      ],
+      "groupTags": ["webpack"],
       "purpose": {
         "en": "Webpack loader for proto import handling and build-time import transformation.",
         "ru": "Webpack-loader для обработки proto-импортов и преобразования импортов на этапе сборки."
@@ -1411,9 +1240,7 @@
     },
     {
       "id": "@atls/webpack-start-server-plugin",
-      "groupTags": [
-        "webpack"
-      ],
+      "groupTags": ["webpack"],
       "purpose": {
         "en": "Webpack plugin for starting and coordinating a development server.",
         "ru": "Webpack-плагин для запуска и координации dev-сервера."
@@ -1429,9 +1256,7 @@
     },
     {
       "id": "@atls/yarn-cli",
-      "groupTags": [
-        "yarn"
-      ],
+      "groupTags": ["yarn"],
       "purpose": {
         "en": "Private Yarn CLI implementation for repository automation and release workflows.",
         "ru": "Приватная реализация Yarn CLI для автоматизации репозитория и релизных процессов."
@@ -1447,9 +1272,7 @@
     },
     {
       "id": "@atls/yarn-cli-tools",
-      "groupTags": [
-        "yarn"
-      ],
+      "groupTags": ["yarn"],
       "purpose": {
         "en": "Supporting tools and helpers used by the internal Yarn CLI.",
         "ru": "Вспомогательные инструменты и хелперы, используемые внутренним Yarn CLI."
@@ -1465,9 +1288,7 @@
     },
     {
       "id": "@atls/yarn-pack-utils",
-      "groupTags": [
-        "yarn"
-      ],
+      "groupTags": ["yarn"],
       "purpose": {
         "en": "Utilities for packaging, packing, and publish preparation in Yarn workflows.",
         "ru": "Утилиты для упаковки, pack и подготовки публикации в Yarn-процессах."
@@ -1483,9 +1304,7 @@
     },
     {
       "id": "@atls/yarn-plugin-badges",
-      "groupTags": [
-        "yarn"
-      ],
+      "groupTags": ["yarn"],
       "purpose": {
         "en": "Yarn plugin for generating and managing repository badges.",
         "ru": "Yarn-плагин для генерации и управления бейджами репозитория."
@@ -1501,9 +1320,7 @@
     },
     {
       "id": "@atls/yarn-plugin-changelog",
-      "groupTags": [
-        "yarn"
-      ],
+      "groupTags": ["yarn"],
       "purpose": {
         "en": "Yarn plugin for changelog generation and release notes workflows.",
         "ru": "Yarn-плагин для генерации changelog и работы с релиз-нотами."
@@ -1519,9 +1336,7 @@
     },
     {
       "id": "@atls/yarn-plugin-check",
-      "groupTags": [
-        "yarn"
-      ],
+      "groupTags": ["yarn"],
       "purpose": {
         "en": "Yarn plugin for repository checks and validation commands.",
         "ru": "Yarn-плагин для проверок репозитория и команд валидации."
@@ -1537,9 +1352,7 @@
     },
     {
       "id": "@atls/yarn-plugin-checks",
-      "groupTags": [
-        "yarn"
-      ],
+      "groupTags": ["yarn"],
       "purpose": {
         "en": "Extended checks plugin for multiple validation routines in Yarn.",
         "ru": "Плагин расширенных проверок для нескольких сценариев валидации в Yarn."
@@ -1555,9 +1368,7 @@
     },
     {
       "id": "@atls/yarn-plugin-cli-publish",
-      "groupTags": [
-        "yarn"
-      ],
+      "groupTags": ["yarn"],
       "purpose": {
         "en": "Yarn plugin for CLI-driven publishing and release automation.",
         "ru": "Yarn-плагин для публикации через CLI и автоматизации релизов."
@@ -1573,10 +1384,7 @@
     },
     {
       "id": "@atls/yarn-plugin-commit",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for commit-related automation and conventions.",
         "ru": "Плагин Yarn для автоматизации и правил, связанных с коммитами."
@@ -1592,10 +1400,7 @@
     },
     {
       "id": "@atls/yarn-plugin-essentials",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Core Yarn plugin with essential shared functionality.",
         "ru": "Основной плагин Yarn с базовой общей функциональностью."
@@ -1611,10 +1416,7 @@
     },
     {
       "id": "@atls/yarn-plugin-export",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for exporting project artifacts or metadata.",
         "ru": "Плагин Yarn для экспорта артефактов или метаданных проекта."
@@ -1630,10 +1432,7 @@
     },
     {
       "id": "@atls/yarn-plugin-files",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for file handling and file-based workflows.",
         "ru": "Плагин Yarn для работы с файлами и файловыми сценариями."
@@ -1649,10 +1448,7 @@
     },
     {
       "id": "@atls/yarn-plugin-format",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for formatting code and project files.",
         "ru": "Плагин Yarn для форматирования кода и файлов проекта."
@@ -1668,10 +1464,7 @@
     },
     {
       "id": "@atls/yarn-plugin-image",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for image-related processing and assets.",
         "ru": "Плагин Yarn для обработки изображений и графических ресурсов."
@@ -1687,10 +1480,7 @@
     },
     {
       "id": "@atls/yarn-plugin-jsr",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for JSR publishing or integration workflows.",
         "ru": "Плагин Yarn для публикации в JSR или интеграции с ним."
@@ -1706,10 +1496,7 @@
     },
     {
       "id": "@atls/yarn-plugin-library",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for library-oriented project workflows.",
         "ru": "Плагин Yarn для рабочих процессов библиотечных проектов."
@@ -1725,10 +1512,7 @@
     },
     {
       "id": "@atls/yarn-plugin-lint",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for linting and code quality checks.",
         "ru": "Плагин Yarn для линтинга и проверок качества кода."
@@ -1744,10 +1528,7 @@
     },
     {
       "id": "@atls/yarn-plugin-pnp-patch",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for patching Plug'n'Play behavior and related loaders.",
         "ru": "Плагин Yarn для патчинга поведения Plug'n'Play и связанных загрузчиков."
@@ -1763,10 +1544,7 @@
     },
     {
       "id": "@atls/yarn-plugin-release",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for release automation and publishing workflows.",
         "ru": "Плагин Yarn для автоматизации релизов и публикации."
@@ -1782,10 +1560,7 @@
     },
     {
       "id": "@atls/yarn-plugin-renderer",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for rendering output such as templates or reports.",
         "ru": "Плагин Yarn для рендеринга вывода, например шаблонов или отчетов."
@@ -1801,10 +1576,7 @@
     },
     {
       "id": "@atls/yarn-plugin-schematics",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for schematics and project scaffolding.",
         "ru": "Плагин Yarn для схем и генерации каркаса проекта."
@@ -1820,10 +1592,7 @@
     },
     {
       "id": "@atls/yarn-plugin-service",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for service-oriented raijin and orchestration.",
         "ru": "Плагин Yarn для сервисных инструментов и оркестрации."
@@ -1839,10 +1608,7 @@
     },
     {
       "id": "@atls/yarn-plugin-test",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for testing workflows and test automation.",
         "ru": "Плагин Yarn для тестирования и автоматизации тестов."
@@ -1858,10 +1624,7 @@
     },
     {
       "id": "@atls/yarn-plugin-tools",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for shared developer tools and utilities.",
         "ru": "Плагин Yarn для общих инструментов и утилит разработчика."
@@ -1877,10 +1640,7 @@
     },
     {
       "id": "@atls/yarn-plugin-typescript",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for TypeScript-specific build and integration support.",
         "ru": "Плагин Yarn для поддержки TypeScript-сборки и интеграции."
@@ -1896,10 +1656,7 @@
     },
     {
       "id": "@atls/yarn-plugin-ui",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for UI-related workflows and interface raijin.",
         "ru": "Плагин Yarn для UI-сценариев и инструментов интерфейса."
@@ -1915,10 +1672,7 @@
     },
     {
       "id": "@atls/yarn-plugin-workspaces",
-      "groupTags": [
-        "plugin",
-        "yarn"
-      ],
+      "groupTags": ["plugin", "yarn"],
       "purpose": {
         "en": "Yarn plugin for workspace management and monorepo coordination.",
         "ru": "Плагин Yarn для управления workspace и координации монорепозитория."
@@ -1934,10 +1688,7 @@
     },
     {
       "id": "@atls/yarn-run-utils",
-      "groupTags": [
-        "utils",
-        "yarn"
-      ],
+      "groupTags": ["utils", "yarn"],
       "purpose": {
         "en": "Utility package for running commands and process helpers in Yarn workflows.",
         "ru": "Утилитарный пакет для запуска команд и работы с процессами в сценариях Yarn."
@@ -1953,10 +1704,7 @@
     },
     {
       "id": "@atls/yarn-test-utils",
-      "groupTags": [
-        "utils",
-        "yarn"
-      ],
+      "groupTags": ["utils", "yarn"],
       "purpose": {
         "en": "Utility package for testing helpers and test setup in Yarn projects.",
         "ru": "Утилитарный пакет для тестовых помощников и настройки тестов в проектах Yarn."
@@ -1972,10 +1720,7 @@
     },
     {
       "id": "@atls/yarn-workspace-utils",
-      "groupTags": [
-        "utils",
-        "yarn"
-      ],
+      "groupTags": ["utils", "yarn"],
       "purpose": {
         "en": "Utility package for workspace and monorepo helper functions.",
         "ru": "Утилитарный пакет для функций-помощников workspace и монорепозитория."

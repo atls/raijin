@@ -132,8 +132,7 @@ for (const testCase of llmCases) {
     const passed =
       testCase.expectedStatus === 'unavailable'
         ? actualStatus === testCase.expectedStatus
-        : actualCommand === testCase.expectedCommand &&
-          actualStatus === testCase.expectedStatus
+        : actualCommand === testCase.expectedCommand && actualStatus === testCase.expectedStatus
 
     results.push({
       id: testCase.id,

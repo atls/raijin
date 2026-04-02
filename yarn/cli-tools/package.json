@@ -1,6 +1,6 @@
 {
   "name": "@atls/yarn-cli-tools",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "private": true,
   "license": "BSD-3-Clause",
   "main": "src/getPluginConfiguration.ts",

@@ -1,5 +1,17 @@
 
 
+## [2.0.13](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.12...@atls/config-eslint@2.0.13) (2026-04-02)
+
+
+### Features
+
+
+* rebrand tooling layer to raijin ([109b958](https://github.com/atls/raijin/commit/109b958952c097c8d8da47742a01e0858953c103))
+
+
+
+
+
 ## [2.0.12](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.11...@atls/config-eslint@2.0.12) (2026-04-01)
 
 

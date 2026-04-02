@@ -1,5 +1,23 @@
 
 
+## [1.0.23](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.22...@atls/yarn-plugin-checks@1.0.23) (2026-04-02)
+
+
+### Bug Fixes
+
+
+* **common:** align conflict zones with master ([8d3b7d6](https://github.com/atls/raijin/commit/8d3b7d6c184d98576a7265fe186f4958117551c9))
+* **common:** make package and typecheck merge-friendly ([72d92c2](https://github.com/atls/raijin/commit/72d92c2f0e416a61cc460705ace117d664863cbf))
+* **tools:** address tooling review comments and stabilize checks ([8186376](https://github.com/atls/raijin/commit/818637639951d64f095b950f9cebd63d03755eb9))
+* **yarn-plugin-checks:** forward changed flag in proxy mode ([8c7fc0e](https://github.com/atls/raijin/commit/8c7fc0e777e2b836142b2dd4848e936dc124c19e))
+* **yarn-plugin-checks:** include changed declaration files in typecheck ([1a9e79e](https://github.com/atls/raijin/commit/1a9e79e091642fa29bed0aad880e81081de226fc))
+* **yarn-plugin-checks:** resolve checks conflicts with master ([ac21c8f](https://github.com/atls/raijin/commit/ac21c8f7c1ed5aff9bbbd778fdf07f4152c37dc7))
+* **yarn-plugin-checks:** restore full checks-run contract ([e9b191f](https://github.com/atls/raijin/commit/e9b191f38bf9e46df1d7bbca4fa62da7987208b7))
+
+
+
+
+
 ## [1.0.22](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.21...@atls/yarn-plugin-checks@1.0.22) (2026-04-01)
 
 

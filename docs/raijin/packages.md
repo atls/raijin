@@ -9,7 +9,9 @@ Grouped cards for workspace packages
 Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <!-- sync:package-card:atls-yarn-cli -->
+
 ### `@atls/yarn-cli`
+
 - Location: `yarn/cli`
 - Group: `yarn`
 - Visibility: `private`
@@ -21,7 +23,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 54, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
+
 ### `@atls/yarn-cli-tools`
+
 - Location: `yarn/cli-tools`
 - Group: `yarn`
 - Visibility: `private`
@@ -33,7 +37,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 53, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
+
 ### `@atls/yarn-pack-utils`
+
 - Location: `yarn/pack-utils`
 - Group: `yarn`
 - Visibility: `private`
@@ -45,7 +51,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 1, devDeps 7, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-plugin-badges -->
+
 ### `@atls/yarn-plugin-badges`
+
 - Location: `yarn/plugin-badges`
 - Group: `yarn`
 - Visibility: `private`
@@ -57,7 +65,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 1, devDeps 5, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-changelog -->
+
 ### `@atls/yarn-plugin-changelog`
+
 - Location: `yarn/plugin-changelog`
 - Group: `yarn`
 - Visibility: `private`
@@ -69,7 +79,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 2, devDeps 3, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-check -->
+
 ### `@atls/yarn-plugin-check`
+
 - Location: `yarn/plugin-check`
 - Group: `yarn`
 - Visibility: `private`
@@ -81,7 +93,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 0, devDeps 3, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-checks -->
+
 ### `@atls/yarn-plugin-checks`
+
 - Location: `yarn/plugin-checks`
 - Group: `yarn`
 - Visibility: `private`
@@ -93,7 +107,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 15, devDeps 10, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-cli-publish -->
+
 ### `@atls/yarn-plugin-cli-publish`
+
 - Location: `yarn/plugin-cli-publish`
 - Group: `yarn`
 - Visibility: `private`
@@ -105,7 +121,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 0, devDeps 5, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-commit -->
+
 ### `@atls/yarn-plugin-commit`
+
 - Location: `yarn/plugin-commit`
 - Group: `yarn`
 - Visibility: `private`
@@ -117,7 +135,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 10, devDeps 6, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-essentials -->
+
 ### `@atls/yarn-plugin-essentials`
+
 - Location: `yarn/plugin-essentials`
 - Group: `yarn`
 - Visibility: `private`
@@ -129,7 +149,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 2, devDeps 4, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-export -->
+
 ### `@atls/yarn-plugin-export`
+
 - Location: `yarn/plugin-export`
 - Group: `yarn`
 - Visibility: `private`
@@ -141,7 +163,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 2, devDeps 5, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-files -->
+
 ### `@atls/yarn-plugin-files`
+
 - Location: `yarn/plugin-files`
 - Group: `yarn`
 - Visibility: `private`
@@ -153,7 +177,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 3, devDeps 3, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-format -->
+
 ### `@atls/yarn-plugin-format`
+
 - Location: `yarn/plugin-format`
 - Group: `yarn`
 - Visibility: `private`
@@ -165,7 +191,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 8, devDeps 6, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-image -->
+
 ### `@atls/yarn-plugin-image`
+
 - Location: `yarn/plugin-image`
 - Group: `yarn`
 - Visibility: `private`
@@ -177,7 +205,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 6, devDeps 5, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-jsr -->
+
 ### `@atls/yarn-plugin-jsr`
+
 - Location: `yarn/plugin-jsr`
 - Group: `yarn`
 - Visibility: `private`
@@ -189,7 +219,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 2, devDeps 4, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-library -->
+
 ### `@atls/yarn-plugin-library`
+
 - Location: `yarn/plugin-library`
 - Group: `yarn`
 - Visibility: `private`
@@ -201,7 +233,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 11, devDeps 6, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-lint -->
+
 ### `@atls/yarn-plugin-lint`
+
 - Location: `yarn/plugin-lint`
 - Group: `yarn`
 - Visibility: `private`
@@ -213,7 +247,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 9, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-pnp-patch -->
+
 ### `@atls/yarn-plugin-pnp-patch`
+
 - Location: `yarn/plugin-pnp-patch`
 - Group: `yarn`
 - Visibility: `private`
@@ -225,7 +261,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 5, devDeps 6, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-plugin-release -->
+
 ### `@atls/yarn-plugin-release`
+
 - Location: `yarn/plugin-release`
 - Group: `yarn`
 - Visibility: `private`
@@ -237,7 +275,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 3, devDeps 3, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-renderer -->
+
 ### `@atls/yarn-plugin-renderer`
+
 - Location: `yarn/plugin-renderer`
 - Group: `yarn`
 - Visibility: `private`
@@ -249,7 +289,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 3, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-schematics -->
+
 ### `@atls/yarn-plugin-schematics`
+
 - Location: `yarn/plugin-schematics`
 - Group: `yarn`
 - Visibility: `private`
@@ -261,7 +303,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 9, devDeps 9, peerDeps 5
 
 <!-- sync:package-card:atls-yarn-plugin-service -->
+
 ### `@atls/yarn-plugin-service`
+
 - Location: `yarn/plugin-service`
 - Group: `yarn`
 - Visibility: `private`
@@ -273,7 +317,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 11, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-test -->
+
 ### `@atls/yarn-plugin-test`
+
 - Location: `yarn/plugin-test`
 - Group: `yarn`
 - Visibility: `private`
@@ -285,7 +331,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 11, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-tools -->
+
 ### `@atls/yarn-plugin-tools`
+
 - Location: `yarn/plugin-tools`
 - Group: `yarn`
 - Visibility: `private`
@@ -297,7 +345,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 6, devDeps 5, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-plugin-typescript -->
+
 ### `@atls/yarn-plugin-typescript`
+
 - Location: `yarn/plugin-typescript`
 - Group: `yarn`
 - Visibility: `private`
@@ -309,7 +359,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 11, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-ui -->
+
 ### `@atls/yarn-plugin-ui`
+
 - Location: `yarn/plugin-ui`
 - Group: `yarn`
 - Visibility: `private`
@@ -321,7 +373,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 8, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-workspaces -->
+
 ### `@atls/yarn-plugin-workspaces`
+
 - Location: `yarn/plugin-workspaces`
 - Group: `yarn`
 - Visibility: `private`
@@ -333,7 +387,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 3, devDeps 4, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-run-utils -->
+
 ### `@atls/yarn-run-utils`
+
 - Location: `yarn/run-utils`
 - Group: `yarn`
 - Visibility: `private`
@@ -345,7 +401,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 1, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-test-utils -->
+
 ### `@atls/yarn-test-utils`
+
 - Location: `yarn/test-utils`
 - Group: `yarn`
 - Visibility: `private`
@@ -357,7 +415,9 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Dependencies: deps 3, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-workspace-utils -->
+
 ### `@atls/yarn-workspace-utils`
+
 - Location: `yarn/workspace-utils`
 - Group: `yarn`
 - Visibility: `private`
@@ -368,13 +428,14 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Scripts: none
 - Dependencies: deps 0, devDeps 1, peerDeps 0
 
-
 ## Group `code`
 
 Core code libraries for build, checks, and utilities
 
 <!-- sync:package-card:atls-code-changelog -->
+
 ### `@atls/code-changelog`
+
 - Location: `code/code-changelog`
 - Group: `code`
 - Visibility: `public`
@@ -386,7 +447,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 2, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-commit -->
+
 ### `@atls/code-commit`
+
 - Location: `code/code-commit`
 - Group: `code`
 - Visibility: `public`
@@ -398,7 +461,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 10, devDeps 2, peerDeps 0
 
 <!-- sync:package-card:atls-code-configuration -->
+
 ### `@atls/code-configuration`
+
 - Location: `code/code-configuration`
 - Group: `code`
 - Visibility: `public`
@@ -410,7 +475,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 1, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-code-format -->
+
 ### `@atls/code-format`
+
 - Location: `code/code-format`
 - Group: `code`
 - Visibility: `public`
@@ -422,7 +489,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 5, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-github -->
+
 ### `@atls/code-github`
+
 - Location: `code/code-github`
 - Group: `code`
 - Visibility: `public`
@@ -434,7 +503,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 2, devDeps 1, peerDeps 1
 
 <!-- sync:package-card:atls-code-icons -->
+
 ### `@atls/code-icons`
+
 - Location: `code/code-icons`
 - Group: `code`
 - Visibility: `public`
@@ -446,7 +517,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 7, devDeps 4, peerDeps 0
 
 <!-- sync:package-card:atls-code-jsr -->
+
 ### `@atls/code-jsr`
+
 - Location: `code/code-jsr`
 - Group: `code`
 - Visibility: `public`
@@ -458,7 +531,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 1, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-code-lint -->
+
 ### `@atls/code-lint`
+
 - Location: `code/code-lint`
 - Group: `code`
 - Visibility: `public`
@@ -470,7 +545,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 3, devDeps 1, peerDeps 2
 
 <!-- sync:package-card:atls-code-pack -->
+
 ### `@atls/code-pack`
+
 - Location: `code/code-pack`
 - Group: `code`
 - Visibility: `public`
@@ -482,7 +559,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 4, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-schematics -->
+
 ### `@atls/code-schematics`
+
 - Location: `code/code-schematics`
 - Group: `code`
 - Visibility: `public`
@@ -494,7 +573,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 3, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-code-service -->
+
 ### `@atls/code-service`
+
 - Location: `code/code-service`
 - Group: `code`
 - Visibility: `public`
@@ -506,7 +587,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 7, devDeps 5, peerDeps 0
 
 <!-- sync:package-card:atls-code-test -->
+
 ### `@atls/code-test`
+
 - Location: `code/code-test`
 - Group: `code`
 - Visibility: `public`
@@ -518,7 +601,9 @@ Core code libraries for build, checks, and utilities
 - Dependencies: deps 3, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-typescript -->
+
 ### `@atls/code-typescript`
+
 - Location: `code/code-typescript`
 - Group: `code`
 - Visibility: `public`
@@ -529,13 +614,14 @@ Core code libraries for build, checks, and utilities
 - Scripts: `build`, `build:worker`, `postpack`, `prepack`
 - Dependencies: deps 2, devDeps 2, peerDeps 0
 
-
 ## Group `config`
 
 Configuration packages and shared presets
 
 <!-- sync:package-card:atls-config-commitlint -->
+
 ### `@atls/config-commitlint`
+
 - Location: `config/commitlint`
 - Group: `config`
 - Visibility: `public`
@@ -547,7 +633,9 @@ Configuration packages and shared presets
 - Dependencies: deps 0, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-config-eslint -->
+
 ### `@atls/config-eslint`
+
 - Location: `config/eslint`
 - Group: `config`
 - Visibility: `public`
@@ -559,7 +647,9 @@ Configuration packages and shared presets
 - Dependencies: deps 16, devDeps 3, peerDeps 0
 
 <!-- sync:package-card:atls-config-prettier -->
+
 ### `@atls/config-prettier`
+
 - Location: `config/prettier`
 - Group: `config`
 - Visibility: `public`
@@ -571,7 +661,9 @@ Configuration packages and shared presets
 - Dependencies: deps 1, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-config-typescript -->
+
 ### `@atls/config-typescript`
+
 - Location: `config/typescript`
 - Group: `config`
 - Visibility: `public`
@@ -582,13 +674,14 @@ Configuration packages and shared presets
 - Scripts: `build`, `postpack`, `prepack`
 - Dependencies: deps 0, devDeps 0, peerDeps 0
 
-
 ## Group `runtime`
 
 Runtime modules and execution infrastructure
 
 <!-- sync:package-card:atls-code-runtime -->
+
 ### `@atls/code-runtime`
+
 - Location: `runtime/code-runtime`
 - Group: `runtime`
 - Visibility: `public`
@@ -599,13 +692,14 @@ Runtime modules and execution infrastructure
 - Scripts: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
 - Dependencies: deps 14, devDeps 3, peerDeps 0
 
-
 ## Group `webpack`
 
 Webpack integrations and build adapters
 
 <!-- sync:package-card:atls-webpack-proto-imports-loader -->
+
 ### `@atls/webpack-proto-imports-loader`
+
 - Location: `webpack/webpack-proto-imports-loader`
 - Group: `webpack`
 - Visibility: `public`
@@ -617,7 +711,9 @@ Webpack integrations and build adapters
 - Dependencies: deps 3, devDeps 9, peerDeps 0
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
+
 ### `@atls/webpack-start-server-plugin`
+
 - Location: `webpack/webpack-start-server-plugin`
 - Group: `webpack`
 - Visibility: `public`
@@ -628,13 +724,14 @@ Webpack integrations and build adapters
 - Scripts: `build`, `postpack`, `prepack`
 - Dependencies: deps 1, devDeps 1, peerDeps 0
 
-
 ## Group `prettier`
 
 Formatting and Prettier integrations
 
 <!-- sync:package-card:atls-prettier-plugin -->
+
 ### `@atls/prettier-plugin`
+
 - Location: `prettier/plugin`
 - Group: `prettier`
 - Visibility: `public`
@@ -645,7 +742,6 @@ Formatting and Prettier integrations
 - Scripts: `build`, `postpack`, `prepack`
 - Dependencies: deps 7, devDeps 3, peerDeps 0
 
-
 ## Group `cli`
 
 Compact list of CLI packages and their role
@@ -653,128 +749,169 @@ Compact list of CLI packages and their role
 _Compact format: short cards without extended details_
 
 <!-- sync:package-card:atls-cli-ui-error-info-component -->
+
 ### `@atls/cli-ui-error-info-component`
+
 - Purpose: Renders a compact error summary for CLI output.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-error-info`
 
 <!-- sync:package-card:atls-cli-ui-file-link-component -->
+
 ### `@atls/cli-ui-file-link-component`
+
 - Purpose: Displays a clickable or styled link to a file path in terminal UI.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-file-link`
 
 <!-- sync:package-card:atls-cli-ui-file-path-component -->
+
 ### `@atls/cli-ui-file-path-component`
+
 - Purpose: Formats file system paths for consistent CLI presentation.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-file-path`
 
 <!-- sync:package-card:atls-cli-ui-format-progress-component -->
+
 ### `@atls/cli-ui-format-progress-component`
+
 - Purpose: Shows progress for formatting tasks in CLI output.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-format-progress`
 
 <!-- sync:package-card:atls-cli-ui-git-commit-component -->
+
 ### `@atls/cli-ui-git-commit-component`
+
 - Purpose: Presents git commit information in a terminal-friendly format.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-git-commit`
 
 <!-- sync:package-card:atls-cli-ui-icons-progress-component -->
+
 ### `@atls/cli-ui-icons-progress-component`
+
 - Purpose: Provides icon-based progress indicators for CLI states.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-icons-progress`
 
 <!-- sync:package-card:atls-cli-ui-line-component -->
+
 ### `@atls/cli-ui-line-component`
+
 - Purpose: Renders a single formatted line for CLI messages.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-line`
 
 <!-- sync:package-card:atls-cli-ui-lint-progress-component -->
+
 ### `@atls/cli-ui-lint-progress-component`
+
 - Purpose: Displays linting progress in CLI output.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-lint-progress`
 
 <!-- sync:package-card:atls-cli-ui-lint-result-component -->
+
 ### `@atls/cli-ui-lint-result-component`
+
 - Purpose: Summarizes lint results with warnings and errors.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-lint-result`
 
 <!-- sync:package-card:atls-cli-ui-log-record-component -->
+
 ### `@atls/cli-ui-log-record-component`
+
 - Purpose: Formats a single log record for terminal display.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-log-record`
 
 <!-- sync:package-card:atls-cli-ui-pretty-logs-component -->
+
 ### `@atls/cli-ui-pretty-logs-component`
+
 - Purpose: Turns raw logs into a readable, styled CLI log view.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-pretty-logs`
 
 <!-- sync:package-card:atls-cli-ui-raw-output-component -->
+
 ### `@atls/cli-ui-raw-output-component`
+
 - Purpose: Outputs unformatted raw text for CLI consumers.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-raw-output`
 
 <!-- sync:package-card:atls-cli-ui-renderer-static-component -->
+
 ### `@atls/cli-ui-renderer-static-component`
+
 - Purpose: Renders static CLI content that does not change over time.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-render-static`
 
 <!-- sync:package-card:atls-cli-ui-schematics-component -->
+
 ### `@atls/cli-ui-schematics-component`
+
 - Purpose: Shows schematics or generator-related information in CLI.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-schematics-component`
 
 <!-- sync:package-card:atls-cli-ui-service-progress-component -->
+
 ### `@atls/cli-ui-service-progress-component`
+
 - Purpose: Displays progress for service-related operations.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-service-progress`
 
 <!-- sync:package-card:atls-cli-ui-source-preview-component -->
+
 ### `@atls/cli-ui-source-preview-component`
+
 - Purpose: Previews source code snippets in terminal output.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-source-preview`
 
 <!-- sync:package-card:atls-cli-ui-stack-trace-component -->
+
 ### `@atls/cli-ui-stack-trace-component`
+
 - Purpose: Formats stack traces for readable CLI error output.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-stack-trace`
 
 <!-- sync:package-card:atls-cli-ui-test-failure-component -->
+
 ### `@atls/cli-ui-test-failure-component`
+
 - Purpose: Summarizes failed test results in CLI output.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-test-failure`
 
 <!-- sync:package-card:atls-cli-ui-test-progress-component -->
+
 ### `@atls/cli-ui-test-progress-component`
+
 - Purpose: Shows progress while tests are running.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-test-progress`
 
 <!-- sync:package-card:atls-cli-ui-typescript-diagnostic-component -->
+
 ### `@atls/cli-ui-typescript-diagnostic-component`
+
 - Purpose: Displays TypeScript diagnostics in a readable CLI format.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-typescript-diagnostic`
 
 <!-- sync:package-card:atls-cli-ui-typescript-progress-component -->
+
 ### `@atls/cli-ui-typescript-progress-component`
+
 - Purpose: Shows progress for TypeScript type-checking tasks.
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-types-check-progress`
-

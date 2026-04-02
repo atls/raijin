@@ -9,7 +9,9 @@
 Пакеты кастомного Yarn CLI, плагинов и bundle-инфраструктуры
 
 <!-- sync:package-card:atls-yarn-cli -->
+
 ### `@atls/yarn-cli`
+
 - Локация: `yarn/cli`
 - Группа: `yarn`
 - Видимость: `private`
@@ -21,7 +23,9 @@
 - Зависимости: deps 54, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
+
 ### `@atls/yarn-cli-tools`
+
 - Локация: `yarn/cli-tools`
 - Группа: `yarn`
 - Видимость: `private`
@@ -33,7 +37,9 @@
 - Зависимости: deps 53, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
+
 ### `@atls/yarn-pack-utils`
+
 - Локация: `yarn/pack-utils`
 - Группа: `yarn`
 - Видимость: `private`
@@ -45,7 +51,9 @@
 - Зависимости: deps 1, devDeps 7, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-plugin-badges -->
+
 ### `@atls/yarn-plugin-badges`
+
 - Локация: `yarn/plugin-badges`
 - Группа: `yarn`
 - Видимость: `private`
@@ -57,7 +65,9 @@
 - Зависимости: deps 1, devDeps 5, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-changelog -->
+
 ### `@atls/yarn-plugin-changelog`
+
 - Локация: `yarn/plugin-changelog`
 - Группа: `yarn`
 - Видимость: `private`
@@ -69,7 +79,9 @@
 - Зависимости: deps 2, devDeps 3, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-check -->
+
 ### `@atls/yarn-plugin-check`
+
 - Локация: `yarn/plugin-check`
 - Группа: `yarn`
 - Видимость: `private`
@@ -81,7 +93,9 @@
 - Зависимости: deps 0, devDeps 3, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-checks -->
+
 ### `@atls/yarn-plugin-checks`
+
 - Локация: `yarn/plugin-checks`
 - Группа: `yarn`
 - Видимость: `private`
@@ -93,7 +107,9 @@
 - Зависимости: deps 15, devDeps 10, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-cli-publish -->
+
 ### `@atls/yarn-plugin-cli-publish`
+
 - Локация: `yarn/plugin-cli-publish`
 - Группа: `yarn`
 - Видимость: `private`
@@ -105,7 +121,9 @@
 - Зависимости: deps 0, devDeps 5, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-commit -->
+
 ### `@atls/yarn-plugin-commit`
+
 - Локация: `yarn/plugin-commit`
 - Группа: `yarn`
 - Видимость: `private`
@@ -117,7 +135,9 @@
 - Зависимости: deps 10, devDeps 6, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-essentials -->
+
 ### `@atls/yarn-plugin-essentials`
+
 - Локация: `yarn/plugin-essentials`
 - Группа: `yarn`
 - Видимость: `private`
@@ -129,7 +149,9 @@
 - Зависимости: deps 2, devDeps 4, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-export -->
+
 ### `@atls/yarn-plugin-export`
+
 - Локация: `yarn/plugin-export`
 - Группа: `yarn`
 - Видимость: `private`
@@ -141,7 +163,9 @@
 - Зависимости: deps 2, devDeps 5, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-files -->
+
 ### `@atls/yarn-plugin-files`
+
 - Локация: `yarn/plugin-files`
 - Группа: `yarn`
 - Видимость: `private`
@@ -153,7 +177,9 @@
 - Зависимости: deps 3, devDeps 3, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-format -->
+
 ### `@atls/yarn-plugin-format`
+
 - Локация: `yarn/plugin-format`
 - Группа: `yarn`
 - Видимость: `private`
@@ -165,7 +191,9 @@
 - Зависимости: deps 8, devDeps 6, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-image -->
+
 ### `@atls/yarn-plugin-image`
+
 - Локация: `yarn/plugin-image`
 - Группа: `yarn`
 - Видимость: `private`
@@ -177,7 +205,9 @@
 - Зависимости: deps 6, devDeps 5, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-jsr -->
+
 ### `@atls/yarn-plugin-jsr`
+
 - Локация: `yarn/plugin-jsr`
 - Группа: `yarn`
 - Видимость: `private`
@@ -189,7 +219,9 @@
 - Зависимости: deps 2, devDeps 4, peerDeps 3
 
 <!-- sync:package-card:atls-yarn-plugin-library -->
+
 ### `@atls/yarn-plugin-library`
+
 - Локация: `yarn/plugin-library`
 - Группа: `yarn`
 - Видимость: `private`
@@ -201,7 +233,9 @@
 - Зависимости: deps 11, devDeps 6, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-lint -->
+
 ### `@atls/yarn-plugin-lint`
+
 - Локация: `yarn/plugin-lint`
 - Группа: `yarn`
 - Видимость: `private`
@@ -213,7 +247,9 @@
 - Зависимости: deps 9, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-pnp-patch -->
+
 ### `@atls/yarn-plugin-pnp-patch`
+
 - Локация: `yarn/plugin-pnp-patch`
 - Группа: `yarn`
 - Видимость: `private`
@@ -225,7 +261,9 @@
 - Зависимости: deps 5, devDeps 6, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-plugin-release -->
+
 ### `@atls/yarn-plugin-release`
+
 - Локация: `yarn/plugin-release`
 - Группа: `yarn`
 - Видимость: `private`
@@ -237,7 +275,9 @@
 - Зависимости: deps 3, devDeps 3, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-renderer -->
+
 ### `@atls/yarn-plugin-renderer`
+
 - Локация: `yarn/plugin-renderer`
 - Группа: `yarn`
 - Видимость: `private`
@@ -249,7 +289,9 @@
 - Зависимости: deps 3, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-schematics -->
+
 ### `@atls/yarn-plugin-schematics`
+
 - Локация: `yarn/plugin-schematics`
 - Группа: `yarn`
 - Видимость: `private`
@@ -261,7 +303,9 @@
 - Зависимости: deps 9, devDeps 9, peerDeps 5
 
 <!-- sync:package-card:atls-yarn-plugin-service -->
+
 ### `@atls/yarn-plugin-service`
+
 - Локация: `yarn/plugin-service`
 - Группа: `yarn`
 - Видимость: `private`
@@ -273,7 +317,9 @@
 - Зависимости: deps 11, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-test -->
+
 ### `@atls/yarn-plugin-test`
+
 - Локация: `yarn/plugin-test`
 - Группа: `yarn`
 - Видимость: `private`
@@ -285,7 +331,9 @@
 - Зависимости: deps 11, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-tools -->
+
 ### `@atls/yarn-plugin-tools`
+
 - Локация: `yarn/plugin-tools`
 - Группа: `yarn`
 - Видимость: `private`
@@ -297,7 +345,9 @@
 - Зависимости: deps 6, devDeps 5, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-plugin-typescript -->
+
 ### `@atls/yarn-plugin-typescript`
+
 - Локация: `yarn/plugin-typescript`
 - Группа: `yarn`
 - Видимость: `private`
@@ -309,7 +359,9 @@
 - Зависимости: deps 11, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-ui -->
+
 ### `@atls/yarn-plugin-ui`
+
 - Локация: `yarn/plugin-ui`
 - Группа: `yarn`
 - Видимость: `private`
@@ -321,7 +373,9 @@
 - Зависимости: deps 8, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-workspaces -->
+
 ### `@atls/yarn-plugin-workspaces`
+
 - Локация: `yarn/plugin-workspaces`
 - Группа: `yarn`
 - Видимость: `private`
@@ -333,7 +387,9 @@
 - Зависимости: deps 3, devDeps 4, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-run-utils -->
+
 ### `@atls/yarn-run-utils`
+
 - Локация: `yarn/run-utils`
 - Группа: `yarn`
 - Видимость: `private`
@@ -345,7 +401,9 @@
 - Зависимости: deps 1, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-test-utils -->
+
 ### `@atls/yarn-test-utils`
+
 - Локация: `yarn/test-utils`
 - Группа: `yarn`
 - Видимость: `private`
@@ -357,7 +415,9 @@
 - Зависимости: deps 3, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-workspace-utils -->
+
 ### `@atls/yarn-workspace-utils`
+
 - Локация: `yarn/workspace-utils`
 - Группа: `yarn`
 - Видимость: `private`
@@ -368,13 +428,14 @@
 - Скрипты: отсутствуют
 - Зависимости: deps 0, devDeps 1, peerDeps 0
 
-
 ## Group `code`
 
 Базовые code-библиотеки для сборки, тестов и утилит
 
 <!-- sync:package-card:atls-code-changelog -->
+
 ### `@atls/code-changelog`
+
 - Локация: `code/code-changelog`
 - Группа: `code`
 - Видимость: `public`
@@ -386,7 +447,9 @@
 - Зависимости: deps 2, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-commit -->
+
 ### `@atls/code-commit`
+
 - Локация: `code/code-commit`
 - Группа: `code`
 - Видимость: `public`
@@ -398,7 +461,9 @@
 - Зависимости: deps 10, devDeps 2, peerDeps 0
 
 <!-- sync:package-card:atls-code-configuration -->
+
 ### `@atls/code-configuration`
+
 - Локация: `code/code-configuration`
 - Группа: `code`
 - Видимость: `public`
@@ -410,7 +475,9 @@
 - Зависимости: deps 1, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-code-format -->
+
 ### `@atls/code-format`
+
 - Локация: `code/code-format`
 - Группа: `code`
 - Видимость: `public`
@@ -422,7 +489,9 @@
 - Зависимости: deps 5, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-github -->
+
 ### `@atls/code-github`
+
 - Локация: `code/code-github`
 - Группа: `code`
 - Видимость: `public`
@@ -434,7 +503,9 @@
 - Зависимости: deps 2, devDeps 1, peerDeps 1
 
 <!-- sync:package-card:atls-code-icons -->
+
 ### `@atls/code-icons`
+
 - Локация: `code/code-icons`
 - Группа: `code`
 - Видимость: `public`
@@ -446,7 +517,9 @@
 - Зависимости: deps 7, devDeps 4, peerDeps 0
 
 <!-- sync:package-card:atls-code-jsr -->
+
 ### `@atls/code-jsr`
+
 - Локация: `code/code-jsr`
 - Группа: `code`
 - Видимость: `public`
@@ -458,7 +531,9 @@
 - Зависимости: deps 1, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-code-lint -->
+
 ### `@atls/code-lint`
+
 - Локация: `code/code-lint`
 - Группа: `code`
 - Видимость: `public`
@@ -470,7 +545,9 @@
 - Зависимости: deps 3, devDeps 1, peerDeps 2
 
 <!-- sync:package-card:atls-code-pack -->
+
 ### `@atls/code-pack`
+
 - Локация: `code/code-pack`
 - Группа: `code`
 - Видимость: `public`
@@ -482,7 +559,9 @@
 - Зависимости: deps 4, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-schematics -->
+
 ### `@atls/code-schematics`
+
 - Локация: `code/code-schematics`
 - Группа: `code`
 - Видимость: `public`
@@ -494,7 +573,9 @@
 - Зависимости: deps 3, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-code-service -->
+
 ### `@atls/code-service`
+
 - Локация: `code/code-service`
 - Группа: `code`
 - Видимость: `public`
@@ -506,7 +587,9 @@
 - Зависимости: deps 7, devDeps 5, peerDeps 0
 
 <!-- sync:package-card:atls-code-test -->
+
 ### `@atls/code-test`
+
 - Локация: `code/code-test`
 - Группа: `code`
 - Видимость: `public`
@@ -518,7 +601,9 @@
 - Зависимости: deps 3, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-typescript -->
+
 ### `@atls/code-typescript`
+
 - Локация: `code/code-typescript`
 - Группа: `code`
 - Видимость: `public`
@@ -529,13 +614,14 @@
 - Скрипты: `build`, `build:worker`, `postpack`, `prepack`
 - Зависимости: deps 2, devDeps 2, peerDeps 0
 
-
 ## Group `config`
 
 Пакеты конфигурации и shared presets
 
 <!-- sync:package-card:atls-config-commitlint -->
+
 ### `@atls/config-commitlint`
+
 - Локация: `config/commitlint`
 - Группа: `config`
 - Видимость: `public`
@@ -547,7 +633,9 @@
 - Зависимости: deps 0, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-config-eslint -->
+
 ### `@atls/config-eslint`
+
 - Локация: `config/eslint`
 - Группа: `config`
 - Видимость: `public`
@@ -559,7 +647,9 @@
 - Зависимости: deps 16, devDeps 3, peerDeps 0
 
 <!-- sync:package-card:atls-config-prettier -->
+
 ### `@atls/config-prettier`
+
 - Локация: `config/prettier`
 - Группа: `config`
 - Видимость: `public`
@@ -571,7 +661,9 @@
 - Зависимости: deps 1, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-config-typescript -->
+
 ### `@atls/config-typescript`
+
 - Локация: `config/typescript`
 - Группа: `config`
 - Видимость: `public`
@@ -582,13 +674,14 @@
 - Скрипты: `build`, `postpack`, `prepack`
 - Зависимости: deps 0, devDeps 0, peerDeps 0
 
-
 ## Group `runtime`
 
 Runtime-модули и инфраструктура исполнения
 
 <!-- sync:package-card:atls-code-runtime -->
+
 ### `@atls/code-runtime`
+
 - Локация: `runtime/code-runtime`
 - Группа: `runtime`
 - Видимость: `public`
@@ -599,13 +692,14 @@ Runtime-модули и инфраструктура исполнения
 - Скрипты: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
 - Зависимости: deps 14, devDeps 3, peerDeps 0
 
-
 ## Group `webpack`
 
 Webpack-интеграции и сборочные адаптеры
 
 <!-- sync:package-card:atls-webpack-proto-imports-loader -->
+
 ### `@atls/webpack-proto-imports-loader`
+
 - Локация: `webpack/webpack-proto-imports-loader`
 - Группа: `webpack`
 - Видимость: `public`
@@ -617,7 +711,9 @@ Webpack-интеграции и сборочные адаптеры
 - Зависимости: deps 3, devDeps 9, peerDeps 0
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
+
 ### `@atls/webpack-start-server-plugin`
+
 - Локация: `webpack/webpack-start-server-plugin`
 - Группа: `webpack`
 - Видимость: `public`
@@ -628,13 +724,14 @@ Webpack-интеграции и сборочные адаптеры
 - Скрипты: `build`, `postpack`, `prepack`
 - Зависимости: deps 1, devDeps 1, peerDeps 0
 
-
 ## Group `prettier`
 
 Форматирование и Prettier-интеграции
 
 <!-- sync:package-card:atls-prettier-plugin -->
+
 ### `@atls/prettier-plugin`
+
 - Локация: `prettier/plugin`
 - Группа: `prettier`
 - Видимость: `public`
@@ -645,7 +742,6 @@ Webpack-интеграции и сборочные адаптеры
 - Скрипты: `build`, `postpack`, `prepack`
 - Зависимости: deps 7, devDeps 3, peerDeps 0
 
-
 ## Group `cli`
 
 Компактный список CLI-пакетов и их роль
@@ -653,128 +749,169 @@ Webpack-интеграции и сборочные адаптеры
 _Компактный формат: короткие карточки без расширенной детализации_
 
 <!-- sync:package-card:atls-cli-ui-error-info-component -->
+
 ### `@atls/cli-ui-error-info-component`
+
 - Назначение: Отображает краткую сводку ошибки для вывода в CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-error-info`
 
 <!-- sync:package-card:atls-cli-ui-file-link-component -->
+
 ### `@atls/cli-ui-file-link-component`
+
 - Назначение: Показывает кликабельную или стилизованную ссылку на путь к файлу в терминальном интерфейсе.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-file-link`
 
 <!-- sync:package-card:atls-cli-ui-file-path-component -->
+
 ### `@atls/cli-ui-file-path-component`
+
 - Назначение: Форматирует пути файловой системы для единообразного отображения в CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-file-path`
 
 <!-- sync:package-card:atls-cli-ui-format-progress-component -->
+
 ### `@atls/cli-ui-format-progress-component`
+
 - Назначение: Показывает прогресс задач форматирования в выводе CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-format-progress`
 
 <!-- sync:package-card:atls-cli-ui-git-commit-component -->
+
 ### `@atls/cli-ui-git-commit-component`
+
 - Назначение: Показывает информацию о git-коммите в удобном для терминала формате.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-git-commit`
 
 <!-- sync:package-card:atls-cli-ui-icons-progress-component -->
+
 ### `@atls/cli-ui-icons-progress-component`
+
 - Назначение: Предоставляет индикаторы прогресса на основе иконок для состояний CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-icons-progress`
 
 <!-- sync:package-card:atls-cli-ui-line-component -->
+
 ### `@atls/cli-ui-line-component`
+
 - Назначение: Отображает одну форматированную строку для сообщений CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-line`
 
 <!-- sync:package-card:atls-cli-ui-lint-progress-component -->
+
 ### `@atls/cli-ui-lint-progress-component`
+
 - Назначение: Показывает прогресс линтинга в выводе CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-lint-progress`
 
 <!-- sync:package-card:atls-cli-ui-lint-result-component -->
+
 ### `@atls/cli-ui-lint-result-component`
+
 - Назначение: Сводит результаты линтинга с предупреждениями и ошибками.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-lint-result`
 
 <!-- sync:package-card:atls-cli-ui-log-record-component -->
+
 ### `@atls/cli-ui-log-record-component`
+
 - Назначение: Форматирует одну запись лога для отображения в терминале.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-log-record`
 
 <!-- sync:package-card:atls-cli-ui-pretty-logs-component -->
+
 ### `@atls/cli-ui-pretty-logs-component`
+
 - Назначение: Преобразует сырые логи в читаемый, стилизованный вид для CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-pretty-logs`
 
 <!-- sync:package-card:atls-cli-ui-raw-output-component -->
+
 ### `@atls/cli-ui-raw-output-component`
+
 - Назначение: Выводит неформатированный сырой текст для потребителей CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-raw-output`
 
 <!-- sync:package-card:atls-cli-ui-renderer-static-component -->
+
 ### `@atls/cli-ui-renderer-static-component`
+
 - Назначение: Отображает статический контент CLI, который не меняется со временем.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-render-static`
 
 <!-- sync:package-card:atls-cli-ui-schematics-component -->
+
 ### `@atls/cli-ui-schematics-component`
+
 - Назначение: Показывает информацию о схематиках или генераторах в CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-schematics-component`
 
 <!-- sync:package-card:atls-cli-ui-service-progress-component -->
+
 ### `@atls/cli-ui-service-progress-component`
+
 - Назначение: Показывает прогресс операций, связанных с сервисами.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-service-progress`
 
 <!-- sync:package-card:atls-cli-ui-source-preview-component -->
+
 ### `@atls/cli-ui-source-preview-component`
+
 - Назначение: Предпросматривает фрагменты исходного кода в выводе терминала.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-source-preview`
 
 <!-- sync:package-card:atls-cli-ui-stack-trace-component -->
+
 ### `@atls/cli-ui-stack-trace-component`
+
 - Назначение: Форматирует stack trace для читаемого вывода ошибок в CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-stack-trace`
 
 <!-- sync:package-card:atls-cli-ui-test-failure-component -->
+
 ### `@atls/cli-ui-test-failure-component`
+
 - Назначение: Сводит результаты упавших тестов в выводе CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-test-failure`
 
 <!-- sync:package-card:atls-cli-ui-test-progress-component -->
+
 ### `@atls/cli-ui-test-progress-component`
+
 - Назначение: Показывает прогресс во время выполнения тестов.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-test-progress`
 
 <!-- sync:package-card:atls-cli-ui-typescript-diagnostic-component -->
+
 ### `@atls/cli-ui-typescript-diagnostic-component`
+
 - Назначение: Отображает диагностические сообщения TypeScript в читаемом формате CLI.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-typescript-diagnostic`
 
 <!-- sync:package-card:atls-cli-ui-typescript-progress-component -->
+
 ### `@atls/cli-ui-typescript-progress-component`
+
 - Назначение: Показывает прогресс задач проверки типов TypeScript.
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-types-check-progress`
-
