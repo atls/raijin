@@ -1,6 +1,6 @@
-![toolset-github-cover](https://user-images.githubusercontent.com/102182195/234980835-78ed0fdb-c692-4b0e-ac95-b46c8cbd17a4.png)
+![raijin-github-cover](https://user-images.githubusercontent.com/102182195/234980835-78ed0fdb-c692-4b0e-ac95-b46c8cbd17a4.png)
 
-# Atlantis Toolset
+# Atlantis Raijin
 
 Монорепозиторий с набором инструментов и утилит, разработанных нашей командой, чтобы упростить разработку и работу над проектами.
 

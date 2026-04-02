@@ -126,8 +126,8 @@ const routePrompt = (prompt, commands) => {
   }
 }
 
-const index = readJson('docs/tooling/index.v1.json')
-const fixture = readJson('docs/tooling/smoke-prompts.json')
+const index = readJson('docs/raijin/index.v1.json')
+const fixture = readJson('docs/raijin/smoke-prompts.json')
 const failures = []
 
 for (const testCase of fixture.cases) {

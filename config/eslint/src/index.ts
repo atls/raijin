@@ -61,7 +61,7 @@ const config: Array<Linter.Config> = [
       parser,
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['scripts/tooling/*.mjs'],
+          allowDefaultProject: ['scripts/raijin/*.mjs'],
         },
         ecmaFeatures: {
           jsx: true,
@@ -86,7 +86,7 @@ const config: Array<Linter.Config> = [
     },
   },
   {
-    files: ['scripts/tooling/*.mjs'],
+    files: ['scripts/raijin/*.mjs'],
     rules: {
       'n/no-sync': 'off',
       'n/no-process-exit': 'off',

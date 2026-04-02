@@ -1,6 +1,6 @@
-# Tooling Quickstart
+# Raijin Quickstart
 
-Minimum bootstrap for stable work with the custom `atls` yarn bundle
+Minimum bootstrap for stable work with custom `atls` Yarn bundle
 
 <!-- sync:preflight -->
 ## 1. Preflight
@@ -21,5 +21,7 @@ Minimum bootstrap for stable work with the custom `atls` yarn bundle
 <!-- sync:verification -->
 ## 4. Basic verification
 
-- `yarn check` runs `format`, `typecheck`, and `lint`
-- Command map: `docs/tooling/commands.md` and `docs/tooling/commands.ru.md`
+- `yarn check`
+- `yarn files changed list`
+- `yarn test unit`
+

@@ -1,16 +1,18 @@
-# Agent Adapter
+# Raijin Agent Adapter
 
-Thin adapter for coding agents. Source of truth is `docs/tooling`
+Thin adapter for routing in this repository. Facts live in `docs/raijin/index.v1.json`.
 
 ## Required read order
 
-1. `docs/tooling/quickstart.md`
-2. `docs/tooling/index.v1.json`
-3. `docs/tooling/commands.md`
-4. `docs/tooling/packages.md`
+1. `docs/raijin/README.ru.md` (default)
+2. `docs/raijin/quickstart.ru.md`
+3. `docs/raijin/commands.ru.md`
+4. `docs/raijin/packages.ru.md`
+5. `docs/raijin/index.v1.json`
+6. `docs/raijin/semantics.v1.json`
 
-## Routing constraints
+## Constraints
 
-- Prefer commands with `status = active`
-- Treat `status = inactive` as unavailable
-- Validate command and plugin existence against `docs/tooling/index.v1.json`
+- Route only commands with `status = active`
+- Treat `inactive` commands as unavailable
+- Do not use unrelated frontend/mobile/backend instruction packs

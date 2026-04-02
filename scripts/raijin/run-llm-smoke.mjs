@@ -5,7 +5,7 @@ const repoRoot = process.cwd()
 
 const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_SERVICE_ACCOUNT_KEY
 const baseUrl = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
-const model = process.env.OPENAI_MODEL || 'gpt-4.1-mini'
+const model = process.env.OPENAI_MODEL || process.env.OPENAI_TOOLING_MODEL || 'gpt-5.4-mini'
 const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 120000)
 
 if (!apiKey) {
@@ -108,8 +108,8 @@ const callOpenAI = async (prompt, commands) => {
   }
 }
 
-const index = readJson('docs/tooling/index.v1.json')
-const fixture = readJson('docs/tooling/smoke-prompts.json')
+const index = readJson('docs/raijin/index.v1.json')
+const fixture = readJson('docs/raijin/smoke-prompts.json')
 
 const failures = []
 const results = []

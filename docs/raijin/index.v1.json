@@ -68,6 +68,7 @@
       "className": "BadgesCommand",
       "plugin": "@atls/yarn-plugin-badges",
       "pluginDir": "plugin-badges",
+      "domain": "badges",
       "source": "yarn/plugin-badges/sources/badges.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -81,6 +82,7 @@
       "className": "ChangelogGenerateCommand",
       "plugin": "@atls/yarn-plugin-changelog",
       "pluginDir": "plugin-changelog",
+      "domain": "changelog",
       "source": "yarn/plugin-changelog/sources/changelog-generate.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -93,6 +95,7 @@
       "className": "CheckCommand",
       "plugin": "@atls/yarn-plugin-check",
       "pluginDir": "plugin-check",
+      "domain": "check",
       "source": "yarn/plugin-check/sources/check.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -106,6 +109,7 @@
       "className": "ChecksLintCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
+      "domain": "checks",
       "source": "yarn/plugin-checks/sources/checks-lint.command.tsx",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -119,6 +123,7 @@
       "className": "ChecksReleaseCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
+      "domain": "checks",
       "source": "yarn/plugin-checks/sources/checks-release.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -132,6 +137,7 @@
       "className": "ChecksRunCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
+      "domain": "checks",
       "source": "yarn/plugin-checks/sources/checks-run.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -146,6 +152,7 @@
       "className": "ChecksTestIntegrationCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
+      "domain": "checks",
       "source": "yarn/plugin-checks/sources/checks-test-integration.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -160,6 +167,7 @@
       "className": "ChecksTestUnitCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
+      "domain": "checks",
       "source": "yarn/plugin-checks/sources/checks-test-unit.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -173,6 +181,7 @@
       "className": "ChecksTypeCheckCommand",
       "plugin": "@atls/yarn-plugin-checks",
       "pluginDir": "plugin-checks",
+      "domain": "checks",
       "source": "yarn/plugin-checks/sources/checks-typecheck.command.tsx",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -186,6 +195,7 @@
       "className": "CommitMessageCommand",
       "plugin": "@atls/yarn-plugin-commit",
       "pluginDir": "plugin-commit",
+      "domain": "commit",
       "source": "yarn/plugin-commit/sources/commit-message.command.tsx",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -200,6 +210,7 @@
       "className": "CommitMessageLintCommand",
       "plugin": "@atls/yarn-plugin-commit",
       "pluginDir": "plugin-commit",
+      "domain": "commit",
       "source": "yarn/plugin-commit/sources/commit-message-lint.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -213,7 +224,23 @@
       "className": "CommitStagedCommand",
       "plugin": "@atls/yarn-plugin-commit",
       "pluginDir": "plugin-commit",
+      "domain": "commit",
       "source": "yarn/plugin-commit/sources/commit-staged.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "set version atls",
+      "pathTokens": [
+        "set",
+        "version",
+        "atls"
+      ],
+      "className": "SetVersionCommand",
+      "plugin": "@atls/yarn-plugin-essentials",
+      "pluginDir": "plugin-essentials",
+      "domain": "essentials",
+      "source": "yarn/plugin-essentials/sources/commands/set-version.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
@@ -225,6 +252,7 @@
       "className": "WorkspaceExportCommand",
       "plugin": "@atls/yarn-plugin-export",
       "pluginDir": "plugin-export",
+      "domain": "export",
       "source": "yarn/plugin-export/sources/commands/workspace-export.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -239,6 +267,7 @@
       "className": "FilesChangedListCommand",
       "plugin": "@atls/yarn-plugin-files",
       "pluginDir": "plugin-files",
+      "domain": "files",
       "source": "yarn/plugin-files/sources/files-changed-list.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -251,22 +280,10 @@
       "className": "FormatCommand",
       "plugin": "@atls/yarn-plugin-format",
       "pluginDir": "plugin-format",
+      "domain": "format",
       "source": "yarn/plugin-format/sources/format.command.tsx",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
-      "command": "generate project",
-      "pathTokens": [
-        "generate",
-        "project"
-      ],
-      "className": "GenerateProjectCommand",
-      "plugin": "@atls/yarn-plugin-schematics",
-      "pluginDir": "plugin-schematics",
-      "source": "yarn/plugin-schematics/sources/commands/generate-project.command.tsx",
-      "status": "inactive",
-      "availabilityReason": "plugin is in bundle but not exported from plugin index"
     },
     {
       "command": "image pack",
@@ -277,6 +294,7 @@
       "className": "ImagePackCommand",
       "plugin": "@atls/yarn-plugin-image",
       "pluginDir": "plugin-image",
+      "domain": "image",
       "source": "yarn/plugin-image/sources/image-pack.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -290,6 +308,7 @@
       "className": "JsrPublishCommand",
       "plugin": "@atls/yarn-plugin-jsr",
       "pluginDir": "plugin-jsr",
+      "domain": "jsr",
       "source": "yarn/plugin-jsr/sources/jsr-publish.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -303,6 +322,7 @@
       "className": "LibraryBuildCommand",
       "plugin": "@atls/yarn-plugin-library",
       "pluginDir": "plugin-library",
+      "domain": "library",
       "source": "yarn/plugin-library/sources/library-build.command.tsx",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -315,6 +335,7 @@
       "className": "LintCommand",
       "plugin": "@atls/yarn-plugin-lint",
       "pluginDir": "plugin-lint",
+      "domain": "lint",
       "source": "yarn/plugin-lint/sources/lint.command.tsx",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -328,6 +349,7 @@
       "className": "ReleaseCreateCommand",
       "plugin": "@atls/yarn-plugin-release",
       "pluginDir": "plugin-release",
+      "domain": "release",
       "source": "yarn/plugin-release/sources/release-create.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -341,6 +363,7 @@
       "className": "RendererBuildCommand",
       "plugin": "@atls/yarn-plugin-renderer",
       "pluginDir": "plugin-renderer",
+      "domain": "renderer",
       "source": "yarn/plugin-renderer/sources/commands/renderer-build.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -354,9 +377,24 @@
       "className": "RendererDevCommand",
       "plugin": "@atls/yarn-plugin-renderer",
       "pluginDir": "plugin-renderer",
+      "domain": "renderer",
       "source": "yarn/plugin-renderer/sources/commands/renderer-dev.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "generate project",
+      "pathTokens": [
+        "generate",
+        "project"
+      ],
+      "className": "GenerateProjectCommand",
+      "plugin": "@atls/yarn-plugin-schematics",
+      "pluginDir": "plugin-schematics",
+      "domain": "schematics",
+      "source": "yarn/plugin-schematics/sources/commands/generate-project.command.tsx",
+      "status": "inactive",
+      "availabilityReason": "plugin is in bundle but not exported from plugin index"
     },
     {
       "command": "service build",
@@ -367,6 +405,7 @@
       "className": "ServiceBuildCommand",
       "plugin": "@atls/yarn-plugin-service",
       "pluginDir": "plugin-service",
+      "domain": "service",
       "source": "yarn/plugin-service/sources/service-build.command.tsx",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -380,21 +419,8 @@
       "className": "ServiceDevCommand",
       "plugin": "@atls/yarn-plugin-service",
       "pluginDir": "plugin-service",
+      "domain": "service",
       "source": "yarn/plugin-service/sources/service-dev.command.tsx",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
-      "command": "set version atls",
-      "pathTokens": [
-        "set",
-        "version",
-        "atls"
-      ],
-      "className": "SetVersionCommand",
-      "plugin": "@atls/yarn-plugin-essentials",
-      "pluginDir": "plugin-essentials",
-      "source": "yarn/plugin-essentials/sources/commands/set-version.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
@@ -406,6 +432,7 @@
       "className": "TestCommand",
       "plugin": "@atls/yarn-plugin-test",
       "pluginDir": "plugin-test",
+      "domain": "test",
       "source": "yarn/plugin-test/sources/test.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -419,6 +446,7 @@
       "className": "TestIntegrationCommand",
       "plugin": "@atls/yarn-plugin-test",
       "pluginDir": "plugin-test",
+      "domain": "test",
       "source": "yarn/plugin-test/sources/test-integration.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -432,6 +460,7 @@
       "className": "TestUnitCommand",
       "plugin": "@atls/yarn-plugin-test",
       "pluginDir": "plugin-test",
+      "domain": "test",
       "source": "yarn/plugin-test/sources/test-unit.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -445,6 +474,7 @@
       "className": "ToolsSyncCommand",
       "plugin": "@atls/yarn-plugin-tools",
       "pluginDir": "plugin-tools",
+      "domain": "tools",
       "source": "yarn/plugin-tools/sources/commands/sync/tools-sync.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -459,6 +489,7 @@
       "className": "ToolsSyncTSConfigCommand",
       "plugin": "@atls/yarn-plugin-tools",
       "pluginDir": "plugin-tools",
+      "domain": "tools",
       "source": "yarn/plugin-tools/sources/commands/sync/tools-sync-tsconfig.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -473,6 +504,7 @@
       "className": "ToolsSyncTypeScriptCommand",
       "plugin": "@atls/yarn-plugin-tools",
       "pluginDir": "plugin-tools",
+      "domain": "tools",
       "source": "yarn/plugin-tools/sources/commands/sync/tools-sync-typescript.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -485,6 +517,7 @@
       "className": "TypeCheckCommand",
       "plugin": "@atls/yarn-plugin-typescript",
       "pluginDir": "plugin-typescript",
+      "domain": "typescript",
       "source": "yarn/plugin-typescript/sources/typecheck.command.tsx",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -499,6 +532,7 @@
       "className": "UiIconsGenerateCommand",
       "plugin": "@atls/yarn-plugin-ui",
       "pluginDir": "plugin-ui",
+      "domain": "ui",
       "source": "yarn/plugin-ui/sources/commands/ui-icons-generate.command.tsx",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -513,6 +547,7 @@
       "className": "WorkspacesChangedForeachCommand",
       "plugin": "@atls/yarn-plugin-workspaces",
       "pluginDir": "plugin-workspaces",
+      "domain": "workspaces",
       "source": "yarn/plugin-workspaces/sources/workspaces-changed-foreach.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -527,6 +562,7 @@
       "className": "WorkspacesChangedListCommand",
       "plugin": "@atls/yarn-plugin-workspaces",
       "pluginDir": "plugin-workspaces",
+      "domain": "workspaces",
       "source": "yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
@@ -857,23 +893,6 @@
       "peerDependencyCount": 2
     },
     {
-      "name": "@atls/cli-ui-typescript-progress-component",
-      "location": "cli/cli-ui-types-check-progress",
-      "group": "cli",
-      "private": false,
-      "description": "",
-      "purposeEn": "CLI UI component for terminal rendering",
-      "purposeRu": "CLI UI-компонент для терминального интерфейса",
-      "scripts": [
-        "build",
-        "postpack",
-        "prepack"
-      ],
-      "dependencyCount": 2,
-      "devDependencyCount": 3,
-      "peerDependencyCount": 2
-    },
-    {
       "name": "@atls/cli-ui-typescript-diagnostic-component",
       "location": "cli/cli-ui-typescript-diagnostic",
       "group": "cli",
@@ -891,13 +910,30 @@
       "peerDependencyCount": 2
     },
     {
+      "name": "@atls/cli-ui-typescript-progress-component",
+      "location": "cli/cli-ui-types-check-progress",
+      "group": "cli",
+      "private": false,
+      "description": "",
+      "purposeEn": "CLI UI component for terminal rendering",
+      "purposeRu": "CLI UI-компонент для терминального интерфейса",
+      "scripts": [
+        "build",
+        "postpack",
+        "prepack"
+      ],
+      "dependencyCount": 2,
+      "devDependencyCount": 3,
+      "peerDependencyCount": 2
+    },
+    {
       "name": "@atls/code-changelog",
       "location": "code/code-changelog",
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -913,8 +949,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -930,8 +966,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -947,8 +983,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -964,8 +1000,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -981,8 +1017,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -998,8 +1034,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -1015,8 +1051,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -1032,8 +1068,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -1049,8 +1085,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "build:library",
@@ -1068,8 +1104,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "postpack",
@@ -1085,8 +1121,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "build:worker",
@@ -1103,8 +1139,8 @@
       "group": "code",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "build:worker",
@@ -1121,8 +1157,8 @@
       "group": "config",
       "private": false,
       "description": "",
-      "purposeEn": "Shared tooling configuration package",
-      "purposeRu": "Пакет конфигурации для shared tooling",
+      "purposeEn": "Shared raijin configuration package",
+      "purposeRu": "Конфигурационный пакет shared-raijin",
       "scripts": [
         "build",
         "postpack",
@@ -1138,8 +1174,8 @@
       "group": "config",
       "private": false,
       "description": "",
-      "purposeEn": "Shared tooling configuration package",
-      "purposeRu": "Пакет конфигурации для shared tooling",
+      "purposeEn": "Shared raijin configuration package",
+      "purposeRu": "Конфигурационный пакет shared-raijin",
       "scripts": [
         "build",
         "postpack",
@@ -1155,8 +1191,8 @@
       "group": "config",
       "private": false,
       "description": "",
-      "purposeEn": "Shared tooling configuration package",
-      "purposeRu": "Пакет конфигурации для shared tooling",
+      "purposeEn": "Shared raijin configuration package",
+      "purposeRu": "Конфигурационный пакет shared-raijin",
       "scripts": [
         "build",
         "postpack",
@@ -1172,8 +1208,8 @@
       "group": "config",
       "private": false,
       "description": "",
-      "purposeEn": "Shared tooling configuration package",
-      "purposeRu": "Пакет конфигурации для shared tooling",
+      "purposeEn": "Shared raijin configuration package",
+      "purposeRu": "Конфигурационный пакет shared-raijin",
       "scripts": [
         "build",
         "postpack",
@@ -1206,8 +1242,8 @@
       "group": "runtime",
       "private": false,
       "description": "",
-      "purposeEn": "Code utility library used by raijin tooling",
-      "purposeRu": "Библиотека code-утилит для инструментов raijin",
+      "purposeEn": "Code utility library for raijin workflows",
+      "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": [
         "build",
         "build:library",
@@ -1225,8 +1261,8 @@
       "group": "webpack",
       "private": false,
       "description": "",
-      "purposeEn": "Webpack integration for tools ecosystem",
-      "purposeRu": "Webpack интеграция для экосистемы tools",
+      "purposeEn": "Webpack integration for raijin ecosystem",
+      "purposeRu": "Webpack-интеграция инструментов",
       "scripts": [
         "build",
         "postpack",
@@ -1242,8 +1278,8 @@
       "group": "webpack",
       "private": false,
       "description": "",
-      "purposeEn": "Webpack integration for tools ecosystem",
-      "purposeRu": "Webpack интеграция для экосистемы tools",
+      "purposeEn": "Webpack integration for raijin ecosystem",
+      "purposeRu": "Webpack-интеграция инструментов",
       "scripts": [
         "build",
         "postpack",
@@ -1254,26 +1290,13 @@
       "peerDependencyCount": 0
     },
     {
-      "name": "@atls/yarn-cli-tools",
-      "location": "yarn/cli-tools",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "purposeEn": "Entrypoint for custom yarn CLI and bundle configuration",
-      "purposeRu": "Входная точка кастомного yarn CLI и bundle-конфигурации",
-      "scripts": [],
-      "dependencyCount": 53,
-      "devDependencyCount": 0,
-      "peerDependencyCount": 0
-    },
-    {
       "name": "@atls/yarn-cli",
       "location": "yarn/cli",
       "group": "yarn",
       "private": true,
       "description": "",
-      "purposeEn": "Entrypoint for custom yarn CLI and bundle configuration",
-      "purposeRu": "Входная точка кастомного yarn CLI и bundle-конфигурации",
+      "purposeEn": "Entrypoint for custom Yarn CLI and bundle configuration",
+      "purposeRu": "Входная точка кастомного Yarn CLI и bundle-конфигурации",
       "scripts": [
         "build",
         "build:bundle",
@@ -1291,13 +1314,26 @@
       "peerDependencyCount": 0
     },
     {
+      "name": "@atls/yarn-cli-tools",
+      "location": "yarn/cli-tools",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "purposeEn": "Entrypoint for custom Yarn CLI and bundle configuration",
+      "purposeRu": "Входная точка кастомного Yarn CLI и bundle-конфигурации",
+      "scripts": [],
+      "dependencyCount": 53,
+      "devDependencyCount": 0,
+      "peerDependencyCount": 0
+    },
+    {
       "name": "@atls/yarn-pack-utils",
       "location": "yarn/pack-utils",
       "group": "yarn",
       "private": true,
       "description": "",
-      "purposeEn": "Utility package for yarn ecosystem",
-      "purposeRu": "Вспомогательная утилита экосистемы yarn",
+      "purposeEn": "Utility package for Yarn ecosystem",
+      "purposeRu": "Утилита экосистемы Yarn",
       "scripts": [],
       "dependencyCount": 1,
       "devDependencyCount": 7,
@@ -1310,7 +1346,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for badges domain",
-      "purposeRu": "Yarn-плагин для домена badges",
+      "purposeRu": "Yarn-плагин домена badges",
       "scripts": [
         "build",
         "postpack",
@@ -1327,7 +1363,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for changelog domain",
-      "purposeRu": "Yarn-плагин для домена changelog",
+      "purposeRu": "Yarn-плагин домена changelog",
       "scripts": [
         "build",
         "postpack",
@@ -1344,7 +1380,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for check domain",
-      "purposeRu": "Yarn-плагин для домена check",
+      "purposeRu": "Yarn-плагин домена check",
       "scripts": [
         "build",
         "postpack",
@@ -1361,7 +1397,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for checks domain",
-      "purposeRu": "Yarn-плагин для домена checks",
+      "purposeRu": "Yarn-плагин домена checks",
       "scripts": [
         "build",
         "postpack",
@@ -1378,7 +1414,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for cli-publish domain",
-      "purposeRu": "Yarn-плагин для домена cli-publish",
+      "purposeRu": "Yarn-плагин домена cli-publish",
       "scripts": [
         "build",
         "postpack",
@@ -1395,7 +1431,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for commit domain",
-      "purposeRu": "Yarn-плагин для домена commit",
+      "purposeRu": "Yarn-плагин домена commit",
       "scripts": [
         "build",
         "postpack",
@@ -1412,7 +1448,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for essentials domain",
-      "purposeRu": "Yarn-плагин для домена essentials",
+      "purposeRu": "Yarn-плагин домена essentials",
       "scripts": [
         "build",
         "postpack",
@@ -1429,7 +1465,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for export domain",
-      "purposeRu": "Yarn-плагин для домена export",
+      "purposeRu": "Yarn-плагин домена export",
       "scripts": [
         "build",
         "postpack",
@@ -1446,7 +1482,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for files domain",
-      "purposeRu": "Yarn-плагин для домена files",
+      "purposeRu": "Yarn-плагин домена files",
       "scripts": [
         "build",
         "postpack",
@@ -1463,7 +1499,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for format domain",
-      "purposeRu": "Yarn-плагин для домена format",
+      "purposeRu": "Yarn-плагин домена format",
       "scripts": [
         "build",
         "postpack",
@@ -1480,7 +1516,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for image domain",
-      "purposeRu": "Yarn-плагин для домена image",
+      "purposeRu": "Yarn-плагин домена image",
       "scripts": [
         "build",
         "postpack",
@@ -1497,7 +1533,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for jsr domain",
-      "purposeRu": "Yarn-плагин для домена jsr",
+      "purposeRu": "Yarn-плагин домена jsr",
       "scripts": [
         "build",
         "postpack",
@@ -1514,7 +1550,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for library domain",
-      "purposeRu": "Yarn-плагин для домена library",
+      "purposeRu": "Yarn-плагин домена library",
       "scripts": [
         "build",
         "postpack",
@@ -1531,7 +1567,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for lint domain",
-      "purposeRu": "Yarn-плагин для домена lint",
+      "purposeRu": "Yarn-плагин домена lint",
       "scripts": [
         "build",
         "postpack",
@@ -1548,7 +1584,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for pnp-patch domain",
-      "purposeRu": "Yarn-плагин для домена pnp-patch",
+      "purposeRu": "Yarn-плагин домена pnp-patch",
       "scripts": [
         "build",
         "build:loader",
@@ -1568,7 +1604,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for release domain",
-      "purposeRu": "Yarn-плагин для домена release",
+      "purposeRu": "Yarn-плагин домена release",
       "scripts": [
         "build",
         "postpack",
@@ -1585,7 +1621,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for renderer domain",
-      "purposeRu": "Yarn-плагин для домена renderer",
+      "purposeRu": "Yarn-плагин домена renderer",
       "scripts": [
         "build",
         "postpack",
@@ -1602,7 +1638,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for schematics domain",
-      "purposeRu": "Yarn-плагин для домена schematics",
+      "purposeRu": "Yarn-плагин домена schematics",
       "scripts": [
         "build",
         "postpack",
@@ -1619,7 +1655,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for service domain",
-      "purposeRu": "Yarn-плагин для домена service",
+      "purposeRu": "Yarn-плагин домена service",
       "scripts": [
         "build",
         "postpack",
@@ -1636,7 +1672,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for test domain",
-      "purposeRu": "Yarn-плагин для домена test",
+      "purposeRu": "Yarn-плагин домена test",
       "scripts": [
         "build",
         "postpack",
@@ -1653,7 +1689,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for tools domain",
-      "purposeRu": "Yarn-плагин для домена tools",
+      "purposeRu": "Yarn-плагин домена tools",
       "scripts": [
         "build",
         "postpack",
@@ -1670,7 +1706,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for typescript domain",
-      "purposeRu": "Yarn-плагин для домена typescript",
+      "purposeRu": "Yarn-плагин домена typescript",
       "scripts": [
         "build",
         "postpack",
@@ -1687,7 +1723,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for ui domain",
-      "purposeRu": "Yarn-плагин для домена ui",
+      "purposeRu": "Yarn-плагин домена ui",
       "scripts": [
         "build",
         "postpack",
@@ -1704,7 +1740,7 @@
       "private": true,
       "description": "",
       "purposeEn": "Yarn plugin for workspaces domain",
-      "purposeRu": "Yarn-плагин для домена workspaces",
+      "purposeRu": "Yarn-плагин домена workspaces",
       "scripts": [
         "build",
         "postpack",
@@ -1720,8 +1756,8 @@
       "group": "yarn",
       "private": true,
       "description": "",
-      "purposeEn": "Utility package for yarn ecosystem",
-      "purposeRu": "Вспомогательная утилита экосистемы yarn",
+      "purposeEn": "Utility package for Yarn ecosystem",
+      "purposeRu": "Утилита экосистемы Yarn",
       "scripts": [],
       "dependencyCount": 1,
       "devDependencyCount": 0,
@@ -1733,8 +1769,8 @@
       "group": "yarn",
       "private": true,
       "description": "",
-      "purposeEn": "Utility package for yarn ecosystem",
-      "purposeRu": "Вспомогательная утилита экосистемы yarn",
+      "purposeEn": "Utility package for Yarn ecosystem",
+      "purposeRu": "Утилита экосистемы Yarn",
       "scripts": [],
       "dependencyCount": 3,
       "devDependencyCount": 0,
@@ -1746,8 +1782,8 @@
       "group": "yarn",
       "private": true,
       "description": "",
-      "purposeEn": "Utility package for yarn ecosystem",
-      "purposeRu": "Вспомогательная утилита экосистемы yarn",
+      "purposeEn": "Utility package for Yarn ecosystem",
+      "purposeRu": "Утилита экосистемы Yarn",
       "scripts": [],
       "dependencyCount": 0,
       "devDependencyCount": 1,
@@ -1768,6 +1804,7 @@
       "commit message",
       "commit message lint",
       "commit staged",
+      "set version atls",
       "export",
       "files changed list",
       "format",
@@ -1780,7 +1817,6 @@
       "renderer dev",
       "service build",
       "service dev",
-      "set version atls",
       "test",
       "test integration",
       "test unit",
@@ -1830,5 +1866,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-03-31T03:05:38.484Z"
+  "lastGenerated": "2026-04-02T02:33:11.721Z"
 }
