@@ -88,17 +88,24 @@ const hasAnyToken = (promptTokensSet, aliases) =>
   })
 
 const hasNegatedChecksIntent = (promptText) => {
-  const normalizedPrompt = normalize(promptText)
+  const tokens = tokenize(promptText)
+  const checksTokens = new Set(['check', 'checks'])
+  const negationTokens = new Set(['not', 'no', 'without', 'avoid', 'exclude', 'не', 'без'])
 
-  return [
-    /\bnot\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
-    /\bno\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
-    /\bwithout\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
-    /\bavoid\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
-    /\bexclude\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
-    /\bне\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
-    /\bбез\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
-  ].some((pattern) => pattern.test(normalizedPrompt))
+  for (let index = 0; index < tokens.length; index += 1) {
+    if (!checksTokens.has(tokens[index])) continue
+
+    for (let offset = 1; offset <= 3; offset += 1) {
+      const negationIndex = index - offset
+      if (negationIndex < 0) break
+
+      if (negationTokens.has(tokens[negationIndex])) {
+        return true
+      }
+    }
+  }
+
+  return false
 }
 
 const resolveConflictBonus = (commandName, promptTokensSet, promptText) => {
@@ -576,19 +583,6 @@ for (const testCase of llmCases) {
         }
         fallbackUsed = false
         fallbackReason = ''
-
-        if (
-          finalDecision.command &&
-          shortlistMap.get(finalDecision.command)?.command.status !== 'active' &&
-          fallbackDecision.status === 'active'
-        ) {
-          finalDecision = {
-            command: fallbackDecision.command,
-            status: fallbackDecision.status,
-          }
-          fallbackUsed = true
-          fallbackReason = `prefer-deterministic-active:${fallbackDecision.reason}`
-        }
       } else {
         finalDecision = {
           command: fallbackDecision.command,
