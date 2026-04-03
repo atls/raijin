@@ -563,6 +563,7 @@ for (const testCase of llmCases) {
   let fallbackUsed = true
   let fallbackReason = `shortlist:${fallbackDecision.reason}`
   let modelCallFailed = false
+  let invalidModelDecision = false
 
   try {
     if (shortlistBuild.shortlist.length > 0) {
@@ -591,6 +592,7 @@ for (const testCase of llmCases) {
         fallbackUsed = false
         fallbackReason = ''
       } else {
+        invalidModelDecision = true
         finalDecision = {
           command: fallbackDecision.command,
           status: fallbackDecision.status,
@@ -618,6 +620,7 @@ for (const testCase of llmCases) {
 
   const passed =
     !modelCallFailed &&
+    !invalidModelDecision &&
     (testCase.expectedStatus === 'unavailable'
       ? finalDecision.status === 'unavailable'
       : finalDecision.command === testCase.expectedCommand &&
@@ -646,7 +649,9 @@ for (const testCase of llmCases) {
     failures.push(
       modelCallFailed
         ? `${testCase.id}: LLM request failed (${modelDecision.reason})`
-        : `${testCase.id}: expected ${testCase.expectedCommand}|${testCase.expectedStatus}, got ${finalDecision.command}|${finalDecision.status}`
+        : invalidModelDecision
+          ? `${testCase.id}: invalid model decision (${modelDecision.reason})`
+          : `${testCase.id}: expected ${testCase.expectedCommand}|${testCase.expectedStatus}, got ${finalDecision.command}|${finalDecision.status}`
     )
   }
 }
