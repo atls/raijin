@@ -10,6 +10,8 @@ const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 120000)
 const minimumScore = 4
 const shortlistMaxItems = 6
 const shortlistScoreGap = 8
+const minimumStrongActiveFallbackScore = 8
+const maximumActiveFallbackGap = 2
 
 if (!apiKey) {
   console.error('OPENAI_API_KEY or OPENAI_SERVICE_ACCOUNT_KEY is required')
@@ -26,14 +28,7 @@ const normalize = (value) =>
     .replace(/\s+/g, ' ')
     .trim()
 
-const normalizeToken = (token) => {
-  const normalized = normalize(token)
-  if (normalized.length > 4 && normalized.endsWith('s')) {
-    return normalized.slice(0, -1)
-  }
-
-  return normalized
-}
+const normalizeToken = (token) => normalize(token)
 
 const tokenize = (value) =>
   normalize(value)
@@ -336,6 +331,21 @@ const chooseDeterministicFallback = (scoredCandidates) => {
       command: best.command.command,
       status: 'active',
       reason: 'best_active',
+    }
+  }
+
+  const bestActive = scoredCandidates.find((candidate) => candidate.command.status === 'active')
+  if (bestActive) {
+    const scoreGap = best.score - bestActive.score
+    if (
+      bestActive.score >= minimumStrongActiveFallbackScore &&
+      scoreGap <= maximumActiveFallbackGap
+    ) {
+      return {
+        command: bestActive.command.command,
+        status: 'active',
+        reason: 'near_best_active',
+      }
     }
   }
 
