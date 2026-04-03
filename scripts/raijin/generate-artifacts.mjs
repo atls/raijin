@@ -459,6 +459,12 @@ const renderRootReadme = (language) => {
     `[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](${rootReadmeRu})`,
     `[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](${rootReadmeEn})`,
     '',
+    '<!-- sync:root-language-default -->',
+    '',
+    isRu
+      ? `Документация по умолчанию: [README_RU.md](${rootReadmeRu}). Английская версия: [README.md](${rootReadmeEn})`
+      : `Default docs language is RU: [README_RU.md](${rootReadmeRu}). EN version: [README.md](${rootReadmeEn})`,
+    '',
     '<!-- sync:root-what -->',
     '',
     isRu ? '## Что это' : '## What this is',
@@ -534,7 +540,6 @@ const renderRootReadme = (language) => {
     '```bash',
     'yarn check',
     'yarn files changed list',
-    'yarn test unit',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
@@ -721,12 +726,9 @@ const renderQuickstart = (language) => {
     '<!-- sync:preflight -->',
     isRu ? '## 1. Предпосылки' : '## 1. Prerequisites',
     '',
-    '- Node.js: `22.x`',
-    '- Yarn: `4.x`',
+    isRu ? '- Node.js: `>= 22` (не ниже `22`)' : '- Node.js: `>= 22`',
+    isRu ? '- Yarn: `>= 4` (не ниже `4`)' : '- Yarn: `>= 4`',
     isRu ? '- Рабочий проект с `package.json`' : '- A working project with `package.json`',
-    isRu
-      ? '- Доступ к интернету для загрузки bundle-файла'
-      : '- Internet access to download bundle artifacts',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
@@ -746,8 +748,8 @@ const renderQuickstart = (language) => {
       ? '- В `.yarn/releases/` появляется актуальный `yarn.mjs` из Raijin'
       : '- `.yarn/releases/` contains the current Raijin `yarn.mjs`',
     isRu
-      ? '- Команды из бандла (`check`, `files changed list`, `test unit` и другие) становятся доступны'
-      : '- Bundle commands (`check`, `files changed list`, `test unit`, etc.) become available',
+      ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
+      : '- Bundle commands (`check`, `files changed list`, etc.) become available',
     '',
     '<!-- sync:bundle-upgrade -->',
     isRu ? '## 3. Обновление установленного бандла' : '## 3. Upgrade installed bundle',
@@ -767,7 +769,6 @@ const renderQuickstart = (language) => {
     '```bash',
     'yarn check',
     'yarn files changed list',
-    'yarn test unit',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
@@ -777,9 +778,6 @@ const renderQuickstart = (language) => {
     isRu
       ? '- `yarn files changed list` возвращает список файлов или пустой список, если изменений нет'
       : '- `yarn files changed list` returns file list (or empty list if no changes)',
-    isRu
-      ? '- `yarn test unit` запускает модульные тесты текущего проекта'
-      : '- `yarn test unit` runs unit tests for the current project',
     '',
     '<!-- sync:consumer-howto -->',
     isRu ? '## 5. Как использовать в чужом проекте' : '## 5. How to use in an external project',
@@ -793,19 +791,6 @@ const renderQuickstart = (language) => {
     isRu
       ? '- Для CI используйте те же команды, что и локально, чтобы избежать расхождения поведения'
       : '- Use the same commands in CI and locally to avoid behavior drift',
-    '',
-    '<!-- sync:inside-raijin -->',
-    isRu ? '## 6. Дополнительно: работа внутри `raijin`' : '## 6. Extra: working inside `raijin`',
-    '',
-    '```bash',
-    'source .env',
-    'export NODE_OPTIONS',
-    '```',
-    '',
-    isRu ? 'Ожидаемый результат:' : 'Expected result:',
-    isRu
-      ? '- Внутренние команды репозитория выполняются в согласованной среде'
-      : '- Internal repository commands run in a consistent environment',
     '',
   ].join('\n')
 }

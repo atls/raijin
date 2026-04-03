@@ -6,10 +6,9 @@
 
 ## 1. Предпосылки
 
-- Node.js: `22.x`
-- Yarn: `4.x`
+- Node.js: `>= 22` (не ниже `22`)
+- Yarn: `>= 4` (не ниже `4`)
 - Рабочий проект с `package.json`
-- Доступ к интернету для загрузки bundle-файла
 
 Ожидаемый результат:
 
@@ -27,7 +26,7 @@ yarn set version atls
 Ожидаемый результат:
 
 - В `.yarn/releases/` появляется актуальный `yarn.mjs` из Raijin
-- Команды из бандла (`check`, `files changed list`, `test unit` и другие) становятся доступны
+- Команды из бандла (`check`, `files changed list` и другие) становятся доступны
 
 <!-- sync:bundle-upgrade -->
 
@@ -48,14 +47,12 @@ yarn set version atls
 ```bash
 yarn check
 yarn files changed list
-yarn test unit
 ```
 
 Ожидаемый результат:
 
 - `yarn check` завершает полный проход проверок без ошибок маршрутизации
 - `yarn files changed list` возвращает список файлов или пустой список, если изменений нет
-- `yarn test unit` запускает модульные тесты текущего проекта
 
 <!-- sync:consumer-howto -->
 
@@ -64,16 +61,3 @@ yarn test unit
 - Подключите бандл один раз, затем поддерживайте версию через `yarn set version atls`
 - Коммитьте изменения `.yarn/releases` и `.yarnrc.yml` вместе с обновлением бандла
 - Для CI используйте те же команды, что и локально, чтобы избежать расхождения поведения
-
-<!-- sync:inside-raijin -->
-
-## 6. Дополнительно: работа внутри `raijin`
-
-```bash
-source .env
-export NODE_OPTIONS
-```
-
-Ожидаемый результат:
-
-- Внутренние команды репозитория выполняются в согласованной среде
