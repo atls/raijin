@@ -5,16 +5,12 @@
 [![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README.md)
 [![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README_EN.md)
 
-<!-- sync:root-language-default -->
-
-Документация по умолчанию: [README.md](README.md). Английская версия: [README_EN.md](README_EN.md)
-
 <!-- sync:root-what -->
 
 ## Что это
 
-Raijin — это набор команд и пакетов для монорепозиториев, поставляемый как кастомный Yarn-бандл `atls`
-Цель — дать единый способ запускать проверки, сборку, релиз и сервисные утилиты в разных проектах
+Raijin — это подход к работе в едином инженерном контуре, поставляемый как кастомный Yarn-бандл `atls`
+Он объединяет команды вокруг строгих стандартов и мощных контрактов, чтобы повышать предсказуемость поставки и реальную производительность
 
 <!-- sync:root-audience -->
 
