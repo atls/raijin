@@ -87,7 +87,21 @@ const hasAnyToken = (promptTokensSet, aliases) =>
     )
   })
 
-const resolveConflictBonus = (commandName, promptTokensSet) => {
+const hasNegatedChecksIntent = (promptText) => {
+  const normalizedPrompt = normalize(promptText)
+
+  return [
+    /\bnot\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
+    /\bno\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
+    /\bwithout\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
+    /\bavoid\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
+    /\bexclude\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
+    /\bне\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
+    /\bбез\s+(?:[a-z0-9а-яё-]+\s+){0,2}checks?\b/,
+  ].some((pattern) => pattern.test(normalizedPrompt))
+}
+
+const resolveConflictBonus = (commandName, promptTokensSet, promptText) => {
   const wantsFiles = hasAnyToken(promptTokensSet, [
     'file',
     'files',
@@ -105,7 +119,8 @@ const resolveConflictBonus = (commandName, promptTokensSet) => {
     'пакет',
     'пакеты',
   ])
-  const wantsChecksContext = hasAnyToken(promptTokensSet, [
+  const checksIntentNegated = hasNegatedChecksIntent(promptText)
+  const wantsChecksContextRaw = hasAnyToken(promptTokensSet, [
     'checks',
     'ci',
     'github',
@@ -117,6 +132,7 @@ const resolveConflictBonus = (commandName, promptTokensSet) => {
     'экшен',
     'пайплайн',
   ])
+  const wantsChecksContext = wantsChecksContextRaw && !checksIntentNegated
   const wantsUnit = hasAnyToken(promptTokensSet, [
     'unit',
     'юнит',
@@ -137,19 +153,22 @@ const resolveConflictBonus = (commandName, promptTokensSet) => {
   }
 
   if (commandName === 'test unit') {
-    if (wantsUnit && !wantsChecksContext) return 14
+    if (wantsUnit && (!wantsChecksContext || checksIntentNegated)) {
+      return checksIntentNegated ? 18 : 14
+    }
     if (wantsChecksContext) return -8
   }
 
   if (commandName === 'checks test unit') {
     if (wantsChecksContext) return 16
+    if (checksIntentNegated) return -18
     if (wantsUnit && !wantsChecksContext) return -10
   }
 
   return 0
 }
 
-const scoreCandidate = (command, semantics, promptTokens, promptTokensSet) => {
+const scoreCandidate = (command, semantics, promptTokens, promptTokensSet, promptText) => {
   let score = 0
   const signals = []
 
@@ -197,7 +216,7 @@ const scoreCandidate = (command, semantics, promptTokens, promptTokensSet) => {
     signals.push(`semantic:${semanticMatches.slice(0, 4).join(',')}`)
   }
 
-  const conflictBonus = resolveConflictBonus(command.command, promptTokensSet)
+  const conflictBonus = resolveConflictBonus(command.command, promptTokensSet, promptText)
   if (conflictBonus !== 0) {
     score += conflictBonus
     signals.push(`conflict:${conflictBonus > 0 ? '+' : ''}${conflictBonus}`)
@@ -259,7 +278,8 @@ const buildShortlist = (prompt, routingHint, commands, semanticsMap) => {
         command,
         getCommandSemantics(command, semanticsMap),
         promptTokens,
-        promptTokensSet
+        promptTokensSet,
+        enrichedPrompt
       )
     )
     .filter((candidate) => candidate.score >= minimumScore)
@@ -558,10 +578,9 @@ for (const testCase of llmCases) {
         fallbackReason = ''
 
         if (
-          (finalDecision.status === 'unavailable' && fallbackDecision.status === 'active') ||
-          (finalDecision.command &&
-            shortlistMap.get(finalDecision.command)?.command.status !== 'active' &&
-            fallbackDecision.status === 'active')
+          finalDecision.command &&
+          shortlistMap.get(finalDecision.command)?.command.status !== 'active' &&
+          fallbackDecision.status === 'active'
         ) {
           finalDecision = {
             command: fallbackDecision.command,
