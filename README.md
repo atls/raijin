@@ -2,91 +2,91 @@
 
 # Atlantis Raijin
 
-[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README_RU.md)
-[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README.md)
+[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README.md)
+[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README_EN.md)
 
 <!-- sync:root-language-default -->
 
-Default docs language is RU: [README_RU.md](README_RU.md). EN version: [README.md](README.md)
+Документация по умолчанию: [README.md](README.md). Английская версия: [README_EN.md](README_EN.md)
 
 <!-- sync:root-what -->
 
-## What this is
+## Что это
 
-Raijin is a command and package toolkit for monorepos, shipped as the custom `atls` Yarn bundle
-The goal is one consistent way to run checks, builds, release, and utility flows across projects
+Raijin — это набор команд и пакетов для монорепозиториев, поставляемый как кастомный Yarn-бандл `atls`
+Цель — дать единый способ запускать проверки, сборку, релиз и сервисные утилиты в разных проектах
 
 <!-- sync:root-audience -->
 
-## Who it is for
+## Для кого
 
-- Teams maintaining multiple `Node.js`/`TypeScript` projects
-- Developers who need one command contract locally and in `GitHub Actions`
-- Open-source and internal repositories that need predictable checks and upgrades
+- Для команд, которые поддерживают несколько `Node.js`/`TypeScript` проектов
+- Для разработчиков, которым нужен единый контракт команд в локальной среде и в `GitHub Actions`
+- Для опенсорс и внутренних репозиториев, где важны предсказуемые проверки и обновления
 
 <!-- sync:root-capabilities -->
 
-## What Raijin can do
+## Что умеет Raijin
 
-- Code validation: `check`, `lint`, `typecheck`, `test`, `checks *`
-- Change scope tooling: `files changed *`, `workspaces changed *`
-- Build and release flows: `service build`, `library build`, `release create`, `npm publish`
-- Generators and utility commands for monorepo infrastructure
+- Проверки кода: `check`, `lint`, `typecheck`, `test`, `checks *`
+- Работа с изменениями: `files changed *`, `workspaces changed *`
+- Сборка и выпуск: `service build`, `library build`, `release create`, `npm publish`
+- Генераторы и служебные команды для инфраструктуры монорепозитория
 
 <!-- sync:root-quickstart -->
 
-## Quickstart
+## Быстрый старт
 
-### New project
+### Новый проект
 
 ```bash
 yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs
 yarn set version atls
 ```
 
-Expected result:
+Ожидаемый результат:
 
-- `.yarn/releases/yarn.mjs` is added or updated in the project
-- Raijin commands are available via `yarn`
+- В проекте появляется/обновляется `.yarn/releases/yarn.mjs`
+- Команды `raijin` становятся доступны через `yarn`
 
-### Upgrade
+### Обновление
 
 ```bash
 yarn set version atls
 ```
 
-Expected result:
+Ожидаемый результат:
 
-- The latest bundle version is installed
+- Подтягивается актуальная версия бандла
 
-### Verify
+### Проверка
 
 ```bash
 yarn check
 yarn files changed list
 ```
 
-Expected result:
+Ожидаемый результат:
 
-- Commands run with expected routing and expected validation steps
+- Команды выполняются без ошибки маршрутизации и с ожидаемым набором шагов
 
 <!-- sync:root-consumer-howto -->
 
-## How to use in another project
+## Как использовать в чужом проекте
 
-1. Install the bundle using [Quickstart](./docs/raijin/quickstart.md)
-2. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control
-3. Update with `yarn set version atls` when newer bundle versions are released
+1. Подключите бандл по разделу [Быстрый старт](./docs/raijin/quickstart.ru.md)
+2. Зафиксируйте изменения `.yarn/releases` и `.yarnrc.yml` в системе контроля версий
+3. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий
 
 <!-- sync:root-read-more -->
 
-## Where to read next
+## Где читать дальше
 
-- RU (default): [README_RU.md](README_RU.md)
-- EN: [README.md](README.md)
-- Docs index RU: [docs/README.ru.md](docs/README.ru.md)
-- Docs index EN: [docs/README.md](docs/README.md)
-- Raijin section router: [docs/raijin/README.md](docs/raijin/README.md)
-- Quickstart: [docs/raijin/quickstart.md](docs/raijin/quickstart.md)
-- Commands map: [docs/raijin/commands.md](docs/raijin/commands.md)
-- Packages map: [docs/raijin/packages.md](docs/raijin/packages.md)
+- RU (по умолчанию): [README.md](README.md)
+- EN: [README_EN.md](README_EN.md)
+- Индекс документации RU: [docs/README.ru.md](docs/README.ru.md)
+- Индекс документации EN: [docs/README.md](docs/README.md)
+- Роутер раздела Raijin: [docs/raijin/README.ru.md](docs/raijin/README.ru.md)
+- Быстрый старт: [docs/raijin/quickstart.ru.md](docs/raijin/quickstart.ru.md)
+- Карта команд: [docs/raijin/commands.ru.md](docs/raijin/commands.ru.md)
+- Карта пакетов: [docs/raijin/packages.ru.md](docs/raijin/packages.ru.md)

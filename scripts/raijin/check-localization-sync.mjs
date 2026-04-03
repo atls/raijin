@@ -37,8 +37,8 @@ const compareSets = (label, left, right) => {
   return errors
 }
 
-const rootEn = readText('README.md')
-const rootRu = readText('README_RU.md')
+const rootEn = readText('README_EN.md')
+const rootRu = readText('README.md')
 const docsRouterEn = readText('docs/README.md')
 const docsRouterRu = readText('docs/README.ru.md')
 const routerEn = readText('docs/raijin/README.md')

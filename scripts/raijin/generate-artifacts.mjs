@@ -442,8 +442,8 @@ const linkByLanguage = (basePath, language) => `${basePath}${language === 'ru' ?
 
 const renderRootReadme = (language) => {
   const isRu = language === 'ru'
-  const rootReadmeRu = 'README_RU.md'
-  const rootReadmeEn = 'README.md'
+  const rootReadmeRu = 'README.md'
+  const rootReadmeEn = 'README_EN.md'
   const docsRouterRu = 'docs/README.ru.md'
   const docsRouterEn = 'docs/README.md'
   const quickstartPath = linkByLanguage('docs/raijin/quickstart', language)
@@ -462,8 +462,8 @@ const renderRootReadme = (language) => {
     '<!-- sync:root-language-default -->',
     '',
     isRu
-      ? `Документация по умолчанию: [README_RU.md](${rootReadmeRu}). Английская версия: [README.md](${rootReadmeEn})`
-      : `Default docs language is RU: [README_RU.md](${rootReadmeRu}). EN version: [README.md](${rootReadmeEn})`,
+      ? `Документация по умолчанию: [README.md](${rootReadmeRu}). Английская версия: [README_EN.md](${rootReadmeEn})`
+      : `Default docs language is RU: [README.md](${rootReadmeRu}). EN version: [README_EN.md](${rootReadmeEn})`,
     '',
     '<!-- sync:root-what -->',
     '',
@@ -566,9 +566,9 @@ const renderRootReadme = (language) => {
     isRu ? '## Где читать дальше' : '## Where to read next',
     '',
     isRu
-      ? `- RU (по умолчанию): [README_RU.md](${rootReadmeRu})`
-      : `- RU (default): [README_RU.md](${rootReadmeRu})`,
-    isRu ? `- EN: [README.md](${rootReadmeEn})` : `- EN: [README.md](${rootReadmeEn})`,
+      ? `- RU (по умолчанию): [README.md](${rootReadmeRu})`
+      : `- RU (default): [README.md](${rootReadmeRu})`,
+    isRu ? `- EN: [README_EN.md](${rootReadmeEn})` : `- EN: [README_EN.md](${rootReadmeEn})`,
     isRu
       ? `- Индекс документации RU: [docs/README.ru.md](${docsRouterRu})`
       : `- Docs index RU: [docs/README.ru.md](${docsRouterRu})`,
@@ -1356,8 +1356,8 @@ writeJson(`${DOCS_DIR}/index.meta.v1.json`, {
   lastGenerated,
 })
 
-writeText('README.md', `${renderRootReadme('en')}\n`)
-writeText('README_RU.md', `${renderRootReadme('ru')}\n`)
+writeText('README.md', `${renderRootReadme('ru')}\n`)
+writeText('README_EN.md', `${renderRootReadme('en')}\n`)
 writeText('docs/README.md', `${renderDocsRootReadme('en')}\n`)
 writeText('docs/README.ru.md', `${renderDocsRootReadme('ru')}\n`)
 writeText(`${DOCS_DIR}/README.md`, `${renderRaijinReadme(index, 'en')}\n`)
@@ -1380,7 +1380,7 @@ formatGeneratedFiles([
   `${DOCS_DIR}/index.meta.v1.json`,
   `${DOCS_DIR}/smoke-prompts.json`,
   'README.md',
-  'README_RU.md',
+  'README_EN.md',
   'docs/README.md',
   'docs/README.ru.md',
   `${DOCS_DIR}/README.md`,
