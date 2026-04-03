@@ -8,7 +8,6 @@ const baseUrl = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
 const model = process.env.OPENAI_MODEL || process.env.OPENAI_TOOLING_MODEL || 'gpt-5.4-mini'
 const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 120000)
 const minimumScore = 4
-const minimumStrongActiveScore = 7
 const shortlistMaxItems = 6
 const shortlistScoreGap = 8
 
@@ -87,6 +86,12 @@ const hasAnyToken = (promptTokensSet, aliases) =>
     )
   })
 
+const hasExactToken = (promptTokensSet, aliases) =>
+  aliases.some((alias) => {
+    const token = normalizeToken(alias)
+    return Boolean(token) && promptTokensSet.has(token)
+  })
+
 const hasNegatedChecksIntent = (promptText) => {
   const tokens = tokenize(promptText)
   const checksTokens = new Set(['check', 'checks'])
@@ -127,8 +132,8 @@ const resolveConflictBonus = (commandName, promptTokensSet, promptText) => {
     'пакеты',
   ])
   const checksIntentNegated = hasNegatedChecksIntent(promptText)
-  const wantsChecksContextRaw = hasAnyToken(promptTokensSet, [
-    'checks',
+  const wantsChecksKeyword = hasExactToken(promptTokensSet, ['checks'])
+  const wantsChecksInfraContext = hasAnyToken(promptTokensSet, [
     'ci',
     'github',
     'actions',
@@ -139,6 +144,7 @@ const resolveConflictBonus = (commandName, promptTokensSet, promptText) => {
     'экшен',
     'пайплайн',
   ])
+  const wantsChecksContextRaw = wantsChecksKeyword || wantsChecksInfraContext
   const wantsChecksContext = wantsChecksContextRaw && !checksIntentNegated
   const wantsUnit = hasAnyToken(promptTokensSet, [
     'unit',
@@ -330,15 +336,6 @@ const chooseDeterministicFallback = (scoredCandidates) => {
       command: best.command.command,
       status: 'active',
       reason: 'best_active',
-    }
-  }
-
-  const bestActive = scoredCandidates.find((candidate) => candidate.command.status === 'active')
-  if (bestActive && bestActive.score >= minimumStrongActiveScore) {
-    return {
-      command: bestActive.command.command,
-      status: 'active',
-      reason: 'prefer_active_over_inactive',
     }
   }
 
