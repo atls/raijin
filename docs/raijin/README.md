@@ -2,6 +2,14 @@
 
 Navigation for custom `atls` Yarn bundle docs
 
+<!-- sync:router-scenarios -->
+
+## Navigate by task
+
+- Install or upgrade the bundle: [quickstart.md](./quickstart.md)
+- Pick and understand a command: [commands.md](./commands.md)
+- Understand workspace packages: [packages.md](./packages.md)
+
 <!-- sync:router-read-order -->
 
 ## Read order

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "cases": [
     {
       "id": "check-before-pr",
@@ -10,12 +10,14 @@
     {
       "id": "files-changed-list",
       "prompt": "show changed files in workspace",
+      "routingHint": "Need file-level changes list, not changed workspaces list",
       "expectedCommand": "files changed list",
       "expectedStatus": "active"
     },
     {
       "id": "run-unit-tests",
       "prompt": "run unit tests only",
+      "routingHint": "Prefer plain unit test route, not checks namespace route",
       "expectedCommand": "test unit",
       "expectedStatus": "active"
     },
