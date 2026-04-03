@@ -459,22 +459,16 @@ const renderRootReadme = (language) => {
     `[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](${rootReadmeRu})`,
     `[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](${rootReadmeEn})`,
     '',
-    '<!-- sync:root-language-default -->',
-    '',
-    isRu
-      ? `Документация по умолчанию: [README.md](${rootReadmeRu}). Английская версия: [README_EN.md](${rootReadmeEn})`
-      : `Default docs language is RU: [README.md](${rootReadmeRu}). EN version: [README_EN.md](${rootReadmeEn})`,
-    '',
     '<!-- sync:root-what -->',
     '',
     isRu ? '## Что это' : '## What this is',
     '',
     isRu
-      ? 'Raijin — это набор команд и пакетов для монорепозиториев, поставляемый как кастомный Yarn-бандл `atls`'
-      : 'Raijin is a command and package toolkit for monorepos, shipped as the custom `atls` Yarn bundle',
+      ? 'Raijin — это подход к работе в едином инженерном контуре, поставляемый как кастомный Yarn-бандл `atls`'
+      : 'Raijin is an engineering operating model for a unified delivery contour, shipped as the custom `atls` Yarn bundle',
     isRu
-      ? 'Цель — дать единый способ запускать проверки, сборку, релиз и сервисные утилиты в разных проектах'
-      : 'The goal is one consistent way to run checks, builds, release, and utility flows across projects',
+      ? 'Он объединяет команды вокруг строгих стандартов и мощных контрактов, чтобы повышать предсказуемость поставки и реальную производительность'
+      : 'It aligns teams on strict standards and strong contracts to increase delivery predictability and real engineering throughput',
     '',
     '<!-- sync:root-audience -->',
     '',

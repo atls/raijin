@@ -5,16 +5,12 @@
 [![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README.md)
 [![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README_EN.md)
 
-<!-- sync:root-language-default -->
-
-Default docs language is RU: [README.md](README.md). EN version: [README_EN.md](README_EN.md)
-
 <!-- sync:root-what -->
 
 ## What this is
 
-Raijin is a command and package toolkit for monorepos, shipped as the custom `atls` Yarn bundle
-The goal is one consistent way to run checks, builds, release, and utility flows across projects
+Raijin is an engineering operating model for a unified delivery contour, shipped as the custom `atls` Yarn bundle
+It aligns teams on strict standards and strong contracts to increase delivery predictability and real engineering throughput
 
 <!-- sync:root-audience -->
 
