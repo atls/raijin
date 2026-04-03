@@ -447,6 +447,7 @@ const renderRootReadme = (language) => {
   const quickstartPath = linkByLanguage('docs/raijin/quickstart', language)
   const commandsPath = linkByLanguage('docs/raijin/commands', language)
   const packagesPath = linkByLanguage('docs/raijin/packages', language)
+  const raijinRouterPath = linkByLanguage('docs/raijin/README', language)
 
   return [
     `![raijin-github-cover](${COVER_IMAGE_URL})`,
@@ -456,20 +457,114 @@ const renderRootReadme = (language) => {
     `[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](${docsRouterRu})`,
     `[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](${docsRouterEn})`,
     '',
-    isRu
-      ? 'Монорепозиторий инструментов `Raijin` с кастомным `Yarn`-бандлом `atls`'
-      : 'Monorepo of `Raijin` tools with custom `atls` `Yarn` bundle',
+    '<!-- sync:root-what -->',
     '',
-    '<!-- sync:root-docs-entry -->',
-    '',
-    isRu ? '## Документация' : '## Documentation',
+    isRu ? '## Что это' : '## What this is',
     '',
     isRu
-      ? `- Русская версия: [docs/README.ru.md](${docsRouterRu})`
+      ? 'Raijin — это набор команд и пакетов для монорепозиториев, поставляемый как кастомный Yarn-бандл `atls`'
+      : 'Raijin is a command and package toolkit for monorepos, shipped as the custom `atls` Yarn bundle',
+    isRu
+      ? 'Цель — дать единый способ запускать проверки, сборку, релиз и сервисные утилиты в разных проектах'
+      : 'The goal is one consistent way to run checks, builds, release, and utility flows across projects',
+    '',
+    '<!-- sync:root-audience -->',
+    '',
+    isRu ? '## Для кого' : '## Who it is for',
+    '',
+    isRu
+      ? '- Для команд, которые поддерживают несколько `Node.js`/`TypeScript` проектов'
+      : '- Teams maintaining multiple `Node.js`/`TypeScript` projects',
+    isRu
+      ? '- Для разработчиков, которым нужен единый контракт команд в локальной среде и в `GitHub Actions`'
+      : '- Developers who need one command contract locally and in `GitHub Actions`',
+    isRu
+      ? '- Для опенсорс и внутренних репозиториев, где важны предсказуемые проверки и обновления'
+      : '- Open-source and internal repositories that need predictable checks and upgrades',
+    '',
+    '<!-- sync:root-capabilities -->',
+    '',
+    isRu ? '## Что умеет Raijin' : '## What Raijin can do',
+    '',
+    isRu
+      ? '- Проверки кода: `check`, `lint`, `typecheck`, `test`, `checks *`'
+      : '- Code validation: `check`, `lint`, `typecheck`, `test`, `checks *`',
+    isRu
+      ? '- Работа с изменениями: `files changed *`, `workspaces changed *`'
+      : '- Change scope tooling: `files changed *`, `workspaces changed *`',
+    isRu
+      ? '- Сборка и выпуск: `service build`, `library build`, `release create`, `npm publish`'
+      : '- Build and release flows: `service build`, `library build`, `release create`, `npm publish`',
+    isRu
+      ? '- Генераторы и служебные команды для инфраструктуры монорепозитория'
+      : '- Generators and utility commands for monorepo infrastructure',
+    '',
+    '<!-- sync:root-quickstart -->',
+    '',
+    isRu ? '## Быстрый старт' : '## Quickstart',
+    '',
+    isRu ? '### Новый проект' : '### New project',
+    '',
+    '```bash',
+    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs',
+    'yarn set version atls',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- В проекте появляется/обновляется `.yarn/releases/yarn.mjs`'
+      : '- `.yarn/releases/yarn.mjs` is added or updated in the project',
+    isRu
+      ? '- Команды `raijin` становятся доступны через `yarn`'
+      : '- Raijin commands are available via `yarn`',
+    '',
+    isRu ? '### Обновление' : '### Upgrade',
+    '',
+    '```bash',
+    'yarn set version atls',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu ? '- Подтягивается актуальная версия бандла' : '- The latest bundle version is installed',
+    '',
+    isRu ? '### Проверка' : '### Verify',
+    '',
+    '```bash',
+    'yarn check',
+    'yarn files changed list',
+    'yarn test unit',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- Команды выполняются без ошибки маршрутизации и с ожидаемым набором шагов'
+      : '- Commands run with expected routing and expected validation steps',
+    '',
+    '<!-- sync:root-consumer-howto -->',
+    '',
+    isRu ? '## Как использовать в чужом проекте' : '## How to use in another project',
+    '',
+    isRu
+      ? `1. Подключите бандл по разделу [Быстрый старт](./${quickstartPath})`
+      : `1. Install the bundle using [Quickstart](./${quickstartPath})`,
+    isRu
+      ? '2. Зафиксируйте изменения `.yarn/releases` и `.yarnrc.yml` в системе контроля версий'
+      : '2. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control',
+    isRu
+      ? '3. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий'
+      : '3. Update with `yarn set version atls` when newer bundle versions are released',
+    '',
+    '<!-- sync:root-read-more -->',
+    '',
+    isRu ? '## Где читать дальше' : '## Where to read next',
+    '',
+    isRu
+      ? `- RU (по умолчанию): [docs/README.ru.md](${docsRouterRu})`
       : `- RU (default): [docs/README.ru.md](${docsRouterRu})`,
+    isRu ? `- EN: [docs/README.md](${docsRouterEn})` : `- EN: [docs/README.md](${docsRouterEn})`,
     isRu
-      ? `- Английская версия: [docs/README.md](${docsRouterEn})`
-      : `- EN: [docs/README.md](${docsRouterEn})`,
+      ? `- Роутер раздела Raijin: [${raijinRouterPath}](${raijinRouterPath})`
+      : `- Raijin section router: [${raijinRouterPath}](${raijinRouterPath})`,
     isRu
       ? `- Быстрый старт: [${quickstartPath}](${quickstartPath})`
       : `- Quickstart: [${quickstartPath}](${quickstartPath})`,
@@ -479,13 +574,6 @@ const renderRootReadme = (language) => {
     isRu
       ? `- Карта пакетов: [${packagesPath}](${packagesPath})`
       : `- Packages map: [${packagesPath}](${packagesPath})`,
-    '',
-    '<!-- sync:root-quickstart -->',
-    '',
-    isRu ? '## Быстрый старт' : '## Quick start',
-    '',
-    '- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs`',
-    '- `yarn set version atls`',
     '',
   ].join('\n')
 }
@@ -513,6 +601,23 @@ const renderDocsRootReadme = (language) => {
       : '- RU (default): [README.ru.md](./README.ru.md)',
     isRu ? '- Английская версия: [README.md](./README.md)' : '- EN: [README.md](./README.md)',
     '',
+    '<!-- sync:docs-router-scenarios -->',
+    '',
+    isRu ? '## Куда идти по сценарию' : '## Scenario routing',
+    '',
+    isRu
+      ? `- Нужно быстро подключить или обновить бандл в проекте: [${quickstartPath}](./${quickstartPath})`
+      : `- Need to install or upgrade bundle quickly: [${quickstartPath}](./${quickstartPath})`,
+    isRu
+      ? `- Нужно выбрать команду под задачу: [${commandsPath}](./${commandsPath})`
+      : `- Need the right command for a task: [${commandsPath}](./${commandsPath})`,
+    isRu
+      ? `- Нужно понять назначение workspace-пакета: [${packagesPath}](./${packagesPath})`
+      : `- Need workspace package purpose and ownership: [${packagesPath}](./${packagesPath})`,
+    isRu
+      ? `- Нужен обзор структуры раздела Raijin: [${raijinRouterPath}](./${raijinRouterPath})`
+      : `- Need a compact Raijin docs overview: [${raijinRouterPath}](./${raijinRouterPath})`,
+    '',
     '<!-- sync:docs-router-read-order -->',
     '',
     isRu ? '## Порядок чтения' : '## Read order',
@@ -537,6 +642,20 @@ const renderRaijinReadme = (index, language) => {
     isRu
       ? 'Навигация по документации кастомного Yarn-бандла `atls`'
       : 'Navigation for custom `atls` Yarn bundle docs',
+    '',
+    '<!-- sync:router-scenarios -->',
+    '',
+    isRu ? '## Куда идти по задаче' : '## Navigate by task',
+    '',
+    isRu
+      ? `- Подключить или обновить бандл: [${quickstartPath}](./${quickstartPath})`
+      : `- Install or upgrade the bundle: [${quickstartPath}](./${quickstartPath})`,
+    isRu
+      ? `- Выбрать и понять команду: [${commandsPath}](./${commandsPath})`
+      : `- Pick and understand a command: [${commandsPath}](./${commandsPath})`,
+    isRu
+      ? `- Разобраться с workspace-пакетами: [${packagesPath}](./${packagesPath})`
+      : `- Understand workspace packages: [${packagesPath}](./${packagesPath})`,
     '',
     '<!-- sync:router-read-order -->',
     '',
@@ -588,35 +707,97 @@ const renderQuickstart = (language) => {
     '# Raijin Quickstart',
     '',
     isRu
-      ? 'Минимальный bootstrap для стабильной работы с кастомным Yarn-бандлом `atls`'
-      : 'Minimum bootstrap for stable work with custom `atls` Yarn bundle',
+      ? 'Минимальный сценарий подключения и проверки кастомного Yarn-бандла `atls`'
+      : 'Minimal install-and-verify flow for the custom `atls` Yarn bundle',
     '',
     '<!-- sync:preflight -->',
-    isRu ? '## 1. Preflight' : '## 1. Preflight',
+    isRu ? '## 1. Предпосылки' : '## 1. Prerequisites',
     '',
     '- Node.js: `22.x`',
+    '- Yarn: `4.x`',
+    isRu ? '- Рабочий проект с `package.json`' : '- A working project with `package.json`',
     isRu
-      ? '- Внутри `raijin` перед `yarn`-командами выполняйте `source .env` и `export NODE_OPTIONS`'
-      : '- Inside `raijin`, run `source .env` and `export NODE_OPTIONS` before `yarn` commands',
+      ? '- Доступ к интернету для загрузки bundle-файла'
+      : '- Internet access to download bundle artifacts',
     '',
-    '<!-- sync:bundle-install -->',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '## 2. Установка бандла в проект-потребитель'
-      : '## 2. Install bundle in a consumer project',
+      ? '- Команда `yarn --version` выполняется, и проект готов к переключению версии Yarn'
+      : '- `yarn --version` works and the project can switch Yarn versions',
     '',
-    '- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs`',
+    '<!-- sync:new-project -->',
+    isRu ? '## 2. Новый проект: подключение бандла' : '## 2. New project: install the bundle',
+    '',
+    '```bash',
+    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs',
+    'yarn set version atls',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- В `.yarn/releases/` появляется актуальный `yarn.mjs` из Raijin'
+      : '- `.yarn/releases/` contains the current Raijin `yarn.mjs`',
+    isRu
+      ? '- Команды из бандла (`check`, `files changed list`, `test unit` и другие) становятся доступны'
+      : '- Bundle commands (`check`, `files changed list`, `test unit`, etc.) become available',
     '',
     '<!-- sync:bundle-upgrade -->',
     isRu ? '## 3. Обновление установленного бандла' : '## 3. Upgrade installed bundle',
     '',
-    '- `yarn set version atls`',
+    '```bash',
+    'yarn set version atls',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- Бандл обновлён до последней доступной версии'
+      : '- Bundle is upgraded to the latest available version',
     '',
     '<!-- sync:verification -->',
     isRu ? '## 4. Базовая проверка' : '## 4. Basic verification',
     '',
-    '- `yarn check`',
-    '- `yarn files changed list`',
-    '- `yarn test unit`',
+    '```bash',
+    'yarn check',
+    'yarn files changed list',
+    'yarn test unit',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- `yarn check` завершает полный проход проверок без ошибок маршрутизации'
+      : '- `yarn check` runs a complete validation pass without routing errors',
+    isRu
+      ? '- `yarn files changed list` возвращает список файлов или пустой список, если изменений нет'
+      : '- `yarn files changed list` returns file list (or empty list if no changes)',
+    isRu
+      ? '- `yarn test unit` запускает модульные тесты текущего проекта'
+      : '- `yarn test unit` runs unit tests for the current project',
+    '',
+    '<!-- sync:consumer-howto -->',
+    isRu ? '## 5. Как использовать в чужом проекте' : '## 5. How to use in an external project',
+    '',
+    isRu
+      ? '- Подключите бандл один раз, затем поддерживайте версию через `yarn set version atls`'
+      : '- Install once, then keep it current with `yarn set version atls`',
+    isRu
+      ? '- Коммитьте изменения `.yarn/releases` и `.yarnrc.yml` вместе с обновлением бандла'
+      : '- Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates',
+    isRu
+      ? '- Для CI используйте те же команды, что и локально, чтобы избежать расхождения поведения'
+      : '- Use the same commands in CI and locally to avoid behavior drift',
+    '',
+    '<!-- sync:inside-raijin -->',
+    isRu ? '## 6. Дополнительно: работа внутри `raijin`' : '## 6. Extra: working inside `raijin`',
+    '',
+    '```bash',
+    'source .env',
+    'export NODE_OPTIONS',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- Внутренние команды репозитория выполняются в согласованной среде'
+      : '- Internal repository commands run in a consistent environment',
     '',
   ].join('\n')
 }
@@ -1023,7 +1204,7 @@ const cleanupAgentsDirectory = () => {
 }
 
 const smokeFixture = {
-  version: 2,
+  version: 3,
   cases: [
     {
       id: 'check-before-pr',
@@ -1034,12 +1215,14 @@ const smokeFixture = {
     {
       id: 'files-changed-list',
       prompt: 'show changed files in workspace',
+      routingHint: 'Need file-level changes list, not changed workspaces list',
       expectedCommand: 'files changed list',
       expectedStatus: 'active',
     },
     {
       id: 'run-unit-tests',
       prompt: 'run unit tests only',
+      routingHint: 'Prefer plain unit test route, not checks namespace route',
       expectedCommand: 'test unit',
       expectedStatus: 'active',
     },

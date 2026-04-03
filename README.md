@@ -5,21 +5,83 @@
 [![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](docs/README.ru.md)
 [![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](docs/README.md)
 
-Monorepo of `Raijin` tools with custom `atls` `Yarn` bundle
+<!-- sync:root-what -->
 
-<!-- sync:root-docs-entry -->
+## What this is
 
-## Documentation
+Raijin is a command and package toolkit for monorepos, shipped as the custom `atls` Yarn bundle
+The goal is one consistent way to run checks, builds, release, and utility flows across projects
 
-- RU (default): [docs/README.ru.md](docs/README.ru.md)
-- EN: [docs/README.md](docs/README.md)
-- Quickstart: [docs/raijin/quickstart.md](docs/raijin/quickstart.md)
-- Commands map: [docs/raijin/commands.md](docs/raijin/commands.md)
-- Packages map: [docs/raijin/packages.md](docs/raijin/packages.md)
+<!-- sync:root-audience -->
+
+## Who it is for
+
+- Teams maintaining multiple `Node.js`/`TypeScript` projects
+- Developers who need one command contract locally and in `GitHub Actions`
+- Open-source and internal repositories that need predictable checks and upgrades
+
+<!-- sync:root-capabilities -->
+
+## What Raijin can do
+
+- Code validation: `check`, `lint`, `typecheck`, `test`, `checks *`
+- Change scope tooling: `files changed *`, `workspaces changed *`
+- Build and release flows: `service build`, `library build`, `release create`, `npm publish`
+- Generators and utility commands for monorepo infrastructure
 
 <!-- sync:root-quickstart -->
 
-## Quick start
+## Quickstart
 
-- `yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs`
-- `yarn set version atls`
+### New project
+
+```bash
+yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs
+yarn set version atls
+```
+
+Expected result:
+
+- `.yarn/releases/yarn.mjs` is added or updated in the project
+- Raijin commands are available via `yarn`
+
+### Upgrade
+
+```bash
+yarn set version atls
+```
+
+Expected result:
+
+- The latest bundle version is installed
+
+### Verify
+
+```bash
+yarn check
+yarn files changed list
+yarn test unit
+```
+
+Expected result:
+
+- Commands run with expected routing and expected validation steps
+
+<!-- sync:root-consumer-howto -->
+
+## How to use in another project
+
+1. Install the bundle using [Quickstart](./docs/raijin/quickstart.md)
+2. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control
+3. Update with `yarn set version atls` when newer bundle versions are released
+
+<!-- sync:root-read-more -->
+
+## Where to read next
+
+- RU (default): [docs/README.ru.md](docs/README.ru.md)
+- EN: [docs/README.md](docs/README.md)
+- Raijin section router: [docs/raijin/README.md](docs/raijin/README.md)
+- Quickstart: [docs/raijin/quickstart.md](docs/raijin/quickstart.md)
+- Commands map: [docs/raijin/commands.md](docs/raijin/commands.md)
+- Packages map: [docs/raijin/packages.md](docs/raijin/packages.md)

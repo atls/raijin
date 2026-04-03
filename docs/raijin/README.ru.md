@@ -2,6 +2,14 @@
 
 Навигация по документации кастомного Yarn-бандла `atls`
 
+<!-- sync:router-scenarios -->
+
+## Куда идти по задаче
+
+- Подключить или обновить бандл: [quickstart.ru.md](./quickstart.ru.md)
+- Выбрать и понять команду: [commands.ru.md](./commands.ru.md)
+- Разобраться с workspace-пакетами: [packages.ru.md](./packages.ru.md)
+
 <!-- sync:router-read-order -->
 
 ## Порядок чтения
