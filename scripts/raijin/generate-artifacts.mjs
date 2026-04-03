@@ -442,6 +442,8 @@ const linkByLanguage = (basePath, language) => `${basePath}${language === 'ru' ?
 
 const renderRootReadme = (language) => {
   const isRu = language === 'ru'
+  const rootReadmeRu = 'README_RU.md'
+  const rootReadmeEn = 'README.md'
   const docsRouterRu = 'docs/README.ru.md'
   const docsRouterEn = 'docs/README.md'
   const quickstartPath = linkByLanguage('docs/raijin/quickstart', language)
@@ -454,8 +456,8 @@ const renderRootReadme = (language) => {
     '',
     '# Atlantis Raijin',
     '',
-    `[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](${docsRouterRu})`,
-    `[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](${docsRouterEn})`,
+    `[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](${rootReadmeRu})`,
+    `[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](${rootReadmeEn})`,
     '',
     '<!-- sync:root-what -->',
     '',
@@ -559,9 +561,15 @@ const renderRootReadme = (language) => {
     isRu ? '## Где читать дальше' : '## Where to read next',
     '',
     isRu
-      ? `- RU (по умолчанию): [docs/README.ru.md](${docsRouterRu})`
-      : `- RU (default): [docs/README.ru.md](${docsRouterRu})`,
-    isRu ? `- EN: [docs/README.md](${docsRouterEn})` : `- EN: [docs/README.md](${docsRouterEn})`,
+      ? `- RU (по умолчанию): [README_RU.md](${rootReadmeRu})`
+      : `- RU (default): [README_RU.md](${rootReadmeRu})`,
+    isRu ? `- EN: [README.md](${rootReadmeEn})` : `- EN: [README.md](${rootReadmeEn})`,
+    isRu
+      ? `- Индекс документации RU: [docs/README.ru.md](${docsRouterRu})`
+      : `- Docs index RU: [docs/README.ru.md](${docsRouterRu})`,
+    isRu
+      ? `- Индекс документации EN: [docs/README.md](${docsRouterEn})`
+      : `- Docs index EN: [docs/README.md](${docsRouterEn})`,
     isRu
       ? `- Роутер раздела Raijin: [${raijinRouterPath}](${raijinRouterPath})`
       : `- Raijin section router: [${raijinRouterPath}](${raijinRouterPath})`,
