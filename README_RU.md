@@ -2,8 +2,8 @@
 
 # Atlantis Raijin
 
-[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](docs/README.ru.md)
-[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](docs/README.md)
+[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README_RU.md)
+[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README.md)
 
 <!-- sync:root-what -->
 
@@ -79,8 +79,10 @@ yarn test unit
 
 ## Где читать дальше
 
-- RU (по умолчанию): [docs/README.ru.md](docs/README.ru.md)
-- EN: [docs/README.md](docs/README.md)
+- RU (по умолчанию): [README_RU.md](README_RU.md)
+- EN: [README.md](README.md)
+- Индекс документации RU: [docs/README.ru.md](docs/README.ru.md)
+- Индекс документации EN: [docs/README.md](docs/README.md)
 - Роутер раздела Raijin: [docs/raijin/README.ru.md](docs/raijin/README.ru.md)
 - Быстрый старт: [docs/raijin/quickstart.ru.md](docs/raijin/quickstart.ru.md)
 - Карта команд: [docs/raijin/commands.ru.md](docs/raijin/commands.ru.md)

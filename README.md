@@ -2,8 +2,8 @@
 
 # Atlantis Raijin
 
-[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](docs/README.ru.md)
-[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](docs/README.md)
+[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README_RU.md)
+[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README.md)
 
 <!-- sync:root-what -->
 
@@ -79,8 +79,10 @@ Expected result:
 
 ## Where to read next
 
-- RU (default): [docs/README.ru.md](docs/README.ru.md)
-- EN: [docs/README.md](docs/README.md)
+- RU (default): [README_RU.md](README_RU.md)
+- EN: [README.md](README.md)
+- Docs index RU: [docs/README.ru.md](docs/README.ru.md)
+- Docs index EN: [docs/README.md](docs/README.md)
 - Raijin section router: [docs/raijin/README.md](docs/raijin/README.md)
 - Quickstart: [docs/raijin/quickstart.md](docs/raijin/quickstart.md)
 - Commands map: [docs/raijin/commands.md](docs/raijin/commands.md)
