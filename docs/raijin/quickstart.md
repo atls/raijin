@@ -6,10 +6,9 @@ Minimal install-and-verify flow for the custom `atls` Yarn bundle
 
 ## 1. Prerequisites
 
-- Node.js: `22.x`
-- Yarn: `4.x`
+- Node.js: `>= 22`
+- Yarn: `>= 4`
 - A working project with `package.json`
-- Internet access to download bundle artifacts
 
 Expected result:
 
@@ -27,7 +26,7 @@ yarn set version atls
 Expected result:
 
 - `.yarn/releases/` contains the current Raijin `yarn.mjs`
-- Bundle commands (`check`, `files changed list`, `test unit`, etc.) become available
+- Bundle commands (`check`, `files changed list`, etc.) become available
 
 <!-- sync:bundle-upgrade -->
 
@@ -48,14 +47,12 @@ Expected result:
 ```bash
 yarn check
 yarn files changed list
-yarn test unit
 ```
 
 Expected result:
 
 - `yarn check` runs a complete validation pass without routing errors
 - `yarn files changed list` returns file list (or empty list if no changes)
-- `yarn test unit` runs unit tests for the current project
 
 <!-- sync:consumer-howto -->
 
@@ -64,16 +61,3 @@ Expected result:
 - Install once, then keep it current with `yarn set version atls`
 - Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates
 - Use the same commands in CI and locally to avoid behavior drift
-
-<!-- sync:inside-raijin -->
-
-## 6. Extra: working inside `raijin`
-
-```bash
-source .env
-export NODE_OPTIONS
-```
-
-Expected result:
-
-- Internal repository commands run in a consistent environment

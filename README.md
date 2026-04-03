@@ -5,6 +5,10 @@
 [![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README_RU.md)
 [![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README.md)
 
+<!-- sync:root-language-default -->
+
+Default docs language is RU: [README_RU.md](README_RU.md). EN version: [README.md](README.md)
+
 <!-- sync:root-what -->
 
 ## What this is
@@ -60,7 +64,6 @@ Expected result:
 ```bash
 yarn check
 yarn files changed list
-yarn test unit
 ```
 
 Expected result:
