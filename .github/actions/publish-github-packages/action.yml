@@ -1,7 +1,8 @@
-name: Publish composite action
+name: Publish GitHub Packages composite action
+description: Publish packages to GitHub Packages
 
 inputs:
-  NPM_TOKEN:
+  GITHUB_PACKAGES_TOKEN:
     required: true
   WORKSPACE:
     required: false
@@ -25,17 +26,17 @@ runs:
       run: |
         echo "Selected workspace: ${{ inputs.WORKSPACE }}"
 
-    - name: Verify NPM auth
+    - name: Verify GitHub Packages auth
       shell: bash
       run: |
         source .env
         export NODE_OPTIONS
         yarn npm whoami --publish
       env:
-        YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-        YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
+        YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
+        YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
 
-    - name: Npm Publish
+    - name: Publish to GitHub Packages
       if: ${{ inputs.WORKSPACE == '' }}
       shell: bash
       run: |
@@ -43,10 +44,10 @@ runs:
         export NODE_OPTIONS
         yarn workspaces changed foreach -vt --no-private npm publish --tolerate-republish --access public
       env:
-        YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-        YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
+        YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
+        YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
 
-    - name: Npm Publish selected workspace
+    - name: Publish selected workspace to GitHub Packages
       if: ${{ inputs.WORKSPACE != '' }}
       shell: bash
       run: |
@@ -54,5 +55,5 @@ runs:
         export NODE_OPTIONS
         yarn workspace ${{ inputs.WORKSPACE }} npm publish --tolerate-republish --access public
       env:
-        YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-        YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
+        YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
+        YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com

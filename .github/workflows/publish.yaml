@@ -2,6 +2,11 @@ name: Publish
 
 on:
   workflow_dispatch:
+    inputs:
+      workspace:
+        description: Workspace package name to publish (example @atls/code-schematics)
+        required: false
+        default: ''
   pull_request:
     types:
       - closed
@@ -29,7 +34,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || 'master' }}
           token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 0
 
@@ -57,6 +62,16 @@ jobs:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
 
+      - name: Verify GitHub Packages auth
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          source .env
+          export NODE_OPTIONS
+          yarn npm whoami --publish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ github.token }}
+          YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
+
       - name: Changelog
         if: ${{ !cancelled() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/changelog
@@ -64,11 +79,20 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Publish to NPM
-        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
+        if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
         id: npm
         uses: ./.github/actions/publish-npm
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          WORKSPACE: ${{ inputs.workspace || '' }}
+
+      - name: Publish to GitHub Packages
+        if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
+        id: github-packages
+        uses: ./.github/actions/publish-github-packages
+        with:
+          GITHUB_PACKAGES_TOKEN: ${{ github.token }}
+          WORKSPACE: ${{ inputs.workspace || '' }}
 
       - name: Bundle yarn
         if: ${{ !cancelled() && github.event.pull_request.merged == true }}
