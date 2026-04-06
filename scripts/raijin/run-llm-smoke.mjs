@@ -585,12 +585,24 @@ for (const testCase of llmCases) {
       }
 
       if (normalized.valid) {
-        finalDecision = {
-          command: normalized.command,
-          status: normalized.status,
+        const shouldPreferActiveFallback =
+          normalized.status === 'unavailable' && fallbackDecision.status === 'active'
+
+        if (shouldPreferActiveFallback) {
+          finalDecision = {
+            command: fallbackDecision.command,
+            status: fallbackDecision.status,
+          }
+          fallbackUsed = true
+          fallbackReason = `prefer-active-fallback:${fallbackDecision.reason}`
+        } else {
+          finalDecision = {
+            command: normalized.command,
+            status: normalized.status,
+          }
+          fallbackUsed = false
+          fallbackReason = ''
         }
-        fallbackUsed = false
-        fallbackReason = ''
       } else {
         invalidModelDecision = true
         finalDecision = {
