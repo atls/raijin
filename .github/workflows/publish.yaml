@@ -70,6 +70,13 @@ jobs:
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Publish to GitHub Packages
+        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
+        id: github-packages
+        uses: ./.github/actions/publish-github-packages
+        with:
+          GITHUB_PACKAGES_TOKEN: ${{ github.token }}
+
       - name: Bundle yarn
         if: ${{ !cancelled() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/bundle

@@ -1,0 +1,37 @@
+name: Publish GitHub Packages composite action
+description: Publish packages to GitHub Packages
+
+inputs:
+  GITHUB_PACKAGES_TOKEN:
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: List changed workspaces
+      shell: bash
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn workspaces changed list
+
+    - name: Verify GitHub Packages auth
+      shell: bash
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn npm whoami --publish
+      env:
+        YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
+        YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
+
+    - name: Publish to GitHub Packages
+      shell: bash
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn workspaces changed foreach -vt --no-private npm publish --tolerate-republish --access public
+      env:
+        YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
+        YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
