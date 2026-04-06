@@ -2,6 +2,11 @@ name: Publish
 
 on:
   workflow_dispatch:
+    inputs:
+      workspace:
+        description: Workspace package name to publish (example @atls/code-schematics)
+        required: false
+        default: ''
   pull_request:
     types:
       - closed
@@ -79,6 +84,7 @@ jobs:
         uses: ./.github/actions/publish-npm
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          WORKSPACE: ${{ inputs.workspace || '' }}
 
       - name: Publish to GitHub Packages
         if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
@@ -86,6 +92,7 @@ jobs:
         uses: ./.github/actions/publish-github-packages
         with:
           GITHUB_PACKAGES_TOKEN: ${{ github.token }}
+          WORKSPACE: ${{ inputs.workspace || '' }}
 
       - name: Bundle yarn
         if: ${{ !cancelled() && github.event.pull_request.merged == true }}

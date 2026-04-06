@@ -4,17 +4,27 @@ description: Publish packages to GitHub Packages
 inputs:
   GITHUB_PACKAGES_TOKEN:
     required: true
+  WORKSPACE:
+    required: false
+    default: ''
 
 runs:
   using: composite
 
   steps:
     - name: List changed workspaces
+      if: ${{ inputs.WORKSPACE == '' }}
       shell: bash
       run: |
         source .env
         export NODE_OPTIONS
         yarn workspaces changed list
+
+    - name: Show selected workspace
+      if: ${{ inputs.WORKSPACE != '' }}
+      shell: bash
+      run: |
+        echo "Selected workspace: ${{ inputs.WORKSPACE }}"
 
     - name: Verify GitHub Packages auth
       shell: bash
@@ -27,11 +37,23 @@ runs:
         YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
 
     - name: Publish to GitHub Packages
+      if: ${{ inputs.WORKSPACE == '' }}
       shell: bash
       run: |
         source .env
         export NODE_OPTIONS
         yarn workspaces changed foreach -vt --no-private npm publish --tolerate-republish --access public
+      env:
+        YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
+        YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
+
+    - name: Publish selected workspace to GitHub Packages
+      if: ${{ inputs.WORKSPACE != '' }}
+      shell: bash
+      run: |
+        source .env
+        export NODE_OPTIONS
+        yarn workspace ${{ inputs.WORKSPACE }} npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
         YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
