@@ -1,5 +1,12 @@
 
 
+## [1.0.15](https://github.com/atls/raijin/compare/@atls/yarn-plugin-typescript@1.0.14...@atls/yarn-plugin-typescript@1.0.15) (2026-04-06)
+
+
+
+
+
+
 ## [1.0.14](https://github.com/atls/raijin/compare/@atls/yarn-plugin-typescript@1.0.13...@atls/yarn-plugin-typescript@1.0.14) (2026-04-02)
 
 

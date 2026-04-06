@@ -1,3 +1,10 @@
+
+
+## [1.0.4](https://github.com/atls/raijin/compare/@atls/cli-ui-schematics-component@1.0.2...@atls/cli-ui-schematics-component@1.0.4) (2026-04-06)
+
+
+
+
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/cli-ui-schematics-component@1.0.1...@atls/cli-ui-schematics-component@1.0.2) (2025-03-09)
 
 ### Bug Fixes
