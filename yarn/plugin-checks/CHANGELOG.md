@@ -1,5 +1,19 @@
 
 
+## [1.0.25](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.24...@atls/yarn-plugin-checks@1.0.25) (2026-04-23)
+
+
+### Bug Fixes
+
+
+* **checks:** include test stderr in annotations ([5d17807](https://github.com/atls/raijin/commit/5d178070d80f4855bceda6cc734654d34758ad38))
+* **checks:** make test formatter runtime safe ([1d66e71](https://github.com/atls/raijin/commit/1d66e71318f4992522cdd37840d02065921430f9))
+* **yarn-plugin-checks:** scope stderr usage for test annotations ([5c2229f](https://github.com/atls/raijin/commit/5c2229fdad3c2fab95e2b983ddb55539547c18f2))
+
+
+
+
+
 ## [1.0.24](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.23...@atls/yarn-plugin-checks@1.0.24) (2026-04-06)
 
 
