@@ -631,6 +631,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-configuration@workspace:code/code-configuration"
   dependencies:
+    "@types/node": "npm:22.13.10"
     "@yarnpkg/fslib": "npm:3.1.0"
   languageName: unknown
   linkType: soft
