@@ -1,14 +1,12 @@
 import type { TestEvent }  from 'node:test/reporters'
 
-import type { Annotation } from './github.checks.js'
+import type { Annotation }      from './github.checks.js'
+import type { AnnotationLevel } from './github.checks.js'
 
-import { relative }        from 'node:path'
-
-import stripAnsi           from 'strip-ansi'
-
-import { AnnotationLevel } from './github.checks.js'
+import { relative }             from 'node:path'
 
 const DEFAULT_LINE = 1
+const FAILURE_ANNOTATION_LEVEL = 'failure' as AnnotationLevel
 
 const GENERIC_TEST_FAILURE_MESSAGES = new Set(['test failed'])
 
@@ -36,7 +34,7 @@ const isErrorLike = (value: unknown): value is ErrorLike =>
   typeof value === 'object' && value !== null
 
 const getText = (value: unknown): string | undefined =>
-  typeof value === 'string' && value.length > 0 ? stripAnsi(value) : undefined
+  typeof value === 'string' && value.length > 0 ? value : undefined
 
 const getMessage = (error: unknown): string | undefined => {
   if (!isErrorLike(error)) {
@@ -89,7 +87,7 @@ const getStderrTitle = (stderr: string | undefined): string | undefined => {
     return undefined
   }
 
-  const lines = stripAnsi(stderr)
+  const lines = stderr
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean)
@@ -111,7 +109,7 @@ const getAnnotationTitle = (error: unknown, stderr: string | undefined): string 
 
 const getAnnotationDetails = (error: unknown, stderr: string | undefined): string => {
   if (stderr) {
-    return stripAnsi(stderr).trim()
+    return stderr.trim()
   }
 
   const rootError = findRootError(error)
@@ -141,7 +139,7 @@ export const formatTestResults = (
       path: result.file ? relative(cwd, result.file) : cwd,
       start_line: line,
       end_line: line,
-      annotation_level: AnnotationLevel.Failure,
+      annotation_level: FAILURE_ANNOTATION_LEVEL,
       raw_details: getAnnotationDetails(result.details.error, stderr),
       title,
       message: title,

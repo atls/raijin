@@ -1,10 +1,20 @@
 import type { TestEvent }    from 'node:test/reporters'
+import type { Annotation }   from './github.checks.js'
 
 import assert                from 'node:assert/strict'
 import { join }              from 'node:path'
 import { test }              from 'node:test'
 
-import { formatTestResults } from './test-results.formatter.js'
+type FormatTestResults = (
+  results: Array<TestFail>,
+  cwd: string,
+  events?: Array<TestEvent>
+) => Array<Annotation>
+
+// @ts-expect-error node:test executes TypeScript sources directly in regular mode
+const { formatTestResults } = (await import('./test-results.formatter.ts')) as {
+  formatTestResults: FormatTestResults
+}
 
 const createFailure = (cwd: string, error: Error, overrides: Partial<TestFail> = {}): TestFail => {
   const file = join(cwd, 'client/src/auth/profile.test.ts')
