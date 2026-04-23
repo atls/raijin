@@ -1,5 +1,12 @@
 
 
+## [1.1.55](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.55...@atls/yarn-cli@1.1.55) (2026-04-23)
+
+
+
+
+
+
 ## [1.1.54](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.47...@atls/yarn-cli@1.1.54) (2026-04-06)
 
 
