@@ -92,7 +92,8 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
 
           const annotations = this.formatResults(
             results.filter((result) => result.type === 'test:fail').map((result) => result.data),
-            project.cwd
+            project.cwd,
+            results
           )
 
           await checks.complete(checkId, {
