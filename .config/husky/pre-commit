@@ -1,1 +1,3 @@
-yarn commit staged
+ROOT_DIR=$(git rev-parse --show-toplevel)
+
+exec "$ROOT_DIR/.yarn/bin/yarn" commit staged
