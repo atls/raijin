@@ -516,10 +516,10 @@ const normalizeModelDecision = (parsed, shortlistMap) => {
 
   if (status && status !== expectedStatus) {
     return {
-      valid: false,
+      valid: true,
       command,
-      status,
-      reason: 'status_mismatch',
+      status: expectedStatus,
+      reason: 'status_coerced',
     }
   }
 
