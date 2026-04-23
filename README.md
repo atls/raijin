@@ -1,4 +1,4 @@
-<img width="2248" height="431" alt="toolset-github-cover@2x 1" src="https://github.com/user-attachments/assets/ac98b900-ee3c-4ea8-a081-e83a1f5f3282" />
+![raijin-github-cover](https://user-images.githubusercontent.com/102182195/234980835-78ed0fdb-c692-4b0e-ac95-b46c8cbd17a4.png)
 
 # Atlantis Raijin
 

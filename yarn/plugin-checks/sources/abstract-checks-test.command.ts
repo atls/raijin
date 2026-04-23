@@ -1,21 +1,17 @@
-import type { Annotation } from './github.checks.js'
+import type { TestEvent }    from 'node:test/reporters'
 
-import { relative }        from 'node:path'
+import type { Annotation }   from './github.checks.js'
 
-import { BaseCommand }     from '@yarnpkg/cli'
+import { BaseCommand }       from '@yarnpkg/cli'
 
-import { AnnotationLevel } from './github.checks.js'
+import { formatTestResults } from './test-results.formatter.js'
 
 export abstract class AbstractChecksTestCommand extends BaseCommand {
-  formatResults(results: Array<TestFail>, cwd: string): Array<Annotation> {
-    return results.map((result) => ({
-      path: result.file ? relative(cwd, result.file) : cwd,
-      start_line: result.column ?? 1,
-      end_line: result.column ?? 1,
-      annotation_level: AnnotationLevel.Failure,
-      raw_details: result.details.error.stack || result.details.error.message,
-      title: result.details.error.message,
-      message: result.details.error.message,
-    }))
+  formatResults(
+    results: Array<TestFail>,
+    cwd: string,
+    events: Array<TestEvent> = []
+  ): Array<Annotation> {
+    return formatTestResults(results, cwd, events)
   }
 }
