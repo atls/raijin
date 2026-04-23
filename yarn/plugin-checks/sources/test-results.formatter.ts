@@ -1,4 +1,4 @@
-import type { TestEvent }  from 'node:test/reporters'
+import type { TestEvent }       from 'node:test/reporters'
 
 import type { Annotation }      from './github.checks.js'
 import type { AnnotationLevel } from './github.checks.js'

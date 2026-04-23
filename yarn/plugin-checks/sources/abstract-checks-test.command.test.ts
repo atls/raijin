@@ -1,9 +1,10 @@
-import type { TestEvent }    from 'node:test/reporters'
-import type { Annotation }   from './github.checks.js'
+import type { TestEvent }  from 'node:test/reporters'
 
-import assert                from 'node:assert/strict'
-import { join }              from 'node:path'
-import { test }              from 'node:test'
+import type { Annotation } from './github.checks.js'
+
+import assert              from 'node:assert/strict'
+import { join }            from 'node:path'
+import { test }            from 'node:test'
 
 type FormatTestResults = (
   results: Array<TestFail>,
