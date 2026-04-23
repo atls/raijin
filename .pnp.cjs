@@ -1507,6 +1507,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-configuration/",\
         "packageDependencies": [\
           ["@atls/code-configuration", "workspace:code/code-configuration"],\
+          ["@types/node", "npm:22.13.10"],\
           ["@yarnpkg/fslib", "npm:3.1.0"]\
         ],\
         "linkType": "SOFT"\
@@ -12326,6 +12327,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["ink-link", "virtual:d4d863e1847474d8decf0216abd91809bdc8a06347a3940489842b1b00bc5fd2839e3e2bcf786c043e3e943816eddfcbede79fe3854c3472d030c68955adab7e#npm:4.1.0"],\
           ["@types/ink", null],\
+          ["@types/react", "npm:18.3.18"],\
           ["ink", "virtual:41e75c4e884651becc23cd9371ff80957cda61af29333e93f2626446035dbe0bc3aae6938e95657a19bd4e897a1338289ce6044a41933fe389051ed80db43003#npm:3.2.0"],\
           ["prop-types", "npm:15.8.1"],\
           ["react", "npm:18.3.1"],\

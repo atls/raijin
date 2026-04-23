@@ -529,7 +529,7 @@
 - Пример: `Загрузить настройки workspace из файла конфигурации.`
 - Теги: `code`
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 1, devDeps 0, peerDeps 0
+- Зависимости: deps 1, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-format -->
 
