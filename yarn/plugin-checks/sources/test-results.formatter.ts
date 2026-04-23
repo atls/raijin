@@ -67,6 +67,9 @@ const findRootError = (error: unknown): unknown => {
   return error
 }
 
+const isGenericFailureMessage = (message: string | undefined): boolean =>
+  message === undefined || GENERIC_TEST_FAILURE_MESSAGES.has(message)
+
 const collectStderrByFile = (events: Array<TestEvent>): Map<string, string> =>
   events.reduce((stderrByFile, event) => {
     if (event.type !== 'test:stderr') {
@@ -95,12 +98,38 @@ const getStderrTitle = (stderr: string | undefined): string | undefined => {
   return lines.find((line) => ERROR_TITLE_PREFIXES.some((prefix) => line.startsWith(prefix)))
 }
 
+const collectFailureCountByFile = (results: Array<TestFail>): Map<string, number> =>
+  results.reduce((failureCountByFile, result) => {
+    if (!result.file) {
+      return failureCountByFile
+    }
+
+    failureCountByFile.set(result.file, (failureCountByFile.get(result.file) ?? 0) + 1)
+
+    return failureCountByFile
+  }, new Map<string, number>())
+
+const shouldUseStderr = (
+  error: unknown,
+  stderr: string | undefined,
+  fileFailureCount: number
+): boolean => {
+  if (!stderr || fileFailureCount > 1) {
+    return false
+  }
+
+  const rootError = findRootError(error)
+  const rootMessage = getMessage(rootError)
+
+  return isGenericFailureMessage(rootMessage) && getStderrTitle(stderr) !== undefined
+}
+
 const getAnnotationTitle = (error: unknown, stderr: string | undefined): string => {
   const rootError = findRootError(error)
   const rootMessage = getMessage(rootError)
   const stderrTitle = getStderrTitle(stderr)
 
-  if (stderrTitle && (!rootMessage || GENERIC_TEST_FAILURE_MESSAGES.has(rootMessage))) {
+  if (stderrTitle && isGenericFailureMessage(rootMessage)) {
     return stderrTitle
   }
 
@@ -108,11 +137,12 @@ const getAnnotationTitle = (error: unknown, stderr: string | undefined): string 
 }
 
 const getAnnotationDetails = (error: unknown, stderr: string | undefined): string => {
-  if (stderr) {
+  const rootError = findRootError(error)
+  const rootMessage = getMessage(rootError)
+
+  if (stderr && isGenericFailureMessage(rootMessage)) {
     return stderr.trim()
   }
-
-  const rootError = findRootError(error)
 
   return (
     getStack(rootError) ??
@@ -129,10 +159,15 @@ export const formatTestResults = (
   events: Array<TestEvent> = []
 ): Array<Annotation> => {
   const stderrByFile = collectStderrByFile(events)
+  const failureCountByFile = collectFailureCountByFile(results)
 
   return results.map((result) => {
     const stderr = result.file ? stderrByFile.get(result.file) : undefined
-    const title = getAnnotationTitle(result.details.error, stderr)
+    const fileFailureCount = result.file ? (failureCountByFile.get(result.file) ?? 0) : 0
+    const scopedStderr = shouldUseStderr(result.details.error, stderr, fileFailureCount)
+      ? stderr
+      : undefined
+    const title = getAnnotationTitle(result.details.error, scopedStderr)
     const line = result.line ?? DEFAULT_LINE
 
     return {
@@ -140,7 +175,7 @@ export const formatTestResults = (
       start_line: line,
       end_line: line,
       annotation_level: FAILURE_ANNOTATION_LEVEL,
-      raw_details: getAnnotationDetails(result.details.error, stderr),
+      raw_details: getAnnotationDetails(result.details.error, scopedStderr),
       title,
       message: title,
     }

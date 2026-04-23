@@ -79,3 +79,71 @@ test('should unwrap non-generic failure cause', () => {
   assert.equal(annotation.message, 'The provided credentials are invalid.')
   assert.equal(annotation.raw_details, cause.stack)
 })
+
+test('should keep failure-specific details for multiple fails in one file', () => {
+  const cwd = '/workspace/project'
+  const file = join(cwd, 'client/src/auth/profile.test.ts')
+  const firstCause = new Error('First failure reason')
+  const secondCause = new Error('Second failure reason')
+
+  firstCause.stack = 'Error: First failure reason\n    at profile.test.ts:12:4'
+  secondCause.stack = 'Error: Second failure reason\n    at profile.test.ts:32:4'
+
+  const firstError = new Error('test failed', { cause: firstCause })
+  const secondError = new Error('test failed', { cause: secondCause })
+
+  const events = [
+    {
+      type: 'test:stderr',
+      data: {
+        file,
+        message: 'Error: unrelated merged stderr chunk for first failure\n',
+      },
+    },
+    {
+      type: 'test:stderr',
+      data: {
+        file,
+        message: 'Error: unrelated merged stderr chunk for second failure\n',
+      },
+    },
+  ] as Array<TestEvent>
+
+  const annotations = formatTestResults(
+    [
+      createFailure(cwd, firstError, { name: 'first fail', testNumber: 1, line: 12 }),
+      createFailure(cwd, secondError, { name: 'second fail', testNumber: 2, line: 32 }),
+    ],
+    cwd,
+    events
+  )
+
+  assert.equal(annotations[0].title, 'First failure reason')
+  assert.equal(annotations[0].raw_details, firstCause.stack)
+  assert.equal(annotations[1].title, 'Second failure reason')
+  assert.equal(annotations[1].raw_details, secondCause.stack)
+})
+
+test('should ignore non-error stderr for non-generic failures', () => {
+  const cwd = '/workspace/project'
+  const file = join(cwd, 'client/src/auth/profile.test.ts')
+  const cause = new Error('The provided credentials are invalid.')
+  cause.stack = 'Error: The provided credentials are invalid.\n    at auth.ts:149:11'
+
+  const error = new Error('test failed', { cause })
+  const events = [
+    {
+      type: 'test:stderr',
+      data: {
+        file,
+        message: 'diagnostic line from passing test\n',
+      },
+    },
+  ] as Array<TestEvent>
+
+  const [annotation] = formatTestResults([createFailure(cwd, error)], cwd, events)
+
+  assert.equal(annotation.title, 'The provided credentials are invalid.')
+  assert.equal(annotation.message, 'The provided credentials are invalid.')
+  assert.equal(annotation.raw_details, cause.stack)
+})
