@@ -529,7 +529,7 @@ Compact list:
 - Example: `Load workspace settings from a config file.`
 - Tags: `code`
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 1, devDeps 0, peerDeps 0
+- Dependencies: deps 1, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-code-format -->
 
