@@ -135,7 +135,13 @@ class ChecksLintCommand extends BaseCommand {
       }
     )
 
-    return commandReport.exitCode()
+    const exitCode = commandReport.exitCode()
+
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      process.exit(exitCode)
+    }
+
+    return exitCode
   }
 
   private async getLintTargets(project: Project): Promise<Array<string> | null> {
