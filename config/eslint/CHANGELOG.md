@@ -1,5 +1,17 @@
 
 
+## [2.0.14](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.13...@atls/config-eslint@2.0.14) (2026-04-26)
+
+
+### Bug Fixes
+
+
+* **common:** align prettier config resolution across cli and ide ([7ba028c](https://github.com/atls/raijin/commit/7ba028c773ab836ce5c78dd29a07cb845c5fdac6))
+
+
+
+
+
 ## [2.0.13](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.12...@atls/config-eslint@2.0.13) (2026-04-02)
 
 

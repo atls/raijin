@@ -1,5 +1,17 @@
 
 
+## [2.1.23](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.22...@atls/code-runtime@2.1.23) (2026-04-26)
+
+
+### Bug Fixes
+
+
+* **common:** align prettier config resolution across cli and ide ([7ba028c](https://github.com/atls/raijin/commit/7ba028c773ab836ce5c78dd29a07cb845c5fdac6))
+
+
+
+
+
 ## [2.1.22](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.21...@atls/code-runtime@2.1.22) (2026-04-26)
 
 

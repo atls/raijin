@@ -1,5 +1,17 @@
 
 
+## [1.0.3](https://github.com/atls/raijin/compare/@atls/prettier-plugin@1.0.2...@atls/prettier-plugin@1.0.3) (2026-04-26)
+
+
+### Bug Fixes
+
+
+* **common:** align prettier config resolution across cli and ide ([7ba028c](https://github.com/atls/raijin/commit/7ba028c773ab836ce5c78dd29a07cb845c5fdac6))
+
+
+
+
+
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/prettier-plugin@1.0.1...@atls/prettier-plugin@1.0.2) (2025-12-07)
 
 
