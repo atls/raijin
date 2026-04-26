@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -55,7 +55,7 @@ jobs:
 
       - name: Upload LLM smoke report
         if: ${{ always() && env.OPENAI_API_KEY != '' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: raijin-llm-smoke-report
           path: artifacts/llm-smoke-report.json
