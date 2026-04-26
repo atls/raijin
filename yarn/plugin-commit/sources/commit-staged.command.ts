@@ -5,15 +5,25 @@ import { BaseCommand } from '@yarnpkg/cli'
 import { Option }      from 'clipanion'
 import lintStaged      from 'lint-staged'
 
-const rootDir = process.cwd()
-const yarnBin = join(rootDir, '.yarn/bin/yarn')
-const yarnCommand = (command: string): string => `"${yarnBin}" ${command}`
+const resolveRootDir = (): string => {
+  try {
+    // eslint-disable-next-line n/no-sync
+    return execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim()
+  } catch {
+    return process.cwd()
+  }
+}
 
-const config: lintStaged.Config = {
-  '*.{yml,yaml,json,graphql,md}': yarnCommand('format'),
-  '*.{js,mjs,cjs,jsx,ts,tsx}': [yarnCommand('format'), yarnCommand('lint')],
-  '*.{ts,tsx}': yarnCommand('typecheck'),
-  '*.{test,spec}.{ts,tsx}': yarnCommand('test unit'),
+const createConfig = (rootDir: string): lintStaged.Config => {
+  const yarnBin = join(rootDir, '.yarn/bin/yarn')
+  const yarnCommand = (command: string): string => `"${yarnBin}" ${command}`
+
+  return {
+    '*.{yml,yaml,json,graphql,md}': yarnCommand('format'),
+    '*.{js,mjs,cjs,jsx,ts,tsx}': [yarnCommand('format'), yarnCommand('lint')],
+    '*.{ts,tsx}': yarnCommand('typecheck'),
+    '*.{test,spec}.{ts,tsx}': yarnCommand('test unit'),
+  }
 }
 
 export class CommitStagedCommand extends BaseCommand {
@@ -35,7 +45,7 @@ export class CommitStagedCommand extends BaseCommand {
 
       // @ts-expect-error: Fix import
       const passed = await lintStaged({
-        config,
+        config: createConfig(resolveRootDir()),
         maxArgLength: safeMaxArgLength,
       })
 
