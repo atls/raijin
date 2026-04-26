@@ -1,5 +1,19 @@
 
 
+## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.8...@atls/yarn-plugin-commit@1.0.9) (2026-04-26)
+
+
+### Bug Fixes
+
+
+* **commit-staged:** use repository yarn for lint-staged tasks ([b941f41](https://github.com/atls/raijin/commit/b941f41bc15a1c9c5df6688d54720b0992ba29d4))
+* **yarn-cli:** rebuild bundled commit staged commands ([bc10113](https://github.com/atls/raijin/commit/bc101136fef158944671fb80ba91141939a9ec1f))
+* **yarn-plugin-commit:** resolve yarn path from git root ([c54480a](https://github.com/atls/raijin/commit/c54480ac73092fba4082b8d603ebe135ef87fa1b))
+
+
+
+
+
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.7...@atls/yarn-plugin-commit@1.0.8) (2025-12-07)
 
 

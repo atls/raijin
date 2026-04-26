@@ -1,5 +1,18 @@
 
 
+## [1.1.59](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.59...@atls/yarn-cli@1.1.59) (2026-04-26)
+
+
+### Bug Fixes
+
+
+* **yarn-cli:** rebuild bundled commit staged commands ([bc10113](https://github.com/atls/raijin/commit/bc101136fef158944671fb80ba91141939a9ec1f))
+* **yarn-plugin-commit:** resolve yarn path from git root ([c54480a](https://github.com/atls/raijin/commit/c54480ac73092fba4082b8d603ebe135ef87fa1b))
+
+
+
+
+
 ## [1.1.58](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.58...@atls/yarn-cli@1.1.58) (2026-04-26)
 
 

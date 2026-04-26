@@ -1,5 +1,17 @@
 
 
+## [2.1.22](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.21...@atls/code-runtime@2.1.22) (2026-04-26)
+
+
+### Bug Fixes
+
+
+* **hooks:** run pre-commit via repository yarn ([6bfd60d](https://github.com/atls/raijin/commit/6bfd60d7667489555532d238f132786634145d65))
+
+
+
+
+
 ## [2.1.21](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.20...@atls/code-runtime@2.1.21) (2026-04-23)
 
 

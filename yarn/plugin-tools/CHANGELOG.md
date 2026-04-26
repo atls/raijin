@@ -1,5 +1,17 @@
 
 
+## [1.0.19](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.18...@atls/yarn-plugin-tools@1.0.19) (2026-04-26)
+
+
+### Bug Fixes
+
+
+* **hooks:** run pre-commit via repository yarn ([6bfd60d](https://github.com/atls/raijin/commit/6bfd60d7667489555532d238f132786634145d65))
+
+
+
+
+
 ## [1.0.18](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.17...@atls/yarn-plugin-tools@1.0.18) (2026-04-23)
 
 
