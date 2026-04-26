@@ -7,6 +7,10 @@ import { ppath }                 from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'
 
 const hook = (command: string): string => `${command}`
+const preCommitHook = (): string => `#!/bin/sh
+ROOT_DIR=$(git rev-parse --show-toplevel)
+"$ROOT_DIR/.yarn/bin/yarn" commit staged
+`
 
 const git = (args: Array<string>): SpawnSyncReturns<string> =>
   // eslint-disable-next-line n/no-sync
@@ -40,7 +44,7 @@ export const afterAllInstalled = async (project: Project): Promise<void> => {
     mode: 0o755,
   })
 
-  await xfs.writeFilePromise(ppath.join(target, 'pre-commit'), hook('yarn commit staged'), {
+  await xfs.writeFilePromise(ppath.join(target, 'pre-commit'), preCommitHook(), {
     mode: 0o755,
   })
 
