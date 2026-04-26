@@ -125,15 +125,11 @@ class ChecksLintCommand extends BaseCommand {
                   : 'All checks passed',
               annotations,
             })
-
-            this.exitProxy()
           } catch (error) {
             await checks.failure({
               title: 'Lint run failed',
               summary: error instanceof Error ? error.message : (error as string),
             })
-
-            this.exitProxy()
           }
         })
       }
@@ -190,12 +186,6 @@ class ChecksLintCommand extends BaseCommand {
           }
         }))
       .flat()
-  }
-
-  private exitProxy(): void {
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      process.reallyExit(0)
-    }
   }
 }
 
