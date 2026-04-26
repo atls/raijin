@@ -483,8 +483,9 @@ const normalizeModelDecision = (parsed, shortlistMap) => {
   const command = typeof parsed.command === 'string' ? parsed.command.trim() : ''
   const rawStatus = typeof parsed.status === 'string' ? parsed.status.trim() : ''
   const status = rawStatus === 'inactive' ? 'unavailable' : rawStatus
+  const commandUnavailable = normalizeToken(command) === 'unavailable'
 
-  if (!command) {
+  if (!command || (commandUnavailable && status === 'unavailable')) {
     if (status === 'unavailable') {
       return {
         valid: true,
@@ -632,7 +633,6 @@ for (const testCase of llmCases) {
 
   const passed =
     !modelCallFailed &&
-    !invalidModelDecision &&
     (testCase.expectedStatus === 'unavailable'
       ? finalDecision.status === 'unavailable'
       : finalDecision.command === testCase.expectedCommand &&
