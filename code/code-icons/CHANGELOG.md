@@ -1,5 +1,17 @@
 
 
+## [2.0.25](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.24...@atls/code-icons@2.0.25) (2026-04-26)
+
+
+### Bug Fixes
+
+
+* **common:** reconcile published package versions ([4c73ca5](https://github.com/atls/raijin/commit/4c73ca5e5b76b21b79e6586d09bcda56049a5006))
+
+
+
+
+
 ## [2.0.24](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.23...@atls/code-icons@2.0.24) (2026-04-26)
 
 
