@@ -15,6 +15,10 @@ on:
     paths-ignore:
       - '.github/**'
 
+concurrency:
+  group: publish-master
+  cancel-in-progress: false
+
 jobs:
   run:
     name: Publish
