@@ -125,23 +125,21 @@ class ChecksLintCommand extends BaseCommand {
                   : 'All checks passed',
               annotations,
             })
+
+            this.exitProxy()
           } catch (error) {
             await checks.failure({
               title: 'Lint run failed',
               summary: error instanceof Error ? error.message : (error as string),
             })
+
+            this.exitProxy()
           }
         })
       }
     )
 
-    const exitCode = commandReport.exitCode()
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      process.exit(exitCode)
-    }
-
-    return exitCode
+    return commandReport.exitCode()
   }
 
   private async getLintTargets(project: Project): Promise<Array<string> | null> {
@@ -192,6 +190,12 @@ class ChecksLintCommand extends BaseCommand {
           }
         }))
       .flat()
+  }
+
+  private exitProxy(): void {
+    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+      process.reallyExit(0)
+    }
   }
 }
 
