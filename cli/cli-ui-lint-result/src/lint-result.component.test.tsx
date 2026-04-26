@@ -40,7 +40,6 @@ import React             from 'react'
 │  3 |                                                                                             │
 │  4 | import { render }        from 'ink-testing-library'                                         │
 │                                                                                                  │
-│                                                                                                  │
 │   some message                                                                                   │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯`
