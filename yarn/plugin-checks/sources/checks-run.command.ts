@@ -50,11 +50,16 @@ class ChecksRunCommand extends BaseCommand {
         !args.includes('--changed')
       const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
 
-      const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...checkArgs], {
+      const { code } = await execUtils.pipevp('yarn', ['checks', ...checkArgs], {
         cwd,
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+        stderr: this.context.stderr,
       })
 
-      this.context.stdout.write(stdout || stderr)
+      if (code > 0) {
+        report.reportError(MessageName.UNNAMED, `Run check ${args.join(' ')} exit code ${code}`)
+      }
     } catch (error) {
       report.reportError(
         MessageName.UNNAMED,
