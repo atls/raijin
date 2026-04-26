@@ -61,7 +61,7 @@ const config: Array<Linter.Config> = [
       parser,
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['scripts/raijin/*.mjs'],
+          allowDefaultProject: ['scripts/raijin/*.mjs', '.prettierrc.mjs'],
         },
         ecmaFeatures: {
           jsx: true,

@@ -388,6 +388,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
+          ["@atls/config-prettier", "workspace:config/prettier"],\
           ["@types/node", "npm:22.13.10"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["esbuild", [\
@@ -1849,6 +1850,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./config/prettier/",\
         "packageDependencies": [\
           ["@atls/config-prettier", "workspace:config/prettier"],\
+          ["@atls/prettier-plugin", "workspace:prettier/plugin"],\
           ["@types/node", "npm:22.13.10"],\
           ["prettier", "npm:3.5.3"]\
         ],\
@@ -16328,6 +16330,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["tools", "workspace:."],\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
+          ["@atls/config-prettier", "workspace:config/prettier"],\
           ["@types/node", "npm:22.13.10"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["esbuild", [\

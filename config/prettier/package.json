@@ -17,6 +17,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/prettier-plugin": "workspace:*",
     "prettier": "3.5.3"
   },
   "devDependencies": {
