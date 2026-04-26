@@ -727,7 +727,7 @@
 - Пример: `Применить общую конфигурацию Prettier к новому workspace.`
 - Теги: `config`
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 1, devDeps 1, peerDeps 0
+- Зависимости: deps 2, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-config-typescript -->
 
