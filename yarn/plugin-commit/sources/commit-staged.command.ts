@@ -1,14 +1,18 @@
-import { execSync }    from 'node:child_process'
+import { join }        from 'node:path'
 
 import { BaseCommand } from '@yarnpkg/cli'
 import { Option }      from 'clipanion'
 import lintStaged      from 'lint-staged'
 
+const rootDir = process.cwd()
+const yarnBin = join(rootDir, '.yarn/bin/yarn')
+const yarnCommand = (command: string): string => `"${yarnBin}" ${command}`
+
 const config: lintStaged.Config = {
-  '*.{yml,yaml,json,graphql,md}': 'yarn format',
-  '*.{js,mjs,cjs,jsx,ts,tsx}': ['yarn format', 'yarn lint'],
-  '*.{ts,tsx}': 'yarn typecheck',
-  '*.{test,spec}.{ts,tsx}': 'yarn test unit',
+  '*.{yml,yaml,json,graphql,md}': yarnCommand('format'),
+  '*.{js,mjs,cjs,jsx,ts,tsx}': [yarnCommand('format'), yarnCommand('lint')],
+  '*.{ts,tsx}': yarnCommand('typecheck'),
+  '*.{test,spec}.{ts,tsx}': yarnCommand('test unit'),
 }
 
 export class CommitStagedCommand extends BaseCommand {
