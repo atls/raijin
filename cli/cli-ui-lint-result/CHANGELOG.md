@@ -1,5 +1,17 @@
 
 
+## [1.0.2](https://github.com/atls/raijin/compare/@atls/cli-ui-lint-result-component@1.0.1...@atls/cli-ui-lint-result-component@1.0.2) (2026-04-26)
+
+
+### Bug Fixes
+
+
+* **cli-ui-lint-result:** remove extra vertical spacing ([878734c](https://github.com/atls/raijin/commit/878734c3d3318efabed7ff27a3653cc04a4c5d89))
+
+
+
+
+
 ## [1.0.1](https://github.com/atls/raijin/compare/@atls/cli-ui-lint-result-component@1.0.0...@atls/cli-ui-lint-result-component@1.0.1) (2025-12-07)
 
 
