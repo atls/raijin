@@ -8,7 +8,9 @@ import type { AST }               from 'prettier'
 
 import type { GetPrintersReturn } from '../interfaces/index.js'
 
-import { extractPrinter }         from '../patch.js'
+import * as estree                from 'prettier/plugins/estree'
+
+const estreePrinter = (estree as unknown as { printers: Record<string, Printer> }).printers.estree
 
 const nodeImportSize = (node: ImportDeclaration): number => {
   if (node.specifiers.length === 0) {
@@ -27,11 +29,7 @@ const nodeImportSize = (node: ImportDeclaration): number => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const print: Printer<Node>['print'] = (path, options, prnt): any => {
   const node = path.getNode()
-
-  const plugin = options.plugins.find((p) => typeof p !== 'string' && p.printers?.estree)
-
-  // @ts-expect-error possibly undefined
-  let result = plugin.printers.estree.print(path, options, prnt)
+  let result = estreePrinter.print(path, options, prnt)
 
   if (node?.type === 'ImportDeclaration') {
     // @ts-expect-error explicit any type
@@ -79,11 +77,9 @@ export const preprocess = async (ast: AST): Promise<AST> => {
 }
 
 export const getPrinters = async (): GetPrintersReturn => {
-  const printer = await extractPrinter()
-
   const printers = {
     'typescript-custom': {
-      ...printer,
+      ...estreePrinter,
       preprocess,
       print,
     },

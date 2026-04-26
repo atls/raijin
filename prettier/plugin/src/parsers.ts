@@ -12,10 +12,8 @@ const preprocess: Parser['preprocess'] = (source, options): string =>
   importSortPreprocess(source, options)
 
 const parse: Parser['parse'] = async (source, { plugins }) => {
-  const plugin = plugins.find((p) => typeof p !== 'string' && p.parsers?.typescript)
-
-  // @ts-expect-error possibly undefined
-  const program = plugin.parsers.typescript.parse(source)
+  // @ts-expect-error parser options type is wider at runtime than @types/prettier declares
+  const program = typescript.parsers.typescript.parse(source, { plugins })
 
   const bodyLength = program.body.length
 

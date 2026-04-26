@@ -845,6 +845,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/config-prettier@workspace:config/prettier"
   dependencies:
+    "@atls/prettier-plugin": "workspace:*"
     "@types/node": "npm:22.13.10"
     prettier: "npm:3.5.3"
   languageName: unknown
@@ -12329,6 +12330,7 @@ __metadata:
   resolution: "tools@workspace:."
   dependencies:
     "@atls/code-runtime": "workspace:*"
+    "@atls/config-prettier": "workspace:*"
     "@types/node": "npm:22.13.10"
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch"
     esbuild: "npm:esbuild-wasm@^0.23.1"

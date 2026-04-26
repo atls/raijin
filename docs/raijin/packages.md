@@ -727,7 +727,7 @@ Compact list:
 - Example: `Apply the shared Prettier config to a new workspace.`
 - Tags: `config`
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 1, devDeps 1, peerDeps 0
+- Dependencies: deps 2, devDeps 1, peerDeps 0
 
 <!-- sync:package-card:atls-config-typescript -->
 
