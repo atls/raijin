@@ -27,6 +27,7 @@ export class Linter extends EventEmitter {
     private readonly linter: ESLinter,
     private readonly cacheLinter: ESLint,
     private readonly config: Array<ESLinter.Config>,
+    private readonly clearCaches: () => void,
     private readonly cwd: string
   ) {
     super()
@@ -35,8 +36,12 @@ export class Linter extends EventEmitter {
   }
 
   static async initialize(rootCwd: string, cwd: string): Promise<Linter> {
-    const { Linter: LinterConstructor, ESLint } = await import('@atls/code-runtime/eslint')
-    const { eslintconfig } = await import('@atls/code-runtime/eslint')
+    const {
+      Linter: LinterConstructor,
+      ESLint,
+      eslintconfig,
+      clearEslintCaches,
+    } = await import('@atls/code-runtime/eslint')
 
     const linter = new LinterConstructor({ configType: 'flat' })
 
@@ -59,7 +64,7 @@ export class Linter extends EventEmitter {
       cacheLocation: join(rootCwd, '.config/eslint/.eslintcache'),
     })
 
-    return new Linter(linter, eslint, config, cwd)
+    return new Linter(linter, eslint, config, clearEslintCaches, cwd)
   }
 
   async lintFile(filename: string, options?: LintOptions): Promise<ESLint.LintResult> {
@@ -117,11 +122,15 @@ export class Linter extends EventEmitter {
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
     )
 
-    if (options?.cache) {
-      return this.lintWithCache(finalFiles)
-    }
+    try {
+      if (options?.cache) {
+        return await this.lintWithCache(finalFiles)
+      }
 
-    return this.lintFiles(finalFiles, options)
+      return await this.lintFiles(finalFiles, options)
+    } finally {
+      this.clearCaches()
+    }
   }
 
   private async lintWithCache(files: Array<string> = []): Promise<Array<ESLint.LintResult>> {

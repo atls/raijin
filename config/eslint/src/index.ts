@@ -99,4 +99,9 @@ const config: Array<Linter.Config> = [
   },
 ]
 
+const clearEslintCaches = (): void => {
+  parser.clearCaches()
+}
+
+export { clearEslintCaches }
 export default config
