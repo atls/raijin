@@ -633,6 +633,7 @@ for (const testCase of llmCases) {
 
   const passed =
     !modelCallFailed &&
+    !invalidModelDecision &&
     (testCase.expectedStatus === 'unavailable'
       ? finalDecision.status === 'unavailable'
       : finalDecision.command === testCase.expectedCommand &&
