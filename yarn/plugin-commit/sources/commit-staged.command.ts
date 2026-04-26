@@ -1,3 +1,4 @@
+import { execSync }    from 'node:child_process'
 import { join }        from 'node:path'
 
 import { BaseCommand } from '@yarnpkg/cli'
