@@ -42,7 +42,7 @@ export const LintResultMessage = ({
     </Box>
     {!!source && (
       <>
-        <Box marginBottom={1}>
+        <Box>
           <SourcePreview line={message.line} column={message.column}>
             {source}
           </SourcePreview>
