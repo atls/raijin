@@ -1,9 +1,9 @@
-import assert     from 'node:assert/strict'
-import { test }   from 'node:test'
-
 import type { Config } from '@atls/code-runtime/svgr'
 
-import { Icons }  from './icons.js'
+import assert          from 'node:assert/strict'
+import { test }        from 'node:test'
+
+import { Icons }       from './icons.js'
 
 type ReplaceAttrValues = Record<string, string>
 
@@ -79,7 +79,9 @@ test('should pass configured replacements when replacement entry exists', async 
     '#000': 'currentColor',
   }
 
-  const icons = new TestIcons({ ExistingReplacementIcon: replacement }, async ({ replaceAttrValues }) => {
+  const icons = new TestIcons({ ExistingReplacementIcon: replacement }, async ({
+    replaceAttrValues,
+  }) => {
     replaceAttrValuesCalls.push(replaceAttrValues)
 
     return 'export const ExistingReplacementIcon = () => null'
