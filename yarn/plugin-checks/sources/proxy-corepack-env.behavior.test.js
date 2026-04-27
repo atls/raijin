@@ -19,6 +19,7 @@ const runExecFile = async (file, args, options = {}) =>
       file,
       args,
       {
+        shell: process.platform === 'win32',
         timeout: 60_000,
         maxBuffer: 1024 * 1024 * 16,
         ...options,
