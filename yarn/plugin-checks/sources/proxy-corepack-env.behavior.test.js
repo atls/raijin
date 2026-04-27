@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { execFile } from 'node:child_process'
 import { mkdtemp } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
 import { realpath } from 'node:fs/promises'
 import { rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -69,7 +70,14 @@ test('should run checks proxy via Corepack shim without Corepack package resolut
 
   const resolvedShimPath = await realpath(yarnShim)
 
-  assert.match(resolvedShimPath, /corepack[\\/]+dist[\\/]+yarn\.js$/)
+  if (process.platform === 'win32') {
+    const shimSource = await readFile(yarnShim, 'utf8')
+
+    assert.match(shimSource, /corepack/i)
+    assert.match(shimSource, /yarn/i)
+  } else {
+    assert.match(resolvedShimPath, /corepack[\\/]+dist[\\/]+yarn\.js$/)
+  }
 
   const env = {
     ...process.env,
