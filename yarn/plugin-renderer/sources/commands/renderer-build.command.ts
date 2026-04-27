@@ -4,9 +4,11 @@ import { PassThrough }       from 'node:stream'
 
 import { BaseCommand }       from '@yarnpkg/cli'
 import { Configuration }     from '@yarnpkg/core'
+import { Project }           from '@yarnpkg/core'
 import { StreamReport }      from '@yarnpkg/core'
 import { MessageName }       from '@yarnpkg/core'
 import { execUtils }         from '@yarnpkg/core'
+import { scriptUtils }       from '@yarnpkg/core'
 import { xfs }               from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
 
@@ -15,6 +17,7 @@ export class RendererBuildCommand extends BaseCommand {
 
   async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project } = await Project.find(configuration, this.context.cwd)
 
     const commandReport = await StreamReport.start(
       {
@@ -50,6 +53,12 @@ export class RendererBuildCommand extends BaseCommand {
             await xfs.writeJsonPromise(ppath.join(this.context.cwd, 'src/package.json'), {
               type: 'module',
             })
+            const binFolder = await xfs.mktempPromise()
+            const env = await scriptUtils.makeScriptEnv({
+              binFolder,
+              project,
+              ignoreCorepack: true,
+            })
 
             await execUtils.pipevp('yarn', ['next', 'build', 'src', '--no-lint'], {
               end: execUtils.EndStrategy.ErrorCode,
@@ -57,6 +66,7 @@ export class RendererBuildCommand extends BaseCommand {
               stdin: this.context.stdin,
               stdout,
               stderr,
+              env,
             })
           } catch (error) {
             report.reportError(

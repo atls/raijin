@@ -6,6 +6,8 @@ import { Configuration }     from '@yarnpkg/core'
 import { MessageName }       from '@yarnpkg/core'
 import { Project }           from '@yarnpkg/core'
 import { execUtils }         from '@yarnpkg/core'
+import { scriptUtils }       from '@yarnpkg/core'
+import { xfs }               from '@yarnpkg/fslib'
 import { Option }            from 'clipanion'
 
 class ChecksRunCommand extends BaseCommand {
@@ -23,15 +25,15 @@ class ChecksRunCommand extends BaseCommand {
         configuration,
       },
       async (report) => {
-        await this.runCheck(project.cwd, ['typecheck'], report)
-        await this.runCheck(project.cwd, ['lint'], report)
+        await this.runCheck(project, project.cwd, ['typecheck'], report)
+        await this.runCheck(project, project.cwd, ['lint'], report)
 
         await Promise.allSettled([
-          this.runCheck(project.cwd, ['test', 'unit'], report),
-          this.runCheck(project.cwd, ['test', 'integration'], report),
+          this.runCheck(project, project.cwd, ['test', 'unit'], report),
+          this.runCheck(project, project.cwd, ['test', 'integration'], report),
         ])
 
-        await this.runCheck(project.cwd, ['release'], report)
+        await this.runCheck(project, project.cwd, ['release'], report)
       }
     )
 
@@ -39,6 +41,7 @@ class ChecksRunCommand extends BaseCommand {
   }
 
   private async runCheck(
+    project: Project,
     cwd: PortablePath,
     args: Array<string>,
     report: StreamReport
@@ -49,9 +52,12 @@ class ChecksRunCommand extends BaseCommand {
         (args[0] === 'lint' || args[0] === 'typecheck') &&
         !args.includes('--changed')
       const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
+      const binFolder = await xfs.mktempPromise()
+      const env = await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })
 
       const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...checkArgs], {
         cwd,
+        env,
       })
 
       this.context.stdout.write(stdout || stderr)

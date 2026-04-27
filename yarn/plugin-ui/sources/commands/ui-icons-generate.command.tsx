@@ -55,7 +55,7 @@ export class UiIconsGenerateCommand extends BaseCommand {
       stdout: this.context.stdout,
       stderr: this.context.stderr,
       env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project })),
+        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
         COMMAND_PROXY_EXECUTION: 'true',
       },
     })

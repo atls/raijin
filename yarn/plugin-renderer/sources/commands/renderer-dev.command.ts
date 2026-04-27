@@ -3,6 +3,7 @@ import type { Tunnel }   from 'localtunnel'
 import { BaseCommand }   from '@yarnpkg/cli'
 import { Configuration } from '@yarnpkg/core'
 import { Project }       from '@yarnpkg/core'
+import { scriptUtils }   from '@yarnpkg/core'
 import { xfs }           from '@yarnpkg/fslib'
 import { ppath }         from '@yarnpkg/fslib'
 import { Option }        from 'clipanion'
@@ -59,7 +60,14 @@ export class RendererDevCommand extends BaseCommand {
       args.push('--experimental-https-cert', ppath.join(project.cwd, '.config/certs/local/dev.crt'))
     }
 
-    spawn('yarn', args, { stdio: 'inherit', cwd: this.context.cwd })
+    const binFolder = await xfs.mktempPromise()
+    const env = await scriptUtils.makeScriptEnv({
+      binFolder,
+      project,
+      ignoreCorepack: true,
+    })
+
+    spawn('yarn', args, { stdio: 'inherit', cwd: this.context.cwd, env })
 
     if (this.tunnel) {
       const workspace = project.getWorkspaceByCwd(this.context.cwd)
