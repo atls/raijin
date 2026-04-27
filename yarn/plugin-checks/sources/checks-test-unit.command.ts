@@ -38,7 +38,7 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
 
     const binFolder = await xfs.mktempPromise()
 
-    const env = await scriptUtils.makeScriptEnv({ binFolder, project })
+    const env = await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })
 
     if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --loader @atls/code-runtime/ts-node-register`
