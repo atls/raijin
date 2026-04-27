@@ -13,7 +13,7 @@ import { test } from 'node:test'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 
-const runExecFile = (file, args, options = {}) =>
+const runExecFile = async (file, args, options = {}) =>
   new Promise((resolvePromise) => {
     execFile(
       file,
@@ -42,21 +42,29 @@ test('should run checks proxy via Corepack shim without Corepack package resolut
     await rm(shimDir, { recursive: true, force: true })
   })
 
-  const corepackEnableResult = await runExecFile('corepack', ['enable', '--install-directory', shimDir], {
-    cwd: repoRoot,
-    env: {
-      ...process.env,
-      COREPACK_ENABLE_DOWNLOAD_PROMPT: '0',
-    },
-  })
+  const corepackEnableResult = await runExecFile(
+    'corepack',
+    ['enable', '--install-directory', shimDir],
+    {
+      cwd: repoRoot,
+      env: {
+        ...process.env,
+        COREPACK_ENABLE_DOWNLOAD_PROMPT: '0',
+      },
+    }
+  )
 
-  if (corepackEnableResult.error && corepackEnableResult.error.code === 'ENOENT') {
+  if (corepackEnableResult.error?.code === 'ENOENT') {
     t.skip('corepack is not available in environment')
 
     return
   }
 
-  assert.equal(corepackEnableResult.code, 0, corepackEnableResult.stderr || corepackEnableResult.stdout)
+  assert.equal(
+    corepackEnableResult.code,
+    0,
+    corepackEnableResult.stderr || corepackEnableResult.stdout
+  )
 
   const resolvedShimPath = await realpath(yarnShim)
 
@@ -67,6 +75,7 @@ test('should run checks proxy via Corepack shim without Corepack package resolut
     NODE_OPTIONS: '',
     PATH: `${shimDir}${delimiter}${process.env.PATH ?? ''}`,
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0',
+    COREPACK_ENABLE_PROJECT_SPEC: '0',
   }
 
   delete env.GITHUB_TOKEN
