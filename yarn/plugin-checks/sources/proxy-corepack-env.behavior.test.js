@@ -36,6 +36,22 @@ const runExecFile = async (file, args, options = {}) =>
     )
   })
 
+const isCorepackUnavailable = ({ code, error, stdout, stderr }) => {
+  if (error?.code === 'ENOENT') {
+    return true
+  }
+
+  if (code === 127) {
+    return true
+  }
+
+  const combinedOutput = `${stdout}\n${stderr}`
+
+  return /command not found:\s*corepack|corepack:\s*not found|'corepack' is not recognized/i.test(
+    combinedOutput
+  )
+}
+
 test('should run checks proxy via Corepack shim without Corepack package resolution errors', async (t) => {
   const shimDir = await mkdtemp(join(tmpdir(), 'raijin-corepack-shim-'))
   const yarnShim = join(shimDir, process.platform === 'win32' ? 'yarn.cmd' : 'yarn')
@@ -56,7 +72,7 @@ test('should run checks proxy via Corepack shim without Corepack package resolut
     }
   )
 
-  if (corepackEnableResult.error?.code === 'ENOENT') {
+  if (isCorepackUnavailable(corepackEnableResult)) {
     t.skip('corepack is not available in environment')
 
     return
