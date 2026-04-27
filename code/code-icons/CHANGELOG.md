@@ -1,5 +1,17 @@
 
 
+## [2.0.28](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.27...@atls/code-icons@2.0.28) (2026-04-27)
+
+
+### Bug Fixes
+
+
+* **common:** make corepack behavior e2e offline-safe ([79ff930](https://github.com/atls/raijin/commit/79ff930f5d1eaa6d853ffafac7e000161f9b7ed5))
+
+
+
+
+
 ## [2.0.27](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.26...@atls/code-icons@2.0.27) (2026-04-26)
 
 

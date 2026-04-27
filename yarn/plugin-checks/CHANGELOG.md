@@ -1,5 +1,20 @@
 
 
+## [1.0.30](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.29...@atls/yarn-plugin-checks@1.0.30) (2026-04-27)
+
+
+### Bug Fixes
+
+
+* **common:** make corepack behavior e2e offline-safe ([79ff930](https://github.com/atls/raijin/commit/79ff930f5d1eaa6d853ffafac7e000161f9b7ed5))
+* **yarn-plugin-checks:** relax shim assertion on windows ([5b6938e](https://github.com/atls/raijin/commit/5b6938e29dcc1e383580ff2ed19e455c910f5994))
+* **yarn-plugin-checks:** run cmd shim with shell ([b36bf1c](https://github.com/atls/raijin/commit/b36bf1c99578b61a032c7e0190f1d877afcbed94))
+* **yarn-plugin-checks:** skip when corepack is unavailable ([ead5799](https://github.com/atls/raijin/commit/ead5799278da8c778a8e7513eeadb031158f58aa))
+
+
+
+
+
 ## [1.0.29](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.28...@atls/yarn-plugin-checks@1.0.29) (2026-04-27)
 
 
