@@ -1,5 +1,17 @@
 
 
+## [1.0.22](https://github.com/atls/raijin/compare/@atls/yarn-plugin-ui@1.0.21...@atls/yarn-plugin-ui@1.0.22) (2026-04-27)
+
+
+### Bug Fixes
+
+
+* **yarn:** avoid corepack in proxy script env ([#609](https://github.com/atls/raijin/issues/609)) ([bc924d9](https://github.com/atls/raijin/commit/bc924d9e8b469ff1d177bdefb267e288d697c991))
+
+
+
+
+
 ## [1.0.21](https://github.com/atls/raijin/compare/@atls/yarn-plugin-ui@1.0.20...@atls/yarn-plugin-ui@1.0.21) (2026-04-26)
 
 

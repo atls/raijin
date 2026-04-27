@@ -1,5 +1,17 @@
 
 
+## [1.1.62](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.61...@atls/yarn-cli@1.1.62) (2026-04-27)
+
+
+### Bug Fixes
+
+
+* **yarn:** avoid corepack in proxy script env ([#609](https://github.com/atls/raijin/issues/609)) ([bc924d9](https://github.com/atls/raijin/commit/bc924d9e8b469ff1d177bdefb267e288d697c991))
+
+
+
+
+
 ## [1.1.60](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.60...@atls/yarn-cli@1.1.60) (2026-04-26)
 
 
