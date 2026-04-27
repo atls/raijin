@@ -79,7 +79,7 @@ const WORKSPACE_GROUP_ORDER = [
 const DETAILED_GROUPS = new Set(WORKSPACE_GROUP_ORDER.filter((group) => group !== 'cli'))
 
 const COVER_IMAGE_URL =
-  'https://user-images.githubusercontent.com/102182195/234980835-78ed0fdb-c692-4b0e-ac95-b46c8cbd17a4.png'
+  'https://github.com/user-attachments/assets/ac98b900-ee3c-4ea8-a081-e83a1f5f3282'
 
 const walkFiles = (dirPath, predicate, output = []) => {
   if (!fs.existsSync(dirPath)) return output
