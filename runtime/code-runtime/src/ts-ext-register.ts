@@ -14,6 +14,10 @@ const mapping = new Map([
   ['.mjs', ['.mjs', '.mts']],
   ['.cjs', ['.cjs', '.cts']],
   ['.jsx', ['.jsx', '.tsx']],
+  [
+    '.css',
+    ['.css.ts', '.css.tsx', '.css.js', '.css.mjs', '.css.mts', '.css.cjs', '.css.cts', '.css'],
+  ],
 ])
 
 export const resolve: ResolveHook = (
