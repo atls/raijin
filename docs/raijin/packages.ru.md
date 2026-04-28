@@ -768,7 +768,7 @@ Runtime-модули и инфраструктура исполнения
 - Пример: `Реализовать runtime-хелпер для запуска сервисов.`
 - Теги: `runtime`
 - Скрипты: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
-- Зависимости: deps 14, devDeps 3, peerDeps 0
+- Зависимости: deps 13, devDeps 3, peerDeps 0
 
 </details>
 
@@ -796,7 +796,7 @@ Webpack-интеграции и сборочные адаптеры
 - Пример: `Преобразовать proto-импорты во время сборки бандла.`
 - Теги: `webpack`
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 3, devDeps 9, peerDeps 0
+- Зависимости: deps 2, devDeps 8, peerDeps 0
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
 

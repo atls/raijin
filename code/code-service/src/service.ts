@@ -20,7 +20,7 @@ export class Service extends EventEmitter {
   }
 
   static async initialize(cwd: string): Promise<Service> {
-    const { webpack, nullLoaderPath, tsLoaderPath, nodeLoaderPath, protoLoaderPath } = await import(
+    const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } = await import(
       '@atls/code-runtime/webpack'
     )
 
@@ -28,7 +28,6 @@ export class Service extends EventEmitter {
       webpack,
       {
         nodeLoader: nodeLoaderPath,
-        nullLoader: nullLoaderPath,
         tsLoader: tsLoaderPath,
         protoLoader: protoLoaderPath,
       },

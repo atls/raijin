@@ -1,5 +1,7 @@
 import assert            from 'node:assert/strict'
-import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp }       from 'node:fs/promises'
+import { rm }            from 'node:fs/promises'
+import { writeFile }     from 'node:fs/promises'
 import { tmpdir }        from 'node:os'
 import { join }          from 'node:path'
 import { test }          from 'node:test'
@@ -7,9 +9,10 @@ import { pathToFileURL } from 'node:url'
 
 import { resolve }       from '../src/ts-ext-register.js'
 
-const createContext = (parentPath: string) => ({
-  parentURL: pathToFileURL(parentPath).href,
-} as never)
+const createContext = (parentPath: string) =>
+  ({
+    parentURL: pathToFileURL(parentPath).href,
+  }) as never
 
 test('should resolve css imports to css.ts source', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'ts-ext-register-'))

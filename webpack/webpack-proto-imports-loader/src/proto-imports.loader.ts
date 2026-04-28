@@ -1,7 +1,6 @@
-import path       from 'node:path'
+import path      from 'node:path'
 
-import { parse }  from 'protocol-buffers-schema'
-import fileLoader from 'file-loader'
+import { parse } from 'protocol-buffers-schema'
 
 export const getProtoFileName = (resourcePath: string): string => {
   const hash = Buffer.from(path.dirname(resourcePath)).toString('hex')
@@ -19,46 +18,45 @@ export const resolvePackageImportPath = (packageName: string, importPath: string
   return importPath
 }
 
-export default function protoImportsLoader(source: Buffer | string): string {
-  const { imports, package: packageName } = parse(source)
+interface ProtoImportsLoaderContext {
+  resourcePath: string
+  addDependency: (file: string) => void
+  emitFile: (name: string, content: Buffer | string) => void
+}
+
+const getEmittedFileName = (resourcePath: string): string =>
+  getProtoFileName(resourcePath).replace(/^\.\//, '')
+
+export default function protoImportsLoader(
+  this: ProtoImportsLoaderContext,
+  source: Buffer | string
+): string {
+  let sourceText = Buffer.isBuffer(source) ? source.toString() : source
+
+  const { imports, package: packageName } = parse(sourceText)
 
   const dependencies: Array<string> = []
 
   imports.forEach((importPath) => {
     if (!path.isAbsolute(importPath) && typeof packageName === 'string') {
       const resolvedImportPath = resolvePackageImportPath(packageName, importPath)
-      // @ts-expect-error this is undefined
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const importAbsolutePath = path.join(path.dirname(this.resourcePath), resolvedImportPath)
       const targetPath = getProtoFileName(importAbsolutePath)
 
-      if (Buffer.isBuffer(source)) {
-        source = source.toString()
-      }
+      sourceText = sourceText.replace(importPath, targetPath)
 
-      source = source.replace(importPath, targetPath)
+      dependencies.push(`require(${JSON.stringify(importAbsolutePath)})`)
 
-      dependencies.push(`require('${importAbsolutePath}')`)
-
-      // @ts-expect-error this is undefined
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       this.addDependency(importAbsolutePath)
     }
   })
 
-  const result = fileLoader.call(
-    {
-      // @ts-expect-error this is undefined
-      ...this,
-      query: {
-        postTransformPublicPath: (p: string) => `__non_webpack_require__.resolve(${p})`,
-        // TODO (as string)
-        // @ts-expect-error this is undefined
-        name: getProtoFileName(this.resourcePath as string),
-      },
-    },
-    source
-  )
+  const emittedFileName = getEmittedFileName(this.resourcePath)
+  const emittedFilePath = getProtoFileName(this.resourcePath)
 
-  return [...dependencies, result].join('\n')
+  this.emitFile(emittedFileName, sourceText)
+
+  const resolvedPathExport = `export default __non_webpack_require__.resolve(__webpack_public_path__ + ${JSON.stringify(emittedFilePath)})`
+
+  return [...dependencies, resolvedPathExport].join('\n')
 }

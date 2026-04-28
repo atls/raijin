@@ -971,7 +971,7 @@
       "purposeEn": "Code utility library for raijin workflows",
       "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": ["build", "build:library", "build:schematic", "postpack", "prepack"],
-      "dependencyCount": 14,
+      "dependencyCount": 13,
       "devDependencyCount": 3,
       "peerDependencyCount": 0
     },
@@ -984,8 +984,8 @@
       "purposeEn": "Webpack integration for raijin ecosystem",
       "purposeRu": "Webpack-интеграция инструментов",
       "scripts": ["build", "postpack", "prepack"],
-      "dependencyCount": 3,
-      "devDependencyCount": 9,
+      "dependencyCount": 2,
+      "devDependencyCount": 8,
       "peerDependencyCount": 0
     },
     {
@@ -1477,5 +1477,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-04-26T22:05:12.897Z"
+  "lastGenerated": "2026-04-28T02:07:36.852Z"
 }

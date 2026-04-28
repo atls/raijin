@@ -17,14 +17,12 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "file-loader": "6.2.0",
     "protocol-buffers-schema": "3.6.0",
     "tslib": "2.8.1"
   },
   "devDependencies": {
     "@atls/config-typescript": "workspace:*",
     "@monstrs/types-import-proto": "0.0.1",
-    "@types/file-loader": "5.0.4",
     "@types/node": "22.13.10",
     "@types/protocol-buffers-schema": "3.4.3",
     "memfs": "4.6.0",

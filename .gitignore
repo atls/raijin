@@ -24,7 +24,7 @@ build/Release
 
 # Dependency directory
 node_modules
-!.yarn/unplugged/**/node_modules
+/.yarn/unplugged
 .yarn-cache
 
 # Optional npm cache directory
