@@ -33,7 +33,6 @@ runs:
         yarn npm whoami --publish
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-        YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
 
     - name: Npm Publish
       if: ${{ inputs.WORKSPACE == '' }}
@@ -44,7 +43,6 @@ runs:
         yarn workspaces changed foreach -vt --no-private npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-        YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
 
     - name: Npm Publish selected workspace
       if: ${{ inputs.WORKSPACE != '' }}
@@ -55,4 +53,3 @@ runs:
         yarn workspace ${{ inputs.WORKSPACE }} npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-        YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org

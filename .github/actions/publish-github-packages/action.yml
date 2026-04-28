@@ -34,7 +34,6 @@ runs:
         yarn npm whoami --publish
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
-        YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
 
     - name: Publish to GitHub Packages
       if: ${{ inputs.WORKSPACE == '' }}
@@ -45,7 +44,6 @@ runs:
         yarn workspaces changed foreach -vt --no-private npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
-        YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
 
     - name: Publish selected workspace to GitHub Packages
       if: ${{ inputs.WORKSPACE != '' }}
@@ -56,4 +54,3 @@ runs:
         yarn workspace ${{ inputs.WORKSPACE }} npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
-        YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
