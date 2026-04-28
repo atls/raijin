@@ -91,6 +91,9 @@ jobs:
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           WORKSPACE: ${{ inputs.workspace || '' }}
+        env:
+          YARN_NPM_REGISTRY_SERVER: https://registry.npmjs.org
+          YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
 
       - name: Publish to GitHub Packages
         if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
@@ -99,6 +102,9 @@ jobs:
         with:
           GITHUB_PACKAGES_TOKEN: ${{ github.token }}
           WORKSPACE: ${{ inputs.workspace || '' }}
+        env:
+          YARN_NPM_REGISTRY_SERVER: https://npm.pkg.github.com
+          YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
 
       - name: Bundle yarn
         if: ${{ !cancelled() && github.event.pull_request.merged == true }}

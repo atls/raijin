@@ -11,12 +11,6 @@ runs:
   using: composite
 
   steps:
-    - name: Set NPM registries
-      shell: bash
-      run: |
-        echo "YARN_NPM_REGISTRY_SERVER=https://registry.npmjs.org" >> "$GITHUB_ENV"
-        echo "YARN_NPM_PUBLISH_REGISTRY=https://registry.npmjs.org" >> "$GITHUB_ENV"
-
     - name: List changed workspaces
       if: ${{ inputs.WORKSPACE == '' }}
       shell: bash

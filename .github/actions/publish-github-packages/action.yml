@@ -12,12 +12,6 @@ runs:
   using: composite
 
   steps:
-    - name: Set GitHub Packages registries
-      shell: bash
-      run: |
-        echo "YARN_NPM_REGISTRY_SERVER=https://npm.pkg.github.com" >> "$GITHUB_ENV"
-        echo "YARN_NPM_PUBLISH_REGISTRY=https://npm.pkg.github.com" >> "$GITHUB_ENV"
-
     - name: List changed workspaces
       if: ${{ inputs.WORKSPACE == '' }}
       shell: bash
