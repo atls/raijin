@@ -52,10 +52,11 @@ export default function protoImportsLoader(
   })
 
   const emittedFileName = getEmittedFileName(this.resourcePath)
+  const emittedFilePath = getProtoFileName(this.resourcePath)
 
   this.emitFile(emittedFileName, sourceText)
 
-  const resolvedPathExport = `export default __non_webpack_require__.resolve(__webpack_public_path__ + ${JSON.stringify(emittedFileName)})`
+  const resolvedPathExport = `export default __non_webpack_require__.resolve(__webpack_public_path__ + ${JSON.stringify(emittedFilePath)})`
 
   return [...dependencies, resolvedPathExport].join('\n')
 }
