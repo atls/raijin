@@ -19,7 +19,6 @@ export class WebpackConfig {
     private readonly loaders: {
       tsLoader: string
       nodeLoader: string
-      nullLoader: string
       protoLoader: string
     },
     private readonly cwd: string
@@ -85,12 +84,6 @@ export class WebpackConfig {
       devtool: environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
       module: {
         rules: [
-          {
-            test: /\.d\.ts$/,
-            use: {
-              loader: this.loaders.nullLoader,
-            },
-          },
           {
             test: /(^.?|\.[^d]|[^.]d|[^.][^d])\.tsx?$/,
             use: {
