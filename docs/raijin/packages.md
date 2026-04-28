@@ -768,7 +768,7 @@ Compact list:
 - Example: `Implement a runtime helper for bootstrapping services.`
 - Tags: `runtime`
 - Scripts: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
-- Dependencies: deps 14, devDeps 3, peerDeps 0
+- Dependencies: deps 13, devDeps 3, peerDeps 0
 
 </details>
 
@@ -796,7 +796,7 @@ Compact list:
 - Example: `Transform proto imports during bundle compilation.`
 - Tags: `webpack`
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 3, devDeps 9, peerDeps 0
+- Dependencies: deps 2, devDeps 8, peerDeps 0
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
 
