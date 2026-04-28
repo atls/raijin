@@ -1,5 +1,19 @@
 
 
+## [1.0.6](https://github.com/atls/raijin/compare/@atls/webpack-proto-imports-loader@1.0.5...@atls/webpack-proto-imports-loader@1.0.6) (2026-04-28)
+
+
+### Bug Fixes
+
+
+* **runtime:** remove legacy loaders and sync yarn metadata ([ac53a9a](https://github.com/atls/raijin/commit/ac53a9aeb7161e154fc17042815ed7a95a679558))
+* **webpack-proto-imports-loader:** keep relative emitted asset resolve path ([68a4bcd](https://github.com/atls/raijin/commit/68a4bcdb137d0675ec6576a4a8fad8e7d35e1d87))
+* **webpack-proto-imports-loader:** sort union type constituents ([cdbdb6f](https://github.com/atls/raijin/commit/cdbdb6fe538eb84a25a1c9be959984d62da4796d))
+
+
+
+
+
 ## [1.0.5](https://github.com/atls/raijin/compare/@atls/webpack-proto-imports-loader@1.0.4...@atls/webpack-proto-imports-loader@1.0.5) (2025-12-07)
 
 

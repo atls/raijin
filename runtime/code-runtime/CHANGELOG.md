@@ -1,5 +1,17 @@
 
 
+## [2.1.25](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.24...@atls/code-runtime@2.1.25) (2026-04-28)
+
+
+### Bug Fixes
+
+
+* **runtime:** remove legacy loaders and sync yarn metadata ([ac53a9a](https://github.com/atls/raijin/commit/ac53a9aeb7161e154fc17042815ed7a95a679558))
+
+
+
+
+
 ## [2.1.24](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.23...@atls/code-runtime@2.1.24) (2026-04-28)
 
 
