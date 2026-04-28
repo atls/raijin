@@ -1,5 +1,17 @@
 
 
+## [2.1.24](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.23...@atls/code-runtime@2.1.24) (2026-04-28)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** support css extensions in ts-ext-register ([1a94d54](https://github.com/atls/raijin/commit/1a94d54b36ff9a3d06f624ed53d5f71eeab26c17))
+
+
+
+
+
 ## [2.1.23](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.22...@atls/code-runtime@2.1.23) (2026-04-26)
 
 
