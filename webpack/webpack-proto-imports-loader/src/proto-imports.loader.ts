@@ -21,7 +21,7 @@ export const resolvePackageImportPath = (packageName: string, importPath: string
 interface ProtoImportsLoaderContext {
   resourcePath: string
   addDependency: (file: string) => void
-  emitFile: (name: string, content: string | Buffer) => void
+  emitFile: (name: string, content: Buffer | string) => void
 }
 
 const getEmittedFileName = (resourcePath: string): string =>
