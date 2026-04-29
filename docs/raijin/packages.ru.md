@@ -56,7 +56,7 @@
 - Пример: `Добавить команду, которая повышает версии пакетов и обновляет changelog.`
 - Теги: `yarn`
 - Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:schemaic`, `build:version`, `fix`, `postpack`, `prepack`
-- Зависимости: deps 54, devDeps 0, peerDeps 0
+- Зависимости: deps 59, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
 
@@ -70,7 +70,7 @@
 - Пример: `Создать хелпер для разбора CLI-флагов и путей workspace.`
 - Теги: `yarn`
 - Скрипты: отсутствуют
-- Зависимости: deps 53, devDeps 0, peerDeps 0
+- Зависимости: deps 58, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
 
@@ -627,7 +627,7 @@
 - Пример: `Добавить схему, которая создаёт новый workspace-пакет.`
 - Теги: `code`
 - Скрипты: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`
-- Зависимости: deps 3, devDeps 8, peerDeps 2
+- Зависимости: deps 4, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-code-service -->
 

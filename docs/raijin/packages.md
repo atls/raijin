@@ -56,7 +56,7 @@ Compact list:
 - Example: `Add a command that bumps package versions and updates changelogs.`
 - Tags: `yarn`
 - Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:schemaic`, `build:version`, `fix`, `postpack`, `prepack`
-- Dependencies: deps 54, devDeps 0, peerDeps 0
+- Dependencies: deps 59, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
 
@@ -70,7 +70,7 @@ Compact list:
 - Example: `Create a helper for parsing CLI flags and workspace paths.`
 - Tags: `yarn`
 - Scripts: none
-- Dependencies: deps 53, devDeps 0, peerDeps 0
+- Dependencies: deps 58, devDeps 0, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
 
@@ -627,7 +627,7 @@ Compact list:
 - Example: `Add a schematic that scaffolds a new workspace package.`
 - Tags: `code`
 - Scripts: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`
-- Dependencies: deps 3, devDeps 8, peerDeps 2
+- Dependencies: deps 4, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-code-service -->
 
