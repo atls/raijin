@@ -1,3 +1,4 @@
+import type { EventData } from 'node:test'
 import type { TestEvent } from 'node:test/reporters'
 
 import EventEmitter       from 'node:events'
@@ -14,6 +15,11 @@ import ignorer            from 'ignore'
 import { Tests }          from './tests.js'
 
 export type TestsStream = ReturnType<typeof run>
+
+type TestFail = EventData.TestFail
+type TestPass = EventData.TestPass
+type TestStderr = EventData.TestStderr
+type TestStdout = EventData.TestStdout
 
 type TestOptions = {
   files?: Array<string>

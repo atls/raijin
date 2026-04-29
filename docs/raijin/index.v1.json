@@ -9,7 +9,7 @@
   "bundle": {
     "package": "@atls/yarn-cli",
     "bundleName": "standard",
-    "pluginCount": 43,
+    "pluginCount": 48,
     "plugins": [
       "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-changelog",
@@ -34,15 +34,19 @@
       "@atls/yarn-plugin-typescript",
       "@atls/yarn-plugin-ui",
       "@atls/yarn-plugin-workspaces",
+      "@yarnpkg/plugin-catalog",
       "@yarnpkg/plugin-compat",
+      "@yarnpkg/plugin-constraints",
       "@yarnpkg/plugin-dlx",
       "@yarnpkg/plugin-essentials",
+      "@yarnpkg/plugin-exec",
       "@yarnpkg/plugin-file",
       "@yarnpkg/plugin-git",
       "@yarnpkg/plugin-github",
       "@yarnpkg/plugin-http",
       "@yarnpkg/plugin-init",
       "@yarnpkg/plugin-interactive-tools",
+      "@yarnpkg/plugin-jsr",
       "@yarnpkg/plugin-link",
       "@yarnpkg/plugin-nm",
       "@yarnpkg/plugin-npm",
@@ -51,6 +55,7 @@
       "@yarnpkg/plugin-patch",
       "@yarnpkg/plugin-pnp",
       "@yarnpkg/plugin-pnpm",
+      "@yarnpkg/plugin-stage",
       "@yarnpkg/plugin-typescript",
       "@yarnpkg/plugin-version",
       "@yarnpkg/plugin-workspace-tools"
@@ -854,7 +859,7 @@
       "purposeEn": "Code utility library for raijin workflows",
       "purposeRu": "Библиотека code-утилит для raijin-сценариев",
       "scripts": ["build", "build:library", "build:schematic-factory", "postpack", "prepack"],
-      "dependencyCount": 3,
+      "dependencyCount": 4,
       "devDependencyCount": 8,
       "peerDependencyCount": 2
     },
@@ -1021,7 +1026,7 @@
         "postpack",
         "prepack"
       ],
-      "dependencyCount": 54,
+      "dependencyCount": 59,
       "devDependencyCount": 0,
       "peerDependencyCount": 0
     },
@@ -1034,7 +1039,7 @@
       "purposeEn": "Entrypoint for custom Yarn CLI and bundle configuration",
       "purposeRu": "Входная точка кастомного Yarn CLI и bundle-конфигурации",
       "scripts": [],
-      "dependencyCount": 53,
+      "dependencyCount": 58,
       "devDependencyCount": 0,
       "peerDependencyCount": 0
     },
@@ -1477,5 +1482,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-04-28T02:07:36.852Z"
+  "lastGenerated": "2026-04-29T20:54:41.789Z"
 }

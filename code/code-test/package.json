@@ -24,7 +24,7 @@
     "ignore": "5.3.2"
   },
   "devDependencies": {
-    "@types/node": "22.13.10"
+    "@types/node": "24.12.2"
   },
   "publishConfig": {
     "access": "public",

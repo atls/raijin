@@ -18,11 +18,11 @@
     "postpack": "rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "22.13.10",
+    "@types/node": "24.12.2",
     "@yarnpkg/builder": "4.2.0",
-    "@yarnpkg/cli": "4.5.1",
-    "@yarnpkg/core": "4.1.4",
-    "@yarnpkg/fslib": "3.1.0"
+    "@yarnpkg/cli": "4.14.1",
+    "@yarnpkg/core": "4.7.0",
+    "@yarnpkg/fslib": "3.1.5"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",

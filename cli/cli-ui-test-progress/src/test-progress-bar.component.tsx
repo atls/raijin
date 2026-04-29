@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/method-signature-style */
 
+import type { EventData }    from 'node:test'
 import type { ReactElement } from 'react'
 
 import { ProgressBar }       from '@inkjs/ui'
 import { useEffect }         from 'react'
 import { useState }          from 'react'
 import React                 from 'react'
+
+type TestFail = EventData.TestFail
+type TestPass = EventData.TestPass
 
 export interface TestProgressBarProps {
   tester: {
