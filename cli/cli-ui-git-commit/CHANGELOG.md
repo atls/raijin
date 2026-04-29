@@ -1,5 +1,12 @@
 
 
+## [1.0.10](https://github.com/atls/raijin/compare/@atls/cli-ui-git-commit-component@1.0.9...@atls/cli-ui-git-commit-component@1.0.10) (2026-04-29)
+
+
+
+
+
+
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/cli-ui-git-commit-component@1.0.8...@atls/cli-ui-git-commit-component@1.0.9) (2025-12-07)
 
 

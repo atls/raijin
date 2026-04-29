@@ -1,3 +1,10 @@
+
+
+## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-jsr@1.0.3...@atls/yarn-plugin-jsr@1.0.4) (2026-04-29)
+
+
+
+
 ## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-jsr@1.0.2...@atls/yarn-plugin-jsr@1.0.3) (2025-03-09)
 
 ## 1.0.2 (2025-01-30)

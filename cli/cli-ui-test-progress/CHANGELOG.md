@@ -1,5 +1,12 @@
 
 
+## [1.0.2](https://github.com/atls/raijin/compare/@atls/cli-ui-test-progress-component@1.0.1...@atls/cli-ui-test-progress-component@1.0.2) (2026-04-29)
+
+
+
+
+
+
 ## [1.0.1](https://github.com/atls/raijin/compare/@atls/cli-ui-test-progress-component@1.0.0...@atls/cli-ui-test-progress-component@1.0.1) (2025-12-07)
 
 

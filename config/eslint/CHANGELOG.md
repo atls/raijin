@@ -1,5 +1,12 @@
 
 
+## [2.0.15](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.14...@atls/config-eslint@2.0.15) (2026-04-29)
+
+
+
+
+
+
 ## [2.0.14](https://github.com/atls/raijin/compare/@atls/config-eslint@2.0.13...@atls/config-eslint@2.0.14) (2026-04-26)
 
 

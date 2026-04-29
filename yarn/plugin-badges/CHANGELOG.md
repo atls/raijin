@@ -1,5 +1,12 @@
 
 
+## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-badges@1.0.2...@atls/yarn-plugin-badges@1.0.3) (2026-04-29)
+
+
+
+
+
+
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/yarn-plugin-badges@1.0.1...@atls/yarn-plugin-badges@1.0.2) (2025-12-07)
 
 

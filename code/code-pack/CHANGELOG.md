@@ -1,5 +1,12 @@
 
 
+## [2.0.8](https://github.com/atls/raijin/compare/@atls/code-pack@2.0.7...@atls/code-pack@2.0.8) (2026-04-29)
+
+
+
+
+
+
 ## [2.0.7](https://github.com/atls/raijin/compare/@atls/code-pack@2.0.6...@atls/code-pack@2.0.7) (2025-12-07)
 
 

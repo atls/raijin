@@ -1,5 +1,12 @@
 
 
+## [2.0.2](https://github.com/atls/raijin/compare/@atls/code-configuration@2.0.1...@atls/code-configuration@2.0.2) (2026-04-29)
+
+
+
+
+
+
 ## 2.0.1 (2026-04-23)
 
 

@@ -1,5 +1,12 @@
 
 
+## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-workspaces@1.0.4...@atls/yarn-plugin-workspaces@1.0.5) (2026-04-29)
+
+
+
+
+
+
 ## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-workspaces@1.0.3...@atls/yarn-plugin-workspaces@1.0.4) (2026-04-01)
 
 

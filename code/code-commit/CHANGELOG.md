@@ -1,5 +1,12 @@
 
 
+## [2.0.7](https://github.com/atls/raijin/compare/@atls/code-commit@2.0.6...@atls/code-commit@2.0.7) (2026-04-29)
+
+
+
+
+
+
 ## [2.0.6](https://github.com/atls/raijin/compare/@atls/code-commit@2.0.5...@atls/code-commit@2.0.6) (2025-12-07)
 
 
