@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@atls/code-runtime": "workspace:*",
-    "@types/node": "22.13.10",
+    "@types/node": "24.12.2",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",
     "@yarnpkg/esbuild-plugin-pnp": "3.0.0-rc.15",

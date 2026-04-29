@@ -1,31 +1,37 @@
 /* eslint-disable n/no-sync */
 
-import { readFileSync }  from 'node:fs'
-import { relative }      from 'node:path'
-import { pathToFileURL } from 'node:url'
+import type { EventData } from 'node:test'
 
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { Filename }      from '@yarnpkg/fslib'
-import { scriptUtils }   from '@yarnpkg/core'
-import { execUtils }     from '@yarnpkg/core'
-import { xfs }           from '@yarnpkg/fslib'
-import { ppath }         from '@yarnpkg/fslib'
-import { npath }         from '@yarnpkg/fslib'
-import { Option }        from 'clipanion'
-import { Command }       from 'clipanion'
-import { render }        from 'ink'
-import { isEnum }        from 'typanion'
-import React             from 'react'
+import { readFileSync }   from 'node:fs'
+import { relative }       from 'node:path'
+import { pathToFileURL }  from 'node:url'
 
-import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
-import { LogRecord }     from '@atls/cli-ui-log-record-component'
-import { RawOutput }     from '@atls/cli-ui-raw-output-component'
-import { TestFailure }   from '@atls/cli-ui-test-failure-component'
-import { TestProgress }  from '@atls/cli-ui-test-progress-component'
-import { Tester }        from '@atls/code-test'
-import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
+import { BaseCommand }    from '@yarnpkg/cli'
+import { Configuration }  from '@yarnpkg/core'
+import { Project }        from '@yarnpkg/core'
+import { Filename }       from '@yarnpkg/fslib'
+import { scriptUtils }    from '@yarnpkg/core'
+import { execUtils }      from '@yarnpkg/core'
+import { xfs }            from '@yarnpkg/fslib'
+import { ppath }          from '@yarnpkg/fslib'
+import { npath }          from '@yarnpkg/fslib'
+import { Option }         from 'clipanion'
+import { Command }        from 'clipanion'
+import { render }         from 'ink'
+import { isEnum }         from 'typanion'
+import React              from 'react'
+
+import { ErrorInfo }      from '@atls/cli-ui-error-info-component'
+import { LogRecord }      from '@atls/cli-ui-log-record-component'
+import { RawOutput }      from '@atls/cli-ui-raw-output-component'
+import { TestFailure }    from '@atls/cli-ui-test-failure-component'
+import { TestProgress }   from '@atls/cli-ui-test-progress-component'
+import { Tester }         from '@atls/code-test'
+import { renderStatic }   from '@atls/cli-ui-renderer-static-component'
+
+type TestFail = EventData.TestFail
+type TestStderr = EventData.TestStderr
+type TestStdout = EventData.TestStdout
 
 export abstract class AbstractTestCommand extends BaseCommand {
   static override usage = Command.Usage({

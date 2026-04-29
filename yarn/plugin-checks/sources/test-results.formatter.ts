@@ -1,3 +1,4 @@
+import type { EventData }       from 'node:test'
 import type { TestEvent }       from 'node:test/reporters'
 
 import type { Annotation }      from './github.checks.js'
@@ -18,6 +19,8 @@ const ERROR_TITLE_PREFIXES = [
   'ReferenceError:',
   'RangeError:',
 ]
+
+type TestFail = EventData.TestFail
 
 type ErrorLike = {
   message?: unknown

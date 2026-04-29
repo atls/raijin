@@ -24,7 +24,7 @@
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",
-    "typescript": "5.5.4"
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
