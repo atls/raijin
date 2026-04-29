@@ -1,4 +1,5 @@
 export * from './gitignore.utils.js'
+export * from './merge-gitignore-content.utils.js'
 export * from './tsconfig.utils.js'
 export * from './json.utils.js'
 export * from './yaml.utils.js'
