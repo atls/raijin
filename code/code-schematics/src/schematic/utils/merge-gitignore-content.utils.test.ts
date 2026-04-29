@@ -113,3 +113,38 @@ test('should normalize CRLF input before comparison', () => {
     ].join('\n')
   )
 })
+
+test('should preserve project-specific lines added outside managed block', () => {
+  const templateContent = ['node_modules', '.yarn/install-state.gz', 'dist/'].join('\n')
+  const existingContent = [
+    'node_modules',
+    '.yarn/install-state.gz',
+    'dist/',
+    '',
+    '.custom-above-block/',
+    '# raijin:begin project-specific gitignore',
+    '.idea/',
+    '# raijin:end project-specific gitignore',
+    '.custom-below-block/',
+  ].join('\n')
+
+  const actual = mergeGitIgnoreContent({
+    existingContent,
+    templateContent,
+  })
+
+  assert.equal(
+    actual,
+    [
+      'node_modules',
+      '.yarn/install-state.gz',
+      'dist/',
+      '',
+      '# raijin:begin project-specific gitignore',
+      '.idea/',
+      '.custom-above-block/',
+      '.custom-below-block/',
+      '# raijin:end project-specific gitignore',
+    ].join('\n')
+  )
+})

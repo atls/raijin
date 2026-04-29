@@ -28,7 +28,25 @@ const getProjectSpecificLines = (
   const endIndex = existingLines.indexOf(PROJECT_SPECIFIC_END_MARKER)
 
   if (startIndex !== -1 && endIndex > startIndex) {
-    return trimTrailingEmptyLines(existingLines.slice(startIndex + 1, endIndex))
+    const linesBeforeBlock = existingLines.slice(0, startIndex)
+    const linesAfterBlock = existingLines.slice(endIndex + 1)
+
+    const blockSeparatorIndex = linesBeforeBlock.lastIndexOf('')
+
+    const userLinesBeforeBlock =
+      blockSeparatorIndex >= 0 ? linesBeforeBlock.slice(blockSeparatorIndex + 1) : []
+
+    const outsideBlockProjectSpecificLines = [...userLinesBeforeBlock, ...linesAfterBlock].filter(
+      (line) => line !== '' && !templateLineSet.has(line)
+    )
+
+    const managedProjectSpecificLines = trimTrailingEmptyLines(
+      existingLines.slice(startIndex + 1, endIndex)
+    )
+
+    return Array.from(
+      new Set([...managedProjectSpecificLines, ...outsideBlockProjectSpecificLines])
+    )
   }
 
   return existingLines.filter((line) => !templateLineSet.has(line))
