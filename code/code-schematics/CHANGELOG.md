@@ -1,5 +1,24 @@
 
 
+## [2.0.21](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.20...@atls/code-schematics@2.0.21) (2026-04-29)
+
+
+### Bug Fixes
+
+
+* **code-schematics:** handle managed and CRLF gitignore merge ([17944f0](https://github.com/atls/raijin/commit/17944f0e7d4aedb87294e4e09853eb1ea1df0288))
+* **code-schematics:** keep custom gitignore entries around managed block ([f1bb3ca](https://github.com/atls/raijin/commit/f1bb3ca6558ad0f148eb81a810c0321ff91e81a0))
+* **code-schematics:** keep gitignore project rule order ([63d4372](https://github.com/atls/raijin/commit/63d4372b0589fcca49eaa506fa91ba50599a8658))
+* **code-schematics:** preserve custom lines before managed gitignore block ([96546d7](https://github.com/atls/raijin/commit/96546d7f5d2d770115c4549bbaa961c88da18a3a))
+* **code-schematics:** preserve gitignore project-specific rule order ([fdbf668](https://github.com/atls/raijin/commit/fdbf6688651c32422b3dc3004ad8651499ba33be))
+* **code-schematics:** preserve managed block priority in gitignore merge ([518546d](https://github.com/atls/raijin/commit/518546d0a00a1a897e35fcf1fe96b3402108fb5c))
+* **code-schematics:** preserve project-specific gitignore entries ([921dd55](https://github.com/atls/raijin/commit/921dd55852632512925a96191774786545a939ea))
+* **code-schematics:** skip blank gitignore project entries ([a9d68ac](https://github.com/atls/raijin/commit/a9d68ac02e0f2dd4c02ccd4a60d0cfdd73ae89c7))
+
+
+
+
+
 ## [2.0.20](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.19...@atls/code-schematics@2.0.20) (2026-04-28)
 
 

@@ -1,5 +1,12 @@
 
 
+## [2.1.26](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.25...@atls/code-runtime@2.1.26) (2026-04-29)
+
+
+
+
+
+
 ## [2.1.25](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.24...@atls/code-runtime@2.1.25) (2026-04-28)
 
 
