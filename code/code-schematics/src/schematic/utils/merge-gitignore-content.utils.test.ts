@@ -61,6 +61,17 @@ test('should not duplicate template entries from project content', () => {
   assert.equal(actual, templateContent)
 })
 
+test('should not create project-specific block for blank existing content', () => {
+  const templateContent = ['node_modules', '.yarn/install-state.gz', 'dist/'].join('\n')
+
+  const actual = mergeGitIgnoreContent({
+    existingContent: '\n',
+    templateContent,
+  })
+
+  assert.equal(actual, templateContent)
+})
+
 test('should not keep removed template rules when managed block exists', () => {
   const templateContent = ['node_modules', '.yarn/install-state.gz'].join('\n')
   const existingContent = [

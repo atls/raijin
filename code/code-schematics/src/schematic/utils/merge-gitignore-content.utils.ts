@@ -41,7 +41,7 @@ const getProjectSpecificLines = (
     )
   }
 
-  return existingLines.filter((line) => !templateLineSet.has(line))
+  return existingLines.filter((line) => isProjectSpecificLine(line, templateLineSet))
 }
 
 export const mergeGitIgnoreContent = ({
