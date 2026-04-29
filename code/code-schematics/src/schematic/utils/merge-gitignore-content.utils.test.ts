@@ -142,8 +142,8 @@ test('should preserve project-specific lines added outside managed block', () =>
       'dist/',
       '',
       '# raijin:begin project-specific gitignore',
-      '.idea/',
       '.custom-above-block/',
+      '.idea/',
       '.custom-below-block/',
       '# raijin:end project-specific gitignore',
     ].join('\n')
@@ -176,8 +176,41 @@ test('should preserve project-specific lines in template area before managed blo
       'dist/',
       '',
       '# raijin:begin project-specific gitignore',
-      '.idea/',
       '.custom-top-line/',
+      '.idea/',
+      '# raijin:end project-specific gitignore',
+    ].join('\n')
+  )
+})
+
+test('should preserve project-specific negation order around managed block', () => {
+  const templateContent = ['node_modules', '.yarn/install-state.gz', 'dist/'].join('\n')
+  const existingContent = [
+    'node_modules',
+    '.yarn/install-state.gz',
+    'dist/',
+    '',
+    '*.log',
+    '# raijin:begin project-specific gitignore',
+    '!important.log',
+    '# raijin:end project-specific gitignore',
+  ].join('\n')
+
+  const actual = mergeGitIgnoreContent({
+    existingContent,
+    templateContent,
+  })
+
+  assert.equal(
+    actual,
+    [
+      'node_modules',
+      '.yarn/install-state.gz',
+      'dist/',
+      '',
+      '# raijin:begin project-specific gitignore',
+      '*.log',
+      '!important.log',
       '# raijin:end project-specific gitignore',
     ].join('\n')
   )
