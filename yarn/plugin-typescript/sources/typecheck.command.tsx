@@ -1,9 +1,7 @@
 import { BaseCommand }          from '@yarnpkg/cli'
 import { Configuration }        from '@yarnpkg/core'
 import { Project }              from '@yarnpkg/core'
-import { Filename }             from '@yarnpkg/fslib'
 import { scriptUtils }          from '@yarnpkg/core'
-import { execUtils }            from '@yarnpkg/core'
 import { ppath }                from '@yarnpkg/fslib'
 import { xfs }                  from '@yarnpkg/fslib'
 import { Option }               from 'clipanion'
@@ -15,6 +13,8 @@ import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-compone
 import { TypeScriptProgress }   from '@atls/cli-ui-typescript-progress-component'
 import { TypeScript }           from '@atls/code-typescript'
 import { renderStatic }         from '@atls/cli-ui-renderer-static-component'
+import { executeYarnPnpProxy }  from '@atls/yarn-run-utils'
+import { pipeYarnPnpProxy }     from '@atls/yarn-run-utils'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -22,17 +22,14 @@ export class TypeCheckCommand extends BaseCommand {
   args: Array<string> = Option.Rest({ required: 0 })
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
-    }
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return executeYarnPnpProxy({
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      executeRegular: async () => this.executeRegular(),
+      executeProxy: async () => this.executeProxy(),
+    })
   }
 
   async executeProxy(): Promise<number> {
@@ -41,7 +38,8 @@ export class TypeCheckCommand extends BaseCommand {
 
     const binFolder = await xfs.mktempPromise()
 
-    const { code } = await execUtils.pipevp('yarn', ['typecheck', ...this.args], {
+    return pipeYarnPnpProxy({
+      args: ['typecheck', ...this.args],
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
@@ -51,8 +49,6 @@ export class TypeCheckCommand extends BaseCommand {
         COMMAND_PROXY_EXECUTION: 'true',
       },
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {

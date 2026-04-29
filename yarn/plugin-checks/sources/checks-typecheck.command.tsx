@@ -11,9 +11,7 @@ import { Configuration }                from '@yarnpkg/core'
 import { Project }                      from '@yarnpkg/core'
 import { StreamReport }                 from '@yarnpkg/core'
 import { MessageName }                  from '@yarnpkg/core'
-import { Filename }                     from '@yarnpkg/fslib'
 import { codeFrameColumns }             from '@babel/code-frame'
-import { execUtils }                    from '@yarnpkg/core'
 import { scriptUtils }                  from '@yarnpkg/core'
 import { xfs }                          from '@yarnpkg/fslib'
 import { npath }                        from '@yarnpkg/fslib'
@@ -26,6 +24,8 @@ import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic
 import { TypeScript }                   from '@atls/code-typescript'
 import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
 import { getChangedFiles }              from '@atls/yarn-plugin-files'
+import { executeYarnPnpProxy }          from '@atls/yarn-run-utils'
+import { pipeYarnPnpProxy }             from '@atls/yarn-run-utils'
 
 import { GitHubChecks }                 from './github.checks.js'
 import { AnnotationLevel }              from './github.checks.js'
@@ -34,17 +34,14 @@ class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
-    }
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return executeYarnPnpProxy({
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      executeRegular: async () => this.executeRegular(),
+      executeProxy: async () => this.executeProxy(),
+    })
   }
 
   async executeProxy(): Promise<number> {
@@ -54,7 +51,8 @@ class ChecksTypeCheckCommand extends BaseCommand {
     const binFolder = await xfs.mktempPromise()
     const args = ['checks', 'typecheck', ...(this.changed ? ['--changed'] : [])]
 
-    const { code } = await execUtils.pipevp('yarn', args, {
+    return pipeYarnPnpProxy({
+      args,
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
@@ -64,8 +62,6 @@ class ChecksTypeCheckCommand extends BaseCommand {
         COMMAND_PROXY_EXECUTION: 'true',
       },
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {

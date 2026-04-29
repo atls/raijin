@@ -25,7 +25,7 @@ const TARGET_SOURCE_DIRS = [
 ]
 
 const YARN_REENTRY_REGEXP =
-  /\b(?:execUtils\.)?(?:pipevp|execvp)\(\s*['"]yarn['"]|\bspawn\(\s*['"]yarn['"]/g
+  /\bpipeYarnPnpProxy\(\s*\{|\b(?:execUtils\.)?(?:pipevp|execvp)\(\s*['"]yarn['"]|\bspawn\(\s*['"]yarn['"]/g
 
 const SCRIPT_ENV_REGEXP = /scriptUtils\.makeScriptEnv\(\s*\{[\s\S]*?\}\s*\)/g
 

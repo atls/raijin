@@ -1,8 +1,8 @@
 import { Configuration }       from '@yarnpkg/core'
 import { Project }             from '@yarnpkg/core'
-import { Filename }            from '@yarnpkg/fslib'
 
 import { Tester }              from '@atls/code-test'
+import { executeYarnPnpProxy } from '@atls/yarn-run-utils'
 
 import { AbstractTestCommand } from './abstract-test.command.jsx'
 
@@ -10,17 +10,14 @@ export class TestCommand extends AbstractTestCommand {
   static override paths = [['test']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
-    }
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return executeYarnPnpProxy({
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      executeRegular: async () => this.executeRegular(),
+      executeProxy: async () => this.executeProxy(),
+    })
   }
 
   override async executeRegular(): Promise<number> {

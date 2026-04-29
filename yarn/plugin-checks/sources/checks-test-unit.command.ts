@@ -4,13 +4,14 @@ import { StreamReport }              from '@yarnpkg/core'
 import { Configuration }             from '@yarnpkg/core'
 import { Project }                   from '@yarnpkg/core'
 import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
 import { scriptUtils }               from '@yarnpkg/core'
 import { xfs }                       from '@yarnpkg/fslib'
 import { ppath }                     from '@yarnpkg/fslib'
 import { npath }                     from '@yarnpkg/fslib'
 
 import { Tester }                    from '@atls/code-test'
+import { executeYarnPnpProxy }       from '@atls/yarn-run-utils'
+import { pipeYarnPnpProxy }          from '@atls/yarn-run-utils'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
@@ -19,17 +20,14 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static override paths = [['checks', 'test', 'unit']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
-    }
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return executeYarnPnpProxy({
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      executeRegular: async () => this.executeRegular(),
+      executeProxy: async () => this.executeProxy(),
+    })
   }
 
   async executeProxy(): Promise<number> {
@@ -60,15 +58,14 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
 
     env.COMMAND_PROXY_EXECUTION = 'true'
 
-    const { code } = await execUtils.pipevp('yarn', ['checks', 'test', 'unit'], {
+    return pipeYarnPnpProxy({
+      args: ['checks', 'test', 'unit'],
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
       env,
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {

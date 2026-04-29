@@ -1,22 +1,22 @@
-import { join }          from 'node:path'
-import { relative }      from 'node:path'
+import { join }                from 'node:path'
+import { relative }            from 'node:path'
 
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { Filename }      from '@yarnpkg/fslib'
-import { execUtils }     from '@yarnpkg/core'
-import { scriptUtils }   from '@yarnpkg/core'
-import { xfs }           from '@yarnpkg/fslib'
-import { Option }        from 'clipanion'
-import { globby }        from 'globby'
-import { render }        from 'ink'
-import React             from 'react'
+import { BaseCommand }         from '@yarnpkg/cli'
+import { Configuration }       from '@yarnpkg/core'
+import { Project }             from '@yarnpkg/core'
+import { scriptUtils }         from '@yarnpkg/core'
+import { xfs }                 from '@yarnpkg/fslib'
+import { Option }              from 'clipanion'
+import { globby }              from 'globby'
+import { render }              from 'ink'
+import React                   from 'react'
 
-import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
-import { IconsProgress } from '@atls/cli-ui-icons-progress-component'
-import { Icons }         from '@atls/code-icons'
-import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
+import { ErrorInfo }           from '@atls/cli-ui-error-info-component'
+import { IconsProgress }       from '@atls/cli-ui-icons-progress-component'
+import { Icons }               from '@atls/code-icons'
+import { renderStatic }        from '@atls/cli-ui-renderer-static-component'
+import { executeYarnPnpProxy } from '@atls/yarn-run-utils'
+import { pipeYarnPnpProxy }    from '@atls/yarn-run-utils'
 
 export class UiIconsGenerateCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
@@ -24,17 +24,14 @@ export class UiIconsGenerateCommand extends BaseCommand {
   native: boolean = Option.Boolean('-n, --native', false)
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
-    }
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return executeYarnPnpProxy({
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      executeRegular: async () => this.executeRegular(),
+      executeProxy: async () => this.executeProxy(),
+    })
   }
 
   async executeProxy(): Promise<number> {
@@ -49,7 +46,8 @@ export class UiIconsGenerateCommand extends BaseCommand {
       args.push('--native')
     }
 
-    const { code } = await execUtils.pipevp('yarn', ['ui', 'icons', 'generate', ...args], {
+    return pipeYarnPnpProxy({
+      args: ['ui', 'icons', 'generate', ...args],
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
@@ -59,8 +57,6 @@ export class UiIconsGenerateCommand extends BaseCommand {
         COMMAND_PROXY_EXECUTION: 'true',
       },
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {

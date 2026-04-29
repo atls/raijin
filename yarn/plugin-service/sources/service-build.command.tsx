@@ -1,16 +1,15 @@
 import { Configuration }          from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
-import { Filename }               from '@yarnpkg/fslib'
 import { scriptUtils }            from '@yarnpkg/core'
-import { execUtils }              from '@yarnpkg/core'
 import { xfs }                    from '@yarnpkg/fslib'
 import { render }                 from 'ink'
 import React                      from 'react'
 
 import { ErrorInfo }              from '@atls/cli-ui-error-info-component'
 import { ServiceProgress }        from '@atls/cli-ui-service-progress-component'
-import { Service }                from '@atls/code-service'
 import { renderStatic }           from '@atls/cli-ui-renderer-static-component'
+import { executeYarnPnpProxy }    from '@atls/yarn-run-utils'
+import { pipeYarnPnpProxy }       from '@atls/yarn-run-utils'
 
 import { AbstractServiceCommand } from './abstract-service.command.jsx'
 
@@ -18,17 +17,14 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
   static override paths = [['service', 'build']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
-    }
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return executeYarnPnpProxy({
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      executeRegular: async () => this.executeRegular(),
+      executeProxy: async () => this.executeProxy(),
+    })
   }
 
   async executeProxy(): Promise<number> {
@@ -43,7 +39,8 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
 
     const binFolder = await xfs.mktempPromise()
 
-    const { code } = await execUtils.pipevp('yarn', ['service', 'build', ...args], {
+    return pipeYarnPnpProxy({
+      args: ['service', 'build', ...args],
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
@@ -53,11 +50,10 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
         COMMAND_PROXY_EXECUTION: 'true',
       },
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {
+    const { Service } = await import('@atls/code-service')
     const service = await Service.initialize(this.context.cwd)
 
     const { clear } = render(<ServiceProgress service={service} />)

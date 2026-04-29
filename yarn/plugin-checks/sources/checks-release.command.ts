@@ -3,8 +3,6 @@ import type { Annotation }       from './github.checks.js'
 import { BaseCommand }           from '@yarnpkg/cli'
 import { Configuration }         from '@yarnpkg/core'
 import { Project }               from '@yarnpkg/core'
-import { Filename }              from '@yarnpkg/fslib'
-import { execUtils }             from '@yarnpkg/core'
 import { scriptUtils }           from '@yarnpkg/core'
 import { ppath }                 from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'
@@ -12,6 +10,8 @@ import stripAnsi                 from 'strip-ansi'
 
 import { PassThroughRunContext } from '@atls/yarn-run-utils'
 import { getChangedFiles }       from '@atls/yarn-plugin-files'
+import { executeYarnPnpProxy }   from '@atls/yarn-run-utils'
+import { pipeYarnPnpProxy }      from '@atls/yarn-run-utils'
 import { getChangedWorkspaces }  from '@atls/yarn-workspace-utils'
 
 import { GitHubChecks }          from './github.checks.js'
@@ -21,17 +21,14 @@ class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
-    }
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return executeYarnPnpProxy({
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      executeRegular: async () => this.executeRegular(),
+      executeProxy: async () => this.executeProxy(),
+    })
   }
 
   async executeProxy(): Promise<number> {
@@ -40,7 +37,8 @@ class ChecksReleaseCommand extends BaseCommand {
 
     const binFolder = await xfs.mktempPromise()
 
-    const { code } = await execUtils.pipevp('yarn', ['checks', 'release'], {
+    return pipeYarnPnpProxy({
+      args: ['checks', 'release'],
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
@@ -50,8 +48,6 @@ class ChecksReleaseCommand extends BaseCommand {
         COMMAND_PROXY_EXECUTION: 'true',
       },
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {

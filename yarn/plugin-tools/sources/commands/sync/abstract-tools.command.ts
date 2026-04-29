@@ -1,11 +1,12 @@
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { Filename }      from '@yarnpkg/fslib'
-import { scriptUtils }   from '@yarnpkg/core'
-import { execUtils }     from '@yarnpkg/core'
-import { xfs }           from '@yarnpkg/fslib'
-import { Command }       from 'clipanion'
+import { BaseCommand }         from '@yarnpkg/cli'
+import { Configuration }       from '@yarnpkg/core'
+import { Project }             from '@yarnpkg/core'
+import { scriptUtils }         from '@yarnpkg/core'
+import { xfs }                 from '@yarnpkg/fslib'
+import { Command }             from 'clipanion'
+
+import { executeYarnPnpProxy } from '@atls/yarn-run-utils'
+import { pipeYarnPnpProxy }    from '@atls/yarn-run-utils'
 
 export abstract class AbstractToolsCommand extends BaseCommand {
   static override usage = Command.Usage({
@@ -22,17 +23,14 @@ export abstract class AbstractToolsCommand extends BaseCommand {
   })
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
-    }
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return executeYarnPnpProxy({
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      executeRegular: async () => this.executeRegular(),
+      executeProxy: async () => this.executeProxy(),
+    })
   }
 
   async executeProxy(command: Array<string> = ['tools', 'sync']): Promise<number> {
@@ -41,7 +39,8 @@ export abstract class AbstractToolsCommand extends BaseCommand {
 
     const binFolder = await xfs.mktempPromise()
 
-    const { code } = await execUtils.pipevp('yarn', command, {
+    return pipeYarnPnpProxy({
+      args: command,
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
@@ -51,8 +50,6 @@ export abstract class AbstractToolsCommand extends BaseCommand {
         COMMAND_PROXY_EXECUTION: 'true',
       },
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {

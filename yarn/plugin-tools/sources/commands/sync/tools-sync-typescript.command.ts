@@ -1,9 +1,10 @@
 import { Configuration }        from '@yarnpkg/core'
 import { Project }              from '@yarnpkg/core'
 import { StreamReport }         from '@yarnpkg/core'
-import { Filename }             from '@yarnpkg/fslib'
 import { structUtils }          from '@yarnpkg/core'
 import semver                   from 'semver'
+
+import { executeYarnPnpProxy }  from '@atls/yarn-run-utils'
 
 import { AbstractToolsCommand } from './abstract-tools.command.js'
 
@@ -11,17 +12,14 @@ export class ToolsSyncTypeScriptCommand extends AbstractToolsCommand {
   static override paths = [['tools', 'sync', 'typescript']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
-    }
-
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy(['tools', 'sync', 'typescript'])
+    return executeYarnPnpProxy({
+      cwd: this.context.cwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      executeRegular: async () => this.executeRegular(),
+      executeProxy: async () => this.executeProxy(['tools', 'sync', 'typescript']),
+    })
   }
 
   override async executeRegular(): Promise<number> {

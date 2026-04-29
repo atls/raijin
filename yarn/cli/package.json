@@ -49,6 +49,7 @@
     "@atls/yarn-plugin-typescript": "workspace:*",
     "@atls/yarn-plugin-ui": "workspace:*",
     "@atls/yarn-plugin-workspaces": "workspace:*",
+    "@atls/yarn-run-utils": "workspace:*",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.5.1",
     "@yarnpkg/core": "4.1.4",

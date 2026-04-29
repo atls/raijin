@@ -1,31 +1,31 @@
 /* eslint-disable n/no-sync */
 
-import { readFileSync }  from 'node:fs'
-import { relative }      from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { readFileSync }     from 'node:fs'
+import { relative }         from 'node:path'
+import { pathToFileURL }    from 'node:url'
 
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { Filename }      from '@yarnpkg/fslib'
-import { scriptUtils }   from '@yarnpkg/core'
-import { execUtils }     from '@yarnpkg/core'
-import { xfs }           from '@yarnpkg/fslib'
-import { ppath }         from '@yarnpkg/fslib'
-import { npath }         from '@yarnpkg/fslib'
-import { Option }        from 'clipanion'
-import { Command }       from 'clipanion'
-import { render }        from 'ink'
-import { isEnum }        from 'typanion'
-import React             from 'react'
+import { BaseCommand }      from '@yarnpkg/cli'
+import { Configuration }    from '@yarnpkg/core'
+import { Project }          from '@yarnpkg/core'
+import { Filename }         from '@yarnpkg/fslib'
+import { scriptUtils }      from '@yarnpkg/core'
+import { xfs }              from '@yarnpkg/fslib'
+import { ppath }            from '@yarnpkg/fslib'
+import { npath }            from '@yarnpkg/fslib'
+import { Option }           from 'clipanion'
+import { Command }          from 'clipanion'
+import { render }           from 'ink'
+import { isEnum }           from 'typanion'
+import React                from 'react'
 
-import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
-import { LogRecord }     from '@atls/cli-ui-log-record-component'
-import { RawOutput }     from '@atls/cli-ui-raw-output-component'
-import { TestFailure }   from '@atls/cli-ui-test-failure-component'
-import { TestProgress }  from '@atls/cli-ui-test-progress-component'
-import { Tester }        from '@atls/code-test'
-import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
+import { ErrorInfo }        from '@atls/cli-ui-error-info-component'
+import { LogRecord }        from '@atls/cli-ui-log-record-component'
+import { RawOutput }        from '@atls/cli-ui-raw-output-component'
+import { TestFailure }      from '@atls/cli-ui-test-failure-component'
+import { TestProgress }     from '@atls/cli-ui-test-progress-component'
+import { Tester }           from '@atls/code-test'
+import { renderStatic }     from '@atls/cli-ui-renderer-static-component'
+import { pipeYarnPnpProxy } from '@atls/yarn-run-utils'
 
 export abstract class AbstractTestCommand extends BaseCommand {
   static override usage = Command.Usage({
@@ -113,15 +113,14 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
     env.COMMAND_PROXY_EXECUTION = 'true'
 
-    const { code } = await execUtils.pipevp('yarn', ['test', type ?? '', ...args], {
+    return pipeYarnPnpProxy({
+      args: ['test', type ?? '', ...args],
       cwd: project.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
       env,
     })
-
-    return code
   }
 
   async executeRegular(type: 'integration' | 'unit'): Promise<number> {
