@@ -3,6 +3,13 @@ type MergeGitIgnoreContentOptions = {
   templateContent: string
 }
 
+const PROJECT_SPECIFIC_START_MARKER = '# raijin:begin project-specific gitignore'
+const PROJECT_SPECIFIC_END_MARKER = '# raijin:end project-specific gitignore'
+
+const normalizeContent = (content: string): string => content.replace(/\r\n/g, '\n')
+
+const getNormalizedLines = (content: string): Array<string> => normalizeContent(content).split('\n')
+
 const trimTrailingEmptyLines = (lines: Array<string>): Array<string> => {
   const normalizedLines = [...lines]
 
@@ -13,18 +20,32 @@ const trimTrailingEmptyLines = (lines: Array<string>): Array<string> => {
   return normalizedLines
 }
 
+const getProjectSpecificLines = (
+  existingLines: Array<string>,
+  templateLineSet: Set<string>
+): Array<string> => {
+  const startIndex = existingLines.indexOf(PROJECT_SPECIFIC_START_MARKER)
+  const endIndex = existingLines.indexOf(PROJECT_SPECIFIC_END_MARKER)
+
+  if (startIndex !== -1 && endIndex > startIndex) {
+    return trimTrailingEmptyLines(existingLines.slice(startIndex + 1, endIndex))
+  }
+
+  return existingLines.filter((line) => !templateLineSet.has(line))
+}
+
 export const mergeGitIgnoreContent = ({
   existingContent,
   templateContent,
 }: MergeGitIgnoreContentOptions): string => {
-  const templateLines = templateContent.split('\n')
+  const templateLines = getNormalizedLines(templateContent)
   const templateLineSet = new Set(templateLines)
-  const existingLines = existingContent.split('\n')
+  const existingLines = getNormalizedLines(existingContent)
 
-  const projectSpecificLines = existingLines.filter((line) => !templateLineSet.has(line))
+  const projectSpecificLines = getProjectSpecificLines(existingLines, templateLineSet)
 
   if (projectSpecificLines.length === 0) {
-    return templateContent
+    return trimTrailingEmptyLines(templateLines).join('\n')
   }
 
   const mergedLines = trimTrailingEmptyLines(templateLines)
@@ -33,7 +54,9 @@ export const mergeGitIgnoreContent = ({
     mergedLines.push('')
   }
 
+  mergedLines.push(PROJECT_SPECIFIC_START_MARKER)
   mergedLines.push(...projectSpecificLines)
+  mergedLines.push(PROJECT_SPECIFIC_END_MARKER)
 
   return mergedLines.join('\n')
 }
