@@ -85,6 +85,7 @@ test('should not keep removed template rules when managed block exists', () => {
       '.yarn/install-state.gz',
       '',
       '# raijin:begin project-specific gitignore',
+      'dist/',
       '.idea/',
       '# raijin:end project-specific gitignore',
     ].join('\n')
@@ -144,6 +145,39 @@ test('should preserve project-specific lines added outside managed block', () =>
       '.idea/',
       '.custom-above-block/',
       '.custom-below-block/',
+      '# raijin:end project-specific gitignore',
+    ].join('\n')
+  )
+})
+
+test('should preserve project-specific lines in template area before managed block', () => {
+  const templateContent = ['node_modules', '.yarn/install-state.gz', 'dist/'].join('\n')
+  const existingContent = [
+    '.custom-top-line/',
+    'node_modules',
+    '.yarn/install-state.gz',
+    'dist/',
+    '',
+    '# raijin:begin project-specific gitignore',
+    '.idea/',
+    '# raijin:end project-specific gitignore',
+  ].join('\n')
+
+  const actual = mergeGitIgnoreContent({
+    existingContent,
+    templateContent,
+  })
+
+  assert.equal(
+    actual,
+    [
+      'node_modules',
+      '.yarn/install-state.gz',
+      'dist/',
+      '',
+      '# raijin:begin project-specific gitignore',
+      '.idea/',
+      '.custom-top-line/',
       '# raijin:end project-specific gitignore',
     ].join('\n')
   )
