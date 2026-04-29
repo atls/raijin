@@ -53,7 +53,7 @@
       "unplugged": true
     }
   },
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "yarn@4.14.1",
   "formatterIgnorePatterns": [
     "CHANGELOG.md"
   ],

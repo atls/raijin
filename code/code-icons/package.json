@@ -20,8 +20,8 @@
   "dependencies": {
     "@atls/code-runtime": "workspace:*",
     "@atls/config-typescript": "workspace:*",
-    "@yarnpkg/cli": "4.5.1",
-    "@yarnpkg/core": "4.1.4",
+    "@yarnpkg/cli": "4.14.1",
+    "@yarnpkg/core": "4.7.0",
     "camelcase": "8.0.0",
     "typescript": "5.5.4",
     "webpack-chain-5": "8.0.2"
@@ -30,7 +30,7 @@
     "@monstrs/logger": "0.0.20",
     "@types/node": "22.13.10",
     "@types/webpack": "5.28.5",
-    "@yarnpkg/fslib": "3.1.0"
+    "@yarnpkg/fslib": "3.1.5"
   },
   "publishConfig": {
     "access": "public",

@@ -18,6 +18,7 @@ const [major, minor] = process.versions.node.split(`.`).map((value) => parseInt(
 const WATCH_MODE_MESSAGE_USES_ARRAYS = major > 19 || major === 19 && minor >= 2 || major === 18 && minor >= 13;
 const SUPPORTS_IMPORT_ATTRIBUTES = major >= 21 || major === 20 && minor >= 10 || major === 18 && minor >= 20;
 const SUPPORTS_IMPORT_ATTRIBUTES_ONLY = major >= 22;
+const HAS_BROKEN_FSTAT_FOR_ZIP_FDS = major > 25 || major === 25 && minor >= 7;
 
 const PortablePath = {
   root: `/`,
@@ -871,7 +872,7 @@ function requireStatUtils () {
 		            const element = stats[key];
 		            if (typeof element === `number`) {
 		                // @ts-expect-error Typescript isn't able to tell this is valid
-		                bigintStats[key] = BigInt(element);
+		                bigintStats[key] = BigInt(Math.floor(element));
 		            }
 		            else if (nodeUtils.types.isDate(element)) {
 		                // @ts-expect-error Typescript isn't able to tell this is valid
@@ -879,10 +880,10 @@ function requireStatUtils () {
 		            }
 		        }
 		    }
-		    bigintStats.atimeNs = bigintStats.atimeMs * BigInt(1e6);
-		    bigintStats.mtimeNs = bigintStats.mtimeMs * BigInt(1e6);
-		    bigintStats.ctimeNs = bigintStats.ctimeMs * BigInt(1e6);
-		    bigintStats.birthtimeNs = bigintStats.birthtimeMs * BigInt(1e6);
+		    bigintStats.atimeNs = bigintStats.atimeMs * BigInt(1e6) + BigInt(Math.floor((stats.atimeMs % 1) * 1e3)) * BigInt(1e3);
+		    bigintStats.mtimeNs = bigintStats.mtimeMs * BigInt(1e6) + BigInt(Math.floor((stats.mtimeMs % 1) * 1e3)) * BigInt(1e3);
+		    bigintStats.ctimeNs = bigintStats.ctimeMs * BigInt(1e6) + BigInt(Math.floor((stats.ctimeMs % 1) * 1e3)) * BigInt(1e3);
+		    bigintStats.birthtimeNs = bigintStats.birthtimeMs * BigInt(1e6) + BigInt(Math.floor((stats.birthtimeMs % 1) * 1e3)) * BigInt(1e3);
 		    return bigintStats;
 		}
 		function areStatsEqual(a, b) {
@@ -1144,7 +1145,7 @@ function requireCopyPromise () {
 	    try {
 	        return await baseFs.lstatPromise(p);
 	    }
-	    catch (e) {
+	    catch {
 	        return null;
 	    }
 	}
@@ -1365,7 +1366,6 @@ function requireOpendir () {
 	    async *[Symbol.asyncIterator]() {
 	        try {
 	            let dirent;
-	            // eslint-disable-next-line no-cond-assign
 	            while ((dirent = await this.read()) !== null) {
 	                yield dirent;
 	            }
@@ -1489,7 +1489,7 @@ function requireCustomStatWatcher () {
 	        try {
 	            return this.fakeFs.statSync(this.path, { bigint: this.bigint });
 	        }
-	        catch (error) {
+	        catch {
 	            // From observation, all errors seem to be mostly ignored by Node.
 	            // Checked with ENOENT, ENOTDIR, EPERM
 	            const statInstance = this.bigint
@@ -1870,7 +1870,7 @@ function requireFakeFS () {
 	        try {
 	            current = await this.readFilePromise(p);
 	        }
-	        catch (error) {
+	        catch {
 	            // ignore errors, no big deal
 	        }
 	        if (Buffer.compare(current, content) === 0)
@@ -1882,7 +1882,7 @@ function requireFakeFS () {
 	        try {
 	            current = await this.readFilePromise(p, `utf8`);
 	        }
-	        catch (error) {
+	        catch {
 	            // ignore errors, no big deal
 	        }
 	        const normalizedContent = automaticNewlines
@@ -1905,7 +1905,7 @@ function requireFakeFS () {
 	        try {
 	            current = this.readFileSync(p);
 	        }
-	        catch (error) {
+	        catch {
 	            // ignore errors, no big deal
 	        }
 	        if (Buffer.compare(current, content) === 0)
@@ -1917,7 +1917,7 @@ function requireFakeFS () {
 	        try {
 	            current = this.readFileSync(p, `utf8`);
 	        }
-	        catch (error) {
+	        catch {
 	            // ignore errors, no big deal
 	        }
 	        const normalizedContent = automaticNewlines
@@ -1969,9 +1969,9 @@ function requireFakeFS () {
 	            try {
 	                ([pid] = await this.readJsonPromise(lockPath));
 	            }
-	            catch (error) {
+	            catch {
 	                // If we can't read the file repeatedly, we assume the process was
-	                // aborted before even writing finishing writing the payload.
+	                // aborted before even finishing writing the payload.
 	                return Date.now() - startTime < 500;
 	            }
 	            try {
@@ -1980,7 +1980,7 @@ function requireFakeFS () {
 	                process.kill(pid, 0);
 	                return true;
 	            }
-	            catch (error) {
+	            catch {
 	                return false;
 	            }
 	        };
@@ -1995,7 +1995,7 @@ function requireFakeFS () {
 	                            await this.unlinkPromise(lockPath);
 	                            continue;
 	                        }
-	                        catch (error) {
+	                        catch {
 	                            // No big deal if we can't remove it. Just fallback to wait for
 	                            // it to be eventually released by its owner.
 	                        }
@@ -2024,7 +2024,7 @@ function requireFakeFS () {
 	                await this.closePromise(fd);
 	                await this.unlinkPromise(lockPath);
 	            }
-	            catch (error) {
+	            catch {
 	                // noop
 	            }
 	        }
@@ -2339,12 +2339,12 @@ function requireProxiedFS () {
 	    }
 	    watch(p, a, b) {
 	        return this.baseFs.watch(this.mapToBase(p), 
-	        // @ts-expect-error
+	        // @ts-expect-error - reason TBS
 	        a, b);
 	    }
 	    watchFile(p, a, b) {
 	        return this.baseFs.watchFile(this.mapToBase(p), 
-	        // @ts-expect-error
+	        // @ts-expect-error - reason TBS
 	        a, b);
 	    }
 	    unwatchFile(p, cb) {
@@ -2447,7 +2447,7 @@ function requireNodeFS () {
 	                this.realFs.opendir(path_1.npath.fromPortablePath(p), this.makeCallback(resolve, reject));
 	            }
 	        }).then(dir => {
-	            // @ts-expect-error
+	            // @ts-expect-error - reason TBS
 	            //
 	            // We need a way to tell TS that the values returned by the `read`
 	            // methods are compatible with `Dir`, especially the `name` field.
@@ -2469,7 +2469,7 @@ function requireNodeFS () {
 	        const dir = typeof opts !== `undefined`
 	            ? this.realFs.opendirSync(path_1.npath.fromPortablePath(p), opts)
 	            : this.realFs.opendirSync(path_1.npath.fromPortablePath(p));
-	        // @ts-expect-error
+	        // @ts-expect-error - reason TBS
 	        //
 	        // We need a way to tell TS that the values returned by the `read`
 	        // methods are compatible with `Dir`, especially the `name` field.
@@ -2855,12 +2855,12 @@ function requireNodeFS () {
 	    }
 	    watch(p, a, b) {
 	        return this.realFs.watch(path_1.npath.fromPortablePath(p), 
-	        // @ts-expect-error
+	        // @ts-expect-error - reason TBS
 	        a, b);
 	    }
 	    watchFile(p, a, b) {
 	        return this.realFs.watchFile(path_1.npath.fromPortablePath(p), 
-	        // @ts-expect-error
+	        // @ts-expect-error - reason TBS
 	        a, b);
 	    }
 	    unwatchFile(p, cb) {
@@ -3426,7 +3426,7 @@ function requireMountFS () {
 	            try {
 	                content = await sourceFs.readFilePromise(sourceP);
 	            }
-	            catch (error) {
+	            catch {
 	                throw Object.assign(new Error(`EINVAL: invalid argument, copyfile '${sourceP}' -> '${destP}'`), { code: `EINVAL` });
 	            }
 	            await destFs.writeFilePromise(destP, content);
@@ -3460,7 +3460,7 @@ function requireMountFS () {
 	            try {
 	                content = sourceFs.readFileSync(sourceP);
 	            }
-	            catch (error) {
+	            catch {
 	                throw Object.assign(new Error(`EINVAL: invalid argument, copyfile '${sourceP}' -> '${destP}'`), { code: `EINVAL` });
 	            }
 	            destFs.writeFileSync(destP, content);
@@ -3705,18 +3705,18 @@ function requireMountFS () {
 	    watch(p, a, b) {
 	        return this.makeCallSync(p, () => {
 	            return this.baseFs.watch(p, 
-	            // @ts-expect-error
+	            // @ts-expect-error - reason TBS
 	            a, b);
 	        }, (mountFs, { subPath }) => {
 	            return mountFs.watch(subPath, 
-	            // @ts-expect-error
+	            // @ts-expect-error - reason TBS
 	            a, b);
 	        });
 	    }
 	    watchFile(p, a, b) {
 	        return this.makeCallSync(p, () => {
 	            return this.baseFs.watchFile(p, 
-	            // @ts-expect-error
+	            // @ts-expect-error - reason TBS
 	            a, b);
 	        }, () => {
 	            return (0, watchFile_1.watchFile)(this, p, a, b);
@@ -3765,7 +3765,7 @@ function requireMountFS () {
 	                if (this.notMount.has(filePath))
 	                    continue;
 	                try {
-	                    if (this.typeCheck !== null && (this.baseFs.lstatSync(filePath).mode & fs_1.constants.S_IFMT) !== this.typeCheck) {
+	                    if (this.typeCheck !== null && (this.baseFs.statSync(filePath).mode & fs_1.constants.S_IFMT) !== this.typeCheck) {
 	                        this.notMount.add(filePath);
 	                        continue;
 	                    }
@@ -4379,29 +4379,41 @@ function requireFileHandle () {
 	    sync() {
 	        throw new Error(`Method not implemented.`);
 	    }
-	    async read(bufferOrOptions, offset, length, position) {
+	    async read(bufferOrOptions, offsetOrOptions, length, position) {
 	        try {
 	            this[kRef](this.read);
 	            let buffer;
-	            if (!Buffer.isBuffer(bufferOrOptions)) {
-	                bufferOrOptions ??= {};
-	                buffer = bufferOrOptions.buffer ?? Buffer.alloc(16384);
-	                offset = bufferOrOptions.offset || 0;
-	                length = bufferOrOptions.length ?? buffer.byteLength;
-	                position = bufferOrOptions.position ?? null;
+	            let offset;
+	            if (!ArrayBuffer.isView(bufferOrOptions)) {
+	                // read([options])
+	                // TypeScript isn't able to infer that the coalescing happens only in the no-generic case
+	                buffer = bufferOrOptions?.buffer ?? Buffer.alloc(16384);
+	                offset = bufferOrOptions?.offset ?? 0;
+	                length = bufferOrOptions?.length ?? buffer.byteLength - offset;
+	                position = bufferOrOptions?.position ?? null;
+	            }
+	            else if (typeof offsetOrOptions === `object` && offsetOrOptions !== null) {
+	                // read(buffer[, options])
+	                buffer = bufferOrOptions;
+	                offset = offsetOrOptions?.offset ?? 0;
+	                length = offsetOrOptions?.length ?? buffer.byteLength - offset;
+	                position = offsetOrOptions?.position ?? null;
 	            }
 	            else {
+	                // read(buffer, offset[, length[, position]])
 	                buffer = bufferOrOptions;
+	                offset = offsetOrOptions ?? 0;
+	                length ??= 0;
 	            }
-	            offset ??= 0;
-	            length ??= 0;
 	            if (length === 0) {
 	                return {
 	                    bytesRead: length,
 	                    buffer,
 	                };
 	            }
-	            const bytesRead = await this[kBaseFs].readPromise(this.fd, buffer, offset, length, position);
+	            const bytesRead = await this[kBaseFs].readPromise(this.fd, 
+	            // FIXME: FakeFS should support ArrayBufferViews directly
+	            Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer.buffer, buffer.byteOffset, buffer.byteLength), offset, length, position);
 	            return {
 	                bytesRead,
 	                buffer,
@@ -4735,7 +4747,7 @@ function requirePatchFs () {
 	            try {
 	                return fakeFs.existsSync(p);
 	            }
-	            catch (error) {
+	            catch {
 	                return false;
 	            }
 	        });
@@ -4794,7 +4806,7 @@ function requirePatchFs () {
 	            });
 	        }
 	        setupFn(patchedFsPromises, `open`, async (...args) => {
-	            // @ts-expect-error
+	            // @ts-expect-error - reason TBS
 	            const fd = await fakeFs.openPromise(...args);
 	            return new FileHandle_1.FileHandle(fd, fakeFs);
 	        });
@@ -4809,12 +4821,12 @@ function requirePatchFs () {
 	        // https://github.com/nodejs/node/blob/dc79f3f37caf6f25b8efee4623bec31e2c20f595/lib/fs.js#L690-L691
 	        // and
 	        // https://github.com/nodejs/node/blob/ba684805b6c0eded76e5cd89ee00328ac7a59365/lib/internal/util.js#L293
-	        // @ts-expect-error
+	        // @ts-expect-error - reason TBS
 	        patchedFs.read[util_1.promisify.custom] = async (fd, buffer, ...args) => {
 	            const res = fakeFs.readPromise(fd, buffer, ...args);
 	            return { bytesRead: await res, buffer };
 	        };
-	        // @ts-expect-error
+	        // @ts-expect-error - reason TBS
 	        patchedFs.write[util_1.promisify.custom] = async (fd, buffer, ...args) => {
 	            const res = fakeFs.writePromise(fd, buffer, ...args);
 	            return { bytesWritten: await res, buffer };
@@ -5079,7 +5091,7 @@ async function copyImpl(prelayout, postlayout, destinationFs, destination, sourc
 async function maybeLStat(baseFs, p) {
   try {
     return await baseFs.lstatPromise(p);
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -5431,7 +5443,7 @@ class FakeFS {
     let current = Buffer.alloc(0);
     try {
       current = await this.readFilePromise(p);
-    } catch (error) {
+    } catch {
     }
     if (Buffer.compare(current, content) === 0)
       return;
@@ -5441,7 +5453,7 @@ class FakeFS {
     let current = ``;
     try {
       current = await this.readFilePromise(p, `utf8`);
-    } catch (error) {
+    } catch {
     }
     const normalizedContent = automaticNewlines ? normalizeLineEndings(current, content) : content;
     if (current === normalizedContent)
@@ -5459,7 +5471,7 @@ class FakeFS {
     let current = Buffer.alloc(0);
     try {
       current = this.readFileSync(p);
-    } catch (error) {
+    } catch {
     }
     if (Buffer.compare(current, content) === 0)
       return;
@@ -5469,7 +5481,7 @@ class FakeFS {
     let current = ``;
     try {
       current = this.readFileSync(p, `utf8`);
-    } catch (error) {
+    } catch {
     }
     const normalizedContent = automaticNewlines ? normalizeLineEndings(current, content) : content;
     if (current === normalizedContent)
@@ -5509,13 +5521,13 @@ class FakeFS {
       let pid;
       try {
         [pid] = await this.readJsonPromise(lockPath);
-      } catch (error) {
+      } catch {
         return Date.now() - startTime < 500;
       }
       try {
         process.kill(pid, 0);
         return true;
-      } catch (error) {
+      } catch {
         return false;
       }
     };
@@ -5528,7 +5540,7 @@ class FakeFS {
             try {
               await this.unlinkPromise(lockPath);
               continue;
-            } catch (error2) {
+            } catch {
             }
           }
           if (Date.now() - startTime < 60 * 1e3) {
@@ -5548,7 +5560,7 @@ class FakeFS {
       try {
         await this.closePromise(fd);
         await this.unlinkPromise(lockPath);
-      } catch (error) {
+      } catch {
       }
     }
   }
@@ -6018,7 +6030,7 @@ class NodeFS extends BasePortableFakeFS {
   watch(p, a, b) {
     return this.realFs.watch(
       npath.fromPortablePath(p),
-      // @ts-expect-error
+      // @ts-expect-error - reason TBS
       a,
       b
     );
@@ -6026,7 +6038,7 @@ class NodeFS extends BasePortableFakeFS {
   watchFile(p, a, b) {
     return this.realFs.watchFile(
       npath.fromPortablePath(p),
-      // @ts-expect-error
+      // @ts-expect-error - reason TBS
       a,
       b
     );
@@ -6274,7 +6286,7 @@ class ProxiedFS extends FakeFS {
   watch(p, a, b) {
     return this.baseFs.watch(
       this.mapToBase(p),
-      // @ts-expect-error
+      // @ts-expect-error - reason TBS
       a,
       b
     );
@@ -6282,7 +6294,7 @@ class ProxiedFS extends FakeFS {
   watchFile(p, a, b) {
     return this.baseFs.watchFile(
       this.mapToBase(p),
-      // @ts-expect-error
+      // @ts-expect-error - reason TBS
       a,
       b
     );
@@ -6410,9 +6422,11 @@ async function load$1(urlString, context, nextLoad) {
       "watch:import": WATCH_MODE_MESSAGE_USES_ARRAYS ? [pathToSend] : pathToSend
     });
   }
+  const shouldReadSource = format === `commonjs` && HAS_BROKEN_FSTAT_FOR_ZIP_FDS && filePath.includes(`.zip/`);
+  const source = format !== `commonjs` || shouldReadSource ? await fs.promises.readFile(filePath, `utf8`) : void 0;
   return {
     format,
-    source: format === `commonjs` ? void 0 : await fs.promises.readFile(filePath, `utf8`),
+    source,
     shortCircuit: true
   };
 }
@@ -6924,7 +6938,7 @@ function packageImportsResolve({ name, base, conditions, readFileSyncFn }) {
 let findPnpApi = esmModule.findPnpApi;
 if (!findPnpApi) {
   const require = createRequire$1(import.meta.url);
-  const pnpApi = require(`./.pnp.cjs`);
+  const pnpApi = require(structuredClone(`./.pnp.cjs`));
   pnpApi.setup();
   findPnpApi = esmModule.findPnpApi;
 }

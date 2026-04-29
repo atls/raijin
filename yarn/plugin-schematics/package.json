@@ -31,9 +31,9 @@
     "@atls/yarn-test-utils": "workspace:*",
     "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
-    "@yarnpkg/cli": "4.5.1",
-    "@yarnpkg/core": "4.1.4",
-    "@yarnpkg/fslib": "3.1.0",
+    "@yarnpkg/cli": "4.14.1",
+    "@yarnpkg/core": "4.7.0",
+    "@yarnpkg/fslib": "3.1.5",
     "ink": "3.2.0",
     "react": "18.3.1",
     "typescript": "5.5.4"
