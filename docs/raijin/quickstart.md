@@ -6,7 +6,7 @@ Minimal install-and-verify flow for the custom `atls` Yarn bundle
 
 ## 1. Prerequisites
 
-- Node.js: `>= 22`
+- Node.js: `>= 24`
 - Yarn: `>= 4`
 - A working project with `package.json`
 

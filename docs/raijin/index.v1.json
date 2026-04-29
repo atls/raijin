@@ -1,6 +1,6 @@
 {
   "environment": {
-    "nodeVersion": "22",
+    "nodeVersion": "24",
     "requiresSourceEnv": true,
     "requiredEnv": ["NODE_OPTIONS"],
     "pnpEnableEsmLoader": true,
@@ -1482,5 +1482,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-04-29T20:54:41.789Z"
+  "lastGenerated": "2026-04-29T23:07:25.462Z"
 }
