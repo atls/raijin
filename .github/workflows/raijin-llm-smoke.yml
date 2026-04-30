@@ -18,7 +18,7 @@ jobs:
     permissions:
       contents: read
     env:
-      NODE_VERSION: '22'
+      NODE_VERSION: '24'
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.OPENAI_SERVICE_ACCOUNT_KEY }}
       OPENAI_MODEL: ${{ inputs.model || vars.OPENAI_SMOKE_MODEL || 'gpt-5.4-mini' }}
       LLM_SMOKE_REPORT_PATH: artifacts/llm-smoke-report.json

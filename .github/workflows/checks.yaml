@@ -9,7 +9,7 @@ jobs:
   checks:
     name: Shared checks / Checks
     env:
-      NODE_VERSION: '22'
+      NODE_VERSION: '24'
     runs-on: ubuntu-latest
     permissions: write-all
 
@@ -36,7 +36,7 @@ jobs:
   raijin:
     name: Raijin checks
     env:
-      NODE_VERSION: '22'
+      NODE_VERSION: '24'
     runs-on: ubuntu-latest
     permissions: read-all
 

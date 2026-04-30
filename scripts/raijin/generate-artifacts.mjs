@@ -720,7 +720,7 @@ const renderQuickstart = (language) => {
     '<!-- sync:preflight -->',
     isRu ? '## 1. Предпосылки' : '## 1. Prerequisites',
     '',
-    isRu ? '- Node.js: `>= 22` (не ниже `22`)' : '- Node.js: `>= 22`',
+    isRu ? '- Node.js: `>= 24` (не ниже `24`)' : '- Node.js: `>= 24`',
     isRu ? '- Yarn: `>= 4` (не ниже `4`)' : '- Yarn: `>= 4`',
     isRu ? '- Рабочий проект с `package.json`' : '- A working project with `package.json`',
     '',
@@ -1290,7 +1290,7 @@ const yarnPathMatch = yarnRc.match(/^\s*yarnPath:\s*(.+)\s*$/m)
 
 const draftIndex = {
   environment: {
-    nodeVersion: '22',
+    nodeVersion: '24',
     requiresSourceEnv: true,
     requiredEnv: ['NODE_OPTIONS'],
     pnpEnableEsmLoader: /pnpEnableEsmLoader:\s*true/.test(yarnRc),
