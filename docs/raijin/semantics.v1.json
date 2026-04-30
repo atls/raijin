@@ -256,8 +256,8 @@
         "ru": "Используйте при создании новой структуры проекта из готовых шаблонов."
       },
       "example": {
-        "en": "yarn generate project",
-        "ru": "yarn generate project"
+        "en": "unavailable while inactive",
+        "ru": "недоступно, пока команда inactive"
       }
     },
     {

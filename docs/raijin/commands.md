@@ -600,7 +600,7 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Status: `inactive`
 - Purpose: Generate a new project from schematics templates.
 - When to use: Use when scaffolding a new project structure from predefined templates.
-- Example: `yarn generate project`
+- Example: unavailable for inactive command
 - Plugin: `@atls/yarn-plugin-schematics`
 - Source: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
 - Routing: do not use (plugin is in bundle but not exported from plugin index)

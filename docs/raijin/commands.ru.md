@@ -600,7 +600,7 @@
 - Статус: `inactive`
 - Назначение: Сгенерировать новый проект из шаблонов schematics.
 - Когда использовать: Используйте при создании новой структуры проекта из готовых шаблонов.
-- Пример: `yarn generate project`
+- Пример: недоступен для inactive-команды
 - Плагин: `@atls/yarn-plugin-schematics`
 - Исходник: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
 - Маршрутизация: не использовать (plugin is in bundle but not exported from plugin index)

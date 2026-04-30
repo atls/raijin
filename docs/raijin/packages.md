@@ -626,7 +626,7 @@ Compact list:
 - When to use: Use when building templates, generators, or schematic factories.
 - Example: `Add a schematic that scaffolds a new workspace package.`
 - Tags: `code`
-- Scripts: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`
+- Scripts: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`, `smoke:schematic`
 - Dependencies: deps 4, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-code-service -->
