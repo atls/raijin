@@ -1,5 +1,12 @@
 
 
+## [2.1.29](https://github.com/atls/raijin/compare/@atls/code-service@2.1.28...@atls/code-service@2.1.29) (2026-04-30)
+
+
+
+
+
+
 ## [2.1.28](https://github.com/atls/raijin/compare/@atls/code-service@2.1.27...@atls/code-service@2.1.28) (2026-04-29)
 
 

@@ -1,5 +1,12 @@
 
 
+## [2.0.33](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.32...@atls/code-icons@2.0.33) (2026-04-30)
+
+
+
+
+
+
 ## [2.0.32](https://github.com/atls/raijin/compare/@atls/code-icons@2.0.31...@atls/code-icons@2.0.32) (2026-04-29)
 
 

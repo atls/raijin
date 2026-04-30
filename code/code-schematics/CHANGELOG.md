@@ -1,5 +1,17 @@
 
 
+## [2.0.23](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.22...@atls/code-schematics@2.0.23) (2026-04-30)
+
+
+### Features
+
+
+* **code-schematics:** restore schematic smoke helper ([b76a85b](https://github.com/atls/raijin/commit/b76a85bdccfe82b1b33e6f5064f27902adabd3b2))
+
+
+
+
+
 ## [2.0.22](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.21...@atls/code-schematics@2.0.22) (2026-04-29)
 
 
