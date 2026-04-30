@@ -15,7 +15,8 @@
     "build:library": "yarn library build",
     "build:schematic-factory": "yarn node ./src/scripts/schematic-factory-build.script.ts",
     "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "postpack": "rm -rf dist",
+    "smoke:schematic": "yarn node ./src/scripts/schematic-smoke.script.ts"
   },
   "dependencies": {
     "@angular-devkit/core": "19.1.5",

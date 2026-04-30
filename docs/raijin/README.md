@@ -31,6 +31,7 @@ Navigation for custom `atls` Yarn bundle docs
 
 - `yarn raijin:generate`
 - `yarn raijin:check`
+- `yarn schematic:test`
 
 <!-- sync:router-coverage -->
 
@@ -38,4 +39,4 @@ Navigation for custom `atls` Yarn bundle docs
 
 - Commands: 36 (active: 35, inactive: 1)
 - Workspace packages: 72
-- Last generated: 2026-04-29T23:07:25.462Z
+- Last generated: 2026-04-30T02:04:56.641Z

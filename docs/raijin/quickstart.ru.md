@@ -54,9 +54,22 @@ yarn files changed list
 - `yarn check` завершает полный проход проверок без ошибок маршрутизации
 - `yarn files changed list` возвращает список файлов или пустой список, если изменений нет
 
+<!-- sync:schematic-smoke -->
+
+## 5. Локальная smoke-проверка schematics
+
+```bash
+yarn schematic:test
+```
+
+Ожидаемый результат:
+
+- Временный fixture создаётся через публичные экспорты `@atls/code-schematics`
+- Проверка падает, если helper или Markdown-документация вызывают inactive-команду
+
 <!-- sync:consumer-howto -->
 
-## 5. Как использовать в чужом проекте
+## 6. Как использовать в чужом проекте
 
 - Подключите бандл один раз, затем поддерживайте версию через `yarn set version atls`
 - Коммитьте изменения `.yarn/releases` и `.yarnrc.yml` вместе с обновлением бандла

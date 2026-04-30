@@ -369,6 +369,10 @@ const normalizeTags = (tags, fallbackTags) => {
 const fallbackCommandSemantics = (command) => {
   const enPurpose = `Runs "${command.command}" in ${command.domain} raijin domain`
   const ruPurpose = `Запускает "${command.command}" в raijin-домене ${command.domain}`
+  const example =
+    command.status === 'inactive'
+      ? { en: 'unavailable while inactive', ru: 'недоступно, пока команда inactive' }
+      : { en: `yarn ${command.command}`, ru: `yarn ${command.command}` }
 
   return {
     id: command.command,
@@ -378,7 +382,7 @@ const fallbackCommandSemantics = (command) => {
       en: `Use when you need ${command.command} in project workflow`,
       ru: `Используйте, когда в рабочем потоке нужен сценарий ${command.command}`,
     },
-    example: { en: `yarn ${command.command}`, ru: `yarn ${command.command}` },
+    example,
   }
 }
 
@@ -689,6 +693,7 @@ const renderRaijinReadme = (index, language) => {
     '',
     '- `yarn raijin:generate`',
     '- `yarn raijin:check`',
+    '- `yarn schematic:test`',
     '',
     '<!-- sync:router-coverage -->',
     '',
@@ -773,8 +778,23 @@ const renderQuickstart = (language) => {
       ? '- `yarn files changed list` возвращает список файлов или пустой список, если изменений нет'
       : '- `yarn files changed list` returns file list (or empty list if no changes)',
     '',
+    '<!-- sync:schematic-smoke -->',
+    isRu ? '## 5. Локальная smoke-проверка schematics' : '## 5. Local schematics smoke check',
+    '',
+    '```bash',
+    'yarn schematic:test',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- Временный fixture создаётся через публичные экспорты `@atls/code-schematics`'
+      : '- Temporary fixture is created through public `@atls/code-schematics` exports',
+    isRu
+      ? '- Проверка падает, если helper или Markdown-документация вызывают inactive-команду'
+      : '- Check fails if helper or Markdown docs invoke an inactive command',
+    '',
     '<!-- sync:consumer-howto -->',
-    isRu ? '## 5. Как использовать в чужом проекте' : '## 5. How to use in an external project',
+    isRu ? '## 6. Как использовать в чужом проекте' : '## 6. How to use in an external project',
     '',
     isRu
       ? '- Подключите бандл один раз, затем поддерживайте версию через `yarn set version atls`'
@@ -808,7 +828,7 @@ const groupCommandsByDomain = (commands) => {
 const renderCommandCard = (command, semantics, language) => {
   const isRu = language === 'ru'
 
-  return [
+  const lines = [
     `<!-- sync:command-card:${slugify(command.command)} -->`,
     '',
     `#### \`${command.command}\``,
@@ -820,12 +840,26 @@ const renderCommandCard = (command, semantics, language) => {
     isRu
       ? `- Когда использовать: ${languageField(semantics.whenToUse, 'ru')}`
       : `- When to use: ${languageField(semantics.whenToUse, 'en')}`,
-    isRu
-      ? `- Пример: \`${languageField(semantics.example, 'ru')}\``
-      : `- Example: \`${languageField(semantics.example, 'en')}\``,
-    isRu ? `- Плагин: \`${command.plugin}\`` : `- Plugin: \`${command.plugin}\``,
-    isRu ? `- Исходник: \`${command.source}\`` : `- Source: \`${command.source}\``,
   ]
+
+  if (command.status === 'active') {
+    lines.push(
+      isRu
+        ? `- Пример: \`${languageField(semantics.example, 'ru')}\``
+        : `- Example: \`${languageField(semantics.example, 'en')}\``
+    )
+  } else {
+    lines.push(
+      isRu
+        ? '- Пример: недоступен для inactive-команды'
+        : '- Example: unavailable for inactive command'
+    )
+  }
+
+  lines.push(isRu ? `- Плагин: \`${command.plugin}\`` : `- Plugin: \`${command.plugin}\``)
+  lines.push(isRu ? `- Исходник: \`${command.source}\`` : `- Source: \`${command.source}\``)
+
+  return lines
 }
 
 const renderCommandsDoc = (commands, semanticsLookup, language) => {

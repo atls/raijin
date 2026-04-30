@@ -54,9 +54,22 @@ Expected result:
 - `yarn check` runs a complete validation pass without routing errors
 - `yarn files changed list` returns file list (or empty list if no changes)
 
+<!-- sync:schematic-smoke -->
+
+## 5. Local schematics smoke check
+
+```bash
+yarn schematic:test
+```
+
+Expected result:
+
+- Temporary fixture is created through public `@atls/code-schematics` exports
+- Check fails if helper or Markdown docs invoke an inactive command
+
 <!-- sync:consumer-howto -->
 
-## 5. How to use in an external project
+## 6. How to use in an external project
 
 - Install once, then keep it current with `yarn set version atls`
 - Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates

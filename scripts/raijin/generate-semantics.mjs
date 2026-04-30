@@ -110,10 +110,16 @@ const fallbackCommandEntry = (command) => ({
     en: `Use when ${command.command} is needed in project workflow`,
     ru: `Используйте, когда в рабочем потоке нужен сценарий ${command.command}`,
   },
-  example: {
-    en: `yarn ${command.command}`,
-    ru: `yarn ${command.command}`,
-  },
+  example:
+    command.status === 'inactive'
+      ? {
+          en: 'unavailable while inactive',
+          ru: 'недоступно, пока команда inactive',
+        }
+      : {
+          en: `yarn ${command.command}`,
+          ru: `yarn ${command.command}`,
+        },
 })
 
 const fallbackWorkspaceEntry = (workspace) => ({

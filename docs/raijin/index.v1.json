@@ -858,7 +858,14 @@
       "description": "",
       "purposeEn": "Code utility library for raijin workflows",
       "purposeRu": "Библиотека code-утилит для raijin-сценариев",
-      "scripts": ["build", "build:library", "build:schematic-factory", "postpack", "prepack"],
+      "scripts": [
+        "build",
+        "build:library",
+        "build:schematic-factory",
+        "postpack",
+        "prepack",
+        "smoke:schematic"
+      ],
       "dependencyCount": 4,
       "devDependencyCount": 8,
       "peerDependencyCount": 2
@@ -1482,5 +1489,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-04-29T23:07:25.462Z"
+  "lastGenerated": "2026-04-30T02:04:56.641Z"
 }

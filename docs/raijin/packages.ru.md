@@ -626,7 +626,7 @@
 - Когда использовать: Используйте при создании шаблонов, генераторов или фабрик схем.
 - Пример: `Добавить схему, которая создаёт новый workspace-пакет.`
 - Теги: `code`
-- Скрипты: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`
+- Скрипты: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`, `smoke:schematic`
 - Зависимости: deps 4, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-code-service -->

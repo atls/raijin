@@ -31,6 +31,7 @@
 
 - `yarn raijin:generate`
 - `yarn raijin:check`
+- `yarn schematic:test`
 
 <!-- sync:router-coverage -->
 
@@ -38,4 +39,4 @@
 
 - Команд: 36 (active: 35, inactive: 1)
 - Workspace-пакетов: 72
-- Последняя генерация: 2026-04-29T23:07:25.462Z
+- Последняя генерация: 2026-04-30T02:04:56.641Z

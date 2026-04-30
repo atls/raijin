@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "cli:build": "yarn workspace @atls/yarn-cli build",
-    "raijin:check": "yarn raijin:check:drift && yarn raijin:check:localization && yarn raijin:check:coverage && yarn raijin:smoke:deterministic",
+    "raijin:check": "yarn raijin:check:drift && yarn raijin:check:localization && yarn raijin:check:coverage && yarn raijin:smoke:deterministic && yarn raijin:smoke:schematic",
     "raijin:check:coverage": "node scripts/raijin/check-semantics-coverage.mjs",
     "raijin:check:drift": "node scripts/raijin/generate-artifacts.mjs && git diff --exit-code -- README.md README_EN.md docs/README.md docs/README.ru.md docs/raijin .agents && test -z \"$(git ls-files --others --exclude-standard -- README.md README_EN.md docs/README.md docs/README.ru.md docs/raijin .agents)\"",
     "raijin:check:localization": "node scripts/raijin/check-localization-sync.mjs",
@@ -22,6 +22,8 @@
     "raijin:generate:semantics": "node scripts/raijin/generate-semantics.mjs",
     "raijin:smoke:deterministic": "node scripts/raijin/run-deterministic-smoke.mjs",
     "raijin:smoke:llm": "node scripts/raijin/run-llm-smoke.mjs",
+    "raijin:smoke:schematic": "yarn workspace @atls/code-schematics smoke:schematic",
+    "schematic:test": "yarn raijin:smoke:schematic",
     "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download"
   },
   "resolutions": {
