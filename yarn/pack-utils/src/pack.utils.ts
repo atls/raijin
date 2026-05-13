@@ -1,3 +1,5 @@
+/// <reference path='./configuration-value-map.d.ts' />
+
 import type { Workspace }             from '@yarnpkg/core'
 import type { Report }                from '@yarnpkg/core'
 import type { PortablePath }          from '@yarnpkg/fslib'
