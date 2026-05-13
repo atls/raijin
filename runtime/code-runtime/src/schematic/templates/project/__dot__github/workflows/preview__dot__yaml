@@ -30,7 +30,7 @@ jobs:
 
       - name: Install Buildpack Cli
         run: |
-          (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.18.0/pack-v0.18.0-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
+          (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.40.4/pack-v0.40.4-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
 
       - name: Login to Google Container Registry
         run: echo -e $GCR_KEYFILE | docker login -u _json_key --password-stdin https://eu.gcr.io

@@ -66,7 +66,7 @@ class ImagePackCommand extends BaseCommand {
         const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
         const { packConfiguration = {} } = JSON.parse(content)
         const buildpackVersion = packConfiguration.buildpackVersion ?? '0.1.1'
-        const builderTag = packConfiguration.builderTag ?? '22'
+        const builderTag = packConfiguration.builderTag ?? '24'
         const { require } = packConfiguration
 
         await packUtils.pack(configuration, project, workspace, report, destination)
