@@ -1,5 +1,17 @@
 
 
+## [1.0.6](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.5...@atls/yarn-pack-utils@1.0.6) (2026-05-14)
+
+
+### Bug Fixes
+
+
+* **common:** include node linker config type ([d2fc12b](https://github.com/atls/raijin/commit/d2fc12bbb8f3f9eb3ca60b62612f4cd22e29e943))
+
+
+
+
+
 ## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.4...@atls/yarn-pack-utils@1.0.5) (2026-04-29)
 
 
