@@ -13,6 +13,8 @@ interface InstallPackOptions {
 
 type InstallPack = (options: InstallPackOptions) => Promise<void>
 
+const PACK_VERSION = '0.40.4'
+
 /**
  * Installs pack if not present
  */
@@ -38,7 +40,7 @@ export const installPack: InstallPack = async ({ context, cwd }) => {
     // eslint-disable-next-line no-console
     console.log('Buildpack CLI (pack) is not installed. Installing it...')
 
-    let downloadUrl = 'https://github.com/buildpacks/pack/releases/download/v0.36.2/pack-v0.36.2-'
+    let downloadUrl = `https://github.com/buildpacks/pack/releases/download/v${PACK_VERSION}/pack-v${PACK_VERSION}-`
 
     const currentPlatform = platform()
     const currentArch = arch()
