@@ -15,6 +15,10 @@ import { Option }         from 'clipanion'
 import { pack }           from '@atls/code-pack'
 import { packUtils }      from '@atls/yarn-pack-utils'
 
+const DEFAULT_BUILDPACK_VERSION =
+  '0.1.1@sha256:5bb88957788fb75d8c925bf56e0fb2dd0d4945b8730d8aebab8939aaa517b67f'
+const DEFAULT_BUILDER_TAG = '24'
+
 class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]
 
@@ -65,8 +69,8 @@ class ImagePackCommand extends BaseCommand {
         // eslint-disable-next-line n/no-sync
         const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
         const { packConfiguration = {} } = JSON.parse(content)
-        const buildpackVersion = packConfiguration.buildpackVersion ?? '0.1.1'
-        const builderTag = packConfiguration.builderTag ?? '24'
+        const buildpackVersion = packConfiguration.buildpackVersion ?? DEFAULT_BUILDPACK_VERSION
+        const builderTag = packConfiguration.builderTag ?? DEFAULT_BUILDER_TAG
         const { require } = packConfiguration
 
         await packUtils.pack(configuration, project, workspace, report, destination)
