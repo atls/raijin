@@ -14,8 +14,7 @@ export const assetsStructure = {
           __dot__gitignore: 'Xwo=',
           'commit-msg':
             'IyEvYmluL3NoCi4gIiQoZGlybmFtZSAiJDAiKS9fL2h1c2t5LnNoIgoKeWFybiBjb21taXQgbWVzc2FnZSBsaW50Cg==',
-          'pre-commit':
-            'IyEvYmluL3NoCgpST09UX0RJUj0kKGdpdCByZXYtcGFyc2UgLS1zaG93LXRvcGxldmVsKQoiJFJPT1RfRElSLy55YXJuL2Jpbi95YXJuIiBjb21taXQgc3RhZ2VkCg==',
+          'pre-commit': 'eWFybiBjb21taXQgc3RhZ2VkCg==',
           'prepare-commit-msg':
             'IyEvYmluL3NoCi4gIiQoZGlybmFtZSAiJDAiKS9fL2h1c2t5LnNoIgoKeWFybiBjb21taXQgbWVzc2FnZSAkQAo=',
         },
