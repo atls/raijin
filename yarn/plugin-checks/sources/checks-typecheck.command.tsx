@@ -1,37 +1,29 @@
-import type { PortablePath }            from '@yarnpkg/fslib'
-import type { ts }                      from '@atls/code-runtime/typescript'
+import { spawn }           from 'node:child_process'
+import { resolve }         from 'node:path'
 
-import type { Annotation }              from './github.checks.js'
+import { BaseCommand }     from '@yarnpkg/cli'
+import { Configuration }   from '@yarnpkg/core'
+import { Project }         from '@yarnpkg/core'
+import { StreamReport }    from '@yarnpkg/core'
+import { MessageName }     from '@yarnpkg/core'
+import { Filename }        from '@yarnpkg/fslib'
+import { execUtils }       from '@yarnpkg/core'
+import { scriptUtils }     from '@yarnpkg/core'
+import { xfs }             from '@yarnpkg/fslib'
+import { npath }           from '@yarnpkg/fslib'
+import { ppath }           from '@yarnpkg/fslib'
+import { Option }          from 'clipanion'
 
-import { EOL }                          from 'node:os'
-import { resolve }                      from 'node:path'
+import { getChangedFiles } from '@atls/yarn-plugin-files'
 
-import { BaseCommand }                  from '@yarnpkg/cli'
-import { Configuration }                from '@yarnpkg/core'
-import { Project }                      from '@yarnpkg/core'
-import { StreamReport }                 from '@yarnpkg/core'
-import { MessageName }                  from '@yarnpkg/core'
-import { Filename }                     from '@yarnpkg/fslib'
-import { codeFrameColumns }             from '@babel/code-frame'
-import { execUtils }                    from '@yarnpkg/core'
-import { scriptUtils }                  from '@yarnpkg/core'
-import { xfs }                          from '@yarnpkg/fslib'
-import { npath }                        from '@yarnpkg/fslib'
-import { ppath }                        from '@yarnpkg/fslib'
-import { Option }                       from 'clipanion'
-import { flattenDiagnosticMessageText } from 'typescript'
-import React                            from 'react'
+import { GitHubChecks }    from './github.checks.js'
 
-import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScript }                   from '@atls/code-typescript'
-import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
-import { getChangedFiles }              from '@atls/yarn-plugin-files'
-
-import { GitHubChecks }                 from './github.checks.js'
-import { AnnotationLevel }              from './github.checks.js'
+const TYPECHECK_TIMEOUT_MS = 5 * 60 * 1000
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
+
+  changed = Option.Boolean('--changed', false)
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
@@ -99,63 +91,35 @@ class ChecksTypeCheckCommand extends BaseCommand {
                 return
               }
 
-              const typescript = await TypeScript.initialize(project.cwd)
+              report.reportInfo(MessageName.UNNAMED, `TypeCheck targets: ${includes.length}`)
 
-              const diagnostics = await typescript.check(includes)
+              const code = await this.runTypecheck(project, includes)
 
-              diagnostics.forEach((diagnostic: ts.Diagnostic) => {
-                const output = renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
-
-                output.split('\n').forEach((line) => {
-                  report.reportInfo(MessageName.UNNAMED, line)
+              if (code === 0) {
+                await checks.complete(checkId, {
+                  title: 'Successful',
+                  summary: 'All checks passed',
+                  annotations: [],
                 })
-              })
+              } else {
+                await checks.failure(
+                  {
+                    title: 'TypeCheck run failed',
+                    summary:
+                      code === 124
+                        ? `TypeCheck timed out after ${TYPECHECK_TIMEOUT_MS / 1000}s`
+                        : `TypeCheck failed with exit code ${code}`,
+                  },
+                  checkId
+                )
 
-              const annotations: Array<Annotation> = []
-
-              diagnostics.forEach((diagnostic: ts.Diagnostic) => {
-                if (diagnostic.file) {
-                  const position = diagnostic.start
-                    ? diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start)
-                    : null
-
-                  annotations.push({
-                    path: ppath.normalize(
-                      ppath.relative(project.cwd, diagnostic.file.fileName as PortablePath)
-                    ),
-
-                    title: flattenDiagnosticMessageText(diagnostic.messageText, EOL)
-                      .split(EOL)
-                      .at(0)!,
-                    message: flattenDiagnosticMessageText(diagnostic.messageText, EOL),
-                    start_line: position ? position.line + 1 : 0,
-                    end_line: position ? position.line + 1 : 0,
-                    raw_details: position
-                      ? codeFrameColumns(
-                          // eslint-disable-next-line n/no-sync
-                          xfs.readFileSync(diagnostic.file.fileName as PortablePath).toString(),
-                          {
-                            start: {
-                              line: position.line + 1,
-                              column: position.character + 1,
-                            },
-                          },
-                          { highlightCode: false }
-                        )
-                      : flattenDiagnosticMessageText(diagnostic.messageText, EOL),
-                    annotation_level: AnnotationLevel.Failure,
-                  })
-                }
-              })
-
-              await checks.complete(checkId, {
-                title: diagnostics.length > 0 ? `Errors ${annotations.length}` : 'Successful',
-                summary:
-                  diagnostics.length > 0
-                    ? `Found ${annotations.length} errors`
-                    : 'All checks passed',
-                annotations,
-              })
+                report.reportError(
+                  MessageName.UNNAMED,
+                  code === 124
+                    ? `TypeCheck timed out after ${TYPECHECK_TIMEOUT_MS / 1000}s`
+                    : `TypeCheck failed with exit code ${code}`
+                )
+              }
             } catch (error) {
               await checks.failure(
                 {
@@ -177,9 +141,6 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
     return commandReport.exitCode()
   }
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  changed = Option.Boolean('--changed', false)
 
   protected async getIncludes(project: Project): Promise<Array<string>> {
     if (this.changed) {
@@ -207,6 +168,47 @@ class ChecksTypeCheckCommand extends BaseCommand {
     return project.topLevelWorkspace.manifest.workspaceDefinitions.map(
       (definition) => definition.pattern
     )
+  }
+
+  private async runTypecheck(project: Project, includes: Array<string>): Promise<number> {
+    const binFolder = await xfs.mktempPromise()
+    const env = {
+      ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
+      COMMAND_PROXY_EXECUTION: 'true',
+    }
+    let timeout: NodeJS.Timeout | undefined
+
+    return new Promise((resolvePromise, rejectPromise) => {
+      let timedOut = false
+      const child = spawn('yarn', ['typecheck', ...includes], {
+        cwd: npath.fromPortablePath(project.cwd),
+        env,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      })
+
+      child.stdout.pipe(this.context.stdout, { end: false })
+      child.stderr.pipe(this.context.stderr, { end: false })
+
+      timeout = setTimeout(() => {
+        timedOut = true
+        child.kill('SIGTERM')
+
+        setTimeout(() => {
+          if (!child.killed) {
+            child.kill('SIGKILL')
+          }
+        }, 5000).unref()
+      }, TYPECHECK_TIMEOUT_MS)
+
+      child.on('error', rejectPromise)
+      child.on('close', (code) => {
+        if (timeout) {
+          clearTimeout(timeout)
+        }
+
+        resolvePromise(timedOut ? 124 : (code ?? 1))
+      })
+    })
   }
 }
 
