@@ -94,10 +94,13 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
             annotations,
           })
         } catch (error) {
-          await checks.failure({
-            title: 'Test:Unit run failed',
-            summary: error instanceof Error ? error.message : (error as string),
-          })
+          await checks.failure(
+            {
+              title: 'Test:Unit run failed',
+              summary: error instanceof Error ? error.message : (error as string),
+            },
+            checkId
+          )
         }
       }
     )

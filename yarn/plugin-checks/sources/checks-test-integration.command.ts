@@ -94,10 +94,13 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
             annotations,
           })
         } catch (error) {
-          await checks.failure({
-            title: 'Test:Integration run failed',
-            summary: error instanceof Error ? error.message : (error as string),
-          })
+          await checks.failure(
+            {
+              title: 'Test:Integration run failed',
+              summary: error instanceof Error ? error.message : (error as string),
+            },
+            checkId
+          )
         }
       }
     )
