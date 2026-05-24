@@ -43,6 +43,18 @@ export class GitHubChecks {
     return response.data
   }
 
+  async update(
+    params: RequestParameters & {
+      owner: string
+      repo: string
+      check_run_id: number
+    }
+  ): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.update>> {
+    const response = await this.octokit.rest.checks.update(params)
+
+    return response.data
+  }
+
   async start(): Promise<
     GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>
   > {
@@ -60,14 +72,10 @@ export class GitHubChecks {
   async complete(
     id: number,
     output: { title: string; summary: string; annotations: Array<Annotation> }
-  ): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>> {
-    const { payload } = context
-
-    return this.create({
+  ): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.update>> {
+    return this.update({
       ...context.repo,
       check_run_id: id,
-      name: this.name,
-      head_sha: payload.after || payload.pull_request?.head.sha || process.env.GITHUB_SHA!,
       completed_at: new Date().toISOString(),
       status: 'completed',
       conclusion: output.annotations.length > 0 ? 'failure' : 'success',
@@ -81,17 +89,17 @@ export class GitHubChecks {
     })
   }
 
-  async failure(output: {
-    title: string
-    summary: string
-    annotations?: Array<Annotation>
-  }): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>> {
+  async failure(
+    output: {
+      title: string
+      summary: string
+      annotations?: Array<Annotation>
+    },
+    id?: number
+  ): Promise<GetResponseDataTypeFromEndpointMethod<typeof this.octokit.rest.checks.create>> {
     const { payload } = context
-
-    return this.create({
+    const params = {
       ...context.repo,
-      name: this.name,
-      head_sha: payload.after || payload.pull_request?.head.sha || process.env.GITHUB_SHA!,
       completed_at: new Date().toISOString(),
       status: 'completed',
       conclusion: 'failure',
@@ -102,6 +110,19 @@ export class GitHubChecks {
               annotations: output.annotations.slice(0, 50),
             }
           : output,
+    }
+
+    if (id) {
+      return this.update({
+        ...params,
+        check_run_id: id,
+      })
+    }
+
+    return this.create({
+      ...params,
+      name: this.name,
+      head_sha: payload.after || payload.pull_request?.head.sha || process.env.GITHUB_SHA!,
     })
   }
 }

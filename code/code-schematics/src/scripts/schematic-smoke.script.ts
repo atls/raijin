@@ -1,4 +1,4 @@
-/* eslint-disable no-await-in-loop, no-console */
+/* eslint-disable no-await-in-loop, no-console, n/no-process-exit */
 
 import type { PortablePath }       from '@yarnpkg/fslib'
 
@@ -226,15 +226,21 @@ const runSchematicSmoke = async (): Promise<void> => {
   }
 }
 
-try {
-  await runSchematicSmoke()
-  console.log('Schematic smoke passed')
-} catch (error) {
-  if (error instanceof Error) {
-    console.error(error.message)
-  } else {
-    console.error(error)
-  }
+const main = async (): Promise<number> => {
+  try {
+    await runSchematicSmoke()
+    console.log('Schematic smoke passed')
 
-  process.exitCode = 1
+    return 0
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message)
+    } else {
+      console.error(error)
+    }
+
+    return 1
+  }
 }
+
+process.exit(await main())
