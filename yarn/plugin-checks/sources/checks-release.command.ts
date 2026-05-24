@@ -110,10 +110,13 @@ class ChecksReleaseCommand extends BaseCommand {
         annotations,
       })
     } catch (error) {
-      await checks.failure({
-        title: 'Release run failed',
-        summary: error instanceof Error ? error.message : (error as string),
-      })
+      await checks.failure(
+        {
+          title: 'Release run failed',
+          summary: error instanceof Error ? error.message : (error as string),
+        },
+        checkId
+      )
     }
 
     return 0

@@ -157,10 +157,13 @@ class ChecksTypeCheckCommand extends BaseCommand {
                 annotations,
               })
             } catch (error) {
-              await checks.failure({
-                title: 'TypeCheck run failed',
-                summary: error instanceof Error ? error.message : (error as string),
-              })
+              await checks.failure(
+                {
+                  title: 'TypeCheck run failed',
+                  summary: error instanceof Error ? error.message : (error as string),
+                },
+                checkId
+              )
             }
           })
         } catch (error) {

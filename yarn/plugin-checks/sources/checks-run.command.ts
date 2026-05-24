@@ -55,12 +55,17 @@ class ChecksRunCommand extends BaseCommand {
       const binFolder = await xfs.mktempPromise()
       const env = await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })
 
-      const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...checkArgs], {
+      const { code } = await execUtils.pipevp('yarn', ['checks', ...checkArgs], {
         cwd,
         env,
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+        stderr: this.context.stderr,
       })
 
-      this.context.stdout.write(stdout || stderr)
+      if (code !== 0) {
+        report.reportError(MessageName.UNNAMED, `Run check ${args.join(' ')} failed: ${code}`)
+      }
     } catch (error) {
       report.reportError(
         MessageName.UNNAMED,
