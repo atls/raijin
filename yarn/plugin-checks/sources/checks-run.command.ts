@@ -25,13 +25,22 @@ class ChecksRunCommand extends BaseCommand {
         configuration,
       },
       async (report) => {
-        await this.runCheck(project, project.cwd, ['typecheck'], report)
-        await this.runCheck(project, project.cwd, ['lint'], report)
+        if ((await this.runCheck(project, project.cwd, ['typecheck'], report)) !== 0) {
+          return
+        }
 
-        await Promise.allSettled([
+        if ((await this.runCheck(project, project.cwd, ['lint'], report)) !== 0) {
+          return
+        }
+
+        const testResults = await Promise.all([
           this.runCheck(project, project.cwd, ['test', 'unit'], report),
           this.runCheck(project, project.cwd, ['test', 'integration'], report),
         ])
+
+        if (testResults.some((code) => code !== 0)) {
+          return
+        }
 
         await this.runCheck(project, project.cwd, ['release'], report)
       }
@@ -45,7 +54,7 @@ class ChecksRunCommand extends BaseCommand {
     cwd: PortablePath,
     args: Array<string>,
     report: StreamReport
-  ): Promise<void> {
+  ): Promise<number> {
     try {
       const shouldAppendChanged =
         this.changed &&
@@ -55,12 +64,19 @@ class ChecksRunCommand extends BaseCommand {
       const binFolder = await xfs.mktempPromise()
       const env = await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })
 
-      const { stdout, stderr } = await execUtils.execvp('yarn', ['checks', ...checkArgs], {
+      const { code } = await execUtils.pipevp('yarn', ['checks', ...checkArgs], {
         cwd,
         env,
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+        stderr: this.context.stderr,
       })
 
-      this.context.stdout.write(stdout || stderr)
+      if (code !== 0) {
+        report.reportError(MessageName.UNNAMED, `Run check ${args.join(' ')} failed: ${code}`)
+      }
+
+      return code
     } catch (error) {
       report.reportError(
         MessageName.UNNAMED,
@@ -68,6 +84,8 @@ class ChecksRunCommand extends BaseCommand {
           error instanceof Error ? error.message : (error as string)
         }`
       )
+
+      return 1
     }
   }
 }

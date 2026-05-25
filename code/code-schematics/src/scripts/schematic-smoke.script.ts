@@ -1,4 +1,4 @@
-/* eslint-disable no-await-in-loop, no-console */
+/* eslint-disable no-await-in-loop, no-console, n/no-process-exit */
 
 import type { PortablePath }       from '@yarnpkg/fslib'
 
@@ -204,6 +204,7 @@ const assertGeneratedFixture = async (fixtureDir: string): Promise<void> => {
 const runSchematicSmoke = async (): Promise<void> => {
   const repoRoot = await findRepoRoot(process.cwd())
 
+  console.log('Schematic smoke: checking inactive commands')
   await assertInactiveCommandsAreNotInvoked(repoRoot)
 
   const tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'raijin-schematic-smoke-'))
@@ -214,27 +215,37 @@ const runSchematicSmoke = async (): Promise<void> => {
     await fs.mkdir(collectionDir, { recursive: true })
     await fs.mkdir(fixtureDir, { recursive: true })
     await writeFixturePackage(fixtureDir)
+    console.log('Schematic smoke: writing collection')
     await writeTmpSchematicHelper(collectionDir as PortablePath)
+    console.log('Schematic smoke: preparing collection')
     await prepareCollectionDir(repoRoot, collectionDir)
+    console.log('Schematic smoke: running project schematic')
     await runProjectSchematic({
       collectionPath: path.join(collectionDir, 'collection.json'),
       fixtureDir,
     })
+    console.log('Schematic smoke: checking fixture')
     await assertGeneratedFixture(fixtureDir)
   } finally {
     await fs.rm(tmpRoot, { recursive: true, force: true })
   }
 }
 
-try {
-  await runSchematicSmoke()
-  console.log('Schematic smoke passed')
-} catch (error) {
-  if (error instanceof Error) {
-    console.error(error.message)
-  } else {
-    console.error(error)
-  }
+const main = async (): Promise<number> => {
+  try {
+    await runSchematicSmoke()
+    console.log('Schematic smoke passed')
 
-  process.exitCode = 1
+    return 0
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message)
+    } else {
+      console.error(error)
+    }
+
+    return 1
+  }
 }
+
+process.exit(await main())

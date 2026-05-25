@@ -126,10 +126,13 @@ class ChecksLintCommand extends BaseCommand {
               annotations,
             })
           } catch (error) {
-            await checks.failure({
-              title: 'Lint run failed',
-              summary: error instanceof Error ? error.message : (error as string),
-            })
+            await checks.failure(
+              {
+                title: 'Lint run failed',
+                summary: error instanceof Error ? error.message : (error as string),
+              },
+              checkId
+            )
           }
         })
       }
