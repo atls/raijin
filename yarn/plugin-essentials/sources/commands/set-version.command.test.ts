@@ -81,4 +81,12 @@ test('should convert between windows native and portable paths', () => {
     nativeToPortablePath('C:\\repo\\backend\\wallet', 'win32'),
     '/C:/repo/backend/wallet'
   )
+  assert.equal(
+    portableToNativePath('/unc/server/share/backend/wallet', 'win32'),
+    '\\\\server\\share\\backend\\wallet'
+  )
+  assert.equal(
+    nativeToPortablePath('\\\\server\\share\\backend\\wallet', 'win32'),
+    '/unc/server/share/backend/wallet'
+  )
 })
