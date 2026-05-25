@@ -26,7 +26,6 @@ jobs:
     env:
       NODE_VERSION: '24'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     permissions: write-all
 
     steps:
@@ -87,7 +86,6 @@ jobs:
 
       - name: Publish to NPM
         if: ${{ success() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
-        timeout-minutes: 15
         id: npm
         uses: ./.github/actions/publish-npm
         with:
@@ -99,7 +97,6 @@ jobs:
 
       - name: Publish to GitHub Packages
         if: ${{ success() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
-        timeout-minutes: 15
         id: github-packages
         uses: ./.github/actions/publish-github-packages
         with:
