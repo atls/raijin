@@ -15,7 +15,6 @@ import { Option }         from 'clipanion'
 import { pack }           from '@atls/code-pack'
 import { packUtils }      from '@atls/yarn-pack-utils'
 
-const DEFAULT_BUILDPACK_VERSION = '24'
 const DEFAULT_BUILDER_TAG = '24'
 
 class ImagePackCommand extends BaseCommand {
@@ -68,8 +67,8 @@ class ImagePackCommand extends BaseCommand {
         // eslint-disable-next-line n/no-sync
         const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
         const { packConfiguration = {} } = JSON.parse(content)
-        const buildpackVersion = packConfiguration.buildpackVersion ?? DEFAULT_BUILDPACK_VERSION
         const builderTag = packConfiguration.builderTag ?? DEFAULT_BUILDER_TAG
+        const buildpackVersion = packConfiguration.buildpackVersion ?? builderTag
         const { require } = packConfiguration
 
         await packUtils.pack(configuration, project, workspace, report, destination)
