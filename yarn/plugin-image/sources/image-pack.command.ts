@@ -15,8 +15,7 @@ import { Option }         from 'clipanion'
 import { pack }           from '@atls/code-pack'
 import { packUtils }      from '@atls/yarn-pack-utils'
 
-const DEFAULT_BUILDPACK_VERSION =
-  '0.1.1@sha256:5bb88957788fb75d8c925bf56e0fb2dd0d4945b8730d8aebab8939aaa517b67f'
+const DEFAULT_BUILDPACK_VERSION = '24'
 const DEFAULT_BUILDER_TAG = '24'
 
 class ImagePackCommand extends BaseCommand {
