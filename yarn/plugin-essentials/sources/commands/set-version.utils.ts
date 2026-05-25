@@ -6,6 +6,9 @@ import { join }      from 'node:path'
 const PACKAGE_JSON = 'package.json'
 const YARN_LOCK = 'yarn.lock'
 
+const PACKAGE_CWD_NOT_FOUND_MESSAGE =
+  'Package manifest was not found in current directory or its ancestors'
+
 const WINDOWS_PORTABLE_ROOT = /^\/([A-Za-z]:)(?=\/|$)/
 const WINDOWS_NATIVE_ROOT = /^([A-Za-z]:)(?=\/|$)/
 
@@ -51,7 +54,7 @@ export const findPackageCwd = async (cwd: string): Promise<string> => {
   const parentCwd = nativeToPortablePath(dirname(nativeCwd))
 
   if (parentCwd === cwd) {
-    return cwd
+    throw new Error(PACKAGE_CWD_NOT_FOUND_MESSAGE)
   }
 
   return findPackageCwd(parentCwd)

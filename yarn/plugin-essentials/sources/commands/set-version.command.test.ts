@@ -60,6 +60,18 @@ test('should create yarn lock in package cwd without touching repo root', async 
   assert.equal(await exists(join(root, 'yarn.lock')), false)
 })
 
+test('should reject cwd without package manifest ancestor', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'raijin-set-version-'))
+  const packageChildCwd = join(root, 'backend/wallet/src/app')
+
+  await mkdir(packageChildCwd, { recursive: true })
+
+  await assert.rejects(
+    findPackageCwd(packageChildCwd),
+    /Package manifest was not found in current directory or its ancestors/
+  )
+})
+
 test('should convert between windows native and portable paths', () => {
   assert.equal(
     portableToNativePath('/C:/repo/backend/wallet', 'win32'),
