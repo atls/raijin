@@ -79,13 +79,13 @@ jobs:
           YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
 
       - name: Changelog
-        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
+        if: ${{ success() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/changelog
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Publish to NPM
-        if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
+        if: ${{ success() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
         id: npm
         uses: ./.github/actions/publish-npm
         with:
@@ -96,7 +96,7 @@ jobs:
           YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
 
       - name: Publish to GitHub Packages
-        if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
+        if: ${{ success() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
         id: github-packages
         uses: ./.github/actions/publish-github-packages
         with:
@@ -107,17 +107,17 @@ jobs:
           YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
 
       - name: Bundle yarn
-        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
+        if: ${{ success() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/bundle
 
       - name: Create release
-        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
+        if: ${{ success() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/release
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Commit changes
-        if: ${{ !cancelled() && github.event.pull_request.merged == true }}
+        if: ${{ success() && github.event.pull_request.merged == true }}
         uses: ./.github/actions/commit
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}

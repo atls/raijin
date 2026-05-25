@@ -1,4 +1,5 @@
 name: Publish composite action
+description: Patch versions for changed packages before publish
 
 inputs:
   GITHUB_TOKEN:
