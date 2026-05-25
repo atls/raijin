@@ -6,6 +6,31 @@ import { join }      from 'node:path'
 const PACKAGE_JSON = 'package.json'
 const YARN_LOCK = 'yarn.lock'
 
+const WINDOWS_PORTABLE_ROOT = /^\/([A-Za-z]:)(?=\/|$)/
+const WINDOWS_NATIVE_ROOT = /^([A-Za-z]:)(?=\/|$)/
+
+export const portableToNativePath = (
+  path: string,
+  platform: NodeJS.Platform = process.platform
+): string => {
+  if (platform !== 'win32') {
+    return path
+  }
+
+  return path.replace(WINDOWS_PORTABLE_ROOT, '$1').replace(/\//g, '\\')
+}
+
+export const nativeToPortablePath = (
+  path: string,
+  platform: NodeJS.Platform = process.platform
+): string => {
+  if (platform !== 'win32') {
+    return path
+  }
+
+  return path.replace(/\\/g, '/').replace(WINDOWS_NATIVE_ROOT, '/$1')
+}
+
 const pathExists = async (path: string): Promise<boolean> => {
   try {
     await access(path)
@@ -17,11 +42,13 @@ const pathExists = async (path: string): Promise<boolean> => {
 }
 
 export const findPackageCwd = async (cwd: string): Promise<string> => {
-  if (await pathExists(join(cwd, PACKAGE_JSON))) {
+  const nativeCwd = portableToNativePath(cwd)
+
+  if (await pathExists(join(nativeCwd, PACKAGE_JSON))) {
     return cwd
   }
 
-  const parentCwd = dirname(cwd)
+  const parentCwd = nativeToPortablePath(dirname(nativeCwd))
 
   if (parentCwd === cwd) {
     return cwd
@@ -31,7 +58,7 @@ export const findPackageCwd = async (cwd: string): Promise<string> => {
 }
 
 export const preparePackageProjectBoundary = async (cwd: string): Promise<void> => {
-  const lockfilePath = join(cwd, YARN_LOCK)
+  const lockfilePath = join(portableToNativePath(cwd), YARN_LOCK)
 
   if (!(await pathExists(lockfilePath))) {
     await writeFile(lockfilePath, '')

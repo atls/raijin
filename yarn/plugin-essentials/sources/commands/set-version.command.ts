@@ -3,6 +3,7 @@ import { Configuration }                 from '@yarnpkg/core'
 import { Command }                       from 'clipanion'
 
 import { findPackageCwd }                from './set-version.utils.js'
+import { portableToNativePath }          from './set-version.utils.js'
 import { preparePackageProjectBoundary } from './set-version.utils.js'
 
 export class SetVersionCommand extends BaseCommand {
@@ -22,7 +23,7 @@ export class SetVersionCommand extends BaseCommand {
     await preparePackageProjectBoundary(cwd)
 
     try {
-      process.chdir(cwd)
+      process.chdir(portableToNativePath(cwd))
 
       const args = ['set', 'version']
       args.push('https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs')

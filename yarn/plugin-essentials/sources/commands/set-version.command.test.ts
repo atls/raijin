@@ -1,13 +1,15 @@
 import assert                            from 'node:assert/strict'
+import { access }                        from 'node:fs/promises'
 import { mkdtemp }                       from 'node:fs/promises'
 import { mkdir }                         from 'node:fs/promises'
-import { access }                        from 'node:fs/promises'
 import { writeFile }                     from 'node:fs/promises'
 import { tmpdir }                        from 'node:os'
 import { join }                          from 'node:path'
 import { test }                          from 'node:test'
 
 import { findPackageCwd }                from './set-version.utils.js'
+import { nativeToPortablePath }          from './set-version.utils.js'
+import { portableToNativePath }          from './set-version.utils.js'
 import { preparePackageProjectBoundary } from './set-version.utils.js'
 
 const exists = async (path: string): Promise<boolean> => {
@@ -56,4 +58,15 @@ test('should create yarn lock in package cwd without touching repo root', async 
 
   assert.equal(await exists(join(packageCwd, 'yarn.lock')), true)
   assert.equal(await exists(join(root, 'yarn.lock')), false)
+})
+
+test('should convert between windows native and portable paths', () => {
+  assert.equal(
+    portableToNativePath('/C:/repo/backend/wallet', 'win32'),
+    'C:\\repo\\backend\\wallet'
+  )
+  assert.equal(
+    nativeToPortablePath('C:\\repo\\backend\\wallet', 'win32'),
+    '/C:/repo/backend/wallet'
+  )
 })
