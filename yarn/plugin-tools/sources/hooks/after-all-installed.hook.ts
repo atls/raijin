@@ -7,10 +7,7 @@ import { ppath }                 from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'
 
 const hook = (command: string): string => `${command}`
-const preCommitHook = (): string => `#!/bin/sh
-ROOT_DIR=$(git rev-parse --show-toplevel)
-"$ROOT_DIR/.yarn/bin/yarn" commit staged
-`
+const preCommitHook = (): string => hook('yarn commit staged')
 
 const git = (args: Array<string>): SpawnSyncReturns<string> =>
   // eslint-disable-next-line n/no-sync
