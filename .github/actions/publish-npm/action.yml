@@ -1,4 +1,5 @@
 name: Publish composite action
+description: Publish changed packages to npm
 
 inputs:
   NPM_TOKEN:
