@@ -1,18 +1,19 @@
-import type { EventData } from 'node:test'
-import type { TestEvent } from 'node:test/reporters'
+import type { EventData }    from 'node:test'
+import type { TestEvent }    from 'node:test/reporters'
 
-import EventEmitter       from 'node:events'
-import { readFileSync }   from 'node:fs'
+import EventEmitter          from 'node:events'
+import { readFileSync }      from 'node:fs'
 /* eslint-disable @typescript-eslint/member-ordering */
-import { relative }       from 'node:path'
-import { join }           from 'node:path'
-import { run }            from 'node:test'
-import { tap }            from 'node:test/reporters'
+import { relative }          from 'node:path'
+import { join }              from 'node:path'
+import { run }               from 'node:test'
+import { tap }               from 'node:test/reporters'
 
-import { globby }         from 'globby'
-import ignorer            from 'ignore'
+import { globby }            from 'globby'
+import ignorer               from 'ignore'
 
-import { Tests }          from './tests.js'
+import { Tests }             from './tests.js'
+import { parseTestExecArgv } from './test-exec-argv.js'
 
 export type TestsStream = ReturnType<typeof run>
 
@@ -43,13 +44,17 @@ export class Tester extends EventEmitter {
     watch = false,
     testReporter?: string
   ): Promise<Array<TestEvent>> {
+    const execArgv = parseTestExecArgv()
+    const runOptions = {
+      files,
+      timeout,
+      concurrency,
+      watch,
+      ...(execArgv.length > 0 ? { execArgv } : {}),
+    }
+
     if (testReporter === 'tap') {
-      const result = run({
-        files,
-        timeout,
-        concurrency,
-        watch,
-      }).compose(tap)
+      const result = run(runOptions).compose(tap)
 
       result.pipe(process.stdout)
 
@@ -62,12 +67,7 @@ export class Tester extends EventEmitter {
 
     this.emit('start', { tests })
 
-    const testsStream = run({
-      files,
-      timeout,
-      concurrency,
-      watch,
-    })
+    const testsStream = run(runOptions)
 
     const onPass = (data: TestPass): void => {
       this.emit('test:pass', data)

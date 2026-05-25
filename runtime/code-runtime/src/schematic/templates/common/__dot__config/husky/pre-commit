@@ -1,4 +1,1 @@
-#!/bin/sh
-
-ROOT_DIR=$(git rev-parse --show-toplevel)
-"$ROOT_DIR/.yarn/bin/yarn" commit staged
+yarn commit staged

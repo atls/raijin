@@ -46,7 +46,7 @@ export class SetVersionCommand extends BaseCommand {
         }
       )
 
-      return bumpExitCode && exitCode
+      return exitCode || bumpExitCode
     } finally {
       process.chdir(previousCwd)
     }

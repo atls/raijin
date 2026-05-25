@@ -9,8 +9,9 @@ jobs:
   checks:
     name: Shared checks / Checks
     env:
-      NODE_VERSION: '24'
+      NODE_VERSION: '25'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions: write-all
 
     steps:
@@ -36,8 +37,9 @@ jobs:
   raijin:
     name: Raijin checks
     env:
-      NODE_VERSION: '24'
+      NODE_VERSION: '25'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions: read-all
 
     steps:
@@ -56,4 +58,8 @@ jobs:
         uses: ./.github/actions/install
 
       - name: Raijin checks
-        run: yarn raijin:check
+        shell: bash
+        run: |
+          source .env
+          export NODE_OPTIONS
+          yarn raijin:check

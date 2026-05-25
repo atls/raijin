@@ -11,6 +11,8 @@ import { ppath }                     from '@yarnpkg/fslib'
 import { npath }                     from '@yarnpkg/fslib'
 
 import { Tester }                    from '@atls/code-test'
+import { TEST_EXEC_ARGV_ENV }        from '@atls/code-test'
+import { createTestExecArgv }        from '@atls/code-test'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
@@ -40,23 +42,12 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
 
     const env = await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })
 
-    if (!env.NODE_OPTIONS?.includes('@atls/code-runtime/ts-node-register')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --loader @atls/code-runtime/ts-node-register`
+    const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
+    const pnpEsmLoader = (await xfs.existsPromise(pnpEsmLoaderPath))
+      ? pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
+      : undefined
 
-      const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
-
-      if (await xfs.existsPromise(pnpEsmLoaderPath)) {
-        env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${
-          pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
-        }`
-      }
-
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
-    }
-
-    if (!env.NODE_OPTIONS.includes('--enable-source-maps')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --enable-source-maps`
-    }
+    env[TEST_EXEC_ARGV_ENV] = JSON.stringify(createTestExecArgv(pnpEsmLoader))
 
     env.COMMAND_PROXY_EXECUTION = 'true'
 

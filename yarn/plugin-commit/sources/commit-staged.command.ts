@@ -1,5 +1,4 @@
 import { execSync }    from 'node:child_process'
-import { join }        from 'node:path'
 
 import { BaseCommand } from '@yarnpkg/cli'
 import { Option }      from 'clipanion'
@@ -14,9 +13,14 @@ const resolveRootDir = (): string => {
   }
 }
 
-const createConfig = (rootDir: string): lintStaged.Config => {
-  const yarnBin = join(rootDir, '.yarn/bin/yarn')
-  const yarnCommand = (command: string): string => `"${yarnBin}" ${command}`
+const quoteShellArgument = (value: string): string => JSON.stringify(value)
+
+export const resolveYarnCommandPath = (): string =>
+  process.env.npm_execpath || process.argv[1] || 'yarn'
+
+export const createConfig = (yarnCommandPath = resolveYarnCommandPath()): lintStaged.Config => {
+  const yarnCommand = (command: string): string =>
+    `${quoteShellArgument(yarnCommandPath)} ${command}`
 
   return {
     '*.{yml,yaml,json,graphql,md}': yarnCommand('format'),
@@ -45,7 +49,8 @@ export class CommitStagedCommand extends BaseCommand {
 
       // @ts-expect-error: Fix import
       const passed = await lintStaged({
-        config: createConfig(resolveRootDir()),
+        config: createConfig(),
+        cwd: resolveRootDir(),
         maxArgLength: safeMaxArgLength,
       })
 
