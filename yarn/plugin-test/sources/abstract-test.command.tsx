@@ -1,33 +1,35 @@
 /* eslint-disable n/no-sync */
 
-import type { EventData } from 'node:test'
+import type { EventData }     from 'node:test'
 
-import { readFileSync }   from 'node:fs'
-import { relative }       from 'node:path'
-import { pathToFileURL }  from 'node:url'
+import { readFileSync }       from 'node:fs'
+import { relative }           from 'node:path'
+import { pathToFileURL }      from 'node:url'
 
-import { BaseCommand }    from '@yarnpkg/cli'
-import { Configuration }  from '@yarnpkg/core'
-import { Project }        from '@yarnpkg/core'
-import { Filename }       from '@yarnpkg/fslib'
-import { scriptUtils }    from '@yarnpkg/core'
-import { execUtils }      from '@yarnpkg/core'
-import { xfs }            from '@yarnpkg/fslib'
-import { ppath }          from '@yarnpkg/fslib'
-import { npath }          from '@yarnpkg/fslib'
-import { Option }         from 'clipanion'
-import { Command }        from 'clipanion'
-import { render }         from 'ink'
-import { isEnum }         from 'typanion'
-import React              from 'react'
+import { BaseCommand }        from '@yarnpkg/cli'
+import { Configuration }      from '@yarnpkg/core'
+import { Project }            from '@yarnpkg/core'
+import { Filename }           from '@yarnpkg/fslib'
+import { scriptUtils }        from '@yarnpkg/core'
+import { execUtils }          from '@yarnpkg/core'
+import { xfs }                from '@yarnpkg/fslib'
+import { ppath }              from '@yarnpkg/fslib'
+import { npath }              from '@yarnpkg/fslib'
+import { Option }             from 'clipanion'
+import { Command }            from 'clipanion'
+import { render }             from 'ink'
+import { isEnum }             from 'typanion'
+import React                  from 'react'
 
-import { ErrorInfo }      from '@atls/cli-ui-error-info-component'
-import { LogRecord }      from '@atls/cli-ui-log-record-component'
-import { RawOutput }      from '@atls/cli-ui-raw-output-component'
-import { TestFailure }    from '@atls/cli-ui-test-failure-component'
-import { TestProgress }   from '@atls/cli-ui-test-progress-component'
-import { Tester }         from '@atls/code-test'
-import { renderStatic }   from '@atls/cli-ui-renderer-static-component'
+import { ErrorInfo }          from '@atls/cli-ui-error-info-component'
+import { LogRecord }          from '@atls/cli-ui-log-record-component'
+import { RawOutput }          from '@atls/cli-ui-raw-output-component'
+import { TestFailure }        from '@atls/cli-ui-test-failure-component'
+import { TestProgress }       from '@atls/cli-ui-test-progress-component'
+import { Tester }             from '@atls/code-test'
+import { TEST_EXEC_ARGV_ENV } from '@atls/code-test'
+import { renderStatic }       from '@atls/cli-ui-renderer-static-component'
+import { createTestExecArgv } from '@atls/code-test'
 
 type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
@@ -99,23 +101,12 @@ export abstract class AbstractTestCommand extends BaseCommand {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
     }
 
-    if (!env.NODE_OPTIONS.includes('@atls/code-runtime/ts-node-register')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-node-register`
+    const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
+    const pnpEsmLoader = (await xfs.existsPromise(pnpEsmLoaderPath))
+      ? pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
+      : undefined
 
-      const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
-
-      if (await xfs.existsPromise(pnpEsmLoaderPath)) {
-        env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader ${
-          pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
-        }`
-      }
-
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --loader @atls/code-runtime/ts-ext-register`
-    }
-
-    if (!env.NODE_OPTIONS.includes('--enable-source-maps')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS} --enable-source-maps`
-    }
+    env[TEST_EXEC_ARGV_ENV] = JSON.stringify(createTestExecArgv(pnpEsmLoader))
 
     env.COMMAND_PROXY_EXECUTION = 'true'
 

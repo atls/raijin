@@ -4,6 +4,7 @@ import type { ts as typescript }     from '@atls/code-runtime/typescript'
 
 import EventEmitter                  from 'node:events'
 import { readFileSync }              from 'node:fs'
+import { createRequire }             from 'node:module'
 import { join }                      from 'node:path'
 
 import tsconfig                      from '@atls/config-typescript'
@@ -19,7 +20,10 @@ export class TypeScript extends EventEmitter {
   }
 
   static async initialize(cwd: string): Promise<TypeScript> {
-    const { ts } = await import('@atls/code-runtime/typescript')
+    const require = createRequire(import.meta.url)
+    const runtimePackagePath = require.resolve('@atls/code-runtime/package.json')
+    const runtimeRequire = createRequire(runtimePackagePath)
+    const ts = runtimeRequire('typescript') as typeof typescript
 
     return new TypeScript(ts, cwd)
   }
