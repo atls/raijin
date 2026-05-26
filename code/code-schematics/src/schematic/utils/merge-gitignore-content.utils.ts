@@ -35,9 +35,7 @@ const getProjectSpecificLines = (
 
   if (startIndex !== -1 && endIndex > startIndex) {
     return Array.from(
-      new Set(
-        existingLines.filter((line) => isProjectSpecificLine(line, templateLineSet))
-      )
+      new Set(existingLines.filter((line) => isProjectSpecificLine(line, templateLineSet)))
     )
   }
 

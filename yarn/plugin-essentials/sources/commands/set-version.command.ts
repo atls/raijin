@@ -1,6 +1,10 @@
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Configuration } from '@yarnpkg/core'
-import { Command }       from 'clipanion'
+import { BaseCommand }                   from '@yarnpkg/cli'
+import { Configuration }                 from '@yarnpkg/core'
+import { Command }                       from 'clipanion'
+
+import { findPackageCwd }                from './set-version.utils.js'
+import { portableToNativePath }          from './set-version.utils.js'
+import { preparePackageProjectBoundary } from './set-version.utils.js'
 
 export class SetVersionCommand extends BaseCommand {
   static paths = [['set', 'version', 'atls']]
@@ -13,22 +17,39 @@ export class SetVersionCommand extends BaseCommand {
   })
 
   async execute(): Promise<number> {
-    const args = ['set', 'version']
-    args.push('https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs')
-    const exitCode = await this.cli.run(args)
+    const cwd = await findPackageCwd(this.context.cwd)
+    const previousCwd = process.cwd()
 
-    const bumpArgs = ['up', '@atls/code-runtime']
-    const bumpExitCode = await this.cli.run(bumpArgs)
+    await preparePackageProjectBoundary(cwd)
 
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    try {
+      process.chdir(portableToNativePath(cwd))
 
-    await configuration.triggerHook(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
-      (hooks) => (hooks as any).afterYarnVersionSet,
-      configuration,
-      this.context
-    )
+      const args = ['set', 'version']
+      args.push('https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs')
+      const exitCode = await this.cli.run(args, { cwd: cwd as typeof this.context.cwd })
 
-    return bumpExitCode && exitCode
+      const bumpArgs = ['up', '@atls/code-runtime']
+      const bumpExitCode = await this.cli.run(bumpArgs, { cwd: cwd as typeof this.context.cwd })
+
+      const configuration = await Configuration.find(
+        cwd as typeof this.context.cwd,
+        this.context.plugins
+      )
+
+      await configuration.triggerHook(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
+        (hooks) => (hooks as any).afterYarnVersionSet,
+        configuration,
+        {
+          ...this.context,
+          cwd: cwd as typeof this.context.cwd,
+        }
+      )
+
+      return exitCode || bumpExitCode
+    } finally {
+      process.chdir(previousCwd)
+    }
   }
 }
