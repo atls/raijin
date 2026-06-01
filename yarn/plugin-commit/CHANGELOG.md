@@ -1,5 +1,6 @@
 
 
+
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.9...@atls/yarn-plugin-commit@1.0.10) (2026-04-29)
 
 

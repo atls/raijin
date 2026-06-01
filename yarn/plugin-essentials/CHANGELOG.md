@@ -1,5 +1,6 @@
 
 
+
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/yarn-plugin-essentials@1.0.1...@atls/yarn-plugin-essentials@1.0.2) (2026-04-29)
 
 

@@ -1,5 +1,6 @@
 
 
+
 ## [2.0.24](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.23...@atls/code-schematics@2.0.24) (2026-05-14)
 
 
