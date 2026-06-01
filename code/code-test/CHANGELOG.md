@@ -1,5 +1,17 @@
 
 
+## [2.0.40](https://github.com/atls/raijin/compare/@atls/code-test@2.0.39...@atls/code-test@2.0.40) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **common:** resolve esm test loaders through exec argv ([6eb7a6a](https://github.com/atls/raijin/commit/6eb7a6a7092d30795135e6304d375e6e08dfd8b2))
+
+
+
+
+
 
 ## [2.0.39](https://github.com/atls/raijin/compare/@atls/code-test@2.0.38...@atls/code-test@2.0.39) (2026-05-14)
 

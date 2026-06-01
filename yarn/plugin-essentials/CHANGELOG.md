@@ -1,5 +1,20 @@
 
 
+## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-essentials@1.0.2...@atls/yarn-plugin-essentials@1.0.3) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-essentials:** normalize portable set version paths ([844e4ba](https://github.com/atls/raijin/commit/844e4ba87ae109706c378014059c52378835b3da))
+* **yarn-plugin-essentials:** reject missing package cwd ([c42b1fc](https://github.com/atls/raijin/commit/c42b1fca8bfe3ddc053519e968db03d3e30144f6))
+* **yarn-plugin-essentials:** scope set version to package root ([9a05bfd](https://github.com/atls/raijin/commit/9a05bfd9ee485f3f5f0de02f098fd26df30502f6))
+* **yarn-plugin-essentials:** support windows unc paths ([433c31e](https://github.com/atls/raijin/commit/433c31e62e40c17f90542dcccc01cf0053acd3d6))
+
+
+
+
+
 
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/yarn-plugin-essentials@1.0.1...@atls/yarn-plugin-essentials@1.0.2) (2026-04-29)
 

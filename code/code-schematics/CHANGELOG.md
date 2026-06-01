@@ -1,5 +1,19 @@
 
 
+## [2.0.25](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.24...@atls/code-schematics@2.0.25) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **common:** bound ci check runtime ([ffa791e](https://github.com/atls/raijin/commit/ffa791ec9c95267a5bdf796db2a31185eba5483c))
+* **common:** complete ci checks ([4805cf1](https://github.com/atls/raijin/commit/4805cf1dd46eda4e094d9da482fd02bc967b89f7))
+* **common:** complete ci checks ([9194879](https://github.com/atls/raijin/commit/9194879fecef8639d86217055d3353051ec12171))
+
+
+
+
+
 
 ## [2.0.24](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.23...@atls/code-schematics@2.0.24) (2026-05-14)
 

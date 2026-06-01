@@ -1,5 +1,17 @@
 
 
+## [2.1.30](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.29...@atls/code-runtime@2.1.30) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **common:** reuse current yarn in staged hooks ([dc09336](https://github.com/atls/raijin/commit/dc093368b2fdbb57133486175a01321f0bb6a09c))
+
+
+
+
+
 
 ## [2.1.29](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.28...@atls/code-runtime@2.1.29) (2026-05-14)
 

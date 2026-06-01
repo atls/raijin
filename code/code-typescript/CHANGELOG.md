@@ -1,5 +1,17 @@
 
 
+## [2.0.38](https://github.com/atls/raijin/compare/@atls/code-typescript@2.0.37...@atls/code-typescript@2.0.38) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **common:** avoid linux pnp typecheck hang ([0342c36](https://github.com/atls/raijin/commit/0342c3638cd401c65f6bac651eb5ecc4829e1f8d))
+
+
+
+
+
 
 ## [2.0.37](https://github.com/atls/raijin/compare/@atls/code-typescript@2.0.36...@atls/code-typescript@2.0.37) (2026-05-14)
 

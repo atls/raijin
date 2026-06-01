@@ -1,5 +1,31 @@
 
 
+## [1.1.72](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.71...@atls/yarn-cli@1.1.72) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **common:** avoid linux pnp typecheck hang ([0342c36](https://github.com/atls/raijin/commit/0342c3638cd401c65f6bac651eb5ecc4829e1f8d))
+* **common:** bound ci check runtime ([ffa791e](https://github.com/atls/raijin/commit/ffa791ec9c95267a5bdf796db2a31185eba5483c))
+* **common:** complete ci checks ([4805cf1](https://github.com/atls/raijin/commit/4805cf1dd46eda4e094d9da482fd02bc967b89f7))
+* **common:** complete ci checks ([d9a18cc](https://github.com/atls/raijin/commit/d9a18ccacbfb7f18de3912f7061aaff6df62f099))
+* **common:** complete ci checks ([5b1c322](https://github.com/atls/raijin/commit/5b1c3223e551b671e4dfc4aa4fa1383dec90de3a))
+* **common:** complete ci checks ([9194879](https://github.com/atls/raijin/commit/9194879fecef8639d86217055d3353051ec12171))
+* **common:** resolve esm test loaders through exec argv ([6eb7a6a](https://github.com/atls/raijin/commit/6eb7a6a7092d30795135e6304d375e6e08dfd8b2))
+* **common:** reuse current yarn in staged hooks ([dc09336](https://github.com/atls/raijin/commit/dc093368b2fdbb57133486175a01321f0bb6a09c))
+* **yarn-plugin-essentials:** normalize portable set version paths ([844e4ba](https://github.com/atls/raijin/commit/844e4ba87ae109706c378014059c52378835b3da))
+* **yarn-plugin-essentials:** reject missing package cwd ([c42b1fc](https://github.com/atls/raijin/commit/c42b1fca8bfe3ddc053519e968db03d3e30144f6))
+* **yarn-plugin-essentials:** scope set version to package root ([9a05bfd](https://github.com/atls/raijin/commit/9a05bfd9ee485f3f5f0de02f098fd26df30502f6))
+* **yarn-plugin-essentials:** support windows unc paths ([433c31e](https://github.com/atls/raijin/commit/433c31e62e40c17f90542dcccc01cf0053acd3d6))
+* **yarn-plugin-image:** derive buildpack tag from builder tag ([3863cba](https://github.com/atls/raijin/commit/3863cbaf81989a88185a30c6f353450a30bad27d))
+* **yarn-plugin-image:** drop pinned buildpack digest ([6ac7146](https://github.com/atls/raijin/commit/6ac714675bfb69c2ed67bbdac69b099d96ddaf7f))
+* **yarn-plugin-image:** pin default buildpack digest ([493d624](https://github.com/atls/raijin/commit/493d624e0e3c12721a6278cff68b811b96c22421))
+
+
+
+
+
 ## [1.1.70](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.70...@atls/yarn-cli@1.1.70) (2026-05-14)
 
 

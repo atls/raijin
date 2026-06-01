@@ -1,5 +1,17 @@
 
 
+## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.10...@atls/yarn-plugin-commit@1.0.11) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **common:** reuse current yarn in staged hooks ([dc09336](https://github.com/atls/raijin/commit/dc093368b2fdbb57133486175a01321f0bb6a09c))
+
+
+
+
+
 
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.9...@atls/yarn-plugin-commit@1.0.10) (2026-04-29)
 

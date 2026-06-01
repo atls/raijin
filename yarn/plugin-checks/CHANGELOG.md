@@ -1,5 +1,20 @@
 
 
+## [1.0.37](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.36...@atls/yarn-plugin-checks@1.0.37) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **common:** avoid linux pnp typecheck hang ([0342c36](https://github.com/atls/raijin/commit/0342c3638cd401c65f6bac651eb5ecc4829e1f8d))
+* **common:** bound ci check runtime ([ffa791e](https://github.com/atls/raijin/commit/ffa791ec9c95267a5bdf796db2a31185eba5483c))
+* **common:** complete ci checks ([4805cf1](https://github.com/atls/raijin/commit/4805cf1dd46eda4e094d9da482fd02bc967b89f7))
+* **common:** resolve esm test loaders through exec argv ([6eb7a6a](https://github.com/atls/raijin/commit/6eb7a6a7092d30795135e6304d375e6e08dfd8b2))
+
+
+
+
+
 
 ## [1.0.36](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.35...@atls/yarn-plugin-checks@1.0.36) (2026-05-14)
 

@@ -1,5 +1,19 @@
 
 
+## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.10...@atls/yarn-plugin-image@1.0.11) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-image:** derive buildpack tag from builder tag ([3863cba](https://github.com/atls/raijin/commit/3863cbaf81989a88185a30c6f353450a30bad27d))
+* **yarn-plugin-image:** drop pinned buildpack digest ([6ac7146](https://github.com/atls/raijin/commit/6ac714675bfb69c2ed67bbdac69b099d96ddaf7f))
+* **yarn-plugin-image:** pin default buildpack digest ([493d624](https://github.com/atls/raijin/commit/493d624e0e3c12721a6278cff68b811b96c22421))
+
+
+
+
+
 
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.9...@atls/yarn-plugin-image@1.0.10) (2026-05-14)
 

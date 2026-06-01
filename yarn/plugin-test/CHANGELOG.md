@@ -1,5 +1,17 @@
 
 
+## [1.0.31](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.30...@atls/yarn-plugin-test@1.0.31) (2026-06-01)
+
+
+### Bug Fixes
+
+
+* **common:** resolve esm test loaders through exec argv ([6eb7a6a](https://github.com/atls/raijin/commit/6eb7a6a7092d30795135e6304d375e6e08dfd8b2))
+
+
+
+
+
 
 ## [1.0.30](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.29...@atls/yarn-plugin-test@1.0.30) (2026-05-14)
 
