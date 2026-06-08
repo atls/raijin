@@ -322,7 +322,7 @@
 - Пример: `Рендерьте документационные артефакты во время сборки.`
 - Теги: `plugin`, `yarn`
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 3, devDeps 8, peerDeps 2
+- Зависимости: deps 4, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-schematics -->
 
@@ -364,7 +364,7 @@
 - Пример: `Запускайте тесты плагина перед упаковкой и релизом.`
 - Теги: `plugin`, `yarn`
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 11, devDeps 8, peerDeps 2
+- Зависимости: deps 12, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-tools -->
 
@@ -378,7 +378,7 @@
 - Пример: `Переиспользуйте helpers из tools в нескольких плагинах Yarn.`
 - Теги: `plugin`, `yarn`
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 6, devDeps 5, peerDeps 0
+- Зависимости: deps 7, devDeps 5, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-plugin-typescript -->
 
@@ -406,7 +406,7 @@
 - Пример: `Соберите UI-артефакты как часть процесса релиза плагина.`
 - Теги: `plugin`, `yarn`
 - Скрипты: `build`, `postpack`, `prepack`
-- Зависимости: deps 8, devDeps 7, peerDeps 2
+- Зависимости: deps 9, devDeps 6, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-workspaces -->
 

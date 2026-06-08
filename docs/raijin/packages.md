@@ -322,7 +322,7 @@ Compact list:
 - Example: `Render documentation assets during the build.`
 - Tags: `plugin`, `yarn`
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 3, devDeps 8, peerDeps 2
+- Dependencies: deps 4, devDeps 7, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-schematics -->
 
@@ -364,7 +364,7 @@ Compact list:
 - Example: `Run plugin tests before packaging and release.`
 - Tags: `plugin`, `yarn`
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 11, devDeps 8, peerDeps 2
+- Dependencies: deps 12, devDeps 8, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-tools -->
 
@@ -378,7 +378,7 @@ Compact list:
 - Example: `Reuse tools helpers across multiple Yarn plugins.`
 - Tags: `plugin`, `yarn`
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 6, devDeps 5, peerDeps 0
+- Dependencies: deps 7, devDeps 5, peerDeps 0
 
 <!-- sync:package-card:atls-yarn-plugin-typescript -->
 
@@ -406,7 +406,7 @@ Compact list:
 - Example: `Build UI assets as part of the plugin release process.`
 - Tags: `plugin`, `yarn`
 - Scripts: `build`, `postpack`, `prepack`
-- Dependencies: deps 8, devDeps 7, peerDeps 2
+- Dependencies: deps 9, devDeps 6, peerDeps 2
 
 <!-- sync:package-card:atls-yarn-plugin-workspaces -->
 

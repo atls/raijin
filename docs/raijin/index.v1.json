@@ -1280,8 +1280,8 @@
       "purposeEn": "Yarn plugin for renderer domain",
       "purposeRu": "Yarn-плагин домена renderer",
       "scripts": ["build", "postpack", "prepack"],
-      "dependencyCount": 3,
-      "devDependencyCount": 8,
+      "dependencyCount": 4,
+      "devDependencyCount": 7,
       "peerDependencyCount": 2
     },
     {
@@ -1319,7 +1319,7 @@
       "purposeEn": "Yarn plugin for test domain",
       "purposeRu": "Yarn-плагин домена test",
       "scripts": ["build", "postpack", "prepack"],
-      "dependencyCount": 11,
+      "dependencyCount": 12,
       "devDependencyCount": 8,
       "peerDependencyCount": 2
     },
@@ -1332,7 +1332,7 @@
       "purposeEn": "Yarn plugin for tools domain",
       "purposeRu": "Yarn-плагин домена tools",
       "scripts": ["build", "postpack", "prepack"],
-      "dependencyCount": 6,
+      "dependencyCount": 7,
       "devDependencyCount": 5,
       "peerDependencyCount": 0
     },
@@ -1358,8 +1358,8 @@
       "purposeEn": "Yarn plugin for ui domain",
       "purposeRu": "Yarn-плагин домена ui",
       "scripts": ["build", "postpack", "prepack"],
-      "dependencyCount": 8,
-      "devDependencyCount": 7,
+      "dependencyCount": 9,
+      "devDependencyCount": 6,
       "peerDependencyCount": 2
     },
     {
@@ -1489,5 +1489,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-04-30T02:04:56.641Z"
+  "lastGenerated": "2026-06-08T14:53:34.171Z"
 }
