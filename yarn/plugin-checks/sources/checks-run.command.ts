@@ -6,9 +6,10 @@ import { Configuration }     from '@yarnpkg/core'
 import { MessageName }       from '@yarnpkg/core'
 import { Project }           from '@yarnpkg/core'
 import { execUtils }         from '@yarnpkg/core'
-import { scriptUtils }       from '@yarnpkg/core'
 import { xfs }               from '@yarnpkg/fslib'
 import { Option }            from 'clipanion'
+
+import { makeYarnReentry }   from '@atls/yarn-run-utils'
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
@@ -62,9 +63,9 @@ class ChecksRunCommand extends BaseCommand {
         !args.includes('--changed')
       const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
       const binFolder = await xfs.mktempPromise()
-      const env = await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })
+      const { executable, env } = await makeYarnReentry({ binFolder, project })
 
-      const { code } = await execUtils.pipevp('yarn', ['checks', ...checkArgs], {
+      const { code } = await execUtils.pipevp(executable, ['checks', ...checkArgs], {
         cwd,
         env,
         stdin: this.context.stdin,

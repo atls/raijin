@@ -18,12 +18,12 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "cross-spawn": "7.0.3",
     "localtunnel": "2.0.2"
   },
   "devDependencies": {
-    "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-test-utils": "workspace:*",
     "@types/cross-spawn": "6.0.6",
     "@types/localtunnel": "2.0.4",

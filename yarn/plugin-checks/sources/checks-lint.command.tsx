@@ -16,7 +16,6 @@ import { Project }                 from '@yarnpkg/core'
 import { Filename }                from '@yarnpkg/fslib'
 import { codeFrameColumns }        from '@babel/code-frame'
 import { execUtils }               from '@yarnpkg/core'
-import { scriptUtils }             from '@yarnpkg/core'
 import { xfs }                     from '@yarnpkg/fslib'
 import { npath }                   from '@yarnpkg/fslib'
 import { Option }                  from 'clipanion'
@@ -26,6 +25,7 @@ import { LintResult }              from '@atls/cli-ui-lint-result-component'
 import { Linter }                  from '@atls/code-lint'
 import { renderStatic }            from '@atls/cli-ui-renderer-static-component'
 import { getChangedFiles }         from '@atls/yarn-plugin-files'
+import { makeYarnReentry }         from '@atls/yarn-run-utils'
 
 import { GitHubChecks }            from './github.checks.js'
 import { AnnotationLevel }         from './github.checks.js'
@@ -55,16 +55,20 @@ class ChecksLintCommand extends BaseCommand {
 
     const binFolder = await xfs.mktempPromise()
     const args = ['checks', 'lint', ...(this.changed ? ['--changed'] : [])]
+    const { executable, env } = await makeYarnReentry({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
-    const { code } = await execUtils.pipevp('yarn', args, {
+    const { code } = await execUtils.pipevp(executable, args, {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code

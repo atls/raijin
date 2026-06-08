@@ -10,7 +10,6 @@ import { BaseCommand }        from '@yarnpkg/cli'
 import { Configuration }      from '@yarnpkg/core'
 import { Project }            from '@yarnpkg/core'
 import { Filename }           from '@yarnpkg/fslib'
-import { scriptUtils }        from '@yarnpkg/core'
 import { execUtils }          from '@yarnpkg/core'
 import { xfs }                from '@yarnpkg/fslib'
 import { ppath }              from '@yarnpkg/fslib'
@@ -30,6 +29,7 @@ import { Tester }             from '@atls/code-test'
 import { TEST_EXEC_ARGV_ENV } from '@atls/code-test'
 import { renderStatic }       from '@atls/cli-ui-renderer-static-component'
 import { createTestExecArgv } from '@atls/code-test'
+import { makeYarnReentry }    from '@atls/yarn-run-utils'
 
 type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
@@ -95,7 +95,13 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
     const binFolder = await xfs.mktempPromise()
 
-    const env = await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })
+    const { executable, env } = await makeYarnReentry({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
     if (!env.NODE_OPTIONS?.includes('--no-warnings')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
@@ -108,9 +114,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
     env[TEST_EXEC_ARGV_ENV] = JSON.stringify(createTestExecArgv(pnpEsmLoader))
 
-    env.COMMAND_PROXY_EXECUTION = 'true'
-
-    const { code } = await execUtils.pipevp('yarn', ['test', type ?? '', ...args], {
+    const { code } = await execUtils.pipevp(executable, ['test', type ?? '', ...args], {
       cwd: project.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,

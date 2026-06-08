@@ -2930,6 +2930,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-test", "workspace:code/code-test"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/yarn-plugin-test", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-test"],\
+          ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@types/react", "npm:18.3.18"],\
           ["@types/yarnpkg__cli", null],\
@@ -2964,6 +2965,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-test", "workspace:code/code-test"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/yarn-plugin-test", "workspace:yarn/plugin-test"],\
+          ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@atls/yarn-test-utils", "workspace:yarn/test-utils"],\
           ["@types/react", "npm:18.3.18"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
@@ -2986,6 +2988,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
+          ["@atls/yarn-run-utils", "workspace:yarn/run-utils"],\
           ["@types/semver", "npm:7.5.8"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["@yarnpkg/cli", "virtual:ccae17f137fefbbaba6c5ad07c1c85d0eeb7c2d83d1717382e2500f9abd36b42c5a217d63d5beef22301d21ac6bd18bc3e8b2b111a393b68f24ae0ff8b227324#npm:4.14.1"],\

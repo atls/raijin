@@ -5,7 +5,6 @@ import { Configuration }             from '@yarnpkg/core'
 import { Project }                   from '@yarnpkg/core'
 import { Filename }                  from '@yarnpkg/fslib'
 import { execUtils }                 from '@yarnpkg/core'
-import { scriptUtils }               from '@yarnpkg/core'
 import { xfs }                       from '@yarnpkg/fslib'
 import { ppath }                     from '@yarnpkg/fslib'
 import { npath }                     from '@yarnpkg/fslib'
@@ -13,6 +12,7 @@ import { npath }                     from '@yarnpkg/fslib'
 import { Tester }                    from '@atls/code-test'
 import { TEST_EXEC_ARGV_ENV }        from '@atls/code-test'
 import { createTestExecArgv }        from '@atls/code-test'
+import { makeYarnReentry }           from '@atls/yarn-run-utils'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
@@ -40,7 +40,13 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
 
     const binFolder = await xfs.mktempPromise()
 
-    const env = await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })
+    const { executable, env } = await makeYarnReentry({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
     const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
     const pnpEsmLoader = (await xfs.existsPromise(pnpEsmLoaderPath))
@@ -49,9 +55,7 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
 
     env[TEST_EXEC_ARGV_ENV] = JSON.stringify(createTestExecArgv(pnpEsmLoader))
 
-    env.COMMAND_PROXY_EXECUTION = 'true'
-
-    const { code } = await execUtils.pipevp('yarn', ['checks', 'test', 'unit'], {
+    const { code } = await execUtils.pipevp(executable, ['checks', 'test', 'unit'], {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,

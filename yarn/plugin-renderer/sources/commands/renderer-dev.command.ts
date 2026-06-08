@@ -1,14 +1,15 @@
-import type { Tunnel }   from 'localtunnel'
+import type { Tunnel }     from 'localtunnel'
 
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { scriptUtils }   from '@yarnpkg/core'
-import { xfs }           from '@yarnpkg/fslib'
-import { ppath }         from '@yarnpkg/fslib'
-import { Option }        from 'clipanion'
-import spawn             from 'cross-spawn'
-import localtunnel       from 'localtunnel'
+import { BaseCommand }     from '@yarnpkg/cli'
+import { Configuration }   from '@yarnpkg/core'
+import { Project }         from '@yarnpkg/core'
+import { xfs }             from '@yarnpkg/fslib'
+import { ppath }           from '@yarnpkg/fslib'
+import { Option }          from 'clipanion'
+import spawn               from 'cross-spawn'
+import localtunnel         from 'localtunnel'
+
+import { makeYarnReentry } from '@atls/yarn-run-utils'
 
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
@@ -61,13 +62,12 @@ export class RendererDevCommand extends BaseCommand {
     }
 
     const binFolder = await xfs.mktempPromise()
-    const env = await scriptUtils.makeScriptEnv({
+    const { executable, env } = await makeYarnReentry({
       binFolder,
       project,
-      ignoreCorepack: true,
     })
 
-    spawn('yarn', args, { stdio: 'inherit', cwd: this.context.cwd, env })
+    spawn(executable, args, { stdio: 'inherit', cwd: this.context.cwd, env })
 
     if (this.tunnel) {
       const workspace = project.getWorkspaceByCwd(this.context.cwd)

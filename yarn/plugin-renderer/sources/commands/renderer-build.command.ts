@@ -8,9 +8,10 @@ import { Project }           from '@yarnpkg/core'
 import { StreamReport }      from '@yarnpkg/core'
 import { MessageName }       from '@yarnpkg/core'
 import { execUtils }         from '@yarnpkg/core'
-import { scriptUtils }       from '@yarnpkg/core'
 import { xfs }               from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
+
+import { makeYarnReentry }   from '@atls/yarn-run-utils'
 
 export class RendererBuildCommand extends BaseCommand {
   static paths = [['renderer', 'build']]
@@ -54,13 +55,12 @@ export class RendererBuildCommand extends BaseCommand {
               type: 'module',
             })
             const binFolder = await xfs.mktempPromise()
-            const env = await scriptUtils.makeScriptEnv({
+            const { executable, env } = await makeYarnReentry({
               binFolder,
               project,
-              ignoreCorepack: true,
             })
 
-            await execUtils.pipevp('yarn', ['next', 'build', 'src', '--no-lint'], {
+            await execUtils.pipevp(executable, ['next', 'build', 'src', '--no-lint'], {
               end: execUtils.EndStrategy.ErrorCode,
               cwd: this.context.cwd,
               stdin: this.context.stdin,

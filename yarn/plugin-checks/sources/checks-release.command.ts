@@ -5,13 +5,13 @@ import { Configuration }         from '@yarnpkg/core'
 import { Project }               from '@yarnpkg/core'
 import { Filename }              from '@yarnpkg/fslib'
 import { execUtils }             from '@yarnpkg/core'
-import { scriptUtils }           from '@yarnpkg/core'
 import { ppath }                 from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'
 import stripAnsi                 from 'strip-ansi'
 
 import { PassThroughRunContext } from '@atls/yarn-run-utils'
 import { getChangedFiles }       from '@atls/yarn-plugin-files'
+import { makeYarnReentry }       from '@atls/yarn-run-utils'
 import { getChangedWorkspaces }  from '@atls/yarn-workspace-utils'
 
 import { GitHubChecks }          from './github.checks.js'
@@ -39,16 +39,20 @@ class ChecksReleaseCommand extends BaseCommand {
     const { project } = await Project.find(configuration, this.context.cwd)
 
     const binFolder = await xfs.mktempPromise()
+    const { executable, env } = await makeYarnReentry({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
-    const { code } = await execUtils.pipevp('yarn', ['checks', 'release'], {
+    const { code } = await execUtils.pipevp(executable, ['checks', 'release'], {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code

@@ -1,7 +1,6 @@
 import { Configuration }          from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
 import { Filename }               from '@yarnpkg/fslib'
-import { scriptUtils }            from '@yarnpkg/core'
 import { execUtils }              from '@yarnpkg/core'
 import { xfs }                    from '@yarnpkg/fslib'
 import { render }                 from 'ink'
@@ -9,6 +8,7 @@ import React                      from 'react'
 
 import { ServiceProgress }        from '@atls/cli-ui-service-progress-component'
 import { Service }                from '@atls/code-service'
+import { makeYarnReentry }        from '@atls/yarn-run-utils'
 
 import { AbstractServiceCommand } from './abstract-service.command.jsx'
 
@@ -40,16 +40,20 @@ export class ServiceDevCommand extends AbstractServiceCommand {
     }
 
     const binFolder = await xfs.mktempPromise()
+    const { executable, env } = await makeYarnReentry({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
-    const { code } = await execUtils.pipevp('yarn', ['service', 'dev', ...args], {
+    const { code } = await execUtils.pipevp(executable, ['service', 'dev', ...args], {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code

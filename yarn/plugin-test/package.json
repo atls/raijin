@@ -24,6 +24,7 @@
     "@atls/cli-ui-test-failure-component": "workspace:*",
     "@atls/cli-ui-test-progress-component": "workspace:*",
     "@atls/code-test": "workspace:*",
+    "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "ink": "3.2.0",
     "react": "18.3.1",

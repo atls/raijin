@@ -8,13 +8,13 @@ import { StreamReport }    from '@yarnpkg/core'
 import { MessageName }     from '@yarnpkg/core'
 import { Filename }        from '@yarnpkg/fslib'
 import { execUtils }       from '@yarnpkg/core'
-import { scriptUtils }     from '@yarnpkg/core'
 import { xfs }             from '@yarnpkg/fslib'
 import { npath }           from '@yarnpkg/fslib'
 import { ppath }           from '@yarnpkg/fslib'
 import { Option }          from 'clipanion'
 
 import { getChangedFiles } from '@atls/yarn-plugin-files'
+import { makeYarnReentry } from '@atls/yarn-run-utils'
 
 import { GitHubChecks }    from './github.checks.js'
 
@@ -45,16 +45,20 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
     const binFolder = await xfs.mktempPromise()
     const args = ['checks', 'typecheck', ...(this.changed ? ['--changed'] : [])]
+    const { executable, env } = await makeYarnReentry({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
-    const { code } = await execUtils.pipevp('yarn', args, {
+    const { code } = await execUtils.pipevp(executable, args, {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code
@@ -172,15 +176,18 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
   private async runTypecheck(project: Project, includes: Array<string>): Promise<number> {
     const binFolder = await xfs.mktempPromise()
-    const env = {
-      ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-      COMMAND_PROXY_EXECUTION: 'true',
-    }
+    const { executable, env } = await makeYarnReentry({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
     let timeout: NodeJS.Timeout | undefined
 
     return new Promise((resolvePromise, rejectPromise) => {
       let timedOut = false
-      const child = spawn('yarn', ['typecheck', ...includes], {
+      const child = spawn(executable, ['typecheck', ...includes], {
         cwd: npath.fromPortablePath(project.cwd),
         env,
         stdio: ['ignore', 'pipe', 'pipe'],

@@ -1,19 +1,19 @@
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { Filename }      from '@yarnpkg/fslib'
-import { execUtils }     from '@yarnpkg/core'
-import { scriptUtils }   from '@yarnpkg/core'
-import { xfs }           from '@yarnpkg/fslib'
-import { Option }        from 'clipanion'
-import { render }        from 'ink'
-import React             from 'react'
+import { BaseCommand }     from '@yarnpkg/cli'
+import { Configuration }   from '@yarnpkg/core'
+import { Project }         from '@yarnpkg/core'
+import { Filename }        from '@yarnpkg/fslib'
+import { execUtils }       from '@yarnpkg/core'
+import { xfs }             from '@yarnpkg/fslib'
+import { Option }          from 'clipanion'
+import { render }          from 'ink'
+import React               from 'react'
 
-import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
-import { LintProgress }  from '@atls/cli-ui-lint-progress-component'
-import { LintResult }    from '@atls/cli-ui-lint-result-component'
-import { Linter }        from '@atls/code-lint'
-import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
+import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
+import { LintProgress }    from '@atls/cli-ui-lint-progress-component'
+import { LintResult }      from '@atls/cli-ui-lint-result-component'
+import { Linter }          from '@atls/code-lint'
+import { renderStatic }    from '@atls/cli-ui-renderer-static-component'
+import { makeYarnReentry } from '@atls/yarn-run-utils'
 
 export class LintCommand extends BaseCommand {
   static override paths = [['lint']]
@@ -54,15 +54,20 @@ export class LintCommand extends BaseCommand {
       args.push('--cache')
     }
 
-    const { code } = await execUtils.pipevp('yarn', ['lint', ...args, ...this.files], {
+    const { executable, env } = await makeYarnReentry({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
+
+    const { code } = await execUtils.pipevp(executable, ['lint', ...args, ...this.files], {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code

@@ -1461,6 +1461,7 @@ __metadata:
     "@atls/cli-ui-test-progress-component": "workspace:*"
     "@atls/code-test": "workspace:*"
     "@atls/config-typescript": "workspace:*"
+    "@atls/yarn-run-utils": "workspace:*"
     "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
@@ -1484,6 +1485,7 @@ __metadata:
   dependencies:
     "@atls/code-runtime": "workspace:*"
     "@atls/config-typescript": "workspace:*"
+    "@atls/yarn-run-utils": "workspace:*"
     "@types/semver": "npm:7.5.8"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"

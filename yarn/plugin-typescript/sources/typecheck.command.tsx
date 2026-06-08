@@ -2,7 +2,6 @@ import { BaseCommand }          from '@yarnpkg/cli'
 import { Configuration }        from '@yarnpkg/core'
 import { Project }              from '@yarnpkg/core'
 import { Filename }             from '@yarnpkg/fslib'
-import { scriptUtils }          from '@yarnpkg/core'
 import { execUtils }            from '@yarnpkg/core'
 import { ppath }                from '@yarnpkg/fslib'
 import { xfs }                  from '@yarnpkg/fslib'
@@ -15,6 +14,7 @@ import { TypeScriptDiagnostic } from '@atls/cli-ui-typescript-diagnostic-compone
 import { TypeScriptProgress }   from '@atls/cli-ui-typescript-progress-component'
 import { TypeScript }           from '@atls/code-typescript'
 import { renderStatic }         from '@atls/cli-ui-renderer-static-component'
+import { makeYarnReentry }      from '@atls/yarn-run-utils'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -40,16 +40,20 @@ export class TypeCheckCommand extends BaseCommand {
     const { project } = await Project.find(configuration, this.context.cwd)
 
     const binFolder = await xfs.mktempPromise()
+    const { executable, env } = await makeYarnReentry({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
-    const { code } = await execUtils.pipevp('yarn', ['typecheck', ...this.args], {
+    const { code } = await execUtils.pipevp(executable, ['typecheck', ...this.args], {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code
