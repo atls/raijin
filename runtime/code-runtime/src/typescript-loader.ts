@@ -16,6 +16,8 @@ import { fileURLToPath }    from 'node:url'
 const require = createRequire(import.meta.url)
 const ts = require('typescript') as typeof TypeScript
 
+const compilerOptionsByConfigPath = new Map<string, TypeScript.CompilerOptions>()
+
 const sourceExtensionsBySpecifier = new Map([
   ['.js', ['.js', '.ts', '.tsx', '.jsx']],
   ['.mjs', ['.mjs', '.mts']],
@@ -70,6 +72,47 @@ const getFormat = (filepath: string): 'commonjs' | 'module' | null => {
 const getModuleKind = (format: 'commonjs' | 'module'): TypeScript.ModuleKind =>
   format === 'module' ? ts.ModuleKind.ESNext : ts.ModuleKind.CommonJS
 
+const readCompilerOptions = (filepath: string): TypeScript.CompilerOptions => {
+  const configPath = ts.findConfigFile(dirname(filepath), ts.sys.fileExists, 'tsconfig.json')
+
+  if (!configPath) {
+    return {}
+  }
+
+  const cached = compilerOptionsByConfigPath.get(configPath)
+  if (cached) {
+    return cached
+  }
+
+  const configFile = ts.readConfigFile(configPath, ts.sys.readFile)
+  if (configFile.error) {
+    return {}
+  }
+
+  const { options } = ts.parseJsonConfigFileContent(configFile.config, ts.sys, dirname(configPath))
+
+  compilerOptionsByConfigPath.set(configPath, options)
+
+  return options
+}
+
+const getCompilerOptions = (
+  filepath: string,
+  format: 'commonjs' | 'module'
+): TypeScript.CompilerOptions => {
+  const options = readCompilerOptions(filepath)
+
+  return {
+    ...options,
+    esModuleInterop: true,
+    inlineSourceMap: true,
+    jsx: options.jsx ?? ts.JsxEmit.ReactJSX,
+    module: getModuleKind(format),
+    sourceMap: false,
+    target: options.target ?? ts.ScriptTarget.ES2022,
+  }
+}
+
 const transformSource = (
   source: string,
   filepath: string,
@@ -77,13 +120,7 @@ const transformSource = (
 ): string => {
   const { outputText } = ts.transpileModule(source, {
     fileName: filepath,
-    compilerOptions: {
-      esModuleInterop: true,
-      inlineSourceMap: true,
-      jsx: ts.JsxEmit.ReactJSX,
-      module: getModuleKind(format),
-      target: ts.ScriptTarget.ES2022,
-    },
+    compilerOptions: getCompilerOptions(filepath, format),
   })
 
   return outputText
