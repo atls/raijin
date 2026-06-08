@@ -6,8 +6,6 @@ import path from 'node:path'
 const repoRoot = process.cwd()
 
 const DOCS_DIR = 'docs/raijin'
-const AGENTS_DIR = '.agents'
-const SEMANTICS_PATH = `${DOCS_DIR}/semantics.v1.json`
 
 const readJson = (relativePath) =>
   JSON.parse(fs.readFileSync(path.join(repoRoot, relativePath), 'utf8'))
@@ -57,14 +55,6 @@ const slugify = (value) =>
     .replace(/^-+|-+$/g, '')
     .replace(/--+/g, '-')
 
-const emptySemantics = {
-  schemaVersion: 1,
-  generatedAt: '',
-  model: '',
-  commands: [],
-  workspaces: [],
-}
-
 const WORKSPACE_GROUP_ORDER = [
   'yarn',
   'code',
@@ -109,60 +99,6 @@ const walkFiles = (dirPath, predicate, output = []) => {
   }
 
   return output
-}
-
-const inferPackagePurpose = (packageName, group, language) => {
-  const isRu = language === 'ru'
-  const name = packageName || ''
-
-  if (name.includes('/yarn-plugin-')) {
-    const topic = name.split('/yarn-plugin-')[1] || 'custom'
-    return isRu ? `Yarn-плагин домена ${topic}` : `Yarn plugin for ${topic} domain`
-  }
-
-  if (name.includes('/yarn-cli')) {
-    return isRu
-      ? 'Входная точка кастомного Yarn CLI и bundle-конфигурации'
-      : 'Entrypoint for custom Yarn CLI and bundle configuration'
-  }
-
-  if (name.includes('/yarn-')) {
-    return isRu ? 'Утилита экосистемы Yarn' : 'Utility package for Yarn ecosystem'
-  }
-
-  if (name.includes('/code-')) {
-    return isRu
-      ? 'Библиотека code-утилит для raijin-сценариев'
-      : 'Code utility library for raijin workflows'
-  }
-
-  if (name.includes('/cli-ui-')) {
-    return isRu
-      ? 'CLI UI-компонент для терминального интерфейса'
-      : 'CLI UI component for terminal rendering'
-  }
-
-  if (group === 'config') {
-    return isRu ? 'Конфигурационный пакет shared-raijin' : 'Shared raijin configuration package'
-  }
-
-  if (group === 'runtime') {
-    return isRu ? 'Runtime-пакет запуска инструментов' : 'Runtime package for raijin execution'
-  }
-
-  if (group === 'schematics') {
-    return isRu ? 'Пакет схем и генераторов' : 'Schematics and template generation package'
-  }
-
-  if (group === 'webpack') {
-    return isRu ? 'Webpack-интеграция инструментов' : 'Webpack integration for raijin ecosystem'
-  }
-
-  if (group === 'prettier') {
-    return isRu ? 'Prettier-плагин и форматирование' : 'Prettier plugin and formatting utilities'
-  }
-
-  return isRu ? 'Назначение не описано в package.json' : 'Purpose is not described in package.json'
 }
 
 const commandDomainFromPlugin = (plugin) => {
@@ -210,12 +146,7 @@ const loadWorkspacePackages = () => {
       private: Boolean(packageJson.private),
       description:
         typeof packageJson.description === 'string' ? packageJson.description.trim() : '',
-      purposeEn: inferPackagePurpose(packageJson.name, group, 'en'),
-      purposeRu: inferPackagePurpose(packageJson.name, group, 'ru'),
       scripts: Object.keys(packageJson.scripts || {}).sort(sortByLocale),
-      dependencyCount: Object.keys(packageJson.dependencies || {}).length,
-      devDependencyCount: Object.keys(packageJson.devDependencies || {}).length,
-      peerDependencyCount: Object.keys(packageJson.peerDependencies || {}).length,
     }
   })
 
@@ -337,110 +268,6 @@ const loadCommands = (pluginRegistry) => {
 
   return commands
 }
-
-const readSemantics = () => {
-  const semanticsPath = path.join(repoRoot, SEMANTICS_PATH)
-  if (!fs.existsSync(semanticsPath)) return emptySemantics
-
-  const raw = JSON.parse(fs.readFileSync(semanticsPath, 'utf8'))
-
-  return {
-    schemaVersion: Number(raw.schemaVersion) || 1,
-    generatedAt: typeof raw.generatedAt === 'string' ? raw.generatedAt : '',
-    model: typeof raw.model === 'string' ? raw.model : '',
-    commands: Array.isArray(raw.commands) ? raw.commands : [],
-    workspaces: Array.isArray(raw.workspaces) ? raw.workspaces : [],
-  }
-}
-
-const normalizeLocalePair = (value, fallbackEn, fallbackRu) => ({
-  en: typeof value?.en === 'string' && value.en.trim() ? value.en.trim() : fallbackEn,
-  ru: typeof value?.ru === 'string' && value.ru.trim() ? value.ru.trim() : fallbackRu,
-})
-
-const normalizeTags = (tags, fallbackTags) => {
-  const unique = [...new Set((Array.isArray(tags) ? tags : []).filter(Boolean))].map((tag) =>
-    String(tag).trim()
-  )
-
-  return (unique.length > 0 ? unique : fallbackTags).sort(sortByLocale)
-}
-
-const fallbackCommandSemantics = (command) => {
-  const enPurpose = `Runs "${command.command}" in ${command.domain} raijin domain`
-  const ruPurpose = `Запускает "${command.command}" в raijin-домене ${command.domain}`
-  const example =
-    command.status === 'inactive'
-      ? { en: 'unavailable while inactive', ru: 'недоступно, пока команда inactive' }
-      : { en: `yarn ${command.command}`, ru: `yarn ${command.command}` }
-
-  return {
-    id: command.command,
-    groupTags: [command.domain, command.status],
-    purpose: { en: enPurpose, ru: ruPurpose },
-    whenToUse: {
-      en: `Use when you need ${command.command} in project workflow`,
-      ru: `Используйте, когда в рабочем потоке нужен сценарий ${command.command}`,
-    },
-    example,
-  }
-}
-
-const fallbackWorkspaceSemantics = (workspace) => ({
-  id: workspace.name,
-  groupTags: [workspace.group, workspace.private ? 'private' : 'public'],
-  purpose: {
-    en: workspace.description || workspace.purposeEn,
-    ru: workspace.description || workspace.purposeRu,
-  },
-  whenToUse: {
-    en: `Use when working with ${workspace.group} workspace package`,
-    ru: `Используйте при работе с workspace-пакетом группы ${workspace.group}`,
-  },
-  example: {
-    en:
-      workspace.scripts.length > 0
-        ? `yarn workspace ${workspace.name} ${workspace.scripts[0]}`
-        : `yarn workspace ${workspace.name} run`,
-    ru:
-      workspace.scripts.length > 0
-        ? `yarn workspace ${workspace.name} ${workspace.scripts[0]}`
-        : `yarn workspace ${workspace.name} run`,
-  },
-})
-
-const buildSemanticsLookup = (semantics) => ({
-  commandById: new Map((semantics.commands || []).map((entry) => [entry.id, entry])),
-  workspaceById: new Map((semantics.workspaces || []).map((entry) => [entry.id, entry])),
-})
-
-const getCommandSemantics = (command, lookup) => {
-  const raw = lookup.commandById.get(command.command)
-  const fallback = fallbackCommandSemantics(command)
-
-  return {
-    id: command.command,
-    groupTags: normalizeTags(raw?.groupTags, fallback.groupTags),
-    purpose: normalizeLocalePair(raw?.purpose, fallback.purpose.en, fallback.purpose.ru),
-    whenToUse: normalizeLocalePair(raw?.whenToUse, fallback.whenToUse.en, fallback.whenToUse.ru),
-    example: normalizeLocalePair(raw?.example, fallback.example.en, fallback.example.ru),
-  }
-}
-
-const getWorkspaceSemantics = (workspace, lookup) => {
-  const raw = lookup.workspaceById.get(workspace.name)
-  const fallback = fallbackWorkspaceSemantics(workspace)
-
-  return {
-    id: workspace.name,
-    groupTags: normalizeTags(raw?.groupTags, fallback.groupTags),
-    purpose: normalizeLocalePair(raw?.purpose, fallback.purpose.en, fallback.purpose.ru),
-    whenToUse: normalizeLocalePair(raw?.whenToUse, fallback.whenToUse.en, fallback.whenToUse.ru),
-    example: normalizeLocalePair(raw?.example, fallback.example.en, fallback.example.ru),
-  }
-}
-
-const languageField = (value, language) => (language === 'ru' ? value.ru : value.en)
 
 const linkByLanguage = (basePath, language) => `${basePath}${language === 'ru' ? '.ru' : ''}.md`
 
@@ -825,7 +652,7 @@ const groupCommandsByDomain = (commands) => {
   return [...groups.entries()].sort(([left], [right]) => left.localeCompare(right))
 }
 
-const renderCommandCard = (command, semantics, language) => {
+const renderCommandCard = (command, language) => {
   const isRu = language === 'ru'
 
   const lines = [
@@ -834,19 +661,11 @@ const renderCommandCard = (command, semantics, language) => {
     `#### \`${command.command}\``,
     '',
     isRu ? `- Статус: \`${command.status}\`` : `- Status: \`${command.status}\``,
-    isRu
-      ? `- Назначение: ${languageField(semantics.purpose, 'ru')}`
-      : `- Purpose: ${languageField(semantics.purpose, 'en')}`,
-    isRu
-      ? `- Когда использовать: ${languageField(semantics.whenToUse, 'ru')}`
-      : `- When to use: ${languageField(semantics.whenToUse, 'en')}`,
   ]
 
   if (command.status === 'active') {
     lines.push(
-      isRu
-        ? `- Пример: \`${languageField(semantics.example, 'ru')}\``
-        : `- Example: \`${languageField(semantics.example, 'en')}\``
+      isRu ? `- Пример: \`yarn ${command.command}\`` : `- Example: \`yarn ${command.command}\``
     )
   } else {
     lines.push(
@@ -862,7 +681,7 @@ const renderCommandCard = (command, semantics, language) => {
   return lines
 }
 
-const renderCommandsDoc = (commands, semanticsLookup, language) => {
+const renderCommandsDoc = (commands, language) => {
   const isRu = language === 'ru'
   const active = commands.filter((command) => command.status === 'active')
   const inactive = commands.filter((command) => command.status === 'inactive')
@@ -914,8 +733,7 @@ const renderCommandsDoc = (commands, semanticsLookup, language) => {
     }
 
     for (const command of domainCommands) {
-      const semantics = getCommandSemantics(command, semanticsLookup)
-      lines.push(...renderCommandCard(command, semantics, language))
+      lines.push(...renderCommandCard(command, language))
       lines.push('')
     }
 
@@ -950,8 +768,7 @@ const renderCommandsDoc = (commands, semanticsLookup, language) => {
       lines.push('')
 
       for (const command of domainCommands) {
-        const semantics = getCommandSemantics(command, semanticsLookup)
-        lines.push(...renderCommandCard(command, semantics, language))
+        lines.push(...renderCommandCard(command, language))
         lines.push(
           isRu
             ? `- Маршрутизация: не использовать (${command.availabilityReason})`
@@ -1007,7 +824,7 @@ const workspaceGroupIntro = (group, language) => {
   )
 }
 
-const renderWorkspaceCard = (workspace, semantics, language, compact) => {
+const renderWorkspaceCard = (workspace, language, compact) => {
   const isRu = language === 'ru'
   const lines = [
     `<!-- sync:package-card:${slugify(workspace.name)} -->`,
@@ -1017,11 +834,6 @@ const renderWorkspaceCard = (workspace, semantics, language, compact) => {
   ]
 
   if (compact) {
-    lines.push(
-      isRu
-        ? `- Назначение: ${languageField(semantics.purpose, 'ru')}`
-        : `- Purpose: ${languageField(semantics.purpose, 'en')}`
-    )
     lines.push(
       isRu
         ? `- Скрипты: ${workspace.scripts.length > 0 ? workspace.scripts.map((script) => `\`${script}\``).join(', ') : 'отсутствуют'}`
@@ -1042,41 +854,20 @@ const renderWorkspaceCard = (workspace, semantics, language, compact) => {
       ? `- Видимость: \`${workspace.private ? 'private' : 'public'}\``
       : `- Visibility: \`${workspace.private ? 'private' : 'public'}\``
   )
-  lines.push(
-    isRu
-      ? `- Назначение: ${languageField(semantics.purpose, 'ru')}`
-      : `- Purpose: ${languageField(semantics.purpose, 'en')}`
-  )
-  lines.push(
-    isRu
-      ? `- Когда использовать: ${languageField(semantics.whenToUse, 'ru')}`
-      : `- When to use: ${languageField(semantics.whenToUse, 'en')}`
-  )
-  lines.push(
-    isRu
-      ? `- Пример: \`${languageField(semantics.example, 'ru')}\``
-      : `- Example: \`${languageField(semantics.example, 'en')}\``
-  )
-  lines.push(
-    isRu
-      ? `- Теги: ${semantics.groupTags.map((tag) => `\`${tag}\``).join(', ')}`
-      : `- Tags: ${semantics.groupTags.map((tag) => `\`${tag}\``).join(', ')}`
-  )
+  if (workspace.description) {
+    lines.push(
+      isRu ? `- Описание: ${workspace.description}` : `- Description: ${workspace.description}`
+    )
+  }
   lines.push(
     isRu
       ? `- Скрипты: ${workspace.scripts.length > 0 ? workspace.scripts.map((script) => `\`${script}\``).join(', ') : 'отсутствуют'}`
       : `- Scripts: ${workspace.scripts.length > 0 ? workspace.scripts.map((script) => `\`${script}\``).join(', ') : 'none'}`
   )
-  lines.push(
-    isRu
-      ? `- Зависимости: deps ${workspace.dependencyCount}, devDeps ${workspace.devDependencyCount}, peerDeps ${workspace.peerDependencyCount}`
-      : `- Dependencies: deps ${workspace.dependencyCount}, devDeps ${workspace.devDependencyCount}, peerDeps ${workspace.peerDependencyCount}`
-  )
-
   return lines
 }
 
-const renderPackagesDoc = (workspaces, semanticsLookup, language) => {
+const renderPackagesDoc = (workspaces, language) => {
   const isRu = language === 'ru'
   const groups = new Map()
 
@@ -1109,12 +900,7 @@ const renderPackagesDoc = (workspaces, semanticsLookup, language) => {
     lines.push('')
 
     for (const workspace of groupItems) {
-      const semantics = getWorkspaceSemantics(workspace, semanticsLookup)
-      lines.push(
-        isRu
-          ? `- \`${workspace.name}\` — ${languageField(semantics.purpose, 'ru')}`
-          : `- \`${workspace.name}\` — ${languageField(semantics.purpose, 'en')}`
-      )
+      lines.push(`- \`${workspace.name}\` — \`${workspace.location}\``)
     }
 
     lines.push('')
@@ -1134,8 +920,7 @@ const renderPackagesDoc = (workspaces, semanticsLookup, language) => {
     }
 
     for (const workspace of groupItems) {
-      const semantics = getWorkspaceSemantics(workspace, semanticsLookup)
-      lines.push(...renderWorkspaceCard(workspace, semantics, language, compact))
+      lines.push(...renderWorkspaceCard(workspace, language, compact))
       lines.push('')
     }
 
@@ -1144,84 +929,6 @@ const renderPackagesDoc = (workspaces, semanticsLookup, language) => {
   }
 
   return `${lines.join('\n')}\n`
-}
-
-const renderAgentReadme = () =>
-  [
-    '# Raijin Agent Adapter',
-    '',
-    'Thin adapter for routing in this repository. Facts live in `docs/raijin/index.v1.json`.',
-    '',
-    '## Required read order',
-    '',
-    '1. `docs/raijin/README.ru.md` (default)',
-    '2. `docs/raijin/quickstart.ru.md`',
-    '3. `docs/raijin/commands.ru.md`',
-    '4. `docs/raijin/packages.ru.md`',
-    '5. `docs/raijin/index.v1.json`',
-    '6. `docs/raijin/semantics.v1.json`',
-    '',
-    '## Constraints',
-    '',
-    '- Route only commands with `status = active`',
-    '- Treat `inactive` commands as unavailable',
-    '- Do not use unrelated frontend/mobile/backend instruction packs',
-    '',
-  ].join('\n')
-
-const renderAgentRouting = () =>
-  [
-    '# Raijin Routing Rules',
-    '',
-    '1. Load `docs/raijin/index.v1.json` and `docs/raijin/semantics.v1.json`',
-    '2. Match prompt to command path tokens and semantics tags',
-    '3. Prefer `active` command entries when several routes match',
-    '4. If the strongest match is `inactive`, return unavailable route',
-    '5. For local execution in `raijin`, run `source .env` and `export NODE_OPTIONS` first',
-    '',
-  ].join('\n')
-
-const renderAgentsMd = () =>
-  [
-    '# Raijin-only Agent Rules',
-    '',
-    '- Use only `docs/raijin/*` and `docs/raijin/index.v1.json` as routing source',
-    '- Default language for routing is Russian docs (`README.ru.md` first)',
-    '- Ignore non-raijin instructions outside this folder',
-    '',
-  ].join('\n')
-
-const cleanupAgentsDirectory = () => {
-  const root = path.join(repoRoot, AGENTS_DIR)
-  if (!fs.existsSync(root)) return
-
-  const allowed = new Set([
-    `${AGENTS_DIR}/README.md`,
-    `${AGENTS_DIR}/raijin-routing.md`,
-    `${AGENTS_DIR}/AGENTS.md`,
-  ])
-
-  const visit = (currentPath) => {
-    for (const entry of fs.readdirSync(currentPath, { withFileTypes: true })) {
-      const fullPath = path.join(currentPath, entry.name)
-      const relativePath = toPosix(path.relative(repoRoot, fullPath))
-
-      if (entry.isDirectory()) {
-        visit(fullPath)
-
-        if (fs.existsSync(fullPath) && fs.readdirSync(fullPath).length === 0) {
-          fs.rmdirSync(fullPath)
-        }
-        continue
-      }
-
-      if (!allowed.has(relativePath)) {
-        fs.rmSync(fullPath)
-      }
-    }
-  }
-
-  visit(root)
 }
 
 const smokeFixture = {
@@ -1295,8 +1002,6 @@ const bundlePlugins = [...yarnCliPackage['@yarnpkg/builder'].bundles.standard].s
 const pluginRegistry = loadPluginRegistry(bundlePlugins)
 const commands = loadCommands(pluginRegistry)
 const workspaces = loadWorkspacePackages()
-const semantics = readSemantics()
-const semanticsLookup = buildSemanticsLookup(semantics)
 
 const activeCommands = commands
   .filter((command) => command.status === 'active')
@@ -1378,9 +1083,6 @@ writeJson(`${DOCS_DIR}/index.meta.v1.json`, {
   commandCount: commands.length,
   activeCommandCount: activeCommands.length,
   inactiveCommandCount: inactiveCommands.length,
-  semanticsSchemaVersion: semantics.schemaVersion,
-  semanticsCommandCount: semantics.commands.length,
-  semanticsWorkspaceCount: semantics.workspaces.length,
   lastGenerated,
 })
 
@@ -1392,16 +1094,11 @@ writeText(`${DOCS_DIR}/README.md`, `${renderRaijinReadme(index, 'en')}\n`)
 writeText(`${DOCS_DIR}/README.ru.md`, `${renderRaijinReadme(index, 'ru')}\n`)
 writeText(`${DOCS_DIR}/quickstart.md`, `${renderQuickstart('en')}\n`)
 writeText(`${DOCS_DIR}/quickstart.ru.md`, `${renderQuickstart('ru')}\n`)
-writeText(`${DOCS_DIR}/commands.md`, renderCommandsDoc(commands, semanticsLookup, 'en'))
-writeText(`${DOCS_DIR}/commands.ru.md`, renderCommandsDoc(commands, semanticsLookup, 'ru'))
-writeText(`${DOCS_DIR}/packages.md`, renderPackagesDoc(workspaces, semanticsLookup, 'en'))
-writeText(`${DOCS_DIR}/packages.ru.md`, renderPackagesDoc(workspaces, semanticsLookup, 'ru'))
+writeText(`${DOCS_DIR}/commands.md`, renderCommandsDoc(commands, 'en'))
+writeText(`${DOCS_DIR}/commands.ru.md`, renderCommandsDoc(commands, 'ru'))
+writeText(`${DOCS_DIR}/packages.md`, renderPackagesDoc(workspaces, 'en'))
+writeText(`${DOCS_DIR}/packages.ru.md`, renderPackagesDoc(workspaces, 'ru'))
 writeJson(`${DOCS_DIR}/smoke-prompts.json`, smokeFixture)
-
-cleanupAgentsDirectory()
-writeText(`${AGENTS_DIR}/README.md`, renderAgentReadme())
-writeText(`${AGENTS_DIR}/raijin-routing.md`, renderAgentRouting())
-writeText(`${AGENTS_DIR}/AGENTS.md`, renderAgentsMd())
 
 formatGeneratedFiles([
   `${DOCS_DIR}/index.v1.json`,
@@ -1419,9 +1116,6 @@ formatGeneratedFiles([
   `${DOCS_DIR}/commands.ru.md`,
   `${DOCS_DIR}/packages.md`,
   `${DOCS_DIR}/packages.ru.md`,
-  `${AGENTS_DIR}/README.md`,
-  `${AGENTS_DIR}/raijin-routing.md`,
-  `${AGENTS_DIR}/AGENTS.md`,
 ])
 
 console.log(
@@ -1429,6 +1123,5 @@ console.log(
     `Generated raijin artifacts: ${commands.length} commands`,
     `${workspaces.length} workspace packages`,
     `(active: ${activeCommands.length}, inactive: ${inactiveCommands.length})`,
-    `semantics loaded: commands=${semantics.commands.length}, workspaces=${semantics.workspaces.length}`,
   ].join(' ')
 )
