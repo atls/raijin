@@ -1,5 +1,18 @@
 
 
+## [1.0.32](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.31...@atls/yarn-plugin-test@1.0.32) (2026-06-08)
+
+
+### Bug Fixes
+
+
+* **common:** centralize current yarn executable ([0826676](https://github.com/atls/raijin/commit/0826676f7004ee1042c916eeead53851118c8d21))
+* **common:** use current executable for command re-entry ([7a4a03a](https://github.com/atls/raijin/commit/7a4a03a1eb0409361d4807deb5bbb6665cb1fc4b))
+
+
+
+
+
 ## [1.0.31](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.30...@atls/yarn-plugin-test@1.0.31) (2026-06-01)
 
 
