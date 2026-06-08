@@ -28,6 +28,7 @@ const YARN_LITERAL_REENTRY_REGEXP =
   /\b(?:execUtils\.)?(?:pipevp|execvp)\(\s*['"]yarn['"]|\bspawn\(\s*['"]yarn['"]/g
 
 const SCRIPT_ENV_REGEXP = /scriptUtils\.makeScriptEnv\(\s*\{[\s\S]*?\}\s*\)/g
+const CURRENT_YARN_EXECUTABLE_OWNER = 'yarn/plugin-tools/sources/current-yarn-executable.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 
@@ -55,7 +56,7 @@ const collectSourceFiles = async (dir) => {
   return files.flat()
 }
 
-test('should keep yarn proxy re-entry calls on the current Yarn executable', async () => {
+test('should keep current Yarn executable calls on the current Yarn executable', async () => {
   const sourceFiles = (
     await Promise.all(TARGET_SOURCE_DIRS.map((dir) => collectSourceFiles(join(repoRoot, dir))))
   ).flat()
@@ -71,16 +72,20 @@ test('should keep yarn proxy re-entry calls on the current Yarn executable', asy
   for (const { path, source } of sources) {
     const relativePath = relative(repoRoot, path)
 
-    for (const match of source.matchAll(SCRIPT_ENV_REGEXP)) {
-      errors.push(
-        `${relativePath}:${getLine(source, match.index ?? 0)} yarn re-entry must use makeYarnReentry`
-      )
+    if (relativePath !== CURRENT_YARN_EXECUTABLE_OWNER) {
+      for (const match of source.matchAll(SCRIPT_ENV_REGEXP)) {
+        errors.push(
+          `${relativePath}:${getLine(source, match.index ?? 0)} current Yarn executable must use makeCurrentYarnExecutable`
+        )
+      }
     }
 
     for (const match of source.matchAll(YARN_LITERAL_REENTRY_REGEXP)) {
       const line = getLine(source, match.index ?? 0)
 
-      errors.push(`${relativePath}:${line} yarn re-entry must use makeYarnReentry executable`)
+      errors.push(
+        `${relativePath}:${line} current Yarn executable must use makeCurrentYarnExecutable executable`
+      )
     }
   }
 

@@ -23,6 +23,7 @@
     "@atls/cli-ui-service-progress-component": "workspace:*",
     "@atls/code-service": "workspace:*",
     "@atls/yarn-pack-utils": "workspace:*",
+    "@atls/yarn-plugin-tools": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@monstrs/logger": "0.0.20",
     "clipanion": "4.0.0-rc.2",

@@ -1,34 +1,34 @@
 /* eslint-disable n/no-sync */
 
-import type { ESLint }             from '@atls/code-runtime/eslint'
-import type { Linter as ESLinter } from '@atls/code-runtime/eslint'
+import type { ESLint }               from '@atls/code-runtime/eslint'
+import type { Linter as ESLinter }   from '@atls/code-runtime/eslint'
 
-import type { Annotation }         from './github.checks.js'
+import type { Annotation }           from './github.checks.js'
 
-import { readFileSync }            from 'node:fs'
-import { resolve }                 from 'node:path'
+import { readFileSync }              from 'node:fs'
+import { resolve }                   from 'node:path'
 
-import { BaseCommand }             from '@yarnpkg/cli'
-import { StreamReport }            from '@yarnpkg/core'
-import { Configuration }           from '@yarnpkg/core'
-import { MessageName }             from '@yarnpkg/core'
-import { Project }                 from '@yarnpkg/core'
-import { Filename }                from '@yarnpkg/fslib'
-import { codeFrameColumns }        from '@babel/code-frame'
-import { execUtils }               from '@yarnpkg/core'
-import { xfs }                     from '@yarnpkg/fslib'
-import { npath }                   from '@yarnpkg/fslib'
-import { Option }                  from 'clipanion'
-import React                       from 'react'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { StreamReport }              from '@yarnpkg/core'
+import { Configuration }             from '@yarnpkg/core'
+import { MessageName }               from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { codeFrameColumns }          from '@babel/code-frame'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { npath }                     from '@yarnpkg/fslib'
+import { Option }                    from 'clipanion'
+import React                         from 'react'
 
-import { LintResult }              from '@atls/cli-ui-lint-result-component'
-import { Linter }                  from '@atls/code-lint'
-import { renderStatic }            from '@atls/cli-ui-renderer-static-component'
-import { getChangedFiles }         from '@atls/yarn-plugin-files'
-import { makeYarnReentry }         from '@atls/yarn-run-utils'
+import { LintResult }                from '@atls/cli-ui-lint-result-component'
+import { Linter }                    from '@atls/code-lint'
+import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
+import { getChangedFiles }           from '@atls/yarn-plugin-files'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
-import { GitHubChecks }            from './github.checks.js'
-import { AnnotationLevel }         from './github.checks.js'
+import { GitHubChecks }              from './github.checks.js'
+import { AnnotationLevel }           from './github.checks.js'
 
 class ChecksLintCommand extends BaseCommand {
   static override paths = [['checks', 'lint']]
@@ -55,7 +55,7 @@ class ChecksLintCommand extends BaseCommand {
 
     const binFolder = await xfs.mktempPromise()
     const args = ['checks', 'lint', ...(this.changed ? ['--changed'] : [])]
-    const { executable, env } = await makeYarnReentry({
+    const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
       env: {

@@ -1,15 +1,15 @@
-import type { Tunnel }     from 'localtunnel'
+import type { Tunnel }               from 'localtunnel'
 
-import { BaseCommand }     from '@yarnpkg/cli'
-import { Configuration }   from '@yarnpkg/core'
-import { Project }         from '@yarnpkg/core'
-import { xfs }             from '@yarnpkg/fslib'
-import { ppath }           from '@yarnpkg/fslib'
-import { Option }          from 'clipanion'
-import spawn               from 'cross-spawn'
-import localtunnel         from 'localtunnel'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { ppath }                     from '@yarnpkg/fslib'
+import { Option }                    from 'clipanion'
+import spawn                         from 'cross-spawn'
+import localtunnel                   from 'localtunnel'
 
-import { makeYarnReentry } from '@atls/yarn-run-utils'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
@@ -62,7 +62,7 @@ export class RendererDevCommand extends BaseCommand {
     }
 
     const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeYarnReentry({
+    const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
     })

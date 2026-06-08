@@ -1,16 +1,16 @@
-import { Configuration }          from '@yarnpkg/core'
-import { Project }                from '@yarnpkg/core'
-import { Filename }               from '@yarnpkg/fslib'
-import { execUtils }              from '@yarnpkg/core'
-import { xfs }                    from '@yarnpkg/fslib'
-import { render }                 from 'ink'
-import React                      from 'react'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { render }                    from 'ink'
+import React                         from 'react'
 
-import { ServiceProgress }        from '@atls/cli-ui-service-progress-component'
-import { Service }                from '@atls/code-service'
-import { makeYarnReentry }        from '@atls/yarn-run-utils'
+import { ServiceProgress }           from '@atls/cli-ui-service-progress-component'
+import { Service }                   from '@atls/code-service'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
-import { AbstractServiceCommand } from './abstract-service.command.jsx'
+import { AbstractServiceCommand }    from './abstract-service.command.jsx'
 
 export class ServiceDevCommand extends AbstractServiceCommand {
   static override paths = [['service', 'dev']]
@@ -40,7 +40,7 @@ export class ServiceDevCommand extends AbstractServiceCommand {
     }
 
     const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeYarnReentry({
+    const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
       env: {

@@ -12,7 +12,7 @@ import { npath }                     from '@yarnpkg/fslib'
 import { Tester }                    from '@atls/code-test'
 import { TEST_EXEC_ARGV_ENV }        from '@atls/code-test'
 import { createTestExecArgv }        from '@atls/code-test'
-import { makeYarnReentry }           from '@atls/yarn-run-utils'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
@@ -40,7 +40,7 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
 
     const binFolder = await xfs.mktempPromise()
 
-    const { executable, env } = await makeYarnReentry({
+    const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
       env: {

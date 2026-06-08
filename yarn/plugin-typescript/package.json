@@ -23,6 +23,7 @@
     "@atls/cli-ui-typescript-progress-component": "workspace:*",
     "@atls/code-runtime": "workspace:*",
     "@atls/code-typescript": "workspace:*",
+    "@atls/yarn-plugin-tools": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "ink": "3.2.0",

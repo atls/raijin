@@ -1,12 +1,12 @@
-import { BaseCommand }     from '@yarnpkg/cli'
-import { Configuration }   from '@yarnpkg/core'
-import { Project }         from '@yarnpkg/core'
-import { Filename }        from '@yarnpkg/fslib'
-import { execUtils }       from '@yarnpkg/core'
-import { xfs }             from '@yarnpkg/fslib'
-import { Command }         from 'clipanion'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { Command }                   from 'clipanion'
 
-import { makeYarnReentry } from '@atls/yarn-run-utils'
+import { makeCurrentYarnExecutable } from '../../current-yarn-executable.js'
 
 export abstract class AbstractToolsCommand extends BaseCommand {
   static override usage = Command.Usage({
@@ -41,7 +41,7 @@ export abstract class AbstractToolsCommand extends BaseCommand {
     const { project } = await Project.find(configuration, this.context.cwd)
 
     const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeYarnReentry({
+    const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
       env: {

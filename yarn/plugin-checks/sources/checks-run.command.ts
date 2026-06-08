@@ -1,15 +1,15 @@
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { PortablePath }         from '@yarnpkg/fslib'
 
-import { BaseCommand }       from '@yarnpkg/cli'
-import { StreamReport }      from '@yarnpkg/core'
-import { Configuration }     from '@yarnpkg/core'
-import { MessageName }       from '@yarnpkg/core'
-import { Project }           from '@yarnpkg/core'
-import { execUtils }         from '@yarnpkg/core'
-import { xfs }               from '@yarnpkg/fslib'
-import { Option }            from 'clipanion'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { StreamReport }              from '@yarnpkg/core'
+import { Configuration }             from '@yarnpkg/core'
+import { MessageName }               from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { Option }                    from 'clipanion'
 
-import { makeYarnReentry }   from '@atls/yarn-run-utils'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
@@ -63,7 +63,7 @@ class ChecksRunCommand extends BaseCommand {
         !args.includes('--changed')
       const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
       const binFolder = await xfs.mktempPromise()
-      const { executable, env } = await makeYarnReentry({ binFolder, project })
+      const { executable, env } = await makeCurrentYarnExecutable({ binFolder, project })
 
       const { code } = await execUtils.pipevp(executable, ['checks', ...checkArgs], {
         cwd,

@@ -26,6 +26,7 @@
     "@atls/code-test": "workspace:*",
     "@atls/code-typescript": "workspace:*",
     "@atls/yarn-plugin-files": "workspace:*",
+    "@atls/yarn-plugin-tools": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "@atls/yarn-workspace-utils": "workspace:*",
     "@babel/code-frame": "7.24.7",

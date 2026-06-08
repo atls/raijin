@@ -8,22 +8,22 @@ const YARN_EXECUTABLE_NAME = process.platform === 'win32' ? 'yarn.cmd' : 'yarn'
 
 type ScriptEnvOptions = Parameters<typeof scriptUtils.makeScriptEnv>[0]
 
-export interface YarnReentryOptions {
+export interface CurrentYarnExecutableOptions {
   binFolder: ScriptEnvOptions['binFolder']
   project: Project
   env?: NodeJS.ProcessEnv
 }
 
-export interface YarnReentry {
+export interface CurrentYarnExecutable {
   executable: string
   env: NodeJS.ProcessEnv
 }
 
-export const makeYarnReentry = async ({
+export const makeCurrentYarnExecutable = async ({
   binFolder,
   project,
   env = {},
-}: YarnReentryOptions): Promise<YarnReentry> => {
+}: CurrentYarnExecutableOptions): Promise<CurrentYarnExecutable> => {
   const scriptEnv = await scriptUtils.makeScriptEnv({
     binFolder,
     project,

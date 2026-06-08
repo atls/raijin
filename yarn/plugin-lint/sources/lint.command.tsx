@@ -1,19 +1,19 @@
-import { BaseCommand }     from '@yarnpkg/cli'
-import { Configuration }   from '@yarnpkg/core'
-import { Project }         from '@yarnpkg/core'
-import { Filename }        from '@yarnpkg/fslib'
-import { execUtils }       from '@yarnpkg/core'
-import { xfs }             from '@yarnpkg/fslib'
-import { Option }          from 'clipanion'
-import { render }          from 'ink'
-import React               from 'react'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { Option }                    from 'clipanion'
+import { render }                    from 'ink'
+import React                         from 'react'
 
-import { ErrorInfo }       from '@atls/cli-ui-error-info-component'
-import { LintProgress }    from '@atls/cli-ui-lint-progress-component'
-import { LintResult }      from '@atls/cli-ui-lint-result-component'
-import { Linter }          from '@atls/code-lint'
-import { renderStatic }    from '@atls/cli-ui-renderer-static-component'
-import { makeYarnReentry } from '@atls/yarn-run-utils'
+import { ErrorInfo }                 from '@atls/cli-ui-error-info-component'
+import { LintProgress }              from '@atls/cli-ui-lint-progress-component'
+import { LintResult }                from '@atls/cli-ui-lint-result-component'
+import { Linter }                    from '@atls/code-lint'
+import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 export class LintCommand extends BaseCommand {
   static override paths = [['lint']]
@@ -54,7 +54,7 @@ export class LintCommand extends BaseCommand {
       args.push('--cache')
     }
 
-    const { executable, env } = await makeYarnReentry({
+    const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
       env: {
