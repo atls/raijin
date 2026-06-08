@@ -1,16 +1,17 @@
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { PortablePath }         from '@yarnpkg/fslib'
 
-import { PassThrough }       from 'node:stream'
+import { PassThrough }               from 'node:stream'
 
-import { BaseCommand }       from '@yarnpkg/cli'
-import { Configuration }     from '@yarnpkg/core'
-import { Project }           from '@yarnpkg/core'
-import { StreamReport }      from '@yarnpkg/core'
-import { MessageName }       from '@yarnpkg/core'
-import { execUtils }         from '@yarnpkg/core'
-import { scriptUtils }       from '@yarnpkg/core'
-import { xfs }               from '@yarnpkg/fslib'
-import { ppath }             from '@yarnpkg/fslib'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { StreamReport }              from '@yarnpkg/core'
+import { MessageName }               from '@yarnpkg/core'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { ppath }                     from '@yarnpkg/fslib'
+
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 export class RendererBuildCommand extends BaseCommand {
   static paths = [['renderer', 'build']]
@@ -54,13 +55,12 @@ export class RendererBuildCommand extends BaseCommand {
               type: 'module',
             })
             const binFolder = await xfs.mktempPromise()
-            const env = await scriptUtils.makeScriptEnv({
+            const { executable, env } = await makeCurrentYarnExecutable({
               binFolder,
               project,
-              ignoreCorepack: true,
             })
 
-            await execUtils.pipevp('yarn', ['next', 'build', 'src', '--no-lint'], {
+            await execUtils.pipevp(executable, ['next', 'build', 'src', '--no-lint'], {
               end: execUtils.EndStrategy.ErrorCode,
               cwd: this.context.cwd,
               stdin: this.context.stdin,

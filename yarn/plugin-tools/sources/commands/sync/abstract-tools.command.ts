@@ -1,11 +1,12 @@
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { Filename }      from '@yarnpkg/fslib'
-import { scriptUtils }   from '@yarnpkg/core'
-import { execUtils }     from '@yarnpkg/core'
-import { xfs }           from '@yarnpkg/fslib'
-import { Command }       from 'clipanion'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { Command }                   from 'clipanion'
+
+import { makeCurrentYarnExecutable } from '../../current-yarn-executable.js'
 
 export abstract class AbstractToolsCommand extends BaseCommand {
   static override usage = Command.Usage({
@@ -40,16 +41,20 @@ export abstract class AbstractToolsCommand extends BaseCommand {
     const { project } = await Project.find(configuration, this.context.cwd)
 
     const binFolder = await xfs.mktempPromise()
+    const { executable, env } = await makeCurrentYarnExecutable({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
-    const { code } = await execUtils.pipevp('yarn', command, {
+    const { code } = await execUtils.pipevp(executable, command, {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code

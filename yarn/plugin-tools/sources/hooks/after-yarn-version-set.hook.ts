@@ -1,10 +1,11 @@
-import type { Configuration }  from '@yarnpkg/core'
-import type { CommandContext } from '@yarnpkg/core'
+import type { Configuration }        from '@yarnpkg/core'
+import type { CommandContext }       from '@yarnpkg/core'
 
-import { Project }             from '@yarnpkg/core'
-import { execUtils }           from '@yarnpkg/core'
-import { scriptUtils }         from '@yarnpkg/core'
-import { xfs }                 from '@yarnpkg/fslib'
+import { Project }                   from '@yarnpkg/core'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+
+import { makeCurrentYarnExecutable } from '../current-yarn-executable.js'
 
 export const afterYarnVersionSet = async (
   configuration: Configuration,
@@ -12,9 +13,9 @@ export const afterYarnVersionSet = async (
 ): Promise<void> => {
   const { project } = await Project.find(configuration, context.cwd)
   const binFolder = await xfs.mktempPromise()
-  const env = await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })
+  const { executable, env } = await makeCurrentYarnExecutable({ binFolder, project })
 
-  await execUtils.pipevp('yarn', ['tools', 'sync'], {
+  await execUtils.pipevp(executable, ['tools', 'sync'], {
     cwd: context.cwd,
     stdin: context.stdin,
     stdout: context.stdout,

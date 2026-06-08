@@ -1,21 +1,21 @@
-import type { Annotation }       from './github.checks.js'
+import type { Annotation }           from './github.checks.js'
 
-import { BaseCommand }           from '@yarnpkg/cli'
-import { Configuration }         from '@yarnpkg/core'
-import { Project }               from '@yarnpkg/core'
-import { Filename }              from '@yarnpkg/fslib'
-import { execUtils }             from '@yarnpkg/core'
-import { scriptUtils }           from '@yarnpkg/core'
-import { ppath }                 from '@yarnpkg/fslib'
-import { xfs }                   from '@yarnpkg/fslib'
-import stripAnsi                 from 'strip-ansi'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { execUtils }                 from '@yarnpkg/core'
+import { ppath }                     from '@yarnpkg/fslib'
+import { xfs }                       from '@yarnpkg/fslib'
+import stripAnsi                     from 'strip-ansi'
 
-import { PassThroughRunContext } from '@atls/yarn-run-utils'
-import { getChangedFiles }       from '@atls/yarn-plugin-files'
-import { getChangedWorkspaces }  from '@atls/yarn-workspace-utils'
+import { PassThroughRunContext }     from '@atls/yarn-run-utils'
+import { getChangedFiles }           from '@atls/yarn-plugin-files'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { getChangedWorkspaces }      from '@atls/yarn-workspace-utils'
 
-import { GitHubChecks }          from './github.checks.js'
-import { AnnotationLevel }       from './github.checks.js'
+import { GitHubChecks }              from './github.checks.js'
+import { AnnotationLevel }           from './github.checks.js'
 
 class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]
@@ -39,16 +39,20 @@ class ChecksReleaseCommand extends BaseCommand {
     const { project } = await Project.find(configuration, this.context.cwd)
 
     const binFolder = await xfs.mktempPromise()
+    const { executable, env } = await makeCurrentYarnExecutable({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
-    const { code } = await execUtils.pipevp('yarn', ['checks', 'release'], {
+    const { code } = await execUtils.pipevp(executable, ['checks', 'release'], {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code

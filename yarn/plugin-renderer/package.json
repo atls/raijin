@@ -18,6 +18,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/yarn-plugin-tools": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "cross-spawn": "7.0.3",
     "localtunnel": "2.0.2"

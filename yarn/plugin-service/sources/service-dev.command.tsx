@@ -1,16 +1,16 @@
-import { Configuration }          from '@yarnpkg/core'
-import { Project }                from '@yarnpkg/core'
-import { Filename }               from '@yarnpkg/fslib'
-import { scriptUtils }            from '@yarnpkg/core'
-import { execUtils }              from '@yarnpkg/core'
-import { xfs }                    from '@yarnpkg/fslib'
-import { render }                 from 'ink'
-import React                      from 'react'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { render }                    from 'ink'
+import React                         from 'react'
 
-import { ServiceProgress }        from '@atls/cli-ui-service-progress-component'
-import { Service }                from '@atls/code-service'
+import { ServiceProgress }           from '@atls/cli-ui-service-progress-component'
+import { Service }                   from '@atls/code-service'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
-import { AbstractServiceCommand } from './abstract-service.command.jsx'
+import { AbstractServiceCommand }    from './abstract-service.command.jsx'
 
 export class ServiceDevCommand extends AbstractServiceCommand {
   static override paths = [['service', 'dev']]
@@ -40,16 +40,20 @@ export class ServiceDevCommand extends AbstractServiceCommand {
     }
 
     const binFolder = await xfs.mktempPromise()
+    const { executable, env } = await makeCurrentYarnExecutable({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
 
-    const { code } = await execUtils.pipevp('yarn', ['service', 'dev', ...args], {
+    const { code } = await execUtils.pipevp(executable, ['service', 'dev', ...args], {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code

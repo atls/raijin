@@ -24,10 +24,11 @@ const TARGET_SOURCE_DIRS = [
   'yarn/plugin-renderer/sources',
 ]
 
-const YARN_REENTRY_REGEXP =
+const YARN_LITERAL_REENTRY_REGEXP =
   /\b(?:execUtils\.)?(?:pipevp|execvp)\(\s*['"]yarn['"]|\bspawn\(\s*['"]yarn['"]/g
 
 const SCRIPT_ENV_REGEXP = /scriptUtils\.makeScriptEnv\(\s*\{[\s\S]*?\}\s*\)/g
+const CURRENT_YARN_EXECUTABLE_OWNER = 'yarn/plugin-tools/sources/current-yarn-executable.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 
@@ -55,7 +56,7 @@ const collectSourceFiles = async (dir) => {
   return files.flat()
 }
 
-test('should keep yarn proxy re-entry calls isolated from Corepack', async () => {
+test('should keep current Yarn executable calls on the current Yarn executable', async () => {
   const sourceFiles = (
     await Promise.all(TARGET_SOURCE_DIRS.map((dir) => collectSourceFiles(join(repoRoot, dir))))
   ).flat()
@@ -71,29 +72,20 @@ test('should keep yarn proxy re-entry calls isolated from Corepack', async () =>
   for (const { path, source } of sources) {
     const relativePath = relative(repoRoot, path)
 
-    for (const match of source.matchAll(SCRIPT_ENV_REGEXP)) {
-      if (!match[0].includes('ignoreCorepack: true')) {
+    if (relativePath !== CURRENT_YARN_EXECUTABLE_OWNER) {
+      for (const match of source.matchAll(SCRIPT_ENV_REGEXP)) {
         errors.push(
-          `${relativePath}:${getLine(source, match.index ?? 0)} makeScriptEnv must set ignoreCorepack: true`
+          `${relativePath}:${getLine(source, match.index ?? 0)} current Yarn executable must use makeCurrentYarnExecutable`
         )
       }
     }
 
-    for (const match of source.matchAll(YARN_REENTRY_REGEXP)) {
+    for (const match of source.matchAll(YARN_LITERAL_REENTRY_REGEXP)) {
       const line = getLine(source, match.index ?? 0)
-      const reentryCall = source.slice(match.index ?? 0, (match.index ?? 0) + 800)
 
-      if (!source.includes('scriptUtils.makeScriptEnv')) {
-        errors.push(`${relativePath}:${line} yarn re-entry must use scriptUtils.makeScriptEnv`)
-      }
-
-      if (!source.includes('ignoreCorepack: true')) {
-        errors.push(`${relativePath}:${line} yarn re-entry must set ignoreCorepack: true`)
-      }
-
-      if (!/env\s*(?:[:,}])/.test(reentryCall)) {
-        errors.push(`${relativePath}:${line} yarn re-entry must pass env to the child process`)
-      }
+      errors.push(
+        `${relativePath}:${line} current Yarn executable must use makeCurrentYarnExecutable executable`
+      )
     }
   }
 

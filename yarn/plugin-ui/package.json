@@ -22,6 +22,7 @@
     "@atls/cli-ui-icons-progress-component": "workspace:*",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/code-icons": "workspace:*",
+    "@atls/yarn-plugin-tools": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "globby": "13.2.2",
     "ink": "3.2.0",

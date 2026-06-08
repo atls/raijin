@@ -6,6 +6,7 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
+    "./current-yarn-executable": "./sources/current-yarn-executable.ts",
     ".": "./sources/index.ts"
   },
   "main": "sources/index.ts",
@@ -36,6 +37,11 @@
     "access": "public",
     "exports": {
       "./package.json": "./package.json",
+      "./current-yarn-executable": {
+        "import": "./dist/current-yarn-executable.js",
+        "types": "./dist/current-yarn-executable.d.ts",
+        "default": "./dist/current-yarn-executable.js"
+      },
       ".": {
         "import": "./dist/index.js",
         "types": "./dist/index.d.ts",

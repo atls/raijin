@@ -22,6 +22,7 @@
     "@atls/cli-ui-lint-result-component": "workspace:*",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/code-lint": "workspace:*",
+    "@atls/yarn-plugin-tools": "workspace:*",
     "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "ink": "3.2.0",

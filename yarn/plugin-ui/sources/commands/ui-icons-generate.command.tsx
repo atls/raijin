@@ -1,22 +1,22 @@
-import { join }          from 'node:path'
-import { relative }      from 'node:path'
+import { join }                      from 'node:path'
+import { relative }                  from 'node:path'
 
-import { BaseCommand }   from '@yarnpkg/cli'
-import { Configuration } from '@yarnpkg/core'
-import { Project }       from '@yarnpkg/core'
-import { Filename }      from '@yarnpkg/fslib'
-import { execUtils }     from '@yarnpkg/core'
-import { scriptUtils }   from '@yarnpkg/core'
-import { xfs }           from '@yarnpkg/fslib'
-import { Option }        from 'clipanion'
-import { globby }        from 'globby'
-import { render }        from 'ink'
-import React             from 'react'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { execUtils }                 from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { Option }                    from 'clipanion'
+import { globby }                    from 'globby'
+import { render }                    from 'ink'
+import React                         from 'react'
 
-import { ErrorInfo }     from '@atls/cli-ui-error-info-component'
-import { IconsProgress } from '@atls/cli-ui-icons-progress-component'
-import { Icons }         from '@atls/code-icons'
-import { renderStatic }  from '@atls/cli-ui-renderer-static-component'
+import { ErrorInfo }                 from '@atls/cli-ui-error-info-component'
+import { IconsProgress }             from '@atls/cli-ui-icons-progress-component'
+import { Icons }                     from '@atls/code-icons'
+import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 export class UiIconsGenerateCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
@@ -49,15 +49,20 @@ export class UiIconsGenerateCommand extends BaseCommand {
       args.push('--native')
     }
 
-    const { code } = await execUtils.pipevp('yarn', ['ui', 'icons', 'generate', ...args], {
+    const { executable, env } = await makeCurrentYarnExecutable({
+      binFolder,
+      project,
+      env: {
+        COMMAND_PROXY_EXECUTION: 'true',
+      },
+    })
+
+    const { code } = await execUtils.pipevp(executable, ['ui', 'icons', 'generate', ...args], {
       cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: {
-        ...(await scriptUtils.makeScriptEnv({ binFolder, project, ignoreCorepack: true })),
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env,
     })
 
     return code
