@@ -1,13 +1,13 @@
 export const TEST_EXEC_ARGV_ENV = 'RAIJIN_TEST_EXEC_ARGV'
 
 export const createTestExecArgv = (pnpEsmLoader?: string): Array<string> => {
-  const execArgv = ['--loader', '@atls/code-runtime/ts-node-register']
+  const execArgv: Array<string> = []
 
   if (pnpEsmLoader) {
     execArgv.push('--loader', pnpEsmLoader)
   }
 
-  execArgv.push('--loader', '@atls/code-runtime/ts-ext-register')
+  execArgv.push('--loader', '@atls/code-runtime/typescript-loader')
   execArgv.push('--enable-source-maps')
 
   return execArgv

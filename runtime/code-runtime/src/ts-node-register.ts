@@ -1,2 +1,1 @@
-// @ts-expect-error: Unresolved declarations
-export * from 'ts-node/esm/transpile-only'
+export * from './typescript-loader.js'
