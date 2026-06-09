@@ -86,12 +86,33 @@ const isRootWorkspace = (workspace: ReleaseVersionWorkspaceOwner): boolean =>
 const isNestedWorkspaceFile = (file: string, workspace: ReleaseVersionWorkspaceOwner): boolean =>
   file === workspace.relativeCwd || file.startsWith(`${workspace.relativeCwd}/`)
 
+const isWorkspaceOwner = (
+  workspace: ReleaseVersionWorkspaceOwner,
+  owner: ReleaseVersionWorkspaceOwner
+): boolean => workspace.relativeCwd === owner.relativeCwd
+
+const isNestedWorkspaceOwner = (
+  workspace: ReleaseVersionWorkspaceOwner,
+  owner: ReleaseVersionWorkspaceOwner
+): boolean => {
+  if (isWorkspaceOwner(workspace, owner)) {
+    return false
+  }
+
+  if (isRootWorkspace(workspace)) {
+    return !isRootWorkspace(owner)
+  }
+
+  return owner.relativeCwd.startsWith(`${workspace.relativeCwd}/`)
+}
+
 const isClaimedByNestedWorkspace = (
   file: string,
+  workspace: ReleaseVersionWorkspaceOwner,
   workspaceOwners: ReadonlyArray<ReleaseVersionWorkspaceOwner>
 ): boolean =>
   workspaceOwners.some(
-    (workspace) => !isRootWorkspace(workspace) && isNestedWorkspaceFile(file, workspace)
+    (owner) => isNestedWorkspaceOwner(workspace, owner) && isNestedWorkspaceFile(file, owner)
   )
 
 const isWorkspaceFile = (
@@ -100,10 +121,13 @@ const isWorkspaceFile = (
   workspaceOwners: ReadonlyArray<ReleaseVersionWorkspaceOwner>
 ): boolean => {
   if (isRootWorkspace(workspace)) {
-    return !isClaimedByNestedWorkspace(file, workspaceOwners)
+    return !isClaimedByNestedWorkspace(file, workspace, workspaceOwners)
   }
 
-  return isNestedWorkspaceFile(file, workspace)
+  return (
+    isNestedWorkspaceFile(file, workspace) &&
+    !isClaimedByNestedWorkspace(file, workspace, workspaceOwners)
+  )
 }
 
 const isConventionalType = (type: string): boolean =>
