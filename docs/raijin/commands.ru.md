@@ -307,7 +307,7 @@
 
 ### Домен `release`
 
-- Команды: `release create`
+- Команды: `release create`, `release version defer`
 
 <details>
 <summary>Подробности домена `release`</summary>
@@ -320,6 +320,15 @@
 - Пример: `yarn release create`
 - Плагин: `@atls/yarn-plugin-release`
 - Исходник: `yarn/plugin-release/sources/release-create.command.ts`
+
+<!-- sync:command-card:release-version-defer -->
+
+#### `release version defer`
+
+- Статус: `active`
+- Пример: `yarn release version defer`
+- Плагин: `@atls/yarn-plugin-release`
+- Исходник: `yarn/plugin-release/sources/release-version-defer.command.ts`
 
 </details>
 
