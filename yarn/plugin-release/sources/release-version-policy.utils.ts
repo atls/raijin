@@ -69,8 +69,12 @@ export const mergeReleaseVersionDeferredDecision = (
     return next
   }
 
-  if (!isReleaseVersionStrategy(next)) {
+  if (!isReleaseVersionStrategy(current)) {
     return current
+  }
+
+  if (!isReleaseVersionStrategy(next)) {
+    return next
   }
 
   return resolveReleaseVersionDeferredStrategy(current, next)

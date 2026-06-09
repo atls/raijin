@@ -74,6 +74,7 @@ test('should merge existing deferred release decisions without downgrade', () =>
   assert.equal(mergeReleaseVersionDeferredDecision('minor', 'patch'), 'minor')
   assert.equal(mergeReleaseVersionDeferredDecision('patch', 'major'), 'major')
   assert.equal(mergeReleaseVersionDeferredDecision('2.0.0', 'minor'), '2.0.0')
+  assert.equal(mergeReleaseVersionDeferredDecision('minor', 'decline'), 'decline')
 })
 
 test('should resolve strategies per changed workspace', () => {
