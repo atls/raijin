@@ -18,7 +18,7 @@ import { resolveReleaseVersionWorkspaceStrategies } from './release-version-poli
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
 
-const DEFAULT_GIT_RANGE = 'origin/master...HEAD'
+const DEFAULT_GIT_RANGE = 'origin/master..HEAD'
 
 const toWorkspaceIdent = (workspace: Workspace): string | undefined =>
   workspace.manifest.name ? structUtils.stringifyIdent(workspace.manifest.name) : undefined
