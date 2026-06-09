@@ -20,6 +20,7 @@ const HEADER_SEPARATOR = ': '
 const SCOPE_START = '('
 const SCOPE_END = ')'
 const BREAKING_MARKER = '!'
+const ROOT_WORKSPACE_CWD = '.'
 const BREAKING_CHANGE_PREFIXES = [
   'BREAKING CHANGE:',
   'BREAKING CHANGE ',
@@ -38,8 +39,31 @@ const compareStrategies = (
   next: ReleaseVersionStrategy
 ): ReleaseVersionStrategy => (STRATEGY_WEIGHT[next] > STRATEGY_WEIGHT[current] ? next : current)
 
-const isWorkspaceFile = (file: string, workspace: ReleaseVersionWorkspace): boolean =>
+const isRootWorkspace = (workspace: ReleaseVersionWorkspace): boolean =>
+  workspace.relativeCwd === ROOT_WORKSPACE_CWD
+
+const isNestedWorkspaceFile = (file: string, workspace: ReleaseVersionWorkspace): boolean =>
   file === workspace.relativeCwd || file.startsWith(`${workspace.relativeCwd}/`)
+
+const isClaimedByNestedWorkspace = (
+  file: string,
+  workspaces: ReadonlyArray<ReleaseVersionWorkspace>
+): boolean =>
+  workspaces.some(
+    (workspace) => !isRootWorkspace(workspace) && isNestedWorkspaceFile(file, workspace)
+  )
+
+const isWorkspaceFile = (
+  file: string,
+  workspace: ReleaseVersionWorkspace,
+  workspaces: ReadonlyArray<ReleaseVersionWorkspace>
+): boolean => {
+  if (isRootWorkspace(workspace)) {
+    return !isClaimedByNestedWorkspace(file, workspaces)
+  }
+
+  return isNestedWorkspaceFile(file, workspace)
+}
 
 const isConventionalType = (type: string): boolean =>
   type.length > 0 && [...type].every((char) => char >= 'a' && char <= 'z')
@@ -119,7 +143,7 @@ export const resolveReleaseVersionWorkspaceStrategies = (
     }
 
     for (const workspace of workspaces) {
-      if (!change.files.some((file) => isWorkspaceFile(file, workspace))) {
+      if (!change.files.some((file) => isWorkspaceFile(file, workspace, workspaces))) {
         continue
       }
 

@@ -7,16 +7,22 @@ import { test }                                     from 'node:test'
 import { resolveReleaseVersionStrategy }            from '../release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from '../release-version-policy.utils.js'
 
-const workspaces: Array<ReleaseVersionWorkspace> = [
-  {
-    ident: '@atls/code-runtime',
-    relativeCwd: 'runtime/code-runtime',
-  },
-  {
-    ident: '@atls/code-test',
-    relativeCwd: 'code/code-test',
-  },
-]
+const rootWorkspace: ReleaseVersionWorkspace = {
+  ident: '@atls/raijin',
+  relativeCwd: '.',
+}
+
+const runtimeWorkspace: ReleaseVersionWorkspace = {
+  ident: '@atls/code-runtime',
+  relativeCwd: 'runtime/code-runtime',
+}
+
+const testWorkspace: ReleaseVersionWorkspace = {
+  ident: '@atls/code-test',
+  relativeCwd: 'code/code-test',
+}
+
+const workspaces: Array<ReleaseVersionWorkspace> = [rootWorkspace, runtimeWorkspace, testWorkspace]
 
 test('should map feature commits to minor strategy', () => {
   assert.equal(resolveReleaseVersionStrategy('feat(runtime): add loader'), 'minor')
@@ -55,11 +61,11 @@ test('should resolve strategies per changed workspace', () => {
 
   assert.deepEqual(resolveReleaseVersionWorkspaceStrategies(workspaces, changes), [
     {
-      workspace: workspaces[1],
+      workspace: testWorkspace,
       strategy: 'patch',
     },
     {
-      workspace: workspaces[0],
+      workspace: runtimeWorkspace,
       strategy: 'minor',
     },
   ])
@@ -83,7 +89,7 @@ test('should keep highest strategy per workspace', () => {
 
   assert.deepEqual(resolveReleaseVersionWorkspaceStrategies(workspaces, changes), [
     {
-      workspace: workspaces[0],
+      workspace: runtimeWorkspace,
       strategy: 'major',
     },
   ])
@@ -99,8 +105,28 @@ test('should not match sibling workspace path prefixes', () => {
 
   assert.deepEqual(resolveReleaseVersionWorkspaceStrategies(workspaces, changes), [
     {
-      workspace: workspaces[1],
+      workspace: testWorkspace,
       strategy: 'minor',
+    },
+  ])
+})
+
+test('should resolve root workspace files not claimed by nested workspaces', () => {
+  const changes: Array<ReleaseVersionChange> = [
+    {
+      message: 'fix(root): update release policy',
+      files: ['package.json', 'runtime/code-runtime/src/typescript.ts'],
+    },
+  ]
+
+  assert.deepEqual(resolveReleaseVersionWorkspaceStrategies(workspaces, changes), [
+    {
+      workspace: rootWorkspace,
+      strategy: 'patch',
+    },
+    {
+      workspace: runtimeWorkspace,
+      strategy: 'patch',
     },
   ])
 })
