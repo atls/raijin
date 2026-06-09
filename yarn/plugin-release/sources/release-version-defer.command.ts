@@ -31,6 +31,7 @@ const DEFAULT_GIT_BASE_REF = 'origin/HEAD'
 const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
 const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
+const DECLINE_DECISION = 'decline'
 
 const isErrorWithCode = (error: unknown, code: string): boolean =>
   typeof error === 'object' &&
@@ -190,6 +191,35 @@ const getReleaseVersionChanges = async (
   return getLocalChanges(project, gitRange ?? DEFAULT_GIT_RANGE)
 }
 
+export const parseDeferredReleaseDecisions = (versionContent: string): Map<string, string> => {
+  const versionData = parseSyml(versionContent) as {
+    releases?: Record<string, unknown>
+    declined?: Array<unknown>
+  }
+  const decisions = new Map<string, string>()
+
+  for (const ident of versionData.declined ?? []) {
+    if (typeof ident !== 'string') {
+      continue
+    }
+
+    decisions.set(
+      ident,
+      mergeReleaseVersionDeferredDecision(decisions.get(ident), DECLINE_DECISION)
+    )
+  }
+
+  for (const [ident, decision] of Object.entries(versionData.releases ?? {})) {
+    if (typeof decision !== 'string') {
+      continue
+    }
+
+    decisions.set(ident, mergeReleaseVersionDeferredDecision(decisions.get(ident), decision))
+  }
+
+  return decisions
+}
+
 const getDeferredReleaseDecisions = async (
   configuration: Configuration
 ): Promise<Map<string, string>> => {
@@ -215,15 +245,9 @@ const getDeferredReleaseDecisions = async (
     const versionPath = ppath.join(deferredVersionFolder, entry)
     // eslint-disable-next-line no-await-in-loop
     const versionContent = await xfs.readFilePromise(versionPath, 'utf8')
-    const versionData = parseSyml(versionContent) as {
-      releases?: Record<string, unknown>
-    }
+    const versionDecisions = parseDeferredReleaseDecisions(versionContent)
 
-    for (const [ident, decision] of Object.entries(versionData.releases ?? {})) {
-      if (typeof decision !== 'string') {
-        continue
-      }
-
+    for (const [ident, decision] of versionDecisions) {
       decisions.set(ident, mergeReleaseVersionDeferredDecision(decisions.get(ident), decision))
     }
   }

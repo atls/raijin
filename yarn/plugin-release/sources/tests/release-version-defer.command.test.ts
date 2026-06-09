@@ -1,8 +1,9 @@
-import assert                          from 'node:assert/strict'
-import { test }                        from 'node:test'
+import assert                            from 'node:assert/strict'
+import { test }                          from 'node:test'
 
-import { selectLocalCommitDiffParent } from '../release-version-defer.command.js'
-import { toGitHubChange }              from '../release-version-defer.command.js'
+import { parseDeferredReleaseDecisions } from '../release-version-defer.command.js'
+import { selectLocalCommitDiffParent }   from '../release-version-defer.command.js'
+import { toGitHubChange }                from '../release-version-defer.command.js'
 
 test('should include previous GitHub filenames for renamed files', () => {
   const change = toGitHubChange({
@@ -40,4 +41,19 @@ test('should fall back to the first parent when all merge parents are local', ()
     ),
     'feature-parent'
   )
+})
+
+test('should preserve declined deferred decisions', () => {
+  const decisions = parseDeferredReleaseDecisions(
+    [
+      'declined:',
+      '  - "@atls/code-runtime"',
+      'releases:',
+      '  "@atls/code-runtime": minor',
+      '  "@atls/code-test": patch',
+    ].join('\n')
+  )
+
+  assert.equal(decisions.get('@atls/code-runtime'), 'decline')
+  assert.equal(decisions.get('@atls/code-test'), 'patch')
 })
