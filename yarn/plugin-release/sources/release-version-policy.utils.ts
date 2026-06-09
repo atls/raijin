@@ -31,6 +31,7 @@ const BREAKING_CHANGE_PREFIXES = [
   'BREAKING-CHANGE:',
   'BREAKING-CHANGE ',
 ]
+const COMMIT_FOOTER_PATTERN = /^(?:[A-Za-z0-9-]+|BREAKING CHANGE)(?:: | #).+/
 
 const STRATEGY_WEIGHT: Record<ReleaseVersionStrategy, number> = {
   patch: 0,
@@ -133,11 +134,39 @@ const isWorkspaceFile = (
 const isConventionalType = (type: string): boolean =>
   type.length > 0 && [...type].every((char) => char >= 'a' && char <= 'z')
 
+const isBlankLine = (line: string): boolean => line.trim().length === 0
+
+const isCommitFooterLine = (line: string): boolean => COMMIT_FOOTER_PATTERN.test(line)
+
+const getCommitFooterLines = (message: string): Array<string> => {
+  const lines = message.split('\n').map((line) => line.replace('\r', ''))
+
+  while (lines.length > 0 && isBlankLine(lines[lines.length - 1])) {
+    lines.pop()
+  }
+
+  let footerStart = lines.length
+
+  while (footerStart > 0 && !isBlankLine(lines[footerStart - 1])) {
+    footerStart -= 1
+  }
+
+  if (footerStart === 0 || footerStart === lines.length) {
+    return []
+  }
+
+  const footerLines = lines.slice(footerStart)
+
+  if (!footerLines.every(isCommitFooterLine)) {
+    return []
+  }
+
+  return footerLines
+}
+
 const hasBreakingChangeFooter = (message: string): boolean =>
-  message
-    .split('\n')
-    .map((line) => line.replace('\r', ''))
-    .some((line) => BREAKING_CHANGE_PREFIXES.some((prefix) => line.startsWith(prefix)))
+  getCommitFooterLines(message).some((line) =>
+    BREAKING_CHANGE_PREFIXES.some((prefix) => line.startsWith(prefix)))
 
 const parseCommitHeader = (header: string): { type: string; breaking: boolean } | undefined => {
   const separatorIndex = header.indexOf(HEADER_SEPARATOR)

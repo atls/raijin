@@ -49,6 +49,43 @@ test('should map breaking commits to major strategy', () => {
   )
 })
 
+test('should map breaking footer after body to major strategy', () => {
+  assert.equal(
+    resolveReleaseVersionStrategy(
+      [
+        'fix(runtime): remove patched loader',
+        '',
+        'The loader no longer accepts legacy hooks.',
+        '',
+        'BREAKING CHANGE: runtime changed',
+      ].join('\n')
+    ),
+    'major'
+  )
+})
+
+test('should ignore breaking change markers outside footer block', () => {
+  assert.equal(
+    resolveReleaseVersionStrategy(
+      [
+        'fix(runtime): repair loader',
+        '',
+        'The generated docs include this example:',
+        'BREAKING CHANGE: not a footer',
+      ].join('\n')
+    ),
+    'patch'
+  )
+  assert.equal(
+    resolveReleaseVersionStrategy(
+      ['fix(runtime): repair loader', '', '```text', 'BREAKING CHANGE: not a footer', '```'].join(
+        '\n'
+      )
+    ),
+    'patch'
+  )
+})
+
 test('should map release affecting conventional commits to patch strategy', () => {
   assert.equal(resolveReleaseVersionStrategy('fix(runtime): repair loader'), 'patch')
   assert.equal(resolveReleaseVersionStrategy('chore(runtime): update metadata'), 'patch')
