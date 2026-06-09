@@ -1,5 +1,17 @@
 
 
+## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-files@1.0.4...@atls/yarn-plugin-files@1.0.5) (2026-06-09)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-files:** paginate commit file lists ([7b3f737](https://github.com/atls/raijin/commit/7b3f73782133320efc35905adf530ec53764912c))
+
+
+
+
+
 ## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-files@1.0.3...@atls/yarn-plugin-files@1.0.4) (2026-04-29)
 
 

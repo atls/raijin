@@ -1,5 +1,33 @@
 
 
+## [1.1.75](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.75...@atls/yarn-cli@1.1.75) (2026-06-09)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-files:** paginate commit file lists ([7b3f737](https://github.com/atls/raijin/commit/7b3f73782133320efc35905adf530ec53764912c))
+* **yarn-plugin-release:** exclude private child root changes ([86751d4](https://github.com/atls/raijin/commit/86751d419147a9aad356541b5dfa94c0a4dec93a))
+* **yarn-plugin-release:** honor explicit release range in ci ([1c6b327](https://github.com/atls/raijin/commit/1c6b32728668592254b57021691dfd87f5c9a22f))
+* **yarn-plugin-release:** include merge commit files locally ([511eb30](https://github.com/atls/raijin/commit/511eb308e8ba9213a0046244d7c5346345f7c848))
+* **yarn-plugin-release:** include renamed github files ([dd940aa](https://github.com/atls/raijin/commit/dd940aae9bed90116457226b7e24eb0492779aa6))
+* **yarn-plugin-release:** include root workspace release changes ([8d80996](https://github.com/atls/raijin/commit/8d809960e62bd9717d6a0392b2f4c3c7abbf9311))
+* **yarn-plugin-release:** keep multiline breaking footers ([a0bfc02](https://github.com/atls/raijin/commit/a0bfc02d7a3550e086f73f486e27d86049ac53d0))
+* **yarn-plugin-release:** preserve declined deferred decisions ([eca2265](https://github.com/atls/raijin/commit/eca2265e8d10ab8a7e1f5d72db70a7a6f020dc4b))
+* **yarn-plugin-release:** preserve deferred release levels ([df18529](https://github.com/atls/raijin/commit/df18529d577643e4985bac6ef6e4717587cf30a6))
+* **yarn-plugin-release:** select merge diff parent ([b236122](https://github.com/atls/raijin/commit/b236122ff764ca3fdb678c85825d35c01f0f2c95))
+* **yarn-plugin-release:** use one-sided default release range ([51903ef](https://github.com/atls/raijin/commit/51903ef1890c76adeeca559a5cd7a7f78088614c))
+* **yarn-plugin-release:** use remote default branch for release range ([eddc2d9](https://github.com/atls/raijin/commit/eddc2d902e4b75a7754dee5f099e90f6f8c1cb40))
+
+### Features
+
+
+* **yarn-plugin-release:** add conventional deferred version policy ([47b6f01](https://github.com/atls/raijin/commit/47b6f0186cbb177c325c37cdb4d79d83d79f77bd))
+
+
+
+
+
 ## [1.1.74](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.73...@atls/yarn-cli@1.1.74) (2026-06-08)
 
 
