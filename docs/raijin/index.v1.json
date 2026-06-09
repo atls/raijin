@@ -294,6 +294,17 @@
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
     {
+      "command": "release version defer",
+      "pathTokens": ["release", "version", "defer"],
+      "className": "ReleaseVersionDeferCommand",
+      "plugin": "@atls/yarn-plugin-release",
+      "pluginDir": "plugin-release",
+      "domain": "release",
+      "source": "yarn/plugin-release/sources/release-version-defer.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
       "command": "renderer build",
       "pathTokens": ["renderer", "build"],
       "className": "RendererBuildCommand",
@@ -1078,6 +1089,7 @@
       "library build",
       "lint",
       "release create",
+      "release version defer",
       "renderer build",
       "renderer dev",
       "service build",
@@ -1129,5 +1141,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-08T15:50:33.273Z"
+  "lastGenerated": "2026-06-09T10:12:29.890Z"
 }

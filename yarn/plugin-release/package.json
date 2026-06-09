@@ -19,6 +19,7 @@
   "dependencies": {
     "@atls/code-changelog": "workspace:*",
     "@atls/code-github": "workspace:*",
+    "@atls/yarn-plugin-files": "workspace:*",
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {

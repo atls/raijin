@@ -1,0 +1,157 @@
+import type { Workspace }                           from '@yarnpkg/core'
+
+import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
+import type { ReleaseVersionWorkspace }             from './release-version-policy.utils.js'
+
+import { BaseCommand }                              from '@yarnpkg/cli'
+import { WorkspaceRequiredError }                   from '@yarnpkg/cli'
+import { Configuration }                            from '@yarnpkg/core'
+import { Project }                                  from '@yarnpkg/core'
+import { StreamReport }                             from '@yarnpkg/core'
+import { execUtils }                                from '@yarnpkg/core'
+import { structUtils }                              from '@yarnpkg/core'
+import { Option }                                   from 'clipanion'
+
+import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
+
+import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
+
+type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
+
+const DEFAULT_GIT_RANGE = 'origin/master...HEAD'
+
+const toWorkspaceIdent = (workspace: Workspace): string | undefined =>
+  workspace.manifest.name ? structUtils.stringifyIdent(workspace.manifest.name) : undefined
+
+const isReleasedWorkspace = (workspace: Workspace): boolean =>
+  workspace.manifest.raw.private !== true && Boolean(toWorkspaceIdent(workspace))
+
+const toReleaseWorkspace = (workspace: Workspace): ReleaseVersionWorkspace | undefined => {
+  const ident = toWorkspaceIdent(workspace)
+
+  if (!ident || !isReleasedWorkspace(workspace)) {
+    return undefined
+  }
+
+  return {
+    ident,
+    relativeCwd: workspace.relativeCwd,
+  }
+}
+
+const toGitHubChange = (commit: GitHubCommit): ReleaseVersionChange => ({
+  message: commit.data.commit.message,
+  files: (commit.data.files ?? []).map((file) => file.filename).filter(Boolean),
+})
+
+const getGitHubChanges = async (): Promise<Array<ReleaseVersionChange>> =>
+  (await getChangedCommmits()).map(toGitHubChange)
+
+const getLocalCommitShas = async (project: Project, gitRange: string): Promise<Array<string>> => {
+  const { stdout } = await execUtils.execvp('git', ['rev-list', '--reverse', gitRange], {
+    cwd: project.cwd,
+    strict: true,
+  })
+
+  return stdout.split(/\r?\n/).filter(Boolean)
+}
+
+const getLocalCommitChange = async (
+  project: Project,
+  sha: string
+): Promise<ReleaseVersionChange> => {
+  const { stdout } = await execUtils.execvp(
+    'git',
+    ['show', '--name-only', '--format=%B%x00', '-z', '--no-renames', '--max-count=1', sha],
+    {
+      cwd: project.cwd,
+      strict: true,
+    }
+  )
+
+  const [message = '', ...files] = stdout.split('\0')
+
+  return {
+    message,
+    files: files.map((file) => file.trim()).filter(Boolean),
+  }
+}
+
+const getLocalChanges = async (
+  project: Project,
+  gitRange: string
+): Promise<Array<ReleaseVersionChange>> =>
+  Promise.all(
+    (await getLocalCommitShas(project, gitRange)).map(async (sha) =>
+      getLocalCommitChange(project, sha))
+  )
+
+const getReleaseVersionChanges = async (
+  project: Project,
+  gitRange: string
+): Promise<Array<ReleaseVersionChange>> => {
+  if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
+    return getGitHubChanges()
+  }
+
+  return getLocalChanges(project, gitRange)
+}
+
+export class ReleaseVersionDeferCommand extends BaseCommand {
+  static override paths = [['release', 'version', 'defer']]
+
+  since = Option.String('--since', DEFAULT_GIT_RANGE)
+
+  dryRun = Option.Boolean('--dry-run', false)
+
+  override async execute(): Promise<number> {
+    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { project, workspace } = await Project.find(configuration, this.context.cwd)
+
+    if (!workspace) throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
+
+    const commandReport = await StreamReport.start(
+      {
+        stdout: this.context.stdout,
+        configuration,
+      },
+      async (report) => {
+        const workspaces = project.workspaces
+          .map(toReleaseWorkspace)
+          .filter((item): item is ReleaseVersionWorkspace => Boolean(item))
+
+        const changes = await getReleaseVersionChanges(project, this.since)
+        const strategies = resolveReleaseVersionWorkspaceStrategies(workspaces, changes)
+
+        if (!strategies.length) {
+          report.reportInfo(null, 'No released workspaces need deferred version records')
+
+          return
+        }
+
+        for (const { workspace: changedWorkspace, strategy } of strategies) {
+          report.reportInfo(null, `Deferring ${changedWorkspace.ident} as ${strategy}`)
+
+          if (this.dryRun) {
+            continue
+          }
+
+          // Deferred version records share the same `.yarn/versions` state.
+          // eslint-disable-next-line no-await-in-loop
+          const code = await this.cli.run(
+            ['workspace', changedWorkspace.ident, 'version', strategy, '--deferred'],
+            {
+              cwd: project.cwd,
+            }
+          )
+
+          if (code > 0) {
+            throw new Error(`Failed to defer ${changedWorkspace.ident} as ${strategy}`)
+          }
+        }
+      }
+    )
+
+    return commandReport.exitCode()
+  }
+}
