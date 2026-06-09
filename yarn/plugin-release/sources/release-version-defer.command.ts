@@ -17,6 +17,7 @@ import { getChangedCommmits }                       from '@atls/yarn-plugin-file
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
+type GitHubCommitFile = NonNullable<GitHubCommit['data']['files']>[number]
 
 const DEFAULT_GIT_BASE_REF = 'origin/HEAD'
 const HEAD_REF = 'HEAD'
@@ -41,9 +42,13 @@ const toReleaseWorkspace = (workspace: Workspace): ReleaseVersionWorkspace | und
   }
 }
 
-const toGitHubChange = (commit: GitHubCommit): ReleaseVersionChange => ({
+const toGitHubFileNames = (file: GitHubCommitFile): Array<string> =>
+  [file.filename, file.previous_filename].filter((filename): filename is string =>
+    Boolean(filename))
+
+export const toGitHubChange = (commit: GitHubCommit): ReleaseVersionChange => ({
   message: commit.data.commit.message,
-  files: (commit.data.files ?? []).map((file) => file.filename).filter(Boolean),
+  files: [...new Set((commit.data.files ?? []).flatMap(toGitHubFileNames))],
 })
 
 const getGitHubChanges = async (): Promise<Array<ReleaseVersionChange>> =>
