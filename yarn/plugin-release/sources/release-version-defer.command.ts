@@ -88,19 +88,19 @@ const getLocalChanges = async (
 
 const getReleaseVersionChanges = async (
   project: Project,
-  gitRange: string
+  gitRange?: string
 ): Promise<Array<ReleaseVersionChange>> => {
-  if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
+  if (gitRange === undefined && process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
     return getGitHubChanges()
   }
 
-  return getLocalChanges(project, gitRange)
+  return getLocalChanges(project, gitRange ?? DEFAULT_GIT_RANGE)
 }
 
 export class ReleaseVersionDeferCommand extends BaseCommand {
   static override paths = [['release', 'version', 'defer']]
 
-  since = Option.String('--since', DEFAULT_GIT_RANGE)
+  since = Option.String('--since')
 
   dryRun = Option.Boolean('--dry-run', false)
 
