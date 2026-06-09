@@ -1,7 +1,8 @@
-import assert             from 'node:assert/strict'
-import { test }           from 'node:test'
+import assert                          from 'node:assert/strict'
+import { test }                        from 'node:test'
 
-import { toGitHubChange } from '../release-version-defer.command.js'
+import { selectLocalCommitDiffParent } from '../release-version-defer.command.js'
+import { toGitHubChange }              from '../release-version-defer.command.js'
 
 test('should include previous GitHub filenames for renamed files', () => {
   const change = toGitHubChange({
@@ -22,4 +23,21 @@ test('should include previous GitHub filenames for renamed files', () => {
     message: 'fix(runtime): move loader',
     files: ['code/code-test/src/loader.ts', 'runtime/code-runtime/src/loader.ts'],
   })
+})
+
+test('should diff merge commits against the parent outside the local range', () => {
+  assert.equal(
+    selectLocalCommitDiffParent(['feature-parent', 'base-parent'], new Set(['feature-parent'])),
+    'base-parent'
+  )
+})
+
+test('should fall back to the first parent when all merge parents are local', () => {
+  assert.equal(
+    selectLocalCommitDiffParent(
+      ['feature-parent', 'topic-parent'],
+      new Set(['feature-parent', 'topic-parent'])
+    ),
+    'feature-parent'
+  )
 })

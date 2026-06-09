@@ -76,10 +76,55 @@ const getLocalCommitMessage = async (project: Project, sha: string): Promise<str
   return stdout
 }
 
-const getLocalCommitFiles = async (project: Project, sha: string): Promise<Array<string>> => {
+const getLocalCommitParentShas = async (project: Project, sha: string): Promise<Array<string>> => {
+  const { stdout } = await execUtils.execvp('git', ['rev-list', '--parents', '-n', '1', sha], {
+    cwd: project.cwd,
+    strict: true,
+  })
+
+  const [, ...parents] = stdout.trim().split(' ').filter(Boolean)
+
+  return parents
+}
+
+export const selectLocalCommitDiffParent = (
+  parents: ReadonlyArray<string>,
+  rangeShas: ReadonlySet<string>
+): string | undefined => parents.find((parent) => !rangeShas.has(parent)) ?? parents[0]
+
+const getLocalRootCommitFiles = async (project: Project, sha: string): Promise<Array<string>> => {
   const { stdout } = await execUtils.execvp(
     'git',
-    ['diff-tree', '--no-commit-id', '--name-only', '-r', '-m', '--root', '--no-renames', '-z', sha],
+    ['diff-tree', '--no-commit-id', '--name-only', '-r', '--root', '--no-renames', '-z', sha],
+    {
+      cwd: project.cwd,
+      strict: true,
+    }
+  )
+
+  return stdout
+    .split('\0')
+    .map((file) => file.trim())
+    .filter(Boolean)
+}
+
+const getLocalCommitFiles = async (
+  project: Project,
+  sha: string,
+  rangeShas: ReadonlySet<string>
+): Promise<Array<string>> => {
+  const diffParent = selectLocalCommitDiffParent(
+    await getLocalCommitParentShas(project, sha),
+    rangeShas
+  )
+
+  if (!diffParent) {
+    return getLocalRootCommitFiles(project, sha)
+  }
+
+  const { stdout } = await execUtils.execvp(
+    'git',
+    ['diff', '--name-only', '--no-renames', '-z', diffParent, sha],
     {
       cwd: project.cwd,
       strict: true,
@@ -98,20 +143,22 @@ const getLocalCommitFiles = async (project: Project, sha: string): Promise<Array
 
 const getLocalCommitChange = async (
   project: Project,
-  sha: string
+  sha: string,
+  rangeShas: ReadonlySet<string>
 ): Promise<ReleaseVersionChange> => ({
   message: await getLocalCommitMessage(project, sha),
-  files: await getLocalCommitFiles(project, sha),
+  files: await getLocalCommitFiles(project, sha, rangeShas),
 })
 
 const getLocalChanges = async (
   project: Project,
   gitRange: string
-): Promise<Array<ReleaseVersionChange>> =>
-  Promise.all(
-    (await getLocalCommitShas(project, gitRange)).map(async (sha) =>
-      getLocalCommitChange(project, sha))
-  )
+): Promise<Array<ReleaseVersionChange>> => {
+  const shas = await getLocalCommitShas(project, gitRange)
+  const rangeShas = new Set(shas)
+
+  return Promise.all(shas.map(async (sha) => getLocalCommitChange(project, sha, rangeShas)))
+}
 
 const getReleaseVersionChanges = async (
   project: Project,
