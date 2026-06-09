@@ -64,6 +64,20 @@ test('should map breaking footer after body to major strategy', () => {
   )
 })
 
+test('should map multiline breaking footer to major strategy', () => {
+  assert.equal(
+    resolveReleaseVersionStrategy(
+      [
+        'fix(runtime): remove patched loader',
+        '',
+        'BREAKING CHANGE: runtime changed',
+        'Follow the migration guide before upgrading.',
+      ].join('\n')
+    ),
+    'major'
+  )
+})
+
 test('should ignore breaking change markers outside footer block', () => {
   assert.equal(
     resolveReleaseVersionStrategy(

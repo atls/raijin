@@ -157,7 +157,7 @@ const getCommitFooterLines = (message: string): Array<string> => {
 
   const footerLines = lines.slice(footerStart)
 
-  if (!footerLines.every(isCommitFooterLine)) {
+  if (!isCommitFooterLine(footerLines[0])) {
     return []
   }
 
