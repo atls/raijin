@@ -22,7 +22,12 @@ const testWorkspace: ReleaseVersionWorkspace = {
   relativeCwd: 'code/code-test',
 }
 
+const privateWorkspace = {
+  relativeCwd: 'examples/private-service',
+}
+
 const workspaces: Array<ReleaseVersionWorkspace> = [rootWorkspace, runtimeWorkspace, testWorkspace]
+const workspaceOwners = [...workspaces, privateWorkspace]
 
 test('should map feature commits to minor strategy', () => {
   assert.equal(resolveReleaseVersionStrategy('feat(runtime): add loader'), 'minor')
@@ -119,7 +124,7 @@ test('should resolve root workspace files not claimed by nested workspaces', () 
     },
   ]
 
-  assert.deepEqual(resolveReleaseVersionWorkspaceStrategies(workspaces, changes), [
+  assert.deepEqual(resolveReleaseVersionWorkspaceStrategies(workspaces, changes, workspaceOwners), [
     {
       workspace: rootWorkspace,
       strategy: 'patch',
@@ -129,4 +134,18 @@ test('should resolve root workspace files not claimed by nested workspaces', () 
       strategy: 'patch',
     },
   ])
+})
+
+test('should not resolve private child workspace files as root workspace changes', () => {
+  const changes: Array<ReleaseVersionChange> = [
+    {
+      message: 'fix(private): update internal service',
+      files: ['examples/private-service/src/service.ts'],
+    },
+  ]
+
+  assert.deepEqual(
+    resolveReleaseVersionWorkspaceStrategies(workspaces, changes, workspaceOwners),
+    []
+  )
 })

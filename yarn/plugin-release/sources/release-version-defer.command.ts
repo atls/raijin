@@ -2,6 +2,7 @@ import type { Workspace }                           from '@yarnpkg/core'
 
 import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspace }             from './release-version-policy.utils.js'
+import type { ReleaseVersionWorkspaceOwner }        from './release-version-policy.utils.js'
 
 import { BaseCommand }                              from '@yarnpkg/cli'
 import { WorkspaceRequiredError }                   from '@yarnpkg/cli'
@@ -41,6 +42,10 @@ const toReleaseWorkspace = (workspace: Workspace): ReleaseVersionWorkspace | und
     relativeCwd: workspace.relativeCwd,
   }
 }
+
+const toReleaseWorkspaceOwner = (workspace: Workspace): ReleaseVersionWorkspaceOwner => ({
+  relativeCwd: workspace.relativeCwd,
+})
 
 const toGitHubFileNames = (file: GitHubCommitFile): Array<string> =>
   [file.filename, file.previous_filename].filter((filename): filename is string =>
@@ -193,9 +198,14 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
         const workspaces = project.workspaces
           .map(toReleaseWorkspace)
           .filter((item): item is ReleaseVersionWorkspace => Boolean(item))
+        const workspaceOwners = project.workspaces.map(toReleaseWorkspaceOwner)
 
         const changes = await getReleaseVersionChanges(project, this.since)
-        const strategies = resolveReleaseVersionWorkspaceStrategies(workspaces, changes)
+        const strategies = resolveReleaseVersionWorkspaceStrategies(
+          workspaces,
+          changes,
+          workspaceOwners
+        )
 
         if (!strategies.length) {
           report.reportInfo(null, 'No released workspaces need deferred version records')

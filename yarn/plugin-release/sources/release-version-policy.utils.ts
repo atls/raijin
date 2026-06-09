@@ -5,6 +5,10 @@ export interface ReleaseVersionWorkspace {
   relativeCwd: string
 }
 
+export interface ReleaseVersionWorkspaceOwner {
+  relativeCwd: string
+}
+
 export interface ReleaseVersionChange {
   message: string
   files: Array<string>
@@ -39,27 +43,27 @@ const compareStrategies = (
   next: ReleaseVersionStrategy
 ): ReleaseVersionStrategy => (STRATEGY_WEIGHT[next] > STRATEGY_WEIGHT[current] ? next : current)
 
-const isRootWorkspace = (workspace: ReleaseVersionWorkspace): boolean =>
+const isRootWorkspace = (workspace: ReleaseVersionWorkspaceOwner): boolean =>
   workspace.relativeCwd === ROOT_WORKSPACE_CWD
 
-const isNestedWorkspaceFile = (file: string, workspace: ReleaseVersionWorkspace): boolean =>
+const isNestedWorkspaceFile = (file: string, workspace: ReleaseVersionWorkspaceOwner): boolean =>
   file === workspace.relativeCwd || file.startsWith(`${workspace.relativeCwd}/`)
 
 const isClaimedByNestedWorkspace = (
   file: string,
-  workspaces: ReadonlyArray<ReleaseVersionWorkspace>
+  workspaceOwners: ReadonlyArray<ReleaseVersionWorkspaceOwner>
 ): boolean =>
-  workspaces.some(
+  workspaceOwners.some(
     (workspace) => !isRootWorkspace(workspace) && isNestedWorkspaceFile(file, workspace)
   )
 
 const isWorkspaceFile = (
   file: string,
   workspace: ReleaseVersionWorkspace,
-  workspaces: ReadonlyArray<ReleaseVersionWorkspace>
+  workspaceOwners: ReadonlyArray<ReleaseVersionWorkspaceOwner>
 ): boolean => {
   if (isRootWorkspace(workspace)) {
-    return !isClaimedByNestedWorkspace(file, workspaces)
+    return !isClaimedByNestedWorkspace(file, workspaceOwners)
   }
 
   return isNestedWorkspaceFile(file, workspace)
@@ -131,7 +135,8 @@ export const resolveReleaseVersionStrategy = (
 
 export const resolveReleaseVersionWorkspaceStrategies = (
   workspaces: ReadonlyArray<ReleaseVersionWorkspace>,
-  changes: ReadonlyArray<ReleaseVersionChange>
+  changes: ReadonlyArray<ReleaseVersionChange>,
+  workspaceOwners: ReadonlyArray<ReleaseVersionWorkspaceOwner> = workspaces
 ): Array<ReleaseVersionWorkspaceStrategy> => {
   const strategies = new Map<string, ReleaseVersionWorkspaceStrategy>()
 
@@ -143,7 +148,7 @@ export const resolveReleaseVersionWorkspaceStrategies = (
     }
 
     for (const workspace of workspaces) {
-      if (!change.files.some((file) => isWorkspaceFile(file, workspace, workspaces))) {
+      if (!change.files.some((file) => isWorkspaceFile(file, workspace, workspaceOwners))) {
         continue
       }
 
