@@ -1,4 +1,6 @@
 import type { Workspace }                           from '@yarnpkg/core'
+import type { Filename }                            from '@yarnpkg/fslib'
+import type { PortablePath }                        from '@yarnpkg/fslib'
 
 import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspace }             from './release-version-policy.utils.js'
@@ -11,10 +13,15 @@ import { Project }                                  from '@yarnpkg/core'
 import { StreamReport }                             from '@yarnpkg/core'
 import { execUtils }                                from '@yarnpkg/core'
 import { structUtils }                              from '@yarnpkg/core'
+import { ppath }                                    from '@yarnpkg/fslib'
+import { xfs }                                      from '@yarnpkg/fslib'
+import { parseSyml }                                from '@yarnpkg/parsers'
 import { Option }                                   from 'clipanion'
 
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
+import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
+import { resolveReleaseVersionDeferredStrategy }    from './release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
@@ -23,6 +30,13 @@ type GitHubCommitFile = NonNullable<GitHubCommit['data']['files']>[number]
 const DEFAULT_GIT_BASE_REF = 'origin/HEAD'
 const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
+const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
+
+const isErrorWithCode = (error: unknown, code: string): boolean =>
+  typeof error === 'object' &&
+  error !== null &&
+  'code' in error &&
+  (error as { code?: unknown }).code === code
 
 const toWorkspaceIdent = (workspace: Workspace): string | undefined =>
   workspace.manifest.name ? structUtils.stringifyIdent(workspace.manifest.name) : undefined
@@ -176,6 +190,47 @@ const getReleaseVersionChanges = async (
   return getLocalChanges(project, gitRange ?? DEFAULT_GIT_RANGE)
 }
 
+const getDeferredReleaseDecisions = async (
+  configuration: Configuration
+): Promise<Map<string, string>> => {
+  const deferredVersionFolder = configuration.get('deferredVersionFolder') as PortablePath
+  const decisions = new Map<string, string>()
+  let entries: Array<Filename>
+
+  try {
+    entries = await xfs.readdirPromise(deferredVersionFolder)
+  } catch (error) {
+    if (isErrorWithCode(error, MISSING_DIRECTORY_ERROR_CODE)) {
+      return decisions
+    }
+
+    throw error
+  }
+
+  for (const entry of entries) {
+    if (!entry.endsWith('.yml')) {
+      continue
+    }
+
+    const versionPath = ppath.join(deferredVersionFolder, entry)
+    // eslint-disable-next-line no-await-in-loop
+    const versionContent = await xfs.readFilePromise(versionPath, 'utf8')
+    const versionData = parseSyml(versionContent) as {
+      releases?: Record<string, unknown>
+    }
+
+    for (const [ident, decision] of Object.entries(versionData.releases ?? {})) {
+      if (typeof decision !== 'string') {
+        continue
+      }
+
+      decisions.set(ident, mergeReleaseVersionDeferredDecision(decisions.get(ident), decision))
+    }
+  }
+
+  return decisions
+}
+
 export class ReleaseVersionDeferCommand extends BaseCommand {
   static override paths = [['release', 'version', 'defer']]
 
@@ -213,8 +268,15 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
           return
         }
 
+        const deferredDecisions = await getDeferredReleaseDecisions(configuration)
+
         for (const { workspace: changedWorkspace, strategy } of strategies) {
-          report.reportInfo(null, `Deferring ${changedWorkspace.ident} as ${strategy}`)
+          const effectiveStrategy = resolveReleaseVersionDeferredStrategy(
+            deferredDecisions.get(changedWorkspace.ident),
+            strategy
+          )
+
+          report.reportInfo(null, `Deferring ${changedWorkspace.ident} as ${effectiveStrategy}`)
 
           if (this.dryRun) {
             continue
@@ -223,7 +285,7 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
           // Deferred version records share the same `.yarn/versions` state.
           // eslint-disable-next-line no-await-in-loop
           const code = await this.cli.run(
-            ['workspace', changedWorkspace.ident, 'version', strategy, '--deferred'],
+            ['workspace', changedWorkspace.ident, 'version', effectiveStrategy, '--deferred'],
             {
               cwd: project.cwd,
             }

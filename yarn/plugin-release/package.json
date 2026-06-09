@@ -20,6 +20,8 @@
     "@atls/code-changelog": "workspace:*",
     "@atls/code-github": "workspace:*",
     "@atls/yarn-plugin-files": "workspace:*",
+    "@yarnpkg/fslib": "3.1.5",
+    "@yarnpkg/parsers": "3.0.3",
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {

@@ -2729,6 +2729,8 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["@yarnpkg/cli", "virtual:ccae17f137fefbbaba6c5ad07c1c85d0eeb7c2d83d1717382e2500f9abd36b42c5a217d63d5beef22301d21ac6bd18bc3e8b2b111a393b68f24ae0ff8b227324#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
+          ["@yarnpkg/fslib", "npm:3.1.5"],\
+          ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
         ],\
         "packagePeers": [\
@@ -2749,6 +2751,8 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["@yarnpkg/cli", "virtual:ccae17f137fefbbaba6c5ad07c1c85d0eeb7c2d83d1717382e2500f9abd36b42c5a217d63d5beef22301d21ac6bd18bc3e8b2b111a393b68f24ae0ff8b227324#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
+          ["@yarnpkg/fslib", "npm:3.1.5"],\
+          ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
         ],\
         "linkType": "SOFT"\

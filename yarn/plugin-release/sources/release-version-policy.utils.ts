@@ -38,10 +38,43 @@ const STRATEGY_WEIGHT: Record<ReleaseVersionStrategy, number> = {
   major: 2,
 }
 
+const isReleaseVersionStrategy = (strategy: string): strategy is ReleaseVersionStrategy =>
+  Object.hasOwn(STRATEGY_WEIGHT, strategy)
+
 const compareStrategies = (
   current: ReleaseVersionStrategy,
   next: ReleaseVersionStrategy
 ): ReleaseVersionStrategy => (STRATEGY_WEIGHT[next] > STRATEGY_WEIGHT[current] ? next : current)
+
+export const resolveReleaseVersionDeferredStrategy = (
+  current: string | undefined,
+  next: ReleaseVersionStrategy
+): string => {
+  if (current === undefined) {
+    return next
+  }
+
+  if (!isReleaseVersionStrategy(current)) {
+    return current
+  }
+
+  return compareStrategies(current, next)
+}
+
+export const mergeReleaseVersionDeferredDecision = (
+  current: string | undefined,
+  next: string
+): string => {
+  if (current === undefined) {
+    return next
+  }
+
+  if (!isReleaseVersionStrategy(next)) {
+    return current
+  }
+
+  return resolveReleaseVersionDeferredStrategy(current, next)
+}
 
 const isRootWorkspace = (workspace: ReleaseVersionWorkspaceOwner): boolean =>
   workspace.relativeCwd === ROOT_WORKSPACE_CWD

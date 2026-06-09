@@ -4,6 +4,8 @@ import type { ReleaseVersionWorkspace }             from '../release-version-pol
 import assert                                       from 'node:assert/strict'
 import { test }                                     from 'node:test'
 
+import { mergeReleaseVersionDeferredDecision }      from '../release-version-policy.utils.js'
+import { resolveReleaseVersionDeferredStrategy }    from '../release-version-policy.utils.js'
 import { resolveReleaseVersionStrategy }            from '../release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from '../release-version-policy.utils.js'
 
@@ -50,6 +52,28 @@ test('should map release affecting conventional commits to patch strategy', () =
 
 test('should ignore non conventional commits', () => {
   assert.equal(resolveReleaseVersionStrategy('update runtime'), undefined)
+})
+
+test('should preserve higher existing deferred release strategy', () => {
+  assert.equal(resolveReleaseVersionDeferredStrategy('minor', 'patch'), 'minor')
+  assert.equal(resolveReleaseVersionDeferredStrategy('major', 'patch'), 'major')
+})
+
+test('should raise lower existing deferred release strategy', () => {
+  assert.equal(resolveReleaseVersionDeferredStrategy('patch', 'minor'), 'minor')
+  assert.equal(resolveReleaseVersionDeferredStrategy('minor', 'major'), 'major')
+})
+
+test('should preserve non-conventional existing deferred decisions', () => {
+  assert.equal(resolveReleaseVersionDeferredStrategy('2.0.0', 'patch'), '2.0.0')
+  assert.equal(resolveReleaseVersionDeferredStrategy('decline', 'minor'), 'decline')
+})
+
+test('should merge existing deferred release decisions without downgrade', () => {
+  assert.equal(mergeReleaseVersionDeferredDecision(undefined, 'patch'), 'patch')
+  assert.equal(mergeReleaseVersionDeferredDecision('minor', 'patch'), 'minor')
+  assert.equal(mergeReleaseVersionDeferredDecision('patch', 'major'), 'major')
+  assert.equal(mergeReleaseVersionDeferredDecision('2.0.0', 'minor'), '2.0.0')
 })
 
 test('should resolve strategies per changed workspace', () => {
