@@ -1,5 +1,5 @@
 name: Publish composite action
-description: Patch versions for changed packages before publish
+description: Apply deferred versions for changed packages before publish
 
 inputs:
   GITHUB_TOKEN:
@@ -9,11 +9,12 @@ runs:
   using: composite
 
   steps:
-    - name: Patch version
+    - name: Apply deferred versions
       shell: bash
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach -vt --exclude '{.,@atls/yarn-cli}' version patch
+        yarn release version defer
+        yarn version apply --all
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
