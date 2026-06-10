@@ -1,6 +1,6 @@
 {
   "name": "@atls/yarn-plugin-release",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
@@ -19,6 +19,9 @@
   "dependencies": {
     "@atls/code-changelog": "workspace:*",
     "@atls/code-github": "workspace:*",
+    "@atls/yarn-plugin-files": "workspace:*",
+    "@yarnpkg/fslib": "3.1.5",
+    "@yarnpkg/parsers": "3.0.3",
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {

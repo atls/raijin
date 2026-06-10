@@ -6,9 +6,12 @@ import { getOctokit }     from '@actions/github'
 import { execUtils }      from '@yarnpkg/core'
 
 type GetCommitResponseData = Endpoints['GET /repos/{owner}/{repo}/commits/{ref}']['response']
+type GetCommitFileData = NonNullable<GetCommitResponseData['data']['files']>[number]
 type GetCommitsResponseData = Endpoints['GET /repos/{owner}/{repo}/commits']['response']['data']
 type GetPullFilesResponseData =
   Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/files']['response']['data']
+
+const COMMIT_FILES_PAGE_SIZE = 100
 
 export const getEventCommmits = async (): Promise<
   GetCommitResponseData | GetCommitsResponseData
@@ -31,12 +34,32 @@ export const getEventCommmits = async (): Promise<
 }
 
 export const getCommitData = async (ref: string): Promise<GetCommitResponseData> => {
-  const commit = await getOctokit(process.env.GITHUB_TOKEN!).rest.repos.getCommit({
+  const octokit = getOctokit(process.env.GITHUB_TOKEN!)
+  const files: Array<GetCommitFileData> = []
+  let commit: GetCommitResponseData | undefined
+
+  for await (const response of octokit.paginate.iterator(octokit.rest.repos.getCommit, {
     ...context.repo,
     ref,
-  })
+    per_page: COMMIT_FILES_PAGE_SIZE,
+  })) {
+    const commitResponse = response as GetCommitResponseData
 
-  return commit as GetCommitResponseData
+    commit ??= commitResponse
+    files.push(...(commitResponse.data.files ?? []))
+  }
+
+  if (!commit) {
+    throw new Error(`Could not resolve commit "${ref}"`)
+  }
+
+  return {
+    ...commit,
+    data: {
+      ...commit.data,
+      files,
+    },
+  }
 }
 
 export const getChangedCommmits = async (): Promise<Array<GetCommitResponseData>> => {

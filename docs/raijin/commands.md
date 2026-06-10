@@ -307,7 +307,7 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 ### Domain `release`
 
-- Commands: `release create`
+- Commands: `release create`, `release version defer`
 
 <details>
 <summary>Domain details: `release`</summary>
@@ -320,6 +320,15 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Example: `yarn release create`
 - Plugin: `@atls/yarn-plugin-release`
 - Source: `yarn/plugin-release/sources/release-create.command.ts`
+
+<!-- sync:command-card:release-version-defer -->
+
+#### `release version defer`
+
+- Status: `active`
+- Example: `yarn release version defer`
+- Plugin: `@atls/yarn-plugin-release`
+- Source: `yarn/plugin-release/sources/release-version-defer.command.ts`
 
 </details>
 
