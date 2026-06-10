@@ -1,5 +1,17 @@
 
 
+## [2.0.41](https://github.com/atls/raijin/compare/@atls/code-test@2.0.40...@atls/code-test@2.0.41) (2026-06-10)
+
+
+### Features
+
+
+* **code-runtime:** introduce conventional typescript loader ([fa3ecac](https://github.com/atls/raijin/commit/fa3ecacd454399055397e9b60d4cc731b6ab2569))
+
+
+
+
+
 ## [2.0.40](https://github.com/atls/raijin/compare/@atls/code-test@2.0.39...@atls/code-test@2.0.40) (2026-06-01)
 
 

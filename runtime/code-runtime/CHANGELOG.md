@@ -1,5 +1,22 @@
 
 
+## [2.1.31](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.30...@atls/code-runtime@2.1.31) (2026-06-10)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** preserve loader tsconfig options ([8ee69d3](https://github.com/atls/raijin/commit/8ee69d315d4c2706d0d6164e641c958b145189f8))
+
+### Features
+
+
+* **code-runtime:** introduce conventional typescript loader ([fa3ecac](https://github.com/atls/raijin/commit/fa3ecacd454399055397e9b60d4cc731b6ab2569))
+
+
+
+
+
 ## [2.1.30](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.29...@atls/code-runtime@2.1.30) (2026-06-01)
 
 
