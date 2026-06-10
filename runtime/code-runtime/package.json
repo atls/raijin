@@ -10,6 +10,7 @@
     "./eslint": "./src/eslint.ts",
     "./webpack": "./src/webpack.ts",
     "./typescript": "./src/typescript.ts",
+    "./typescript-loader": "./src/typescript-loader.ts",
     "./svgr": "./src/svgr.ts",
     "./ts-node-register": "./src/ts-node-register.ts",
     "./ts-ext-register": "./src/ts-ext-register.ts"
@@ -38,7 +39,6 @@
     "node-loader": "2.1.0",
     "strip-json-comments": "3.1.1",
     "ts-loader": "9.5.2",
-    "ts-node": "10.9.2",
     "typescript": "5.5.4",
     "webpack": "5.98.0"
   },
@@ -72,6 +72,11 @@
         "import": "./dist/typescript.js",
         "default": "./dist/typescript.js",
         "types": "./dist/typescript.d.ts"
+      },
+      "./typescript-loader": {
+        "import": "./dist/typescript-loader.js",
+        "default": "./dist/typescript-loader.js",
+        "types": "./dist/typescript-loader.d.ts"
       },
       "./svgr": {
         "import": "./dist/svgr.js",

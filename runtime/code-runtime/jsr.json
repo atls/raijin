@@ -8,6 +8,7 @@
     "./eslint": "./src/eslint.ts",
     "./webpack": "./src/webpack.ts",
     "./typescript": "./src/typescript.ts",
+    "./typescript-loader": "./src/typescript-loader.ts",
     "./svgr": "./src/svgr.ts",
     "./ts-node-register": "./src/ts-node-register.ts",
     "./ts-ext-register": "./src/ts-ext-register.ts"
