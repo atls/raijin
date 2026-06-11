@@ -1,5 +1,17 @@
 
 
+## [1.1.77](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.78...@atls/yarn-cli@1.1.77) (2026-06-11)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-release:** tolerate existing release tags ([7995971](https://github.com/atls/raijin/commit/79959715dc93e8c6e5e0d6eaf8abb036dd3da6a4))
+
+
+
+
+
 ## [1.1.76](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.76...@atls/yarn-cli@1.1.76) (2026-06-10)
 
 
