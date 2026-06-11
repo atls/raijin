@@ -21,14 +21,12 @@
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/cli-ui-schematics-component": "workspace:*",
     "@atls/code-schematics": "workspace:*",
-    "@atls/yarn-run-utils": "workspace:*",
     "@yarnpkg/libui": "3.0.1",
     "clipanion": "4.0.0-rc.2",
     "force-stdin-tty": "0.0.1",
     "typanion": "3.14.0"
   },
   "devDependencies": {
-    "@atls/yarn-test-utils": "workspace:*",
     "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",

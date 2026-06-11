@@ -1040,30 +1040,6 @@
       "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-run-utils",
-      "location": "yarn/run-utils",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": []
-    },
-    {
-      "name": "@atls/yarn-test-utils",
-      "location": "yarn/test-utils",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": []
-    },
-    {
-      "name": "@atls/yarn-workspace-utils",
-      "location": "yarn/workspace-utils",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": []
     }
   ],
   "availability": {
@@ -1141,5 +1117,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-09T10:12:29.890Z"
+  "lastGenerated": "2026-06-11T11:38:07.745Z"
 }

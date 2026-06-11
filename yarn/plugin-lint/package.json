@@ -23,13 +23,11 @@
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/code-lint": "workspace:*",
     "@atls/yarn-plugin-tools": "workspace:*",
-    "@atls/yarn-run-utils": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "ink": "3.2.0",
     "react": "18.3.1"
   },
   "devDependencies": {
-    "@atls/yarn-test-utils": "workspace:*",
     "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",

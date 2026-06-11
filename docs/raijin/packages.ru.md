@@ -37,9 +37,6 @@
 - `@atls/yarn-plugin-typescript` — `yarn/plugin-typescript`
 - `@atls/yarn-plugin-ui` — `yarn/plugin-ui`
 - `@atls/yarn-plugin-workspaces` — `yarn/plugin-workspaces`
-- `@atls/yarn-run-utils` — `yarn/run-utils`
-- `@atls/yarn-test-utils` — `yarn/test-utils`
-- `@atls/yarn-workspace-utils` — `yarn/workspace-utils`
 
 <details>
 <summary>Подробности группы `yarn`</summary>
@@ -286,33 +283,6 @@
 - Группа: `yarn`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-run-utils -->
-
-#### `@atls/yarn-run-utils`
-
-- Локация: `yarn/run-utils`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: отсутствуют
-
-<!-- sync:package-card:atls-yarn-test-utils -->
-
-#### `@atls/yarn-test-utils`
-
-- Локация: `yarn/test-utils`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: отсутствуют
-
-<!-- sync:package-card:atls-yarn-workspace-utils -->
-
-#### `@atls/yarn-workspace-utils`
-
-- Локация: `yarn/workspace-utils`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: отсутствуют
 
 </details>
 

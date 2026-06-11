@@ -9,13 +9,13 @@ import { ppath }                     from '@yarnpkg/fslib'
 import { xfs }                       from '@yarnpkg/fslib'
 import stripAnsi                     from 'strip-ansi'
 
-import { PassThroughRunContext }     from '@atls/yarn-run-utils'
 import { getChangedFiles }           from '@atls/yarn-plugin-files'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
-import { getChangedWorkspaces }      from '@atls/yarn-workspace-utils'
+import { getChangedWorkspaces }      from '@atls/yarn-plugin-workspaces'
 
 import { GitHubChecks }              from './github.checks.js'
 import { AnnotationLevel }           from './github.checks.js'
+import { PassThroughRunContext }     from './pass-through-run.context.js'
 
 class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]

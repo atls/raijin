@@ -15,10 +15,9 @@ import { Project }                from '@yarnpkg/core'
 import { structUtils }            from '@yarnpkg/core'
 import { miscUtils }              from '@yarnpkg/core'
 
-import { SpinnerProgress }        from '@atls/yarn-run-utils'
-
 import { BADGES }                 from './badges.constants.js'
 import { COLORS }                 from './badges.constants.js'
+import { SpinnerProgress }        from './spinner.progress.js'
 
 class BadgesCommand extends BaseCommand {
   static paths = [['badges', 'generate']]

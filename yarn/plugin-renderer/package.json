@@ -24,8 +24,6 @@
     "localtunnel": "2.0.2"
   },
   "devDependencies": {
-    "@atls/yarn-run-utils": "workspace:*",
-    "@atls/yarn-test-utils": "workspace:*",
     "@types/cross-spawn": "6.0.6",
     "@types/localtunnel": "2.0.4",
     "@yarnpkg/builder": "4.2.0",

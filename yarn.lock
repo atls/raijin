@@ -1049,7 +1049,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-badges@workspace:yarn/plugin-badges"
   dependencies:
-    "@atls/yarn-run-utils": "workspace:*"
     "@types/child-process-promise": "npm:2.2.6"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1104,8 +1103,7 @@ __metadata:
     "@atls/code-typescript": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-workspace-utils": "workspace:*"
+    "@atls/yarn-plugin-workspaces": "workspace:*"
     "@babel/code-frame": "npm:7.24.7"
     "@octokit/types": "npm:13.5.0"
     "@types/babel__code-frame": "npm:7.0.6"
@@ -1227,8 +1225,6 @@ __metadata:
     "@atls/cli-ui-format-progress-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/code-format": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1249,7 +1245,6 @@ __metadata:
   dependencies:
     "@atls/code-pack": "workspace:*"
     "@atls/yarn-pack-utils": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
     "@iarna/toml": "npm:2.2.5"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1294,8 +1289,6 @@ __metadata:
     "@atls/cli-ui-typescript-progress-component": "workspace:*"
     "@atls/code-typescript": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1320,8 +1313,6 @@ __metadata:
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/code-lint": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1379,8 +1370,6 @@ __metadata:
   resolution: "@atls/yarn-plugin-renderer@workspace:yarn/plugin-renderer"
   dependencies:
     "@atls/yarn-plugin-tools": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:*"
     "@types/cross-spawn": "npm:6.0.6"
     "@types/localtunnel": "npm:2.0.4"
     "@yarnpkg/builder": "npm:4.2.0"
@@ -1404,8 +1393,6 @@ __metadata:
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-schematics-component": "workspace:*"
     "@atls/code-schematics": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1438,8 +1425,6 @@ __metadata:
     "@atls/code-service": "workspace:*"
     "@atls/yarn-pack-utils": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:*"
     "@monstrs/logger": "npm:0.0.20"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
@@ -1469,7 +1454,6 @@ __metadata:
     "@atls/code-test": "workspace:*"
     "@atls/config-typescript": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1515,8 +1499,6 @@ __metadata:
     "@atls/code-runtime": "workspace:*"
     "@atls/code-typescript": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1542,8 +1524,6 @@ __metadata:
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/code-icons": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
-    "@atls/yarn-run-utils": "workspace:*"
-    "@atls/yarn-test-utils": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1564,7 +1544,6 @@ __metadata:
   resolution: "@atls/yarn-plugin-workspaces@workspace:yarn/plugin-workspaces"
   dependencies:
     "@atls/yarn-plugin-files": "workspace:*"
-    "@atls/yarn-workspace-utils": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
@@ -1573,32 +1552,6 @@ __metadata:
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-run-utils@workspace:*, @atls/yarn-run-utils@workspace:yarn/run-utils":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-run-utils@workspace:yarn/run-utils"
-  dependencies:
-    "@yarnpkg/core": "npm:4.7.0"
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-test-utils@workspace:*, @atls/yarn-test-utils@workspace:yarn/test-utils":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-test-utils@workspace:yarn/test-utils"
-  dependencies:
-    "@yarnpkg/core": "npm:4.7.0"
-    "@yarnpkg/fslib": "npm:3.1.5"
-    "@yarnpkg/plugin-pack": "npm:4.0.4"
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-workspace-utils@workspace:*, @atls/yarn-workspace-utils@workspace:yarn/workspace-utils":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-workspace-utils@workspace:yarn/workspace-utils"
-  dependencies:
-    "@yarnpkg/core": "npm:4.7.0"
   languageName: unknown
   linkType: soft
 

@@ -7,7 +7,8 @@ import { structUtils }            from '@yarnpkg/core'
 import { Option }                 from 'clipanion'
 
 import { getChangedFiles }        from '@atls/yarn-plugin-files'
-import { getChangedWorkspaces }   from '@atls/yarn-workspace-utils'
+
+import { getChangedWorkspaces }   from './get-changed-workspaces.util.js'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static paths = [['workspaces', 'changed', 'foreach']]
