@@ -4,10 +4,11 @@ import type { PackOutputs } from './pack.interfaces.js'
 import { readFileSync }     from 'node:fs'
 
 import { stringify }        from '@iarna/toml'
-import { execUtils }        from '@yarnpkg/core'
+import type { execUtils }   from '@yarnpkg/core'
 import { xfs }              from '@yarnpkg/fslib'
 import { ppath }            from '@yarnpkg/fslib'
 
+import { execOrThrow }      from './pack.utils.js'
 import { installPack }      from './pack.utils.js'
 import { getTag }           from './tag.utils.js'
 
@@ -102,22 +103,20 @@ export const pack = async (
 
   await installPack({ cwd, context })
 
-  await execUtils.pipevp('pack', ['config', 'experimental', 'true'], {
+  await execOrThrow('pack', ['config', 'experimental', 'true'], {
     cwd: cwd ?? context.cwd,
     env: process.env,
     stdin: context.stdin,
     stdout: context.stdout,
     stderr: context.stderr,
-    end: execUtils.EndStrategy.ErrorCode,
   })
 
-  await execUtils.pipevp('pack', args, {
+  await execOrThrow('pack', args, {
     cwd: cwd ?? context.cwd,
     env: process.env,
     stdin: context.stdin,
     stdout: context.stdout,
     stderr: context.stderr,
-    end: execUtils.EndStrategy.ErrorCode,
   })
 
   return {
