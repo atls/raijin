@@ -83,6 +83,22 @@ test('should materialize source-only TypeScript loader to JavaScript', async () 
   }
 })
 
+test('should reject code runtime package without loadable TypeScript loader', async () => {
+  const workspace = await mkdtemp(join(tmpdir(), 'service-exec-argv-loader-'))
+  const packageJsonPath = join(workspace, 'package.json')
+
+  try {
+    await writeFile(packageJsonPath, JSON.stringify({ type: 'module' }), 'utf8')
+
+    await assert.rejects(
+      resolveTypeScriptLoader(packageJsonPath),
+      /Unable to resolve loadable TypeScript loader/
+    )
+  } finally {
+    await rm(workspace, { recursive: true, force: true })
+  }
+})
+
 test('should resolve PnP loader from parent project root', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'service-exec-argv-'))
   const nestedWorkspace = join(workspace, 'backend', 'wallet', 'service')

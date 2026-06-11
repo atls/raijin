@@ -15,7 +15,6 @@ const PNP_ESM_LOADER_FILENAME = '.pnp.loader.mjs'
 const CODE_RUNTIME_PACKAGE_JSON = '@atls/code-runtime/package.json'
 const TYPESCRIPT_LOADER_DIST_PATH = 'dist/typescript-loader.js'
 const TYPESCRIPT_LOADER_SOURCE_PATH = 'src/typescript-loader.ts'
-const TYPESCRIPT_LOADER_SPECIFIER = '@atls/code-runtime/typescript-loader'
 const TYPESCRIPT_LOADER_RUNTIME_REQUIRE = 'createRequire(import.meta.url)'
 
 const require = createRequire(import.meta.url)
@@ -105,32 +104,30 @@ const getMaterializedTypeScriptLoader = async (
   return nextMaterializedTypeScriptLoader
 }
 
+const resolveCodeRuntimePackagePath = (): string => require.resolve(CODE_RUNTIME_PACKAGE_JSON)
+
 export const resolveTypeScriptLoader = async (
-  codeRuntimePackagePath = require.resolve(CODE_RUNTIME_PACKAGE_JSON)
+  codeRuntimePackagePath = resolveCodeRuntimePackagePath()
 ): Promise<string> => {
-  try {
-    const codeRuntimePath = dirname(codeRuntimePackagePath)
-    const typeScriptLoaderPath = join(codeRuntimePath, TYPESCRIPT_LOADER_DIST_PATH)
+  const codeRuntimePath = dirname(codeRuntimePackagePath)
+  const typeScriptLoaderPath = join(codeRuntimePath, TYPESCRIPT_LOADER_DIST_PATH)
 
-    if (await fileExists(typeScriptLoaderPath)) {
-      return pathToFileURL(typeScriptLoaderPath).href
-    }
-
-    const typeScriptLoaderSourcePath = join(codeRuntimePath, TYPESCRIPT_LOADER_SOURCE_PATH)
-
-    if (await fileExists(typeScriptLoaderSourcePath)) {
-      return getMaterializedTypeScriptLoader(codeRuntimePackagePath, typeScriptLoaderSourcePath)
-    }
-  } catch {
-    return TYPESCRIPT_LOADER_SPECIFIER
+  if (await fileExists(typeScriptLoaderPath)) {
+    return pathToFileURL(typeScriptLoaderPath).href
   }
 
-  return TYPESCRIPT_LOADER_SPECIFIER
+  const typeScriptLoaderSourcePath = join(codeRuntimePath, TYPESCRIPT_LOADER_SOURCE_PATH)
+
+  if (await fileExists(typeScriptLoaderSourcePath)) {
+    return getMaterializedTypeScriptLoader(codeRuntimePackagePath, typeScriptLoaderSourcePath)
+  }
+
+  throw new Error(`Unable to resolve loadable TypeScript loader for ${CODE_RUNTIME_PACKAGE_JSON}`)
 }
 
 export const createServiceExecArgv = (
-  pnpEsmLoader?: string,
-  typeScriptLoader = TYPESCRIPT_LOADER_SPECIFIER
+  pnpEsmLoader: string | undefined,
+  typeScriptLoader: string
 ): Array<string> => {
   const execArgv: Array<string> = []
 
