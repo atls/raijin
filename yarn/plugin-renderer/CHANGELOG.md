@@ -3,6 +3,18 @@
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.7...@atls/yarn-plugin-renderer@1.0.7) (2026-06-11)
 
 
+### Bug Fixes
+
+
+* **yarn-plugin-renderer:** harden next build execution ([510f808](https://github.com/atls/raijin/commit/510f8088d98c57d16ff210cac3d26da4bacbb306))
+
+
+
+
+
+## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.7...@atls/yarn-plugin-renderer@1.0.7) (2026-06-11)
+
+
 
 
 
