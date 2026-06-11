@@ -1,10 +1,11 @@
+import type { execUtils }   from '@yarnpkg/core'
+
 import type { PackOptions } from './pack.interfaces.js'
 import type { PackOutputs } from './pack.interfaces.js'
 
 import { readFileSync }     from 'node:fs'
 
 import { stringify }        from '@iarna/toml'
-import type { execUtils }   from '@yarnpkg/core'
 import { xfs }              from '@yarnpkg/fslib'
 import { ppath }            from '@yarnpkg/fslib'
 

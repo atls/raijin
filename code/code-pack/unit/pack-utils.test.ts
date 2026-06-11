@@ -1,9 +1,9 @@
-import assert                    from 'node:assert/strict'
-import test                      from 'node:test'
+import assert          from 'node:assert/strict'
+import test            from 'node:test'
 
-import { npath }                 from '@yarnpkg/fslib'
+import { npath }       from '@yarnpkg/fslib'
 
-import { execOrThrow }           from '../src/pack.utils.js'
+import { execOrThrow } from '../src/pack.utils.js'
 
 const cwd = npath.toPortablePath(process.cwd())
 
