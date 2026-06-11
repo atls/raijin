@@ -15,6 +15,21 @@ type InstallPack = (options: InstallPackOptions) => Promise<void>
 
 const PACK_VERSION = '0.40.4'
 
+export const execOrThrow = async (
+  command: string,
+  args: Array<string>,
+  options: Omit<execUtils.PipevpOptions, 'end'>
+): Promise<void> => {
+  const { code } = await execUtils.pipevp(command, args, {
+    ...options,
+    end: execUtils.EndStrategy.ErrorCode,
+  })
+
+  if (code !== 0) {
+    throw new Error(`Command "${[command, ...args].join(' ')}" failed with exit code ${code}`)
+  }
+}
+
 /**
  * Installs pack if not present
  */
@@ -22,13 +37,12 @@ export const installPack: InstallPack = async ({ context, cwd }) => {
   let isPackInstalled: boolean
 
   try {
-    await execUtils.pipevp('pack', ['--version'], {
+    await execOrThrow('pack', ['--version'], {
       cwd: cwd ?? context.cwd,
       env: process.env,
       stdin: context.stdin,
       stdout: context.stdout,
       stderr: context.stderr,
-      end: execUtils.EndStrategy.ErrorCode,
     })
 
     isPackInstalled = true
@@ -62,22 +76,20 @@ export const installPack: InstallPack = async ({ context, cwd }) => {
 
     const tempFile = `${cwd ?? context.cwd}/pack.tgz`
 
-    await execUtils.pipevp('curl', ['-sSL', '-o', tempFile, downloadUrl], {
+    await execOrThrow('curl', ['-sSL', '-o', tempFile, downloadUrl], {
       cwd: cwd ?? context.cwd,
       env: process.env,
       stdin: context.stdin,
       stdout: context.stdout,
       stderr: context.stderr,
-      end: execUtils.EndStrategy.ErrorCode,
     })
 
-    await execUtils.pipevp('tar', ['-C', '/usr/local/bin/', '--no-same-owner', '-xzv', tempFile], {
+    await execOrThrow('tar', ['-C', '/usr/local/bin/', '--no-same-owner', '-xzv', tempFile], {
       cwd: cwd ?? context.cwd,
       env: process.env,
       stdin: context.stdin,
       stdout: context.stdout,
       stderr: context.stderr,
-      end: execUtils.EndStrategy.ErrorCode,
     })
 
     // eslint-disable-next-line no-console
