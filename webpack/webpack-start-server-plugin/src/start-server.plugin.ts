@@ -14,11 +14,12 @@ export interface StartServerPluginOptions {
   execArgv?: Array<string>
 }
 
-export const createStartServerForkOptions = ({
-  execArgv,
-}: StartServerPluginOptions): ForkOptions => ({
+export const createStartServerForkOptions = (
+  { execArgv }: StartServerPluginOptions,
+  parentExecArgv = process.execArgv
+): ForkOptions => ({
   silent: true,
-  ...(execArgv ? { execArgv } : {}),
+  ...(execArgv ? { execArgv: [...parentExecArgv, ...execArgv] } : {}),
 })
 
 export class StartServerPlugin {

@@ -11,12 +11,30 @@ test('should keep default silent fork options', () => {
 
 test('should pass runtime exec argv to fork options', () => {
   assert.deepEqual(
-    createStartServerForkOptions({
-      execArgv: ['--loader', 'file:///repo/.pnp.loader.mjs'],
-    }),
+    createStartServerForkOptions(
+      {
+        execArgv: ['--loader', 'file:///repo/.pnp.loader.mjs'],
+      },
+      []
+    ),
     {
       silent: true,
       execArgv: ['--loader', 'file:///repo/.pnp.loader.mjs'],
+    }
+  )
+})
+
+test('should preserve parent node exec argv', () => {
+  assert.deepEqual(
+    createStartServerForkOptions(
+      {
+        execArgv: ['--loader', 'file:///repo/.pnp.loader.mjs'],
+      },
+      ['--inspect']
+    ),
+    {
+      silent: true,
+      execArgv: ['--inspect', '--loader', 'file:///repo/.pnp.loader.mjs'],
     }
   )
 })
