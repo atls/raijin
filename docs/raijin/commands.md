@@ -251,24 +251,6 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 </details>
 
-### Domain `jsr`
-
-- Commands: `jsr publish`
-
-<details>
-<summary>Domain details: `jsr`</summary>
-
-<!-- sync:command-card:jsr-publish -->
-
-#### `jsr publish`
-
-- Status: `active`
-- Example: `yarn jsr publish`
-- Plugin: `@atls/yarn-plugin-jsr`
-- Source: `yarn/plugin-jsr/sources/jsr-publish.command.ts`
-
-</details>
-
 ### Domain `library`
 
 - Commands: `library build`

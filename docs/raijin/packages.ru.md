@@ -24,7 +24,6 @@
 - `@atls/yarn-plugin-files` — `yarn/plugin-files`
 - `@atls/yarn-plugin-format` — `yarn/plugin-format`
 - `@atls/yarn-plugin-image` — `yarn/plugin-image`
-- `@atls/yarn-plugin-jsr` — `yarn/plugin-jsr`
 - `@atls/yarn-plugin-library` — `yarn/plugin-library`
 - `@atls/yarn-plugin-lint` — `yarn/plugin-lint`
 - `@atls/yarn-plugin-pnp-patch` — `yarn/plugin-pnp-patch`
@@ -167,15 +166,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-jsr -->
-
-#### `@atls/yarn-plugin-jsr`
-
-- Локация: `yarn/plugin-jsr`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-library -->
 
 #### `@atls/yarn-plugin-library`
@@ -298,7 +288,6 @@
 - `@atls/code-format` — `code/code-format`
 - `@atls/code-github` — `code/code-github`
 - `@atls/code-icons` — `code/code-icons`
-- `@atls/code-jsr` — `code/code-jsr`
 - `@atls/code-lint` — `code/code-lint`
 - `@atls/code-pack` — `code/code-pack`
 - `@atls/code-schematics` — `code/code-schematics`
@@ -359,15 +348,6 @@
 #### `@atls/code-icons`
 
 - Локация: `code/code-icons`
-- Группа: `code`
-- Видимость: `public`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-jsr -->
-
-#### `@atls/code-jsr`
-
-- Локация: `code/code-jsr`
 - Группа: `code`
 - Видимость: `public`
 - Скрипты: `build`, `postpack`, `prepack`

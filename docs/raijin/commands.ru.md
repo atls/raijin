@@ -251,24 +251,6 @@
 
 </details>
 
-### Домен `jsr`
-
-- Команды: `jsr publish`
-
-<details>
-<summary>Подробности домена `jsr`</summary>
-
-<!-- sync:command-card:jsr-publish -->
-
-#### `jsr publish`
-
-- Статус: `active`
-- Пример: `yarn jsr publish`
-- Плагин: `@atls/yarn-plugin-jsr`
-- Исходник: `yarn/plugin-jsr/sources/jsr-publish.command.ts`
-
-</details>
-
 ### Домен `library`
 
 - Команды: `library build`
