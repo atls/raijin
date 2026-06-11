@@ -1,17 +1,20 @@
-import type { PortablePath }         from '@yarnpkg/fslib'
+import type { PortablePath }           from '@yarnpkg/fslib'
 
-import { PassThrough }               from 'node:stream'
+import { PassThrough }                 from 'node:stream'
 
-import { BaseCommand }               from '@yarnpkg/cli'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { StreamReport }              from '@yarnpkg/core'
-import { MessageName }               from '@yarnpkg/core'
-import { execUtils }                 from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
-import { ppath }                     from '@yarnpkg/fslib'
+import { BaseCommand }                 from '@yarnpkg/cli'
+import { Configuration }               from '@yarnpkg/core'
+import { Project }                     from '@yarnpkg/core'
+import { StreamReport }                from '@yarnpkg/core'
+import { MessageName }                 from '@yarnpkg/core'
+import { execUtils }                   from '@yarnpkg/core'
+import { xfs }                         from '@yarnpkg/fslib'
+import { ppath }                       from '@yarnpkg/fslib'
 
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { makeCurrentYarnExecutable }   from '@atls/yarn-plugin-tools/current-yarn-executable'
+
+import { assertRendererBuildExitCode } from './renderer-build.utils.js'
+import { createRendererBuildEnv }      from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
   static paths = [['renderer', 'build']]
@@ -50,29 +53,28 @@ export class RendererBuildCommand extends BaseCommand {
               })
           })
 
-          try {
-            await xfs.writeJsonPromise(ppath.join(this.context.cwd, 'src/package.json'), {
-              type: 'module',
-            })
-            const binFolder = await xfs.mktempPromise()
-            const { executable, env } = await makeCurrentYarnExecutable({
-              binFolder,
-              project,
-            })
+          await xfs.writeJsonPromise(ppath.join(this.context.cwd, 'src/package.json'), {
+            type: 'module',
+          })
 
-            await execUtils.pipevp(executable, ['next', 'build', 'src', '--no-lint'], {
-              end: execUtils.EndStrategy.ErrorCode,
-              cwd: this.context.cwd,
-              stdin: this.context.stdin,
-              stdout,
-              stderr,
-              env,
-            })
-          } catch (error) {
-            report.reportError(
-              MessageName.UNNAMED,
-              error instanceof Error ? error.message : 'Build error'
+          try {
+            const binFolder = await xfs.mktempPromise()
+            const { executable, env } = await makeCurrentYarnExecutable({ binFolder, project })
+
+            const { code } = await execUtils.pipevp(
+              executable,
+              ['next', 'build', 'src', '--no-lint'],
+              {
+                end: execUtils.EndStrategy.ErrorCode,
+                cwd: this.context.cwd,
+                stdin: this.context.stdin,
+                stdout,
+                stderr,
+                env: createRendererBuildEnv(env),
+              }
             )
+
+            assertRendererBuildExitCode(code)
           } finally {
             await xfs.removePromise(ppath.join(this.context.cwd, 'src/package.json'))
           }
