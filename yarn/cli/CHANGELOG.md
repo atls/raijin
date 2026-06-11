@@ -1,5 +1,23 @@
 
 
+## [1.1.78](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.78...@atls/yarn-cli@1.1.78) (2026-06-11)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** share runtime exec argv contract ([3f27740](https://github.com/atls/raijin/commit/3f27740f4022e7ca10f7c00c580e286ef00d3115))
+* **code-service:** materialize workspace runtime loader ([e8dbb98](https://github.com/atls/raijin/commit/e8dbb985a9d879414662b0df4078d19ff896344b))
+* **code-service:** propagate service runtime exec argv ([e0475e4](https://github.com/atls/raijin/commit/e0475e4439099b092e25fe1b41a2c474077929fe))
+* **code-service:** reject unresolved runtime loader ([99cbe5f](https://github.com/atls/raijin/commit/99cbe5f9d2fc31acc914962cfaa7b9732c0c3112))
+* **code-service:** resolve runtime loader to javascript ([ec11087](https://github.com/atls/raijin/commit/ec11087d1661a9fd346dfacf97b6c1c5236907c6))
+* **webpack-start-server-plugin:** preserve parent exec argv ([4ff09ee](https://github.com/atls/raijin/commit/4ff09ee24b71a5c4cf0b445258b5f66b0e82196e))
+* **yarn-plugin-release:** tolerate existing release tags ([7995971](https://github.com/atls/raijin/commit/79959715dc93e8c6e5e0d6eaf8abb036dd3da6a4))
+
+
+
+
+
 ## [1.1.77](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.78...@atls/yarn-cli@1.1.77) (2026-06-11)
 
 

@@ -1,5 +1,17 @@
 
 
+## [2.0.42](https://github.com/atls/raijin/compare/@atls/code-test@2.0.41...@atls/code-test@2.0.42) (2026-06-11)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** share runtime exec argv contract ([3f27740](https://github.com/atls/raijin/commit/3f27740f4022e7ca10f7c00c580e286ef00d3115))
+
+
+
+
+
 ## [2.0.41](https://github.com/atls/raijin/compare/@atls/code-test@2.0.40...@atls/code-test@2.0.41) (2026-06-10)
 
 

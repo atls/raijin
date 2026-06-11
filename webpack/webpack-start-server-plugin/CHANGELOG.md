@@ -1,3 +1,16 @@
+
+
+## [1.0.5](https://github.com/atls/raijin/compare/@atls/webpack-start-server-plugin@1.0.4...@atls/webpack-start-server-plugin@1.0.5) (2026-06-11)
+
+
+### Bug Fixes
+
+
+* **code-service:** propagate service runtime exec argv ([e0475e4](https://github.com/atls/raijin/commit/e0475e4439099b092e25fe1b41a2c474077929fe))
+* **webpack-start-server-plugin:** preserve parent exec argv ([4ff09ee](https://github.com/atls/raijin/commit/4ff09ee24b71a5c4cf0b445258b5f66b0e82196e))
+
+
+
 ## [1.0.4](https://github.com/atls/raijin/compare/@atls/webpack-start-server-plugin@1.0.3...@atls/webpack-start-server-plugin@1.0.4) (2025-03-09)
 
 ### Features
