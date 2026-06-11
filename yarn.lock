@@ -935,6 +935,7 @@ __metadata:
     "@yarnpkg/plugin-http": "npm:3.0.3"
     "@yarnpkg/plugin-init": "npm:4.1.2"
     "@yarnpkg/plugin-interactive-tools": "npm:4.1.0"
+    "@yarnpkg/plugin-jsr": "npm:1.1.1"
     "@yarnpkg/plugin-link": "npm:3.0.2"
     "@yarnpkg/plugin-nm": "npm:4.0.8"
     "@yarnpkg/plugin-npm": "npm:3.5.0"
@@ -999,6 +1000,7 @@ __metadata:
     "@yarnpkg/plugin-http": "npm:3.0.3"
     "@yarnpkg/plugin-init": "npm:4.1.2"
     "@yarnpkg/plugin-interactive-tools": "npm:4.1.0"
+    "@yarnpkg/plugin-jsr": "npm:1.1.1"
     "@yarnpkg/plugin-link": "npm:3.0.2"
     "@yarnpkg/plugin-nm": "npm:4.0.8"
     "@yarnpkg/plugin-npm": "npm:3.5.0"
@@ -4732,7 +4734,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/plugin-jsr@npm:^1.1.1":
+"@yarnpkg/plugin-jsr@npm:1.1.1, @yarnpkg/plugin-jsr@npm:^1.1.1":
   version: 1.1.1
   resolution: "@yarnpkg/plugin-jsr@npm:1.1.1"
   dependencies:

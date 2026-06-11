@@ -1908,6 +1908,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/plugin-http", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:3.0.3"],\
           ["@yarnpkg/plugin-init", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:4.1.2"],\
           ["@yarnpkg/plugin-interactive-tools", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:4.1.0"],\
+          ["@yarnpkg/plugin-jsr", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:1.1.1"],\
           ["@yarnpkg/plugin-link", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:3.0.2"],\
           ["@yarnpkg/plugin-nm", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:4.0.8"],\
           ["@yarnpkg/plugin-npm", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:3.5.0"],\
@@ -1973,6 +1974,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/plugin-http", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:3.0.3"],\
           ["@yarnpkg/plugin-init", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:4.1.2"],\
           ["@yarnpkg/plugin-interactive-tools", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:4.1.0"],\
+          ["@yarnpkg/plugin-jsr", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:1.1.1"],\
           ["@yarnpkg/plugin-link", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:3.0.2"],\
           ["@yarnpkg/plugin-nm", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:4.0.8"],\
           ["@yarnpkg/plugin-npm", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:3.5.0"],\

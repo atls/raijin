@@ -45,6 +45,7 @@
     "@yarnpkg/plugin-http": "3.0.3",
     "@yarnpkg/plugin-init": "4.1.2",
     "@yarnpkg/plugin-interactive-tools": "4.1.0",
+    "@yarnpkg/plugin-jsr": "1.1.1",
     "@yarnpkg/plugin-link": "3.0.2",
     "@yarnpkg/plugin-nm": "4.0.8",
     "@yarnpkg/plugin-npm": "3.5.0",

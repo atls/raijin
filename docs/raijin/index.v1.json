@@ -9,7 +9,7 @@
   "bundle": {
     "package": "@atls/yarn-cli",
     "bundleName": "standard",
-    "pluginCount": 46,
+    "pluginCount": 47,
     "plugins": [
       "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-changelog",
@@ -45,6 +45,7 @@
       "@yarnpkg/plugin-http",
       "@yarnpkg/plugin-init",
       "@yarnpkg/plugin-interactive-tools",
+      "@yarnpkg/plugin-jsr",
       "@yarnpkg/plugin-link",
       "@yarnpkg/plugin-nm",
       "@yarnpkg/plugin-npm",
@@ -1086,5 +1087,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-11T18:51:10.289Z"
+  "lastGenerated": "2026-06-11T19:14:37.703Z"
 }
