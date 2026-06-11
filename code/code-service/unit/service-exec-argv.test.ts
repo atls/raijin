@@ -6,33 +6,47 @@ import { writeFile }                    from 'node:fs/promises'
 import { tmpdir }                       from 'node:os'
 import { join }                         from 'node:path'
 import test                             from 'node:test'
+import { fileURLToPath }                from 'node:url'
 import { pathToFileURL }                from 'node:url'
 
 import { createServiceExecArgv }        from '../src/service-exec-argv.js'
 import { createServiceRuntimeExecArgv } from '../src/service-exec-argv.js'
+import { resolveTypeScriptLoader }      from '../src/service-exec-argv.js'
 
 test('should create service exec argv without PnP loader', () => {
-  assert.deepEqual(createServiceExecArgv(), [
+  assert.deepEqual(createServiceExecArgv(undefined, 'file:///runtime/typescript-loader.js'), [
     '--loader',
-    '@atls/code-runtime/typescript-loader',
+    'file:///runtime/typescript-loader.js',
     '--enable-source-maps',
   ])
 })
 
 test('should keep PnP loader before TypeScript service loader', () => {
-  assert.deepEqual(createServiceExecArgv('file:///repo/.pnp.loader.mjs'), [
-    '--loader',
-    'file:///repo/.pnp.loader.mjs',
-    '--loader',
-    '@atls/code-runtime/typescript-loader',
-    '--enable-source-maps',
-  ])
+  assert.deepEqual(
+    createServiceExecArgv('file:///repo/.pnp.loader.mjs', 'file:///runtime/typescript-loader.js'),
+    [
+      '--loader',
+      'file:///repo/.pnp.loader.mjs',
+      '--loader',
+      'file:///runtime/typescript-loader.js',
+      '--enable-source-maps',
+    ]
+  )
+})
+
+test('should resolve TypeScript loader to loadable JavaScript', async () => {
+  assert.ok(
+    fileURLToPath(await resolveTypeScriptLoader()).endsWith(
+      join('runtime', 'code-runtime', 'dist', 'typescript-loader.js')
+    )
+  )
 })
 
 test('should resolve PnP loader from parent project root', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'service-exec-argv-'))
   const nestedWorkspace = join(workspace, 'backend', 'wallet', 'service')
   const pnpEsmLoaderPath = join(workspace, '.pnp.loader.mjs')
+  const typeScriptLoader = await resolveTypeScriptLoader()
 
   await mkdir(nestedWorkspace, { recursive: true })
   await writeFile(pnpEsmLoaderPath, '')
@@ -42,7 +56,7 @@ test('should resolve PnP loader from parent project root', async () => {
       '--loader',
       pathToFileURL(pnpEsmLoaderPath).href,
       '--loader',
-      '@atls/code-runtime/typescript-loader',
+      typeScriptLoader,
       '--enable-source-maps',
     ])
   } finally {
