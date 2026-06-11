@@ -9,7 +9,7 @@
   "bundle": {
     "package": "@atls/yarn-cli",
     "bundleName": "standard",
-    "pluginCount": 48,
+    "pluginCount": 46,
     "plugins": [
       "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-changelog",
@@ -22,7 +22,6 @@
       "@atls/yarn-plugin-files",
       "@atls/yarn-plugin-format",
       "@atls/yarn-plugin-image",
-      "@atls/yarn-plugin-jsr",
       "@atls/yarn-plugin-library",
       "@atls/yarn-plugin-lint",
       "@atls/yarn-plugin-release",
@@ -46,7 +45,6 @@
       "@yarnpkg/plugin-http",
       "@yarnpkg/plugin-init",
       "@yarnpkg/plugin-interactive-tools",
-      "@yarnpkg/plugin-jsr",
       "@yarnpkg/plugin-link",
       "@yarnpkg/plugin-nm",
       "@yarnpkg/plugin-npm",
@@ -246,17 +244,6 @@
       "pluginDir": "plugin-image",
       "domain": "image",
       "source": "yarn/plugin-image/sources/image-pack.command.ts",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
-      "command": "jsr publish",
-      "pathTokens": ["jsr", "publish"],
-      "className": "JsrPublishCommand",
-      "plugin": "@atls/yarn-plugin-jsr",
-      "pluginDir": "plugin-jsr",
-      "domain": "jsr",
-      "source": "yarn/plugin-jsr/sources/jsr-publish.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
@@ -688,14 +675,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-jsr",
-      "location": "code/code-jsr",
-      "group": "code",
-      "private": false,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/code-lint",
       "location": "code/code-lint",
       "group": "code",
@@ -938,14 +917,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/yarn-plugin-jsr",
-      "location": "yarn/plugin-jsr",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/yarn-plugin-library",
       "location": "yarn/plugin-library",
       "group": "yarn",
@@ -1061,7 +1032,6 @@
       "files changed list",
       "format",
       "image pack",
-      "jsr publish",
       "library build",
       "lint",
       "release create",
@@ -1094,7 +1064,6 @@
       "@atls/yarn-plugin-files",
       "@atls/yarn-plugin-format",
       "@atls/yarn-plugin-image",
-      "@atls/yarn-plugin-jsr",
       "@atls/yarn-plugin-library",
       "@atls/yarn-plugin-lint",
       "@atls/yarn-plugin-release",
@@ -1117,5 +1086,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-11T11:38:07.745Z"
+  "lastGenerated": "2026-06-11T18:51:10.289Z"
 }
