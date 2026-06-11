@@ -1,5 +1,17 @@
 
 
+## [2.0.10](https://github.com/atls/raijin/compare/@atls/code-pack@2.0.9...@atls/code-pack@2.0.10) (2026-06-11)
+
+
+### Bug Fixes
+
+
+* **code-pack:** propagate pack command failures ([10ece28](https://github.com/atls/raijin/commit/10ece285e961f3e0e82b6439373a580646468538))
+
+
+
+
+
 ## [2.0.9](https://github.com/atls/raijin/compare/@atls/code-pack@2.0.8...@atls/code-pack@2.0.9) (2026-05-14)
 
 
