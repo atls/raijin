@@ -4,16 +4,12 @@ import type { EventData }            from 'node:test'
 
 import { readFileSync }              from 'node:fs'
 import { relative }                  from 'node:path'
-import { pathToFileURL }             from 'node:url'
 
 import { BaseCommand }               from '@yarnpkg/cli'
 import { Configuration }             from '@yarnpkg/core'
 import { Project }                   from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
 import { execUtils }                 from '@yarnpkg/core'
 import { xfs }                       from '@yarnpkg/fslib'
-import { ppath }                     from '@yarnpkg/fslib'
-import { npath }                     from '@yarnpkg/fslib'
 import { Option }                    from 'clipanion'
 import { Command }                   from 'clipanion'
 import { render }                    from 'ink'
@@ -26,9 +22,7 @@ import { RawOutput }                 from '@atls/cli-ui-raw-output-component'
 import { TestFailure }               from '@atls/cli-ui-test-failure-component'
 import { TestProgress }              from '@atls/cli-ui-test-progress-component'
 import { Tester }                    from '@atls/code-test'
-import { TEST_EXEC_ARGV_ENV }        from '@atls/code-test'
 import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
-import { createTestExecArgv }        from '@atls/code-test'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 type TestFail = EventData.TestFail
@@ -106,13 +100,6 @@ export abstract class AbstractTestCommand extends BaseCommand {
     if (!env.NODE_OPTIONS?.includes('--no-warnings')) {
       env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
     }
-
-    const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
-    const pnpEsmLoader = (await xfs.existsPromise(pnpEsmLoaderPath))
-      ? pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
-      : undefined
-
-    env[TEST_EXEC_ARGV_ENV] = JSON.stringify(createTestExecArgv(pnpEsmLoader))
 
     const { code } = await execUtils.pipevp(executable, ['test', type ?? '', ...args], {
       cwd: project.cwd,

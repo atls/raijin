@@ -1,19 +1,20 @@
-import type { EventData }    from 'node:test'
-import type { TestEvent }    from 'node:test/reporters'
+import type { EventData }            from 'node:test'
+import type { TestEvent }            from 'node:test/reporters'
 
-import EventEmitter          from 'node:events'
-import { readFileSync }      from 'node:fs'
+import EventEmitter                  from 'node:events'
+import { readFileSync }              from 'node:fs'
 /* eslint-disable @typescript-eslint/member-ordering */
-import { relative }          from 'node:path'
-import { join }              from 'node:path'
-import { run }               from 'node:test'
-import { tap }               from 'node:test/reporters'
+import { relative }                  from 'node:path'
+import { join }                      from 'node:path'
+import { run }                       from 'node:test'
+import { tap }                       from 'node:test/reporters'
 
-import { globby }            from 'globby'
-import ignorer               from 'ignore'
+import { globby }                    from 'globby'
+import ignorer                       from 'ignore'
 
-import { Tests }             from './tests.js'
-import { parseTestExecArgv } from './test-exec-argv.js'
+import { Tests }                     from './tests.js'
+import { parseTestExecArgv }         from './test-exec-argv.js'
+import { createTestRuntimeExecArgv } from './test-exec-argv.js'
 
 export type TestsStream = ReturnType<typeof run>
 
@@ -44,7 +45,9 @@ export class Tester extends EventEmitter {
     watch = false,
     testReporter?: string
   ): Promise<Array<TestEvent>> {
-    const execArgv = parseTestExecArgv()
+    const explicitExecArgv = parseTestExecArgv()
+    const execArgv =
+      explicitExecArgv.length > 0 ? explicitExecArgv : await createTestRuntimeExecArgv(this.cwd)
     const runOptions = {
       files,
       timeout,

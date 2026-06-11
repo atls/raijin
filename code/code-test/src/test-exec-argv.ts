@@ -1,16 +1,37 @@
+import type { createRuntimeExecArgv as createRuntimeExecArgvFn } from '@atls/code-runtime/runtime-exec-argv'
+
 export const TEST_EXEC_ARGV_ENV = 'RAIJIN_TEST_EXEC_ARGV'
 
-export const createTestExecArgv = (pnpEsmLoader?: string): Array<string> => {
+const TYPESCRIPT_LOADER_SPECIFIER = '@atls/code-runtime/typescript-loader'
+const RUNTIME_EXEC_ARGV_MODULE = '@atls/code-runtime/runtime-exec-argv'
+
+type RuntimeExecArgvModule = {
+  createRuntimeExecArgv: typeof createRuntimeExecArgvFn
+}
+
+const importRuntimeExecArgvModule = async (): Promise<RuntimeExecArgvModule> =>
+  (await import(RUNTIME_EXEC_ARGV_MODULE)) as RuntimeExecArgvModule
+
+export const createTestExecArgv = (
+  pnpEsmLoader?: string,
+  typeScriptLoader = TYPESCRIPT_LOADER_SPECIFIER
+): Array<string> => {
   const execArgv: Array<string> = []
 
   if (pnpEsmLoader) {
     execArgv.push('--loader', pnpEsmLoader)
   }
 
-  execArgv.push('--loader', '@atls/code-runtime/typescript-loader')
+  execArgv.push('--loader', typeScriptLoader)
   execArgv.push('--enable-source-maps')
 
   return execArgv
+}
+
+export const createTestRuntimeExecArgv = async (cwd: string): Promise<Array<string>> => {
+  const { createRuntimeExecArgv } = await importRuntimeExecArgvModule()
+
+  return createRuntimeExecArgv(cwd)
 }
 
 export const parseTestExecArgv = (value = process.env[TEST_EXEC_ARGV_ENV]): Array<string> => {

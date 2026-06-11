@@ -6,5 +6,6 @@ export * as svgr from './svgr.js'
 export * as eslint from './eslint.js'
 export * as webpack from './webpack.js'
 export * as typescript from './typescript.js'
+export * as runtimeExecArgv from './runtime-exec-argv.js'
 
 export { default as tsConfig } from '@atls/config-typescript'

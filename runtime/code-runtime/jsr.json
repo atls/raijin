@@ -8,6 +8,7 @@
     "./eslint": "./src/eslint.ts",
     "./webpack": "./src/webpack.ts",
     "./typescript": "./src/typescript.ts",
+    "./runtime-exec-argv": "./src/runtime-exec-argv.ts",
     "./typescript-loader": "./src/typescript-loader.ts",
     "./svgr": "./src/svgr.ts",
     "./ts-node-register": "./src/ts-node-register.ts",

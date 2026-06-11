@@ -10,6 +10,7 @@
     "./eslint": "./src/eslint.ts",
     "./webpack": "./src/webpack.ts",
     "./typescript": "./src/typescript.ts",
+    "./runtime-exec-argv": "./src/runtime-exec-argv.ts",
     "./typescript-loader": "./src/typescript-loader.ts",
     "./svgr": "./src/svgr.ts",
     "./ts-node-register": "./src/ts-node-register.ts",
@@ -72,6 +73,11 @@
         "import": "./dist/typescript.js",
         "default": "./dist/typescript.js",
         "types": "./dist/typescript.d.ts"
+      },
+      "./runtime-exec-argv": {
+        "import": "./dist/runtime-exec-argv.js",
+        "default": "./dist/runtime-exec-argv.js",
+        "types": "./dist/runtime-exec-argv.d.ts"
       },
       "./typescript-loader": {
         "import": "./dist/typescript-loader.js",
