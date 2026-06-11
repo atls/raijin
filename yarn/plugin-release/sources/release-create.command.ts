@@ -12,6 +12,28 @@ import { Release }                from '@atls/code-github'
 
 import { parseGitHubUrl }         from './utils/parse-git-url.js'
 
+const RELEASE_ALREADY_EXISTS_STATUS = 422
+const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
+const RELEASE_ALREADY_EXISTS_CODE = '"code":"already_exists"'
+const RELEASE_ALREADY_EXISTS_FIELD = '"field":"tag_name"'
+
+interface GitHubReleaseError {
+  status?: number
+  message?: string
+}
+
+export const isReleaseAlreadyExistsError = (error: unknown): boolean => {
+  const githubError = error as GitHubReleaseError
+
+  return (
+    githubError.status === RELEASE_ALREADY_EXISTS_STATUS &&
+    typeof githubError.message === 'string' &&
+    githubError.message.includes(RELEASE_ALREADY_EXISTS_RESOURCE) &&
+    githubError.message.includes(RELEASE_ALREADY_EXISTS_CODE) &&
+    githubError.message.includes(RELEASE_ALREADY_EXISTS_FIELD)
+  )
+}
+
 export class ReleaseCreateCommand extends BaseCommand {
   static override paths = [['release', 'create']]
 
@@ -71,15 +93,27 @@ export class ReleaseCreateCommand extends BaseCommand {
           assert.ok(owner, 'Could not get url of the repo')
           assert.ok(repo, 'Could not get url of the repo')
 
-          await release.create({
-            draft: false,
-            make_latest: true,
-            name: `${packageName}@${version}`,
-            tag_name: `${packageName}@${version}`,
-            body,
-            owner,
-            repo,
-          })
+          const tagName = `${packageName}@${version}`
+
+          try {
+            await release.create({
+              draft: false,
+              make_latest: true,
+              name: tagName,
+              tag_name: tagName,
+              body,
+              owner,
+              repo,
+            })
+          } catch (error) {
+            if (isReleaseAlreadyExistsError(error)) {
+              report.reportInfo(null, `Release ${tagName} already exists; skipping`)
+
+              return
+            }
+
+            throw error
+          }
         })
       }
     )
