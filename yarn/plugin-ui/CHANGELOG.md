@@ -7,6 +7,13 @@
 
 
 
+## [1.0.32](https://github.com/atls/raijin/compare/@atls/yarn-plugin-ui@1.0.32...@atls/yarn-plugin-ui@1.0.32) (2026-06-11)
+
+
+
+
+
+
 ## [1.0.32](https://github.com/atls/raijin/compare/@atls/yarn-plugin-ui@1.0.31...@atls/yarn-plugin-ui@1.0.32) (2026-06-10)
 
 
