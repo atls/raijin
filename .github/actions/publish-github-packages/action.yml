@@ -24,7 +24,17 @@ runs:
       if: ${{ inputs.WORKSPACE != '' }}
       shell: bash
       run: |
-        echo "Selected workspace: ${{ inputs.WORKSPACE }}"
+        echo "Selected workspace: $SELECTED_WORKSPACE"
+      env:
+        SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}
+
+    - name: Validate selected workspace
+      if: ${{ inputs.WORKSPACE != '' }}
+      shell: bash
+      run: |
+        yarn workspace "$SELECTED_WORKSPACE" exec true
+      env:
+        SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}
 
     - name: Verify GitHub Packages auth
       shell: bash
@@ -51,6 +61,7 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspace ${{ inputs.WORKSPACE }} npm publish --tolerate-republish --access public
+        yarn workspace "$SELECTED_WORKSPACE" npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
+        SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}
