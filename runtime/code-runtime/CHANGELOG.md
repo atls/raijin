@@ -1,5 +1,18 @@
 
 
+## [2.1.32](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.31...@atls/code-runtime@2.1.32) (2026-06-11)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** drop retired jsr runtime metadata ([c6b76c2](https://github.com/atls/raijin/commit/c6b76c25ce359fe72e321e3ae60b22e88464d3d4))
+* **code-runtime:** share runtime exec argv contract ([3f27740](https://github.com/atls/raijin/commit/3f27740f4022e7ca10f7c00c580e286ef00d3115))
+
+
+
+
+
 ## [2.1.31](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.30...@atls/code-runtime@2.1.31) (2026-06-10)
 
 

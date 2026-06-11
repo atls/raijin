@@ -1,5 +1,21 @@
 
 
+## [2.1.33](https://github.com/atls/raijin/compare/@atls/code-service@2.1.32...@atls/code-service@2.1.33) (2026-06-11)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** share runtime exec argv contract ([3f27740](https://github.com/atls/raijin/commit/3f27740f4022e7ca10f7c00c580e286ef00d3115))
+* **code-service:** materialize workspace runtime loader ([e8dbb98](https://github.com/atls/raijin/commit/e8dbb985a9d879414662b0df4078d19ff896344b))
+* **code-service:** propagate service runtime exec argv ([e0475e4](https://github.com/atls/raijin/commit/e0475e4439099b092e25fe1b41a2c474077929fe))
+* **code-service:** reject unresolved runtime loader ([99cbe5f](https://github.com/atls/raijin/commit/99cbe5f9d2fc31acc914962cfaa7b9732c0c3112))
+* **code-service:** resolve runtime loader to javascript ([ec11087](https://github.com/atls/raijin/commit/ec11087d1661a9fd346dfacf97b6c1c5236907c6))
+
+
+
+
+
 ## [2.1.32](https://github.com/atls/raijin/compare/@atls/code-service@2.1.31...@atls/code-service@2.1.32) (2026-06-10)
 
 
