@@ -1,17 +1,11 @@
-import { pathToFileURL }             from 'node:url'
-
 import { StreamReport }              from '@yarnpkg/core'
 import { Configuration }             from '@yarnpkg/core'
 import { Project }                   from '@yarnpkg/core'
 import { Filename }                  from '@yarnpkg/fslib'
 import { execUtils }                 from '@yarnpkg/core'
 import { xfs }                       from '@yarnpkg/fslib'
-import { ppath }                     from '@yarnpkg/fslib'
-import { npath }                     from '@yarnpkg/fslib'
 
 import { Tester }                    from '@atls/code-test'
-import { TEST_EXEC_ARGV_ENV }        from '@atls/code-test'
-import { createTestExecArgv }        from '@atls/code-test'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
@@ -47,13 +41,6 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
         COMMAND_PROXY_EXECUTION: 'true',
       },
     })
-
-    const pnpEsmLoaderPath = ppath.join(project.cwd, Filename.pnpEsmLoader)
-    const pnpEsmLoader = (await xfs.existsPromise(pnpEsmLoaderPath))
-      ? pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
-      : undefined
-
-    env[TEST_EXEC_ARGV_ENV] = JSON.stringify(createTestExecArgv(pnpEsmLoader))
 
     const { code } = await execUtils.pipevp(executable, ['checks', 'test', 'unit'], {
       cwd: this.context.cwd,

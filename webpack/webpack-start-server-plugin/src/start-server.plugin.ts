@@ -1,4 +1,5 @@
 import type { ChildProcess } from 'node:child_process'
+import type { ForkOptions }  from 'node:child_process'
 import type { Writable }     from 'node:stream'
 import type webpack          from 'webpack'
 
@@ -10,7 +11,16 @@ import { StartServerLogger } from './start-server.logger.js'
 export interface StartServerPluginOptions {
   stdout?: Writable
   stderr?: Writable
+  execArgv?: Array<string>
 }
+
+export const createStartServerForkOptions = (
+  { execArgv }: StartServerPluginOptions,
+  parentExecArgv = process.execArgv
+): ForkOptions => ({
+  silent: true,
+  ...(execArgv ? { execArgv: [...parentExecArgv, ...execArgv] } : {}),
+})
 
 export class StartServerPlugin {
   options: StartServerPluginOptions
@@ -62,9 +72,7 @@ export class StartServerPlugin {
   }
 
   private runWorker(entryFile: string, callback: (arg0: ChildProcess) => void): void {
-    const worker = fork(entryFile, [], {
-      silent: true,
-    })
+    const worker = fork(entryFile, [], createStartServerForkOptions(this.options))
 
     if (this.options.stdout) {
       worker.stdout?.pipe(this.options.stdout, { end: false })
