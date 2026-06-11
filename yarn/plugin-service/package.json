@@ -24,14 +24,12 @@
     "@atls/code-service": "workspace:*",
     "@atls/yarn-pack-utils": "workspace:*",
     "@atls/yarn-plugin-tools": "workspace:*",
-    "@atls/yarn-run-utils": "workspace:*",
     "@monstrs/logger": "0.0.20",
     "clipanion": "4.0.0-rc.2",
     "ink": "3.2.0",
     "react": "18.3.1"
   },
   "devDependencies": {
-    "@atls/yarn-test-utils": "workspace:*",
     "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",

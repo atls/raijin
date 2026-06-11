@@ -37,9 +37,6 @@ Compact list:
 - `@atls/yarn-plugin-typescript` — `yarn/plugin-typescript`
 - `@atls/yarn-plugin-ui` — `yarn/plugin-ui`
 - `@atls/yarn-plugin-workspaces` — `yarn/plugin-workspaces`
-- `@atls/yarn-run-utils` — `yarn/run-utils`
-- `@atls/yarn-test-utils` — `yarn/test-utils`
-- `@atls/yarn-workspace-utils` — `yarn/workspace-utils`
 
 <details>
 <summary>Group details: `yarn`</summary>
@@ -286,33 +283,6 @@ Compact list:
 - Group: `yarn`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-run-utils -->
-
-#### `@atls/yarn-run-utils`
-
-- Location: `yarn/run-utils`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: none
-
-<!-- sync:package-card:atls-yarn-test-utils -->
-
-#### `@atls/yarn-test-utils`
-
-- Location: `yarn/test-utils`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: none
-
-<!-- sync:package-card:atls-yarn-workspace-utils -->
-
-#### `@atls/yarn-workspace-utils`
-
-- Location: `yarn/workspace-utils`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: none
 
 </details>
 

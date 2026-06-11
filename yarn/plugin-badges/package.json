@@ -16,9 +16,6 @@
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
-  "dependencies": {
-    "@atls/yarn-run-utils": "workspace:*"
-  },
   "devDependencies": {
     "@types/child-process-promise": "2.2.6",
     "@yarnpkg/builder": "4.2.0",

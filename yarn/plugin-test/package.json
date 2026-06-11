@@ -32,7 +32,6 @@
   },
   "devDependencies": {
     "@atls/config-typescript": "workspace:*",
-    "@atls/yarn-test-utils": "workspace:*",
     "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
