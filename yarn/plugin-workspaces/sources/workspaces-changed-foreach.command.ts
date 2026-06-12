@@ -9,6 +9,7 @@ import { Option }                 from 'clipanion'
 import { getChangedFiles }        from '@atls/yarn-plugin-files'
 
 import { getChangedWorkspaces }   from './get-changed-workspaces.util.js'
+import { createForeachInput }     from './workspaces-changed-foreach.input.js'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static paths = [['workspaces', 'changed', 'foreach']]
@@ -50,7 +51,7 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
       throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
     }
 
-    const files = await getChangedFiles(project)
+    const files = await getChangedFiles(project, this.since)
     const workspaces = getChangedWorkspaces(project, files)
 
     if (!workspaces.length) {
@@ -67,54 +68,19 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
       return commandReport.exitCode()
     }
 
-    const input = ['workspaces', 'foreach']
-
-    workspaces.forEach((ws) => {
-      input.push('--include')
-      input.push(structUtils.stringifyIdent(ws.anchoredLocator))
-    })
-
-    if (this.all) {
-      input.push('--all')
-    } else if (this.since.length > 0) {
-      input.push('--since')
-      input.push(this.since)
-    } else if (this.workTree) {
-      input.push('--worktree')
-    }
-
-    if (this.exclude) {
-      input.push('--exclude')
-      input.push(this.exclude)
-    }
-
-    if (this.verbose) {
-      input.push('--verbose')
-    }
-
-    if (this.parallel) {
-      input.push('--parallel')
-    }
-
-    if (this.interlaced) {
-      input.push('--interlaced')
-    }
-
-    if (this.publicOnly) {
-      input.push('--no-private')
-    }
-
-    if (this.topological) {
-      input.push('--topological')
-    }
-
-    if (this.topologicalDev) {
-      input.push('--topological-dev')
-    }
-
-    if (this.jobs) {
-      input.push('--jobs')
-    }
+    const input = createForeachInput(
+      workspaces.map((ws) => structUtils.stringifyIdent(ws.anchoredLocator)),
+      {
+        exclude: this.exclude,
+        verbose: this.verbose,
+        parallel: this.parallel,
+        interlaced: this.interlaced,
+        publicOnly: this.publicOnly,
+        topological: this.topological,
+        topologicalDev: this.topologicalDev,
+        jobs: this.jobs,
+      }
+    )
 
     return this.cli.run([...input, this.commandName, ...this.args], {
       cwd: project.cwd,
