@@ -5,11 +5,13 @@ import { ToolsSyncTSConfigCommand }   from './commands/index.js'
 import { ToolsSyncTypeScriptCommand } from './commands/index.js'
 import { afterAllInstalled }          from './hooks/index.js'
 import { afterYarnVersionSet }        from './hooks/index.js'
+import { setupScriptEnvironment }     from './hooks/index.js'
 
 export const plugin: Plugin = {
   hooks: {
     afterAllInstalled,
     afterYarnVersionSet,
+    setupScriptEnvironment,
   },
   commands: [ToolsSyncCommand, ToolsSyncTypeScriptCommand, ToolsSyncTSConfigCommand],
 }

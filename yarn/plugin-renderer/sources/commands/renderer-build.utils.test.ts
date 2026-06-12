@@ -1,8 +1,14 @@
 import assert                                             from 'node:assert/strict'
 import test                                               from 'node:test'
 
+import { ppath }                                          from '@yarnpkg/fslib'
+import { xfs }                                            from '@yarnpkg/fslib'
+
 import { NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE } from './renderer-build.utils.js'
 import { assertRendererBuildExitCode }                    from './renderer-build.utils.js'
+import { cleanupRendererBuildSourceArtifacts }            from './renderer-build.utils.js'
+import { cleanupRendererBuildStaleArtifacts }             from './renderer-build.utils.js'
+import { cleanupRendererBuildWorkspaceManifests }         from './renderer-build.utils.js'
 import { createRendererBuildEnv }                         from './renderer-build.utils.js'
 
 test('should disable Next telemetry for renderer build', () => {
@@ -64,4 +70,37 @@ test('should reject failed renderer build exit code', () => {
   assert.throws(() => {
     assertRendererBuildExitCode(1)
   }, /Renderer build failed with exit code 1/)
+})
+
+test('should remove stale renderer artifacts before project discovery', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.mkdirPromise(ppath.join(cwd, 'dist'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(cwd, 'src/.next'), { recursive: true })
+  await xfs.writeJsonPromise(ppath.join(cwd, 'dist/package.json'), {})
+  await xfs.writeJsonPromise(ppath.join(cwd, 'src/.next/package.json'), {})
+  await xfs.writeJsonPromise(ppath.join(cwd, 'src/package.json'), {})
+
+  await cleanupRendererBuildStaleArtifacts(cwd)
+
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist')), false)
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/.next')), false)
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/package.json')), false)
+})
+
+test('should remove renderer workspace manifests without removing dist output', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.mkdirPromise(ppath.join(cwd, 'dist'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(cwd, 'src/.next'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(cwd, 'dist/index.js'), '')
+  await xfs.writeJsonPromise(ppath.join(cwd, 'dist/package.json'), {})
+  await xfs.writeJsonPromise(ppath.join(cwd, 'src/.next/package.json'), {})
+
+  await cleanupRendererBuildWorkspaceManifests(cwd)
+  await cleanupRendererBuildSourceArtifacts(cwd)
+
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/index.js')), true)
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/package.json')), false)
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/.next')), false)
 })

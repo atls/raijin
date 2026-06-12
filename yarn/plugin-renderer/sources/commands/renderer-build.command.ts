@@ -14,6 +14,9 @@ import { ppath }                                         from '@yarnpkg/fslib'
 import { makeCurrentYarnExecutable }                     from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
+import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'
+import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
+import { cleanupRendererBuildWorkspaceManifests }        from './renderer-build.utils.js'
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
 
@@ -22,6 +25,9 @@ export class RendererBuildCommand extends BaseCommand {
 
   async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+
+    await cleanupRendererBuildStaleArtifacts(this.context.cwd)
+
     const { project } = await Project.find(configuration, this.context.cwd)
 
     const commandReport = await StreamReport.start(
@@ -84,12 +90,6 @@ export class RendererBuildCommand extends BaseCommand {
         })
 
         await report.startTimerPromise('Copy standalone files', async () => {
-          if (await xfs.existsPromise(ppath.join(this.context.cwd, 'dist'))) {
-            await xfs.rmdirPromise(ppath.join(this.context.cwd, 'dist'), {
-              recursive: true,
-            })
-          }
-
           await xfs.copyPromise(
             ppath.join(this.context.cwd, 'dist'),
             ppath.join(
@@ -99,6 +99,10 @@ export class RendererBuildCommand extends BaseCommand {
               'src'
             )
           )
+        })
+
+        await report.startTimerPromise('Clean workspace manifests', async () => {
+          await cleanupRendererBuildWorkspaceManifests(this.context.cwd)
         })
 
         await report.startTimerPromise('Copy static files', async () => {
@@ -124,6 +128,10 @@ export class RendererBuildCommand extends BaseCommand {
             ppath.join(this.context.cwd, 'dist/server.js'),
             ppath.join(this.context.cwd, 'dist/index.js')
           )
+        })
+
+        await report.startTimerPromise('Clean source build artifacts', async () => {
+          await cleanupRendererBuildSourceArtifacts(this.context.cwd)
         })
       }
     )
