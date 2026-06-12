@@ -1,6 +1,9 @@
 import assert                            from 'node:assert/strict'
 import { test }                          from 'node:test'
 
+import { structUtils }                   from '@yarnpkg/core'
+
+import { isReleaseVersionWorkspace }     from '../release-version-defer.command.js'
 import { parseDeferredReleaseDecisions } from '../release-version-defer.command.js'
 import { selectLocalCommitDiffParent }   from '../release-version-defer.command.js'
 import { toGitHubChange }                from '../release-version-defer.command.js'
@@ -56,4 +59,52 @@ test('should preserve declined deferred decisions', () => {
 
   assert.equal(decisions.get('@atls/code-runtime'), 'decline')
   assert.equal(decisions.get('@atls/code-test'), 'patch')
+})
+
+test('should include private versioned workspaces in release version policy', () => {
+  assert.equal(
+    isReleaseVersionWorkspace({
+      relativeCwd: 'yarn/plugin-renderer',
+      manifest: {
+        name: structUtils.makeIdent('atls', 'yarn-plugin-renderer'),
+        version: '1.0.7',
+        raw: {
+          private: true,
+        },
+      },
+    }),
+    true
+  )
+})
+
+test('should exclude root workspace from release version policy', () => {
+  assert.equal(
+    isReleaseVersionWorkspace({
+      relativeCwd: '.',
+      manifest: {
+        name: structUtils.makeIdent(null, 'tools'),
+        version: '1.0.0',
+        raw: {
+          private: true,
+        },
+      },
+    }),
+    false
+  )
+})
+
+test('should exclude unversioned workspaces from release version policy', () => {
+  assert.equal(
+    isReleaseVersionWorkspace({
+      relativeCwd: 'yarn/cli-tools',
+      manifest: {
+        name: structUtils.makeIdent('atls', 'yarn-cli-tools'),
+        version: null,
+        raw: {
+          private: true,
+        },
+      },
+    }),
+    false
+  )
 })
