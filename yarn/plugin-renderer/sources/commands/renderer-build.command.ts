@@ -1,20 +1,21 @@
-import type { PortablePath }           from '@yarnpkg/fslib'
+import type { PortablePath }                             from '@yarnpkg/fslib'
 
-import { PassThrough }                 from 'node:stream'
+import { PassThrough }                                   from 'node:stream'
 
-import { BaseCommand }                 from '@yarnpkg/cli'
-import { Configuration }               from '@yarnpkg/core'
-import { Project }                     from '@yarnpkg/core'
-import { StreamReport }                from '@yarnpkg/core'
-import { MessageName }                 from '@yarnpkg/core'
-import { execUtils }                   from '@yarnpkg/core'
-import { xfs }                         from '@yarnpkg/fslib'
-import { ppath }                       from '@yarnpkg/fslib'
+import { BaseCommand }                                   from '@yarnpkg/cli'
+import { Configuration }                                 from '@yarnpkg/core'
+import { Project }                                       from '@yarnpkg/core'
+import { StreamReport }                                  from '@yarnpkg/core'
+import { MessageName }                                   from '@yarnpkg/core'
+import { execUtils }                                     from '@yarnpkg/core'
+import { xfs }                                           from '@yarnpkg/fslib'
+import { ppath }                                         from '@yarnpkg/fslib'
 
-import { makeCurrentYarnExecutable }   from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { makeCurrentYarnExecutable }                     from '@atls/yarn-plugin-tools/current-yarn-executable'
 
-import { assertRendererBuildExitCode } from './renderer-build.utils.js'
-import { createRendererBuildEnv }      from './renderer-build.utils.js'
+import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
+import { createRendererBuildEnv }                        from './renderer-build.utils.js'
+import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
   static paths = [['renderer', 'build']]
@@ -60,6 +61,8 @@ export class RendererBuildCommand extends BaseCommand {
           try {
             const binFolder = await xfs.mktempPromise()
             const { executable, env } = await makeCurrentYarnExecutable({ binFolder, project })
+            const nextCompiledConfRequireCacheLoader =
+              await materializeNextCompiledConfRequireCacheLoader(binFolder)
 
             const { code } = await execUtils.pipevp(
               executable,
@@ -70,7 +73,7 @@ export class RendererBuildCommand extends BaseCommand {
                 stdin: this.context.stdin,
                 stdout,
                 stderr,
-                env: createRendererBuildEnv(env),
+                env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader),
               }
             )
 
