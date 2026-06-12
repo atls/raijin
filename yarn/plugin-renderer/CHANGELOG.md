@@ -1,5 +1,18 @@
 
 
+## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.7...@atls/yarn-plugin-renderer@1.0.8) (2026-06-12)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-renderer:** harden next build execution ([510f808](https://github.com/atls/raijin/commit/510f8088d98c57d16ff210cac3d26da4bacbb306))
+* **yarn-plugin-renderer:** patch next conf pnp loader ([efb6177](https://github.com/atls/raijin/commit/efb617750898d7d54d98811970490b907617e184))
+
+
+
+
+
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.7...@atls/yarn-plugin-renderer@1.0.7) (2026-06-11)
 
 

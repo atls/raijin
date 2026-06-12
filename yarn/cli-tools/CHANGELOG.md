@@ -12,6 +12,18 @@
 
 
 
+## [1.0.52](https://github.com/atls/raijin/compare/@atls/yarn-cli-tools@1.0.52...@atls/yarn-cli-tools@1.0.52) (2026-06-12)
+
+
+### Bug Fixes
+
+
+* **yarn-cli:** keep jsr protocol resolver ([4113f3c](https://github.com/atls/raijin/commit/4113f3ca4feaa7c9169edd2ba5fca810c01a5862))
+
+
+
+
+
 ## [1.0.52](https://github.com/atls/raijin/compare/@atls/yarn-cli-tools@1.0.52...@atls/yarn-cli-tools@1.0.52) (2026-06-11)
 
 
