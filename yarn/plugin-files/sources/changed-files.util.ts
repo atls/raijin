@@ -104,10 +104,6 @@ export const getChangedFiles = async (
   project: Project,
   gitRange?: string
 ): Promise<Array<string>> => {
-  if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
-    return getGithubChangedFiles()
-  }
-
   const { stdout } = await execUtils.execvp(
     'git',
     ['diff', '--name-only', ...(gitRange ? [gitRange] : [])],
@@ -117,5 +113,15 @@ export const getChangedFiles = async (
     }
   )
 
-  return stdout.split(/\r?\n/).filter(Boolean)
+  const gitChangedFiles = stdout.split(/\r?\n/).filter(Boolean)
+
+  if (gitChangedFiles.length > 0) {
+    return gitChangedFiles
+  }
+
+  if (!gitRange && process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
+    return getGithubChangedFiles()
+  }
+
+  return []
 }
