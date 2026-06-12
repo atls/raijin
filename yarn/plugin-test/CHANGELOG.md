@@ -1,5 +1,17 @@
 
 
+## [1.0.33](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.33...@atls/yarn-plugin-test@1.0.33) (2026-06-12)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** share runtime exec argv contract ([3f27740](https://github.com/atls/raijin/commit/3f27740f4022e7ca10f7c00c580e286ef00d3115))
+
+
+
+
+
 ## [1.0.33](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.33...@atls/yarn-plugin-test@1.0.33) (2026-06-11)
 
 

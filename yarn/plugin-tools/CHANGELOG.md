@@ -1,5 +1,17 @@
 
 
+## [1.0.31](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.30...@atls/yarn-plugin-tools@1.0.31) (2026-06-12)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-renderer:** stabilize workspace build route ([8e60b56](https://github.com/atls/raijin/commit/8e60b5623c6156133eae727b98c371fa65449474))
+
+
+
+
+
 ## [1.0.30](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.30...@atls/yarn-plugin-tools@1.0.30) (2026-06-11)
 
 
