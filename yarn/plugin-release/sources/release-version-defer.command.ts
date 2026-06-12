@@ -27,6 +27,11 @@ import { resolveReleaseVersionWorkspaceStrategies } from './release-version-poli
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
 type GitHubCommitFile = NonNullable<GitHubCommit['data']['files']>[number]
 
+interface ReleaseVersionWorkspaceCandidate {
+  relativeCwd: string
+  manifest: Pick<Workspace['manifest'], 'name' | 'raw' | 'version'>
+}
+
 const DEFAULT_GIT_BASE_REF = 'origin/HEAD'
 const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
@@ -39,16 +44,20 @@ const isErrorWithCode = (error: unknown, code: string): boolean =>
   'code' in error &&
   (error as { code?: unknown }).code === code
 
-const toWorkspaceIdent = (workspace: Workspace): string | undefined =>
+const toWorkspaceIdent = (
+  workspace: Pick<ReleaseVersionWorkspaceCandidate, 'manifest'>
+): string | undefined =>
   workspace.manifest.name ? structUtils.stringifyIdent(workspace.manifest.name) : undefined
 
-const isReleasedWorkspace = (workspace: Workspace): boolean =>
-  workspace.manifest.raw.private !== true && Boolean(toWorkspaceIdent(workspace))
+export const isReleaseVersionWorkspace = (workspace: ReleaseVersionWorkspaceCandidate): boolean =>
+  workspace.relativeCwd !== '.' &&
+  Boolean(workspace.manifest.version) &&
+  Boolean(toWorkspaceIdent(workspace))
 
 const toReleaseWorkspace = (workspace: Workspace): ReleaseVersionWorkspace | undefined => {
   const ident = toWorkspaceIdent(workspace)
 
-  if (!ident || !isReleasedWorkspace(workspace)) {
+  if (!ident || !isReleaseVersionWorkspace(workspace)) {
     return undefined
   }
 
