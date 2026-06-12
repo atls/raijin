@@ -1,5 +1,17 @@
 
 
+## [1.1.87](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.86...@atls/yarn-cli@1.1.87) (2026-06-12)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-renderer:** patch next conf pnp loader ([efb6177](https://github.com/atls/raijin/commit/efb617750898d7d54d98811970490b907617e184))
+
+
+
+
+
 ## [1.1.85](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.80...@atls/yarn-cli@1.1.85) (2026-06-12)
 
 
