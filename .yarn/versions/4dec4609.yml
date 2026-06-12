@@ -1,0 +1,3 @@
+releases:
+  "@atls/yarn-cli": patch
+  "@atls/yarn-plugin-release": patch
