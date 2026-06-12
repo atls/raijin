@@ -1,5 +1,20 @@
 
 
+## [1.1.85](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.80...@atls/yarn-cli@1.1.85) (2026-06-12)
+
+
+### Bug Fixes
+
+
+* **yarn-cli:** keep jsr protocol resolver ([4113f3c](https://github.com/atls/raijin/commit/4113f3ca4feaa7c9169edd2ba5fca810c01a5862))
+* **yarn-plugin-release:** include private release workspaces ([cd65639](https://github.com/atls/raijin/commit/cd656394d902c10bece510e1bbcf1029d450537e))
+* **yarn-plugin-renderer:** harden next build execution ([510f808](https://github.com/atls/raijin/commit/510f8088d98c57d16ff210cac3d26da4bacbb306))
+* **yarn-plugin-workspaces:** keep local changed files in release actions ([c3c82db](https://github.com/atls/raijin/commit/c3c82db73f73d5ffc90e07b296ff4ced1914ea01))
+
+
+
+
+
 ## [1.1.81](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.80...@atls/yarn-cli@1.1.81) (2026-06-11)
 
 

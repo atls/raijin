@@ -1,5 +1,17 @@
 
 
+## [1.0.6](https://github.com/atls/raijin/compare/@atls/yarn-plugin-files@1.0.5...@atls/yarn-plugin-files@1.0.6) (2026-06-12)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-workspaces:** keep local changed files in release actions ([c3c82db](https://github.com/atls/raijin/commit/c3c82db73f73d5ffc90e07b296ff4ced1914ea01))
+
+
+
+
+
 ## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-files@1.0.4...@atls/yarn-plugin-files@1.0.5) (2026-06-09)
 
 
