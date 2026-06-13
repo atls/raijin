@@ -73,7 +73,7 @@ export class Tester extends EventEmitter {
 
       result.pipe(process.stdout)
 
-      return this.collectTestsStream(testsStream, result)
+      return this.collectTestsStream(testsStream, result, watch)
     }
 
     const tests = await Tests.load(files)
@@ -105,7 +105,7 @@ export class Tester extends EventEmitter {
     testsStream.on('test:stderr', onStderr)
 
     try {
-      return await this.collectTestsStream(testsStream, drainReporter)
+      return await this.collectTestsStream(testsStream, drainReporter, watch)
     } finally {
       this.emit('end')
 
@@ -122,7 +122,8 @@ export class Tester extends EventEmitter {
 
   private async collectTestsStream(
     testsStream: TestsStream,
-    reporter?: NodeJS.ReadableStream
+    reporter?: NodeJS.ReadableStream,
+    watch = false
   ): Promise<Array<TestEvent>> {
     const events: Array<TestEvent> = []
     let reporterOutput = ''
@@ -148,7 +149,7 @@ export class Tester extends EventEmitter {
       function onSummary(data: TestSummary): void {
         events.push(createTestEvent('test:summary', data))
 
-        if (isFinalSummary(data)) {
+        if (!watch && isFinalSummary(data)) {
           resolveWithEvents()
         }
       }
