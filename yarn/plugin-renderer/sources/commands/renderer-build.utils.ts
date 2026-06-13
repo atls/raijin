@@ -1,8 +1,10 @@
+import type { Locator }      from '@yarnpkg/core'
 import type { Filename }     from '@yarnpkg/fslib'
 import type { PortablePath } from '@yarnpkg/fslib'
 
 import { pathToFileURL }     from 'node:url'
 
+import { structUtils }       from '@yarnpkg/core'
 import { npath }             from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
@@ -14,6 +16,7 @@ const DIST_DIR = 'dist' as Filename
 const NEXT_DIR = '.next' as Filename
 const PACKAGE_MANIFEST = 'package.json' as Filename
 const SRC_DIR = 'src' as Filename
+const NPM_PROTOCOL = 'npm:'
 const NEXT_MAJOR_WEBPACK_BY_DEFAULT = 16
 type RendererBuildPathSegments = ReadonlyArray<Filename>
 
@@ -267,6 +270,17 @@ export const assertSupportedRendererNextVersion = (nextVersion: string | undefin
   if (nextMajor !== null && nextMajor < NEXT_MAJOR_WEBPACK_BY_DEFAULT) {
     throw new Error(`Renderer build requires Next.js 16 or newer, found ${nextVersion}`)
   }
+}
+
+export const normalizeNextPackageVersion = (reference: string): string =>
+  reference.startsWith(NPM_PROTOCOL) ? reference.slice(NPM_PROTOCOL.length) : reference
+
+export const resolveNextPackageVersion = (locator: Locator): string => {
+  const nextLocator = structUtils.isVirtualLocator(locator)
+    ? structUtils.devirtualizeLocator(locator)
+    : locator
+
+  return normalizeNextPackageVersion(nextLocator.reference)
 }
 
 export const createRendererBuildArgs = (

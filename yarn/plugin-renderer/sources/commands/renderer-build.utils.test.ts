@@ -1,6 +1,7 @@
 import assert                                             from 'node:assert/strict'
 import test                                               from 'node:test'
 
+import { structUtils }                                    from '@yarnpkg/core'
 import { ppath }                                          from '@yarnpkg/fslib'
 import { xfs }                                            from '@yarnpkg/fslib'
 
@@ -14,6 +15,8 @@ import { createNextRendererLoaderSource }                 from './renderer-build
 import { createRendererBuildArgs }                        from './renderer-build.utils.js'
 import { createRendererBuildEnv }                         from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                        from './renderer-build.utils.js'
+import { normalizeNextPackageVersion }                    from './renderer-build.utils.js'
+import { resolveNextPackageVersion }                      from './renderer-build.utils.js'
 
 test('should disable Next telemetry for renderer build', () => {
   const env = createRendererBuildEnv(
@@ -74,6 +77,33 @@ test('should reject unsupported Next versions before 16', () => {
 
 test('should use explicit webpack build arguments for Next versions after 15', () => {
   assert.deepEqual(createRendererBuildArgs('16.0.7'), ['node', 'next', 'build', '--webpack', 'src'])
+})
+
+test('should normalize Next npm package references before version checks', () => {
+  assert.equal(normalizeNextPackageVersion('npm:16.2.9'), '16.2.9')
+  assert.deepEqual(createRendererBuildArgs(normalizeNextPackageVersion('npm:16.2.9')), [
+    'node',
+    'next',
+    'build',
+    '--webpack',
+    'src',
+  ])
+})
+
+test('should devirtualize Next locator references before version checks', () => {
+  const locator = structUtils.makeLocator(
+    structUtils.makeIdent(null, 'next'),
+    'virtual:peer-reference#npm:16.2.9'
+  )
+
+  assert.equal(resolveNextPackageVersion(locator), '16.2.9')
+  assert.deepEqual(createRendererBuildArgs(resolveNextPackageVersion(locator)), [
+    'node',
+    'next',
+    'build',
+    '--webpack',
+    'src',
+  ])
 })
 
 test('should avoid version-specific Next build arguments when version is unknown', () => {

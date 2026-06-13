@@ -22,6 +22,7 @@ import { createRendererBuildArgs }                       from './renderer-build.
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
 import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
+import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
   static paths = [['renderer', 'build']]
@@ -94,9 +95,7 @@ export class RendererBuildCommand extends BaseCommand {
             }
 
             const [nextPackage, nextBin] = nextBinary
-            const nextVersion = nextPackage.reference.startsWith('npm:')
-              ? nextPackage.reference.slice('npm:'.length)
-              : nextPackage.reference
+            const nextVersion = resolveNextPackageVersion(nextPackage)
             const nextCompiledConfRequireCacheLoader =
               await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
             const { executable, env } = await makeCurrentYarnExecutable({
