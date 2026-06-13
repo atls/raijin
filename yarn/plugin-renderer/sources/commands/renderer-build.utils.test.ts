@@ -79,7 +79,7 @@ test('should create combined renderer loader source with PnP loader delegation',
 })
 
 test('should reject unsupported Next versions before 16', () => {
-  for (const version of ['14.2.24', '15.3.1']) {
+  for (const version of ['14.0.0', '14.2.24', '15.0.0', '15.3.1', '15.5.0']) {
     const error = {
       message: `Renderer build requires Next.js 16 or newer, found ${version}`,
     }
