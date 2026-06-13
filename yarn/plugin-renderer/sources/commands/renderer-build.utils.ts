@@ -37,6 +37,12 @@ const RENDERER_BUILD_SOURCE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegme
 export const NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE = `
 const pnpLoader = {}
 
+const NEXT_PACKAGE_PATH = '/node_modules/next/'
+const NEXT_COMPILED_CONF_PATH = '/dist/compiled/conf/index.js'
+const NEXT_CONFIG_REQUIRE_HOOK_PATH = '/dist/build/next-config-ts/require-hook.js'
+const NEXT_REQUIRE_CACHE_PATH = '/dist/server/dev/require-cache.js'
+const NEXT_COMPILED_WEBPACK_PATH = '/dist/compiled/webpack/bundle5.js'
+const NEXT_WEBPACK_CONFIG_PATH = '/dist/build/webpack-config.js'
 const REQUIRE_CACHE_NEEDLE = 'delete require.cache[__filename]'
 const REQUIRE_CACHE_REPLACEMENT = 'if (require.cache) delete require.cache[__filename]'
 const REQUIRE_CACHE_FILE_NEEDLE = 'const mod = require.cache[filePath];'
@@ -58,20 +64,18 @@ const WEBPACK_NODE_PROTOCOL_PLUGIN_REPLACEMENT = [
 const REQUIRE_EXTENSIONS_NEEDLE = "const oldJSHook = requireExtensions['.js'];"
 const REQUIRE_EXTENSIONS_REPLACEMENT = "const requireExtensions = require.extensions || _nodemodule.default._extensions;\\nconst oldJSHook = requireExtensions['.js'];"
 
-const isNextCompiledConf = (url) =>
-  url.includes('/node_modules/next/') && url.includes('/dist/compiled/conf/index.js')
+const isNextSource = (url, path) =>
+  url.includes(NEXT_PACKAGE_PATH) && url.includes(path)
 
-const isNextConfigRequireHook = (url) =>
-  url.includes('/node_modules/next/') && url.includes('/dist/build/next-config-ts/require-hook.js')
+const isNextCompiledConf = (url) => isNextSource(url, NEXT_COMPILED_CONF_PATH)
 
-const isNextRequireCache = (url) =>
-  url.includes('/node_modules/next/') && url.includes('/dist/server/dev/require-cache.js')
+const isNextConfigRequireHook = (url) => isNextSource(url, NEXT_CONFIG_REQUIRE_HOOK_PATH)
 
-const isNextCompiledWebpack = (url) =>
-  url.includes('/node_modules/next/') && url.includes('/dist/compiled/webpack/bundle5.js')
+const isNextRequireCache = (url) => isNextSource(url, NEXT_REQUIRE_CACHE_PATH)
 
-const isNextWebpackConfig = (url) =>
-  url.includes('/node_modules/next/') && url.includes('/dist/build/webpack-config.js')
+const isNextCompiledWebpack = (url) => isNextSource(url, NEXT_COMPILED_WEBPACK_PATH)
+
+const isNextWebpackConfig = (url) => isNextSource(url, NEXT_WEBPACK_CONFIG_PATH)
 
 const patchNextCompiledConfSource = (source) =>
   source
