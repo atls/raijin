@@ -6,6 +6,7 @@ import { dirname }                   from 'node:path'
 import { resolve }                   from 'node:path'
 import test                          from 'node:test'
 import { fileURLToPath }             from 'node:url'
+import { pathToFileURL }             from 'node:url'
 
 import { Configuration }             from '@yarnpkg/core'
 import { Project }                   from '@yarnpkg/core'
@@ -177,4 +178,42 @@ test('should preserve unrelated package script node loaders', async () => {
     decodeURIComponent(env.NODE_OPTIONS),
     /register\("file:\/\/\/tmp\/managed-loader\.mjs"/
   )
+})
+
+test('should forward node flags from managed node wrapper', async () => {
+  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
+  const { project } = await Project.find(configuration, repoRoot)
+  const binFolder = await xfs.mktempPromise()
+  const loaderPath = ppath.join(binFolder, 'managed-loader.mjs' as Filename)
+
+  await xfs.writeFilePromise(
+    loaderPath,
+    [
+      'export async function resolve(specifier, context, nextResolve) {',
+      '  return nextResolve(specifier, context)',
+      '}',
+      'export async function load(url, context, nextLoad) {',
+      '  return nextLoad(url, context)',
+      '}',
+    ].join('\n')
+  )
+
+  const { env } = await makeCurrentYarnExecutable({
+    binFolder,
+    nodeLoader: pathToFileURL(npath.fromPortablePath(loaderPath)).href,
+    project,
+  })
+  const nodeWrapper = npath.fromPortablePath(ppath.join(binFolder, 'node' as Filename))
+  const { stdout } = await execFileAsync(
+    nodeWrapper,
+    [
+      '--conditions=raijin-managed-wrapper-test',
+      '-e',
+      'process.stdout.write(JSON.stringify(process.execArgv))',
+    ],
+    { env }
+  )
+  const execArgv = JSON.parse(stdout) as Array<string>
+
+  assert.ok(execArgv.includes('--conditions=raijin-managed-wrapper-test'))
 })

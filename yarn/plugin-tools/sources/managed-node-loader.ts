@@ -140,10 +140,28 @@ const removeNodeLoaders = (nodeOptions) => {
   }
   return nextTokens.length > 0 ? nextTokens.join(' ') : undefined;
 };
+const getForwardedExecArgv = () => {
+  const nextExecArgv = [];
+  let removedWrapperEval = false;
+  for (let index = 0; index < process.execArgv.length; index += 1) {
+    const arg = process.execArgv[index];
+    if (!removedWrapperEval && (arg === '-e' || arg === '--eval')) {
+      removedWrapperEval = true;
+      index += 1;
+      continue;
+    }
+    if (!removedWrapperEval && (arg.startsWith('-e') || arg.startsWith('--eval='))) {
+      removedWrapperEval = true;
+      continue;
+    }
+    nextExecArgv.push(arg);
+  }
+  return nextExecArgv;
+};
 if (process.env[loaderEnv]) {
   process.env.NODE_OPTIONS = [removeNodeLoaders(process.env.NODE_OPTIONS), loaderOption, createNodeLoaderRegisterImport(process.env[loaderEnv])].filter(Boolean).join(' ');
 }
-const result = spawnSync(process.execPath, process.argv.slice(1), {
+const result = spawnSync(process.execPath, [...getForwardedExecArgv(), ...process.argv.slice(1)], {
   stdio: 'inherit',
   env: process.env,
 });
