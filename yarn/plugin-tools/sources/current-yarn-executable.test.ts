@@ -40,25 +40,83 @@ const execFileAsync = async (
     })
   })
 
-test('should materialize current Yarn shims without Corepack reentry', async () => {
+test('should materialize current Yarn wrappers without Corepack reentry', async () => {
   const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
   const { project } = await Project.find(configuration, repoRoot)
   const binFolder = await xfs.mktempPromise()
   const { executable, env } = await makeCurrentYarnExecutable({ binFolder, project })
 
-  const shims = await Promise.all(
+  const wrappers = await Promise.all(
     yarnExecutableNames.map(async (name) =>
       xfs.readFilePromise(ppath.join(binFolder, name), 'utf-8'))
   )
 
-  for (const shim of shims) {
-    assert.match(shim, /\.yarn[\\/]releases[\\/]yarn\.mjs/)
-    assert.doesNotMatch(shim, /corepack/)
+  for (const wrapper of wrappers) {
+    assert.match(wrapper, /\.yarn[\\/]releases[\\/]yarn\.mjs/)
+    assert.doesNotMatch(wrapper, /corepack/)
   }
 
   const { stdout } = await execFileAsync(executable, ['--version'], { env })
 
   assert.match(stdout, /-atls/)
+})
+
+test('should create script env for the selected workspace locator', async () => {
+  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
+  const { project, workspace } = await Project.find(
+    configuration,
+    ppath.join(repoRoot, 'yarn/plugin-renderer')
+  )
+  const binFolder = await xfs.mktempPromise()
+  const { env } = await makeCurrentYarnExecutable({
+    binFolder,
+    locator: workspace?.anchoredLocator,
+    project,
+  })
+
+  assert.equal(env.npm_package_name, '@atls/yarn-plugin-renderer')
+  assert.match(env.npm_package_json ?? '', /yarn[\\/]plugin-renderer[\\/]package\.json/)
+})
+
+test('should materialize managed node wrapper for current Yarn executable', async () => {
+  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
+  const { project } = await Project.find(configuration, repoRoot)
+  const binFolder = await xfs.mktempPromise()
+  const { env } = await makeCurrentYarnExecutable({
+    binFolder,
+    nodeLoader: 'file:///tmp/managed-loader.mjs',
+    project,
+  })
+  const nodeWrapper = await xfs.readFilePromise(ppath.join(binFolder, 'node' as Filename), 'utf-8')
+
+  assert.equal(env.RAIJIN_NODE_LOADER, 'file:///tmp/managed-loader.mjs')
+  assert.match(env.NODE_OPTIONS ?? '', /--import data:text\/javascript,/)
+  assert.match(
+    decodeURIComponent(env.NODE_OPTIONS ?? ''),
+    /register\("file:\/\/\/tmp\/managed-loader\.mjs"/
+  )
+  assert.match(nodeWrapper, /RAIJIN_NODE_LOADER/)
+})
+
+test('should keep managed node loader options idempotent', async () => {
+  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
+  const { project } = await Project.find(configuration, repoRoot)
+  const binFolder = await xfs.mktempPromise()
+  const { env } = await makeCurrentYarnExecutable({
+    binFolder,
+    nodeLoader: 'file:///tmp/managed-loader.mjs',
+    project,
+  })
+  const firstNodeOptions = env.NODE_OPTIONS
+
+  await makeCurrentYarnExecutable({
+    binFolder,
+    env,
+    nodeLoader: 'file:///tmp/managed-loader.mjs',
+    project,
+  })
+
+  assert.equal(env.NODE_OPTIONS, firstNodeOptions)
 })
 
 test('should setup package script Yarn wrappers without Corepack reentry', async () => {
@@ -80,4 +138,24 @@ test('should setup package script Yarn wrappers without Corepack reentry', async
     assert.match(wrapper.args.join(' '), /\.yarn[\\/]releases[\\/]yarn\.mjs/)
     assert.doesNotMatch(wrapper.args.join(' '), /corepack/)
   }
+})
+
+test('should replace package script PnP loader with managed node loader', async () => {
+  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
+  const { project } = await Project.find(configuration, repoRoot)
+  const wrappers: Array<{ name: string; argv0: string; args: Array<string> }> = []
+  const env = {
+    NODE_OPTIONS: '--require ./.pnp.cjs --experimental-loader file:///.pnp.loader.mjs',
+    RAIJIN_NODE_LOADER: 'file:///tmp/managed-loader.mjs',
+  }
+
+  await setupScriptEnvironment(project, env, async (name, argv0, args = []) => {
+    wrappers.push({ name, argv0, args })
+  })
+
+  assert.match(env.NODE_OPTIONS, /^--require \.\/\.pnp\.cjs --import data:text\/javascript,/)
+  assert.match(
+    decodeURIComponent(env.NODE_OPTIONS),
+    /register\("file:\/\/\/tmp\/managed-loader\.mjs"/
+  )
 })
