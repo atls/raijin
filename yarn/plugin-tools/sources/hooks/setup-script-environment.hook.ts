@@ -1,11 +1,10 @@
-import type { Project }                   from '@yarnpkg/core'
+import type { Project }            from '@yarnpkg/core'
 
-import { npath }                          from '@yarnpkg/fslib'
+import { npath }                   from '@yarnpkg/fslib'
 
-import { MANAGED_NODE_LOADER_ENV }        from '../managed-node-loader.js'
-import { resolveCurrentYarnPath }         from '../current-yarn-executable.js'
-import { applyManagedNodeLoader }         from '../managed-node-loader.js'
-import { createManagedNodeWrapperSource } from '../managed-node-loader.js'
+import { MANAGED_NODE_LOADER_ENV } from '../managed-node-loader.js'
+import { resolveCurrentYarnPath }  from '../current-yarn-executable.js'
+import { applyManagedNodeLoader }  from '../managed-node-loader.js'
 
 type MakePathWrapper = (name: string, argv0: string, args?: Array<string>) => Promise<void>
 
@@ -25,9 +24,7 @@ export const setupScriptEnvironment = async (
   const yarnBin = npath.fromPortablePath(yarnPath)
 
   await Promise.all([
-    ...(env[MANAGED_NODE_LOADER_ENV]
-      ? [makePathWrapper('node', process.execPath, ['-e', createManagedNodeWrapperSource()])]
-      : []),
+    ...(env[MANAGED_NODE_LOADER_ENV] ? [makePathWrapper('node', process.execPath)] : []),
     makePathWrapper('run', process.execPath, [yarnBin, 'run']),
     makePathWrapper('yarn', process.execPath, [yarnBin]),
     makePathWrapper('yarnpkg', process.execPath, [yarnBin]),

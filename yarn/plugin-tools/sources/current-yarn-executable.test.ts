@@ -96,7 +96,8 @@ test('should materialize managed node wrapper for current Yarn executable', asyn
     decodeURIComponent(env.NODE_OPTIONS ?? ''),
     /register\("file:\/\/\/tmp\/managed-loader\.mjs"/
   )
-  assert.match(nodeWrapper, /RAIJIN_NODE_LOADER/)
+  assert.doesNotMatch(nodeWrapper, / -e /)
+  assert.doesNotMatch(nodeWrapper, /RAIJIN_NODE_LOADER/)
 })
 
 test('should keep managed node loader options idempotent', async () => {
@@ -154,6 +155,9 @@ test('should replace package script PnP loader with managed node loader', async 
     wrappers.push({ name, argv0, args })
   })
 
+  const nodeWrapper = wrappers.find(({ name }) => name === 'node')
+
+  assert.deepEqual(nodeWrapper, { name: 'node', argv0: process.execPath, args: [] })
   assert.match(env.NODE_OPTIONS, /^--require \.\/\.pnp\.cjs --import data:text\/javascript,/)
   assert.match(
     decodeURIComponent(env.NODE_OPTIONS),

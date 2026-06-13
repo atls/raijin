@@ -1,18 +1,17 @@
-import type { Project }                   from '@yarnpkg/core'
-import type { Locator }                   from '@yarnpkg/core'
-import type { Filename }                  from '@yarnpkg/fslib'
-import type { PortablePath }              from '@yarnpkg/fslib'
+import type { Project }            from '@yarnpkg/core'
+import type { Locator }            from '@yarnpkg/core'
+import type { Filename }           from '@yarnpkg/fslib'
+import type { PortablePath }       from '@yarnpkg/fslib'
 
-import { join }                           from 'node:path'
+import { join }                    from 'node:path'
 
-import { scriptUtils }                    from '@yarnpkg/core'
-import { npath }                          from '@yarnpkg/fslib'
-import { ppath }                          from '@yarnpkg/fslib'
-import { xfs }                            from '@yarnpkg/fslib'
+import { scriptUtils }             from '@yarnpkg/core'
+import { npath }                   from '@yarnpkg/fslib'
+import { ppath }                   from '@yarnpkg/fslib'
+import { xfs }                     from '@yarnpkg/fslib'
 
-import { MANAGED_NODE_LOADER_ENV }        from './managed-node-loader.js'
-import { applyManagedNodeLoader }         from './managed-node-loader.js'
-import { createManagedNodeWrapperSource } from './managed-node-loader.js'
+import { MANAGED_NODE_LOADER_ENV } from './managed-node-loader.js'
+import { applyManagedNodeLoader }  from './managed-node-loader.js'
 
 const YARN_EXECUTABLE_NAME = (process.platform === 'win32' ? 'yarn.cmd' : 'yarn') as Filename
 const NODE_EXECUTABLE_NAME = (process.platform === 'win32' ? 'node.cmd' : 'node') as Filename
@@ -75,7 +74,7 @@ const materializeCurrentYarnWrappers = async (
       ? [
           xfs.writeFilePromise(
             ppath.join(portableBinFolder, NODE_EXECUTABLE_NAME),
-            createExecutableWrapper(process.execPath, ['-e', createManagedNodeWrapperSource()]),
+            createExecutableWrapper(process.execPath, []),
             { mode: 0o755 }
           ),
         ]
