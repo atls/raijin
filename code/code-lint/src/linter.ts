@@ -1,19 +1,21 @@
-import type { ESLint }             from '@atls/code-runtime/eslint'
-import type { Linter as ESLinter } from '@atls/code-runtime/eslint'
+import type { ESLintInstance } from '@atls/code-runtime/eslint'
+import type { LinterConfig }   from '@atls/code-runtime/eslint'
+import type { LinterInstance } from '@atls/code-runtime/eslint'
+import type { LintResult }     from '@atls/code-runtime/eslint'
 
-import EventEmitter                from 'node:events'
-import { readFileSync }            from 'node:fs'
-import { readFile }                from 'node:fs/promises'
-import { writeFile }               from 'node:fs/promises'
-import { relative }                from 'node:path'
-import { join }                    from 'node:path'
+import EventEmitter            from 'node:events'
+import { readFileSync }        from 'node:fs'
+import { readFile }            from 'node:fs/promises'
+import { writeFile }           from 'node:fs/promises'
+import { relative }            from 'node:path'
+import { join }                from 'node:path'
 
-import { globby }                  from 'globby'
-import ignorer                     from 'ignore'
+import { globby }              from 'globby'
+import ignorer                 from 'ignore'
 
-import { ignore }                  from './linter.patterns.js'
-import { createPatterns }          from './linter.patterns.js'
-import { createLintResult }        from './linter.utils.js'
+import { ignore }              from './linter.patterns.js'
+import { createPatterns }      from './linter.patterns.js'
+import { createLintResult }    from './linter.utils.js'
 
 export interface LintOptions {
   fix?: boolean
@@ -24,9 +26,9 @@ export class Linter extends EventEmitter {
   private ignore: ignorer.Ignore
 
   constructor(
-    private readonly linter: ESLinter,
-    private readonly cacheLinter: ESLint,
-    private readonly config: Array<ESLinter.Config>,
+    private readonly linter: LinterInstance,
+    private readonly cacheLinter: ESLintInstance,
+    private readonly config: Array<LinterConfig>,
     private readonly cwd: string
   ) {
     super()
@@ -40,7 +42,7 @@ export class Linter extends EventEmitter {
 
     const linter = new LinterConstructor({ configType: 'flat' })
 
-    const config: Array<ESLinter.Config> = eslintconfig.map((item) => ({
+    const config: Array<LinterConfig> = eslintconfig.map((item) => ({
       ...item,
       languageOptions: {
         ...(item.languageOptions || {}),
@@ -62,7 +64,7 @@ export class Linter extends EventEmitter {
     return new Linter(linter, eslint, config, cwd)
   }
 
-  async lintFile(filename: string, options?: LintOptions): Promise<ESLint.LintResult> {
+  async lintFile(filename: string, options?: LintOptions): Promise<LintResult> {
     const source = await readFile(filename, 'utf8')
 
     if (options?.fix) {
@@ -86,11 +88,8 @@ export class Linter extends EventEmitter {
     )
   }
 
-  async lintFiles(
-    files: Array<string> = [],
-    options?: LintOptions
-  ): Promise<Array<ESLint.LintResult>> {
-    const results: Array<ESLint.LintResult> = []
+  async lintFiles(files: Array<string> = [], options?: LintOptions): Promise<Array<LintResult>> {
+    const results: Array<LintResult> = []
 
     this.emit('start', { files })
 
@@ -109,7 +108,7 @@ export class Linter extends EventEmitter {
     return results
   }
 
-  async lint(files?: Array<string>, options?: LintOptions): Promise<Array<ESLint.LintResult>> {
+  async lint(files?: Array<string>, options?: LintOptions): Promise<Array<LintResult>> {
     const filesForLint =
       files && files.length > 0 ? files : await globby(createPatterns(this.cwd), { dot: true })
 
@@ -124,7 +123,7 @@ export class Linter extends EventEmitter {
     return this.lintFiles(finalFiles, options)
   }
 
-  private async lintWithCache(files: Array<string> = []): Promise<Array<ESLint.LintResult>> {
+  private async lintWithCache(files: Array<string> = []): Promise<Array<LintResult>> {
     this.emit('start', { files })
 
     const results = await this.cacheLinter.lintFiles(files)

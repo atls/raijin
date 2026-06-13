@@ -1,11 +1,11 @@
-import type { Linter as ESLinter } from '@atls/code-runtime/eslint'
-import type { ESLint }             from '@atls/code-runtime/eslint'
+import type { LintMessage } from '@atls/code-runtime/eslint'
+import type { LintResult }  from '@atls/code-runtime/eslint'
 
 export const createLintResult = (
   filePath: string,
   source: string,
-  messages: Array<ESLinter.LintMessage>
-): ESLint.LintResult => ({
+  messages: Array<LintMessage>
+): LintResult => ({
   filePath,
   source,
   messages,
