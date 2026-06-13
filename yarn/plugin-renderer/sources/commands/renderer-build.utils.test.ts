@@ -58,6 +58,18 @@ test('should extract existing node loader option from renderer build node option
   )
 })
 
+test('should extract PnP node loader without removing unrelated loaders', () => {
+  assert.deepEqual(
+    extractNodeLoaderOption(
+      '--loader file:///tmp/custom-loader.mjs --experimental-loader file:///.pnp.loader.mjs'
+    ),
+    {
+      nodeOptions: '--loader file:///tmp/custom-loader.mjs',
+      loader: 'file:///.pnp.loader.mjs',
+    }
+  )
+})
+
 test('should create combined renderer loader source with PnP loader delegation', () => {
   const source = createNextRendererLoaderSource('file:///.pnp.loader.mjs')
 

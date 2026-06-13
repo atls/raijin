@@ -35,6 +35,9 @@ const RENDERER_BUILD_SOURCE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegme
   [SRC_DIR, NEXT_DIR],
 ]
 
+const isPnpNodeLoader = (value: string | undefined): boolean =>
+  value?.includes('.pnp.loader.mjs') ?? false
+
 export const NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE = `
 const pnpLoader = {}
 
@@ -261,6 +264,11 @@ export const extractNodeLoaderOption = (
     }
 
     const loader = hasInlineValue ? token.slice(separatorIndex + 1) : tokens[index + 1]
+
+    if (!isPnpNodeLoader(loader)) {
+      continue
+    }
+
     const tokenCount = hasInlineValue ? 1 : 2
     const nextTokens = [...tokens.slice(0, index), ...tokens.slice(index + tokenCount)]
 
