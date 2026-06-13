@@ -67,12 +67,18 @@ test('should create combined renderer loader source with PnP loader delegation',
 })
 
 test('should reject unsupported Next versions before 16', () => {
-  assert.throws(() => {
-    createRendererBuildArgs('14.2.24')
-  }, /Renderer build requires Next\.js 16 or newer, found 14\.2\.24/)
-  assert.throws(() => {
-    assertSupportedRendererNextVersion('15.3.1')
-  }, /Renderer build requires Next\.js 16 or newer, found 15\.3\.1/)
+  for (const version of ['14.2.24', '15.3.1']) {
+    const error = {
+      message: `Renderer build requires Next.js 16 or newer, found ${version}`,
+    }
+
+    assert.throws(() => {
+      createRendererBuildArgs(version)
+    }, error)
+    assert.throws(() => {
+      assertSupportedRendererNextVersion(version)
+    }, error)
+  }
 })
 
 test('should use explicit webpack build arguments for Next versions after 15', () => {
