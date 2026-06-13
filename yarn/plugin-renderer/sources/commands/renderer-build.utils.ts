@@ -1,13 +1,20 @@
-import type { Locator }      from '@yarnpkg/core'
-import type { Filename }     from '@yarnpkg/fslib'
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { Locator }                  from '@yarnpkg/core'
+import type { Filename }                 from '@yarnpkg/fslib'
+import type { PortablePath }             from '@yarnpkg/fslib'
 
-import { pathToFileURL }     from 'node:url'
+import { pathToFileURL }                 from 'node:url'
 
-import { structUtils }       from '@yarnpkg/core'
-import { npath }             from '@yarnpkg/fslib'
-import { ppath }             from '@yarnpkg/fslib'
-import { xfs }               from '@yarnpkg/fslib'
+import { structUtils }                   from '@yarnpkg/core'
+import { npath }                         from '@yarnpkg/fslib'
+import { ppath }                         from '@yarnpkg/fslib'
+import { xfs }                           from '@yarnpkg/fslib'
+
+import { NEXT_COMPILED_CONF_PATH }       from './renderer-build.constants.js'
+import { NEXT_COMPILED_WEBPACK_PATH }    from './renderer-build.constants.js'
+import { NEXT_CONFIG_REQUIRE_HOOK_PATH } from './renderer-build.constants.js'
+import { NEXT_PACKAGE_PATH }             from './renderer-build.constants.js'
+import { NEXT_REQUIRE_CACHE_PATH }       from './renderer-build.constants.js'
+import { NEXT_WEBPACK_CONFIG_PATH }      from './renderer-build.constants.js'
 
 const NEXT_COMPILED_CONF_LOADER_FILENAME = 'next-compiled-conf-require-cache-loader.mjs'
 const NODE_LOADER_OPTIONS = new Set(['--experimental-loader', '--loader'])
@@ -41,12 +48,12 @@ const isPnpNodeLoader = (value: string | undefined): boolean =>
 export const NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE = `
 const pnpLoader = {}
 
-const NEXT_PACKAGE_PATH = '/node_modules/next/'
-const NEXT_COMPILED_CONF_PATH = '/dist/compiled/conf/index.js'
-const NEXT_CONFIG_REQUIRE_HOOK_PATH = '/dist/build/next-config-ts/require-hook.js'
-const NEXT_REQUIRE_CACHE_PATH = '/dist/server/dev/require-cache.js'
-const NEXT_COMPILED_WEBPACK_PATH = '/dist/compiled/webpack/bundle5.js'
-const NEXT_WEBPACK_CONFIG_PATH = '/dist/build/webpack-config.js'
+const NEXT_PACKAGE_PATH = ${JSON.stringify(NEXT_PACKAGE_PATH)}
+const NEXT_COMPILED_CONF_PATH = ${JSON.stringify(NEXT_COMPILED_CONF_PATH)}
+const NEXT_CONFIG_REQUIRE_HOOK_PATH = ${JSON.stringify(NEXT_CONFIG_REQUIRE_HOOK_PATH)}
+const NEXT_REQUIRE_CACHE_PATH = ${JSON.stringify(NEXT_REQUIRE_CACHE_PATH)}
+const NEXT_COMPILED_WEBPACK_PATH = ${JSON.stringify(NEXT_COMPILED_WEBPACK_PATH)}
+const NEXT_WEBPACK_CONFIG_PATH = ${JSON.stringify(NEXT_WEBPACK_CONFIG_PATH)}
 const REQUIRE_CACHE_NEEDLE = 'delete require.cache[__filename]'
 const REQUIRE_CACHE_REPLACEMENT = 'if (require.cache) delete require.cache[__filename]'
 const REQUIRE_CACHE_FILE_NEEDLE = 'const mod = require.cache[filePath];'
