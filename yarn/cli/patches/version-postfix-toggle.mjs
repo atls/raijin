@@ -40,7 +40,7 @@ export const removePostfix = (packageJson, postfix = POSTFIX) => {
  */
 export const updatePackageJsonFile = (path, data) => {
   // eslint-disable-next-line n/no-sync
-  writeFileSync(path, JSON.stringify(data, undefined, 2))
+  writeFileSync(path, `${JSON.stringify(data, undefined, 2)}\n`)
 }
 
 let modifiedPackageJson
