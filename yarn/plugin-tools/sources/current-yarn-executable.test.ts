@@ -159,3 +159,22 @@ test('should replace package script PnP loader with managed node loader', async 
     /register\("file:\/\/\/tmp\/managed-loader\.mjs"/
   )
 })
+
+test('should preserve unrelated package script node loaders', async () => {
+  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
+  const { project } = await Project.find(configuration, repoRoot)
+  const env = {
+    NODE_OPTIONS:
+      '--loader file:///tmp/custom-loader.mjs --experimental-loader file:///.pnp.loader.mjs',
+    RAIJIN_NODE_LOADER: 'file:///tmp/managed-loader.mjs',
+  }
+
+  await setupScriptEnvironment(project, env, async () => undefined)
+
+  assert.match(env.NODE_OPTIONS, /--loader file:\/\/\/tmp\/custom-loader\.mjs/)
+  assert.doesNotMatch(env.NODE_OPTIONS, /\.pnp\.loader\.mjs/)
+  assert.match(
+    decodeURIComponent(env.NODE_OPTIONS),
+    /register\("file:\/\/\/tmp\/managed-loader\.mjs"/
+  )
+})

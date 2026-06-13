@@ -22,6 +22,9 @@ export const appendNodeOption = (
 const isManagedNodeLoaderImport = (value: string | undefined): boolean =>
   value?.startsWith(NODE_LOADER_REGISTER_IMPORT_PREFIX) ?? false
 
+const isPnpNodeLoader = (value: string | undefined): boolean =>
+  value?.includes('.pnp.loader.mjs') ?? false
+
 export const removeNodeLoaderOptions = (nodeOptions: string | undefined): string | undefined => {
   if (!nodeOptions) {
     return undefined
@@ -35,7 +38,20 @@ export const removeNodeLoaderOptions = (nodeOptions: string | undefined): string
     const [option] = token.split('=', 2)
 
     if (NODE_LOADER_OPTIONS.has(option)) {
-      if (!token.includes('=')) {
+      const value = token.includes('=') ? token.split('=', 2)[1] : tokens[index + 1]
+
+      if (isPnpNodeLoader(value)) {
+        if (!token.includes('=')) {
+          index += 1
+        }
+
+        continue
+      }
+
+      nextTokens.push(token)
+
+      if (!token.includes('=') && value) {
+        nextTokens.push(value)
         index += 1
       }
 
@@ -85,6 +101,8 @@ const loaderEnv = ${JSON.stringify(MANAGED_NODE_LOADER_ENV)};
 const loaderOptions = new Set(${JSON.stringify([...NODE_LOADER_OPTIONS])});
 const isManagedNodeLoaderImport = (value) =>
   typeof value === 'string' && value.startsWith(loaderImportPrefix);
+const isPnpNodeLoader = (value) =>
+  typeof value === 'string' && value.includes('.pnp.loader.mjs');
 const createNodeLoaderRegisterImport = (loader) =>
   'data:text/javascript,' + encodeURIComponent([
     'import { register } from "node:module";',
@@ -99,7 +117,16 @@ const removeNodeLoaders = (nodeOptions) => {
     const token = tokens[index];
     const [option] = token.split('=', 2);
     if (loaderOptions.has(option)) {
-      if (!token.includes('=')) index += 1;
+      const value = token.includes('=') ? token.split('=', 2)[1] : tokens[index + 1];
+      if (isPnpNodeLoader(value)) {
+        if (!token.includes('=')) index += 1;
+        continue;
+      }
+      nextTokens.push(token);
+      if (!token.includes('=') && value) {
+        nextTokens.push(value);
+        index += 1;
+      }
       continue;
     }
     if (option === loaderOption) {
