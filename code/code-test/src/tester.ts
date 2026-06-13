@@ -73,7 +73,7 @@ export class Tester extends EventEmitter {
 
       result.pipe(process.stdout)
 
-      return this.collectTestsStream(testsStream)
+      return this.collectTestsStream(testsStream, result)
     }
 
     const tests = await Tests.load(files)
