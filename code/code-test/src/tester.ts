@@ -63,7 +63,6 @@ export class Tester extends EventEmitter {
       timeout,
       concurrency,
       watch,
-      forceExit: !watch,
       ...(execArgv.length > 0 ? { execArgv } : {}),
     }
 
