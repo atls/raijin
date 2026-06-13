@@ -160,12 +160,12 @@ export abstract class AbstractTestCommand extends BaseCommand {
           ? await tester.integration(this.target ?? project.cwd, {
               files: this.files,
               watch: this.watch,
-              testReporter: this.testReporter ?? 'tap',
+              testReporter: this.testReporter,
             })
           : await tester.unit(this.target ?? project.cwd, {
               files: this.files,
               watch: this.watch,
-              testReporter: this.testReporter ?? 'tap',
+              testReporter: this.testReporter,
             })
 
       return results.find((result) => result.type === 'test:fail') ? 1 : 0
