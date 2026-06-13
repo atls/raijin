@@ -148,6 +148,23 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
     const tester = await Tester.initialize(this.context.cwd)
 
+    if (this.testReporter === 'tap') {
+      const results =
+        type === 'integration'
+          ? await tester.integration(this.target ?? project.cwd, {
+              files: this.files,
+              watch: this.watch,
+              testReporter: this.testReporter,
+            })
+          : await tester.unit(this.target ?? project.cwd, {
+              files: this.files,
+              watch: this.watch,
+              testReporter: this.testReporter,
+            })
+
+      return results.find((result) => result.type === 'test:fail') ? 1 : 0
+    }
+
     tester.on('test:stdout', onStdout)
     tester.on('test:stderr', onStderr)
     tester.on('test:fail', onFail)
