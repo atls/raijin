@@ -22,6 +22,7 @@ import { createRendererBuildArgs }                       from './renderer-build.
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
 import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
+import { resolveRendererBuildPnpLoader }                 from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
@@ -84,7 +85,9 @@ export class RendererBuildCommand extends BaseCommand {
               project,
             }
             const scriptEnvironment = await makeCurrentYarnExecutable(executableContext)
-            const { loader, nodeOptions } = extractNodeLoaderOption(
+            const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
+            const loader = await resolveRendererBuildPnpLoader(
+              project.cwd,
               scriptEnvironment.env.NODE_OPTIONS
             )
             const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)

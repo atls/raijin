@@ -22,6 +22,7 @@ const RAIJIN_NODE_LOADER = 'RAIJIN_NODE_LOADER'
 const DIST_DIR = 'dist' as Filename
 const NEXT_DIR = '.next' as Filename
 const PACKAGE_MANIFEST = 'package.json' as Filename
+const PNP_ESM_LOADER = '.pnp.loader.mjs' as Filename
 const SRC_DIR = 'src' as Filename
 const NPM_PROTOCOL = 'npm:'
 const NPM_REFERENCE_PATTERN = /(?:^|@)npm:([^#@]+)/
@@ -289,6 +290,19 @@ export const extractNodeLoaderOption = (
     nodeOptions,
     loader: undefined,
   }
+}
+
+export const resolveRendererBuildPnpLoader = async (
+  projectCwd: PortablePath,
+  nodeOptions: string | undefined
+): Promise<string | undefined> => {
+  const pnpLoaderPath = ppath.join(projectCwd, PNP_ESM_LOADER)
+
+  if (await xfs.existsPromise(pnpLoaderPath)) {
+    return pathToFileURL(npath.fromPortablePath(pnpLoaderPath)).href
+  }
+
+  return extractNodeLoaderOption(nodeOptions).loader
 }
 
 export const assertSupportedRendererNextVersion = (nextVersion: string | undefined): void => {

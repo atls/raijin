@@ -1,5 +1,6 @@
 import assert                                             from 'node:assert/strict'
 import test                                               from 'node:test'
+import { pathToFileURL }                                  from 'node:url'
 
 import { structUtils }                                    from '@yarnpkg/core'
 import { ppath }                                          from '@yarnpkg/fslib'
@@ -17,6 +18,7 @@ import { createRendererBuildEnv }                         from './renderer-build
 import { extractNodeLoaderOption }                        from './renderer-build.utils.js'
 import { normalizeNextPackageVersion }                    from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                      from './renderer-build.utils.js'
+import { resolveRendererBuildPnpLoader }                  from './renderer-build.utils.js'
 
 test('should disable Next telemetry for renderer build', () => {
   const env = createRendererBuildEnv(
@@ -67,6 +69,21 @@ test('should extract PnP node loader without removing unrelated loaders', () => 
       nodeOptions: '--loader file:///tmp/custom-loader.mjs',
       loader: 'file:///.pnp.loader.mjs',
     }
+  )
+})
+
+test('should resolve renderer PnP loader from project when managed env already removed it', async () => {
+  const cwd = await xfs.mktempPromise()
+  const pnpLoader = ppath.join(cwd, '.pnp.loader.mjs')
+
+  await xfs.writeFilePromise(pnpLoader, '')
+
+  assert.equal(
+    await resolveRendererBuildPnpLoader(
+      cwd,
+      '--require ./.pnp.cjs --import data:text/javascript,managed-loader'
+    ),
+    pathToFileURL(pnpLoader).href
   )
 })
 
