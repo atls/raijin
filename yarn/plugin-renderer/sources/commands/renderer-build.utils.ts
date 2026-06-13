@@ -77,6 +77,13 @@ const isNextCompiledWebpack = (url) => isNextSource(url, NEXT_COMPILED_WEBPACK_P
 
 const isNextWebpackConfig = (url) => isNextSource(url, NEXT_WEBPACK_CONFIG_PATH)
 
+const isPatchableNextSource = (url) =>
+  isNextCompiledConf(url) ||
+  isNextConfigRequireHook(url) ||
+  isNextRequireCache(url) ||
+  isNextCompiledWebpack(url) ||
+  isNextWebpackConfig(url)
+
 const patchNextCompiledConfSource = (source) =>
   source
     .split(REQUIRE_CACHE_NEEDLE)
@@ -108,7 +115,7 @@ const patchNextWebpackConfigSource = (source) =>
     .split(WEBPACK_NODE_PROTOCOL_PLUGIN_NEEDLE)
     .join(WEBPACK_NODE_PROTOCOL_PLUGIN_REPLACEMENT)
 
-const patchSource = (url, source) => {
+const transformNextSource = (url, source) => {
   if (isNextCompiledConf(url)) {
     return patchNextCompiledConfSource(source)
   }
@@ -145,21 +152,21 @@ export async function load(url, context, nextLoad) {
     ? await pnpLoader.load(url, context, nextLoad)
     : await nextLoad(url, context)
 
-  if (!isNextCompiledConf(url) && !isNextConfigRequireHook(url) && !isNextRequireCache(url) && !isNextCompiledWebpack(url) && !isNextWebpackConfig(url)) {
+  if (!isPatchableNextSource(url)) {
     return result
   }
 
   if (typeof result.source === 'string') {
     return {
       ...result,
-      source: patchSource(url, result.source),
+      source: transformNextSource(url, result.source),
     }
   }
 
   if (result.source instanceof Uint8Array) {
     return {
       ...result,
-      source: patchSource(url, Buffer.from(result.source).toString('utf8')),
+      source: transformNextSource(url, Buffer.from(result.source).toString('utf8')),
     }
   }
 
@@ -296,6 +303,8 @@ export const createRendererBuildArgs = (
 
   assertSupportedRendererNextVersion(nextVersion)
 
+  // TODO(atls/raijin#629): replace the explicit webpack renderer route with the
+  // planned Turbopack contract once the Raijin v3 Next build stream owns it.
   if (nextMajor !== null && nextMajor >= NEXT_MAJOR_WEBPACK_BY_DEFAULT) {
     args.push('--webpack')
   }
