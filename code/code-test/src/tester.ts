@@ -146,6 +146,14 @@ export class Tester extends EventEmitter {
         events.push(createTestEvent('test:fail', data))
       }
 
+      function onStdout(data: TestStdout): void {
+        events.push(createTestEvent('test:stdout', data))
+      }
+
+      function onStderr(data: TestStderr): void {
+        events.push(createTestEvent('test:stderr', data))
+      }
+
       function onSummary(data: TestSummary): void {
         events.push(createTestEvent('test:summary', data))
 
@@ -181,6 +189,8 @@ export class Tester extends EventEmitter {
 
         testsStream.off('test:pass', onPass)
         testsStream.off('test:fail', onFail)
+        testsStream.off('test:stdout', onStdout)
+        testsStream.off('test:stderr', onStderr)
         testsStream.off('test:summary', onSummary)
         testsStream.off('end', onEnd)
         testsStream.off('error', onError)
@@ -192,6 +202,8 @@ export class Tester extends EventEmitter {
 
       testsStream.on('test:pass', onPass)
       testsStream.on('test:fail', onFail)
+      testsStream.on('test:stdout', onStdout)
+      testsStream.on('test:stderr', onStderr)
       testsStream.on('test:summary', onSummary)
       testsStream.once('end', onEnd)
       testsStream.once('error', onError)
