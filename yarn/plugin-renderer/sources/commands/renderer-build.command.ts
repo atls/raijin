@@ -8,6 +8,7 @@ import { Project }                                       from '@yarnpkg/core'
 import { StreamReport }                                  from '@yarnpkg/core'
 import { MessageName }                                   from '@yarnpkg/core'
 import { execUtils }                                     from '@yarnpkg/core'
+import { scriptUtils }                                   from '@yarnpkg/core'
 import { xfs }                                           from '@yarnpkg/fslib'
 import { ppath }                                         from '@yarnpkg/fslib'
 
@@ -17,7 +18,9 @@ import { assertRendererBuildExitCode }                   from './renderer-build.
 import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }        from './renderer-build.utils.js'
+import { createRendererBuildArgs }                       from './renderer-build.utils.js'
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
+import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
 import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
@@ -28,7 +31,15 @@ export class RendererBuildCommand extends BaseCommand {
 
     await cleanupRendererBuildStaleArtifacts(this.context.cwd)
 
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, workspace } = await Project.find(configuration, this.context.cwd)
+
+    if (!workspace) {
+      throw new Error('Renderer build must be executed from a workspace')
+    }
+
+    const rendererCwd = workspace.cwd
+
+    await project.restoreInstallState()
 
     const commandReport = await StreamReport.start(
       {
@@ -60,22 +71,48 @@ export class RendererBuildCommand extends BaseCommand {
               })
           })
 
-          await xfs.writeJsonPromise(ppath.join(this.context.cwd, 'src/package.json'), {
+          await xfs.writeJsonPromise(ppath.join(rendererCwd, 'src/package.json'), {
             type: 'module',
           })
 
           try {
             const binFolder = await xfs.mktempPromise()
-            const { executable, env } = await makeCurrentYarnExecutable({ binFolder, project })
+            const executableContext = {
+              binFolder,
+              locator: workspace.anchoredLocator,
+              project,
+            }
+            const scriptEnvironment = await makeCurrentYarnExecutable(executableContext)
+            const { loader, nodeOptions } = extractNodeLoaderOption(
+              scriptEnvironment.env.NODE_OPTIONS
+            )
+            const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
+            const nextBinary = binaries.get('next')
+
+            if (!nextBinary) {
+              throw new Error('Renderer build requires Next.js 16 or newer')
+            }
+
+            const [nextPackage, nextBin] = nextBinary
+            const nextVersion = nextPackage.reference.startsWith('npm:')
+              ? nextPackage.reference.slice('npm:'.length)
+              : nextPackage.reference
             const nextCompiledConfRequireCacheLoader =
-              await materializeNextCompiledConfRequireCacheLoader(binFolder)
+              await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
+            const { executable, env } = await makeCurrentYarnExecutable({
+              ...executableContext,
+              env: {
+                NODE_OPTIONS: nodeOptions,
+              },
+              nodeLoader: nextCompiledConfRequireCacheLoader,
+            })
 
             const { code } = await execUtils.pipevp(
               executable,
-              ['next', 'build', 'src', '--no-lint'],
+              createRendererBuildArgs(nextVersion, nextBin),
               {
                 end: execUtils.EndStrategy.ErrorCode,
-                cwd: this.context.cwd,
+                cwd: rendererCwd,
                 stdin: this.context.stdin,
                 stdout,
                 stderr,
@@ -85,53 +122,51 @@ export class RendererBuildCommand extends BaseCommand {
 
             assertRendererBuildExitCode(code)
           } finally {
-            await xfs.removePromise(ppath.join(this.context.cwd, 'src/package.json'))
+            await xfs.removePromise(ppath.join(rendererCwd, 'src/package.json'))
           }
         })
 
         await report.startTimerPromise('Copy standalone files', async () => {
           await xfs.copyPromise(
-            ppath.join(this.context.cwd, 'dist'),
+            ppath.join(rendererCwd, 'dist'),
             ppath.join(
-              this.context.cwd,
+              rendererCwd,
               'src/.next/standalone',
-              this.context.cwd.replace(`${configuration.projectCwd || ''}/`, '') as PortablePath,
+              rendererCwd.replace(`${configuration.projectCwd || ''}/`, '') as PortablePath,
               'src'
             )
           )
         })
 
         await report.startTimerPromise('Clean workspace manifests', async () => {
-          await cleanupRendererBuildWorkspaceManifests(this.context.cwd)
+          await cleanupRendererBuildWorkspaceManifests(rendererCwd)
         })
 
         await report.startTimerPromise('Copy static files', async () => {
           await xfs.copyPromise(
-            ppath.join(this.context.cwd, 'dist/.next/static'),
-            ppath.join(this.context.cwd, 'src/.next/static')
+            ppath.join(rendererCwd, 'dist/.next/static'),
+            ppath.join(rendererCwd, 'src/.next/static')
           )
         })
 
         await report.startTimerPromise('Copy edge chunks files', async () => {
-          if (
-            await xfs.existsPromise(ppath.join(this.context.cwd, 'src/.next/server/edge-chunks'))
-          ) {
+          if (await xfs.existsPromise(ppath.join(rendererCwd, 'src/.next/server/edge-chunks'))) {
             await xfs.copyPromise(
-              ppath.join(this.context.cwd, 'dist/.next/server/edge-chunks'),
-              ppath.join(this.context.cwd, 'src/.next/server/edge-chunks')
+              ppath.join(rendererCwd, 'dist/.next/server/edge-chunks'),
+              ppath.join(rendererCwd, 'src/.next/server/edge-chunks')
             )
           }
         })
 
         await report.startTimerPromise('Move server start files', async () => {
           await xfs.movePromise(
-            ppath.join(this.context.cwd, 'dist/server.js'),
-            ppath.join(this.context.cwd, 'dist/index.js')
+            ppath.join(rendererCwd, 'dist/server.js'),
+            ppath.join(rendererCwd, 'dist/index.js')
           )
         })
 
         await report.startTimerPromise('Clean source build artifacts', async () => {
-          await cleanupRendererBuildSourceArtifacts(this.context.cwd)
+          await cleanupRendererBuildSourceArtifacts(rendererCwd)
         })
       }
     )
