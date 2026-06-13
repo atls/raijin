@@ -20,8 +20,10 @@ export const TestProgress = ({ cwd, tester }: TestProgressProps): ReactElement |
   const [complete, setComplete] = useState<boolean>(false)
 
   useEffect(() => {
+    let completeTimeout: NodeJS.Timeout | undefined
+
     const onEnd = (): void => {
-      setTimeout(() => {
+      completeTimeout = setTimeout(() => {
         setComplete(true)
       }, 1000)
     }
@@ -29,6 +31,10 @@ export const TestProgress = ({ cwd, tester }: TestProgressProps): ReactElement |
     tester.on('end', onEnd)
 
     return (): void => {
+      if (completeTimeout) {
+        clearTimeout(completeTimeout)
+      }
+
       tester.off('end', onEnd)
     }
   }, [setComplete])

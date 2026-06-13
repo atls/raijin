@@ -22,12 +22,22 @@ type TestFail = EventData.TestFail
 type TestPass = EventData.TestPass
 type TestStderr = EventData.TestStderr
 type TestStdout = EventData.TestStdout
+type TestSummary = EventData.TestSummary
 
 type TestOptions = {
   files?: Array<string>
   watch?: boolean
   testReporter?: string
 }
+
+const TEST_STREAM_KEEP_ALIVE_INTERVAL = 1000
+
+const createTestEvent = <T>(type: string, data: T): TestEvent => ({ type, data }) as TestEvent
+
+const isFinalSummary = (data: TestSummary): boolean => !data.file
+
+const hasReporterFailures = (output: string): boolean =>
+  output.includes('\nnot ok ') || /# (?:fail|cancelled) [1-9]\d*/.test(output)
 
 export class Tester extends EventEmitter {
   private ignore: ignorer.Ignore
@@ -53,17 +63,17 @@ export class Tester extends EventEmitter {
       timeout,
       concurrency,
       watch,
+      forceExit: !watch,
       ...(execArgv.length > 0 ? { execArgv } : {}),
     }
 
     if (testReporter === 'tap') {
-      const result = run(runOptions).compose(tap)
+      const testsStream = run(runOptions)
+      const result = testsStream.compose(tap)
 
       result.pipe(process.stdout)
 
-      // @ts-expect-error toArray is missing
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
-      return result.toArray()
+      return this.collectTestsStream(testsStream)
     }
 
     const tests = await Tests.load(files)
@@ -71,6 +81,7 @@ export class Tester extends EventEmitter {
     this.emit('start', { tests })
 
     const testsStream = run(runOptions)
+    const drainReporter = testsStream.compose(tap)
 
     const onPass = (data: TestPass): void => {
       this.emit('test:pass', data)
@@ -94,7 +105,7 @@ export class Tester extends EventEmitter {
     testsStream.on('test:stderr', onStderr)
 
     try {
-      return (await testsStream.toArray()) as Array<TestEvent>
+      return await this.collectTestsStream(testsStream, drainReporter)
     } finally {
       this.emit('end')
 
@@ -107,6 +118,87 @@ export class Tester extends EventEmitter {
 
   static async initialize(cwd: string): Promise<Tester> {
     return new Tester(cwd)
+  }
+
+  private async collectTestsStream(
+    testsStream: TestsStream,
+    reporter?: NodeJS.ReadableStream
+  ): Promise<Array<TestEvent>> {
+    const events: Array<TestEvent> = []
+    let reporterOutput = ''
+    const keepAlive = setInterval(() => undefined, TEST_STREAM_KEEP_ALIVE_INTERVAL)
+
+    return new Promise((resolve, reject) => {
+      let cleanup = (): void => undefined
+
+      function resolveWithEvents(): void {
+        cleanup()
+
+        resolve(events)
+      }
+
+      function onPass(data: TestPass): void {
+        events.push(createTestEvent('test:pass', data))
+      }
+
+      function onFail(data: TestFail): void {
+        events.push(createTestEvent('test:fail', data))
+      }
+
+      function onSummary(data: TestSummary): void {
+        events.push(createTestEvent('test:summary', data))
+
+        if (isFinalSummary(data)) {
+          resolveWithEvents()
+        }
+      }
+
+      function onReporterData(chunk: Buffer | string): void {
+        reporterOutput += chunk.toString()
+      }
+
+      function onReporterEnd(): void {
+        if (hasReporterFailures(reporterOutput)) {
+          events.push(createTestEvent('test:fail', {} as TestFail))
+        }
+
+        resolveWithEvents()
+      }
+
+      function onEnd(): void {
+        resolveWithEvents()
+      }
+
+      function onError(error: Error): void {
+        cleanup()
+
+        reject(error)
+      }
+
+      cleanup = (): void => {
+        clearInterval(keepAlive)
+
+        testsStream.off('test:pass', onPass)
+        testsStream.off('test:fail', onFail)
+        testsStream.off('test:summary', onSummary)
+        testsStream.off('end', onEnd)
+        testsStream.off('error', onError)
+
+        reporter?.off('data', onReporterData)
+        reporter?.off('end', onReporterEnd)
+        reporter?.off('error', onError)
+      }
+
+      testsStream.on('test:pass', onPass)
+      testsStream.on('test:fail', onFail)
+      testsStream.on('test:summary', onSummary)
+      testsStream.once('end', onEnd)
+      testsStream.once('error', onError)
+
+      reporter?.on('data', onReporterData)
+      reporter?.once('end', onReporterEnd)
+      reporter?.once('error', onError)
+    })
   }
 
   async unit(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
