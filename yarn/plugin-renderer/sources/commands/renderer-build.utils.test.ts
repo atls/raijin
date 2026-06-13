@@ -112,6 +112,19 @@ test('should devirtualize Next locator references before version checks', () => 
   ])
 })
 
+test('should normalize patched Next package references before version checks', () => {
+  const reference = 'patch:next@npm%3A16.2.9#~/.yarn/patches/next.patch'
+
+  assert.equal(normalizeNextPackageVersion(reference), '16.2.9')
+  assert.deepEqual(createRendererBuildArgs(normalizeNextPackageVersion(reference)), [
+    'node',
+    'next',
+    'build',
+    '--webpack',
+    'src',
+  ])
+})
+
 test('should avoid version-specific Next build arguments when version is unknown', () => {
   assert.deepEqual(createRendererBuildArgs(undefined), ['node', 'next', 'build', 'src'])
 })

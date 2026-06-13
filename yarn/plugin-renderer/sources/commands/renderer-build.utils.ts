@@ -17,6 +17,7 @@ const NEXT_DIR = '.next' as Filename
 const PACKAGE_MANIFEST = 'package.json' as Filename
 const SRC_DIR = 'src' as Filename
 const NPM_PROTOCOL = 'npm:'
+const NPM_REFERENCE_PATTERN = /(?:^|@)npm:([^#@]+)/
 const NEXT_MAJOR_WEBPACK_BY_DEFAULT = 16
 type RendererBuildPathSegments = ReadonlyArray<Filename>
 
@@ -283,8 +284,16 @@ export const assertSupportedRendererNextVersion = (nextVersion: string | undefin
   }
 }
 
-export const normalizeNextPackageVersion = (reference: string): string =>
-  reference.startsWith(NPM_PROTOCOL) ? reference.slice(NPM_PROTOCOL.length) : reference
+export const normalizeNextPackageVersion = (reference: string): string => {
+  if (reference.startsWith(NPM_PROTOCOL)) {
+    return reference.slice(NPM_PROTOCOL.length)
+  }
+
+  const decodedReference = decodeURIComponent(reference)
+  const npmReference = decodedReference.match(NPM_REFERENCE_PATTERN)
+
+  return npmReference?.[1] ?? reference
+}
 
 export const resolveNextPackageVersion = (locator: Locator): string => {
   const nextLocator = structUtils.isVirtualLocator(locator)
