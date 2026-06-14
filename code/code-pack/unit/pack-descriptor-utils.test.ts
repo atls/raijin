@@ -186,6 +186,37 @@ test('should not reject missing non-target libc conditional unplugged payload', 
   assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
 })
 
+test('should reject missing requested uncommon cpu conditional unplugged payload', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.cjs'),
+    'packageLocation: "./.yarn/unplugged/@rollup-rollup-linux-riscv64-gnu-npm-4.45.0-4c6c3cfa9d/node_modules/@rollup/rollup-linux-riscv64-gnu/"'
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"@rollup/rollup-linux-riscv64-gnu@npm:4.45.0":',
+      '  version: 4.45.0',
+      '  resolution: "@rollup/rollup-linux-riscv64-gnu@npm:4.45.0"',
+      '  conditions: os=linux & cpu=riscv64 & libc=glibc',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  await assert.rejects(
+    createProjectDescriptor({
+      repo,
+      builder,
+      envs,
+      cwd,
+      platform: 'linux/riscv64',
+    }),
+    /PnP manifest references unplugged packages that are missing/
+  )
+})
+
 test('should not reject missing non-target patched conditional unplugged payload', async () => {
   const cwd = await xfs.mktempPromise()
 

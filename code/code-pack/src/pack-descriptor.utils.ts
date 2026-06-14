@@ -16,6 +16,9 @@ const UNPLUGGED_EXCLUDE_PATH = '.yarn/unplugged'
 const UNPLUGGED_REFERENCE_PREFIX = '.yarn/unplugged/'
 const UNPLUGGED_REFERENCE_REGEXP = /["'`]([^"'`]*\.yarn\/unplugged\/[^"'`]*)["'`]/g
 const NODE_MODULES_REFERENCE_REGEXP = /^\.yarn\/unplugged\/([^/]+)\/node_modules\/(.+)$/
+const CPU_ALIASES = {
+  amd64: 'x64',
+} as Record<string, string>
 
 interface TargetPlatform {
   os: string
@@ -102,19 +105,11 @@ const getWorkspacePnpUnpluggedReferences = async (
 }
 
 const normalizeTargetCpu = (cpu: string | undefined): string | undefined => {
-  switch (cpu) {
-    case 'amd64':
-      return 'x64'
-    case 'arm':
-    case 'arm64':
-    case 'ia32':
-    case 'ppc64':
-    case 's390x':
-    case 'x64':
-      return cpu
-    default:
-      return undefined
+  if (!cpu) {
+    return undefined
   }
+
+  return CPU_ALIASES[cpu] ?? cpu
 }
 
 const getTargetPlatform = (platform: string | undefined): TargetPlatform => {
