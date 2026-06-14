@@ -30,23 +30,13 @@ export class TestCommand extends AbstractTestCommand {
     const tester = await Tester.initialize(this.context.cwd)
 
     try {
-      const results = (await tester.general(this.target ?? project.cwd, {
+      const results = await tester.general(this.target ?? project.cwd, {
         files: this.files,
         watch: this.watch,
         testReporter: this.testReporter,
-      })) as unknown as Array<string>
-
-      return results.some((result) => {
-        if (result.includes('# fail ')) {
-          const failedNumber = parseInt(result.split('# fail ')[1], 2)
-
-          return failedNumber > 0
-        }
-
-        return false
       })
-        ? 1
-        : 0
+
+      return results.some((result) => result.type === 'test:fail') ? 1 : 0
     } catch (error) {
       console.error(error) // eslint-disable-line no-console
 

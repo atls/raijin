@@ -60,7 +60,7 @@ export async function writeFiles(baseDir: string) {
 
       if (typeof value === 'string') {
         await writeFile(
-          fullPath, 
+          fullPath,
           Buffer.from(value, 'base64').toString('utf-8')
         )
       } else {

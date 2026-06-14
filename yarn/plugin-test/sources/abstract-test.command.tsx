@@ -148,11 +148,28 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
     const tester = await Tester.initialize(this.context.cwd)
 
+    if (this.testReporter === 'tap') {
+      const results =
+        type === 'integration'
+          ? await tester.integration(this.target ?? project.cwd, {
+              files: this.files,
+              watch: this.watch,
+              testReporter: this.testReporter,
+            })
+          : await tester.unit(this.target ?? project.cwd, {
+              files: this.files,
+              watch: this.watch,
+              testReporter: this.testReporter,
+            })
+
+      return results.find((result) => result.type === 'test:fail') ? 1 : 0
+    }
+
     tester.on('test:stdout', onStdout)
     tester.on('test:stderr', onStderr)
     tester.on('test:fail', onFail)
 
-    const { clear } = render(<TestProgress cwd={project.cwd} tester={tester} />)
+    const { clear, unmount } = render(<TestProgress cwd={project.cwd} tester={tester} />)
 
     try {
       const results =
@@ -160,10 +177,12 @@ export abstract class AbstractTestCommand extends BaseCommand {
           ? await tester.integration(this.target ?? project.cwd, {
               files: this.files,
               watch: this.watch,
+              testReporter: this.testReporter,
             })
           : await tester.unit(this.target ?? project.cwd, {
               files: this.files,
               watch: this.watch,
+              testReporter: this.testReporter,
             })
 
       return results.find((result) => result.type === 'test:fail') ? 1 : 0
@@ -186,6 +205,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
       tester.off('test:stderr', onStderr)
       tester.off('test:fail', onFail)
 
+      unmount()
       clear()
     }
   }
@@ -261,8 +281,15 @@ export abstract class AbstractTestCommand extends BaseCommand {
   }
 
   private flushBufferedStd(): void {
+    if (this.bufferedStdTimeout) {
+      clearTimeout(this.bufferedStdTimeout)
+      this.bufferedStdTimeout = undefined
+    }
+
     this.std.forEach((messages, file) => {
       this.renderStdBuffer({ file, messages })
     })
+
+    this.std.clear()
   }
 }

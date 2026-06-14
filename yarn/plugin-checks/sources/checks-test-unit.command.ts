@@ -54,6 +54,10 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   }
 
   async executeRegular(): Promise<number> {
+    if (!process.env.GITHUB_TOKEN) {
+      return this.cli.run(['test', 'unit'])
+    }
+
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 
