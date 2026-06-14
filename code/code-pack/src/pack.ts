@@ -57,6 +57,7 @@ export const pack = async (
     builder,
     envs,
     cwd: packCwd,
+    platform,
   })
 
   const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml')
