@@ -95,6 +95,35 @@ test('should normalize absolute runtime unplugged references before integrity ch
   )
 })
 
+test('should not reject missing conditional unplugged package payloads', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.cjs'),
+    'packageLocation: "./.yarn/unplugged/@esbuild-linux-x64-npm-0.24.2-4423400f4a/node_modules/@esbuild/linux-x64/"'
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"@esbuild/linux-x64@npm:0.24.2":',
+      '  version: 0.24.2',
+      '  resolution: "@esbuild/linux-x64@npm:0.24.2"',
+      '  conditions: os=linux & cpu=x64',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  const descriptor = await createProjectDescriptor({
+    repo,
+    builder,
+    envs,
+    cwd,
+  })
+
+  assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
+})
+
 test('should reject image pack context with missing unplugged package payload', async () => {
   const cwd = await xfs.mktempPromise()
 

@@ -5,11 +5,15 @@ import { ppath }             from '@yarnpkg/fslib'
 
 const PROJECT_DESCRIPTOR_SCHEMA_VERSION = '0.2'
 const GIT_EXCLUDE_PATH = '.git'
+const LOCKFILE_PATH = 'yarn.lock' as PortablePath
+const NPM_PROTOCOL = 'npm:'
+const UNPLUGGED_FOLDER_NPM_DELIMITER = '-npm-'
 const PNP_MANIFEST_PATH = '.pnp.cjs' as PortablePath
 const PNP_DATA_PATH = '.pnp.data.json' as PortablePath
 const UNPLUGGED_EXCLUDE_PATH = '.yarn/unplugged'
 const UNPLUGGED_REFERENCE_PREFIX = '.yarn/unplugged/'
 const UNPLUGGED_REFERENCE_REGEXP = /["'`]([^"'`]*\.yarn\/unplugged\/[^"'`]*)["'`]/g
+const NODE_MODULES_REFERENCE_REGEXP = /^\.yarn\/unplugged\/([^/]+)\/node_modules\/(.+)$/
 
 export interface BuildEnv extends Record<string, string> {
   name: string
@@ -83,9 +87,75 @@ const getWorkspacePnpUnpluggedReferences = async (
   return Array.from(references).sort()
 }
 
+const getConditionalPackageLocators = (lockfileContent: string): Set<string> => {
+  const locators = new Set<string>()
+
+  for (const block of lockfileContent.split(/\n{2,}/)) {
+    if (!block.includes('\n  conditions:')) {
+      continue
+    }
+
+    const resolution = block.match(/\n {2}resolution: "([^"]+)"/)?.[1]
+
+    if (resolution) {
+      locators.add(resolution)
+    }
+  }
+
+  return locators
+}
+
+const getWorkspaceConditionalPackageLocators = async (cwd: PortablePath): Promise<Set<string>> => {
+  const lockfilePath = ppath.join(cwd, LOCKFILE_PATH)
+
+  if (!(await xfs.existsPromise(lockfilePath))) {
+    return new Set()
+  }
+
+  return getConditionalPackageLocators(await xfs.readFilePromise(lockfilePath, 'utf8'))
+}
+
+const getUnpluggedReferenceLocator = (reference: PortablePath): string | undefined => {
+  const match = reference.match(NODE_MODULES_REFERENCE_REGEXP)
+
+  if (!match) {
+    return undefined
+  }
+
+  const [, unpluggedFolder, packageName] = match
+  const npmDelimiterIndex = unpluggedFolder.lastIndexOf(UNPLUGGED_FOLDER_NPM_DELIMITER)
+
+  if (npmDelimiterIndex === -1) {
+    return undefined
+  }
+
+  const versionWithHash = unpluggedFolder.slice(
+    npmDelimiterIndex + UNPLUGGED_FOLDER_NPM_DELIMITER.length
+  )
+  const hashDelimiterIndex = versionWithHash.lastIndexOf('-')
+
+  if (hashDelimiterIndex === -1) {
+    return undefined
+  }
+
+  const version = versionWithHash.slice(0, hashDelimiterIndex)
+
+  return `${packageName}@${NPM_PROTOCOL}${version}`
+}
+
+const isConditionalUnpluggedReference = (
+  reference: PortablePath,
+  conditionalPackageLocators: Set<string>
+): boolean => {
+  const locator = getUnpluggedReferenceLocator(reference)
+
+  return locator ? conditionalPackageLocators.has(locator) : false
+}
+
 const getMissingReferences = async (
   cwd: PortablePath,
-  references: Array<PortablePath>
+  references: Array<PortablePath>,
+  conditionalPackageLocators: Set<string>
 ): Promise<Array<PortablePath>> => {
   const referencesState = await Promise.all(
     references.map(async (reference) => ({
@@ -94,7 +164,12 @@ const getMissingReferences = async (
     }))
   )
 
-  return referencesState.filter(({ exists }) => !exists).map(({ reference }) => reference)
+  return referencesState
+    .filter(
+      ({ exists, reference }) =>
+        !exists && !isConditionalUnpluggedReference(reference, conditionalPackageLocators)
+    )
+    .map(({ reference }) => reference)
 }
 
 const getBuildContextExcludes = async (cwd: PortablePath): Promise<Array<string>> => {
@@ -104,7 +179,8 @@ const getBuildContextExcludes = async (cwd: PortablePath): Promise<Array<string>
     return [GIT_EXCLUDE_PATH, UNPLUGGED_EXCLUDE_PATH]
   }
 
-  const missingReferences = await getMissingReferences(cwd, references)
+  const conditionalPackageLocators = await getWorkspaceConditionalPackageLocators(cwd)
+  const missingReferences = await getMissingReferences(cwd, references, conditionalPackageLocators)
 
   if (missingReferences.length > 0) {
     throw new Error(
