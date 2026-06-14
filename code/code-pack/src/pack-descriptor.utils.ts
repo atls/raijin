@@ -6,6 +6,7 @@ import { ppath }             from '@yarnpkg/fslib'
 const PROJECT_DESCRIPTOR_SCHEMA_VERSION = '0.2'
 const GIT_EXCLUDE_PATH = '.git'
 const PNP_MANIFEST_PATH = '.pnp.cjs' as PortablePath
+const PNP_DATA_PATH = '.pnp.data.json' as PortablePath
 const UNPLUGGED_EXCLUDE_PATH = '.yarn/unplugged'
 const UNPLUGGED_REFERENCE_PREFIX = '.yarn/unplugged/'
 const UNPLUGGED_REFERENCE_REGEXP = /["'`]([^"'`]*\.yarn\/unplugged\/[^"'`]*)["'`]/g
@@ -58,15 +59,28 @@ export const getPnpUnpluggedReferences = (content: string): Array<PortablePath> 
 const getWorkspacePnpUnpluggedReferences = async (
   cwd: PortablePath
 ): Promise<Array<PortablePath>> => {
-  const pnpManifestPath = ppath.join(cwd, PNP_MANIFEST_PATH)
+  const references = new Set<PortablePath>()
+  const manifestsReferences = await Promise.all(
+    [PNP_MANIFEST_PATH, PNP_DATA_PATH].map(async (manifestPath) => {
+      const pnpManifestPath = ppath.join(cwd, manifestPath)
 
-  if (!(await xfs.existsPromise(pnpManifestPath))) {
-    return []
+      if (!(await xfs.existsPromise(pnpManifestPath))) {
+        return []
+      }
+
+      const content = await xfs.readFilePromise(pnpManifestPath, 'utf8')
+
+      return getPnpUnpluggedReferences(content)
+    })
+  )
+
+  for (const manifestReferences of manifestsReferences) {
+    for (const reference of manifestReferences) {
+      references.add(reference)
+    }
   }
 
-  const content = await xfs.readFilePromise(pnpManifestPath, 'utf8')
-
-  return getPnpUnpluggedReferences(content)
+  return Array.from(references).sort()
 }
 
 const getMissingReferences = async (

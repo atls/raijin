@@ -51,6 +51,41 @@ test('should preserve unplugged when PnP manifest references unplugged package p
   assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
 })
 
+test('should read split PnP data before excluding unplugged', async () => {
+  const cwd = await xfs.mktempPromise()
+  const unpluggedPackagePath = '.yarn/unplugged/open-npm-8.4.0-df63cfe537/node_modules/open'
+
+  await xfs.mkdirpPromise(ppath.join(cwd, unpluggedPackagePath))
+  await xfs.writeFilePromise(ppath.join(cwd, '.pnp.cjs'), 'module.exports = {}')
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.data.json'),
+    JSON.stringify({
+      packageRegistryData: [
+        [
+          'open',
+          [
+            [
+              'npm:8.4.0',
+              {
+                packageLocation: `./${unpluggedPackagePath}/`,
+              },
+            ],
+          ],
+        ],
+      ],
+    })
+  )
+
+  const descriptor = await createProjectDescriptor({
+    repo,
+    builder,
+    envs,
+    cwd,
+  })
+
+  assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
+})
+
 test('should normalize absolute runtime unplugged references before integrity check', () => {
   assert.deepEqual(
     getPnpUnpluggedReferences(
