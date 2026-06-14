@@ -156,6 +156,36 @@ test('should reject missing target conditional unplugged package payload', async
   )
 })
 
+test('should not reject missing non-target patched conditional unplugged payload', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.cjs'),
+    'packageLocation: "./.yarn/unplugged/fsevents-patch-df0bf1/node_modules/fsevents/"'
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"fsevents@patch:fsevents@npm%3A~2.3.2#optional!builtin<compat/fsevents>":',
+      '  version: 2.3.3',
+      '  resolution: "fsevents@patch:fsevents@npm%3A2.3.3#optional!builtin<compat/fsevents>::version=2.3.3&hash=df0bf1"',
+      '  conditions: os=darwin',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  const descriptor = await createProjectDescriptor({
+    repo,
+    builder,
+    envs,
+    cwd,
+    platform: 'linux/amd64',
+  })
+
+  assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
+})
+
 test('should reject image pack context with missing unplugged package payload', async () => {
   const cwd = await xfs.mktempPromise()
 

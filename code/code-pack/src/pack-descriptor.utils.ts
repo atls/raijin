@@ -9,8 +9,6 @@ const PROJECT_DESCRIPTOR_SCHEMA_VERSION = '0.2'
 const GIT_EXCLUDE_PATH = '.git'
 const LOCKFILE_PATH = 'yarn.lock' as PortablePath
 const DEFAULT_IMAGE_OS = 'linux'
-const NPM_PROTOCOL = 'npm:'
-const UNPLUGGED_FOLDER_NPM_DELIMITER = '-npm-'
 const PNP_MANIFEST_PATH = '.pnp.cjs' as PortablePath
 const PNP_DATA_PATH = '.pnp.data.json' as PortablePath
 const UNPLUGGED_EXCLUDE_PATH = '.yarn/unplugged'
@@ -24,8 +22,7 @@ interface TargetPlatform {
 }
 
 interface ConditionalPackageLocator {
-  locator: string
-  conditions: string
+  packageName: string
   target: boolean
 }
 
@@ -143,11 +140,21 @@ const isTargetCondition = (condition: string, targetPlatform: TargetPlatform): b
 const isTargetConditionalPackage = (conditions: string, targetPlatform: TargetPlatform): boolean =>
   conditions.split(/\s*&\s*/).every((condition) => isTargetCondition(condition, targetPlatform))
 
+const getLocatorPackageName = (locator: string): string | undefined => {
+  const packageNameEnd = locator.startsWith('@') ? locator.indexOf('@', 1) : locator.indexOf('@')
+
+  if (packageNameEnd === -1) {
+    return undefined
+  }
+
+  return locator.slice(0, packageNameEnd)
+}
+
 const getConditionalPackageLocators = (
   lockfileContent: string,
   targetPlatform: TargetPlatform
-): Map<string, ConditionalPackageLocator> => {
-  const locators = new Map<string, ConditionalPackageLocator>()
+): Map<string, Array<ConditionalPackageLocator>> => {
+  const locators = new Map<string, Array<ConditionalPackageLocator>>()
 
   for (const block of lockfileContent.split(/\n{2,}/)) {
     if (!block.includes('\n  conditions:')) {
@@ -156,13 +163,15 @@ const getConditionalPackageLocators = (
 
     const resolution = block.match(/\n {2}resolution: "([^"]+)"/)?.[1]
     const conditions = block.match(/\n {2}conditions: (.+)/)?.[1]
+    const packageName = resolution ? getLocatorPackageName(resolution) : undefined
 
-    if (resolution && conditions) {
-      locators.set(resolution, {
-        locator: resolution,
-        conditions,
+    if (packageName && conditions) {
+      const locator = {
+        packageName,
         target: isTargetConditionalPackage(conditions, targetPlatform),
-      })
+      }
+
+      locators.set(packageName, [...(locators.get(packageName) ?? []), locator])
     }
   }
 
@@ -172,7 +181,7 @@ const getConditionalPackageLocators = (
 const getWorkspaceConditionalPackageLocators = async (
   cwd: PortablePath,
   targetPlatform: TargetPlatform
-): Promise<Map<string, ConditionalPackageLocator>> => {
+): Promise<Map<string, Array<ConditionalPackageLocator>>> => {
   const lockfilePath = ppath.join(cwd, LOCKFILE_PATH)
 
   if (!(await xfs.existsPromise(lockfilePath))) {
@@ -185,48 +194,38 @@ const getWorkspaceConditionalPackageLocators = async (
   )
 }
 
-const getUnpluggedReferenceLocator = (reference: PortablePath): string | undefined => {
+const getUnpluggedReferencePackageName = (reference: PortablePath): string | undefined => {
   const match = reference.match(NODE_MODULES_REFERENCE_REGEXP)
 
   if (!match) {
     return undefined
   }
 
-  const [, unpluggedFolder, packageName] = match
-  const npmDelimiterIndex = unpluggedFolder.lastIndexOf(UNPLUGGED_FOLDER_NPM_DELIMITER)
-
-  if (npmDelimiterIndex === -1) {
-    return undefined
-  }
-
-  const versionWithHash = unpluggedFolder.slice(
-    npmDelimiterIndex + UNPLUGGED_FOLDER_NPM_DELIMITER.length
-  )
-  const hashDelimiterIndex = versionWithHash.lastIndexOf('-')
-
-  if (hashDelimiterIndex === -1) {
-    return undefined
-  }
-
-  const version = versionWithHash.slice(0, hashDelimiterIndex)
-
-  return `${packageName}@${NPM_PROTOCOL}${version}`
+  return match[2]
 }
 
 const isConditionalUnpluggedReference = (
   reference: PortablePath,
-  conditionalPackageLocators: Map<string, ConditionalPackageLocator>
+  conditionalPackageLocators: Map<string, Array<ConditionalPackageLocator>>
 ): boolean => {
-  const locator = getUnpluggedReferenceLocator(reference)
-  const conditionalPackageLocator = locator ? conditionalPackageLocators.get(locator) : undefined
+  const packageName = getUnpluggedReferencePackageName(reference)
+  const conditionalPackageLocatorsForPackage = packageName
+    ? conditionalPackageLocators.get(packageName)
+    : undefined
 
-  return conditionalPackageLocator ? !conditionalPackageLocator.target : false
+  if (!conditionalPackageLocatorsForPackage) {
+    return false
+  }
+
+  return conditionalPackageLocatorsForPackage.every(
+    (conditionalPackageLocator) => !conditionalPackageLocator.target
+  )
 }
 
 const getMissingReferences = async (
   cwd: PortablePath,
   references: Array<PortablePath>,
-  conditionalPackageLocators: Map<string, ConditionalPackageLocator>
+  conditionalPackageLocators: Map<string, Array<ConditionalPackageLocator>>
 ): Promise<Array<PortablePath>> => {
   const referencesState = await Promise.all(
     references.map(async (reference) => ({
