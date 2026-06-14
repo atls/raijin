@@ -1,5 +1,17 @@
 
 
+## [1.1.91](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.90...@atls/yarn-cli@1.1.91) (2026-06-14)
+
+
+### Bug Fixes
+
+
+* **code-schematics:** preserve generated file newline ([f3a564c](https://github.com/atls/raijin/commit/f3a564c6e996caeea9b1353cdced82d3ba7928c5))
+
+
+
+
+
 ## [1.1.89](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.88...@atls/yarn-cli@1.1.89) (2026-06-12)
 
 

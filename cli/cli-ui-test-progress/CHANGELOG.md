@@ -1,5 +1,17 @@
 
 
+## [1.0.3](https://github.com/atls/raijin/compare/@atls/cli-ui-test-progress-component@1.0.2...@atls/cli-ui-test-progress-component@1.0.3) (2026-06-14)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-test:** stabilize local test checks ([2a1c383](https://github.com/atls/raijin/commit/2a1c383fc2567f8297e53be6dde649dd529f75c5))
+
+
+
+
+
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/cli-ui-test-progress-component@1.0.1...@atls/cli-ui-test-progress-component@1.0.2) (2026-04-29)
 
 

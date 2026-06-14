@@ -1,5 +1,21 @@
 
 
+## [1.0.34](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.33...@atls/yarn-plugin-test@1.0.34) (2026-06-14)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** share runtime exec argv contract ([3f27740](https://github.com/atls/raijin/commit/3f27740f4022e7ca10f7c00c580e286ef00d3115))
+* **yarn-plugin-test:** keep default reporter route ([c0d36be](https://github.com/atls/raijin/commit/c0d36be8c1828497c68fc97a5da26d2d12da012e))
+* **yarn-plugin-test:** return events from tap route ([8bf7889](https://github.com/atls/raijin/commit/8bf7889eea9007e59a7b7e988ad86dea27a9fe15))
+* **yarn-plugin-test:** skip ui for tap output ([a3885a9](https://github.com/atls/raijin/commit/a3885a95d2f7b46e9abed34c28e61af74e2455d4))
+* **yarn-plugin-test:** stabilize local test checks ([2a1c383](https://github.com/atls/raijin/commit/2a1c383fc2567f8297e53be6dde649dd529f75c5))
+
+
+
+
+
 ## [1.0.33](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.33...@atls/yarn-plugin-test@1.0.33) (2026-06-12)
 
 

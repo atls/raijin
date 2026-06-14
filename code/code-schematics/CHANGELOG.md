@@ -1,5 +1,17 @@
 
 
+## [2.0.28](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.27...@atls/code-schematics@2.0.28) (2026-06-14)
+
+
+### Bug Fixes
+
+
+* **code-schematics:** preserve generated file newline ([f3a564c](https://github.com/atls/raijin/commit/f3a564c6e996caeea9b1353cdced82d3ba7928c5))
+
+
+
+
+
 ## [2.0.27](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.26...@atls/code-schematics@2.0.27) (2026-06-11)
 
 

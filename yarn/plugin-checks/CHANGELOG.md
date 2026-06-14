@@ -1,5 +1,18 @@
 
 
+## [1.0.41](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.40...@atls/yarn-plugin-checks@1.0.41) (2026-06-14)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** share runtime exec argv contract ([3f27740](https://github.com/atls/raijin/commit/3f27740f4022e7ca10f7c00c580e286ef00d3115))
+* **yarn-plugin-test:** stabilize local test checks ([2a1c383](https://github.com/atls/raijin/commit/2a1c383fc2567f8297e53be6dde649dd529f75c5))
+
+
+
+
+
 ## [1.0.40](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.40...@atls/yarn-plugin-checks@1.0.40) (2026-06-12)
 
 

@@ -1,5 +1,12 @@
 
 
+## [1.0.25](https://github.com/atls/raijin/compare/@atls/yarn-plugin-schematics@1.0.25...@atls/yarn-plugin-schematics@1.0.25) (2026-06-14)
+
+
+
+
+
+
 ## [1.0.25](https://github.com/atls/raijin/compare/@atls/yarn-plugin-schematics@1.0.25...@atls/yarn-plugin-schematics@1.0.25) (2026-06-11)
 
 

@@ -1,5 +1,17 @@
 
 
+## [2.1.34](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.33...@atls/code-runtime@2.1.34) (2026-06-14)
+
+
+### Bug Fixes
+
+
+* **code-runtime:** load eslint through pnp safe route ([ae9c525](https://github.com/atls/raijin/commit/ae9c525adbbe609fa13d2c91fc9b7d7ad2b921ba))
+
+
+
+
+
 ## [2.1.33](https://github.com/atls/raijin/compare/@atls/code-runtime@2.1.32...@atls/code-runtime@2.1.33) (2026-06-11)
 
 

@@ -1,5 +1,21 @@
 
 
+## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.9...@atls/yarn-plugin-renderer@1.0.10) (2026-06-14)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-renderer:** delegate pnp loader ([8e6c9cd](https://github.com/atls/raijin/commit/8e6c9cd0b2fdb6d6e1581571aae68d89d59dfe2b))
+* **yarn-plugin-renderer:** devirtualize next version ([465778e](https://github.com/atls/raijin/commit/465778e6417fca77154ab8c52f00ab892ed6b765))
+* **yarn-plugin-renderer:** normalize patched next refs ([2b0329b](https://github.com/atls/raijin/commit/2b0329b3d750c4fe27869a16315ee63fbca55036))
+* **yarn-plugin-renderer:** preserve pnp loader delegate ([2c692b9](https://github.com/atls/raijin/commit/2c692b95690fd726d74be9eca84ac9af3ea5e43a))
+* **yarn-plugin-renderer:** restore next webpack build route ([a903ee4](https://github.com/atls/raijin/commit/a903ee4647f1e731619328a563b623a75bc42e0b))
+
+
+
+
+
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.8...@atls/yarn-plugin-renderer@1.0.9) (2026-06-12)
 
 

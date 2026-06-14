@@ -1,5 +1,21 @@
 
 
+## [2.0.43](https://github.com/atls/raijin/compare/@atls/code-test@2.0.42...@atls/code-test@2.0.43) (2026-06-14)
+
+
+### Bug Fixes
+
+
+* **code-test:** avoid force exiting embedded runs ([12f00b7](https://github.com/atls/raijin/commit/12f00b7c8a826ac17ed4efbdba88a73cef29dfa9))
+* **code-test:** keep watch streams open ([d303b36](https://github.com/atls/raijin/commit/d303b36d774b64c9eb202f1458045cbc5c10c304))
+* **code-test:** preserve output events ([423d30b](https://github.com/atls/raijin/commit/423d30bdd96d2a5536a3fc33496d2ade662bc80a))
+* **yarn-plugin-test:** return events from tap route ([8bf7889](https://github.com/atls/raijin/commit/8bf7889eea9007e59a7b7e988ad86dea27a9fe15))
+* **yarn-plugin-test:** stabilize local test checks ([2a1c383](https://github.com/atls/raijin/commit/2a1c383fc2567f8297e53be6dde649dd529f75c5))
+
+
+
+
+
 ## [2.0.42](https://github.com/atls/raijin/compare/@atls/code-test@2.0.42...@atls/code-test@2.0.42) (2026-06-11)
 
 

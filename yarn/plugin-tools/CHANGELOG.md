@@ -1,5 +1,20 @@
 
 
+## [1.0.32](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.31...@atls/yarn-plugin-tools@1.0.32) (2026-06-14)
+
+
+### Bug Fixes
+
+
+* **tools:** keep command routes on managed wrappers ([43b3686](https://github.com/atls/raijin/commit/43b36863bef68cc27309ef8005f352c44b7bdfb7))
+* **yarn-plugin-tools:** avoid eval node wrapper ([073a368](https://github.com/atls/raijin/commit/073a36839672d82469a159fcb348c4cd74e2a023))
+* **yarn-plugin-tools:** forward managed node flags ([97c7078](https://github.com/atls/raijin/commit/97c7078f2a1d4bfbcd3255a5d673a886294faf16))
+* **yarn-plugin-tools:** preserve unrelated node loaders ([1986e92](https://github.com/atls/raijin/commit/1986e92e2ebf33ea0d218dddbd40d9f5c3109d1d))
+
+
+
+
+
 ## [1.0.31](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.30...@atls/yarn-plugin-tools@1.0.31) (2026-06-12)
 
 
