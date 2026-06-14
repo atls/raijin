@@ -1,17 +1,18 @@
-import type { execUtils }   from '@yarnpkg/core'
+import type { execUtils }          from '@yarnpkg/core'
 
-import type { PackOptions } from './pack.interfaces.js'
-import type { PackOutputs } from './pack.interfaces.js'
+import type { PackOptions }        from './pack.interfaces.js'
+import type { PackOutputs }        from './pack.interfaces.js'
 
-import { readFileSync }     from 'node:fs'
+import { readFileSync }            from 'node:fs'
 
-import { stringify }        from '@iarna/toml'
-import { xfs }              from '@yarnpkg/fslib'
-import { ppath }            from '@yarnpkg/fslib'
+import { stringify }               from '@iarna/toml'
+import { xfs }                     from '@yarnpkg/fslib'
+import { ppath }                   from '@yarnpkg/fslib'
 
-import { execOrThrow }      from './pack.utils.js'
-import { installPack }      from './pack.utils.js'
-import { getTag }           from './tag.utils.js'
+import { createProjectDescriptor } from './pack-descriptor.utils.js'
+import { execOrThrow }             from './pack.utils.js'
+import { installPack }             from './pack.utils.js'
+import { getTag }                  from './tag.utils.js'
 
 export const pack = async (
   {
@@ -27,6 +28,7 @@ export const pack = async (
   }: PackOptions,
   context: execUtils.PipevpOptions
 ): Promise<PackOutputs> => {
+  const packCwd = cwd ?? context.cwd
   const repo = workspace.replace('@', '').replace(/\//g, '-')
   const image = `${registry}${repo}`
 
@@ -50,23 +52,12 @@ export const pack = async (
     })
   }
 
-  const descriptor = {
-    _: {
-      'schema-version': '0.2',
-      id: repo,
-      name: repo,
-      version: '0.0.1',
-    },
-    io: {
-      buildpacks: {
-        exclude: ['.git', '.yarn/unplugged'],
-        builder,
-        build: {
-          env: envs,
-        },
-      },
-    },
-  }
+  const descriptor = await createProjectDescriptor({
+    repo,
+    builder,
+    envs,
+    cwd: packCwd,
+  })
 
   const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml')
 
@@ -105,7 +96,7 @@ export const pack = async (
   await installPack({ cwd, context })
 
   await execOrThrow('pack', ['config', 'experimental', 'true'], {
-    cwd: cwd ?? context.cwd,
+    cwd: packCwd,
     env: process.env,
     stdin: context.stdin,
     stdout: context.stdout,
@@ -113,7 +104,7 @@ export const pack = async (
   })
 
   await execOrThrow('pack', args, {
-    cwd: cwd ?? context.cwd,
+    cwd: packCwd,
     env: process.env,
     stdin: context.stdin,
     stdout: context.stdout,
