@@ -156,6 +156,36 @@ test('should reject missing target conditional unplugged package payload', async
   )
 })
 
+test('should not reject missing non-target libc conditional unplugged payload', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.cjs'),
+    'packageLocation: "./.yarn/unplugged/@rollup-rollup-linux-x64-musl-npm-4.45.0-7ea6a5f09b/node_modules/@rollup/rollup-linux-x64-musl/"'
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"@rollup/rollup-linux-x64-musl@npm:4.45.0":',
+      '  version: 4.45.0',
+      '  resolution: "@rollup/rollup-linux-x64-musl@npm:4.45.0"',
+      '  conditions: os=linux & cpu=x64 & libc=musl',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  const descriptor = await createProjectDescriptor({
+    repo,
+    builder,
+    envs,
+    cwd,
+    platform: 'linux/amd64',
+  })
+
+  assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
+})
+
 test('should not reject missing non-target patched conditional unplugged payload', async () => {
   const cwd = await xfs.mktempPromise()
 

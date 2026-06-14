@@ -9,6 +9,7 @@ const PROJECT_DESCRIPTOR_SCHEMA_VERSION = '0.2'
 const GIT_EXCLUDE_PATH = '.git'
 const LOCKFILE_PATH = 'yarn.lock' as PortablePath
 const DEFAULT_IMAGE_OS = 'linux'
+const DEFAULT_LINUX_LIBC = 'glibc'
 const PNP_MANIFEST_PATH = '.pnp.cjs' as PortablePath
 const PNP_DATA_PATH = '.pnp.data.json' as PortablePath
 const UNPLUGGED_EXCLUDE_PATH = '.yarn/unplugged'
@@ -19,6 +20,7 @@ const NODE_MODULES_REFERENCE_REGEXP = /^\.yarn\/unplugged\/([^/]+)\/node_modules
 interface TargetPlatform {
   os: string
   cpu?: string
+  libc?: string
 }
 
 interface ConditionalPackageLocator {
@@ -117,10 +119,12 @@ const normalizeTargetCpu = (cpu: string | undefined): string | undefined => {
 
 const getTargetPlatform = (platform: string | undefined): TargetPlatform => {
   const [os, cpu] = platform?.split('/').slice(0, 2) ?? []
+  const targetOs = os || DEFAULT_IMAGE_OS
 
   return {
-    os: os || DEFAULT_IMAGE_OS,
+    os: targetOs,
     cpu: normalizeTargetCpu(cpu) ?? normalizeTargetCpu(arch()),
+    libc: targetOs === 'linux' ? DEFAULT_LINUX_LIBC : undefined,
   }
 }
 
@@ -132,8 +136,10 @@ const isTargetCondition = (condition: string, targetPlatform: TargetPlatform): b
       return targetPlatform.os === value
     case 'cpu':
       return targetPlatform.cpu === value
+    case 'libc':
+      return targetPlatform.libc === value
     default:
-      return true
+      return false
   }
 }
 
