@@ -28,13 +28,15 @@ export const createReleasePlanForeachInput = (
   plan: ReleasePlan,
   options: ReleasePlanForeachOptions
 ): Array<string> => {
-  if (plan.workspaces.length === 0) {
+  const workspaces = plan.workspaces.filter((workspace) => workspace.strategy !== 'decline')
+
+  if (workspaces.length === 0) {
     return []
   }
 
   const input = ['workspaces', 'foreach']
 
-  for (const workspace of plan.workspaces) {
+  for (const workspace of workspaces) {
     input.push('--include', workspace.ident)
   }
 

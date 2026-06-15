@@ -60,3 +60,57 @@ test('should not run native foreach for empty release plan', () => {
     []
   )
 })
+
+test('should skip declined release plan workspaces', () => {
+  const input = createReleasePlanForeachInput(
+    {
+      schemaVersion: 1,
+      workspaces: [
+        {
+          ident: '@atls/yarn-cli',
+          relativeCwd: 'yarn/cli',
+          version: '1.1.96',
+          strategy: 'decline',
+          private: true,
+        },
+        {
+          ident: '@atls/yarn-plugin-release',
+          relativeCwd: 'yarn/plugin-release',
+          version: '1.0.10',
+          strategy: 'patch',
+          private: true,
+        },
+      ],
+    },
+    {}
+  )
+
+  assert.deepEqual(input, [
+    'workspaces',
+    'foreach',
+    '--include',
+    '@atls/yarn-plugin-release',
+    '--all',
+  ])
+})
+
+test('should not run native foreach when all plan workspaces are declined', () => {
+  assert.deepEqual(
+    createReleasePlanForeachInput(
+      {
+        schemaVersion: 1,
+        workspaces: [
+          {
+            ident: '@atls/yarn-cli',
+            relativeCwd: 'yarn/cli',
+            version: '1.1.96',
+            strategy: 'decline',
+            private: true,
+          },
+        ],
+      },
+      {}
+    ),
+    []
+  )
+})
