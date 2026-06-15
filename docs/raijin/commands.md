@@ -289,7 +289,7 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 ### Domain `release`
 
-- Commands: `release create`, `release version defer`
+- Commands: `release create`, `release plan create`, `release plan foreach`, `release version defer`
 
 <details>
 <summary>Domain details: `release`</summary>
@@ -302,6 +302,24 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Example: `yarn release create`
 - Plugin: `@atls/yarn-plugin-release`
 - Source: `yarn/plugin-release/sources/release-create.command.ts`
+
+<!-- sync:command-card:release-plan-create -->
+
+#### `release plan create`
+
+- Status: `active`
+- Example: `yarn release plan create`
+- Plugin: `@atls/yarn-plugin-release`
+- Source: `yarn/plugin-release/sources/release-plan-create.command.ts`
+
+<!-- sync:command-card:release-plan-foreach -->
+
+#### `release plan foreach`
+
+- Status: `active`
+- Example: `yarn release plan foreach`
+- Plugin: `@atls/yarn-plugin-release`
+- Source: `yarn/plugin-release/sources/release-plan-foreach.command.ts`
 
 <!-- sync:command-card:release-version-defer -->
 
