@@ -353,6 +353,37 @@ test('should reject missing linux 386 target conditional unplugged payload', asy
   )
 })
 
+test('should reject missing windows target conditional unplugged payload', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.cjs'),
+    'packageLocation: "./.yarn/unplugged/@esbuild-win32-x64-npm-0.24.2-4423400f4a/node_modules/@esbuild/win32-x64/"'
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"@esbuild/win32-x64@npm:0.24.2":',
+      '  version: 0.24.2',
+      '  resolution: "@esbuild/win32-x64@npm:0.24.2"',
+      '  conditions: os=win32 & cpu=x64',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  await assert.rejects(
+    createProjectDescriptor({
+      repo,
+      builder,
+      envs,
+      cwd,
+      platform: 'windows/amd64',
+    }),
+    /PnP manifest references unplugged packages that are missing/
+  )
+})
+
 test('should reject missing endian aliased target conditional unplugged payloads', async () => {
   const cases = [
     {

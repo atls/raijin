@@ -24,6 +24,9 @@ const CPU_ALIASES = {
   mips64le: 'mips64el',
   ppc64le: 'ppc64',
 } as Record<string, string>
+const OS_ALIASES = {
+  windows: 'win32',
+} as Record<string, string>
 
 interface TargetPlatform {
   os: string
@@ -259,9 +262,11 @@ const normalizeTargetCpu = (cpu: string | undefined): string | undefined => {
   return CPU_ALIASES[cpu] ?? cpu
 }
 
+const normalizeTargetOs = (os: string): string => OS_ALIASES[os] ?? os
+
 const getTargetPlatform = (platform: string | undefined): TargetPlatform => {
   const [os, cpu] = platform?.split('/').slice(0, 2) ?? []
-  const targetOs = os || DEFAULT_IMAGE_OS
+  const targetOs = normalizeTargetOs(os || DEFAULT_IMAGE_OS)
 
   return {
     os: targetOs,
