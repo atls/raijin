@@ -1,5 +1,17 @@
 
 
+## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.6...@atls/yarn-pack-utils@1.0.7) (2026-06-15)
+
+
+### Bug Fixes
+
+
+* **yarn-pack-utils:** materialize pnp payload for image platform ([ed465b8](https://github.com/atls/raijin/commit/ed465b82f29a5c2a656f1306cffd94e6cf5f64d3))
+
+
+
+
+
 ## [1.0.6](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.5...@atls/yarn-pack-utils@1.0.6) (2026-05-14)
 
 
