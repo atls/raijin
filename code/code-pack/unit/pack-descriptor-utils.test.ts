@@ -125,6 +125,111 @@ test('should not reject missing non-target conditional unplugged package payload
   assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
 })
 
+test('should keep same-name unconditional unplugged package payload required', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(ppath.join(cwd, '.pnp.cjs'), 'module.exports = {}')
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.data.json'),
+    JSON.stringify({
+      packageRegistryData: [
+        [
+          'same-package',
+          [
+            [
+              'npm:1.0.0',
+              {
+                packageLocation:
+                  './.yarn/unplugged/same-package-npm-1.0.0-required/node_modules/same-package/',
+              },
+            ],
+          ],
+        ],
+      ],
+    })
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"same-package@npm:1.0.0":',
+      '  version: 1.0.0',
+      '  resolution: "same-package@npm:1.0.0"',
+      '  languageName: node',
+      '  linkType: hard',
+      '',
+      '"same-package@npm:2.0.0":',
+      '  version: 2.0.0',
+      '  resolution: "same-package@npm:2.0.0"',
+      '  conditions: os=darwin',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  await assert.rejects(
+    createProjectDescriptor({
+      repo,
+      builder,
+      envs,
+      cwd,
+      platform: 'linux/amd64',
+    }),
+    /PnP manifest references unplugged packages that are missing/
+  )
+})
+
+test('should filter same-name non-target conditional unplugged package by locator', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(ppath.join(cwd, '.pnp.cjs'), 'module.exports = {}')
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.data.json'),
+    JSON.stringify({
+      packageRegistryData: [
+        [
+          'same-package',
+          [
+            [
+              'npm:2.0.0',
+              {
+                packageLocation:
+                  './.yarn/unplugged/same-package-npm-2.0.0-optional/node_modules/same-package/',
+              },
+            ],
+          ],
+        ],
+      ],
+    })
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"same-package@npm:1.0.0":',
+      '  version: 1.0.0',
+      '  resolution: "same-package@npm:1.0.0"',
+      '  languageName: node',
+      '  linkType: hard',
+      '',
+      '"same-package@npm:2.0.0":',
+      '  version: 2.0.0',
+      '  resolution: "same-package@npm:2.0.0"',
+      '  conditions: os=darwin',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  const descriptor = await createProjectDescriptor({
+    repo,
+    builder,
+    envs,
+    cwd,
+    platform: 'linux/amd64',
+  })
+
+  assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
+})
+
 test('should reject missing target conditional unplugged package payload', async () => {
   const cwd = await xfs.mktempPromise()
 
