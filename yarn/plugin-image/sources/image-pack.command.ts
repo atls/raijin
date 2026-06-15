@@ -2,6 +2,7 @@ import type { TagPolicy } from '@atls/code-pack'
 import type { Workspace } from '@yarnpkg/core'
 
 import { readFileSync }   from 'node:fs'
+import { arch }           from 'node:os'
 import { join }           from 'node:path'
 
 import { BaseCommand }    from '@yarnpkg/cli'
@@ -17,6 +18,9 @@ import { packUtils }      from '@atls/yarn-pack-utils'
 
 const DEFAULT_BUILDER_TAG = '24'
 const DEFAULT_BUILDPACK_VERSION = '0.1.1'
+const DEFAULT_MATERIALIZATION_OS = 'linux'
+
+const getDefaultMaterializationPlatform = (): string => `${DEFAULT_MATERIALIZATION_OS}/${arch()}`
 
 class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]
@@ -72,7 +76,9 @@ class ImagePackCommand extends BaseCommand {
         const buildpackVersion = packConfiguration.buildpackVersion ?? DEFAULT_BUILDPACK_VERSION
         const { require } = packConfiguration
 
-        await packUtils.pack(configuration, project, workspace, report, destination)
+        await packUtils.pack(configuration, project, workspace, report, destination, {
+          platform: this.platform ?? getDefaultMaterializationPlatform(),
+        })
 
         await pack(
           {
