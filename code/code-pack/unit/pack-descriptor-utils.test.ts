@@ -433,6 +433,58 @@ test('should not reject missing non-target patched conditional unplugged payload
   assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
 })
 
+test('should match virtual unplugged entries to lockfile conditional locator', async () => {
+  const cwd = await xfs.mktempPromise()
+  const unpluggedPackagePath = '.yarn/unplugged/fsevents-npm-2.3.3-df0bf1/node_modules/fsevents'
+
+  await xfs.writeFilePromise(ppath.join(cwd, '.pnp.cjs'), 'module.exports = {}')
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.data.json'),
+    JSON.stringify({
+      packageRegistryData: [
+        [
+          'fsevents',
+          [
+            [
+              'npm:2.3.3',
+              {
+                packageLocation: `./${unpluggedPackagePath}/`,
+              },
+            ],
+            [
+              'virtual:peer-hash#npm:2.3.3',
+              {
+                packageLocation: `./${unpluggedPackagePath}/`,
+              },
+            ],
+          ],
+        ],
+      ],
+    })
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"fsevents@npm:2.3.3":',
+      '  version: 2.3.3',
+      '  resolution: "fsevents@npm:2.3.3"',
+      '  conditions: os=darwin',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  const descriptor = await createProjectDescriptor({
+    repo,
+    builder,
+    envs,
+    cwd,
+    platform: 'linux/amd64',
+  })
+
+  assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
+})
+
 test('should reject image pack context with missing custom unplugged package payload', async () => {
   const cwd = await xfs.mktempPromise()
 

@@ -17,6 +17,7 @@ const UNPLUGGED_EXCLUDE_PATH = '.yarn/unplugged'
 const PACKAGE_LOCATION_REGEXP = /["'`]([^"'`]*)["'`]/g
 const NODE_MODULES_REFERENCE_REGEXP = /\/node_modules\/(.+)$/
 const PNP_UNPLUGGED_FOLDER_REGEXP = /(?:^|\n)pnpUnpluggedFolder:\s*([^#\n]+)/
+const VIRTUAL_PACKAGE_REFERENCE_REGEXP = /^virtual:[^#]+#(.+)$/
 const CPU_ALIASES = {
   386: 'ia32',
   amd64: 'x64',
@@ -177,6 +178,9 @@ const getPnpPackageRegistryData = (
     : []
 }
 
+const normalizePnpPackageReference = (packageReference: string): string =>
+  packageReference.match(VIRTUAL_PACKAGE_REFERENCE_REGEXP)?.[1] ?? packageReference
+
 const getPnpUnpluggedReferenceEntries = (
   content: string,
   unpluggedFolders: Array<PortablePath>
@@ -198,7 +202,7 @@ const getPnpUnpluggedReferenceEntries = (
           reference,
           locator: {
             packageName,
-            packageReference,
+            packageReference: normalizePnpPackageReference(packageReference),
           },
         })
       }
