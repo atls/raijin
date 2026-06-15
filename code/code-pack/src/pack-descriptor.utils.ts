@@ -8,14 +8,15 @@ import { ppath }             from '@yarnpkg/fslib'
 const PROJECT_DESCRIPTOR_SCHEMA_VERSION = '0.2'
 const GIT_EXCLUDE_PATH = '.git'
 const LOCKFILE_PATH = 'yarn.lock' as PortablePath
+const YARNRC_PATH = '.yarnrc.yml' as PortablePath
 const DEFAULT_IMAGE_OS = 'linux'
 const DEFAULT_LINUX_LIBC = 'glibc'
 const PNP_MANIFEST_PATH = '.pnp.cjs' as PortablePath
 const PNP_DATA_PATH = '.pnp.data.json' as PortablePath
 const UNPLUGGED_EXCLUDE_PATH = '.yarn/unplugged'
-const UNPLUGGED_REFERENCE_PREFIX = '.yarn/unplugged/'
-const UNPLUGGED_REFERENCE_REGEXP = /["'`]([^"'`]*\.yarn\/unplugged\/[^"'`]*)["'`]/g
-const NODE_MODULES_REFERENCE_REGEXP = /^\.yarn\/unplugged\/([^/]+)\/node_modules\/(.+)$/
+const PACKAGE_LOCATION_REGEXP = /["'`]([^"'`]*)["'`]/g
+const NODE_MODULES_REFERENCE_REGEXP = /\/node_modules\/(.+)$/
+const PNP_UNPLUGGED_FOLDER_REGEXP = /(?:^|\n)pnpUnpluggedFolder:\s*([^#\n]+)/
 const CPU_ALIASES = {
   386: 'ia32',
   amd64: 'x64',
@@ -45,14 +46,53 @@ export interface CreateProjectDescriptorOptions {
   platform?: string
 }
 
-const normalizeUnpluggedReference = (reference: string): PortablePath | undefined => {
-  const normalizedReference = reference.replaceAll('\\', '/')
-  const referenceStart = normalizedReference.indexOf(UNPLUGGED_REFERENCE_PREFIX)
+const normalizeUnpluggedFolder = (folder: string): PortablePath => {
+  const normalizedFolder = ppath.normalize(folder.replace(/^['"]|['"]$/g, '') as PortablePath)
 
-  if (referenceStart === -1) {
+  if (normalizedFolder.endsWith('/')) {
+    return normalizedFolder.slice(0, -1) as PortablePath
+  }
+
+  return normalizedFolder
+}
+
+const getConfiguredUnpluggedFolder = (content: string): PortablePath | undefined => {
+  const match = content.match(PNP_UNPLUGGED_FOLDER_REGEXP)
+  const value = match?.[1]?.trim()
+
+  return value ? normalizeUnpluggedFolder(value) : undefined
+}
+
+const getWorkspaceUnpluggedFolders = async (cwd: PortablePath): Promise<Array<PortablePath>> => {
+  const folders = new Set<PortablePath>([normalizeUnpluggedFolder(UNPLUGGED_EXCLUDE_PATH)])
+  const yarnrcPath = ppath.join(cwd, YARNRC_PATH)
+
+  if (await xfs.existsPromise(yarnrcPath)) {
+    const configuredFolder = getConfiguredUnpluggedFolder(
+      await xfs.readFilePromise(yarnrcPath, 'utf8')
+    )
+
+    if (configuredFolder) {
+      folders.add(configuredFolder)
+    }
+  }
+
+  return Array.from(folders).sort()
+}
+
+const normalizeUnpluggedReference = (
+  reference: string,
+  unpluggedFolders: Array<PortablePath>
+): PortablePath | undefined => {
+  const normalizedReference = reference.replaceAll('\\', '/')
+  const unpluggedFolder = unpluggedFolders.find((folder) =>
+    normalizedReference.includes(`${folder}/`))
+
+  if (!unpluggedFolder) {
     return undefined
   }
 
+  const referenceStart = normalizedReference.indexOf(`${unpluggedFolder}/`)
   const unpluggedReference = ppath.normalize(
     normalizedReference.slice(referenceStart) as PortablePath
   )
@@ -64,11 +104,14 @@ const normalizeUnpluggedReference = (reference: string): PortablePath | undefine
   return unpluggedReference
 }
 
-export const getPnpUnpluggedReferences = (content: string): Array<PortablePath> => {
+export const getPnpUnpluggedReferences = (
+  content: string,
+  unpluggedFolders: Array<PortablePath> = [normalizeUnpluggedFolder(UNPLUGGED_EXCLUDE_PATH)]
+): Array<PortablePath> => {
   const references = new Set<string>()
 
-  for (const match of content.matchAll(UNPLUGGED_REFERENCE_REGEXP)) {
-    const reference = normalizeUnpluggedReference(match[1])
+  for (const match of content.matchAll(PACKAGE_LOCATION_REGEXP)) {
+    const reference = normalizeUnpluggedReference(match[1], unpluggedFolders)
 
     if (reference) {
       references.add(reference)
@@ -82,6 +125,7 @@ const getWorkspacePnpUnpluggedReferences = async (
   cwd: PortablePath
 ): Promise<Array<PortablePath>> => {
   const references = new Set<PortablePath>()
+  const unpluggedFolders = await getWorkspaceUnpluggedFolders(cwd)
   const manifestsReferences = await Promise.all(
     [PNP_MANIFEST_PATH, PNP_DATA_PATH].map(async (manifestPath) => {
       const pnpManifestPath = ppath.join(cwd, manifestPath)
@@ -92,7 +136,7 @@ const getWorkspacePnpUnpluggedReferences = async (
 
       const content = await xfs.readFilePromise(pnpManifestPath, 'utf8')
 
-      return getPnpUnpluggedReferences(content)
+      return getPnpUnpluggedReferences(content, unpluggedFolders)
     })
   )
 
@@ -203,7 +247,7 @@ const getUnpluggedReferencePackageName = (reference: PortablePath): string | und
     return undefined
   }
 
-  return match[2]
+  return match[1]
 }
 
 const isConditionalUnpluggedReference = (

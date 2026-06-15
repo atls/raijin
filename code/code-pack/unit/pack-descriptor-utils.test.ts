@@ -278,6 +278,26 @@ test('should not reject missing non-target patched conditional unplugged payload
   assert.deepEqual(descriptor.io.buildpacks.exclude, ['.git'])
 })
 
+test('should reject image pack context with missing custom unplugged package payload', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(ppath.join(cwd, '.yarnrc.yml'), 'pnpUnpluggedFolder: .pnp-unplugged')
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.cjs'),
+    'packageLocation: "./.pnp-unplugged/open-npm-8.4.0-df63cfe537/node_modules/open/"'
+  )
+
+  await assert.rejects(
+    createProjectDescriptor({
+      repo,
+      builder,
+      envs,
+      cwd,
+    }),
+    /PnP manifest references unplugged packages that are missing/
+  )
+})
+
 test('should reject image pack context with missing unplugged package payload', async () => {
   const cwd = await xfs.mktempPromise()
 
