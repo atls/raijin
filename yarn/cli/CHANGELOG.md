@@ -1,5 +1,17 @@
 
 
+## [1.2.3](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.2...@atls/yarn-cli@1.2.3) (2026-06-15)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-release:** use yarn deferred targets for release plans ([05d8417](https://github.com/atls/raijin/commit/05d84171447a88f79454156b868aa8090aa2abfa))
+
+
+
+
+
 ## [1.2.1](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.1...@atls/yarn-cli@1.2.1) (2026-06-15)
 
 

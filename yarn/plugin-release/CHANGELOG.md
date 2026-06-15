@@ -1,5 +1,19 @@
 
 
+## [1.1.1](https://github.com/atls/raijin/compare/@atls/yarn-plugin-release@1.1.0...@atls/yarn-plugin-release@1.1.1) (2026-06-15)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-release:** include declined release plan targets ([923085f](https://github.com/atls/raijin/commit/923085fd8260d717657f7fcafdb9a5dedc9bce3a))
+* **yarn-plugin-release:** preserve deferred version decisions ([394772f](https://github.com/atls/raijin/commit/394772f2106bac3a9485289d459307a16780721b))
+* **yarn-plugin-release:** use yarn deferred targets for release plans ([05d8417](https://github.com/atls/raijin/commit/05d84171447a88f79454156b868aa8090aa2abfa))
+
+
+
+
+
 # [1.1.0](https://github.com/atls/raijin/compare/@atls/yarn-plugin-release@1.0.10...@atls/yarn-plugin-release@1.1.0) (2026-06-15)
 
 
