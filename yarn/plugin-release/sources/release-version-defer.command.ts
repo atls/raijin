@@ -1,17 +1,14 @@
-import { BaseCommand }                           from '@yarnpkg/cli'
-import { WorkspaceRequiredError }                from '@yarnpkg/cli'
-import { Configuration }                         from '@yarnpkg/core'
-import { Project }                               from '@yarnpkg/core'
-import { StreamReport }                          from '@yarnpkg/core'
-import { Option }                                from 'clipanion'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { WorkspaceRequiredError }       from '@yarnpkg/cli'
+import { Configuration }                from '@yarnpkg/core'
+import { Project }                      from '@yarnpkg/core'
+import { StreamReport }                 from '@yarnpkg/core'
+import { Option }                       from 'clipanion'
 
-import { getDeferredReleaseDecisions }           from './release-plan.utils.js'
-import { getReleaseVersionChanges }              from './release-plan.utils.js'
-import { resolveReleasePlanStrategies }          from './release-plan.utils.js'
-import { resolveReleaseVersionDeferredStrategy } from './release-version-policy.utils.js'
+import { getReleaseVersionChanges }     from './release-plan.utils.js'
+import { resolveReleasePlanStrategies } from './release-plan.utils.js'
 
 export { isReleaseVersionWorkspace } from './release-plan.utils.js'
-export { parseDeferredReleaseDecisions } from './release-plan.utils.js'
 export { selectLocalCommitDiffParent } from './release-plan.utils.js'
 export { toGitHubChange } from './release-plan.utils.js'
 
@@ -43,15 +40,8 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
           return
         }
 
-        const deferredDecisions = await getDeferredReleaseDecisions(configuration)
-
         for (const { workspace: changedWorkspace, strategy } of strategies) {
-          const effectiveStrategy = resolveReleaseVersionDeferredStrategy(
-            deferredDecisions.get(changedWorkspace.ident),
-            strategy
-          )
-
-          report.reportInfo(null, `Deferring ${changedWorkspace.ident} as ${effectiveStrategy}`)
+          report.reportInfo(null, `Deferring ${changedWorkspace.ident} as ${strategy}`)
 
           if (this.dryRun) {
             continue
@@ -60,7 +50,7 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
           // Deferred version records share the same `.yarn/versions` state.
           // eslint-disable-next-line no-await-in-loop
           const code = await this.cli.run(
-            ['workspace', changedWorkspace.ident, 'version', effectiveStrategy, '--deferred'],
+            ['workspace', changedWorkspace.ident, 'version', strategy, '--deferred'],
             {
               cwd: project.cwd,
             }
