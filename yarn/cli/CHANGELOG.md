@@ -1,5 +1,35 @@
 
 
+# [1.2.0](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.92...@atls/yarn-cli@1.2.0) (2026-06-15)
+
+
+### Bug Fixes
+
+
+* **code-pack:** devirtualize pnp unplugged locators ([fa6750c](https://github.com/atls/raijin/commit/fa6750ce97518ce0dc3e8fb090d4a5b0f0e63d94))
+* **code-pack:** match conditional unplugged locators exactly ([ab233c6](https://github.com/atls/raijin/commit/ab233c67f914e6615645d93971a8782980b0a8ca))
+* **code-pack:** normalize endian platform cpu aliases ([9c1cd6a](https://github.com/atls/raijin/commit/9c1cd6afc8b15cd3b72f01da828b698fdf9eadae))
+* **code-pack:** normalize windows image platform ([85d35f0](https://github.com/atls/raijin/commit/85d35f09fa7ee4bb318cff2f57d5c753ff3328ad))
+* **code-pack:** preserve pnp unplugged payload ([f79a6af](https://github.com/atls/raijin/commit/f79a6afcfc2ecf18bc6d3e968ce90fe87c4e02f6))
+* **code-pack:** reject unplugged payloads outside context ([1b0a75c](https://github.com/atls/raijin/commit/1b0a75cc5314a66fe12ff74f4e107580e974d55a))
+* **yarn-pack-utils:** materialize pnp payload for image platform ([ed465b8](https://github.com/atls/raijin/commit/ed465b82f29a5c2a656f1306cffd94e6cf5f64d3))
+* **yarn-plugin-image:** use published buildpack default ([49c735a](https://github.com/atls/raijin/commit/49c735a6c6df8d440491beff2cbdaed66d3817dc))
+* **yarn-plugin-release:** honor deferred target versions ([caa4913](https://github.com/atls/raijin/commit/caa491378aebe76310c8ab7302b5f765d153ed73))
+* **yarn-plugin-release:** reject unsupported plan decisions ([c504960](https://github.com/atls/raijin/commit/c5049604aff0376b912c26cc4703cd04055b2b6b))
+* **yarn-plugin-release:** resolve plan workspaces by absolute cwd ([ddaeed6](https://github.com/atls/raijin/commit/ddaeed6fe38b773a863cae06390c7d8b53b1a6ec))
+* **yarn-plugin-release:** skip declined release plan workspaces ([d699eea](https://github.com/atls/raijin/commit/d699eeafe5144d27f8369d220caaadb93cd71c82))
+* **yarn-plugin-release:** use yarn version strategy resolution ([6aa32b0](https://github.com/atls/raijin/commit/6aa32b076507158c92329f26054ed9db199c2951))
+* **yarn-plugin-release:** write target versions to release plan ([b0b73f5](https://github.com/atls/raijin/commit/b0b73f502e177d713b1f466a1a17cb2f57cbb2d4))
+
+### Features
+
+
+* **yarn-plugin-release:** add release plan contract ([6db30c3](https://github.com/atls/raijin/commit/6db30c34fd55537eaafa6cffdb0e64457197b3c0))
+
+
+
+
+
 ## [1.1.97](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.96...@atls/yarn-cli@1.1.97) (2026-06-15)
 
 
