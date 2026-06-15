@@ -65,19 +65,44 @@ test('should create a fixed release plan from selected workspace strategies', ()
       {
         ident: '@atls/code-runtime',
         relativeCwd: 'runtime/code-runtime',
-        version: '2.1.33',
+        version: '3.0.0',
         strategy: 'major',
         private: false,
       },
       {
         ident: '@atls/yarn-cli',
         relativeCwd: 'yarn/cli',
-        version: '1.1.96',
+        version: '1.1.97',
         strategy: 'patch',
         private: true,
       },
     ],
   })
+})
+
+test('should write target minor versions into release plan', () => {
+  const project = createProject([rootWorkspace, runtimeWorkspace])
+  const strategies = [
+    {
+      workspace: {
+        ident: '@atls/code-runtime',
+        relativeCwd: 'runtime/code-runtime',
+      },
+      strategy: 'patch',
+    } as const,
+  ]
+
+  const plan = createReleasePlan(project, strategies, new Map([['@atls/code-runtime', 'minor']]))
+
+  assert.deepEqual(plan.workspaces, [
+    {
+      ident: '@atls/code-runtime',
+      relativeCwd: 'runtime/code-runtime',
+      version: '2.2.0',
+      strategy: 'minor',
+      private: false,
+    },
+  ])
 })
 
 test('should reject malformed release plan content', () => {

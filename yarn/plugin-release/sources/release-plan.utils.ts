@@ -5,11 +5,13 @@ import type { Filename }                            from '@yarnpkg/fslib'
 import type { PortablePath }                        from '@yarnpkg/fslib'
 
 import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
+import type { ReleaseVersionStrategy }              from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspace }             from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspaceOwner }        from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspaceStrategy }     from './release-version-policy.utils.js'
 
 import { execUtils }                                from '@yarnpkg/core'
+import { semverUtils }                              from '@yarnpkg/core'
 import { structUtils }                              from '@yarnpkg/core'
 import { ppath }                                    from '@yarnpkg/fslib'
 import { xfs }                                      from '@yarnpkg/fslib'
@@ -47,6 +49,7 @@ const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
 const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
 const DECLINE_DECISION = 'decline'
+const RELEASE_VERSION_STRATEGIES = new Set<ReleaseVersionStrategy>(['major', 'minor', 'patch'])
 
 const isErrorWithCode = (error: unknown, code: string): boolean =>
   typeof error === 'object' &&
@@ -274,6 +277,27 @@ export const getDeferredReleaseDecisions = async (
   return decisions
 }
 
+const isReleaseVersionStrategy = (strategy: string): strategy is ReleaseVersionStrategy =>
+  RELEASE_VERSION_STRATEGIES.has(strategy as ReleaseVersionStrategy)
+
+const resolveReleasePlanTargetVersion = (version: string, strategy: string): string => {
+  if (!isReleaseVersionStrategy(strategy)) {
+    return version
+  }
+
+  const parsedVersion = new semverUtils.SemVer(version)
+
+  if (strategy === 'major') {
+    return `${parsedVersion.major + 1}.0.0`
+  }
+
+  if (strategy === 'minor') {
+    return `${parsedVersion.major}.${parsedVersion.minor + 1}.0`
+  }
+
+  return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch + 1}`
+}
+
 const toPlanWorkspace = (
   project: Project,
   strategy: ReleaseVersionWorkspaceStrategy,
@@ -287,14 +311,16 @@ const toPlanWorkspace = (
     throw new Error(`Could not resolve release workspace "${strategy.workspace.ident}"`)
   }
 
+  const effectiveStrategy = resolveReleaseVersionDeferredStrategy(
+    deferredDecisions.get(strategy.workspace.ident),
+    strategy.strategy
+  )
+
   return {
     ident: strategy.workspace.ident,
     relativeCwd: strategy.workspace.relativeCwd,
-    version,
-    strategy: resolveReleaseVersionDeferredStrategy(
-      deferredDecisions.get(strategy.workspace.ident),
-      strategy.strategy
-    ),
+    version: resolveReleasePlanTargetVersion(version, effectiveStrategy),
+    strategy: effectiveStrategy,
     private: workspace.manifest.private,
   }
 }
