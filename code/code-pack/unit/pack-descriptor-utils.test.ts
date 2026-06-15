@@ -248,6 +248,56 @@ test('should reject missing linux 386 target conditional unplugged payload', asy
   )
 })
 
+test('should reject missing endian aliased target conditional unplugged payloads', async () => {
+  const cases = [
+    {
+      packageName: '@esbuild/linux-mips64el',
+      platform: 'linux/mips64le',
+      targetCpu: 'mips64el',
+      unpluggedFolder: '@esbuild-linux-mips64el-npm-0.24.2-4423400f4a',
+    },
+    {
+      packageName: '@esbuild/linux-ppc64',
+      platform: 'linux/ppc64le',
+      targetCpu: 'ppc64',
+      unpluggedFolder: '@esbuild-linux-ppc64-npm-0.24.2-4423400f4a',
+    },
+  ]
+
+  await Promise.all(
+    cases.map(async ({ packageName, platform, targetCpu, unpluggedFolder }) => {
+      const cwd = await xfs.mktempPromise()
+
+      await xfs.writeFilePromise(
+        ppath.join(cwd, '.pnp.cjs'),
+        `packageLocation: "./.yarn/unplugged/${unpluggedFolder}/node_modules/${packageName}/"`
+      )
+      await xfs.writeFilePromise(
+        ppath.join(cwd, 'yarn.lock'),
+        [
+          `"${packageName}@npm:0.24.2":`,
+          '  version: 0.24.2',
+          `  resolution: "${packageName}@npm:0.24.2"`,
+          `  conditions: os=linux & cpu=${targetCpu}`,
+          '  languageName: node',
+          '  linkType: hard',
+        ].join('\n')
+      )
+
+      await assert.rejects(
+        createProjectDescriptor({
+          repo,
+          builder,
+          envs,
+          cwd,
+          platform,
+        }),
+        /PnP manifest references unplugged packages that are missing/
+      )
+    })
+  )
+})
+
 test('should not reject missing non-target patched conditional unplugged payload', async () => {
   const cwd = await xfs.mktempPromise()
 

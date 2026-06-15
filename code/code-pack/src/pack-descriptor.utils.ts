@@ -20,6 +20,8 @@ const PNP_UNPLUGGED_FOLDER_REGEXP = /(?:^|\n)pnpUnpluggedFolder:\s*([^#\n]+)/
 const CPU_ALIASES = {
   386: 'ia32',
   amd64: 'x64',
+  mips64le: 'mips64el',
+  ppc64le: 'ppc64',
 } as Record<string, string>
 
 interface TargetPlatform {
