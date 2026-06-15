@@ -10,7 +10,6 @@ import type { ReleaseVersionWorkspaceOwner }        from './release-version-poli
 import type { ReleaseVersionWorkspaceStrategy }     from './release-version-policy.utils.js'
 
 import { execUtils }                                from '@yarnpkg/core'
-import { semverUtils }                              from '@yarnpkg/core'
 import { structUtils }                              from '@yarnpkg/core'
 import { ppath }                                    from '@yarnpkg/fslib'
 import { xfs }                                      from '@yarnpkg/fslib'
@@ -300,18 +299,12 @@ const resolveReleasePlanBaseVersion = (workspace: Workspace): string | undefined
 }
 
 const resolveReleasePlanTargetVersion = (version: string, strategy: string): string => {
-  const exactVersion = semverUtils.clean(strategy)
-
-  if (exactVersion) {
-    return exactVersion
-  }
-
-  if (semverUtils.validRange(strategy)) {
-    return strategy
+  if (IGNORED_RELEASE_DECISIONS.has(strategy)) {
+    return version
   }
 
   if (!isReleaseVersionDecision(strategy)) {
-    return version
+    throw new Error(`Unsupported release decision "${strategy}"`)
   }
 
   return versionUtils.applyStrategy(version, strategy)

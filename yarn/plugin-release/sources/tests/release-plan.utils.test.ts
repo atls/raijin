@@ -132,7 +132,7 @@ test('should write exact deferred versions into release plan', () => {
   ])
 })
 
-test('should preserve deferred version ranges in release plan', () => {
+test('should reject unsupported deferred version ranges in release plan', () => {
   const project = createProject([rootWorkspace, cliWorkspace])
   const strategies = [
     {
@@ -144,17 +144,12 @@ test('should preserve deferred version ranges in release plan', () => {
     } as const,
   ]
 
-  const plan = createReleasePlan(project, strategies, new Map([['@atls/yarn-cli', '^2.0.0']]))
-
-  assert.deepEqual(plan.workspaces, [
+  assert.throws(
+    () => createReleasePlan(project, strategies, new Map([['@atls/yarn-cli', '^2.0.0']])),
     {
-      ident: '@atls/yarn-cli',
-      relativeCwd: 'yarn/cli',
-      version: '^2.0.0',
-      strategy: '^2.0.0',
-      private: true,
-    },
-  ])
+      message: 'Unsupported release decision "^2.0.0"',
+    }
+  )
 })
 
 test('should match Yarn patch target for prerelease workspaces', () => {
