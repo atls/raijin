@@ -2636,6 +2636,8 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
+          ["@yarnpkg/plugin-git", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:3.2.0"],\
+          ["@yarnpkg/plugin-version", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:4.2.0"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
         ],\
         "packagePeers": [\
@@ -2658,6 +2660,8 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
+          ["@yarnpkg/plugin-git", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:3.2.0"],\
+          ["@yarnpkg/plugin-version", "virtual:583a0bdaeb100dd5538886306b319570fc389a50928b1738f84331819a3a7f8b2e490b3ff064d0e7a2f19cdca818434e844fea5a1a9bddf3c5ba54a8c3de3876#npm:4.2.0"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
         ],\
         "linkType": "SOFT"\

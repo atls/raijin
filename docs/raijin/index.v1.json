@@ -282,6 +282,28 @@
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
     {
+      "command": "release plan create",
+      "pathTokens": ["release", "plan", "create"],
+      "className": "ReleasePlanCreateCommand",
+      "plugin": "@atls/yarn-plugin-release",
+      "pluginDir": "plugin-release",
+      "domain": "release",
+      "source": "yarn/plugin-release/sources/release-plan-create.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "release plan foreach",
+      "pathTokens": ["release", "plan", "foreach"],
+      "className": "ReleasePlanForeachCommand",
+      "plugin": "@atls/yarn-plugin-release",
+      "pluginDir": "plugin-release",
+      "domain": "release",
+      "source": "yarn/plugin-release/sources/release-plan-foreach.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
       "command": "release version defer",
       "pathTokens": ["release", "version", "defer"],
       "className": "ReleaseVersionDeferCommand",
@@ -1036,6 +1058,8 @@
       "library build",
       "lint",
       "release create",
+      "release plan create",
+      "release plan foreach",
       "release version defer",
       "renderer build",
       "renderer dev",
@@ -1087,5 +1111,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-11T19:14:37.703Z"
+  "lastGenerated": "2026-06-15T17:30:14.291Z"
 }
