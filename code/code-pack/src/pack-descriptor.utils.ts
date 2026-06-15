@@ -513,6 +513,12 @@ const isConditionalUnpluggedReference = (
   )
 }
 
+const isBuildContextReference = (cwd: PortablePath, reference: PortablePath): boolean => {
+  const referencePath = ppath.resolve(cwd, reference)
+
+  return referencePath === cwd || referencePath.startsWith(`${cwd}/`)
+}
+
 const getMissingReferences = async (
   cwd: PortablePath,
   references: Array<PnpUnpluggedReference>,
@@ -520,7 +526,9 @@ const getMissingReferences = async (
 ): Promise<Array<PortablePath>> => {
   const referencesState = await Promise.all(
     references.map(async (referenceEntry) => ({
-      exists: await xfs.existsPromise(ppath.join(cwd, referenceEntry.reference)),
+      exists:
+        isBuildContextReference(cwd, referenceEntry.reference) &&
+        (await xfs.existsPromise(ppath.join(cwd, referenceEntry.reference))),
       referenceEntry,
     }))
   )
