@@ -22,6 +22,8 @@
     "@atls/yarn-plugin-files": "workspace:*",
     "@yarnpkg/fslib": "3.1.5",
     "@yarnpkg/parsers": "3.0.3",
+    "@yarnpkg/plugin-git": "3.2.0",
+    "@yarnpkg/plugin-version": "4.2.0",
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {

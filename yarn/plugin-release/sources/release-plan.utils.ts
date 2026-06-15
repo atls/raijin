@@ -5,7 +5,6 @@ import type { Filename }                            from '@yarnpkg/fslib'
 import type { PortablePath }                        from '@yarnpkg/fslib'
 
 import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
-import type { ReleaseVersionStrategy }              from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspace }             from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspaceOwner }        from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspaceStrategy }     from './release-version-policy.utils.js'
@@ -16,6 +15,7 @@ import { structUtils }                              from '@yarnpkg/core'
 import { ppath }                                    from '@yarnpkg/fslib'
 import { xfs }                                      from '@yarnpkg/fslib'
 import { parseSyml }                                from '@yarnpkg/parsers'
+import { versionUtils }                             from '@yarnpkg/plugin-version'
 
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
@@ -25,7 +25,6 @@ import { resolveReleaseVersionWorkspaceStrategies } from './release-version-poli
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
 type GitHubCommitFile = NonNullable<GitHubCommit['data']['files']>[number]
-type ReleasePrereleaseSegment = number | string
 
 interface ReleaseVersionWorkspaceCandidate {
   relativeCwd: string
@@ -50,8 +49,10 @@ const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
 const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
 const DECLINE_DECISION = 'decline'
-const RELEASE_VERSION_STRATEGIES = new Set<ReleaseVersionStrategy>(['major', 'minor', 'patch'])
-const PRERELEASE_VERSION_STRATEGIES = new Set(['premajor', 'preminor', 'prepatch', 'prerelease'])
+const IGNORED_RELEASE_DECISIONS = new Set<string>([
+  versionUtils.Decision.DECLINE,
+  versionUtils.Decision.UNDECIDED,
+])
 
 const isErrorWithCode = (error: unknown, code: string): boolean =>
   typeof error === 'object' &&
@@ -247,7 +248,7 @@ export const parseDeferredReleaseDecisions = (versionContent: string): Map<strin
 export const getDeferredReleaseDecisions = async (
   configuration: Configuration
 ): Promise<Map<string, string>> => {
-  const deferredVersionFolder = configuration.get('deferredVersionFolder') as PortablePath
+  const deferredVersionFolder = configuration.get('deferredVersionFolder')
   const decisions = new Map<string, string>()
   let entries: Array<Filename>
 
@@ -279,32 +280,23 @@ export const getDeferredReleaseDecisions = async (
   return decisions
 }
 
-const isReleaseVersionStrategy = (strategy: string): strategy is ReleaseVersionStrategy =>
-  RELEASE_VERSION_STRATEGIES.has(strategy as ReleaseVersionStrategy)
-
-const isPrereleaseVersionStrategy = (strategy: string): boolean =>
-  PRERELEASE_VERSION_STRATEGIES.has(strategy)
-
-const formatPrerelease = (prerelease: ReadonlyArray<ReleasePrereleaseSegment>): string =>
-  prerelease.length > 0 ? `-${prerelease.join('.')}` : ''
-
-const resolveNextPrerelease = (
-  prerelease: ReadonlyArray<ReleasePrereleaseSegment>
-): Array<ReleasePrereleaseSegment> => {
-  if (prerelease.length === 0) {
-    return [0]
+const isReleaseVersionDecision = (strategy: string): boolean => {
+  try {
+    return (
+      Boolean(versionUtils.validateReleaseDecision(strategy)) &&
+      !IGNORED_RELEASE_DECISIONS.has(strategy)
+    )
+  } catch {
+    return false
   }
+}
 
-  const nextPrerelease = [...prerelease]
-  const numericIndex = nextPrerelease.findLastIndex((item) => typeof item === 'number')
+const resolveReleasePlanBaseVersion = (workspace: Workspace): string | undefined => {
+  const { stableVersion } = workspace.manifest.raw
 
-  if (numericIndex < 0) {
-    nextPrerelease.push(0)
-  } else {
-    nextPrerelease[numericIndex] = (nextPrerelease[numericIndex] as number) + 1
-  }
-
-  return nextPrerelease
+  return typeof stableVersion === 'string'
+    ? stableVersion
+    : (workspace.manifest.version ?? undefined)
 }
 
 const resolveReleasePlanTargetVersion = (version: string, strategy: string): string => {
@@ -314,51 +306,15 @@ const resolveReleasePlanTargetVersion = (version: string, strategy: string): str
     return exactVersion
   }
 
-  if (
-    semverUtils.validRange(strategy) &&
-    !isReleaseVersionStrategy(strategy) &&
-    !isPrereleaseVersionStrategy(strategy)
-  ) {
+  if (semverUtils.validRange(strategy)) {
     return strategy
   }
 
-  if (!isReleaseVersionStrategy(strategy)) {
-    if (!isPrereleaseVersionStrategy(strategy)) {
-      return version
-    }
+  if (!isReleaseVersionDecision(strategy)) {
+    return version
   }
 
-  const parsedVersion = new semverUtils.SemVer(version)
-
-  if (strategy === 'major') {
-    return `${parsedVersion.major + 1}.0.0`
-  }
-
-  if (strategy === 'minor') {
-    return `${parsedVersion.major}.${parsedVersion.minor + 1}.0`
-  }
-
-  if (strategy === 'patch') {
-    return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch + 1}`
-  }
-
-  if (strategy === 'premajor') {
-    return `${parsedVersion.major + 1}.0.0-0`
-  }
-
-  if (strategy === 'preminor') {
-    return `${parsedVersion.major}.${parsedVersion.minor + 1}.0-0`
-  }
-
-  if (strategy === 'prepatch') {
-    return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch + 1}-0`
-  }
-
-  if (parsedVersion.prerelease.length === 0) {
-    return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch + 1}-0`
-  }
-
-  return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch}${formatPrerelease(resolveNextPrerelease(parsedVersion.prerelease))}`
+  return versionUtils.applyStrategy(version, strategy)
 }
 
 const toPlanWorkspace = (
@@ -368,7 +324,7 @@ const toPlanWorkspace = (
 ): ReleasePlanWorkspace => {
   const workspaceCwd = ppath.resolve(project.cwd, strategy.workspace.relativeCwd as PortablePath)
   const workspace = project.workspacesByCwd.get(workspaceCwd)
-  const version = workspace?.manifest.version
+  const version = workspace ? resolveReleasePlanBaseVersion(workspace) : undefined
 
   if (!workspace || !version) {
     throw new Error(`Could not resolve release workspace "${strategy.workspace.ident}"`)

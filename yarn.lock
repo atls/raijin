@@ -1331,6 +1331,8 @@ __metadata:
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
     "@yarnpkg/parsers": "npm:3.0.3"
+    "@yarnpkg/plugin-git": "npm:3.2.0"
+    "@yarnpkg/plugin-version": "npm:4.2.0"
     clipanion: "npm:4.0.0-rc.2"
   peerDependencies:
     "@yarnpkg/cli": "*"

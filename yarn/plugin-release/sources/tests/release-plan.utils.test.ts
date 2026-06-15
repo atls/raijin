@@ -16,7 +16,8 @@ const createWorkspace = (
   ident: string,
   relativeCwd: string,
   version: string,
-  isPrivate = false
+  isPrivate = false,
+  raw: Record<string, unknown> = {}
 ): Workspace =>
   ({
     relativeCwd,
@@ -26,6 +27,7 @@ const createWorkspace = (
       private: isPrivate,
       raw: {
         private: isPrivate,
+        ...raw,
       },
     },
   }) as unknown as Workspace
@@ -151,6 +153,40 @@ test('should preserve deferred version ranges in release plan', () => {
       version: '^2.0.0',
       strategy: '^2.0.0',
       private: true,
+    },
+  ])
+})
+
+test('should match Yarn patch target for prerelease workspaces', () => {
+  const prereleaseWorkspace = createWorkspace(
+    '@atls/code-runtime',
+    'runtime/code-runtime',
+    '2.1.33-alpha.0',
+    false,
+    {
+      stableVersion: '2.1.32',
+    }
+  )
+  const project = createProject([rootWorkspace, prereleaseWorkspace])
+  const strategies = [
+    {
+      workspace: {
+        ident: '@atls/code-runtime',
+        relativeCwd: 'runtime/code-runtime',
+      },
+      strategy: 'patch',
+    } as const,
+  ]
+
+  const plan = createReleasePlan(project, strategies, new Map())
+
+  assert.deepEqual(plan.workspaces, [
+    {
+      ident: '@atls/code-runtime',
+      relativeCwd: 'runtime/code-runtime',
+      version: '2.1.33',
+      strategy: 'patch',
+      private: false,
     },
   ])
 })
