@@ -1,5 +1,17 @@
 
 
+## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.7...@atls/yarn-pack-utils@1.0.8) (2026-06-15)
+
+
+### Bug Fixes
+
+
+* **yarn-pack-utils:** include yarn release in image payload ([169fb3d](https://github.com/atls/raijin/commit/169fb3d5585d6857b2eeed82a576b3e2a5ceb3ff))
+
+
+
+
+
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.6...@atls/yarn-pack-utils@1.0.7) (2026-06-15)
 
 
@@ -119,5 +131,4 @@
 
 
 * yarn pack utils deps ([5f775ab](https://github.com/atls/raijin/commit/5f775ab4413bb3a2f29f29fe667004323710109a))
-
 
