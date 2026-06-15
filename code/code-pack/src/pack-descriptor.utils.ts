@@ -33,6 +33,8 @@ interface ConditionalPackageLocator {
   target: boolean
 }
 
+type ConditionToken = string
+
 export interface BuildEnv extends Record<string, string> {
   name: string
   value: string
@@ -168,23 +170,123 @@ const getTargetPlatform = (platform: string | undefined): TargetPlatform => {
   }
 }
 
-const isTargetCondition = (condition: string, targetPlatform: TargetPlatform): boolean => {
-  const [key, value] = condition.split('=').map((part) => part.trim())
+const tokenizeConditionExpression = (conditions: string): Array<ConditionToken> =>
+  conditions.match(/[()&|!=]|[A-Za-z0-9_.-]+/g) ?? []
 
-  switch (key) {
-    case 'os':
-      return targetPlatform.os === value
-    case 'cpu':
-      return targetPlatform.cpu === value
-    case 'libc':
-      return targetPlatform.libc === value
-    default:
-      return false
+class ConditionExpressionParser {
+  constructor(
+    private readonly tokens: Array<ConditionToken>,
+    private readonly targetPlatform: TargetPlatform
+  ) {}
+
+  parse(): boolean {
+    const expression = this.parseOr(0)
+
+    return Boolean(expression && expression.next === this.tokens.length && expression.target)
+  }
+
+  private isTargetCondition(index: number): { next: number; target: boolean } | undefined {
+    const key = this.tokens[index]
+    const operator = this.tokens[index + 1]
+    const value = this.tokens[index + 2]
+
+    if (!key || operator !== '=' || !value) {
+      return undefined
+    }
+
+    const next = index + 3
+
+    switch (key) {
+      case 'os':
+        return { next, target: this.targetPlatform.os === value }
+      case 'cpu':
+        return { next, target: this.targetPlatform.cpu === value }
+      case 'libc':
+        return { next, target: this.targetPlatform.libc === value }
+      default:
+        return { next, target: false }
+    }
+  }
+
+  private parsePrimary(index: number): { next: number; target: boolean } | undefined {
+    if (this.tokens[index] === '(') {
+      const expression = this.parseOr(index + 1)
+
+      if (!expression || this.tokens[expression.next] !== ')') {
+        return undefined
+      }
+
+      return { next: expression.next + 1, target: expression.target }
+    }
+
+    return this.isTargetCondition(index)
+  }
+
+  private parseUnary(index: number): { next: number; target: boolean } | undefined {
+    if (this.tokens[index] === '!') {
+      const expression = this.parseUnary(index + 1)
+
+      return expression ? { next: expression.next, target: !expression.target } : undefined
+    }
+
+    return this.parsePrimary(index)
+  }
+
+  private parseAnd(index: number): { next: number; target: boolean } | undefined {
+    let expression = this.parseUnary(index)
+
+    if (!expression) {
+      return undefined
+    }
+
+    while (this.tokens[expression.next] === '&') {
+      const nextExpression = this.parseUnary(expression.next + 1)
+
+      if (!nextExpression) {
+        return undefined
+      }
+
+      expression = {
+        next: nextExpression.next,
+        target: expression.target && nextExpression.target,
+      }
+    }
+
+    return expression
+  }
+
+  private parseOr(index: number): { next: number; target: boolean } | undefined {
+    let expression = this.parseAnd(index)
+
+    if (!expression) {
+      return undefined
+    }
+
+    while (this.tokens[expression.next] === '|') {
+      const nextExpression = this.parseAnd(expression.next + 1)
+
+      if (!nextExpression) {
+        return undefined
+      }
+
+      expression = {
+        next: nextExpression.next,
+        target: expression.target || nextExpression.target,
+      }
+    }
+
+    return expression
   }
 }
 
-const isTargetConditionalPackage = (conditions: string, targetPlatform: TargetPlatform): boolean =>
-  conditions.split(/\s*&\s*/).every((condition) => isTargetCondition(condition, targetPlatform))
+const isTargetConditionalPackage = (
+  conditions: string,
+  targetPlatform: TargetPlatform
+): boolean => {
+  const tokens = tokenizeConditionExpression(conditions)
+
+  return new ConditionExpressionParser(tokens, targetPlatform).parse()
+}
 
 const getLocatorPackageName = (locator: string): string | undefined => {
   const packageNameEnd = locator.startsWith('@') ? locator.indexOf('@', 1) : locator.indexOf('@')

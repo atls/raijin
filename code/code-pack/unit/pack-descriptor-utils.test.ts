@@ -298,6 +298,37 @@ test('should reject image pack context with missing custom unplugged package pay
   )
 })
 
+test('should reject missing target compound conditional unplugged payload', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.cjs'),
+    'packageLocation: "./.yarn/unplugged/@esbuild-linux-x64-npm-0.24.2-4423400f4a/node_modules/@esbuild/linux-x64/"'
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"@esbuild/linux-x64@npm:0.24.2":',
+      '  version: 0.24.2',
+      '  resolution: "@esbuild/linux-x64@npm:0.24.2"',
+      '  conditions: (os=linux | os=darwin) & !cpu=arm64',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  await assert.rejects(
+    createProjectDescriptor({
+      repo,
+      builder,
+      envs,
+      cwd,
+      platform: 'linux/amd64',
+    }),
+    /PnP manifest references unplugged packages that are missing/
+  )
+})
+
 test('should reject image pack context with missing unplugged package payload', async () => {
   const cwd = await xfs.mktempPromise()
 
