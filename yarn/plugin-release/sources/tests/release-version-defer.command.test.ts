@@ -1,11 +1,12 @@
-import assert                          from 'node:assert/strict'
-import { test }                        from 'node:test'
+import assert                            from 'node:assert/strict'
+import { test }                          from 'node:test'
 
-import { structUtils }                 from '@yarnpkg/core'
+import { structUtils }                   from '@yarnpkg/core'
 
-import { isReleaseVersionWorkspace }   from '../release-version-defer.command.js'
-import { selectLocalCommitDiffParent } from '../release-version-defer.command.js'
-import { toGitHubChange }              from '../release-version-defer.command.js'
+import { isReleaseVersionWorkspace }     from '../release-version-defer.command.js'
+import { parseDeferredReleaseDecisions } from '../release-version-defer.command.js'
+import { selectLocalCommitDiffParent }   from '../release-version-defer.command.js'
+import { toGitHubChange }                from '../release-version-defer.command.js'
 
 test('should include previous GitHub filenames for renamed files', () => {
   const change = toGitHubChange({
@@ -58,6 +59,23 @@ test('should include private versioned workspaces in release version policy', ()
       },
     }),
     true
+  )
+})
+
+test('should parse deferred release decisions', () => {
+  assert.deepEqual(
+    parseDeferredReleaseDecisions(`
+releases:
+  "@atls/code-runtime": minor
+  "@atls/yarn-cli": 1.2.0
+declined:
+  - "@atls/code-test"
+`),
+    new Map([
+      ['@atls/code-test', 'decline'],
+      ['@atls/code-runtime', 'minor'],
+      ['@atls/yarn-cli', '1.2.0'],
+    ])
   )
 })
 

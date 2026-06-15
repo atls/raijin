@@ -1,5 +1,7 @@
 import type { Workspace }                           from '@yarnpkg/core'
+import type { Configuration }                       from '@yarnpkg/core'
 import type { Project }                             from '@yarnpkg/core'
+import type { Filename }                            from '@yarnpkg/fslib'
 import type { PortablePath }                        from '@yarnpkg/fslib'
 
 import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
@@ -10,10 +12,13 @@ import type { ReleaseVersionWorkspaceStrategy }     from './release-version-poli
 import { execUtils }                                from '@yarnpkg/core'
 import { structUtils }                              from '@yarnpkg/core'
 import { ppath }                                    from '@yarnpkg/fslib'
+import { xfs }                                      from '@yarnpkg/fslib'
+import { parseSyml }                                from '@yarnpkg/parsers'
 import { versionUtils }                             from '@yarnpkg/plugin-version'
 
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
+import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
@@ -45,6 +50,14 @@ export interface ReleasePlanTarget {
 const DEFAULT_GIT_BASE_REF = 'origin/HEAD'
 const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
+const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
+const DECLINE_DECISION = 'decline'
+
+const isErrorWithCode = (error: unknown, code: string): boolean =>
+  typeof error === 'object' &&
+  error !== null &&
+  'code' in error &&
+  (error as { code?: unknown }).code === code
 
 const toWorkspaceIdent = (
   workspace: Pick<ReleaseVersionWorkspaceCandidate, 'manifest'>
@@ -200,6 +213,70 @@ export const getReleaseVersionChanges = async (
   }
 
   return getLocalChanges(project, gitRange ?? DEFAULT_GIT_RANGE)
+}
+
+export const parseDeferredReleaseDecisions = (versionContent: string): Map<string, string> => {
+  const versionData = parseSyml(versionContent) as {
+    releases?: Record<string, unknown>
+    declined?: Array<unknown>
+  }
+  const decisions = new Map<string, string>()
+
+  for (const ident of versionData.declined ?? []) {
+    if (typeof ident !== 'string') {
+      continue
+    }
+
+    decisions.set(
+      ident,
+      mergeReleaseVersionDeferredDecision(decisions.get(ident), DECLINE_DECISION)
+    )
+  }
+
+  for (const [ident, decision] of Object.entries(versionData.releases ?? {})) {
+    if (typeof decision !== 'string') {
+      continue
+    }
+
+    decisions.set(ident, mergeReleaseVersionDeferredDecision(decisions.get(ident), decision))
+  }
+
+  return decisions
+}
+
+export const getDeferredReleaseDecisions = async (
+  configuration: Configuration
+): Promise<Map<string, string>> => {
+  const deferredVersionFolder = configuration.get('deferredVersionFolder')
+  const decisions = new Map<string, string>()
+  let entries: Array<Filename>
+
+  try {
+    entries = await xfs.readdirPromise(deferredVersionFolder)
+  } catch (error) {
+    if (isErrorWithCode(error, MISSING_DIRECTORY_ERROR_CODE)) {
+      return decisions
+    }
+
+    throw error
+  }
+
+  for (const entry of entries) {
+    if (!entry.endsWith('.yml')) {
+      continue
+    }
+
+    const versionPath = ppath.join(deferredVersionFolder, entry)
+    // eslint-disable-next-line no-await-in-loop
+    const versionContent = await xfs.readFilePromise(versionPath, 'utf8')
+    const versionDecisions = parseDeferredReleaseDecisions(versionContent)
+
+    for (const [ident, decision] of versionDecisions) {
+      decisions.set(ident, mergeReleaseVersionDeferredDecision(decisions.get(ident), decision))
+    }
+  }
+
+  return decisions
 }
 
 const toPlanWorkspace = (project: Project, target: ReleasePlanTarget): ReleasePlanWorkspace => {

@@ -4,6 +4,8 @@ import type { ReleaseVersionWorkspace }             from '../release-version-pol
 import assert                                       from 'node:assert/strict'
 import { test }                                     from 'node:test'
 
+import { mergeReleaseVersionDeferredDecision }      from '../release-version-policy.utils.js'
+import { resolveReleaseVersionDeferredStrategy }    from '../release-version-policy.utils.js'
 import { resolveReleaseVersionStrategy }            from '../release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from '../release-version-policy.utils.js'
 
@@ -35,6 +37,19 @@ const workspaceOwners = [...workspaces, privateWorkspace, privateRuntimeWorkspac
 
 test('should map feature commits to minor strategy', () => {
   assert.equal(resolveReleaseVersionStrategy('feat(runtime): add loader'), 'minor')
+})
+
+test('should preserve explicit deferred decisions over computed strategies', () => {
+  assert.equal(resolveReleaseVersionDeferredStrategy('major', 'patch'), 'major')
+  assert.equal(resolveReleaseVersionDeferredStrategy('2.0.0', 'patch'), '2.0.0')
+  assert.equal(resolveReleaseVersionDeferredStrategy('decline', 'patch'), 'decline')
+})
+
+test('should merge deferred decisions by preserving explicit decisions and highest strategy', () => {
+  assert.equal(mergeReleaseVersionDeferredDecision('patch', 'minor'), 'minor')
+  assert.equal(mergeReleaseVersionDeferredDecision('major', 'patch'), 'major')
+  assert.equal(mergeReleaseVersionDeferredDecision('patch', '2.0.0'), '2.0.0')
+  assert.equal(mergeReleaseVersionDeferredDecision('decline', 'patch'), 'decline')
 })
 
 test('should map breaking commits to major strategy', () => {
