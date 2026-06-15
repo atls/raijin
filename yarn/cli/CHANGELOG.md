@@ -1,5 +1,17 @@
 
 
+## [1.1.93](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.92...@atls/yarn-cli@1.1.93) (2026-06-15)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-image:** use published buildpack default ([49c735a](https://github.com/atls/raijin/commit/49c735a6c6df8d440491beff2cbdaed66d3817dc))
+
+
+
+
+
 ## [1.1.91](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.90...@atls/yarn-cli@1.1.91) (2026-06-14)
 
 

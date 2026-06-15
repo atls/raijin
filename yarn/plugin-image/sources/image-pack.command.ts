@@ -16,6 +16,7 @@ import { pack }           from '@atls/code-pack'
 import { packUtils }      from '@atls/yarn-pack-utils'
 
 const DEFAULT_BUILDER_TAG = '24'
+const DEFAULT_BUILDPACK_VERSION = '0.1.1'
 
 class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]
@@ -68,7 +69,7 @@ class ImagePackCommand extends BaseCommand {
         const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
         const { packConfiguration = {} } = JSON.parse(content)
         const builderTag = packConfiguration.builderTag ?? DEFAULT_BUILDER_TAG
-        const buildpackVersion = packConfiguration.buildpackVersion ?? builderTag
+        const buildpackVersion = packConfiguration.buildpackVersion ?? DEFAULT_BUILDPACK_VERSION
         const { require } = packConfiguration
 
         await packUtils.pack(configuration, project, workspace, report, destination)

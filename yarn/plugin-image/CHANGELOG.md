@@ -1,5 +1,17 @@
 
 
+## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.11...@atls/yarn-plugin-image@1.0.12) (2026-06-15)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-image:** use published buildpack default ([49c735a](https://github.com/atls/raijin/commit/49c735a6c6df8d440491beff2cbdaed66d3817dc))
+
+
+
+
+
 ## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.10...@atls/yarn-plugin-image@1.0.11) (2026-06-01)
 
 
