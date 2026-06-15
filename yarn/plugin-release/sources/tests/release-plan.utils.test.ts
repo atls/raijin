@@ -50,7 +50,11 @@ const createProject = (workspaces: Array<Workspace>): Project =>
     ),
   }) as Project
 
-const createTarget = (workspace: Workspace, version: string): ReleasePlanTarget => {
+const createTarget = (
+  workspace: Workspace,
+  version: string,
+  strategy: string = version
+): ReleasePlanTarget => {
   if (!workspace.manifest.name) {
     throw new Error('Release plan target test workspace must have an ident')
   }
@@ -61,6 +65,7 @@ const createTarget = (workspace: Workspace, version: string): ReleasePlanTarget 
       relativeCwd: workspace.relativeCwd,
     },
     version,
+    strategy,
   }
 }
 
@@ -227,6 +232,36 @@ test('should resolve release plan targets through Yarn version files', async (co
       ['@atls/code-runtime', createTarget(runtimeWorkspace, '2.2.0')],
       ['@atls/yarn-cli', createTarget(cliWorkspace, '1.2.0')],
     ]
+  )
+})
+
+test('should include declined deferred workspaces in release plan targets', async (context) => {
+  const project = createProject([rootWorkspace, runtimeWorkspace, cliWorkspace])
+
+  context.mock.method(versionUtils, 'resolveVersionFiles', async () => new Map())
+
+  const targets = await resolveReleasePlanTargets(project, new Set(['@atls/code-runtime']))
+
+  assert.deepEqual(
+    [...targets.entries()],
+    [['@atls/code-runtime', createTarget(runtimeWorkspace, '2.1.33', 'decline')]]
+  )
+})
+
+test('should prefer Yarn resolved targets over declined deferred fallbacks', async (context) => {
+  const project = createProject([rootWorkspace, runtimeWorkspace, cliWorkspace])
+
+  context.mock.method(
+    versionUtils,
+    'resolveVersionFiles',
+    async () => new Map([[runtimeWorkspace, '2.2.0']])
+  )
+
+  const targets = await resolveReleasePlanTargets(project, new Set(['@atls/code-runtime']))
+
+  assert.deepEqual(
+    [...targets.entries()],
+    [['@atls/code-runtime', createTarget(runtimeWorkspace, '2.2.0')]]
   )
 })
 

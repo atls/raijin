@@ -32,7 +32,7 @@ export class ReleasePlanCreateCommand extends BaseCommand {
 
     if (!workspace) throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
 
-    const plan = await buildReleasePlan(project, this.since)
+    const plan = await buildReleasePlan(project, configuration, this.since)
     const content = `${JSON.stringify(plan, null, 2)}\n`
 
     if (!this.output) {

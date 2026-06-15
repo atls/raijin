@@ -45,6 +45,7 @@ export interface ReleasePlan {
 export interface ReleasePlanTarget {
   workspace: ReleaseVersionWorkspace
   version: string
+  strategy: string
 }
 
 const DEFAULT_GIT_BASE_REF = 'origin/HEAD'
@@ -279,6 +280,18 @@ export const getDeferredReleaseDecisions = async (
   return decisions
 }
 
+export const getDeferredReleaseDeclinedIdents = async (
+  configuration: Configuration
+): Promise<Set<string>> => {
+  const decisions = await getDeferredReleaseDecisions(configuration)
+
+  return new Set(
+    [...decisions.entries()]
+      .filter(([, decision]) => decision === DECLINE_DECISION)
+      .map(([ident]) => ident)
+  )
+}
+
 const toPlanWorkspace = (project: Project, target: ReleasePlanTarget): ReleasePlanWorkspace => {
   const workspaceCwd = ppath.resolve(project.cwd, target.workspace.relativeCwd as PortablePath)
   const workspace = project.workspacesByCwd.get(workspaceCwd)
@@ -291,13 +304,49 @@ const toPlanWorkspace = (project: Project, target: ReleasePlanTarget): ReleasePl
     ident: target.workspace.ident,
     relativeCwd: target.workspace.relativeCwd,
     version: target.version,
-    strategy: target.version,
+    strategy: target.strategy,
     private: workspace.manifest.private,
   }
 }
 
+const toDeclinedReleasePlanTarget = (workspace: Workspace): ReleasePlanTarget | undefined => {
+  const releaseWorkspace = toReleaseWorkspace(workspace)
+  const { version } = workspace.manifest
+
+  if (!releaseWorkspace || !version) {
+    return undefined
+  }
+
+  return {
+    workspace: releaseWorkspace,
+    version,
+    strategy: DECLINE_DECISION,
+  }
+}
+
+const addDeclinedReleasePlanTargets = (
+  project: Project,
+  targets: Map<string, ReleasePlanTarget>,
+  declinedIdents: ReadonlySet<string>
+): void => {
+  for (const workspace of project.workspaces) {
+    const target = toDeclinedReleasePlanTarget(workspace)
+
+    if (
+      !target ||
+      !declinedIdents.has(target.workspace.ident) ||
+      targets.has(target.workspace.ident)
+    ) {
+      continue
+    }
+
+    targets.set(target.workspace.ident, target)
+  }
+}
+
 export const resolveReleasePlanTargets = async (
-  project: Project
+  project: Project,
+  declinedIdents: ReadonlySet<string> = new Set()
 ): Promise<Map<string, ReleasePlanTarget>> => {
   const versions = await versionUtils.resolveVersionFiles(project)
   const targets = new Map<string, ReleasePlanTarget>()
@@ -312,8 +361,11 @@ export const resolveReleasePlanTargets = async (
     targets.set(releaseWorkspace.ident, {
       workspace: releaseWorkspace,
       version,
+      strategy: version,
     })
   }
+
+  addDeclinedReleasePlanTargets(project, targets, declinedIdents)
 
   return targets
 }
@@ -354,11 +406,13 @@ export const resolveReleasePlanStrategies = (
 
 export const buildReleasePlan = async (
   project: Project,
+  configuration: Configuration,
   gitRange?: string
 ): Promise<ReleasePlan> => {
   const changes = await getReleaseVersionChanges(project, gitRange)
   const strategies = resolveReleasePlanStrategies(project, changes)
-  const targets = await resolveReleasePlanTargets(project)
+  const declinedIdents = await getDeferredReleaseDeclinedIdents(configuration)
+  const targets = await resolveReleasePlanTargets(project, declinedIdents)
 
   return createReleasePlan(project, strategies, targets)
 }
