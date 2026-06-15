@@ -1,10 +1,12 @@
 import type { Project }                 from '@yarnpkg/core'
 import type { Workspace }               from '@yarnpkg/core'
+import type { PortablePath }            from '@yarnpkg/fslib'
 
 import assert                           from 'node:assert/strict'
 import { test }                         from 'node:test'
 
 import { structUtils }                  from '@yarnpkg/core'
+import { ppath }                        from '@yarnpkg/fslib'
 
 import { createReleasePlan }            from '../release-plan.utils.js'
 import { parseReleasePlan }             from '../release-plan.utils.js'
@@ -31,11 +33,15 @@ const createWorkspace = (
 const runtimeWorkspace = createWorkspace('@atls/code-runtime', 'runtime/code-runtime', '2.1.33')
 const cliWorkspace = createWorkspace('@atls/yarn-cli', 'yarn/cli', '1.1.96', true)
 const rootWorkspace = createWorkspace('tools', '.', '1.0.0', true)
+const projectCwd = '/repo' as PortablePath
 
 const createProject = (workspaces: Array<Workspace>): Project =>
   ({
+    cwd: projectCwd,
     workspaces,
-    workspacesByCwd: new Map(workspaces.map((workspace) => [workspace.relativeCwd, workspace])),
+    workspacesByCwd: new Map(
+      workspaces.map((workspace) => [ppath.resolve(projectCwd, workspace.relativeCwd), workspace])
+    ),
   }) as Project
 
 test('should create a fixed release plan from selected workspace strategies', () => {

@@ -279,7 +279,8 @@ const toPlanWorkspace = (
   strategy: ReleaseVersionWorkspaceStrategy,
   deferredDecisions: ReadonlyMap<string, string>
 ): ReleasePlanWorkspace => {
-  const workspace = project.workspacesByCwd.get(strategy.workspace.relativeCwd as PortablePath)
+  const workspaceCwd = ppath.resolve(project.cwd, strategy.workspace.relativeCwd as PortablePath)
+  const workspace = project.workspacesByCwd.get(workspaceCwd)
   const version = workspace?.manifest.version
 
   if (!workspace || !version) {
