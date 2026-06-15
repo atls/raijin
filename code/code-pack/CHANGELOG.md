@@ -1,5 +1,31 @@
 
 
+## [2.0.11](https://github.com/atls/raijin/compare/@atls/code-pack@2.0.10...@atls/code-pack@2.0.11) (2026-06-15)
+
+
+### Bug Fixes
+
+
+* **code-pack:** allow missing conditional pnp payloads ([a4ab161](https://github.com/atls/raijin/commit/a4ab16133f2af80dc453ae9cfe510627a0659d6a))
+* **code-pack:** detect patched conditional payloads ([1e38088](https://github.com/atls/raijin/commit/1e38088c5faeb4c71daa906010c4f4acd82c4b7e))
+* **code-pack:** devirtualize pnp unplugged locators ([fa6750c](https://github.com/atls/raijin/commit/fa6750ce97518ce0dc3e8fb090d4a5b0f0e63d94))
+* **code-pack:** inspect split pnp data ([c9929bb](https://github.com/atls/raijin/commit/c9929bb68a96288909ebe58b68ffd6171809bdfb))
+* **code-pack:** map image 386 platform to ia32 ([8a32461](https://github.com/atls/raijin/commit/8a324610ddddd05c38c8f6c03368960519cdd56c))
+* **code-pack:** match conditional unplugged locators exactly ([ab233c6](https://github.com/atls/raijin/commit/ab233c67f914e6615645d93971a8782980b0a8ca))
+* **code-pack:** normalize endian platform cpu aliases ([9c1cd6a](https://github.com/atls/raijin/commit/9c1cd6afc8b15cd3b72f01da828b698fdf9eadae))
+* **code-pack:** normalize windows image platform ([85d35f0](https://github.com/atls/raijin/commit/85d35f09fa7ee4bb318cff2f57d5c753ff3328ad))
+* **code-pack:** parse compound yarn platform conditions ([49f9080](https://github.com/atls/raijin/commit/49f9080e63aa0fb223342b11704474b0d69aaa48))
+* **code-pack:** preserve pnp unplugged payload ([f79a6af](https://github.com/atls/raijin/commit/f79a6afcfc2ecf18bc6d3e968ce90fe87c4e02f6))
+* **code-pack:** preserve requested platform cpu ([a7eaaad](https://github.com/atls/raijin/commit/a7eaaad71dd4e8776233376a866d7be27c150c13))
+* **code-pack:** reject unplugged payloads outside context ([1b0a75c](https://github.com/atls/raijin/commit/1b0a75cc5314a66fe12ff74f4e107580e974d55a))
+* **code-pack:** respect target libc conditions ([37f144a](https://github.com/atls/raijin/commit/37f144a05cbe1972d655b43718b78d0f9702050e))
+* **code-pack:** validate custom pnp unplugged folder ([30efd64](https://github.com/atls/raijin/commit/30efd648a21c0f9bdb28e398e6a7c6cb81c0ed2c))
+* **code-pack:** validate target conditional payloads ([7fb496f](https://github.com/atls/raijin/commit/7fb496ff98c0ea2a6627a7ce140c8771fcfa1e2b))
+
+
+
+
+
 ## [2.0.10](https://github.com/atls/raijin/compare/@atls/code-pack@2.0.9...@atls/code-pack@2.0.10) (2026-06-11)
 
 

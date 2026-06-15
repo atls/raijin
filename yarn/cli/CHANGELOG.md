@@ -1,5 +1,23 @@
 
 
+## [1.1.95](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.92...@atls/yarn-cli@1.1.95) (2026-06-15)
+
+
+### Bug Fixes
+
+
+* **code-pack:** devirtualize pnp unplugged locators ([fa6750c](https://github.com/atls/raijin/commit/fa6750ce97518ce0dc3e8fb090d4a5b0f0e63d94))
+* **code-pack:** match conditional unplugged locators exactly ([ab233c6](https://github.com/atls/raijin/commit/ab233c67f914e6615645d93971a8782980b0a8ca))
+* **code-pack:** normalize endian platform cpu aliases ([9c1cd6a](https://github.com/atls/raijin/commit/9c1cd6afc8b15cd3b72f01da828b698fdf9eadae))
+* **code-pack:** normalize windows image platform ([85d35f0](https://github.com/atls/raijin/commit/85d35f09fa7ee4bb318cff2f57d5c753ff3328ad))
+* **code-pack:** preserve pnp unplugged payload ([f79a6af](https://github.com/atls/raijin/commit/f79a6afcfc2ecf18bc6d3e968ce90fe87c4e02f6))
+* **code-pack:** reject unplugged payloads outside context ([1b0a75c](https://github.com/atls/raijin/commit/1b0a75cc5314a66fe12ff74f4e107580e974d55a))
+* **yarn-plugin-image:** use published buildpack default ([49c735a](https://github.com/atls/raijin/commit/49c735a6c6df8d440491beff2cbdaed66d3817dc))
+
+
+
+
+
 ## [1.1.93](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.1.92...@atls/yarn-cli@1.1.93) (2026-06-15)
 
 
