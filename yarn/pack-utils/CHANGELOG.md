@@ -1,5 +1,12 @@
 
 
+## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.8...@atls/yarn-pack-utils@1.0.9) (2026-06-15)
+
+
+
+
+
+
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.7...@atls/yarn-pack-utils@1.0.8) (2026-06-15)
 
 
