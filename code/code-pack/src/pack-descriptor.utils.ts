@@ -17,6 +17,7 @@ const UNPLUGGED_REFERENCE_PREFIX = '.yarn/unplugged/'
 const UNPLUGGED_REFERENCE_REGEXP = /["'`]([^"'`]*\.yarn\/unplugged\/[^"'`]*)["'`]/g
 const NODE_MODULES_REFERENCE_REGEXP = /^\.yarn\/unplugged\/([^/]+)\/node_modules\/(.+)$/
 const CPU_ALIASES = {
+  386: 'ia32',
   amd64: 'x64',
 } as Record<string, string>
 

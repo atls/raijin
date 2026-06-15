@@ -217,6 +217,37 @@ test('should reject missing requested uncommon cpu conditional unplugged payload
   )
 })
 
+test('should reject missing linux 386 target conditional unplugged payload', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.writeFilePromise(
+    ppath.join(cwd, '.pnp.cjs'),
+    'packageLocation: "./.yarn/unplugged/@esbuild-linux-ia32-npm-0.24.2-420afcf818/node_modules/@esbuild/linux-ia32/"'
+  )
+  await xfs.writeFilePromise(
+    ppath.join(cwd, 'yarn.lock'),
+    [
+      '"@esbuild/linux-ia32@npm:0.24.2":',
+      '  version: 0.24.2',
+      '  resolution: "@esbuild/linux-ia32@npm:0.24.2"',
+      '  conditions: os=linux & cpu=ia32',
+      '  languageName: node',
+      '  linkType: hard',
+    ].join('\n')
+  )
+
+  await assert.rejects(
+    createProjectDescriptor({
+      repo,
+      builder,
+      envs,
+      cwd,
+      platform: 'linux/386',
+    }),
+    /PnP manifest references unplugged packages that are missing/
+  )
+})
+
 test('should not reject missing non-target patched conditional unplugged payload', async () => {
   const cwd = await xfs.mktempPromise()
 
