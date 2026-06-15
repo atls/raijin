@@ -25,6 +25,7 @@ import { resolveReleaseVersionWorkspaceStrategies } from './release-version-poli
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
 type GitHubCommitFile = NonNullable<GitHubCommit['data']['files']>[number]
+type ReleasePrereleaseSegment = number | string
 
 interface ReleaseVersionWorkspaceCandidate {
   relativeCwd: string
@@ -50,6 +51,7 @@ const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
 const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
 const DECLINE_DECISION = 'decline'
 const RELEASE_VERSION_STRATEGIES = new Set<ReleaseVersionStrategy>(['major', 'minor', 'patch'])
+const PRERELEASE_VERSION_STRATEGIES = new Set(['premajor', 'preminor', 'prepatch', 'prerelease'])
 
 const isErrorWithCode = (error: unknown, code: string): boolean =>
   typeof error === 'object' &&
@@ -280,9 +282,50 @@ export const getDeferredReleaseDecisions = async (
 const isReleaseVersionStrategy = (strategy: string): strategy is ReleaseVersionStrategy =>
   RELEASE_VERSION_STRATEGIES.has(strategy as ReleaseVersionStrategy)
 
+const isPrereleaseVersionStrategy = (strategy: string): boolean =>
+  PRERELEASE_VERSION_STRATEGIES.has(strategy)
+
+const formatPrerelease = (prerelease: ReadonlyArray<ReleasePrereleaseSegment>): string =>
+  prerelease.length > 0 ? `-${prerelease.join('.')}` : ''
+
+const resolveNextPrerelease = (
+  prerelease: ReadonlyArray<ReleasePrereleaseSegment>
+): Array<ReleasePrereleaseSegment> => {
+  if (prerelease.length === 0) {
+    return [0]
+  }
+
+  const nextPrerelease = [...prerelease]
+  const numericIndex = nextPrerelease.findLastIndex((item) => typeof item === 'number')
+
+  if (numericIndex < 0) {
+    nextPrerelease.push(0)
+  } else {
+    nextPrerelease[numericIndex] = (nextPrerelease[numericIndex] as number) + 1
+  }
+
+  return nextPrerelease
+}
+
 const resolveReleasePlanTargetVersion = (version: string, strategy: string): string => {
+  const exactVersion = semverUtils.clean(strategy)
+
+  if (exactVersion) {
+    return exactVersion
+  }
+
+  if (
+    semverUtils.validRange(strategy) &&
+    !isReleaseVersionStrategy(strategy) &&
+    !isPrereleaseVersionStrategy(strategy)
+  ) {
+    return strategy
+  }
+
   if (!isReleaseVersionStrategy(strategy)) {
-    return version
+    if (!isPrereleaseVersionStrategy(strategy)) {
+      return version
+    }
   }
 
   const parsedVersion = new semverUtils.SemVer(version)
@@ -295,7 +338,27 @@ const resolveReleasePlanTargetVersion = (version: string, strategy: string): str
     return `${parsedVersion.major}.${parsedVersion.minor + 1}.0`
   }
 
-  return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch + 1}`
+  if (strategy === 'patch') {
+    return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch + 1}`
+  }
+
+  if (strategy === 'premajor') {
+    return `${parsedVersion.major + 1}.0.0-0`
+  }
+
+  if (strategy === 'preminor') {
+    return `${parsedVersion.major}.${parsedVersion.minor + 1}.0-0`
+  }
+
+  if (strategy === 'prepatch') {
+    return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch + 1}-0`
+  }
+
+  if (parsedVersion.prerelease.length === 0) {
+    return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch + 1}-0`
+  }
+
+  return `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch}${formatPrerelease(resolveNextPrerelease(parsedVersion.prerelease))}`
 }
 
 const toPlanWorkspace = (
