@@ -18,6 +18,7 @@ export class ReleasePlanCreateCommand extends BaseCommand {
     details: `
       The release plan records the publish workspace selection and target package versions once,
       so later publish stages can consume the same state instead of recalculating changed workspaces.
+      Run it after yarn release version defer and before yarn version apply --all.
     `,
   })
 

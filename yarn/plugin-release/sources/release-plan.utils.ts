@@ -19,7 +19,6 @@ import { versionUtils }                             from '@yarnpkg/plugin-versio
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
 import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
-import { resolveReleaseVersionDeferredStrategy }    from './release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
@@ -43,15 +42,17 @@ export interface ReleasePlan {
   workspaces: Array<ReleasePlanWorkspace>
 }
 
+export interface ReleasePlanTarget {
+  workspace: ReleaseVersionWorkspace
+  version: string
+  strategy: string
+}
+
 const DEFAULT_GIT_BASE_REF = 'origin/HEAD'
 const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
 const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
 const DECLINE_DECISION = 'decline'
-const IGNORED_RELEASE_DECISIONS = new Set<string>([
-  versionUtils.Decision.DECLINE,
-  versionUtils.Decision.UNDECIDED,
-])
 
 const isErrorWithCode = (error: unknown, code: string): boolean =>
   typeof error === 'object' &&
@@ -279,72 +280,117 @@ export const getDeferredReleaseDecisions = async (
   return decisions
 }
 
-const isReleaseVersionDecision = (strategy: string): boolean => {
-  try {
-    return (
-      Boolean(versionUtils.validateReleaseDecision(strategy)) &&
-      !IGNORED_RELEASE_DECISIONS.has(strategy)
-    )
-  } catch {
-    return false
-  }
-}
+export const getDeferredReleaseDeclinedIdents = async (
+  configuration: Configuration
+): Promise<Set<string>> => {
+  const decisions = await getDeferredReleaseDecisions(configuration)
 
-const resolveReleasePlanBaseVersion = (workspace: Workspace): string | undefined => {
-  const { stableVersion } = workspace.manifest.raw
-
-  return typeof stableVersion === 'string'
-    ? stableVersion
-    : (workspace.manifest.version ?? undefined)
-}
-
-const resolveReleasePlanTargetVersion = (version: string, strategy: string): string => {
-  if (IGNORED_RELEASE_DECISIONS.has(strategy)) {
-    return version
-  }
-
-  if (!isReleaseVersionDecision(strategy)) {
-    throw new Error(`Unsupported release decision "${strategy}"`)
-  }
-
-  return versionUtils.applyStrategy(version, strategy)
-}
-
-const toPlanWorkspace = (
-  project: Project,
-  strategy: ReleaseVersionWorkspaceStrategy,
-  deferredDecisions: ReadonlyMap<string, string>
-): ReleasePlanWorkspace => {
-  const workspaceCwd = ppath.resolve(project.cwd, strategy.workspace.relativeCwd as PortablePath)
-  const workspace = project.workspacesByCwd.get(workspaceCwd)
-  const version = workspace ? resolveReleasePlanBaseVersion(workspace) : undefined
-
-  if (!workspace || !version) {
-    throw new Error(`Could not resolve release workspace "${strategy.workspace.ident}"`)
-  }
-
-  const effectiveStrategy = resolveReleaseVersionDeferredStrategy(
-    deferredDecisions.get(strategy.workspace.ident),
-    strategy.strategy
+  return new Set(
+    [...decisions.entries()]
+      .filter(([, decision]) => decision === DECLINE_DECISION)
+      .map(([ident]) => ident)
   )
+}
+
+const toPlanWorkspace = (project: Project, target: ReleasePlanTarget): ReleasePlanWorkspace => {
+  const workspaceCwd = ppath.resolve(project.cwd, target.workspace.relativeCwd as PortablePath)
+  const workspace = project.workspacesByCwd.get(workspaceCwd)
+
+  if (!workspace) {
+    throw new Error(`Could not resolve release workspace "${target.workspace.ident}"`)
+  }
 
   return {
-    ident: strategy.workspace.ident,
-    relativeCwd: strategy.workspace.relativeCwd,
-    version: resolveReleasePlanTargetVersion(version, effectiveStrategy),
-    strategy: effectiveStrategy,
+    ident: target.workspace.ident,
+    relativeCwd: target.workspace.relativeCwd,
+    version: target.version,
+    strategy: target.strategy,
     private: workspace.manifest.private,
   }
+}
+
+const toDeclinedReleasePlanTarget = (workspace: Workspace): ReleasePlanTarget | undefined => {
+  const releaseWorkspace = toReleaseWorkspace(workspace)
+  const { version } = workspace.manifest
+
+  if (!releaseWorkspace || !version) {
+    return undefined
+  }
+
+  return {
+    workspace: releaseWorkspace,
+    version,
+    strategy: DECLINE_DECISION,
+  }
+}
+
+const addDeclinedReleasePlanTargets = (
+  project: Project,
+  targets: Map<string, ReleasePlanTarget>,
+  declinedIdents: ReadonlySet<string>
+): void => {
+  for (const workspace of project.workspaces) {
+    const target = toDeclinedReleasePlanTarget(workspace)
+
+    if (
+      !target ||
+      !declinedIdents.has(target.workspace.ident) ||
+      targets.has(target.workspace.ident)
+    ) {
+      continue
+    }
+
+    targets.set(target.workspace.ident, target)
+  }
+}
+
+export const resolveReleasePlanTargets = async (
+  project: Project,
+  declinedIdents: ReadonlySet<string> = new Set()
+): Promise<Map<string, ReleasePlanTarget>> => {
+  const versions = await versionUtils.resolveVersionFiles(project)
+  const targets = new Map<string, ReleasePlanTarget>()
+
+  for (const [workspace, version] of versions) {
+    const releaseWorkspace = toReleaseWorkspace(workspace)
+
+    if (!releaseWorkspace) {
+      continue
+    }
+
+    targets.set(releaseWorkspace.ident, {
+      workspace: releaseWorkspace,
+      version,
+      strategy: version,
+    })
+  }
+
+  addDeclinedReleasePlanTargets(project, targets, declinedIdents)
+
+  return targets
 }
 
 export const createReleasePlan = (
   project: Project,
   strategies: ReadonlyArray<ReleaseVersionWorkspaceStrategy>,
-  deferredDecisions: ReadonlyMap<string, string>
-): ReleasePlan => ({
-  schemaVersion: 1,
-  workspaces: strategies.map((strategy) => toPlanWorkspace(project, strategy, deferredDecisions)),
-})
+  targets: ReadonlyMap<string, ReleasePlanTarget>
+): ReleasePlan => {
+  for (const strategy of strategies) {
+    if (!targets.has(strategy.workspace.ident)) {
+      throw new Error(
+        `Release plan requires deferred target version for "${strategy.workspace.ident}". ` +
+          'Run `yarn release version defer` before `yarn release plan create`.'
+      )
+    }
+  }
+
+  return {
+    schemaVersion: 1,
+    workspaces: [...targets.values()]
+      .sort((left, right) => left.workspace.relativeCwd.localeCompare(right.workspace.relativeCwd))
+      .map((target) => toPlanWorkspace(project, target)),
+  }
+}
 
 export const resolveReleasePlanStrategies = (
   project: Project,
@@ -365,9 +411,10 @@ export const buildReleasePlan = async (
 ): Promise<ReleasePlan> => {
   const changes = await getReleaseVersionChanges(project, gitRange)
   const strategies = resolveReleasePlanStrategies(project, changes)
-  const deferredDecisions = await getDeferredReleaseDecisions(configuration)
+  const declinedIdents = await getDeferredReleaseDeclinedIdents(configuration)
+  const targets = await resolveReleasePlanTargets(project, declinedIdents)
 
-  return createReleasePlan(project, strategies, deferredDecisions)
+  return createReleasePlan(project, strategies, targets)
 }
 
 const isReleasePlanWorkspace = (workspace: unknown): workspace is ReleasePlanWorkspace => {

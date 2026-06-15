@@ -46,21 +46,6 @@ test('should fall back to the first parent when all merge parents are local', ()
   )
 })
 
-test('should preserve declined deferred decisions', () => {
-  const decisions = parseDeferredReleaseDecisions(
-    [
-      'declined:',
-      '  - "@atls/code-runtime"',
-      'releases:',
-      '  "@atls/code-runtime": minor',
-      '  "@atls/code-test": patch',
-    ].join('\n')
-  )
-
-  assert.equal(decisions.get('@atls/code-runtime'), 'decline')
-  assert.equal(decisions.get('@atls/code-test'), 'patch')
-})
-
 test('should include private versioned workspaces in release version policy', () => {
   assert.equal(
     isReleaseVersionWorkspace({
@@ -74,6 +59,23 @@ test('should include private versioned workspaces in release version policy', ()
       },
     }),
     true
+  )
+})
+
+test('should parse deferred release decisions', () => {
+  assert.deepEqual(
+    parseDeferredReleaseDecisions(`
+releases:
+  "@atls/code-runtime": minor
+  "@atls/yarn-cli": 1.2.0
+declined:
+  - "@atls/code-test"
+`),
+    new Map([
+      ['@atls/code-test', 'decline'],
+      ['@atls/code-runtime', 'minor'],
+      ['@atls/yarn-cli', '1.2.0'],
+    ])
   )
 })
 

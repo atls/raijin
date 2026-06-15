@@ -39,6 +39,19 @@ test('should map feature commits to minor strategy', () => {
   assert.equal(resolveReleaseVersionStrategy('feat(runtime): add loader'), 'minor')
 })
 
+test('should preserve explicit deferred decisions over computed strategies', () => {
+  assert.equal(resolveReleaseVersionDeferredStrategy('major', 'patch'), 'major')
+  assert.equal(resolveReleaseVersionDeferredStrategy('2.0.0', 'patch'), '2.0.0')
+  assert.equal(resolveReleaseVersionDeferredStrategy('decline', 'patch'), 'decline')
+})
+
+test('should merge deferred decisions by preserving explicit decisions and highest strategy', () => {
+  assert.equal(mergeReleaseVersionDeferredDecision('patch', 'minor'), 'minor')
+  assert.equal(mergeReleaseVersionDeferredDecision('major', 'patch'), 'major')
+  assert.equal(mergeReleaseVersionDeferredDecision('patch', '2.0.0'), '2.0.0')
+  assert.equal(mergeReleaseVersionDeferredDecision('decline', 'patch'), 'decline')
+})
+
 test('should map breaking commits to major strategy', () => {
   assert.equal(resolveReleaseVersionStrategy('fix(runtime)!: remove patched loader'), 'major')
   assert.equal(
@@ -107,29 +120,6 @@ test('should map release affecting conventional commits to patch strategy', () =
 
 test('should ignore non conventional commits', () => {
   assert.equal(resolveReleaseVersionStrategy('update runtime'), undefined)
-})
-
-test('should preserve higher existing deferred release strategy', () => {
-  assert.equal(resolveReleaseVersionDeferredStrategy('minor', 'patch'), 'minor')
-  assert.equal(resolveReleaseVersionDeferredStrategy('major', 'patch'), 'major')
-})
-
-test('should raise lower existing deferred release strategy', () => {
-  assert.equal(resolveReleaseVersionDeferredStrategy('patch', 'minor'), 'minor')
-  assert.equal(resolveReleaseVersionDeferredStrategy('minor', 'major'), 'major')
-})
-
-test('should preserve non-conventional existing deferred decisions', () => {
-  assert.equal(resolveReleaseVersionDeferredStrategy('2.0.0', 'patch'), '2.0.0')
-  assert.equal(resolveReleaseVersionDeferredStrategy('decline', 'minor'), 'decline')
-})
-
-test('should merge existing deferred release decisions without downgrade', () => {
-  assert.equal(mergeReleaseVersionDeferredDecision(undefined, 'patch'), 'patch')
-  assert.equal(mergeReleaseVersionDeferredDecision('minor', 'patch'), 'minor')
-  assert.equal(mergeReleaseVersionDeferredDecision('patch', 'major'), 'major')
-  assert.equal(mergeReleaseVersionDeferredDecision('2.0.0', 'minor'), '2.0.0')
-  assert.equal(mergeReleaseVersionDeferredDecision('minor', 'decline'), 'decline')
 })
 
 test('should resolve strategies per changed workspace', () => {

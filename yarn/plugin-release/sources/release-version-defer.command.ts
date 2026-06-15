@@ -67,7 +67,7 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
           )
 
           if (code > 0) {
-            throw new Error(`Failed to defer ${changedWorkspace.ident} as ${strategy}`)
+            throw new Error(`Failed to defer ${changedWorkspace.ident} as ${effectiveStrategy}`)
           }
         }
       }
