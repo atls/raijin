@@ -1,5 +1,17 @@
 
 
+## [1.0.16](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.15...@atls/yarn-plugin-image@1.0.16) (2026-06-16)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-image:** use start-image buildpack reference ([ec4cec1](https://github.com/atls/raijin/commit/ec4cec114d3c7bfa20f558b324487e7fe0a306b6))
+
+
+
+
+
 ## [1.0.15](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.14...@atls/yarn-plugin-image@1.0.15) (2026-06-16)
 
 

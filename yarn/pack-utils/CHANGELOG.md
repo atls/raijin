@@ -1,5 +1,17 @@
 
 
+## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.9...@atls/yarn-pack-utils@1.0.10) (2026-06-16)
+
+
+### Bug Fixes
+
+
+* **yarn-pack-utils:** materialize image pack with pnp linker ([1179121](https://github.com/atls/raijin/commit/1179121be4fa964392cdde6b1480943ccbea464c))
+
+
+
+
+
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-pack-utils@1.0.8...@atls/yarn-pack-utils@1.0.9) (2026-06-15)
 
 
