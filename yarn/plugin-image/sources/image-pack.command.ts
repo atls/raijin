@@ -1,26 +1,25 @@
-import type { TagPolicy } from '@atls/code-pack'
-import type { Workspace } from '@yarnpkg/core'
+import type { TagPolicy }                    from '@atls/code-pack'
+import type { Workspace }                    from '@yarnpkg/core'
 
-import { readFileSync }   from 'node:fs'
-import { arch }           from 'node:os'
-import { join }           from 'node:path'
+import type { ImagePackConfiguration }       from './image-pack.utils.js'
 
-import { BaseCommand }    from '@yarnpkg/cli'
-import { Configuration }  from '@yarnpkg/core'
-import { Project }        from '@yarnpkg/core'
-import { StreamReport }   from '@yarnpkg/core'
-import { structUtils }    from '@yarnpkg/core'
-import { xfs }            from '@yarnpkg/fslib'
-import { Option }         from 'clipanion'
+import { readFileSync }                      from 'node:fs'
+import { join }                              from 'node:path'
 
-import { pack }           from '@atls/code-pack'
-import { packUtils }      from '@atls/yarn-pack-utils'
+import { BaseCommand }                       from '@yarnpkg/cli'
+import { Configuration }                     from '@yarnpkg/core'
+import { Project }                           from '@yarnpkg/core'
+import { StreamReport }                      from '@yarnpkg/core'
+import { structUtils }                       from '@yarnpkg/core'
+import { xfs }                               from '@yarnpkg/fslib'
+import { Option }                            from 'clipanion'
 
-const DEFAULT_BUILDER_TAG = '24'
-const DEFAULT_BUILDPACK_VERSION = '0.1.1'
-const DEFAULT_MATERIALIZATION_OS = 'linux'
+import { pack }                              from '@atls/code-pack'
+import { packUtils }                         from '@atls/yarn-pack-utils'
 
-const getDefaultMaterializationPlatform = (): string => `${DEFAULT_MATERIALIZATION_OS}/${arch()}`
+import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
+import { resolveBuildpackReference }         from './image-pack.utils.js'
+import { resolveBuilderReference }           from './image-pack.utils.js'
 
 class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]
@@ -71,9 +70,9 @@ class ImagePackCommand extends BaseCommand {
 
         // eslint-disable-next-line n/no-sync
         const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
-        const { packConfiguration = {} } = JSON.parse(content)
-        const builderTag = packConfiguration.builderTag ?? DEFAULT_BUILDER_TAG
-        const buildpackVersion = packConfiguration.buildpackVersion ?? DEFAULT_BUILDPACK_VERSION
+        const { packConfiguration = {} } = JSON.parse(content) as {
+          packConfiguration?: ImagePackConfiguration
+        }
         const { require } = packConfiguration
 
         await packUtils.pack(configuration, project, workspace, report, destination, {
@@ -86,8 +85,8 @@ class ImagePackCommand extends BaseCommand {
             registry: this.registry,
             publish: this.publish,
             tagPolicy: this.tagPolicy,
-            buildpack: `atlantislab/buildpack-yarn-workspace:${buildpackVersion}`,
-            builder: `atlantislab/builder-base:${builderTag}`,
+            buildpack: resolveBuildpackReference(packConfiguration),
+            builder: resolveBuilderReference(packConfiguration),
             platform: this.platform,
             require,
             cwd: destination,
