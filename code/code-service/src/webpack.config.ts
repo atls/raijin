@@ -11,7 +11,7 @@ import { join }                    from 'node:path'
 import tsconfig                    from '@atls/config-typescript'
 
 import { WebpackExternals }        from './webpack.externals.js'
-import { LAZY_IMPORTS }            from './webpack.ignore.js'
+import { isOptionalImport }        from './webpack.ignore.js'
 
 export class WebpackConfig {
   constructor(
@@ -128,12 +128,12 @@ export class WebpackConfig {
   ): Array<wp.WebpackPluginInstance> {
     const plugins: Array<wp.WebpackPluginInstance> = [
       new this.webpack.IgnorePlugin({
-        checkResource: (resource: string): boolean => {
+        checkResource: (resource: string, context: string): boolean => {
           if (resource.endsWith('.js.map')) {
             return true
           }
 
-          if (!LAZY_IMPORTS.includes(resource)) {
+          if (!isOptionalImport(resource, context)) {
             return false
           }
 
