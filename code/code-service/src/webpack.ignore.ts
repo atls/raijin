@@ -271,7 +271,7 @@ const isExistingPackageDirectoryEntry = (path: string): boolean => {
 
 const isExistingPackageSubpath = (packagePath: string, subpath: string): boolean => {
   if (!subpath) {
-    return true
+    return isExistingPackageDirectoryEntry(packagePath)
   }
 
   const subpathCandidate = join(packagePath, subpath)
@@ -294,6 +294,20 @@ const isSubpathExportPatternMatching = (exportKey: string, requestKey: string): 
   return requestKey.startsWith(prefix) && requestKey.endsWith(suffix)
 }
 
+const getSubpathExportPatternMatch = (exportKey: string, requestKey: string): string | null => {
+  if (!exportKey.includes('*')) {
+    return exportKey === requestKey ? '' : null
+  }
+
+  const [prefix, suffix = ''] = exportKey.split('*')
+
+  if (!requestKey.startsWith(prefix) || !requestKey.endsWith(suffix)) {
+    return null
+  }
+
+  return requestKey.slice(prefix.length, requestKey.length - suffix.length)
+}
+
 const compareSubpathExportPatterns = (left: string, right: string): number => {
   const [leftPrefix, leftSuffix = ''] = left.split('*')
   const [rightPrefix, rightSuffix = ''] = right.split('*')
@@ -309,41 +323,54 @@ const compareSubpathExportPatterns = (left: string, right: string): number => {
   return right.length - left.length
 }
 
-const isExportTargetAvailable = (target: unknown): boolean => {
+const collectExportTargetPaths = (target: unknown, patternMatch = ''): Array<string> => {
   if (target === null) {
-    return false
+    return []
   }
 
   if (typeof target === 'string') {
-    return true
+    return [target.replaceAll('*', patternMatch)]
   }
 
   if (Array.isArray(target)) {
-    return target.some(isExportTargetAvailable)
+    return target.flatMap((entry) => collectExportTargetPaths(entry, patternMatch))
   }
 
   if (isObject(target)) {
-    const condition = Object.keys(target).find((key) => ACTIVE_EXPORT_CONDITIONS.has(key))
-
-    return condition ? isExportTargetAvailable(target[condition]) : false
+    return Object.keys(target)
+      .filter((key) => ACTIVE_EXPORT_CONDITIONS.has(key))
+      .flatMap((key) => collectExportTargetPaths(target[key], patternMatch))
   }
 
-  return false
+  return []
 }
 
-const isPackageSubpathExported = (manifest: PackageManifest, subpath: string): boolean => {
+const isExportTargetExisting = (packagePath: string, target: string): boolean => {
+  if (!target.startsWith('./')) {
+    return false
+  }
+
+  const targetPath = join(packagePath, target.slice(2))
+
+  return isExistingPackageFilePath(targetPath) || isExistingPackageDirectoryEntry(targetPath)
+}
+
+const getPackageSubpathExportTargets = (
+  manifest: PackageManifest,
+  subpath: string
+): Array<string> | null => {
   if (!manifest.exports) {
-    return true
+    return null
   }
 
   const requestKey = subpath ? `./${subpath}` : '.'
 
   if (typeof manifest.exports === 'string' || Array.isArray(manifest.exports)) {
-    return requestKey === '.'
+    return requestKey === '.' ? collectExportTargetPaths(manifest.exports) : []
   }
 
   if (!isObject(manifest.exports)) {
-    return false
+    return []
   }
 
   const packageExports = manifest.exports
@@ -351,11 +378,11 @@ const isPackageSubpathExported = (manifest: PackageManifest, subpath: string): b
   const hasSubpathExports = exportKeys.some((key) => key.startsWith('.'))
 
   if (!hasSubpathExports) {
-    return requestKey === '.' && isExportTargetAvailable(packageExports)
+    return requestKey === '.' ? collectExportTargetPaths(packageExports) : []
   }
 
   if (Object.hasOwn(packageExports, requestKey)) {
-    return isExportTargetAvailable(packageExports[requestKey])
+    return collectExportTargetPaths(packageExports[requestKey])
   }
 
   const matchingPattern = exportKeys
@@ -364,10 +391,16 @@ const isPackageSubpathExported = (manifest: PackageManifest, subpath: string): b
     .at(0)
 
   if (!matchingPattern) {
-    return false
+    return []
   }
 
-  return isExportTargetAvailable(packageExports[matchingPattern])
+  const patternMatch = getSubpathExportPatternMatch(matchingPattern, requestKey)
+
+  if (patternMatch === null) {
+    return []
+  }
+
+  return collectExportTargetPaths(packageExports[matchingPattern], patternMatch)
 }
 
 const isNodeModulesResolvable = (request: string, context: string): boolean => {
@@ -385,12 +418,16 @@ const isNodeModulesResolvable = (request: string, context: string): boolean => {
     const manifestPath = join(packagePath, PACKAGE_MANIFEST)
     const manifest = readPackageManifest(manifestPath)
 
-    if (
-      manifest &&
-      isPackageSubpathExported(manifest, subpath) &&
-      isExistingPackageSubpath(packagePath, subpath)
-    ) {
-      return true
+    if (manifest) {
+      const exportTargets = getPackageSubpathExportTargets(manifest, subpath)
+
+      if (exportTargets) {
+        return exportTargets.some((target) => isExportTargetExisting(packagePath, target))
+      }
+
+      if (isExistingPackageSubpath(packagePath, subpath)) {
+        return true
+      }
     }
 
     current = dirname(current)
