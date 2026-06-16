@@ -28,6 +28,16 @@ const COMPATIBILITY_OPTIONAL_IMPORTS = new Map<string, Set<string>>([
     ]),
   ],
   [
+    '@nestjs/terminus',
+    new Set([
+      '@nestjs/mongoose',
+      '@nestjs/sequelize',
+      '@nestjs/sequelize/dist/common/sequelize.utils',
+      '@nestjs/typeorm',
+      '@nestjs/typeorm/dist/common/typeorm.utils',
+    ]),
+  ],
+  [
     'typeorm',
     new Set([
       'mariadb',

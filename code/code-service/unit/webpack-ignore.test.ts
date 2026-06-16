@@ -95,3 +95,17 @@ test('should keep scoped compatibility imports for packages with incomplete meta
   assert.equal(isOptionalImport('mariadb/callback', context), true)
   assert.equal(isOptionalImport('not-a-driver', context), false)
 })
+
+test('should keep legacy Terminus optional integration imports scoped to Terminus', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', '@nestjs', 'terminus')
+  const context = join(packagePath, 'dist')
+
+  await writeManifest(packagePath, { name: '@nestjs/terminus' })
+  await mkdir(context, { recursive: true })
+
+  assert.equal(isOptionalImport('@nestjs/mongoose', context), true)
+  assert.equal(isOptionalImport('@nestjs/typeorm/dist/common/typeorm.utils', context), true)
+  assert.equal(isOptionalImport('@nestjs/sequelize/dist/common/sequelize.utils', context), true)
+  assert.equal(isOptionalImport('@nestjs/websockets', context), false)
+})
