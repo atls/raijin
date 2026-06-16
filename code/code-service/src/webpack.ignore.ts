@@ -333,7 +333,11 @@ const collectExportTargetPaths = (target: unknown, patternMatch = ''): Array<str
   }
 
   if (Array.isArray(target)) {
-    return target.flatMap((entry) => collectExportTargetPaths(entry, patternMatch))
+    return (
+      target
+        .map((entry) => collectExportTargetPaths(entry, patternMatch))
+        .find((entryTargets) => entryTargets.length > 0) ?? []
+    )
   }
 
   if (isObject(target)) {

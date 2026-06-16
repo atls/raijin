@@ -339,3 +339,27 @@ test('should verify package root entry points before accepting optional imports'
   assert.equal(shouldIgnoreOptionalImport('missing-entry-driver', context, root), true)
   assert.equal(shouldIgnoreOptionalImport('available-entry-driver', context, root), false)
 })
+
+test('should not fall through package export array targets', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'optional-driver': '*',
+    },
+  })
+  await writeManifest(driverPath, {
+    name: 'optional-driver',
+    exports: {
+      '.': ['./missing.js', './index.js'],
+    },
+  })
+  await writeFile(join(driverPath, 'index.js'), '')
+  await mkdir(context, { recursive: true })
+
+  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), true)
+})
