@@ -5,6 +5,7 @@ import { dirname }       from 'node:path'
 import { join }          from 'node:path'
 
 export interface PackageManifest {
+  exports?: unknown
   name?: string
   optionalDependencies?: Record<string, string>
   peerDependenciesMeta?: Record<string, { optional?: boolean }>
@@ -220,6 +221,44 @@ const isExistingPackageSubpath = (packagePath: string, subpath: string): boolean
   ].some(isPathExisting)
 }
 
+const isObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+const isSubpathExportPatternMatching = (exportKey: string, requestKey: string): boolean => {
+  if (!exportKey.includes('*')) {
+    return exportKey === requestKey
+  }
+
+  const [prefix, suffix = ''] = exportKey.split('*')
+
+  return requestKey.startsWith(prefix) && requestKey.endsWith(suffix)
+}
+
+const isPackageSubpathExported = (manifest: PackageManifest, subpath: string): boolean => {
+  if (!manifest.exports) {
+    return true
+  }
+
+  const requestKey = subpath ? `./${subpath}` : '.'
+
+  if (typeof manifest.exports === 'string' || Array.isArray(manifest.exports)) {
+    return requestKey === '.'
+  }
+
+  if (!isObject(manifest.exports)) {
+    return false
+  }
+
+  const exportKeys = Object.keys(manifest.exports)
+  const hasSubpathExports = exportKeys.some((key) => key.startsWith('.'))
+
+  if (!hasSubpathExports) {
+    return requestKey === '.'
+  }
+
+  return exportKeys.some((key) => isSubpathExportPatternMatching(key, requestKey))
+}
+
 const isNodeModulesResolvable = (request: string, context: string): boolean => {
   const packageName = getPackageNameFromRequest(request)
 
@@ -233,10 +272,13 @@ const isNodeModulesResolvable = (request: string, context: string): boolean => {
   while (current !== dirname(current)) {
     const packagePath = join(current, 'node_modules', packageName)
     const manifestPath = join(packagePath, PACKAGE_MANIFEST)
+    const manifest = readPackageManifest(manifestPath)
 
-    // IgnorePlugin.checkResource is synchronous, so resolver fallback must stay synchronous.
-    // eslint-disable-next-line n/no-sync
-    if (existsSync(manifestPath) && isExistingPackageSubpath(packagePath, subpath)) {
+    if (
+      manifest &&
+      isPackageSubpathExported(manifest, subpath) &&
+      isExistingPackageSubpath(packagePath, subpath)
+    ) {
       return true
     }
 

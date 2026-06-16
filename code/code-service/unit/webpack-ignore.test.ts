@@ -152,3 +152,31 @@ test('should not ignore optional dependencies resolvable from issuer context', a
   assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
   assert.equal(shouldIgnoreOptionalImport('missing-driver', context, root), true)
 })
+
+test('should respect package exports when resolving optional dependency subpaths', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'optional-driver': '*',
+    },
+  })
+  await writeManifest(driverPath, {
+    name: 'optional-driver',
+    exports: {
+      '.': './index.js',
+      './public': './public.js',
+    },
+  })
+  await writeFile(join(driverPath, 'index.js'), '')
+  await writeFile(join(driverPath, 'public.js'), '')
+  await writeFile(join(driverPath, 'private.js'), '')
+  await mkdir(context, { recursive: true })
+
+  assert.equal(shouldIgnoreOptionalImport('optional-driver/public', context, root), false)
+  assert.equal(shouldIgnoreOptionalImport('optional-driver/private', context, root), true)
+})
