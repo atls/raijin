@@ -20,7 +20,13 @@ const PACKAGE_MANIFEST = 'package.json'
 const OPTIONAL_IMPORT_IGNORE_PLUGIN = 'OptionalImportIgnorePlugin'
 
 interface WebpackResolver {
-  resolveSync: (context: Record<string, unknown>, path: string, request: string) => unknown
+  resolve: (
+    context: Record<string, unknown>,
+    path: string,
+    request: string,
+    resolveContext: Record<string, unknown>,
+    callback: (error?: Error | null, result?: unknown) => void
+  ) => void
 }
 
 const getPackagePathFromContext = (context: string): string | null => {
@@ -250,67 +256,55 @@ export const isOptionalImport = (request: string, context: string): boolean => {
   )
 }
 
-export const getWebpackResolveConditionNames = (
-  dependencyType: string | undefined,
-  environment: string
-): Array<string> => {
-  const environmentConditions = [environment, 'webpack', 'node', 'default']
-
-  if (dependencyType === 'commonjs') {
-    return ['require', ...environmentConditions]
-  }
-
-  if (dependencyType === 'esm') {
-    return ['import', 'module', ...environmentConditions]
-  }
-
-  return environmentConditions
-}
-
-const isImportResolvable = (
+const isImportResolvable = async (
   resolver: WebpackResolver,
   request: string,
   context: string
-): boolean => {
-  try {
-    // IgnorePlugin hooks are synchronous, so the webpack resolver check must stay synchronous.
-    // eslint-disable-next-line n/no-sync
-    resolver.resolveSync({}, context, request)
+): Promise<boolean> =>
+  new Promise((resolve) => {
+    resolver.resolve({}, context, request, {}, (error, result) => {
+      resolve(!error && Boolean(result))
+    })
+  })
 
-    return true
-  } catch {
-    return false
-  }
-}
-
-export const shouldIgnoreOptionalImport = (
+export const shouldIgnoreOptionalImport = async (
   request: string,
   context: string,
   resolver: WebpackResolver
-): boolean => isOptionalImport(request, context) && !isImportResolvable(resolver, request, context)
+): Promise<boolean> => {
+  if (!isOptionalImport(request, context)) {
+    return false
+  }
+
+  return !(await isImportResolvable(resolver, request, context))
+}
 
 export const createOptionalImportIgnorePlugin = (
-  environment: string
+  _environment: string
 ): wp.WebpackPluginInstance => ({
   apply: (compiler): void => {
     compiler.hooks.normalModuleFactory.tap(OPTIONAL_IMPORT_IGNORE_PLUGIN, (normalModuleFactory) => {
-      normalModuleFactory.hooks.beforeResolve.tap(OPTIONAL_IMPORT_IGNORE_PLUGIN, (resolveData) => {
+      normalModuleFactory.hooks.beforeResolve.tapAsync(OPTIONAL_IMPORT_IGNORE_PLUGIN, (
+        resolveData,
+        callback
+      ) => {
         if (resolveData.request.endsWith('.js.map')) {
-          return false
+          callback(null, false)
+          return
         }
 
-        const conditionNames = getWebpackResolveConditionNames(
-          resolveData.dependencyType,
-          environment
-        )
         const resolver = normalModuleFactory.getResolver('normal', {
           ...(resolveData.resolveOptions ?? {}),
-          conditionNames,
+          dependencyType: resolveData.dependencyType,
         })
 
-        return shouldIgnoreOptionalImport(resolveData.request, resolveData.context, resolver)
-          ? false
-          : undefined
+        shouldIgnoreOptionalImport(resolveData.request, resolveData.context, resolver)
+          .then((shouldIgnore) => {
+            callback(null, shouldIgnore ? false : undefined)
+          })
+          .catch((error: Error) => {
+            callback(error)
+          })
       })
     })
   },

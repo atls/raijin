@@ -10,7 +10,6 @@ import { createOptionalImportIgnorePlugin } from '../src/webpack.ignore.js'
 import { findPackageManifestPath }          from '../src/webpack.ignore.js'
 import { getPackageNameFromContext }        from '../src/webpack.ignore.js'
 import { getPackageNameFromRequest }        from '../src/webpack.ignore.js'
-import { getWebpackResolveConditionNames }  from '../src/webpack.ignore.js'
 import { isOptionalImport }                 from '../src/webpack.ignore.js'
 import { shouldIgnoreOptionalImport }       from '../src/webpack.ignore.js'
 
@@ -20,21 +19,53 @@ const writeManifest = async (path: string, manifest: Record<string, unknown>): P
 }
 
 const createResolver = (resolvableRequests: Array<string>) => ({
-  resolveSync: (_context: Record<string, unknown>, _path: string, request: string): string => {
+  resolve: (
+    _context: Record<string, unknown>,
+    _path: string,
+    request: string,
+    _resolveContext: Record<string, unknown>,
+    callback: (error?: Error | null, result?: string) => void
+  ): void => {
     if (resolvableRequests.includes(request)) {
-      return request
+      callback(null, request)
+      return
     }
 
-    throw new Error(`Cannot resolve ${request}`)
+    callback(new Error(`Cannot resolve ${request}`))
   },
 })
 
-type BeforeResolve = (resolveData: {
-  context: string
-  dependencyType?: string
-  request: string
-  resolveOptions?: Record<string, unknown>
-}) => false | undefined
+type BeforeResolveCallback = (error?: Error | null, result?: false) => void
+
+type BeforeResolve = (
+  resolveData: {
+    context: string
+    dependencyType?: string
+    request: string
+    resolveOptions?: Record<string, unknown>
+  },
+  callback: BeforeResolveCallback
+) => void
+
+const runBeforeResolve = async (
+  beforeResolve: BeforeResolve,
+  resolveData: {
+    context: string
+    dependencyType?: string
+    request: string
+    resolveOptions?: Record<string, unknown>
+  }
+): Promise<false | undefined> =>
+  new Promise((resolve, reject) => {
+    beforeResolve(resolveData, (error, result) => {
+      if (error) {
+        reject(error)
+        return
+      }
+
+      resolve(result)
+    })
+  })
 
 type FakeNormalModuleFactory = {
   getResolver: (
@@ -43,7 +74,7 @@ type FakeNormalModuleFactory = {
   ) => ReturnType<typeof createResolver>
   hooks: {
     beforeResolve: {
-      tap: (name: string, callback: BeforeResolve) => void
+      tapAsync: (name: string, callback: BeforeResolve) => void
     }
   }
 }
@@ -151,7 +182,10 @@ test('should not ignore optional peer imports from workspace source context', as
   })
   await mkdir(context, { recursive: true })
 
-  assert.equal(shouldIgnoreOptionalImport('@nestjs/websockets', context, createResolver([])), false)
+  assert.equal(
+    await shouldIgnoreOptionalImport('@nestjs/websockets', context, createResolver([])),
+    false
+  )
 })
 
 test('should keep scoped compatibility imports for packages with incomplete metadata', async () => {
@@ -195,37 +229,20 @@ test('should not ignore optional dependencies resolvable from issuer context', a
   await mkdir(context, { recursive: true })
 
   assert.equal(
-    shouldIgnoreOptionalImport('optional-driver', context, createResolver(['optional-driver'])),
+    await shouldIgnoreOptionalImport(
+      'optional-driver',
+      context,
+      createResolver(['optional-driver'])
+    ),
     false
   )
-  assert.equal(shouldIgnoreOptionalImport('missing-driver', context, createResolver([])), true)
+  assert.equal(
+    await shouldIgnoreOptionalImport('missing-driver', context, createResolver([])),
+    true
+  )
 })
 
-test('should use dependency-specific webpack export conditions', () => {
-  assert.deepEqual(getWebpackResolveConditionNames('commonjs', 'production'), [
-    'require',
-    'production',
-    'webpack',
-    'node',
-    'default',
-  ])
-  assert.deepEqual(getWebpackResolveConditionNames('esm', 'development'), [
-    'import',
-    'module',
-    'development',
-    'webpack',
-    'node',
-    'default',
-  ])
-  assert.deepEqual(getWebpackResolveConditionNames(undefined, 'production'), [
-    'production',
-    'webpack',
-    'node',
-    'default',
-  ])
-})
-
-test('should pass dependency conditions into the webpack resolver before ignoring imports', async () => {
+test('should pass dependency type into the webpack resolver before ignoring imports', async () => {
   const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
   const packagePath = join(root, 'node_modules', 'framework')
   const context = join(packagePath, 'dist')
@@ -257,7 +274,7 @@ test('should pass dependency conditions into the webpack resolver before ignorin
             },
             hooks: {
               beforeResolve: {
-                tap: (_hookName: string, beforeResolve: BeforeResolve): void => {
+                tapAsync: (_hookName: string, beforeResolve: BeforeResolve): void => {
                   callbacks.push(beforeResolve)
                 },
               },
@@ -271,7 +288,7 @@ test('should pass dependency conditions into the webpack resolver before ignorin
   const [beforeResolve] = callbacks
 
   assert.equal(
-    beforeResolve({
+    await runBeforeResolve(beforeResolve, {
       context,
       dependencyType: 'commonjs',
       request: 'missing-driver',
@@ -282,7 +299,7 @@ test('should pass dependency conditions into the webpack resolver before ignorin
     false
   )
   assert.deepEqual(resolveOptions.at(0), {
-    conditionNames: ['require', 'production', 'webpack', 'node', 'default'],
+    dependencyType: 'commonjs',
     extensions: ['.tsx', '.ts', '.js'],
   })
 })
