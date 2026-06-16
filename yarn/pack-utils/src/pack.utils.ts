@@ -24,6 +24,7 @@ import { getYarnPathFromDestination } from './yarn-path.utils.js'
 
 const DEFAULT_IMAGE_OS = 'linux'
 const DEFAULT_LINUX_LIBC = 'glibc'
+export const IMAGE_PACK_NODE_LINKER = 'pnp'
 const CPU_ALIASES = {
   386: 'ia32',
   amd64: 'x64',
@@ -96,6 +97,7 @@ export const pack = async (
     tmpConfiguration.values.set('enableGlobalCache', false)
     tmpConfiguration.values.set('enableMirror', false)
     tmpConfiguration.values.set('globalFolder', configuration.get('globalFolder'))
+    tmpConfiguration.values.set('nodeLinker', IMAGE_PACK_NODE_LINKER)
     tmpConfiguration.values.set('pnpEnableEsmLoader', configuration.get('pnpEnableEsmLoader'))
     if (options.platform) {
       tmpConfiguration.values.set(
@@ -116,7 +118,7 @@ export const pack = async (
       enableNetwork: tmpConfiguration.get(`enableNetwork`),
       enableMirror: tmpConfiguration.get(`enableMirror`),
       globalFolder: `.yarn/berry` as PortablePath,
-      nodeLinker: project.configuration.get('nodeLinker'),
+      nodeLinker: IMAGE_PACK_NODE_LINKER,
       yarnPath: await getYarnPathFromDestination(destination),
     })
 
