@@ -363,3 +363,35 @@ test('should not fall through package export array targets', async () => {
 
   assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), true)
 })
+
+test('should resolve webpack folder export mappings in optional imports', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'optional-driver': '*',
+    },
+  })
+  await writeManifest(driverPath, {
+    name: 'optional-driver',
+    exports: {
+      './features/': './src/features/',
+    },
+  })
+  await mkdir(join(driverPath, 'src', 'features'), { recursive: true })
+  await writeFile(join(driverPath, 'src', 'features', 'enabled.js'), '')
+  await mkdir(context, { recursive: true })
+
+  assert.equal(
+    shouldIgnoreOptionalImport('optional-driver/features/enabled.js', context, root),
+    false
+  )
+  assert.equal(
+    shouldIgnoreOptionalImport('optional-driver/features/missing.js', context, root),
+    true
+  )
+})

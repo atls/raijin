@@ -323,19 +323,27 @@ const compareSubpathExportPatterns = (left: string, right: string): number => {
   return right.length - left.length
 }
 
-const collectExportTargetPaths = (target: unknown, patternMatch = ''): Array<string> => {
+const collectExportTargetPaths = (
+  target: unknown,
+  patternMatch = '',
+  folderRemainder = ''
+): Array<string> => {
   if (target === null) {
     return []
   }
 
   if (typeof target === 'string') {
-    return [target.replaceAll('*', patternMatch)]
+    const targetPath = target.replaceAll('*', patternMatch)
+
+    return [
+      folderRemainder && targetPath.endsWith('/') ? `${targetPath}${folderRemainder}` : targetPath,
+    ]
   }
 
   if (Array.isArray(target)) {
     return (
       target
-        .map((entry) => collectExportTargetPaths(entry, patternMatch))
+        .map((entry) => collectExportTargetPaths(entry, patternMatch, folderRemainder))
         .find((entryTargets) => entryTargets.length > 0) ?? []
     )
   }
@@ -343,7 +351,7 @@ const collectExportTargetPaths = (target: unknown, patternMatch = ''): Array<str
   if (isObject(target)) {
     return Object.keys(target)
       .filter((key) => ACTIVE_EXPORT_CONDITIONS.has(key))
-      .flatMap((key) => collectExportTargetPaths(target[key], patternMatch))
+      .flatMap((key) => collectExportTargetPaths(target[key], patternMatch, folderRemainder))
   }
 
   return []
@@ -387,6 +395,19 @@ const getPackageSubpathExportTargets = (
 
   if (Object.hasOwn(packageExports, requestKey)) {
     return collectExportTargetPaths(packageExports[requestKey])
+  }
+
+  const folderExport = exportKeys
+    .filter((key) => key.endsWith('/') && requestKey.startsWith(key))
+    .sort((left, right) => right.length - left.length)
+    .at(0)
+
+  if (folderExport) {
+    return collectExportTargetPaths(
+      packageExports[folderExport],
+      '',
+      requestKey.slice(folderExport.length)
+    )
   }
 
   const matchingPattern = exportKeys
