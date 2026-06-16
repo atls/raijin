@@ -1,11 +1,13 @@
 import { existsSync }    from 'node:fs'
 import { readFileSync }  from 'node:fs'
+import { statSync }      from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname }       from 'node:path'
 import { join }          from 'node:path'
 
 export interface PackageManifest {
   exports?: unknown
+  main?: string
   name?: string
   optionalDependencies?: Record<string, string>
   peerDependenciesMeta?: Record<string, { optional?: boolean }>
@@ -17,10 +19,15 @@ const PACKAGE_MANIFEST = 'package.json'
 const REQUIRE_CONTEXT_FILENAME = '__raijin_optional_import__.js'
 const ACTIVE_EXPORT_CONDITIONS = new Set(['default', 'import', 'node', 'node-addons', 'require'])
 
-const isPathExisting = (path: string): boolean =>
-  // IgnorePlugin.checkResource is synchronous, so resolver fallback must stay synchronous.
-  // eslint-disable-next-line n/no-sync
-  existsSync(path)
+const isFileExisting = (path: string): boolean => {
+  try {
+    // IgnorePlugin.checkResource is synchronous, so resolver fallback must stay synchronous.
+    // eslint-disable-next-line n/no-sync
+    return statSync(path).isFile()
+  } catch {
+    return false
+  }
+}
 
 const getPackagePathFromContext = (context: string): string | null => {
   const normalizedContext = context.replaceAll('\\', '/')
@@ -249,6 +256,19 @@ export const isOptionalImport = (request: string, context: string): boolean => {
   )
 }
 
+const isExistingPackageFilePath = (path: string): boolean =>
+  [path, `${path}.js`, `${path}.json`, `${path}.node`].some(isFileExisting)
+
+const isExistingPackageDirectoryEntry = (path: string): boolean => {
+  const manifest = readPackageManifest(join(path, PACKAGE_MANIFEST))
+
+  if (typeof manifest?.main === 'string' && isExistingPackageFilePath(join(path, manifest.main))) {
+    return true
+  }
+
+  return isExistingPackageFilePath(join(path, 'index'))
+}
+
 const isExistingPackageSubpath = (packagePath: string, subpath: string): boolean => {
   if (!subpath) {
     return true
@@ -256,13 +276,9 @@ const isExistingPackageSubpath = (packagePath: string, subpath: string): boolean
 
   const subpathCandidate = join(packagePath, subpath)
 
-  return [
-    subpathCandidate,
-    `${subpathCandidate}.js`,
-    `${subpathCandidate}.json`,
-    join(subpathCandidate, 'index.js'),
-    join(subpathCandidate, PACKAGE_MANIFEST),
-  ].some(isPathExisting)
+  return (
+    isExistingPackageFilePath(subpathCandidate) || isExistingPackageDirectoryEntry(subpathCandidate)
+  )
 }
 
 const isObject = (value: unknown): value is Record<string, unknown> =>

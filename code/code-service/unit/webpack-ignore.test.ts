@@ -164,6 +164,7 @@ test('should not ignore optional dependencies resolvable from issuer context', a
   await writeManifest(join(packagePath, 'node_modules', 'optional-driver'), {
     name: 'optional-driver',
   })
+  await writeFile(join(packagePath, 'node_modules', 'optional-driver', 'index.js'), '')
   await mkdir(context, { recursive: true })
 
   assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
@@ -284,4 +285,28 @@ test('should keep installed optional ESM imports available in fallback resolutio
   await mkdir(context, { recursive: true })
 
   assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
+})
+
+test('should not treat package subpath directories as resolved entries', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'optional-driver': '*',
+    },
+  })
+  await writeManifest(driverPath, {
+    name: 'optional-driver',
+  })
+  await mkdir(join(driverPath, 'feature'), { recursive: true })
+  await mkdir(join(driverPath, 'available'), { recursive: true })
+  await writeFile(join(driverPath, 'available', 'index.js'), '')
+  await mkdir(context, { recursive: true })
+
+  assert.equal(shouldIgnoreOptionalImport('optional-driver/feature', context, root), true)
+  assert.equal(shouldIgnoreOptionalImport('optional-driver/available', context, root), false)
 })
