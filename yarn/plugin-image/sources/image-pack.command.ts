@@ -16,7 +16,7 @@ import { Option }         from 'clipanion'
 import { pack }           from '@atls/code-pack'
 import { packUtils }      from '@atls/yarn-pack-utils'
 
-const DEFAULT_BUILDER_TAG = '26'
+const DEFAULT_BUILDER_TAG = '24'
 const DEFAULT_BUILDPACK_VERSION = '0.1.3'
 const DEFAULT_BUILDER_IMAGE = 'ghcr.io/atls/builder-base'
 const DEFAULT_BUILDPACK_IMAGE = 'ghcr.io/atls/buildpack-yarn-workspace'
