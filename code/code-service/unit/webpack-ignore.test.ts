@@ -259,3 +259,29 @@ test('should respect active package export conditions in fallback resolution', a
   assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), true)
   assert.equal(shouldIgnoreOptionalImport('optional-driver/node', context, root), false)
 })
+
+test('should keep installed optional ESM imports available in fallback resolution', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'optional-driver': '*',
+    },
+  })
+  await writeManifest(driverPath, {
+    name: 'optional-driver',
+    exports: {
+      '.': {
+        import: './esm.js',
+      },
+    },
+  })
+  await writeFile(join(driverPath, 'esm.js'), '')
+  await mkdir(context, { recursive: true })
+
+  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
+})
