@@ -17,7 +17,15 @@ const manifestCache = new Map<string, PackageManifest | null>()
 const NODE_MODULES_SEGMENT = '/node_modules/'
 const PACKAGE_MANIFEST = 'package.json'
 const REQUIRE_CONTEXT_FILENAME = '__raijin_optional_import__.js'
-const ACTIVE_EXPORT_CONDITIONS = new Set(['default', 'import', 'node', 'node-addons', 'require'])
+const ACTIVE_EXPORT_CONDITIONS = new Set([
+  'default',
+  'import',
+  'module',
+  'node',
+  'node-addons',
+  'require',
+  'webpack',
+])
 
 const isFileExisting = (path: string): boolean => {
   try {
@@ -349,9 +357,13 @@ const collectExportTargetPaths = (
   }
 
   if (isObject(target)) {
-    return Object.keys(target)
+    const activeCondition = Object.keys(target)
       .filter((key) => ACTIVE_EXPORT_CONDITIONS.has(key))
-      .flatMap((key) => collectExportTargetPaths(target[key], patternMatch, folderRemainder))
+      .at(0)
+
+    return activeCondition
+      ? collectExportTargetPaths(target[activeCondition], patternMatch, folderRemainder)
+      : []
   }
 
   return []

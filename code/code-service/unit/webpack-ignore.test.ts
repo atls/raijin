@@ -287,6 +287,37 @@ test('should keep installed optional ESM imports available in fallback resolutio
   assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
 })
 
+test('should keep webpack condition optional imports available in fallback resolution', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'optional-driver': '*',
+    },
+  })
+  await writeManifest(driverPath, {
+    name: 'optional-driver',
+    exports: {
+      '.': {
+        webpack: './webpack.js',
+      },
+      './module': {
+        module: './module.js',
+      },
+    },
+  })
+  await writeFile(join(driverPath, 'module.js'), '')
+  await writeFile(join(driverPath, 'webpack.js'), '')
+  await mkdir(context, { recursive: true })
+
+  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
+  assert.equal(shouldIgnoreOptionalImport('optional-driver/module', context, root), false)
+})
+
 test('should not treat package subpath directories as resolved entries', async () => {
   const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
   const packagePath = join(root, 'node_modules', 'framework')
