@@ -183,3 +183,31 @@ test('should respect package exports when resolving optional dependency subpaths
   assert.equal(shouldIgnoreOptionalImport('optional-driver/public', context, root), false)
   assert.equal(shouldIgnoreOptionalImport('optional-driver/private', context, root), true)
 })
+
+test('should respect blocked package export patterns before broader patterns', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'optional-driver': '*',
+    },
+  })
+  await writeManifest(driverPath, {
+    name: 'optional-driver',
+    exports: {
+      './private/*': null,
+      './*': './*.js',
+    },
+  })
+  await mkdir(join(driverPath, 'private'), { recursive: true })
+  await writeFile(join(driverPath, 'private', 'secret.js'), '')
+  await writeFile(join(driverPath, 'public.js'), '')
+  await mkdir(context, { recursive: true })
+
+  assert.equal(shouldIgnoreOptionalImport('optional-driver/private/secret', context, root), true)
+  assert.equal(shouldIgnoreOptionalImport('optional-driver/public', context, root), false)
+})

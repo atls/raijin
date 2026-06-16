@@ -234,6 +234,21 @@ const isSubpathExportPatternMatching = (exportKey: string, requestKey: string): 
   return requestKey.startsWith(prefix) && requestKey.endsWith(suffix)
 }
 
+const compareSubpathExportPatterns = (left: string, right: string): number => {
+  const [leftPrefix, leftSuffix = ''] = left.split('*')
+  const [rightPrefix, rightSuffix = ''] = right.split('*')
+
+  if (leftPrefix.length !== rightPrefix.length) {
+    return rightPrefix.length - leftPrefix.length
+  }
+
+  if (leftSuffix.length !== rightSuffix.length) {
+    return rightSuffix.length - leftSuffix.length
+  }
+
+  return right.length - left.length
+}
+
 const isExportTargetAvailable = (target: unknown): boolean => {
   if (target === null) {
     return false
@@ -281,12 +296,16 @@ const isPackageSubpathExported = (manifest: PackageManifest, subpath: string): b
     return isExportTargetAvailable(packageExports[requestKey])
   }
 
-  return exportKeys.some(
-    (key) =>
-      key.includes('*') &&
-      isSubpathExportPatternMatching(key, requestKey) &&
-      isExportTargetAvailable(packageExports[key])
-  )
+  const matchingPattern = exportKeys
+    .filter((key) => key.includes('*') && isSubpathExportPatternMatching(key, requestKey))
+    .sort(compareSubpathExportPatterns)
+    .at(0)
+
+  if (!matchingPattern) {
+    return false
+  }
+
+  return isExportTargetAvailable(packageExports[matchingPattern])
 }
 
 const isNodeModulesResolvable = (request: string, context: string): boolean => {
