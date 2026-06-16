@@ -12,6 +12,7 @@ import { assertSupportedRendererNextVersion }             from './renderer-build
 import { cleanupRendererBuildSourceArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }             from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }         from './renderer-build.utils.js'
+import { copyRendererBuildPublicAssets }                  from './renderer-build.utils.js'
 import { createNextRendererLoaderSource }                 from './renderer-build.utils.js'
 import { createRendererBuildArgs }                        from './renderer-build.utils.js'
 import { createRendererBuildEnv }                         from './renderer-build.utils.js'
@@ -321,4 +322,28 @@ test('should remove renderer workspace manifests without removing dist output', 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/index.js')), true)
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/package.json')), false)
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/.next')), false)
+})
+
+test('should copy renderer public assets into standalone artifact', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.mkdirPromise(ppath.join(cwd, 'src/public/organization-logos'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(cwd, 'src/public/Bg.png'), '')
+  await xfs.writeFilePromise(ppath.join(cwd, 'src/public/organization-logos/atlantis.png'), '')
+
+  await copyRendererBuildPublicAssets(cwd)
+
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/Bg.png')), true)
+  assert.equal(
+    await xfs.existsPromise(ppath.join(cwd, 'dist/public/organization-logos/atlantis.png')),
+    true
+  )
+})
+
+test('should ignore missing renderer public assets', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await copyRendererBuildPublicAssets(cwd)
+
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public')), false)
 })

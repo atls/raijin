@@ -23,6 +23,7 @@ const DIST_DIR = 'dist' as Filename
 const NEXT_DIR = '.next' as Filename
 const PACKAGE_MANIFEST = 'package.json' as Filename
 const PNP_ESM_LOADER = '.pnp.loader.mjs' as Filename
+const PUBLIC_DIR = 'public' as Filename
 const SRC_DIR = 'src' as Filename
 const NPM_PROTOCOL = 'npm:'
 const NPM_REFERENCE_PATTERN = /(?:^|@)npm:([^#@]+)/
@@ -238,6 +239,16 @@ export const cleanupRendererBuildWorkspaceManifests = async (cwd: PortablePath):
 
 export const cleanupRendererBuildSourceArtifacts = async (cwd: PortablePath): Promise<void> => {
   await removeRendererBuildPaths(cwd, RENDERER_BUILD_SOURCE_ARTIFACT_PATHS)
+}
+
+export const copyRendererBuildPublicAssets = async (cwd: PortablePath): Promise<void> => {
+  const source = ppath.join(cwd, SRC_DIR, PUBLIC_DIR)
+
+  if (!(await xfs.existsPromise(source))) {
+    return
+  }
+
+  await xfs.copyPromise(ppath.join(cwd, DIST_DIR, PUBLIC_DIR), source)
 }
 
 export const createRendererBuildEnv = (

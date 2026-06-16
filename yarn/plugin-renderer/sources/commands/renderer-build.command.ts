@@ -18,6 +18,7 @@ import { assertRendererBuildExitCode }                   from './renderer-build.
 import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }        from './renderer-build.utils.js'
+import { copyRendererBuildPublicAssets }                 from './renderer-build.utils.js'
 import { createRendererBuildArgs }                       from './renderer-build.utils.js'
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
@@ -149,6 +150,10 @@ export class RendererBuildCommand extends BaseCommand {
             ppath.join(rendererCwd, 'dist/.next/static'),
             ppath.join(rendererCwd, 'src/.next/static')
           )
+        })
+
+        await report.startTimerPromise('Copy public assets', async () => {
+          await copyRendererBuildPublicAssets(rendererCwd)
         })
 
         await report.startTimerPromise('Copy edge chunks files', async () => {
