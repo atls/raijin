@@ -17,7 +17,9 @@ import { pack }           from '@atls/code-pack'
 import { packUtils }      from '@atls/yarn-pack-utils'
 
 const DEFAULT_BUILDER_TAG = '24'
-const DEFAULT_BUILDPACK_VERSION = '0.1.1'
+const DEFAULT_BUILDPACK_VERSION = '0.1.3'
+const DEFAULT_BUILDER_IMAGE = 'ghcr.io/atls/builder-base'
+const DEFAULT_BUILDPACK_IMAGE = 'ghcr.io/atls/buildpack-yarn-workspace'
 const DEFAULT_MATERIALIZATION_OS = 'linux'
 
 const getDefaultMaterializationPlatform = (): string => `${DEFAULT_MATERIALIZATION_OS}/${arch()}`
@@ -86,8 +88,8 @@ class ImagePackCommand extends BaseCommand {
             registry: this.registry,
             publish: this.publish,
             tagPolicy: this.tagPolicy,
-            buildpack: `atlantislab/buildpack-yarn-workspace:${buildpackVersion}`,
-            builder: `atlantislab/builder-base:${builderTag}`,
+            buildpack: `${DEFAULT_BUILDPACK_IMAGE}:${buildpackVersion}`,
+            builder: `${DEFAULT_BUILDER_IMAGE}:${builderTag}`,
             platform: this.platform,
             require,
             cwd: destination,
