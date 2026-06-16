@@ -6,10 +6,6 @@ import { dirname }            from 'node:path'
 import { join }               from 'node:path'
 
 export interface PackageManifest {
-  exports?: unknown
-  main?: string
-  module?: string
-  name?: string
   optionalDependencies?: Record<string, string>
   peerDependenciesMeta?: Record<string, { optional?: boolean }>
 }
@@ -28,6 +24,13 @@ interface WebpackResolver {
     callback: (error?: Error | null, result?: unknown) => void
   ) => void
 }
+
+interface WebpackDependency {
+  optional?: boolean
+}
+
+const hasOptionalDependency = (dependencies?: Array<WebpackDependency>): boolean =>
+  dependencies?.some((dependency) => dependency.optional === true) ?? false
 
 const getPackagePathFromContext = (context: string): string | null => {
   const normalizedContext = context.replaceAll('\\', '/')
@@ -59,62 +62,6 @@ const getPackagePathFromContext = (context: string): string | null => {
 
   return `${normalizedContext.slice(0, nodeModulesIndex + NODE_MODULES_SEGMENT.length)}${packagePathSegments.join('/')}`
 }
-
-const COMPATIBILITY_OPTIONAL_IMPORTS = new Map<string, Set<string>>([
-  [
-    '@nestjs/microservices',
-    new Set([
-      '@grpc/grpc-js',
-      '@nestjs/websockets',
-      'amqp-connection-manager',
-      'amqplib',
-      'cache-manager',
-      'ioredis',
-      'kafkajs',
-      'mqtt',
-      'nats',
-    ]),
-  ],
-  [
-    '@nestjs/terminus',
-    new Set([
-      '@nestjs/mongoose',
-      '@nestjs/sequelize',
-      '@nestjs/sequelize/dist/common/sequelize.utils',
-      '@nestjs/typeorm',
-      '@nestjs/typeorm/dist/common/typeorm.utils',
-    ]),
-  ],
-  [
-    'typeorm',
-    new Set([
-      'mariadb',
-      'mariadb/callback',
-      'better-sqlite3',
-      'pg-native',
-      'hdb-pool',
-      'oracledb',
-      'mongodb',
-      'tedious',
-      'sqlite3',
-      'mysql',
-      'mysql2',
-      'mssql',
-      'sql.js',
-      'libsql',
-    ]),
-  ],
-  [
-    '@mikro-orm/core',
-    new Set([
-      '@mikro-orm/better-sqlite',
-      '@mikro-orm/mongodb',
-      '@mikro-orm/mariadb',
-      '@mikro-orm/sqlite',
-      '@mikro-orm/mysql',
-    ]),
-  ],
-])
 
 export const getPackageNameFromRequest = (request: string): string | null => {
   if (request.startsWith('.') || request.startsWith('/')) {
@@ -213,21 +160,11 @@ const isOptionalByManifest = (manifest: PackageManifest, packageName: string): b
   manifest.peerDependenciesMeta?.[packageName]?.optional === true ||
   Boolean(manifest.optionalDependencies?.[packageName])
 
-const isOptionalByCompatibility = (
-  manifest: PackageManifest,
+export const isOptionalImport = (
   request: string,
-  packageName: string
+  context: string,
+  isDependencyOptional = false
 ): boolean => {
-  if (!manifest.name) {
-    return false
-  }
-
-  const optionalImports = COMPATIBILITY_OPTIONAL_IMPORTS.get(manifest.name)
-
-  return Boolean(optionalImports?.has(request) || optionalImports?.has(packageName))
-}
-
-export const isOptionalImport = (request: string, context: string): boolean => {
   const packageName = getPackageNameFromRequest(request)
 
   if (!packageName) {
@@ -250,10 +187,7 @@ export const isOptionalImport = (request: string, context: string): boolean => {
     return false
   }
 
-  return (
-    isOptionalByManifest(manifest, packageName) ||
-    isOptionalByCompatibility(manifest, request, packageName)
-  )
+  return isDependencyOptional || isOptionalByManifest(manifest, packageName)
 }
 
 const isImportResolvable = async (
@@ -270,9 +204,10 @@ const isImportResolvable = async (
 export const shouldIgnoreOptionalImport = async (
   request: string,
   context: string,
-  resolver: WebpackResolver
+  resolver: WebpackResolver,
+  isDependencyOptional = false
 ): Promise<boolean> => {
-  if (!isOptionalImport(request, context)) {
+  if (!isOptionalImport(request, context, isDependencyOptional)) {
     return false
   }
 
@@ -298,7 +233,12 @@ export const createOptionalImportIgnorePlugin = (
           dependencyType: resolveData.dependencyType,
         })
 
-        shouldIgnoreOptionalImport(resolveData.request, resolveData.context, resolver)
+        shouldIgnoreOptionalImport(
+          resolveData.request,
+          resolveData.context,
+          resolver,
+          hasOptionalDependency(resolveData.dependencies as Array<WebpackDependency> | undefined)
+        )
           .then((shouldIgnore) => {
             callback(null, shouldIgnore ? false : undefined)
           })
