@@ -7,6 +7,13 @@
 
 
 
+## [1.0.35](https://github.com/atls/raijin/compare/@atls/yarn-plugin-service@1.0.35...@atls/yarn-plugin-service@1.0.35) (2026-06-16)
+
+
+
+
+
+
 ## [1.0.35](https://github.com/atls/raijin/compare/@atls/yarn-plugin-service@1.0.35...@atls/yarn-plugin-service@1.0.35) (2026-06-15)
 
 

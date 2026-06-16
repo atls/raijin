@@ -1,5 +1,35 @@
 
 
+## [2.1.34](https://github.com/atls/raijin/compare/@atls/code-service@2.1.33...@atls/code-service@2.1.34) (2026-06-16)
+
+
+### Bug Fixes
+
+
+* **code-service:** honor blocked export patterns ([1de7ae2](https://github.com/atls/raijin/commit/1de7ae2b35dd8111af8dc8b60a72d8d375a6de35))
+* **code-service:** honor blocked export targets ([6a3e3ec](https://github.com/atls/raijin/commit/6a3e3ecf9549535c1d30ebc5a095eee461a20a23))
+* **code-service:** honor import export condition ([282d8d8](https://github.com/atls/raijin/commit/282d8d82703d5d204d64f615837e0c7cdf86c3b2))
+* **code-service:** honor module package entry ([aef7a34](https://github.com/atls/raijin/commit/aef7a3484690cd6aa36b9df12fea32b1f2db53cb))
+* **code-service:** honor webpack export conditions ([4dda60c](https://github.com/atls/raijin/commit/4dda60cac725a65384c1a9d7ad6dbb50a1bf529c))
+* **code-service:** ignore optional framework imports ([c0a9d0c](https://github.com/atls/raijin/commit/c0a9d0ca0ed720ac580f9a4794e3c4ae707f324b))
+* **code-service:** keep terminus optional imports ([a8e6062](https://github.com/atls/raijin/commit/a8e6062ee28257b184856b1fa304f52b35d26390))
+* **code-service:** keep workspace source imports strict ([f294e00](https://github.com/atls/raijin/commit/f294e0044c0c0f3804a1899e1fe568b407f1d571))
+* **code-service:** remove optional import vendor list ([fc60728](https://github.com/atls/raijin/commit/fc60728f29fdae27c882ace8a78af25c538fa285))
+* **code-service:** resolve folder export mappings ([a0ac270](https://github.com/atls/raijin/commit/a0ac2707e19aff2f3ff7f24b8ffdb00e40368b97))
+* **code-service:** resolve optional imports asynchronously ([b008a08](https://github.com/atls/raijin/commit/b008a08f186bbe481f6a66ff98bdeed2b3dd538a))
+* **code-service:** resolve optional imports from issuer ([e21872a](https://github.com/atls/raijin/commit/e21872aeae91e657a48bd238cd432a1062dbddd4))
+* **code-service:** respect active export conditions ([7443eb3](https://github.com/atls/raijin/commit/7443eb3ab6b848dc04c39678a08bfd09061e40d6))
+* **code-service:** respect optional import exports ([08753f2](https://github.com/atls/raijin/commit/08753f2a552e634886d99b77670dc2d7486460dd))
+* **code-service:** stop export array fallthrough ([bdfba30](https://github.com/atls/raijin/commit/bdfba30805838612b41ca50e6f44ce8d81928a81))
+* **code-service:** use issuer root manifest ([7dc7c94](https://github.com/atls/raijin/commit/7dc7c94d6b7c018ceb8963a72507a98e1e036a6f))
+* **code-service:** use webpack resolver for optional imports ([b367d33](https://github.com/atls/raijin/commit/b367d3384ce5494c7952aca7fdc135da4092df63))
+* **code-service:** validate optional subpath entries ([7a58e40](https://github.com/atls/raijin/commit/7a58e40af56ca053a9e23468e3c102f3f50606d6))
+* **code-service:** verify optional package entrypoints ([a41ae9a](https://github.com/atls/raijin/commit/a41ae9ab72b76442a456903f6487d231385fddc6))
+
+
+
+
+
 ## [2.1.33](https://github.com/atls/raijin/compare/@atls/code-service@2.1.33...@atls/code-service@2.1.33) (2026-06-14)
 
 

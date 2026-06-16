@@ -1,5 +1,17 @@
 
 
+## [2.0.29](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.28...@atls/code-schematics@2.0.29) (2026-06-16)
+
+
+### Bug Fixes
+
+
+* **code-schematics:** emit formatted generated factory ([4f63b05](https://github.com/atls/raijin/commit/4f63b053ebb2a79683e67184e828fa319f1e5567))
+
+
+
+
+
 ## [2.0.28](https://github.com/atls/raijin/compare/@atls/code-schematics@2.0.27...@atls/code-schematics@2.0.28) (2026-06-14)
 
 

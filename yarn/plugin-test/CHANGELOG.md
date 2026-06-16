@@ -1,5 +1,12 @@
 
 
+## [1.0.34](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.34...@atls/yarn-plugin-test@1.0.34) (2026-06-16)
+
+
+
+
+
+
 ## [1.0.34](https://github.com/atls/raijin/compare/@atls/yarn-plugin-test@1.0.33...@atls/yarn-plugin-test@1.0.34) (2026-06-14)
 
 
