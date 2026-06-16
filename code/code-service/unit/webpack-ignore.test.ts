@@ -371,6 +371,28 @@ test('should verify package root entry points before accepting optional imports'
   assert.equal(shouldIgnoreOptionalImport('available-entry-driver', context, root), false)
 })
 
+test('should honor package module field for optional root imports', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'optional-driver': '*',
+    },
+  })
+  await writeManifest(driverPath, {
+    name: 'optional-driver',
+    module: './esm.js',
+  })
+  await writeFile(join(driverPath, 'esm.js'), '')
+  await mkdir(context, { recursive: true })
+
+  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
+})
+
 test('should not fall through package export array targets', async () => {
   const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
   const packagePath = join(root, 'node_modules', 'framework')

@@ -8,6 +8,7 @@ import { join }          from 'node:path'
 export interface PackageManifest {
   exports?: unknown
   main?: string
+  module?: string
   name?: string
   optionalDependencies?: Record<string, string>
   peerDependenciesMeta?: Record<string, { optional?: boolean }>
@@ -26,6 +27,7 @@ const ACTIVE_EXPORT_CONDITIONS = new Set([
   'require',
   'webpack',
 ])
+const PACKAGE_ENTRY_FIELDS = ['module', 'main'] as const
 
 const isFileExisting = (path: string): boolean => {
   try {
@@ -270,7 +272,13 @@ const isExistingPackageFilePath = (path: string): boolean =>
 const isExistingPackageDirectoryEntry = (path: string): boolean => {
   const manifest = readPackageManifest(join(path, PACKAGE_MANIFEST))
 
-  if (typeof manifest?.main === 'string' && isExistingPackageFilePath(join(path, manifest.main))) {
+  const manifestEntryExists = PACKAGE_ENTRY_FIELDS.some((field) => {
+    const entry = manifest?.[field]
+
+    return typeof entry === 'string' && isExistingPackageFilePath(join(path, entry))
+  })
+
+  if (manifestEntryExists) {
     return true
   }
 
