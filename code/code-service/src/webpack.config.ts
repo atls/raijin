@@ -1,17 +1,17 @@
-import type { webpack as wp }      from '@atls/code-runtime/webpack'
+import type { webpack as wp }               from '@atls/code-runtime/webpack'
 
-import type { WebpackEnvironment } from './webpack.interfaces.js'
+import type { WebpackEnvironment }          from './webpack.interfaces.js'
 
-import { readFile }                from 'node:fs/promises'
-import { writeFile }               from 'node:fs/promises'
-import { mkdtemp }                 from 'node:fs/promises'
-import { tmpdir }                  from 'node:os'
-import { join }                    from 'node:path'
+import { readFile }                         from 'node:fs/promises'
+import { writeFile }                        from 'node:fs/promises'
+import { mkdtemp }                          from 'node:fs/promises'
+import { tmpdir }                           from 'node:os'
+import { join }                             from 'node:path'
 
-import tsconfig                    from '@atls/config-typescript'
+import tsconfig                             from '@atls/config-typescript'
 
-import { WebpackExternals }        from './webpack.externals.js'
-import { LAZY_IMPORTS }            from './webpack.ignore.js'
+import { WebpackExternals }                 from './webpack.externals.js'
+import { createOptionalImportIgnorePlugin } from './webpack.ignore.js'
 
 export class WebpackConfig {
   constructor(
@@ -127,27 +127,7 @@ export class WebpackConfig {
     isEsm: boolean
   ): Array<wp.WebpackPluginInstance> {
     const plugins: Array<wp.WebpackPluginInstance> = [
-      new this.webpack.IgnorePlugin({
-        checkResource: (resource: string): boolean => {
-          if (resource.endsWith('.js.map')) {
-            return true
-          }
-
-          if (!LAZY_IMPORTS.includes(resource)) {
-            return false
-          }
-
-          try {
-            require.resolve(resource, {
-              paths: [this.cwd],
-            })
-          } catch {
-            return true
-          }
-
-          return false
-        },
-      }),
+      createOptionalImportIgnorePlugin(environment),
       ...additionalPlugins,
     ]
 
