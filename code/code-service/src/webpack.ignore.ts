@@ -21,6 +21,37 @@ const isPathExisting = (path: string): boolean =>
   // eslint-disable-next-line n/no-sync
   existsSync(path)
 
+const getPackagePathFromContext = (context: string): string | null => {
+  const normalizedContext = context.replaceAll('\\', '/')
+  const nodeModulesIndex = normalizedContext.lastIndexOf(NODE_MODULES_SEGMENT)
+
+  if (nodeModulesIndex === -1) {
+    return null
+  }
+
+  const packageSegments = normalizedContext
+    .slice(nodeModulesIndex + NODE_MODULES_SEGMENT.length)
+    .split('/')
+
+  const [first] = packageSegments
+
+  if (!first) {
+    return null
+  }
+
+  const segmentCount = first.startsWith('@') ? 2 : 1
+  const packagePathSegments = packageSegments.slice(0, segmentCount)
+
+  if (
+    packagePathSegments.length !== segmentCount ||
+    packagePathSegments.some((segment) => !segment)
+  ) {
+    return null
+  }
+
+  return `${normalizedContext.slice(0, nodeModulesIndex + NODE_MODULES_SEGMENT.length)}${packagePathSegments.join('/')}`
+}
+
 const COMPATIBILITY_OPTIONAL_IMPORTS = new Map<string, Set<string>>([
   [
     '@nestjs/microservices',
@@ -121,10 +152,22 @@ export const getPackageNameFromContext = (context: string): string | null => {
 }
 
 export const findPackageManifestPath = (context: string): string | null => {
+  const packagePath = getPackagePathFromContext(context)
+
+  if (packagePath) {
+    const manifestPath = join(packagePath, PACKAGE_MANIFEST)
+
+    // IgnorePlugin.checkResource is synchronous, so manifest lookup must stay synchronous.
+    // eslint-disable-next-line n/no-sync
+    if (existsSync(manifestPath)) {
+      return manifestPath
+    }
+  }
+
   let current = context
 
   while (current !== dirname(current)) {
-    const manifestPath = join(current, 'package.json')
+    const manifestPath = join(current, PACKAGE_MANIFEST)
 
     // IgnorePlugin.checkResource is synchronous, so manifest lookup must stay synchronous.
     // eslint-disable-next-line n/no-sync

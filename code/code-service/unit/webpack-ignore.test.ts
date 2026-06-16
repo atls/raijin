@@ -46,6 +46,23 @@ test('should find issuer package manifest from nested context', async () => {
   assert.equal(findPackageManifestPath(context), join(packagePath, 'package.json'))
 })
 
+test('should prefer issuer root package manifest over nested package manifests', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist', 'cjs')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'missing-driver': '*',
+    },
+  })
+  await writeManifest(context, { type: 'commonjs' })
+
+  assert.equal(findPackageManifestPath(context), join(packagePath, 'package.json'))
+  assert.equal(isOptionalImport('missing-driver', context), true)
+})
+
 test('should ignore missing optional peer imports from issuer package metadata', async () => {
   const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
   const packagePath = join(root, 'node_modules', '@nestjs', 'microservices')
