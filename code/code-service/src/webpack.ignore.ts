@@ -15,6 +15,7 @@ const manifestCache = new Map<string, PackageManifest | null>()
 const NODE_MODULES_SEGMENT = '/node_modules/'
 const PACKAGE_MANIFEST = 'package.json'
 const REQUIRE_CONTEXT_FILENAME = '__raijin_optional_import__.js'
+const ACTIVE_EXPORT_CONDITIONS = new Set(['default', 'node', 'node-addons', 'require'])
 
 const isPathExisting = (path: string): boolean =>
   // IgnorePlugin.checkResource is synchronous, so resolver fallback must stay synchronous.
@@ -306,7 +307,9 @@ const isExportTargetAvailable = (target: unknown): boolean => {
   }
 
   if (isObject(target)) {
-    return Object.values(target).some(isExportTargetAvailable)
+    const condition = Object.keys(target).find((key) => ACTIVE_EXPORT_CONDITIONS.has(key))
+
+    return condition ? isExportTargetAvailable(target[condition]) : false
   }
 
   return false
