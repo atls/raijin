@@ -1,5 +1,18 @@
 
 
+## [1.2.5](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.4...@atls/yarn-cli@1.2.5) (2026-06-16)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-image:** keep node 24 builder default ([46ff690](https://github.com/atls/raijin/commit/46ff69048c4fb9b01c4d611c6065fd3098e9818c))
+* **yarn-plugin-image:** use ghcr buildpack defaults ([60031ea](https://github.com/atls/raijin/commit/60031eafebc2b8ca9270ef8be76346e06ad5db08))
+
+
+
+
+
 ## [1.2.3](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.2...@atls/yarn-cli@1.2.3) (2026-06-15)
 
 
