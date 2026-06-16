@@ -1,7 +1,8 @@
-import { existsSync }   from 'node:fs'
-import { readFileSync } from 'node:fs'
-import { dirname }      from 'node:path'
-import { join }         from 'node:path'
+import { existsSync }    from 'node:fs'
+import { readFileSync }  from 'node:fs'
+import { createRequire } from 'node:module'
+import { dirname }       from 'node:path'
+import { join }          from 'node:path'
 
 export interface PackageManifest {
   name?: string
@@ -11,6 +12,13 @@ export interface PackageManifest {
 
 const manifestCache = new Map<string, PackageManifest | null>()
 const NODE_MODULES_SEGMENT = '/node_modules/'
+const PACKAGE_MANIFEST = 'package.json'
+const REQUIRE_CONTEXT_FILENAME = '__raijin_optional_import__.js'
+
+const isPathExisting = (path: string): boolean =>
+  // IgnorePlugin.checkResource is synchronous, so resolver fallback must stay synchronous.
+  // eslint-disable-next-line n/no-sync
+  existsSync(path)
 
 const COMPATIBILITY_OPTIONAL_IMPORTS = new Map<string, Set<string>>([
   [
@@ -191,3 +199,65 @@ export const isOptionalImport = (request: string, context: string): boolean => {
     isOptionalByCompatibility(manifest, request, packageName)
   )
 }
+
+const isExistingPackageSubpath = (packagePath: string, subpath: string): boolean => {
+  if (!subpath) {
+    return true
+  }
+
+  const subpathCandidate = join(packagePath, subpath)
+
+  return [
+    subpathCandidate,
+    `${subpathCandidate}.js`,
+    `${subpathCandidate}.json`,
+    join(subpathCandidate, 'index.js'),
+    join(subpathCandidate, PACKAGE_MANIFEST),
+  ].some(isPathExisting)
+}
+
+const isNodeModulesResolvable = (request: string, context: string): boolean => {
+  const packageName = getPackageNameFromRequest(request)
+
+  if (!packageName) {
+    return false
+  }
+
+  const subpath = request.slice(packageName.length).replace(/^\//, '')
+  let current = context
+
+  while (current !== dirname(current)) {
+    const packagePath = join(current, 'node_modules', packageName)
+    const manifestPath = join(packagePath, PACKAGE_MANIFEST)
+
+    // IgnorePlugin.checkResource is synchronous, so resolver fallback must stay synchronous.
+    // eslint-disable-next-line n/no-sync
+    if (existsSync(manifestPath) && isExistingPackageSubpath(packagePath, subpath)) {
+      return true
+    }
+
+    current = dirname(current)
+  }
+
+  return false
+}
+
+export const isImportResolvable = (request: string, paths: Array<string>): boolean => {
+  const uniquePaths = Array.from(new Set(paths))
+
+  return uniquePaths.some((path) => {
+    try {
+      createRequire(join(path, REQUIRE_CONTEXT_FILENAME)).resolve(request)
+
+      return true
+    } catch {
+      return isNodeModulesResolvable(request, path)
+    }
+  })
+}
+
+export const shouldIgnoreOptionalImport = (
+  request: string,
+  context: string,
+  cwd: string
+): boolean => isOptionalImport(request, context) && !isImportResolvable(request, [context, cwd])

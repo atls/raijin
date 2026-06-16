@@ -1,15 +1,16 @@
-import assert                        from 'node:assert/strict'
-import { mkdir }                     from 'node:fs/promises'
-import { mkdtemp }                   from 'node:fs/promises'
-import { writeFile }                 from 'node:fs/promises'
-import { tmpdir }                    from 'node:os'
-import { join }                      from 'node:path'
-import test                          from 'node:test'
+import assert                         from 'node:assert/strict'
+import { mkdir }                      from 'node:fs/promises'
+import { mkdtemp }                    from 'node:fs/promises'
+import { writeFile }                  from 'node:fs/promises'
+import { tmpdir }                     from 'node:os'
+import { join }                       from 'node:path'
+import test                           from 'node:test'
 
-import { findPackageManifestPath }   from '../src/webpack.ignore.js'
-import { getPackageNameFromContext } from '../src/webpack.ignore.js'
-import { getPackageNameFromRequest } from '../src/webpack.ignore.js'
-import { isOptionalImport }          from '../src/webpack.ignore.js'
+import { findPackageManifestPath }    from '../src/webpack.ignore.js'
+import { getPackageNameFromContext }  from '../src/webpack.ignore.js'
+import { getPackageNameFromRequest }  from '../src/webpack.ignore.js'
+import { isOptionalImport }           from '../src/webpack.ignore.js'
+import { shouldIgnoreOptionalImport } from '../src/webpack.ignore.js'
 
 const writeManifest = async (path: string, manifest: Record<string, unknown>): Promise<void> => {
   await mkdir(path, { recursive: true })
@@ -108,4 +109,25 @@ test('should keep legacy Terminus optional integration imports scoped to Terminu
   assert.equal(isOptionalImport('@nestjs/typeorm/dist/common/typeorm.utils', context), true)
   assert.equal(isOptionalImport('@nestjs/sequelize/dist/common/sequelize.utils', context), true)
   assert.equal(isOptionalImport('@nestjs/websockets', context), false)
+})
+
+test('should not ignore optional dependencies resolvable from issuer context', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'missing-driver': '*',
+      'optional-driver': '*',
+    },
+  })
+  await writeManifest(join(packagePath, 'node_modules', 'optional-driver'), {
+    name: 'optional-driver',
+  })
+  await mkdir(context, { recursive: true })
+
+  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
+  assert.equal(shouldIgnoreOptionalImport('missing-driver', context, root), true)
 })

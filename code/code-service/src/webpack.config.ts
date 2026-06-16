@@ -1,17 +1,17 @@
-import type { webpack as wp }      from '@atls/code-runtime/webpack'
+import type { webpack as wp }         from '@atls/code-runtime/webpack'
 
-import type { WebpackEnvironment } from './webpack.interfaces.js'
+import type { WebpackEnvironment }    from './webpack.interfaces.js'
 
-import { readFile }                from 'node:fs/promises'
-import { writeFile }               from 'node:fs/promises'
-import { mkdtemp }                 from 'node:fs/promises'
-import { tmpdir }                  from 'node:os'
-import { join }                    from 'node:path'
+import { readFile }                   from 'node:fs/promises'
+import { writeFile }                  from 'node:fs/promises'
+import { mkdtemp }                    from 'node:fs/promises'
+import { tmpdir }                     from 'node:os'
+import { join }                       from 'node:path'
 
-import tsconfig                    from '@atls/config-typescript'
+import tsconfig                       from '@atls/config-typescript'
 
-import { WebpackExternals }        from './webpack.externals.js'
-import { isOptionalImport }        from './webpack.ignore.js'
+import { WebpackExternals }           from './webpack.externals.js'
+import { shouldIgnoreOptionalImport } from './webpack.ignore.js'
 
 export class WebpackConfig {
   constructor(
@@ -133,15 +133,7 @@ export class WebpackConfig {
             return true
           }
 
-          if (!isOptionalImport(resource, context)) {
-            return false
-          }
-
-          try {
-            require.resolve(resource, {
-              paths: [this.cwd],
-            })
-          } catch {
+          if (shouldIgnoreOptionalImport(resource, context, this.cwd)) {
             return true
           }
 
