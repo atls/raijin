@@ -234,6 +234,26 @@ const isSubpathExportPatternMatching = (exportKey: string, requestKey: string): 
   return requestKey.startsWith(prefix) && requestKey.endsWith(suffix)
 }
 
+const isExportTargetAvailable = (target: unknown): boolean => {
+  if (target === null) {
+    return false
+  }
+
+  if (typeof target === 'string') {
+    return true
+  }
+
+  if (Array.isArray(target)) {
+    return target.some(isExportTargetAvailable)
+  }
+
+  if (isObject(target)) {
+    return Object.values(target).some(isExportTargetAvailable)
+  }
+
+  return false
+}
+
 const isPackageSubpathExported = (manifest: PackageManifest, subpath: string): boolean => {
   if (!manifest.exports) {
     return true
@@ -249,14 +269,24 @@ const isPackageSubpathExported = (manifest: PackageManifest, subpath: string): b
     return false
   }
 
-  const exportKeys = Object.keys(manifest.exports)
+  const packageExports = manifest.exports
+  const exportKeys = Object.keys(packageExports)
   const hasSubpathExports = exportKeys.some((key) => key.startsWith('.'))
 
   if (!hasSubpathExports) {
-    return requestKey === '.'
+    return requestKey === '.' && isExportTargetAvailable(packageExports)
   }
 
-  return exportKeys.some((key) => isSubpathExportPatternMatching(key, requestKey))
+  if (Object.hasOwn(packageExports, requestKey)) {
+    return isExportTargetAvailable(packageExports[requestKey])
+  }
+
+  return exportKeys.some(
+    (key) =>
+      key.includes('*') &&
+      isSubpathExportPatternMatching(key, requestKey) &&
+      isExportTargetAvailable(packageExports[key])
+  )
 }
 
 const isNodeModulesResolvable = (request: string, context: string): boolean => {

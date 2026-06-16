@@ -169,14 +169,17 @@ test('should respect package exports when resolving optional dependency subpaths
     name: 'optional-driver',
     exports: {
       '.': './index.js',
+      './blocked': null,
       './public': './public.js',
     },
   })
+  await writeFile(join(driverPath, 'blocked.js'), '')
   await writeFile(join(driverPath, 'index.js'), '')
   await writeFile(join(driverPath, 'public.js'), '')
   await writeFile(join(driverPath, 'private.js'), '')
   await mkdir(context, { recursive: true })
 
+  assert.equal(shouldIgnoreOptionalImport('optional-driver/blocked', context, root), true)
   assert.equal(shouldIgnoreOptionalImport('optional-driver/public', context, root), false)
   assert.equal(shouldIgnoreOptionalImport('optional-driver/private', context, root), true)
 })
