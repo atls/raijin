@@ -85,6 +85,27 @@ test('should not ignore the same missing import from workspace source context', 
   assert.equal(isOptionalImport('@nestjs/websockets', context), false)
 })
 
+test('should not ignore optional peer imports from workspace source context', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const workspacePath = join(root, 'app')
+  const context = join(workspacePath, 'src')
+
+  await writeManifest(workspacePath, {
+    name: '@app/service',
+    peerDependencies: {
+      '@nestjs/websockets': '^10.0.0',
+    },
+    peerDependenciesMeta: {
+      '@nestjs/websockets': {
+        optional: true,
+      },
+    },
+  })
+  await mkdir(context, { recursive: true })
+
+  assert.equal(shouldIgnoreOptionalImport('@nestjs/websockets', context, root), false)
+})
+
 test('should keep scoped compatibility imports for packages with incomplete metadata', async () => {
   const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
   const packagePath = join(root, 'node_modules', 'typeorm')

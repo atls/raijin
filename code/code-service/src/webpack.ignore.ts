@@ -182,6 +182,10 @@ export const isOptionalImport = (request: string, context: string): boolean => {
     return false
   }
 
+  if (!getPackageNameFromContext(context)) {
+    return false
+  }
+
   const manifestPath = findPackageManifestPath(context)
 
   if (!manifestPath) {
