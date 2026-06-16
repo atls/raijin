@@ -1,20 +1,51 @@
-import assert                         from 'node:assert/strict'
-import { mkdir }                      from 'node:fs/promises'
-import { mkdtemp }                    from 'node:fs/promises'
-import { writeFile }                  from 'node:fs/promises'
-import { tmpdir }                     from 'node:os'
-import { join }                       from 'node:path'
-import test                           from 'node:test'
+import assert                               from 'node:assert/strict'
+import { mkdir }                            from 'node:fs/promises'
+import { mkdtemp }                          from 'node:fs/promises'
+import { writeFile }                        from 'node:fs/promises'
+import { tmpdir }                           from 'node:os'
+import { join }                             from 'node:path'
+import test                                 from 'node:test'
 
-import { findPackageManifestPath }    from '../src/webpack.ignore.js'
-import { getPackageNameFromContext }  from '../src/webpack.ignore.js'
-import { getPackageNameFromRequest }  from '../src/webpack.ignore.js'
-import { isOptionalImport }           from '../src/webpack.ignore.js'
-import { shouldIgnoreOptionalImport } from '../src/webpack.ignore.js'
+import { createOptionalImportIgnorePlugin } from '../src/webpack.ignore.js'
+import { findPackageManifestPath }          from '../src/webpack.ignore.js'
+import { getPackageNameFromContext }        from '../src/webpack.ignore.js'
+import { getPackageNameFromRequest }        from '../src/webpack.ignore.js'
+import { getWebpackResolveConditionNames }  from '../src/webpack.ignore.js'
+import { isOptionalImport }                 from '../src/webpack.ignore.js'
+import { shouldIgnoreOptionalImport }       from '../src/webpack.ignore.js'
 
 const writeManifest = async (path: string, manifest: Record<string, unknown>): Promise<void> => {
   await mkdir(path, { recursive: true })
   await writeFile(join(path, 'package.json'), JSON.stringify(manifest))
+}
+
+const createResolver = (resolvableRequests: Array<string>) => ({
+  resolveSync: (_context: Record<string, unknown>, _path: string, request: string): string => {
+    if (resolvableRequests.includes(request)) {
+      return request
+    }
+
+    throw new Error(`Cannot resolve ${request}`)
+  },
+})
+
+type BeforeResolve = (resolveData: {
+  context: string
+  dependencyType?: string
+  request: string
+  resolveOptions?: Record<string, unknown>
+}) => false | undefined
+
+type FakeNormalModuleFactory = {
+  getResolver: (
+    type: 'normal',
+    options?: Record<string, unknown>
+  ) => ReturnType<typeof createResolver>
+  hooks: {
+    beforeResolve: {
+      tap: (name: string, callback: BeforeResolve) => void
+    }
+  }
 }
 
 test('should parse package names from import requests', () => {
@@ -120,7 +151,7 @@ test('should not ignore optional peer imports from workspace source context', as
   })
   await mkdir(context, { recursive: true })
 
-  assert.equal(shouldIgnoreOptionalImport('@nestjs/websockets', context, root), false)
+  assert.equal(shouldIgnoreOptionalImport('@nestjs/websockets', context, createResolver([])), false)
 })
 
 test('should keep scoped compatibility imports for packages with incomplete metadata', async () => {
@@ -161,290 +192,97 @@ test('should not ignore optional dependencies resolvable from issuer context', a
       'optional-driver': '*',
     },
   })
-  await writeManifest(join(packagePath, 'node_modules', 'optional-driver'), {
-    name: 'optional-driver',
-  })
-  await writeFile(join(packagePath, 'node_modules', 'optional-driver', 'index.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
-  assert.equal(shouldIgnoreOptionalImport('missing-driver', context, root), true)
-})
-
-test('should respect package exports when resolving optional dependency subpaths', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'optional-driver': '*',
-    },
-  })
-  await writeManifest(driverPath, {
-    name: 'optional-driver',
-    exports: {
-      '.': './index.js',
-      './blocked': null,
-      './public': './public.js',
-    },
-  })
-  await writeFile(join(driverPath, 'blocked.js'), '')
-  await writeFile(join(driverPath, 'index.js'), '')
-  await writeFile(join(driverPath, 'public.js'), '')
-  await writeFile(join(driverPath, 'private.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('optional-driver/blocked', context, root), true)
-  assert.equal(shouldIgnoreOptionalImport('optional-driver/public', context, root), false)
-  assert.equal(shouldIgnoreOptionalImport('optional-driver/private', context, root), true)
-})
-
-test('should respect blocked package export patterns before broader patterns', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'optional-driver': '*',
-    },
-  })
-  await writeManifest(driverPath, {
-    name: 'optional-driver',
-    exports: {
-      './private/*': null,
-      './*': './*.js',
-    },
-  })
-  await mkdir(join(driverPath, 'private'), { recursive: true })
-  await writeFile(join(driverPath, 'private', 'secret.js'), '')
-  await writeFile(join(driverPath, 'public.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('optional-driver/private/secret', context, root), true)
-  assert.equal(shouldIgnoreOptionalImport('optional-driver/public', context, root), false)
-})
-
-test('should respect active package export conditions in fallback resolution', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'optional-driver': '*',
-    },
-  })
-  await writeManifest(driverPath, {
-    name: 'optional-driver',
-    exports: {
-      '.': {
-        browser: './browser.js',
-      },
-      './node': {
-        node: './node.js',
-      },
-    },
-  })
-  await writeFile(join(driverPath, 'browser.js'), '')
-  await writeFile(join(driverPath, 'node.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), true)
-  assert.equal(shouldIgnoreOptionalImport('optional-driver/node', context, root), false)
-})
-
-test('should keep installed optional ESM imports available in fallback resolution', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'optional-driver': '*',
-    },
-  })
-  await writeManifest(driverPath, {
-    name: 'optional-driver',
-    exports: {
-      '.': {
-        import: './esm.js',
-      },
-    },
-  })
-  await writeFile(join(driverPath, 'esm.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
-})
-
-test('should keep webpack condition optional imports available in fallback resolution', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'optional-driver': '*',
-    },
-  })
-  await writeManifest(driverPath, {
-    name: 'optional-driver',
-    exports: {
-      '.': {
-        webpack: './webpack.js',
-      },
-      './module': {
-        module: './module.js',
-      },
-    },
-  })
-  await writeFile(join(driverPath, 'module.js'), '')
-  await writeFile(join(driverPath, 'webpack.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
-  assert.equal(shouldIgnoreOptionalImport('optional-driver/module', context, root), false)
-})
-
-test('should not treat package subpath directories as resolved entries', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'optional-driver': '*',
-    },
-  })
-  await writeManifest(driverPath, {
-    name: 'optional-driver',
-  })
-  await mkdir(join(driverPath, 'feature'), { recursive: true })
-  await mkdir(join(driverPath, 'available'), { recursive: true })
-  await writeFile(join(driverPath, 'available', 'index.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('optional-driver/feature', context, root), true)
-  assert.equal(shouldIgnoreOptionalImport('optional-driver/available', context, root), false)
-})
-
-test('should verify package root entry points before accepting optional imports', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const missingDriverPath = join(packagePath, 'node_modules', 'missing-entry-driver')
-  const availableDriverPath = join(packagePath, 'node_modules', 'available-entry-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'available-entry-driver': '*',
-      'missing-entry-driver': '*',
-    },
-  })
-  await writeManifest(missingDriverPath, {
-    name: 'missing-entry-driver',
-    main: './missing.js',
-  })
-  await writeManifest(availableDriverPath, {
-    name: 'available-entry-driver',
-    main: './entry.js',
-  })
-  await writeFile(join(availableDriverPath, 'entry.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('missing-entry-driver', context, root), true)
-  assert.equal(shouldIgnoreOptionalImport('available-entry-driver', context, root), false)
-})
-
-test('should honor package module field for optional root imports', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'optional-driver': '*',
-    },
-  })
-  await writeManifest(driverPath, {
-    name: 'optional-driver',
-    module: './esm.js',
-  })
-  await writeFile(join(driverPath, 'esm.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), false)
-})
-
-test('should not fall through package export array targets', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'optional-driver': '*',
-    },
-  })
-  await writeManifest(driverPath, {
-    name: 'optional-driver',
-    exports: {
-      '.': ['./missing.js', './index.js'],
-    },
-  })
-  await writeFile(join(driverPath, 'index.js'), '')
-  await mkdir(context, { recursive: true })
-
-  assert.equal(shouldIgnoreOptionalImport('optional-driver', context, root), true)
-})
-
-test('should resolve webpack folder export mappings in optional imports', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
-  const packagePath = join(root, 'node_modules', 'framework')
-  const context = join(packagePath, 'dist')
-  const driverPath = join(packagePath, 'node_modules', 'optional-driver')
-
-  await writeManifest(packagePath, {
-    name: 'framework',
-    optionalDependencies: {
-      'optional-driver': '*',
-    },
-  })
-  await writeManifest(driverPath, {
-    name: 'optional-driver',
-    exports: {
-      './features/': './src/features/',
-    },
-  })
-  await mkdir(join(driverPath, 'src', 'features'), { recursive: true })
-  await writeFile(join(driverPath, 'src', 'features', 'enabled.js'), '')
   await mkdir(context, { recursive: true })
 
   assert.equal(
-    shouldIgnoreOptionalImport('optional-driver/features/enabled.js', context, root),
+    shouldIgnoreOptionalImport('optional-driver', context, createResolver(['optional-driver'])),
     false
   )
+  assert.equal(shouldIgnoreOptionalImport('missing-driver', context, createResolver([])), true)
+})
+
+test('should use dependency-specific webpack export conditions', () => {
+  assert.deepEqual(getWebpackResolveConditionNames('commonjs', 'production'), [
+    'require',
+    'production',
+    'webpack',
+    'node',
+    'default',
+  ])
+  assert.deepEqual(getWebpackResolveConditionNames('esm', 'development'), [
+    'import',
+    'module',
+    'development',
+    'webpack',
+    'node',
+    'default',
+  ])
+  assert.deepEqual(getWebpackResolveConditionNames(undefined, 'production'), [
+    'production',
+    'webpack',
+    'node',
+    'default',
+  ])
+})
+
+test('should pass dependency conditions into the webpack resolver before ignoring imports', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'framework')
+  const context = join(packagePath, 'dist')
+  const resolveOptions: Array<Record<string, unknown> | undefined> = []
+
+  await writeManifest(packagePath, {
+    name: 'framework',
+    optionalDependencies: {
+      'missing-driver': '*',
+    },
+  })
+  await mkdir(context, { recursive: true })
+
+  const callbacks: Array<BeforeResolve> = []
+  const plugin = createOptionalImportIgnorePlugin('production')
+
+  plugin.apply({
+    hooks: {
+      normalModuleFactory: {
+        tap: (
+          _name: string,
+          callback: (normalModuleFactory: FakeNormalModuleFactory) => void
+        ): void => {
+          callback({
+            getResolver: (_type: 'normal', options?: Record<string, unknown>) => {
+              resolveOptions.push(options)
+
+              return createResolver([])
+            },
+            hooks: {
+              beforeResolve: {
+                tap: (_hookName: string, beforeResolve: BeforeResolve): void => {
+                  callbacks.push(beforeResolve)
+                },
+              },
+            },
+          })
+        },
+      },
+    },
+  } as never)
+
+  const [beforeResolve] = callbacks
+
   assert.equal(
-    shouldIgnoreOptionalImport('optional-driver/features/missing.js', context, root),
-    true
+    beforeResolve({
+      context,
+      dependencyType: 'commonjs',
+      request: 'missing-driver',
+      resolveOptions: {
+        extensions: ['.tsx', '.ts', '.js'],
+      },
+    }),
+    false
   )
+  assert.deepEqual(resolveOptions.at(0), {
+    conditionNames: ['require', 'production', 'webpack', 'node', 'default'],
+    extensions: ['.tsx', '.ts', '.js'],
+  })
 })
