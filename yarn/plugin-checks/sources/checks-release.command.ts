@@ -1,24 +1,46 @@
-import type { Annotation }           from './github.checks.js'
+import type { Annotation }            from './github.checks.js'
 
-import { BaseCommand }               from '@yarnpkg/cli'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { ppath }                     from '@yarnpkg/fslib'
-import { xfs }                       from '@yarnpkg/fslib'
-import stripAnsi                     from 'strip-ansi'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { Configuration }              from '@yarnpkg/core'
+import { Project }                    from '@yarnpkg/core'
+import { Filename }                   from '@yarnpkg/fslib'
+import { execUtils }                  from '@yarnpkg/core'
+import { ppath }                      from '@yarnpkg/fslib'
+import { xfs }                        from '@yarnpkg/fslib'
+import { Command }                    from 'clipanion'
+import { Option }                     from 'clipanion'
+import stripAnsi                      from 'strip-ansi'
 
-import { getChangedFiles }           from '@atls/yarn-plugin-files'
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
-import { getChangedWorkspaces }      from '@atls/yarn-plugin-workspaces'
+import { getChangedFiles }            from '@atls/yarn-plugin-files'
+import { makeCurrentYarnExecutable }  from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
 
-import { GitHubChecks }              from './github.checks.js'
-import { AnnotationLevel }           from './github.checks.js'
-import { PassThroughRunContext }     from './pass-through-run.context.js'
+import { GitHubChecks }               from './github.checks.js'
+import { AnnotationLevel }            from './github.checks.js'
+import { PassThroughRunContext }      from './pass-through-run.context.js'
+import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
+import { resolveChecksReleaseConfig } from './checks-release.config.js'
+
+export const createChecksReleaseProxyArgs = (noPrivate: boolean): Array<string> => [
+  'checks',
+  'release',
+  ...(noPrivate ? ['--no-private'] : []),
+]
 
 class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]
+
+  static override usage = Command.Usage({
+    description: 'run the release GitHub check for changed workspaces',
+    details: `
+      By default this keeps the existing release check behavior and builds every changed workspace with a build script.
+      Use --no-private or top-level package.json tools.checks.release.privateWorkspaces=false
+      when private application workspaces should not participate in release checks.
+      Set top-level package.json tools.checks.release=false to disable this check from checks run.
+    `,
+  })
+
+  noPrivate = Option.Boolean('--no-private', false)
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
@@ -47,13 +69,17 @@ class ChecksReleaseCommand extends BaseCommand {
       },
     })
 
-    const { code } = await execUtils.pipevp(executable, ['checks', 'release'], {
-      cwd: this.context.cwd,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-      env,
-    })
+    const { code } = await execUtils.pipevp(
+      executable,
+      createChecksReleaseProxyArgs(this.noPrivate),
+      {
+        cwd: this.context.cwd,
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+        stderr: this.context.stderr,
+        env,
+      }
+    )
 
     return code
   }
@@ -64,7 +90,15 @@ class ChecksReleaseCommand extends BaseCommand {
       this.context.cwd
     )
 
-    const workspaces = getChangedWorkspaces(project, await getChangedFiles(project))
+    const releaseConfig = resolveChecksReleaseConfig(project)
+    const effectiveReleaseConfig = {
+      ...releaseConfig,
+      privateWorkspaces: this.noPrivate ? false : releaseConfig.privateWorkspaces,
+    }
+    const workspaces = releaseConfig.enabled
+      ? getChangedWorkspaces(project, await getChangedFiles(project)).filter((workspace) =>
+          isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
+      : []
 
     const checks = new GitHubChecks('Release')
 
