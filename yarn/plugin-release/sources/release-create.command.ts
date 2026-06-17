@@ -30,6 +30,7 @@ interface GitHubReleaseOptions {
   owner: string
   repo: string
   tag_name: string
+  target_commitish: string
 }
 
 interface GitHubReleaseNotesOptions {
@@ -37,6 +38,7 @@ interface GitHubReleaseNotesOptions {
   previous_tag_name?: string
   repo: string
   tag_name: string
+  target_commitish: string
 }
 
 export const isReleaseAlreadyExistsError = (error: unknown): boolean => {
@@ -59,7 +61,8 @@ export const createGitHubReleaseOptions = (
   version: string,
   body: string,
   owner: string,
-  repo: string
+  repo: string,
+  targetCommitish: string
 ): GitHubReleaseOptions => {
   const tagName = createGitHubReleaseTagName(packageName, version)
 
@@ -71,6 +74,7 @@ export const createGitHubReleaseOptions = (
     owner,
     repo,
     tag_name: tagName,
+    target_commitish: targetCommitish,
   }
 }
 
@@ -79,12 +83,14 @@ export const createGitHubReleaseNotesOptions = (
   version: string,
   owner: string,
   repo: string,
+  targetCommitish: string,
   previousTagName?: string
 ): GitHubReleaseNotesOptions => {
   const options: GitHubReleaseNotesOptions = {
     owner,
     repo,
     tag_name: createGitHubReleaseTagName(packageName, version),
+    target_commitish: targetCommitish,
   }
 
   if (previousTagName) {
@@ -173,6 +179,15 @@ export const getGitHubReleaseTagNames = async (
     .filter(Boolean)
 }
 
+export const getGitHubReleaseTargetCommitish = async (project: Project): Promise<string> => {
+  const { stdout } = await execUtils.execvp('git', ['rev-parse', 'HEAD'], {
+    cwd: project.cwd,
+    strict: true,
+  })
+
+  return stdout.trim()
+}
+
 export class ReleaseCreateCommand extends BaseCommand {
   static override paths = [['release', 'create']]
 
@@ -226,6 +241,7 @@ export class ReleaseCreateCommand extends BaseCommand {
 
           try {
             const tagNames = await getGitHubReleaseTagNames(project, packageName)
+            const targetCommitish = await getGitHubReleaseTargetCommitish(project)
             const previousTagName = selectPreviousGitHubReleaseTagName(
               packageName,
               version,
@@ -236,6 +252,7 @@ export class ReleaseCreateCommand extends BaseCommand {
               version,
               owner,
               repo,
+              targetCommitish,
               previousTagName
             )
             const releaseNotes = await release.generateNotes(releaseNotesOptions)
@@ -244,7 +261,8 @@ export class ReleaseCreateCommand extends BaseCommand {
               version,
               releaseNotes,
               owner,
-              repo
+              repo,
+              targetCommitish
             )
 
             await release.create(releaseOptions)

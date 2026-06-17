@@ -9,7 +9,7 @@ import { selectPreviousGitHubReleaseTagName } from '../release-create.command.js
 
 test('should create releases with GitHub generated release notes', () => {
   assert.deepEqual(
-    createGitHubReleaseOptions('@atls/yarn-cli', '1.2.3', 'Release body', 'atls', 'raijin'),
+    createGitHubReleaseOptions('@atls/yarn-cli', '1.2.3', 'Release body', 'atls', 'raijin', 'main'),
     {
       body: 'Release body',
       draft: false,
@@ -18,6 +18,7 @@ test('should create releases with GitHub generated release notes', () => {
       owner: 'atls',
       repo: 'raijin',
       tag_name: '@atls/yarn-cli@1.2.3',
+      target_commitish: 'main',
     }
   )
 })
@@ -29,6 +30,7 @@ test('should create release note options with package-specific previous tags', (
       '1.2.3',
       'atls',
       'raijin',
+      'main',
       '@atls/yarn-cli@1.2.2'
     ),
     {
@@ -36,16 +38,21 @@ test('should create release note options with package-specific previous tags', (
       previous_tag_name: '@atls/yarn-cli@1.2.2',
       repo: 'raijin',
       tag_name: '@atls/yarn-cli@1.2.3',
+      target_commitish: 'main',
     }
   )
 })
 
 test('should omit previous release tag from first package release notes', () => {
-  assert.deepEqual(createGitHubReleaseNotesOptions('@atls/yarn-cli', '1.2.3', 'atls', 'raijin'), {
-    owner: 'atls',
-    repo: 'raijin',
-    tag_name: '@atls/yarn-cli@1.2.3',
-  })
+  assert.deepEqual(
+    createGitHubReleaseNotesOptions('@atls/yarn-cli', '1.2.3', 'atls', 'raijin', 'main'),
+    {
+      owner: 'atls',
+      repo: 'raijin',
+      tag_name: '@atls/yarn-cli@1.2.3',
+      target_commitish: 'main',
+    }
+  )
 })
 
 test('should parse scoped package release tag versions', () => {
