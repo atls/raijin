@@ -1,5 +1,18 @@
 
 
+## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.10...@atls/yarn-plugin-renderer@1.0.12) (2026-06-17)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
+* **yarn-plugin-renderer:** copy public assets into standalone artifact ([9f27060](https://github.com/atls/raijin/commit/9f270604a04c433470b043b099066a2d56329f68))
+
+
+
+
+
 ## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.11...@atls/yarn-plugin-renderer@1.0.12) (2026-06-17)
 
 
