@@ -1,5 +1,18 @@
 
 
+## [1.2.13](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.12...@atls/yarn-cli@1.2.13) (2026-06-17)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-release:** bump release plan schema ([7d93188](https://github.com/atls/raijin/commit/7d931889b8bce2b17bba4d618557022cdbc8983c))
+* **yarn-plugin-release:** drop release ownership metadata ([ed0c760](https://github.com/atls/raijin/commit/ed0c76097010ba3c67bb1acf1ce44108920d246e))
+
+
+
+
+
 ## [1.2.11](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.6...@atls/yarn-cli@1.2.11) (2026-06-17)
 
 
