@@ -41,6 +41,13 @@ interface GitHubReleaseNotesOptions {
   target_commitish: string
 }
 
+interface SemVer {
+  major: number
+  minor: number
+  patch: number
+  prerelease: Array<string>
+}
+
 export const isReleaseAlreadyExistsError = (error: unknown): boolean => {
   const githubError = error as GitHubReleaseError
 
@@ -100,9 +107,14 @@ export const createGitHubReleaseNotesOptions = (
   return options
 }
 
-const parseVersionCore = (version: string): [number, number, number] | undefined => {
+const isNumericSemverIdentifier = (identifier: string): boolean =>
+  identifier.length > 0 && [...identifier].every((char) => char >= '0' && char <= '9')
+
+const parseSemver = (version: string): SemVer | undefined => {
   const [withoutBuild] = version.split('+')
-  const [versionCore] = withoutBuild.split('-')
+  const prereleaseIndex = withoutBuild.indexOf('-')
+  const versionCore = prereleaseIndex === -1 ? withoutBuild : withoutBuild.slice(0, prereleaseIndex)
+  const prereleaseCore = prereleaseIndex === -1 ? '' : withoutBuild.slice(prereleaseIndex + 1)
   const versionParts = versionCore.split('.')
 
   if (versionParts.length !== 3) {
@@ -115,26 +127,72 @@ const parseVersionCore = (version: string): [number, number, number] | undefined
     return undefined
   }
 
-  return [parsedVersionParts[0], parsedVersionParts[1], parsedVersionParts[2]]
+  const prerelease = prereleaseCore.length > 0 ? prereleaseCore.split('.') : []
+
+  if (prerelease.some((identifier) => identifier.length === 0)) {
+    return undefined
+  }
+
+  return {
+    major: parsedVersionParts[0],
+    minor: parsedVersionParts[1],
+    patch: parsedVersionParts[2],
+    prerelease,
+  }
 }
 
-const compareVersionCore = (leftVersion: string, rightVersion: string): number => {
-  const leftCore = parseVersionCore(leftVersion)
-  const rightCore = parseVersionCore(rightVersion)
+const comparePrereleaseIdentifier = (leftIdentifier: string, rightIdentifier: string): number => {
+  const leftNumeric = isNumericSemverIdentifier(leftIdentifier)
+  const rightNumeric = isNumericSemverIdentifier(rightIdentifier)
 
-  if (!leftCore || !rightCore) {
+  if (leftNumeric && rightNumeric) {
+    return Number(leftIdentifier) - Number(rightIdentifier)
+  }
+
+  if (leftNumeric !== rightNumeric) {
+    return leftNumeric ? -1 : 1
+  }
+
+  return leftIdentifier.localeCompare(rightIdentifier)
+}
+
+const compareSemver = (leftVersion: string, rightVersion: string): number => {
+  const leftSemver = parseSemver(leftVersion)
+  const rightSemver = parseSemver(rightVersion)
+
+  if (!leftSemver || !rightSemver) {
     return leftVersion.localeCompare(rightVersion)
   }
 
-  for (const index of [0, 1, 2]) {
-    const diff = leftCore[index] - rightCore[index]
+  for (const key of ['major', 'minor', 'patch'] as const) {
+    const diff = leftSemver[key] - rightSemver[key]
 
     if (diff !== 0) {
       return diff
     }
   }
 
-  return 0
+  if (leftSemver.prerelease.length === 0 && rightSemver.prerelease.length > 0) {
+    return 1
+  }
+
+  if (leftSemver.prerelease.length > 0 && rightSemver.prerelease.length === 0) {
+    return -1
+  }
+
+  const prereleaseLength = Math.min(leftSemver.prerelease.length, rightSemver.prerelease.length)
+
+  for (const index of Array.from({ length: prereleaseLength }, (_, currentIndex) => currentIndex)) {
+    const leftIdentifier = leftSemver.prerelease[index]
+    const rightIdentifier = rightSemver.prerelease[index]
+    const diff = comparePrereleaseIdentifier(leftIdentifier, rightIdentifier)
+
+    if (diff !== 0) {
+      return diff
+    }
+  }
+
+  return leftSemver.prerelease.length - rightSemver.prerelease.length
 }
 
 export const parseGitHubReleaseTagVersion = (
@@ -161,8 +219,8 @@ export const selectPreviousGitHubReleaseTagName = (
       version: parseGitHubReleaseTagVersion(packageName, tagName),
     }))
     .filter((tag): tag is { tagName: string; version: string } => typeof tag.version === 'string')
-    .filter((tag) => compareVersionCore(tag.version, version) < 0)
-    .sort((leftTag, rightTag) => compareVersionCore(rightTag.version, leftTag.version))[0]?.tagName
+    .filter((tag) => compareSemver(tag.version, version) < 0)
+    .sort((leftTag, rightTag) => compareSemver(rightTag.version, leftTag.version))[0]?.tagName
 
 export const getGitHubReleaseTagNames = async (
   project: Project,

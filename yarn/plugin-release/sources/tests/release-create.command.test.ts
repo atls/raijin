@@ -90,6 +90,29 @@ test('should skip previous release tag when package has no older release', () =>
   )
 })
 
+test('should select previous package prerelease tag', () => {
+  assert.equal(
+    selectPreviousGitHubReleaseTagName('@atls/yarn-cli', '1.2.3-1', [
+      '@atls/yarn-cli@1.2.2',
+      '@atls/yarn-cli@1.2.3-0',
+      '@atls/yarn-cli@1.2.3-1',
+      '@atls/yarn-cli@1.2.3',
+    ]),
+    '@atls/yarn-cli@1.2.3-0'
+  )
+})
+
+test('should treat stable releases as newer than prereleases', () => {
+  assert.equal(
+    selectPreviousGitHubReleaseTagName('@atls/yarn-cli', '1.2.3', [
+      '@atls/yarn-cli@1.2.2',
+      '@atls/yarn-cli@1.2.3-0',
+      '@atls/yarn-cli@1.2.3-1',
+    ]),
+    '@atls/yarn-cli@1.2.3-1'
+  )
+})
+
 test('should detect existing release tag errors', () => {
   assert.equal(
     isReleaseAlreadyExistsError({
