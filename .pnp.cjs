@@ -2625,7 +2625,6 @@ const RAW_RUNTIME_STATE =
       ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-release", {\
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-release-virtual-bbcc09757f/1/yarn/plugin-release/",\
         "packageDependencies": [\
-          ["@atls/code-changelog", "workspace:code/code-changelog"],\
           ["@atls/code-github", "virtual:bbcc09757fc2c8fe1988d3f27a93dfa46b1ad5c7cff2c229f3479d029379bde7a751f5aa608d45793b48a3281bd52e78a80f3bd1410fde26592afacb695b2ad3#workspace:code/code-github"],\
           ["@atls/yarn-plugin-files", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-files"],\
           ["@atls/yarn-plugin-release", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-release"],\
@@ -2651,7 +2650,6 @@ const RAW_RUNTIME_STATE =
       ["workspace:yarn/plugin-release", {\
         "packageLocation": "./yarn/plugin-release/",\
         "packageDependencies": [\
-          ["@atls/code-changelog", "workspace:code/code-changelog"],\
           ["@atls/code-github", "virtual:bbcc09757fc2c8fe1988d3f27a93dfa46b1ad5c7cff2c229f3479d029379bde7a751f5aa608d45793b48a3281bd52e78a80f3bd1410fde26592afacb695b2ad3#workspace:code/code-github"],\
           ["@atls/yarn-plugin-files", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-files"],\
           ["@atls/yarn-plugin-release", "workspace:yarn/plugin-release"],\
