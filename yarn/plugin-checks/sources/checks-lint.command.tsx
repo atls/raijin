@@ -1,7 +1,7 @@
 /* eslint-disable n/no-sync */
 
-import type { ESLint }               from '@atls/code-runtime/eslint'
-import type { Linter as ESLinter }   from '@atls/code-runtime/eslint'
+import type { LintMessage }          from '@atls/code-runtime/eslint'
+import type { LintResult as Result } from '@atls/code-runtime/eslint'
 
 import type { Annotation }           from './github.checks.js'
 
@@ -92,7 +92,7 @@ class ChecksLintCommand extends BaseCommand {
           try {
             const linter = await Linter.initialize(project.cwd, this.context.cwd)
             const lintTargets = await this.getLintTargets(project)
-            let results: Array<ESLint.LintResult> = []
+            let results: Array<Result> = []
 
             if (lintTargets === null) {
               results = await linter.lint()
@@ -161,7 +161,7 @@ class ChecksLintCommand extends BaseCommand {
     return lintTargets.filter((_, index) => existsMap[index])
   }
 
-  private getAnnotationLevel(severity: ESLinter.Severity): AnnotationLevel {
+  private getAnnotationLevel(severity: LintMessage['severity']): AnnotationLevel {
     if (severity === 1) {
       return AnnotationLevel.Warning
     }
@@ -169,20 +169,20 @@ class ChecksLintCommand extends BaseCommand {
     return AnnotationLevel.Failure
   }
 
-  private formatResults(results: Array<ESLint.LintResult>, cwd?: string): Array<Annotation> {
+  private formatResults(results: Array<Result>, cwd?: string): Array<Annotation> {
     return results
       .filter((result) => result.messages.length > 0)
-      .map(({ filePath, messages = [] }) =>
-        messages.map((message) => {
+      .map((result) =>
+        result.messages.map((message) => {
           const line = (message.line || 0) + 1
 
           return {
-            path: cwd ? filePath.substring(cwd.length + 1) : filePath,
+            path: cwd ? result.filePath.substring(cwd.length + 1) : result.filePath,
             start_line: line,
             end_line: line,
             annotation_level: this.getAnnotationLevel(message.severity),
             raw_details: codeFrameColumns(
-              readFileSync(filePath).toString(),
+              readFileSync(result.filePath).toString(),
               {
                 start: { line: message.line || 0, column: message.column || 0 },
               },
