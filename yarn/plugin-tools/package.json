@@ -33,22 +33,23 @@
     "@yarnpkg/core": "4.7.0",
     "@yarnpkg/fslib": "3.1.5"
   },
-  "publishConfig": {
-    "access": "public",
-    "exports": {
-      "./package.json": "./package.json",
-      "./current-yarn-executable": {
-        "import": "./dist/current-yarn-executable.js",
-        "types": "./dist/current-yarn-executable.d.ts",
-        "default": "./dist/current-yarn-executable.js"
+  "raijin": {
+    "pack": {
+      "exports": {
+        "./package.json": "./package.json",
+        "./current-yarn-executable": {
+          "import": "./dist/current-yarn-executable.js",
+          "types": "./dist/current-yarn-executable.d.ts",
+          "default": "./dist/current-yarn-executable.js"
+        },
+        ".": {
+          "import": "./dist/index.js",
+          "types": "./dist/index.d.ts",
+          "default": "./dist/index.js"
+        }
       },
-      ".": {
-        "import": "./dist/index.js",
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts"
+      "main": "dist/index.js",
+      "types": "dist/index.d.ts"
+    }
   }
 }

@@ -41,17 +41,18 @@
     "@yarnpkg/core": "*",
     "@yarnpkg/fslib": "*"
   },
-  "publishConfig": {
-    "access": "public",
-    "exports": {
-      "./package.json": "./package.json",
-      ".": {
-        "import": "./dist/index.js",
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts"
+  "raijin": {
+    "pack": {
+      "exports": {
+        "./package.json": "./package.json",
+        ".": {
+          "import": "./dist/index.js",
+          "types": "./dist/index.d.ts",
+          "default": "./dist/index.js"
+        }
+      },
+      "main": "dist/index.js",
+      "types": "dist/index.d.ts"
+    }
   }
 }

@@ -84,19 +84,6 @@
     "semver": "7.6.3",
     "typanion": "3.14.0"
   },
-  "publishConfig": {
-    "access": "public",
-    "exports": {
-      "./package.json": "./package.json",
-      ".": {
-        "import": "./dist/index.js",
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts"
-  },
   "@yarnpkg/builder": {
     "bundles": {
       "standard": [
@@ -148,6 +135,20 @@
         "@yarnpkg/plugin-pnpm",
         "@yarnpkg/plugin-stage"
       ]
+    }
+  },
+  "raijin": {
+    "pack": {
+      "exports": {
+        "./package.json": "./package.json",
+        ".": {
+          "import": "./dist/index.js",
+          "types": "./dist/index.d.ts",
+          "default": "./dist/index.js"
+        }
+      },
+      "main": "dist/index.js",
+      "types": "dist/index.d.ts"
     }
   }
 }
