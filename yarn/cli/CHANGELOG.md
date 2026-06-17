@@ -1,5 +1,25 @@
 
 
+## [1.2.19](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.6...@atls/yarn-cli@1.2.19) (2026-06-17)
+
+
+### Bug Fixes
+
+
+* **code-service:** honor blocked export targets ([6a3e3ec](https://github.com/atls/raijin/commit/6a3e3ecf9549535c1d30ebc5a095eee461a20a23))
+* **code-service:** remove optional import vendor list ([fc60728](https://github.com/atls/raijin/commit/fc60728f29fdae27c882ace8a78af25c538fa285))
+* **code-service:** resolve optional imports asynchronously ([b008a08](https://github.com/atls/raijin/commit/b008a08f186bbe481f6a66ff98bdeed2b3dd538a))
+* **code-service:** use webpack resolver for optional imports ([b367d33](https://github.com/atls/raijin/commit/b367d3384ce5494c7952aca7fdc135da4092df63))
+* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
+* **yarn-plugin-release:** bump release plan schema ([7d93188](https://github.com/atls/raijin/commit/7d931889b8bce2b17bba4d618557022cdbc8983c))
+* **yarn-plugin-release:** drop release ownership metadata ([ed0c760](https://github.com/atls/raijin/commit/ed0c76097010ba3c67bb1acf1ce44108920d246e))
+* **yarn-plugin-renderer:** copy public assets into standalone artifact ([9f27060](https://github.com/atls/raijin/commit/9f270604a04c433470b043b099066a2d56329f68))
+* **yarn-plugin-tools:** preserve hook final newline ([ccfe781](https://github.com/atls/raijin/commit/ccfe7816894f0146a9373893e11e5830b14dae34))
+
+
+
+
+
 ## [1.2.17](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.16...@atls/yarn-cli@1.2.17) (2026-06-17)
 
 
