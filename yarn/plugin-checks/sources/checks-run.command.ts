@@ -1,24 +1,39 @@
-import type { PortablePath }         from '@yarnpkg/fslib'
+import type { PortablePath }          from '@yarnpkg/fslib'
 
-import { BaseCommand }               from '@yarnpkg/cli'
-import { StreamReport }              from '@yarnpkg/core'
-import { Configuration }             from '@yarnpkg/core'
-import { MessageName }               from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { execUtils }                 from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
-import { Option }                    from 'clipanion'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { StreamReport }               from '@yarnpkg/core'
+import { Configuration }              from '@yarnpkg/core'
+import { MessageName }                from '@yarnpkg/core'
+import { Project }                    from '@yarnpkg/core'
+import { execUtils }                  from '@yarnpkg/core'
+import { xfs }                        from '@yarnpkg/fslib'
+import { Command }                    from 'clipanion'
+import { Option }                     from 'clipanion'
 
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { makeCurrentYarnExecutable }  from '@atls/yarn-plugin-tools/current-yarn-executable'
+
+import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
 
+  static override usage = Command.Usage({
+    description: 'run the standard GitHub check sequence',
+    details: `
+      The standard sequence is typecheck, lint, unit tests, integration tests, then release.
+      Use --no-release for private application pipelines that need the standard checks without the Release check.
+      The same release step can be disabled from top-level package.json with tools.checks.release=false.
+    `,
+  })
+
   changed = Option.Boolean('--changed', false)
+
+  noRelease = Option.Boolean('--no-release', false)
 
   async execute(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
+    const releaseConfig = resolveChecksReleaseConfig(project)
 
     const commandReport = await StreamReport.start(
       {
@@ -43,7 +58,9 @@ class ChecksRunCommand extends BaseCommand {
           return
         }
 
-        await this.runCheck(project, project.cwd, ['release'], report)
+        if (!this.noRelease && releaseConfig.enabled) {
+          await this.runCheck(project, project.cwd, ['release'], report)
+        }
       }
     )
 
