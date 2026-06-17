@@ -7,10 +7,17 @@ interface ReleaseOptions {
 
 interface CreateOptions {
   tag_name: string
+  body?: string
   draft: boolean
   make_latest: boolean
   name: string
-  generate_release_notes?: boolean
+  owner: string
+  repo: string
+}
+
+interface GenerateNotesOptions {
+  tag_name: string
+  previous_tag_name?: string
   owner: string
   repo: string
 }
@@ -26,15 +33,7 @@ export class Release {
   }
 
   async create(options: CreateOptions): Promise<number> {
-    const {
-      owner,
-      repo,
-      tag_name: tagName,
-      name,
-      make_latest: makeLatest,
-      draft,
-      generate_release_notes: generateReleaseNotes,
-    } = options
+    const { owner, repo, tag_name: tagName, name, make_latest: makeLatest, draft, body } = options
 
     const result = await this.client.repos.createRelease({
       owner,
@@ -43,9 +42,22 @@ export class Release {
       draft,
       make_latest: makeLatest ? 'true' : 'false',
       name,
-      generate_release_notes: generateReleaseNotes,
+      body,
     })
 
     return result.status
+  }
+
+  async generateNotes(options: GenerateNotesOptions): Promise<string> {
+    const { owner, repo, tag_name: tagName, previous_tag_name: previousTagName } = options
+
+    const result = await this.client.repos.generateReleaseNotes({
+      owner,
+      repo,
+      tag_name: tagName,
+      previous_tag_name: previousTagName,
+    })
+
+    return result.data.body
   }
 }

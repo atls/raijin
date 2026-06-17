@@ -4,8 +4,9 @@ import { execSync }               from 'node:child_process'
 import { BaseCommand }            from '@yarnpkg/cli'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
 import { Configuration }          from '@yarnpkg/core'
-import { StreamReport }           from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
+import { StreamReport }           from '@yarnpkg/core'
+import { execUtils }              from '@yarnpkg/core'
 
 import { Release }                from '@atls/code-github'
 
@@ -22,11 +23,18 @@ interface GitHubReleaseError {
 }
 
 interface GitHubReleaseOptions {
+  body: string
   draft: boolean
-  generate_release_notes: boolean
   make_latest: boolean
   name: string
   owner: string
+  repo: string
+  tag_name: string
+}
+
+interface GitHubReleaseNotesOptions {
+  owner: string
+  previous_tag_name?: string
   repo: string
   tag_name: string
 }
@@ -43,23 +51,126 @@ export const isReleaseAlreadyExistsError = (error: unknown): boolean => {
   )
 }
 
+export const createGitHubReleaseTagName = (packageName: string, version: string): string =>
+  `${packageName}@${version}`
+
 export const createGitHubReleaseOptions = (
   packageName: string,
   version: string,
+  body: string,
   owner: string,
   repo: string
 ): GitHubReleaseOptions => {
-  const tagName = `${packageName}@${version}`
+  const tagName = createGitHubReleaseTagName(packageName, version)
 
   return {
+    body,
     draft: false,
-    generate_release_notes: true,
     make_latest: true,
     name: tagName,
     owner,
     repo,
     tag_name: tagName,
   }
+}
+
+export const createGitHubReleaseNotesOptions = (
+  packageName: string,
+  version: string,
+  owner: string,
+  repo: string,
+  previousTagName?: string
+): GitHubReleaseNotesOptions => {
+  const options: GitHubReleaseNotesOptions = {
+    owner,
+    repo,
+    tag_name: createGitHubReleaseTagName(packageName, version),
+  }
+
+  if (previousTagName) {
+    options.previous_tag_name = previousTagName
+  }
+
+  return options
+}
+
+const parseVersionCore = (version: string): [number, number, number] | undefined => {
+  const [withoutBuild] = version.split('+')
+  const [versionCore] = withoutBuild.split('-')
+  const versionParts = versionCore.split('.')
+
+  if (versionParts.length !== 3) {
+    return undefined
+  }
+
+  const parsedVersionParts = versionParts.map((part) => Number(part))
+
+  if (!parsedVersionParts.every((part) => Number.isInteger(part) && part >= 0)) {
+    return undefined
+  }
+
+  return [parsedVersionParts[0], parsedVersionParts[1], parsedVersionParts[2]]
+}
+
+const compareVersionCore = (leftVersion: string, rightVersion: string): number => {
+  const leftCore = parseVersionCore(leftVersion)
+  const rightCore = parseVersionCore(rightVersion)
+
+  if (!leftCore || !rightCore) {
+    return leftVersion.localeCompare(rightVersion)
+  }
+
+  for (const index of [0, 1, 2]) {
+    const diff = leftCore[index] - rightCore[index]
+
+    if (diff !== 0) {
+      return diff
+    }
+  }
+
+  return 0
+}
+
+export const parseGitHubReleaseTagVersion = (
+  packageName: string,
+  tagName: string
+): string | undefined => {
+  const tagPrefix = `${packageName}@`
+
+  if (!tagName.startsWith(tagPrefix)) {
+    return undefined
+  }
+
+  return tagName.slice(tagPrefix.length)
+}
+
+export const selectPreviousGitHubReleaseTagName = (
+  packageName: string,
+  version: string,
+  tagNames: Array<string>
+): string | undefined =>
+  tagNames
+    .map((tagName) => ({
+      tagName,
+      version: parseGitHubReleaseTagVersion(packageName, tagName),
+    }))
+    .filter((tag): tag is { tagName: string; version: string } => typeof tag.version === 'string')
+    .filter((tag) => compareVersionCore(tag.version, version) < 0)
+    .sort((leftTag, rightTag) => compareVersionCore(rightTag.version, leftTag.version))[0]?.tagName
+
+export const getGitHubReleaseTagNames = async (
+  project: Project,
+  packageName: string
+): Promise<Array<string>> => {
+  const { stdout } = await execUtils.execvp('git', ['tag', '--list', `${packageName}@*`], {
+    cwd: project.cwd,
+    strict: true,
+  })
+
+  return stdout
+    .split('\n')
+    .map((tagName) => tagName.trim())
+    .filter(Boolean)
 }
 
 export class ReleaseCreateCommand extends BaseCommand {
@@ -114,7 +225,27 @@ export class ReleaseCreateCommand extends BaseCommand {
           assert.ok(repo, 'Could not get url of the repo')
 
           try {
-            const releaseOptions = createGitHubReleaseOptions(packageName, version, owner, repo)
+            const tagNames = await getGitHubReleaseTagNames(project, packageName)
+            const previousTagName = selectPreviousGitHubReleaseTagName(
+              packageName,
+              version,
+              tagNames
+            )
+            const releaseNotesOptions = createGitHubReleaseNotesOptions(
+              packageName,
+              version,
+              owner,
+              repo,
+              previousTagName
+            )
+            const releaseNotes = await release.generateNotes(releaseNotesOptions)
+            const releaseOptions = createGitHubReleaseOptions(
+              packageName,
+              version,
+              releaseNotes,
+              owner,
+              repo
+            )
 
             await release.create(releaseOptions)
           } catch (error) {
