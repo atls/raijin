@@ -17,7 +17,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-changelog": "workspace:*",
     "@atls/code-github": "workspace:*",
     "@atls/yarn-plugin-files": "workspace:*",
     "@yarnpkg/fslib": "3.1.5",

@@ -88,12 +88,6 @@ jobs:
           YARN_NPM_REGISTRY_SERVER: https://npm.pkg.github.com
           YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
 
-      - name: Changelog
-        if: ${{ success() && github.event.pull_request.merged == true }}
-        uses: ./.github/actions/changelog
-        with:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-
       - name: Publish to NPM
         if: ${{ success() && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true) }}
         id: npm

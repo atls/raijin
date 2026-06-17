@@ -7,7 +7,6 @@ import { Configuration }          from '@yarnpkg/core'
 import { StreamReport }           from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
 
-import { Changelog }              from '@atls/code-changelog'
 import { Release }                from '@atls/code-github'
 
 import { parseGitHubUrl }         from './utils/parse-git-url.js'
@@ -22,6 +21,16 @@ interface GitHubReleaseError {
   message?: string
 }
 
+interface GitHubReleaseOptions {
+  draft: boolean
+  generate_release_notes: boolean
+  make_latest: boolean
+  name: string
+  owner: string
+  repo: string
+  tag_name: string
+}
+
 export const isReleaseAlreadyExistsError = (error: unknown): boolean => {
   const githubError = error as GitHubReleaseError
 
@@ -32,6 +41,25 @@ export const isReleaseAlreadyExistsError = (error: unknown): boolean => {
     githubError.message.includes(RELEASE_ALREADY_EXISTS_CODE) &&
     githubError.message.includes(RELEASE_ALREADY_EXISTS_FIELD)
   )
+}
+
+export const createGitHubReleaseOptions = (
+  packageName: string,
+  version: string,
+  owner: string,
+  repo: string
+): GitHubReleaseOptions => {
+  const tagName = `${packageName}@${version}`
+
+  return {
+    draft: false,
+    generate_release_notes: true,
+    make_latest: true,
+    name: tagName,
+    owner,
+    repo,
+    tag_name: tagName,
+  }
 }
 
 export class ReleaseCreateCommand extends BaseCommand {
@@ -69,14 +97,6 @@ export class ReleaseCreateCommand extends BaseCommand {
 
           packageName += `${workspaceName}`
 
-          const changelog = new Changelog()
-
-          const body = await changelog.generate({
-            packageName,
-            version,
-            path: this.context.cwd,
-          })
-
           const release = new Release({ token })
 
           let owner: string
@@ -93,21 +113,13 @@ export class ReleaseCreateCommand extends BaseCommand {
           assert.ok(owner, 'Could not get url of the repo')
           assert.ok(repo, 'Could not get url of the repo')
 
-          const tagName = `${packageName}@${version}`
-
           try {
-            await release.create({
-              draft: false,
-              make_latest: true,
-              name: tagName,
-              tag_name: tagName,
-              body,
-              owner,
-              repo,
-            })
+            const releaseOptions = createGitHubReleaseOptions(packageName, version, owner, repo)
+
+            await release.create(releaseOptions)
           } catch (error) {
             if (isReleaseAlreadyExistsError(error)) {
-              report.reportInfo(null, `Release ${tagName} already exists; skipping`)
+              report.reportInfo(null, `Release ${packageName}@${version} already exists; skipping`)
 
               return
             }

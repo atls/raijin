@@ -10,7 +10,7 @@ interface CreateOptions {
   draft: boolean
   make_latest: boolean
   name: string
-  body: string
+  generate_release_notes?: boolean
   owner: string
   repo: string
 }
@@ -26,7 +26,15 @@ export class Release {
   }
 
   async create(options: CreateOptions): Promise<number> {
-    const { owner, repo, tag_name: tagName, name, make_latest: makeLatest, draft, body } = options
+    const {
+      owner,
+      repo,
+      tag_name: tagName,
+      name,
+      make_latest: makeLatest,
+      draft,
+      generate_release_notes: generateReleaseNotes,
+    } = options
 
     const result = await this.client.repos.createRelease({
       owner,
@@ -35,7 +43,7 @@ export class Release {
       draft,
       make_latest: makeLatest ? 'true' : 'false',
       name,
-      body,
+      generate_release_notes: generateReleaseNotes,
     })
 
     return result.status
