@@ -16,6 +16,7 @@ import { ppath }                     from '@yarnpkg/fslib'
 import { xfs }                       from '@yarnpkg/fslib'
 
 import { makeCurrentYarnExecutable } from './current-yarn-executable.js'
+import { afterAllInstalled }         from './hooks/after-all-installed.hook.js'
 import { setupScriptEnvironment }    from './hooks/setup-script-environment.hook.js'
 
 const repoRoot = npath.toPortablePath(resolve(dirname(fileURLToPath(import.meta.url)), '../../..'))
@@ -27,7 +28,7 @@ const yarnExecutableNames: Array<Filename> =
 const execFileAsync = async (
   file: string,
   args: Array<string>,
-  options: { env: NodeJS.ProcessEnv }
+  options: { cwd?: string; env?: NodeJS.ProcessEnv } = {}
 ): Promise<{ stdout: string; stderr: string }> =>
   new Promise((resolvePromise, rejectPromise) => {
     execFile(file, args, options, (error, stdout, stderr) => {
@@ -220,4 +221,30 @@ test('should forward node flags from managed node wrapper', async () => {
   const execArgv = JSON.parse(stdout) as Array<string>
 
   assert.ok(execArgv.includes('--conditions=raijin-managed-wrapper-test'))
+})
+
+test('should materialize Husky hooks as newline-terminated text files', async () => {
+  const cwd = await xfs.mktempPromise()
+  const hooksPath = ppath.join(cwd, '.config/husky')
+
+  await execFileAsync('git', ['init'], { cwd: npath.fromPortablePath(cwd) })
+  await afterAllInstalled({ cwd } as Project)
+
+  const hookNames: Array<Filename> = [
+    'commit-msg' as Filename,
+    'pre-commit' as Filename,
+    'prepare-commit-msg' as Filename,
+  ]
+  const hooks = await Promise.all(
+    hookNames.map(async (name) => xfs.readFilePromise(ppath.join(hooksPath, name), 'utf-8'))
+  )
+  const { stdout } = await execFileAsync('git', ['config', 'core.hooksPath'], {
+    cwd: npath.fromPortablePath(cwd),
+  })
+
+  for (const hookContent of hooks) {
+    assert.match(hookContent, /\n$/)
+  }
+
+  assert.equal(stdout.trim(), npath.fromPortablePath(hooksPath))
 })
