@@ -1,5 +1,17 @@
 
 
+## [1.0.26](https://github.com/atls/raijin/compare/@atls/yarn-plugin-schematics@1.0.25...@atls/yarn-plugin-schematics@1.0.26) (2026-06-17)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
+
+
+
+
+
 ## [1.0.25](https://github.com/atls/raijin/compare/@atls/yarn-plugin-schematics@1.0.25...@atls/yarn-plugin-schematics@1.0.25) (2026-06-16)
 
 

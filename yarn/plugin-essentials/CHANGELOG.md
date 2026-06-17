@@ -1,5 +1,17 @@
 
 
+## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-essentials@1.0.3...@atls/yarn-plugin-essentials@1.0.4) (2026-06-17)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
+
+
+
+
+
 ## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-essentials@1.0.2...@atls/yarn-plugin-essentials@1.0.3) (2026-06-01)
 
 

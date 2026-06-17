@@ -1,5 +1,17 @@
 
 
+## [1.2.17](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.16...@atls/yarn-cli@1.2.17) (2026-06-17)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
+
+
+
+
+
 ## [1.2.15](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.14...@atls/yarn-cli@1.2.15) (2026-06-17)
 
 
