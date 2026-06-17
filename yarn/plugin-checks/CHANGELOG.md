@@ -1,5 +1,18 @@
 
 
+## [1.0.42](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.41...@atls/yarn-plugin-checks@1.0.42) (2026-06-17)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-checks:** add release selection controls ([13842c5](https://github.com/atls/raijin/commit/13842c5482743a924fbcc12f8b113106602604c9))
+* **yarn-plugin-checks:** type lint annotations ([c54c4ff](https://github.com/atls/raijin/commit/c54c4ff3620cc23a1a30890876bbe55d5b552e53))
+
+
+
+
+
 ## [1.0.41](https://github.com/atls/raijin/compare/@atls/yarn-plugin-checks@1.0.41...@atls/yarn-plugin-checks@1.0.41) (2026-06-16)
 
 
