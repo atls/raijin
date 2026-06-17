@@ -3,15 +3,16 @@ import type { SpawnSyncReturns } from 'node:child_process'
 
 import { spawnSync }             from 'node:child_process'
 
+import { npath }                 from '@yarnpkg/fslib'
 import { ppath }                 from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'
 
-const hook = (command: string): string => `${command}`
+const hook = (command: string): string => `${command}\n`
 const preCommitHook = (): string => hook('yarn commit staged')
 
-const git = (args: Array<string>): SpawnSyncReturns<string> =>
+const git = (args: Array<string>, cwd?: string): SpawnSyncReturns<string> =>
   // eslint-disable-next-line n/no-sync
-  spawnSync('git', args, { encoding: 'utf-8' })
+  spawnSync('git', args, { cwd, encoding: 'utf-8' })
 
 export const afterAllInstalled = async (project: Project): Promise<void> => {
   if (process.env.GITHUB_ACTIONS) {
@@ -51,7 +52,7 @@ export const afterAllInstalled = async (project: Project): Promise<void> => {
     { mode: 0o755 }
   )
 
-  const { error } = git(['config', 'core.hooksPath', target])
+  const { error } = git(['config', 'core.hooksPath', target], npath.fromPortablePath(project.cwd))
 
   if (error) throw error
 }
