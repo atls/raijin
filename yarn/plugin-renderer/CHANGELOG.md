@@ -1,5 +1,17 @@
 
 
+## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.10...@atls/yarn-plugin-renderer@1.0.11) (2026-06-17)
+
+
+### Bug Fixes
+
+
+* **yarn-plugin-renderer:** copy public assets into standalone artifact ([9f27060](https://github.com/atls/raijin/commit/9f270604a04c433470b043b099066a2d56329f68))
+
+
+
+
+
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.10...@atls/yarn-plugin-renderer@1.0.10) (2026-06-16)
 
 

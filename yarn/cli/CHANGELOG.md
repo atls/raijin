@@ -1,5 +1,21 @@
 
 
+## [1.2.11](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.6...@atls/yarn-cli@1.2.11) (2026-06-17)
+
+
+### Bug Fixes
+
+
+* **code-service:** honor blocked export targets ([6a3e3ec](https://github.com/atls/raijin/commit/6a3e3ecf9549535c1d30ebc5a095eee461a20a23))
+* **code-service:** remove optional import vendor list ([fc60728](https://github.com/atls/raijin/commit/fc60728f29fdae27c882ace8a78af25c538fa285))
+* **code-service:** resolve optional imports asynchronously ([b008a08](https://github.com/atls/raijin/commit/b008a08f186bbe481f6a66ff98bdeed2b3dd538a))
+* **code-service:** use webpack resolver for optional imports ([b367d33](https://github.com/atls/raijin/commit/b367d3384ce5494c7952aca7fdc135da4092df63))
+* **yarn-plugin-renderer:** copy public assets into standalone artifact ([9f27060](https://github.com/atls/raijin/commit/9f270604a04c433470b043b099066a2d56329f68))
+
+
+
+
+
 ## [1.2.9](https://github.com/atls/raijin/compare/@atls/yarn-cli@1.2.8...@atls/yarn-cli@1.2.9) (2026-06-16)
 
 
