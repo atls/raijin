@@ -4,6 +4,8 @@ import type { Project }                             from '@yarnpkg/core'
 import type { Filename }                            from '@yarnpkg/fslib'
 import type { PortablePath }                        from '@yarnpkg/fslib'
 
+import type { ReleaseOwnershipContract }            from './release-ownership.contract.js'
+import type { ReleasePlanDecision }                 from './release-ownership.contract.js'
 import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspace }             from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspaceOwner }        from './release-version-policy.utils.js'
@@ -18,6 +20,10 @@ import { versionUtils }                             from '@yarnpkg/plugin-versio
 
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
+import { RELEASE_OWNERSHIP_CONTRACT }               from './release-ownership.contract.js'
+import { RELEASE_PLAN_SCHEMA_VERSION }              from './release-ownership.contract.js'
+import { isReleaseOwnershipContract }               from './release-ownership.contract.js'
+import { isReleasePlanDecision }                    from './release-ownership.contract.js'
 import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
 
@@ -32,20 +38,19 @@ interface ReleaseVersionWorkspaceCandidate {
 export interface ReleasePlanWorkspace {
   ident: string
   relativeCwd: string
-  version: string
-  strategy: string
+  decision: ReleasePlanDecision
   private: boolean
 }
 
 export interface ReleasePlan {
-  schemaVersion: 1
+  schemaVersion: typeof RELEASE_PLAN_SCHEMA_VERSION
+  ownership: ReleaseOwnershipContract
   workspaces: Array<ReleasePlanWorkspace>
 }
 
 export interface ReleasePlanTarget {
   workspace: ReleaseVersionWorkspace
-  version: string
-  strategy: string
+  decision: ReleasePlanDecision
 }
 
 const DEFAULT_GIT_BASE_REF = 'origin/HEAD'
@@ -303,8 +308,7 @@ const toPlanWorkspace = (project: Project, target: ReleasePlanTarget): ReleasePl
   return {
     ident: target.workspace.ident,
     relativeCwd: target.workspace.relativeCwd,
-    version: target.version,
-    strategy: target.strategy,
+    decision: target.decision,
     private: workspace.manifest.private,
   }
 }
@@ -319,8 +323,7 @@ const toDeclinedReleasePlanTarget = (workspace: Workspace): ReleasePlanTarget | 
 
   return {
     workspace: releaseWorkspace,
-    version,
-    strategy: DECLINE_DECISION,
+    decision: 'decline',
   }
 }
 
@@ -354,14 +357,13 @@ export const resolveReleasePlanTargets = async (
   for (const [workspace, version] of versions) {
     const releaseWorkspace = toReleaseWorkspace(workspace)
 
-    if (!releaseWorkspace) {
+    if (!releaseWorkspace || !version) {
       continue
     }
 
     targets.set(releaseWorkspace.ident, {
       workspace: releaseWorkspace,
-      version,
-      strategy: version,
+      decision: 'release',
     })
   }
 
@@ -385,7 +387,8 @@ export const createReleasePlan = (
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
+    ownership: RELEASE_OWNERSHIP_CONTRACT,
     workspaces: [...targets.values()]
       .sort((left, right) => left.workspace.relativeCwd.localeCompare(right.workspace.relativeCwd))
       .map((target) => toPlanWorkspace(project, target)),
@@ -427,8 +430,7 @@ const isReleasePlanWorkspace = (workspace: unknown): workspace is ReleasePlanWor
   return (
     typeof item.ident === 'string' &&
     typeof item.relativeCwd === 'string' &&
-    typeof item.version === 'string' &&
-    typeof item.strategy === 'string' &&
+    isReleasePlanDecision(item.decision) &&
     typeof item.private === 'boolean'
   )
 }
@@ -437,7 +439,8 @@ export const parseReleasePlan = (content: string): ReleasePlan => {
   const plan = JSON.parse(content) as Partial<ReleasePlan>
 
   if (
-    plan.schemaVersion !== 1 ||
+    plan.schemaVersion !== RELEASE_PLAN_SCHEMA_VERSION ||
+    !isReleaseOwnershipContract(plan.ownership) ||
     !Array.isArray(plan.workspaces) ||
     !plan.workspaces.every(isReleasePlanWorkspace)
   ) {
@@ -445,7 +448,8 @@ export const parseReleasePlan = (content: string): ReleasePlan => {
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
+    ownership: RELEASE_OWNERSHIP_CONTRACT,
     workspaces: plan.workspaces,
   }
 }

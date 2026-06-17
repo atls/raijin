@@ -28,7 +28,7 @@ export const createReleasePlanForeachInput = (
   plan: ReleasePlan,
   options: ReleasePlanForeachOptions
 ): Array<string> => {
-  const workspaces = plan.workspaces.filter((workspace) => workspace.strategy !== 'decline')
+  const workspaces = plan.workspaces.filter((workspace) => workspace.decision !== 'decline')
 
   if (workspaces.length === 0) {
     return []
@@ -83,7 +83,7 @@ export class ReleasePlanForeachCommand extends BaseCommand {
   static override usage = Command.Usage({
     description: 'run a command for workspaces listed in a Raijin release plan',
     details: `
-      This command routes the fixed release plan selection through Yarn workspaces foreach.
+      This command routes the fixed release workspace selection through Yarn workspaces foreach.
       Empty plans are no-ops, never broad workspace execution.
     `,
   })
