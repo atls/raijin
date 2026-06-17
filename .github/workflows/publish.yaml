@@ -1,7 +1,5 @@
 name: Publish
 
-# Release ownership contract: yarn/plugin-release/sources/release-ownership.contract.ts
-
 on:
   workflow_dispatch:
     inputs:
