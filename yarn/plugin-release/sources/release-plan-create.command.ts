@@ -16,7 +16,7 @@ export class ReleasePlanCreateCommand extends BaseCommand {
   static override usage = Command.Usage({
     description: 'create a Raijin release workspace selection',
     details: `
-      The release selection records changed workspaces and ownership metadata once,
+      The release selection records the fixed workspace set once,
       so later publish stages can route the same workspaces without recalculating changed workspaces.
       Target package versions remain owned by Yarn deferred versioning and are only validated here.
       Run it after yarn release version defer and before yarn version apply --all.

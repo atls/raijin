@@ -1,15 +1,13 @@
 import assert                            from 'node:assert/strict'
 import { test }                          from 'node:test'
 
-import { RELEASE_OWNERSHIP_CONTRACT }    from '../release-ownership.contract.js'
-import { RELEASE_PLAN_SCHEMA_VERSION }   from '../release-ownership.contract.js'
+import { RELEASE_PLAN_SCHEMA_VERSION }   from '../release-plan.utils.js'
 import { createReleasePlanForeachInput } from '../release-plan-foreach.command.js'
 
 test('should run native foreach over release plan workspaces', () => {
   const input = createReleasePlanForeachInput(
     {
       schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-      ownership: RELEASE_OWNERSHIP_CONTRACT,
       workspaces: [
         {
           ident: '@atls/yarn-cli',
@@ -54,7 +52,6 @@ test('should not run native foreach for empty release plan', () => {
     createReleasePlanForeachInput(
       {
         schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-        ownership: RELEASE_OWNERSHIP_CONTRACT,
         workspaces: [],
       },
       {}
@@ -67,7 +64,6 @@ test('should skip declined release plan workspaces', () => {
   const input = createReleasePlanForeachInput(
     {
       schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-      ownership: RELEASE_OWNERSHIP_CONTRACT,
       workspaces: [
         {
           ident: '@atls/yarn-cli',
@@ -100,7 +96,6 @@ test('should not run native foreach when all plan workspaces are declined', () =
     createReleasePlanForeachInput(
       {
         schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-        ownership: RELEASE_OWNERSHIP_CONTRACT,
         workspaces: [
           {
             ident: '@atls/yarn-cli',

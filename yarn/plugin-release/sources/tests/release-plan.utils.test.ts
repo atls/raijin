@@ -11,8 +11,7 @@ import { structUtils }                  from '@yarnpkg/core'
 import { ppath }                        from '@yarnpkg/fslib'
 import { versionUtils }                 from '@yarnpkg/plugin-version'
 
-import { RELEASE_OWNERSHIP_CONTRACT }   from '../release-ownership.contract.js'
-import { RELEASE_PLAN_SCHEMA_VERSION }  from '../release-ownership.contract.js'
+import { RELEASE_PLAN_SCHEMA_VERSION }  from '../release-plan.utils.js'
 import { createReleasePlan }            from '../release-plan.utils.js'
 import { parseReleasePlan }             from '../release-plan.utils.js'
 import { resolveReleasePlanStrategies } from '../release-plan.utils.js'
@@ -90,7 +89,6 @@ test('should create a release selection from Yarn deferred targets', () => {
 
   assert.deepEqual(plan, {
     schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-    ownership: RELEASE_OWNERSHIP_CONTRACT,
     workspaces: [
       {
         ident: '@atls/code-runtime',
@@ -260,28 +258,12 @@ test('should prefer Yarn resolved targets over declined deferred fallbacks', asy
   assert.deepEqual([...targets.entries()], [['@atls/code-runtime', createTarget(runtimeWorkspace)]])
 })
 
-test('should reject release plan content without ownership contract', () => {
-  assert.throws(
-    () =>
-      parseReleasePlan(
-        JSON.stringify({
-          schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-          workspaces: [],
-        })
-      ),
-    {
-      message: 'Invalid release plan',
-    }
-  )
-})
-
 test('should reject legacy release plan schema content', () => {
   assert.throws(
     () =>
       parseReleasePlan(
         JSON.stringify({
           schemaVersion: 1,
-          ownership: RELEASE_OWNERSHIP_CONTRACT,
           workspaces: [
             {
               ident: '@atls/yarn-cli',
@@ -305,7 +287,6 @@ test('should reject malformed release plan content', () => {
       parseReleasePlan(
         JSON.stringify({
           schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-          ownership: RELEASE_OWNERSHIP_CONTRACT,
           workspaces: [
             {
               ident: 'pkg',
@@ -324,7 +305,6 @@ test('should parse valid release plan content', () => {
     parseReleasePlan(
       JSON.stringify({
         schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-        ownership: RELEASE_OWNERSHIP_CONTRACT,
         workspaces: [
           {
             ident: '@atls/yarn-cli',
@@ -337,7 +317,6 @@ test('should parse valid release plan content', () => {
     ),
     {
       schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-      ownership: RELEASE_OWNERSHIP_CONTRACT,
       workspaces: [
         {
           ident: '@atls/yarn-cli',

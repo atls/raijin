@@ -4,8 +4,6 @@ import type { Project }                             from '@yarnpkg/core'
 import type { Filename }                            from '@yarnpkg/fslib'
 import type { PortablePath }                        from '@yarnpkg/fslib'
 
-import type { ReleaseOwnershipContract }            from './release-ownership.contract.js'
-import type { ReleasePlanDecision }                 from './release-ownership.contract.js'
 import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspace }             from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspaceOwner }        from './release-version-policy.utils.js'
@@ -20,10 +18,6 @@ import { versionUtils }                             from '@yarnpkg/plugin-versio
 
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
-import { RELEASE_OWNERSHIP_CONTRACT }               from './release-ownership.contract.js'
-import { RELEASE_PLAN_SCHEMA_VERSION }              from './release-ownership.contract.js'
-import { isReleaseOwnershipContract }               from './release-ownership.contract.js'
-import { isReleasePlanDecision }                    from './release-ownership.contract.js'
 import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
 
@@ -44,7 +38,6 @@ export interface ReleasePlanWorkspace {
 
 export interface ReleasePlan {
   schemaVersion: typeof RELEASE_PLAN_SCHEMA_VERSION
-  ownership: ReleaseOwnershipContract
   workspaces: Array<ReleasePlanWorkspace>
 }
 
@@ -58,6 +51,13 @@ const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
 const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
 const DECLINE_DECISION = 'decline'
+
+export const RELEASE_PLAN_SCHEMA_VERSION = 2
+
+export type ReleasePlanDecision = 'decline' | 'release'
+
+export const isReleasePlanDecision = (decision: unknown): decision is ReleasePlanDecision =>
+  decision === 'release' || decision === 'decline'
 
 const isErrorWithCode = (error: unknown, code: string): boolean =>
   typeof error === 'object' &&
@@ -388,7 +388,6 @@ export const createReleasePlan = (
 
   return {
     schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-    ownership: RELEASE_OWNERSHIP_CONTRACT,
     workspaces: [...targets.values()]
       .sort((left, right) => left.workspace.relativeCwd.localeCompare(right.workspace.relativeCwd))
       .map((target) => toPlanWorkspace(project, target)),
@@ -440,7 +439,6 @@ export const parseReleasePlan = (content: string): ReleasePlan => {
 
   if (
     plan.schemaVersion !== RELEASE_PLAN_SCHEMA_VERSION ||
-    !isReleaseOwnershipContract(plan.ownership) ||
     !Array.isArray(plan.workspaces) ||
     !plan.workspaces.every(isReleasePlanWorkspace)
   ) {
@@ -449,7 +447,6 @@ export const parseReleasePlan = (content: string): ReleasePlan => {
 
   return {
     schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
-    ownership: RELEASE_OWNERSHIP_CONTRACT,
     workspaces: plan.workspaces,
   }
 }
