@@ -11,6 +11,7 @@ import { structUtils }                  from '@yarnpkg/core'
 import { ppath }                        from '@yarnpkg/fslib'
 import { versionUtils }                 from '@yarnpkg/plugin-version'
 
+import { RELEASE_PLAN_SCHEMA_VERSION }  from '../release-plan.utils.js'
 import { createReleasePlan }            from '../release-plan.utils.js'
 import { parseReleasePlan }             from '../release-plan.utils.js'
 import { resolveReleasePlanStrategies } from '../release-plan.utils.js'
@@ -52,8 +53,7 @@ const createProject = (workspaces: Array<Workspace>): Project =>
 
 const createTarget = (
   workspace: Workspace,
-  version: string,
-  strategy: string = version
+  decision: ReleasePlanTarget['decision'] = 'release'
 ): ReleasePlanTarget => {
   if (!workspace.manifest.name) {
     throw new Error('Release plan target test workspace must have an ident')
@@ -64,12 +64,11 @@ const createTarget = (
       ident: structUtils.stringifyIdent(workspace.manifest.name),
       relativeCwd: workspace.relativeCwd,
     },
-    version,
-    strategy,
+    decision,
   }
 }
 
-test('should create a fixed release plan from Yarn deferred targets', () => {
+test('should create a release selection from Yarn deferred targets', () => {
   const project = createProject([rootWorkspace, runtimeWorkspace, cliWorkspace])
   const strategies = resolveReleasePlanStrategies(project, [
     {
@@ -82,27 +81,25 @@ test('should create a fixed release plan from Yarn deferred targets', () => {
     },
   ])
   const targets = new Map([
-    ['@atls/code-runtime', createTarget(runtimeWorkspace, '3.0.0')],
-    ['@atls/yarn-cli', createTarget(cliWorkspace, '1.1.97')],
+    ['@atls/code-runtime', createTarget(runtimeWorkspace)],
+    ['@atls/yarn-cli', createTarget(cliWorkspace)],
   ])
 
   const plan = createReleasePlan(project, strategies, targets)
 
   assert.deepEqual(plan, {
-    schemaVersion: 1,
+    schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
     workspaces: [
       {
         ident: '@atls/code-runtime',
         relativeCwd: 'runtime/code-runtime',
-        version: '3.0.0',
-        strategy: '3.0.0',
+        decision: 'release',
         private: false,
       },
       {
         ident: '@atls/yarn-cli',
         relativeCwd: 'yarn/cli',
-        version: '1.1.97',
-        strategy: '1.1.97',
+        decision: 'release',
         private: true,
       },
     ],
@@ -121,8 +118,8 @@ test('should include deferred-only workspaces in release plan', () => {
     } as const,
   ]
   const targets = new Map([
-    ['@atls/code-runtime', createTarget(runtimeWorkspace, '2.1.34')],
-    ['@atls/yarn-cli', createTarget(cliWorkspace, '1.1.97')],
+    ['@atls/code-runtime', createTarget(runtimeWorkspace)],
+    ['@atls/yarn-cli', createTarget(cliWorkspace)],
   ])
 
   const plan = createReleasePlan(project, strategies, targets)
@@ -131,15 +128,13 @@ test('should include deferred-only workspaces in release plan', () => {
     {
       ident: '@atls/code-runtime',
       relativeCwd: 'runtime/code-runtime',
-      version: '2.1.34',
-      strategy: '2.1.34',
+      decision: 'release',
       private: false,
     },
     {
       ident: '@atls/yarn-cli',
       relativeCwd: 'yarn/cli',
-      version: '1.1.97',
-      strategy: '1.1.97',
+      decision: 'release',
       private: true,
     },
   ])
@@ -184,7 +179,7 @@ test('should not bump already applied manifest versions without deferred targets
   })
 })
 
-test('should preserve exact Yarn deferred targets in release plan', () => {
+test('should not copy Yarn target versions into release plan state', () => {
   const project = createProject([rootWorkspace, cliWorkspace])
   const strategies = [
     {
@@ -195,7 +190,7 @@ test('should preserve exact Yarn deferred targets in release plan', () => {
       strategy: 'patch',
     } as const,
   ]
-  const targets = new Map([['@atls/yarn-cli', createTarget(cliWorkspace, '1.5.0')]])
+  const targets = new Map([['@atls/yarn-cli', createTarget(cliWorkspace)]])
 
   const plan = createReleasePlan(project, strategies, targets)
 
@@ -203,11 +198,12 @@ test('should preserve exact Yarn deferred targets in release plan', () => {
     {
       ident: '@atls/yarn-cli',
       relativeCwd: 'yarn/cli',
-      version: '1.5.0',
-      strategy: '1.5.0',
+      decision: 'release',
       private: true,
     },
   ])
+
+  assert.equal('version' in plan.workspaces[0], false)
 })
 
 test('should resolve release plan targets through Yarn version files', async (context) => {
@@ -229,8 +225,8 @@ test('should resolve release plan targets through Yarn version files', async (co
   assert.deepEqual(
     [...targets.entries()],
     [
-      ['@atls/code-runtime', createTarget(runtimeWorkspace, '2.2.0')],
-      ['@atls/yarn-cli', createTarget(cliWorkspace, '1.2.0')],
+      ['@atls/code-runtime', createTarget(runtimeWorkspace)],
+      ['@atls/yarn-cli', createTarget(cliWorkspace)],
     ]
   )
 })
@@ -244,7 +240,7 @@ test('should include declined deferred workspaces in release plan targets', asyn
 
   assert.deepEqual(
     [...targets.entries()],
-    [['@atls/code-runtime', createTarget(runtimeWorkspace, '2.1.33', 'decline')]]
+    [['@atls/code-runtime', createTarget(runtimeWorkspace, 'decline')]]
   )
 })
 
@@ -259,42 +255,73 @@ test('should prefer Yarn resolved targets over declined deferred fallbacks', asy
 
   const targets = await resolveReleasePlanTargets(project, new Set(['@atls/code-runtime']))
 
-  assert.deepEqual(
-    [...targets.entries()],
-    [['@atls/code-runtime', createTarget(runtimeWorkspace, '2.2.0')]]
+  assert.deepEqual([...targets.entries()], [['@atls/code-runtime', createTarget(runtimeWorkspace)]])
+})
+
+test('should reject legacy release plan schema content', () => {
+  assert.throws(
+    () =>
+      parseReleasePlan(
+        JSON.stringify({
+          schemaVersion: 1,
+          workspaces: [
+            {
+              ident: '@atls/yarn-cli',
+              relativeCwd: 'yarn/cli',
+              version: '1.1.97',
+              strategy: '1.1.97',
+              private: true,
+            },
+          ],
+        })
+      ),
+    {
+      message: 'Invalid release plan',
+    }
   )
 })
 
 test('should reject malformed release plan content', () => {
-  assert.throws(() => parseReleasePlan('{"schemaVersion":1,"workspaces":[{"ident":"pkg"}]}'), {
-    message: 'Invalid release plan',
-  })
+  assert.throws(
+    () =>
+      parseReleasePlan(
+        JSON.stringify({
+          schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
+          workspaces: [
+            {
+              ident: 'pkg',
+            },
+          ],
+        })
+      ),
+    {
+      message: 'Invalid release plan',
+    }
+  )
 })
 
 test('should parse valid release plan content', () => {
   assert.deepEqual(
     parseReleasePlan(
       JSON.stringify({
-        schemaVersion: 1,
+        schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
         workspaces: [
           {
             ident: '@atls/yarn-cli',
             relativeCwd: 'yarn/cli',
-            version: '1.1.96',
-            strategy: 'patch',
+            decision: 'release',
             private: true,
           },
         ],
       })
     ),
     {
-      schemaVersion: 1,
+      schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
       workspaces: [
         {
           ident: '@atls/yarn-cli',
           relativeCwd: 'yarn/cli',
-          version: '1.1.96',
-          strategy: 'patch',
+          decision: 'release',
           private: true,
         },
       ],

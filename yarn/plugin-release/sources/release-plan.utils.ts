@@ -32,20 +32,18 @@ interface ReleaseVersionWorkspaceCandidate {
 export interface ReleasePlanWorkspace {
   ident: string
   relativeCwd: string
-  version: string
-  strategy: string
+  decision: ReleasePlanDecision
   private: boolean
 }
 
 export interface ReleasePlan {
-  schemaVersion: 1
+  schemaVersion: typeof RELEASE_PLAN_SCHEMA_VERSION
   workspaces: Array<ReleasePlanWorkspace>
 }
 
 export interface ReleasePlanTarget {
   workspace: ReleaseVersionWorkspace
-  version: string
-  strategy: string
+  decision: ReleasePlanDecision
 }
 
 const DEFAULT_GIT_BASE_REF = 'origin/HEAD'
@@ -53,6 +51,13 @@ const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
 const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
 const DECLINE_DECISION = 'decline'
+
+export const RELEASE_PLAN_SCHEMA_VERSION = 2
+
+export type ReleasePlanDecision = 'decline' | 'release'
+
+export const isReleasePlanDecision = (decision: unknown): decision is ReleasePlanDecision =>
+  decision === 'release' || decision === 'decline'
 
 const isErrorWithCode = (error: unknown, code: string): boolean =>
   typeof error === 'object' &&
@@ -303,8 +308,7 @@ const toPlanWorkspace = (project: Project, target: ReleasePlanTarget): ReleasePl
   return {
     ident: target.workspace.ident,
     relativeCwd: target.workspace.relativeCwd,
-    version: target.version,
-    strategy: target.strategy,
+    decision: target.decision,
     private: workspace.manifest.private,
   }
 }
@@ -319,8 +323,7 @@ const toDeclinedReleasePlanTarget = (workspace: Workspace): ReleasePlanTarget | 
 
   return {
     workspace: releaseWorkspace,
-    version,
-    strategy: DECLINE_DECISION,
+    decision: 'decline',
   }
 }
 
@@ -354,14 +357,13 @@ export const resolveReleasePlanTargets = async (
   for (const [workspace, version] of versions) {
     const releaseWorkspace = toReleaseWorkspace(workspace)
 
-    if (!releaseWorkspace) {
+    if (!releaseWorkspace || !version) {
       continue
     }
 
     targets.set(releaseWorkspace.ident, {
       workspace: releaseWorkspace,
-      version,
-      strategy: version,
+      decision: 'release',
     })
   }
 
@@ -385,7 +387,7 @@ export const createReleasePlan = (
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
     workspaces: [...targets.values()]
       .sort((left, right) => left.workspace.relativeCwd.localeCompare(right.workspace.relativeCwd))
       .map((target) => toPlanWorkspace(project, target)),
@@ -427,8 +429,7 @@ const isReleasePlanWorkspace = (workspace: unknown): workspace is ReleasePlanWor
   return (
     typeof item.ident === 'string' &&
     typeof item.relativeCwd === 'string' &&
-    typeof item.version === 'string' &&
-    typeof item.strategy === 'string' &&
+    isReleasePlanDecision(item.decision) &&
     typeof item.private === 'boolean'
   )
 }
@@ -437,7 +438,7 @@ export const parseReleasePlan = (content: string): ReleasePlan => {
   const plan = JSON.parse(content) as Partial<ReleasePlan>
 
   if (
-    plan.schemaVersion !== 1 ||
+    plan.schemaVersion !== RELEASE_PLAN_SCHEMA_VERSION ||
     !Array.isArray(plan.workspaces) ||
     !plan.workspaces.every(isReleasePlanWorkspace)
   ) {
@@ -445,7 +446,7 @@ export const parseReleasePlan = (content: string): ReleasePlan => {
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
     workspaces: plan.workspaces,
   }
 }

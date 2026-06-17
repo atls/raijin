@@ -1,25 +1,24 @@
 import assert                            from 'node:assert/strict'
 import { test }                          from 'node:test'
 
+import { RELEASE_PLAN_SCHEMA_VERSION }   from '../release-plan.utils.js'
 import { createReleasePlanForeachInput } from '../release-plan-foreach.command.js'
 
 test('should run native foreach over release plan workspaces', () => {
   const input = createReleasePlanForeachInput(
     {
-      schemaVersion: 1,
+      schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
       workspaces: [
         {
           ident: '@atls/yarn-cli',
           relativeCwd: 'yarn/cli',
-          version: '1.1.96',
-          strategy: 'patch',
+          decision: 'release',
           private: true,
         },
         {
           ident: '@atls/yarn-plugin-release',
           relativeCwd: 'yarn/plugin-release',
-          version: '1.0.10',
-          strategy: 'minor',
+          decision: 'release',
           private: true,
         },
       ],
@@ -52,7 +51,7 @@ test('should not run native foreach for empty release plan', () => {
   assert.deepEqual(
     createReleasePlanForeachInput(
       {
-        schemaVersion: 1,
+        schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
         workspaces: [],
       },
       {}
@@ -64,20 +63,18 @@ test('should not run native foreach for empty release plan', () => {
 test('should skip declined release plan workspaces', () => {
   const input = createReleasePlanForeachInput(
     {
-      schemaVersion: 1,
+      schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
       workspaces: [
         {
           ident: '@atls/yarn-cli',
           relativeCwd: 'yarn/cli',
-          version: '1.1.96',
-          strategy: 'decline',
+          decision: 'decline',
           private: true,
         },
         {
           ident: '@atls/yarn-plugin-release',
           relativeCwd: 'yarn/plugin-release',
-          version: '1.0.10',
-          strategy: 'patch',
+          decision: 'release',
           private: true,
         },
       ],
@@ -98,13 +95,12 @@ test('should not run native foreach when all plan workspaces are declined', () =
   assert.deepEqual(
     createReleasePlanForeachInput(
       {
-        schemaVersion: 1,
+        schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
         workspaces: [
           {
             ident: '@atls/yarn-cli',
             relativeCwd: 'yarn/cli',
-            version: '1.1.96',
-            strategy: 'decline',
+            decision: 'decline',
             private: true,
           },
         ],
