@@ -12,6 +12,7 @@ import { ppath }                        from '@yarnpkg/fslib'
 import { versionUtils }                 from '@yarnpkg/plugin-version'
 
 import { RELEASE_OWNERSHIP_CONTRACT }   from '../release-ownership.contract.js'
+import { RELEASE_PLAN_SCHEMA_VERSION }  from '../release-ownership.contract.js'
 import { createReleasePlan }            from '../release-plan.utils.js'
 import { parseReleasePlan }             from '../release-plan.utils.js'
 import { resolveReleasePlanStrategies } from '../release-plan.utils.js'
@@ -88,7 +89,7 @@ test('should create a release selection from Yarn deferred targets', () => {
   const plan = createReleasePlan(project, strategies, targets)
 
   assert.deepEqual(plan, {
-    schemaVersion: 1,
+    schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
     ownership: RELEASE_OWNERSHIP_CONTRACT,
     workspaces: [
       {
@@ -264,8 +265,32 @@ test('should reject release plan content without ownership contract', () => {
     () =>
       parseReleasePlan(
         JSON.stringify({
-          schemaVersion: 1,
+          schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
           workspaces: [],
+        })
+      ),
+    {
+      message: 'Invalid release plan',
+    }
+  )
+})
+
+test('should reject legacy release plan schema content', () => {
+  assert.throws(
+    () =>
+      parseReleasePlan(
+        JSON.stringify({
+          schemaVersion: 1,
+          ownership: RELEASE_OWNERSHIP_CONTRACT,
+          workspaces: [
+            {
+              ident: '@atls/yarn-cli',
+              relativeCwd: 'yarn/cli',
+              version: '1.1.97',
+              strategy: '1.1.97',
+              private: true,
+            },
+          ],
         })
       ),
     {
@@ -279,7 +304,7 @@ test('should reject malformed release plan content', () => {
     () =>
       parseReleasePlan(
         JSON.stringify({
-          schemaVersion: 1,
+          schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
           ownership: RELEASE_OWNERSHIP_CONTRACT,
           workspaces: [
             {
@@ -298,7 +323,7 @@ test('should parse valid release plan content', () => {
   assert.deepEqual(
     parseReleasePlan(
       JSON.stringify({
-        schemaVersion: 1,
+        schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
         ownership: RELEASE_OWNERSHIP_CONTRACT,
         workspaces: [
           {
@@ -311,7 +336,7 @@ test('should parse valid release plan content', () => {
       })
     ),
     {
-      schemaVersion: 1,
+      schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
       ownership: RELEASE_OWNERSHIP_CONTRACT,
       workspaces: [
         {

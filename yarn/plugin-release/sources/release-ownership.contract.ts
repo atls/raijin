@@ -1,4 +1,4 @@
-export const RELEASE_PLAN_SCHEMA_VERSION = 1
+export const RELEASE_PLAN_SCHEMA_VERSION = 2
 
 export const RELEASE_VERSION_STATE_OWNER = 'yarn'
 
