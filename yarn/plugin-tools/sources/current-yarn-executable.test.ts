@@ -226,9 +226,29 @@ test('should forward node flags from managed node wrapper', async () => {
 test('should materialize Husky hooks as newline-terminated text files', async () => {
   const cwd = await xfs.mktempPromise()
   const hooksPath = ppath.join(cwd, '.config/husky')
+  const previousGitHubActions = process.env.GITHUB_ACTIONS
+  const previousImagePack = process.env.IMAGE_PACK
 
   await execFileAsync('git', ['init'], { cwd: npath.fromPortablePath(cwd) })
-  await afterAllInstalled({ cwd } as Project)
+
+  delete process.env.GITHUB_ACTIONS
+  delete process.env.IMAGE_PACK
+
+  try {
+    await afterAllInstalled({ cwd } as Project)
+  } finally {
+    if (previousGitHubActions === undefined) {
+      delete process.env.GITHUB_ACTIONS
+    } else {
+      process.env.GITHUB_ACTIONS = previousGitHubActions
+    }
+
+    if (previousImagePack === undefined) {
+      delete process.env.IMAGE_PACK
+    } else {
+      process.env.IMAGE_PACK = previousImagePack
+    }
+  }
 
   const hookNames: Array<Filename> = [
     'commit-msg' as Filename,
