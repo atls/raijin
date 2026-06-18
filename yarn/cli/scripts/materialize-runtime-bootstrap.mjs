@@ -151,27 +151,45 @@ const stripYarnInlineComment = (value) => {
   return value
 }
 
-const yarnEnvironmentPlaceholderPattern = new RegExp('[$][{]([A-Za-z_][A-Za-z0-9_]*)[}]', 'g')
+const yarnEnvironmentPlaceholderPattern = new RegExp(
+  '[$][{]([A-Za-z_][A-Za-z0-9_]*)(?:(:-|-)([^}]*))?[}]',
+  'g'
+)
 
-const expandYarnEnvironmentPlaceholders = (value) => {
+const expandYarnEnvironmentPlaceholders = (value, depth = 0) => {
   if (!value.includes('$' + '{')) {
     return value
   }
 
+  if (depth > 5) {
+    return undefined
+  }
+
   let missingEnvironmentValue = false
-  const expanded = value.replace(yarnEnvironmentPlaceholderPattern, (_, name) => {
+  const expanded = value.replace(yarnEnvironmentPlaceholderPattern, (_, name, operator, fallback) => {
     const environmentValue = process.env[name]
+    const hasEnvironmentValue = typeof environmentValue === 'string'
 
-    if (typeof environmentValue !== 'string') {
-      missingEnvironmentValue = true
-
-      return ''
+    if (hasEnvironmentValue && (operator !== ':-' || environmentValue.length > 0)) {
+      return environmentValue
     }
 
-    return environmentValue
+    if (typeof fallback === 'string') {
+      return fallback
+    }
+
+    if (!hasEnvironmentValue) {
+      missingEnvironmentValue = true
+    }
+
+    return ''
   })
 
-  return missingEnvironmentValue ? undefined : expanded
+  if (missingEnvironmentValue) {
+    return undefined
+  }
+
+  return expanded.includes('$' + '{') ? expandYarnEnvironmentPlaceholders(expanded, depth + 1) : expanded
 }
 
 const parseYarnScalar = (value) => {
