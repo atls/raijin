@@ -12,4 +12,5 @@ runs:
         export NODE_OPTIONS
         yarn workspace @atls/yarn-cli version patch
         yarn cli:build
-        yarn format
+        export YARN_IGNORE_PATH=1
+        node yarn/cli/dist/runtime/yarn.mjs format
