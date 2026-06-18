@@ -27,13 +27,50 @@ const releaseApiUrl = `https://api.github.com/repos/atls/raijin/releases/tags/${
   tagName
 )}`
 
+const resolveRuntimeAssetUrl = async () => {
+  if (process.env.RAIJIN_RUNTIME_ASSET_URL) {
+    return process.env.RAIJIN_RUNTIME_ASSET_URL
+  }
+
+  const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN
+
+  if (!token) {
+    throw new Error('GITHUB_TOKEN is required to resolve the Raijin runtime release asset URL')
+  }
+
+  const response = await fetch(releaseApiUrl, {
+    headers: {
+      accept: 'application/vnd.github+json',
+      authorization: `Bearer ${token}`,
+      'user-agent': 'raijin-yarn-bootstrap-materializer',
+      'x-github-api-version': '2022-11-28',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to resolve Raijin runtime release asset URL: HTTP ${response.status}`)
+  }
+
+  const release = await response.json()
+  const asset = release.assets?.find((candidate) => candidate.name === assetName)
+  const assetUrl = asset?.browser_download_url
+
+  if (typeof assetUrl !== 'string' || assetUrl.length === 0) {
+    throw new Error(`Missing Raijin runtime release asset ${assetName}`)
+  }
+
+  return assetUrl
+}
+
+const assetUrl = await resolveRuntimeAssetUrl()
+
 const manifest = {
   schemaVersion: 1,
   packageName,
   version,
   tagName,
   assetName,
-  releaseApiUrl,
+  assetUrl,
   sha256,
 }
 const manifestContent = JSON.stringify(manifest, null, 2)
@@ -210,17 +247,6 @@ const request = async (url, redirects = 0) => {
   })
 }
 
-const downloadJson = async (url) => {
-  const response = await request(url)
-  const chunks = []
-
-  for await (const chunk of response) {
-    chunks.push(chunk)
-  }
-
-  return JSON.parse(Buffer.concat(chunks).toString('utf-8'))
-}
-
 const hashFile = async (path) => {
   const hash = createHash('sha256')
   hash.update(await readFile(path))
@@ -246,18 +272,6 @@ const downloadFile = async (url, destination) => {
   await pipeline(response, createWriteStream(destination, { mode: 0o755 }))
 }
 
-const resolveAssetUrl = async (manifest) => {
-  const release = await downloadJson(manifest.releaseApiUrl)
-  const asset = release.assets?.find((candidate) => candidate.name === manifest.assetName)
-  const assetUrl = asset?.browser_download_url
-
-  if (typeof assetUrl !== 'string' || assetUrl.length === 0) {
-    throw new Error(\`Missing Raijin runtime release asset \${manifest.assetName}\`)
-  }
-
-  return assetUrl
-}
-
 const resolveRuntime = async () => {
   const manifest = await readManifest()
   const runtimePath = join(cacheRoot, manifest.sha256, manifest.assetName)
@@ -267,7 +281,11 @@ const resolveRuntime = async () => {
   }
 
   const temporaryPath = \`\${runtimePath}.tmp-\${process.pid}\`
-  const assetUrl = await resolveAssetUrl(manifest)
+  const assetUrl = manifest.assetUrl
+
+  if (typeof assetUrl !== 'string' || assetUrl.length === 0) {
+    throw new Error(\`Missing Raijin runtime asset URL for \${manifest.tagName}\`)
+  }
 
   await rm(temporaryPath, { force: true })
   await downloadFile(assetUrl, temporaryPath)

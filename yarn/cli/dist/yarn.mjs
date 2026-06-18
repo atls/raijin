@@ -28,7 +28,7 @@ const embeddedManifest = {
   "version": "1.2.22",
   "tagName": "@atls/yarn-cli@1.2.22",
   "assetName": "yarn.mjs",
-  "releaseApiUrl": "https://api.github.com/repos/atls/raijin/releases/tags/%40atls%2Fyarn-cli%401.2.22",
+  "assetUrl": "https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.22/yarn.mjs",
   "sha256": "1ae689b9a7e02b31dc6ed64eda012b7cb1fc9ad27062124755190e135639a192"
 }
 
@@ -178,17 +178,6 @@ const request = async (url, redirects = 0) => {
   })
 }
 
-const downloadJson = async (url) => {
-  const response = await request(url)
-  const chunks = []
-
-  for await (const chunk of response) {
-    chunks.push(chunk)
-  }
-
-  return JSON.parse(Buffer.concat(chunks).toString('utf-8'))
-}
-
 const hashFile = async (path) => {
   const hash = createHash('sha256')
   hash.update(await readFile(path))
@@ -214,18 +203,6 @@ const downloadFile = async (url, destination) => {
   await pipeline(response, createWriteStream(destination, { mode: 0o755 }))
 }
 
-const resolveAssetUrl = async (manifest) => {
-  const release = await downloadJson(manifest.releaseApiUrl)
-  const asset = release.assets?.find((candidate) => candidate.name === manifest.assetName)
-  const assetUrl = asset?.browser_download_url
-
-  if (typeof assetUrl !== 'string' || assetUrl.length === 0) {
-    throw new Error(`Missing Raijin runtime release asset ${manifest.assetName}`)
-  }
-
-  return assetUrl
-}
-
 const resolveRuntime = async () => {
   const manifest = await readManifest()
   const runtimePath = join(cacheRoot, manifest.sha256, manifest.assetName)
@@ -235,7 +212,11 @@ const resolveRuntime = async () => {
   }
 
   const temporaryPath = `${runtimePath}.tmp-${process.pid}`
-  const assetUrl = await resolveAssetUrl(manifest)
+  const assetUrl = manifest.assetUrl
+
+  if (typeof assetUrl !== 'string' || assetUrl.length === 0) {
+    throw new Error(`Missing Raijin runtime asset URL for ${manifest.tagName}`)
+  }
 
   await rm(temporaryPath, { force: true })
   await downloadFile(assetUrl, temporaryPath)

@@ -123,6 +123,8 @@ jobs:
       - name: Materialize yarn bootstrap
         if: ${{ success() && github.event.pull_request.merged == true }}
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: node yarn/cli/scripts/materialize-runtime-bootstrap.mjs
 
       - name: Commit changes
