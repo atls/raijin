@@ -142,7 +142,7 @@ const readYarnNetworkConfiguration = async () => {
     return Object.fromEntries(
       configuration
         .split(/\\r?\\n/)
-        .map((line) => line.match(/^\\s*(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/))
+        .map((line) => line.match(/^(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/))
         .filter(Boolean)
         .map((match) => [match[1], parseYarnScalar(match[2])])
         .filter(([, value]) => typeof value === 'string' && value.length > 0)
