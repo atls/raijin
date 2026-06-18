@@ -188,7 +188,10 @@ const resolveRuntime = async () => {
 
 const runtimePath = await resolveRuntime()
 const child = spawn(process.execPath, [runtimePath, ...process.argv.slice(2)], {
-  env: process.env,
+  env: {
+    ...process.env,
+    YARN_IGNORE_PATH: '1',
+  },
   stdio: 'inherit',
 })
 
