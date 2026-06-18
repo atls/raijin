@@ -26,7 +26,7 @@ export class SetVersionCommand extends BaseCommand {
       process.chdir(portableToNativePath(cwd))
 
       const args = ['set', 'version']
-      args.push('https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs')
+      args.push('https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs')
       const exitCode = await this.cli.run(args, { cwd: cwd as typeof this.context.cwd })
 
       const bumpArgs = ['up', '@atls/code-runtime']

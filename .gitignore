@@ -42,9 +42,9 @@ node_modules
 # This is the Yarn install state cache, it can be rebuilt anytime
 /.yarn/install-state.gz
 /.yarn/sdks
+/.yarn/raijin
 
 dist/
-!yarn/cli/dist
 yarn/plugin-*/bundles/
 !yarn/plugin-badges/bundles/
 !yarn/plugin-badges/bundles/**

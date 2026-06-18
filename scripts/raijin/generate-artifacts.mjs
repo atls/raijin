@@ -339,14 +339,14 @@ const renderRootReadme = (language) => {
     isRu ? '### Новый проект' : '### New project',
     '',
     '```bash',
-    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs',
+    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs',
     'yarn set version atls',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В проекте появляется/обновляется `.yarn/releases/yarn.mjs`'
-      : '- `.yarn/releases/yarn.mjs` is added or updated in the project',
+      ? '- В проекте появляется/обновляется маленький bootstrap `.yarn/releases/yarn.mjs`, а runtime bundle загружается из GitHub Releases'
+      : '- A small `.yarn/releases/yarn.mjs` bootstrap is added or updated, and the runtime bundle is downloaded from GitHub Releases',
     isRu
       ? '- Команды `raijin` становятся доступны через `yarn`'
       : '- Raijin commands are available via `yarn`',
@@ -358,7 +358,9 @@ const renderRootReadme = (language) => {
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
-    isRu ? '- Подтягивается актуальная версия бандла' : '- The latest bundle version is installed',
+    isRu
+      ? '- Подтягивается актуальная версия bootstrap и runtime bundle'
+      : '- The latest bootstrap and runtime bundle version is installed',
     '',
     isRu ? '### Проверка' : '### Verify',
     '',
@@ -565,14 +567,14 @@ const renderQuickstart = (language) => {
     isRu ? '## 2. Новый проект: подключение бандла' : '## 2. New project: install the bundle',
     '',
     '```bash',
-    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs',
+    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs',
     'yarn set version atls',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В `.yarn/releases/` появляется актуальный `yarn.mjs` из Raijin'
-      : '- `.yarn/releases/` contains the current Raijin `yarn.mjs`',
+      ? '- В `.yarn/releases/yarn.mjs` появляется bootstrap Raijin, а runtime bundle загружается из GitHub Releases'
+      : '- `.yarn/releases/yarn.mjs` contains the Raijin bootstrap, and the runtime bundle is downloaded from GitHub Releases',
     isRu
       ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
       : '- Bundle commands (`check`, `files changed list`, etc.) become available',

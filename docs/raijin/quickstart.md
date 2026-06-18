@@ -19,13 +19,13 @@ Expected result:
 ## 2. New project: install the bundle
 
 ```bash
-yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs
+yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs
 yarn set version atls
 ```
 
 Expected result:
 
-- `.yarn/releases/` contains the current Raijin `yarn.mjs`
+- `.yarn/releases/yarn.mjs` contains the Raijin bootstrap, and the runtime bundle is downloaded from GitHub Releases
 - Bundle commands (`check`, `files changed list`, etc.) become available
 
 <!-- sync:bundle-upgrade -->
