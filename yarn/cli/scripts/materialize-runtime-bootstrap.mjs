@@ -98,6 +98,7 @@ import { connect as connectTls } from 'node:tls'
 const bootstrapDir = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(bootstrapDir, '../..')
 const cacheRoot = join(projectRoot, '.yarn/raijin/runtime')
+const yarnConfigPath = join(projectRoot, '.yarnrc.yml')
 const maxRedirects = 5
 const embeddedManifest = ${manifestContent}
 
@@ -108,10 +109,60 @@ const proxyEnvironmentNames = {
   'https:': ['YARN_HTTPS_PROXY', 'HTTPS_PROXY', 'https_proxy'],
 }
 
-const resolveProxyUrl = (parsedUrl) => {
+const yarnProxyConfigKeys = {
+  'http:': ['httpProxy'],
+  'https:': ['httpsProxy', 'httpProxy'],
+}
+
+const parseYarnScalar = (value) => {
+  const trimmed = value.trim()
+
+  if (!trimmed || trimmed === 'null' || trimmed === '~') {
+    return undefined
+  }
+
+  if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    try {
+      return JSON.parse(trimmed)
+    } catch {
+      return trimmed.slice(1, -1)
+    }
+  }
+
+  if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
+    return trimmed.slice(1, -1).replace(/''/g, "'")
+  }
+
+  return trimmed
+}
+
+const readYarnProxyConfiguration = async () => {
+  try {
+    const configuration = await readFile(yarnConfigPath, 'utf-8')
+
+    return Object.fromEntries(
+      configuration
+        .split(/\\r?\\n/)
+        .map((line) => line.match(/^\\s*(httpProxy|httpsProxy)\\s*:\\s*(.*?)\\s*$/))
+        .filter(Boolean)
+        .map((match) => [match[1], parseYarnScalar(match[2])])
+        .filter(([, value]) => typeof value === 'string' && value.length > 0)
+    )
+  } catch {
+    return {}
+  }
+}
+
+const yarnProxyConfiguration = readYarnProxyConfiguration()
+
+const resolveProxyUrl = async (parsedUrl) => {
+  const configuration = await yarnProxyConfiguration
   const proxy = proxyEnvironmentNames[parsedUrl.protocol]
     ?.map((name) => process.env[name])
     .find((value) => typeof value === 'string' && value.length > 0)
+    ?? yarnProxyConfigKeys[parsedUrl.protocol]
+      ?.map((name) => configuration[name])
+      .find((value) => typeof value === 'string' && value.length > 0)
 
   return proxy ? new URL(proxy) : undefined
 }
@@ -186,7 +237,7 @@ const createProxyTunnel = async (targetUrl, proxyUrl) =>
 
 const request = async (url, redirects = 0) => {
   const parsedUrl = new URL(url)
-  const proxyUrl = resolveProxyUrl(parsedUrl)
+  const proxyUrl = await resolveProxyUrl(parsedUrl)
   const proxyTunnel =
     proxyUrl && parsedUrl.protocol === 'https:' ? await createProxyTunnel(parsedUrl, proxyUrl) : undefined
 
