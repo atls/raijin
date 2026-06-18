@@ -1,13 +1,17 @@
-import type { Configuration }   from '@yarnpkg/core'
+import type { Configuration }                 from '@yarnpkg/core'
 
-import { createHash }           from 'node:crypto'
-import { readFile }             from 'node:fs/promises'
-import { isAbsolute }           from 'node:path'
-import { join }                 from 'node:path'
+import { createHash }                         from 'node:crypto'
+import { mkdir }                              from 'node:fs/promises'
+import { readFile }                           from 'node:fs/promises'
+import { writeFile }                          from 'node:fs/promises'
+import { dirname }                            from 'node:path'
+import { isAbsolute }                         from 'node:path'
+import { join }                               from 'node:path'
 
-import { httpUtils }            from '@yarnpkg/core'
+import { Configuration as YarnConfiguration } from '@yarnpkg/core'
+import { httpUtils }                          from '@yarnpkg/core'
 
-import { portableToNativePath } from './set-version.utils.js'
+import { portableToNativePath }               from './set-version.utils.js'
 
 const RAIJIN_RUNTIME_MANIFEST_URL =
   'https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/raijin-runtime.json'
@@ -15,6 +19,9 @@ const RAIJIN_RUNTIME_PACKAGE_NAME = '@atls/yarn-cli'
 const RAIJIN_RUNTIME_ASSET_NAME = 'yarn.mjs'
 const RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION = 1
 const SHA256_PATTERN = /^[a-f0-9]{64}$/
+
+type ConfigurationUpdate = Parameters<typeof YarnConfiguration.updateConfiguration>[1]
+type ConfigurationUpdateCwd = Parameters<typeof YarnConfiguration.updateConfiguration>[0]
 
 export interface RaijinRuntimeManifest {
   assetName: string
@@ -94,6 +101,60 @@ export const fetchRaijinRuntimeManifest = async (
 
 export const createSha256Digest = (data: Buffer): string =>
   createHash('sha256').update(data).digest('hex')
+
+export const getRaijinRuntimeYarnPath = (manifest: RaijinRuntimeManifest): string =>
+  `.yarn/releases/raijin-yarn-${manifest.version}.mjs`
+
+const downloadRaijinRuntime = async (
+  configuration: Configuration,
+  manifest: RaijinRuntimeManifest
+): Promise<Buffer> => {
+  const response = await httpUtils.get(manifest.assetUrl, {
+    configuration,
+    headers: {
+      accept: 'application/octet-stream',
+      'user-agent': 'raijin-yarn-plugin-essentials',
+    },
+    jsonResponse: false,
+  })
+
+  if (Buffer.isBuffer(response)) {
+    return response
+  }
+
+  if (typeof response === 'string') {
+    return Buffer.from(response)
+  }
+
+  throw new Error('Invalid Raijin runtime asset response')
+}
+
+export const installRaijinRuntime = async (
+  configuration: Configuration,
+  cwd: string,
+  manifest: RaijinRuntimeManifest
+): Promise<void> => {
+  const runtime = await downloadRaijinRuntime(configuration, manifest)
+  const digest = createSha256Digest(runtime)
+
+  if (digest !== manifest.sha256) {
+    throw new Error(
+      `Downloaded Raijin runtime digest mismatch: expected ${manifest.sha256}, got ${digest}`
+    )
+  }
+
+  const yarnPath = getRaijinRuntimeYarnPath(manifest)
+  const runtimePath = join(portableToNativePath(cwd), portableToNativePath(yarnPath))
+
+  await mkdir(dirname(runtimePath), { recursive: true })
+  await writeFile(runtimePath, runtime)
+  await YarnConfiguration.updateConfiguration(
+    cwd as ConfigurationUpdateCwd,
+    {
+      yarnPath,
+    } as ConfigurationUpdate
+  )
+}
 
 export const resolveYarnPath = (cwd: string, yarnPath: string | null): string => {
   if (!yarnPath) {

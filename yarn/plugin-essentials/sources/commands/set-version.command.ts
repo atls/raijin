@@ -4,6 +4,7 @@ import { Command }                       from 'clipanion'
 
 import { assertInstalledRaijinRuntime }  from './set-version.runtime.js'
 import { fetchRaijinRuntimeManifest }    from './set-version.runtime.js'
+import { installRaijinRuntime }          from './set-version.runtime.js'
 import { findPackageCwd }                from './set-version.utils.js'
 import { portableToNativePath }          from './set-version.utils.js'
 import { preparePackageProjectBoundary } from './set-version.utils.js'
@@ -32,13 +33,7 @@ export class SetVersionCommand extends BaseCommand {
         this.context.plugins
       )
       const runtimeManifest = await fetchRaijinRuntimeManifest(configuration)
-      const exitCode = await this.cli.run(['set', 'version', runtimeManifest.assetUrl], {
-        cwd: cwd as typeof this.context.cwd,
-      })
-
-      if (exitCode !== 0) {
-        return exitCode
-      }
+      await installRaijinRuntime(configuration, cwd, runtimeManifest)
 
       const updatedConfiguration = await Configuration.find(
         cwd as typeof this.context.cwd,
