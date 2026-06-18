@@ -116,8 +116,41 @@ const yarnProxyConfigKeys = {
   'https:': ['httpsProxy', 'httpProxy'],
 }
 
+const stripYarnInlineComment = (value) => {
+  let quotedWith
+  let escaped = false
+
+  for (let index = 0; index < value.length; index += 1) {
+    const character = value[index]
+
+    if (escaped) {
+      escaped = false
+
+      continue
+    }
+
+    if (quotedWith === '"' && character === '\\') {
+      escaped = true
+
+      continue
+    }
+
+    if ((character === '"' || character === "'") && (!quotedWith || quotedWith === character)) {
+      quotedWith = quotedWith ? undefined : character
+
+      continue
+    }
+
+    if (!quotedWith && character === '#' && (index === 0 || value[index - 1].trim() === '')) {
+      return value.slice(0, index).trimEnd()
+    }
+  }
+
+  return value
+}
+
 const parseYarnScalar = (value) => {
-  const trimmed = value.trim()
+  const trimmed = stripYarnInlineComment(value).trim()
 
   if (!trimmed || trimmed === 'null' || trimmed === '~') {
     return undefined
