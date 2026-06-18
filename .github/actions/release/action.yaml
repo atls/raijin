@@ -17,5 +17,4 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        export YARN_IGNORE_PATH=1
-        node yarn/cli/dist/runtime/yarn.mjs workspaces changed foreach -v --exclude . release create
+        yarn workspaces changed foreach -v --exclude . release create
