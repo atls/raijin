@@ -13,7 +13,6 @@ const packageJsonPath = join(root, 'yarn/cli/package.json')
 const bundlePath = join(root, 'yarn/cli/dist/runtime/yarn.mjs')
 const releasesDir = join(root, '.yarn/releases')
 const bootstrapPath = join(releasesDir, 'yarn.mjs')
-const legacyBootstrapPath = join(root, 'yarn/cli/dist/yarn.mjs')
 const manifestPath = join(releasesDir, 'raijin-runtime.json')
 const assetName = 'yarn.mjs'
 const packageName = '@atls/yarn-cli'
@@ -390,7 +389,5 @@ child.on('exit', (code, signal) => {
 `
 
 await mkdir(releasesDir, { recursive: true })
-await mkdir(dirname(legacyBootstrapPath), { recursive: true })
 await writeFile(manifestPath, `${manifestContent}\n`)
 await writeFile(bootstrapPath, bootstrap, { mode: 0o755 })
-await writeFile(legacyBootstrapPath, bootstrap, { mode: 0o755 })
