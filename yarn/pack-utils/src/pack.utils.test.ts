@@ -7,6 +7,7 @@ import { writeFile }                     from 'node:fs/promises'
 import { arch }                          from 'node:os'
 import test                              from 'node:test'
 
+import { execUtils }                     from '@yarnpkg/core'
 import { npath }                         from '@yarnpkg/fslib'
 import { ppath }                         from '@yarnpkg/fslib'
 import { xfs }                           from '@yarnpkg/fslib'
@@ -130,6 +131,50 @@ test('should fail image pack runtime copy when Raijin runtime prewarm fails', as
       assert.equal(
         await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
         false
+      )
+    })
+  })
+})
+
+test('should prewarm yarn release with native path', async (context) => {
+  await xfs.mktempPromise(async (source) => {
+    await xfs.mktempPromise(async (destination) => {
+      const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
+      const yarnNativePath = npath.fromPortablePath(yarnPath)
+      const execArgs: Array<string> = []
+
+      await mkdir(npath.dirname(yarnNativePath), { recursive: true })
+      await writeFile(yarnNativePath, '#!/usr/bin/env node\n', { mode: 0o755 })
+
+      context.mock.method(npath, 'fromPortablePath', (path: string) => {
+        if (path === yarnPath) {
+          return yarnNativePath
+        }
+
+        return path
+      })
+
+      context.mock.method(execUtils, 'execvp', async (_command: string, args: Array<string>) => {
+        execArgs.push(...args)
+
+        return { code: 0, stdout: Buffer.from(''), stderr: Buffer.from('') }
+      })
+
+      await copyYarnRelease(
+        {
+          cwd: source,
+          configuration: {
+            get: (name: string) => (name === 'yarnPath' ? yarnPath : undefined),
+          },
+        } as unknown as Project,
+        destination,
+        { reportInfo: () => undefined } as unknown as Report
+      )
+
+      assert.deepEqual(execArgs, [yarnNativePath, '--version'])
+      assert.equal(
+        await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
+        true
       )
     })
   })

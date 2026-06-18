@@ -10,6 +10,7 @@ import { Manifest }          from '@yarnpkg/core'
 import { execUtils }         from '@yarnpkg/core'
 import { structUtils }       from '@yarnpkg/core'
 import { xfs }               from '@yarnpkg/fslib'
+import { npath }             from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
 
 export const copyCacheMarkedFiles = async (
@@ -147,7 +148,7 @@ export const copyYarnRelease = async (
 
   report.reportInfo(null, path)
 
-  await execUtils.execvp(process.execPath, [src, '--version'], {
+  await execUtils.execvp(process.execPath, [npath.fromPortablePath(src), '--version'], {
     cwd: project.cwd,
     env: {
       ...process.env,
