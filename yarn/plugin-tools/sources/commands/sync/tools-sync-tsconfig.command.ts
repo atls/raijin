@@ -14,6 +14,10 @@ import tsconfig                 from '@atls/config-typescript'
 
 import { AbstractToolsCommand } from './abstract-tools.command.js'
 
+const projectTypesIncludeEntry = 'project.types.d.ts'
+
+const implicitTSConfigIncludeEntry = '**/*'
+
 const combineMerge = (
   /* eslint-disable @typescript-eslint/no-explicit-any */
   target: Array<any>,
@@ -55,12 +59,20 @@ export const getTSConfigIncludeEntries = (
   include: unknown,
   workspaceIncludes: Array<string>
 ): Array<string> => {
-  const tsconfigIncludes: Array<string> = Array.isArray(include)
-    ? include.filter((item): item is string => typeof item === 'string')
-    : []
+  const tsconfigIncludes: Array<string> = (() => {
+    if (Array.isArray(include)) {
+      return include.filter((item): item is string => typeof item === 'string')
+    }
+
+    if (typeof include === 'undefined') {
+      return [implicitTSConfigIncludeEntry]
+    }
+
+    return []
+  })()
 
   return Array.from(
-    new Set<string>(['project.types.d.ts', ...tsconfigIncludes, ...workspaceIncludes])
+    new Set<string>([projectTypesIncludeEntry, ...tsconfigIncludes, ...workspaceIncludes])
   )
 }
 
