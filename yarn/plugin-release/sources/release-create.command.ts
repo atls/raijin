@@ -3,6 +3,7 @@ import type { PortablePath }      from '@yarnpkg/fslib'
 import assert                     from 'node:assert/strict'
 import { Buffer }                 from 'node:buffer'
 import { execSync }               from 'node:child_process'
+import { createHash }             from 'node:crypto'
 import { readFile }               from 'node:fs/promises'
 
 import { BaseCommand }            from '@yarnpkg/cli'
@@ -54,6 +55,7 @@ interface GitHubReleaseNotesOptions {
 interface GitHubRelease {
   id: number
   assets: Array<{
+    browser_download_url: string
     name: string
   }>
 }
@@ -62,6 +64,11 @@ interface GitHubReleaseAssetOptions {
   content_type: string
   name: string
   path: string
+}
+
+interface GitHubReleaseAsset {
+  browser_download_url: string
+  name: string
 }
 
 interface SemVer {
@@ -147,6 +154,43 @@ export const createYarnRuntimeReleaseAssetOptions = (
   }
 }
 
+export const createYarnRuntimeReleaseAssetDigest = (data: Buffer): string =>
+  createHash('sha256').update(data).digest('hex')
+
+export const fetchYarnRuntimeReleaseAssetData = async (
+  asset: GitHubReleaseAsset
+): Promise<Buffer> => {
+  const response = await fetch(asset.browser_download_url, {
+    headers: {
+      'user-agent': 'raijin-yarn-plugin-release',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to verify existing release asset ${asset.name}: HTTP ${response.status}`
+    )
+  }
+
+  return Buffer.from(await response.arrayBuffer())
+}
+
+export const assertYarnRuntimeReleaseAssetMatches = async (
+  asset: GitHubReleaseAsset,
+  expectedData: Buffer
+): Promise<void> => {
+  const actualDigest = createYarnRuntimeReleaseAssetDigest(
+    await fetchYarnRuntimeReleaseAssetData(asset)
+  )
+  const expectedDigest = createYarnRuntimeReleaseAssetDigest(expectedData)
+
+  if (actualDigest !== expectedDigest) {
+    throw new Error(
+      `Existing release asset ${asset.name} digest mismatch: expected ${expectedDigest}, got ${actualDigest}`
+    )
+  }
+}
+
 const uploadYarnRuntimeReleaseAsset = async (
   release: Release,
   githubRelease: GitHubRelease,
@@ -162,24 +206,26 @@ const uploadYarnRuntimeReleaseAsset = async (
     return
   }
 
-  if (githubRelease.assets.some((asset) => asset.name === assetOptions.name)) {
-    report.reportInfo(null, `Release asset ${assetOptions.name} already exists; skipping`)
-
-    return
-  }
-
   if (!(await xfs.existsPromise(npath.toPortablePath(assetOptions.path)))) {
     throw new Error(`Missing Raijin runtime asset source: ${assetOptions.path}`)
   }
 
-  const data = await readFile(assetOptions.path, 'utf-8')
+  const data = await readFile(assetOptions.path)
+  const existingAsset = githubRelease.assets.find((asset) => asset.name === assetOptions.name)
+
+  if (existingAsset) {
+    await assertYarnRuntimeReleaseAssetMatches(existingAsset, data)
+    report.reportInfo(null, `Release asset ${assetOptions.name} already exists; verified`)
+
+    return
+  }
 
   await release.uploadAsset({
     owner,
     repo,
     release_id: githubRelease.id,
-    data,
-    size: Buffer.byteLength(data),
+    data: data.toString('utf-8'),
+    size: data.byteLength,
     ...assetOptions,
   })
 }

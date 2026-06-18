@@ -19,6 +19,7 @@ interface CreateOptions {
 interface GitHubRelease {
   id: number
   assets: Array<{
+    browser_download_url: string
     name: string
   }>
 }
@@ -83,6 +84,7 @@ export class Release {
     return {
       id: result.data.id,
       assets: result.data.assets.map((asset) => ({
+        browser_download_url: asset.browser_download_url,
         name: asset.name,
       })),
     }
@@ -99,6 +101,7 @@ export class Release {
     return {
       id: result.data.id,
       assets: result.data.assets.map((asset) => ({
+        browser_download_url: asset.browser_download_url,
         name: asset.name,
       })),
     }

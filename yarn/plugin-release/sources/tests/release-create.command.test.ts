@@ -1,8 +1,10 @@
 import type { PortablePath }                    from '@yarnpkg/fslib'
 
 import assert                                   from 'node:assert/strict'
+import { Buffer }                               from 'node:buffer'
 import { test }                                 from 'node:test'
 
+import { assertYarnRuntimeReleaseAssetMatches } from '../release-create.command.js'
 import { createGitHubReleaseNotesOptions }      from '../release-create.command.js'
 import { createGitHubReleaseOptions }           from '../release-create.command.js'
 import { createYarnRuntimeReleaseAssetOptions } from '../release-create.command.js'
@@ -55,6 +57,45 @@ test('should create yarn runtime release asset options only for yarn cli release
     name: 'yarn.mjs',
     path: '/repo/yarn/cli/dist/runtime/yarn.mjs',
   })
+})
+
+test('should accept existing yarn runtime release assets with matching content', async () => {
+  const originalFetch = globalThis.fetch
+
+  globalThis.fetch = (async () => new Response('runtime')) as typeof fetch
+
+  try {
+    await assertYarnRuntimeReleaseAssetMatches(
+      {
+        browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+        name: 'yarn.mjs',
+      },
+      Buffer.from('runtime')
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('should reject existing yarn runtime release assets with mismatching content', async () => {
+  const originalFetch = globalThis.fetch
+
+  globalThis.fetch = (async () => new Response('stale-runtime')) as typeof fetch
+
+  try {
+    await assert.rejects(
+      assertYarnRuntimeReleaseAssetMatches(
+        {
+          browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+          name: 'yarn.mjs',
+        },
+        Buffer.from('runtime')
+      ),
+      /Existing release asset yarn\.mjs digest mismatch/
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
 
 test('should omit previous release tag from first package release notes', () => {
