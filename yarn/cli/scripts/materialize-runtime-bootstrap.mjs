@@ -118,6 +118,8 @@ const yarnProxyConfigKeys = {
   'https:': ['httpsProxy', 'httpProxy'],
 }
 
+const yarnCertificateAuthorityEnvironmentNames = ['YARN_HTTPS_CA_FILE_PATH']
+
 const stripYarnInlineComment = (value) => {
   let quotedWith
   let escaped = false
@@ -360,7 +362,10 @@ const resolveYarnPath = (path, basePath = projectRoot) =>
 
 const readYarnCertificateAuthority = async (parsedUrl) => {
   const configuration = await getYarnNetworkConfiguration(parsedUrl.hostname)
-  const caPath = configuration.httpsCaFilePath
+  const caPath =
+    yarnCertificateAuthorityEnvironmentNames
+      .map((name) => process.env[name])
+      .find((value) => typeof value === 'string' && value.length > 0) ?? configuration.httpsCaFilePath
 
   if (typeof caPath !== 'string' || caPath.length === 0) {
     return undefined
