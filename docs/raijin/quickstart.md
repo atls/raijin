@@ -19,14 +19,18 @@ Expected result:
 ## 2. New project: install the bundle
 
 ```bash
-yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs
+mkdir -p .yarn/releases
+curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs
+yarn config set yarnPath .yarn/releases/yarn.mjs
 yarn set version atls
+rm .yarn/releases/yarn.mjs
 ```
 
 Expected result:
 
-- `.yarn/releases/yarn.mjs` contains the full initial Raijin entry file
-- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn
+- `.yarn/releases/yarn.mjs` contains the temporary initial Raijin entry file
+- `yarn set version atls` updates the bundle from a GitHub Release asset and points `yarnPath` to the versioned `.yarn/releases/raijin-yarn-<version>.mjs` file
+- The temporary `.yarn/releases/yarn.mjs` file is removed after the switch
 - Bundle commands (`check`, `files changed list`, etc.) become available
 
 <!-- sync:bundle-upgrade -->

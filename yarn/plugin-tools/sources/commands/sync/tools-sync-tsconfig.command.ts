@@ -51,6 +51,19 @@ const convertWorkspacesToIncludes = (workspaces: string): string => {
   return workspaces
 }
 
+export const getTSConfigIncludeEntries = (
+  include: unknown,
+  workspaceIncludes: Array<string>
+): Array<string> => {
+  const tsconfigIncludes: Array<string> = Array.isArray(include)
+    ? include.filter((item): item is string => typeof item === 'string')
+    : []
+
+  return Array.from(
+    new Set<string>(['project.types.d.ts', ...tsconfigIncludes, ...workspaceIncludes])
+  )
+}
+
 export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
   static override paths = [['tools', 'sync', 'tsconfig']]
 
@@ -104,7 +117,7 @@ export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
 
           const created = {
             ...config,
-            include: Array.from(new Set(['project.types.d.ts', ...config.include, ...includes])),
+            include: getTSConfigIncludeEntries(config.include, includes),
           }
 
           try {
