@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url'
 import { request as httpRequest } from 'node:http'
 import { request as httpsRequest } from 'node:https'
 import { connect as connectNet } from 'node:net'
+import { pipeline } from 'node:stream/promises'
 import { connect as connectTls } from 'node:tls'
 
 const bootstrapDir = dirname(fileURLToPath(import.meta.url))
@@ -28,7 +29,7 @@ const embeddedManifest = {
   "tagName": "@atls/yarn-cli@1.2.22",
   "assetName": "yarn.mjs",
   "releaseApiUrl": "https://api.github.com/repos/atls/raijin/releases/tags/%40atls%2Fyarn-cli%401.2.22",
-  "sha256": "c23b49595a1e4a5a64dc209a39064bbc6f7ff2845c299b946749b4f459df5738"
+  "sha256": "1ae689b9a7e02b31dc6ed64eda012b7cb1fc9ad27062124755190e135639a192"
 }
 
 const readManifest = async () => embeddedManifest
@@ -209,14 +210,8 @@ const downloadFile = async (url, destination) => {
   await mkdir(dirname(destination), { recursive: true })
 
   const response = await request(url)
-  const stream = createWriteStream(destination, { mode: 0o755 })
 
-  await new Promise((resolveDownload, rejectDownload) => {
-    response.pipe(stream)
-    response.on('error', rejectDownload)
-    stream.on('error', rejectDownload)
-    stream.on('finish', resolveDownload)
-  })
+  await pipeline(response, createWriteStream(destination, { mode: 0o755 }))
 }
 
 const resolveAssetUrl = async (manifest) => {

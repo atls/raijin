@@ -55,6 +55,7 @@ import { fileURLToPath } from 'node:url'
 import { request as httpRequest } from 'node:http'
 import { request as httpsRequest } from 'node:https'
 import { connect as connectNet } from 'node:net'
+import { pipeline } from 'node:stream/promises'
 import { connect as connectTls } from 'node:tls'
 
 const bootstrapDir = dirname(fileURLToPath(import.meta.url))
@@ -241,14 +242,8 @@ const downloadFile = async (url, destination) => {
   await mkdir(dirname(destination), { recursive: true })
 
   const response = await request(url)
-  const stream = createWriteStream(destination, { mode: 0o755 })
 
-  await new Promise((resolveDownload, rejectDownload) => {
-    response.pipe(stream)
-    response.on('error', rejectDownload)
-    stream.on('error', rejectDownload)
-    stream.on('finish', resolveDownload)
-  })
+  await pipeline(response, createWriteStream(destination, { mode: 0o755 }))
 }
 
 const resolveAssetUrl = async (manifest) => {
