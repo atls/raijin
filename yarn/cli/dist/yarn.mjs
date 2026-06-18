@@ -14,6 +14,8 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { request as httpRequest } from 'node:http'
 import { request as httpsRequest } from 'node:https'
+import { connect as connectNet } from 'node:net'
+import { connect as connectTls } from 'node:tls'
 
 const bootstrapDir = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(bootstrapDir, '../..')
@@ -31,19 +33,118 @@ const embeddedManifest = {
 
 const readManifest = async () => embeddedManifest
 
-const request = async (url, redirects = 0) =>
-  new Promise((resolveRequest, rejectRequest) => {
-    const parsedUrl = new URL(url)
+const proxyEnvironmentNames = {
+  'http:': ['YARN_HTTP_PROXY', 'HTTP_PROXY', 'http_proxy'],
+  'https:': ['YARN_HTTPS_PROXY', 'HTTPS_PROXY', 'https_proxy'],
+}
+
+const resolveProxyUrl = (parsedUrl) => {
+  const proxy = proxyEnvironmentNames[parsedUrl.protocol]
+    ?.map((name) => process.env[name])
+    .find((value) => typeof value === 'string' && value.length > 0)
+
+  return proxy ? new URL(proxy) : undefined
+}
+
+const connectSocket = (url, options) =>
+  url.protocol === 'https:' ? connectTls(options) : connectNet(options)
+
+const createProxyTunnel = async (targetUrl, proxyUrl) =>
+  new Promise((resolveTunnel, rejectTunnel) => {
+    const proxyPort = Number(proxyUrl.port || (proxyUrl.protocol === 'https:' ? 443 : 80))
+    const socket = connectSocket(proxyUrl, {
+      host: proxyUrl.hostname,
+      port: proxyPort,
+      servername: proxyUrl.hostname,
+    })
+    const targetPort = targetUrl.port || (targetUrl.protocol === 'https:' ? '443' : '80')
+    const targetHost = `${targetUrl.hostname}:${targetPort}`
+    const authorization =
+      proxyUrl.username || proxyUrl.password
+        ? `Proxy-Authorization: Basic ${Buffer.from(
+            `${decodeURIComponent(proxyUrl.username)}:${decodeURIComponent(proxyUrl.password)}`
+          ).toString('base64')}\r\n`
+        : ''
+    const request = `CONNECT ${targetHost} HTTP/1.1\r\nHost: ${targetHost}\r\n${authorization}\r\n`
+    let buffer = ''
+
+    const reject = (error) => {
+      socket.destroy()
+      rejectTunnel(error)
+    }
+
+    socket.once('error', reject)
+    socket.once('connect', () => {
+      socket.write(request)
+    })
+    socket.on('data', (chunk) => {
+      buffer += chunk.toString('latin1')
+
+      const headerEnd = buffer.indexOf('\r\n\r\n')
+
+      if (headerEnd === -1) {
+        return
+      }
+
+      const [statusLine] = buffer.slice(0, headerEnd).split('\r\n')
+
+      if (!/^HTTP\/1\.[01] 2\d\d /.test(statusLine)) {
+        reject(new Error(`Proxy tunnel failed for ${targetHost}: ${statusLine}`))
+
+        return
+      }
+
+      socket.removeListener('error', reject)
+      socket.removeAllListeners('data')
+
+      const rest = Buffer.from(buffer.slice(headerEnd + 4), 'latin1')
+
+      if (rest.length > 0) {
+        socket.unshift(rest)
+      }
+
+      resolveTunnel(
+        targetUrl.protocol === 'https:'
+          ? connectTls({
+              socket,
+              servername: targetUrl.hostname,
+            })
+          : socket
+      )
+    })
+  })
+
+const request = async (url, redirects = 0) => {
+  const parsedUrl = new URL(url)
+  const proxyUrl = resolveProxyUrl(parsedUrl)
+  const proxyTunnel =
+    proxyUrl && parsedUrl.protocol === 'https:' ? await createProxyTunnel(parsedUrl, proxyUrl) : undefined
+
+  return new Promise((resolveRequest, rejectRequest) => {
     const transport = parsedUrl.protocol === 'http:' ? httpRequest : httpsRequest
     const headers =
       parsedUrl.hostname === 'api.github.com'
         ? {
             accept: 'application/vnd.github+json',
             'user-agent': 'raijin-yarn-bootstrap',
-          }
+        }
         : undefined
+    const requestOptions = proxyUrl
+      ? parsedUrl.protocol === 'http:'
+        ? {
+            headers,
+            host: proxyUrl.hostname,
+            path: parsedUrl.toString(),
+            port: Number(proxyUrl.port || (proxyUrl.protocol === 'https:' ? 443 : 80)),
+            protocol: proxyUrl.protocol,
+          }
+        : {
+            headers,
+            createConnection: () => proxyTunnel,
+          }
+      : { headers }
 
-    const req = transport(parsedUrl, { headers }, (response) => {
+    const req = transport(parsedUrl, requestOptions, (response) => {
       const status = response.statusCode ?? 0
       const location = response.headers.location
 
@@ -74,6 +175,7 @@ const request = async (url, redirects = 0) =>
     req.on('error', rejectRequest)
     req.end()
   })
+}
 
 const downloadJson = async (url) => {
   const response = await request(url)
