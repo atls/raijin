@@ -35,6 +35,7 @@ const manifest = {
   assetUrl,
   sha256,
 }
+const manifestContent = JSON.stringify(manifest, null, 2)
 
 const bootstrap = `#!/usr/bin/env node
 import { createHash } from 'node:crypto'
@@ -55,13 +56,11 @@ import { request as httpsRequest } from 'node:https'
 
 const bootstrapDir = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(bootstrapDir, '../..')
-const localManifestPath = join(bootstrapDir, 'raijin-runtime.json')
-const remoteManifestUrl =
-  'https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/raijin-runtime.json'
 const cacheRoot = join(projectRoot, '.yarn/raijin/runtime')
 const maxRedirects = 5
+const embeddedManifest = ${manifestContent}
 
-const readJsonFile = async (path) => JSON.parse(await readFile(path, 'utf-8'))
+const readManifest = async () => embeddedManifest
 
 const request = async (url, redirects = 0) =>
   new Promise((resolveRequest, rejectRequest) => {
@@ -98,25 +97,6 @@ const request = async (url, redirects = 0) =>
     req.on('error', rejectRequest)
     req.end()
   })
-
-const downloadJson = async (url) => {
-  const response = await request(url)
-  const chunks = []
-
-  for await (const chunk of response) {
-    chunks.push(chunk)
-  }
-
-  return JSON.parse(Buffer.concat(chunks).toString('utf-8'))
-}
-
-const readManifest = async () => {
-  try {
-    return await readJsonFile(localManifestPath)
-  } catch {
-    return downloadJson(remoteManifestUrl)
-  }
-}
 
 const hashFile = async (path) => {
   const hash = createHash('sha256')
@@ -191,5 +171,5 @@ child.on('exit', (code, signal) => {
 `
 
 await mkdir(releasesDir, { recursive: true })
-await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
+await writeFile(manifestPath, `${manifestContent}\n`)
 await writeFile(bootstrapPath, bootstrap, { mode: 0o755 })
