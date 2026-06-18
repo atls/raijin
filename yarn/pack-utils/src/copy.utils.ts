@@ -153,6 +153,7 @@ export const copyYarnRelease = async (
       ...process.env,
       YARN_IGNORE_PATH: '1',
     },
+    strict: true,
   })
 
   await xfs.copyPromise(dest, src, {

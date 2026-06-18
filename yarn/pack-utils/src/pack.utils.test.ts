@@ -95,3 +95,42 @@ test('should copy prewarmed Raijin runtime cache with yarn release', async () =>
     })
   })
 })
+
+test('should fail image pack runtime copy when Raijin runtime prewarm fails', async () => {
+  await xfs.mktempPromise(async (source) => {
+    await xfs.mktempPromise(async (destination) => {
+      const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
+      const yarnNativePath = npath.fromPortablePath(yarnPath)
+
+      await mkdir(npath.dirname(yarnNativePath), { recursive: true })
+      await writeFile(
+        yarnNativePath,
+        [
+          '#!/usr/bin/env node',
+          'if (process.env.YARN_IGNORE_PATH !== "1") process.exit(2)',
+          'process.exit(17)',
+          '',
+        ].join('\n'),
+        { mode: 0o755 }
+      )
+
+      await assert.rejects(
+        copyYarnRelease(
+          {
+            cwd: source,
+            configuration: {
+              get: (name: string) => (name === 'yarnPath' ? yarnPath : undefined),
+            },
+          } as unknown as Project,
+          destination,
+          { reportInfo: () => undefined } as unknown as Report
+        )
+      )
+
+      assert.equal(
+        await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
+        false
+      )
+    })
+  })
+})
