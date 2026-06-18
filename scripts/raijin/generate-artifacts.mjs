@@ -339,14 +339,17 @@ const renderRootReadme = (language) => {
     isRu ? '### Новый проект' : '### New project',
     '',
     '```bash',
-    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs',
+    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs',
     'yarn set version atls',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В проекте появляется/обновляется `.yarn/releases/yarn.mjs`'
-      : '- `.yarn/releases/yarn.mjs` is added or updated in the project',
+      ? '- В проекте появляется/обновляется полный файл первичного подключения `.yarn/releases/yarn.mjs`'
+      : '- A full initial `.yarn/releases/yarn.mjs` entry file is added or updated',
+    isRu
+      ? '- `yarn set version atls` обновляет бандл через вложение релиза GitHub штатным механизмом Yarn'
+      : '- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn',
     isRu
       ? '- Команды `raijin` становятся доступны через `yarn`'
       : '- Raijin commands are available via `yarn`',
@@ -358,7 +361,9 @@ const renderRootReadme = (language) => {
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
-    isRu ? '- Подтягивается актуальная версия бандла' : '- The latest bundle version is installed',
+    isRu
+      ? '- Бандл обновляется до последней доступной версии штатным механизмом Yarn'
+      : '- The bundle is upgraded to the latest available version through Yarn',
     '',
     isRu ? '### Проверка' : '### Verify',
     '',
@@ -565,14 +570,17 @@ const renderQuickstart = (language) => {
     isRu ? '## 2. Новый проект: подключение бандла' : '## 2. New project: install the bundle',
     '',
     '```bash',
-    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs',
+    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs',
     'yarn set version atls',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В `.yarn/releases/` появляется актуальный `yarn.mjs` из Raijin'
-      : '- `.yarn/releases/` contains the current Raijin `yarn.mjs`',
+      ? '- В `.yarn/releases/yarn.mjs` появляется полный файл первичного подключения Raijin'
+      : '- `.yarn/releases/yarn.mjs` contains the full initial Raijin entry file',
+    isRu
+      ? '- `yarn set version atls` обновляет бандл через вложение релиза GitHub штатным механизмом Yarn'
+      : '- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn',
     isRu
       ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
       : '- Bundle commands (`check`, `files changed list`, etc.) become available',

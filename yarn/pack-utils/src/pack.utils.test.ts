@@ -1,8 +1,18 @@
+import type { Project }                  from '@yarnpkg/core'
+import type { Report }                   from '@yarnpkg/core'
+
 import assert                            from 'node:assert/strict'
+import { mkdir }                         from 'node:fs/promises'
+import { writeFile }                     from 'node:fs/promises'
 import { arch }                          from 'node:os'
 import test                              from 'node:test'
 
+import { npath }                         from '@yarnpkg/fslib'
+import { ppath }                         from '@yarnpkg/fslib'
+import { xfs }                           from '@yarnpkg/fslib'
+
 import { IMAGE_PACK_NODE_LINKER }        from './pack.utils.js'
+import { copyYarnRelease }               from './copy.utils.js'
 import { resolveSupportedArchitectures } from './pack.utils.js'
 
 test('should materialize image pack runtime with PnP linker', () => {
@@ -40,4 +50,68 @@ test('should normalize Docker platform aliases before Yarn install', () => {
       ['libc', []],
     ])
   )
+})
+
+test('should copy yarn release without runtime cache side effects', async () => {
+  await xfs.mktempPromise(async (source) => {
+    await xfs.mktempPromise(async (destination) => {
+      const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
+      const yarnNativePath = npath.fromPortablePath(yarnPath)
+
+      await mkdir(npath.dirname(yarnNativePath), { recursive: true })
+      await writeFile(yarnNativePath, '#!/usr/bin/env node\n', { mode: 0o755 })
+
+      await copyYarnRelease(
+        {
+          cwd: source,
+          configuration: {
+            get: (name: string) => (name === 'yarnPath' ? yarnPath : undefined),
+          },
+        } as unknown as Project,
+        destination,
+        { reportInfo: () => undefined } as unknown as Report
+      )
+
+      assert.equal(
+        await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
+        true
+      )
+    })
+  })
+})
+
+test('should copy yarn release from native yarn path', async (context) => {
+  await xfs.mktempPromise(async (source) => {
+    await xfs.mktempPromise(async (destination) => {
+      const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
+      const yarnNativePath = npath.fromPortablePath(yarnPath)
+
+      await mkdir(npath.dirname(yarnNativePath), { recursive: true })
+      await writeFile(yarnNativePath, '#!/usr/bin/env node\n', { mode: 0o755 })
+
+      context.mock.method(npath, 'fromPortablePath', (path: string) => {
+        if (path === yarnPath) {
+          return yarnNativePath
+        }
+
+        return path
+      })
+
+      await copyYarnRelease(
+        {
+          cwd: source,
+          configuration: {
+            get: (name: string) => (name === 'yarnPath' ? yarnPath : undefined),
+          },
+        } as unknown as Project,
+        destination,
+        { reportInfo: () => undefined } as unknown as Report
+      )
+
+      assert.equal(
+        await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
+        true
+      )
+    })
+  })
 })

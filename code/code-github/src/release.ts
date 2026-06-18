@@ -16,6 +16,35 @@ interface CreateOptions {
   repo: string
 }
 
+interface GitHubRelease {
+  id: number
+  assets: Array<{
+    browser_download_url: string
+    name: string
+  }>
+}
+
+interface GetByTagOptions {
+  owner: string
+  repo: string
+  tag_name: string
+}
+
+interface UploadAssetOptions {
+  content_type: string
+  data: string
+  name: string
+  owner: string
+  size: number
+  release_id: number
+  repo: string
+}
+
+interface GitHubReleaseAsset {
+  browser_download_url: string
+  name: string
+}
+
 interface GenerateNotesOptions {
   tag_name: string
   target_commitish?: string
@@ -34,7 +63,7 @@ export class Release {
     })
   }
 
-  async create(options: CreateOptions): Promise<number> {
+  async create(options: CreateOptions): Promise<GitHubRelease> {
     const {
       owner,
       repo,
@@ -57,7 +86,58 @@ export class Release {
       body,
     })
 
-    return result.status
+    return {
+      id: result.data.id,
+      assets: result.data.assets.map((asset) => ({
+        browser_download_url: asset.browser_download_url,
+        name: asset.name,
+      })),
+    }
+  }
+
+  async getByTag(options: GetByTagOptions): Promise<GitHubRelease> {
+    const { owner, repo, tag_name: tagName } = options
+    const result = await this.client.repos.getReleaseByTag({
+      owner,
+      repo,
+      tag: tagName,
+    })
+
+    return {
+      id: result.data.id,
+      assets: result.data.assets.map((asset) => ({
+        browser_download_url: asset.browser_download_url,
+        name: asset.name,
+      })),
+    }
+  }
+
+  async uploadAsset(options: UploadAssetOptions): Promise<GitHubReleaseAsset> {
+    const {
+      owner,
+      repo,
+      release_id: releaseId,
+      name,
+      data,
+      size,
+      content_type: contentType,
+    } = options
+    const result = await this.client.repos.uploadReleaseAsset({
+      owner,
+      repo,
+      release_id: releaseId,
+      name,
+      data,
+      headers: {
+        'content-length': size,
+        'content-type': contentType,
+      },
+    })
+
+    return {
+      browser_download_url: result.data.browser_download_url,
+      name: result.data.name,
+    }
   }
 
   async generateNotes(options: GenerateNotesOptions): Promise<string> {

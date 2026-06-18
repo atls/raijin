@@ -19,13 +19,14 @@
 ## 2. Новый проект: подключение бандла
 
 ```bash
-yarn set version https://raw.githubusercontent.com/atls/raijin/master/yarn/cli/dist/yarn.mjs
+yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs
 yarn set version atls
 ```
 
 Ожидаемый результат:
 
-- В `.yarn/releases/` появляется актуальный `yarn.mjs` из Raijin
+- В `.yarn/releases/yarn.mjs` появляется полный файл первичного подключения Raijin
+- `yarn set version atls` обновляет бандл через вложение релиза GitHub штатным механизмом Yarn
 - Команды из бандла (`check`, `files changed list` и другие) становятся доступны
 
 <!-- sync:bundle-upgrade -->

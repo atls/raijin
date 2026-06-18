@@ -1,11 +1,18 @@
-import assert                                 from 'node:assert/strict'
-import { test }                               from 'node:test'
+import type { PortablePath }                    from '@yarnpkg/fslib'
 
-import { createGitHubReleaseNotesOptions }    from '../release-create.command.js'
-import { createGitHubReleaseOptions }         from '../release-create.command.js'
-import { isReleaseAlreadyExistsError }        from '../release-create.command.js'
-import { parseGitHubReleaseTagVersion }       from '../release-create.command.js'
-import { selectPreviousGitHubReleaseTagName } from '../release-create.command.js'
+import assert                                   from 'node:assert/strict'
+import { Buffer }                               from 'node:buffer'
+import { test }                                 from 'node:test'
+
+import { assertYarnRuntimeReleaseAssetMatches } from '../release-create.command.js'
+import { createGitHubReleaseNotesOptions }      from '../release-create.command.js'
+import { createGitHubReleaseOptions }           from '../release-create.command.js'
+import { createYarnRuntimeManifest }            from '../release-create.command.js'
+import { createYarnRuntimeManifestPath }        from '../release-create.command.js'
+import { createYarnRuntimeReleaseAssetOptions } from '../release-create.command.js'
+import { isReleaseAlreadyExistsError }          from '../release-create.command.js'
+import { parseGitHubReleaseTagVersion }         from '../release-create.command.js'
+import { selectPreviousGitHubReleaseTagName }   from '../release-create.command.js'
 
 test('should create releases with GitHub generated release notes', () => {
   assert.deepEqual(
@@ -41,6 +48,88 @@ test('should create release note options with package-specific previous tags', (
       target_commitish: 'main',
     }
   )
+})
+
+test('should create yarn runtime release asset options only for yarn cli release', () => {
+  const projectCwd = '/repo' as PortablePath
+
+  assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/code-github', projectCwd), undefined)
+  assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/yarn-cli', projectCwd), {
+    content_type: 'text/javascript',
+    name: 'yarn.mjs',
+    path: '/repo/yarn/cli/dist/runtime/yarn.mjs',
+  })
+})
+
+test('should create yarn runtime manifest path', () => {
+  assert.equal(
+    createYarnRuntimeManifestPath('/repo' as PortablePath),
+    '/repo/.yarn/releases/raijin-runtime.json'
+  )
+})
+
+test('should create yarn runtime manifest from verified release asset', () => {
+  assert.deepEqual(
+    createYarnRuntimeManifest(
+      '@atls/yarn-cli',
+      '1.2.3',
+      {
+        browser_download_url:
+          'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
+        name: 'yarn.mjs',
+      },
+      Buffer.from('runtime')
+    ),
+    {
+      assetName: 'yarn.mjs',
+      assetUrl:
+        'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
+      packageName: '@atls/yarn-cli',
+      schemaVersion: 1,
+      sha256: 'd92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23',
+      tagName: '@atls/yarn-cli@1.2.3',
+      version: '1.2.3',
+    }
+  )
+})
+
+test('should accept existing yarn runtime release assets with matching content', async () => {
+  const originalFetch = globalThis.fetch
+
+  globalThis.fetch = (async () => new Response('runtime')) as typeof fetch
+
+  try {
+    await assertYarnRuntimeReleaseAssetMatches(
+      {
+        browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+        name: 'yarn.mjs',
+      },
+      Buffer.from('runtime')
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('should reject existing yarn runtime release assets with mismatching content', async () => {
+  const originalFetch = globalThis.fetch
+
+  globalThis.fetch = (async () => new Response('stale-runtime')) as typeof fetch
+
+  try {
+    await assert.rejects(
+      assertYarnRuntimeReleaseAssetMatches(
+        {
+          browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+          name: 'yarn.mjs',
+        },
+        Buffer.from('runtime')
+      ),
+      /Existing release asset yarn\.mjs digest mismatch/
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
 
 test('should omit previous release tag from first package release notes', () => {

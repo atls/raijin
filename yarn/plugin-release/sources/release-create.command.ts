@@ -1,5 +1,13 @@
+import type { PortablePath }      from '@yarnpkg/fslib'
+
 import assert                     from 'node:assert/strict'
+import { Buffer }                 from 'node:buffer'
 import { execSync }               from 'node:child_process'
+import { createHash }             from 'node:crypto'
+import { mkdir }                  from 'node:fs/promises'
+import { readFile }               from 'node:fs/promises'
+import { writeFile }              from 'node:fs/promises'
+import { dirname }                from 'node:path'
 
 import { BaseCommand }            from '@yarnpkg/cli'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
@@ -7,6 +15,9 @@ import { Configuration }          from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
 import { StreamReport }           from '@yarnpkg/core'
 import { execUtils }              from '@yarnpkg/core'
+import { npath }                  from '@yarnpkg/fslib'
+import { ppath }                  from '@yarnpkg/fslib'
+import { xfs }                    from '@yarnpkg/fslib'
 
 import { Release }                from '@atls/code-github'
 
@@ -16,6 +27,11 @@ const RELEASE_ALREADY_EXISTS_STATUS = 422
 const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
 const RELEASE_ALREADY_EXISTS_CODE = '"code":"already_exists"'
 const RELEASE_ALREADY_EXISTS_FIELD = '"field":"tag_name"'
+const YARN_CLI_PACKAGE_NAME = '@atls/yarn-cli'
+const YARN_RUNTIME_ASSET_NAME = 'yarn.mjs'
+const YARN_RUNTIME_ASSET_CONTENT_TYPE = 'text/javascript'
+const YARN_RUNTIME_MANIFEST_PATH = '.yarn/releases/raijin-runtime.json'
+const YARN_RUNTIME_MANIFEST_SCHEMA_VERSION = 1
 
 interface GitHubReleaseError {
   status?: number
@@ -39,6 +55,35 @@ interface GitHubReleaseNotesOptions {
   repo: string
   tag_name: string
   target_commitish: string
+}
+
+interface GitHubRelease {
+  id: number
+  assets: Array<{
+    browser_download_url: string
+    name: string
+  }>
+}
+
+interface GitHubReleaseAssetOptions {
+  content_type: string
+  name: string
+  path: string
+}
+
+interface GitHubReleaseAsset {
+  browser_download_url: string
+  name: string
+}
+
+interface YarnRuntimeManifest {
+  assetName: string
+  assetUrl: string
+  packageName: string
+  schemaVersion: number
+  sha256: string
+  tagName: string
+  version: string
 }
 
 interface SemVer {
@@ -105,6 +150,133 @@ export const createGitHubReleaseNotesOptions = (
   }
 
   return options
+}
+
+export const createYarnRuntimeReleaseAssetOptions = (
+  packageName: string,
+  projectCwd: PortablePath
+): GitHubReleaseAssetOptions | undefined => {
+  if (packageName !== YARN_CLI_PACKAGE_NAME) {
+    return undefined
+  }
+
+  return {
+    content_type: YARN_RUNTIME_ASSET_CONTENT_TYPE,
+    name: YARN_RUNTIME_ASSET_NAME,
+    path: npath.fromPortablePath(
+      ppath.join(projectCwd, 'yarn/cli/dist/runtime/yarn.mjs' as PortablePath)
+    ),
+  }
+}
+
+export const createYarnRuntimeReleaseAssetDigest = (data: Buffer): string =>
+  createHash('sha256').update(data).digest('hex')
+
+export const createYarnRuntimeManifestPath = (projectCwd: PortablePath): string =>
+  npath.fromPortablePath(ppath.join(projectCwd, YARN_RUNTIME_MANIFEST_PATH as PortablePath))
+
+export const createYarnRuntimeManifest = (
+  packageName: string,
+  version: string,
+  asset: GitHubReleaseAsset,
+  data: Buffer
+): YarnRuntimeManifest => ({
+  assetName: asset.name,
+  assetUrl: asset.browser_download_url,
+  packageName,
+  schemaVersion: YARN_RUNTIME_MANIFEST_SCHEMA_VERSION,
+  sha256: createYarnRuntimeReleaseAssetDigest(data),
+  tagName: createGitHubReleaseTagName(packageName, version),
+  version,
+})
+
+export const fetchYarnRuntimeReleaseAssetData = async (
+  asset: GitHubReleaseAsset
+): Promise<Buffer> => {
+  const response = await fetch(asset.browser_download_url, {
+    headers: {
+      'user-agent': 'raijin-yarn-plugin-release',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to verify existing release asset ${asset.name}: HTTP ${response.status}`
+    )
+  }
+
+  return Buffer.from(await response.arrayBuffer())
+}
+
+export const assertYarnRuntimeReleaseAssetMatches = async (
+  asset: GitHubReleaseAsset,
+  expectedData: Buffer
+): Promise<void> => {
+  const actualDigest = createYarnRuntimeReleaseAssetDigest(
+    await fetchYarnRuntimeReleaseAssetData(asset)
+  )
+  const expectedDigest = createYarnRuntimeReleaseAssetDigest(expectedData)
+
+  if (actualDigest !== expectedDigest) {
+    throw new Error(
+      `Existing release asset ${asset.name} digest mismatch: expected ${expectedDigest}, got ${actualDigest}`
+    )
+  }
+}
+
+const writeYarnRuntimeManifest = async (
+  project: Project,
+  manifest: YarnRuntimeManifest
+): Promise<void> => {
+  const manifestPath = createYarnRuntimeManifestPath(project.cwd)
+
+  await mkdir(dirname(manifestPath), { recursive: true })
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
+}
+
+const ensureYarnRuntimeReleaseAsset = async (
+  release: Release,
+  githubRelease: GitHubRelease,
+  packageName: string,
+  version: string,
+  project: Project,
+  owner: string,
+  repo: string,
+  report: StreamReport
+): Promise<void> => {
+  const assetOptions = createYarnRuntimeReleaseAssetOptions(packageName, project.cwd)
+
+  if (!assetOptions) {
+    return
+  }
+
+  if (!(await xfs.existsPromise(npath.toPortablePath(assetOptions.path)))) {
+    throw new Error(`Missing Raijin runtime asset source: ${assetOptions.path}`)
+  }
+
+  const data = await readFile(assetOptions.path)
+  const existingAsset = githubRelease.assets.find((asset) => asset.name === assetOptions.name)
+  let asset: GitHubReleaseAsset
+
+  if (existingAsset) {
+    await assertYarnRuntimeReleaseAssetMatches(existingAsset, data)
+    report.reportInfo(null, `Release asset ${assetOptions.name} already exists; verified`)
+    asset = existingAsset
+  } else {
+    asset = await release.uploadAsset({
+      owner,
+      repo,
+      release_id: githubRelease.id,
+      data: data.toString('utf-8'),
+      size: data.byteLength,
+      ...assetOptions,
+    })
+  }
+
+  await writeYarnRuntimeManifest(
+    project,
+    createYarnRuntimeManifest(packageName, version, asset, data)
+  )
 }
 
 const isNumericSemverIdentifier = (identifier: string): boolean =>
@@ -323,9 +495,37 @@ export class ReleaseCreateCommand extends BaseCommand {
               targetCommitish
             )
 
-            await release.create(releaseOptions)
+            const githubRelease = await release.create(releaseOptions)
+
+            await ensureYarnRuntimeReleaseAsset(
+              release,
+              githubRelease,
+              packageName,
+              version,
+              project,
+              owner,
+              repo,
+              report
+            )
           } catch (error) {
             if (isReleaseAlreadyExistsError(error)) {
+              const tagName = createGitHubReleaseTagName(packageName, version)
+              const githubRelease = await release.getByTag({
+                owner,
+                repo,
+                tag_name: tagName,
+              })
+
+              await ensureYarnRuntimeReleaseAsset(
+                release,
+                githubRelease,
+                packageName,
+                version,
+                project,
+                owner,
+                repo,
+                report
+              )
               report.reportInfo(null, `Release ${packageName}@${version} already exists; skipping`)
 
               return
