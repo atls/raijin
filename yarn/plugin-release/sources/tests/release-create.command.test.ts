@@ -1,11 +1,14 @@
-import assert                                 from 'node:assert/strict'
-import { test }                               from 'node:test'
+import type { PortablePath }                    from '@yarnpkg/fslib'
 
-import { createGitHubReleaseNotesOptions }    from '../release-create.command.js'
-import { createGitHubReleaseOptions }         from '../release-create.command.js'
-import { isReleaseAlreadyExistsError }        from '../release-create.command.js'
-import { parseGitHubReleaseTagVersion }       from '../release-create.command.js'
-import { selectPreviousGitHubReleaseTagName } from '../release-create.command.js'
+import assert                                   from 'node:assert/strict'
+import { test }                                 from 'node:test'
+
+import { createGitHubReleaseNotesOptions }      from '../release-create.command.js'
+import { createGitHubReleaseOptions }           from '../release-create.command.js'
+import { createYarnRuntimeReleaseAssetOptions } from '../release-create.command.js'
+import { isReleaseAlreadyExistsError }          from '../release-create.command.js'
+import { parseGitHubReleaseTagVersion }         from '../release-create.command.js'
+import { selectPreviousGitHubReleaseTagName }   from '../release-create.command.js'
 
 test('should create releases with GitHub generated release notes', () => {
   assert.deepEqual(
@@ -41,6 +44,17 @@ test('should create release note options with package-specific previous tags', (
       target_commitish: 'main',
     }
   )
+})
+
+test('should create yarn runtime release asset options only for yarn cli release', () => {
+  const projectCwd = '/repo' as PortablePath
+
+  assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/code-github', projectCwd), undefined)
+  assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/yarn-cli', projectCwd), {
+    content_type: 'text/javascript',
+    name: 'yarn.mjs',
+    path: '/repo/yarn/cli/dist/yarn.mjs',
+  })
 })
 
 test('should omit previous release tag from first package release notes', () => {

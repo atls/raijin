@@ -1,5 +1,9 @@
+import type { PortablePath }      from '@yarnpkg/fslib'
+
 import assert                     from 'node:assert/strict'
+import { Buffer }                 from 'node:buffer'
 import { execSync }               from 'node:child_process'
+import { readFile }               from 'node:fs/promises'
 
 import { BaseCommand }            from '@yarnpkg/cli'
 import { WorkspaceRequiredError } from '@yarnpkg/cli'
@@ -7,6 +11,9 @@ import { Configuration }          from '@yarnpkg/core'
 import { Project }                from '@yarnpkg/core'
 import { StreamReport }           from '@yarnpkg/core'
 import { execUtils }              from '@yarnpkg/core'
+import { npath }                  from '@yarnpkg/fslib'
+import { ppath }                  from '@yarnpkg/fslib'
+import { xfs }                    from '@yarnpkg/fslib'
 
 import { Release }                from '@atls/code-github'
 
@@ -16,6 +23,9 @@ const RELEASE_ALREADY_EXISTS_STATUS = 422
 const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
 const RELEASE_ALREADY_EXISTS_CODE = '"code":"already_exists"'
 const RELEASE_ALREADY_EXISTS_FIELD = '"field":"tag_name"'
+const YARN_CLI_PACKAGE_NAME = '@atls/yarn-cli'
+const YARN_RUNTIME_ASSET_NAME = 'yarn.mjs'
+const YARN_RUNTIME_ASSET_CONTENT_TYPE = 'text/javascript'
 
 interface GitHubReleaseError {
   status?: number
@@ -39,6 +49,19 @@ interface GitHubReleaseNotesOptions {
   repo: string
   tag_name: string
   target_commitish: string
+}
+
+interface GitHubRelease {
+  id: number
+  assets: Array<{
+    name: string
+  }>
+}
+
+interface GitHubReleaseAssetOptions {
+  content_type: string
+  name: string
+  path: string
 }
 
 interface SemVer {
@@ -105,6 +128,58 @@ export const createGitHubReleaseNotesOptions = (
   }
 
   return options
+}
+
+export const createYarnRuntimeReleaseAssetOptions = (
+  packageName: string,
+  projectCwd: PortablePath
+): GitHubReleaseAssetOptions | undefined => {
+  if (packageName !== YARN_CLI_PACKAGE_NAME) {
+    return undefined
+  }
+
+  return {
+    content_type: YARN_RUNTIME_ASSET_CONTENT_TYPE,
+    name: YARN_RUNTIME_ASSET_NAME,
+    path: npath.fromPortablePath(ppath.join(projectCwd, 'yarn/cli/dist/yarn.mjs' as PortablePath)),
+  }
+}
+
+const uploadYarnRuntimeReleaseAsset = async (
+  release: Release,
+  githubRelease: GitHubRelease,
+  packageName: string,
+  project: Project,
+  owner: string,
+  repo: string,
+  report: StreamReport
+): Promise<void> => {
+  const assetOptions = createYarnRuntimeReleaseAssetOptions(packageName, project.cwd)
+
+  if (!assetOptions) {
+    return
+  }
+
+  if (githubRelease.assets.some((asset) => asset.name === assetOptions.name)) {
+    report.reportInfo(null, `Release asset ${assetOptions.name} already exists; skipping`)
+
+    return
+  }
+
+  if (!(await xfs.existsPromise(npath.toPortablePath(assetOptions.path)))) {
+    throw new Error(`Missing Raijin runtime asset source: ${assetOptions.path}`)
+  }
+
+  const data = await readFile(assetOptions.path, 'utf-8')
+
+  await release.uploadAsset({
+    owner,
+    repo,
+    release_id: githubRelease.id,
+    data,
+    size: Buffer.byteLength(data),
+    ...assetOptions,
+  })
 }
 
 const isNumericSemverIdentifier = (identifier: string): boolean =>
@@ -323,9 +398,35 @@ export class ReleaseCreateCommand extends BaseCommand {
               targetCommitish
             )
 
-            await release.create(releaseOptions)
+            const githubRelease = await release.create(releaseOptions)
+
+            await uploadYarnRuntimeReleaseAsset(
+              release,
+              githubRelease,
+              packageName,
+              project,
+              owner,
+              repo,
+              report
+            )
           } catch (error) {
             if (isReleaseAlreadyExistsError(error)) {
+              const tagName = createGitHubReleaseTagName(packageName, version)
+              const githubRelease = await release.getByTag({
+                owner,
+                repo,
+                tag_name: tagName,
+              })
+
+              await uploadYarnRuntimeReleaseAsset(
+                release,
+                githubRelease,
+                packageName,
+                project,
+                owner,
+                repo,
+                report
+              )
               report.reportInfo(null, `Release ${packageName}@${version} already exists; skipping`)
 
               return
