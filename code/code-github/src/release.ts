@@ -40,6 +40,11 @@ interface UploadAssetOptions {
   repo: string
 }
 
+interface GitHubReleaseAsset {
+  browser_download_url: string
+  name: string
+}
+
 interface GenerateNotesOptions {
   tag_name: string
   target_commitish?: string
@@ -107,7 +112,7 @@ export class Release {
     }
   }
 
-  async uploadAsset(options: UploadAssetOptions): Promise<number> {
+  async uploadAsset(options: UploadAssetOptions): Promise<GitHubReleaseAsset> {
     const {
       owner,
       repo,
@@ -129,7 +134,10 @@ export class Release {
       },
     })
 
-    return result.status
+    return {
+      browser_download_url: result.data.browser_download_url,
+      name: result.data.name,
+    }
   }
 
   async generateNotes(options: GenerateNotesOptions): Promise<string> {
