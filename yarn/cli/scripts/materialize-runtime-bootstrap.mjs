@@ -138,42 +138,113 @@ const parseYarnScalar = (value) => {
   return trimmed
 }
 
-const readYarnNetworkConfigurationFile = async (configurationPath) => {
+const normalizeYarnNetworkSettingsHost = (value) => {
+  const host = parseYarnScalar(value)
+
+  if (typeof host !== 'string' || host.length === 0) {
+    return undefined
+  }
+
+  try {
+    return new URL(host.includes('://') ? host : \`https://\${host}\`).hostname.toLowerCase()
+  } catch {
+    return host.toLowerCase()
+  }
+}
+
+const isYarnNetworkSettingsHostMatch = (networkSettingsHost, hostname) => {
+  if (networkSettingsHost === hostname) {
+    return true
+  }
+
+  return networkSettingsHost.startsWith('*.') && hostname.endsWith(networkSettingsHost.slice(1))
+}
+
+const readYarnNetworkConfigurationFile = async (configurationPath, hostname) => {
   try {
     const configuration = await readFile(configurationPath, 'utf-8')
+    const entries = []
+    const networkEntries = []
+    let inNetworkSettings = false
+    let networkSettingsHost
 
-    const entries = configuration
-      .split(/\\r?\\n/)
-      .map((line) => line.match(/^(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/))
-      .filter(Boolean)
-      .map((match) => [match[1], parseYarnScalar(match[2])])
-      .filter(([, value]) => typeof value === 'string' && value.length > 0)
+    for (const line of configuration.split(/\\r?\\n/)) {
+      const topLevelMatch = line.match(/^(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/)
+
+      if (topLevelMatch) {
+        entries.push([topLevelMatch[1], parseYarnScalar(topLevelMatch[2])])
+        inNetworkSettings = false
+        networkSettingsHost = undefined
+
+        continue
+      }
+
+      if (/^networkSettings\\s*:\\s*$/.test(line)) {
+        inNetworkSettings = true
+        networkSettingsHost = undefined
+
+        continue
+      }
+
+      if (!inNetworkSettings) {
+        continue
+      }
+
+      if (/^\\S/.test(line)) {
+        inNetworkSettings = false
+        networkSettingsHost = undefined
+
+        continue
+      }
+
+      const hostMatch = line.match(/^\\s{2}([^\\s].*?)\\s*:\\s*$/)
+
+      if (hostMatch) {
+        networkSettingsHost = normalizeYarnNetworkSettingsHost(hostMatch[1])
+
+        continue
+      }
+
+      const settingMatch = line.match(/^\\s{4}(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/)
+
+      if (
+        networkSettingsHost &&
+        isYarnNetworkSettingsHostMatch(networkSettingsHost, hostname) &&
+        settingMatch
+      ) {
+        networkEntries.push([settingMatch[1], parseYarnScalar(settingMatch[2])])
+      }
+    }
 
     return {
-      configuration: Object.fromEntries(entries),
+      entries: [...entries, ...networkEntries].filter(
+        ([, value]) => typeof value === 'string' && value.length > 0
+      ),
       configurationDir: dirname(configurationPath),
     }
   } catch {
     return {
-      configuration: {},
+      entries: [],
       configurationDir: undefined,
     }
   }
 }
 
-const readYarnNetworkConfiguration = async () => {
-  const userConfiguration = await readYarnNetworkConfigurationFile(userYarnConfigPath)
-  const projectConfiguration = await readYarnNetworkConfigurationFile(yarnConfigPath)
-  const configuration = {
-    ...userConfiguration.configuration,
-    ...projectConfiguration.configuration,
+const readYarnNetworkConfiguration = async (hostname) => {
+  const userConfiguration = await readYarnNetworkConfigurationFile(userYarnConfigPath, hostname)
+  const projectConfiguration = await readYarnNetworkConfigurationFile(yarnConfigPath, hostname)
+  const configuration = {}
+  let httpsCaFilePathBase
+
+  for (const source of [userConfiguration, projectConfiguration]) {
+    for (const [key, value] of source.entries) {
+      configuration[key] = value
+
+      if (key === 'httpsCaFilePath') {
+        httpsCaFilePathBase = source.configurationDir
+      }
+    }
   }
-  const httpsCaFilePathBase =
-    projectConfiguration.configuration.httpsCaFilePath
-      ? projectConfiguration.configurationDir
-      : userConfiguration.configuration.httpsCaFilePath
-        ? userConfiguration.configurationDir
-        : undefined
 
   return {
     ...configuration,
@@ -181,10 +252,23 @@ const readYarnNetworkConfiguration = async () => {
   }
 }
 
-const yarnNetworkConfiguration = readYarnNetworkConfiguration()
+const yarnNetworkConfigurationByHostname = new Map()
+
+const getYarnNetworkConfiguration = (hostname) => {
+  const normalizedHostname = hostname.toLowerCase()
+
+  if (!yarnNetworkConfigurationByHostname.has(normalizedHostname)) {
+    yarnNetworkConfigurationByHostname.set(
+      normalizedHostname,
+      readYarnNetworkConfiguration(normalizedHostname)
+    )
+  }
+
+  return yarnNetworkConfigurationByHostname.get(normalizedHostname)
+}
 
 const resolveProxyUrl = async (parsedUrl) => {
-  const configuration = await yarnNetworkConfiguration
+  const configuration = await getYarnNetworkConfiguration(parsedUrl.hostname)
   const proxy = proxyEnvironmentNames[parsedUrl.protocol]
     ?.map((name) => process.env[name])
     .find((value) => typeof value === 'string' && value.length > 0)
@@ -198,8 +282,8 @@ const resolveProxyUrl = async (parsedUrl) => {
 const resolveYarnPath = (path, basePath = projectRoot) =>
   isAbsolute(path) ? path : resolve(basePath ?? projectRoot, path)
 
-const readYarnCertificateAuthority = async () => {
-  const configuration = await yarnNetworkConfiguration
+const readYarnCertificateAuthority = async (parsedUrl) => {
+  const configuration = await getYarnNetworkConfiguration(parsedUrl.hostname)
   const caPath = configuration.httpsCaFilePath
 
   if (typeof caPath !== 'string' || caPath.length === 0) {
@@ -282,7 +366,7 @@ const createProxyTunnel = async (targetUrl, proxyUrl, ca) =>
 const request = async (url, redirects = 0) => {
   const parsedUrl = new URL(url)
   const proxyUrl = await resolveProxyUrl(parsedUrl)
-  const ca = parsedUrl.protocol === 'https:' ? await readYarnCertificateAuthority() : undefined
+  const ca = parsedUrl.protocol === 'https:' ? await readYarnCertificateAuthority(parsedUrl) : undefined
   const proxyTunnel =
     proxyUrl && parsedUrl.protocol === 'https:' ? await createProxyTunnel(parsedUrl, proxyUrl, ca) : undefined
 
