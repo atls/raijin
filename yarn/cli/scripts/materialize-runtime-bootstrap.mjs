@@ -136,14 +136,14 @@ const parseYarnScalar = (value) => {
   return trimmed
 }
 
-const readYarnProxyConfiguration = async () => {
+const readYarnNetworkConfiguration = async () => {
   try {
     const configuration = await readFile(yarnConfigPath, 'utf-8')
 
     return Object.fromEntries(
       configuration
         .split(/\\r?\\n/)
-        .map((line) => line.match(/^\\s*(httpProxy|httpsProxy)\\s*:\\s*(.*?)\\s*$/))
+        .map((line) => line.match(/^\\s*(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/))
         .filter(Boolean)
         .map((match) => [match[1], parseYarnScalar(match[2])])
         .filter(([, value]) => typeof value === 'string' && value.length > 0)
@@ -153,10 +153,10 @@ const readYarnProxyConfiguration = async () => {
   }
 }
 
-const yarnProxyConfiguration = readYarnProxyConfiguration()
+const yarnNetworkConfiguration = readYarnNetworkConfiguration()
 
 const resolveProxyUrl = async (parsedUrl) => {
-  const configuration = await yarnProxyConfiguration
+  const configuration = await yarnNetworkConfiguration
   const proxy = proxyEnvironmentNames[parsedUrl.protocol]
     ?.map((name) => process.env[name])
     .find((value) => typeof value === 'string' && value.length > 0)
@@ -167,15 +167,29 @@ const resolveProxyUrl = async (parsedUrl) => {
   return proxy ? new URL(proxy) : undefined
 }
 
+const resolveYarnPath = (path) => (path.startsWith('/') ? path : resolve(projectRoot, path))
+
+const readYarnCertificateAuthority = async () => {
+  const configuration = await yarnNetworkConfiguration
+  const caPath = configuration.httpsCaFilePath
+
+  if (typeof caPath !== 'string' || caPath.length === 0) {
+    return undefined
+  }
+
+  return readFile(resolveYarnPath(caPath))
+}
+
 const connectSocket = (url, options) =>
   url.protocol === 'https:' ? connectTls(options) : connectNet(options)
 
-const createProxyTunnel = async (targetUrl, proxyUrl) =>
+const createProxyTunnel = async (targetUrl, proxyUrl, ca) =>
   new Promise((resolveTunnel, rejectTunnel) => {
     const proxyPort = Number(proxyUrl.port || (proxyUrl.protocol === 'https:' ? 443 : 80))
     const socket = connectSocket(proxyUrl, {
       host: proxyUrl.hostname,
       port: proxyPort,
+      ca,
       servername: proxyUrl.hostname,
     })
     const targetPort = targetUrl.port || (targetUrl.protocol === 'https:' ? '443' : '80')
@@ -228,6 +242,7 @@ const createProxyTunnel = async (targetUrl, proxyUrl) =>
         targetUrl.protocol === 'https:'
           ? connectTls({
               socket,
+              ca,
               servername: targetUrl.hostname,
             })
           : socket
@@ -238,8 +253,9 @@ const createProxyTunnel = async (targetUrl, proxyUrl) =>
 const request = async (url, redirects = 0) => {
   const parsedUrl = new URL(url)
   const proxyUrl = await resolveProxyUrl(parsedUrl)
+  const ca = parsedUrl.protocol === 'https:' ? await readYarnCertificateAuthority() : undefined
   const proxyTunnel =
-    proxyUrl && parsedUrl.protocol === 'https:' ? await createProxyTunnel(parsedUrl, proxyUrl) : undefined
+    proxyUrl && parsedUrl.protocol === 'https:' ? await createProxyTunnel(parsedUrl, proxyUrl, ca) : undefined
 
   return new Promise((resolveRequest, rejectRequest) => {
     const transport = parsedUrl.protocol === 'http:' ? httpRequest : httpsRequest
@@ -260,10 +276,11 @@ const request = async (url, redirects = 0) => {
             protocol: proxyUrl.protocol,
           }
         : {
+            ca,
             headers,
             createConnection: () => proxyTunnel,
           }
-      : { headers }
+      : { ca, headers }
 
     const req = transport(parsedUrl, requestOptions, (response) => {
       const status = response.statusCode ?? 0
