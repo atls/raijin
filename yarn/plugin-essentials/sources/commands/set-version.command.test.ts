@@ -7,6 +7,9 @@ import { tmpdir }                        from 'node:os'
 import { join }                          from 'node:path'
 import { test }                          from 'node:test'
 
+import { createSha256Digest }            from './set-version.runtime.js'
+import { parseRaijinRuntimeManifest }    from './set-version.runtime.js'
+import { resolveYarnPath }               from './set-version.runtime.js'
 import { findPackageCwd }                from './set-version.utils.js'
 import { nativeToPortablePath }          from './set-version.utils.js'
 import { portableToNativePath }          from './set-version.utils.js'
@@ -88,5 +91,76 @@ test('should convert between windows native and portable paths', () => {
   assert.equal(
     nativeToPortablePath('\\\\server\\share\\backend\\wallet', 'win32'),
     '/unc/server/share/backend/wallet'
+  )
+})
+
+test('should parse Raijin runtime manifest', () => {
+  assert.deepEqual(
+    parseRaijinRuntimeManifest({
+      schemaVersion: 1,
+      packageName: '@atls/yarn-cli',
+      version: '1.2.3',
+      tagName: '@atls/yarn-cli@1.2.3',
+      assetName: 'yarn.mjs',
+      assetUrl:
+        'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
+      sha256: 'a'.repeat(64),
+    }),
+    {
+      schemaVersion: 1,
+      packageName: '@atls/yarn-cli',
+      version: '1.2.3',
+      tagName: '@atls/yarn-cli@1.2.3',
+      assetName: 'yarn.mjs',
+      assetUrl:
+        'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
+      sha256: 'a'.repeat(64),
+    }
+  )
+})
+
+test('should reject runtime manifest from another package', () => {
+  assert.throws(
+    () =>
+      parseRaijinRuntimeManifest({
+        schemaVersion: 1,
+        packageName: '@atls/yarn-plugin-release',
+        version: '1.2.3',
+        tagName: '@atls/yarn-plugin-release@1.2.3',
+        assetName: 'yarn.mjs',
+        assetUrl: 'https://github.com/atls/raijin/releases/download/plugin/yarn.mjs',
+        sha256: 'a'.repeat(64),
+      }),
+    /expected @atls\/yarn-cli/
+  )
+})
+
+test('should reject runtime manifest with invalid digest', () => {
+  assert.throws(
+    () =>
+      parseRaijinRuntimeManifest({
+        schemaVersion: 1,
+        packageName: '@atls/yarn-cli',
+        version: '1.2.3',
+        tagName: '@atls/yarn-cli@1.2.3',
+        assetName: 'yarn.mjs',
+        assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+        sha256: 'not-a-digest',
+      }),
+    /invalid sha256/
+  )
+})
+
+test('should create runtime digest', () => {
+  assert.equal(
+    createSha256Digest(Buffer.from('runtime')),
+    'd92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23'
+  )
+})
+
+test('should resolve relative yarn path from package cwd', () => {
+  assert.equal(
+    resolveYarnPath('/repo/backend/wallet', '.yarn/releases/yarn.mjs'),
+    '/repo/backend/wallet/.yarn/releases/yarn.mjs'
   )
 })

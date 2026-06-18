@@ -345,8 +345,11 @@ const renderRootReadme = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В проекте появляется/обновляется маленький bootstrap `.yarn/releases/yarn.mjs`, а runtime bundle загружается из GitHub Releases'
-      : '- A small `.yarn/releases/yarn.mjs` bootstrap is added or updated, and the runtime bundle is downloaded from GitHub Releases',
+      ? '- В проекте появляется/обновляется полный файл первичного подключения `.yarn/releases/yarn.mjs`'
+      : '- A full initial `.yarn/releases/yarn.mjs` entry file is added or updated',
+    isRu
+      ? '- `yarn set version atls` обновляет бандл через вложение релиза GitHub штатным механизмом Yarn'
+      : '- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn',
     isRu
       ? '- Команды `raijin` становятся доступны через `yarn`'
       : '- Raijin commands are available via `yarn`',
@@ -359,8 +362,8 @@ const renderRootReadme = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Подтягивается актуальная версия bootstrap и runtime bundle'
-      : '- The latest bootstrap and runtime bundle version is installed',
+      ? '- Бандл обновляется до последней доступной версии штатным механизмом Yarn'
+      : '- The bundle is upgraded to the latest available version through Yarn',
     '',
     isRu ? '### Проверка' : '### Verify',
     '',
@@ -573,8 +576,11 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В `.yarn/releases/yarn.mjs` появляется bootstrap Raijin, а runtime bundle загружается из GitHub Releases'
-      : '- `.yarn/releases/yarn.mjs` contains the Raijin bootstrap, and the runtime bundle is downloaded from GitHub Releases',
+      ? '- В `.yarn/releases/yarn.mjs` появляется полный файл первичного подключения Raijin'
+      : '- `.yarn/releases/yarn.mjs` contains the full initial Raijin entry file',
+    isRu
+      ? '- `yarn set version atls` обновляет бандл через вложение релиза GitHub штатным механизмом Yarn'
+      : '- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn',
     isRu
       ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
       : '- Bundle commands (`check`, `files changed list`, etc.) become available',

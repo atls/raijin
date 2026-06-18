@@ -25,7 +25,8 @@ yarn set version atls
 
 Expected result:
 
-- `.yarn/releases/yarn.mjs` contains the Raijin bootstrap, and the runtime bundle is downloaded from GitHub Releases
+- `.yarn/releases/yarn.mjs` contains the full initial Raijin entry file
+- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn
 - Bundle commands (`check`, `files changed list`, etc.) become available
 
 <!-- sync:bundle-upgrade -->

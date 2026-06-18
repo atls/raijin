@@ -42,7 +42,8 @@ yarn set version atls
 
 Expected result:
 
-- A small `.yarn/releases/yarn.mjs` bootstrap is added or updated, and the runtime bundle is downloaded from GitHub Releases
+- A full initial `.yarn/releases/yarn.mjs` entry file is added or updated
+- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn
 - Raijin commands are available via `yarn`
 
 ### Upgrade
@@ -53,7 +54,7 @@ yarn set version atls
 
 Expected result:
 
-- The latest bootstrap and runtime bundle version is installed
+- The bundle is upgraded to the latest available version through Yarn
 
 ### Verify
 

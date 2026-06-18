@@ -42,7 +42,8 @@ yarn set version atls
 
 Ожидаемый результат:
 
-- В проекте появляется/обновляется маленький bootstrap `.yarn/releases/yarn.mjs`, а runtime bundle загружается из GitHub Releases
+- В проекте появляется/обновляется полный файл первичного подключения `.yarn/releases/yarn.mjs`
+- `yarn set version atls` обновляет бандл через вложение релиза GitHub штатным механизмом Yarn
 - Команды `raijin` становятся доступны через `yarn`
 
 ### Обновление
@@ -53,7 +54,7 @@ yarn set version atls
 
 Ожидаемый результат:
 
-- Подтягивается актуальная версия bootstrap и runtime bundle
+- Бандл обновляется до последней доступной версии штатным механизмом Yarn
 
 ### Проверка
 

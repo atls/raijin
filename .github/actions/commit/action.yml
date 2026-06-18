@@ -15,7 +15,7 @@ inputs:
     description: Branch to commit to
   PATTERN:
     required: false
-    default: '*.json *.md *.yaml *.yml *.lock .yarn/releases/yarn.mjs yarn/cli/dist/yarn.mjs'
+    default: '*.json *.md *.yaml *.yml *.lock .yarn/releases/raijin-runtime.json'
     description: File pattern for adding to commits
 
 runs:

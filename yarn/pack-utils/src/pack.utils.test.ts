@@ -7,7 +7,6 @@ import { writeFile }                     from 'node:fs/promises'
 import { arch }                          from 'node:os'
 import test                              from 'node:test'
 
-import { execUtils }                     from '@yarnpkg/core'
 import { npath }                         from '@yarnpkg/fslib'
 import { ppath }                         from '@yarnpkg/fslib'
 import { xfs }                           from '@yarnpkg/fslib'
@@ -53,29 +52,14 @@ test('should normalize Docker platform aliases before Yarn install', () => {
   )
 })
 
-test('should copy prewarmed Raijin runtime cache with yarn release', async () => {
+test('should copy yarn release without runtime cache side effects', async () => {
   await xfs.mktempPromise(async (source) => {
     await xfs.mktempPromise(async (destination) => {
       const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
       const yarnNativePath = npath.fromPortablePath(yarnPath)
-      const runtimeCachePath = ppath.join('.yarn', 'raijin', 'runtime', 'runtime-sha', 'yarn.mjs')
 
       await mkdir(npath.dirname(yarnNativePath), { recursive: true })
-      await writeFile(
-        yarnNativePath,
-        [
-          '#!/usr/bin/env node',
-          'import { mkdirSync, writeFileSync } from "node:fs"',
-          'import { join } from "node:path"',
-          'if (process.env.YARN_IGNORE_PATH !== "1") process.exit(2)',
-          'const runtimePath = join(process.cwd(), ".yarn/raijin/runtime/runtime-sha/yarn.mjs")',
-          'mkdirSync(join(process.cwd(), ".yarn/raijin/runtime/runtime-sha"), { recursive: true })',
-          'writeFileSync(runtimePath, "runtime")',
-          'console.log("1.0.0")',
-          '',
-        ].join('\n'),
-        { mode: 0o755 }
-      )
+      await writeFile(yarnNativePath, '#!/usr/bin/env node\n', { mode: 0o755 })
 
       await copyYarnRelease(
         {
@@ -92,56 +76,15 @@ test('should copy prewarmed Raijin runtime cache with yarn release', async () =>
         await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
         true
       )
-      assert.equal(await xfs.existsPromise(ppath.join(destination, runtimeCachePath)), true)
     })
   })
 })
 
-test('should fail image pack runtime copy when Raijin runtime prewarm fails', async () => {
+test('should copy yarn release from native yarn path', async (context) => {
   await xfs.mktempPromise(async (source) => {
     await xfs.mktempPromise(async (destination) => {
       const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
       const yarnNativePath = npath.fromPortablePath(yarnPath)
-
-      await mkdir(npath.dirname(yarnNativePath), { recursive: true })
-      await writeFile(
-        yarnNativePath,
-        [
-          '#!/usr/bin/env node',
-          'if (process.env.YARN_IGNORE_PATH !== "1") process.exit(2)',
-          'process.exit(17)',
-          '',
-        ].join('\n'),
-        { mode: 0o755 }
-      )
-
-      await assert.rejects(
-        copyYarnRelease(
-          {
-            cwd: source,
-            configuration: {
-              get: (name: string) => (name === 'yarnPath' ? yarnPath : undefined),
-            },
-          } as unknown as Project,
-          destination,
-          { reportInfo: () => undefined } as unknown as Report
-        )
-      )
-
-      assert.equal(
-        await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
-        false
-      )
-    })
-  })
-})
-
-test('should prewarm yarn release with native path', async (context) => {
-  await xfs.mktempPromise(async (source) => {
-    await xfs.mktempPromise(async (destination) => {
-      const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
-      const yarnNativePath = npath.fromPortablePath(yarnPath)
-      const execArgs: Array<string> = []
 
       await mkdir(npath.dirname(yarnNativePath), { recursive: true })
       await writeFile(yarnNativePath, '#!/usr/bin/env node\n', { mode: 0o755 })
@@ -152,12 +95,6 @@ test('should prewarm yarn release with native path', async (context) => {
         }
 
         return path
-      })
-
-      context.mock.method(execUtils, 'execvp', async (_command: string, args: Array<string>) => {
-        execArgs.push(...args)
-
-        return { code: 0, stdout: Buffer.from(''), stderr: Buffer.from('') }
       })
 
       await copyYarnRelease(
@@ -171,7 +108,6 @@ test('should prewarm yarn release with native path', async (context) => {
         { reportInfo: () => undefined } as unknown as Report
       )
 
-      assert.deepEqual(execArgs, [yarnNativePath, '--version'])
       assert.equal(
         await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
         true

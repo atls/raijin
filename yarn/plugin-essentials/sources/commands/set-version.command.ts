@@ -2,6 +2,8 @@ import { BaseCommand }                   from '@yarnpkg/cli'
 import { Configuration }                 from '@yarnpkg/core'
 import { Command }                       from 'clipanion'
 
+import { assertInstalledRaijinRuntime }  from './set-version.runtime.js'
+import { fetchRaijinRuntimeManifest }    from './set-version.runtime.js'
 import { findPackageCwd }                from './set-version.utils.js'
 import { portableToNativePath }          from './set-version.utils.js'
 import { preparePackageProjectBoundary } from './set-version.utils.js'
@@ -25,29 +27,45 @@ export class SetVersionCommand extends BaseCommand {
     try {
       process.chdir(portableToNativePath(cwd))
 
-      const args = ['set', 'version']
-      args.push('https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs')
-      const exitCode = await this.cli.run(args, { cwd: cwd as typeof this.context.cwd })
-
-      const bumpArgs = ['up', '@atls/code-runtime']
-      const bumpExitCode = await this.cli.run(bumpArgs, { cwd: cwd as typeof this.context.cwd })
-
       const configuration = await Configuration.find(
         cwd as typeof this.context.cwd,
         this.context.plugins
       )
+      const runtimeManifest = await fetchRaijinRuntimeManifest(configuration)
+      const exitCode = await this.cli.run(['set', 'version', runtimeManifest.assetUrl], {
+        cwd: cwd as typeof this.context.cwd,
+      })
 
-      await configuration.triggerHook(
+      if (exitCode !== 0) {
+        return exitCode
+      }
+
+      const updatedConfiguration = await Configuration.find(
+        cwd as typeof this.context.cwd,
+        this.context.plugins
+      )
+
+      await assertInstalledRaijinRuntime(updatedConfiguration, cwd, runtimeManifest)
+
+      const bumpArgs = ['up', '@atls/code-runtime']
+      const bumpExitCode = await this.cli.run(bumpArgs, { cwd: cwd as typeof this.context.cwd })
+
+      const finalConfiguration = await Configuration.find(
+        cwd as typeof this.context.cwd,
+        this.context.plugins
+      )
+
+      await finalConfiguration.triggerHook(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
         (hooks) => (hooks as any).afterYarnVersionSet,
-        configuration,
+        finalConfiguration,
         {
           ...this.context,
           cwd: cwd as typeof this.context.cwd,
         }
       )
 
-      return exitCode || bumpExitCode
+      return bumpExitCode
     } finally {
       process.chdir(previousCwd)
     }

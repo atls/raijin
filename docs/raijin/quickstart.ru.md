@@ -25,7 +25,8 @@ yarn set version atls
 
 Ожидаемый результат:
 
-- В `.yarn/releases/yarn.mjs` появляется bootstrap Raijin, а runtime bundle загружается из GitHub Releases
+- В `.yarn/releases/yarn.mjs` появляется полный файл первичного подключения Raijin
+- `yarn set version atls` обновляет бандл через вложение релиза GitHub штатным механизмом Yarn
 - Команды из бандла (`check`, `files changed list` и другие) становятся доступны
 
 <!-- sync:bundle-upgrade -->

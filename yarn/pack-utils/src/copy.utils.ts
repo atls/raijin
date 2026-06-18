@@ -7,10 +7,8 @@ import type { Locator }      from '@yarnpkg/core'
 import type { PortablePath } from '@yarnpkg/fslib'
 
 import { Manifest }          from '@yarnpkg/core'
-import { execUtils }         from '@yarnpkg/core'
 import { structUtils }       from '@yarnpkg/core'
 import { xfs }               from '@yarnpkg/fslib'
-import { npath }             from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
 
 export const copyCacheMarkedFiles = async (
@@ -148,27 +146,7 @@ export const copyYarnRelease = async (
 
   report.reportInfo(null, path)
 
-  await execUtils.execvp(process.execPath, [npath.fromPortablePath(src), '--version'], {
-    cwd: project.cwd,
-    env: {
-      ...process.env,
-      YARN_IGNORE_PATH: '1',
-    },
-    strict: true,
-  })
-
   await xfs.copyPromise(dest, src, {
     overwrite: true,
   })
-
-  const runtimeCachePath = ppath.join('.yarn', 'raijin')
-  const runtimeCacheSource = ppath.join(project.cwd, runtimeCachePath)
-
-  if (await xfs.existsPromise(runtimeCacheSource)) {
-    report.reportInfo(null, runtimeCachePath)
-
-    await xfs.copyPromise(ppath.join(destination, runtimeCachePath), runtimeCacheSource, {
-      overwrite: true,
-    })
-  }
 }
