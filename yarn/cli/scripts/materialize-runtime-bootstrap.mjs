@@ -149,6 +149,29 @@ const stripYarnInlineComment = (value) => {
   return value
 }
 
+const yarnEnvironmentPlaceholderPattern = new RegExp('[$][{]([A-Za-z_][A-Za-z0-9_]*)[}]', 'g')
+
+const expandYarnEnvironmentPlaceholders = (value) => {
+  if (!value.includes('$' + '{')) {
+    return value
+  }
+
+  let missingEnvironmentValue = false
+  const expanded = value.replace(yarnEnvironmentPlaceholderPattern, (_, name) => {
+    const environmentValue = process.env[name]
+
+    if (typeof environmentValue !== 'string') {
+      missingEnvironmentValue = true
+
+      return ''
+    }
+
+    return environmentValue
+  })
+
+  return missingEnvironmentValue ? undefined : expanded
+}
+
 const parseYarnScalar = (value) => {
   const trimmed = stripYarnInlineComment(value).trim()
 
@@ -158,17 +181,17 @@ const parseYarnScalar = (value) => {
 
   if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
     try {
-      return JSON.parse(trimmed)
+      return expandYarnEnvironmentPlaceholders(JSON.parse(trimmed))
     } catch {
-      return trimmed.slice(1, -1)
+      return expandYarnEnvironmentPlaceholders(trimmed.slice(1, -1))
     }
   }
 
   if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
-    return trimmed.slice(1, -1).replace(/''/g, "'")
+    return expandYarnEnvironmentPlaceholders(trimmed.slice(1, -1).replace(/''/g, "'"))
   }
 
-  return trimmed
+  return expandYarnEnvironmentPlaceholders(trimmed)
 }
 
 const normalizeYarnNetworkSettingsHost = (value) => {
