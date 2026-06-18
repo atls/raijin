@@ -245,21 +245,35 @@ const readYarnNetworkConfigurationFile = async (configurationPath, hostname) => 
     const networkEntries = []
     let inNetworkSettings = false
     let networkSettingsHost
+    let networkSettingsIndent = -1
+    let networkSettingsHostIndent = -1
 
     for (const line of configuration.split(/\\r?\\n/)) {
+      const trimmedLine = line.trim()
+
+      if (!trimmedLine || trimmedLine.startsWith('#')) {
+        continue
+      }
+
       const topLevelMatch = line.match(/^(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/)
 
       if (topLevelMatch) {
         entries.push([topLevelMatch[1], parseYarnScalar(topLevelMatch[2])])
         inNetworkSettings = false
         networkSettingsHost = undefined
+        networkSettingsIndent = -1
+        networkSettingsHostIndent = -1
 
         continue
       }
 
-      if (/^networkSettings\\s*:\\s*$/.test(line)) {
+      const networkSettingsMatch = line.match(/^(\\s*)networkSettings\\s*:\\s*$/)
+
+      if (networkSettingsMatch && networkSettingsMatch[1].length === 0) {
         inNetworkSettings = true
         networkSettingsHost = undefined
+        networkSettingsIndent = networkSettingsMatch[1].length
+        networkSettingsHostIndent = -1
 
         continue
       }
@@ -271,26 +285,30 @@ const readYarnNetworkConfigurationFile = async (configurationPath, hostname) => 
       if (/^\\S/.test(line)) {
         inNetworkSettings = false
         networkSettingsHost = undefined
+        networkSettingsIndent = -1
+        networkSettingsHostIndent = -1
 
         continue
       }
 
-      const hostMatch = line.match(/^\\s{2}([^\\s].*?)\\s*:\\s*$/)
-
-      if (hostMatch) {
-        networkSettingsHost = normalizeYarnNetworkSettingsHost(hostMatch[1])
-
-        continue
-      }
-
-      const settingMatch = line.match(/^\\s{4}(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/)
+      const settingMatch = line.match(/^(\\s+)(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/)
 
       if (
         networkSettingsHost &&
-        isYarnNetworkSettingsHostMatch(networkSettingsHost, hostname) &&
-        settingMatch
+        settingMatch &&
+        settingMatch[1].length > networkSettingsHostIndent &&
+        isYarnNetworkSettingsHostMatch(networkSettingsHost, hostname)
       ) {
-        networkEntries.push([settingMatch[1], parseYarnScalar(settingMatch[2])])
+        networkEntries.push([settingMatch[2], parseYarnScalar(settingMatch[3])])
+
+        continue
+      }
+
+      const hostMatch = line.match(/^(\\s+)([^\\s].*?)\\s*:\\s*$/)
+
+      if (hostMatch && hostMatch[1].length > networkSettingsIndent) {
+        networkSettingsHost = normalizeYarnNetworkSettingsHost(hostMatch[2])
+        networkSettingsHostIndent = hostMatch[1].length
       }
     }
 
