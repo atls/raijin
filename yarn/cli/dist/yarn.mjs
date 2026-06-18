@@ -25,7 +25,7 @@ const embeddedManifest = {
   "version": "1.2.22",
   "tagName": "@atls/yarn-cli@1.2.22",
   "assetName": "yarn.mjs",
-  "assetUrl": "https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.22/yarn.mjs",
+  "releaseApiUrl": "https://api.github.com/repos/atls/raijin/releases/tags/%40atls%2Fyarn-cli%401.2.22",
   "sha256": "c23b49595a1e4a5a64dc209a39064bbc6f7ff2845c299b946749b4f459df5738"
 }
 
@@ -35,7 +35,15 @@ const request = async (url, redirects = 0) =>
   new Promise((resolveRequest, rejectRequest) => {
     const parsedUrl = new URL(url)
     const transport = parsedUrl.protocol === 'http:' ? httpRequest : httpsRequest
-    const req = transport(parsedUrl, (response) => {
+    const headers =
+      parsedUrl.hostname === 'api.github.com'
+        ? {
+            accept: 'application/vnd.github+json',
+            'user-agent': 'raijin-yarn-bootstrap',
+          }
+        : undefined
+
+    const req = transport(parsedUrl, { headers }, (response) => {
       const status = response.statusCode ?? 0
       const location = response.headers.location
 
@@ -66,6 +74,17 @@ const request = async (url, redirects = 0) =>
     req.on('error', rejectRequest)
     req.end()
   })
+
+const downloadJson = async (url) => {
+  const response = await request(url)
+  const chunks = []
+
+  for await (const chunk of response) {
+    chunks.push(chunk)
+  }
+
+  return JSON.parse(Buffer.concat(chunks).toString('utf-8'))
+}
 
 const hashFile = async (path) => {
   const hash = createHash('sha256')
@@ -98,6 +117,18 @@ const downloadFile = async (url, destination) => {
   })
 }
 
+const resolveAssetUrl = async (manifest) => {
+  const release = await downloadJson(manifest.releaseApiUrl)
+  const asset = release.assets?.find((candidate) => candidate.name === manifest.assetName)
+  const assetUrl = asset?.browser_download_url
+
+  if (typeof assetUrl !== 'string' || assetUrl.length === 0) {
+    throw new Error(`Missing Raijin runtime release asset ${manifest.assetName}`)
+  }
+
+  return assetUrl
+}
+
 const resolveRuntime = async () => {
   const manifest = await readManifest()
   const runtimePath = join(cacheRoot, manifest.sha256, manifest.assetName)
@@ -107,9 +138,10 @@ const resolveRuntime = async () => {
   }
 
   const temporaryPath = `${runtimePath}.tmp-${process.pid}`
+  const assetUrl = await resolveAssetUrl(manifest)
 
   await rm(temporaryPath, { force: true })
-  await downloadFile(manifest.assetUrl, temporaryPath)
+  await downloadFile(assetUrl, temporaryPath)
 
   if ((await hashFile(temporaryPath)) !== manifest.sha256) {
     await rm(temporaryPath, { force: true })
