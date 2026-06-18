@@ -339,17 +339,23 @@ const renderRootReadme = (language) => {
     isRu ? '### Новый проект' : '### New project',
     '',
     '```bash',
-    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs',
-    'yarn set version atls',
+    'mkdir -p .yarn/releases && \\',
+    'curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs && \\',
+    'yarn config set yarnPath .yarn/releases/yarn.mjs && \\',
+    'yarn set version atls && \\',
+    'rm .yarn/releases/yarn.mjs',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В проекте появляется/обновляется полный файл первичного подключения `.yarn/releases/yarn.mjs`'
-      : '- A full initial `.yarn/releases/yarn.mjs` entry file is added or updated',
+      ? '- В проекте появляется временный файл первичного подключения `.yarn/releases/yarn.mjs`'
+      : '- A temporary `.yarn/releases/yarn.mjs` initial entry file is added',
     isRu
-      ? '- `yarn set version atls` обновляет бандл через вложение релиза GitHub штатным механизмом Yarn'
-      : '- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn',
+      ? '- `yarn set version atls` обновляет бандл через файл релиза GitHub и переключает `yarnPath` на версионный файл `.yarn/releases/raijin-yarn-<version>.mjs`'
+      : '- `yarn set version atls` updates the bundle from a GitHub Release asset and points `yarnPath` to the versioned `.yarn/releases/raijin-yarn-<version>.mjs` file',
+    isRu
+      ? '- Временный файл `.yarn/releases/yarn.mjs` удаляется после переключения'
+      : '- The temporary `.yarn/releases/yarn.mjs` file is removed after the switch',
     isRu
       ? '- Команды `raijin` становятся доступны через `yarn`'
       : '- Raijin commands are available via `yarn`',
@@ -570,17 +576,23 @@ const renderQuickstart = (language) => {
     isRu ? '## 2. Новый проект: подключение бандла' : '## 2. New project: install the bundle',
     '',
     '```bash',
-    'yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs',
-    'yarn set version atls',
+    'mkdir -p .yarn/releases && \\',
+    'curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs && \\',
+    'yarn config set yarnPath .yarn/releases/yarn.mjs && \\',
+    'yarn set version atls && \\',
+    'rm .yarn/releases/yarn.mjs',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В `.yarn/releases/yarn.mjs` появляется полный файл первичного подключения Raijin'
-      : '- `.yarn/releases/yarn.mjs` contains the full initial Raijin entry file',
+      ? '- В `.yarn/releases/yarn.mjs` появляется временный файл первичного подключения Raijin'
+      : '- `.yarn/releases/yarn.mjs` contains the temporary initial Raijin entry file',
     isRu
-      ? '- `yarn set version atls` обновляет бандл через вложение релиза GitHub штатным механизмом Yarn'
-      : '- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn',
+      ? '- `yarn set version atls` обновляет бандл через файл релиза GitHub и переключает `yarnPath` на версионный файл `.yarn/releases/raijin-yarn-<version>.mjs`'
+      : '- `yarn set version atls` updates the bundle from a GitHub Release asset and points `yarnPath` to the versioned `.yarn/releases/raijin-yarn-<version>.mjs` file',
+    isRu
+      ? '- Временный файл `.yarn/releases/yarn.mjs` удаляется после переключения'
+      : '- The temporary `.yarn/releases/yarn.mjs` file is removed after the switch',
     isRu
       ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
       : '- Bundle commands (`check`, `files changed list`, etc.) become available',

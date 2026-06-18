@@ -14,6 +14,12 @@ import tsconfig                 from '@atls/config-typescript'
 
 import { AbstractToolsCommand } from './abstract-tools.command.js'
 
+const projectTypesIncludeEntry = 'project.types.d.ts'
+
+const implicitTSConfigIncludeEntry = '**/*'
+
+type TSConfigShape = Record<string, unknown>
+
 const combineMerge = (
   /* eslint-disable @typescript-eslint/no-explicit-any */
   target: Array<any>,
@@ -49,6 +55,35 @@ const convertWorkspacesToIncludes = (workspaces: string): string => {
   }
 
   return workspaces
+}
+
+const hasTSConfigEntry = (config: TSConfigShape, key: string): boolean => Object.hasOwn(config, key)
+
+export const getTSConfigIncludeEntries = (
+  config: TSConfigShape,
+  workspaceIncludes: Array<string>
+): Array<string> | undefined => {
+  const tsconfigIncludes: Array<string> = (() => {
+    if (Array.isArray(config.include)) {
+      return config.include.filter((item): item is string => typeof item === 'string')
+    }
+
+    if (!hasTSConfigEntry(config, 'include')) {
+      if (hasTSConfigEntry(config, 'files') || hasTSConfigEntry(config, 'extends')) {
+        return []
+      }
+
+      return [implicitTSConfigIncludeEntry]
+    }
+
+    return []
+  })()
+
+  if (tsconfigIncludes.length === 0 && !hasTSConfigEntry(config, 'include')) {
+    return undefined
+  }
+
+  return Array.from(new Set([projectTypesIncludeEntry, ...tsconfigIncludes, ...workspaceIncludes]))
 }
 
 export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
@@ -102,9 +137,11 @@ export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
             (project.topLevelWorkspace.manifest.raw.workspaces as Array<string> | undefined) || []
           ).map(convertWorkspacesToIncludes)
 
+          const include = getTSConfigIncludeEntries(config, includes)
+
           const created = {
             ...config,
-            include: Array.from(new Set(['project.types.d.ts', ...config.include, ...includes])),
+            ...(include ? { include } : {}),
           }
 
           try {

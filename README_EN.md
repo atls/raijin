@@ -36,14 +36,18 @@ It aligns teams on strict standards and strong contracts to increase delivery pr
 ### New project
 
 ```bash
-yarn set version https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs
-yarn set version atls
+mkdir -p .yarn/releases && \
+curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs && \
+yarn config set yarnPath .yarn/releases/yarn.mjs && \
+yarn set version atls && \
+rm .yarn/releases/yarn.mjs
 ```
 
 Expected result:
 
-- A full initial `.yarn/releases/yarn.mjs` entry file is added or updated
-- `yarn set version atls` updates the bundle from a GitHub Release asset through Yarn
+- A temporary `.yarn/releases/yarn.mjs` initial entry file is added
+- `yarn set version atls` updates the bundle from a GitHub Release asset and points `yarnPath` to the versioned `.yarn/releases/raijin-yarn-<version>.mjs` file
+- The temporary `.yarn/releases/yarn.mjs` file is removed after the switch
 - Raijin commands are available via `yarn`
 
 ### Upgrade
