@@ -12,5 +12,4 @@ runs:
         export NODE_OPTIONS
         yarn workspace @atls/yarn-cli version patch
         yarn cli:build
-        node yarn/cli/scripts/materialize-runtime-bootstrap.mjs
         yarn format
