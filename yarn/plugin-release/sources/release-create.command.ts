@@ -141,7 +141,9 @@ export const createYarnRuntimeReleaseAssetOptions = (
   return {
     content_type: YARN_RUNTIME_ASSET_CONTENT_TYPE,
     name: YARN_RUNTIME_ASSET_NAME,
-    path: npath.fromPortablePath(ppath.join(projectCwd, 'yarn/cli/dist/yarn.mjs' as PortablePath)),
+    path: npath.fromPortablePath(
+      ppath.join(projectCwd, 'yarn/cli/dist/runtime/yarn.mjs' as PortablePath)
+    ),
   }
 }
 

@@ -53,7 +53,7 @@ test('should create yarn runtime release asset options only for yarn cli release
   assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/yarn-cli', projectCwd), {
     content_type: 'text/javascript',
     name: 'yarn.mjs',
-    path: '/repo/yarn/cli/dist/yarn.mjs',
+    path: '/repo/yarn/cli/dist/runtime/yarn.mjs',
   })
 })
 

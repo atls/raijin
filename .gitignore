@@ -45,6 +45,9 @@ node_modules
 /.yarn/raijin
 
 dist/
+!yarn/cli/dist/
+yarn/cli/dist/*
+!yarn/cli/dist/yarn.mjs
 yarn/plugin-*/bundles/
 !yarn/plugin-badges/bundles/
 !yarn/plugin-badges/bundles/**

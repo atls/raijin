@@ -1,44 +1,4 @@
-import { createHash } from 'node:crypto'
-import { mkdir } from 'node:fs/promises'
-import { readFile } from 'node:fs/promises'
-import { writeFile } from 'node:fs/promises'
-import { dirname } from 'node:path'
-import { join } from 'node:path'
-import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-const scriptDir = dirname(fileURLToPath(import.meta.url))
-const root = resolve(scriptDir, '../../..')
-const packageJsonPath = join(root, 'yarn/cli/package.json')
-const bundlePath = join(root, 'yarn/cli/dist/runtime/yarn.mjs')
-const releasesDir = join(root, '.yarn/releases')
-const bootstrapPath = join(releasesDir, 'yarn.mjs')
-const legacyBootstrapPath = join(root, 'yarn/cli/dist/yarn.mjs')
-const manifestPath = join(releasesDir, 'raijin-runtime.json')
-const assetName = 'yarn.mjs'
-const packageName = '@atls/yarn-cli'
-
-const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'))
-const bundle = await readFile(bundlePath)
-const { version } = packageJson
-const tagName = `${packageName}@${version}`
-const sha256 = createHash('sha256').update(bundle).digest('hex')
-const assetUrl = `https://github.com/atls/raijin/releases/download/${encodeURIComponent(
-  tagName
-)}/${assetName}`
-
-const manifest = {
-  schemaVersion: 1,
-  packageName,
-  version,
-  tagName,
-  assetName,
-  assetUrl,
-  sha256,
-}
-const manifestContent = JSON.stringify(manifest, null, 2)
-
-const bootstrap = `#!/usr/bin/env node
+#!/usr/bin/env node
 import { createHash } from 'node:crypto'
 import { spawn } from 'node:child_process'
 import { createWriteStream } from 'node:fs'
@@ -59,7 +19,15 @@ const bootstrapDir = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(bootstrapDir, '../..')
 const cacheRoot = join(projectRoot, '.yarn/raijin/runtime')
 const maxRedirects = 5
-const embeddedManifest = ${manifestContent}
+const embeddedManifest = {
+  "schemaVersion": 1,
+  "packageName": "@atls/yarn-cli",
+  "version": "1.2.22",
+  "tagName": "@atls/yarn-cli@1.2.22",
+  "assetName": "yarn.mjs",
+  "assetUrl": "https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.22/yarn.mjs",
+  "sha256": "c23b49595a1e4a5a64dc209a39064bbc6f7ff2845c299b946749b4f459df5738"
+}
 
 const readManifest = async () => embeddedManifest
 
@@ -75,7 +43,7 @@ const request = async (url, redirects = 0) =>
         response.resume()
 
         if (redirects >= maxRedirects) {
-          rejectRequest(new Error(\`Too many redirects while downloading \${url}\`))
+          rejectRequest(new Error(`Too many redirects while downloading ${url}`))
 
           return
         }
@@ -87,7 +55,7 @@ const request = async (url, redirects = 0) =>
 
       if (status < 200 || status >= 300) {
         response.resume()
-        rejectRequest(new Error(\`Request failed for \${url}: HTTP \${status}\`))
+        rejectRequest(new Error(`Request failed for ${url}: HTTP ${status}`))
 
         return
       }
@@ -138,14 +106,14 @@ const resolveRuntime = async () => {
     return runtimePath
   }
 
-  const temporaryPath = \`\${runtimePath}.tmp-\${process.pid}\`
+  const temporaryPath = `${runtimePath}.tmp-${process.pid}`
 
   await rm(temporaryPath, { force: true })
   await downloadFile(manifest.assetUrl, temporaryPath)
 
   if ((await hashFile(temporaryPath)) !== manifest.sha256) {
     await rm(temporaryPath, { force: true })
-    throw new Error(\`Downloaded Raijin runtime digest mismatch for \${manifest.tagName}\`)
+    throw new Error(`Downloaded Raijin runtime digest mismatch for ${manifest.tagName}`)
   }
 
   await rename(temporaryPath, runtimePath)
@@ -169,10 +137,3 @@ child.on('exit', (code, signal) => {
 
   process.exit(code ?? 1)
 })
-`
-
-await mkdir(releasesDir, { recursive: true })
-await mkdir(dirname(legacyBootstrapPath), { recursive: true })
-await writeFile(manifestPath, `${manifestContent}\n`)
-await writeFile(bootstrapPath, bootstrap, { mode: 0o755 })
-await writeFile(legacyBootstrapPath, bootstrap, { mode: 0o755 })
