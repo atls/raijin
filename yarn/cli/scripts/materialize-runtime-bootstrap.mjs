@@ -84,7 +84,9 @@ import { readFile } from 'node:fs/promises'
 import { rename } from 'node:fs/promises'
 import { rm } from 'node:fs/promises'
 import { stat } from 'node:fs/promises'
+import { homedir } from 'node:os'
 import { dirname } from 'node:path'
+import { isAbsolute } from 'node:path'
 import { join } from 'node:path'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -98,6 +100,7 @@ const bootstrapDir = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(bootstrapDir, '../..')
 const cacheRoot = join(projectRoot, '.yarn/raijin/runtime')
 const yarnConfigPath = join(projectRoot, '.yarnrc.yml')
+const userYarnConfigPath = join(homedir(), '.yarnrc.yml')
 const maxRedirects = 5
 const embeddedManifest = ${manifestContent}
 
@@ -135,20 +138,46 @@ const parseYarnScalar = (value) => {
   return trimmed
 }
 
-const readYarnNetworkConfiguration = async () => {
+const readYarnNetworkConfigurationFile = async (configurationPath) => {
   try {
-    const configuration = await readFile(yarnConfigPath, 'utf-8')
+    const configuration = await readFile(configurationPath, 'utf-8')
 
-    return Object.fromEntries(
-      configuration
-        .split(/\\r?\\n/)
-        .map((line) => line.match(/^(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/))
-        .filter(Boolean)
-        .map((match) => [match[1], parseYarnScalar(match[2])])
-        .filter(([, value]) => typeof value === 'string' && value.length > 0)
-    )
+    const entries = configuration
+      .split(/\\r?\\n/)
+      .map((line) => line.match(/^(httpProxy|httpsProxy|httpsCaFilePath)\\s*:\\s*(.*?)\\s*$/))
+      .filter(Boolean)
+      .map((match) => [match[1], parseYarnScalar(match[2])])
+      .filter(([, value]) => typeof value === 'string' && value.length > 0)
+
+    return {
+      configuration: Object.fromEntries(entries),
+      configurationDir: dirname(configurationPath),
+    }
   } catch {
-    return {}
+    return {
+      configuration: {},
+      configurationDir: undefined,
+    }
+  }
+}
+
+const readYarnNetworkConfiguration = async () => {
+  const userConfiguration = await readYarnNetworkConfigurationFile(userYarnConfigPath)
+  const projectConfiguration = await readYarnNetworkConfigurationFile(yarnConfigPath)
+  const configuration = {
+    ...userConfiguration.configuration,
+    ...projectConfiguration.configuration,
+  }
+  const httpsCaFilePathBase =
+    projectConfiguration.configuration.httpsCaFilePath
+      ? projectConfiguration.configurationDir
+      : userConfiguration.configuration.httpsCaFilePath
+        ? userConfiguration.configurationDir
+        : undefined
+
+  return {
+    ...configuration,
+    httpsCaFilePathBase,
   }
 }
 
@@ -166,7 +195,8 @@ const resolveProxyUrl = async (parsedUrl) => {
   return proxy ? new URL(proxy) : undefined
 }
 
-const resolveYarnPath = (path) => (path.startsWith('/') ? path : resolve(projectRoot, path))
+const resolveYarnPath = (path, basePath = projectRoot) =>
+  isAbsolute(path) ? path : resolve(basePath ?? projectRoot, path)
 
 const readYarnCertificateAuthority = async () => {
   const configuration = await yarnNetworkConfiguration
@@ -176,7 +206,7 @@ const readYarnCertificateAuthority = async () => {
     return undefined
   }
 
-  return readFile(resolveYarnPath(caPath))
+  return readFile(resolveYarnPath(caPath, configuration.httpsCaFilePathBase))
 }
 
 const connectSocket = (url, options) =>
