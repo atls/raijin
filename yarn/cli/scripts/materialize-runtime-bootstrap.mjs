@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { mkdir } from 'node:fs/promises'
+import { copyFile } from 'node:fs/promises'
 import { readFile } from 'node:fs/promises'
 import { writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
@@ -11,6 +12,7 @@ const scriptDir = dirname(fileURLToPath(import.meta.url))
 const root = resolve(scriptDir, '../../..')
 const packageJsonPath = join(root, 'yarn/cli/package.json')
 const bundlePath = join(root, 'yarn/cli/dist/runtime/yarn.mjs')
+const legacyBundlePath = join(root, 'yarn/cli/dist/yarn.mjs')
 const releasesDir = join(root, '.yarn/releases')
 const bootstrapPath = join(releasesDir, 'yarn.mjs')
 const manifestPath = join(releasesDir, 'raijin-runtime.json')
@@ -559,5 +561,7 @@ child.on('exit', (code, signal) => {
 `
 
 await mkdir(releasesDir, { recursive: true })
+await mkdir(dirname(legacyBundlePath), { recursive: true })
 await writeFile(manifestPath, `${manifestContent}\n`)
 await writeFile(bootstrapPath, bootstrap, { mode: 0o755 })
+await copyFile(bundlePath, legacyBundlePath)
