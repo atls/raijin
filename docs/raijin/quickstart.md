@@ -22,8 +22,7 @@ Expected result:
 mkdir -p .yarn/releases
 curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs
 yarn config set yarnPath .yarn/releases/yarn.mjs
-yarn set version atls
-rm .yarn/releases/yarn.mjs
+yarn set version atls && rm .yarn/releases/yarn.mjs
 ```
 
 Expected result:
