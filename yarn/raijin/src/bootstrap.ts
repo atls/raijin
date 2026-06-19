@@ -32,10 +32,7 @@ export const updateYarnPathConfiguration = (content: string, yarnPath: string): 
   return `${normalizedContent}\n${yarnPathLine}\n`
 }
 
-export const writeBootstrapYarnPathConfiguration = async (
-  cwd: string,
-  yarnPath: string
-): Promise<void> => {
+export const writeYarnPathConfiguration = async (cwd: string, yarnPath: string): Promise<void> => {
   const yarnrcPath = join(cwd, YARNRC_PATH)
   const yarnrc = await readTextOrEmpty(yarnrcPath)
 

@@ -5,7 +5,7 @@ import { tmpdir }                                             from 'node:os'
 import { join }                                               from 'node:path'
 import { test }                                               from 'node:test'
 
-import { updateYarnPathConfiguration }                        from './bootstrap-yarnrc.js'
+import { updateYarnPathConfiguration }                        from './bootstrap.js'
 import { runRaijinInitializer as runPublicRaijinInitializer } from './index.js'
 import { runRaijinInitializer }                               from './initializer.js'
 import { installRaijinRuntime }                               from './runtime-installer.js'

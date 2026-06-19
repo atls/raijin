@@ -1,16 +1,16 @@
-import type { FetchLike }                      from './runtime-download.js'
-import type { RaijinRuntimeManifest }          from './runtime.js'
+import type { FetchLike }             from './runtime-download.js'
+import type { RaijinRuntimeManifest } from './runtime.js'
 
-import { mkdir }                               from 'node:fs/promises'
-import { writeFile }                           from 'node:fs/promises'
-import { dirname }                             from 'node:path'
-import { join }                                from 'node:path'
+import { mkdir }                      from 'node:fs/promises'
+import { writeFile }                  from 'node:fs/promises'
+import { dirname }                    from 'node:path'
+import { join }                       from 'node:path'
 
-import { writeBootstrapYarnPathConfiguration } from './bootstrap-yarnrc.js'
-import { downloadRaijinRuntime }               from './runtime-download.js'
-import { fetchRaijinRuntimeManifest }          from './runtime-download.js'
-import { createSha256Digest }                  from './runtime.js'
-import { getRaijinRuntimeYarnPath }            from './runtime.js'
+import { writeYarnPathConfiguration } from './bootstrap.js'
+import { downloadRaijinRuntime }      from './runtime-download.js'
+import { fetchRaijinRuntimeManifest } from './runtime-download.js'
+import { createSha256Digest }         from './runtime.js'
+import { getRaijinRuntimeYarnPath }   from './runtime.js'
 
 export interface InstallRaijinRuntimeOptions {
   cwd: string
@@ -36,7 +36,7 @@ export const installRaijinRuntime = async ({
 
   await mkdir(dirname(runtimePath), { recursive: true })
   await writeFile(runtimePath, runtime)
-  await writeBootstrapYarnPathConfiguration(cwd, yarnPath)
+  await writeYarnPathConfiguration(cwd, yarnPath)
 
   return manifest
 }
