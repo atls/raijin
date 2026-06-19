@@ -1,4 +1,8 @@
-import { createHash } from 'node:crypto'
+import type { RaijinRuntimeManifest } from './runtime.interfaces.js'
+
+import { createHash }                 from 'node:crypto'
+
+export type { RaijinRuntimeManifest } from './runtime.interfaces.js'
 
 export const RAIJIN_RUNTIME_MANIFEST_URL =
   'https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/raijin-runtime.json'
@@ -7,16 +11,6 @@ export const RAIJIN_RUNTIME_ASSET_NAME = 'yarn.mjs'
 export const RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION = 1
 
 const SHA256_PATTERN = /^[a-f0-9]{64}$/
-
-export interface RaijinRuntimeManifest {
-  assetName: string
-  assetUrl: string
-  packageName: string
-  schemaVersion: number
-  sha256: string
-  tagName: string
-  version: string
-}
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null

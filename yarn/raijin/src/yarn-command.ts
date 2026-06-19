@@ -1,6 +1,6 @@
-import { spawn } from 'node:child_process'
+import type { YarnCommandRunner } from './yarn-command.interfaces.js'
 
-export type YarnCommandRunner = (args: Array<string>, cwd: string) => Promise<void>
+import { spawn }                  from 'node:child_process'
 
 export const createYarnCommandEnvironment = (
   environment: NodeJS.ProcessEnv = process.env

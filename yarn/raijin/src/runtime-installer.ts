@@ -1,21 +1,16 @@
-import type { FetchLike }             from './runtime-download.js'
-import type { RaijinRuntimeManifest } from './runtime.js'
+import type { InstallRaijinRuntimeOptions } from './runtime-installer.interfaces.js'
+import type { RaijinRuntimeManifest }       from './runtime.interfaces.js'
 
-import { mkdir }                      from 'node:fs/promises'
-import { writeFile }                  from 'node:fs/promises'
-import { dirname }                    from 'node:path'
-import { join }                       from 'node:path'
+import { mkdir }                            from 'node:fs/promises'
+import { writeFile }                        from 'node:fs/promises'
+import { dirname }                          from 'node:path'
+import { join }                             from 'node:path'
 
-import { writeYarnPathConfiguration } from './bootstrap.js'
-import { downloadRaijinRuntime }      from './runtime-download.js'
-import { fetchRaijinRuntimeManifest } from './runtime-download.js'
-import { createSha256Digest }         from './runtime.js'
-import { getRaijinRuntimeYarnPath }   from './runtime.js'
-
-export interface InstallRaijinRuntimeOptions {
-  cwd: string
-  fetchImpl: FetchLike
-}
+import { writeYarnPathConfiguration }       from './bootstrap.js'
+import { downloadRaijinRuntime }            from './runtime-download.js'
+import { fetchRaijinRuntimeManifest }       from './runtime-download.js'
+import { createSha256Digest }               from './runtime.js'
+import { getRaijinRuntimeYarnPath }         from './runtime.js'
 
 export const installRaijinRuntime = async ({
   cwd,

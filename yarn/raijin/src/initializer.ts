@@ -1,17 +1,9 @@
-import type { FetchLike }         from './runtime-download.js'
-import type { YarnCommandRunner } from './yarn-command.js'
+import type { RunRaijinInitializerOptions } from './initializer.interfaces.js'
 
-import { installRaijinRuntime }   from './runtime-installer.js'
-import { runYarnCommand }         from './yarn-command.js'
+import { installRaijinRuntime }             from './runtime-installer.js'
+import { runYarnCommand }                   from './yarn-command.js'
 
 const CODE_RUNTIME_PACKAGE = '@atls/code-runtime@latest'
-
-export interface RunRaijinInitializerOptions {
-  argv?: Array<string>
-  cwd?: string
-  fetchImpl?: FetchLike
-  runYarnCommand?: YarnCommandRunner
-}
 
 export const runRaijinInitializer = async ({
   argv = [],
