@@ -1,11 +1,18 @@
-import type { RaijinRuntimeManifest }                      from '../interfaces.js'
+import type { RaijinRuntimeManifest } from '../interfaces.js'
 
-import { INVALID_RUNTIME_MANIFEST_OBJECT_MESSAGE }         from '../../errors.js'
-import { INVALID_RUNTIME_MANIFEST_SCHEMA_VERSION_MESSAGE } from '../../errors.js'
-import { INVALID_RUNTIME_MANIFEST_SHA256_MESSAGE }         from '../../errors.js'
-import { createInvalidRuntimeManifestAssetMessage }        from '../../errors.js'
-import { createInvalidRuntimeManifestFieldMessage }        from '../../errors.js'
-import { createInvalidRuntimeManifestPackageMessage }      from '../../errors.js'
+const INVALID_RUNTIME_MANIFEST_OBJECT_MESSAGE = 'Invalid Raijin runtime manifest: expected object'
+const INVALID_RUNTIME_MANIFEST_SCHEMA_VERSION_MESSAGE =
+  'Invalid Raijin runtime manifest: unsupported schemaVersion'
+const INVALID_RUNTIME_MANIFEST_SHA256_MESSAGE = 'Invalid Raijin runtime manifest: invalid sha256'
+
+const createInvalidRuntimeManifestFieldMessage = (key: keyof RaijinRuntimeManifest): string =>
+  `Invalid Raijin runtime manifest: missing ${key}`
+
+const createInvalidRuntimeManifestPackageMessage = (packageName: string): string =>
+  `Invalid Raijin runtime manifest: expected ${packageName}`
+
+const createInvalidRuntimeManifestAssetMessage = (assetName: string): string =>
+  `Invalid Raijin runtime manifest: expected ${assetName}`
 
 export class InvalidRaijinRuntimeManifestException extends Error {
   private constructor(message: string) {
