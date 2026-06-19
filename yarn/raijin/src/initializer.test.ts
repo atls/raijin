@@ -1,16 +1,17 @@
-import assert                           from 'node:assert/strict'
-import { mkdtemp }                      from 'node:fs/promises'
-import { readFile }                     from 'node:fs/promises'
-import { tmpdir }                       from 'node:os'
-import { join }                         from 'node:path'
-import { test }                         from 'node:test'
+import assert                                                 from 'node:assert/strict'
+import { mkdtemp }                                            from 'node:fs/promises'
+import { readFile }                                           from 'node:fs/promises'
+import { tmpdir }                                             from 'node:os'
+import { join }                                               from 'node:path'
+import { test }                                               from 'node:test'
 
-import { updateYarnPathConfiguration }  from './bootstrap-yarnrc.js'
-import { runRaijinInitializer }         from './initializer.js'
-import { installRaijinRuntime }         from './runtime-installer.js'
-import { createSha256Digest }           from './runtime.js'
-import { parseRaijinRuntimeManifest }   from './runtime.js'
-import { createYarnCommandEnvironment } from './yarn-command.js'
+import { updateYarnPathConfiguration }                        from './bootstrap-yarnrc.js'
+import { runRaijinInitializer as runPublicRaijinInitializer } from './index.js'
+import { runRaijinInitializer }                               from './initializer.js'
+import { installRaijinRuntime }                               from './runtime-installer.js'
+import { createSha256Digest }                                 from './runtime.js'
+import { parseRaijinRuntimeManifest }                         from './runtime.js'
+import { createYarnCommandEnvironment }                       from './yarn-command.js'
 
 const getRequestHref = (url: Request | URL | string): string => {
   if (typeof url === 'string') {
@@ -45,6 +46,30 @@ const createFetch = (runtime: Buffer): typeof fetch => {
 
     return new Response(new Uint8Array(runtime))
   }) as typeof fetch
+}
+
+const EXPECTED_INITIALIZER_COMMANDS = [
+  ['add', '-D', '@atls/code-runtime@latest'],
+  ['generate', 'project'],
+  ['tools', 'sync'],
+]
+
+const collectInitializerCommands = async (
+  runInitializer: typeof runRaijinInitializer
+): Promise<Array<Array<string>>> => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const commands: Array<Array<string>> = []
+
+  await runInitializer({
+    argv: ['init'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime')),
+    runYarnCommand: async (args) => {
+      commands.push(args)
+    },
+  })
+
+  return commands
 }
 
 test('should parse Raijin runtime manifest', () => {
@@ -126,23 +151,17 @@ test('should install verified runtime asset and write yarnPath', async () => {
 })
 
 test('should run initializer command sequence', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const commands: Array<Array<string>> = []
+  assert.deepEqual(
+    await collectInitializerCommands(runRaijinInitializer),
+    EXPECTED_INITIALIZER_COMMANDS
+  )
+})
 
-  await runRaijinInitializer({
-    argv: ['init'],
-    cwd,
-    fetchImpl: createFetch(Buffer.from('runtime')),
-    runYarnCommand: async (args) => {
-      commands.push(args)
-    },
-  })
-
-  assert.deepEqual(commands, [
-    ['add', '-D', '@atls/code-runtime@latest'],
-    ['generate', 'project'],
-    ['tools', 'sync'],
-  ])
+test('should expose initializer command through public index', async () => {
+  assert.deepEqual(
+    await collectInitializerCommands(runPublicRaijinInitializer),
+    EXPECTED_INITIALIZER_COMMANDS
+  )
 })
 
 test('should reject unknown initializer arguments', async () => {
