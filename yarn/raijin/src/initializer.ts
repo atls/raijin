@@ -1,5 +1,6 @@
 import type { RunRaijinInitializerOptions } from './initializer.interfaces.js'
 
+import { RAIJIN_INITIALIZER_USAGE_MESSAGE } from './errors.js'
 import { installRaijinRuntime }             from './runtime-installer.js'
 import { runYarnCommand }                   from './yarn-command.js'
 
@@ -14,7 +15,7 @@ export const runRaijinInitializer = async ({
   const command = argv[0]
 
   if (argv.length > 1 || (command && command !== 'init')) {
-    throw new Error('Usage: yarn init @atls/raijin or yarn dlx @atls/raijin init')
+    throw new Error(RAIJIN_INITIALIZER_USAGE_MESSAGE)
   }
 
   await installRaijinRuntime({ cwd, fetchImpl })
