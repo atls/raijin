@@ -5,12 +5,12 @@ import { tmpdir }                       from 'node:os'
 import { join }                         from 'node:path'
 import { test }                         from 'node:test'
 
-import { createSha256Digest }           from './index.js'
-import { createYarnCommandEnvironment } from './index.js'
-import { installRaijinRuntime }         from './index.js'
-import { parseRaijinRuntimeManifest }   from './index.js'
-import { runRaijinInitializer }         from './index.js'
-import { updateYarnPathConfiguration }  from './index.js'
+import { updateYarnPathConfiguration }  from './bootstrap-yarnrc.js'
+import { runRaijinInitializer }         from './initializer.js'
+import { installRaijinRuntime }         from './runtime-installer.js'
+import { createSha256Digest }           from './runtime.js'
+import { parseRaijinRuntimeManifest }   from './runtime.js'
+import { createYarnCommandEnvironment } from './yarn-command.js'
 
 const getRequestHref = (url: Request | URL | string): string => {
   if (typeof url === 'string') {

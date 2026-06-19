@@ -1,4 +1,4 @@
-import { runRaijinInitializer } from './index.js'
+import { runRaijinInitializer } from './initializer.js'
 
 try {
   await runRaijinInitializer({ argv: process.argv.slice(2) })
