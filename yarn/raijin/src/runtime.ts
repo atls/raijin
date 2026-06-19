@@ -1,13 +1,8 @@
-import type { RaijinRuntimeManifest }                      from './runtime.interfaces.js'
+import type { RaijinRuntimeManifest }            from './runtime.interfaces.js'
 
-import { createHash }                                      from 'node:crypto'
+import { createHash }                            from 'node:crypto'
 
-import { INVALID_RUNTIME_MANIFEST_OBJECT_MESSAGE }         from './errors.js'
-import { INVALID_RUNTIME_MANIFEST_SCHEMA_VERSION_MESSAGE } from './errors.js'
-import { INVALID_RUNTIME_MANIFEST_SHA256_MESSAGE }         from './errors.js'
-import { createInvalidRuntimeManifestAssetMessage }        from './errors.js'
-import { createInvalidRuntimeManifestFieldMessage }        from './errors.js'
-import { createInvalidRuntimeManifestPackageMessage }      from './errors.js'
+import { InvalidRaijinRuntimeManifestException } from './exceptions.js'
 
 export type { RaijinRuntimeManifest } from './runtime.interfaces.js'
 
@@ -29,7 +24,7 @@ const assertManifestString = (
   const value = manifest[key]
 
   if (typeof value !== 'string' || value.length === 0) {
-    throw new Error(createInvalidRuntimeManifestFieldMessage(key))
+    throw InvalidRaijinRuntimeManifestException.missingField(key)
   }
 
   return value
@@ -37,11 +32,11 @@ const assertManifestString = (
 
 export const parseRaijinRuntimeManifest = (value: unknown): RaijinRuntimeManifest => {
   if (!isRecord(value)) {
-    throw new Error(INVALID_RUNTIME_MANIFEST_OBJECT_MESSAGE)
+    throw InvalidRaijinRuntimeManifestException.expectedObject()
   }
 
   if (value.schemaVersion !== RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION) {
-    throw new Error(INVALID_RUNTIME_MANIFEST_SCHEMA_VERSION_MESSAGE)
+    throw InvalidRaijinRuntimeManifestException.unsupportedSchemaVersion()
   }
 
   const packageName = assertManifestString(value, 'packageName')
@@ -49,15 +44,15 @@ export const parseRaijinRuntimeManifest = (value: unknown): RaijinRuntimeManifes
   const sha256 = assertManifestString(value, 'sha256')
 
   if (packageName !== RAIJIN_RUNTIME_PACKAGE_NAME) {
-    throw new Error(createInvalidRuntimeManifestPackageMessage(RAIJIN_RUNTIME_PACKAGE_NAME))
+    throw InvalidRaijinRuntimeManifestException.unexpectedPackage(RAIJIN_RUNTIME_PACKAGE_NAME)
   }
 
   if (assetName !== RAIJIN_RUNTIME_ASSET_NAME) {
-    throw new Error(createInvalidRuntimeManifestAssetMessage(RAIJIN_RUNTIME_ASSET_NAME))
+    throw InvalidRaijinRuntimeManifestException.unexpectedAsset(RAIJIN_RUNTIME_ASSET_NAME)
   }
 
   if (!SHA256_PATTERN.test(sha256)) {
-    throw new Error(INVALID_RUNTIME_MANIFEST_SHA256_MESSAGE)
+    throw InvalidRaijinRuntimeManifestException.invalidSha256()
   }
 
   return {

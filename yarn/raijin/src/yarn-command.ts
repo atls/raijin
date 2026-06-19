@@ -1,8 +1,8 @@
-import type { YarnCommandRunner }          from './yarn-command.interfaces.js'
+import type { YarnCommandRunner }     from './yarn-command.interfaces.js'
 
-import { spawn }                           from 'node:child_process'
+import { spawn }                      from 'node:child_process'
 
-import { createYarnCommandFailureMessage } from './errors.js'
+import { RaijinYarnCommandException } from './exceptions.js'
 
 export const createYarnCommandEnvironment = (
   environment: NodeJS.ProcessEnv = process.env
@@ -31,6 +31,6 @@ export const runYarnCommand: YarnCommandRunner = async (
   })
 
   if (exitCode !== 0) {
-    throw new Error(createYarnCommandFailureMessage(args))
+    throw new RaijinYarnCommandException(args)
   }
 }

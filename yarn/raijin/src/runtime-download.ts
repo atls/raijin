@@ -1,10 +1,10 @@
-import type { FetchLike }                              from './runtime-download.interfaces.js'
-import type { RaijinRuntimeManifest }                  from './runtime.interfaces.js'
+import type { FetchLike }                         from './runtime-download.interfaces.js'
+import type { RaijinRuntimeManifest }             from './runtime.interfaces.js'
 
-import { RAIJIN_RUNTIME_MANIFEST_URL }                 from './runtime.js'
-import { createRuntimeAssetDownloadFailureMessage }    from './errors.js'
-import { createRuntimeManifestDownloadFailureMessage } from './errors.js'
-import { parseRaijinRuntimeManifest }                  from './runtime.js'
+import { RaijinRuntimeAssetDownloadException }    from './exceptions.js'
+import { RaijinRuntimeManifestDownloadException } from './exceptions.js'
+import { RAIJIN_RUNTIME_MANIFEST_URL }            from './runtime.js'
+import { parseRaijinRuntimeManifest }             from './runtime.js'
 
 const fetchJson = async (fetchImpl: FetchLike, url: string): Promise<unknown> => {
   const response = await fetchImpl(url, {
@@ -15,7 +15,7 @@ const fetchJson = async (fetchImpl: FetchLike, url: string): Promise<unknown> =>
   })
 
   if (!response.ok) {
-    throw new Error(createRuntimeManifestDownloadFailureMessage(response.status))
+    throw new RaijinRuntimeManifestDownloadException(response.status)
   }
 
   return response.json()
@@ -30,7 +30,7 @@ const fetchBuffer = async (fetchImpl: FetchLike, url: string): Promise<Buffer> =
   })
 
   if (!response.ok) {
-    throw new Error(createRuntimeAssetDownloadFailureMessage(response.status))
+    throw new RaijinRuntimeAssetDownloadException(response.status)
   }
 
   return Buffer.from(await response.arrayBuffer())

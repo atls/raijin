@@ -5,6 +5,8 @@ import { tmpdir }                                             from 'node:os'
 import { join }                                               from 'node:path'
 import { test }                                               from 'node:test'
 
+import { InvalidRaijinRuntimeManifestException }              from './exceptions.js'
+import { RaijinInitializerUsageException }                    from './exceptions.js'
 import { updateYarnPathConfiguration }                        from './bootstrap.js'
 import { runRaijinInitializer as runPublicRaijinInitializer } from './index.js'
 import { runRaijinInitializer }                               from './initializer.js'
@@ -107,7 +109,9 @@ test('should reject non-yarn runtime manifest', () => {
         tagName: '@atls/code-runtime@1.2.3',
         version: '1.2.3',
       }),
-    /expected @atls\/yarn-cli/
+    (error) =>
+      error instanceof InvalidRaijinRuntimeManifestException &&
+      error.message.includes('expected @atls/yarn-cli')
   )
 })
 
@@ -170,6 +174,8 @@ test('should reject unknown initializer arguments', async () => {
       argv: ['unknown'],
       fetchImpl: createFetch(Buffer.from('runtime')),
     }),
-    /Usage: yarn init @atls\/raijin/
+    (error) =>
+      error instanceof RaijinInitializerUsageException &&
+      error.message.includes('Usage: yarn init @atls/raijin')
   )
 })
