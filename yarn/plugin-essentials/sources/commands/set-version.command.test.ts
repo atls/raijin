@@ -7,9 +7,10 @@ import { tmpdir }                        from 'node:os'
 import { join }                          from 'node:path'
 import { test }                          from 'node:test'
 
-import { createSha256Digest }            from './set-version.runtime.js'
-import { getRaijinRuntimeYarnPath }      from './set-version.runtime.js'
-import { parseRaijinRuntimeManifest }    from './set-version.runtime.js'
+import { createSha256Digest }            from '@atls/raijin/runtime'
+import { getRaijinRuntimeYarnPath }      from '@atls/raijin/runtime'
+import { parseRaijinRuntimeManifest }    from '@atls/raijin/runtime'
+
 import { resolveYarnPath }               from './set-version.runtime.js'
 import { findPackageCwd }                from './set-version.utils.js'
 import { nativeToPortablePath }          from './set-version.utils.js'

@@ -2302,6 +2302,7 @@ const RAW_RUNTIME_STATE =
       ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-essentials", {\
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-essentials-virtual-27819aa3ba/1/yarn/plugin-essentials/",\
         "packageDependencies": [\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-essentials", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-essentials"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -2326,6 +2327,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:yarn/plugin-essentials", {\
         "packageLocation": "./yarn/plugin-essentials/",\
         "packageDependencies": [\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-essentials", "workspace:yarn/plugin-essentials"],\
           ["@yarnpkg/builder", "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch::version=4.1.2&hash=a711a8"],\
           ["@yarnpkg/cli", "virtual:ccae17f137fefbbaba6c5ad07c1c85d0eeb7c2d83d1717382e2500f9abd36b42c5a217d63d5beef22301d21ac6bd18bc3e8b2b111a393b68f24ae0ff8b227324#npm:4.14.1"],\

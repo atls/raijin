@@ -865,7 +865,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/raijin@workspace:yarn/raijin":
+"@atls/raijin@workspace:*, @atls/raijin@workspace:yarn/raijin":
   version: 0.0.0-use.local
   resolution: "@atls/raijin@workspace:yarn/raijin"
   dependencies:
@@ -1171,6 +1171,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-essentials@workspace:yarn/plugin-essentials"
   dependencies:
+    "@atls/raijin": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
