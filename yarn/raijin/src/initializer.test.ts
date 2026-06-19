@@ -5,15 +5,15 @@ import { tmpdir }                                             from 'node:os'
 import { join }                                               from 'node:path'
 import { test }                                               from 'node:test'
 
-import { InvalidRaijinRuntimeManifestException }              from './exceptions.js'
-import { RaijinInitializerUsageException }                    from './exceptions.js'
-import { updateYarnPathConfiguration }                        from './bootstrap.js'
+import { RaijinInitializerUsageException }                    from './initializer/exceptions/usage.exception.js'
+import { InvalidRaijinRuntimeManifestException }              from './runtime/exceptions/invalid-manifest.exception.js'
 import { runRaijinInitializer as runPublicRaijinInitializer } from './index.js'
-import { runRaijinInitializer }                               from './initializer.js'
-import { installRaijinRuntime }                               from './runtime-installer.js'
-import { createSha256Digest }                                 from './runtime.js'
-import { parseRaijinRuntimeManifest }                         from './runtime.js'
-import { createYarnCommandEnvironment }                       from './yarn-command.js'
+import { runRaijinInitializer }                               from './initializer/index.js'
+import { updateYarnPathConfiguration }                        from './runtime/bootstrap.js'
+import { installRaijinRuntime }                               from './runtime/installer.js'
+import { createSha256Digest }                                 from './runtime/manifest.js'
+import { parseRaijinRuntimeManifest }                         from './runtime/manifest.js'
+import { createYarnCommandEnvironment }                       from './yarn/command.js'
 
 const getRequestHref = (url: Request | URL | string): string => {
   if (typeof url === 'string') {

@@ -1,8 +1,8 @@
-import type { RunRaijinInitializerOptions } from './initializer.interfaces.js'
+import type { RunRaijinInitializerOptions } from './interfaces.js'
 
-import { RaijinInitializerUsageException }  from './exceptions.js'
-import { installRaijinRuntime }             from './runtime-installer.js'
-import { runYarnCommand }                   from './yarn-command.js'
+import { RaijinInitializerUsageException }  from './exceptions/usage.exception.js'
+import { installRaijinRuntime }             from '../runtime/installer.js'
+import { runYarnCommand }                   from '../yarn/command.js'
 
 const CODE_RUNTIME_PACKAGE = '@atls/code-runtime@latest'
 

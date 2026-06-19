@@ -1,11 +1,11 @@
-import type { RaijinRuntimeManifest }                      from '../runtime.interfaces.js'
+import type { RaijinRuntimeManifest }                      from '../interfaces.js'
 
-import { INVALID_RUNTIME_MANIFEST_OBJECT_MESSAGE }         from '../errors.js'
-import { INVALID_RUNTIME_MANIFEST_SCHEMA_VERSION_MESSAGE } from '../errors.js'
-import { INVALID_RUNTIME_MANIFEST_SHA256_MESSAGE }         from '../errors.js'
-import { createInvalidRuntimeManifestAssetMessage }        from '../errors.js'
-import { createInvalidRuntimeManifestFieldMessage }        from '../errors.js'
-import { createInvalidRuntimeManifestPackageMessage }      from '../errors.js'
+import { INVALID_RUNTIME_MANIFEST_OBJECT_MESSAGE }         from '../../errors.js'
+import { INVALID_RUNTIME_MANIFEST_SCHEMA_VERSION_MESSAGE } from '../../errors.js'
+import { INVALID_RUNTIME_MANIFEST_SHA256_MESSAGE }         from '../../errors.js'
+import { createInvalidRuntimeManifestAssetMessage }        from '../../errors.js'
+import { createInvalidRuntimeManifestFieldMessage }        from '../../errors.js'
+import { createInvalidRuntimeManifestPackageMessage }      from '../../errors.js'
 
 export class InvalidRaijinRuntimeManifestException extends Error {
   private constructor(message: string) {

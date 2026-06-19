@@ -1,4 +1,4 @@
-import { createRuntimeAssetDownloadFailureMessage } from '../errors.js'
+import { createRuntimeAssetDownloadFailureMessage } from '../../errors.js'
 
 export class RaijinRuntimeAssetDownloadException extends Error {
   constructor(status: number) {

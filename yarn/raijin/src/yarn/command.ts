@@ -1,8 +1,8 @@
-import type { YarnCommandRunner }     from './yarn-command.interfaces.js'
+import type { YarnCommandRunner }     from './interfaces.js'
 
 import { spawn }                      from 'node:child_process'
 
-import { RaijinYarnCommandException } from './exceptions.js'
+import { RaijinYarnCommandException } from './exceptions/command.exception.js'
 
 export const createYarnCommandEnvironment = (
   environment: NodeJS.ProcessEnv = process.env

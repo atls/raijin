@@ -1,10 +1,10 @@
-import type { FetchLike }                         from './runtime-download.interfaces.js'
-import type { RaijinRuntimeManifest }             from './runtime.interfaces.js'
+import type { FetchLike }                         from './download.interfaces.js'
+import type { RaijinRuntimeManifest }             from './interfaces.js'
 
-import { RaijinRuntimeAssetDownloadException }    from './exceptions.js'
-import { RaijinRuntimeManifestDownloadException } from './exceptions.js'
-import { RAIJIN_RUNTIME_MANIFEST_URL }            from './runtime.js'
-import { parseRaijinRuntimeManifest }             from './runtime.js'
+import { RaijinRuntimeAssetDownloadException }    from './exceptions/asset-download.exception.js'
+import { RaijinRuntimeManifestDownloadException } from './exceptions/manifest-download.exception.js'
+import { RAIJIN_RUNTIME_MANIFEST_URL }            from './manifest.js'
+import { parseRaijinRuntimeManifest }             from './manifest.js'
 
 const fetchJson = async (fetchImpl: FetchLike, url: string): Promise<unknown> => {
   const response = await fetchImpl(url, {

@@ -1,4 +1,4 @@
-import type { RaijinRuntimeManifest } from './runtime.interfaces.js'
+import type { RaijinRuntimeManifest } from './runtime/interfaces.js'
 
 export const RAIJIN_INITIALIZER_USAGE_MESSAGE =
   'Usage: yarn init @atls/raijin or yarn dlx @atls/raijin init'

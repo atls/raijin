@@ -1,17 +1,17 @@
-import type { InstallRaijinRuntimeOptions }     from './runtime-installer.interfaces.js'
-import type { RaijinRuntimeManifest }           from './runtime.interfaces.js'
+import type { InstallRaijinRuntimeOptions }     from './installer.interfaces.js'
+import type { RaijinRuntimeManifest }           from './interfaces.js'
 
 import { mkdir }                                from 'node:fs/promises'
 import { writeFile }                            from 'node:fs/promises'
 import { dirname }                              from 'node:path'
 import { join }                                 from 'node:path'
 
-import { RaijinRuntimeDigestMismatchException } from './exceptions.js'
+import { RaijinRuntimeDigestMismatchException } from './exceptions/digest-mismatch.exception.js'
 import { writeYarnPathConfiguration }           from './bootstrap.js'
-import { downloadRaijinRuntime }                from './runtime-download.js'
-import { fetchRaijinRuntimeManifest }           from './runtime-download.js'
-import { createSha256Digest }                   from './runtime.js'
-import { getRaijinRuntimeYarnPath }             from './runtime.js'
+import { downloadRaijinRuntime }                from './download.js'
+import { fetchRaijinRuntimeManifest }           from './download.js'
+import { createSha256Digest }                   from './manifest.js'
+import { getRaijinRuntimeYarnPath }             from './manifest.js'
 
 export const installRaijinRuntime = async ({
   cwd,

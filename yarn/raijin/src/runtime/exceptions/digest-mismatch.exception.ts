@@ -1,4 +1,4 @@
-import { createRuntimeDigestMismatchMessage } from '../errors.js'
+import { createRuntimeDigestMismatchMessage } from '../../errors.js'
 
 export class RaijinRuntimeDigestMismatchException extends Error {
   constructor(expected: string, actual: string) {

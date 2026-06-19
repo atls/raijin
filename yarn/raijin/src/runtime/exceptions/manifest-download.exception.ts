@@ -1,4 +1,4 @@
-import { createRuntimeManifestDownloadFailureMessage } from '../errors.js'
+import { createRuntimeManifestDownloadFailureMessage } from '../../errors.js'
 
 export class RaijinRuntimeManifestDownloadException extends Error {
   constructor(status: number) {
