@@ -1,6 +1,6 @@
-# Raijin Quickstart
+# Быстрый старт Raijin
 
-Минимальный сценарий подключения и проверки кастомного Yarn-бандла `atls`
+Минимальный сценарий создания или подключения проекта к Raijin
 
 <!-- sync:preflight -->
 
@@ -8,34 +8,44 @@
 
 - Node.js: `>= 24` (не ниже `24`)
 - Yarn: `>= 4` (не ниже `4`)
-- Рабочий проект с `package.json`
+- Для нового проекта: пустая директория
+- Для существующего проекта: `package.json` в корне проекта
 
 Ожидаемый результат:
 
-- Команда `yarn --version` выполняется, и проект готов к переключению версии Yarn
+- Команда `yarn --version` выполняется
 
 <!-- sync:new-project -->
 
-## 2. Новый проект: подключение бандла
+## 2. Новый проект
 
 ```bash
-mkdir -p .yarn/releases && \
-curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs && \
-yarn config set yarnPath .yarn/releases/yarn.mjs && \
-yarn set version atls && \
-rm .yarn/releases/yarn.mjs
+yarn init @atls/raijin
 ```
 
 Ожидаемый результат:
 
-- В `.yarn/releases/yarn.mjs` появляется временный файл первичного подключения Raijin
-- `yarn set version atls` обновляет бандл через файл релиза GitHub и переключает `yarnPath` на версионный файл `.yarn/releases/raijin-yarn-<version>.mjs`
-- Временный файл `.yarn/releases/yarn.mjs` удаляется после переключения
+- Создаётся `package.json`, если его ещё не было
+- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/raijin-yarn-<version>.mjs`
+- `.yarnrc.yml` сразу получает финальный `yarnPath` без временного файла
+- Проектный каркас создаётся через существующие схемы Raijin
 - Команды из бандла (`check`, `files changed list` и другие) становятся доступны
+
+<!-- sync:existing-project -->
+
+## 3. Существующий проект
+
+```bash
+yarn dlx @atls/raijin init
+```
+
+Ожидаемый результат:
+
+- Установленный проект получает среду выполнения Raijin, `@atls/code-runtime`, проектные схемы и первичную синхронизацию
 
 <!-- sync:bundle-upgrade -->
 
-## 3. Обновление установленного бандла
+## 4. Обновление установленного бандла
 
 ```bash
 yarn set version atls
@@ -47,7 +57,7 @@ yarn set version atls
 
 <!-- sync:verification -->
 
-## 4. Базовая проверка
+## 5. Базовая проверка
 
 ```bash
 yarn check
@@ -61,7 +71,7 @@ yarn files changed list
 
 <!-- sync:schematic-smoke -->
 
-## 5. Локальная smoke-проверка schematics
+## 6. Локальная проверка схем
 
 ```bash
 yarn schematic:test
@@ -69,13 +79,14 @@ yarn schematic:test
 
 Ожидаемый результат:
 
-- Временный fixture создаётся через публичные экспорты `@atls/code-schematics`
-- Проверка падает, если helper или Markdown-документация вызывают inactive-команду
+- Временный проект создаётся через публичные экспорты `@atls/code-schematics`
+- Проверка падает, если вспомогательный код или Markdown-документация вызывают отключённую команду
 
 <!-- sync:consumer-howto -->
 
-## 6. Как использовать в чужом проекте
+## 7. Как использовать в чужом проекте
 
-- Подключите бандл один раз, затем поддерживайте версию через `yarn set version atls`
+- Для первого подключения используйте `yarn init @atls/raijin` или `yarn dlx @atls/raijin init`
+- После первого подключения обновляйте бандл командой `yarn set version atls`
 - Коммитьте изменения `.yarn/releases` и `.yarnrc.yml` вместе с обновлением бандла
 - Для CI используйте те же команды, что и локально, чтобы избежать расхождения поведения

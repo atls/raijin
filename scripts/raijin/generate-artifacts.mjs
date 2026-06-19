@@ -339,26 +339,33 @@ const renderRootReadme = (language) => {
     isRu ? '### Новый проект' : '### New project',
     '',
     '```bash',
-    'mkdir -p .yarn/releases && \\',
-    'curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs && \\',
-    'yarn config set yarnPath .yarn/releases/yarn.mjs && \\',
-    'yarn set version atls && \\',
-    'rm .yarn/releases/yarn.mjs',
+    'yarn init @atls/raijin',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В проекте появляется временный файл первичного подключения `.yarn/releases/yarn.mjs`'
-      : '- A temporary `.yarn/releases/yarn.mjs` initial entry file is added',
+      ? '- Создаётся каркас проекта и устанавливается версионная среда выполнения Raijin'
+      : '- Project scaffold is created and the versioned Raijin runtime is installed',
     isRu
-      ? '- `yarn set version atls` обновляет бандл через файл релиза GitHub и переключает `yarnPath` на версионный файл `.yarn/releases/raijin-yarn-<version>.mjs`'
-      : '- `yarn set version atls` updates the bundle from a GitHub Release asset and points `yarnPath` to the versioned `.yarn/releases/raijin-yarn-<version>.mjs` file',
+      ? '- `.yarnrc.yml` сразу указывает на финальный файл `.yarn/releases/raijin-yarn-<version>.mjs`'
+      : '- `.yarnrc.yml` points directly to the final `.yarn/releases/raijin-yarn-<version>.mjs` file',
     isRu
-      ? '- Временный файл `.yarn/releases/yarn.mjs` удаляется после переключения'
-      : '- The temporary `.yarn/releases/yarn.mjs` file is removed after the switch',
+      ? '- Схемы проекта и первичная синхронизация выполняются автоматически'
+      : '- Project schematics and the first sync run automatically',
     isRu
       ? '- Команды `raijin` становятся доступны через `yarn`'
       : '- Raijin commands are available via `yarn`',
+    '',
+    isRu ? '### Существующий проект' : '### Existing project',
+    '',
+    '```bash',
+    'yarn dlx @atls/raijin init',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- Проект получает ту же среду выполнения Raijin, схемы и первичную синхронизацию без ручных шагов первичного подключения'
+      : '- The project gets the same Raijin runtime, schematics, and first sync without manual bootstrap steps',
     '',
     isRu ? '### Обновление' : '### Upgrade',
     '',
@@ -554,51 +561,63 @@ const renderQuickstart = (language) => {
   const isRu = language === 'ru'
 
   return [
-    '# Raijin Quickstart',
+    isRu ? '# Быстрый старт Raijin' : '# Raijin Quickstart',
     '',
     isRu
-      ? 'Минимальный сценарий подключения и проверки кастомного Yarn-бандла `atls`'
-      : 'Minimal install-and-verify flow for the custom `atls` Yarn bundle',
+      ? 'Минимальный сценарий создания или подключения проекта к Raijin'
+      : 'Minimal flow for creating or connecting a project to Raijin',
     '',
     '<!-- sync:preflight -->',
     isRu ? '## 1. Предпосылки' : '## 1. Prerequisites',
     '',
     isRu ? '- Node.js: `>= 24` (не ниже `24`)' : '- Node.js: `>= 24`',
     isRu ? '- Yarn: `>= 4` (не ниже `4`)' : '- Yarn: `>= 4`',
-    isRu ? '- Рабочий проект с `package.json`' : '- A working project with `package.json`',
+    isRu ? '- Для нового проекта: пустая директория' : '- For a new project: an empty directory',
+    isRu
+      ? '- Для существующего проекта: `package.json` в корне проекта'
+      : '- For an existing project: `package.json` in the project root',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
-    isRu
-      ? '- Команда `yarn --version` выполняется, и проект готов к переключению версии Yarn'
-      : '- `yarn --version` works and the project can switch Yarn versions',
+    isRu ? '- Команда `yarn --version` выполняется' : '- `yarn --version` works',
     '',
     '<!-- sync:new-project -->',
-    isRu ? '## 2. Новый проект: подключение бандла' : '## 2. New project: install the bundle',
+    isRu ? '## 2. Новый проект' : '## 2. New project',
     '',
     '```bash',
-    'mkdir -p .yarn/releases && \\',
-    'curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs && \\',
-    'yarn config set yarnPath .yarn/releases/yarn.mjs && \\',
-    'yarn set version atls && \\',
-    'rm .yarn/releases/yarn.mjs',
+    'yarn init @atls/raijin',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- В `.yarn/releases/yarn.mjs` появляется временный файл первичного подключения Raijin'
-      : '- `.yarn/releases/yarn.mjs` contains the temporary initial Raijin entry file',
+      ? '- Создаётся `package.json`, если его ещё не было'
+      : '- `package.json` is created when it does not exist yet',
     isRu
-      ? '- `yarn set version atls` обновляет бандл через файл релиза GitHub и переключает `yarnPath` на версионный файл `.yarn/releases/raijin-yarn-<version>.mjs`'
-      : '- `yarn set version atls` updates the bundle from a GitHub Release asset and points `yarnPath` to the versioned `.yarn/releases/raijin-yarn-<version>.mjs` file',
+      ? '- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/raijin-yarn-<version>.mjs`'
+      : '- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/raijin-yarn-<version>.mjs`',
     isRu
-      ? '- Временный файл `.yarn/releases/yarn.mjs` удаляется после переключения'
-      : '- The temporary `.yarn/releases/yarn.mjs` file is removed after the switch',
+      ? '- `.yarnrc.yml` сразу получает финальный `yarnPath` без временного файла'
+      : '- `.yarnrc.yml` gets the final `yarnPath` directly without a temporary file',
+    isRu
+      ? '- Проектный каркас создаётся через существующие схемы Raijin'
+      : '- Project scaffold is created through the existing Raijin schematics',
     isRu
       ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
       : '- Bundle commands (`check`, `files changed list`, etc.) become available',
     '',
+    '<!-- sync:existing-project -->',
+    isRu ? '## 3. Существующий проект' : '## 3. Existing project',
+    '',
+    '```bash',
+    'yarn dlx @atls/raijin init',
+    '```',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- Установленный проект получает среду выполнения Raijin, `@atls/code-runtime`, проектные схемы и первичную синхронизацию'
+      : '- Existing project gets Raijin runtime, `@atls/code-runtime`, project schematics, and the first sync',
+    '',
     '<!-- sync:bundle-upgrade -->',
-    isRu ? '## 3. Обновление установленного бандла' : '## 3. Upgrade installed bundle',
+    isRu ? '## 4. Обновление установленного бандла' : '## 4. Upgrade installed bundle',
     '',
     '```bash',
     'yarn set version atls',
@@ -610,7 +629,7 @@ const renderQuickstart = (language) => {
       : '- Bundle is upgraded to the latest available version',
     '',
     '<!-- sync:verification -->',
-    isRu ? '## 4. Базовая проверка' : '## 4. Basic verification',
+    isRu ? '## 5. Базовая проверка' : '## 5. Basic verification',
     '',
     '```bash',
     'yarn check',
@@ -626,7 +645,7 @@ const renderQuickstart = (language) => {
       : '- `yarn files changed list` returns file list (or empty list if no changes)',
     '',
     '<!-- sync:schematic-smoke -->',
-    isRu ? '## 5. Локальная smoke-проверка schematics' : '## 5. Local schematics smoke check',
+    isRu ? '## 6. Локальная проверка схем' : '## 6. Local schematics smoke check',
     '',
     '```bash',
     'yarn schematic:test',
@@ -634,18 +653,21 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Временный fixture создаётся через публичные экспорты `@atls/code-schematics`'
+      ? '- Временный проект создаётся через публичные экспорты `@atls/code-schematics`'
       : '- Temporary fixture is created through public `@atls/code-schematics` exports',
     isRu
-      ? '- Проверка падает, если helper или Markdown-документация вызывают inactive-команду'
+      ? '- Проверка падает, если вспомогательный код или Markdown-документация вызывают отключённую команду'
       : '- Check fails if helper or Markdown docs invoke an inactive command',
     '',
     '<!-- sync:consumer-howto -->',
-    isRu ? '## 6. Как использовать в чужом проекте' : '## 6. How to use in an external project',
+    isRu ? '## 7. Как использовать в чужом проекте' : '## 7. How to use in an external project',
     '',
     isRu
-      ? '- Подключите бандл один раз, затем поддерживайте версию через `yarn set version atls`'
-      : '- Install once, then keep it current with `yarn set version atls`',
+      ? '- Для первого подключения используйте `yarn init @atls/raijin` или `yarn dlx @atls/raijin init`'
+      : '- Use `yarn init @atls/raijin` or `yarn dlx @atls/raijin init` for the first setup',
+    isRu
+      ? '- После первого подключения обновляйте бандл командой `yarn set version atls`'
+      : '- After the first setup, keep the bundle current with `yarn set version atls`',
     isRu
       ? '- Коммитьте изменения `.yarn/releases` и `.yarnrc.yml` вместе с обновлением бандла'
       : '- Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates',

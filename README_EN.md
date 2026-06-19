@@ -36,19 +36,25 @@ It aligns teams on strict standards and strong contracts to increase delivery pr
 ### New project
 
 ```bash
-mkdir -p .yarn/releases && \
-curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs && \
-yarn config set yarnPath .yarn/releases/yarn.mjs && \
-yarn set version atls && \
-rm .yarn/releases/yarn.mjs
+yarn init @atls/raijin
 ```
 
 Expected result:
 
-- A temporary `.yarn/releases/yarn.mjs` initial entry file is added
-- `yarn set version atls` updates the bundle from a GitHub Release asset and points `yarnPath` to the versioned `.yarn/releases/raijin-yarn-<version>.mjs` file
-- The temporary `.yarn/releases/yarn.mjs` file is removed after the switch
+- Project scaffold is created and the versioned Raijin runtime is installed
+- `.yarnrc.yml` points directly to the final `.yarn/releases/raijin-yarn-<version>.mjs` file
+- Project schematics and the first sync run automatically
 - Raijin commands are available via `yarn`
+
+### Existing project
+
+```bash
+yarn dlx @atls/raijin init
+```
+
+Expected result:
+
+- The project gets the same Raijin runtime, schematics, and first sync without manual bootstrap steps
 
 ### Upgrade
 

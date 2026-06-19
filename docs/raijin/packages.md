@@ -10,6 +10,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 Compact list:
 
+- `@atls/raijin` — `yarn/raijin`
 - `@atls/yarn-cli` — `yarn/cli`
 - `@atls/yarn-cli-tools` — `yarn/cli-tools`
 - `@atls/yarn-pack-utils` — `yarn/pack-utils`
@@ -39,6 +40,15 @@ Compact list:
 
 <details>
 <summary>Group details: `yarn`</summary>
+
+<!-- sync:package-card:atls-raijin -->
+
+#### `@atls/raijin`
+
+- Location: `yarn/raijin`
+- Group: `yarn`
+- Visibility: `public`
+- Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli -->
 

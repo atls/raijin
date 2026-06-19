@@ -281,6 +281,10 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@atls/yarn-plugin-workspaces",\
       "reference": "workspace:yarn/plugin-workspaces"\
+    },\
+    {\
+      "name": "@atls/raijin",\
+      "reference": "workspace:yarn/raijin"\
     }\
   ],\
   "enableTopLevelFallback": true,\
@@ -326,6 +330,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/config-prettier", ["workspace:config/prettier"]],\
     ["@atls/config-typescript", ["workspace:config/typescript"]],\
     ["@atls/prettier-plugin", ["workspace:prettier/plugin"]],\
+    ["@atls/raijin", ["workspace:yarn/raijin"]],\
     ["@atls/webpack-proto-imports-loader", ["workspace:webpack/webpack-proto-imports-loader"]],\
     ["@atls/webpack-start-server-plugin", ["workspace:webpack/webpack-start-server-plugin"]],\
     ["@atls/yarn-cli", ["workspace:yarn/cli"]],\
@@ -1828,6 +1833,16 @@ const RAW_RUNTIME_STATE =
           ["import-sort-style", "npm:6.0.0"],\
           ["prettier", "npm:3.5.3"],\
           ["sort-package-json", "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=tools%40workspace%3A."]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@atls/raijin", [\
+      ["workspace:yarn/raijin", {\
+        "packageLocation": "./yarn/raijin/",\
+        "packageDependencies": [\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
+          ["@types/node", "npm:24.12.2"]\
         ],\
         "linkType": "SOFT"\
       }]\

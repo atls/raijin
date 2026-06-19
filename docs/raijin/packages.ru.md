@@ -10,6 +10,7 @@
 
 Короткий список:
 
+- `@atls/raijin` — `yarn/raijin`
 - `@atls/yarn-cli` — `yarn/cli`
 - `@atls/yarn-cli-tools` — `yarn/cli-tools`
 - `@atls/yarn-pack-utils` — `yarn/pack-utils`
@@ -39,6 +40,15 @@
 
 <details>
 <summary>Подробности группы `yarn`</summary>
+
+<!-- sync:package-card:atls-raijin -->
+
+#### `@atls/raijin`
+
+- Локация: `yarn/raijin`
+- Группа: `yarn`
+- Видимость: `public`
+- Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli -->
 

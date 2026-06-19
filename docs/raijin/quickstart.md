@@ -1,6 +1,6 @@
 # Raijin Quickstart
 
-Minimal install-and-verify flow for the custom `atls` Yarn bundle
+Minimal flow for creating or connecting a project to Raijin
 
 <!-- sync:preflight -->
 
@@ -8,34 +8,44 @@ Minimal install-and-verify flow for the custom `atls` Yarn bundle
 
 - Node.js: `>= 24`
 - Yarn: `>= 4`
-- A working project with `package.json`
+- For a new project: an empty directory
+- For an existing project: `package.json` in the project root
 
 Expected result:
 
-- `yarn --version` works and the project can switch Yarn versions
+- `yarn --version` works
 
 <!-- sync:new-project -->
 
-## 2. New project: install the bundle
+## 2. New project
 
 ```bash
-mkdir -p .yarn/releases && \
-curl -fsSL https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/yarn.mjs -o .yarn/releases/yarn.mjs && \
-yarn config set yarnPath .yarn/releases/yarn.mjs && \
-yarn set version atls && \
-rm .yarn/releases/yarn.mjs
+yarn init @atls/raijin
 ```
 
 Expected result:
 
-- `.yarn/releases/yarn.mjs` contains the temporary initial Raijin entry file
-- `yarn set version atls` updates the bundle from a GitHub Release asset and points `yarnPath` to the versioned `.yarn/releases/raijin-yarn-<version>.mjs` file
-- The temporary `.yarn/releases/yarn.mjs` file is removed after the switch
+- `package.json` is created when it does not exist yet
+- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/raijin-yarn-<version>.mjs`
+- `.yarnrc.yml` gets the final `yarnPath` directly without a temporary file
+- Project scaffold is created through the existing Raijin schematics
 - Bundle commands (`check`, `files changed list`, etc.) become available
+
+<!-- sync:existing-project -->
+
+## 3. Existing project
+
+```bash
+yarn dlx @atls/raijin init
+```
+
+Expected result:
+
+- Existing project gets Raijin runtime, `@atls/code-runtime`, project schematics, and the first sync
 
 <!-- sync:bundle-upgrade -->
 
-## 3. Upgrade installed bundle
+## 4. Upgrade installed bundle
 
 ```bash
 yarn set version atls
@@ -47,7 +57,7 @@ Expected result:
 
 <!-- sync:verification -->
 
-## 4. Basic verification
+## 5. Basic verification
 
 ```bash
 yarn check
@@ -61,7 +71,7 @@ Expected result:
 
 <!-- sync:schematic-smoke -->
 
-## 5. Local schematics smoke check
+## 6. Local schematics smoke check
 
 ```bash
 yarn schematic:test
@@ -74,8 +84,9 @@ Expected result:
 
 <!-- sync:consumer-howto -->
 
-## 6. How to use in an external project
+## 7. How to use in an external project
 
-- Install once, then keep it current with `yarn set version atls`
+- Use `yarn init @atls/raijin` or `yarn dlx @atls/raijin init` for the first setup
+- After the first setup, keep the bundle current with `yarn set version atls`
 - Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates
 - Use the same commands in CI and locally to avoid behavior drift

@@ -817,6 +817,14 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/raijin",
+      "location": "yarn/raijin",
+      "group": "yarn",
+      "private": false,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/yarn-cli",
       "location": "yarn/cli",
       "group": "yarn",
@@ -1111,5 +1119,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-15T17:30:14.291Z"
+  "lastGenerated": "2026-06-19T20:32:49.339Z"
 }
