@@ -43,7 +43,7 @@ const createFetch = (runtime: Buffer): typeof fetch => {
   }) as typeof fetch
 }
 
-test('should install verified runtime asset and write yarnPath', async () => {
+test('should install verified runtime asset and write bootstrap config', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
   const runtime = Buffer.from('runtime')
 
@@ -55,6 +55,6 @@ test('should install verified runtime asset and write yarnPath', async () => {
   )
   assert.equal(
     await readFile(join(cwd, '.yarnrc.yml'), 'utf-8'),
-    'yarnPath: .yarn/releases/raijin-yarn-1.2.3.mjs\n'
+    'nodeLinker: pnp\nyarnPath: .yarn/releases/raijin-yarn-1.2.3.mjs\n'
   )
 })
