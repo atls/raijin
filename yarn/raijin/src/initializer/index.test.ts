@@ -1,5 +1,7 @@
 import assert                                                 from 'node:assert/strict'
 import { mkdtemp }                                            from 'node:fs/promises'
+import { readFile }                                           from 'node:fs/promises'
+import { writeFile }                                          from 'node:fs/promises'
 import { tmpdir }                                             from 'node:os'
 import { join }                                               from 'node:path'
 import { test }                                               from 'node:test'
@@ -51,10 +53,15 @@ const EXPECTED_INITIALIZER_COMMANDS = [
 ]
 
 const collectInitializerCommands = async (
-  runInitializer: typeof runRaijinInitializer
+  runInitializer: typeof runRaijinInitializer,
+  packageJson = false
 ): Promise<Array<Array<string>>> => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
   const commands: Array<Array<string>> = []
+
+  if (packageJson) {
+    await writeFile(join(cwd, 'package.json'), '{}')
+  }
 
   await runInitializer({
     argv: ['init'],
@@ -68,9 +75,18 @@ const collectInitializerCommands = async (
   return commands
 }
 
+const noopYarnCommand = async (): Promise<void> => undefined
+
 test('should run initializer command sequence', async () => {
   assert.deepEqual(
     await collectInitializerCommands(runRaijinInitializer),
+    EXPECTED_INITIALIZER_COMMANDS
+  )
+})
+
+test('should preserve existing package initialization', async () => {
+  assert.deepEqual(
+    await collectInitializerCommands(runRaijinInitializer, true),
     EXPECTED_INITIALIZER_COMMANDS
   )
 })
@@ -80,6 +96,21 @@ test('should expose initializer command through public index', async () => {
     await collectInitializerCommands(runPublicRaijinInitializer),
     EXPECTED_INITIALIZER_COMMANDS
   )
+})
+
+test('should create package manifest for empty project', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+
+  await runRaijinInitializer({
+    argv: ['init'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime')),
+    runYarnCommand: noopYarnCommand,
+  })
+
+  const packageJson = await readFile(join(cwd, 'package.json'), 'utf-8')
+
+  assert.match(packageJson, /"name": "raijin-initializer-/)
 })
 
 test('should reject unknown initializer arguments', async () => {
