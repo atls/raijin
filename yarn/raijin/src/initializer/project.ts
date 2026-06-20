@@ -4,6 +4,7 @@ import { basename }  from 'node:path'
 import { join }      from 'node:path'
 
 const PACKAGE_JSON = 'package.json'
+const YARN_LOCK = 'yarn.lock'
 const FALLBACK_PACKAGE_NAME = 'raijin-project'
 const INVALID_PACKAGE_NAME_CHARS_PATTERN = /[^a-z0-9._~-]+/g
 const PACKAGE_NAME_EDGE_DASHES_PATTERN = /^-+|-+$/g
@@ -17,9 +18,9 @@ export const getPackageName = (cwd: string): string => {
   return packageName || FALLBACK_PACKAGE_NAME
 }
 
-export const hasPackageJson = async (cwd: string): Promise<boolean> => {
+const hasProjectFile = async (cwd: string, fileName: string): Promise<boolean> => {
   try {
-    await access(join(cwd, PACKAGE_JSON))
+    await access(join(cwd, fileName))
 
     return true
   } catch (error) {
@@ -31,6 +32,11 @@ export const hasPackageJson = async (cwd: string): Promise<boolean> => {
   }
 }
 
+export const hasPackageJson = async (cwd: string): Promise<boolean> =>
+  hasProjectFile(cwd, PACKAGE_JSON)
+
+export const hasYarnLock = async (cwd: string): Promise<boolean> => hasProjectFile(cwd, YARN_LOCK)
+
 export const ensurePackageJson = async (cwd: string): Promise<void> => {
   if (await hasPackageJson(cwd)) {
     return
@@ -40,4 +46,12 @@ export const ensurePackageJson = async (cwd: string): Promise<void> => {
     join(cwd, PACKAGE_JSON),
     `${JSON.stringify({ name: getPackageName(cwd) }, null, 2)}\n`
   )
+}
+
+export const ensureYarnLock = async (cwd: string): Promise<void> => {
+  if (await hasYarnLock(cwd)) {
+    return
+  }
+
+  await writeFile(join(cwd, YARN_LOCK), '')
 }

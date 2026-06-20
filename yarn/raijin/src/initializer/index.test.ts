@@ -113,6 +113,36 @@ test('should create package manifest for empty project', async () => {
   assert.match(packageJson, /"name": "raijin-initializer-/)
 })
 
+test('should create project lockfile boundary before yarn commands', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+
+  await runRaijinInitializer({
+    argv: ['init'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime')),
+    runYarnCommand: noopYarnCommand,
+  })
+
+  assert.equal(await readFile(join(cwd, 'yarn.lock'), 'utf-8'), '')
+})
+
+test('should preserve existing project lockfile boundary', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const lockfile = '# existing lockfile\n'
+
+  await writeFile(join(cwd, 'package.json'), '{}')
+  await writeFile(join(cwd, 'yarn.lock'), lockfile)
+
+  await runRaijinInitializer({
+    argv: ['init'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime')),
+    runYarnCommand: noopYarnCommand,
+  })
+
+  assert.equal(await readFile(join(cwd, 'yarn.lock'), 'utf-8'), lockfile)
+})
+
 test('should reject unknown initializer arguments', async () => {
   await assert.rejects(
     runRaijinInitializer({
