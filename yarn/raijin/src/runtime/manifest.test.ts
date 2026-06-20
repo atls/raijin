@@ -1,7 +1,7 @@
 import assert                                    from 'node:assert/strict'
 import { test }                                  from 'node:test'
 
-import { InvalidRaijinRuntimeManifestException } from './exceptions/invalid-manifest.exception.js'
+import { InvalidRaijinRuntimeManifestException } from './exceptions/invalid-manifest.js'
 import { parseRaijinRuntimeManifest }            from './manifest.js'
 
 test('should parse Raijin runtime manifest', () => {

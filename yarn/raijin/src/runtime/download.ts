@@ -1,8 +1,8 @@
 import type { FetchLike }                         from './download.interfaces.js'
 import type { RaijinRuntimeManifest }             from './interfaces.js'
 
-import { RaijinRuntimeAssetDownloadException }    from './exceptions/asset-download.exception.js'
-import { RaijinRuntimeManifestDownloadException } from './exceptions/manifest-download.exception.js'
+import { RaijinRuntimeAssetDownloadException }    from './exceptions/asset-download.js'
+import { RaijinRuntimeManifestDownloadException } from './exceptions/manifest-download.js'
 import { RAIJIN_RUNTIME_MANIFEST_URL }            from './manifest.js'
 import { parseRaijinRuntimeManifest }             from './manifest.js'
 

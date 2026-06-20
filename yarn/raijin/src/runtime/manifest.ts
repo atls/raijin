@@ -2,7 +2,7 @@ import type { RaijinRuntimeManifest }            from './interfaces.js'
 
 import { createHash }                            from 'node:crypto'
 
-import { InvalidRaijinRuntimeManifestException } from './exceptions/invalid-manifest.exception.js'
+import { InvalidRaijinRuntimeManifestException } from './exceptions/invalid-manifest.js'
 
 export type { RaijinRuntimeManifest } from './interfaces.js'
 

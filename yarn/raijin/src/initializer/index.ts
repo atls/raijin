@@ -1,6 +1,6 @@
 import type { RunRaijinInitializerOptions } from './interfaces.js'
 
-import { RaijinInitializerUsageException }  from './exceptions/usage.exception.js'
+import { RaijinInitializerUsageException }  from './exceptions/usage.js'
 import { installRaijinRuntime }             from '../runtime/installer.js'
 import { runYarnCommand }                   from '../yarn/command.js'
 

@@ -6,7 +6,7 @@ import { writeFile }                            from 'node:fs/promises'
 import { dirname }                              from 'node:path'
 import { join }                                 from 'node:path'
 
-import { RaijinRuntimeDigestMismatchException } from './exceptions/digest-mismatch.exception.js'
+import { RaijinRuntimeDigestMismatchException } from './exceptions/digest-mismatch.js'
 import { writeYarnPathConfiguration }           from './bootstrap.js'
 import { downloadRaijinRuntime }                from './download.js'
 import { fetchRaijinRuntimeManifest }           from './download.js'

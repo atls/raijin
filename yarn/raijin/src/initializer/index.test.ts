@@ -4,7 +4,7 @@ import { tmpdir }                                             from 'node:os'
 import { join }                                               from 'node:path'
 import { test }                                               from 'node:test'
 
-import { RaijinInitializerUsageException }                    from './exceptions/usage.exception.js'
+import { RaijinInitializerUsageException }                    from './exceptions/usage.js'
 import { runRaijinInitializer as runPublicRaijinInitializer } from '../index.js'
 import { createSha256Digest }                                 from '../runtime/manifest.js'
 import { runRaijinInitializer }                               from './index.js'
