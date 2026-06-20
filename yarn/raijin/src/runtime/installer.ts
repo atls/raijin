@@ -1,5 +1,5 @@
-import type { InstallRaijinRuntimeOptions }     from './installer.interfaces.js'
-import type { RaijinRuntimeManifest }           from './interfaces.js'
+import type { FetchLike }                       from './download.js'
+import type { RaijinRuntimeManifest }           from './manifest.js'
 
 import { mkdir }                                from 'node:fs/promises'
 import { writeFile }                            from 'node:fs/promises'
@@ -12,6 +12,11 @@ import { downloadRaijinRuntime }                from './download.js'
 import { fetchRaijinRuntimeManifest }           from './download.js'
 import { createSha256Digest }                   from './manifest.js'
 import { getRaijinRuntimeYarnPath }             from './manifest.js'
+
+export interface InstallRaijinRuntimeOptions {
+  cwd: string
+  fetchImpl: FetchLike
+}
 
 export const installRaijinRuntime = async ({
   cwd,

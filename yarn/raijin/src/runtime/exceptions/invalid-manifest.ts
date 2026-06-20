@@ -1,4 +1,4 @@
-import type { RaijinRuntimeManifest } from '../interfaces.js'
+import type { RaijinRuntimeManifest } from '../manifest.js'
 
 const INVALID_RUNTIME_MANIFEST_OBJECT_MESSAGE = 'Invalid Raijin runtime manifest: expected object'
 const INVALID_RUNTIME_MANIFEST_SCHEMA_VERSION_MESSAGE =

@@ -1,10 +1,11 @@
-import type { FetchLike }                         from './download.interfaces.js'
-import type { RaijinRuntimeManifest }             from './interfaces.js'
+import type { RaijinRuntimeManifest }             from './manifest.js'
 
 import { RaijinRuntimeAssetDownloadException }    from './exceptions/asset-download.js'
 import { RaijinRuntimeManifestDownloadException } from './exceptions/manifest-download.js'
 import { RAIJIN_RUNTIME_MANIFEST_URL }            from './manifest.js'
 import { parseRaijinRuntimeManifest }             from './manifest.js'
+
+export type FetchLike = typeof fetch
 
 const fetchJson = async (fetchImpl: FetchLike, url: string): Promise<unknown> => {
   const response = await fetchImpl(url, {

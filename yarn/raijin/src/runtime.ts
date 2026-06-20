@@ -1,4 +1,4 @@
-export type { RaijinRuntimeManifest } from './runtime/interfaces.js'
+export type { RaijinRuntimeManifest } from './runtime/manifest.js'
 
 export { createSha256Digest } from './runtime/manifest.js'
 export { getRaijinRuntimeYarnPath } from './runtime/manifest.js'

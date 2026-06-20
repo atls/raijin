@@ -1,10 +1,16 @@
-import type { RaijinRuntimeManifest }            from './interfaces.js'
-
 import { createHash }                            from 'node:crypto'
 
 import { InvalidRaijinRuntimeManifestException } from './exceptions/invalid-manifest.js'
 
-export type { RaijinRuntimeManifest } from './interfaces.js'
+export interface RaijinRuntimeManifest {
+  assetName: string
+  assetUrl: string
+  packageName: string
+  schemaVersion: number
+  sha256: string
+  tagName: string
+  version: string
+}
 
 export const RAIJIN_RUNTIME_MANIFEST_URL =
   'https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/raijin-runtime.json'

@@ -1,6 +1,6 @@
-export type { FetchLike } from './download.interfaces.js'
-export type { InstallRaijinRuntimeOptions } from './installer.interfaces.js'
-export type { RaijinRuntimeManifest } from './interfaces.js'
+export type { FetchLike } from './download.js'
+export type { InstallRaijinRuntimeOptions } from './installer.js'
+export type { RaijinRuntimeManifest } from './manifest.js'
 
 export { createSha256Digest } from './manifest.js'
 export { downloadRaijinRuntime } from './download.js'
