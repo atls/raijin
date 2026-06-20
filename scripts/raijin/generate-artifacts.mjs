@@ -572,6 +572,9 @@ const renderQuickstart = (language) => {
     '',
     isRu ? '- Node.js: `>= 24` (не ниже `24`)' : '- Node.js: `>= 24`',
     isRu ? '- Yarn: `>= 4` (не ниже `4`)' : '- Yarn: `>= 4`',
+    isRu
+      ? '- Raijin поддерживает только Yarn PnP и ESM; режим `node-modules` и CommonJS не входят в контракт быстрого старта'
+      : '- Raijin supports only Yarn PnP and ESM; `node-modules` and CommonJS are outside the quickstart contract',
     isRu ? '- Для нового проекта: пустая директория' : '- For a new project: an empty directory',
     isRu
       ? '- Для существующего проекта: `package.json` в корне проекта'
@@ -595,8 +598,8 @@ const renderQuickstart = (language) => {
       ? '- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/raijin-yarn-<version>.mjs`'
       : '- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/raijin-yarn-<version>.mjs`',
     isRu
-      ? '- `.yarnrc.yml` сразу получает финальный `yarnPath` без временного файла'
-      : '- `.yarnrc.yml` gets the final `yarnPath` directly without a temporary file',
+      ? '- `.yarnrc.yml` сразу получает `nodeLinker: pnp` и финальный `yarnPath` без временного файла'
+      : '- `.yarnrc.yml` gets `nodeLinker: pnp` and the final `yarnPath` directly without a temporary file',
     isRu
       ? '- Проектный каркас создаётся через существующие схемы Raijin'
       : '- Project scaffold is created through the existing Raijin schematics',

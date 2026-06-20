@@ -8,6 +8,7 @@ Minimal flow for creating or connecting a project to Raijin
 
 - Node.js: `>= 24`
 - Yarn: `>= 4`
+- Raijin supports only Yarn PnP and ESM; `node-modules` and CommonJS are outside the quickstart contract
 - For a new project: an empty directory
 - For an existing project: `package.json` in the project root
 
@@ -27,7 +28,7 @@ Expected result:
 
 - `package.json` is created when it does not exist yet
 - Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/raijin-yarn-<version>.mjs`
-- `.yarnrc.yml` gets the final `yarnPath` directly without a temporary file
+- `.yarnrc.yml` gets `nodeLinker: pnp` and the final `yarnPath` directly without a temporary file
 - Project scaffold is created through the existing Raijin schematics
 - Bundle commands (`check`, `files changed list`, etc.) become available
 

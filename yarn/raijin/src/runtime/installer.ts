@@ -7,7 +7,7 @@ import { dirname }                              from 'node:path'
 import { join }                                 from 'node:path'
 
 import { RaijinRuntimeDigestMismatchException } from './exceptions/digest-mismatch.js'
-import { writeYarnPathConfiguration }           from './bootstrap.js'
+import { writeBootstrapConfiguration }          from './bootstrap.js'
 import { downloadRaijinRuntime }                from './download.js'
 import { fetchRaijinRuntimeManifest }           from './download.js'
 import { createSha256Digest }                   from './manifest.js'
@@ -35,7 +35,7 @@ export const installRaijinRuntime = async ({
 
   await mkdir(dirname(runtimePath), { recursive: true })
   await writeFile(runtimePath, runtime)
-  await writeYarnPathConfiguration(cwd, yarnPath)
+  await writeBootstrapConfiguration(cwd, yarnPath)
 
   return manifest
 }

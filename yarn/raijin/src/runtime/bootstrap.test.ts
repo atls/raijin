@@ -1,11 +1,11 @@
-import assert                          from 'node:assert/strict'
-import { test }                        from 'node:test'
+import assert                           from 'node:assert/strict'
+import { test }                         from 'node:test'
 
-import { updateYarnPathConfiguration } from './bootstrap.js'
+import { updateBootstrapConfiguration } from './bootstrap.js'
 
 test('should update yarn path in existing yarnrc', () => {
   assert.equal(
-    updateYarnPathConfiguration(
+    updateBootstrapConfiguration(
       'nodeLinker: pnp\nyarnPath: .yarn/releases/yarn.mjs\n',
       '.yarn/releases/raijin-yarn-1.2.3.mjs'
     ),
@@ -15,7 +15,17 @@ test('should update yarn path in existing yarnrc', () => {
 
 test('should append yarn path to yarnrc without one', () => {
   assert.equal(
-    updateYarnPathConfiguration('nodeLinker: pnp\n', '.yarn/releases/raijin-yarn-1.2.3.mjs'),
+    updateBootstrapConfiguration('nodeLinker: pnp\n', '.yarn/releases/raijin-yarn-1.2.3.mjs'),
     'nodeLinker: pnp\nyarnPath: .yarn/releases/raijin-yarn-1.2.3.mjs\n'
+  )
+})
+
+test('should pin pnp linker in yarnrc', () => {
+  assert.equal(
+    updateBootstrapConfiguration(
+      'nodeLinker: node-modules\nenableGlobalCache: false\n',
+      '.yarn/releases/raijin-yarn-1.2.3.mjs'
+    ),
+    'enableGlobalCache: false\nnodeLinker: pnp\nyarnPath: .yarn/releases/raijin-yarn-1.2.3.mjs\n'
   )
 })
