@@ -7,7 +7,9 @@ import EventEmitter            from 'node:events'
 import { readFileSync }        from 'node:fs'
 import { readFile }            from 'node:fs/promises'
 import { writeFile }           from 'node:fs/promises'
+import { isAbsolute }          from 'node:path'
 import { relative }            from 'node:path'
+import { resolve }             from 'node:path'
 import { join }                from 'node:path'
 
 import { globby }              from 'globby'
@@ -65,25 +67,27 @@ export class Linter extends EventEmitter {
   }
 
   async lintFile(filename: string, options?: LintOptions): Promise<LintResult> {
-    const source = await readFile(filename, 'utf8')
+    const filePath = this.resolveFilePath(filename)
+    const lintFilename = relative(this.cwd, filePath)
+    const source = await readFile(filePath, 'utf8')
 
     if (options?.fix) {
       const { messages, fixed, output } = this.linter.verifyAndFix(source, this.config, {
-        filename,
+        filename: lintFilename,
       })
 
       if (fixed) {
-        await writeFile(filename, output, 'utf8')
+        await writeFile(filePath, output, 'utf8')
       }
 
-      return createLintResult(filename, output, messages)
+      return createLintResult(filePath, output, messages)
     }
 
     return createLintResult(
-      filename,
+      filePath,
       source,
       this.linter.verify(source, this.config, {
-        filename,
+        filename: lintFilename,
       })
     )
   }
@@ -110,7 +114,9 @@ export class Linter extends EventEmitter {
 
   async lint(files?: Array<string>, options?: LintOptions): Promise<Array<LintResult>> {
     const filesForLint =
-      files && files.length > 0 ? files : await globby(createPatterns(this.cwd), { dot: true })
+      files && files.length > 0
+        ? files.map((file) => this.resolveFilePath(file))
+        : await globby(createPatterns(this.cwd), { dot: true })
 
     const finalFiles = filesForLint.filter(
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
@@ -144,5 +150,9 @@ export class Linter extends EventEmitter {
     const { linterIgnorePatterns = [] } = JSON.parse(content)
 
     return linterIgnorePatterns as Array<string>
+  }
+
+  private resolveFilePath(file: string): string {
+    return isAbsolute(file) ? file : resolve(this.cwd, file)
   }
 }
