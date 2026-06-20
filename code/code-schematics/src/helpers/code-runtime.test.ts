@@ -6,9 +6,9 @@ import { join }                          from 'node:path'
 import { test }                          from 'node:test'
 
 import { SchematicWorkflowException }    from '../exceptions/index.js'
-import { getCodeRuntimeCompilerOptions } from './code-runtime.helper.js'
-import { writeCodeRuntimeFiles }         from './code-runtime.helper.js'
-import { ensureSchematicSucceeded }      from './schematic-result.helper.js'
+import { getCodeRuntimeCompilerOptions } from './code-runtime.js'
+import { writeCodeRuntimeFiles }         from './code-runtime.js'
+import { ensureSchematicSucceeded }      from './schematic-result.js'
 
 test('should load code runtime compiler options from project scope', async () => {
   const compilerOptions = await getCodeRuntimeCompilerOptions(process.cwd())

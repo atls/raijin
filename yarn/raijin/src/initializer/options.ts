@@ -1,5 +1,5 @@
 import type { FetchLike }         from '../runtime/download.js'
-import type { YarnCommandRunner } from '../yarn/interfaces.js'
+import type { YarnCommandRunner } from '../yarn/runner.js'
 
 export interface RunRaijinInitializerOptions {
   argv?: Array<string>

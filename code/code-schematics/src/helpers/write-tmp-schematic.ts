@@ -7,7 +7,7 @@ import { mkdir }                 from 'node:fs/promises'
 import { ppath }                 from '@yarnpkg/fslib'
 
 import { writeSchematicFactory } from '../generated/index.js'
-import { writeCodeRuntimeFiles } from './code-runtime.helper.js'
+import { writeCodeRuntimeFiles } from './code-runtime.js'
 
 export const writeTmpSchematicHelper = async (
   tmpDir: PortablePath,

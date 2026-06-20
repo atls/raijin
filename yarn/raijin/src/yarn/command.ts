@@ -1,4 +1,4 @@
-import type { YarnCommandRunner }     from './interfaces.js'
+import type { YarnCommandRunner }     from './runner.js'
 
 import { spawn }                      from 'node:child_process'
 

@@ -1,1 +1,1 @@
-export * from './undefined-build-result.exception.js'
+export * from './undefined-build-result.js'

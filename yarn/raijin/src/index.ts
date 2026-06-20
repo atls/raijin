@@ -1,3 +1,3 @@
-export type { RunRaijinInitializerOptions } from './initializer/interfaces.js'
+export type { RunRaijinInitializerOptions } from './initializer/options.js'
 
 export { runRaijinInitializer } from './initializer/index.js'

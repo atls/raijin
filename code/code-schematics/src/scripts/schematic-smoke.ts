@@ -15,7 +15,7 @@ const helperScanRoots = [
   'scripts/raijin',
   'README.md',
   'README_EN.md',
-  'code/code-schematics/src/scripts/schematic-smoke.script.ts',
+  'code/code-schematics/src/scripts/schematic-smoke.ts',
   'docs/README.md',
   'docs/README.ru.md',
   'docs/raijin/README.md',
