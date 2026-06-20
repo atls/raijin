@@ -3,7 +3,7 @@
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics'
 import { NodeWorkflow }                  from '@angular-devkit/schematics/tools'
 
-import { eventsLogHelper }               from './events-log.helper.js'
+import { eventsLogHelper }               from './events-log.js'
 
 export const runSchematicHelper = async (
   schematicName: string,

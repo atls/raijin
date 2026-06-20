@@ -57,7 +57,7 @@ export const main = (options: Record<string, string>): Rule => {
 
   return chain([
     captureGitIgnoreContentRule(state),
-    updateTsConfigRule,
+    updateTsConfigRule(options),
     mergeWith(generateCommonSource(options), MergeStrategy.Overwrite),
     mergeWith(generateProjectSpecificSource(options), MergeStrategy.Overwrite),
     mergeGitIgnoreContentRule(state),

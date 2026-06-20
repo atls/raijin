@@ -865,6 +865,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/raijin@workspace:*, @atls/raijin@workspace:yarn/raijin":
+  version: 0.0.0-use.local
+  resolution: "@atls/raijin@workspace:yarn/raijin"
+  dependencies:
+    "@types/node": "npm:24.12.2"
+  bin:
+    raijin: ./bin/raijin.mjs
+  languageName: unknown
+  linkType: soft
+
 "@atls/webpack-proto-imports-loader@workspace:*, @atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader":
   version: 0.0.0-use.local
   resolution: "@atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader"
@@ -1161,6 +1171,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-essentials@workspace:yarn/plugin-essentials"
   dependencies:
+    "@atls/raijin": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
