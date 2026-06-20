@@ -1,4 +1,4 @@
-import type { RunRaijinInitializerOptions } from './options.js'
+import type { RunRaijinInitializerOptions } from './interface.js'
 
 import { RaijinInitializerUsageException }  from './exceptions/usage.js'
 import { installRaijinRuntime }             from '../runtime/installer.js'
