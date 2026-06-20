@@ -1,3 +1,5 @@
 export * from './run-schematics.helper.js'
 export * from './write-tmp-schematic.helper.js'
 export * from './prepare-tmp-dir.helper.js'
+export * from './code-runtime.helper.js'
+export * from './schematic-result.helper.js'
