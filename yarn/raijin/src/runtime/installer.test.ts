@@ -11,6 +11,8 @@ import { test }                 from 'node:test'
 import { installRaijinRuntime } from './installer.js'
 import { createSha256Digest }   from './manifest.js'
 
+const TEST_PACKAGE_MANAGER = 'yarn@4.14.1'
+
 const getRequestHref = (url: Request | URL | string): string => {
   if (typeof url === 'string') {
     return url
@@ -29,6 +31,7 @@ const createFetch = (runtime: Buffer): typeof fetch => {
     assetUrl:
       'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
     packageName: '@atls/yarn-cli',
+    packageManager: TEST_PACKAGE_MANAGER,
     schemaVersion: 1,
     sha256: createSha256Digest(runtime),
     tagName: '@atls/yarn-cli@1.2.3',
