@@ -2,6 +2,10 @@ import type { PortablePath }                    from '@yarnpkg/fslib'
 
 import assert                                   from 'node:assert/strict'
 import { Buffer }                               from 'node:buffer'
+import { mkdtemp }                              from 'node:fs/promises'
+import { writeFile }                            from 'node:fs/promises'
+import { tmpdir }                               from 'node:os'
+import { join }                                 from 'node:path'
 import { test }                                 from 'node:test'
 
 import { assertYarnRuntimeReleaseAssetMatches } from '../release-create.command.js'
@@ -12,6 +16,7 @@ import { createYarnRuntimeManifestPath }        from '../release-create.command.
 import { createYarnRuntimeReleaseAssetOptions } from '../release-create.command.js'
 import { isReleaseAlreadyExistsError }          from '../release-create.command.js'
 import { parseGitHubReleaseTagVersion }         from '../release-create.command.js'
+import { readYarnRuntimePackageManager }        from '../release-create.command.js'
 import { selectPreviousGitHubReleaseTagName }   from '../release-create.command.js'
 
 test('should create releases with GitHub generated release notes', () => {
@@ -68,6 +73,28 @@ test('should create yarn runtime manifest path', () => {
   )
 })
 
+test('should read yarn runtime package manager from root package manifest', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-release-'))
+
+  await writeFile(
+    join(cwd, 'package.json'),
+    `${JSON.stringify({ packageManager: 'yarn@5.0.0' })}\n`
+  )
+
+  assert.equal(await readYarnRuntimePackageManager(cwd as PortablePath), 'yarn@5.0.0')
+})
+
+test('should reject root package manifest without package manager', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-release-'))
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify({ private: true })}\n`)
+
+  await assert.rejects(
+    readYarnRuntimePackageManager(cwd as PortablePath),
+    /Missing root packageManager/
+  )
+})
+
 test('should create yarn runtime manifest from verified release asset', () => {
   assert.deepEqual(
     createYarnRuntimeManifest(
@@ -78,14 +105,15 @@ test('should create yarn runtime manifest from verified release asset', () => {
           'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
         name: 'yarn.mjs',
       },
-      Buffer.from('runtime')
+      Buffer.from('runtime'),
+      'yarn@5.0.0'
     ),
     {
       assetName: 'yarn.mjs',
       assetUrl:
         'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
       packageName: '@atls/yarn-cli',
-      packageManager: 'yarn@4.14.1',
+      packageManager: 'yarn@5.0.0',
       schemaVersion: 1,
       sha256: 'd92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23',
       tagName: '@atls/yarn-cli@1.2.3',

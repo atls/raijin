@@ -1,10 +1,8 @@
-import { access }                 from 'node:fs/promises'
-import { readFile }               from 'node:fs/promises'
-import { writeFile }              from 'node:fs/promises'
-import { basename }               from 'node:path'
-import { join }                   from 'node:path'
-
-import { RAIJIN_PACKAGE_MANAGER } from '../runtime/package-manager.js'
+import { access }    from 'node:fs/promises'
+import { readFile }  from 'node:fs/promises'
+import { writeFile } from 'node:fs/promises'
+import { basename }  from 'node:path'
+import { join }      from 'node:path'
 
 interface PackageManifest extends Record<string, unknown> {
   packageManager?: string
@@ -48,10 +46,7 @@ const writePackageManifest = async (cwd: string, manifest: PackageManifest): Pro
   await writeFile(join(cwd, PACKAGE_JSON), `${JSON.stringify(manifest, null, 2)}\n`)
 }
 
-export const ensurePackageManifest = async (
-  cwd: string,
-  packageManager = RAIJIN_PACKAGE_MANAGER
-): Promise<void> => {
+export const ensurePackageManifest = async (cwd: string, packageManager: string): Promise<void> => {
   if (!(await hasPackageJson(cwd))) {
     await writePackageManifest(cwd, {
       name: getPackageName(cwd),

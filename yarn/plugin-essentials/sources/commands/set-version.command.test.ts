@@ -9,7 +9,6 @@ import { tmpdir }                            from 'node:os'
 import { join }                              from 'node:path'
 import { test }                              from 'node:test'
 
-import { RAIJIN_PACKAGE_MANAGER }            from '@atls/raijin/runtime'
 import { createSha256Digest }                from '@atls/raijin/runtime'
 import { getRaijinRuntimeYarnPath }          from '@atls/raijin/runtime'
 import { parseRaijinRuntimeManifest }        from '@atls/raijin/runtime'
@@ -22,6 +21,8 @@ import { nativeToPortablePath }              from './set-version.utils.js'
 import { normalizePackageManager }           from './set-version.utils.js'
 import { portableToNativePath }              from './set-version.utils.js'
 import { preparePackageProjectBoundary }     from './set-version.utils.js'
+
+const TEST_PACKAGE_MANAGER = 'yarn@4.14.1'
 
 const exists = async (path: string): Promise<boolean> => {
   try {
@@ -84,11 +85,11 @@ test('should normalize package manager without touching package fields', async (
 
   await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
 
-  await normalizePackageManager(cwd, RAIJIN_PACKAGE_MANAGER)
+  await normalizePackageManager(cwd, TEST_PACKAGE_MANAGER)
 
   assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
     ...manifest,
-    packageManager: RAIJIN_PACKAGE_MANAGER,
+    packageManager: TEST_PACKAGE_MANAGER,
   })
 })
 
@@ -246,12 +247,12 @@ test('should normalize package manager while cleanup removes only obsolete runti
   await writeFile(join(releaseDirectory, 'raijin-yarn-4.12.0.mjs'), 'old-runtime')
   await writeFile(join(releaseDirectory, 'manual-yarn.mjs'), 'custom-runtime')
 
-  await normalizePackageManager(cwd, RAIJIN_PACKAGE_MANAGER)
+  await normalizePackageManager(cwd, TEST_PACKAGE_MANAGER)
   await cleanupObsoleteRaijinRuntimeFiles(cwd)
 
   assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
     ...manifest,
-    packageManager: RAIJIN_PACKAGE_MANAGER,
+    packageManager: TEST_PACKAGE_MANAGER,
   })
   assert.deepEqual((await readdir(releaseDirectory)).sort(), ['manual-yarn.mjs', 'yarn.mjs'])
 })

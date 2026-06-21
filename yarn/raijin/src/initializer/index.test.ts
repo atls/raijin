@@ -6,11 +6,12 @@ import { tmpdir }                                             from 'node:os'
 import { join }                                               from 'node:path'
 import { test }                                               from 'node:test'
 
-import { RAIJIN_PACKAGE_MANAGER }                             from '../runtime/package-manager.js'
 import { RaijinInitializerUsageException }                    from './exceptions/usage.js'
 import { runRaijinInitializer as runPublicRaijinInitializer } from '../index.js'
 import { createSha256Digest }                                 from '../runtime/manifest.js'
 import { runRaijinInitializer }                               from './index.js'
+
+const TEST_PACKAGE_MANAGER = 'yarn@4.14.1'
 
 const getRequestHref = (url: Request | URL | string): string => {
   if (typeof url === 'string') {
@@ -24,7 +25,7 @@ const getRequestHref = (url: Request | URL | string): string => {
   return url.url
 }
 
-const createFetch = (runtime: Buffer, packageManager = RAIJIN_PACKAGE_MANAGER): typeof fetch => {
+const createFetch = (runtime: Buffer, packageManager = TEST_PACKAGE_MANAGER): typeof fetch => {
   const manifest = {
     assetName: 'yarn.mjs',
     assetUrl:
@@ -113,7 +114,7 @@ test('should create package manifest for empty project', async () => {
   const packageJson = await readFile(join(cwd, 'package.json'), 'utf-8')
 
   assert.match(packageJson, /"name": "raijin-initializer-/)
-  assert.equal(JSON.parse(packageJson).packageManager, RAIJIN_PACKAGE_MANAGER)
+  assert.equal(JSON.parse(packageJson).packageManager, TEST_PACKAGE_MANAGER)
 })
 
 test('should normalize package manager in existing package manifest', async () => {
@@ -138,7 +139,7 @@ test('should normalize package manager in existing package manifest', async () =
 
   assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
     ...manifest,
-    packageManager: RAIJIN_PACKAGE_MANAGER,
+    packageManager: TEST_PACKAGE_MANAGER,
   })
 })
 
