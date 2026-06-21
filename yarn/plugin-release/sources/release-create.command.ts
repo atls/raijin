@@ -32,6 +32,7 @@ const YARN_RUNTIME_ASSET_NAME = 'yarn.mjs'
 const YARN_RUNTIME_ASSET_CONTENT_TYPE = 'text/javascript'
 const YARN_RUNTIME_MANIFEST_PATH = '.yarn/releases/raijin-runtime.json'
 const YARN_RUNTIME_MANIFEST_SCHEMA_VERSION = 1
+const PACKAGE_JSON = 'package.json'
 
 interface GitHubReleaseError {
   status?: number
@@ -76,10 +77,15 @@ interface GitHubReleaseAsset {
   name: string
 }
 
+interface PackageManifest {
+  packageManager?: unknown
+}
+
 interface YarnRuntimeManifest {
   assetName: string
   assetUrl: string
   packageName: string
+  packageManager: string
   schemaVersion: number
   sha256: string
   tagName: string
@@ -175,15 +181,28 @@ export const createYarnRuntimeReleaseAssetDigest = (data: Buffer): string =>
 export const createYarnRuntimeManifestPath = (projectCwd: PortablePath): string =>
   npath.fromPortablePath(ppath.join(projectCwd, YARN_RUNTIME_MANIFEST_PATH as PortablePath))
 
+export const readYarnRuntimePackageManager = async (projectCwd: PortablePath): Promise<string> => {
+  const manifestPath = npath.fromPortablePath(ppath.join(projectCwd, PACKAGE_JSON as PortablePath))
+  const manifest = JSON.parse(await readFile(manifestPath, 'utf-8')) as PackageManifest
+
+  if (typeof manifest.packageManager !== 'string' || manifest.packageManager.length === 0) {
+    throw new Error('Missing root packageManager')
+  }
+
+  return manifest.packageManager
+}
+
 export const createYarnRuntimeManifest = (
   packageName: string,
   version: string,
   asset: GitHubReleaseAsset,
-  data: Buffer
+  data: Buffer,
+  packageManager: string
 ): YarnRuntimeManifest => ({
   assetName: asset.name,
   assetUrl: asset.browser_download_url,
   packageName,
+  packageManager,
   schemaVersion: YARN_RUNTIME_MANIFEST_SCHEMA_VERSION,
   sha256: createYarnRuntimeReleaseAssetDigest(data),
   tagName: createGitHubReleaseTagName(packageName, version),
@@ -275,7 +294,13 @@ const ensureYarnRuntimeReleaseAsset = async (
 
   await writeYarnRuntimeManifest(
     project,
-    createYarnRuntimeManifest(packageName, version, asset, data)
+    createYarnRuntimeManifest(
+      packageName,
+      version,
+      asset,
+      data,
+      await readYarnRuntimePackageManager(project.cwd)
+    )
   )
 }
 

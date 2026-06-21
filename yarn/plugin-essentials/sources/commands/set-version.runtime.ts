@@ -1,8 +1,11 @@
 import type { RaijinRuntimeManifest }         from '@atls/raijin/runtime'
 import type { Configuration }                 from '@yarnpkg/core'
 
+import { randomUUID }                         from 'node:crypto'
 import { mkdir }                              from 'node:fs/promises'
 import { readFile }                           from 'node:fs/promises'
+import { rename }                             from 'node:fs/promises'
+import { rm }                                 from 'node:fs/promises'
 import { writeFile }                          from 'node:fs/promises'
 import { dirname }                            from 'node:path'
 import { isAbsolute }                         from 'node:path'
@@ -20,6 +23,8 @@ import { portableToNativePath }               from './set-version.utils.js'
 
 type ConfigurationUpdate = Parameters<typeof YarnConfiguration.updateConfiguration>[1]
 type ConfigurationUpdateCwd = Parameters<typeof YarnConfiguration.updateConfiguration>[0]
+
+const TEMPORARY_RUNTIME_FILE_EXTENSION = '.tmp'
 
 export const fetchRaijinRuntimeManifest = async (
   configuration: Configuration
@@ -59,6 +64,22 @@ const downloadRaijinRuntime = async (
   throw new Error('Invalid Raijin runtime asset response')
 }
 
+export const writeRuntimeFileAtomically = async (
+  runtimePath: string,
+  runtime: Buffer
+): Promise<void> => {
+  const temporaryRuntimePath = `${runtimePath}.${process.pid}.${randomUUID()}${TEMPORARY_RUNTIME_FILE_EXTENSION}`
+
+  try {
+    await writeFile(temporaryRuntimePath, runtime)
+    await rename(temporaryRuntimePath, runtimePath)
+  } catch (error) {
+    await rm(temporaryRuntimePath, { force: true })
+
+    throw error
+  }
+}
+
 export const installRaijinRuntime = async (
   configuration: Configuration,
   cwd: string,
@@ -73,11 +94,11 @@ export const installRaijinRuntime = async (
     )
   }
 
-  const yarnPath = getRaijinRuntimeYarnPath(manifest)
+  const yarnPath = getRaijinRuntimeYarnPath()
   const runtimePath = join(portableToNativePath(cwd), portableToNativePath(yarnPath))
 
   await mkdir(dirname(runtimePath), { recursive: true })
-  await writeFile(runtimePath, runtime)
+  await writeRuntimeFileAtomically(runtimePath, runtime)
   await YarnConfiguration.updateConfiguration(
     cwd as ConfigurationUpdateCwd,
     {

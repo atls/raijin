@@ -10,6 +10,7 @@ test('should parse Raijin runtime manifest', () => {
       assetName: 'yarn.mjs',
       assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
       packageName: '@atls/yarn-cli',
+      packageManager: 'yarn@4.15.0',
       schemaVersion: 1,
       sha256: 'a'.repeat(64),
       tagName: '@atls/yarn-cli@1.2.3',
@@ -19,11 +20,30 @@ test('should parse Raijin runtime manifest', () => {
       assetName: 'yarn.mjs',
       assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
       packageName: '@atls/yarn-cli',
+      packageManager: 'yarn@4.15.0',
       schemaVersion: 1,
       sha256: 'a'.repeat(64),
       tagName: '@atls/yarn-cli@1.2.3',
       version: '1.2.3',
     }
+  )
+})
+
+test('should reject Raijin runtime manifest without package manager', () => {
+  assert.throws(
+    () =>
+      parseRaijinRuntimeManifest({
+        assetName: 'yarn.mjs',
+        assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+        packageName: '@atls/yarn-cli',
+        schemaVersion: 1,
+        sha256: 'a'.repeat(64),
+        tagName: '@atls/yarn-cli@1.2.3',
+        version: '1.2.3',
+      }),
+    (error) =>
+      error instanceof InvalidRaijinRuntimeManifestException &&
+      error.message.includes('missing packageManager')
   )
 })
 
