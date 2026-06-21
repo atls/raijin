@@ -287,6 +287,42 @@
 
 </details>
 
+### Домен `raijin`
+
+- Команды: `raijin sync`, `raijin sync tsconfig`, `raijin sync typescript`
+
+<details>
+<summary>Подробности домена `raijin`</summary>
+
+<!-- sync:command-card:raijin-sync -->
+
+#### `raijin sync`
+
+- Статус: `active`
+- Пример: `yarn raijin sync`
+- Плагин: `@atls/yarn-plugin-tools`
+- Исходник: `yarn/plugin-tools/sources/commands/sync/sync.command.ts`
+
+<!-- sync:command-card:raijin-sync-tsconfig -->
+
+#### `raijin sync tsconfig`
+
+- Статус: `active`
+- Пример: `yarn raijin sync tsconfig`
+- Плагин: `@atls/yarn-plugin-tools`
+- Исходник: `yarn/plugin-tools/sources/commands/sync/tsconfig.command.ts`
+
+<!-- sync:command-card:raijin-sync-typescript -->
+
+#### `raijin sync typescript`
+
+- Статус: `active`
+- Пример: `yarn raijin sync typescript`
+- Плагин: `@atls/yarn-plugin-tools`
+- Исходник: `yarn/plugin-tools/sources/commands/sync/typescript.command.ts`
+
+</details>
+
 ### Домен `release`
 
 - Команды: `release create`, `release plan create`, `release plan foreach`, `release version defer`
@@ -419,42 +455,6 @@
 - Пример: `yarn test unit`
 - Плагин: `@atls/yarn-plugin-test`
 - Исходник: `yarn/plugin-test/sources/test-unit.command.ts`
-
-</details>
-
-### Домен `tools`
-
-- Команды: `tools sync`, `tools sync tsconfig`, `tools sync typescript`
-
-<details>
-<summary>Подробности домена `tools`</summary>
-
-<!-- sync:command-card:tools-sync -->
-
-#### `tools sync`
-
-- Статус: `active`
-- Пример: `yarn tools sync`
-- Плагин: `@atls/yarn-plugin-tools`
-- Исходник: `yarn/plugin-tools/sources/commands/sync/tools-sync.command.ts`
-
-<!-- sync:command-card:tools-sync-tsconfig -->
-
-#### `tools sync tsconfig`
-
-- Статус: `active`
-- Пример: `yarn tools sync tsconfig`
-- Плагин: `@atls/yarn-plugin-tools`
-- Исходник: `yarn/plugin-tools/sources/commands/sync/tools-sync-tsconfig.command.ts`
-
-<!-- sync:command-card:tools-sync-typescript -->
-
-#### `tools sync typescript`
-
-- Статус: `active`
-- Пример: `yarn tools sync typescript`
-- Плагин: `@atls/yarn-plugin-tools`
-- Исходник: `yarn/plugin-tools/sources/commands/sync/tools-sync-typescript.command.ts`
 
 </details>
 

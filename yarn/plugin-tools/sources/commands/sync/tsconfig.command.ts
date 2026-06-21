@@ -1,18 +1,18 @@
-import type { PortablePath }    from '@yarnpkg/fslib'
+import type { PortablePath }         from '@yarnpkg/fslib'
 
-import assert                   from 'node:assert'
+import assert                        from 'node:assert'
 
-import { Configuration }        from '@yarnpkg/core'
-import { Project }              from '@yarnpkg/core'
-import { StreamReport }         from '@yarnpkg/core'
-import { Filename }             from '@yarnpkg/fslib'
-import { xfs }                  from '@yarnpkg/fslib'
-import { ppath }                from '@yarnpkg/fslib'
-import deepmerge                from 'deepmerge'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { StreamReport }              from '@yarnpkg/core'
+import { Filename }                  from '@yarnpkg/fslib'
+import { xfs }                       from '@yarnpkg/fslib'
+import { ppath }                     from '@yarnpkg/fslib'
+import deepmerge                     from 'deepmerge'
 
-import tsconfig                 from '@atls/config-typescript'
+import tsconfig                      from '@atls/config-typescript'
 
-import { AbstractToolsCommand } from './abstract-tools.command.js'
+import { AbstractRaijinSyncCommand } from './base.js'
 
 const projectTypesIncludeEntry = 'project.types.d.ts'
 
@@ -86,8 +86,8 @@ export const getTSConfigIncludeEntries = (
   return Array.from(new Set([projectTypesIncludeEntry, ...tsconfigIncludes, ...workspaceIncludes]))
 }
 
-export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
-  static override paths = [['tools', 'sync', 'tsconfig']]
+export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
+  static override paths = [['raijin', 'sync', 'tsconfig']]
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
@@ -100,7 +100,7 @@ export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
       return this.executeRegular()
     }
 
-    return this.executeProxy(['tools', 'sync', 'tsconfig'])
+    return this.executeProxy(['raijin', 'sync', 'tsconfig'])
   }
 
   override async executeRegular(): Promise<number> {
@@ -113,7 +113,7 @@ export class ToolsSyncTSConfigCommand extends AbstractToolsCommand {
         configuration,
       },
       async (report) => {
-        await report.startTimerPromise('Tools sync typescript config', async () => {
+        await report.startTimerPromise('Raijin sync typescript config', async () => {
           const tsconfigpath = ppath.join(
             project.topLevelWorkspace.cwd,
             'tsconfig.json' as PortablePath
