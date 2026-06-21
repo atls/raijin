@@ -2,6 +2,7 @@ import assert                   from 'node:assert/strict'
 import { mkdir }                from 'node:fs/promises'
 import { mkdtemp }              from 'node:fs/promises'
 import { readFile }             from 'node:fs/promises'
+import { readdir }              from 'node:fs/promises'
 import { writeFile }            from 'node:fs/promises'
 import { tmpdir }               from 'node:os'
 import { join }                 from 'node:path'
@@ -75,4 +76,18 @@ test('should preserve existing release files during fresh runtime install', asyn
     await readFile(join(releaseDirectory, 'raijin-yarn-1.2.3.mjs'), 'utf-8'),
     'old-runtime'
   )
+})
+
+test('should replace active runtime without leaving temporary files', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const releaseDirectory = join(cwd, '.yarn/releases')
+  const runtime = Buffer.from('runtime')
+
+  await mkdir(releaseDirectory, { recursive: true })
+  await writeFile(join(releaseDirectory, 'yarn.mjs'), 'old-runtime')
+
+  await installRaijinRuntime({ cwd, fetchImpl: createFetch(runtime) })
+
+  assert.equal(await readFile(join(releaseDirectory, 'yarn.mjs'), 'utf-8'), 'runtime')
+  assert.deepEqual(await readdir(releaseDirectory), ['yarn.mjs'])
 })

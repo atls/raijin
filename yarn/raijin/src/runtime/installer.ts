@@ -1,7 +1,10 @@
 import type { FetchLike }                       from './download.js'
 import type { RaijinRuntimeManifest }           from './manifest.js'
 
+import { randomUUID }                           from 'node:crypto'
 import { mkdir }                                from 'node:fs/promises'
+import { rename }                               from 'node:fs/promises'
+import { rm }                                   from 'node:fs/promises'
 import { writeFile }                            from 'node:fs/promises'
 import { dirname }                              from 'node:path'
 import { join }                                 from 'node:path'
@@ -16,6 +19,21 @@ import { getRaijinRuntimeYarnPath }             from './manifest.js'
 export interface InstallRaijinRuntimeOptions {
   cwd: string
   fetchImpl: FetchLike
+}
+
+const TEMPORARY_RUNTIME_FILE_EXTENSION = '.tmp'
+
+const writeRuntimeFileAtomically = async (runtimePath: string, runtime: Buffer): Promise<void> => {
+  const temporaryRuntimePath = `${runtimePath}.${process.pid}.${randomUUID()}${TEMPORARY_RUNTIME_FILE_EXTENSION}`
+
+  try {
+    await writeFile(temporaryRuntimePath, runtime)
+    await rename(temporaryRuntimePath, runtimePath)
+  } catch (error) {
+    await rm(temporaryRuntimePath, { force: true })
+
+    throw error
+  }
 }
 
 export const installRaijinRuntime = async ({
@@ -34,7 +52,7 @@ export const installRaijinRuntime = async ({
   const runtimePath = join(cwd, yarnPath)
 
   await mkdir(dirname(runtimePath), { recursive: true })
-  await writeFile(runtimePath, runtime)
+  await writeRuntimeFileAtomically(runtimePath, runtime)
   await writeBootstrapConfiguration(cwd, yarnPath)
 
   return manifest

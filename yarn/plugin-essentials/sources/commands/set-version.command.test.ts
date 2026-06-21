@@ -16,6 +16,7 @@ import { parseRaijinRuntimeManifest }        from '@atls/raijin/runtime'
 
 import { cleanupObsoleteRaijinRuntimeFiles } from './set-version.migration.js'
 import { resolveYarnPath }                   from './set-version.runtime.js'
+import { writeRuntimeFileAtomically }        from './set-version.runtime.js'
 import { findPackageCwd }                    from './set-version.utils.js'
 import { nativeToPortablePath }              from './set-version.utils.js'
 import { normalizePackageManager }           from './set-version.utils.js'
@@ -195,6 +196,20 @@ test('should resolve relative yarn path from package cwd', () => {
     resolveYarnPath('/repo/backend/wallet', '.yarn/releases/yarn.mjs'),
     '/repo/backend/wallet/.yarn/releases/yarn.mjs'
   )
+})
+
+test('should replace active runtime atomically without leaving temporary files', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-set-version-'))
+  const releaseDirectory = join(cwd, '.yarn/releases')
+  const runtimePath = join(releaseDirectory, 'yarn.mjs')
+
+  await mkdir(releaseDirectory, { recursive: true })
+  await writeFile(runtimePath, 'old-runtime')
+
+  await writeRuntimeFileAtomically(runtimePath, Buffer.from('runtime'))
+
+  assert.equal(await readFile(runtimePath, 'utf-8'), 'runtime')
+  assert.deepEqual(await readdir(releaseDirectory), ['yarn.mjs'])
 })
 
 test('should clean obsolete Raijin runtime files from release directory', async () => {
