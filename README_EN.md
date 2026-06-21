@@ -42,7 +42,7 @@ yarn init @atls/raijin
 Expected result:
 
 - Project scaffold is created and the versioned Raijin runtime is installed
-- `.yarnrc.yml` points directly to the final `.yarn/releases/raijin-yarn-<version>.mjs` file
+- `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.mjs` file
 - Project schematics and the first sync run automatically
 - Raijin commands are available via `yarn`
 

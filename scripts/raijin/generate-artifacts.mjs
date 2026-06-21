@@ -347,8 +347,8 @@ const renderRootReadme = (language) => {
       ? '- Создаётся каркас проекта и устанавливается версионная среда выполнения Raijin'
       : '- Project scaffold is created and the versioned Raijin runtime is installed',
     isRu
-      ? '- `.yarnrc.yml` сразу указывает на финальный файл `.yarn/releases/raijin-yarn-<version>.mjs`'
-      : '- `.yarnrc.yml` points directly to the final `.yarn/releases/raijin-yarn-<version>.mjs` file',
+      ? '- `.yarnrc.yml` сразу указывает на стабильный файл `.yarn/releases/yarn.mjs`'
+      : '- `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.mjs` file',
     isRu
       ? '- Схемы проекта и первичная синхронизация выполняются автоматически'
       : '- Project schematics and the first sync run automatically',
@@ -595,8 +595,8 @@ const renderQuickstart = (language) => {
       ? '- Создаётся `package.json`, если его ещё не было'
       : '- `package.json` is created when it does not exist yet',
     isRu
-      ? '- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/raijin-yarn-<version>.mjs`'
-      : '- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/raijin-yarn-<version>.mjs`',
+      ? '- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/yarn.mjs`'
+      : '- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.mjs`',
     isRu
       ? '- `.yarnrc.yml` сразу получает `nodeLinker: pnp` и финальный `yarnPath` без временного файла'
       : '- `.yarnrc.yml` gets `nodeLinker: pnp` and the final `yarnPath` directly without a temporary file',

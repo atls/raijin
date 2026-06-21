@@ -16,6 +16,7 @@ export const RAIJIN_RUNTIME_MANIFEST_URL =
   'https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/raijin-runtime.json'
 export const RAIJIN_RUNTIME_PACKAGE_NAME = '@atls/yarn-cli'
 export const RAIJIN_RUNTIME_ASSET_NAME = 'yarn.mjs'
+export const RAIJIN_RUNTIME_YARN_PATH = '.yarn/releases/yarn.mjs'
 export const RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION = 1
 
 const SHA256_PATTERN = /^[a-f0-9]{64}$/
@@ -75,5 +76,4 @@ export const parseRaijinRuntimeManifest = (value: unknown): RaijinRuntimeManifes
 export const createSha256Digest = (data: Buffer): string =>
   createHash('sha256').update(data).digest('hex')
 
-export const getRaijinRuntimeYarnPath = (manifest: RaijinRuntimeManifest): string =>
-  `.yarn/releases/raijin-yarn-${manifest.version}.mjs`
+export const getRaijinRuntimeYarnPath = (): string => RAIJIN_RUNTIME_YARN_PATH

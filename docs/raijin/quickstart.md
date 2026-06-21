@@ -27,7 +27,7 @@ yarn init @atls/raijin
 Expected result:
 
 - `package.json` is created when it does not exist yet
-- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/raijin-yarn-<version>.mjs`
+- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.mjs`
 - `.yarnrc.yml` gets `nodeLinker: pnp` and the final `yarnPath` directly without a temporary file
 - Project scaffold is created through the existing Raijin schematics
 - Bundle commands (`check`, `files changed list`, etc.) become available

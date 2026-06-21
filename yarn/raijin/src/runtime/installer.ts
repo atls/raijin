@@ -30,7 +30,7 @@ export const installRaijinRuntime = async ({
     throw new RaijinRuntimeDigestMismatchException(manifest.sha256, digest)
   }
 
-  const yarnPath = getRaijinRuntimeYarnPath(manifest)
+  const yarnPath = getRaijinRuntimeYarnPath()
   const runtimePath = join(cwd, yarnPath)
 
   await mkdir(dirname(runtimePath), { recursive: true })

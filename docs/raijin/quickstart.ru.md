@@ -27,7 +27,7 @@ yarn init @atls/raijin
 Ожидаемый результат:
 
 - Создаётся `package.json`, если его ещё не было
-- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/raijin-yarn-<version>.mjs`
+- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/yarn.mjs`
 - `.yarnrc.yml` сразу получает `nodeLinker: pnp` и финальный `yarnPath` без временного файла
 - Проектный каркас создаётся через существующие схемы Raijin
 - Команды из бандла (`check`, `files changed list` и другие) становятся доступны

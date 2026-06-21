@@ -1,6 +1,8 @@
 import assert                   from 'node:assert/strict'
+import { mkdir }                from 'node:fs/promises'
 import { mkdtemp }              from 'node:fs/promises'
 import { readFile }             from 'node:fs/promises'
+import { writeFile }            from 'node:fs/promises'
 import { tmpdir }               from 'node:os'
 import { join }                 from 'node:path'
 import { test }                 from 'node:test'
@@ -49,12 +51,28 @@ test('should install verified runtime asset and write bootstrap config', async (
 
   await installRaijinRuntime({ cwd, fetchImpl: createFetch(runtime) })
 
-  assert.equal(
-    await readFile(join(cwd, '.yarn/releases/raijin-yarn-1.2.3.mjs'), 'utf-8'),
-    'runtime'
-  )
+  assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.mjs'), 'utf-8'), 'runtime')
   assert.equal(
     await readFile(join(cwd, '.yarnrc.yml'), 'utf-8'),
-    'nodeLinker: pnp\nyarnPath: .yarn/releases/raijin-yarn-1.2.3.mjs\n'
+    'nodeLinker: pnp\nyarnPath: .yarn/releases/yarn.mjs\n'
+  )
+})
+
+test('should preserve existing release files during fresh runtime install', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const releaseDirectory = join(cwd, '.yarn/releases')
+  const runtime = Buffer.from('runtime')
+
+  await mkdir(releaseDirectory, { recursive: true })
+  await writeFile(join(releaseDirectory, 'yarn-remote.mjs'), 'old-runtime')
+  await writeFile(join(releaseDirectory, 'raijin-yarn-1.2.3.mjs'), 'old-runtime')
+
+  await installRaijinRuntime({ cwd, fetchImpl: createFetch(runtime) })
+
+  assert.equal(await readFile(join(releaseDirectory, 'yarn.mjs'), 'utf-8'), 'runtime')
+  assert.equal(await readFile(join(releaseDirectory, 'yarn-remote.mjs'), 'utf-8'), 'old-runtime')
+  assert.equal(
+    await readFile(join(releaseDirectory, 'raijin-yarn-1.2.3.mjs'), 'utf-8'),
+    'old-runtime'
   )
 })

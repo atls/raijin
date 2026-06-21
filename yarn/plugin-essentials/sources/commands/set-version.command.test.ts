@@ -1,21 +1,23 @@
-import assert                            from 'node:assert/strict'
-import { access }                        from 'node:fs/promises'
-import { mkdtemp }                       from 'node:fs/promises'
-import { mkdir }                         from 'node:fs/promises'
-import { writeFile }                     from 'node:fs/promises'
-import { tmpdir }                        from 'node:os'
-import { join }                          from 'node:path'
-import { test }                          from 'node:test'
+import assert                              from 'node:assert/strict'
+import { access }                          from 'node:fs/promises'
+import { mkdtemp }                         from 'node:fs/promises'
+import { mkdir }                           from 'node:fs/promises'
+import { readdir }                         from 'node:fs/promises'
+import { writeFile }                       from 'node:fs/promises'
+import { tmpdir }                          from 'node:os'
+import { join }                            from 'node:path'
+import { test }                            from 'node:test'
 
-import { createSha256Digest }            from '@atls/raijin/runtime'
-import { getRaijinRuntimeYarnPath }      from '@atls/raijin/runtime'
-import { parseRaijinRuntimeManifest }    from '@atls/raijin/runtime'
+import { createSha256Digest }              from '@atls/raijin/runtime'
+import { getRaijinRuntimeYarnPath }        from '@atls/raijin/runtime'
+import { parseRaijinRuntimeManifest }      from '@atls/raijin/runtime'
 
-import { resolveYarnPath }               from './set-version.runtime.js'
-import { findPackageCwd }                from './set-version.utils.js'
-import { nativeToPortablePath }          from './set-version.utils.js'
-import { portableToNativePath }          from './set-version.utils.js'
-import { preparePackageProjectBoundary } from './set-version.utils.js'
+import { cleanupLegacyRaijinRuntimeFiles } from './set-version.runtime.js'
+import { resolveYarnPath }                 from './set-version.runtime.js'
+import { findPackageCwd }                  from './set-version.utils.js'
+import { nativeToPortablePath }            from './set-version.utils.js'
+import { portableToNativePath }            from './set-version.utils.js'
+import { preparePackageProjectBoundary }   from './set-version.utils.js'
 
 const exists = async (path: string): Promise<boolean> => {
   try {
@@ -161,18 +163,7 @@ test('should create runtime digest', () => {
 })
 
 test('should resolve Raijin runtime yarn path to mjs file', () => {
-  assert.equal(
-    getRaijinRuntimeYarnPath({
-      schemaVersion: 1,
-      packageName: '@atls/yarn-cli',
-      version: '1.2.3',
-      tagName: '@atls/yarn-cli@1.2.3',
-      assetName: 'yarn.mjs',
-      assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
-      sha256: 'a'.repeat(64),
-    }),
-    '.yarn/releases/raijin-yarn-1.2.3.mjs'
-  )
+  assert.equal(getRaijinRuntimeYarnPath(), '.yarn/releases/yarn.mjs')
 })
 
 test('should resolve relative yarn path from package cwd', () => {
@@ -180,4 +171,20 @@ test('should resolve relative yarn path from package cwd', () => {
     resolveYarnPath('/repo/backend/wallet', '.yarn/releases/yarn.mjs'),
     '/repo/backend/wallet/.yarn/releases/yarn.mjs'
   )
+})
+
+test('should clean known legacy Raijin runtime files from release directory', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-set-version-'))
+  const releaseDirectory = join(cwd, '.yarn/releases')
+
+  await mkdir(releaseDirectory, { recursive: true })
+  await writeFile(join(releaseDirectory, 'yarn.mjs'), 'runtime')
+  await writeFile(join(releaseDirectory, 'yarn-remote.mjs'), 'old-runtime')
+  await writeFile(join(releaseDirectory, 'raijin-yarn-1.2.3.mjs'), 'old-runtime')
+  await writeFile(join(releaseDirectory, 'raijin-yarn-1.3.3.mjs'), 'old-runtime')
+  await writeFile(join(releaseDirectory, 'custom-yarn.mjs'), 'custom-runtime')
+
+  await cleanupLegacyRaijinRuntimeFiles(cwd)
+
+  assert.deepEqual((await readdir(releaseDirectory)).sort(), ['custom-yarn.mjs', 'yarn.mjs'])
 })
