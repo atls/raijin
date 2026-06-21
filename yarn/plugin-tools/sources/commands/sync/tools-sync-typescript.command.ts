@@ -1,14 +1,14 @@
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { StreamReport }              from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { structUtils }               from '@yarnpkg/core'
-import semver                        from 'semver'
+import { Configuration }        from '@yarnpkg/core'
+import { Project }              from '@yarnpkg/core'
+import { StreamReport }         from '@yarnpkg/core'
+import { Filename }             from '@yarnpkg/fslib'
+import { structUtils }          from '@yarnpkg/core'
+import semver                   from 'semver'
 
-import { AbstractRaijinSyncCommand } from './base.js'
+import { AbstractToolsCommand } from './abstract-tools.command.js'
 
-export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
-  static override paths = [['raijin', 'sync', 'typescript']]
+export class ToolsSyncTypeScriptCommand extends AbstractToolsCommand {
+  static override paths = [['tools', 'sync', 'typescript']]
 
   override async execute(): Promise<number> {
     const nodeOptions = process.env.NODE_OPTIONS ?? ''
@@ -21,7 +21,7 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
       return this.executeRegular()
     }
 
-    return this.executeProxy(['raijin', 'sync', 'typescript'])
+    return this.executeProxy(['tools', 'sync', 'typescript'])
   }
 
   override async executeRegular(): Promise<number> {
@@ -40,7 +40,7 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
         configuration,
       },
       async (report) => {
-        await report.startTimerPromise('Raijin sync typescript version', async () => {
+        await report.startTimerPromise('Tools sync typescript version', async () => {
           if (project.topLevelWorkspace.manifest.raw.devDependencies) {
             const ident = structUtils.parseIdent('typescript')
 

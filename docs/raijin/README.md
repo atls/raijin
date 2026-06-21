@@ -39,4 +39,4 @@ Navigation for custom `atls` Yarn bundle docs
 
 - Commands: 38 (active: 37, inactive: 1)
 - Workspace packages: 68
-- Last generated: 2026-06-21T18:54:32.858Z
+- Last generated: 2026-06-19T20:32:49.339Z

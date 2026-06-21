@@ -52,7 +52,7 @@ const createFetch = (runtime: Buffer, packageManager = TEST_PACKAGE_MANAGER): ty
 const EXPECTED_INITIALIZER_COMMANDS = [
   ['add', '-D', '@atls/code-runtime@latest'],
   ['generate', 'project'],
-  ['raijin', 'sync'],
+  ['tools', 'sync'],
 ]
 
 const collectInitializerCommands = async (

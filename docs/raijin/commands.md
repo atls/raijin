@@ -287,42 +287,6 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 </details>
 
-### Domain `raijin`
-
-- Commands: `raijin sync`, `raijin sync tsconfig`, `raijin sync typescript`
-
-<details>
-<summary>Domain details: `raijin`</summary>
-
-<!-- sync:command-card:raijin-sync -->
-
-#### `raijin sync`
-
-- Status: `active`
-- Example: `yarn raijin sync`
-- Plugin: `@atls/yarn-plugin-tools`
-- Source: `yarn/plugin-tools/sources/commands/sync/sync.command.ts`
-
-<!-- sync:command-card:raijin-sync-tsconfig -->
-
-#### `raijin sync tsconfig`
-
-- Status: `active`
-- Example: `yarn raijin sync tsconfig`
-- Plugin: `@atls/yarn-plugin-tools`
-- Source: `yarn/plugin-tools/sources/commands/sync/tsconfig.command.ts`
-
-<!-- sync:command-card:raijin-sync-typescript -->
-
-#### `raijin sync typescript`
-
-- Status: `active`
-- Example: `yarn raijin sync typescript`
-- Plugin: `@atls/yarn-plugin-tools`
-- Source: `yarn/plugin-tools/sources/commands/sync/typescript.command.ts`
-
-</details>
-
 ### Domain `release`
 
 - Commands: `release create`, `release plan create`, `release plan foreach`, `release version defer`
@@ -455,6 +419,42 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Example: `yarn test unit`
 - Plugin: `@atls/yarn-plugin-test`
 - Source: `yarn/plugin-test/sources/test-unit.command.ts`
+
+</details>
+
+### Domain `tools`
+
+- Commands: `tools sync`, `tools sync tsconfig`, `tools sync typescript`
+
+<details>
+<summary>Domain details: `tools`</summary>
+
+<!-- sync:command-card:tools-sync -->
+
+#### `tools sync`
+
+- Status: `active`
+- Example: `yarn tools sync`
+- Plugin: `@atls/yarn-plugin-tools`
+- Source: `yarn/plugin-tools/sources/commands/sync/tools-sync.command.ts`
+
+<!-- sync:command-card:tools-sync-tsconfig -->
+
+#### `tools sync tsconfig`
+
+- Status: `active`
+- Example: `yarn tools sync tsconfig`
+- Plugin: `@atls/yarn-plugin-tools`
+- Source: `yarn/plugin-tools/sources/commands/sync/tools-sync-tsconfig.command.ts`
+
+<!-- sync:command-card:tools-sync-typescript -->
+
+#### `tools sync typescript`
+
+- Status: `active`
+- Example: `yarn tools sync typescript`
+- Plugin: `@atls/yarn-plugin-tools`
+- Source: `yarn/plugin-tools/sources/commands/sync/tools-sync-typescript.command.ts`
 
 </details>
 

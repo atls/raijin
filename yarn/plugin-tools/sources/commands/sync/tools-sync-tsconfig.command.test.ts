@@ -1,7 +1,7 @@
 import assert                        from 'node:assert/strict'
 import test                          from 'node:test'
 
-import { getTSConfigIncludeEntries } from './tsconfig.command.js'
+import { getTSConfigIncludeEntries } from './tools-sync-tsconfig.command.js'
 
 test('should preserve implicit include when tsconfig include is missing', () => {
   assert.deepEqual(getTSConfigIncludeEntries({}, []), ['project.types.d.ts', '**/*'])

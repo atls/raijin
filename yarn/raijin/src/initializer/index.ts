@@ -25,5 +25,5 @@ export const runRaijinInitializer = async ({
   await ensureYarnLock(cwd)
   await runCommand(['add', '-D', CODE_RUNTIME_PACKAGE], cwd)
   await runCommand(['generate', 'project'], cwd)
-  await runCommand(['raijin', 'sync'], cwd)
+  await runCommand(['tools', 'sync'], cwd)
 }

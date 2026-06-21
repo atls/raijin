@@ -271,39 +271,6 @@
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
     {
-      "command": "raijin sync",
-      "pathTokens": ["raijin", "sync"],
-      "className": "RaijinSyncCommand",
-      "plugin": "@atls/yarn-plugin-tools",
-      "pluginDir": "plugin-tools",
-      "domain": "raijin",
-      "source": "yarn/plugin-tools/sources/commands/sync/sync.command.ts",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
-      "command": "raijin sync tsconfig",
-      "pathTokens": ["raijin", "sync", "tsconfig"],
-      "className": "RaijinSyncTSConfigCommand",
-      "plugin": "@atls/yarn-plugin-tools",
-      "pluginDir": "plugin-tools",
-      "domain": "raijin",
-      "source": "yarn/plugin-tools/sources/commands/sync/tsconfig.command.ts",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
-      "command": "raijin sync typescript",
-      "pathTokens": ["raijin", "sync", "typescript"],
-      "className": "RaijinSyncTypeScriptCommand",
-      "plugin": "@atls/yarn-plugin-tools",
-      "pluginDir": "plugin-tools",
-      "domain": "raijin",
-      "source": "yarn/plugin-tools/sources/commands/sync/typescript.command.ts",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
       "command": "release create",
       "pathTokens": ["release", "create"],
       "className": "ReleaseCreateCommand",
@@ -432,6 +399,39 @@
       "pluginDir": "plugin-test",
       "domain": "test",
       "source": "yarn/plugin-test/sources/test-unit.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "tools sync",
+      "pathTokens": ["tools", "sync"],
+      "className": "ToolsSyncCommand",
+      "plugin": "@atls/yarn-plugin-tools",
+      "pluginDir": "plugin-tools",
+      "domain": "tools",
+      "source": "yarn/plugin-tools/sources/commands/sync/tools-sync.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "tools sync tsconfig",
+      "pathTokens": ["tools", "sync", "tsconfig"],
+      "className": "ToolsSyncTSConfigCommand",
+      "plugin": "@atls/yarn-plugin-tools",
+      "pluginDir": "plugin-tools",
+      "domain": "tools",
+      "source": "yarn/plugin-tools/sources/commands/sync/tools-sync-tsconfig.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "tools sync typescript",
+      "pathTokens": ["tools", "sync", "typescript"],
+      "className": "ToolsSyncTypeScriptCommand",
+      "plugin": "@atls/yarn-plugin-tools",
+      "pluginDir": "plugin-tools",
+      "domain": "tools",
+      "source": "yarn/plugin-tools/sources/commands/sync/tools-sync-typescript.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
@@ -1065,9 +1065,6 @@
       "image pack",
       "library build",
       "lint",
-      "raijin sync",
-      "raijin sync tsconfig",
-      "raijin sync typescript",
       "release create",
       "release plan create",
       "release plan foreach",
@@ -1079,6 +1076,9 @@
       "test",
       "test integration",
       "test unit",
+      "tools sync",
+      "tools sync tsconfig",
+      "tools sync typescript",
       "typecheck",
       "ui icons generate",
       "workspaces changed foreach",
@@ -1119,5 +1119,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-21T18:54:32.858Z"
+  "lastGenerated": "2026-06-19T20:32:49.339Z"
 }

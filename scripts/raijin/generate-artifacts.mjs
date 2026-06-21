@@ -102,10 +102,6 @@ const walkFiles = (dirPath, predicate, output = []) => {
 }
 
 const commandDomainFromPlugin = (plugin) => {
-  if (plugin === '@atls/yarn-plugin-tools') {
-    return 'raijin'
-  }
-
   if (plugin.startsWith('@atls/yarn-plugin-')) {
     return plugin.replace('@atls/yarn-plugin-', '')
   }
