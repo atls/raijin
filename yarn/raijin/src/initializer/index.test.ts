@@ -167,6 +167,30 @@ test('should normalize package manager from runtime manifest', async () => {
   )
 })
 
+test('should preserve package manifest when runtime install fails', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const manifest = {
+    name: 'wallet',
+    packageManager: 'pnpm@10.12.0',
+  }
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+
+  await assert.rejects(
+    runRaijinInitializer({
+      argv: ['init'],
+      cwd,
+      fetchImpl: (async () => {
+        throw new Error('Runtime manifest unavailable')
+      }) as typeof fetch,
+      runYarnCommand: noopYarnCommand,
+    }),
+    /Runtime manifest unavailable/
+  )
+
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), manifest)
+})
+
 test('should create project lockfile boundary before yarn commands', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
 
