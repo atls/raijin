@@ -1,11 +1,11 @@
-import type { Plugin }                from '@yarnpkg/core'
+import type { Plugin }                 from '@yarnpkg/core'
 
-import { ToolsSyncCommand }           from './commands/index.js'
-import { ToolsSyncTSConfigCommand }   from './commands/index.js'
-import { ToolsSyncTypeScriptCommand } from './commands/index.js'
-import { afterAllInstalled }          from './hooks/index.js'
-import { afterYarnVersionSet }        from './hooks/index.js'
-import { setupScriptEnvironment }     from './hooks/index.js'
+import { RaijinSyncCommand }           from './commands/index.js'
+import { RaijinSyncTSConfigCommand }   from './commands/index.js'
+import { RaijinSyncTypeScriptCommand } from './commands/index.js'
+import { afterAllInstalled }           from './hooks/index.js'
+import { afterYarnVersionSet }         from './hooks/index.js'
+import { setupScriptEnvironment }      from './hooks/index.js'
 
 export const plugin: Plugin = {
   hooks: {
@@ -13,5 +13,5 @@ export const plugin: Plugin = {
     afterYarnVersionSet,
     setupScriptEnvironment,
   },
-  commands: [ToolsSyncCommand, ToolsSyncTypeScriptCommand, ToolsSyncTSConfigCommand],
+  commands: [RaijinSyncCommand, RaijinSyncTypeScriptCommand, RaijinSyncTSConfigCommand],
 }
