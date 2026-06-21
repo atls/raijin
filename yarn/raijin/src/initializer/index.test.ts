@@ -1,6 +1,8 @@
 import assert                                                 from 'node:assert/strict'
+import { access }                                             from 'node:fs/promises'
 import { mkdtemp }                                            from 'node:fs/promises'
 import { readFile }                                           from 'node:fs/promises'
+import { readdir }                                            from 'node:fs/promises'
 import { writeFile }                                          from 'node:fs/promises'
 import { tmpdir }                                             from 'node:os'
 import { join }                                               from 'node:path'
@@ -79,6 +81,20 @@ const collectInitializerCommands = async (
 }
 
 const noopYarnCommand = async (): Promise<void> => undefined
+
+const pathExists = async (path: string): Promise<boolean> => {
+  try {
+    await access(path)
+
+    return true
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return false
+    }
+
+    throw error
+  }
+}
 
 test('should run initializer command sequence', async () => {
   assert.deepEqual(
@@ -203,6 +219,25 @@ test('should create project lockfile boundary before yarn commands', async () =>
   })
 
   assert.equal(await readFile(join(cwd, 'yarn.lock'), 'utf-8'), '')
+})
+
+test('should initialize stock pnp runtime layout', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+
+  await runRaijinInitializer({
+    argv: ['init'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime')),
+    runYarnCommand: noopYarnCommand,
+  })
+
+  assert.equal(
+    await readFile(join(cwd, '.yarnrc.yml'), 'utf-8'),
+    'nodeLinker: pnp\nyarnPath: .yarn/releases/yarn.mjs\n'
+  )
+  assert.deepEqual(await readdir(join(cwd, '.yarn/releases')), ['yarn.mjs'])
+  assert.equal(await pathExists(join(cwd, '.yarn/bin/yarn')), false)
+  assert.equal(await pathExists(join(cwd, '.yarn/releases/yarn-remote.mjs')), false)
 })
 
 test('should preserve existing project lockfile boundary', async () => {

@@ -35,6 +35,14 @@ const requiredGeneratedFiles = [
   'tsconfig.json',
 ]
 
+const forbiddenGeneratedPaths = ['.yarn/bin/yarn', '.yarn/plugins/@atls/yarn-plugin-pnp-patch.cjs']
+
+const forbiddenGeneratedContent = [
+  '@atls/yarn-plugin-pnp-patch',
+  'yarn-plugin-pnp-patch',
+  '.yarn/bin/yarn',
+]
+
 const readJson = async <T>(filePath: string): Promise<T> =>
   JSON.parse(await fs.readFile(filePath, 'utf8')) as T
 
@@ -201,6 +209,38 @@ const assertGeneratedFixture = async (fixtureDir: string): Promise<void> => {
 
   if (!tsconfig.compilerOptions || typeof tsconfig.compilerOptions !== 'object') {
     throw new Error('Generated tsconfig.json does not contain compilerOptions')
+  }
+
+  const forbiddenPaths = []
+
+  for (const relativePath of forbiddenGeneratedPaths) {
+    if (await pathExists(path.join(fixtureDir, relativePath))) {
+      forbiddenPaths.push(relativePath)
+    }
+  }
+
+  if (forbiddenPaths.length > 0) {
+    throw new Error(`Schematic smoke generated legacy runtime paths:\n${forbiddenPaths.join('\n')}`)
+  }
+
+  const generatedFiles = await walkFiles(fixtureDir)
+  const forbiddenContent = []
+
+  for (const filePath of generatedFiles) {
+    const content = await fs.readFile(filePath, 'utf8')
+    const relativePath = path.relative(fixtureDir, filePath)
+
+    for (const legacyRuntimeToken of forbiddenGeneratedContent) {
+      if (content.includes(legacyRuntimeToken)) {
+        forbiddenContent.push(`${relativePath}: contains ${legacyRuntimeToken}`)
+      }
+    }
+  }
+
+  if (forbiddenContent.length > 0) {
+    throw new Error(
+      `Schematic smoke generated legacy runtime references:\n${forbiddenContent.join('\n')}`
+    )
   }
 }
 
