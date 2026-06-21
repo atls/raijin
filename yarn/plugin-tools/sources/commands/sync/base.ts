@@ -8,17 +8,17 @@ import { Command }                   from 'clipanion'
 
 import { makeCurrentYarnExecutable } from '../../current-yarn-executable.js'
 
-export abstract class AbstractToolsCommand extends BaseCommand {
+export abstract class AbstractRaijinSyncCommand extends BaseCommand {
   static override usage = Command.Usage({
-    description: 'Update tools',
+    description: 'Update Raijin project support files',
     details: `
-    Update tools such as \`tsconfig\`, \`typescript\` version, \`@atls/code-runtime\` version
+    Update Raijin project support files such as \`tsconfig\`, \`typescript\` version, \`@atls/code-runtime\` version
     `,
     examples: [
-      ['Update tsconfig', 'yarn tools tsconfig'],
-      ['Update runtime', 'yarn tools runtime'],
-      ['Update typescript version', 'yarn tools typescript'],
-      [`Update all`, 'yarn tools sync'],
+      ['Update tsconfig', 'yarn raijin sync tsconfig'],
+      ['Update runtime', 'yarn install'],
+      ['Update typescript version', 'yarn raijin sync typescript'],
+      [`Update all`, 'yarn raijin sync'],
     ],
   })
 
@@ -36,7 +36,7 @@ export abstract class AbstractToolsCommand extends BaseCommand {
     return this.executeProxy()
   }
 
-  async executeProxy(command: Array<string> = ['tools', 'sync']): Promise<number> {
+  async executeProxy(command: Array<string> = ['raijin', 'sync']): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
 

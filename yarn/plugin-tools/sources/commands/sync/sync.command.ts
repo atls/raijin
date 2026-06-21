@@ -1,13 +1,13 @@
-import { AbstractToolsCommand } from './abstract-tools.command.js'
+import { AbstractRaijinSyncCommand } from './base.js'
 
 const commands: Array<Array<string>> = [
-  ['tools', 'sync', 'typescript'],
-  ['tools', 'sync', 'tsconfig'],
+  ['raijin', 'sync', 'typescript'],
+  ['raijin', 'sync', 'tsconfig'],
   ['install'],
 ]
 
-export class ToolsSyncCommand extends AbstractToolsCommand {
-  static override paths = [['tools', 'sync']]
+export class RaijinSyncCommand extends AbstractRaijinSyncCommand {
+  static override paths = [['raijin', 'sync']]
 
   override async executeRegular(): Promise<number> {
     for (const command of commands) {

@@ -15,7 +15,7 @@ export const afterYarnVersionSet = async (
   const binFolder = await xfs.mktempPromise()
   const { executable, env } = await makeCurrentYarnExecutable({ binFolder, project })
 
-  await execUtils.pipevp(executable, ['tools', 'sync'], {
+  await execUtils.pipevp(executable, ['raijin', 'sync'], {
     cwd: context.cwd,
     stdin: context.stdin,
     stdout: context.stdout,
