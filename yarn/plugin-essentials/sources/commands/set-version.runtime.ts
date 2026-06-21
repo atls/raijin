@@ -1,11 +1,8 @@
 import type { RaijinRuntimeManifest }         from '@atls/raijin/runtime'
 import type { Configuration }                 from '@yarnpkg/core'
-import type { Dirent }                        from 'node:fs'
 
 import { mkdir }                              from 'node:fs/promises'
 import { readFile }                           from 'node:fs/promises'
-import { readdir }                            from 'node:fs/promises'
-import { rm }                                 from 'node:fs/promises'
 import { writeFile }                          from 'node:fs/promises'
 import { dirname }                            from 'node:path'
 import { isAbsolute }                         from 'node:path'
@@ -23,28 +20,6 @@ import { portableToNativePath }               from './set-version.utils.js'
 
 type ConfigurationUpdate = Parameters<typeof YarnConfiguration.updateConfiguration>[1]
 type ConfigurationUpdateCwd = Parameters<typeof YarnConfiguration.updateConfiguration>[0]
-
-const LEGACY_RAIJIN_RUNTIME_FILE_NAMES = new Set(['yarn-remote.mjs'])
-const LEGACY_RAIJIN_RUNTIME_FILE_PATTERN = /^raijin-yarn-.+\.mjs$/
-
-const isNotFoundError = (error: unknown): boolean =>
-  error instanceof Error && 'code' in error && error.code === 'ENOENT'
-
-const isLegacyRaijinRuntimeFileName = (fileName: string): boolean =>
-  LEGACY_RAIJIN_RUNTIME_FILE_NAMES.has(fileName) ||
-  LEGACY_RAIJIN_RUNTIME_FILE_PATTERN.test(fileName)
-
-const readDirectoryEntries = async (path: string): Promise<Array<Dirent>> => {
-  try {
-    return await readdir(path, { withFileTypes: true })
-  } catch (error) {
-    if (isNotFoundError(error)) {
-      return []
-    }
-
-    throw error
-  }
-}
 
 export const fetchRaijinRuntimeManifest = async (
   configuration: Configuration
@@ -108,22 +83,6 @@ export const installRaijinRuntime = async (
     {
       yarnPath,
     } as ConfigurationUpdate
-  )
-}
-
-export const cleanupLegacyRaijinRuntimeFiles = async (cwd: string): Promise<void> => {
-  const yarnPath = getRaijinRuntimeYarnPath()
-  const runtimePath = join(portableToNativePath(cwd), portableToNativePath(yarnPath))
-  const runtimeDirectory = dirname(runtimePath)
-  const entries = await readDirectoryEntries(runtimeDirectory)
-
-  await Promise.all(
-    entries
-      .filter((entry) => entry.isFile())
-      .filter((entry) => isLegacyRaijinRuntimeFileName(entry.name))
-      .map(async (entry) => {
-        await rm(join(runtimeDirectory, entry.name), { force: true })
-      })
   )
 }
 

@@ -1,23 +1,23 @@
-import assert                              from 'node:assert/strict'
-import { access }                          from 'node:fs/promises'
-import { mkdtemp }                         from 'node:fs/promises'
-import { mkdir }                           from 'node:fs/promises'
-import { readdir }                         from 'node:fs/promises'
-import { writeFile }                       from 'node:fs/promises'
-import { tmpdir }                          from 'node:os'
-import { join }                            from 'node:path'
-import { test }                            from 'node:test'
+import assert                                from 'node:assert/strict'
+import { access }                            from 'node:fs/promises'
+import { mkdtemp }                           from 'node:fs/promises'
+import { mkdir }                             from 'node:fs/promises'
+import { readdir }                           from 'node:fs/promises'
+import { writeFile }                         from 'node:fs/promises'
+import { tmpdir }                            from 'node:os'
+import { join }                              from 'node:path'
+import { test }                              from 'node:test'
 
-import { createSha256Digest }              from '@atls/raijin/runtime'
-import { getRaijinRuntimeYarnPath }        from '@atls/raijin/runtime'
-import { parseRaijinRuntimeManifest }      from '@atls/raijin/runtime'
+import { createSha256Digest }                from '@atls/raijin/runtime'
+import { getRaijinRuntimeYarnPath }          from '@atls/raijin/runtime'
+import { parseRaijinRuntimeManifest }        from '@atls/raijin/runtime'
 
-import { cleanupLegacyRaijinRuntimeFiles } from './set-version.runtime.js'
-import { resolveYarnPath }                 from './set-version.runtime.js'
-import { findPackageCwd }                  from './set-version.utils.js'
-import { nativeToPortablePath }            from './set-version.utils.js'
-import { portableToNativePath }            from './set-version.utils.js'
-import { preparePackageProjectBoundary }   from './set-version.utils.js'
+import { cleanupObsoleteRaijinRuntimeFiles } from './set-version.migration.js'
+import { resolveYarnPath }                   from './set-version.runtime.js'
+import { findPackageCwd }                    from './set-version.utils.js'
+import { nativeToPortablePath }              from './set-version.utils.js'
+import { portableToNativePath }              from './set-version.utils.js'
+import { preparePackageProjectBoundary }     from './set-version.utils.js'
 
 const exists = async (path: string): Promise<boolean> => {
   try {
@@ -173,7 +173,7 @@ test('should resolve relative yarn path from package cwd', () => {
   )
 })
 
-test('should clean known legacy Raijin runtime files from release directory', async () => {
+test('should clean obsolete Raijin runtime files from release directory', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-set-version-'))
   const releaseDirectory = join(cwd, '.yarn/releases')
 
@@ -184,7 +184,7 @@ test('should clean known legacy Raijin runtime files from release directory', as
   await writeFile(join(releaseDirectory, 'raijin-yarn-1.3.3.mjs'), 'old-runtime')
   await writeFile(join(releaseDirectory, 'custom-yarn.mjs'), 'custom-runtime')
 
-  await cleanupLegacyRaijinRuntimeFiles(cwd)
+  await cleanupObsoleteRaijinRuntimeFiles(cwd)
 
   assert.deepEqual((await readdir(releaseDirectory)).sort(), ['custom-yarn.mjs', 'yarn.mjs'])
 })
