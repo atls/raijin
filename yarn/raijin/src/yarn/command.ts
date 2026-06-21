@@ -10,9 +10,67 @@ const TEMPORARY_YARN_BIN_PATH = /[\\/]xfs-[^\\/]*(?:[\\/]|$)/
 const PNP_NODE_OPTION = /(?:^|[\\/])\.pnp\.(?:cjs|loader\.mjs)$/
 const NODE_OPTIONS_WITH_VALUE = new Set(['--experimental-loader', '--loader', '--require', '-r'])
 
+type NodeOptionToken = {
+  raw: string
+  value: string
+}
+
 const isPnPNodeOptionValue = (value: string): boolean => PNP_NODE_OPTION.test(value)
 
-const splitNodeOptions = (nodeOptions: string): Array<string> => nodeOptions.match(/\S+/g) ?? []
+const splitNodeOptions = (nodeOptions: string): Array<NodeOptionToken> => {
+  const tokens: Array<NodeOptionToken> = []
+  let raw = ''
+  let value = ''
+  let quote: string | undefined
+
+  for (let index = 0; index < nodeOptions.length; index += 1) {
+    const char = nodeOptions[index]
+
+    if (quote) {
+      raw += char
+
+      if (char === '\\' && nodeOptions[index + 1] === quote) {
+        index += 1
+        raw += nodeOptions[index]
+        value += nodeOptions[index]
+        continue
+      }
+
+      if (char === quote) {
+        quote = undefined
+        continue
+      }
+
+      value += char
+      continue
+    }
+
+    if (char === '"' || char === "'") {
+      raw += char
+      quote = char
+      continue
+    }
+
+    if (/\s/.test(char)) {
+      if (raw) {
+        tokens.push({ raw, value })
+        raw = ''
+        value = ''
+      }
+
+      continue
+    }
+
+    raw += char
+    value += char
+  }
+
+  if (raw) {
+    tokens.push({ raw, value })
+  }
+
+  return tokens
+}
 
 const removePnPNodeOptions = (nodeOptions: string): string => {
   const options = splitNodeOptions(nodeOptions)
@@ -20,22 +78,22 @@ const removePnPNodeOptions = (nodeOptions: string): string => {
 
   for (let index = 0; index < options.length; index += 1) {
     const option = options[index]
-    const [name, value] = option.split('=', 2)
+    const [name, value] = option.value.split('=', 2)
 
     if (value && NODE_OPTIONS_WITH_VALUE.has(name) && isPnPNodeOptionValue(value)) {
       continue
     }
 
-    if (NODE_OPTIONS_WITH_VALUE.has(option)) {
-      const next = options[index + 1]
+    if (NODE_OPTIONS_WITH_VALUE.has(option.value)) {
+      const next = options.at(index + 1)
 
-      if (next && isPnPNodeOptionValue(next)) {
+      if (next && isPnPNodeOptionValue(next.value)) {
         index += 1
         continue
       }
     }
 
-    filtered.push(option)
+    filtered.push(option.raw)
   }
 
   return filtered.join(' ')

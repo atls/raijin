@@ -48,3 +48,17 @@ test('should remove node options when they only contain dlx pnp loader state', (
     }
   )
 })
+
+test('should remove quoted dlx pnp loader values from node options', () => {
+  assert.deepEqual(
+    createYarnCommandEnvironment('/repo/package', {
+      NODE_OPTIONS:
+        '--require "/private/tmp/dlx path/.pnp.cjs" --experimental-loader "file:///private/tmp/dlx path/.pnp.loader.mjs" --trace-warnings --loader "file:///tmp/custom loader.mjs"',
+    }),
+    {
+      INIT_CWD: '/repo/package',
+      NODE_OPTIONS: '--trace-warnings --loader "file:///tmp/custom loader.mjs"',
+      PROJECT_CWD: '/repo/package',
+    }
+  )
+})
