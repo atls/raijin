@@ -3,11 +3,13 @@ import { access }                            from 'node:fs/promises'
 import { mkdtemp }                           from 'node:fs/promises'
 import { mkdir }                             from 'node:fs/promises'
 import { readdir }                           from 'node:fs/promises'
+import { readFile }                          from 'node:fs/promises'
 import { writeFile }                         from 'node:fs/promises'
 import { tmpdir }                            from 'node:os'
 import { join }                              from 'node:path'
 import { test }                              from 'node:test'
 
+import { RAIJIN_PACKAGE_MANAGER }            from '@atls/raijin/runtime'
 import { createSha256Digest }                from '@atls/raijin/runtime'
 import { getRaijinRuntimeYarnPath }          from '@atls/raijin/runtime'
 import { parseRaijinRuntimeManifest }        from '@atls/raijin/runtime'
@@ -16,6 +18,7 @@ import { cleanupObsoleteRaijinRuntimeFiles } from './set-version.migration.js'
 import { resolveYarnPath }                   from './set-version.runtime.js'
 import { findPackageCwd }                    from './set-version.utils.js'
 import { nativeToPortablePath }              from './set-version.utils.js'
+import { normalizePackageManager }           from './set-version.utils.js'
 import { portableToNativePath }              from './set-version.utils.js'
 import { preparePackageProjectBoundary }     from './set-version.utils.js'
 
@@ -65,6 +68,27 @@ test('should create yarn lock in package cwd without touching repo root', async 
 
   assert.equal(await exists(join(packageCwd, 'yarn.lock')), true)
   assert.equal(await exists(join(root, 'yarn.lock')), false)
+})
+
+test('should normalize package manager without touching package fields', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-set-version-'))
+  const manifest = {
+    name: 'wallet',
+    packageManager: 'yarn@4.12.0',
+    private: true,
+    scripts: {
+      check: 'raijin check',
+    },
+  }
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+
+  await normalizePackageManager(cwd)
+
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
+    ...manifest,
+    packageManager: RAIJIN_PACKAGE_MANAGER,
+  })
 })
 
 test('should reject cwd without package manifest ancestor', async () => {
@@ -187,4 +211,30 @@ test('should clean obsolete Raijin runtime files from release directory', async 
   await cleanupObsoleteRaijinRuntimeFiles(cwd)
 
   assert.deepEqual((await readdir(releaseDirectory)).sort(), ['custom-yarn.mjs', 'yarn.mjs'])
+})
+
+test('should normalize package manager while cleanup removes only obsolete runtime files', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-set-version-'))
+  const releaseDirectory = join(cwd, '.yarn/releases')
+  const manifest = {
+    name: 'wallet',
+    packageManager: 'yarn@4.12.0',
+    private: true,
+  }
+
+  await mkdir(releaseDirectory, { recursive: true })
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+  await writeFile(join(releaseDirectory, 'yarn.mjs'), 'runtime')
+  await writeFile(join(releaseDirectory, 'yarn-remote.mjs'), 'old-runtime')
+  await writeFile(join(releaseDirectory, 'raijin-yarn-4.12.0.mjs'), 'old-runtime')
+  await writeFile(join(releaseDirectory, 'manual-yarn.mjs'), 'custom-runtime')
+
+  await normalizePackageManager(cwd)
+  await cleanupObsoleteRaijinRuntimeFiles(cwd)
+
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
+    ...manifest,
+    packageManager: RAIJIN_PACKAGE_MANAGER,
+  })
+  assert.deepEqual((await readdir(releaseDirectory)).sort(), ['manual-yarn.mjs', 'yarn.mjs'])
 })

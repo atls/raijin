@@ -1,7 +1,14 @@
-import { access }    from 'node:fs/promises'
-import { writeFile } from 'node:fs/promises'
-import { basename }  from 'node:path'
-import { join }      from 'node:path'
+import { access }                 from 'node:fs/promises'
+import { readFile }               from 'node:fs/promises'
+import { writeFile }              from 'node:fs/promises'
+import { basename }               from 'node:path'
+import { join }                   from 'node:path'
+
+import { RAIJIN_PACKAGE_MANAGER } from '../runtime/package-manager.js'
+
+interface PackageManifest extends Record<string, unknown> {
+  packageManager?: string
+}
 
 const PACKAGE_JSON = 'package.json'
 const YARN_LOCK = 'yarn.lock'
@@ -37,15 +44,30 @@ export const hasPackageJson = async (cwd: string): Promise<boolean> =>
 
 export const hasYarnLock = async (cwd: string): Promise<boolean> => hasProjectFile(cwd, YARN_LOCK)
 
-export const ensurePackageJson = async (cwd: string): Promise<void> => {
-  if (await hasPackageJson(cwd)) {
+const writePackageManifest = async (cwd: string, manifest: PackageManifest): Promise<void> => {
+  await writeFile(join(cwd, PACKAGE_JSON), `${JSON.stringify(manifest, null, 2)}\n`)
+}
+
+export const ensurePackageManifest = async (cwd: string): Promise<void> => {
+  if (!(await hasPackageJson(cwd))) {
+    await writePackageManifest(cwd, {
+      name: getPackageName(cwd),
+      packageManager: RAIJIN_PACKAGE_MANAGER,
+    })
+
     return
   }
 
-  await writeFile(
-    join(cwd, PACKAGE_JSON),
-    `${JSON.stringify({ name: getPackageName(cwd) }, null, 2)}\n`
-  )
+  const manifest = JSON.parse(await readFile(join(cwd, PACKAGE_JSON), 'utf-8')) as PackageManifest
+
+  if (manifest.packageManager === RAIJIN_PACKAGE_MANAGER) {
+    return
+  }
+
+  await writePackageManifest(cwd, {
+    ...manifest,
+    packageManager: RAIJIN_PACKAGE_MANAGER,
+  })
 }
 
 export const ensureYarnLock = async (cwd: string): Promise<void> => {

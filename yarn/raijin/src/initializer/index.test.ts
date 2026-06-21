@@ -6,6 +6,7 @@ import { tmpdir }                                             from 'node:os'
 import { join }                                               from 'node:path'
 import { test }                                               from 'node:test'
 
+import { RAIJIN_PACKAGE_MANAGER }                             from '../runtime/package-manager.js'
 import { RaijinInitializerUsageException }                    from './exceptions/usage.js'
 import { runRaijinInitializer as runPublicRaijinInitializer } from '../index.js'
 import { createSha256Digest }                                 from '../runtime/manifest.js'
@@ -111,6 +112,33 @@ test('should create package manifest for empty project', async () => {
   const packageJson = await readFile(join(cwd, 'package.json'), 'utf-8')
 
   assert.match(packageJson, /"name": "raijin-initializer-/)
+  assert.equal(JSON.parse(packageJson).packageManager, RAIJIN_PACKAGE_MANAGER)
+})
+
+test('should normalize package manager in existing package manifest', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const manifest = {
+    name: 'wallet',
+    packageManager: 'yarn@4.12.0',
+    private: true,
+    scripts: {
+      check: 'raijin check',
+    },
+  }
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+
+  await runRaijinInitializer({
+    argv: ['init'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime')),
+    runYarnCommand: noopYarnCommand,
+  })
+
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
+    ...manifest,
+    packageManager: RAIJIN_PACKAGE_MANAGER,
+  })
 })
 
 test('should create project lockfile boundary before yarn commands', async () => {

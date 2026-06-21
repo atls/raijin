@@ -592,8 +592,8 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Создаётся `package.json`, если его ещё не было'
-      : '- `package.json` is created when it does not exist yet',
+      ? '- Создаётся `package.json`, если его ещё не было, а `packageManager` приводится к версии Raijin'
+      : '- `package.json` is created when it does not exist yet, and `packageManager` is normalized to the Raijin version',
     isRu
       ? '- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/yarn.mjs`'
       : '- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.mjs`',
@@ -616,8 +616,8 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Установленный проект получает среду выполнения Raijin, `@atls/code-runtime`, проектные схемы и первичную синхронизацию'
-      : '- Existing project gets Raijin runtime, `@atls/code-runtime`, project schematics, and the first sync',
+      ? '- Установленный проект получает среду выполнения Raijin, `@atls/code-runtime`, проектные схемы, первичную синхронизацию и версию `packageManager`, совпадающую с Raijin'
+      : '- Existing project gets Raijin runtime, `@atls/code-runtime`, project schematics, the first sync, and `packageManager` matching Raijin',
     '',
     '<!-- sync:bundle-upgrade -->',
     isRu ? '## 4. Обновление установленного бандла' : '## 4. Upgrade installed bundle',
@@ -628,8 +628,8 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Бандл обновлён до последней доступной версии'
-      : '- Bundle is upgraded to the latest available version',
+      ? '- Бандл обновлён до последней доступной версии, а `packageManager` приведён к версии Raijin'
+      : '- Bundle is upgraded to the latest available version, and `packageManager` is normalized to the Raijin version',
     '',
     '<!-- sync:verification -->',
     isRu ? '## 5. Базовая проверка' : '## 5. Basic verification',

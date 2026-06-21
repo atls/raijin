@@ -1,7 +1,14 @@
-import { access }    from 'node:fs/promises'
-import { writeFile } from 'node:fs/promises'
-import { dirname }   from 'node:path'
-import { join }      from 'node:path'
+import { access }                 from 'node:fs/promises'
+import { readFile }               from 'node:fs/promises'
+import { writeFile }              from 'node:fs/promises'
+import { dirname }                from 'node:path'
+import { join }                   from 'node:path'
+
+import { RAIJIN_PACKAGE_MANAGER } from '@atls/raijin/runtime'
+
+interface PackageManifest extends Record<string, unknown> {
+  packageManager?: string
+}
 
 const PACKAGE_JSON = 'package.json'
 const YARN_LOCK = 'yarn.lock'
@@ -115,4 +122,18 @@ export const preparePackageProjectBoundary = async (cwd: string): Promise<void> 
   if (!(await pathExists(lockfilePath))) {
     await writeFile(lockfilePath, '')
   }
+}
+
+export const normalizePackageManager = async (cwd: string): Promise<void> => {
+  const packageJsonPath = join(portableToNativePath(cwd), PACKAGE_JSON)
+  const manifest = JSON.parse(await readFile(packageJsonPath, 'utf-8')) as PackageManifest
+
+  if (manifest.packageManager === RAIJIN_PACKAGE_MANAGER) {
+    return
+  }
+
+  await writeFile(
+    packageJsonPath,
+    `${JSON.stringify({ ...manifest, packageManager: RAIJIN_PACKAGE_MANAGER }, null, 2)}\n`
+  )
 }

@@ -3,7 +3,7 @@ import type { RunRaijinInitializerOptions } from './interface.js'
 import { RaijinInitializerUsageException }  from './exceptions/usage.js'
 import { installRaijinRuntime }             from '../runtime/installer.js'
 import { runYarnCommand }                   from '../yarn/command.js'
-import { ensurePackageJson }                from './project.js'
+import { ensurePackageManifest }            from './project.js'
 import { ensureYarnLock }                   from './project.js'
 
 const CODE_RUNTIME_PACKAGE = '@atls/code-runtime@latest'
@@ -20,7 +20,7 @@ export const runRaijinInitializer = async ({
     throw new RaijinInitializerUsageException()
   }
 
-  await ensurePackageJson(cwd)
+  await ensurePackageManifest(cwd)
   await ensureYarnLock(cwd)
   await installRaijinRuntime({ cwd, fetchImpl })
   await runCommand(['add', '-D', CODE_RUNTIME_PACKAGE], cwd)

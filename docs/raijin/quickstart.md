@@ -26,7 +26,7 @@ yarn init @atls/raijin
 
 Expected result:
 
-- `package.json` is created when it does not exist yet
+- `package.json` is created when it does not exist yet, and `packageManager` is normalized to the Raijin version
 - Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.mjs`
 - `.yarnrc.yml` gets `nodeLinker: pnp` and the final `yarnPath` directly without a temporary file
 - Project scaffold is created through the existing Raijin schematics
@@ -42,7 +42,7 @@ yarn dlx @atls/raijin init
 
 Expected result:
 
-- Existing project gets Raijin runtime, `@atls/code-runtime`, project schematics, and the first sync
+- Existing project gets Raijin runtime, `@atls/code-runtime`, project schematics, the first sync, and `packageManager` matching Raijin
 
 <!-- sync:bundle-upgrade -->
 
@@ -54,7 +54,7 @@ yarn set version atls
 
 Expected result:
 
-- Bundle is upgraded to the latest available version
+- Bundle is upgraded to the latest available version, and `packageManager` is normalized to the Raijin version
 
 <!-- sync:verification -->
 
