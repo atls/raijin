@@ -9,6 +9,8 @@ import { getRaijinRuntimeYarnPath } from '@atls/raijin/runtime'
 
 import { portableToNativePath }     from './set-version.utils.js'
 
+// TODO: Remove this one-time migration cleanup after all ATLS projects have moved to
+// the stable .yarn/releases/yarn.mjs runtime path.
 const OBSOLETE_RAIJIN_RUNTIME_FILE_NAMES = new Set(['yarn-remote.mjs'])
 const OBSOLETE_RAIJIN_RUNTIME_FILE_PATTERN = /^raijin-yarn-.+\.mjs$/
 
