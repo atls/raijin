@@ -48,11 +48,14 @@ const writePackageManifest = async (cwd: string, manifest: PackageManifest): Pro
   await writeFile(join(cwd, PACKAGE_JSON), `${JSON.stringify(manifest, null, 2)}\n`)
 }
 
-export const ensurePackageManifest = async (cwd: string): Promise<void> => {
+export const ensurePackageManifest = async (
+  cwd: string,
+  packageManager = RAIJIN_PACKAGE_MANAGER
+): Promise<void> => {
   if (!(await hasPackageJson(cwd))) {
     await writePackageManifest(cwd, {
       name: getPackageName(cwd),
-      packageManager: RAIJIN_PACKAGE_MANAGER,
+      packageManager,
     })
 
     return
@@ -60,13 +63,13 @@ export const ensurePackageManifest = async (cwd: string): Promise<void> => {
 
   const manifest = JSON.parse(await readFile(join(cwd, PACKAGE_JSON), 'utf-8')) as PackageManifest
 
-  if (manifest.packageManager === RAIJIN_PACKAGE_MANAGER) {
+  if (manifest.packageManager === packageManager) {
     return
   }
 
   await writePackageManifest(cwd, {
     ...manifest,
-    packageManager: RAIJIN_PACKAGE_MANAGER,
+    packageManager,
   })
 }
 

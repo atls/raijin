@@ -1,10 +1,8 @@
-import { access }                 from 'node:fs/promises'
-import { readFile }               from 'node:fs/promises'
-import { writeFile }              from 'node:fs/promises'
-import { dirname }                from 'node:path'
-import { join }                   from 'node:path'
-
-import { RAIJIN_PACKAGE_MANAGER } from '@atls/raijin/runtime'
+import { access }    from 'node:fs/promises'
+import { readFile }  from 'node:fs/promises'
+import { writeFile } from 'node:fs/promises'
+import { dirname }   from 'node:path'
+import { join }      from 'node:path'
 
 interface PackageManifest extends Record<string, unknown> {
   packageManager?: string
@@ -124,16 +122,16 @@ export const preparePackageProjectBoundary = async (cwd: string): Promise<void> 
   }
 }
 
-export const normalizePackageManager = async (cwd: string): Promise<void> => {
+export const normalizePackageManager = async (
+  cwd: string,
+  packageManager: string
+): Promise<void> => {
   const packageJsonPath = join(portableToNativePath(cwd), PACKAGE_JSON)
   const manifest = JSON.parse(await readFile(packageJsonPath, 'utf-8')) as PackageManifest
 
-  if (manifest.packageManager === RAIJIN_PACKAGE_MANAGER) {
+  if (manifest.packageManager === packageManager) {
     return
   }
 
-  await writeFile(
-    packageJsonPath,
-    `${JSON.stringify({ ...manifest, packageManager: RAIJIN_PACKAGE_MANAGER }, null, 2)}\n`
-  )
+  await writeFile(packageJsonPath, `${JSON.stringify({ ...manifest, packageManager }, null, 2)}\n`)
 }

@@ -20,6 +20,7 @@ import { ppath }                  from '@yarnpkg/fslib'
 import { xfs }                    from '@yarnpkg/fslib'
 
 import { Release }                from '@atls/code-github'
+import { RAIJIN_PACKAGE_MANAGER } from '@atls/raijin/runtime'
 
 import { parseGitHubUrl }         from './utils/parse-git-url.js'
 
@@ -80,6 +81,7 @@ interface YarnRuntimeManifest {
   assetName: string
   assetUrl: string
   packageName: string
+  packageManager: string
   schemaVersion: number
   sha256: string
   tagName: string
@@ -184,6 +186,7 @@ export const createYarnRuntimeManifest = (
   assetName: asset.name,
   assetUrl: asset.browser_download_url,
   packageName,
+  packageManager: RAIJIN_PACKAGE_MANAGER,
   schemaVersion: YARN_RUNTIME_MANIFEST_SCHEMA_VERSION,
   sha256: createYarnRuntimeReleaseAssetDigest(data),
   tagName: createGitHubReleaseTagName(packageName, version),

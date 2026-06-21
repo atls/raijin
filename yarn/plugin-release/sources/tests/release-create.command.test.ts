@@ -85,6 +85,7 @@ test('should create yarn runtime manifest from verified release asset', () => {
       assetUrl:
         'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
       packageName: '@atls/yarn-cli',
+      packageManager: 'yarn@4.14.1',
       schemaVersion: 1,
       sha256: 'd92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23',
       tagName: '@atls/yarn-cli@1.2.3',

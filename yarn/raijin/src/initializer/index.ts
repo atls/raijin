@@ -22,7 +22,8 @@ export const runRaijinInitializer = async ({
 
   await ensurePackageManifest(cwd)
   await ensureYarnLock(cwd)
-  await installRaijinRuntime({ cwd, fetchImpl })
+  const runtimeManifest = await installRaijinRuntime({ cwd, fetchImpl })
+  await ensurePackageManifest(cwd, runtimeManifest.packageManager)
   await runCommand(['add', '-D', CODE_RUNTIME_PACKAGE], cwd)
   await runCommand(['generate', 'project'], cwd)
   await runCommand(['tools', 'sync'], cwd)

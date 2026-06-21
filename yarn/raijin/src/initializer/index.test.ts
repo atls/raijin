@@ -24,12 +24,13 @@ const getRequestHref = (url: Request | URL | string): string => {
   return url.url
 }
 
-const createFetch = (runtime: Buffer): typeof fetch => {
+const createFetch = (runtime: Buffer, packageManager = RAIJIN_PACKAGE_MANAGER): typeof fetch => {
   const manifest = {
     assetName: 'yarn.mjs',
     assetUrl:
       'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
     packageName: '@atls/yarn-cli',
+    packageManager,
     schemaVersion: 1,
     sha256: createSha256Digest(runtime),
     tagName: '@atls/yarn-cli@1.2.3',
@@ -139,6 +140,31 @@ test('should normalize package manager in existing package manifest', async () =
     ...manifest,
     packageManager: RAIJIN_PACKAGE_MANAGER,
   })
+})
+
+test('should normalize package manager from runtime manifest', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const packageManager = 'yarn@4.15.0'
+
+  await writeFile(
+    join(cwd, 'package.json'),
+    `${JSON.stringify({
+      name: 'wallet',
+      packageManager: 'yarn@4.12.0',
+    })}\n`
+  )
+
+  await runRaijinInitializer({
+    argv: ['init'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime'), packageManager),
+    runYarnCommand: noopYarnCommand,
+  })
+
+  assert.equal(
+    JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')).packageManager,
+    packageManager
+  )
 })
 
 test('should create project lockfile boundary before yarn commands', async () => {

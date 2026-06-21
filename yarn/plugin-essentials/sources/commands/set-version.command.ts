@@ -36,7 +36,7 @@ export class SetVersionCommand extends BaseCommand {
       )
       const runtimeManifest = await fetchRaijinRuntimeManifest(configuration)
       await installRaijinRuntime(configuration, cwd, runtimeManifest)
-      await normalizePackageManager(cwd)
+      await normalizePackageManager(cwd, runtimeManifest.packageManager)
 
       const updatedConfiguration = await Configuration.find(
         cwd as typeof this.context.cwd,

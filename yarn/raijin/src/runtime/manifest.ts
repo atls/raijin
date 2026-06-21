@@ -1,11 +1,13 @@
 import { createHash }                            from 'node:crypto'
 
 import { InvalidRaijinRuntimeManifestException } from './exceptions/invalid-manifest.js'
+import { RAIJIN_PACKAGE_MANAGER }                from './package-manager.js'
 
 export interface RaijinRuntimeManifest {
   assetName: string
   assetUrl: string
   packageName: string
+  packageManager: string
   schemaVersion: number
   sha256: string
   tagName: string
@@ -32,6 +34,20 @@ const assertManifestString = (
 
   if (typeof value !== 'string' || value.length === 0) {
     throw InvalidRaijinRuntimeManifestException.missingField(key)
+  }
+
+  return value
+}
+
+const resolveManifestPackageManager = (manifest: Record<string, unknown>): string => {
+  const value = manifest.packageManager
+
+  if (value === undefined) {
+    return RAIJIN_PACKAGE_MANAGER
+  }
+
+  if (typeof value !== 'string' || value.length === 0) {
+    throw InvalidRaijinRuntimeManifestException.missingField('packageManager')
   }
 
   return value
@@ -66,6 +82,7 @@ export const parseRaijinRuntimeManifest = (value: unknown): RaijinRuntimeManifes
     assetName,
     assetUrl: assertManifestString(value, 'assetUrl'),
     packageName,
+    packageManager: resolveManifestPackageManager(value),
     schemaVersion: RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION,
     sha256,
     tagName: assertManifestString(value, 'tagName'),

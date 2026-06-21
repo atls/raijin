@@ -1335,6 +1335,7 @@ __metadata:
   resolution: "@atls/yarn-plugin-release@workspace:yarn/plugin-release"
   dependencies:
     "@atls/code-github": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"

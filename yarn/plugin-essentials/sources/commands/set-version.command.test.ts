@@ -84,7 +84,7 @@ test('should normalize package manager without touching package fields', async (
 
   await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
 
-  await normalizePackageManager(cwd)
+  await normalizePackageManager(cwd, RAIJIN_PACKAGE_MANAGER)
 
   assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
     ...manifest,
@@ -128,6 +128,7 @@ test('should parse Raijin runtime manifest', () => {
     parseRaijinRuntimeManifest({
       schemaVersion: 1,
       packageName: '@atls/yarn-cli',
+      packageManager: 'yarn@4.15.0',
       version: '1.2.3',
       tagName: '@atls/yarn-cli@1.2.3',
       assetName: 'yarn.mjs',
@@ -138,6 +139,7 @@ test('should parse Raijin runtime manifest', () => {
     {
       schemaVersion: 1,
       packageName: '@atls/yarn-cli',
+      packageManager: 'yarn@4.15.0',
       version: '1.2.3',
       tagName: '@atls/yarn-cli@1.2.3',
       assetName: 'yarn.mjs',
@@ -244,7 +246,7 @@ test('should normalize package manager while cleanup removes only obsolete runti
   await writeFile(join(releaseDirectory, 'raijin-yarn-4.12.0.mjs'), 'old-runtime')
   await writeFile(join(releaseDirectory, 'manual-yarn.mjs'), 'custom-runtime')
 
-  await normalizePackageManager(cwd)
+  await normalizePackageManager(cwd, RAIJIN_PACKAGE_MANAGER)
   await cleanupObsoleteRaijinRuntimeFiles(cwd)
 
   assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
@@ -252,4 +254,23 @@ test('should normalize package manager while cleanup removes only obsolete runti
     packageManager: RAIJIN_PACKAGE_MANAGER,
   })
   assert.deepEqual((await readdir(releaseDirectory)).sort(), ['manual-yarn.mjs', 'yarn.mjs'])
+})
+
+test('should normalize package manager from runtime manifest', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-set-version-'))
+  const manifest = {
+    name: 'wallet',
+    packageManager: 'yarn@4.12.0',
+    private: true,
+  }
+  const packageManager = 'yarn@4.15.0'
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+
+  await normalizePackageManager(cwd, packageManager)
+
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
+    ...manifest,
+    packageManager,
+  })
 })
