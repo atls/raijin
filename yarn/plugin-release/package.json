@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@atls/code-github": "workspace:*",
-    "@atls/raijin": "workspace:*",
     "@atls/yarn-plugin-files": "workspace:*",
     "@yarnpkg/fslib": "3.1.5",
     "@yarnpkg/parsers": "3.0.3",
