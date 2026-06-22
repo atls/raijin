@@ -793,14 +793,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-runtime",
-      "location": "runtime/code-runtime",
-      "group": "runtime",
-      "private": false,
-      "description": "",
-      "scripts": ["build", "build:library", "build:schematic", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/webpack-proto-imports-loader",
       "location": "webpack/webpack-proto-imports-loader",
       "group": "webpack",
@@ -1119,5 +1111,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-21T18:54:32.858Z"
+  "lastGenerated": "2026-06-22T17:35:42.185Z"
 }

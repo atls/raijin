@@ -470,28 +470,6 @@
 
 </details>
 
-## Group `runtime`
-
-Runtime-модули и инфраструктура исполнения
-
-Короткий список:
-
-- `@atls/code-runtime` — `runtime/code-runtime`
-
-<details>
-<summary>Подробности группы `runtime`</summary>
-
-<!-- sync:package-card:atls-code-runtime -->
-
-#### `@atls/code-runtime`
-
-- Локация: `runtime/code-runtime`
-- Группа: `runtime`
-- Видимость: `public`
-- Скрипты: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
-
-</details>
-
 ## Group `webpack`
 
 Webpack-интеграции и сборочные адаптеры

@@ -470,28 +470,6 @@ Compact list:
 
 </details>
 
-## Group `runtime`
-
-Runtime modules and execution infrastructure
-
-Compact list:
-
-- `@atls/code-runtime` — `runtime/code-runtime`
-
-<details>
-<summary>Group details: `runtime`</summary>
-
-<!-- sync:package-card:atls-code-runtime -->
-
-#### `@atls/code-runtime`
-
-- Location: `runtime/code-runtime`
-- Group: `runtime`
-- Visibility: `public`
-- Scripts: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
-
-</details>
-
 ## Group `webpack`
 
 Webpack integrations and build adapters
