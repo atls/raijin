@@ -16,6 +16,8 @@ import { AbstractRaijinSyncCommand } from './base.js'
 
 const projectTypesIncludeEntry = 'project.types.d.ts'
 
+export const projectTypesReference = '/// <reference types="@atls/raijin/types" />\n'
+
 const implicitTSConfigIncludeEntry = '**/*'
 
 type TSConfigShape = Record<string, unknown>
@@ -125,7 +127,7 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
 
           await xfs.writeFilePromise(
             ppath.join(project.topLevelWorkspace.cwd, 'project.types.d.ts' as PortablePath),
-            '/// <reference types="@atls/code-runtime/types" />\n'
+            projectTypesReference
           )
 
           const config = deepmerge<

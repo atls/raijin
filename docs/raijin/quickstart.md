@@ -42,7 +42,7 @@ yarn dlx @atls/raijin init
 
 Expected result:
 
-- Existing project gets Raijin runtime, `@atls/code-runtime`, project schematics, the first sync, and `packageManager` from the installed runtime manifest
+- Existing project gets the public `@atls/raijin` package, Raijin runtime, project schematics, the first sync, and `packageManager` from the installed runtime manifest
 
 <!-- sync:bundle-upgrade -->
 

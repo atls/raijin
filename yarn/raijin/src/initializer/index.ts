@@ -6,7 +6,7 @@ import { runYarnCommand }                   from '../yarn/command.js'
 import { ensurePackageManifest }            from './project.js'
 import { ensureYarnLock }                   from './project.js'
 
-const CODE_RUNTIME_PACKAGE = '@atls/code-runtime@latest'
+const RAIJIN_PACKAGE = '@atls/raijin@latest'
 
 export const runRaijinInitializer = async ({
   argv = [],
@@ -23,7 +23,7 @@ export const runRaijinInitializer = async ({
   const runtimeManifest = await installRaijinRuntime({ cwd, fetchImpl })
   await ensurePackageManifest(cwd, runtimeManifest.packageManager)
   await ensureYarnLock(cwd)
-  await runCommand(['add', '-D', CODE_RUNTIME_PACKAGE], cwd)
+  await runCommand(['add', '-D', RAIJIN_PACKAGE], cwd)
   await runCommand(['generate', 'project'], cwd)
   await runCommand(['raijin', 'sync'], cwd)
 }

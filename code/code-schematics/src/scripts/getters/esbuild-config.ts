@@ -17,7 +17,7 @@ export const getEsbuildConfig = (): BuildOptions => {
     platform: 'node' as Platform,
     sourcemap: false,
     target: 'esnext',
-    external: ['node:*', '@atls/code-runtime'],
+    external: ['node:*'],
     plugins: [
       pnpPlugin({
         onResolve: async (args) => {

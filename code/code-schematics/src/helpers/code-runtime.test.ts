@@ -10,13 +10,13 @@ import { getCodeRuntimeCompilerOptions } from './code-runtime.js'
 import { writeCodeRuntimeFiles }         from './code-runtime.js'
 import { ensureSchematicSucceeded }      from './schematic-result.js'
 
-test('should load code runtime compiler options from project scope', async () => {
+test('should load code runtime compiler options from local contract', async () => {
   const compilerOptions = await getCodeRuntimeCompilerOptions(process.cwd())
 
   assert.equal(typeof compilerOptions, 'object')
 })
 
-test('should write code runtime files from project scope', async () => {
+test('should write code runtime files from local generated assets', async () => {
   const tmpDir = await mkdtemp(join(tmpdir(), 'raijin-code-runtime-'))
 
   await writeCodeRuntimeFiles(process.cwd(), tmpDir)

@@ -1614,8 +1614,8 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
-          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-schematics", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:code/code-schematics"],\
+          ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@types/node", "npm:24.12.2"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -1641,8 +1641,8 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
-          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-schematics", "virtual:4dd3a47489ffaa2662e93eb0cac31099615af9672a15bd10809e22f91d8688e254bcd0de7eb018b0b25babd4e1919045f67a5863737414004da01911639aafa4#workspace:code/code-schematics"],\
+          ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@types/node", "npm:24.12.2"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -1666,8 +1666,8 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
-          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-schematics", "workspace:code/code-schematics"],\
+          ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@types/node", "npm:24.12.2"],\
           ["@yarnpkg/cli", "virtual:ccae17f137fefbbaba6c5ad07c1c85d0eeb7c2d83d1717382e2500f9abd36b42c5a217d63d5beef22301d21ac6bd18bc3e8b2b111a393b68f24ae0ff8b227324#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
@@ -1841,6 +1841,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:yarn/raijin", {\
         "packageLocation": "./yarn/raijin/",\
         "packageDependencies": [\
+          ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"]\
         ],\

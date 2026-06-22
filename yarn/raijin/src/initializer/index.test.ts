@@ -50,7 +50,7 @@ const createFetch = (runtime: Buffer, packageManager = TEST_PACKAGE_MANAGER): ty
 }
 
 const EXPECTED_INITIALIZER_COMMANDS = [
-  ['add', '-D', '@atls/code-runtime@latest'],
+  ['add', '-D', '@atls/raijin@latest'],
   ['generate', 'project'],
   ['raijin', 'sync'],
 ]
@@ -98,6 +98,15 @@ test('should expose initializer command through public index', async () => {
   assert.deepEqual(
     await collectInitializerCommands(runPublicRaijinInitializer),
     EXPECTED_INITIALIZER_COMMANDS
+  )
+})
+
+test('should keep code runtime out of public initializer commands', async () => {
+  const commands = await collectInitializerCommands(runRaijinInitializer)
+
+  assert.equal(
+    commands.flat().some((argument) => argument.includes('@atls/code-runtime')),
+    false
   )
 })
 

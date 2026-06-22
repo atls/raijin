@@ -2,6 +2,11 @@ import assert                        from 'node:assert/strict'
 import test                          from 'node:test'
 
 import { getTSConfigIncludeEntries } from './tsconfig.command.js'
+import { projectTypesReference }     from './tsconfig.command.js'
+
+test('should point generated project types to public Raijin package', () => {
+  assert.equal(projectTypesReference, '/// <reference types="@atls/raijin/types" />\n')
+})
 
 test('should preserve implicit include when tsconfig include is missing', () => {
   assert.deepEqual(getTSConfigIncludeEntries({}, []), ['project.types.d.ts', '**/*'])

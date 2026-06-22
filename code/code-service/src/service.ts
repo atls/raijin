@@ -10,7 +10,15 @@ import { SeverityNumber }               from '@monstrs/logger'
 import { StartServerPlugin }            from '@atls/webpack-start-server-plugin'
 
 import { WebpackConfig }                from './webpack.config.js'
+import { importCodeRuntimeModule }      from './code-runtime.js'
 import { createServiceRuntimeExecArgv } from './service-exec-argv.js'
+
+type WebpackRuntime = {
+  webpack: typeof wp
+  tsLoaderPath: string
+  nodeLoaderPath: string
+  protoLoaderPath: string
+}
 
 export class Service extends EventEmitter {
   protected constructor(
@@ -22,9 +30,8 @@ export class Service extends EventEmitter {
   }
 
   static async initialize(cwd: string): Promise<Service> {
-    const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } = await import(
-      '@atls/code-runtime/webpack'
-    )
+    const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } =
+      await importCodeRuntimeModule<WebpackRuntime>('@atls/code-runtime/webpack')
 
     const config = new WebpackConfig(
       webpack,

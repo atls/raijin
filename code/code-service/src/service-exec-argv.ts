@@ -2,6 +2,8 @@ import type { createRuntimeExecArgv as createRuntimeExecArgvFn }     from '@atls
 import type { findPnpEsmLoader as findPnpEsmLoaderFn }               from '@atls/code-runtime/runtime-exec-argv'
 import type { resolveTypeScriptLoader as resolveTypeScriptLoaderFn } from '@atls/code-runtime/runtime-exec-argv'
 
+import { importCodeRuntimeModule }                                   from './code-runtime.js'
+
 const TYPESCRIPT_LOADER_SPECIFIER = '@atls/code-runtime/typescript-loader'
 const RUNTIME_EXEC_ARGV_MODULE = '@atls/code-runtime/runtime-exec-argv'
 
@@ -12,7 +14,7 @@ type RuntimeExecArgvModule = {
 }
 
 const importRuntimeExecArgvModule = async (): Promise<RuntimeExecArgvModule> =>
-  (await import(RUNTIME_EXEC_ARGV_MODULE)) as RuntimeExecArgvModule
+  importCodeRuntimeModule<RuntimeExecArgvModule>(RUNTIME_EXEC_ARGV_MODULE)
 
 export const createServiceExecArgv = (
   pnpEsmLoader?: string,

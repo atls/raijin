@@ -1,23 +1,32 @@
-import type { ESLintInstance } from '@atls/code-runtime/eslint'
-import type { LinterConfig }   from '@atls/code-runtime/eslint'
-import type { LinterInstance } from '@atls/code-runtime/eslint'
-import type { LintResult }     from '@atls/code-runtime/eslint'
+import type { ESLintInstance }          from '@atls/code-runtime/eslint'
+import type { ESLint as RuntimeESLint } from '@atls/code-runtime/eslint'
+import type { LinterConfig }            from '@atls/code-runtime/eslint'
+import type { LinterInstance }          from '@atls/code-runtime/eslint'
+import type { Linter as RuntimeLinter } from '@atls/code-runtime/eslint'
+import type { LintResult }              from '@atls/code-runtime/eslint'
 
-import EventEmitter            from 'node:events'
-import { readFileSync }        from 'node:fs'
-import { readFile }            from 'node:fs/promises'
-import { writeFile }           from 'node:fs/promises'
-import { isAbsolute }          from 'node:path'
-import { relative }            from 'node:path'
-import { resolve }             from 'node:path'
-import { join }                from 'node:path'
+import EventEmitter                     from 'node:events'
+import { readFileSync }                 from 'node:fs'
+import { readFile }                     from 'node:fs/promises'
+import { writeFile }                    from 'node:fs/promises'
+import { isAbsolute }                   from 'node:path'
+import { relative }                     from 'node:path'
+import { resolve }                      from 'node:path'
+import { join }                         from 'node:path'
 
-import { globby }              from 'globby'
-import ignorer                 from 'ignore'
+import { globby }                       from 'globby'
+import ignorer                          from 'ignore'
 
-import { ignore }              from './linter.patterns.js'
-import { createPatterns }      from './linter.patterns.js'
-import { createLintResult }    from './linter.utils.js'
+import { importCodeRuntimeModule }      from './code-runtime.js'
+import { ignore }                       from './linter.patterns.js'
+import { createPatterns }               from './linter.patterns.js'
+import { createLintResult }             from './linter.utils.js'
+
+type EslintRuntime = {
+  Linter: typeof RuntimeLinter
+  ESLint: typeof RuntimeESLint
+  eslintconfig: Array<LinterConfig>
+}
 
 export interface LintOptions {
   fix?: boolean
@@ -39,8 +48,11 @@ export class Linter extends EventEmitter {
   }
 
   static async initialize(rootCwd: string, cwd: string): Promise<Linter> {
-    const { Linter: LinterConstructor, ESLint } = await import('@atls/code-runtime/eslint')
-    const { eslintconfig } = await import('@atls/code-runtime/eslint')
+    const {
+      Linter: LinterConstructor,
+      ESLint,
+      eslintconfig,
+    } = await importCodeRuntimeModule<EslintRuntime>('@atls/code-runtime/eslint')
 
     const linter = new LinterConstructor({ configType: 'flat' })
 

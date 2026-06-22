@@ -18,6 +18,17 @@ import { extname }                         from 'node:path'
 import camelcase                           from 'camelcase'
 
 import { WebpackConfig }                   from './webpack.config.js'
+import { importCodeRuntimeModule }         from './code-runtime.js'
+
+type SvgrRuntime = {
+  transform: typeof svgrTransform
+  jsx: typeof svgrJsx
+}
+
+type WebpackRuntime = {
+  webpack: typeof wp
+  tsLoaderPath: string
+}
 
 interface IconSource {
   source: string
@@ -41,8 +52,10 @@ export class Icons extends EventEmitter {
   }
 
   static async initialize(cwd: string): Promise<Icons> {
-    const { transform, jsx } = await import('@atls/code-runtime/svgr')
-    const { webpack, tsLoaderPath } = await import('@atls/code-runtime/webpack')
+    const { transform, jsx } = await importCodeRuntimeModule<SvgrRuntime>('@atls/code-runtime/svgr')
+    const { webpack, tsLoaderPath } = await importCodeRuntimeModule<WebpackRuntime>(
+      '@atls/code-runtime/webpack'
+    )
 
     return new Icons(
       { transform, jsx },
