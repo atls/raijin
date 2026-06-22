@@ -36,7 +36,7 @@ index c5a58b9ddf1d74675917de75a51f26e19c88f450..c3b07b42c5b1ef210689f527dba5630c
                      },
                      entryPoints: [path_1.default.join(basedir, `sources/cli.ts`)],
                      bundle: true,
-@@ -109,12 +132,13 @@ class BuildBundleCommand extends clipanion_1.Command {
+@@ -109,12 +132,22 @@ class BuildBundleCommand extends clipanion_1.Command {
                      // Default extensions + .mjs
                      resolveExtensions: [`.tsx`, `.ts`, `.jsx`, `.mjs`, `.js`, `.css`, `.json`],
                      logLevel: `silent`,
@@ -48,7 +48,16 @@ index c5a58b9ddf1d74675917de75a51f26e19c88f450..c3b07b42c5b1ef210689f527dba5630c
                      sourcemap: this.sourceMap ? `inline` : false,
 -                    target: `node${semver_1.default.minVersion(package_json_1.default.engines.node).version}`,
 +                    target: `esnext`,
-+                    external: ['@atls/code-runtime']
++                    external: [
++                        '@atls/raijin/eslint',
++                        '@atls/raijin/runtime-exec-argv',
++                        '@atls/raijin/svgr',
++                        '@atls/raijin/ts-ext-register',
++                        '@atls/raijin/ts-node-register',
++                        '@atls/raijin/typescript',
++                        '@atls/raijin/typescript-loader',
++                        '@atls/raijin/webpack'
++                    ]
                  });
                  for (const warning of res.warnings) {
                      if (warning.location !== null)
@@ -56,11 +65,20 @@ diff --git a/lib/commands/build/plugin.js b/lib/commands/build/plugin.js
 index 5a3b4099286bd8e0c768fa2d9ac287886c922e46..b7abb610c4a38ff302c7ef02b825f66374d7ce22 100644
 --- a/lib/commands/build/plugin.js
 +++ b/lib/commands/build/plugin.js
-@@ -99,6 +99,7 @@ class BuildPluginCommand extends clipanion_1.Command {
+@@ -99,6 +99,16 @@ class BuildPluginCommand extends clipanion_1.Command {
                      minify: !this.noMinify,
                      sourcemap: this.sourceMap ? `inline` : false,
                      target: `node${semver_1.default.minVersion(package_json_1.default.engines.node).version}`,
-+                    external: ['@atls/code-runtime']
++                    external: [
++                        '@atls/raijin/eslint',
++                        '@atls/raijin/runtime-exec-argv',
++                        '@atls/raijin/svgr',
++                        '@atls/raijin/ts-ext-register',
++                        '@atls/raijin/ts-node-register',
++                        '@atls/raijin/typescript',
++                        '@atls/raijin/typescript-loader',
++                        '@atls/raijin/webpack'
++                    ]
                  });
                  for (const warning of res.warnings) {
                      if (warning.location !== null)

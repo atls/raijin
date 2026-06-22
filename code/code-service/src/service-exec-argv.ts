@@ -1,11 +1,8 @@
-import type { createRuntimeExecArgv as createRuntimeExecArgvFn }     from '@atls/code-runtime/runtime-exec-argv'
-import type { findPnpEsmLoader as findPnpEsmLoaderFn }               from '@atls/code-runtime/runtime-exec-argv'
-import type { resolveTypeScriptLoader as resolveTypeScriptLoaderFn } from '@atls/code-runtime/runtime-exec-argv'
+import type { createRuntimeExecArgv as createRuntimeExecArgvFn }     from '@atls/raijin/runtime-exec-argv'
+import type { findPnpEsmLoader as findPnpEsmLoaderFn }               from '@atls/raijin/runtime-exec-argv'
+import type { resolveTypeScriptLoader as resolveTypeScriptLoaderFn } from '@atls/raijin/runtime-exec-argv'
 
-import { importCodeRuntimeModule }                                   from '@atls/raijin/runtime'
-
-const TYPESCRIPT_LOADER_SPECIFIER = '@atls/code-runtime/typescript-loader'
-const RUNTIME_EXEC_ARGV_MODULE = '@atls/code-runtime/runtime-exec-argv'
+const TYPESCRIPT_LOADER_SPECIFIER = '@atls/raijin/typescript-loader'
 
 type RuntimeExecArgvModule = {
   createRuntimeExecArgv: typeof createRuntimeExecArgvFn
@@ -14,7 +11,7 @@ type RuntimeExecArgvModule = {
 }
 
 const importRuntimeExecArgvModule = async (): Promise<RuntimeExecArgvModule> =>
-  importCodeRuntimeModule<RuntimeExecArgvModule>(RUNTIME_EXEC_ARGV_MODULE)
+  (await import('@atls/raijin/runtime-exec-argv')) as RuntimeExecArgvModule
 
 export const createServiceExecArgv = (
   pnpEsmLoader?: string,
@@ -38,10 +35,10 @@ export const findPnpEsmLoader = async (cwd: string): Promise<string | undefined>
   return resolvePnpEsmLoader(cwd)
 }
 
-export const resolveTypeScriptLoader = async (codeRuntimePackagePath?: string): Promise<string> => {
+export const resolveTypeScriptLoader = async (raijinPackagePath?: string): Promise<string> => {
   const { resolveTypeScriptLoader: resolveLoader } = await importRuntimeExecArgvModule()
 
-  return resolveLoader(codeRuntimePackagePath)
+  return resolveLoader(raijinPackagePath)
 }
 
 export const createServiceRuntimeExecArgv = async (cwd: string): Promise<Array<string>> => {

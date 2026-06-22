@@ -1,7 +1,7 @@
-import type { Config }                     from '@atls/code-runtime/svgr'
-import type { transform as svgrTransform } from '@atls/code-runtime/svgr'
-import type { jsx as svgrJsx }             from '@atls/code-runtime/svgr'
-import type { webpack as wp }              from '@atls/code-runtime/webpack'
+import type { Config }                     from '@atls/raijin/svgr'
+import type { transform as svgrTransform } from '@atls/raijin/svgr'
+import type { jsx as svgrJsx }             from '@atls/raijin/svgr'
+import type { webpack as wp }              from '@atls/raijin/webpack'
 
 import EventEmitter                        from 'node:events'
 import { access }                          from 'node:fs/promises'
@@ -16,8 +16,6 @@ import { basename }                        from 'node:path'
 import { extname }                         from 'node:path'
 
 import camelcase                           from 'camelcase'
-
-import { importCodeRuntimeModule }         from '@atls/raijin/runtime'
 
 import { WebpackConfig }                   from './webpack.config.js'
 
@@ -53,10 +51,8 @@ export class Icons extends EventEmitter {
   }
 
   static async initialize(cwd: string): Promise<Icons> {
-    const { transform, jsx } = await importCodeRuntimeModule<SvgrRuntime>('@atls/code-runtime/svgr')
-    const { webpack, tsLoaderPath } = await importCodeRuntimeModule<WebpackRuntime>(
-      '@atls/code-runtime/webpack'
-    )
+    const { transform, jsx } = (await import('@atls/raijin/svgr')) as SvgrRuntime
+    const { webpack, tsLoaderPath } = (await import('@atls/raijin/webpack')) as WebpackRuntime
 
     return new Icons(
       { transform, jsx },

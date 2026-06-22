@@ -1,4 +1,4 @@
-import type { webpack as wp }           from '@atls/code-runtime/webpack'
+import type { webpack as wp }           from '@atls/raijin/webpack'
 
 import type { ServiceLogRecord }        from './service.interfaces.js'
 
@@ -8,7 +8,6 @@ import { PassThrough }                  from 'node:stream'
 import { SeverityNumber }               from '@monstrs/logger'
 
 import { StartServerPlugin }            from '@atls/webpack-start-server-plugin'
-import { importCodeRuntimeModule }      from '@atls/raijin/runtime'
 
 import { WebpackConfig }                from './webpack.config.js'
 import { createServiceRuntimeExecArgv } from './service-exec-argv.js'
@@ -30,8 +29,9 @@ export class Service extends EventEmitter {
   }
 
   static async initialize(cwd: string): Promise<Service> {
-    const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } =
-      await importCodeRuntimeModule<WebpackRuntime>('@atls/code-runtime/webpack')
+    const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } = (await import(
+      '@atls/raijin/webpack'
+    )) as WebpackRuntime
 
     const config = new WebpackConfig(
       webpack,

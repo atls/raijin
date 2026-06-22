@@ -18,7 +18,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-runtime": "workspace:*",
     "@atls/config-typescript": "workspace:*",
     "@atls/raijin": "workspace:*",
     "@yarnpkg/cli": "4.14.1",

@@ -19,7 +19,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-runtime": "workspace:*",
     "@atls/config-typescript": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "deepmerge": "4.3.1",

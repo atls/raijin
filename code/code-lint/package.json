@@ -17,7 +17,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-runtime": "workspace:*",
     "@atls/raijin": "workspace:*",
     "globby": "13.2.2",
     "ignore": "5.3.2"

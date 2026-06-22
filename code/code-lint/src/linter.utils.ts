@@ -1,5 +1,5 @@
-import type { LintMessage } from '@atls/code-runtime/eslint'
-import type { LintResult }  from '@atls/code-runtime/eslint'
+import type { LintMessage } from '@atls/raijin/eslint'
+import type { LintResult }  from '@atls/raijin/eslint'
 
 export const createLintResult = (
   filePath: string,

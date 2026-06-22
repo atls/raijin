@@ -1,5 +1,5 @@
 import type { SeverityNumber } from '@monstrs/logger'
-import type { webpack }        from '@atls/code-runtime/webpack'
+import type { webpack }        from '@atls/raijin/webpack'
 
 export interface WebpackLogRecord {
   record: webpack.StatsError

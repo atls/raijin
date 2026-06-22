@@ -1,7 +1,7 @@
 /* eslint-disable n/no-sync */
 
-import type { LintMessage }          from '@atls/code-runtime/eslint'
-import type { LintResult as Result } from '@atls/code-runtime/eslint'
+import type { LintMessage }          from '@atls/raijin/eslint'
+import type { LintResult as Result } from '@atls/raijin/eslint'
 
 import type { Annotation }           from './github.checks.js'
 

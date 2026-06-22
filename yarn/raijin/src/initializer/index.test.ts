@@ -101,13 +101,10 @@ test('should expose initializer command through public index', async () => {
   )
 })
 
-test('should keep code runtime out of public initializer commands', async () => {
+test('should install only public Raijin package directly', async () => {
   const commands = await collectInitializerCommands(runRaijinInitializer)
 
-  assert.equal(
-    commands.flat().some((argument) => argument.includes('@atls/code-runtime')),
-    false
-  )
+  assert.deepEqual(commands[0], ['add', '-D', '@atls/raijin@latest'])
 })
 
 test('should create package manifest for empty project', async () => {

@@ -17,7 +17,7 @@ test('should include previous GitHub filenames for renamed files', () => {
       files: [
         {
           filename: 'code/code-test/src/loader.ts',
-          previous_filename: 'runtime/code-runtime/src/loader.ts',
+          previous_filename: 'yarn/raijin/src/loader.ts',
         },
       ],
     },
@@ -25,7 +25,7 @@ test('should include previous GitHub filenames for renamed files', () => {
 
   assert.deepEqual(change, {
     message: 'fix(runtime): move loader',
-    files: ['code/code-test/src/loader.ts', 'runtime/code-runtime/src/loader.ts'],
+    files: ['code/code-test/src/loader.ts', 'yarn/raijin/src/loader.ts'],
   })
 })
 
@@ -66,14 +66,14 @@ test('should parse deferred release decisions', () => {
   assert.deepEqual(
     parseDeferredReleaseDecisions(`
 releases:
-  "@atls/code-runtime": minor
+  "@atls/raijin": minor
   "@atls/yarn-cli": 1.2.0
 declined:
   - "@atls/code-test"
 `),
     new Map([
       ['@atls/code-test', 'decline'],
-      ['@atls/code-runtime', 'minor'],
+      ['@atls/raijin', 'minor'],
       ['@atls/yarn-cli', '1.2.0'],
     ])
   )

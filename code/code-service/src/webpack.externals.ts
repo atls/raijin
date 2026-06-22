@@ -1,5 +1,5 @@
 import type { IPackageJson }      from 'package-json-type'
-import type { webpack }           from '@atls/code-runtime/webpack'
+import type { webpack }           from '@atls/raijin/webpack'
 
 import { readFile }               from 'node:fs/promises'
 import { join }                   from 'node:path'

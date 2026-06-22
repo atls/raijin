@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@atls/code-configuration": "workspace:*",
-    "@atls/code-runtime": "workspace:*",
     "@atls/config-typescript": "workspace:*",
     "@atls/raijin": "workspace:*",
     "@atls/webpack-start-server-plugin": "workspace:*",

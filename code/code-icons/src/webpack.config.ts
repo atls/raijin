@@ -1,4 +1,4 @@
-import type { webpack } from '@atls/code-runtime/webpack'
+import type { webpack } from '@atls/raijin/webpack'
 
 import { writeFile }    from 'node:fs/promises'
 import { mkdtemp }      from 'node:fs/promises'

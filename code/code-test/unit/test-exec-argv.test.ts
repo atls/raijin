@@ -9,7 +9,7 @@ import test                          from 'node:test'
 import { fileURLToPath }             from 'node:url'
 import { pathToFileURL }             from 'node:url'
 
-import { resolveTypeScriptLoader }   from '@atls/code-runtime/runtime-exec-argv'
+import { resolveTypeScriptLoader }   from '@atls/raijin/runtime-exec-argv'
 
 import { createTestExecArgv }        from '../src/test-exec-argv.js'
 import { createTestRuntimeExecArgv } from '../src/test-exec-argv.js'
@@ -17,7 +17,7 @@ import { createTestRuntimeExecArgv } from '../src/test-exec-argv.js'
 test('should create TypeScript test exec argv without ts-node runtime', () => {
   assert.deepEqual(createTestExecArgv(), [
     '--loader',
-    '@atls/code-runtime/typescript-loader',
+    '@atls/raijin/typescript-loader',
     '--enable-source-maps',
   ])
 })
@@ -27,7 +27,7 @@ test('should keep PnP loader before TypeScript test loader', () => {
     '--loader',
     'file:///repo/.pnp.loader.mjs',
     '--loader',
-    '@atls/code-runtime/typescript-loader',
+    '@atls/raijin/typescript-loader',
     '--enable-source-maps',
   ])
 })

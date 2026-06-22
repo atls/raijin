@@ -5,18 +5,18 @@ import { join }              from 'node:path'
 import { esbuildBuildStep }  from './build-steps/index.js'
 import { generateSchematic } from './schematic-build.js'
 
-const runtimeSchematicDir = join(
+const raijinSchematicDir = join(
   import.meta.dirname,
-  '../../../../runtime/code-runtime/src/schematic'
+  '../../../../yarn/raijin/src/runtime/schematic'
 )
-const runtimeSchematicOutputFile = join(
+const raijinSchematicOutputFile = join(
   import.meta.dirname,
-  '../generated/runtime-schematic-export.ts'
+  '../generated/raijin-schematic-export.ts'
 )
 
 try {
   await esbuildBuildStep()
-  await generateSchematic(runtimeSchematicDir, runtimeSchematicOutputFile)
+  await generateSchematic(raijinSchematicDir, raijinSchematicOutputFile)
 } catch (e: unknown) {
   const error = e as Error
 

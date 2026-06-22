@@ -10,7 +10,7 @@ import semver                        from 'semver'
 
 import { AbstractRaijinSyncCommand } from './base.js'
 
-const codeRuntimeIdent = structUtils.parseIdent('@atls/code-runtime')
+const raijinIdent = structUtils.parseIdent('@atls/raijin')
 const typescriptIdent = structUtils.parseIdent('typescript')
 
 export const findStoredPackageByIdent = (
@@ -19,8 +19,8 @@ export const findStoredPackageByIdent = (
 ): Package | undefined =>
   Array.from(packages).find((storedPackage) => storedPackage.identHash === ident.identHash)
 
-export const getCodeRuntimeTypeScriptRange = (project: Project): string | undefined =>
-  findStoredPackageByIdent(project.storedPackages.values(), codeRuntimeIdent)?.dependencies.get(
+export const getRaijinTypeScriptRange = (project: Project): string | undefined =>
+  findStoredPackageByIdent(project.storedPackages.values(), raijinIdent)?.dependencies.get(
     typescriptIdent.identHash
   )?.range
 
@@ -44,7 +44,7 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   override async executeRegular(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
-    const codeRuntimeTypeScriptRange = getCodeRuntimeTypeScriptRange(project)
+    const raijinTypeScriptRange = getRaijinTypeScriptRange(project)
 
     const commandReport = await StreamReport.start(
       {
@@ -53,7 +53,7 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
       },
       async (report) => {
         await report.startTimerPromise('Raijin sync typescript version', async () => {
-          if (!codeRuntimeTypeScriptRange) {
+          if (!raijinTypeScriptRange) {
             return
           }
 
@@ -65,20 +65,20 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
             ).find((target) => target.scope === ident.scope && target.name === ident.name)
 
             if (!descriptor) {
-              descriptor = structUtils.makeDescriptor(ident, codeRuntimeTypeScriptRange)
+              descriptor = structUtils.makeDescriptor(ident, raijinTypeScriptRange)
             }
 
             if (
               semver.valid(semver.coerce(descriptor.range)) &&
-              semver.valid(semver.coerce(codeRuntimeTypeScriptRange))
+              semver.valid(semver.coerce(raijinTypeScriptRange))
             ) {
               if (
                 !semver.eq(
                   semver.coerce(descriptor.range) || '',
-                  semver.coerce(codeRuntimeTypeScriptRange) || ''
+                  semver.coerce(raijinTypeScriptRange) || ''
                 )
               ) {
-                descriptor.range = codeRuntimeTypeScriptRange
+                descriptor.range = raijinTypeScriptRange
               }
             }
 

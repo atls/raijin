@@ -1,4 +1,4 @@
-import type { Config } from '@atls/code-runtime/svgr'
+import type { Config } from '@atls/raijin/svgr'
 
 import assert          from 'node:assert/strict'
 import { test }        from 'node:test'

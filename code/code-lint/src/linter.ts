@@ -1,9 +1,9 @@
-import type { ESLintInstance }          from '@atls/code-runtime/eslint'
-import type { ESLint as RuntimeESLint } from '@atls/code-runtime/eslint'
-import type { LinterConfig }            from '@atls/code-runtime/eslint'
-import type { LinterInstance }          from '@atls/code-runtime/eslint'
-import type { Linter as RuntimeLinter } from '@atls/code-runtime/eslint'
-import type { LintResult }              from '@atls/code-runtime/eslint'
+import type { ESLintInstance }          from '@atls/raijin/eslint'
+import type { ESLint as RuntimeESLint } from '@atls/raijin/eslint'
+import type { LinterConfig }            from '@atls/raijin/eslint'
+import type { LinterInstance }          from '@atls/raijin/eslint'
+import type { Linter as RuntimeLinter } from '@atls/raijin/eslint'
+import type { LintResult }              from '@atls/raijin/eslint'
 
 import EventEmitter                     from 'node:events'
 import { readFileSync }                 from 'node:fs'
@@ -16,8 +16,6 @@ import { join }                         from 'node:path'
 
 import { globby }                       from 'globby'
 import ignorer                          from 'ignore'
-
-import { importCodeRuntimeModule }      from '@atls/raijin/runtime'
 
 import { ignore }                       from './linter.patterns.js'
 import { createPatterns }               from './linter.patterns.js'
@@ -53,7 +51,7 @@ export class Linter extends EventEmitter {
       Linter: LinterConstructor,
       ESLint,
       eslintconfig,
-    } = await importCodeRuntimeModule<EslintRuntime>('@atls/code-runtime/eslint')
+    } = (await import('@atls/raijin/eslint')) as EslintRuntime
 
     const linter = new LinterConstructor({ configType: 'flat' })
 
