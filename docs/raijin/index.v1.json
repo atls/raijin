@@ -813,7 +813,7 @@
       "location": "yarn/raijin",
       "group": "yarn",
       "private": false,
-      "description": "",
+      "description": "Public Raijin initializer and runtime package",
       "scripts": ["build", "postpack", "prepack"]
     },
     {
@@ -1111,5 +1111,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-22T17:35:42.185Z"
+  "lastGenerated": "2026-06-22T22:49:12.746Z"
 }

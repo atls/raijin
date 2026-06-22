@@ -1,6 +1,16 @@
 {
   "name": "@atls/raijin",
   "version": "0.3.0",
+  "description": "Public Raijin initializer and runtime package",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "yarn/raijin"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

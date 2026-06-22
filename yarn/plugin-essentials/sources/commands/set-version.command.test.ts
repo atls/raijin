@@ -1,26 +1,25 @@
-import assert                                from 'node:assert/strict'
-import { access }                            from 'node:fs/promises'
-import { mkdtemp }                           from 'node:fs/promises'
-import { mkdir }                             from 'node:fs/promises'
-import { readdir }                           from 'node:fs/promises'
-import { readFile }                          from 'node:fs/promises'
-import { writeFile }                         from 'node:fs/promises'
-import { tmpdir }                            from 'node:os'
-import { join }                              from 'node:path'
-import { test }                              from 'node:test'
+import assert                            from 'node:assert/strict'
+import { access }                        from 'node:fs/promises'
+import { mkdtemp }                       from 'node:fs/promises'
+import { mkdir }                         from 'node:fs/promises'
+import { readdir }                       from 'node:fs/promises'
+import { readFile }                      from 'node:fs/promises'
+import { writeFile }                     from 'node:fs/promises'
+import { tmpdir }                        from 'node:os'
+import { join }                          from 'node:path'
+import { test }                          from 'node:test'
 
-import { createSha256Digest }                from '@atls/raijin/runtime'
-import { getRaijinRuntimeYarnPath }          from '@atls/raijin/runtime'
-import { parseRaijinRuntimeManifest }        from '@atls/raijin/runtime'
+import { createSha256Digest }            from '@atls/raijin/runtime'
+import { getRaijinRuntimeYarnPath }      from '@atls/raijin/runtime'
+import { parseRaijinRuntimeManifest }    from '@atls/raijin/runtime'
 
-import { cleanupObsoleteRaijinRuntimeFiles } from './set-version.migration.js'
-import { resolveYarnPath }                   from './set-version.runtime.js'
-import { writeRuntimeFileAtomically }        from './set-version.runtime.js'
-import { findPackageCwd }                    from './set-version.utils.js'
-import { nativeToPortablePath }              from './set-version.utils.js'
-import { normalizePackageManager }           from './set-version.utils.js'
-import { portableToNativePath }              from './set-version.utils.js'
-import { preparePackageProjectBoundary }     from './set-version.utils.js'
+import { resolveYarnPath }               from './set-version.runtime.js'
+import { writeRuntimeFileAtomically }    from './set-version.runtime.js'
+import { findPackageCwd }                from './set-version.utils.js'
+import { nativeToPortablePath }          from './set-version.utils.js'
+import { normalizePackageManager }       from './set-version.utils.js'
+import { portableToNativePath }          from './set-version.utils.js'
+import { preparePackageProjectBoundary } from './set-version.utils.js'
 
 const TEST_PACKAGE_MANAGER = 'yarn@4.14.1'
 
@@ -213,48 +212,6 @@ test('should replace active runtime atomically without leaving temporary files',
 
   assert.equal(await readFile(runtimePath, 'utf-8'), 'runtime')
   assert.deepEqual(await readdir(releaseDirectory), ['yarn.mjs'])
-})
-
-test('should clean obsolete Raijin runtime files from release directory', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-set-version-'))
-  const releaseDirectory = join(cwd, '.yarn/releases')
-
-  await mkdir(releaseDirectory, { recursive: true })
-  await writeFile(join(releaseDirectory, 'yarn.mjs'), 'runtime')
-  await writeFile(join(releaseDirectory, 'yarn-remote.mjs'), 'old-runtime')
-  await writeFile(join(releaseDirectory, 'raijin-yarn-1.2.3.mjs'), 'old-runtime')
-  await writeFile(join(releaseDirectory, 'raijin-yarn-1.3.3.mjs'), 'old-runtime')
-  await writeFile(join(releaseDirectory, 'custom-yarn.mjs'), 'custom-runtime')
-
-  await cleanupObsoleteRaijinRuntimeFiles(cwd)
-
-  assert.deepEqual((await readdir(releaseDirectory)).sort(), ['custom-yarn.mjs', 'yarn.mjs'])
-})
-
-test('should normalize package manager while cleanup removes only obsolete runtime files', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-set-version-'))
-  const releaseDirectory = join(cwd, '.yarn/releases')
-  const manifest = {
-    name: 'wallet',
-    packageManager: 'yarn@4.12.0',
-    private: true,
-  }
-
-  await mkdir(releaseDirectory, { recursive: true })
-  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-  await writeFile(join(releaseDirectory, 'yarn.mjs'), 'runtime')
-  await writeFile(join(releaseDirectory, 'yarn-remote.mjs'), 'old-runtime')
-  await writeFile(join(releaseDirectory, 'raijin-yarn-4.12.0.mjs'), 'old-runtime')
-  await writeFile(join(releaseDirectory, 'manual-yarn.mjs'), 'custom-runtime')
-
-  await normalizePackageManager(cwd, TEST_PACKAGE_MANAGER)
-  await cleanupObsoleteRaijinRuntimeFiles(cwd)
-
-  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
-    ...manifest,
-    packageManager: TEST_PACKAGE_MANAGER,
-  })
-  assert.deepEqual((await readdir(releaseDirectory)).sort(), ['manual-yarn.mjs', 'yarn.mjs'])
 })
 
 test('should normalize package manager from runtime manifest', async () => {

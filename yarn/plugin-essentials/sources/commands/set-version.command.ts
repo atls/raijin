@@ -1,15 +1,14 @@
-import { BaseCommand }                       from '@yarnpkg/cli'
-import { Configuration }                     from '@yarnpkg/core'
-import { Command }                           from 'clipanion'
+import { BaseCommand }                   from '@yarnpkg/cli'
+import { Configuration }                 from '@yarnpkg/core'
+import { Command }                       from 'clipanion'
 
-import { cleanupObsoleteRaijinRuntimeFiles } from './set-version.migration.js'
-import { assertInstalledRaijinRuntime }      from './set-version.runtime.js'
-import { fetchRaijinRuntimeManifest }        from './set-version.runtime.js'
-import { installRaijinRuntime }              from './set-version.runtime.js'
-import { findPackageCwd }                    from './set-version.utils.js'
-import { normalizePackageManager }           from './set-version.utils.js'
-import { portableToNativePath }              from './set-version.utils.js'
-import { preparePackageProjectBoundary }     from './set-version.utils.js'
+import { assertInstalledRaijinRuntime }  from './set-version.runtime.js'
+import { fetchRaijinRuntimeManifest }    from './set-version.runtime.js'
+import { installRaijinRuntime }          from './set-version.runtime.js'
+import { findPackageCwd }                from './set-version.utils.js'
+import { normalizePackageManager }       from './set-version.utils.js'
+import { portableToNativePath }          from './set-version.utils.js'
+import { preparePackageProjectBoundary } from './set-version.utils.js'
 
 const RAIJIN_PUBLIC_PACKAGE = '@atls/raijin'
 
@@ -46,7 +45,6 @@ export class SetVersionCommand extends BaseCommand {
       )
 
       await assertInstalledRaijinRuntime(updatedConfiguration, cwd, runtimeManifest)
-      await cleanupObsoleteRaijinRuntimeFiles(cwd)
 
       const bumpArgs = ['up', RAIJIN_PUBLIC_PACKAGE]
       const bumpExitCode = await this.cli.run(bumpArgs, { cwd: cwd as typeof this.context.cwd })
