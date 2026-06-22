@@ -7,7 +7,7 @@ import { join }          from 'node:path'
 import { test }          from 'node:test'
 import { pathToFileURL } from 'node:url'
 
-import { resolve }       from '../src/ts-ext-register.js'
+import { resolve }       from './ts-ext-register.js'
 
 const createContext = (parentPath: string) =>
   ({

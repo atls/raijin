@@ -7,7 +7,7 @@ import { join }          from 'node:path'
 import { test }          from 'node:test'
 import { pathToFileURL } from 'node:url'
 
-import { load }          from '../src/typescript-loader.js'
+import { load }          from './typescript-loader.js'
 
 const createNextLoad = () =>
   (() => {

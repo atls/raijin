@@ -7,7 +7,6 @@
     "prettier/**/*",
     "code/**/*",
     "webpack/**/*",
-    "runtime/**/*",
     "config/**/*",
     "yarn/**/*",
     "cli/**/*"
@@ -38,8 +37,8 @@
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@atls/code-runtime": "workspace:*",
     "@atls/config-prettier": "workspace:*",
+    "@atls/raijin": "workspace:*",
     "@types/node": "24.12.2",
     "@yarnpkg/builder": "patch:@yarnpkg/builder@npm%3A4.1.2#~/.yarn/patches/@yarnpkg-builder-npm-4.1.2-2648882e59.patch",
     "esbuild": "npm:esbuild-wasm@^0.23.1",

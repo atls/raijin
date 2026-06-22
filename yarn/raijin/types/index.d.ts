@@ -1,1 +1,1 @@
-/// <reference types="@atls/code-runtime/types" />
+/// <reference types='webpack/module.d.ts' />

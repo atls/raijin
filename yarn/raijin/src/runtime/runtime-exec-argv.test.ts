@@ -10,14 +10,14 @@ import test                                from 'node:test'
 import { fileURLToPath }                   from 'node:url'
 import { pathToFileURL }                   from 'node:url'
 
-import { createRuntimeExecArgv }           from '../src/runtime-exec-argv.js'
-import { createTypeScriptRuntimeExecArgv } from '../src/runtime-exec-argv.js'
-import { resolveTypeScriptLoader }         from '../src/runtime-exec-argv.js'
+import { createRuntimeExecArgv }           from './runtime-exec-argv.js'
+import { createTypeScriptRuntimeExecArgv } from './runtime-exec-argv.js'
+import { resolveTypeScriptLoader }         from './runtime-exec-argv.js'
 
 test('should create TypeScript runtime exec argv without PnP loader', () => {
   assert.deepEqual(createTypeScriptRuntimeExecArgv(undefined), [
     '--loader',
-    '@atls/code-runtime/typescript-loader',
+    '@atls/raijin/typescript-loader',
     '--enable-source-maps',
   ])
 })
@@ -44,7 +44,7 @@ test('should resolve TypeScript loader to loadable JavaScript', async () => {
   const typeScriptLoaderModule = await import(`${typeScriptLoader}?runtime-exec-argv`)
 
   assert.ok(
-    typeScriptLoaderPath.endsWith(join('dist', 'typescript-loader.js')) ||
+    typeScriptLoaderPath.endsWith(join('dist', 'runtime', 'typescript-loader.js')) ||
       typeScriptLoaderPath.endsWith('typescript-loader.mjs')
   )
   assert.equal(typeof typeScriptLoaderModule.load, 'function')
@@ -52,7 +52,7 @@ test('should resolve TypeScript loader to loadable JavaScript', async () => {
 
 test('should materialize source-only TypeScript loader to JavaScript', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'runtime-exec-argv-loader-'))
-  const sourceDir = join(workspace, 'src')
+  const sourceDir = join(workspace, 'src', 'runtime')
   const packageJsonPath = join(workspace, 'package.json')
 
   try {
@@ -86,7 +86,7 @@ test('should materialize source-only TypeScript loader to JavaScript', async () 
   }
 })
 
-test('should reject code runtime package without loadable TypeScript loader', async () => {
+test('should reject Raijin package without loadable TypeScript loader', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'runtime-exec-argv-loader-'))
   const packageJsonPath = join(workspace, 'package.json')
 

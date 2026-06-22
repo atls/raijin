@@ -1,7 +1,7 @@
 import assert           from 'node:assert/strict'
 import { test }         from 'node:test'
 
-import { eslintconfig } from '../src/eslint.js'
+import { eslintconfig } from './eslint.js'
 
 test('should allow generated project config files outside tsconfig scope', () => {
   const [baseConfig] = eslintconfig
