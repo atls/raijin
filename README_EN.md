@@ -82,8 +82,9 @@ Expected result:
 ## How to use in another project
 
 1. Install the bundle using [Quickstart](./docs/raijin/quickstart.md)
-2. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control
-3. Update with `yarn set version atls` when newer bundle versions are released
+2. Keep the explicit `@atls/raijin` dependency in `package.json` so GitHub can link the project to Raijin through the dependency graph
+3. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control
+4. Update with `yarn set version atls` when newer bundle versions are released
 
 <!-- sync:root-read-more -->
 

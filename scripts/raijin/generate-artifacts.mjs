@@ -402,11 +402,14 @@ const renderRootReadme = (language) => {
       ? `1. Подключите бандл по разделу [Быстрый старт](./${quickstartPath})`
       : `1. Install the bundle using [Quickstart](./${quickstartPath})`,
     isRu
-      ? '2. Зафиксируйте изменения `.yarn/releases` и `.yarnrc.yml` в системе контроля версий'
-      : '2. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control',
+      ? '2. Оставьте явную зависимость `@atls/raijin` в `package.json`, чтобы GitHub мог связать проект с Raijin через dependency graph'
+      : '2. Keep the explicit `@atls/raijin` dependency in `package.json` so GitHub can link the project to Raijin through the dependency graph',
     isRu
-      ? '3. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий'
-      : '3. Update with `yarn set version atls` when newer bundle versions are released',
+      ? '3. Зафиксируйте изменения `.yarn/releases` и `.yarnrc.yml` в системе контроля версий'
+      : '3. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control',
+    isRu
+      ? '4. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий'
+      : '4. Update with `yarn set version atls` when newer bundle versions are released',
     '',
     '<!-- sync:root-read-more -->',
     '',
@@ -675,6 +678,9 @@ const renderQuickstart = (language) => {
     isRu
       ? '- После первого подключения обновляйте бандл командой `yarn set version atls`'
       : '- After the first setup, keep the bundle current with `yarn set version atls`',
+    isRu
+      ? '- Оставляйте явную зависимость `@atls/raijin` в `package.json`, чтобы GitHub dependency graph видел проект как потребителя Raijin'
+      : '- Keep the explicit `@atls/raijin` dependency in `package.json` so GitHub dependency graph can see the project as a Raijin consumer',
     isRu
       ? '- Коммитьте изменения `.yarn/releases` и `.yarnrc.yml` вместе с обновлением бандла'
       : '- Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates',

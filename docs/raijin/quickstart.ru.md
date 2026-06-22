@@ -89,5 +89,6 @@ yarn schematic:test
 
 - Для первого подключения используйте `yarn init @atls/raijin` или `yarn dlx @atls/raijin init`
 - После первого подключения обновляйте бандл командой `yarn set version atls`
+- Оставляйте явную зависимость `@atls/raijin` в `package.json`, чтобы GitHub dependency graph видел проект как потребителя Raijin
 - Коммитьте изменения `.yarn/releases` и `.yarnrc.yml` вместе с обновлением бандла
 - Для CI используйте те же команды, что и локально, чтобы избежать расхождения поведения
