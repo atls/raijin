@@ -1,5 +1,7 @@
 export type { RaijinRuntimeManifest } from './runtime/manifest.js'
 
+export { createCodeRuntimeRequire } from './runtime/code-runtime.js'
+export { importCodeRuntimeModule } from './runtime/code-runtime.js'
 export { createSha256Digest } from './runtime/manifest.js'
 export { getRaijinRuntimeYarnPath } from './runtime/manifest.js'
 export { parseRaijinRuntimeManifest } from './runtime/manifest.js'

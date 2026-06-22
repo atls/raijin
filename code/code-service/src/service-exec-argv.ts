@@ -2,7 +2,7 @@ import type { createRuntimeExecArgv as createRuntimeExecArgvFn }     from '@atls
 import type { findPnpEsmLoader as findPnpEsmLoaderFn }               from '@atls/code-runtime/runtime-exec-argv'
 import type { resolveTypeScriptLoader as resolveTypeScriptLoaderFn } from '@atls/code-runtime/runtime-exec-argv'
 
-import { importCodeRuntimeModule }                                   from './code-runtime.js'
+import { importCodeRuntimeModule }                                   from '@atls/raijin/runtime'
 
 const TYPESCRIPT_LOADER_SPECIFIER = '@atls/code-runtime/typescript-loader'
 const RUNTIME_EXEC_ARGV_MODULE = '@atls/code-runtime/runtime-exec-argv'

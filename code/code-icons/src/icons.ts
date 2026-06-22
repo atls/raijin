@@ -17,8 +17,9 @@ import { extname }                         from 'node:path'
 
 import camelcase                           from 'camelcase'
 
+import { importCodeRuntimeModule }         from '@atls/raijin/runtime'
+
 import { WebpackConfig }                   from './webpack.config.js'
-import { importCodeRuntimeModule }         from './code-runtime.js'
 
 type SvgrRuntime = {
   transform: typeof svgrTransform

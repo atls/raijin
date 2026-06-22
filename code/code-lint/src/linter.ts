@@ -17,7 +17,8 @@ import { join }                         from 'node:path'
 import { globby }                       from 'globby'
 import ignorer                          from 'ignore'
 
-import { importCodeRuntimeModule }      from './code-runtime.js'
+import { importCodeRuntimeModule }      from '@atls/raijin/runtime'
+
 import { ignore }                       from './linter.patterns.js'
 import { createPatterns }               from './linter.patterns.js'
 import { createLintResult }             from './linter.utils.js'

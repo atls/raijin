@@ -667,6 +667,7 @@ __metadata:
   dependencies:
     "@atls/code-runtime": "workspace:*"
     "@atls/config-typescript": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@monstrs/logger": "npm:0.0.20"
     "@types/node": "npm:24.12.2"
     "@types/webpack": "npm:5.28.5"
@@ -684,6 +685,7 @@ __metadata:
   resolution: "@atls/code-lint@workspace:code/code-lint"
   dependencies:
     "@atls/code-runtime": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
     globby: "npm:13.2.2"
     ignore: "npm:5.3.2"
@@ -761,6 +763,7 @@ __metadata:
     "@atls/code-configuration": "workspace:*"
     "@atls/code-runtime": "workspace:*"
     "@atls/config-typescript": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@atls/webpack-start-server-plugin": "workspace:*"
     "@monstrs/logger": "npm:0.0.20"
     "@types/node": "npm:24.12.2"
@@ -778,6 +781,7 @@ __metadata:
   resolution: "@atls/code-test@workspace:code/code-test"
   dependencies:
     "@atls/code-runtime": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
     globby: "npm:13.2.2"
     ignore: "npm:5.3.2"
@@ -790,6 +794,7 @@ __metadata:
   dependencies:
     "@atls/code-runtime": "workspace:*"
     "@atls/config-typescript": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
     typescript: "npm:5.9.3"
   languageName: unknown

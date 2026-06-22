@@ -1523,6 +1523,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-icons", "workspace:code/code-icons"],\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@monstrs/logger", "npm:0.0.20"],\
           ["@types/node", "npm:24.12.2"],\
           ["@types/webpack", "npm:5.28.5"],\
@@ -1542,6 +1543,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/code-lint", "virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:code/code-lint"],\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["@types/react", "npm:18.3.18"],\
           ["@types/typescript", null],\
@@ -1563,6 +1565,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/code-lint", "workspace:code/code-lint"],\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["globby", "npm:13.2.2"],\
           ["ignore", "npm:5.3.2"]\
@@ -1689,6 +1692,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-service", "workspace:code/code-service"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/webpack-start-server-plugin", "workspace:webpack/webpack-start-server-plugin"],\
           ["@monstrs/logger", "npm:0.0.20"],\
           ["@types/node", "npm:24.12.2"],\
@@ -1708,6 +1712,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-test", "workspace:code/code-test"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["globby", "npm:13.2.2"],\
           ["ignore", "npm:5.3.2"]\
@@ -1722,6 +1727,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-runtime", "workspace:runtime/code-runtime"],\
           ["@atls/code-typescript", "workspace:code/code-typescript"],\
           ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
         ],\

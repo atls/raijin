@@ -8,9 +8,9 @@ import { PassThrough }                  from 'node:stream'
 import { SeverityNumber }               from '@monstrs/logger'
 
 import { StartServerPlugin }            from '@atls/webpack-start-server-plugin'
+import { importCodeRuntimeModule }      from '@atls/raijin/runtime'
 
 import { WebpackConfig }                from './webpack.config.js'
-import { importCodeRuntimeModule }      from './code-runtime.js'
 import { createServiceRuntimeExecArgv } from './service-exec-argv.js'
 
 type WebpackRuntime = {

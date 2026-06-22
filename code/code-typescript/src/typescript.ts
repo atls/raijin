@@ -6,9 +6,9 @@ import EventEmitter                  from 'node:events'
 import { readFileSync }              from 'node:fs'
 import { join }                      from 'node:path'
 
+import { createCodeRuntimeRequire }  from '@atls/raijin/runtime'
 import tsconfig                      from '@atls/config-typescript'
 
-import { createCodeRuntimeRequire }  from './code-runtime.js'
 import { transformJsxToJsExtension } from './transformers/index.js'
 
 export class TypeScript extends EventEmitter {

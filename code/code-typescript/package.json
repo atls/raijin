@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@atls/code-runtime": "workspace:*",
-    "@atls/config-typescript": "workspace:*"
+    "@atls/config-typescript": "workspace:*",
+    "@atls/raijin": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "24.12.2",

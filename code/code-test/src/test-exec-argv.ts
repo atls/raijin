@@ -1,6 +1,6 @@
 import type { createRuntimeExecArgv as createRuntimeExecArgvFn } from '@atls/code-runtime/runtime-exec-argv'
 
-import { importCodeRuntimeModule }                               from './code-runtime.js'
+import { importCodeRuntimeModule }                               from '@atls/raijin/runtime'
 
 export const TEST_EXEC_ARGV_ENV = 'RAIJIN_TEST_EXEC_ARGV'
 
