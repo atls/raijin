@@ -89,6 +89,5 @@ Expected result:
 
 - Use `yarn init @atls/raijin` or `yarn dlx @atls/raijin init` for the first setup
 - After the first setup, keep the bundle current with `yarn set version atls`
-- Keep the explicit `@atls/raijin` dependency in `package.json` so GitHub dependency graph can see the project as a Raijin consumer
 - Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates
 - Use the same commands in CI and locally to avoid behavior drift

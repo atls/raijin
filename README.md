@@ -82,9 +82,8 @@ yarn files changed list
 ## Как использовать в чужом проекте
 
 1. Подключите бандл по разделу [Быстрый старт](./docs/raijin/quickstart.ru.md)
-2. Оставьте явную зависимость `@atls/raijin` в `package.json`, чтобы GitHub мог связать проект с Raijin через dependency graph
-3. Зафиксируйте изменения `.yarn/releases` и `.yarnrc.yml` в системе контроля версий
-4. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий
+2. Зафиксируйте изменения `.yarn/releases` и `.yarnrc.yml` в системе контроля версий
+3. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий
 
 <!-- sync:root-read-more -->
 
