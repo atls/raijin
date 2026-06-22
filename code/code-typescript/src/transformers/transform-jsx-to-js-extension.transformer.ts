@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import type { ts as typescript } from '@atls/code-runtime/typescript'
+import type { ts as typescript } from '@atls/raijin/typescript'
 
 export const transformJsxToJsExtension = (ts: typeof typescript) =>
   (ctx: typescript.TransformationContext): typescript.Transformer<typescript.SourceFile> => {

@@ -12,7 +12,7 @@ export abstract class AbstractRaijinSyncCommand extends BaseCommand {
   static override usage = Command.Usage({
     description: 'Update Raijin project support files',
     details: `
-    Update Raijin project support files such as \`tsconfig\`, \`typescript\` version, \`@atls/code-runtime\` version
+    Update Raijin project support files such as \`tsconfig\` and \`typescript\` version
     `,
     examples: [
       ['Update tsconfig', 'yarn raijin sync tsconfig'],

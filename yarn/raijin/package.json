@@ -6,18 +6,40 @@
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
-    "./runtime": "./src/runtime.ts"
+    "./runtime": "./src/runtime.ts",
+    "./types": "./types/index.d.ts",
+    "./eslint": "./src/runtime/eslint.ts",
+    "./webpack": "./src/runtime/webpack.ts",
+    "./typescript": "./src/runtime/typescript.ts",
+    "./runtime-exec-argv": "./src/runtime/runtime-exec-argv.ts",
+    "./typescript-loader": "./src/runtime/typescript-loader.ts",
+    "./svgr": "./src/runtime/svgr.ts",
+    "./ts-node-register": "./src/runtime/ts-node-register.ts",
+    "./ts-ext-register": "./src/runtime/ts-ext-register.ts"
   },
   "main": "src/index.ts",
   "bin": "./bin/raijin.mjs",
   "files": [
     "bin",
-    "dist"
+    "dist",
+    "types"
   ],
   "scripts": {
     "build": "yarn library build",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/config-eslint": "workspace:*",
+    "@atls/config-typescript": "workspace:*",
+    "@atls/webpack-proto-imports-loader": "workspace:*",
+    "@svgr/core": "8.1.0",
+    "@svgr/plugin-jsx": "8.1.0",
+    "eslint": "9.22.0",
+    "node-loader": "2.1.0",
+    "ts-loader": "9.5.2",
+    "typescript": "5.5.4",
+    "webpack": "5.98.0"
   },
   "devDependencies": {
     "@types/node": "24.12.2"
@@ -29,6 +51,7 @@
     },
     "exports": {
       "./package.json": "./package.json",
+      "./types": "./types/index.d.ts",
       "./runtime": {
         "import": "./dist/runtime.js",
         "types": "./dist/runtime.d.ts",
@@ -38,9 +61,50 @@
         "import": "./dist/index.js",
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
+      },
+      "./eslint": {
+        "import": "./dist/runtime/eslint.js",
+        "types": "./dist/runtime/eslint.d.ts",
+        "default": "./dist/runtime/eslint.js"
+      },
+      "./webpack": {
+        "import": "./dist/runtime/webpack.js",
+        "types": "./dist/runtime/webpack.d.ts",
+        "default": "./dist/runtime/webpack.js"
+      },
+      "./typescript": {
+        "import": "./dist/runtime/typescript.js",
+        "types": "./dist/runtime/typescript.d.ts",
+        "default": "./dist/runtime/typescript.js"
+      },
+      "./runtime-exec-argv": {
+        "import": "./dist/runtime/runtime-exec-argv.js",
+        "types": "./dist/runtime/runtime-exec-argv.d.ts",
+        "default": "./dist/runtime/runtime-exec-argv.js"
+      },
+      "./typescript-loader": {
+        "import": "./dist/runtime/typescript-loader.js",
+        "types": "./dist/runtime/typescript-loader.d.ts",
+        "default": "./dist/runtime/typescript-loader.js"
+      },
+      "./svgr": {
+        "import": "./dist/runtime/svgr.js",
+        "types": "./dist/runtime/svgr.d.ts",
+        "default": "./dist/runtime/svgr.js"
+      },
+      "./ts-node-register": {
+        "import": "./dist/runtime/ts-node-register.js",
+        "types": "./dist/runtime/ts-node-register.d.ts",
+        "default": "./dist/runtime/ts-node-register.js"
+      },
+      "./ts-ext-register": {
+        "import": "./dist/runtime/ts-ext-register.js",
+        "types": "./dist/runtime/ts-ext-register.d.ts",
+        "default": "./dist/runtime/ts-ext-register.js"
       }
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts"
-  }
+  },
+  "typecheckSkipLibCheck": true
 }

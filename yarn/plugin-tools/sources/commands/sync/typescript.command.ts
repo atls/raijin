@@ -1,3 +1,6 @@
+import type { Ident }                from '@yarnpkg/core'
+import type { Package }              from '@yarnpkg/core'
+
 import { Configuration }             from '@yarnpkg/core'
 import { Project }                   from '@yarnpkg/core'
 import { StreamReport }              from '@yarnpkg/core'
@@ -6,6 +9,20 @@ import { structUtils }               from '@yarnpkg/core'
 import semver                        from 'semver'
 
 import { AbstractRaijinSyncCommand } from './base.js'
+
+const raijinIdent = structUtils.parseIdent('@atls/raijin')
+const typescriptIdent = structUtils.parseIdent('typescript')
+
+export const findStoredPackageByIdent = (
+  packages: Iterable<Package>,
+  ident: Ident
+): Package | undefined =>
+  Array.from(packages).find((storedPackage) => storedPackage.identHash === ident.identHash)
+
+export const getRaijinTypeScriptRange = (project: Project): string | undefined =>
+  findStoredPackageByIdent(project.storedPackages.values(), raijinIdent)?.dependencies.get(
+    typescriptIdent.identHash
+  )?.range
 
 export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'typescript']]
@@ -27,12 +44,7 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   override async executeRegular(): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project } = await Project.find(configuration, this.context.cwd)
-
-    const runtime = (
-      await import('@atls/code-runtime/package.json', {
-        with: { type: 'json' },
-      })
-    ).default
+    const raijinTypeScriptRange = getRaijinTypeScriptRange(project)
 
     const commandReport = await StreamReport.start(
       {
@@ -41,6 +53,10 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
       },
       async (report) => {
         await report.startTimerPromise('Raijin sync typescript version', async () => {
+          if (!raijinTypeScriptRange) {
+            return
+          }
+
           if (project.topLevelWorkspace.manifest.raw.devDependencies) {
             const ident = structUtils.parseIdent('typescript')
 
@@ -49,20 +65,20 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
             ).find((target) => target.scope === ident.scope && target.name === ident.name)
 
             if (!descriptor) {
-              descriptor = structUtils.makeDescriptor(ident, runtime.dependencies.typescript)
+              descriptor = structUtils.makeDescriptor(ident, raijinTypeScriptRange)
             }
 
             if (
               semver.valid(semver.coerce(descriptor.range)) &&
-              semver.valid(semver.coerce(runtime.dependencies.typescript))
+              semver.valid(semver.coerce(raijinTypeScriptRange))
             ) {
               if (
                 !semver.eq(
                   semver.coerce(descriptor.range) || '',
-                  semver.coerce(runtime.dependencies.typescript) || ''
+                  semver.coerce(raijinTypeScriptRange) || ''
                 )
               ) {
-                descriptor.range = runtime.dependencies.typescript
+                descriptor.range = raijinTypeScriptRange
               }
             }
 

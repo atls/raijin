@@ -1,4 +1,4 @@
-import type { webpack as wp } from '@atls/code-runtime/webpack'
+import type { webpack as wp } from '@atls/raijin/webpack'
 
 import { existsSync }         from 'node:fs'
 import { readFileSync }       from 'node:fs'

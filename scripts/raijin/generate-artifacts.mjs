@@ -620,8 +620,8 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Установленный проект получает среду выполнения Raijin, `@atls/code-runtime`, проектные схемы, первичную синхронизацию и значение `packageManager` из манифеста установленной среды выполнения'
-      : '- Existing project gets Raijin runtime, `@atls/code-runtime`, project schematics, the first sync, and `packageManager` from the installed runtime manifest',
+      ? '- Установленный проект получает публичный пакет `@atls/raijin`, среду выполнения Raijin, проектные схемы, первичную синхронизацию и значение `packageManager` из манифеста установленной среды выполнения'
+      : '- Existing project gets the public `@atls/raijin` package, Raijin runtime, project schematics, the first sync, and `packageManager` from the installed runtime manifest',
     '',
     '<!-- sync:bundle-upgrade -->',
     isRu ? '## 4. Обновление установленного бандла' : '## 4. Upgrade installed bundle',

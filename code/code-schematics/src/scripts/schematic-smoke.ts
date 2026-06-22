@@ -147,11 +147,9 @@ const prepareCollectionDir = async (repoRoot: string, collectionDir: string): Pr
 const runProjectSchematic = async ({
   collectionPath,
   fixtureDir,
-  runtimeCwd,
 }: {
   collectionPath: string
   fixtureDir: string
-  runtimeCwd: string
 }): Promise<void> => {
   const previousCwd = process.cwd()
 
@@ -163,7 +161,6 @@ const runProjectSchematic = async ({
       {
         type: 'project',
         cwd: fixtureDir,
-        runtimeCwd,
       },
       collectionPath
     )
@@ -226,7 +223,6 @@ const runSchematicSmoke = async (): Promise<void> => {
     await runProjectSchematic({
       collectionPath: path.join(collectionDir, 'collection.json'),
       fixtureDir,
-      runtimeCwd: repoRoot,
     })
     console.log('Schematic smoke: checking fixture')
     await assertGeneratedFixture(fixtureDir)

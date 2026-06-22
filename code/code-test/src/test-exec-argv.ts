@@ -1,16 +1,15 @@
-import type { createRuntimeExecArgv as createRuntimeExecArgvFn } from '@atls/code-runtime/runtime-exec-argv'
+import type { createRuntimeExecArgv as createRuntimeExecArgvFn } from '@atls/raijin/runtime-exec-argv'
 
 export const TEST_EXEC_ARGV_ENV = 'RAIJIN_TEST_EXEC_ARGV'
 
-const TYPESCRIPT_LOADER_SPECIFIER = '@atls/code-runtime/typescript-loader'
-const RUNTIME_EXEC_ARGV_MODULE = '@atls/code-runtime/runtime-exec-argv'
+const TYPESCRIPT_LOADER_SPECIFIER = '@atls/raijin/typescript-loader'
 
 type RuntimeExecArgvModule = {
   createRuntimeExecArgv: typeof createRuntimeExecArgvFn
 }
 
 const importRuntimeExecArgvModule = async (): Promise<RuntimeExecArgvModule> =>
-  (await import(RUNTIME_EXEC_ARGV_MODULE)) as RuntimeExecArgvModule
+  (await import('@atls/raijin/runtime-exec-argv')) as RuntimeExecArgvModule
 
 export const createTestExecArgv = (
   pnpEsmLoader?: string,

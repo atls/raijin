@@ -39,5 +39,5 @@
     "cli/**/*",
     "schematics/**/*"
   ],
-  "types": ["@atls/code-runtime/types"]
+  "types": ["@atls/raijin/types"]
 }

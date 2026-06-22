@@ -1,7 +1,7 @@
-import type { Config }                     from '@atls/code-runtime/svgr'
-import type { transform as svgrTransform } from '@atls/code-runtime/svgr'
-import type { jsx as svgrJsx }             from '@atls/code-runtime/svgr'
-import type { webpack as wp }              from '@atls/code-runtime/webpack'
+import type { Config }                     from '@atls/raijin/svgr'
+import type { transform as svgrTransform } from '@atls/raijin/svgr'
+import type { jsx as svgrJsx }             from '@atls/raijin/svgr'
+import type { webpack as wp }              from '@atls/raijin/webpack'
 
 import EventEmitter                        from 'node:events'
 import { access }                          from 'node:fs/promises'
@@ -18,6 +18,16 @@ import { extname }                         from 'node:path'
 import camelcase                           from 'camelcase'
 
 import { WebpackConfig }                   from './webpack.config.js'
+
+type SvgrRuntime = {
+  transform: typeof svgrTransform
+  jsx: typeof svgrJsx
+}
+
+type WebpackRuntime = {
+  webpack: typeof wp
+  tsLoaderPath: string
+}
 
 interface IconSource {
   source: string
@@ -41,8 +51,8 @@ export class Icons extends EventEmitter {
   }
 
   static async initialize(cwd: string): Promise<Icons> {
-    const { transform, jsx } = await import('@atls/code-runtime/svgr')
-    const { webpack, tsLoaderPath } = await import('@atls/code-runtime/webpack')
+    const { transform, jsx } = (await import('@atls/raijin/svgr')) as SvgrRuntime
+    const { webpack, tsLoaderPath } = (await import('@atls/raijin/webpack')) as WebpackRuntime
 
     return new Icons(
       { transform, jsx },

@@ -37,7 +37,7 @@ const createWorkspace = (
     },
   }) as unknown as Workspace
 
-const runtimeWorkspace = createWorkspace('@atls/code-runtime', 'runtime/code-runtime', '2.1.33')
+const runtimeWorkspace = createWorkspace('@atls/raijin', 'yarn/raijin', '2.1.33')
 const cliWorkspace = createWorkspace('@atls/yarn-cli', 'yarn/cli', '1.1.96', true)
 const rootWorkspace = createWorkspace('tools', '.', '1.0.0', true)
 const projectCwd = '/repo' as PortablePath
@@ -73,7 +73,7 @@ test('should create a release selection from Yarn deferred targets', () => {
   const strategies = resolveReleasePlanStrategies(project, [
     {
       message: 'feat(runtime): add loader',
-      files: ['runtime/code-runtime/src/loader.ts'],
+      files: ['yarn/raijin/src/loader.ts'],
     },
     {
       message: 'fix(cli): repair publish route',
@@ -81,7 +81,7 @@ test('should create a release selection from Yarn deferred targets', () => {
     },
   ])
   const targets = new Map([
-    ['@atls/code-runtime', createTarget(runtimeWorkspace)],
+    ['@atls/raijin', createTarget(runtimeWorkspace)],
     ['@atls/yarn-cli', createTarget(cliWorkspace)],
   ])
 
@@ -91,16 +91,16 @@ test('should create a release selection from Yarn deferred targets', () => {
     schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
     workspaces: [
       {
-        ident: '@atls/code-runtime',
-        relativeCwd: 'runtime/code-runtime',
-        decision: 'release',
-        private: false,
-      },
-      {
         ident: '@atls/yarn-cli',
         relativeCwd: 'yarn/cli',
         decision: 'release',
         private: true,
+      },
+      {
+        ident: '@atls/raijin',
+        relativeCwd: 'yarn/raijin',
+        decision: 'release',
+        private: false,
       },
     ],
   })
@@ -111,14 +111,14 @@ test('should include deferred-only workspaces in release plan', () => {
   const strategies = [
     {
       workspace: {
-        ident: '@atls/code-runtime',
-        relativeCwd: 'runtime/code-runtime',
+        ident: '@atls/raijin',
+        relativeCwd: 'yarn/raijin',
       },
       strategy: 'patch',
     } as const,
   ]
   const targets = new Map([
-    ['@atls/code-runtime', createTarget(runtimeWorkspace)],
+    ['@atls/raijin', createTarget(runtimeWorkspace)],
     ['@atls/yarn-cli', createTarget(cliWorkspace)],
   ])
 
@@ -126,16 +126,16 @@ test('should include deferred-only workspaces in release plan', () => {
 
   assert.deepEqual(plan.workspaces, [
     {
-      ident: '@atls/code-runtime',
-      relativeCwd: 'runtime/code-runtime',
-      decision: 'release',
-      private: false,
-    },
-    {
       ident: '@atls/yarn-cli',
       relativeCwd: 'yarn/cli',
       decision: 'release',
       private: true,
+    },
+    {
+      ident: '@atls/raijin',
+      relativeCwd: 'yarn/raijin',
+      decision: 'release',
+      private: false,
     },
   ])
 })
@@ -145,8 +145,8 @@ test('should require deferred target versions for changed workspaces', () => {
   const strategies = [
     {
       workspace: {
-        ident: '@atls/code-runtime',
-        relativeCwd: 'runtime/code-runtime',
+        ident: '@atls/raijin',
+        relativeCwd: 'yarn/raijin',
       },
       strategy: 'patch',
     } as const,
@@ -154,19 +154,19 @@ test('should require deferred target versions for changed workspaces', () => {
 
   assert.throws(() => createReleasePlan(project, strategies, new Map()), {
     message:
-      'Release plan requires deferred target version for "@atls/code-runtime". ' +
+      'Release plan requires deferred target version for "@atls/raijin". ' +
       'Run `yarn release version defer` before `yarn release plan create`.',
   })
 })
 
 test('should not bump already applied manifest versions without deferred targets', () => {
-  const appliedWorkspace = createWorkspace('@atls/code-runtime', 'runtime/code-runtime', '2.2.0')
+  const appliedWorkspace = createWorkspace('@atls/raijin', 'yarn/raijin', '2.2.0')
   const project = createProject([rootWorkspace, appliedWorkspace])
   const strategies = [
     {
       workspace: {
-        ident: '@atls/code-runtime',
-        relativeCwd: 'runtime/code-runtime',
+        ident: '@atls/raijin',
+        relativeCwd: 'yarn/raijin',
       },
       strategy: 'minor',
     } as const,
@@ -174,7 +174,7 @@ test('should not bump already applied manifest versions without deferred targets
 
   assert.throws(() => createReleasePlan(project, strategies, new Map()), {
     message:
-      'Release plan requires deferred target version for "@atls/code-runtime". ' +
+      'Release plan requires deferred target version for "@atls/raijin". ' +
       'Run `yarn release version defer` before `yarn release plan create`.',
   })
 })
@@ -225,7 +225,7 @@ test('should resolve release plan targets through Yarn version files', async (co
   assert.deepEqual(
     [...targets.entries()],
     [
-      ['@atls/code-runtime', createTarget(runtimeWorkspace)],
+      ['@atls/raijin', createTarget(runtimeWorkspace)],
       ['@atls/yarn-cli', createTarget(cliWorkspace)],
     ]
   )
@@ -236,11 +236,11 @@ test('should include declined deferred workspaces in release plan targets', asyn
 
   context.mock.method(versionUtils, 'resolveVersionFiles', async () => new Map())
 
-  const targets = await resolveReleasePlanTargets(project, new Set(['@atls/code-runtime']))
+  const targets = await resolveReleasePlanTargets(project, new Set(['@atls/raijin']))
 
   assert.deepEqual(
     [...targets.entries()],
-    [['@atls/code-runtime', createTarget(runtimeWorkspace, 'decline')]]
+    [['@atls/raijin', createTarget(runtimeWorkspace, 'decline')]]
   )
 })
 
@@ -253,9 +253,9 @@ test('should prefer Yarn resolved targets over declined deferred fallbacks', asy
     async () => new Map([[runtimeWorkspace, '2.2.0']])
   )
 
-  const targets = await resolveReleasePlanTargets(project, new Set(['@atls/code-runtime']))
+  const targets = await resolveReleasePlanTargets(project, new Set(['@atls/raijin']))
 
-  assert.deepEqual([...targets.entries()], [['@atls/code-runtime', createTarget(runtimeWorkspace)]])
+  assert.deepEqual([...targets.entries()], [['@atls/raijin', createTarget(runtimeWorkspace)]])
 })
 
 test('should reject legacy release plan schema content', () => {

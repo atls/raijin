@@ -50,7 +50,7 @@ const createFetch = (runtime: Buffer, packageManager = TEST_PACKAGE_MANAGER): ty
 }
 
 const EXPECTED_INITIALIZER_COMMANDS = [
-  ['add', '-D', '@atls/code-runtime@latest'],
+  ['add', '-D', '@atls/raijin@latest'],
   ['generate', 'project'],
   ['raijin', 'sync'],
 ]
@@ -99,6 +99,12 @@ test('should expose initializer command through public index', async () => {
     await collectInitializerCommands(runPublicRaijinInitializer),
     EXPECTED_INITIALIZER_COMMANDS
   )
+})
+
+test('should install only public Raijin package directly', async () => {
+  const commands = await collectInitializerCommands(runRaijinInitializer)
+
+  assert.deepEqual(commands[0], ['add', '-D', '@atls/raijin@latest'])
 })
 
 test('should create package manifest for empty project', async () => {

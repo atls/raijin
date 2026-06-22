@@ -53,10 +53,10 @@ test('should reject non-yarn runtime manifest', () => {
       parseRaijinRuntimeManifest({
         assetName: 'yarn.mjs',
         assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
-        packageName: '@atls/code-runtime',
+        packageName: '@atls/not-yarn-cli',
         schemaVersion: 1,
         sha256: 'a'.repeat(64),
-        tagName: '@atls/code-runtime@1.2.3',
+        tagName: '@atls/not-yarn-cli@1.2.3',
         version: '1.2.3',
       }),
     (error) =>

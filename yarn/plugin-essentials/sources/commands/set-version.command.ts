@@ -11,13 +11,15 @@ import { normalizePackageManager }           from './set-version.utils.js'
 import { portableToNativePath }              from './set-version.utils.js'
 import { preparePackageProjectBoundary }     from './set-version.utils.js'
 
+const RAIJIN_PUBLIC_PACKAGE = '@atls/raijin'
+
 export class SetVersionCommand extends BaseCommand {
   static paths = [['set', 'version', 'atls']]
 
   static usage = Command.Usage({
     description: 'lock the Yarn version used by the project',
     details: `
-    This command will get latest Atlantis bundle from [Atlantis Raijin repo](https://github.com/atls/raijin) and bump \`@atls/code-runtime\` dependency
+    This command will get the latest Atlantis bundle from [Atlantis Raijin repo](https://github.com/atls/raijin) and update the public Raijin package
     `,
   })
 
@@ -46,7 +48,7 @@ export class SetVersionCommand extends BaseCommand {
       await assertInstalledRaijinRuntime(updatedConfiguration, cwd, runtimeManifest)
       await cleanupObsoleteRaijinRuntimeFiles(cwd)
 
-      const bumpArgs = ['up', '@atls/code-runtime']
+      const bumpArgs = ['up', RAIJIN_PUBLIC_PACKAGE]
       const bumpExitCode = await this.cli.run(bumpArgs, { cwd: cwd as typeof this.context.cwd })
 
       const finalConfiguration = await Configuration.find(
