@@ -1,0 +1,10 @@
+[
+  "@atls/raijin/eslint",
+  "@atls/raijin/runtime-exec-argv",
+  "@atls/raijin/svgr",
+  "@atls/raijin/ts-ext-register",
+  "@atls/raijin/ts-node-register",
+  "@atls/raijin/typescript",
+  "@atls/raijin/typescript-loader",
+  "@atls/raijin/webpack"
+]
