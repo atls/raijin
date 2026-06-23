@@ -85,6 +85,14 @@ const collectInitializerCommands = async (
 
 const noopYarnCommand = async (): Promise<void> => undefined
 
+const createTerminalStream = (isTTY: boolean): PassThrough & { isTTY?: boolean } => {
+  const stream = new PassThrough() as PassThrough & { isTTY?: boolean }
+
+  stream.isTTY = isTTY
+
+  return stream
+}
+
 test('should run initializer command sequence', async () => {
   assert.deepEqual(
     await collectInitializerCommands(runRaijinInitializer),
@@ -159,11 +167,8 @@ test('should use interactive scaffold type selector when type is omitted', async
 })
 
 test('should select scaffold type from interactive input', async () => {
-  const input = new PassThrough() as PassThrough & { isTTY?: boolean }
-  const output = new PassThrough() as PassThrough & { isTTY?: boolean }
-
-  input.isTTY = true
-  output.isTTY = true
+  const input = createTerminalStream(true)
+  const output = createTerminalStream(true)
 
   const scaffoldType = selectRaijinScaffoldType({ input, output })
 
@@ -173,8 +178,11 @@ test('should select scaffold type from interactive input', async () => {
 })
 
 test('should reject missing scaffold type without interactive terminal', async () => {
+  const input = createTerminalStream(false)
+  const output = createTerminalStream(false)
+
   await assert.rejects(
-    selectRaijinScaffoldType(),
+    selectRaijinScaffoldType({ input, output }),
     (error) => error instanceof RaijinInitializerScaffoldTypeRequiredException
   )
 })
