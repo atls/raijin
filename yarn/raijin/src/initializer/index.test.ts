@@ -177,6 +177,20 @@ test('should select scaffold type from interactive input', async () => {
   assert.equal(await scaffoldType, 'library')
 })
 
+test('should reject scaffold type selection when interactive input closes', async () => {
+  const input = createTerminalStream(true)
+  const output = createTerminalStream(true)
+
+  const scaffoldType = selectRaijinScaffoldType({ input, output })
+
+  input.end()
+
+  await assert.rejects(
+    scaffoldType,
+    (error) => error instanceof RaijinInitializerScaffoldTypeRequiredException
+  )
+})
+
 test('should reject missing scaffold type without interactive terminal', async () => {
   const input = createTerminalStream(false)
   const output = createTerminalStream(false)

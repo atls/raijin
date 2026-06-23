@@ -49,6 +49,41 @@ const SCAFFOLD_TYPE_PROMPT = [
 const isRaijinScaffoldType = (value: string): value is RaijinScaffoldType =>
   (RAIJIN_SCAFFOLD_TYPES as ReadonlyArray<string>).includes(value)
 
+const readScaffoldTypeAnswer = async (input: TtyReadable, output: TtyWritable): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const readline = createInterface({ input, output })
+    let settled = false
+
+    const settle = (callback: () => void): void => {
+      if (settled) {
+        return
+      }
+
+      settled = true
+      callback()
+      readline.close()
+    }
+
+    readline.once('close', () => {
+      if (!settled) {
+        settled = true
+        reject(new RaijinInitializerScaffoldTypeRequiredException())
+      }
+    })
+
+    readline.once('SIGINT', () => {
+      settle(() => {
+        reject(new RaijinInitializerScaffoldTypeRequiredException())
+      })
+    })
+
+    readline.question(SCAFFOLD_TYPE_PROMPT, (answer) => {
+      settle(() => {
+        resolve(answer)
+      })
+    })
+  })
+
 export const parseRaijinScaffoldType = (value: string): RaijinScaffoldType => {
   if (isRaijinScaffoldType(value)) {
     return value
@@ -118,20 +153,12 @@ export const selectRaijinScaffoldType = async ({
     throw new RaijinInitializerScaffoldTypeRequiredException()
   }
 
-  const readline = createInterface({ input, output })
+  const answer = await readScaffoldTypeAnswer(input, output)
+  const scaffoldType = SCAFFOLD_TYPE_OPTIONS.get(answer.trim())
 
-  try {
-    const answer = await new Promise<string>((resolve) => {
-      readline.question(SCAFFOLD_TYPE_PROMPT, resolve)
-    })
-    const scaffoldType = SCAFFOLD_TYPE_OPTIONS.get(answer.trim())
-
-    if (scaffoldType) {
-      return scaffoldType
-    }
-
-    return parseRaijinScaffoldType(answer.trim())
-  } finally {
-    readline.close()
+  if (scaffoldType) {
+    return scaffoldType
   }
+
+  return parseRaijinScaffoldType(answer.trim())
 }
