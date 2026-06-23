@@ -21,8 +21,10 @@
 ## 2. Новый проект
 
 ```bash
-yarn init @atls/raijin
+yarn init @atls/raijin --type project
 ```
+
+Для библиотечного каркаса используйте `--type library`
 
 Ожидаемый результат:
 
@@ -37,8 +39,10 @@ yarn init @atls/raijin
 ## 3. Существующий проект
 
 ```bash
-yarn dlx @atls/raijin init
+yarn dlx @atls/raijin init --type project
 ```
+
+Для библиотечного каркаса используйте `--type library`
 
 Ожидаемый результат:
 
@@ -87,7 +91,7 @@ yarn schematic:test
 
 ## 7. Как использовать в чужом проекте
 
-- Для первого подключения используйте `yarn init @atls/raijin` или `yarn dlx @atls/raijin init`
+- Для первого подключения используйте `yarn init @atls/raijin --type project` или `yarn dlx @atls/raijin init --type project`; для библиотеки замените тип на `library`
 - После первого подключения обновляйте бандл командой `yarn set version atls`
 - Коммитьте изменения `.yarn/releases` и `.yarnrc.yml` вместе с обновлением бандла
 - Для CI используйте те же команды, что и локально, чтобы избежать расхождения поведения

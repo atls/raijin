@@ -343,8 +343,12 @@ const renderRootReadme = (language) => {
     isRu ? '### Новый проект' : '### New project',
     '',
     '```bash',
-    'yarn init @atls/raijin',
+    'yarn init @atls/raijin --type project',
     '```',
+    '',
+    isRu
+      ? 'Для библиотечного каркаса используйте `--type library`'
+      : 'Use `--type library` for the library scaffold',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
@@ -363,8 +367,12 @@ const renderRootReadme = (language) => {
     isRu ? '### Существующий проект' : '### Existing project',
     '',
     '```bash',
-    'yarn dlx @atls/raijin init',
+    'yarn dlx @atls/raijin init --type project',
     '```',
+    '',
+    isRu
+      ? 'Для библиотечного каркаса используйте `--type library`'
+      : 'Use `--type library` for the library scaffold',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
@@ -591,8 +599,12 @@ const renderQuickstart = (language) => {
     isRu ? '## 2. Новый проект' : '## 2. New project',
     '',
     '```bash',
-    'yarn init @atls/raijin',
+    'yarn init @atls/raijin --type project',
     '```',
+    '',
+    isRu
+      ? 'Для библиотечного каркаса используйте `--type library`'
+      : 'Use `--type library` for the library scaffold',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
@@ -615,8 +627,12 @@ const renderQuickstart = (language) => {
     isRu ? '## 3. Существующий проект' : '## 3. Existing project',
     '',
     '```bash',
-    'yarn dlx @atls/raijin init',
+    'yarn dlx @atls/raijin init --type project',
     '```',
+    '',
+    isRu
+      ? 'Для библиотечного каркаса используйте `--type library`'
+      : 'Use `--type library` for the library scaffold',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
@@ -670,8 +686,8 @@ const renderQuickstart = (language) => {
     isRu ? '## 7. Как использовать в чужом проекте' : '## 7. How to use in an external project',
     '',
     isRu
-      ? '- Для первого подключения используйте `yarn init @atls/raijin` или `yarn dlx @atls/raijin init`'
-      : '- Use `yarn init @atls/raijin` or `yarn dlx @atls/raijin init` for the first setup',
+      ? '- Для первого подключения используйте `yarn init @atls/raijin --type project` или `yarn dlx @atls/raijin init --type project`; для библиотеки замените тип на `library`'
+      : '- Use `yarn init @atls/raijin --type project` or `yarn dlx @atls/raijin init --type project` for the first setup; use `library` for the library scaffold',
     isRu
       ? '- После первого подключения обновляйте бандл командой `yarn set version atls`'
       : '- After the first setup, keep the bundle current with `yarn set version atls`',

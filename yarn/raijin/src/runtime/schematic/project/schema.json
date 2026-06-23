@@ -12,6 +12,12 @@
         "index": 0
       },
       "x-prompt": "What name would you like to use for the project?"
+    },
+    "type": {
+      "description": "The scaffold type.",
+      "type": "string",
+      "enum": ["project", "library"],
+      "default": "project"
     }
   }
 }

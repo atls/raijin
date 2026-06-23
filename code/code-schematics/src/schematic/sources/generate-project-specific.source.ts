@@ -9,13 +9,19 @@ import { url }          from '@angular-devkit/schematics'
 import { template }     from '@angular-devkit/schematics'
 import { move }         from '@angular-devkit/schematics'
 
+const templateTypes: Record<string, string> = {
+  library: 'libraries',
+  project: 'project',
+}
+
 export const generateProjectSpecificSource = (options: Record<string, string>): Source => {
   const { name: projectName } = JSON.parse(
     // eslint-disable-next-line n/no-sync
     readFileSync(join(options.cwd, 'package.json'), 'utf-8')
   )
+  const templateType = templateTypes[options.type] ?? options.type
 
-  return apply(url(join('../templates', options.type)), [
+  return apply(url(join('../templates', templateType)), [
     template({
       ...strings,
       ...options,
