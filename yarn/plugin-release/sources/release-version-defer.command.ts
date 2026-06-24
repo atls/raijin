@@ -10,10 +10,10 @@ import { getReleaseVersionChanges }              from './release-plan.utils.js'
 import { resolveReleasePlanStrategies }          from './release-plan.utils.js'
 import { resolveReleaseVersionDeferredStrategy } from './release-version-policy.utils.js'
 
-export { isReleaseVersionWorkspace } from './release-plan.utils.js'
+export { isReleaseVersionWorkspace }     from './release-plan.utils.js'
 export { parseDeferredReleaseDecisions } from './release-plan.utils.js'
-export { selectLocalCommitDiffParent } from './release-plan.utils.js'
-export { toGitHubChange } from './release-plan.utils.js'
+export { selectLocalCommitDiffParent }   from './release-plan.utils.js'
+export { toGitHubChange }                from './release-plan.utils.js'
 
 export class ReleaseVersionDeferCommand extends BaseCommand {
   static override paths = [['release', 'version', 'defer']]

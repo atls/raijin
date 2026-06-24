@@ -1,5 +1,5 @@
 export { plugin as default } from './test.plugin.js'
 
-export * from './test-integration.command.js'
-export * from './test-unit.command.js'
-export * from './abstract-test.command.jsx'
+export *                     from './test-integration.command.js'
+export *                     from './test-unit.command.js'
+export *                     from './abstract-test.command.jsx'
