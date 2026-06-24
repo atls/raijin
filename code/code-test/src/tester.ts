@@ -3,8 +3,10 @@ import type { TestEvent }            from 'node:test/reporters'
 
 import EventEmitter                  from 'node:events'
 import { readFileSync }              from 'node:fs'
+import { stat }                      from 'node:fs/promises'
 /* eslint-disable @typescript-eslint/member-ordering */
 import { relative }                  from 'node:path'
+import { resolve as resolvePath }    from 'node:path'
 import { join }                      from 'node:path'
 import { run }                       from 'node:test'
 import { tap }                       from 'node:test/reporters'
@@ -262,25 +264,53 @@ export class Tester extends EventEmitter {
       })
     }
 
-    return globby(
-      patterns.map((pattern) => {
-        if (this.isFilename(pattern)) {
-          return `**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`
-        }
-
-        if (this.isRootPath(pattern)) {
-          return pattern
-        }
-
-        return `**/${pattern}`
-      }),
-      {
-        cwd,
-        dot: true,
-        absolute: true,
-        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
-      }
+    const testFiles = await Promise.all(
+      patterns.map(async (pattern) => this.collectPatternTestFiles(cwd, folderPattern, pattern))
     )
+
+    return Array.from(new Set(testFiles.flat()))
+  }
+
+  private async collectPatternTestFiles(
+    cwd: string,
+    folderPattern: string,
+    pattern: string
+  ): Promise<Array<string>> {
+    const globbyOptions = {
+      cwd,
+      dot: true,
+      absolute: true,
+      ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+    }
+
+    if (this.isGlobPattern(pattern)) {
+      return globby([pattern], globbyOptions)
+    }
+
+    const targetPath = resolvePath(cwd, pattern)
+    let targetStat
+
+    try {
+      targetStat = await stat(targetPath)
+    } catch (error) {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+        if (this.isFilename(pattern)) {
+          return globby([`**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`], globbyOptions)
+        }
+
+        throw new Error(`Test target does not exist: ${pattern}`)
+      }
+
+      throw error
+    }
+
+    if (targetStat.isDirectory()) {
+      const targetPattern = relative(cwd, targetPath) || '.'
+
+      return globby([`${targetPattern}/**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], globbyOptions)
+    }
+
+    return [targetPath]
   }
 
   private isFilename(pattern: string): boolean {
@@ -291,8 +321,8 @@ export class Tester extends EventEmitter {
     return !hasPathSeparator && !hasValidExtension
   }
 
-  private isRootPath(pattern: string): boolean {
-    return pattern.startsWith('/') || pattern.startsWith('\\')
+  private isGlobPattern(pattern: string): boolean {
+    return /[*?[\]{}]/.test(pattern)
   }
 
   private getProjectIgnorePatterns(): Array<string> {
