@@ -1,11 +1,22 @@
 import { BaseCommand } from '@yarnpkg/cli'
+import { Option }      from 'clipanion'
 
 export class CheckCommand extends BaseCommand {
   static paths = [['check']]
 
-  async execute(): Promise<void> {
-    await this.cli.run(['format'])
-    await this.cli.run(['typecheck'])
-    await this.cli.run(['lint'])
+  targets: Array<string> = Option.Rest({ required: 0 })
+
+  async execute(): Promise<number> {
+    let exitCode = 0
+
+    for await (const command of ['format', 'typecheck', 'lint']) {
+      const commandExitCode = await this.cli.run([command, ...this.targets])
+
+      if (commandExitCode) {
+        exitCode = commandExitCode
+      }
+    }
+
+    return exitCode
   }
 }

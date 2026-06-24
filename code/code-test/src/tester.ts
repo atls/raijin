@@ -3,9 +3,12 @@ import type { TestEvent }            from 'node:test/reporters'
 
 import EventEmitter                  from 'node:events'
 import { readFileSync }              from 'node:fs'
+import { stat }                      from 'node:fs/promises'
 /* eslint-disable @typescript-eslint/member-ordering */
 import { relative }                  from 'node:path'
+import { resolve as resolvePath }    from 'node:path'
 import { join }                      from 'node:path'
+import { basename }                  from 'node:path'
 import { run }                       from 'node:test'
 import { tap }                       from 'node:test/reporters'
 
@@ -29,6 +32,8 @@ type TestOptions = {
   watch?: boolean
   testReporter?: string
 }
+
+type TestType = 'integration' | 'unit' | undefined
 
 const TEST_STREAM_KEEP_ALIVE_INTERVAL = 1000
 
@@ -245,7 +250,7 @@ export class Tester extends EventEmitter {
 
   private async collectTestFiles(
     cwd: string,
-    type: 'integration' | 'unit' | undefined,
+    type: TestType,
     patterns: Array<string> | undefined
   ): Promise<Array<string>> {
     let folderPattern = '*'
@@ -262,25 +267,56 @@ export class Tester extends EventEmitter {
       })
     }
 
-    return globby(
-      patterns.map((pattern) => {
-        if (this.isFilename(pattern)) {
-          return `**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`
-        }
-
-        if (this.isRootPath(pattern)) {
-          return pattern
-        }
-
-        return `**/${pattern}`
-      }),
-      {
-        cwd,
-        dot: true,
-        absolute: true,
-        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
-      }
+    const testFiles = await Promise.all(
+      patterns.map(async (pattern) =>
+        this.collectPatternTestFiles(cwd, folderPattern, type, pattern))
     )
+
+    return Array.from(new Set(testFiles.flat()))
+  }
+
+  private async collectPatternTestFiles(
+    cwd: string,
+    folderPattern: string,
+    type: TestType,
+    pattern: string
+  ): Promise<Array<string>> {
+    const globbyOptions = {
+      cwd,
+      dot: true,
+      absolute: true,
+      ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+    }
+
+    const targetPath = resolvePath(cwd, pattern)
+    let targetStat
+
+    try {
+      targetStat = await stat(targetPath)
+    } catch (error) {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+        if (this.isGlobPattern(pattern)) {
+          return globby([pattern], globbyOptions)
+        }
+
+        if (this.isFilename(pattern)) {
+          return globby([`**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`], globbyOptions)
+        }
+
+        throw new Error(`Test target does not exist: ${pattern}`)
+      }
+
+      throw error
+    }
+
+    if (targetStat.isDirectory()) {
+      return globby(this.createDirectoryTargetPatterns(folderPattern, type, targetPath), {
+        ...globbyOptions,
+        cwd: targetPath,
+      })
+    }
+
+    return [targetPath]
   }
 
   private isFilename(pattern: string): boolean {
@@ -291,8 +327,32 @@ export class Tester extends EventEmitter {
     return !hasPathSeparator && !hasValidExtension
   }
 
-  private isRootPath(pattern: string): boolean {
-    return pattern.startsWith('/') || pattern.startsWith('\\')
+  private isGlobPattern(pattern: string): boolean {
+    return /[*?[\]{}]/.test(pattern)
+  }
+
+  private createDirectoryTargetPatterns(
+    folderPattern: string,
+    type: TestType,
+    targetPath: string
+  ): Array<string> {
+    const directTestPattern = '*.test.{ts,tsx,js,jsx}'
+    const nestedTestPattern = `**/${folderPattern}/${directTestPattern}`
+    const targetFolder = basename(targetPath)
+
+    if (type === undefined) {
+      return [directTestPattern, `**/${directTestPattern}`]
+    }
+
+    if (type === 'integration') {
+      return targetFolder === 'integration'
+        ? [directTestPattern, nestedTestPattern]
+        : [nestedTestPattern]
+    }
+
+    return targetFolder === 'integration'
+      ? [nestedTestPattern]
+      : [directTestPattern, nestedTestPattern]
   }
 
   private getProjectIgnorePatterns(): Array<string> {

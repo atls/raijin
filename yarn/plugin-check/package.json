@@ -16,6 +16,9 @@
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
+  "dependencies": {
+    "clipanion": "4.0.0-rc.2"
+  },
   "devDependencies": {
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",

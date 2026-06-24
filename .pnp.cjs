@@ -2060,7 +2060,8 @@ const RAW_RUNTIME_STATE =
           ["@types/yarnpkg__core", null],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"]\
+          ["@yarnpkg/core", "npm:4.7.0"],\
+          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
         ],\
         "packagePeers": [\
           "@types/yarnpkg__cli",\
@@ -2076,7 +2077,8 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-check", "workspace:yarn/plugin-check"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"]\
+          ["@yarnpkg/core", "npm:4.7.0"],\
+          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
         ],\
         "linkType": "SOFT"\
       }]\
