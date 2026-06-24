@@ -17,6 +17,7 @@ const sourceColumnOffset = 6
 const namedSpecifiersSourceColumnOffset = 8
 const exportAllSourceColumn = 'export * from '.length
 const exportTypeAllSourceColumn = 'export type * from '.length
+const unsupportedImportAssertionPattern = /^\s*assert\s*\{/u
 
 type ModuleSourceDeclaration = ExportAllDeclaration | ExportNamedDeclaration | ImportDeclaration
 
@@ -188,8 +189,7 @@ const getImportAttributesText = (
   options: Options
 ): string | undefined => {
   const attributedNode = node as AttributedModuleSourceDeclaration
-  const importAttributeKeyword = attributedNode.attributes ? 'with' : 'assert'
-  const attributes = attributedNode.attributes ?? attributedNode.assertions ?? []
+  const attributes = attributedNode.attributes ?? []
 
   if (attributes.length === 0) {
     return ''
@@ -201,10 +201,7 @@ const getImportAttributesText = (
     return undefined
   }
 
-  return ` ${importAttributeKeyword} ${getWrappedSpecifiersText(
-    attributeTexts as Array<string>,
-    options
-  )}`
+  return ` with ${getWrappedSpecifiersText(attributeTexts as Array<string>, options)}`
 }
 
 const getStatementTerminatorText = (options: Options): string => (options.semi === false ? '' : ';')
@@ -292,6 +289,60 @@ const getOriginalNodeText = (node: Node, originalText: string): string | undefin
     getLocationOffset(originalText, node.loc.start),
     getLocationOffset(originalText, node.loc.end)
   )
+}
+
+const getNodeEndOffset = (node: Node, originalText: string): number | undefined => {
+  const { end } = node as RangedNode
+
+  if (typeof end === 'number') {
+    return end
+  }
+
+  if (!node.loc) {
+    return undefined
+  }
+
+  return getLocationOffset(originalText, node.loc.end)
+}
+
+const getOriginalSourceSuffixText = (
+  node: ModuleSourceDeclaration,
+  originalText: string
+): string | undefined => {
+  const sourceNode = node.source as Node | null | undefined
+  const sourceEnd = sourceNode ? getNodeEndOffset(sourceNode, originalText) : undefined
+  const nodeEnd = getNodeEndOffset(node, originalText)
+
+  if (sourceEnd === undefined || nodeEnd === undefined) {
+    return undefined
+  }
+
+  return originalText.slice(sourceEnd, nodeEnd)
+}
+
+const hasUnsupportedImportAssertion = (
+  node: ModuleSourceDeclaration,
+  options: Options
+): boolean => {
+  const attributedNode = node as AttributedModuleSourceDeclaration
+
+  if (
+    attributedNode.assertions &&
+    attributedNode.assertions.length > 0 &&
+    !attributedNode.attributes
+  ) {
+    return true
+  }
+
+  const { originalText } = options as OriginalTextOptions
+
+  if (!originalText) {
+    return false
+  }
+
+  const sourceSuffixText = getOriginalSourceSuffixText(node, originalText)
+
+  return sourceSuffixText ? unsupportedImportAssertionPattern.test(sourceSuffixText) : false
 }
 
 const hasCommentToken = (node: Node, originalText: string | undefined): boolean => {
@@ -536,6 +587,10 @@ const getProjectedModuleLineLength = (
   options: Options,
   sourceColumn = getProjectedModuleSourceColumn(node, options)
 ): number | undefined => {
+  if (hasUnsupportedImportAssertion(node, options)) {
+    return undefined
+  }
+
   const sourceText = getSourceText(node, options)
   const importAttributesText = getImportAttributesText(node, options)
 

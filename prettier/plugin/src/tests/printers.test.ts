@@ -204,8 +204,9 @@ test('should count import attributes before aligning source declarations', async
   )
 })
 
-test('should count import assertions before aligning source declarations', async () => {
+test('should leave unsupported import assertions out of source alignment', async () => {
   const source = [
+    "export * from './short.js'",
     "export { VeryLongName } from './x.js'",
     "export * from './foo.json' assert { type: 'json' }",
   ].join('\n')
@@ -213,11 +214,11 @@ test('should count import assertions before aligning source declarations', async
   await assertFormatted(
     source,
     [
+      "export *                from './short.js'",
       "export { VeryLongName } from './x.js'",
       "export * from './foo.json' assert { type: 'json' }",
       '',
-    ].join('\n'),
-    { printWidth: 50 }
+    ].join('\n')
   )
 })
 
