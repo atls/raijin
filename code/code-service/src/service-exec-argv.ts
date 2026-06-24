@@ -1,5 +1,5 @@
-import type { createRuntimeExecArgv as createRuntimeExecArgvFn }     from '@atls/raijin/runtime-exec-argv'
-import type { findPnpEsmLoader as findPnpEsmLoaderFn }               from '@atls/raijin/runtime-exec-argv'
+import type { createRuntimeExecArgv as createRuntimeExecArgvFn } from '@atls/raijin/runtime-exec-argv'
+import type { findPnpEsmLoader as findPnpEsmLoaderFn } from '@atls/raijin/runtime-exec-argv'
 import type { resolveTypeScriptLoader as resolveTypeScriptLoaderFn } from '@atls/raijin/runtime-exec-argv'
 
 const TYPESCRIPT_LOADER_SPECIFIER = '@atls/raijin/typescript-loader'

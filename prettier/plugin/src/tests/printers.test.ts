@@ -10,7 +10,7 @@ import { format }            from 'prettier/standalone'
 
 import { getPrettierPlugin } from '../index.js'
 
-const formatTypeScript = async (source: string): Promise<string> => {
+const formatTypeScript = async (source: string, options: Partial<Config> = {}): Promise<string> => {
   const plugin = await getPrettierPlugin()
 
   return format(source, {
@@ -18,6 +18,7 @@ const formatTypeScript = async (source: string): Promise<string> => {
     semi: false,
     singleQuote: true,
     plugins: [estree, babel, typescript, plugin] as Config['plugins'],
+    ...options,
   })
 }
 
@@ -65,6 +66,71 @@ test('should align namespace export all declarations by their exported binding',
       "export * as ns         from './namespace.js'",
       "export type * as Types from './types.js'",
       "export type { Value }  from './value.js'",
+      '',
+    ].join('\n')
+  )
+})
+
+test('should align string literal export names by their printed quotes', async () => {
+  const source = [
+    "export { 'foo-bar' as fooBar } from './foo.js'",
+    "export { Value } from './value.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export { 'foo-bar' as fooBar } from './foo.js'",
+      "export { Value }               from './value.js'",
+      '',
+    ].join('\n')
+  )
+})
+
+test('should leave commented export declarations outside source alignment', async () => {
+  const source = [
+    "export { Foo /* this comment makes the declaration unsafe to project */ } from './foo.js'",
+    "export * from './short.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      'export {',
+      '  Foo /* this comment makes the declaration unsafe to project */,',
+      "} from './foo.js'",
+      "export * from './short.js'",
+      '',
+    ].join('\n')
+  )
+})
+
+test('should respect bracket spacing when aligning named exports', async () => {
+  const source = [
+    "export * from './x.js'",
+    "export type { LongerNamedType } from './types.js'",
+  ].join('\n')
+  const expected = [
+    "export *                      from './x.js'",
+    "export type {LongerNamedType} from './types.js'",
+    '',
+  ].join('\n')
+
+  assert.equal(await formatTypeScript(source, { bracketSpacing: false }), expected)
+  assert.equal(await formatTypeScript(expected, { bracketSpacing: false }), expected)
+})
+
+test('should keep source exports within print width after alignment padding', async () => {
+  const source = [
+    "export { VeryLongNamedType } from './types.js'",
+    "export * from './very-long-source-module-name-that-would-overflow-after-padding.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export { VeryLongNamedType } from './types.js'",
+      "export * from './very-long-source-module-name-that-would-overflow-after-padding.js'",
       '',
     ].join('\n')
   )

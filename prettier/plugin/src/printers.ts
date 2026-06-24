@@ -13,7 +13,6 @@ const estreePrinter = (estree as unknown as { printers: Record<string, Printer> 
 const fromDocPart = ' from'
 const fromClause = ' from '
 const defaultPrintWidth = 80
-const sourceQuoteWidth = 2
 const sourceColumnOffset = 6
 const namedSpecifiersSourceColumnOffset = 8
 const exportAllSourceColumn = 'export * from '.length
@@ -21,7 +20,38 @@ const exportTypeAllSourceColumn = 'export type * from '.length
 
 type ModuleSourceDeclaration = ExportAllDeclaration | ExportNamedDeclaration | ImportDeclaration
 
-type AlignableModuleSourceDeclaration = ModuleSourceDeclaration & { alignOffset?: number }
+type AlignableModuleSourceDeclaration = ModuleSourceDeclaration & {
+  alignBlocked?: boolean
+  alignOffset?: number
+}
+
+type CommentedNode = {
+  innerComments?: Array<unknown> | null
+  leadingComments?: Array<unknown> | null
+  trailingComments?: Array<unknown> | null
+}
+
+type LocatedComment = {
+  loc?: {
+    end: {
+      column: number
+      line: number
+    }
+    start: {
+      column: number
+      line: number
+    }
+  }
+}
+
+type RangedNode = {
+  end?: number | null
+  start?: number | null
+}
+
+type OriginalTextOptions = Options & {
+  originalText?: string
+}
 
 const isImportSourceDeclaration = (node: Node): node is ImportDeclaration =>
   node.type === 'ImportDeclaration' && node.specifiers.length > 0
@@ -75,8 +105,17 @@ const getFallbackModuleSourceColumn = (node: ModuleSourceDeclaration): number =>
 
 const getPrintWidth = (options: Options): number => options.printWidth ?? defaultPrintWidth
 
-const getNodeName = (
-  node: { name?: string; value?: unknown } | null | undefined
+const getLiteralQuote = (options: Options): '"' | "'" => (options.singleQuote === false ? '"' : "'")
+
+const quoteLiteralValue = (value: string, options: Options): string => {
+  const quote = getLiteralQuote(options)
+
+  return `${quote}${value.replaceAll('\\', '\\\\').replaceAll(quote, `\\${quote}`)}${quote}`
+}
+
+const getPrintedNodeName = (
+  node: { name?: string; value?: unknown } | null | undefined,
+  options: Options
 ): string | undefined => {
   if (!node) {
     return undefined
@@ -87,39 +126,149 @@ const getNodeName = (
   }
 
   if (typeof node.value === 'string') {
-    return node.value
+    return quoteLiteralValue(node.value, options)
   }
 
   return undefined
 }
 
-const getSourceValue = (node: ModuleSourceDeclaration): string | undefined =>
-  typeof node.source?.value === 'string' ? node.source.value : undefined
+const getSourceText = (node: ModuleSourceDeclaration, options: Options): string | undefined =>
+  typeof node.source?.value === 'string' ? quoteLiteralValue(node.source.value, options) : undefined
 
-const getExportAllExportedName = (node: ExportAllDeclaration): string | undefined => {
-  const { exported } = node as ExportAllDeclaration & {
-    exported?: { name?: string; value?: unknown } | null
+const hasComments = (node: CommentedNode | null | undefined): boolean =>
+  Boolean(
+    node &&
+      ((node.leadingComments && node.leadingComments.length > 0) ||
+        (node.innerComments && node.innerComments.length > 0) ||
+        (node.trailingComments && node.trailingComments.length > 0))
+  )
+
+const hasModuleSourceComments = (node: ModuleSourceDeclaration): boolean =>
+  Boolean((node as AlignableModuleSourceDeclaration).alignBlocked) ||
+  hasComments(node as CommentedNode) ||
+  hasComments(node.source as CommentedNode | undefined) ||
+  ('specifiers' in node &&
+    node.specifiers.some((specifier) => {
+      const commentedSpecifier = specifier as CommentedNode & {
+        exported?: CommentedNode | null
+        imported?: CommentedNode | null
+        local?: CommentedNode | null
+      }
+
+      return (
+        hasComments(commentedSpecifier) ||
+        hasComments(commentedSpecifier.local) ||
+        hasComments(commentedSpecifier.imported) ||
+        hasComments(commentedSpecifier.exported)
+      )
+    }))
+
+const hasOriginalSingleLineOverflow = (
+  node: ModuleSourceDeclaration,
+  printWidth: number
+): boolean =>
+  Boolean(node.loc && node.loc.start.line === node.loc.end.line && node.loc.end.column > printWidth)
+
+const isCommentInsideNode = (node: Node, comment: LocatedComment): boolean => {
+  if (!node.loc || !comment.loc) {
+    return false
   }
 
-  return getNodeName(exported)
+  const startsAfterNode =
+    comment.loc.start.line > node.loc.start.line ||
+    (comment.loc.start.line === node.loc.start.line &&
+      comment.loc.start.column >= node.loc.start.column)
+  const endsBeforeNode =
+    comment.loc.end.line < node.loc.end.line ||
+    (comment.loc.end.line === node.loc.end.line && comment.loc.end.column <= node.loc.end.column)
+
+  return startsAfterNode && endsBeforeNode
+}
+
+const getLocationOffset = (
+  originalText: string,
+  location: {
+    column: number
+    line: number
+  }
+): number => {
+  let offset = 0
+  let line = 1
+
+  while (line < location.line) {
+    const nextLineOffset = originalText.indexOf('\n', offset)
+
+    if (nextLineOffset < 0) {
+      return originalText.length
+    }
+
+    offset = nextLineOffset + 1
+    line += 1
+  }
+
+  return offset + location.column
+}
+
+const getOriginalNodeText = (node: Node, originalText: string): string | undefined => {
+  const { end, start } = node as RangedNode
+
+  if (typeof start === 'number' && typeof end === 'number') {
+    return originalText.slice(start, end)
+  }
+
+  if (!node.loc) {
+    return undefined
+  }
+
+  return originalText.slice(
+    getLocationOffset(originalText, node.loc.start),
+    getLocationOffset(originalText, node.loc.end)
+  )
+}
+
+const hasCommentToken = (node: Node, originalText: string | undefined): boolean => {
+  if (!originalText) {
+    return false
+  }
+
+  return getOriginalNodeText(node, originalText)?.includes('/*') ?? false
+}
+
+const markAlignBlockedComments = (
+  body: Array<Node>,
+  comments: Array<LocatedComment>,
+  originalText: string | undefined
+): void => {
+  body.forEach((node) => {
+    if (
+      (isImportSourceDeclaration(node) || isExportSourceDeclaration(node)) &&
+      (hasCommentToken(node, originalText) ||
+        comments.some((comment) => isCommentInsideNode(node, comment)))
+    ) {
+      const alignableNode = node as AlignableModuleSourceDeclaration
+
+      alignableNode.alignBlocked = true
+    }
+  })
 }
 
 const getImportSpecifierText = (
   node: ImportDeclaration,
-  specifier: ImportDeclaration['specifiers'][number]
+  specifier: ImportDeclaration['specifiers'][number],
+  options: Options
 ): string | undefined => {
   switch (specifier.type) {
     case 'ImportDefaultSpecifier': {
-      return getNodeName(specifier.local)
+      return getPrintedNodeName(specifier.local, options)
     }
     case 'ImportNamespaceSpecifier': {
-      const localName = getNodeName(specifier.local)
+      const localName = getPrintedNodeName(specifier.local, options)
 
       return localName ? `* as ${localName}` : undefined
     }
     case 'ImportSpecifier': {
-      const importedName = getNodeName(specifier.imported)
-      const localName = getNodeName(specifier.local)
+      const importedName = getPrintedNodeName(specifier.imported, options)
+      const localName = getPrintedNodeName(specifier.local, options)
 
       if (!importedName || !localName) {
         return undefined
@@ -138,7 +287,13 @@ const getImportSpecifierText = (
   }
 }
 
-const getImportSpecifiersText = (node: ImportDeclaration): string | undefined => {
+const getWrappedSpecifiersText = (specifiers: Array<string>, options: Options): string => {
+  const spacing = options.bracketSpacing === false ? '' : ' '
+
+  return `{${spacing}${specifiers.join(', ')}${spacing}}`
+}
+
+const getImportSpecifiersText = (node: ImportDeclaration, options: Options): string | undefined => {
   const defaultSpecifier = node.specifiers.find(
     (specifier) => specifier.type === 'ImportDefaultSpecifier'
   )
@@ -149,16 +304,18 @@ const getImportSpecifiersText = (node: ImportDeclaration): string | undefined =>
     (specifier) => specifier.type === 'ImportSpecifier'
   )
   const namedSpecifierTexts = namedSpecifiers.map((specifier) =>
-    getImportSpecifierText(node, specifier))
+    getImportSpecifierText(node, specifier, options))
 
   if (namedSpecifierTexts.some((specifier) => !specifier)) {
     return undefined
   }
 
   const specifierTexts = [
-    defaultSpecifier ? getImportSpecifierText(node, defaultSpecifier) : undefined,
-    namespaceSpecifier ? getImportSpecifierText(node, namespaceSpecifier) : undefined,
-    namedSpecifierTexts.length > 0 ? `{ ${namedSpecifierTexts.join(', ')} }` : undefined,
+    defaultSpecifier ? getImportSpecifierText(node, defaultSpecifier, options) : undefined,
+    namespaceSpecifier ? getImportSpecifierText(node, namespaceSpecifier, options) : undefined,
+    namedSpecifierTexts.length > 0
+      ? getWrappedSpecifiersText(namedSpecifierTexts as Array<string>, options)
+      : undefined,
   ].filter((specifier): specifier is string => Boolean(specifier))
 
   return specifierTexts.length > 0 ? specifierTexts.join(', ') : undefined
@@ -166,12 +323,13 @@ const getImportSpecifiersText = (node: ImportDeclaration): string | undefined =>
 
 const getExportSpecifierText = (
   node: ExportNamedDeclaration,
-  specifier: ExportNamedDeclaration['specifiers'][number]
+  specifier: ExportNamedDeclaration['specifiers'][number],
+  options: Options
 ): string | undefined => {
   switch (specifier.type) {
     case 'ExportSpecifier': {
-      const localName = getNodeName(specifier.local)
-      const exportedName = getNodeName(specifier.exported)
+      const localName = getPrintedNodeName(specifier.local, options)
+      const exportedName = getPrintedNodeName(specifier.exported, options)
 
       if (!localName || !exportedName) {
         return undefined
@@ -185,7 +343,7 @@ const getExportSpecifierText = (
         : `${typePrefix}${localName} as ${exportedName}`
     }
     case 'ExportNamespaceSpecifier': {
-      const exportedName = getNodeName(specifier.exported)
+      const exportedName = getPrintedNodeName(specifier.exported, options)
 
       return exportedName ? `* as ${exportedName}` : undefined
     }
@@ -195,22 +353,29 @@ const getExportSpecifierText = (
   }
 }
 
-const getExportSpecifiersText = (node: ExportNamedDeclaration): string | undefined => {
+const getExportSpecifiersText = (
+  node: ExportNamedDeclaration,
+  options: Options
+): string | undefined => {
   if (node.specifiers.length === 0) {
     return undefined
   }
 
-  const specifierTexts = node.specifiers.map((specifier) => getExportSpecifierText(node, specifier))
+  const specifierTexts = node.specifiers.map((specifier) =>
+    getExportSpecifierText(node, specifier, options))
 
   if (specifierTexts.some((specifier) => !specifier)) {
     return undefined
   }
 
-  return `{ ${specifierTexts.join(', ')} }`
+  return getWrappedSpecifiersText(specifierTexts as Array<string>, options)
 }
 
-const getProjectedImportSourceColumn = (node: ImportDeclaration): number | undefined => {
-  const specifiersText = getImportSpecifiersText(node)
+const getProjectedImportSourceColumn = (
+  node: ImportDeclaration,
+  options: Options
+): number | undefined => {
+  const specifiersText = getImportSpecifiersText(node, options)
 
   if (!specifiersText) {
     return undefined
@@ -221,16 +386,29 @@ const getProjectedImportSourceColumn = (node: ImportDeclaration): number | undef
   return `${importKeyword} ${specifiersText}${fromClause}`.length
 }
 
-const getProjectedExportAllSourceColumn = (node: ExportAllDeclaration): number | undefined => {
-  const exportedName = getExportAllExportedName(node)
+const getProjectedExportAllSourceColumn = (
+  node: ExportAllDeclaration,
+  options: Options
+): number | undefined => {
+  const exportedName = getPrintedNodeName(
+    (
+      node as ExportAllDeclaration & {
+        exported?: { name?: string; value?: unknown } | null
+      }
+    ).exported,
+    options
+  )
   const exportKeyword = node.exportKind === 'type' ? 'export type *' : 'export *'
   const exportClause = exportedName ? `${exportKeyword} as ${exportedName}` : exportKeyword
 
   return `${exportClause}${fromClause}`.length
 }
 
-const getProjectedExportNamedSourceColumn = (node: ExportNamedDeclaration): number | undefined => {
-  const specifiersText = getExportSpecifiersText(node)
+const getProjectedExportNamedSourceColumn = (
+  node: ExportNamedDeclaration,
+  options: Options
+): number | undefined => {
+  const specifiersText = getExportSpecifiersText(node, options)
 
   if (!specifiersText) {
     return undefined
@@ -241,90 +419,136 @@ const getProjectedExportNamedSourceColumn = (node: ExportNamedDeclaration): numb
   return `${exportKeyword} ${specifiersText}${fromClause}`.length
 }
 
-const getProjectedModuleSourceColumn = (node: ModuleSourceDeclaration): number | undefined => {
+const getProjectedModuleSourceColumn = (
+  node: ModuleSourceDeclaration,
+  options: Options
+): number | undefined => {
+  if (hasModuleSourceComments(node)) {
+    return undefined
+  }
+
   if (node.type === 'ImportDeclaration') {
-    return getProjectedImportSourceColumn(node)
+    return getProjectedImportSourceColumn(node, options)
   }
 
   if (node.type === 'ExportAllDeclaration') {
-    return getProjectedExportAllSourceColumn(node)
+    return getProjectedExportAllSourceColumn(node, options)
   }
 
-  return getProjectedExportNamedSourceColumn(node)
+  return getProjectedExportNamedSourceColumn(node, options)
 }
 
-const getModuleSourceColumn = (node: ModuleSourceDeclaration): number => {
-  const projectedSourceColumn = getProjectedModuleSourceColumn(node)
+const getModuleSourceColumn = (node: ModuleSourceDeclaration, options: Options): number => {
+  const projectedSourceColumn = getProjectedModuleSourceColumn(node, options)
 
   return projectedSourceColumn ?? getFallbackModuleSourceColumn(node)
 }
 
-const getProjectedModuleLineLength = (node: ModuleSourceDeclaration): number | undefined => {
-  const sourceColumn = getProjectedModuleSourceColumn(node)
-  const sourceValue = getSourceValue(node)
+const getProjectedModuleLineLength = (
+  node: ModuleSourceDeclaration,
+  options: Options,
+  sourceColumn = getProjectedModuleSourceColumn(node, options)
+): number | undefined => {
+  const sourceText = getSourceText(node, options)
 
-  if (sourceColumn === undefined || sourceValue === undefined) {
+  if (sourceColumn === undefined || sourceText === undefined) {
     return undefined
   }
 
-  return sourceColumn + sourceValue.length + sourceQuoteWidth
+  return sourceColumn + sourceText.length
 }
 
 const isAlignableModuleSourceDeclaration = (
   node: ModuleSourceDeclaration,
+  options: Options,
   printWidth: number
 ): boolean => {
-  const lineLength = getProjectedModuleLineLength(node)
+  if (hasOriginalSingleLineOverflow(node, printWidth)) {
+    return false
+  }
+
+  const lineLength = getProjectedModuleLineLength(node, options)
 
   return lineLength !== undefined && lineLength <= printWidth
 }
 
 const getMaxModuleSourceColumn = (
   nodes: Array<ModuleSourceDeclaration>,
+  options: Options,
   printWidth: number
 ): number => {
   const alignableNodes = nodes.filter((node) =>
-    isAlignableModuleSourceDeclaration(node, printWidth))
+    isAlignableModuleSourceDeclaration(node, options, printWidth))
 
-  return alignableNodes.length > 0 ? Math.max(...alignableNodes.map(getModuleSourceColumn)) : 0
+  return alignableNodes.length > 0
+    ? Math.max(...alignableNodes.map((node) => getModuleSourceColumn(node, options)))
+    : 0
 }
 
 const setAlignOffset = (
   node: AlignableModuleSourceDeclaration,
+  options: Options,
   maxModuleSourceColumn: number
 ): void => {
-  const moduleSourceColumn = getModuleSourceColumn(node)
+  const moduleSourceColumn = getModuleSourceColumn(node, options)
 
   node.alignOffset =
     moduleSourceColumn < maxModuleSourceColumn ? maxModuleSourceColumn - moduleSourceColumn : 0
 }
 
+const getAlignableNodes = (
+  nodes: Array<ModuleSourceDeclaration>,
+  options: Options,
+  printWidth: number
+): Array<ModuleSourceDeclaration> => {
+  let alignableNodes = nodes.filter((node) =>
+    isAlignableModuleSourceDeclaration(node, options, printWidth))
+
+  while (alignableNodes.length > 0) {
+    const maxModuleSourceColumn = getMaxModuleSourceColumn(alignableNodes, options, printWidth)
+    const nextAlignableNodes = alignableNodes.filter((node) => {
+      const lineLength = getProjectedModuleLineLength(node, options, maxModuleSourceColumn)
+
+      return lineLength !== undefined && lineLength <= printWidth
+    })
+
+    if (nextAlignableNodes.length === alignableNodes.length) {
+      return alignableNodes
+    }
+
+    alignableNodes = nextAlignableNodes
+  }
+
+  return alignableNodes
+}
+
 const setGroupAlignOffsets = (
   nodes: Array<AlignableModuleSourceDeclaration>,
+  options: Options,
   printWidth: number
 ): void => {
-  const alignableNodes = nodes.filter((node) =>
-    isAlignableModuleSourceDeclaration(node, printWidth))
-  const maxModuleSourceColumn = getMaxModuleSourceColumn(alignableNodes, printWidth)
+  const alignableNodes = getAlignableNodes(nodes, options, printWidth)
+  const maxModuleSourceColumn = getMaxModuleSourceColumn(alignableNodes, options, printWidth)
 
   nodes.forEach((node) => {
     node.alignOffset = 0
   })
 
   alignableNodes.forEach((node) => {
-    setAlignOffset(node, maxModuleSourceColumn)
+    setAlignOffset(node, options, maxModuleSourceColumn)
   })
 }
 
 const setAlignOffsets = <T extends ModuleSourceDeclaration>(
   body: Array<Node>,
   predicate: (node: Node) => node is T,
+  options: Options,
   printWidth: number
 ): void => {
   let group: Array<AlignableModuleSourceDeclaration> = []
 
   const flushGroup = (): void => {
-    setGroupAlignOffsets(group, printWidth)
+    setGroupAlignOffsets(group, options, printWidth)
     group = []
   }
 
@@ -368,10 +592,14 @@ export const print: Printer<Node>['print'] = (path, options, prnt): any => {
 
 export const preprocess = async (ast: AST, options: Options): Promise<AST> => {
   const body = ast.body as Array<Node>
+  const comments: Array<LocatedComment> =
+    (ast as { comments?: Array<LocatedComment> | null }).comments ?? []
+  const { originalText } = options as OriginalTextOptions
   const printWidth = getPrintWidth(options)
 
-  setAlignOffsets(body, isImportSourceDeclaration, printWidth)
-  setAlignOffsets(body, isExportSourceDeclaration, printWidth)
+  markAlignBlockedComments(body, comments, originalText)
+  setAlignOffsets(body, isImportSourceDeclaration, options, printWidth)
+  setAlignOffsets(body, isExportSourceDeclaration, options, printWidth)
 
   return ast
 }
