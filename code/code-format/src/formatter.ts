@@ -1,7 +1,9 @@
 import EventEmitter          from 'node:events'
+import { stat }              from 'node:fs/promises'
 import { writeFile }         from 'node:fs/promises'
 import { readFile }          from 'node:fs/promises'
 import { relative }          from 'node:path'
+import { resolve }           from 'node:path'
 import { join }              from 'node:path'
 
 import * as babel            from 'prettier/plugins/babel'
@@ -39,19 +41,21 @@ export class Formatter extends EventEmitter {
 
   protected async formatFiles(files: Array<string> = []): Promise<void> {
     const prettierPlugin = await getPrettierPlugin()
+    const targetFiles = await this.resolveFormatFiles(files)
 
     const formatFiles = ignorer
       .default()
       .add(ignore)
       .add(await this.getProjectIgnorePatterns())
-      .filter(files.map((filepath) => relative(this.cwd, filepath)))
+      .filter(targetFiles.map((filepath) => relative(this.cwd, filepath)))
 
     this.emit('start', { files: formatFiles })
 
     for await (const filename of formatFiles) {
       this.emit('format:start', { file: filename })
 
-      const input = await readFile(filename, 'utf8')
+      const targetFile = resolve(this.cwd, filename)
+      const input = await readFile(targetFile, 'utf8')
 
       const output = await format(input, {
         ...config,
@@ -61,7 +65,7 @@ export class Formatter extends EventEmitter {
       })
 
       if (output !== input && output) {
-        await writeFile(filename, output, 'utf8')
+        await writeFile(targetFile, output, 'utf8')
 
         this.emit('format:end', { file: filename, changed: true })
       } else {
@@ -78,6 +82,37 @@ export class Formatter extends EventEmitter {
     })
 
     await this.formatFiles(files)
+  }
+
+  protected async resolveFormatFiles(files: Array<string>): Promise<Array<string>> {
+    const resolvedFiles: Array<string> = []
+
+    for await (const filepath of files) {
+      const targetPath = resolve(this.cwd, filepath)
+      let targetStat
+
+      try {
+        targetStat = await stat(targetPath)
+      } catch (error) {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+          throw new Error(`Formatter target does not exist: ${filepath}`)
+        }
+
+        throw error
+      }
+
+      if (targetStat.isDirectory()) {
+        resolvedFiles.push(
+          ...(await globby(createPatterns(targetPath), {
+            dot: true,
+          }))
+        )
+      } else {
+        resolvedFiles.push(targetPath)
+      }
+    }
+
+    return Array.from(new Set(resolvedFiles))
   }
 
   protected async getProjectIgnorePatterns(): Promise<Array<string>> {
