@@ -132,8 +132,13 @@ const getLiteralQuote = (value: string, options: Options): '"' | "'" => {
 
 const quoteLiteralValue = (value: string, options: Options): string => {
   const quote = getLiteralQuote(value, options)
+  const doubleQuotedValue = JSON.stringify(value)
 
-  return `${quote}${value.replaceAll('\\', '\\\\').replaceAll(quote, `\\${quote}`)}${quote}`
+  if (quote === '"') {
+    return doubleQuotedValue
+  }
+
+  return `'${doubleQuotedValue.slice(1, -1).replaceAll('\\"', '"').replaceAll("'", "\\'")}'`
 }
 
 const getPrintedNodeName = (
@@ -173,6 +178,7 @@ const getImportAttributesText = (
   options: Options
 ): string | undefined => {
   const attributedNode = node as AttributedModuleSourceDeclaration
+  const importAttributeKeyword = attributedNode.attributes ? 'with' : 'assert'
   const attributes = attributedNode.attributes ?? attributedNode.assertions ?? []
 
   if (attributes.length === 0) {
@@ -185,7 +191,7 @@ const getImportAttributesText = (
     return undefined
   }
 
-  return ` with { ${(attributeTexts as Array<string>).join(', ')} }`
+  return ` ${importAttributeKeyword} { ${(attributeTexts as Array<string>).join(', ')} }`
 }
 
 const getStatementTerminatorText = (options: Options): string => (options.semi === false ? '' : ';')
@@ -280,7 +286,36 @@ const hasCommentToken = (node: Node, originalText: string | undefined): boolean 
     return false
   }
 
-  return getOriginalNodeText(node, originalText)?.includes('/*') ?? false
+  const originalNodeText = getOriginalNodeText(node, originalText)
+
+  if (!originalNodeText) {
+    return false
+  }
+
+  let quote: string | undefined
+
+  for (let index = 0; index < originalNodeText.length; index += 1) {
+    const current = originalNodeText[index]
+    const next = originalNodeText[index + 1]
+
+    if (quote) {
+      if (current === '\\') {
+        index += 1
+      } else if (current === quote) {
+        quote = undefined
+      }
+
+      continue
+    }
+
+    if (current === '"' || current === "'" || current === '`') {
+      quote = current
+    } else if ((current === '/' && next === '*') || (current === '/' && next === '/')) {
+      return true
+    }
+  }
+
+  return false
 }
 
 const markAlignBlockedComments = (

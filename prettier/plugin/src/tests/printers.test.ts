@@ -107,6 +107,22 @@ test('should prefer the least-escaped configured quote for string literal export
   )
 })
 
+test('should escape string literal export names before measuring source columns', async () => {
+  const source = [
+    "export { 'a\\nb' as ab } from './foo.js'",
+    "export { Value } from './value.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export { 'a\\nb' as ab } from './foo.js'",
+      "export { Value }        from './value.js'",
+      '',
+    ].join('\n')
+  )
+})
+
 test('should leave commented export declarations outside source alignment', async () => {
   const source = [
     "export { Foo /* this comment makes the declaration unsafe to project */ } from './foo.js'",
@@ -122,6 +138,21 @@ test('should leave commented export declarations outside source alignment', asyn
       "export * from './short.js'",
       '',
     ].join('\n')
+  )
+})
+
+test('should leave line-commented export declarations outside source alignment', async () => {
+  const source = [
+    'export { Foo // comment',
+    "} from './foo.js'",
+    "export * from './short.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    ['export {', '  Foo, // comment', "} from './foo.js'", "export * from './short.js'", ''].join(
+      '\n'
+    )
   )
 })
 
@@ -167,6 +198,23 @@ test('should count import attributes before aligning source declarations', async
     [
       "export { VeryLongName } from './x.js'",
       "export * from './foo.json' with { type: 'json' }",
+      '',
+    ].join('\n'),
+    { printWidth: 50 }
+  )
+})
+
+test('should count import assertions before aligning source declarations', async () => {
+  const source = [
+    "export { VeryLongName } from './x.js'",
+    "export * from './foo.json' assert { type: 'json' }",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export { VeryLongName } from './x.js'",
+      "export * from './foo.json' assert { type: 'json' }",
       '',
     ].join('\n'),
     { printWidth: 50 }
