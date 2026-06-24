@@ -255,6 +255,24 @@ test('should count semicolons before aligning source declarations', async () => 
   )
 })
 
+test('should align empty source export declarations', async () => {
+  const source = [
+    "export {} from './empty.js'",
+    "export { VeryLongName } from './x.js'",
+    "export * from './short.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export {}               from './empty.js'",
+      "export { VeryLongName } from './x.js'",
+      "export *                from './short.js'",
+      '',
+    ].join('\n')
+  )
+})
+
 test('should keep import and export source alignment independent', async () => {
   const source = [
     "import { Foo } from './foo.js'",

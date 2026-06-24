@@ -164,6 +164,10 @@ const getSourceText = (node: ModuleSourceDeclaration, options: Options): string 
   typeof node.source?.value === 'string' ? quoteLiteralValue(node.source.value, options) : undefined
 
 const getWrappedSpecifiersText = (specifiers: Array<string>, options: Options): string => {
+  if (specifiers.length === 0) {
+    return '{}'
+  }
+
   const spacing = options.bracketSpacing === false ? '' : ' '
 
   return `{${spacing}${specifiers.join(', ')}${spacing}}`
@@ -444,10 +448,6 @@ const getExportSpecifiersText = (
   node: ExportNamedDeclaration,
   options: Options
 ): string | undefined => {
-  if (node.specifiers.length === 0) {
-    return undefined
-  }
-
   const specifierTexts = node.specifiers.map((specifier) =>
     getExportSpecifierText(node, specifier, options))
 
