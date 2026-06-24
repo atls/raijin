@@ -283,10 +283,6 @@ export class Tester extends EventEmitter {
       ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
     }
 
-    if (this.isGlobPattern(pattern)) {
-      return globby([pattern], globbyOptions)
-    }
-
     const targetPath = resolvePath(cwd, pattern)
     let targetStat
 
@@ -294,6 +290,10 @@ export class Tester extends EventEmitter {
       targetStat = await stat(targetPath)
     } catch (error) {
       if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+        if (this.isGlobPattern(pattern)) {
+          return globby([pattern], globbyOptions)
+        }
+
         if (this.isFilename(pattern)) {
           return globby([`**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`], globbyOptions)
         }
@@ -305,9 +305,10 @@ export class Tester extends EventEmitter {
     }
 
     if (targetStat.isDirectory()) {
-      const targetPattern = relative(cwd, targetPath) || '.'
-
-      return globby([`${targetPattern}/**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], globbyOptions)
+      return globby([`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], {
+        ...globbyOptions,
+        cwd: targetPath,
+      })
     }
 
     return [targetPath]

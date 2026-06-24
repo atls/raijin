@@ -183,8 +183,10 @@ export class Linter extends EventEmitter {
 
       if (targetStat.isDirectory()) {
         resolvedFiles.push(
-          ...(await globby(createPatterns(targetPath), {
+          ...(await globby(createPatterns('.'), {
+            cwd: targetPath,
             dot: true,
+            absolute: true,
           }))
         )
       } else {

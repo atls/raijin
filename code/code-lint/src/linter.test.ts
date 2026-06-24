@@ -59,6 +59,22 @@ test('should expand explicit directory targets before linting files', async () =
   )
 })
 
+test('should expand explicit directory targets with glob metacharacters as literal paths', async () => {
+  const cwd = await createProjectWithGeneratedEslintConfig()
+  const src = join(cwd, 'src/[id]')
+  const linter = await Linter.initialize(cwd, cwd)
+
+  await mkdir(src, { recursive: true })
+  await writeFile(join(src, 'index.ts'), 'export const value = 1\n')
+
+  const results = await linter.lint(['src/[id]'])
+
+  assert.deepEqual(
+    results.map((result) => result.filePath),
+    [join(src, 'index.ts')]
+  )
+})
+
 test('should fail clearly when explicit linter target does not exist', async () => {
   const cwd = await createProjectWithGeneratedEslintConfig()
   const linter = await Linter.initialize(cwd, cwd)

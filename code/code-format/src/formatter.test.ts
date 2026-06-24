@@ -31,6 +31,20 @@ test('should expand explicit directory targets before formatting files', async (
   assert.equal(await readFile(join(src, 'index.ts'), 'utf8'), 'const value = { foo: 1 }\n')
 })
 
+test('should expand explicit directory targets with glob metacharacters as literal paths', async () => {
+  const cwd = await createProject()
+  const src = join(cwd, 'src/[id]')
+
+  await mkdir(src, { recursive: true })
+  await writeFile(join(src, 'index.ts'), 'const value={foo:1}\n')
+
+  const formatter = await Formatter.initialize(cwd)
+
+  await formatter.format(['src/[id]'])
+
+  assert.equal(await readFile(join(src, 'index.ts'), 'utf8'), 'const value = { foo: 1 }\n')
+})
+
 test('should fail clearly when explicit formatter target does not exist', async () => {
   const cwd = await createProject()
   const formatter = await Formatter.initialize(cwd)
