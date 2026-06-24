@@ -1,7 +1,7 @@
 import assert                  from 'node:assert/strict'
 import { test }                from 'node:test'
 
-import { createProxyTestArgs } from './abstract-test.command.js'
+import { createProxyTestArgs } from './abstract-test.command.jsx'
 
 test('should keep proxy test file targets as separate arguments', () => {
   assert.deepEqual(
