@@ -8,6 +8,7 @@ import { stat }                      from 'node:fs/promises'
 import { relative }                  from 'node:path'
 import { resolve as resolvePath }    from 'node:path'
 import { join }                      from 'node:path'
+import { basename }                  from 'node:path'
 import { run }                       from 'node:test'
 import { tap }                       from 'node:test/reporters'
 
@@ -31,6 +32,8 @@ type TestOptions = {
   watch?: boolean
   testReporter?: string
 }
+
+type TestType = 'integration' | 'unit' | undefined
 
 const TEST_STREAM_KEEP_ALIVE_INTERVAL = 1000
 
@@ -247,7 +250,7 @@ export class Tester extends EventEmitter {
 
   private async collectTestFiles(
     cwd: string,
-    type: 'integration' | 'unit' | undefined,
+    type: TestType,
     patterns: Array<string> | undefined
   ): Promise<Array<string>> {
     let folderPattern = '*'
@@ -265,7 +268,8 @@ export class Tester extends EventEmitter {
     }
 
     const testFiles = await Promise.all(
-      patterns.map(async (pattern) => this.collectPatternTestFiles(cwd, folderPattern, pattern))
+      patterns.map(async (pattern) =>
+        this.collectPatternTestFiles(cwd, folderPattern, type, pattern))
     )
 
     return Array.from(new Set(testFiles.flat()))
@@ -274,6 +278,7 @@ export class Tester extends EventEmitter {
   private async collectPatternTestFiles(
     cwd: string,
     folderPattern: string,
+    type: TestType,
     pattern: string
   ): Promise<Array<string>> {
     const globbyOptions = {
@@ -305,7 +310,7 @@ export class Tester extends EventEmitter {
     }
 
     if (targetStat.isDirectory()) {
-      return globby([`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], {
+      return globby(this.createDirectoryTargetPatterns(folderPattern, type, targetPath), {
         ...globbyOptions,
         cwd: targetPath,
       })
@@ -324,6 +329,30 @@ export class Tester extends EventEmitter {
 
   private isGlobPattern(pattern: string): boolean {
     return /[*?[\]{}]/.test(pattern)
+  }
+
+  private createDirectoryTargetPatterns(
+    folderPattern: string,
+    type: TestType,
+    targetPath: string
+  ): Array<string> {
+    const directTestPattern = '*.test.{ts,tsx,js,jsx}'
+    const nestedTestPattern = `**/${folderPattern}/${directTestPattern}`
+    const targetFolder = basename(targetPath)
+
+    if (type === undefined) {
+      return [directTestPattern, `**/${directTestPattern}`]
+    }
+
+    if (type === 'integration') {
+      return targetFolder === 'integration'
+        ? [directTestPattern, nestedTestPattern]
+        : [nestedTestPattern]
+    }
+
+    return targetFolder === 'integration'
+      ? [nestedTestPattern]
+      : [directTestPattern, nestedTestPattern]
   }
 
   private getProjectIgnorePatterns(): Array<string> {

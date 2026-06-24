@@ -50,6 +50,60 @@ test('should expand explicit directory targets before collecting unit tests', as
   assert.deepEqual(files, [join(unit, 'sample.test.js')])
 })
 
+test('should collect unit tests directly under explicit directory targets', async () => {
+  const cwd = await createProject()
+  const src = join(cwd, 'src')
+  const tester = await Tester.initialize(cwd)
+
+  await mkdir(src, { recursive: true })
+  await writeFile(
+    join(src, 'formatter.test.js'),
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('sample', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(cwd, 'unit', [
+    'src',
+  ])
+
+  assert.deepEqual(files, [join(src, 'formatter.test.js')])
+})
+
+test('should collect tests directly under explicit integration directory targets', async () => {
+  const cwd = await createProject()
+  const integration = join(cwd, 'integration')
+  const tester = await Tester.initialize(cwd)
+
+  await mkdir(integration, { recursive: true })
+  await writeFile(
+    join(integration, 'sample.test.js'),
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('sample', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(
+    cwd,
+    'integration',
+    ['integration']
+  )
+
+  assert.deepEqual(files, [join(integration, 'sample.test.js')])
+})
+
 test('should expand explicit directory targets with glob metacharacters as literal paths', async () => {
   const cwd = await createProject()
   const unit = join(cwd, 'src/[id]/unit')
