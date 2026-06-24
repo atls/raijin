@@ -221,6 +221,23 @@ test('should count import assertions before aligning source declarations', async
   )
 })
 
+test('should respect bracket spacing when counting import attributes', async () => {
+  const source = [
+    "export {LongerName} from './x.js'",
+    "export * from './aaaaa.json' with { type: 'json' }",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export {LongerName} from './x.js'",
+      "export *            from './aaaaa.json' with {type: 'json'}",
+      '',
+    ].join('\n'),
+    { bracketSpacing: false, printWidth: 60 }
+  )
+})
+
 test('should count semicolons before aligning source declarations', async () => {
   const source = [
     "export { VeryLongName } from './x.js'",

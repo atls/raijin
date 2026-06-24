@@ -163,6 +163,12 @@ const getPrintedNodeName = (
 const getSourceText = (node: ModuleSourceDeclaration, options: Options): string | undefined =>
   typeof node.source?.value === 'string' ? quoteLiteralValue(node.source.value, options) : undefined
 
+const getWrappedSpecifiersText = (specifiers: Array<string>, options: Options): string => {
+  const spacing = options.bracketSpacing === false ? '' : ' '
+
+  return `{${spacing}${specifiers.join(', ')}${spacing}}`
+}
+
 const getImportAttributeText = (
   attribute: ImportAttributeNode,
   options: Options
@@ -191,7 +197,10 @@ const getImportAttributesText = (
     return undefined
   }
 
-  return ` ${importAttributeKeyword} { ${(attributeTexts as Array<string>).join(', ')} }`
+  return ` ${importAttributeKeyword} ${getWrappedSpecifiersText(
+    attributeTexts as Array<string>,
+    options
+  )}`
 }
 
 const getStatementTerminatorText = (options: Options): string => (options.semi === false ? '' : ';')
@@ -369,12 +378,6 @@ const getImportSpecifierText = (
       return undefined
     }
   }
-}
-
-const getWrappedSpecifiersText = (specifiers: Array<string>, options: Options): string => {
-  const spacing = options.bracketSpacing === false ? '' : ' '
-
-  return `{${spacing}${specifiers.join(', ')}${spacing}}`
 }
 
 const getImportSpecifiersText = (node: ImportDeclaration, options: Options): string | undefined => {
