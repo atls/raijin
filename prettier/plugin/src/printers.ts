@@ -49,6 +49,16 @@ type RangedNode = {
   start?: number | null
 }
 
+type ImportAttributeNode = {
+  key?: { name?: string; value?: unknown } | null
+  value?: { name?: string; value?: unknown } | null
+}
+
+type AttributedModuleSourceDeclaration = ModuleSourceDeclaration & {
+  assertions?: Array<ImportAttributeNode> | null
+  attributes?: Array<ImportAttributeNode> | null
+}
+
 type OriginalTextOptions = Options & {
   originalText?: string
 }
@@ -105,10 +115,23 @@ const getFallbackModuleSourceColumn = (node: ModuleSourceDeclaration): number =>
 
 const getPrintWidth = (options: Options): number => options.printWidth ?? defaultPrintWidth
 
-const getLiteralQuote = (options: Options): '"' | "'" => (options.singleQuote === false ? '"' : "'")
+const countCharacters = (value: string, character: '"' | "'"): number =>
+  [...value].filter((current) => current === character).length
+
+const getPreferredLiteralQuote = (options: Options): '"' | "'" =>
+  options.singleQuote === false ? '"' : "'"
+
+const getLiteralQuote = (value: string, options: Options): '"' | "'" => {
+  const preferredQuote = getPreferredLiteralQuote(options)
+  const fallbackQuote = preferredQuote === "'" ? '"' : "'"
+
+  return countCharacters(value, fallbackQuote) < countCharacters(value, preferredQuote)
+    ? fallbackQuote
+    : preferredQuote
+}
 
 const quoteLiteralValue = (value: string, options: Options): string => {
-  const quote = getLiteralQuote(options)
+  const quote = getLiteralQuote(value, options)
 
   return `${quote}${value.replaceAll('\\', '\\\\').replaceAll(quote, `\\${quote}`)}${quote}`
 }
@@ -134,6 +157,38 @@ const getPrintedNodeName = (
 
 const getSourceText = (node: ModuleSourceDeclaration, options: Options): string | undefined =>
   typeof node.source?.value === 'string' ? quoteLiteralValue(node.source.value, options) : undefined
+
+const getImportAttributeText = (
+  attribute: ImportAttributeNode,
+  options: Options
+): string | undefined => {
+  const key = getPrintedNodeName(attribute.key, options)
+  const value = getPrintedNodeName(attribute.value, options)
+
+  return key && value ? `${key}: ${value}` : undefined
+}
+
+const getImportAttributesText = (
+  node: ModuleSourceDeclaration,
+  options: Options
+): string | undefined => {
+  const attributedNode = node as AttributedModuleSourceDeclaration
+  const attributes = attributedNode.attributes ?? attributedNode.assertions ?? []
+
+  if (attributes.length === 0) {
+    return ''
+  }
+
+  const attributeTexts = attributes.map((attribute) => getImportAttributeText(attribute, options))
+
+  if (attributeTexts.some((attribute) => !attribute)) {
+    return undefined
+  }
+
+  return ` with { ${(attributeTexts as Array<string>).join(', ')} }`
+}
+
+const getStatementTerminatorText = (options: Options): string => (options.semi === false ? '' : ';')
 
 const hasComments = (node: CommentedNode | null | undefined): boolean =>
   Boolean(
@@ -162,12 +217,6 @@ const hasModuleSourceComments = (node: ModuleSourceDeclaration): boolean =>
         hasComments(commentedSpecifier.exported)
       )
     }))
-
-const hasOriginalSingleLineOverflow = (
-  node: ModuleSourceDeclaration,
-  printWidth: number
-): boolean =>
-  Boolean(node.loc && node.loc.start.line === node.loc.end.line && node.loc.end.column > printWidth)
 
 const isCommentInsideNode = (node: Node, comment: LocatedComment): boolean => {
   if (!node.loc || !comment.loc) {
@@ -450,12 +499,22 @@ const getProjectedModuleLineLength = (
   sourceColumn = getProjectedModuleSourceColumn(node, options)
 ): number | undefined => {
   const sourceText = getSourceText(node, options)
+  const importAttributesText = getImportAttributesText(node, options)
 
-  if (sourceColumn === undefined || sourceText === undefined) {
+  if (
+    sourceColumn === undefined ||
+    sourceText === undefined ||
+    importAttributesText === undefined
+  ) {
     return undefined
   }
 
-  return sourceColumn + sourceText.length
+  return (
+    sourceColumn +
+    sourceText.length +
+    importAttributesText.length +
+    getStatementTerminatorText(options).length
+  )
 }
 
 const isAlignableModuleSourceDeclaration = (
@@ -463,10 +522,6 @@ const isAlignableModuleSourceDeclaration = (
   options: Options,
   printWidth: number
 ): boolean => {
-  if (hasOriginalSingleLineOverflow(node, printWidth)) {
-    return false
-  }
-
   const lineLength = getProjectedModuleLineLength(node, options)
 
   return lineLength !== undefined && lineLength <= printWidth

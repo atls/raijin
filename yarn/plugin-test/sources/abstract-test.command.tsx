@@ -29,6 +29,41 @@ type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
 type TestStdout = EventData.TestStdout
 
+interface ProxyTestArgsOptions {
+  files: Array<string>
+  target?: string
+  testReporter?: string
+  watch: boolean
+}
+
+export const createProxyTestArgs = ({
+  files,
+  target,
+  testReporter,
+  watch,
+}: ProxyTestArgsOptions): Array<string> => {
+  const args: Array<string> = []
+
+  if (files.length) {
+    args.push(...files)
+  }
+
+  if (watch) {
+    args.push('-w')
+  }
+
+  if (target) {
+    args.push('-t')
+    args.push(target)
+  }
+
+  if (testReporter) {
+    args.push(`--test-reporter=${testReporter}`)
+  }
+
+  return args
+}
+
 export abstract class AbstractTestCommand extends BaseCommand {
   static override usage = Command.Usage({
     description: 'Run tests',
@@ -67,25 +102,12 @@ export abstract class AbstractTestCommand extends BaseCommand {
   async executeProxy(type?: 'integration' | 'unit'): Promise<number> {
     const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
     const { project, workspace } = await Project.find(configuration, this.context.cwd)
-
-    const args: Array<string> = []
-
-    if (this.files.length) {
-      args.push(this.files.join(' '))
-    }
-
-    if (this.watch) {
-      args.push('-w')
-    }
-
-    if (workspace) {
-      args.push('-t')
-      args.push(this.context.cwd)
-    }
-
-    if (this.testReporter) {
-      args.push(`--test-reporter=${this.testReporter}`)
-    }
+    const args = createProxyTestArgs({
+      files: this.files,
+      watch: this.watch,
+      target: workspace ? this.context.cwd : undefined,
+      testReporter: this.testReporter,
+    })
 
     const binFolder = await xfs.mktempPromise()
 

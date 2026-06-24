@@ -8,6 +8,7 @@ import type { LintResult }              from '@atls/raijin/eslint'
 import EventEmitter                     from 'node:events'
 import { readFileSync }                 from 'node:fs'
 import { readFile }                     from 'node:fs/promises'
+import { stat }                         from 'node:fs/promises'
 import { writeFile }                    from 'node:fs/promises'
 import { isAbsolute }                   from 'node:path'
 import { relative }                     from 'node:path'
@@ -126,7 +127,7 @@ export class Linter extends EventEmitter {
   async lint(files?: Array<string>, options?: LintOptions): Promise<Array<LintResult>> {
     const filesForLint =
       files && files.length > 0
-        ? files.map((file) => this.resolveFilePath(file))
+        ? await this.resolveLintFiles(files)
         : await globby(createPatterns(this.cwd), { dot: true })
 
     const finalFiles = filesForLint.filter(
@@ -161,6 +162,39 @@ export class Linter extends EventEmitter {
     const { linterIgnorePatterns = [] } = JSON.parse(content)
 
     return linterIgnorePatterns as Array<string>
+  }
+
+  private async resolveLintFiles(files: Array<string>): Promise<Array<string>> {
+    const resolvedFiles: Array<string> = []
+
+    for await (const file of files) {
+      const targetPath = this.resolveFilePath(file)
+      let targetStat
+
+      try {
+        targetStat = await stat(targetPath)
+      } catch (error) {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+          throw new Error(`Linter target does not exist: ${file}`)
+        }
+
+        throw error
+      }
+
+      if (targetStat.isDirectory()) {
+        resolvedFiles.push(
+          ...(await globby(createPatterns('.'), {
+            cwd: targetPath,
+            dot: true,
+            absolute: true,
+          }))
+        )
+      } else {
+        resolvedFiles.push(targetPath)
+      }
+    }
+
+    return Array.from(new Set(resolvedFiles))
   }
 
   private resolveFilePath(file: string): string {
