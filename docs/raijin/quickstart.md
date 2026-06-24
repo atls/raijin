@@ -21,8 +21,10 @@ Expected result:
 ## 2. New project
 
 ```bash
-yarn init @atls/raijin
+yarn init @atls/raijin --type project
 ```
+
+Use `--type library` for the library scaffold
 
 Expected result:
 
@@ -37,8 +39,10 @@ Expected result:
 ## 3. Existing project
 
 ```bash
-yarn dlx @atls/raijin init
+yarn dlx @atls/raijin init --type project
 ```
+
+Use `--type library` for the library scaffold
 
 Expected result:
 
@@ -87,7 +91,7 @@ Expected result:
 
 ## 7. How to use in an external project
 
-- Use `yarn init @atls/raijin` or `yarn dlx @atls/raijin init` for the first setup
+- Use `yarn init @atls/raijin --type project` or `yarn dlx @atls/raijin init --type project` for the first setup; use `library` for the library scaffold
 - After the first setup, keep the bundle current with `yarn set version atls`
 - Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates
 - Use the same commands in CI and locally to avoid behavior drift

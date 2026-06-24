@@ -36,8 +36,10 @@ It aligns teams on strict standards and strong contracts to increase delivery pr
 ### New project
 
 ```bash
-yarn init @atls/raijin
+yarn init @atls/raijin --type project
 ```
+
+Use `--type library` for the library scaffold
 
 Expected result:
 
@@ -49,8 +51,10 @@ Expected result:
 ### Existing project
 
 ```bash
-yarn dlx @atls/raijin init
+yarn dlx @atls/raijin init --type project
 ```
+
+Use `--type library` for the library scaffold
 
 Expected result:
 

@@ -4,12 +4,16 @@ import { readFile }                                           from 'node:fs/prom
 import { writeFile }                                          from 'node:fs/promises'
 import { tmpdir }                                             from 'node:os'
 import { join }                                               from 'node:path'
+import { PassThrough }                                        from 'node:stream'
 import { test }                                               from 'node:test'
 
+import { RaijinInitializerScaffoldTypeRequiredException }     from './exceptions/scaffold-type-required.js'
+import { RaijinInitializerScaffoldTypeException }             from './exceptions/scaffold-type.js'
 import { RaijinInitializerUsageException }                    from './exceptions/usage.js'
 import { runRaijinInitializer as runPublicRaijinInitializer } from '../index.js'
 import { createSha256Digest }                                 from '../runtime/manifest.js'
 import { runRaijinInitializer }                               from './index.js'
+import { selectRaijinScaffoldType }                           from './scaffold.js'
 
 const TEST_PACKAGE_MANAGER = 'yarn@4.14.1'
 
@@ -51,13 +55,14 @@ const createFetch = (runtime: Buffer, packageManager = TEST_PACKAGE_MANAGER): ty
 
 const EXPECTED_INITIALIZER_COMMANDS = [
   ['add', '-D', '@atls/raijin@latest'],
-  ['generate', 'project'],
+  ['generate', 'project', '--type', 'project'],
   ['raijin', 'sync'],
 ]
 
 const collectInitializerCommands = async (
   runInitializer: typeof runRaijinInitializer,
-  packageJson = false
+  packageJson = false,
+  argv = ['init', '--type', 'project']
 ): Promise<Array<Array<string>>> => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
   const commands: Array<Array<string>> = []
@@ -67,7 +72,7 @@ const collectInitializerCommands = async (
   }
 
   await runInitializer({
-    argv: ['init'],
+    argv,
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
     runYarnCommand: async (args) => {
@@ -79,6 +84,14 @@ const collectInitializerCommands = async (
 }
 
 const noopYarnCommand = async (): Promise<void> => undefined
+
+const createTerminalStream = (isTTY: boolean): PassThrough & { isTTY?: boolean } => {
+  const stream = new PassThrough() as PassThrough & { isTTY?: boolean }
+
+  stream.isTTY = isTTY
+
+  return stream
+}
 
 test('should run initializer command sequence', async () => {
   assert.deepEqual(
@@ -107,11 +120,103 @@ test('should install only public Raijin package directly', async () => {
   assert.deepEqual(commands[0], ['add', '-D', '@atls/raijin@latest'])
 })
 
+test('should support initializer arguments without init command', async () => {
+  assert.deepEqual(
+    await collectInitializerCommands(runRaijinInitializer, false, ['--type', 'project']),
+    EXPECTED_INITIALIZER_COMMANDS
+  )
+})
+
+test('should pass project scaffold type into schematics', async () => {
+  assert.deepEqual(
+    await collectInitializerCommands(runRaijinInitializer, false, ['init', '--type=project']),
+    EXPECTED_INITIALIZER_COMMANDS
+  )
+})
+
+test('should pass library scaffold type into schematics', async () => {
+  assert.deepEqual(
+    await collectInitializerCommands(runRaijinInitializer, false, ['init', '--type', 'library']),
+    [
+      ['add', '-D', '@atls/raijin@latest'],
+      ['generate', 'project', '--type', 'library'],
+      ['raijin', 'sync'],
+    ]
+  )
+})
+
+test('should use interactive scaffold type selector when type is omitted', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const commands: Array<Array<string>> = []
+
+  await runRaijinInitializer({
+    argv: ['init'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime')),
+    runYarnCommand: async (args) => {
+      commands.push(args)
+    },
+    selectScaffoldType: async () => 'library',
+  })
+
+  assert.deepEqual(commands, [
+    ['add', '-D', '@atls/raijin@latest'],
+    ['generate', 'project', '--type', 'library'],
+    ['raijin', 'sync'],
+  ])
+})
+
+test('should select scaffold type from interactive input', async () => {
+  const input = createTerminalStream(true)
+  const output = createTerminalStream(true)
+
+  const scaffoldType = selectRaijinScaffoldType({ input, output })
+
+  input.write('2\n')
+
+  assert.equal(await scaffoldType, 'library')
+})
+
+test('should reject scaffold type selection when interactive input closes', async () => {
+  const input = createTerminalStream(true)
+  const output = createTerminalStream(true)
+
+  const scaffoldType = selectRaijinScaffoldType({ input, output })
+
+  input.end()
+
+  await assert.rejects(
+    scaffoldType,
+    (error) => error instanceof RaijinInitializerScaffoldTypeRequiredException
+  )
+})
+
+test('should reject missing scaffold type without interactive terminal', async () => {
+  const input = createTerminalStream(false)
+  const output = createTerminalStream(false)
+
+  await assert.rejects(
+    selectRaijinScaffoldType({ input, output }),
+    (error) => error instanceof RaijinInitializerScaffoldTypeRequiredException
+  )
+})
+
+test('should reject unknown scaffold type', async () => {
+  await assert.rejects(
+    runRaijinInitializer({
+      argv: ['init', '--type', 'service'],
+      fetchImpl: createFetch(Buffer.from('runtime')),
+      runYarnCommand: noopYarnCommand,
+    }),
+    (error) => error instanceof RaijinInitializerScaffoldTypeException
+  )
+})
+
 test('should create package manifest for empty project', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
 
   await runRaijinInitializer({
-    argv: ['init'],
+    argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
     runYarnCommand: noopYarnCommand,
@@ -137,7 +242,7 @@ test('should normalize package manager in existing package manifest', async () =
   await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
 
   await runRaijinInitializer({
-    argv: ['init'],
+    argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
     runYarnCommand: noopYarnCommand,
@@ -162,7 +267,7 @@ test('should normalize package manager from runtime manifest', async () => {
   )
 
   await runRaijinInitializer({
-    argv: ['init'],
+    argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime'), packageManager),
     runYarnCommand: noopYarnCommand,
@@ -185,7 +290,7 @@ test('should preserve package manifest when runtime install fails', async () => 
 
   await assert.rejects(
     runRaijinInitializer({
-      argv: ['init'],
+      argv: ['init', '--type', 'project'],
       cwd,
       fetchImpl: (async () => {
         throw new Error('Runtime manifest unavailable')
@@ -202,7 +307,7 @@ test('should create project lockfile boundary before yarn commands', async () =>
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
 
   await runRaijinInitializer({
-    argv: ['init'],
+    argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
     runYarnCommand: noopYarnCommand,
@@ -219,7 +324,7 @@ test('should preserve existing project lockfile boundary', async () => {
   await writeFile(join(cwd, 'yarn.lock'), lockfile)
 
   await runRaijinInitializer({
-    argv: ['init'],
+    argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
     runYarnCommand: noopYarnCommand,
