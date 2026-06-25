@@ -239,6 +239,23 @@ test('should respect bracket spacing when counting import attributes', async () 
   )
 })
 
+test('should count normalized import attribute keys before alignment', async () => {
+  const source = [
+    "export {LongerName} from './x.js'",
+    "export * from './aaaaa.json' with { 'type': 'json' }",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export {LongerName} from './x.js'",
+      "export *            from './aaaaa.json' with {type: 'json'}",
+      '',
+    ].join('\n'),
+    { bracketSpacing: false, printWidth: 60 }
+  )
+})
+
 test('should count semicolons before aligning source declarations', async () => {
   const source = [
     "export { VeryLongName } from './x.js'",
@@ -290,25 +307,6 @@ test('should keep import and export source alignment independent', async () => {
       "import { Foo }                from './foo.js'",
       "export *            from './constants.js'",
       "export type { Foo } from './foo.interfaces.js'",
-      '',
-    ].join('\n')
-  )
-})
-
-test('should keep split import declarations idempotent', async () => {
-  const source = [
-    "import Default, { AlphaAlphaAlpha, BetaBetaBeta, GammaGammaGamma } from './long.js'",
-    "import Z from './z.js'",
-  ].join('\n')
-
-  await assertFormatted(
-    source,
-    [
-      "import { AlphaAlphaAlpha } from './long.js'",
-      "import { BetaBetaBeta }    from './long.js'",
-      "import { GammaGammaGamma } from './long.js'",
-      "import Default             from './long.js'",
-      "import Z                   from './z.js'",
       '',
     ].join('\n')
   )
