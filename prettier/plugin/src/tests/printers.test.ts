@@ -156,6 +156,22 @@ test('should leave line-commented export declarations outside source alignment',
   )
 })
 
+test('should keep trailing-commented export declarations outside source alignment', async () => {
+  const source = [
+    "export * from './a.js' // trailing comment that makes padding unsafe",
+    "export { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export * from './a.js' // trailing comment that makes padding unsafe",
+      "export { VeryLongName } from './x.js'",
+      '',
+    ].join('\n')
+  )
+})
+
 test('should respect bracket spacing when aligning named exports', async () => {
   const source = [
     "export * from './x.js'",
@@ -232,14 +248,14 @@ test('should respect bracket spacing when counting import attributes', async () 
     source,
     [
       "export {LongerName} from './x.js'",
-      "export *            from './aaaaa.json' with {type: 'json'}",
+      "export * from './aaaaa.json' with {type: 'json'}",
       '',
     ].join('\n'),
     { bracketSpacing: false, printWidth: 60 }
   )
 })
 
-test('should count normalized import attribute keys before alignment', async () => {
+test('should preserve quoted import attribute keys without source alignment', async () => {
   const source = [
     "export {LongerName} from './x.js'",
     "export * from './aaaaa.json' with { 'type': 'json' }",
@@ -249,10 +265,10 @@ test('should count normalized import attribute keys before alignment', async () 
     source,
     [
       "export {LongerName} from './x.js'",
-      "export *            from './aaaaa.json' with {type: 'json'}",
+      "export * from './aaaaa.json' with {'type': 'json'}",
       '',
     ].join('\n'),
-    { bracketSpacing: false, printWidth: 60 }
+    { bracketSpacing: false, printWidth: 60, quoteProps: 'preserve' }
   )
 })
 
@@ -333,7 +349,7 @@ test('should keep source exports outside wrapped named exports idempotent', asyn
   )
 })
 
-test('should align named exports that become single line after formatting', async () => {
+test('should align exports that become single line after formatting', async () => {
   const source = [
     'export {',
     '  Foo,',
@@ -348,6 +364,20 @@ test('should align named exports that become single line after formatting', asyn
       "export type { LongerNamedType } from './types.js'",
       '',
     ].join('\n')
+  )
+})
+
+test('should preserve explicit self aliases before source alignment', async () => {
+  const source = [
+    "export { foo as foo } from './foo.js'",
+    "export { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    ["export { foo as foo }   from './foo.js'", "export { VeryLongName } from './x.js'", ''].join(
+      '\n'
+    )
   )
 })
 

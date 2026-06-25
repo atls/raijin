@@ -5,13 +5,17 @@ import type { Options }                from 'prettier'
 import type { AST }                    from 'prettier'
 
 const fromDocPart = ' from'
-const fromClause = ' from '
 const defaultPrintWidth = 80
+const sourceColumnOffset = 6
 const namedSpecifiersSourceColumnOffset = 8
+const compactNamedSpecifiersSourceColumnOffset = 6
+const compactPrintedNamedSpecifiersSourceColumnOffset = 7
 const exportAllSourceColumn = 'export * from '.length
 const exportTypeAllSourceColumn = 'export type * from '.length
+const emptyNamedExportSourceColumn = 'export {} from '.length
+const exportNamedPrefixLength = 'export { '.length
+const exportTypeNamedPrefixLength = 'export type { '.length
 const unsupportedImportAssertionPattern = /^\s*assert\s*\{/u
-const identifierNamePattern = /^[$A-Z_a-z][$\dA-Z_a-z]*$/u
 
 type SourceExportDeclaration = ExportAllDeclaration | ExportNamedDeclaration
 
@@ -41,17 +45,11 @@ type LocatedComment = {
 
 type RangedNode = {
   end?: number | null
-  start?: number | null
-}
-
-type ImportAttributeNode = {
-  key?: { name?: string; value?: unknown } | null
-  value?: { name?: string; value?: unknown } | null
+  range?: [number, number] | null
 }
 
 type AttributedExportDeclaration = SourceExportDeclaration & {
-  assertions?: Array<ImportAttributeNode> | null
-  attributes?: Array<ImportAttributeNode> | null
+  attributes?: Array<unknown> | null
 }
 
 type OriginalTextOptions = Options & {
@@ -63,117 +61,6 @@ export const isSourceExportDeclaration = (node: Node): node is SourceExportDecla
   Boolean(node.source)
 
 const getPrintWidth = (options: Options): number => options.printWidth ?? defaultPrintWidth
-
-const countCharacters = (value: string, character: '"' | "'"): number =>
-  [...value].filter((current) => current === character).length
-
-const getPreferredLiteralQuote = (options: Options): '"' | "'" =>
-  options.singleQuote === false ? '"' : "'"
-
-const getLiteralQuote = (value: string, options: Options): '"' | "'" => {
-  const preferredQuote = getPreferredLiteralQuote(options)
-  const fallbackQuote = preferredQuote === "'" ? '"' : "'"
-
-  return countCharacters(value, fallbackQuote) < countCharacters(value, preferredQuote)
-    ? fallbackQuote
-    : preferredQuote
-}
-
-const quoteLiteralValue = (value: string, options: Options): string => {
-  const quote = getLiteralQuote(value, options)
-  const doubleQuotedValue = JSON.stringify(value)
-
-  if (quote === '"') {
-    return doubleQuotedValue
-  }
-
-  return `'${doubleQuotedValue.slice(1, -1).replaceAll('\\"', '"').replaceAll("'", "\\'")}'`
-}
-
-const getPrintedNodeName = (
-  node: { name?: string; value?: unknown } | null | undefined,
-  options: Options
-): string | undefined => {
-  if (!node) {
-    return undefined
-  }
-
-  if (typeof node.name === 'string') {
-    return node.name
-  }
-
-  if (typeof node.value === 'string') {
-    return quoteLiteralValue(node.value, options)
-  }
-
-  return undefined
-}
-
-const getPrintedAttributeKeyName = (
-  node: { name?: string; value?: unknown } | null | undefined,
-  options: Options
-): string | undefined => {
-  if (!node) {
-    return undefined
-  }
-
-  if (typeof node.name === 'string') {
-    return node.name
-  }
-
-  if (typeof node.value === 'string') {
-    return identifierNamePattern.test(node.value)
-      ? node.value
-      : quoteLiteralValue(node.value, options)
-  }
-
-  return undefined
-}
-
-const getSourceText = (node: SourceExportDeclaration, options: Options): string | undefined =>
-  typeof node.source?.value === 'string' ? quoteLiteralValue(node.source.value, options) : undefined
-
-const getWrappedSpecifiersText = (specifiers: Array<string>, options: Options): string => {
-  if (specifiers.length === 0) {
-    return '{}'
-  }
-
-  const spacing = options.bracketSpacing === false ? '' : ' '
-
-  return `{${spacing}${specifiers.join(', ')}${spacing}}`
-}
-
-const getExportAttributeText = (
-  attribute: ImportAttributeNode,
-  options: Options
-): string | undefined => {
-  const key = getPrintedAttributeKeyName(attribute.key, options)
-  const value = getPrintedNodeName(attribute.value, options)
-
-  return key && value ? `${key}: ${value}` : undefined
-}
-
-const getExportAttributesText = (
-  node: SourceExportDeclaration,
-  options: Options
-): string | undefined => {
-  const attributedNode = node as AttributedExportDeclaration
-  const attributes = attributedNode.attributes ?? []
-
-  if (attributes.length === 0) {
-    return ''
-  }
-
-  const attributeTexts = attributes.map((attribute) => getExportAttributeText(attribute, options))
-
-  if (attributeTexts.some((attribute) => !attribute)) {
-    return undefined
-  }
-
-  return ` with ${getWrappedSpecifiersText(attributeTexts as Array<string>, options)}`
-}
-
-const getStatementTerminatorText = (options: Options): string => (options.semi === false ? '' : ';')
 
 const hasComments = (node: CommentedNode | null | undefined): boolean =>
   Boolean(
@@ -217,117 +104,199 @@ const isCommentInsideNode = (node: Node, comment: LocatedComment): boolean => {
   return startsAfterNode && endsBeforeNode
 }
 
-const getLocationOffset = (
-  originalText: string,
-  location: {
-    column: number
-    line: number
-  }
-): number => {
-  let offset = 0
-  let line = 1
+const markExportAlignBlockedComments = (
+  body: Array<Node>,
+  comments: Array<LocatedComment>
+): void => {
+  body.forEach((node) => {
+    if (
+      isSourceExportDeclaration(node) &&
+      comments.some((comment) => isCommentInsideNode(node, comment))
+    ) {
+      const alignableNode = node as AlignableExportDeclaration
 
-  while (line < location.line) {
-    const nextLineOffset = originalText.indexOf('\n', offset)
-
-    if (nextLineOffset < 0) {
-      return originalText.length
+      alignableNode.exportSourceAlignBlocked = true
     }
-
-    offset = nextLineOffset + 1
-    line += 1
-  }
-
-  return offset + location.column
+  })
 }
 
-const getOriginalNodeText = (node: Node, originalText: string): string | undefined => {
-  const { end, start } = node as RangedNode
+const isLocatedSourceExportDeclaration = (node: Node): node is SourceExportDeclaration =>
+  isSourceExportDeclaration(node) && Boolean(node.loc) && Boolean(node.source?.loc)
 
-  if (typeof start === 'number' && typeof end === 'number') {
-    return originalText.slice(start, end)
-  }
-
-  if (!node.loc) {
+const getRangeEnd = (node: RangedNode | null | undefined): number | undefined => {
+  if (!node) {
     return undefined
   }
 
-  return originalText.slice(
-    getLocationOffset(originalText, node.loc.start),
-    getLocationOffset(originalText, node.loc.end)
+  if (node.range) {
+    return node.range[1]
+  }
+
+  return typeof node.end === 'number' ? node.end : undefined
+}
+
+const getRangeStart = (node: RangedNode | null | undefined): number | undefined => {
+  if (!node) {
+    return undefined
+  }
+
+  if (node.range) {
+    return node.range[0]
+  }
+
+  return undefined
+}
+
+const getExportAllSourceColumn = (node: ExportAllDeclaration): number => {
+  const { exported } = node as ExportAllDeclaration & {
+    exported?: Node | null
+  }
+
+  if (exported?.loc) {
+    return exported.loc.end.column + sourceColumnOffset
+  }
+
+  return node.exportKind === 'type' ? exportTypeAllSourceColumn : exportAllSourceColumn
+}
+
+const getNamedSpecifiersSourceColumnOffset = (
+  specifier: ExportNamedDeclaration['specifiers'][number],
+  options: Options,
+  originalText: string | undefined
+): number => {
+  const specifierEnd = getRangeEnd(specifier as RangedNode)
+  const hasCompactClosingBrace =
+    originalText && specifierEnd !== undefined ? originalText[specifierEnd] === '}' : false
+
+  if (options.bracketSpacing === false) {
+    return hasCompactClosingBrace
+      ? compactPrintedNamedSpecifiersSourceColumnOffset
+      : compactNamedSpecifiersSourceColumnOffset
+  }
+
+  return hasCompactClosingBrace
+    ? namedSpecifiersSourceColumnOffset + 1
+    : namedSpecifiersSourceColumnOffset
+}
+
+const getSpecifierTextLength = (
+  specifier: ExportNamedDeclaration['specifiers'][number],
+  originalText: string | undefined
+): number | undefined => {
+  const start = getRangeStart(specifier as RangedNode)
+  const end = getRangeEnd(specifier as RangedNode)
+
+  return originalText && start !== undefined && end !== undefined
+    ? originalText.slice(start, end).trim().length
+    : undefined
+}
+
+const getSpecifiersTextLength = (
+  specifiers: ExportNamedDeclaration['specifiers'],
+  originalText: string | undefined
+): number | undefined => {
+  let length = 0
+
+  for (const specifier of specifiers) {
+    const specifierLength = getSpecifierTextLength(specifier, originalText)
+
+    if (specifierLength === undefined) {
+      return undefined
+    }
+
+    length += specifierLength
+  }
+
+  return length + Math.max(specifiers.length - 1, 0) * ', '.length
+}
+
+const getMultilineExportNamedSourceColumn = (
+  node: ExportNamedDeclaration,
+  options: Options,
+  originalText: string | undefined
+): number | undefined => {
+  if (
+    node.specifiers.length === 0 ||
+    !node.source?.loc ||
+    !node.loc ||
+    node.loc.start.line === node.source.loc.start.line
+  ) {
+    return undefined
+  }
+
+  const specifiersLength = getSpecifiersTextLength(node.specifiers, originalText)
+
+  if (specifiersLength === undefined) {
+    return undefined
+  }
+
+  const prefixLength =
+    node.exportKind === 'type' ? exportTypeNamedPrefixLength : exportNamedPrefixLength
+  const bracketSpacingOffset =
+    options.bracketSpacing === false
+      ? compactPrintedNamedSpecifiersSourceColumnOffset
+      : namedSpecifiersSourceColumnOffset
+
+  return prefixLength + specifiersLength + bracketSpacingOffset
+}
+
+const getExportNamedSourceColumn = (
+  node: ExportNamedDeclaration,
+  options: Options,
+  originalText: string | undefined
+): number => {
+  const multilineSourceColumn = getMultilineExportNamedSourceColumn(node, options, originalText)
+
+  if (multilineSourceColumn !== undefined) {
+    return multilineSourceColumn
+  }
+
+  if (node.specifiers.length === 0) {
+    return emptyNamedExportSourceColumn
+  }
+
+  const specifier = node.specifiers[node.specifiers.length - 1]
+
+  if (!specifier.loc) {
+    return node.source?.loc?.start.column ?? 0
+  }
+
+  return (
+    specifier.loc.end.column +
+    getNamedSpecifiersSourceColumnOffset(specifier, options, originalText)
   )
 }
 
-const getNodeEndOffset = (node: Node, originalText: string): number | undefined => {
-  const { end } = node as RangedNode
-
-  if (typeof end === 'number') {
-    return end
-  }
-
-  if (!node.loc) {
-    return undefined
-  }
-
-  return getLocationOffset(originalText, node.loc.end)
-}
-
-const getOriginalSourceSuffixText = (
+const getExportSourceColumn = (
   node: SourceExportDeclaration,
-  originalText: string
-): string | undefined => {
-  const sourceNode = node.source as Node | null | undefined
-  const sourceEnd = sourceNode ? getNodeEndOffset(sourceNode, originalText) : undefined
-  const nodeEnd = getNodeEndOffset(node, originalText)
+  options: Options,
+  originalText: string | undefined
+): number =>
+  node.type === 'ExportAllDeclaration'
+    ? getExportAllSourceColumn(node)
+    : getExportNamedSourceColumn(node, options, originalText)
 
-  if (sourceEnd === undefined || nodeEnd === undefined) {
-    return undefined
-  }
+const getOriginalNodeText = (node: Node, originalText: string | undefined): string | undefined => {
+  const start = getRangeStart(node as RangedNode)
+  const end = getRangeEnd(node as RangedNode)
 
-  return originalText.slice(sourceEnd, nodeEnd)
-}
-
-const hasUnsupportedImportAssertion = (
-  node: SourceExportDeclaration,
-  options: Options
-): boolean => {
-  const attributedNode = node as AttributedExportDeclaration
-
-  if (
-    attributedNode.assertions &&
-    attributedNode.assertions.length > 0 &&
-    !attributedNode.attributes
-  ) {
-    return true
-  }
-
-  const { originalText } = options as OriginalTextOptions
-
-  if (!originalText) {
-    return false
-  }
-
-  const sourceSuffixText = getOriginalSourceSuffixText(node, originalText)
-
-  return sourceSuffixText ? unsupportedImportAssertionPattern.test(sourceSuffixText) : false
+  return originalText && start !== undefined && end !== undefined
+    ? originalText.slice(start, end)
+    : undefined
 }
 
 const hasCommentToken = (node: Node, originalText: string | undefined): boolean => {
-  if (!originalText) {
-    return false
-  }
+  const text = getOriginalNodeText(node, originalText)
 
-  const originalNodeText = getOriginalNodeText(node, originalText)
-
-  if (!originalNodeText) {
+  if (!text) {
     return false
   }
 
   let quote: string | undefined
 
-  for (let index = 0; index < originalNodeText.length; index += 1) {
-    const current = originalNodeText[index]
-    const next = originalNodeText[index + 1]
+  for (let index = 0; index < text.length; index += 1) {
+    const current = text[index]
+    const next = text[index + 1]
 
     if (quote) {
       if (current === '\\') {
@@ -349,222 +318,126 @@ const hasCommentToken = (node: Node, originalText: string | undefined): boolean 
   return false
 }
 
-const markExportAlignBlockedComments = (
-  body: Array<Node>,
-  comments: Array<LocatedComment>,
-  originalText: string | undefined
-): void => {
-  body.forEach((node) => {
-    if (
-      isSourceExportDeclaration(node) &&
-      (hasCommentToken(node, originalText) ||
-        comments.some((comment) => isCommentInsideNode(node, comment)))
-    ) {
-      const alignableNode = node as AlignableExportDeclaration
-
-      alignableNode.exportSourceAlignBlocked = true
-    }
-  })
-}
-
-const getExportAllSourceColumn = (node: ExportAllDeclaration): number =>
-  node.exportKind === 'type' ? exportTypeAllSourceColumn : exportAllSourceColumn
-
-const getExportNamedSourceColumn = (node: ExportNamedDeclaration): number => {
-  if (node.specifiers.length === 0) {
-    return node.source?.loc?.start.column ?? 0
-  }
-
-  const specifier = node.specifiers[node.specifiers.length - 1]
-
-  if (!specifier.loc) {
-    return node.source?.loc?.start.column ?? 0
-  }
-
-  return specifier.loc.end.column + namedSpecifiersSourceColumnOffset
-}
-
-const getFallbackExportSourceColumn = (node: SourceExportDeclaration): number => {
-  if (node.type === 'ExportAllDeclaration') {
-    return getExportAllSourceColumn(node)
-  }
-
-  return getExportNamedSourceColumn(node)
-}
-
-const getExportSpecifierText = (
-  node: ExportNamedDeclaration,
-  specifier: ExportNamedDeclaration['specifiers'][number],
-  options: Options
-): string | undefined => {
-  switch (specifier.type) {
-    case 'ExportSpecifier': {
-      const localName = getPrintedNodeName(specifier.local, options)
-      const exportedName = getPrintedNodeName(specifier.exported, options)
-
-      if (!localName || !exportedName) {
-        return undefined
-      }
-
-      const typePrefix =
-        node.exportKind !== 'type' && specifier.exportKind === 'type' ? 'type ' : ''
-
-      return localName === exportedName
-        ? `${typePrefix}${localName}`
-        : `${typePrefix}${localName} as ${exportedName}`
-    }
-    case 'ExportNamespaceSpecifier': {
-      const exportedName = getPrintedNodeName(specifier.exported, options)
-
-      return exportedName ? `* as ${exportedName}` : undefined
-    }
-    default: {
-      return undefined
-    }
-  }
-}
-
-const getExportSpecifiersText = (
-  node: ExportNamedDeclaration,
-  options: Options
-): string | undefined => {
-  const specifierTexts = node.specifiers.map((specifier) =>
-    getExportSpecifierText(node, specifier, options))
-
-  if (specifierTexts.some((specifier) => !specifier)) {
-    return undefined
-  }
-
-  return getWrappedSpecifiersText(specifierTexts as Array<string>, options)
-}
-
-const getProjectedExportAllSourceColumn = (
-  node: ExportAllDeclaration,
-  options: Options
-): number | undefined => {
-  const exportedName = getPrintedNodeName(
-    (
-      node as ExportAllDeclaration & {
-        exported?: { name?: string; value?: unknown } | null
-      }
-    ).exported,
-    options
-  )
-  const exportKeyword = node.exportKind === 'type' ? 'export type *' : 'export *'
-  const exportClause = exportedName ? `${exportKeyword} as ${exportedName}` : exportKeyword
-
-  return `${exportClause}${fromClause}`.length
-}
-
-const getProjectedExportNamedSourceColumn = (
-  node: ExportNamedDeclaration,
-  options: Options
-): number | undefined => {
-  const specifiersText = getExportSpecifiersText(node, options)
-
-  if (!specifiersText) {
-    return undefined
-  }
-
-  const exportKeyword = node.exportKind === 'type' ? 'export type' : 'export'
-
-  return `${exportKeyword} ${specifiersText}${fromClause}`.length
-}
-
-const getProjectedExportSourceColumn = (
+const hasUnsupportedImportAssertion = (
   node: SourceExportDeclaration,
-  options: Options
-): number | undefined => {
-  if (hasExportSourceComments(node)) {
-    return undefined
+  originalText: string | undefined
+): boolean => {
+  const sourceEnd = getRangeEnd(node.source as RangedNode | null | undefined)
+  const nodeEnd = getRangeEnd(node as RangedNode)
+
+  if (!originalText || sourceEnd === undefined || nodeEnd === undefined) {
+    return false
   }
 
-  if (node.type === 'ExportAllDeclaration') {
-    return getProjectedExportAllSourceColumn(node, options)
+  return unsupportedImportAssertionPattern.test(originalText.slice(sourceEnd, nodeEnd))
+}
+
+const hasImportAttributes = (node: SourceExportDeclaration): boolean => {
+  const { attributes } = node as AttributedExportDeclaration
+
+  return Boolean(attributes && attributes.length > 0)
+}
+
+const hasPrintedStatementTerminator = (suffixText: string): boolean => {
+  const trimmedSuffixText = suffixText.trimEnd()
+
+  if (trimmedSuffixText.endsWith(';')) {
+    return true
   }
 
-  return getProjectedExportNamedSourceColumn(node, options)
+  const lineCommentStart = trimmedSuffixText.indexOf('//')
+  const blockCommentStart = trimmedSuffixText.indexOf('/*')
+  const commentStart =
+    lineCommentStart >= 0 && blockCommentStart >= 0
+      ? Math.min(lineCommentStart, blockCommentStart)
+      : Math.max(lineCommentStart, blockCommentStart)
+
+  return commentStart > 0 && trimmedSuffixText.slice(0, commentStart).trimEnd().endsWith(';')
 }
 
-const getExportSourceColumn = (node: SourceExportDeclaration, options: Options): number => {
-  const projectedSourceColumn = getProjectedExportSourceColumn(node, options)
+const getStatementTerminatorLength = (suffixText: string, options: Options): number =>
+  options.semi === false || hasPrintedStatementTerminator(suffixText) ? 0 : 1
 
-  return projectedSourceColumn ?? getFallbackExportSourceColumn(node)
-}
-
-const getProjectedExportLineLength = (
+const getSourceLineSuffixLength = (
   node: SourceExportDeclaration,
   options: Options,
-  sourceColumn = getProjectedExportSourceColumn(node, options)
-): number | undefined => {
-  if (hasUnsupportedImportAssertion(node, options)) {
-    return undefined
+  originalText: string | undefined
+): number => {
+  const sourceLocation = node.source?.loc
+
+  if (!sourceLocation) {
+    return 0
   }
 
-  const sourceText = getSourceText(node, options)
-  const attributesText = getExportAttributesText(node, options)
-
-  if (sourceColumn === undefined || sourceText === undefined || attributesText === undefined) {
-    return undefined
+  if (!originalText) {
+    return node.loc ? node.loc.end.column - sourceLocation.start.column : 0
   }
 
-  return (
-    sourceColumn +
-    sourceText.length +
-    attributesText.length +
-    getStatementTerminatorText(options).length
-  )
+  const lines = originalText.split(/\r?\n/u)
+  const line = lines[sourceLocation.start.line - 1]
+  const suffixText = line ? line.slice(sourceLocation.start.column) : ''
+
+  return suffixText.length + getStatementTerminatorLength(suffixText, options)
 }
+
+const getExportLineLength = (
+  node: SourceExportDeclaration,
+  options: Options,
+  originalText: string | undefined,
+  sourceColumn: number
+): number => sourceColumn + getSourceLineSuffixLength(node, options, originalText)
+
+const isExportAlignGroupMember = (
+  node: Node,
+  options: Options,
+  originalText: string | undefined
+): node is AlignableExportDeclaration =>
+  isLocatedSourceExportDeclaration(node) &&
+  !hasExportSourceComments(node) &&
+  !hasCommentToken(node, originalText) &&
+  !hasImportAttributes(node) &&
+  !hasUnsupportedImportAssertion(node, originalText)
 
 const isAlignableExportDeclaration = (
   node: SourceExportDeclaration,
   options: Options,
+  originalText: string | undefined,
   printWidth: number
-): boolean => {
-  const lineLength = getProjectedExportLineLength(node, options)
-
-  return lineLength !== undefined && lineLength <= printWidth
-}
+): boolean =>
+  !hasExportSourceComments(node) &&
+  !hasCommentToken(node, originalText) &&
+  !hasImportAttributes(node) &&
+  !hasUnsupportedImportAssertion(node, originalText) &&
+  getExportLineLength(
+    node,
+    options,
+    originalText,
+    getExportSourceColumn(node, options, originalText)
+  ) <= printWidth
 
 const getMaxExportSourceColumn = (
   nodes: Array<SourceExportDeclaration>,
   options: Options,
-  printWidth: number
-): number => {
-  const alignableNodes = nodes.filter((node) =>
-    isAlignableExportDeclaration(node, options, printWidth))
-
-  return alignableNodes.length > 0
-    ? Math.max(...alignableNodes.map((node) => getExportSourceColumn(node, options)))
+  originalText: string | undefined
+): number =>
+  nodes.length > 0
+    ? Math.max(...nodes.map((node) => getExportSourceColumn(node, options, originalText)))
     : 0
-}
-
-const setExportAlignOffset = (
-  node: AlignableExportDeclaration,
-  options: Options,
-  maxExportSourceColumn: number
-): void => {
-  const sourceColumn = getExportSourceColumn(node, options)
-
-  node.exportSourceAlignOffset =
-    sourceColumn < maxExportSourceColumn ? maxExportSourceColumn - sourceColumn : 0
-}
 
 const getAlignableExportNodes = (
   nodes: Array<SourceExportDeclaration>,
   options: Options,
+  originalText: string | undefined,
   printWidth: number
 ): Array<SourceExportDeclaration> => {
   let alignableNodes = nodes.filter((node) =>
-    isAlignableExportDeclaration(node, options, printWidth))
+    isAlignableExportDeclaration(node, options, originalText, printWidth))
 
   while (alignableNodes.length > 0) {
-    const maxSourceColumn = getMaxExportSourceColumn(alignableNodes, options, printWidth)
-    const nextAlignableNodes = alignableNodes.filter((node) => {
-      const lineLength = getProjectedExportLineLength(node, options, maxSourceColumn)
-
-      return lineLength !== undefined && lineLength <= printWidth
-    })
+    const maxSourceColumn = getMaxExportSourceColumn(alignableNodes, options, originalText)
+    const nextAlignableNodes = alignableNodes.filter(
+      (node) => getExportLineLength(node, options, originalText, maxSourceColumn) <= printWidth
+    )
 
     if (nextAlignableNodes.length === alignableNodes.length) {
       return alignableNodes
@@ -576,33 +449,51 @@ const getAlignableExportNodes = (
   return alignableNodes
 }
 
+const setExportAlignOffset = (
+  node: AlignableExportDeclaration,
+  options: Options,
+  originalText: string | undefined,
+  maxExportSourceColumn: number
+): void => {
+  const sourceColumn = getExportSourceColumn(node, options, originalText)
+
+  node.exportSourceAlignOffset =
+    sourceColumn < maxExportSourceColumn ? maxExportSourceColumn - sourceColumn : 0
+}
+
 const setExportGroupAlignOffsets = (
   nodes: Array<AlignableExportDeclaration>,
   options: Options,
+  originalText: string | undefined,
   printWidth: number
 ): void => {
-  const alignableNodes = getAlignableExportNodes(nodes, options, printWidth)
-  const maxExportSourceColumn = getMaxExportSourceColumn(alignableNodes, options, printWidth)
+  const alignableNodes = getAlignableExportNodes(nodes, options, originalText, printWidth)
+  const maxExportSourceColumn = getMaxExportSourceColumn(alignableNodes, options, originalText)
 
   nodes.forEach((node) => {
     node.exportSourceAlignOffset = 0
   })
 
   alignableNodes.forEach((node) => {
-    setExportAlignOffset(node, options, maxExportSourceColumn)
+    setExportAlignOffset(node, options, originalText, maxExportSourceColumn)
   })
 }
 
-const setExportAlignOffsets = (body: Array<Node>, options: Options, printWidth: number): void => {
+const setExportAlignOffsets = (
+  body: Array<Node>,
+  options: Options,
+  originalText: string | undefined,
+  printWidth: number
+): void => {
   let group: Array<AlignableExportDeclaration> = []
 
   const flushGroup = (): void => {
-    setExportGroupAlignOffsets(group, options, printWidth)
+    setExportGroupAlignOffsets(group, options, originalText, printWidth)
     group = []
   }
 
   body.forEach((node) => {
-    if (isSourceExportDeclaration(node)) {
+    if (isExportAlignGroupMember(node, options, originalText)) {
       group.push(node)
     } else if (group.length > 0) {
       flushGroup()
@@ -621,8 +512,8 @@ export const setExportSourceAlignOffsets = (ast: AST, options: Options): void =>
   const { originalText } = options as OriginalTextOptions
   const printWidth = getPrintWidth(options)
 
-  markExportAlignBlockedComments(body, comments, originalText)
-  setExportAlignOffsets(body, options, printWidth)
+  markExportAlignBlockedComments(body, comments)
+  setExportAlignOffsets(body, options, originalText, printWidth)
 }
 
 export const alignExportFromDocPart = (part: unknown, node: SourceExportDeclaration): unknown => {
