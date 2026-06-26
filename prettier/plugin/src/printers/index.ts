@@ -34,8 +34,9 @@ export const print: Printer<Node>['print'] = (path, options, prnt): any => {
 
 export const preprocess = async (ast: AST, options: Options): Promise<AST> => {
   const body = ast.body as Array<Node>
+  const comments = (ast as { comments?: Array<never> | null }).comments ?? []
 
-  setImportAlignOffsets(body)
+  setImportAlignOffsets(body, options, comments)
   setExportSourceAlignOffsets(ast, options)
 
   return ast

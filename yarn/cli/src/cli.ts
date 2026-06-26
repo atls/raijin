@@ -7,7 +7,7 @@ import { ppath }                  from '@yarnpkg/fslib'
 // @ts-expect-error: Cjs export
 import { getPluginConfiguration } from '@atls/yarn-cli-tools'
 
-import packageJson                from '../package.json' with { type: 'json' }
+import packageJson from '../package.json' with { type: 'json' }
 
 const selfPath = npath.toPortablePath(npath.resolve(process.argv[1]))
 const pc = getPluginConfiguration(packageJson['@yarnpkg/builder'].bundles.standard)

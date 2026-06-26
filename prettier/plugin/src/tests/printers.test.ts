@@ -75,6 +75,23 @@ test('should align namespace export all declarations by their exported binding',
   )
 })
 
+test('should align namespace exports that become single line after formatting', async () => {
+  const source = [
+    'export * as',
+    "  ns from './namespace.js'",
+    "export { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export * as ns          from './namespace.js'",
+      "export { VeryLongName } from './x.js'",
+      '',
+    ].join('\n')
+  )
+})
+
 test('should align string literal export names by their printed quotes', async () => {
   const source = [
     "export { 'foo-bar' as fooBar } from './foo.js'",
@@ -307,6 +324,19 @@ test('should align empty source export declarations', async () => {
   )
 })
 
+test('should align empty type source export declarations', async () => {
+  const source = ["export type {} from './empty.js'", "export { VeryLongName } from './x.js'"].join(
+    '\n'
+  )
+
+  await assertFormatted(
+    source,
+    ["export type {}          from './empty.js'", "export { VeryLongName } from './x.js'", ''].join(
+      '\n'
+    )
+  )
+})
+
 test('should keep import and export source alignment independent', async () => {
   const source = [
     "import { Foo } from './foo.js'",
@@ -328,6 +358,90 @@ test('should keep import and export source alignment independent', async () => {
   )
 })
 
+test('should align imports that become single line after formatting', async () => {
+  const source = [
+    'import {',
+    '  Foo,',
+    "} from './foo.js'",
+    "import { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    ["import { Foo }          from './foo.js'", "import { VeryLongName } from './x.js'", ''].join(
+      '\n'
+    )
+  )
+})
+
+test('should align namespace imports that become single line after formatting', async () => {
+  const source = [
+    'import * as',
+    "  ns from './ns.js'",
+    "import { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    ["import * as ns          from './ns.js'", "import { VeryLongName } from './x.js'", ''].join(
+      '\n'
+    )
+  )
+})
+
+test('should respect bracket spacing when aligning imports', async () => {
+  const source = [
+    "import { Foo } from './foo.js'",
+    "import type { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "import type {VeryLongName} from './x.js'",
+      '',
+      "import {Foo}               from './foo.js'",
+      '',
+    ].join('\n'),
+    { bracketSpacing: false }
+  )
+})
+
+test('should leave import declarations with attributes outside source alignment', async () => {
+  const source = [
+    "import { Foo } from './foo.js'",
+    "import packageJson from '../package.json' with { type: 'json' }",
+    "import { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "import { Foo }          from './foo.js'",
+      "import { VeryLongName } from './x.js'",
+      "import packageJson from '../package.json' with { type: 'json' }",
+      '',
+    ].join('\n')
+  )
+})
+
+test('should align imports after normalizing module source quotes', async () => {
+  const source = [
+    'import * as ns from "./has\\"quote.js"',
+    'import { VeryLongName } from "./x.js"',
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "import * as ns          from './has\"quote.js'",
+      "import { VeryLongName } from './x.js'",
+      '',
+    ].join('\n'),
+    { printWidth: 43 }
+  )
+})
+
 test('should keep source exports outside wrapped named exports idempotent', async () => {
   const source = [
     "export { AlphaAlphaAlpha, BetaBetaBeta, GammaGammaGamma, DeltaDeltaDelta } from './very-long-source-module-name.js'",
@@ -346,6 +460,38 @@ test('should keep source exports outside wrapped named exports idempotent', asyn
       "export * from './short.js'",
       '',
     ].join('\n')
+  )
+})
+
+test('should align named exports after normalizing specifier spacing', async () => {
+  const source = [
+    "export {  Foo  } from './foo.js'",
+    "export type { LongerNamedType } from './types.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export { Foo }                  from './foo.js'",
+      "export type { LongerNamedType } from './types.js'",
+      '',
+    ].join('\n')
+  )
+})
+
+test('should align exports after normalizing module source quotes', async () => {
+  const source = ['export * from "./has\\"quote.js"', 'export { VeryLongName } from "./x.js"'].join(
+    '\n'
+  )
+
+  await assertFormatted(
+    source,
+    [
+      "export *                from './has\"quote.js'",
+      "export { VeryLongName } from './x.js'",
+      '',
+    ].join('\n'),
+    { printWidth: 45 }
   )
 })
 
