@@ -6,6 +6,7 @@ import type { LocatedComment }      from './source.js'
 import type { OriginalTextOptions } from './source.js'
 
 import { alignFromDocPart }         from './source.js'
+import { getOriginalNodeText }      from './source.js'
 import { getPrintWidth }            from './source.js'
 import { getSourceLineLength }      from './source.js'
 import { hasCommentToken }          from './source.js'
@@ -29,6 +30,11 @@ type CommentedNode = {
 type AttributedImportDeclaration = ImportDeclaration & {
   attributes?: Array<unknown> | null
 }
+
+const importKeyword = 'import'
+const typeKeyword = 'type'
+const emptyNamedImportClause = '{}'
+const fromKeyword = 'from'
 
 const getImportSpecifierText = (
   specifier: ImportDeclaration['specifiers'][number],
@@ -55,6 +61,10 @@ const getNamedImportSpecifiersText = (
 ): string => {
   const specifierText = specifiers.map((specifier) => getImportSpecifierText(specifier, options))
   const joinedSpecifiers = specifierText.join(', ')
+
+  if (joinedSpecifiers.length === 0) {
+    return '{}'
+  }
 
   return options.bracketSpacing === false ? `{${joinedSpecifiers}}` : `{ ${joinedSpecifiers} }`
 }
@@ -111,7 +121,36 @@ const hasImportAttributes = (node: ImportDeclaration): boolean => {
 }
 
 export const isSourceImportDeclaration = (node: Node): node is ImportDeclaration =>
-  node.type === 'ImportDeclaration' && node.specifiers.length > 0
+  node.type === 'ImportDeclaration' && Boolean(node.source)
+
+const hasEmptyImportClause = (text: string | undefined): boolean => {
+  if (!text) {
+    return false
+  }
+
+  let candidate = text.trimStart()
+
+  if (!candidate.startsWith(importKeyword)) {
+    return false
+  }
+
+  candidate = candidate.slice(importKeyword.length).trimStart()
+
+  if (candidate.startsWith(typeKeyword)) {
+    candidate = candidate.slice(typeKeyword.length).trimStart()
+  }
+
+  if (!candidate.startsWith(emptyNamedImportClause)) {
+    return false
+  }
+
+  candidate = candidate.slice(emptyNamedImportClause.length).trimStart()
+
+  return candidate.startsWith(fromKeyword)
+}
+
+const hasImportClause = (node: ImportDeclaration, originalText: string | undefined): boolean =>
+  node.specifiers.length > 0 || hasEmptyImportClause(getOriginalNodeText(node, originalText))
 
 const isAlignableImportDeclaration = (
   node: Node,
@@ -121,10 +160,45 @@ const isAlignableImportDeclaration = (
 ): node is AlignableImportDeclaration =>
   isSourceImportDeclaration(node) &&
   Boolean(node.source) &&
+  hasImportClause(node, originalText) &&
   !hasImportSourceComments(node) &&
   !hasCommentToken(node, originalText) &&
   !hasImportAttributes(node) &&
   getSourceLineLength(getImportSourceColumn(node, options), node.source, options) <= printWidth
+
+const getImportLineLength = (
+  node: ImportDeclaration,
+  options: Options,
+  sourceColumn: number
+): number => getSourceLineLength(sourceColumn, node.source, options)
+
+const getMaxImportSourceColumn = (nodes: Array<ImportDeclaration>, options: Options): number =>
+  nodes.length > 0 ? Math.max(...nodes.map((node) => getImportSourceColumn(node, options))) : 0
+
+const getAlignableImportNodes = (
+  body: Array<Node>,
+  options: Options,
+  originalText: string | undefined,
+  printWidth: number
+): Array<AlignableImportDeclaration> => {
+  let alignableNodes = body.filter((node) =>
+    isAlignableImportDeclaration(node, options, originalText, printWidth))
+
+  while (alignableNodes.length > 0) {
+    const maxSourceColumn = getMaxImportSourceColumn(alignableNodes, options)
+    const nextAlignableNodes = alignableNodes.filter(
+      (node) => getImportLineLength(node, options, maxSourceColumn) <= printWidth
+    )
+
+    if (nextAlignableNodes.length === alignableNodes.length) {
+      return alignableNodes
+    }
+
+    alignableNodes = nextAlignableNodes
+  }
+
+  return alignableNodes
+}
 
 const markImportAlignBlockedComments = (
   body: Array<Node>,
@@ -152,12 +226,16 @@ export const setImportAlignOffsets = (
 
   markImportAlignBlockedComments(body, astComments)
 
-  const imports = body.filter((node) =>
-    isAlignableImportDeclaration(node, options, originalText, printWidth))
-  const maxSourceColumn =
-    imports.length > 0
-      ? Math.max(...imports.map((node) => getImportSourceColumn(node, options)))
-      : 0
+  const imports = getAlignableImportNodes(body, options, originalText, printWidth)
+  const maxSourceColumn = getMaxImportSourceColumn(imports, options)
+
+  body.forEach((node) => {
+    if (isSourceImportDeclaration(node)) {
+      const alignableNode = node as AlignableImportDeclaration
+
+      alignableNode.importSourceAlignOffset = 0
+    }
+  })
 
   imports.forEach((node) => {
     const sourceColumn = getImportSourceColumn(node, options)

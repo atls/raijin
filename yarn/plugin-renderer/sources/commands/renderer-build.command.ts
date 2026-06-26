@@ -12,7 +12,7 @@ import { scriptUtils }                                   from '@yarnpkg/core'
 import { xfs }                                           from '@yarnpkg/fslib'
 import { ppath }                                         from '@yarnpkg/fslib'
 
-import { makeCurrentYarnExecutable }                     from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'

@@ -337,6 +337,27 @@ test('should align empty type source export declarations', async () => {
   )
 })
 
+test('should align empty source import declarations without aligning side-effect imports', async () => {
+  const source = [
+    "import './side-effect.js'",
+    "import {} from './empty.js'",
+    "import type {} from './types.js'",
+    "import { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "import {}               from './empty.js'",
+      "import './side-effect.js'",
+      "import type {}          from './types.js'",
+      '',
+      "import { VeryLongName } from './x.js'",
+      '',
+    ].join('\n')
+  )
+})
+
 test('should keep import and export source alignment independent', async () => {
   const source = [
     "import { Foo } from './foo.js'",
@@ -407,6 +428,23 @@ test('should respect bracket spacing when aligning imports', async () => {
   )
 })
 
+test('should keep source imports within print width after alignment padding', async () => {
+  const source = [
+    "import { Foo } from './long-enough-module.js'",
+    "import { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "import { Foo } from './long-enough-module.js'",
+      "import { VeryLongName } from './x.js'",
+      '',
+    ].join('\n'),
+    { printWidth: 53 }
+  )
+})
+
 test('should leave import declarations with attributes outside source alignment', async () => {
   const source = [
     "import { Foo } from './foo.js'",
@@ -438,7 +476,7 @@ test('should align imports after normalizing module source quotes', async () => 
       "import { VeryLongName } from './x.js'",
       '',
     ].join('\n'),
-    { printWidth: 43 }
+    { printWidth: 50 }
   )
 })
 
@@ -513,6 +551,22 @@ test('should align exports that become single line after formatting', async () =
   )
 })
 
+test('should not treat as inside export literal names as an explicit alias', async () => {
+  const source = [
+    "export { 'foo as bar' } from './literal.js'",
+    "export { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export { 'foo as bar' } from './literal.js'",
+      "export { VeryLongName } from './x.js'",
+      '',
+    ].join('\n')
+  )
+})
+
 test('should preserve explicit self aliases before source alignment', async () => {
   const source = [
     "export { foo as foo } from './foo.js'",
@@ -524,6 +578,22 @@ test('should preserve explicit self aliases before source alignment', async () =
     ["export { foo as foo }   from './foo.js'", "export { VeryLongName } from './x.js'", ''].join(
       '\n'
     )
+  )
+})
+
+test('should preserve explicit string literal self aliases before source alignment', async () => {
+  const source = [
+    "export { 'foo as bar' as 'foo as bar' } from './literal.js'",
+    "export { VeryLongName } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "export { 'foo as bar' as 'foo as bar' } from './literal.js'",
+      "export { VeryLongName }                 from './x.js'",
+      '',
+    ].join('\n')
   )
 })
 

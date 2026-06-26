@@ -11,6 +11,7 @@ import { alignFromDocPart }            from './source.js'
 import { getOriginalNodeText }         from './source.js'
 import { getPrintWidth }               from './source.js'
 import { getRangeEnd }                 from './source.js'
+import { getRangeStart }               from './source.js'
 import { getSourceLineLength }         from './source.js'
 import { hasCommentToken }             from './source.js'
 import { hasComments }                 from './source.js'
@@ -98,9 +99,18 @@ const hasExplicitExportAlias = (
   specifier: ExportNamedDeclaration['specifiers'][number],
   originalText: string | undefined
 ): boolean => {
-  const specifierText = getOriginalNodeText(specifier as RangedNode, originalText)
+  if (specifier.type !== 'ExportSpecifier') {
+    return false
+  }
 
-  return specifierText ? /\bas\b/u.test(specifierText) : false
+  const localEnd = getRangeEnd(specifier.local as RangedNode)
+  const exportedStart = getRangeStart(specifier.exported as RangedNode)
+
+  if (!originalText || localEnd === undefined || exportedStart === undefined) {
+    return false
+  }
+
+  return exportedStart > localEnd && /\bas\b/u.test(originalText.slice(localEnd, exportedStart))
 }
 
 const getExportSpecifierText = (
