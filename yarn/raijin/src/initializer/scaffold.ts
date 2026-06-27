@@ -1,11 +1,11 @@
-import type { Readable }                                  from 'node:stream'
-import type { Writable }                                  from 'node:stream'
+import type { Readable }                          from 'node:stream'
+import type { Writable }                          from 'node:stream'
 
-import { createInterface }                                from 'node:readline'
+import { createInterface }                        from 'node:readline'
 
 import { RaijinInitializerScaffoldTypeRequiredException } from './exceptions/scaffold-type-required.js'
-import { RaijinInitializerScaffoldTypeException }         from './exceptions/scaffold-type.js'
-import { RaijinInitializerUsageException }                from './exceptions/usage.js'
+import { RaijinInitializerScaffoldTypeException } from './exceptions/scaffold-type.js'
+import { RaijinInitializerUsageException }        from './exceptions/usage.js'
 
 export const RAIJIN_SCAFFOLD_TYPES = ['project', 'library'] as const
 

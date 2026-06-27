@@ -1,5 +1,5 @@
 import { parsers }  from './parsers.js'
-import { printers } from './printers.js'
+import { printers } from './printers/index.js'
 
 const plugin = {
   printers,

@@ -7,7 +7,7 @@ import { join }                                               from 'node:path'
 import { PassThrough }                                        from 'node:stream'
 import { test }                                               from 'node:test'
 
-import { RaijinInitializerScaffoldTypeRequiredException }     from './exceptions/scaffold-type-required.js'
+import { RaijinInitializerScaffoldTypeRequiredException } from './exceptions/scaffold-type-required.js'
 import { RaijinInitializerScaffoldTypeException }             from './exceptions/scaffold-type.js'
 import { RaijinInitializerUsageException }                    from './exceptions/usage.js'
 import { runRaijinInitializer as runPublicRaijinInitializer } from '../index.js'
