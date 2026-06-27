@@ -1,22 +1,20 @@
 import type { ImportDeclaration }   from '@babel/types'
 import type { Node }                from '@babel/types'
+import type { Doc }                 from 'prettier'
 import type { Options }             from 'prettier'
 
 import type { LocatedComment }      from './source.js'
 import type { OriginalTextOptions } from './source.js'
 
-import { alignFromDocPart }         from './source.js'
-import { getOriginalNodeText }      from './source.js'
-import { getPrintWidth }            from './source.js'
-import { getSourceLineLength }      from './source.js'
+import { hasSourceAlignDoc }        from './source.js'
 import { hasCommentToken }          from './source.js'
 import { hasComments }              from './source.js'
 import { isCommentInsideNode }      from './source.js'
-import { printModuleName }          from './source.js'
+import { registerSourceAlignDoc }   from './source.js'
+import { setSourceAlignOffsets }    from './source.js'
 
 type AlignableImportDeclaration = ImportDeclaration & {
   importSourceAlignBlocked?: boolean
-  importSourceAlignOffset?: number
 }
 
 type CommentedNode = {
@@ -29,75 +27,6 @@ type CommentedNode = {
 
 type AttributedImportDeclaration = ImportDeclaration & {
   attributes?: Array<unknown> | null
-}
-
-const importKeyword = 'import'
-const typeKeyword = 'type'
-const emptyNamedImportClause = '{}'
-const fromKeyword = 'from'
-
-const getImportSpecifierText = (
-  specifier: ImportDeclaration['specifiers'][number],
-  options: Options
-): string => {
-  if (specifier.type === 'ImportDefaultSpecifier') {
-    return specifier.local.name
-  }
-
-  if (specifier.type === 'ImportNamespaceSpecifier') {
-    return `* as ${specifier.local.name}`
-  }
-
-  const imported = printModuleName(specifier.imported, options)
-  const local = specifier.local.name
-  const value = imported === local ? imported : `${imported} as ${local}`
-
-  return specifier.importKind === 'type' ? `type ${value}` : value
-}
-
-const getNamedImportSpecifiersText = (
-  specifiers: ImportDeclaration['specifiers'],
-  options: Options
-): string => {
-  const specifierText = specifiers.map((specifier) => getImportSpecifierText(specifier, options))
-  const joinedSpecifiers = specifierText.join(', ')
-
-  if (joinedSpecifiers.length === 0) {
-    return '{}'
-  }
-
-  return options.bracketSpacing === false ? `{${joinedSpecifiers}}` : `{ ${joinedSpecifiers} }`
-}
-
-const getImportSourceColumn = (node: ImportDeclaration, options: Options): number => {
-  const namedSpecifiers = node.specifiers.filter(
-    (specifier) => specifier.type === 'ImportSpecifier'
-  )
-  const defaultSpecifier = node.specifiers.find(
-    (specifier) => specifier.type === 'ImportDefaultSpecifier'
-  )
-  const namespaceSpecifier = node.specifiers.find(
-    (specifier) => specifier.type === 'ImportNamespaceSpecifier'
-  )
-  const importKind = node.importKind === 'type' ? 'type ' : ''
-
-  if (namespaceSpecifier) {
-    return `import ${importKind}${getImportSpecifierText(namespaceSpecifier, options)} from `.length
-  }
-
-  if (defaultSpecifier && namedSpecifiers.length > 0) {
-    return `import ${importKind}${getImportSpecifierText(
-      defaultSpecifier,
-      options
-    )}, ${getNamedImportSpecifiersText(namedSpecifiers, options)} from `.length
-  }
-
-  if (defaultSpecifier) {
-    return `import ${importKind}${getImportSpecifierText(defaultSpecifier, options)} from `.length
-  }
-
-  return `import ${importKind}${getNamedImportSpecifiersText(namedSpecifiers, options)} from `
-    .length
 }
 
 const hasImportSourceComments = (node: ImportDeclaration): boolean =>
@@ -123,84 +52,20 @@ const hasImportAttributes = (node: ImportDeclaration): boolean => {
 export const isSourceImportDeclaration = (node: Node): node is ImportDeclaration =>
   node.type === 'ImportDeclaration' && Boolean(node.source)
 
-const hasEmptyImportClause = (text: string | undefined): boolean => {
-  if (!text) {
-    return false
-  }
-
-  let candidate = text.trimStart()
-
-  if (!candidate.startsWith(importKeyword)) {
-    return false
-  }
-
-  candidate = candidate.slice(importKeyword.length).trimStart()
-
-  if (candidate.startsWith(typeKeyword)) {
-    candidate = candidate.slice(typeKeyword.length).trimStart()
-  }
-
-  if (!candidate.startsWith(emptyNamedImportClause)) {
-    return false
-  }
-
-  candidate = candidate.slice(emptyNamedImportClause.length).trimStart()
-
-  return candidate.startsWith(fromKeyword)
-}
-
-const hasImportClause = (node: ImportDeclaration, originalText: string | undefined): boolean =>
-  node.specifiers.length > 0 || hasEmptyImportClause(getOriginalNodeText(node, originalText))
+const hasImportClause = (node: ImportDeclaration): boolean =>
+  node.specifiers.length > 0 || hasSourceAlignDoc(node)
 
 const isAlignableImportDeclaration = (
   node: Node,
-  options: Options,
-  originalText: string | undefined,
-  printWidth: number
+  originalText: string | undefined
 ): node is AlignableImportDeclaration =>
   isSourceImportDeclaration(node) &&
-  Boolean(node.source) &&
-  hasImportClause(node, originalText) &&
+  hasImportClause(node) &&
   !hasImportSourceComments(node) &&
   !hasCommentToken(node, originalText) &&
-  !hasImportAttributes(node) &&
-  getSourceLineLength(getImportSourceColumn(node, options), node.source, options) <= printWidth
+  !hasImportAttributes(node)
 
-const getImportLineLength = (
-  node: ImportDeclaration,
-  options: Options,
-  sourceColumn: number
-): number => getSourceLineLength(sourceColumn, node.source, options)
-
-const getMaxImportSourceColumn = (nodes: Array<ImportDeclaration>, options: Options): number =>
-  nodes.length > 0 ? Math.max(...nodes.map((node) => getImportSourceColumn(node, options))) : 0
-
-const getAlignableImportNodes = (
-  body: Array<Node>,
-  options: Options,
-  originalText: string | undefined,
-  printWidth: number
-): Array<AlignableImportDeclaration> => {
-  let alignableNodes = body.filter((node) =>
-    isAlignableImportDeclaration(node, options, originalText, printWidth))
-
-  while (alignableNodes.length > 0) {
-    const maxSourceColumn = getMaxImportSourceColumn(alignableNodes, options)
-    const nextAlignableNodes = alignableNodes.filter(
-      (node) => getImportLineLength(node, options, maxSourceColumn) <= printWidth
-    )
-
-    if (nextAlignableNodes.length === alignableNodes.length) {
-      return alignableNodes
-    }
-
-    alignableNodes = nextAlignableNodes
-  }
-
-  return alignableNodes
-}
-
-const markImportAlignBlockedComments = (
+export const markImportAlignBlockedComments = (
   body: Array<Node>,
   comments: Array<LocatedComment>
 ): void => {
@@ -216,37 +81,12 @@ const markImportAlignBlockedComments = (
   })
 }
 
-export const setImportAlignOffsets = (
-  body: Array<Node>,
-  options: Options,
-  astComments: Array<LocatedComment> = []
-): void => {
-  const { originalText } = options as OriginalTextOptions
-  const printWidth = getPrintWidth(options)
-
-  markImportAlignBlockedComments(body, astComments)
-
-  const imports = getAlignableImportNodes(body, options, originalText, printWidth)
-  const maxSourceColumn = getMaxImportSourceColumn(imports, options)
-
-  body.forEach((node) => {
-    if (isSourceImportDeclaration(node)) {
-      const alignableNode = node as AlignableImportDeclaration
-
-      alignableNode.importSourceAlignOffset = 0
-    }
-  })
-
-  imports.forEach((node) => {
-    const sourceColumn = getImportSourceColumn(node, options)
-
-    node.importSourceAlignOffset =
-      sourceColumn < maxSourceColumn ? maxSourceColumn - sourceColumn : 0
-  })
+export const registerImportSourceDoc = (node: ImportDeclaration, doc: Doc): void => {
+  registerSourceAlignDoc(node, doc)
 }
 
-export const alignImportFromDocPart = (part: unknown, node: ImportDeclaration): unknown => {
-  const alignOffset = (node as AlignableImportDeclaration).importSourceAlignOffset
+export const setImportAlignOffsets = (body: Array<Node>, options: Options): void => {
+  const { originalText } = options as OriginalTextOptions
 
-  return alignFromDocPart(part, alignOffset)
+  setSourceAlignOffsets(body, options, (node) => isAlignableImportDeclaration(node, originalText))
 }

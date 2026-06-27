@@ -1,5 +1,9 @@
-import type { Node }    from '@babel/types'
-import type { Options } from 'prettier'
+import type { Node }            from '@babel/types'
+import type { Doc }             from 'prettier'
+import type { Options }         from 'prettier'
+
+import { doc as prettierDoc }   from 'prettier'
+import { util as prettierUtil } from 'prettier'
 
 export const fromDocPart = ' from'
 
@@ -14,15 +18,6 @@ type CommentedNode = {
   innerComments?: Array<unknown> | null
   leadingComments?: Array<unknown> | null
   trailingComments?: Array<unknown> | null
-}
-
-type StringLiteralNode = {
-  raw?: string
-  value?: unknown
-}
-
-type NamedNode = {
-  name?: string
 }
 
 export type LocatedComment = {
@@ -41,6 +36,34 @@ export type LocatedComment = {
 export type OriginalTextOptions = Options & {
   originalText?: string
 }
+
+type SourceAlignEntry = {
+  doc: Doc
+  fromPart?: Array<unknown>
+  lineWidth?: number
+  sourceColumn?: number
+}
+
+type DocCommand = {
+  break?: boolean | 'propagated'
+  breakContents?: Doc
+  contents?: Doc
+  expandedStates?: Array<Doc>
+  flatContents?: Doc
+  hard?: boolean
+  literal?: boolean
+  parts?: Array<Doc>
+  soft?: boolean
+  type?: string
+}
+
+type FlattenResult = {
+  foundStop: boolean
+  invalid: boolean
+  text: string
+}
+
+const sourceAlignEntries = new WeakMap<Node, SourceAlignEntry>()
 
 export const getPrintWidth = (options: Options): number => options.printWidth ?? defaultPrintWidth
 
@@ -150,71 +173,257 @@ export const hasCommentToken = (node: Node, originalText: string | undefined): b
   return hasCommentSyntax(sameLineSuffix)
 }
 
-const printDoubleQuotedString = (value: string): string => JSON.stringify(value)
+const isDocCommand = (doc: unknown): doc is DocCommand =>
+  typeof doc === 'object' && doc !== null && !Array.isArray(doc)
 
-const printSingleQuotedString = (value: string): string => {
-  const doubleQuoted = printDoubleQuotedString(value)
-  const body = doubleQuoted.slice(1, -1).replace(/\\"/gu, '"').replace(/'/gu, "\\'")
+const findFromDocPart = (doc: Doc): Array<unknown> | undefined => {
+  if (Array.isArray(doc)) {
+    if (doc[0] === fromDocPart) {
+      return doc as Array<unknown>
+    }
 
-  return `'${body}'`
+    for (const part of doc) {
+      const fromPart = findFromDocPart(part)
+
+      if (fromPart) {
+        return fromPart
+      }
+    }
+
+    return undefined
+  }
+
+  if (!isDocCommand(doc)) {
+    return undefined
+  }
+
+  if (doc.contents) {
+    const fromPart = findFromDocPart(doc.contents)
+
+    if (fromPart) {
+      return fromPart
+    }
+  }
+
+  if (doc.parts) {
+    for (const part of doc.parts) {
+      const fromPart = findFromDocPart(part)
+
+      if (fromPart) {
+        return fromPart
+      }
+    }
+  }
+
+  if (doc.flatContents) {
+    return findFromDocPart(doc.flatContents)
+  }
+
+  return undefined
 }
 
-export const printStringLiteral = (value: string, options: Options): string => {
-  const doubleQuoted = printDoubleQuotedString(value)
-  const singleQuoted = printSingleQuotedString(value)
+const flattenDoc = (doc: Doc, stopPart?: Array<unknown>): FlattenResult => {
+  const chunks: Array<string> = []
+  let foundStop = false
+  let invalid = false
 
-  if (options.singleQuote) {
-    return singleQuoted.length <= doubleQuoted.length ? singleQuoted : doubleQuoted
+  const visit = (part: Doc): void => {
+    if (foundStop || invalid) {
+      return
+    }
+
+    if (stopPart && part === stopPart) {
+      foundStop = true
+
+      return
+    }
+
+    if (typeof part === 'string') {
+      chunks.push(part)
+
+      return
+    }
+
+    if (Array.isArray(part)) {
+      part.forEach((item) => {
+        visit(item)
+      })
+
+      return
+    }
+
+    if (!isDocCommand(part)) {
+      invalid = true
+
+      return
+    }
+
+    switch (part.type) {
+      case 'align':
+      case 'group':
+      case 'indent':
+      case 'label':
+      case 'line-suffix':
+        if (part.type === 'group' && part.break) {
+          invalid = true
+        } else if (part.contents) {
+          visit(part.contents)
+        }
+        break
+      case 'fill':
+        part.parts.forEach((item) => {
+          visit(item)
+        })
+        break
+      case 'if-break':
+        if (part.flatContents) {
+          visit(part.flatContents)
+        }
+        break
+      case 'line':
+        if (part.hard || part.literal) {
+          invalid = true
+        } else {
+          chunks.push(part.soft ? '' : ' ')
+        }
+        break
+      case 'break-parent':
+      case 'cursor':
+      case 'line-suffix-boundary':
+      case 'trim':
+        break
+      default:
+        invalid = true
+    }
   }
 
-  return doubleQuoted.length <= singleQuoted.length ? doubleQuoted : singleQuoted
+  visit(doc)
+
+  return {
+    foundStop,
+    invalid,
+    text: chunks.join(''),
+  }
 }
 
-export const printModuleName = (node: unknown, options: Options): string => {
-  const named = node as NamedNode
+const getDocTextWidth = (text: string): number => prettierUtil.getStringWidth(text)
 
-  if (typeof named.name === 'string') {
-    return named.name
+export const registerSourceAlignDoc = (node: Node, doc: Doc): void => {
+  const fromPart = findFromDocPart(doc)
+
+  if (!fromPart || prettierDoc.utils.willBreak(doc)) {
+    sourceAlignEntries.set(node, { doc })
+
+    return
   }
 
-  const literal = node as StringLiteralNode
+  const prefix = flattenDoc(doc, fromPart)
+  const line = flattenDoc(doc)
 
-  if (typeof literal.value === 'string') {
-    return printStringLiteral(literal.value, options)
+  if (prefix.invalid || !prefix.foundStop || line.invalid) {
+    sourceAlignEntries.set(node, { doc, fromPart })
+
+    return
   }
 
-  return typeof literal.raw === 'string' ? literal.raw : ''
+  sourceAlignEntries.set(node, {
+    doc,
+    fromPart,
+    lineWidth: getDocTextWidth(line.text),
+    sourceColumn: getDocTextWidth(prefix.text),
+  })
 }
 
-export const getSourceLiteralLength = (
-  source: StringLiteralNode | null | undefined,
-  options: Options
-): number => {
-  if (source && typeof source.value === 'string') {
-    return printStringLiteral(source.value, options).length
-  }
+export const hasSourceAlignDoc = (node: Node): boolean =>
+  Boolean(sourceAlignEntries.get(node)?.fromPart)
 
-  if (typeof source?.raw === 'string') {
-    return source.raw.length
-  }
+const resetSourceAlignNode = (node: Node): void => {
+  const entry = sourceAlignEntries.get(node)
 
-  return 0
+  if (entry?.fromPart) {
+    entry.fromPart[0] = fromDocPart
+  }
 }
 
-export const getStatementTerminatorLength = (options: Options): number =>
-  options.semi === false ? 0 : 1
+const setSourceAlignNodeOffset = (node: Node, alignOffset: number): void => {
+  const entry = sourceAlignEntries.get(node)
 
-export const getSourceLineLength = (
-  sourceColumn: number,
-  source: StringLiteralNode | null | undefined,
-  options: Options
-): number =>
-  sourceColumn + getSourceLiteralLength(source, options) + getStatementTerminatorLength(options)
+  if (entry?.fromPart) {
+    entry.fromPart[0] =
+      alignOffset > 0 ? `${''.padStart(alignOffset, ' ')}${fromDocPart}` : fromDocPart
+  }
+}
 
-export const alignFromDocPart = (part: unknown, alignOffset: number | undefined): unknown => {
-  if (Array.isArray(part) && part[0] === fromDocPart && alignOffset && alignOffset > 0) {
-    part[0] = `${''.padStart(alignOffset, ' ')}${fromDocPart}`
+const isMeasuredSourceAlignEntry = (
+  entry: SourceAlignEntry | undefined
+): entry is Required<SourceAlignEntry> => {
+  if (!entry?.fromPart) {
+    return false
   }
 
-  return part
+  return typeof entry.sourceColumn === 'number' && typeof entry.lineWidth === 'number'
+}
+
+const getMaxSourceColumn = (nodes: Array<Node>): number =>
+  nodes.length > 0
+    ? Math.max(
+        ...nodes.map(
+          (node) => sourceAlignEntries.get(node)?.sourceColumn ?? Number.NEGATIVE_INFINITY
+        )
+      )
+    : 0
+
+const getAlignableSourceNodes = (
+  nodes: Array<Node>,
+  options: Options,
+  isAlignable: (node: Node) => boolean
+): Array<Node> => {
+  const printWidth = getPrintWidth(options)
+  let alignableNodes = nodes.filter((node) => {
+    const entry = sourceAlignEntries.get(node)
+
+    return isAlignable(node) && isMeasuredSourceAlignEntry(entry) && entry.lineWidth <= printWidth
+  })
+
+  while (alignableNodes.length > 0) {
+    const maxSourceColumn = getMaxSourceColumn(alignableNodes)
+    const nextAlignableNodes = alignableNodes.filter((node) => {
+      const entry = sourceAlignEntries.get(node)
+
+      return (
+        isMeasuredSourceAlignEntry(entry) &&
+        entry.lineWidth + maxSourceColumn - entry.sourceColumn <= printWidth
+      )
+    })
+
+    if (nextAlignableNodes.length === alignableNodes.length) {
+      return alignableNodes
+    }
+
+    alignableNodes = nextAlignableNodes
+  }
+
+  return alignableNodes
+}
+
+export const setSourceAlignOffsets = (
+  nodes: Array<Node>,
+  options: Options,
+  isAlignable: (node: Node) => boolean
+): void => {
+  nodes.forEach((node) => {
+    resetSourceAlignNode(node)
+  })
+
+  const alignableNodes = getAlignableSourceNodes(nodes, options, isAlignable)
+  const maxSourceColumn = getMaxSourceColumn(alignableNodes)
+
+  alignableNodes.forEach((node) => {
+    const sourceColumn = sourceAlignEntries.get(node)?.sourceColumn ?? maxSourceColumn
+
+    setSourceAlignNodeOffset(
+      node,
+      sourceColumn < maxSourceColumn ? maxSourceColumn - sourceColumn : 0
+    )
+  })
 }
