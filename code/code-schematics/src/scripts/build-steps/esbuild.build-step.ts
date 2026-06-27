@@ -1,23 +1,22 @@
+import { mkdir }                         from 'node:fs/promises'
 import { writeFile }                     from 'node:fs/promises'
+import { join }                          from 'node:path'
 
 import esbuild                           from 'esbuild'
 
 import { UndefinedBuildRedultException } from '../exceptions/index.js'
 import { getEsbuildConfig }              from '../getters/index.js'
 import { getCjsContent }                 from '../getters/index.js'
-import { getEncodedContent }             from '../getters/index.js'
-import { getGeneratedFileContent }       from '../getters/index.js'
 
-export const esbuildBuildStep = async (): Promise<void> => {
+export const esbuildBuildStep = async (schematicOutputDir: string): Promise<void> => {
   const esbuildConfig = getEsbuildConfig()
   const result = await esbuild.build(esbuildConfig)
 
   if (!result.outputFiles) throw new UndefinedBuildRedultException()
 
   const cjsContent = getCjsContent(result)
-  const encodedContent = getEncodedContent(cjsContent)
+  const projectDir = join(schematicOutputDir, 'project')
 
-  const generatedFileContent = getGeneratedFileContent(encodedContent)
-
-  await writeFile('src/generated/schematic-factory-export.ts', generatedFileContent)
+  await mkdir(projectDir, { recursive: true })
+  await writeFile(join(projectDir, 'project.factory.cjs'), cjsContent)
 }

@@ -11,7 +11,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn run build:schematic-factory && yarn run build:library",
+    "build": "yarn run build:library && yarn run build:schematic-factory",
     "build:library": "yarn library build",
     "build:schematic-factory": "yarn node ./src/scripts/schematic-factory-build.ts",
     "prepack": "yarn run build",
