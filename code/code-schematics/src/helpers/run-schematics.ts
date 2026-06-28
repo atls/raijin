@@ -3,9 +3,9 @@
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics'
 import { NodeWorkflow }                  from '@angular-devkit/schematics/tools'
 
-import { eventsLogHelper }               from './events-log.js'
+import { logSchematicEvent }             from './events-log.js'
 
-export const runSchematicHelper = async (
+export const runSchematic = async (
   schematicName: string,
   options: Record<string, string>,
   collectionPath: string
@@ -23,7 +23,7 @@ export const runSchematicHelper = async (
 
   workflow.reporter.subscribe((event) => {
     nothingDone = false
-    eventsLogHelper(event)
+    logSchematicEvent(event)
   })
 
   try {

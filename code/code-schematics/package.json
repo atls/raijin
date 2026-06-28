@@ -11,12 +11,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn run build:schematic-factory && yarn run build:library",
+    "build": "yarn run build:library && yarn run build:schematic-factory",
     "build:library": "yarn library build",
     "build:schematic-factory": "yarn node ./src/scripts/schematic-factory-build.ts",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist",
-    "smoke:schematic": "yarn node ./src/scripts/schematic-smoke.ts"
+    "smoke:schematic": "yarn run build:schematic-factory && yarn node ./src/scripts/schematic-smoke.ts"
   },
   "dependencies": {
     "@angular-devkit/core": "19.1.5",

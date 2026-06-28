@@ -1,5 +1,5 @@
 export * from './run-schematics.js'
 export * from './write-tmp-schematic.js'
 export * from './prepare-tmp-dir.js'
-export * from './raijin.js'
+export * from './schematic-artifact.js'
 export * from './schematic-result.js'
