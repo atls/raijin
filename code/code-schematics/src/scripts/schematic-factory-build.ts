@@ -6,22 +6,19 @@ import { join }             from 'node:path'
 
 import { esbuildBuildStep } from './build-steps/index.js'
 
-const raijinSchematicDir = join(
-  import.meta.dirname,
-  '../../../../yarn/raijin/src/runtime/schematic'
-)
-const raijinSchematicOutputDir = join(import.meta.dirname, '../../dist/schematic')
+const schematicCollectionDir = join(import.meta.dirname, '../schematic/collection')
+const schematicArtifactDir = join(import.meta.dirname, '../../dist/schematic')
 
 try {
-  await rm(raijinSchematicOutputDir, { recursive: true, force: true })
-  await cp(raijinSchematicDir, raijinSchematicOutputDir, { recursive: true })
-  await esbuildBuildStep(raijinSchematicOutputDir)
+  await rm(schematicArtifactDir, { recursive: true, force: true })
+  await cp(schematicCollectionDir, schematicArtifactDir, { recursive: true })
+  await esbuildBuildStep(schematicArtifactDir)
 
-  console.info('SchematicFactory build successed')
+  console.info('Schematic factory build succeeded')
 } catch (e: unknown) {
   const error = e as Error
 
-  console.error('SchematicFactory build error!')
+  console.error('Schematic factory build error!')
   console.error(error.message)
   process.exitCode = 1
 }

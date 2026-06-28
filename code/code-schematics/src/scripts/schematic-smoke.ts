@@ -1,16 +1,16 @@
 /* eslint-disable no-await-in-loop, no-console, n/no-process-exit */
 
-import type { PortablePath }       from '@yarnpkg/fslib'
+import type { PortablePath } from '@yarnpkg/fslib'
 
-import fs                          from 'node:fs/promises'
-import os                          from 'node:os'
-import path                        from 'node:path'
+import fs                    from 'node:fs/promises'
+import os                    from 'node:os'
+import path                  from 'node:path'
 
-import { prepareTmpDir }           from '../helpers/index.js'
-import { runSchematicHelper }      from '../helpers/index.js'
-import { writeTmpSchematicHelper } from '../helpers/index.js'
+import { prepareTmpDir }     from '../helpers/index.js'
+import { runSchematic }      from '../helpers/index.js'
+import { writeTmpSchematic } from '../helpers/index.js'
 
-const helperScanRoots = [
+const commandScanRoots = [
   'package.json',
   'scripts/raijin',
   'README.md',
@@ -91,7 +91,7 @@ const assertInactiveCommandsAreNotInvoked = async (repoRoot: string): Promise<vo
 
   const scanFiles = (
     await Promise.all(
-      helperScanRoots.map(async (scanRoot) => walkFiles(path.join(repoRoot, scanRoot)))
+      commandScanRoots.map(async (scanRoot) => walkFiles(path.join(repoRoot, scanRoot)))
     )
   )
     .flat()
@@ -156,7 +156,7 @@ const runProjectSchematic = async ({
   try {
     process.chdir(fixtureDir)
 
-    const exitCode = await runSchematicHelper(
+    const exitCode = await runSchematic(
       'project',
       {
         type: 'project',
@@ -216,7 +216,7 @@ const runSchematicSmoke = async (): Promise<void> => {
     await fs.mkdir(fixtureDir, { recursive: true })
     await writeFixturePackage(fixtureDir)
     console.log('Schematic smoke: writing collection')
-    await writeTmpSchematicHelper(collectionDir as PortablePath)
+    await writeTmpSchematic(collectionDir as PortablePath)
     console.log('Schematic smoke: preparing collection')
     await prepareCollectionDir(repoRoot, collectionDir)
     console.log('Schematic smoke: running project schematic')

@@ -3,8 +3,8 @@ import type { StreamReport }        from '@yarnpkg/core'
 import { ppath }                    from '@yarnpkg/fslib'
 import { xfs }                      from '@yarnpkg/fslib'
 
-import { runSchematicHelper }       from '../helpers/index.js'
-import { writeTmpSchematicHelper }  from '../helpers/index.js'
+import { runSchematic }             from '../helpers/index.js'
+import { writeTmpSchematic }        from '../helpers/index.js'
 import { prepareTmpDir }            from '../helpers/index.js'
 import { ensureSchematicSucceeded } from '../helpers/index.js'
 
@@ -16,11 +16,10 @@ export const getStreamReportCallback = async (
   const streamReportCallback = async (report: StreamReport): Promise<void> => {
     const tmpDir = await xfs.mktempPromise()
     const collectionPath = ppath.join(tmpDir, 'collection.json')
-    const { cwd } = options
 
-    await writeTmpSchematicHelper(tmpDir, cwd)
+    await writeTmpSchematic(tmpDir)
     await prepareTmpDir(tmpDir)
-    ensureSchematicSucceeded(await runSchematicHelper('project', options, collectionPath))
+    ensureSchematicSucceeded(await runSchematic('project', options, collectionPath))
   }
 
   return streamReportCallback

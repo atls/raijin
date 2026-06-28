@@ -2,7 +2,7 @@
 
 import type { DryRunEvent } from '@angular-devkit/schematics'
 
-export const eventsLogHelper = (event: DryRunEvent): void => {
+export const logSchematicEvent = (event: DryRunEvent): void => {
   const eventPath = event.path
 
   switch (event.kind) {

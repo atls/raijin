@@ -1,14 +1,11 @@
 /* eslint-disable no-console */
 
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { PortablePath }      from '@yarnpkg/fslib'
 
-import { writeRaijinFiles }  from './raijin.js'
+import { writeSchematicArtifact } from './schematic-artifact.js'
 
-export const writeTmpSchematicHelper = async (
-  tmpDir: PortablePath,
-  cwd = process.cwd()
-): Promise<void> => {
-  await writeRaijinFiles(cwd, tmpDir)
+export const writeTmpSchematic = async (tmpDir: PortablePath): Promise<void> => {
+  await writeSchematicArtifact(tmpDir)
 
-  console.info('All Schematic files writed to the tmp!')
+  console.info('Schematic collection written to temporary directory.')
 }

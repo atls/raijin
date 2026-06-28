@@ -4,7 +4,7 @@ import { join }                          from 'node:path'
 
 import esbuild                           from 'esbuild'
 
-import { UndefinedBuildRedultException } from '../exceptions/index.js'
+import { UndefinedBuildResultException } from '../exceptions/index.js'
 import { getEsbuildConfig }              from '../getters/index.js'
 import { getCjsContent }                 from '../getters/index.js'
 
@@ -12,7 +12,7 @@ export const esbuildBuildStep = async (schematicOutputDir: string): Promise<void
   const esbuildConfig = getEsbuildConfig()
   const result = await esbuild.build(esbuildConfig)
 
-  if (!result.outputFiles) throw new UndefinedBuildRedultException()
+  if (!result.outputFiles) throw new UndefinedBuildResultException()
 
   const cjsContent = getCjsContent(result)
   const projectDir = join(schematicOutputDir, 'project')

@@ -1,5 +1,5 @@
-export class UndefinedBuildRedultException extends Error {
+export class UndefinedBuildResultException extends Error {
   constructor() {
-    super('SchematicFactory build result is undefined')
+    super('Schematic factory build result is undefined')
   }
 }
