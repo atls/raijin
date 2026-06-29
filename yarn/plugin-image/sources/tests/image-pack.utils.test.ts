@@ -4,16 +4,25 @@ import { test }                      from 'node:test'
 import { resolveBuildpackReference } from '../image-pack.utils.js'
 import { resolveBuilderReference }   from '../image-pack.utils.js'
 
-test('should use start-image buildpack by default', () => {
-  assert.equal(resolveBuildpackReference({}), 'ghcr.io/atls/buildpack-yarn-workspace-start:0.1.3')
+test('should use buildpack channel for the default Node line', () => {
+  assert.equal(resolveBuildpackReference({}), 'ghcr.io/atls/buildpack-yarn-workspace:24')
 })
 
-test('should keep buildpack version override on start-image buildpack', () => {
+test('should use selected Node line as buildpack channel', () => {
+  assert.equal(
+    resolveBuildpackReference({
+      builderTag: '26',
+    }),
+    'ghcr.io/atls/buildpack-yarn-workspace:26'
+  )
+})
+
+test('should keep buildpack version override as immutable semver pin', () => {
   assert.equal(
     resolveBuildpackReference({
       buildpackVersion: '0.1.3',
     }),
-    'ghcr.io/atls/buildpack-yarn-workspace-start:0.1.3'
+    'ghcr.io/atls/buildpack-yarn-workspace:0.1.3'
   )
 })
 

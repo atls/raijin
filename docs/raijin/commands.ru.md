@@ -247,6 +247,10 @@
 
 - Статус: `active`
 - Пример: `yarn image pack`
+- Контракт: `packConfiguration` по умолчанию использует `ghcr.io/atls/buildpack-yarn-workspace:24`.
+- Контракт: `packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.
+- Контракт: `packConfiguration.buildpackVersion` фиксирует неизменяемый buildpack tag для rollback.
+- Контракт: `packConfiguration.buildpack` переопределяет полную buildpack-ссылку.
 - Плагин: `@atls/yarn-plugin-image`
 - Исходник: `yarn/plugin-image/sources/image-pack.command.ts`
 
