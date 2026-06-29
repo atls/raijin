@@ -55,6 +55,7 @@
 
 - Статус: `active`
 - Пример: `yarn check`
+- Пример: `yarn check yarn/plugin-check/sources`
 - Плагин: `@atls/yarn-plugin-check`
 - Исходник: `yarn/plugin-check/sources/check.command.ts`
 

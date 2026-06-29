@@ -55,6 +55,7 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 - Status: `active`
 - Example: `yarn check`
+- Example: `yarn check yarn/plugin-check/sources`
 - Plugin: `@atls/yarn-plugin-check`
 - Source: `yarn/plugin-check/sources/check.command.ts`
 
