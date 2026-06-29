@@ -1,13 +1,14 @@
-import type { Source }  from '@angular-devkit/schematics'
+import type { Source }    from '@angular-devkit/schematics'
 
-import { readFileSync } from 'node:fs'
-import { join }         from 'node:path'
+import { readFileSync }   from 'node:fs'
+import { join }           from 'node:path'
 
-import { strings }      from '@angular-devkit/core'
-import { apply }        from '@angular-devkit/schematics'
-import { url }          from '@angular-devkit/schematics'
-import { template }     from '@angular-devkit/schematics'
-import { move }         from '@angular-devkit/schematics'
+import { strings }        from '@angular-devkit/core'
+import { apply }          from '@angular-devkit/schematics'
+import { template }       from '@angular-devkit/schematics'
+import { move }           from '@angular-devkit/schematics'
+
+import { templateSource } from './template-source.js'
 
 const templateTypes: Record<string, string> = {
   library: 'libraries',
@@ -21,7 +22,7 @@ export const generateProjectSpecificSource = (options: Record<string, string>): 
   )
   const templateType = templateTypes[options.type] ?? options.type
 
-  return apply(url(join('../templates', templateType)), [
+  return apply(templateSource(join('../templates', templateType)), [
     template({
       ...strings,
       ...options,
