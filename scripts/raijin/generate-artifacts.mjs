@@ -71,6 +71,10 @@ const DETAILED_GROUPS = new Set(WORKSPACE_GROUP_ORDER.filter((group) => group !=
 const COVER_IMAGE_URL =
   'https://github.com/user-attachments/assets/ac98b900-ee3c-4ea8-a081-e83a1f5f3282'
 
+const COMMAND_EXAMPLES = {
+  check: ['yarn check', 'yarn check yarn/plugin-check/sources'],
+}
+
 const walkFiles = (dirPath, predicate, output = []) => {
   if (!fs.existsSync(dirPath)) return output
 
@@ -729,9 +733,11 @@ const renderCommandCard = (command, language) => {
   ]
 
   if (command.status === 'active') {
-    lines.push(
-      isRu ? `- Пример: \`yarn ${command.command}\`` : `- Example: \`yarn ${command.command}\``
-    )
+    const examples = COMMAND_EXAMPLES[command.command] ?? [`yarn ${command.command}`]
+
+    examples.forEach((example) => {
+      lines.push(isRu ? `- Пример: \`${example}\`` : `- Example: \`${example}\``)
+    })
   } else {
     lines.push(
       isRu
