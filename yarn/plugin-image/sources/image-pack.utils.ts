@@ -1,9 +1,8 @@
 import { arch } from 'node:os'
 
 const DEFAULT_BUILDER_TAG = '24'
-const DEFAULT_BUILDPACK_VERSION = '0.1.3'
 const DEFAULT_BUILDER_IMAGE = 'atlantislab/builder-base'
-const DEFAULT_BUILDPACK_IMAGE = 'ghcr.io/atls/buildpack-yarn-workspace-start'
+const DEFAULT_BUILDPACK_IMAGE = 'ghcr.io/atls/buildpack-yarn-workspace'
 const DEFAULT_MATERIALIZATION_OS = 'linux'
 
 export interface ImagePackConfiguration {
@@ -23,13 +22,14 @@ export const resolveBuildpackReference = ({
   buildpack,
   buildpackImage,
   buildpackVersion,
+  builderTag,
 }: ImagePackConfiguration): string => {
   if (buildpack) {
     return buildpack
   }
 
   return `${buildpackImage ?? DEFAULT_BUILDPACK_IMAGE}:${
-    buildpackVersion ?? DEFAULT_BUILDPACK_VERSION
+    buildpackVersion ?? builderTag ?? DEFAULT_BUILDER_TAG
   }`
 }
 

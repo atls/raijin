@@ -247,6 +247,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 - Status: `active`
 - Example: `yarn image pack`
+- Contract: `packConfiguration` defaults to `ghcr.io/atls/buildpack-yarn-workspace:24`.
+- Contract: `packConfiguration.builderTag` selects the supported Node/buildpack channel.
+- Contract: `packConfiguration.buildpackVersion` pins an immutable buildpack tag for rollback.
+- Contract: `packConfiguration.buildpack` overrides the full buildpack reference.
 - Plugin: `@atls/yarn-plugin-image`
 - Source: `yarn/plugin-image/sources/image-pack.command.ts`
 

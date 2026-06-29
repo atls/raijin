@@ -75,6 +75,23 @@ const COMMAND_EXAMPLES = {
   check: ['yarn check', 'yarn check yarn/plugin-check/sources'],
 }
 
+const COMMAND_NOTES = {
+  'image pack': {
+    en: [
+      '`packConfiguration` defaults to `ghcr.io/atls/buildpack-yarn-workspace:24`.',
+      '`packConfiguration.builderTag` selects the supported Node/buildpack channel.',
+      '`packConfiguration.buildpackVersion` pins an immutable buildpack tag for rollback.',
+      '`packConfiguration.buildpack` overrides the full buildpack reference.',
+    ],
+    ru: [
+      '`packConfiguration` по умолчанию использует `ghcr.io/atls/buildpack-yarn-workspace:24`.',
+      '`packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.',
+      '`packConfiguration.buildpackVersion` фиксирует неизменяемый buildpack tag для rollback.',
+      '`packConfiguration.buildpack` переопределяет полную buildpack-ссылку.',
+    ],
+  },
+}
+
 const walkFiles = (dirPath, predicate, output = []) => {
   if (!fs.existsSync(dirPath)) return output
 
@@ -745,6 +762,12 @@ const renderCommandCard = (command, language) => {
         : '- Example: unavailable for inactive command'
     )
   }
+
+  const notes = COMMAND_NOTES[command.command]?.[isRu ? 'ru' : 'en']
+
+  notes?.forEach((note) => {
+    lines.push(isRu ? `- Контракт: ${note}` : `- Contract: ${note}`)
+  })
 
   lines.push(isRu ? `- Плагин: \`${command.plugin}\`` : `- Plugin: \`${command.plugin}\``)
   lines.push(isRu ? `- Исходник: \`${command.source}\`` : `- Source: \`${command.source}\``)
