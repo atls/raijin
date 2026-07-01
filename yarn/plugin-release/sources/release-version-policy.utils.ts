@@ -38,6 +38,7 @@ const STRATEGY_WEIGHT: Record<ReleaseVersionStrategy, number> = {
   minor: 1,
   major: 2,
 }
+const DEFAULT_RELEASE_VERSION_STRATEGY: ReleaseVersionStrategy = 'patch'
 
 const isReleaseVersionStrategy = (strategy: string): strategy is ReleaseVersionStrategy =>
   Object.hasOwn(STRATEGY_WEIGHT, strategy)
@@ -231,11 +232,8 @@ export const resolveReleaseVersionWorkspaceStrategies = (
   const strategies = new Map<string, ReleaseVersionWorkspaceStrategy>()
 
   for (const change of changes) {
-    const strategy = resolveReleaseVersionStrategy(change.message)
-
-    if (!strategy) {
-      continue
-    }
+    const strategy =
+      resolveReleaseVersionStrategy(change.message) ?? DEFAULT_RELEASE_VERSION_STRATEGY
 
     for (const workspace of workspaces) {
       if (!change.files.some((file) => isWorkspaceFile(file, workspace, workspaceOwners))) {

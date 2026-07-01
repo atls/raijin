@@ -88,7 +88,7 @@ test('should keep strongest strategy when internal and public changes share Raij
   ])
 })
 
-test('should not create release strategy for unrelated nonconventional changes', () => {
+test('should default touched Raijin workspace changes to patch strategy', () => {
   const project = createProject([rootWorkspace, runtimeWorkspace, cliWorkspace])
 
   const strategies = resolveReleaseVersionStrategies(project, [
@@ -98,5 +98,13 @@ test('should not create release strategy for unrelated nonconventional changes',
     },
   ])
 
-  assert.deepEqual(strategies, [])
+  assert.deepEqual(strategies, [
+    {
+      workspace: {
+        ident: '@atls/raijin',
+        relativeCwd: 'yarn/raijin',
+      },
+      strategy: 'patch',
+    },
+  ])
 })
