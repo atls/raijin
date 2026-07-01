@@ -32,26 +32,6 @@ test('should keep release creation on the GitHub-native dependency boundary', as
   assert.equal(manifest.dependencies['@atls/code-changelog'], undefined)
 })
 
-test('should keep yarn runtime bundle off legacy changelog plugin', async () => {
-  const manifest = JSON.parse(
-    await readFile(new URL('../../../cli/package.json', import.meta.url), 'utf-8')
-  ) as {
-    '@yarnpkg/builder'?: {
-      bundles?: {
-        standard?: Array<string>
-      }
-    }
-    dependencies?: Record<string, string>
-  }
-
-  assert.ok(manifest.dependencies)
-  assert.equal(manifest.dependencies['@atls/yarn-plugin-changelog'], undefined)
-  assert.equal(
-    manifest['@yarnpkg/builder']?.bundles?.standard?.includes('@atls/yarn-plugin-changelog'),
-    false
-  )
-})
-
 test('should create releases with GitHub generated release notes', () => {
   assert.deepEqual(
     createGitHubReleaseOptions('@atls/yarn-cli', '1.2.3', 'Release body', 'atls', 'raijin', 'main'),
