@@ -303,28 +303,6 @@
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
     {
-      "command": "release plan create",
-      "pathTokens": ["release", "plan", "create"],
-      "className": "ReleasePlanCreateCommand",
-      "plugin": "@atls/yarn-plugin-release",
-      "pluginDir": "plugin-release",
-      "domain": "release",
-      "source": "yarn/plugin-release/sources/release-plan-create.command.ts",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
-      "command": "release plan foreach",
-      "pathTokens": ["release", "plan", "foreach"],
-      "className": "ReleasePlanForeachCommand",
-      "plugin": "@atls/yarn-plugin-release",
-      "pluginDir": "plugin-release",
-      "domain": "release",
-      "source": "yarn/plugin-release/sources/release-plan-foreach.command.ts",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
       "command": "release version defer",
       "pathTokens": ["release", "version", "defer"],
       "className": "ReleaseVersionDeferCommand",
@@ -984,8 +962,6 @@
       "raijin sync tsconfig",
       "raijin sync typescript",
       "release create",
-      "release plan create",
-      "release plan foreach",
       "release version defer",
       "renderer build",
       "renderer dev",
@@ -1033,5 +1009,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-07-01T18:13:03.732Z"
+  "lastGenerated": "2026-07-01T21:53:56.457Z"
 }

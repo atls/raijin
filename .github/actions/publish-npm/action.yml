@@ -12,12 +12,6 @@ runs:
   using: composite
 
   steps:
-    - name: Show release plan
-      if: ${{ inputs.WORKSPACE == '' }}
-      shell: bash
-      run: |
-        cat .raijin/release-plan.json
-
     - name: Show selected workspace
       if: ${{ inputs.WORKSPACE != '' }}
       shell: bash
@@ -53,7 +47,7 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn release plan foreach --publishable -vt --no-private npm publish --tolerate-republish --access public
+        yarn workspace @atls/raijin npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
