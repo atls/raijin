@@ -284,13 +284,13 @@ export const resolveReleaseVersionStrategies = (
     .map(toReleaseWorkspace)
     .filter((item): item is ReleaseVersionWorkspace => Boolean(item))
   const workspaceOwners = project.workspaces.map(toReleaseWorkspaceOwner)
+  const strategies = resolveReleaseVersionWorkspaceStrategies(workspaces, changes, workspaceOwners)
   const publicWorkspace = workspaces.find((workspace) => workspace.ident === '@atls/raijin')
 
   if (!publicWorkspace) {
-    throw new Error('Missing public Raijin release workspace')
+    return strategies
   }
 
-  const strategies = resolveReleaseVersionWorkspaceStrategies(workspaces, changes, workspaceOwners)
   const publicStrategies = new Map<string, ReleaseVersionWorkspaceStrategy>()
 
   for (const { workspace, strategy } of strategies) {

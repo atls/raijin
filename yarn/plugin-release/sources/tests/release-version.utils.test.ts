@@ -108,3 +108,25 @@ test('should default touched Raijin workspace changes to patch strategy', () => 
     },
   ])
 })
+
+test('should keep workspace strategies when public Raijin workspace is absent', () => {
+  const appWorkspace = createWorkspace('@atls/example-app', 'apps/example', '0.1.0')
+  const project = createProject([rootWorkspace, appWorkspace])
+
+  const strategies = resolveReleaseVersionStrategies(project, [
+    {
+      message: 'fix(app): repair generated app',
+      files: ['apps/example/src/index.ts'],
+    },
+  ])
+
+  assert.deepEqual(strategies, [
+    {
+      workspace: {
+        ident: '@atls/example-app',
+        relativeCwd: 'apps/example',
+      },
+      strategy: 'patch',
+    },
+  ])
+})

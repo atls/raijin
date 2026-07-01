@@ -21,7 +21,7 @@ runs:
         source .env
         export NODE_OPTIONS
         yarn release version defer
-        if [ -z "$(git status --porcelain -- .yarn/versions)" ]; then
+        if ! find .yarn/versions -maxdepth 1 -type f -name '*.yml' | grep -q .; then
           echo "release_required=false" >> "$GITHUB_OUTPUT"
           echo "No Raijin release target"
           exit 0
