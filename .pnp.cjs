@@ -1431,7 +1431,6 @@ const RAW_RUNTIME_STATE =
           ["@commitlint/types", "npm:19.0.3"],\
           ["@types/conventional-commits-parser", "npm:5.0.1"],\
           ["@types/node", "npm:24.12.2"],\
-          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch::version=7.0.0&hash=89143f"],\
           ["conventional-commits-parser", "npm:6.0.0"]\
         ],\
         "linkType": "SOFT"\
@@ -4096,7 +4095,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@commitlint/parse", "npm:19.5.0"],\
           ["@commitlint/types", "npm:19.5.0"],\
-          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch::version=7.0.0&hash=89143f"],\
+          ["conventional-changelog-angular", "npm:7.0.0"],\
           ["conventional-commits-parser", "npm:5.0.0"]\
         ],\
         "linkType": "HARD"\
@@ -10118,11 +10117,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["conventional-changelog-angular", [\
-      ["patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch::version=7.0.0&hash=89143f", {\
-        "packageLocation": "../.yarn/berry/cache/conventional-changelog-angular-patch-073dd937fa-10.zip/node_modules/conventional-changelog-angular/",\
+      ["npm:7.0.0", {\
+        "packageLocation": "../.yarn/berry/cache/conventional-changelog-angular-npm-7.0.0-de5edb79f0-10.zip/node_modules/conventional-changelog-angular/",\
         "packageDependencies": [\
           ["compare-func", "npm:2.0.0"],\
-          ["conventional-changelog-angular", "patch:conventional-changelog-angular@npm%3A7.0.0#~/.yarn/patches/conventional-changelog-angular-npm-7.0.0-de5edb79f0.patch::version=7.0.0&hash=89143f"]\
+          ["conventional-changelog-angular", "npm:7.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
