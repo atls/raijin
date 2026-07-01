@@ -15,7 +15,6 @@
 - `@atls/yarn-cli-tools` — `yarn/cli-tools`
 - `@atls/yarn-pack-utils` — `yarn/pack-utils`
 - `@atls/yarn-plugin-badges` — `yarn/plugin-badges`
-- `@atls/yarn-plugin-changelog` — `yarn/plugin-changelog`
 - `@atls/yarn-plugin-check` — `yarn/plugin-check`
 - `@atls/yarn-plugin-checks` — `yarn/plugin-checks`
 - `@atls/yarn-plugin-cli-publish` — `yarn/plugin-cli-publish`
@@ -83,15 +82,6 @@
 #### `@atls/yarn-plugin-badges`
 
 - Локация: `yarn/plugin-badges`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-changelog -->
-
-#### `@atls/yarn-plugin-changelog`
-
-- Локация: `yarn/plugin-changelog`
 - Группа: `yarn`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
@@ -293,7 +283,6 @@
 
 Короткий список:
 
-- `@atls/code-changelog` — `code/code-changelog`
 - `@atls/code-commit` — `code/code-commit`
 - `@atls/code-configuration` — `code/code-configuration`
 - `@atls/code-format` — `code/code-format`
@@ -308,15 +297,6 @@
 
 <details>
 <summary>Подробности группы `code`</summary>
-
-<!-- sync:package-card:atls-code-changelog -->
-
-#### `@atls/code-changelog`
-
-- Локация: `code/code-changelog`
-- Группа: `code`
-- Видимость: `public`
-- Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-commit -->
 

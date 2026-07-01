@@ -9,10 +9,9 @@
   "bundle": {
     "package": "@atls/yarn-cli",
     "bundleName": "standard",
-    "pluginCount": 47,
+    "pluginCount": 46,
     "plugins": [
       "@atls/yarn-plugin-badges",
-      "@atls/yarn-plugin-changelog",
       "@atls/yarn-plugin-check",
       "@atls/yarn-plugin-checks",
       "@atls/yarn-plugin-cli-publish",
@@ -69,17 +68,6 @@
       "pluginDir": "plugin-badges",
       "domain": "badges",
       "source": "yarn/plugin-badges/sources/badges.command.ts",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
-      "command": "changelog generate",
-      "pathTokens": ["changelog", "generate"],
-      "className": "ChangelogGenerateCommand",
-      "plugin": "@atls/yarn-plugin-changelog",
-      "pluginDir": "plugin-changelog",
-      "domain": "changelog",
-      "source": "yarn/plugin-changelog/sources/changelog-generate.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
@@ -650,14 +638,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-changelog",
-      "location": "code/code-changelog",
-      "group": "code",
-      "private": false,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/code-commit",
       "location": "code/code-commit",
       "group": "code",
@@ -860,14 +840,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/yarn-plugin-changelog",
-      "location": "yarn/plugin-changelog",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/yarn-plugin-check",
       "location": "yarn/plugin-check",
       "group": "yarn",
@@ -1039,7 +1011,6 @@
   "availability": {
     "activeCommands": [
       "badges generate",
-      "changelog generate",
       "check",
       "checks lint",
       "checks release",
@@ -1079,7 +1050,6 @@
     "inactiveCommands": ["generate project"],
     "activePlugins": [
       "@atls/yarn-plugin-badges",
-      "@atls/yarn-plugin-changelog",
       "@atls/yarn-plugin-check",
       "@atls/yarn-plugin-checks",
       "@atls/yarn-plugin-cli-publish",
@@ -1111,5 +1081,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-06-22T22:49:12.746Z"
+  "lastGenerated": "2026-07-01T14:26:38.059Z"
 }

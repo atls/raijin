@@ -15,7 +15,6 @@ Compact list:
 - `@atls/yarn-cli-tools` — `yarn/cli-tools`
 - `@atls/yarn-pack-utils` — `yarn/pack-utils`
 - `@atls/yarn-plugin-badges` — `yarn/plugin-badges`
-- `@atls/yarn-plugin-changelog` — `yarn/plugin-changelog`
 - `@atls/yarn-plugin-check` — `yarn/plugin-check`
 - `@atls/yarn-plugin-checks` — `yarn/plugin-checks`
 - `@atls/yarn-plugin-cli-publish` — `yarn/plugin-cli-publish`
@@ -83,15 +82,6 @@ Compact list:
 #### `@atls/yarn-plugin-badges`
 
 - Location: `yarn/plugin-badges`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-changelog -->
-
-#### `@atls/yarn-plugin-changelog`
-
-- Location: `yarn/plugin-changelog`
 - Group: `yarn`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
@@ -293,7 +283,6 @@ Core code libraries for build, checks, and utilities
 
 Compact list:
 
-- `@atls/code-changelog` — `code/code-changelog`
 - `@atls/code-commit` — `code/code-commit`
 - `@atls/code-configuration` — `code/code-configuration`
 - `@atls/code-format` — `code/code-format`
@@ -308,15 +297,6 @@ Compact list:
 
 <details>
 <summary>Group details: `code`</summary>
-
-<!-- sync:package-card:atls-code-changelog -->
-
-#### `@atls/code-changelog`
-
-- Location: `code/code-changelog`
-- Group: `code`
-- Visibility: `public`
-- Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-commit -->
 
