@@ -3,6 +3,7 @@ import type { PortablePath }                    from '@yarnpkg/fslib'
 import assert                                   from 'node:assert/strict'
 import { Buffer }                               from 'node:buffer'
 import { mkdtemp }                              from 'node:fs/promises'
+import { readFile }                             from 'node:fs/promises'
 import { writeFile }                            from 'node:fs/promises'
 import { tmpdir }                               from 'node:os'
 import { join }                                 from 'node:path'
@@ -18,6 +19,18 @@ import { isReleaseAlreadyExistsError }          from '../release-create.command.
 import { parseGitHubReleaseTagVersion }         from '../release-create.command.js'
 import { readYarnRuntimePackageManager }        from '../release-create.command.js'
 import { selectPreviousGitHubReleaseTagName }   from '../release-create.command.js'
+
+test('should keep release creation on the GitHub-native dependency boundary', async () => {
+  const manifest = JSON.parse(
+    await readFile(new URL('../../package.json', import.meta.url), 'utf-8')
+  ) as {
+    dependencies?: Record<string, string>
+  }
+
+  assert.ok(manifest.dependencies)
+  assert.equal(manifest.dependencies['@atls/code-github'], 'workspace:*')
+  assert.equal(manifest.dependencies['@atls/code-changelog'], undefined)
+})
 
 test('should create releases with GitHub generated release notes', () => {
   assert.deepEqual(
