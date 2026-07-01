@@ -1,3 +1,3 @@
-import config from '@atls/config-prettier'
+import config from '@atls/raijin/prettier'
 
 export default config

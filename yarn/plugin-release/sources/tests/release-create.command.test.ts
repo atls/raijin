@@ -68,7 +68,7 @@ test('should create release note options with package-specific previous tags', (
   )
 })
 
-test('should create yarn runtime release asset options only for yarn cli release', () => {
+test('should create yarn runtime release asset options only for Raijin release', () => {
   const projectCwd = '/repo' as PortablePath
 
   assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/code-github', projectCwd), undefined)

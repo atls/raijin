@@ -304,7 +304,6 @@ __metadata:
   resolution: "@atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit"
   dependencies:
     "@atls/code-commit": "workspace:*"
-    "@atls/config-commitlint": "workspace:*"
     "@inkjs/ui": "npm:2.0.0"
     "@types/node": "npm:22.13.10"
     "@types/react": "npm:18.3.18"
@@ -602,7 +601,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-commit@workspace:code/code-commit"
   dependencies:
-    "@atls/config-commitlint": "workspace:*"
     "@commitlint/format": "npm:19.3.0"
     "@commitlint/is-ignored": "npm:19.2.2"
     "@commitlint/lint": "npm:19.4.1"
@@ -629,8 +627,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-format@workspace:code/code-format"
   dependencies:
-    "@atls/config-prettier": "workspace:*"
-    "@atls/prettier-plugin": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
     globby: "npm:13.2.2"
     ignore: "npm:5.3.2"
@@ -654,7 +651,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-icons@workspace:code/code-icons"
   dependencies:
-    "@atls/config-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@monstrs/logger": "npm:0.0.20"
     "@types/node": "npm:24.12.2"
@@ -705,7 +701,7 @@ __metadata:
   dependencies:
     "@angular-devkit/core": "npm:19.1.5"
     "@angular-devkit/schematics": "npm:19.1.5"
-    "@atls/config-typescript": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
@@ -726,7 +722,6 @@ __metadata:
   resolution: "@atls/code-service@workspace:code/code-service"
   dependencies:
     "@atls/code-configuration": "workspace:*"
-    "@atls/config-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@atls/webpack-start-server-plugin": "workspace:*"
     "@monstrs/logger": "npm:0.0.20"
@@ -755,62 +750,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/code-typescript@workspace:code/code-typescript"
   dependencies:
-    "@atls/config-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
     typescript: "npm:5.9.3"
-  languageName: unknown
-  linkType: soft
-
-"@atls/config-commitlint@workspace:*, @atls/config-commitlint@workspace:config/commitlint":
-  version: 0.0.0-use.local
-  resolution: "@atls/config-commitlint@workspace:config/commitlint"
-  dependencies:
-    "@commitlint/types": "npm:19.0.3"
-  languageName: unknown
-  linkType: soft
-
-"@atls/config-eslint@workspace:config/eslint":
-  version: 0.0.0-use.local
-  resolution: "@atls/config-eslint@workspace:config/eslint"
-  dependencies:
-    "@atls/raijin": "workspace:*"
-    "@types/eslint": "npm:9.6.1"
-    "@types/node": "npm:22.13.10"
-    typescript: "npm:5.9.3"
-  languageName: unknown
-  linkType: soft
-
-"@atls/config-prettier@workspace:*, @atls/config-prettier@workspace:config/prettier":
-  version: 0.0.0-use.local
-  resolution: "@atls/config-prettier@workspace:config/prettier"
-  dependencies:
-    "@atls/prettier-plugin": "workspace:*"
-    "@types/node": "npm:22.13.10"
-    prettier: "npm:3.5.3"
-  languageName: unknown
-  linkType: soft
-
-"@atls/config-typescript@workspace:*, @atls/config-typescript@workspace:config/typescript":
-  version: 0.0.0-use.local
-  resolution: "@atls/config-typescript@workspace:config/typescript"
-  languageName: unknown
-  linkType: soft
-
-"@atls/prettier-plugin@workspace:*, @atls/prettier-plugin@workspace:prettier/plugin":
-  version: 0.0.0-use.local
-  resolution: "@atls/prettier-plugin@workspace:prettier/plugin"
-  dependencies:
-    "@babel/types": "npm:7.25.6"
-    "@types/node": "npm:22.13.10"
-    "@types/prettier": "npm:3.0.0"
-    globby: "npm:13.2.2"
-    import-sort: "npm:6.0.0"
-    import-sort-parser: "npm:6.0.0"
-    import-sort-parser-typescript: "npm:6.0.0"
-    import-sort-style: "npm:6.0.0"
-    prettier: "npm:3.5.3"
-    sort-package-json: "npm:2.4.1"
   languageName: unknown
   linkType: soft
 
@@ -818,6 +760,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/raijin@workspace:yarn/raijin"
   dependencies:
+    "@babel/types": "npm:7.25.6"
     "@next/eslint-plugin-next": "npm:16.0.7"
     "@svgr/core": "npm:8.1.0"
     "@svgr/plugin-jsx": "npm:8.1.0"
@@ -832,9 +775,16 @@ __metadata:
     eslint-plugin-react-compiler: "npm:19.1.0-rc.2"
     eslint-plugin-react-hooks: "npm:7.0.1"
     eslint-plugin-security: "npm:3.0.1"
+    globby: "npm:13.2.2"
+    import-sort: "npm:6.0.0"
+    import-sort-parser: "npm:6.0.0"
+    import-sort-parser-typescript: "npm:6.0.0"
+    import-sort-style: "npm:6.0.0"
     node-loader: "npm:2.1.0"
+    prettier: "npm:3.5.3"
     protocol-buffers-schema: "npm:3.6.0"
     react: "npm:18.3.1"
+    sort-package-json: "npm:2.4.1"
     ts-loader: "npm:9.5.2"
     typescript: "npm:5.5.4"
     webpack: "npm:5.98.0"
@@ -842,23 +792,6 @@ __metadata:
     zod-validation-error: "npm:4.0.2"
   bin:
     raijin: ./bin/raijin.mjs
-  languageName: unknown
-  linkType: soft
-
-"@atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader":
-  version: 0.0.0-use.local
-  resolution: "@atls/webpack-proto-imports-loader@workspace:webpack/webpack-proto-imports-loader"
-  dependencies:
-    "@atls/config-typescript": "workspace:*"
-    "@atls/raijin": "workspace:*"
-    "@monstrs/types-import-proto": "npm:0.0.1"
-    "@types/node": "npm:22.13.10"
-    "@types/protocol-buffers-schema": "npm:3.4.3"
-    memfs: "npm:4.6.0"
-    ts-loader: "npm:9.5.2"
-    tslib: "npm:2.8.1"
-    typescript: "npm:5.5.4"
-    webpack: "npm:5.98.0"
   languageName: unknown
   linkType: soft
 
@@ -1391,7 +1324,7 @@ __metadata:
     "@atls/cli-ui-test-failure-component": "workspace:*"
     "@atls/cli-ui-test-progress-component": "workspace:*"
     "@atls/code-test": "workspace:*"
-    "@atls/config-typescript": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
@@ -1413,7 +1346,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-tools@workspace:yarn/plugin-tools"
   dependencies:
-    "@atls/config-typescript": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/semver": "npm:7.5.8"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -3073,13 +3006,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@monstrs/types-import-proto@npm:0.0.1":
-  version: 0.0.1
-  resolution: "@monstrs/types-import-proto@npm:0.0.1"
-  checksum: 10/11c9cd5b81f9bfc6bb239964966b27ece07182ae758a73d912e5f1b259a7f8191cca43d19bfa2b2e71d279a270902217612ad335c6863e097372323920edcfbd
-  languageName: node
-  linkType: hard
-
 "@next/eslint-plugin-next@npm:16.0.7":
   version: 16.0.7
   resolution: "@next/eslint-plugin-next@npm:16.0.7"
@@ -3985,7 +3911,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:*, @types/eslint@npm:9.6.1":
+"@types/eslint@npm:*":
   version: 9.6.1
   resolution: "@types/eslint@npm:9.6.1"
   dependencies:
@@ -4082,7 +4008,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:*, @types/prettier@npm:3.0.0":
+"@types/prettier@npm:*":
   version: 3.0.0
   resolution: "@types/prettier@npm:3.0.0"
   dependencies:
@@ -5569,13 +5495,6 @@ __metadata:
   version: 6.2.1
   resolution: "ansi-styles@npm:6.2.1"
   checksum: 10/70fdf883b704d17a5dfc9cde206e698c16bcd74e7f196ab821511651aee4f9f76c9514bdfa6ca3a27b5e49138b89cb222a28caf3afe4567570139577f991df32
-  languageName: node
-  linkType: hard
-
-"arg@npm:^5.0.2":
-  version: 5.0.2
-  resolution: "arg@npm:5.0.2"
-  checksum: 10/92fe7de222054a060fd2329e92e867410b3ea260328147ee3fb7855f78efae005f4087e698d4e688a856893c56bb09951588c40f2c901cf6996cd8cd7bcfef2c
   languageName: node
   linkType: hard
 
@@ -8570,13 +8489,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hyperdyperid@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "hyperdyperid@npm:1.2.0"
-  checksum: 10/64abb5568ff17aa08ac0175ae55e46e22831c5552be98acdd1692081db0209f36fff58b31432017b4e1772c178962676a2cc3c54e4d5d7f020d7710cec7ad7a6
-  languageName: node
-  linkType: hard
-
 "iconv-lite@npm:^0.4.24":
   version: 0.4.24
   resolution: "iconv-lite@npm:0.4.24"
@@ -9397,29 +9309,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-joy@npm:^9.2.0":
-  version: 9.9.1
-  resolution: "json-joy@npm:9.9.1"
-  dependencies:
-    arg: "npm:^5.0.2"
-    hyperdyperid: "npm:^1.2.0"
-  peerDependencies:
-    quill-delta: ^5
-    rxjs: 7
-    tslib: 2
-  bin:
-    jj: bin/jj.js
-    json-pack: bin/json-pack.js
-    json-pack-test: bin/json-pack-test.js
-    json-patch: bin/json-patch.js
-    json-patch-test: bin/json-patch-test.js
-    json-pointer: bin/json-pointer.js
-    json-pointer-test: bin/json-pointer-test.js
-    json-unpack: bin/json-unpack.js
-  checksum: 10/580cf35465b838a4fe96dc90be1d8d9b95e3c495fb5e48ad4f5b048fc5173ec47c6fd58fb93728ede42b3f8bbce0344484ac0986f9c3fa9be2f1957c4eedd872
-  languageName: node
-  linkType: hard
-
 "json-parse-even-better-errors@npm:^2.3.0, json-parse-even-better-errors@npm:^2.3.1":
   version: 2.3.1
   resolution: "json-parse-even-better-errors@npm:2.3.1"
@@ -9886,18 +9775,6 @@ __metadata:
   version: 2.0.30
   resolution: "mdn-data@npm:2.0.30"
   checksum: 10/e4944322bf3e0461a2daa2aee7e14e208960a036289531e4ef009e53d32bd41528350c070c4a33be867980443fe4c0523518d99318423cffa7c825fe7b1154e2
-  languageName: node
-  linkType: hard
-
-"memfs@npm:4.6.0":
-  version: 4.6.0
-  resolution: "memfs@npm:4.6.0"
-  dependencies:
-    json-joy: "npm:^9.2.0"
-    thingies: "npm:^1.11.1"
-  peerDependencies:
-    tslib: 2
-  checksum: 10/640071c277821a5a1564795caf2cc264e383733b94d259abebc5f21f6832789bdf13ce873468383111685d49657f2e9f29fc85c7bb64ff55757bed186cf074ff
   languageName: node
   linkType: hard
 
@@ -12134,15 +12011,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"thingies@npm:^1.11.1":
-  version: 1.21.0
-  resolution: "thingies@npm:1.21.0"
-  peerDependencies:
-    tslib: ^2
-  checksum: 10/5c3954b67391d1432c252cb7089f29480e2164f06987a63d83c9747aa6999bfc313d6edfce71ed967316a3378dfcaf38f35ea77aaa5d423edaf776b8ff854f83
-  languageName: node
-  linkType: hard
-
 "through@npm:>=2.2.7 <3, through@npm:^2.3.6":
   version: 2.3.8
   resolution: "through@npm:2.3.8"
@@ -12213,7 +12081,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tools@workspace:."
   dependencies:
-    "@atls/config-prettier": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
     "@yarnpkg/builder": "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"
@@ -12274,7 +12141,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.8.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
+"tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10/3e2e043d5c2316461cb54e5c7fe02c30ef6dccb3384717ca22ae5c6b5bc95232a6241df19c622d9c73b809bea33b187f6dbc73030963e29950c2141bc32a79f7

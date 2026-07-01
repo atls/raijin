@@ -733,54 +733,6 @@
       "scripts": ["build", "build:worker", "postpack", "prepack"]
     },
     {
-      "name": "@atls/config-commitlint",
-      "location": "config/commitlint",
-      "group": "config",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/config-eslint",
-      "location": "config/eslint",
-      "group": "config",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/config-prettier",
-      "location": "config/prettier",
-      "group": "config",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/config-typescript",
-      "location": "config/typescript",
-      "group": "config",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/prettier-plugin",
-      "location": "prettier/plugin",
-      "group": "prettier",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/webpack-proto-imports-loader",
-      "location": "webpack/webpack-proto-imports-loader",
-      "group": "webpack",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/webpack-start-server-plugin",
       "location": "webpack/webpack-start-server-plugin",
       "group": "webpack",
@@ -1081,5 +1033,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-07-01T17:21:41.061Z"
+  "lastGenerated": "2026-07-01T18:13:03.732Z"
 }

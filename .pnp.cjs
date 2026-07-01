@@ -143,30 +143,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:code/code-typescript"\
     },\
     {\
-      "name": "@atls/config-commitlint",\
-      "reference": "workspace:config/commitlint"\
-    },\
-    {\
-      "name": "@atls/config-eslint",\
-      "reference": "workspace:config/eslint"\
-    },\
-    {\
-      "name": "@atls/config-prettier",\
-      "reference": "workspace:config/prettier"\
-    },\
-    {\
-      "name": "@atls/config-typescript",\
-      "reference": "workspace:config/typescript"\
-    },\
-    {\
-      "name": "@atls/prettier-plugin",\
-      "reference": "workspace:prettier/plugin"\
-    },\
-    {\
-      "name": "@atls/webpack-proto-imports-loader",\
-      "reference": "workspace:webpack/webpack-proto-imports-loader"\
-    },\
-    {\
       "name": "@atls/webpack-start-server-plugin",\
       "reference": "workspace:webpack/webpack-start-server-plugin"\
     },\
@@ -311,13 +287,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/code-service", ["workspace:code/code-service"]],\
     ["@atls/code-test", ["workspace:code/code-test"]],\
     ["@atls/code-typescript", ["workspace:code/code-typescript"]],\
-    ["@atls/config-commitlint", ["workspace:config/commitlint"]],\
-    ["@atls/config-eslint", ["workspace:config/eslint"]],\
-    ["@atls/config-prettier", ["workspace:config/prettier"]],\
-    ["@atls/config-typescript", ["workspace:config/typescript"]],\
-    ["@atls/prettier-plugin", ["workspace:prettier/plugin"]],\
     ["@atls/raijin", ["workspace:yarn/raijin"]],\
-    ["@atls/webpack-proto-imports-loader", ["workspace:webpack/webpack-proto-imports-loader"]],\
     ["@atls/webpack-start-server-plugin", ["workspace:webpack/webpack-start-server-plugin"]],\
     ["@atls/yarn-cli", ["workspace:yarn/cli"]],\
     ["@atls/yarn-cli-tools", ["workspace:yarn/cli-tools"]],\
@@ -353,7 +323,6 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
-          ["@atls/config-prettier", "workspace:config/prettier"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
@@ -771,7 +740,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/cli-ui-git-commit-component", "virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#workspace:cli/cli-ui-git-commit"],\
           ["@atls/code-commit", "workspace:code/code-commit"],\
-          ["@atls/config-commitlint", "workspace:config/commitlint"],\
           ["@inkjs/ui", "virtual:34adf75b8f607ae2585bd4f5233727093c304928d203ebf825bb8d3d47167263a22d6fc36dd5c907d1167849bb480324f8b91286fc1f7d7afd647cac6ec8f219#npm:2.0.0"],\
           ["@types/ink", null],\
           ["@types/node", "npm:22.13.10"],\
@@ -797,7 +765,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/cli-ui-git-commit-component", "workspace:cli/cli-ui-git-commit"],\
           ["@atls/code-commit", "workspace:code/code-commit"],\
-          ["@atls/config-commitlint", "workspace:config/commitlint"],\
           ["@inkjs/ui", "virtual:34adf75b8f607ae2585bd4f5233727093c304928d203ebf825bb8d3d47167263a22d6fc36dd5c907d1167849bb480324f8b91286fc1f7d7afd647cac6ec8f219#npm:2.0.0"],\
           ["@types/node", "npm:22.13.10"],\
           ["@types/react", "npm:18.3.18"],\
@@ -1421,7 +1388,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-commit/",\
         "packageDependencies": [\
           ["@atls/code-commit", "workspace:code/code-commit"],\
-          ["@atls/config-commitlint", "workspace:config/commitlint"],\
           ["@commitlint/format", "npm:19.3.0"],\
           ["@commitlint/is-ignored", "npm:19.2.2"],\
           ["@commitlint/lint", "npm:19.4.1"],\
@@ -1452,8 +1418,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-format/",\
         "packageDependencies": [\
           ["@atls/code-format", "workspace:code/code-format"],\
-          ["@atls/config-prettier", "workspace:config/prettier"],\
-          ["@atls/prettier-plugin", "workspace:prettier/plugin"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["globby", "npm:13.2.2"],\
           ["ignore", "npm:5.3.2"],\
@@ -1493,7 +1458,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-icons/",\
         "packageDependencies": [\
           ["@atls/code-icons", "workspace:code/code-icons"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@monstrs/logger", "npm:0.0.20"],\
           ["@types/node", "npm:24.12.2"],\
@@ -1563,7 +1527,7 @@ const RAW_RUNTIME_STATE =
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/code-schematics", "virtual:0f3cc5eda50cd331b896fdb67135bbd175f8d6c0e05b778cc8be0f6f8ffc73bafb318fb4f55aa96367ef2c56e5afac1780018e1a5ffc17ec4ebf12353b43f15b#workspace:code/code-schematics"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -1590,7 +1554,7 @@ const RAW_RUNTIME_STATE =
           ["@angular-devkit/core", "virtual:d828b63554ff5f929df875f41a9ea163911c7a958799d364d2f1d21b14eefbb53c035a04f9595ed6a89eaedbba2da838026fe89804e55812dc12c2732e591617#npm:19.1.5"],\
           ["@angular-devkit/schematics", "npm:19.1.5"],\
           ["@atls/code-schematics", "workspace:code/code-schematics"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
@@ -1610,7 +1574,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/code-configuration", "workspace:code/code-configuration"],\
           ["@atls/code-service", "workspace:code/code-service"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/webpack-start-server-plugin", "workspace:webpack/webpack-start-server-plugin"],\
           ["@monstrs/logger", "npm:0.0.20"],\
@@ -1643,73 +1606,9 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./code/code-typescript/",\
         "packageDependencies": [\
           ["@atls/code-typescript", "workspace:code/code-typescript"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/config-commitlint", [\
-      ["workspace:config/commitlint", {\
-        "packageLocation": "./config/commitlint/",\
-        "packageDependencies": [\
-          ["@atls/config-commitlint", "workspace:config/commitlint"],\
-          ["@commitlint/types", "npm:19.0.3"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/config-eslint", [\
-      ["workspace:config/eslint", {\
-        "packageLocation": "./config/eslint/",\
-        "packageDependencies": [\
-          ["@atls/config-eslint", "workspace:config/eslint"],\
-          ["@atls/raijin", "workspace:yarn/raijin"],\
-          ["@types/eslint", "npm:9.6.1"],\
-          ["@types/node", "npm:22.13.10"],\
-          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/config-prettier", [\
-      ["workspace:config/prettier", {\
-        "packageLocation": "./config/prettier/",\
-        "packageDependencies": [\
-          ["@atls/config-prettier", "workspace:config/prettier"],\
-          ["@atls/prettier-plugin", "workspace:prettier/plugin"],\
-          ["@types/node", "npm:22.13.10"],\
-          ["prettier", "npm:3.5.3"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/config-typescript", [\
-      ["workspace:config/typescript", {\
-        "packageLocation": "./config/typescript/",\
-        "packageDependencies": [\
-          ["@atls/config-typescript", "workspace:config/typescript"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/prettier-plugin", [\
-      ["workspace:prettier/plugin", {\
-        "packageLocation": "./prettier/plugin/",\
-        "packageDependencies": [\
-          ["@atls/prettier-plugin", "workspace:prettier/plugin"],\
-          ["@babel/types", "npm:7.25.6"],\
-          ["@types/node", "npm:22.13.10"],\
-          ["@types/prettier", "npm:3.0.0"],\
-          ["globby", "npm:13.2.2"],\
-          ["import-sort", "npm:6.0.0"],\
-          ["import-sort-parser", "npm:6.0.0"],\
-          ["import-sort-parser-typescript", "npm:6.0.0"],\
-          ["import-sort-style", "npm:6.0.0"],\
-          ["prettier", "npm:3.5.3"],\
-          ["sort-package-json", "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=tools%40workspace%3A."]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -1719,6 +1618,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/raijin/",\
         "packageDependencies": [\
           ["@atls/raijin", "workspace:yarn/raijin"],\
+          ["@babel/types", "npm:7.25.6"],\
           ["@next/eslint-plugin-next", "npm:16.0.7"],\
           ["@svgr/core", "npm:8.1.0"],\
           ["@svgr/plugin-jsx", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:8.1.0"],\
@@ -1733,33 +1633,21 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react-compiler", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:19.1.0-rc.2"],\
           ["eslint-plugin-react-hooks", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:7.0.1"],\
           ["eslint-plugin-security", "npm:3.0.1"],\
+          ["globby", "npm:13.2.2"],\
+          ["import-sort", "npm:6.0.0"],\
+          ["import-sort-parser", "npm:6.0.0"],\
+          ["import-sort-parser-typescript", "npm:6.0.0"],\
+          ["import-sort-style", "npm:6.0.0"],\
           ["node-loader", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:2.1.0"],\
+          ["prettier", "npm:3.5.3"],\
           ["protocol-buffers-schema", "npm:3.6.0"],\
           ["react", "npm:18.3.1"],\
+          ["sort-package-json", "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=tools%40workspace%3A."],\
           ["ts-loader", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:9.5.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
           ["webpack", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:5.98.0"],\
           ["zod", "npm:4.1.13"],\
           ["zod-validation-error", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.0.2"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/webpack-proto-imports-loader", [\
-      ["workspace:webpack/webpack-proto-imports-loader", {\
-        "packageLocation": "./webpack/webpack-proto-imports-loader/",\
-        "packageDependencies": [\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
-          ["@atls/raijin", "workspace:yarn/raijin"],\
-          ["@atls/webpack-proto-imports-loader", "workspace:webpack/webpack-proto-imports-loader"],\
-          ["@monstrs/types-import-proto", "npm:0.0.1"],\
-          ["@types/node", "npm:22.13.10"],\
-          ["@types/protocol-buffers-schema", "npm:3.4.3"],\
-          ["memfs", "virtual:a0bc915c153d5ff422ab909e9d6f033b3dd86f2ae1e865fd1b2c29932a554fe0a30358fbb65e84213aad5851f7bbdf303597798b16a80e9d5dcfc0569e5d66c5#npm:4.6.0"],\
-          ["ts-loader", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:9.5.2"],\
-          ["tslib", "npm:2.8.1"],\
-          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
-          ["webpack", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:5.98.0"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -2720,7 +2608,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-test-failure-component", "virtual:c9cca177981ab8ae758413ed8e2c62aac7997e9f921fb7ffe93e264798eaff48c91de930ba59fb05dfcc4b8c1e4d55f34b86a73cb03b67968b44aa61c046f8e7#workspace:cli/cli-ui-test-failure"],\
           ["@atls/cli-ui-test-progress-component", "virtual:c9cca177981ab8ae758413ed8e2c62aac7997e9f921fb7ffe93e264798eaff48c91de930ba59fb05dfcc4b8c1e4d55f34b86a73cb03b67968b44aa61c046f8e7#workspace:cli/cli-ui-test-progress"],\
           ["@atls/code-test", "workspace:code/code-test"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-test", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-test"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@types/react", "npm:18.3.18"],\
@@ -2754,7 +2642,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-test-failure-component", "virtual:c9cca177981ab8ae758413ed8e2c62aac7997e9f921fb7ffe93e264798eaff48c91de930ba59fb05dfcc4b8c1e4d55f34b86a73cb03b67968b44aa61c046f8e7#workspace:cli/cli-ui-test-failure"],\
           ["@atls/cli-ui-test-progress-component", "virtual:c9cca177981ab8ae758413ed8e2c62aac7997e9f921fb7ffe93e264798eaff48c91de930ba59fb05dfcc4b8c1e4d55f34b86a73cb03b67968b44aa61c046f8e7#workspace:cli/cli-ui-test-progress"],\
           ["@atls/code-test", "workspace:code/code-test"],\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-test", "workspace:yarn/plugin-test"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@types/react", "npm:18.3.18"],\
@@ -2775,7 +2663,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:yarn/plugin-tools", {\
         "packageLocation": "./yarn/plugin-tools/",\
         "packageDependencies": [\
-          ["@atls/config-typescript", "workspace:config/typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@types/semver", "npm:7.5.8"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
@@ -4948,15 +4836,6 @@ const RAW_RUNTIME_STATE =
           ["@monstrs/stack-trace", "npm:0.0.6"],\
           ["@types/stack-utils", "npm:2.0.3"],\
           ["stack-utils", "npm:2.0.6"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@monstrs/types-import-proto", [\
-      ["npm:0.0.1", {\
-        "packageLocation": "../.yarn/berry/cache/@monstrs-types-import-proto-npm-0.0.1-839ead19ea-10.zip/node_modules/@monstrs/types-import-proto/",\
-        "packageDependencies": [\
-          ["@monstrs/types-import-proto", "npm:0.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -9103,15 +8982,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["arg", [\
-      ["npm:5.0.2", {\
-        "packageLocation": "../.yarn/berry/cache/arg-npm-5.0.2-2f5805a547-10.zip/node_modules/arg/",\
-        "packageDependencies": [\
-          ["arg", "npm:5.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["argparse", [\
       ["npm:1.0.10", {\
         "packageLocation": "../.yarn/berry/cache/argparse-npm-1.0.10-528934e59d-10.zip/node_modules/argparse/",\
@@ -12463,15 +12333,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["hyperdyperid", [\
-      ["npm:1.2.0", {\
-        "packageLocation": "../.yarn/berry/cache/hyperdyperid-npm-1.2.0-47be2553af-10.zip/node_modules/hyperdyperid/",\
-        "packageDependencies": [\
-          ["hyperdyperid", "npm:1.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["iconv-lite", [\
       ["npm:0.4.24", {\
         "packageLocation": "../.yarn/berry/cache/iconv-lite-npm-0.4.24-c5c4ac6695-10.zip/node_modules/iconv-lite/",\
@@ -13523,38 +13384,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["json-joy", [\
-      ["npm:9.9.1", {\
-        "packageLocation": "../.yarn/berry/cache/json-joy-npm-9.9.1-ed3b23f938-10.zip/node_modules/json-joy/",\
-        "packageDependencies": [\
-          ["json-joy", "npm:9.9.1"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:0dffa1159ea7433957af8e95a7b40bbd068ed2a76dbfd31dc94444b5b975865a31b6f34fb5355c8bf1eed90fe1ac609f0480363088549aebd18c335a504d359d#npm:9.9.1", {\
-        "packageLocation": "./.yarn/__virtual__/json-joy-virtual-b8624ed462/2/.yarn/berry/cache/json-joy-npm-9.9.1-ed3b23f938-10.zip/node_modules/json-joy/",\
-        "packageDependencies": [\
-          ["@types/quill-delta", null],\
-          ["@types/rxjs", null],\
-          ["@types/tslib", null],\
-          ["arg", "npm:5.0.2"],\
-          ["hyperdyperid", "npm:1.2.0"],\
-          ["json-joy", "virtual:0dffa1159ea7433957af8e95a7b40bbd068ed2a76dbfd31dc94444b5b975865a31b6f34fb5355c8bf1eed90fe1ac609f0480363088549aebd18c335a504d359d#npm:9.9.1"],\
-          ["quill-delta", null],\
-          ["rxjs", null],\
-          ["tslib", "npm:2.8.1"]\
-        ],\
-        "packagePeers": [\
-          "@types/quill-delta",\
-          "@types/rxjs",\
-          "@types/tslib",\
-          "quill-delta",\
-          "rxjs",\
-          "tslib"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["json-parse-even-better-errors", [\
       ["npm:2.3.1", {\
         "packageLocation": "../.yarn/berry/cache/json-parse-even-better-errors-npm-2.3.1-144d62256e-10.zip/node_modules/json-parse-even-better-errors/",\
@@ -14051,30 +13880,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/mdn-data-npm-2.0.30-bf7b39c09a-10.zip/node_modules/mdn-data/",\
         "packageDependencies": [\
           ["mdn-data", "npm:2.0.30"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["memfs", [\
-      ["npm:4.6.0", {\
-        "packageLocation": "../.yarn/berry/cache/memfs-npm-4.6.0-a09f68d72d-10.zip/node_modules/memfs/",\
-        "packageDependencies": [\
-          ["memfs", "npm:4.6.0"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:a0bc915c153d5ff422ab909e9d6f033b3dd86f2ae1e865fd1b2c29932a554fe0a30358fbb65e84213aad5851f7bbdf303597798b16a80e9d5dcfc0569e5d66c5#npm:4.6.0", {\
-        "packageLocation": "./.yarn/__virtual__/memfs-virtual-0dffa1159e/2/.yarn/berry/cache/memfs-npm-4.6.0-a09f68d72d-10.zip/node_modules/memfs/",\
-        "packageDependencies": [\
-          ["@types/tslib", null],\
-          ["json-joy", "virtual:0dffa1159ea7433957af8e95a7b40bbd068ed2a76dbfd31dc94444b5b975865a31b6f34fb5355c8bf1eed90fe1ac609f0480363088549aebd18c335a504d359d#npm:9.9.1"],\
-          ["memfs", "virtual:a0bc915c153d5ff422ab909e9d6f033b3dd86f2ae1e865fd1b2c29932a554fe0a30358fbb65e84213aad5851f7bbdf303597798b16a80e9d5dcfc0569e5d66c5#npm:4.6.0"],\
-          ["thingies", "virtual:0dffa1159ea7433957af8e95a7b40bbd068ed2a76dbfd31dc94444b5b975865a31b6f34fb5355c8bf1eed90fe1ac609f0480363088549aebd18c335a504d359d#npm:1.21.0"],\
-          ["tslib", "npm:2.8.1"]\
-        ],\
-        "packagePeers": [\
-          "@types/tslib",\
-          "tslib"\
         ],\
         "linkType": "HARD"\
       }]\
@@ -16510,28 +16315,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["thingies", [\
-      ["npm:1.21.0", {\
-        "packageLocation": "../.yarn/berry/cache/thingies-npm-1.21.0-a230892a3e-10.zip/node_modules/thingies/",\
-        "packageDependencies": [\
-          ["thingies", "npm:1.21.0"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:0dffa1159ea7433957af8e95a7b40bbd068ed2a76dbfd31dc94444b5b975865a31b6f34fb5355c8bf1eed90fe1ac609f0480363088549aebd18c335a504d359d#npm:1.21.0", {\
-        "packageLocation": "./.yarn/__virtual__/thingies-virtual-b8de42d901/2/.yarn/berry/cache/thingies-npm-1.21.0-a230892a3e-10.zip/node_modules/thingies/",\
-        "packageDependencies": [\
-          ["@types/tslib", null],\
-          ["thingies", "virtual:0dffa1159ea7433957af8e95a7b40bbd068ed2a76dbfd31dc94444b5b975865a31b6f34fb5355c8bf1eed90fe1ac609f0480363088549aebd18c335a504d359d#npm:1.21.0"],\
-          ["tslib", "npm:2.8.1"]\
-        ],\
-        "packagePeers": [\
-          "@types/tslib",\
-          "tslib"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["through", [\
       ["npm:2.3.8", {\
         "packageLocation": "../.yarn/berry/cache/through-npm-2.3.8-df5f72a16e-10.zip/node_modules/through/",\
@@ -16614,7 +16397,6 @@ const RAW_RUNTIME_STATE =
       ["workspace:.", {\
         "packageLocation": "./",\
         "packageDependencies": [\
-          ["@atls/config-prettier", "workspace:config/prettier"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\

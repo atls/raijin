@@ -407,78 +407,16 @@
 
 </details>
 
-## Group `config`
-
-Пакеты конфигурации и shared presets
-
-Короткий список:
-
-- `@atls/config-commitlint` — `config/commitlint`
-- `@atls/config-eslint` — `config/eslint`
-- `@atls/config-prettier` — `config/prettier`
-- `@atls/config-typescript` — `config/typescript`
-
-<details>
-<summary>Подробности группы `config`</summary>
-
-<!-- sync:package-card:atls-config-commitlint -->
-
-#### `@atls/config-commitlint`
-
-- Локация: `config/commitlint`
-- Группа: `config`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-config-eslint -->
-
-#### `@atls/config-eslint`
-
-- Локация: `config/eslint`
-- Группа: `config`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-config-prettier -->
-
-#### `@atls/config-prettier`
-
-- Локация: `config/prettier`
-- Группа: `config`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-config-typescript -->
-
-#### `@atls/config-typescript`
-
-- Локация: `config/typescript`
-- Группа: `config`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-</details>
-
 ## Group `webpack`
 
 Webpack-интеграции и сборочные адаптеры
 
 Короткий список:
 
-- `@atls/webpack-proto-imports-loader` — `webpack/webpack-proto-imports-loader`
 - `@atls/webpack-start-server-plugin` — `webpack/webpack-start-server-plugin`
 
 <details>
 <summary>Подробности группы `webpack`</summary>
-
-<!-- sync:package-card:atls-webpack-proto-imports-loader -->
-
-#### `@atls/webpack-proto-imports-loader`
-
-- Локация: `webpack/webpack-proto-imports-loader`
-- Группа: `webpack`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
 
@@ -486,28 +424,6 @@ Webpack-интеграции и сборочные адаптеры
 
 - Локация: `webpack/webpack-start-server-plugin`
 - Группа: `webpack`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-</details>
-
-## Group `prettier`
-
-Форматирование и Prettier-интеграции
-
-Короткий список:
-
-- `@atls/prettier-plugin` — `prettier/plugin`
-
-<details>
-<summary>Подробности группы `prettier`</summary>
-
-<!-- sync:package-card:atls-prettier-plugin -->
-
-#### `@atls/prettier-plugin`
-
-- Локация: `prettier/plugin`
-- Группа: `prettier`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 

@@ -19,7 +19,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-typescript": "workspace:*",
     "@atls/raijin": "workspace:*"
   },
   "devDependencies": {

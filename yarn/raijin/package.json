@@ -26,7 +26,10 @@
     "./typescript-loader": "./src/runtime/typescript-loader.ts",
     "./svgr": "./src/runtime/svgr.ts",
     "./ts-node-register": "./src/runtime/ts-node-register.ts",
-    "./ts-ext-register": "./src/runtime/ts-ext-register.ts"
+    "./ts-ext-register": "./src/runtime/ts-ext-register.ts",
+    "./prettier": "./src/runtime/prettier.ts",
+    "./prettier-plugin": "./src/runtime/prettier-plugin/index.ts",
+    "./typescript-config": "./src/runtime/typescript-config.ts"
   },
   "main": "src/index.ts",
   "bin": "./bin/raijin.mjs",
@@ -41,6 +44,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@babel/types": "7.25.6",
     "@next/eslint-plugin-next": "16.0.7",
     "@svgr/core": "8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
@@ -53,9 +57,16 @@
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-security": "3.0.1",
+    "globby": "13.2.2",
+    "import-sort": "6.0.0",
+    "import-sort-parser": "6.0.0",
+    "import-sort-parser-typescript": "6.0.0",
+    "import-sort-style": "6.0.0",
     "node-loader": "2.1.0",
+    "prettier": "3.5.3",
     "protocol-buffers-schema": "3.6.0",
     "react": "18.3.1",
+    "sort-package-json": "2.4.1",
     "ts-loader": "9.5.2",
     "typescript": "5.5.4",
     "webpack": "5.98.0",
@@ -128,6 +139,21 @@
         "import": "./dist/runtime/ts-ext-register.js",
         "types": "./dist/runtime/ts-ext-register.d.ts",
         "default": "./dist/runtime/ts-ext-register.js"
+      },
+      "./prettier": {
+        "import": "./dist/runtime/prettier.js",
+        "types": "./dist/runtime/prettier.d.ts",
+        "default": "./dist/runtime/prettier.js"
+      },
+      "./prettier-plugin": {
+        "import": "./dist/runtime/prettier-plugin/index.js",
+        "types": "./dist/runtime/prettier-plugin/index.d.ts",
+        "default": "./dist/runtime/prettier-plugin/index.js"
+      },
+      "./typescript-config": {
+        "import": "./dist/runtime/typescript-config.js",
+        "types": "./dist/runtime/typescript-config.d.ts",
+        "default": "./dist/runtime/typescript-config.js"
       }
     },
     "main": "dist/index.js",

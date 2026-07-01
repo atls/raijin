@@ -407,78 +407,16 @@ Compact list:
 
 </details>
 
-## Group `config`
-
-Configuration packages and shared presets
-
-Compact list:
-
-- `@atls/config-commitlint` — `config/commitlint`
-- `@atls/config-eslint` — `config/eslint`
-- `@atls/config-prettier` — `config/prettier`
-- `@atls/config-typescript` — `config/typescript`
-
-<details>
-<summary>Group details: `config`</summary>
-
-<!-- sync:package-card:atls-config-commitlint -->
-
-#### `@atls/config-commitlint`
-
-- Location: `config/commitlint`
-- Group: `config`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-config-eslint -->
-
-#### `@atls/config-eslint`
-
-- Location: `config/eslint`
-- Group: `config`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-config-prettier -->
-
-#### `@atls/config-prettier`
-
-- Location: `config/prettier`
-- Group: `config`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-config-typescript -->
-
-#### `@atls/config-typescript`
-
-- Location: `config/typescript`
-- Group: `config`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-</details>
-
 ## Group `webpack`
 
 Webpack integrations and build adapters
 
 Compact list:
 
-- `@atls/webpack-proto-imports-loader` — `webpack/webpack-proto-imports-loader`
 - `@atls/webpack-start-server-plugin` — `webpack/webpack-start-server-plugin`
 
 <details>
 <summary>Group details: `webpack`</summary>
-
-<!-- sync:package-card:atls-webpack-proto-imports-loader -->
-
-#### `@atls/webpack-proto-imports-loader`
-
-- Location: `webpack/webpack-proto-imports-loader`
-- Group: `webpack`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
 
@@ -486,28 +424,6 @@ Compact list:
 
 - Location: `webpack/webpack-start-server-plugin`
 - Group: `webpack`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-</details>
-
-## Group `prettier`
-
-Formatting and Prettier integrations
-
-Compact list:
-
-- `@atls/prettier-plugin` — `prettier/plugin`
-
-<details>
-<summary>Group details: `prettier`</summary>
-
-<!-- sync:package-card:atls-prettier-plugin -->
-
-#### `@atls/prettier-plugin`
-
-- Location: `prettier/plugin`
-- Group: `prettier`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 

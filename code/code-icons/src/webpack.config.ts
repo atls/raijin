@@ -7,7 +7,7 @@ import { join }         from 'node:path'
 
 import Config           from 'webpack-chain-5'
 
-import tsconfig         from '@atls/config-typescript'
+import tsconfig         from '@atls/raijin/typescript-config'
 
 export class WebpackConfig {
   constructor(

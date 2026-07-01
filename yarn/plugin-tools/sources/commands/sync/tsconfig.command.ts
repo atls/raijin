@@ -10,7 +10,7 @@ import { xfs }                       from '@yarnpkg/fslib'
 import { ppath }                     from '@yarnpkg/fslib'
 import deepmerge                     from 'deepmerge'
 
-import tsconfig                      from '@atls/config-typescript'
+import tsconfig                      from '@atls/raijin/typescript-config'
 
 import { AbstractRaijinSyncCommand } from './base.js'
 

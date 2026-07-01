@@ -24,6 +24,7 @@
     "@atls/cli-ui-test-failure-component": "workspace:*",
     "@atls/cli-ui-test-progress-component": "workspace:*",
     "@atls/code-test": "workspace:*",
+    "@atls/raijin": "workspace:*",
     "@atls/yarn-plugin-tools": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "ink": "3.2.0",
@@ -31,7 +32,6 @@
     "typanion": "3.14.0"
   },
   "devDependencies": {
-    "@atls/config-typescript": "workspace:*",
     "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
