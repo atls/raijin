@@ -21,7 +21,47 @@ runs:
         source .env
         export NODE_OPTIONS
         yarn release version defer
-        if ! find .yarn/versions -maxdepth 1 -type f -name '*.yml' | grep -q .; then
+        release_required="$(node <<'NODE'
+        const fs = require('node:fs')
+        const path = require('node:path')
+
+        const folder = '.yarn/versions'
+        const releaseStrategies = new Set(['major', 'minor', 'patch'])
+
+        let releaseRequired = false
+
+        if (fs.existsSync(folder)) {
+          for (const entry of fs.readdirSync(folder)) {
+            if (!entry.endsWith('.yml')) {
+              continue
+            }
+
+            let section
+
+            for (const line of fs.readFileSync(path.join(folder, entry), 'utf8').split(/\r?\n/)) {
+              if (/^\S/.test(line)) {
+                section = line.startsWith('releases:') ? 'releases' : undefined
+
+                continue
+              }
+
+              if (section !== 'releases') {
+                continue
+              }
+
+              const match = line.trim().match(/^"?@atls\/raijin"?:\s+"?([^"\s]+)"?\s*$/)
+
+              if (match && releaseStrategies.has(match[1])) {
+                releaseRequired = true
+              }
+            }
+          }
+        }
+
+        process.stdout.write(releaseRequired ? 'true' : 'false')
+        NODE
+        )"
+        if [ "$release_required" != "true" ]; then
           echo "release_required=false" >> "$GITHUB_OUTPUT"
           echo "No Raijin release target"
           exit 0
