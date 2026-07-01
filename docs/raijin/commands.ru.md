@@ -24,24 +24,6 @@
 
 </details>
 
-### Домен `changelog`
-
-- Команды: `changelog generate`
-
-<details>
-<summary>Подробности домена `changelog`</summary>
-
-<!-- sync:command-card:changelog-generate -->
-
-#### `changelog generate`
-
-- Статус: `active`
-- Пример: `yarn changelog generate`
-- Плагин: `@atls/yarn-plugin-changelog`
-- Исходник: `yarn/plugin-changelog/sources/changelog-generate.command.ts`
-
-</details>
-
 ### Домен `check`
 
 - Команды: `check`

@@ -24,24 +24,6 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 </details>
 
-### Domain `changelog`
-
-- Commands: `changelog generate`
-
-<details>
-<summary>Domain details: `changelog`</summary>
-
-<!-- sync:command-card:changelog-generate -->
-
-#### `changelog generate`
-
-- Status: `active`
-- Example: `yarn changelog generate`
-- Plugin: `@atls/yarn-plugin-changelog`
-- Source: `yarn/plugin-changelog/sources/changelog-generate.command.ts`
-
-</details>
-
 ### Domain `check`
 
 - Commands: `check`
