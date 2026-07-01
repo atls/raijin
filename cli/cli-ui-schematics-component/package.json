@@ -1,6 +1,7 @@
 {
   "name": "@atls/cli-ui-schematics-component",
   "version": "1.0.4",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

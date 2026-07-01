@@ -122,6 +122,22 @@ test('should ignore non conventional commits', () => {
   assert.equal(resolveReleaseVersionStrategy('update runtime'), undefined)
 })
 
+test('should default changed workspaces without conventional commits to patch strategy', () => {
+  const changes: Array<ReleaseVersionChange> = [
+    {
+      message: 'update runtime',
+      files: ['yarn/raijin/src/typescript.ts'],
+    },
+  ]
+
+  assert.deepEqual(resolveReleaseVersionWorkspaceStrategies(workspaces, changes), [
+    {
+      workspace: runtimeWorkspace,
+      strategy: 'patch',
+    },
+  ])
+})
+
 test('should resolve strategies per changed workspace', () => {
   const changes: Array<ReleaseVersionChange> = [
     {

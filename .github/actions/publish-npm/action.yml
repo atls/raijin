@@ -12,14 +12,6 @@ runs:
   using: composite
 
   steps:
-    - name: List changed workspaces
-      if: ${{ inputs.WORKSPACE == '' }}
-      shell: bash
-      run: |
-        source .env
-        export NODE_OPTIONS
-        yarn workspaces changed list
-
     - name: Show selected workspace
       if: ${{ inputs.WORKSPACE != '' }}
       shell: bash
@@ -32,6 +24,10 @@ runs:
       if: ${{ inputs.WORKSPACE != '' }}
       shell: bash
       run: |
+        if [ "$SELECTED_WORKSPACE" != "@atls/raijin" ]; then
+          echo "Manual public publish is allowed only for @atls/raijin." >&2
+          exit 1
+        fi
         yarn workspace "$SELECTED_WORKSPACE" exec true
       env:
         SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}
@@ -51,7 +47,7 @@ runs:
       run: |
         source .env
         export NODE_OPTIONS
-        yarn workspaces changed foreach -vt --no-private npm publish --tolerate-republish --access public
+        yarn workspace @atls/raijin npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 

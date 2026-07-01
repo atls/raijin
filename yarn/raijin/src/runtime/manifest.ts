@@ -15,7 +15,8 @@ export interface RaijinRuntimeManifest {
 
 export const RAIJIN_RUNTIME_MANIFEST_URL =
   'https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/raijin-runtime.json'
-export const RAIJIN_RUNTIME_PACKAGE_NAME = '@atls/yarn-cli'
+export const RAIJIN_RUNTIME_PACKAGE_NAME = '@atls/raijin'
+export const LEGACY_RAIJIN_RUNTIME_PACKAGE_NAME = '@atls/yarn-cli'
 export const RAIJIN_RUNTIME_ASSET_NAME = 'yarn.mjs'
 export const RAIJIN_RUNTIME_YARN_PATH = '.yarn/releases/yarn.mjs'
 export const RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION = 1
@@ -51,7 +52,10 @@ export const parseRaijinRuntimeManifest = (value: unknown): RaijinRuntimeManifes
   const assetName = assertManifestString(value, 'assetName')
   const sha256 = assertManifestString(value, 'sha256')
 
-  if (packageName !== RAIJIN_RUNTIME_PACKAGE_NAME) {
+  if (
+    packageName !== RAIJIN_RUNTIME_PACKAGE_NAME &&
+    packageName !== LEGACY_RAIJIN_RUNTIME_PACKAGE_NAME
+  ) {
     throw InvalidRaijinRuntimeManifestException.unexpectedPackage(RAIJIN_RUNTIME_PACKAGE_NAME)
   }
 

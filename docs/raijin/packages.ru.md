@@ -2,6 +2,14 @@
 
 Сгруппированные карточки workspace-пакетов
 
+## Public package contract
+
+Публичная поверхность Raijin публикуется как npm-пакет:
+
+- `@atls/raijin` — `yarn/raijin`
+
+## Internal workspace map
+
 <!-- sync:packages-groups -->
 
 ## Group `yarn`
@@ -304,7 +312,7 @@
 
 - Локация: `code/code-commit`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-configuration -->
@@ -313,7 +321,7 @@
 
 - Локация: `code/code-configuration`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-format -->
@@ -322,7 +330,7 @@
 
 - Локация: `code/code-format`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-github -->
@@ -331,7 +339,7 @@
 
 - Локация: `code/code-github`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-icons -->
@@ -340,7 +348,7 @@
 
 - Локация: `code/code-icons`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-lint -->
@@ -349,7 +357,7 @@
 
 - Локация: `code/code-lint`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-pack -->
@@ -358,7 +366,7 @@
 
 - Локация: `code/code-pack`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-schematics -->
@@ -367,7 +375,7 @@
 
 - Локация: `code/code-schematics`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`, `smoke:schematic`
 
 <!-- sync:package-card:atls-code-service -->
@@ -376,7 +384,7 @@
 
 - Локация: `code/code-service`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-test -->
@@ -385,7 +393,7 @@
 
 - Локация: `code/code-test`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `build:worker`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-typescript -->
@@ -394,60 +402,8 @@
 
 - Локация: `code/code-typescript`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `build:worker`, `postpack`, `prepack`
-
-</details>
-
-## Group `config`
-
-Пакеты конфигурации и shared presets
-
-Короткий список:
-
-- `@atls/config-commitlint` — `config/commitlint`
-- `@atls/config-eslint` — `config/eslint`
-- `@atls/config-prettier` — `config/prettier`
-- `@atls/config-typescript` — `config/typescript`
-
-<details>
-<summary>Подробности группы `config`</summary>
-
-<!-- sync:package-card:atls-config-commitlint -->
-
-#### `@atls/config-commitlint`
-
-- Локация: `config/commitlint`
-- Группа: `config`
-- Видимость: `public`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-config-eslint -->
-
-#### `@atls/config-eslint`
-
-- Локация: `config/eslint`
-- Группа: `config`
-- Видимость: `public`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-config-prettier -->
-
-#### `@atls/config-prettier`
-
-- Локация: `config/prettier`
-- Группа: `config`
-- Видимость: `public`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-config-typescript -->
-
-#### `@atls/config-typescript`
-
-- Локация: `config/typescript`
-- Группа: `config`
-- Видимость: `public`
-- Скрипты: `build`, `postpack`, `prepack`
 
 </details>
 
@@ -457,20 +413,10 @@ Webpack-интеграции и сборочные адаптеры
 
 Короткий список:
 
-- `@atls/webpack-proto-imports-loader` — `webpack/webpack-proto-imports-loader`
 - `@atls/webpack-start-server-plugin` — `webpack/webpack-start-server-plugin`
 
 <details>
 <summary>Подробности группы `webpack`</summary>
-
-<!-- sync:package-card:atls-webpack-proto-imports-loader -->
-
-#### `@atls/webpack-proto-imports-loader`
-
-- Локация: `webpack/webpack-proto-imports-loader`
-- Группа: `webpack`
-- Видимость: `public`
-- Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
 
@@ -478,29 +424,7 @@ Webpack-интеграции и сборочные адаптеры
 
 - Локация: `webpack/webpack-start-server-plugin`
 - Группа: `webpack`
-- Видимость: `public`
-- Скрипты: `build`, `postpack`, `prepack`
-
-</details>
-
-## Group `prettier`
-
-Форматирование и Prettier-интеграции
-
-Короткий список:
-
-- `@atls/prettier-plugin` — `prettier/plugin`
-
-<details>
-<summary>Подробности группы `prettier`</summary>
-
-<!-- sync:package-card:atls-prettier-plugin -->
-
-#### `@atls/prettier-plugin`
-
-- Локация: `prettier/plugin`
-- Группа: `prettier`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 </details>

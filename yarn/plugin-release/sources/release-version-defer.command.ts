@@ -5,15 +5,15 @@ import { Project }                               from '@yarnpkg/core'
 import { StreamReport }                          from '@yarnpkg/core'
 import { Option }                                from 'clipanion'
 
-import { getDeferredReleaseDecisions }           from './release-plan.utils.js'
-import { getReleaseVersionChanges }              from './release-plan.utils.js'
-import { resolveReleasePlanStrategies }          from './release-plan.utils.js'
 import { resolveReleaseVersionDeferredStrategy } from './release-version-policy.utils.js'
+import { getDeferredReleaseDecisions }           from './release-version.utils.js'
+import { getReleaseVersionChanges }              from './release-version.utils.js'
+import { resolveReleaseVersionStrategies }       from './release-version.utils.js'
 
-export { isReleaseVersionWorkspace }     from './release-plan.utils.js'
-export { parseDeferredReleaseDecisions } from './release-plan.utils.js'
-export { selectLocalCommitDiffParent }   from './release-plan.utils.js'
-export { toGitHubChange }                from './release-plan.utils.js'
+export { isReleaseVersionWorkspace }     from './release-version.utils.js'
+export { parseDeferredReleaseDecisions } from './release-version.utils.js'
+export { selectLocalCommitDiffParent }   from './release-version.utils.js'
+export { toGitHubChange }                from './release-version.utils.js'
 
 export class ReleaseVersionDeferCommand extends BaseCommand {
   static override paths = [['release', 'version', 'defer']]
@@ -35,7 +35,7 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
       },
       async (report) => {
         const changes = await getReleaseVersionChanges(project, this.since)
-        const strategies = resolveReleasePlanStrategies(project, changes)
+        const strategies = resolveReleaseVersionStrategies(project, changes)
 
         if (!strategies.length) {
           report.reportInfo(null, 'No released workspaces need deferred version records')

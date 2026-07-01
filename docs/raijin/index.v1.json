@@ -303,28 +303,6 @@
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
     {
-      "command": "release plan create",
-      "pathTokens": ["release", "plan", "create"],
-      "className": "ReleasePlanCreateCommand",
-      "plugin": "@atls/yarn-plugin-release",
-      "pluginDir": "plugin-release",
-      "domain": "release",
-      "source": "yarn/plugin-release/sources/release-plan-create.command.ts",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
-      "command": "release plan foreach",
-      "pathTokens": ["release", "plan", "foreach"],
-      "className": "ReleasePlanForeachCommand",
-      "plugin": "@atls/yarn-plugin-release",
-      "pluginDir": "plugin-release",
-      "domain": "release",
-      "source": "yarn/plugin-release/sources/release-plan-foreach.command.ts",
-      "status": "active",
-      "availabilityReason": "plugin in bundle and exported from plugin index"
-    },
-    {
       "command": "release version defer",
       "pathTokens": ["release", "version", "defer"],
       "className": "ReleaseVersionDeferCommand",
@@ -473,7 +451,7 @@
       "name": "@atls/cli-ui-error-info-component",
       "location": "cli/cli-ui-error-info",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -481,7 +459,7 @@
       "name": "@atls/cli-ui-file-link-component",
       "location": "cli/cli-ui-file-link",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -489,7 +467,7 @@
       "name": "@atls/cli-ui-file-path-component",
       "location": "cli/cli-ui-file-path",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -497,7 +475,7 @@
       "name": "@atls/cli-ui-format-progress-component",
       "location": "cli/cli-ui-format-progress",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -505,7 +483,7 @@
       "name": "@atls/cli-ui-git-commit-component",
       "location": "cli/cli-ui-git-commit",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -513,7 +491,7 @@
       "name": "@atls/cli-ui-icons-progress-component",
       "location": "cli/cli-ui-icons-progress",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -521,7 +499,7 @@
       "name": "@atls/cli-ui-line-component",
       "location": "cli/cli-ui-line",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -529,7 +507,7 @@
       "name": "@atls/cli-ui-lint-progress-component",
       "location": "cli/cli-ui-lint-progress",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -537,7 +515,7 @@
       "name": "@atls/cli-ui-lint-result-component",
       "location": "cli/cli-ui-lint-result",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -545,7 +523,7 @@
       "name": "@atls/cli-ui-log-record-component",
       "location": "cli/cli-ui-log-record",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -553,7 +531,7 @@
       "name": "@atls/cli-ui-pretty-logs-component",
       "location": "cli/cli-ui-pretty-logs",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -561,7 +539,7 @@
       "name": "@atls/cli-ui-raw-output-component",
       "location": "cli/cli-ui-raw-output",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -569,7 +547,7 @@
       "name": "@atls/cli-ui-renderer-static-component",
       "location": "cli/cli-ui-render-static",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -577,7 +555,7 @@
       "name": "@atls/cli-ui-schematics-component",
       "location": "cli/cli-ui-schematics-component",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -585,7 +563,7 @@
       "name": "@atls/cli-ui-service-progress-component",
       "location": "cli/cli-ui-service-progress",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -593,7 +571,7 @@
       "name": "@atls/cli-ui-source-preview-component",
       "location": "cli/cli-ui-source-preview",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -601,7 +579,7 @@
       "name": "@atls/cli-ui-stack-trace-component",
       "location": "cli/cli-ui-stack-trace",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -609,7 +587,7 @@
       "name": "@atls/cli-ui-test-failure-component",
       "location": "cli/cli-ui-test-failure",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -617,7 +595,7 @@
       "name": "@atls/cli-ui-test-progress-component",
       "location": "cli/cli-ui-test-progress",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -625,7 +603,7 @@
       "name": "@atls/cli-ui-typescript-diagnostic-component",
       "location": "cli/cli-ui-typescript-diagnostic",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -633,7 +611,7 @@
       "name": "@atls/cli-ui-typescript-progress-component",
       "location": "cli/cli-ui-types-check-progress",
       "group": "cli",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -641,7 +619,7 @@
       "name": "@atls/code-commit",
       "location": "code/code-commit",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -649,7 +627,7 @@
       "name": "@atls/code-configuration",
       "location": "code/code-configuration",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -657,7 +635,7 @@
       "name": "@atls/code-format",
       "location": "code/code-format",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -665,7 +643,7 @@
       "name": "@atls/code-github",
       "location": "code/code-github",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -673,7 +651,7 @@
       "name": "@atls/code-icons",
       "location": "code/code-icons",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -681,7 +659,7 @@
       "name": "@atls/code-lint",
       "location": "code/code-lint",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -689,7 +667,7 @@
       "name": "@atls/code-pack",
       "location": "code/code-pack",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -697,7 +675,7 @@
       "name": "@atls/code-schematics",
       "location": "code/code-schematics",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": [
         "build",
@@ -712,7 +690,7 @@
       "name": "@atls/code-service",
       "location": "code/code-service",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -720,7 +698,7 @@
       "name": "@atls/code-test",
       "location": "code/code-test",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "build:worker", "postpack", "prepack"]
     },
@@ -728,63 +706,15 @@
       "name": "@atls/code-typescript",
       "location": "code/code-typescript",
       "group": "code",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "build:worker", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/config-commitlint",
-      "location": "config/commitlint",
-      "group": "config",
-      "private": false,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/config-eslint",
-      "location": "config/eslint",
-      "group": "config",
-      "private": false,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/config-prettier",
-      "location": "config/prettier",
-      "group": "config",
-      "private": false,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/config-typescript",
-      "location": "config/typescript",
-      "group": "config",
-      "private": false,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/prettier-plugin",
-      "location": "prettier/plugin",
-      "group": "prettier",
-      "private": false,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/webpack-proto-imports-loader",
-      "location": "webpack/webpack-proto-imports-loader",
-      "group": "webpack",
-      "private": false,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
     },
     {
       "name": "@atls/webpack-start-server-plugin",
       "location": "webpack/webpack-start-server-plugin",
       "group": "webpack",
-      "private": false,
+      "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
@@ -1032,8 +962,6 @@
       "raijin sync tsconfig",
       "raijin sync typescript",
       "release create",
-      "release plan create",
-      "release plan foreach",
       "release version defer",
       "renderer build",
       "renderer dev",
@@ -1081,5 +1009,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-07-01T14:26:38.059Z"
+  "lastGenerated": "2026-07-01T21:53:56.457Z"
 }

@@ -5,16 +5,68 @@ inputs:
   GITHUB_TOKEN:
     required: true
 
+outputs:
+  release_required:
+    description: Whether merged changes produced a Raijin deferred version record
+    value: ${{ steps.version.outputs.release_required }}
+
 runs:
   using: composite
 
   steps:
     - name: Apply deferred versions
+      id: version
       shell: bash
       run: |
         source .env
         export NODE_OPTIONS
         yarn release version defer
+        release_required="$(node <<'NODE'
+        const fs = require('node:fs')
+        const path = require('node:path')
+
+        const folder = '.yarn/versions'
+        const releaseStrategies = new Set(['major', 'minor', 'patch'])
+
+        let releaseRequired = false
+
+        if (fs.existsSync(folder)) {
+          for (const entry of fs.readdirSync(folder)) {
+            if (!entry.endsWith('.yml')) {
+              continue
+            }
+
+            let section
+
+            for (const line of fs.readFileSync(path.join(folder, entry), 'utf8').split(/\r?\n/)) {
+              if (/^\S/.test(line)) {
+                section = line.startsWith('releases:') ? 'releases' : undefined
+
+                continue
+              }
+
+              if (section !== 'releases') {
+                continue
+              }
+
+              const match = line.trim().match(/^"?@atls\/raijin"?:\s+"?([^"\s]+)"?\s*$/)
+
+              if (match && releaseStrategies.has(match[1])) {
+                releaseRequired = true
+              }
+            }
+          }
+        }
+
+        process.stdout.write(releaseRequired ? 'true' : 'false')
+        NODE
+        )"
+        if [ "$release_required" != "true" ]; then
+          echo "release_required=false" >> "$GITHUB_OUTPUT"
+          echo "No Raijin release target"
+          exit 0
+        fi
+        echo "release_required=true" >> "$GITHUB_OUTPUT"
         yarn version apply --all
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}

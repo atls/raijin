@@ -11,7 +11,7 @@ import { RuleConfigSeverity }     from '@commitlint/types'
 import { format }                 from '@commitlint/format/lib/format.js'
 import commitlint                 from '@commitlint/lint'
 
-import { rules }                  from '@atls/config-commitlint'
+import { rules }                  from './commitlint.rules.js'
 
 const defaultParserOpts = {
   // eslint-disable-next-line security/detect-unsafe-regex

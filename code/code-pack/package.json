@@ -1,6 +1,7 @@
 {
   "name": "@atls/code-pack",
   "version": "2.0.12",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

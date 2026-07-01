@@ -3,7 +3,7 @@ import type { Linter as LinterType } from 'eslint'
 
 import { createRequire }             from 'node:module'
 
-import eslintconfig                  from '@atls/config-eslint'
+import eslintconfig                  from './eslint-config/index.js'
 
 const require = createRequire(import.meta.url)
 const { Linter: RuntimeLinter, ESLint: RuntimeESLint } = require('eslint') as {

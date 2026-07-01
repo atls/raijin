@@ -6,7 +6,7 @@ import EventEmitter                  from 'node:events'
 import { readFileSync }              from 'node:fs'
 import { join }                      from 'node:path'
 
-import tsconfig                      from '@atls/config-typescript'
+import tsconfig                      from '@atls/raijin/typescript-config'
 
 import { transformJsxToJsExtension } from './transformers/index.js'
 

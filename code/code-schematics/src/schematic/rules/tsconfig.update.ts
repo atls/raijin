@@ -1,6 +1,6 @@
 import type { Rule }            from '@angular-devkit/schematics'
 
-import tsconfig                 from '@atls/config-typescript'
+import tsconfig                 from '@atls/raijin/typescript-config'
 
 import { updateTsConfigInTree } from '../utils/tsconfig.utils.js'
 
