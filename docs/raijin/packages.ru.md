@@ -2,6 +2,14 @@
 
 Сгруппированные карточки workspace-пакетов
 
+## Public package contract
+
+Публичная поверхность Raijin публикуется как npm-пакет:
+
+- `@atls/raijin` — `yarn/raijin`
+
+## Internal workspace map
+
 <!-- sync:packages-groups -->
 
 ## Group `yarn`
@@ -304,7 +312,7 @@
 
 - Локация: `code/code-commit`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-configuration -->
@@ -313,7 +321,7 @@
 
 - Локация: `code/code-configuration`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-format -->
@@ -322,7 +330,7 @@
 
 - Локация: `code/code-format`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-github -->
@@ -331,7 +339,7 @@
 
 - Локация: `code/code-github`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-icons -->
@@ -340,7 +348,7 @@
 
 - Локация: `code/code-icons`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-lint -->
@@ -349,7 +357,7 @@
 
 - Локация: `code/code-lint`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-pack -->
@@ -358,7 +366,7 @@
 
 - Локация: `code/code-pack`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-schematics -->
@@ -367,7 +375,7 @@
 
 - Локация: `code/code-schematics`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`, `smoke:schematic`
 
 <!-- sync:package-card:atls-code-service -->
@@ -376,7 +384,7 @@
 
 - Локация: `code/code-service`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-test -->
@@ -385,7 +393,7 @@
 
 - Локация: `code/code-test`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `build:worker`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-typescript -->
@@ -394,7 +402,7 @@
 
 - Локация: `code/code-typescript`
 - Группа: `code`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `build:worker`, `postpack`, `prepack`
 
 </details>
@@ -419,7 +427,7 @@
 
 - Локация: `config/commitlint`
 - Группа: `config`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-config-eslint -->
@@ -428,7 +436,7 @@
 
 - Локация: `config/eslint`
 - Группа: `config`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-config-prettier -->
@@ -437,7 +445,7 @@
 
 - Локация: `config/prettier`
 - Группа: `config`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-config-typescript -->
@@ -446,7 +454,7 @@
 
 - Локация: `config/typescript`
 - Группа: `config`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 </details>
@@ -469,7 +477,7 @@ Webpack-интеграции и сборочные адаптеры
 
 - Локация: `webpack/webpack-proto-imports-loader`
 - Группа: `webpack`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
@@ -478,7 +486,7 @@ Webpack-интеграции и сборочные адаптеры
 
 - Локация: `webpack/webpack-start-server-plugin`
 - Группа: `webpack`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 </details>
@@ -500,7 +508,7 @@ Webpack-интеграции и сборочные адаптеры
 
 - Локация: `prettier/plugin`
 - Группа: `prettier`
-- Видимость: `public`
+- Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
 </details>

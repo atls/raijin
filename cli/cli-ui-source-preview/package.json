@@ -1,6 +1,7 @@
 {
   "name": "@atls/cli-ui-source-preview-component",
   "version": "1.0.2",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

@@ -2,6 +2,14 @@
 
 Grouped cards for workspace packages
 
+## Public package contract
+
+Raijin public surface is published as npm package:
+
+- `@atls/raijin` — `yarn/raijin`
+
+## Internal workspace map
+
 <!-- sync:packages-groups -->
 
 ## Group `yarn`
@@ -304,7 +312,7 @@ Compact list:
 
 - Location: `code/code-commit`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-configuration -->
@@ -313,7 +321,7 @@ Compact list:
 
 - Location: `code/code-configuration`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-format -->
@@ -322,7 +330,7 @@ Compact list:
 
 - Location: `code/code-format`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-github -->
@@ -331,7 +339,7 @@ Compact list:
 
 - Location: `code/code-github`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-icons -->
@@ -340,7 +348,7 @@ Compact list:
 
 - Location: `code/code-icons`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-lint -->
@@ -349,7 +357,7 @@ Compact list:
 
 - Location: `code/code-lint`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-pack -->
@@ -358,7 +366,7 @@ Compact list:
 
 - Location: `code/code-pack`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-schematics -->
@@ -367,7 +375,7 @@ Compact list:
 
 - Location: `code/code-schematics`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`, `smoke:schematic`
 
 <!-- sync:package-card:atls-code-service -->
@@ -376,7 +384,7 @@ Compact list:
 
 - Location: `code/code-service`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-test -->
@@ -385,7 +393,7 @@ Compact list:
 
 - Location: `code/code-test`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `build:worker`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-typescript -->
@@ -394,7 +402,7 @@ Compact list:
 
 - Location: `code/code-typescript`
 - Group: `code`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `build:worker`, `postpack`, `prepack`
 
 </details>
@@ -419,7 +427,7 @@ Compact list:
 
 - Location: `config/commitlint`
 - Group: `config`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-config-eslint -->
@@ -428,7 +436,7 @@ Compact list:
 
 - Location: `config/eslint`
 - Group: `config`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-config-prettier -->
@@ -437,7 +445,7 @@ Compact list:
 
 - Location: `config/prettier`
 - Group: `config`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-config-typescript -->
@@ -446,7 +454,7 @@ Compact list:
 
 - Location: `config/typescript`
 - Group: `config`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 </details>
@@ -469,7 +477,7 @@ Compact list:
 
 - Location: `webpack/webpack-proto-imports-loader`
 - Group: `webpack`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-webpack-start-server-plugin -->
@@ -478,7 +486,7 @@ Compact list:
 
 - Location: `webpack/webpack-start-server-plugin`
 - Group: `webpack`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 </details>
@@ -500,7 +508,7 @@ Compact list:
 
 - Location: `prettier/plugin`
 - Group: `prettier`
-- Visibility: `public`
+- Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
 </details>

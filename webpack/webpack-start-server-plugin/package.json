@@ -1,6 +1,7 @@
 {
   "name": "@atls/webpack-start-server-plugin",
   "version": "1.0.5",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

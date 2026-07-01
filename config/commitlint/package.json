@@ -1,6 +1,7 @@
 {
   "name": "@atls/config-commitlint",
   "version": "1.0.3",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

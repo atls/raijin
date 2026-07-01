@@ -15,7 +15,7 @@ export interface RaijinRuntimeManifest {
 
 export const RAIJIN_RUNTIME_MANIFEST_URL =
   'https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/raijin-runtime.json'
-export const RAIJIN_RUNTIME_PACKAGE_NAME = '@atls/yarn-cli'
+export const RAIJIN_RUNTIME_PACKAGE_NAME = '@atls/raijin'
 export const RAIJIN_RUNTIME_ASSET_NAME = 'yarn.mjs'
 export const RAIJIN_RUNTIME_YARN_PATH = '.yarn/releases/yarn.mjs'
 export const RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION = 1

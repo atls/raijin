@@ -1,6 +1,7 @@
 {
   "name": "@atls/code-icons",
   "version": "2.1.0",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

@@ -14,12 +14,14 @@ test('should run native foreach over release plan workspaces', () => {
           relativeCwd: 'yarn/cli',
           decision: 'release',
           private: true,
+          publishable: false,
         },
         {
           ident: '@atls/yarn-plugin-release',
           relativeCwd: 'yarn/plugin-release',
           decision: 'release',
           private: true,
+          publishable: false,
         },
       ],
     },
@@ -70,12 +72,14 @@ test('should skip declined release plan workspaces', () => {
           relativeCwd: 'yarn/cli',
           decision: 'decline',
           private: true,
+          publishable: false,
         },
         {
           ident: '@atls/yarn-plugin-release',
           relativeCwd: 'yarn/plugin-release',
           decision: 'release',
           private: true,
+          publishable: false,
         },
       ],
     },
@@ -102,6 +106,7 @@ test('should not run native foreach when all plan workspaces are declined', () =
             relativeCwd: 'yarn/cli',
             decision: 'decline',
             private: true,
+            publishable: false,
           },
         ],
       },
@@ -109,4 +114,41 @@ test('should not run native foreach when all plan workspaces are declined', () =
     ),
     []
   )
+})
+
+test('should run only publishable release plan workspaces', () => {
+  const input = createReleasePlanForeachInput(
+    {
+      schemaVersion: RELEASE_PLAN_SCHEMA_VERSION,
+      workspaces: [
+        {
+          ident: '@atls/yarn-cli',
+          relativeCwd: 'yarn/cli',
+          decision: 'release',
+          private: true,
+          publishable: false,
+        },
+        {
+          ident: '@atls/raijin',
+          relativeCwd: 'yarn/raijin',
+          decision: 'release',
+          private: false,
+          publishable: true,
+        },
+      ],
+    },
+    {
+      publishableOnly: true,
+      verbose: true,
+    }
+  )
+
+  assert.deepEqual(input, [
+    'workspaces',
+    'foreach',
+    '--include',
+    '@atls/raijin',
+    '--all',
+    '--verbose',
+  ])
 })

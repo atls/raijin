@@ -27,7 +27,7 @@ const RELEASE_ALREADY_EXISTS_STATUS = 422
 const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
 const RELEASE_ALREADY_EXISTS_CODE = '"code":"already_exists"'
 const RELEASE_ALREADY_EXISTS_FIELD = '"field":"tag_name"'
-const YARN_CLI_PACKAGE_NAME = '@atls/yarn-cli'
+const RAIJIN_PUBLIC_PACKAGE_NAME = '@atls/raijin'
 const YARN_RUNTIME_ASSET_NAME = 'yarn.mjs'
 const YARN_RUNTIME_ASSET_CONTENT_TYPE = 'text/javascript'
 const YARN_RUNTIME_MANIFEST_PATH = '.yarn/releases/raijin-runtime.json'
@@ -162,7 +162,7 @@ export const createYarnRuntimeReleaseAssetOptions = (
   packageName: string,
   projectCwd: PortablePath
 ): GitHubReleaseAssetOptions | undefined => {
-  if (packageName !== YARN_CLI_PACKAGE_NAME) {
+  if (packageName !== RAIJIN_PUBLIC_PACKAGE_NAME) {
     return undefined
   }
 

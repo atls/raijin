@@ -1,1 +1,1 @@
-export { default } from './proto-imports.loader.js'
+export { default } from '@atls/raijin/webpack-proto-imports-loader'

@@ -964,6 +964,7 @@ const renderWorkspaceCard = (workspace, language, compact) => {
 const renderPackagesDoc = (workspaces, language) => {
   const isRu = language === 'ru'
   const groups = new Map()
+  const publicWorkspaces = workspaces.filter((workspace) => !workspace.private)
 
   for (const workspace of workspaces) {
     if (!groups.has(workspace.group)) groups.set(workspace.group, [])
@@ -974,6 +975,16 @@ const renderPackagesDoc = (workspaces, language) => {
     '# Raijin Packages',
     '',
     isRu ? 'Сгруппированные карточки workspace-пакетов' : 'Grouped cards for workspace packages',
+    '',
+    '## Public package contract',
+    '',
+    isRu
+      ? 'Публичная поверхность Raijin публикуется как npm-пакет:'
+      : 'Raijin public surface is published as npm package:',
+    '',
+    ...publicWorkspaces.map((workspace) => `- \`${workspace.name}\` — \`${workspace.location}\``),
+    '',
+    '## Internal workspace map',
     '',
     '<!-- sync:packages-groups -->',
     '',

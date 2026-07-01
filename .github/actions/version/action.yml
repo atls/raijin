@@ -15,6 +15,7 @@ runs:
         source .env
         export NODE_OPTIONS
         yarn release version defer
+        yarn release plan create --output .raijin/release-plan.json
         yarn version apply --all
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}

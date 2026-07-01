@@ -20,6 +20,7 @@
     "./types": "./types/index.d.ts",
     "./eslint": "./src/runtime/eslint.ts",
     "./webpack": "./src/runtime/webpack.ts",
+    "./webpack-proto-imports-loader": "./src/runtime/webpack/proto-imports.loader.ts",
     "./typescript": "./src/runtime/typescript.ts",
     "./runtime-exec-argv": "./src/runtime/runtime-exec-argv.ts",
     "./typescript-loader": "./src/runtime/typescript-loader.ts",
@@ -40,19 +41,30 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-eslint": "workspace:*",
-    "@atls/config-typescript": "workspace:*",
-    "@atls/webpack-proto-imports-loader": "workspace:*",
+    "@next/eslint-plugin-next": "16.0.7",
     "@svgr/core": "8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
+    "@typescript-eslint/eslint-plugin": "8.48.1",
+    "@typescript-eslint/parser": "8.48.1",
     "eslint": "9.22.0",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-n": "17.23.1",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-compiler": "19.1.0-rc.2",
+    "eslint-plugin-react-hooks": "7.0.1",
+    "eslint-plugin-security": "3.0.1",
     "node-loader": "2.1.0",
+    "protocol-buffers-schema": "3.6.0",
+    "react": "18.3.1",
     "ts-loader": "9.5.2",
     "typescript": "5.5.4",
-    "webpack": "5.98.0"
+    "webpack": "5.98.0",
+    "zod": "4.1.13",
+    "zod-validation-error": "4.0.2"
   },
   "devDependencies": {
-    "@types/node": "24.12.2"
+    "@types/node": "24.12.2",
+    "@types/protocol-buffers-schema": "3.4.3"
   },
   "publishConfig": {
     "access": "public",
@@ -81,6 +93,11 @@
         "import": "./dist/runtime/webpack.js",
         "types": "./dist/runtime/webpack.d.ts",
         "default": "./dist/runtime/webpack.js"
+      },
+      "./webpack-proto-imports-loader": {
+        "import": "./dist/runtime/webpack/proto-imports.loader.js",
+        "types": "./dist/runtime/webpack/proto-imports.loader.d.ts",
+        "default": "./dist/runtime/webpack/proto-imports.loader.js"
       },
       "./typescript": {
         "import": "./dist/runtime/typescript.js",

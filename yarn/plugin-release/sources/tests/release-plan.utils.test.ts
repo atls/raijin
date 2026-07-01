@@ -95,12 +95,14 @@ test('should create a release selection from Yarn deferred targets', () => {
         relativeCwd: 'yarn/cli',
         decision: 'release',
         private: true,
+        publishable: false,
       },
       {
         ident: '@atls/raijin',
         relativeCwd: 'yarn/raijin',
         decision: 'release',
         private: false,
+        publishable: true,
       },
     ],
   })
@@ -130,12 +132,14 @@ test('should include deferred-only workspaces in release plan', () => {
       relativeCwd: 'yarn/cli',
       decision: 'release',
       private: true,
+      publishable: false,
     },
     {
       ident: '@atls/raijin',
       relativeCwd: 'yarn/raijin',
       decision: 'release',
       private: false,
+      publishable: true,
     },
   ])
 })
@@ -200,6 +204,7 @@ test('should not copy Yarn target versions into release plan state', () => {
       relativeCwd: 'yarn/cli',
       decision: 'release',
       private: true,
+      publishable: false,
     },
   ])
 
@@ -271,6 +276,7 @@ test('should reject legacy release plan schema content', () => {
               version: '1.1.97',
               strategy: '1.1.97',
               private: true,
+              publishable: false,
             },
           ],
         })
@@ -311,6 +317,7 @@ test('should parse valid release plan content', () => {
             relativeCwd: 'yarn/cli',
             decision: 'release',
             private: true,
+            publishable: false,
           },
         ],
       })
@@ -323,8 +330,55 @@ test('should parse valid release plan content', () => {
           relativeCwd: 'yarn/cli',
           decision: 'release',
           private: true,
+          publishable: false,
         },
       ],
     }
   )
+})
+
+test('should route internal workspace changes through public Raijin release workspace', () => {
+  const project = createProject([rootWorkspace, runtimeWorkspace, cliWorkspace])
+
+  const strategies = resolveReleasePlanStrategies(project, [
+    {
+      message: 'fix(cli): repair runtime bundle',
+      files: ['yarn/cli/src/cli.ts'],
+    },
+  ])
+
+  assert.deepEqual(strategies, [
+    {
+      workspace: {
+        ident: '@atls/raijin',
+        relativeCwd: 'yarn/raijin',
+      },
+      strategy: 'patch',
+    },
+  ])
+})
+
+test('should keep strongest strategy when internal and public changes share Raijin release', () => {
+  const project = createProject([rootWorkspace, runtimeWorkspace, cliWorkspace])
+
+  const strategies = resolveReleasePlanStrategies(project, [
+    {
+      message: 'fix(cli): repair runtime bundle',
+      files: ['yarn/cli/src/cli.ts'],
+    },
+    {
+      message: 'feat(runtime): expose public runtime contract',
+      files: ['yarn/raijin/src/runtime.ts'],
+    },
+  ])
+
+  assert.deepEqual(strategies, [
+    {
+      workspace: {
+        ident: '@atls/raijin',
+        relativeCwd: 'yarn/raijin',
+      },
+      strategy: 'minor',
+    },
+  ])
 })

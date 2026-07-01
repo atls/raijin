@@ -1,6 +1,7 @@
 {
   "name": "@atls/code-service",
   "version": "2.2.1",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {

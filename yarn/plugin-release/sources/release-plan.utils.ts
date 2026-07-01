@@ -7,6 +7,7 @@ import type { PortablePath }                        from '@yarnpkg/fslib'
 import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspace }             from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspaceOwner }        from './release-version-policy.utils.js'
+import type { ReleaseVersionStrategy }              from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspaceStrategy }     from './release-version-policy.utils.js'
 
 import { execUtils }                                from '@yarnpkg/core'
@@ -34,6 +35,7 @@ export interface ReleasePlanWorkspace {
   relativeCwd: string
   decision: ReleasePlanDecision
   private: boolean
+  publishable: boolean
 }
 
 export interface ReleasePlan {
@@ -51,13 +53,25 @@ const HEAD_REF = 'HEAD'
 const DEFAULT_GIT_RANGE = `${DEFAULT_GIT_BASE_REF}..${HEAD_REF}`
 const MISSING_DIRECTORY_ERROR_CODE = 'ENOENT'
 const DECLINE_DECISION = 'decline'
+const PUBLIC_RELEASE_WORKSPACE_IDENTS = new Set(['@atls/raijin'])
+const RELEASE_STRATEGY_WEIGHT: Record<ReleaseVersionStrategy, number> = {
+  patch: 0,
+  minor: 1,
+  major: 2,
+}
 
-export const RELEASE_PLAN_SCHEMA_VERSION = 2
+export const RELEASE_PLAN_SCHEMA_VERSION = 3
 
 export type ReleasePlanDecision = 'decline' | 'release'
 
 export const isReleasePlanDecision = (decision: unknown): decision is ReleasePlanDecision =>
   decision === 'release' || decision === 'decline'
+
+const selectStrongerReleaseStrategy = (
+  current: ReleaseVersionStrategy,
+  next: ReleaseVersionStrategy
+): ReleaseVersionStrategy =>
+  RELEASE_STRATEGY_WEIGHT[next] > RELEASE_STRATEGY_WEIGHT[current] ? next : current
 
 const isErrorWithCode = (error: unknown, code: string): boolean =>
   typeof error === 'object' &&
@@ -87,6 +101,9 @@ export const toReleaseWorkspace = (workspace: Workspace): ReleaseVersionWorkspac
     relativeCwd: workspace.relativeCwd,
   }
 }
+
+export const isPublicReleaseWorkspace = (workspace: ReleaseVersionWorkspace): boolean =>
+  PUBLIC_RELEASE_WORKSPACE_IDENTS.has(workspace.ident)
 
 export const toReleaseWorkspaceOwner = (workspace: Workspace): ReleaseVersionWorkspaceOwner => ({
   relativeCwd: workspace.relativeCwd,
@@ -310,6 +327,7 @@ const toPlanWorkspace = (project: Project, target: ReleasePlanTarget): ReleasePl
     relativeCwd: target.workspace.relativeCwd,
     decision: target.decision,
     private: workspace.manifest.private,
+    publishable: isPublicReleaseWorkspace(target.workspace),
   }
 }
 
@@ -402,8 +420,27 @@ export const resolveReleasePlanStrategies = (
     .map(toReleaseWorkspace)
     .filter((item): item is ReleaseVersionWorkspace => Boolean(item))
   const workspaceOwners = project.workspaces.map(toReleaseWorkspaceOwner)
+  const publicWorkspace = workspaces.find((workspace) => workspace.ident === '@atls/raijin')
 
-  return resolveReleaseVersionWorkspaceStrategies(workspaces, changes, workspaceOwners)
+  if (!publicWorkspace) {
+    throw new Error('Missing public Raijin release workspace')
+  }
+
+  const strategies = resolveReleaseVersionWorkspaceStrategies(workspaces, changes, workspaceOwners)
+  const publicStrategies = new Map<string, ReleaseVersionWorkspaceStrategy>()
+
+  for (const { workspace, strategy } of strategies) {
+    const releaseWorkspace = isPublicReleaseWorkspace(workspace) ? workspace : publicWorkspace
+    const current = publicStrategies.get(releaseWorkspace.ident)
+
+    publicStrategies.set(releaseWorkspace.ident, {
+      workspace: releaseWorkspace,
+      strategy: current ? selectStrongerReleaseStrategy(current.strategy, strategy) : strategy,
+    })
+  }
+
+  return [...publicStrategies.values()].sort((left, right) =>
+    left.workspace.relativeCwd.localeCompare(right.workspace.relativeCwd))
 }
 
 export const buildReleasePlan = async (
@@ -430,7 +467,8 @@ const isReleasePlanWorkspace = (workspace: unknown): workspace is ReleasePlanWor
     typeof item.ident === 'string' &&
     typeof item.relativeCwd === 'string' &&
     isReleasePlanDecision(item.decision) &&
-    typeof item.private === 'boolean'
+    typeof item.private === 'boolean' &&
+    typeof item.publishable === 'boolean'
   )
 }
 

@@ -20,6 +20,7 @@ export interface ReleasePlanForeachOptions {
   topological?: boolean
   topologicalDev?: boolean
   jobs?: string
+  publishableOnly?: boolean
 }
 
 const DEFAULT_RELEASE_PLAN_PATH = '.raijin/release-plan.json'
@@ -28,7 +29,10 @@ export const createReleasePlanForeachInput = (
   plan: ReleasePlan,
   options: ReleasePlanForeachOptions
 ): Array<string> => {
-  const workspaces = plan.workspaces.filter((workspace) => workspace.decision !== 'decline')
+  const workspaces = plan.workspaces.filter(
+    (workspace) =>
+      workspace.decision !== 'decline' && (!options.publishableOnly || workspace.publishable)
+  )
 
   if (workspaces.length === 0) {
     return []
@@ -106,6 +110,8 @@ export class ReleasePlanForeachCommand extends BaseCommand {
 
   jobs?: string = Option.String('-j,--jobs')
 
+  publishableOnly: boolean = Option.Boolean('--publishable', false)
+
   commandName = Option.String()
 
   args = Option.Proxy()
@@ -129,6 +135,7 @@ export class ReleasePlanForeachCommand extends BaseCommand {
       topological: this.topological,
       topologicalDev: this.topologicalDev,
       jobs: this.jobs,
+      publishableOnly: this.publishableOnly,
     })
 
     if (input.length === 0) {

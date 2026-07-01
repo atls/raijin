@@ -9,21 +9,21 @@ test('should parse Raijin runtime manifest', () => {
     parseRaijinRuntimeManifest({
       assetName: 'yarn.mjs',
       assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
-      packageName: '@atls/yarn-cli',
+      packageName: '@atls/raijin',
       packageManager: 'yarn@4.15.0',
       schemaVersion: 1,
       sha256: 'a'.repeat(64),
-      tagName: '@atls/yarn-cli@1.2.3',
+      tagName: '@atls/raijin@1.2.3',
       version: '1.2.3',
     }),
     {
       assetName: 'yarn.mjs',
       assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
-      packageName: '@atls/yarn-cli',
+      packageName: '@atls/raijin',
       packageManager: 'yarn@4.15.0',
       schemaVersion: 1,
       sha256: 'a'.repeat(64),
-      tagName: '@atls/yarn-cli@1.2.3',
+      tagName: '@atls/raijin@1.2.3',
       version: '1.2.3',
     }
   )
@@ -35,10 +35,10 @@ test('should reject Raijin runtime manifest without package manager', () => {
       parseRaijinRuntimeManifest({
         assetName: 'yarn.mjs',
         assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
-        packageName: '@atls/yarn-cli',
+        packageName: '@atls/raijin',
         schemaVersion: 1,
         sha256: 'a'.repeat(64),
-        tagName: '@atls/yarn-cli@1.2.3',
+        tagName: '@atls/raijin@1.2.3',
         version: '1.2.3',
       }),
     (error) =>
@@ -61,6 +61,6 @@ test('should reject non-yarn runtime manifest', () => {
       }),
     (error) =>
       error instanceof InvalidRaijinRuntimeManifestException &&
-      error.message.includes('expected @atls/yarn-cli')
+      error.message.includes('expected @atls/raijin')
   )
 })
