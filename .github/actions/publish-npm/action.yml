@@ -4,34 +4,11 @@ description: Publish changed packages to npm
 inputs:
   NPM_TOKEN:
     required: true
-  WORKSPACE:
-    required: false
-    default: ''
 
 runs:
   using: composite
 
   steps:
-    - name: Show selected workspace
-      if: ${{ inputs.WORKSPACE != '' }}
-      shell: bash
-      run: |
-        echo "Selected workspace: $SELECTED_WORKSPACE"
-      env:
-        SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}
-
-    - name: Validate selected workspace
-      if: ${{ inputs.WORKSPACE != '' }}
-      shell: bash
-      run: |
-        if [ "$SELECTED_WORKSPACE" != "@atls/raijin" ]; then
-          echo "Manual public publish is allowed only for @atls/raijin." >&2
-          exit 1
-        fi
-        yarn workspace "$SELECTED_WORKSPACE" exec true
-      env:
-        SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}
-
     - name: Verify NPM auth
       shell: bash
       run: |
@@ -40,18 +17,8 @@ runs:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
     - name: Npm Publish
-      if: ${{ inputs.WORKSPACE == '' }}
       shell: bash
       run: |
         yarn workspace @atls/raijin npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-
-    - name: Npm Publish selected workspace
-      if: ${{ inputs.WORKSPACE != '' }}
-      shell: bash
-      run: |
-        yarn workspace "$SELECTED_WORKSPACE" npm publish --tolerate-republish --access public
-      env:
-        YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-        SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}
