@@ -7,7 +7,9 @@ import { test }             from 'node:test'
 
 import { WebpackExternals } from './webpack.externals.js'
 
-test('should externalize non-workspace dependency ranges from all manifest dependency blocks', async () => {
+const createResolver = async (): Promise<
+  (request: string) => Promise<{ result?: string; type?: string }>
+> => {
   const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-externals-'))
 
   await writeFile(
@@ -31,7 +33,7 @@ test('should externalize non-workspace dependency ranges from all manifest depen
 
   const externals = await new WebpackExternals(cwd).build()
 
-  const resolveExternal = async (request: string): Promise<{ result?: string; type?: string }> =>
+  return async (request: string): Promise<{ result?: string; type?: string }> =>
     new Promise((resolve, reject) => {
       externals({ request }, (error, result, type) => {
         if (error) {
@@ -41,20 +43,24 @@ test('should externalize non-workspace dependency ranges from all manifest depen
         }
       })
     })
+}
+
+test('should externalize dependency ranges from all manifest blocks as module externals', async () => {
+  const resolveExternal = await createResolver()
 
   assert.deepEqual(await resolveExternal('@nestjs/common'), {
     result: '@nestjs/common',
-    type: 'commonjs',
+    type: 'module',
   })
   assert.deepEqual(await resolveExternal('@nestjs/terminus'), {
     result: '@nestjs/terminus',
-    type: 'commonjs',
+    type: 'module',
   })
   assert.deepEqual(await resolveExternal('@fastify/swagger-ui'), {
     result: '@fastify/swagger-ui',
-    type: 'commonjs',
+    type: 'module',
   })
-  assert.deepEqual(await resolveExternal('rxjs'), { result: 'rxjs', type: 'commonjs' })
+  assert.deepEqual(await resolveExternal('rxjs'), { result: 'rxjs', type: 'module' })
   assert.deepEqual(await resolveExternal('@internal/module'), {
     result: undefined,
     type: undefined,
