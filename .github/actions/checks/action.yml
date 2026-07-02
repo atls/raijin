@@ -19,8 +19,6 @@ runs:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       shell: bash
       run: |
-        source .env
-        export NODE_OPTIONS
         if [ "${{ inputs.CHANGED }}" = "true" ]; then
           yarn checks run --changed
         else
