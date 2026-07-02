@@ -1,5 +1,0 @@
-releases:
-  "@atls/raijin": patch
-
-undecided:
-  - "@atls/yarn-cli"

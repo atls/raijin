@@ -1,6 +1,6 @@
 {
   "name": "@atls/raijin",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Public Raijin initializer and runtime package",
   "homepage": "https://github.com/atls/raijin#readme",
   "bugs": {
