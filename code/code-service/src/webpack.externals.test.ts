@@ -45,22 +45,22 @@ const createResolver = async (): Promise<
     })
 }
 
-test('should externalize dependency ranges from all manifest blocks as module externals', async () => {
+test('should externalize dependency ranges from all manifest blocks as ESM import externals', async () => {
   const resolveExternal = await createResolver()
 
   assert.deepEqual(await resolveExternal('@nestjs/common'), {
     result: '@nestjs/common',
-    type: 'module',
+    type: 'import',
   })
   assert.deepEqual(await resolveExternal('@nestjs/terminus'), {
     result: '@nestjs/terminus',
-    type: 'module',
+    type: 'import',
   })
   assert.deepEqual(await resolveExternal('@fastify/swagger-ui'), {
     result: '@fastify/swagger-ui',
-    type: 'module',
+    type: 'import',
   })
-  assert.deepEqual(await resolveExternal('rxjs'), { result: 'rxjs', type: 'module' })
+  assert.deepEqual(await resolveExternal('rxjs'), { result: 'rxjs', type: 'import' })
   assert.deepEqual(await resolveExternal('@internal/module'), {
     result: undefined,
     type: undefined,

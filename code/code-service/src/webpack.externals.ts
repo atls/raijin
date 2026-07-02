@@ -61,7 +61,7 @@ export class WebpackExternals {
     ) => void
   ): void => {
     if (request && this.#dependencies.includes(request)) {
-      callback(undefined, request, 'module')
+      callback(undefined, request, 'import')
     } else if (request && this.#externals.includes(request)) {
       callback(undefined, request, 'import')
     } else {

@@ -15,10 +15,3 @@ export interface WebpackConfigPlugin {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: Array<any>
 }
-
-type ModuleType = {
-  commonjs: 'commonjs'
-  module: 'module'
-}
-
-export type ModuleTypes = ModuleType[keyof ModuleType]

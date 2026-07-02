@@ -1,5 +1,15 @@
 releases:
   "@atls/raijin": patch
 
-undecided:
+declined:
+  - "@atls/code-format"
+  - "@atls/code-icons"
+  - "@atls/code-lint"
+  - "@atls/code-schematics"
   - "@atls/code-service"
+  - "@atls/code-test"
+  - "@atls/code-typescript"
+  - "@atls/yarn-plugin-checks"
+  - "@atls/yarn-plugin-essentials"
+  - "@atls/yarn-plugin-test"
+  - "@atls/yarn-plugin-tools"

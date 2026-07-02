@@ -32,12 +32,12 @@ export class WebpackConfig {
 
     await writeFile(configFile, '{"include":["**/*"]}')
 
-    const type = await this.getWorkspaceType()
+    await this.assertEsmWorkspace()
 
     const webpackExternals = new WebpackExternals(this.cwd)
     const externals = ['webpack/hot/poll?100', await webpackExternals.build()]
 
-    const plugins = this.createPlugins(environment, additionalPlugins, type === 'module')
+    const plugins = this.createPlugins(environment, additionalPlugins, true)
 
     return {
       mode: environment,
@@ -45,7 +45,7 @@ export class WebpackConfig {
       target: 'node',
       optimization: { minimize: false },
       experiments: {
-        outputModule: type === 'module',
+        outputModule: true,
       },
       plugins,
       entry: {
@@ -56,9 +56,9 @@ export class WebpackConfig {
       output: {
         path: join(this.cwd, 'dist'),
         filename: '[name].js',
-        library: { type },
-        chunkFormat: environment === 'development' ? 'commonjs' : type, // WARNING: leave until HMR supports ESM for chunks import
-        module: type === 'module',
+        library: { type: 'module' },
+        chunkFormat: environment === 'development' ? 'commonjs' : 'module', // WARNING: leave until HMR supports ESM for chunks import
+        module: true,
         clean: false,
         assetModuleFilename: 'assets/[name][ext]',
       },
@@ -75,9 +75,7 @@ export class WebpackConfig {
         },
       },
       externals,
-      externalsType:
-        // eslint-disable-next-line no-nested-ternary
-        environment === 'production' ? (type === 'module' ? 'import' : 'commonjs') : 'commonjs2',
+      externalsType: environment === 'production' ? 'import' : 'commonjs2',
       externalsPresets: {
         node: true,
       },
@@ -110,14 +108,22 @@ export class WebpackConfig {
     }
   }
 
-  private async getWorkspaceType(): Promise<string> {
+  private async assertEsmWorkspace(): Promise<void> {
     try {
       const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-      const { type = 'commonjs' } = JSON.parse(content)
+      const { type } = JSON.parse(content) as { type?: string }
 
-      return type as string
+      if (type === 'module') {
+        return
+      }
+
+      throw new Error(
+        `Raijin service build supports only ESM workspaces with package.json type=module`
+      )
     } catch {
-      return 'module'
+      throw new Error(
+        `Raijin service build supports only ESM workspaces with package.json type=module`
+      )
     }
   }
 
