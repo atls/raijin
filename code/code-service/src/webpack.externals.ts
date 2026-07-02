@@ -22,9 +22,21 @@ export class WebpackExternals {
   }
 
   async loadDependencies(): Promise<Array<string>> {
-    const { dependencies = {} } = await this.loadPackageJson()
+    const {
+      dependencies = {},
+      devDependencies = {},
+      optionalDependencies = {},
+      peerDependencies = {},
+    } = await this.loadPackageJson()
 
-    return Object.keys(dependencies)
+    return Object.entries({
+      ...dependencies,
+      ...devDependencies,
+      ...optionalDependencies,
+      ...peerDependencies,
+    })
+      .filter(([, range]) => !range.startsWith('workspace:'))
+      .map(([name]) => name)
   }
 
   async loadExternals(): Promise<Array<string>> {
@@ -49,7 +61,7 @@ export class WebpackExternals {
     ) => void
   ): void => {
     if (request && this.#dependencies.includes(request)) {
-      callback(undefined, request, 'module')
+      callback(undefined, request, 'commonjs')
     } else if (request && this.#externals.includes(request)) {
       callback(undefined, request, 'import')
     } else {

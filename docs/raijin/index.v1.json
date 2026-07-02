@@ -380,6 +380,17 @@
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
     {
+      "command": "service start",
+      "pathTokens": ["service", "start"],
+      "className": "ServiceStartCommand",
+      "plugin": "@atls/yarn-plugin-service",
+      "pluginDir": "plugin-service",
+      "domain": "service",
+      "source": "yarn/plugin-service/sources/service-start.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
       "command": "test",
       "pathTokens": ["test"],
       "className": "TestCommand",
@@ -979,6 +990,7 @@
       "renderer dev",
       "service build",
       "service dev",
+      "service start",
       "test",
       "test integration",
       "test unit",
@@ -1021,5 +1033,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-07-02T16:55:43.226Z"
+  "lastGenerated": "2026-07-02T19:10:52.064Z"
 }

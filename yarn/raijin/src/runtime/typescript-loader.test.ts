@@ -8,11 +8,34 @@ import { test }          from 'node:test'
 import { pathToFileURL } from 'node:url'
 
 import { load }          from './typescript-loader.js'
+import { resolve }       from './typescript-loader.js'
 
 const createNextLoad = () =>
   (() => {
     throw new Error('Unexpected fallback loader call')
   }) as never
+
+test('should resolve js specifier to ts source when physical virtual path is unavailable', async () => {
+  const parentURL = pathToFileURL('/virtual/workspace/src/index.ts').href
+  const attemptedSpecifiers: Array<string> = []
+
+  const result = await resolve(
+    './dependency.js',
+    { parentURL } as never,
+    ((specifier: string) => {
+      attemptedSpecifiers.push(specifier)
+
+      if (specifier === './dependency.ts') {
+        return { shortCircuit: true, url: 'file:///workspace/src/dependency.ts' }
+      }
+
+      throw new Error(`Cannot resolve ${specifier}`)
+    }) as never
+  )
+
+  assert.deepEqual(attemptedSpecifiers, ['./dependency.ts'])
+  assert.equal(result.url, 'file:///workspace/src/dependency.ts')
+})
 
 test('should preserve decorator metadata compiler options from tsconfig', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))

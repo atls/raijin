@@ -10,6 +10,7 @@ import { updateTsConfigRule }            from '../rules/index.js'
 import { generateCommonSource }          from '../sources/index.js'
 import { generateProjectSpecificSource } from '../sources/index.js'
 import { mergeGitIgnoreContent }         from '../utils/index.js'
+import { updateServiceStartScripts }     from '../utils/index.js'
 
 const GITIGNORE_PATH = '.gitignore'
 
@@ -58,6 +59,7 @@ export const main = (options: Record<string, string>): Rule => {
   return chain([
     captureGitIgnoreContentRule(state),
     updateTsConfigRule(options),
+    updateServiceStartScripts(),
     mergeWith(generateCommonSource(options), MergeStrategy.Overwrite),
     mergeWith(generateProjectSpecificSource(options), MergeStrategy.Overwrite),
     mergeGitIgnoreContentRule(state),

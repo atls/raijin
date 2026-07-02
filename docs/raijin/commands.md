@@ -375,7 +375,7 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 ### Domain `service`
 
-- Commands: `service build`, `service dev`
+- Commands: `service build`, `service dev`, `service start`
 
 <details>
 <summary>Domain details: `service`</summary>
@@ -397,6 +397,15 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Example: `yarn service dev`
 - Plugin: `@atls/yarn-plugin-service`
 - Source: `yarn/plugin-service/sources/service-dev.command.tsx`
+
+<!-- sync:command-card:service-start -->
+
+#### `service start`
+
+- Status: `active`
+- Example: `yarn service start`
+- Plugin: `@atls/yarn-plugin-service`
+- Source: `yarn/plugin-service/sources/service-start.command.ts`
 
 </details>
 

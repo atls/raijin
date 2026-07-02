@@ -375,7 +375,7 @@
 
 ### Домен `service`
 
-- Команды: `service build`, `service dev`
+- Команды: `service build`, `service dev`, `service start`
 
 <details>
 <summary>Подробности домена `service`</summary>
@@ -397,6 +397,15 @@
 - Пример: `yarn service dev`
 - Плагин: `@atls/yarn-plugin-service`
 - Исходник: `yarn/plugin-service/sources/service-dev.command.tsx`
+
+<!-- sync:command-card:service-start -->
+
+#### `service start`
+
+- Статус: `active`
+- Пример: `yarn service start`
+- Плагин: `@atls/yarn-plugin-service`
+- Исходник: `yarn/plugin-service/sources/service-start.command.ts`
 
 </details>
 
