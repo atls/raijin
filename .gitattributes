@@ -1,2 +1,3 @@
 *.cjs linguist-detectable=false
 *.mjs linguist-detectable=false
+yarn/cli/dist/yarn.mjs -whitespace

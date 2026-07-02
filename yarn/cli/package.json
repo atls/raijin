@@ -15,8 +15,8 @@
   "scripts": {
     "build": "yarn run build:schemaic && yarn run build:clean && yarn run build:version && yarn run build:bundle && yarn run build:fix && yarn run build:dist && yarn run build:version",
     "build:bundle": "builder build bundle --no-git-hash --format esm --target esnext --external-file ../builder/externals.json && mv bundles/yarn.js bundles/yarn.mjs",
-    "build:clean": "rm -rf dist/runtime",
-    "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs",
+    "build:clean": "rm -rf dist/runtime dist/yarn.mjs",
+    "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs && cp dist/runtime/yarn.mjs dist/yarn.mjs",
     "build:fix": "yarn node patches/cli.patch.mjs",
     "build:schemaic": "yarn workspace @atls/code-schematics prepack",
     "build:version": "yarn node patches/version-postfix-toggle.mjs",
