@@ -40,7 +40,7 @@ const STRATEGY_WEIGHT: Record<ReleaseVersionStrategy, number> = {
 }
 const DEFAULT_RELEASE_VERSION_STRATEGY: ReleaseVersionStrategy = 'patch'
 
-const isReleaseVersionStrategy = (strategy: string): strategy is ReleaseVersionStrategy =>
+export const isReleaseVersionStrategy = (strategy: string): strategy is ReleaseVersionStrategy =>
   Object.hasOwn(STRATEGY_WEIGHT, strategy)
 
 const compareStrategies = (

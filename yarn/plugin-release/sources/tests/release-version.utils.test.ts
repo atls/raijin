@@ -8,6 +8,7 @@ import { test }                            from 'node:test'
 import { structUtils }                     from '@yarnpkg/core'
 import { ppath }                           from '@yarnpkg/fslib'
 
+import { isDeferredReleaseRequired }       from '../release-version.utils.js'
 import { resolveReleaseVersionStrategies } from '../release-version.utils.js'
 
 const createWorkspace = (
@@ -129,4 +130,31 @@ test('should keep workspace strategies when public Raijin workspace is absent', 
       strategy: 'patch',
     },
   ])
+})
+
+test('should detect deferred release requirement only from release strategies', () => {
+  assert.equal(
+    isDeferredReleaseRequired(new Map([['@atls/raijin', 'patch']]), '@atls/raijin'),
+    true
+  )
+  assert.equal(
+    isDeferredReleaseRequired(new Map([['@atls/raijin', 'minor']]), '@atls/raijin'),
+    true
+  )
+  assert.equal(
+    isDeferredReleaseRequired(new Map([['@atls/raijin', 'major']]), '@atls/raijin'),
+    true
+  )
+  assert.equal(
+    isDeferredReleaseRequired(new Map([['@atls/raijin', 'decline']]), '@atls/raijin'),
+    false
+  )
+  assert.equal(
+    isDeferredReleaseRequired(new Map([['@atls/raijin', '1.2.3']]), '@atls/raijin'),
+    false
+  )
+  assert.equal(
+    isDeferredReleaseRequired(new Map([['@atls/yarn-cli', 'patch']]), '@atls/raijin'),
+    false
+  )
 })

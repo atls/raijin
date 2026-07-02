@@ -1135,8 +1135,8 @@ const yarnPathMatch = yarnRc.match(/^\s*yarnPath:\s*(.+)\s*$/m)
 const draftIndex = {
   environment: {
     nodeVersion: '24',
-    requiresSourceEnv: true,
-    requiredEnv: ['NODE_OPTIONS'],
+    requiresSourceEnv: false,
+    requiredEnv: [],
     pnpEnableEsmLoader: /pnpEnableEsmLoader:\s*true/.test(yarnRc),
     yarnPath: yarnPathMatch ? yarnPathMatch[1].trim() : '',
   },

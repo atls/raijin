@@ -70,8 +70,6 @@ jobs:
       - name: Verify NPM auth
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
-          source .env
-          export NODE_OPTIONS
           yarn npm whoami --publish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -81,8 +79,6 @@ jobs:
       - name: Verify GitHub Packages auth
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
-          source .env
-          export NODE_OPTIONS
           yarn npm whoami --publish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ github.token }}

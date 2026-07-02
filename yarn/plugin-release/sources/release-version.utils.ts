@@ -18,6 +18,7 @@ import { parseSyml }                                from '@yarnpkg/parsers'
 
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
+import { isReleaseVersionStrategy }                 from './release-version-policy.utils.js'
 import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
 
@@ -274,6 +275,15 @@ export const getDeferredReleaseDecisions = async (
   }
 
   return decisions
+}
+
+export const isDeferredReleaseRequired = (
+  decisions: ReadonlyMap<string, string>,
+  ident: string
+): boolean => {
+  const decision = decisions.get(ident)
+
+  return typeof decision === 'string' && isReleaseVersionStrategy(decision)
 }
 
 export const resolveReleaseVersionStrategies = (

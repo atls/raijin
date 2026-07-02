@@ -35,8 +35,6 @@ runs:
     - name: Verify NPM auth
       shell: bash
       run: |
-        source .env
-        export NODE_OPTIONS
         yarn npm whoami --publish
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
@@ -45,8 +43,6 @@ runs:
       if: ${{ inputs.WORKSPACE == '' }}
       shell: bash
       run: |
-        source .env
-        export NODE_OPTIONS
         yarn workspace @atls/raijin npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
@@ -55,8 +51,6 @@ runs:
       if: ${{ inputs.WORKSPACE != '' }}
       shell: bash
       run: |
-        source .env
-        export NODE_OPTIONS
         yarn workspace "$SELECTED_WORKSPACE" npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}

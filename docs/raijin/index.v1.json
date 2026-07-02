@@ -1,8 +1,8 @@
 {
   "environment": {
     "nodeVersion": "24",
-    "requiresSourceEnv": true,
-    "requiredEnv": ["NODE_OPTIONS"],
+    "requiresSourceEnv": false,
+    "requiredEnv": [],
     "pnpEnableEsmLoader": true,
     "yarnPath": ".yarn/releases/yarn.mjs"
   },
@@ -299,6 +299,17 @@
       "pluginDir": "plugin-release",
       "domain": "release",
       "source": "yarn/plugin-release/sources/release-create.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
+      "command": "release version apply",
+      "pathTokens": ["release", "version", "apply"],
+      "className": "ReleaseVersionApplyCommand",
+      "plugin": "@atls/yarn-plugin-release",
+      "pluginDir": "plugin-release",
+      "domain": "release",
+      "source": "yarn/plugin-release/sources/release-version-apply.command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
@@ -962,6 +973,7 @@
       "raijin sync tsconfig",
       "raijin sync typescript",
       "release create",
+      "release version apply",
       "release version defer",
       "renderer build",
       "renderer dev",
@@ -1009,5 +1021,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-07-01T21:53:56.457Z"
+  "lastGenerated": "2026-07-02T14:49:55.080Z"
 }
