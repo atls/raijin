@@ -39,7 +39,9 @@
     "types"
   ],
   "scripts": {
-    "build": "yarn library build",
+    "build": "yarn run build:library && yarn run build:schematic",
+    "build:library": "yarn library build",
+    "build:schematic": "yarn workspace @atls/code-schematics build:schematic-factory && rm -rf dist/schematic && cp -R ../../code/code-schematics/dist/schematic dist/schematic",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },

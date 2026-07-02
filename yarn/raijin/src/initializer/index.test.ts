@@ -58,6 +58,8 @@ const EXPECTED_INITIALIZER_COMMANDS = [
   ['raijin', 'sync'],
 ]
 
+const noopYarnCommand = async (): Promise<void> => undefined
+
 const collectInitializerCommands = async (
   runInitializer: typeof runRaijinInitializer,
   packageJson = false,
@@ -74,6 +76,7 @@ const collectInitializerCommands = async (
     argv,
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
+    installSchematicArtifact: noopYarnCommand,
     runYarnCommand: async (args) => {
       commands.push(args)
     },
@@ -81,8 +84,6 @@ const collectInitializerCommands = async (
 
   return commands
 }
-
-const noopYarnCommand = async (): Promise<void> => undefined
 
 const createTerminalStream = (isTTY: boolean): PassThrough & { isTTY?: boolean } => {
   const stream = new PassThrough() as PassThrough & { isTTY?: boolean }
@@ -152,6 +153,7 @@ test('should use interactive scaffold type selector when type is omitted', async
     argv: ['init'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
+    installSchematicArtifact: noopYarnCommand,
     runYarnCommand: async (args) => {
       commands.push(args)
     },
@@ -205,6 +207,7 @@ test('should reject unknown scaffold type', async () => {
     runRaijinInitializer({
       argv: ['init', '--type', 'service'],
       fetchImpl: createFetch(Buffer.from('runtime')),
+      installSchematicArtifact: noopYarnCommand,
       runYarnCommand: noopYarnCommand,
     }),
     (error) => error instanceof RaijinInitializerScaffoldTypeException
@@ -218,6 +221,7 @@ test('should create package manifest for empty project', async () => {
     argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
+    installSchematicArtifact: noopYarnCommand,
     runYarnCommand: noopYarnCommand,
   })
 
@@ -244,6 +248,7 @@ test('should normalize package manager in existing package manifest', async () =
     argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
+    installSchematicArtifact: noopYarnCommand,
     runYarnCommand: noopYarnCommand,
   })
 
@@ -269,6 +274,7 @@ test('should normalize package manager from runtime manifest', async () => {
     argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime'), packageManager),
+    installSchematicArtifact: noopYarnCommand,
     runYarnCommand: noopYarnCommand,
   })
 
@@ -294,6 +300,7 @@ test('should preserve package manifest when runtime install fails', async () => 
       fetchImpl: (async () => {
         throw new Error('Runtime manifest unavailable')
       }) as typeof fetch,
+      installSchematicArtifact: noopYarnCommand,
       runYarnCommand: noopYarnCommand,
     }),
     /Runtime manifest unavailable/
@@ -309,6 +316,7 @@ test('should create project lockfile boundary before yarn commands', async () =>
     argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
+    installSchematicArtifact: noopYarnCommand,
     runYarnCommand: noopYarnCommand,
   })
 
@@ -326,6 +334,7 @@ test('should preserve existing project lockfile boundary', async () => {
     argv: ['init', '--type', 'project'],
     cwd,
     fetchImpl: createFetch(Buffer.from('runtime')),
+    installSchematicArtifact: noopYarnCommand,
     runYarnCommand: noopYarnCommand,
   })
 
