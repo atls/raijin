@@ -64,12 +64,12 @@ export class WebpackConfig {
       },
       resolve: {
         extensionAlias: {
-          '.js': ['.tsx', '.ts', '.js'],
-          '.jsx': ['.tsx', '.ts', '.js'],
+          '.js': ['.js', '.tsx', '.ts'],
+          '.jsx': ['.jsx', '.tsx', '.ts'],
           '.cjs': ['.cjs', '.cts'],
           '.mjs': ['.mjs', '.mts'],
         },
-        extensions: ['.tsx', '.ts', '.js'],
+        extensions: ['.js', '.tsx', '.ts'],
         alias: {
           'class-transformer/storage': 'class-transformer/cjs/storage',
         },

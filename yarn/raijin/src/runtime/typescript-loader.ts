@@ -1,17 +1,19 @@
 /* eslint-disable n/no-sync */
 
-import type * as TypeScript from 'typescript'
-import type { ResolveHook } from 'node:module'
-import type { LoadHook }    from 'node:module'
+import type * as TypeScript        from 'typescript'
+import type { LoadHook }           from 'node:module'
+import type { ResolveHook }        from 'node:module'
+import type { ResolveHookContext } from 'node:module'
+import type { ResolveFnOutput }    from 'node:module'
 
-import { existsSync }       from 'node:fs'
-import { readFileSync }     from 'node:fs'
-import { readFile }         from 'node:fs/promises'
-import { createRequire }    from 'node:module'
-import { dirname }          from 'node:path'
-import { extname }          from 'node:path'
-import { join }             from 'node:path'
-import { fileURLToPath }    from 'node:url'
+import { existsSync }              from 'node:fs'
+import { readFileSync }            from 'node:fs'
+import { readFile }                from 'node:fs/promises'
+import { createRequire }           from 'node:module'
+import { dirname }                 from 'node:path'
+import { extname }                 from 'node:path'
+import { join }                    from 'node:path'
+import { fileURLToPath }           from 'node:url'
 
 const require = createRequire(import.meta.url)
 const ts = require('typescript') as typeof TypeScript
@@ -30,6 +32,29 @@ const sourceExtensionsBySpecifier = new Map([
 ])
 
 const typescriptExtensions = new Set(['.ts', '.tsx', '.mts', '.cts'])
+
+type NextResolve = (
+  specifier: string,
+  context?: ResolveHookContext
+) => Promise<ResolveFnOutput> | ResolveFnOutput
+
+const resolveSourceSpecifier = async (
+  context: ResolveHookContext,
+  next: NextResolve,
+  candidates: Array<string>
+): Promise<ResolveFnOutput | undefined> => {
+  const [candidate, ...nextCandidates] = candidates
+
+  if (!candidate) {
+    return undefined
+  }
+
+  try {
+    return await next(candidate, context)
+  } catch {
+    return resolveSourceSpecifier(context, next, nextCandidates)
+  }
+}
 
 const findPackageType = (filepath: string): string => {
   let current = dirname(filepath)
@@ -145,11 +170,26 @@ export const resolve: ResolveHook = async (specifier, context, next) => {
   const location = dirname(fileURLToPath(parentURL))
   const required = specifier.slice(0, -specifiedExtension.length)
   const path = join(location, required)
+  const existingSpecifiers: Array<string> = []
+  const virtualSpecifiers: Array<string> = []
 
   for (const sourceExtension of sourceExtensions) {
+    const sourceSpecifier = required + sourceExtension
+
     if (existsSync(path + sourceExtension)) {
-      return next(required + sourceExtension, context)
+      existingSpecifiers.push(sourceSpecifier)
+    } else if (sourceExtension !== specifiedExtension) {
+      virtualSpecifiers.push(sourceSpecifier)
     }
+  }
+
+  const resolved = await resolveSourceSpecifier(context, next, [
+    ...existingSpecifiers,
+    ...virtualSpecifiers,
+  ])
+
+  if (resolved) {
+    return resolved
   }
 
   return next(specifier, context)
