@@ -15,4 +15,6 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       run: |
-        yarn workspace @atls/raijin release create
+        source .env
+        export NODE_OPTIONS
+        yarn workspaces changed foreach -v --exclude . release create
