@@ -229,6 +229,7 @@ test('should create package manifest for empty project', async () => {
 
   assert.match(packageJson, /"name": "raijin-initializer-/)
   assert.equal(JSON.parse(packageJson).packageManager, TEST_PACKAGE_MANAGER)
+  assert.equal(JSON.parse(packageJson).type, 'module')
 })
 
 test('should normalize package manager in existing package manifest', async () => {
@@ -255,6 +256,7 @@ test('should normalize package manager in existing package manifest', async () =
   assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
     ...manifest,
     packageManager: TEST_PACKAGE_MANAGER,
+    type: 'module',
   })
 })
 

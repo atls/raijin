@@ -42,7 +42,6 @@ export class WebpackConfig {
     config.resolve.extensionAlias
       .set('.js', ['.js', '.ts'])
       .set('.jsx', ['.jsx', '.tsx'])
-      .set('.cjs', ['.cjs', '.cts'])
       .set('.mjs', ['.mjs', '.mts'])
 
     config.externalsType('import')
@@ -65,7 +64,12 @@ export class WebpackConfig {
         transpileOnly: true,
         experimentalWatchApi: true,
         onlyCompileBundledFiles: true,
-        compilerOptions: { ...tsconfig.compilerOptions, sourceMap: true },
+        compilerOptions: {
+          ...tsconfig.compilerOptions,
+          module: 'ESNext',
+          moduleResolution: 'Bundler',
+          sourceMap: true,
+        },
         context: this.cwd,
         configFile,
       })

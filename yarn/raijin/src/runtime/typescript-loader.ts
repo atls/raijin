@@ -23,15 +23,11 @@ const compilerOptionsByConfigPath = new Map<string, TypeScript.CompilerOptions>(
 const sourceExtensionsBySpecifier = new Map([
   ['.js', ['.js', '.ts', '.tsx', '.jsx']],
   ['.mjs', ['.mjs', '.mts']],
-  ['.cjs', ['.cjs', '.cts']],
   ['.jsx', ['.jsx', '.tsx']],
-  [
-    '.css',
-    ['.css.ts', '.css.tsx', '.css.js', '.css.mjs', '.css.mts', '.css.cjs', '.css.cts', '.css'],
-  ],
+  ['.css', ['.css.ts', '.css.tsx', '.css.js', '.css.mjs', '.css.mts', '.css']],
 ])
 
-const typescriptExtensions = new Set(['.ts', '.tsx', '.mts', '.cts'])
+const typescriptExtensions = new Set(['.ts', '.tsx', '.mts'])
 
 type NextResolve = (
   specifier: string,
@@ -56,7 +52,7 @@ const resolveSourceSpecifier = async (
   }
 }
 
-const findPackageType = (filepath: string): string => {
+const findPackageType = (filepath: string): string | undefined => {
   let current = dirname(filepath)
 
   while (current !== dirname(current)) {
@@ -65,37 +61,37 @@ const findPackageType = (filepath: string): string => {
     if (existsSync(packagePath)) {
       const pkg = JSON.parse(readFileSync(packagePath, 'utf8')) as { type?: string }
 
-      return pkg.type ?? 'commonjs'
+      return pkg.type
     }
 
     current = dirname(current)
   }
 
-  return 'commonjs'
+  return undefined
 }
 
-const getFormat = (filepath: string): 'commonjs' | 'module' | null => {
+const getFormat = (filepath: string): 'module' | null => {
   const ext = extname(filepath)
 
   switch (ext) {
     case '.mts': {
       return 'module'
     }
-    case '.cts': {
-      return 'commonjs'
-    }
     case '.ts':
     case '.tsx': {
-      return findPackageType(filepath) === 'module' ? 'module' : 'commonjs'
+      if (findPackageType(filepath) === 'module') {
+        return 'module'
+      }
+
+      throw new Error(
+        `Raijin TypeScript loader supports only ESM TypeScript sources with package.json type=module`
+      )
     }
     default: {
       return null
     }
   }
 }
-
-const getModuleKind = (format: 'commonjs' | 'module'): TypeScript.ModuleKind =>
-  format === 'module' ? ts.ModuleKind.ESNext : ts.ModuleKind.CommonJS
 
 const readCompilerOptions = (filepath: string): TypeScript.CompilerOptions => {
   const configPath = ts.findConfigFile(dirname(filepath), ts.sys.fileExists, 'tsconfig.json')
@@ -121,10 +117,7 @@ const readCompilerOptions = (filepath: string): TypeScript.CompilerOptions => {
   return options
 }
 
-const getCompilerOptions = (
-  filepath: string,
-  format: 'commonjs' | 'module'
-): TypeScript.CompilerOptions => {
+const getCompilerOptions = (filepath: string, _format: 'module'): TypeScript.CompilerOptions => {
   const options = readCompilerOptions(filepath)
 
   return {
@@ -132,17 +125,13 @@ const getCompilerOptions = (
     esModuleInterop: true,
     inlineSourceMap: true,
     jsx: options.jsx ?? ts.JsxEmit.ReactJSX,
-    module: getModuleKind(format),
+    module: ts.ModuleKind.ESNext,
     sourceMap: false,
     target: options.target ?? ts.ScriptTarget.ES2022,
   }
 }
 
-const transformSource = (
-  source: string,
-  filepath: string,
-  format: 'commonjs' | 'module'
-): string => {
+const transformSource = (source: string, filepath: string, format: 'module'): string => {
   const { outputText } = ts.transpileModule(source, {
     fileName: filepath,
     compilerOptions: getCompilerOptions(filepath, format),

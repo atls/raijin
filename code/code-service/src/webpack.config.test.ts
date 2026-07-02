@@ -31,7 +31,6 @@ test('should prefer runtime JavaScript before TypeScript declarations for extens
 
   assert.ok(config.resolve)
   assert.deepEqual(config.resolve.extensionAlias, {
-    '.cjs': ['.cjs', '.cts'],
     '.js': ['.js', '.tsx', '.ts'],
     '.jsx': ['.jsx', '.tsx', '.ts'],
     '.mjs': ['.mjs', '.mts'],
@@ -56,6 +55,33 @@ test('should reject non ESM service workspaces', async () => {
     ).build(),
     /supports only ESM workspaces/
   )
+})
+
+test('should keep development service builds in the ESM module graph', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-config-'))
+
+  await writeFile(join(cwd, 'package.json'), JSON.stringify({ type: 'module' }))
+
+  const config = await new WebpackConfig(
+    webpack,
+    {
+      nodeLoader: 'node-loader',
+      protoLoader: 'proto-loader',
+      tsLoader: 'ts-loader',
+    },
+    cwd
+  ).build('development')
+
+  assert.ok(config.output)
+
+  const { output } = config
+
+  assert.equal(output.chunkFormat, 'module')
+  assert.equal(output.module, true)
+  assert.deepEqual(output.library, { type: 'module' })
+  assert.deepEqual(config.experiments, { outputModule: true })
+  assert.equal(config.externalsType, 'import')
+  assert.equal(config.resolve?.extensionAlias?.['.cjs'], undefined)
 })
 
 test('should keep optional dependency imports lazy in ESM production builds', async () => {

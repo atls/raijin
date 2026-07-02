@@ -1,5 +1,7 @@
 import { resolve as resolveBaseHook } from '@yarnpkg/pnp/lib/esm-loader/hooks/resolve.js'
 
+import { getTypeScriptSpecifier }     from './resolve.utils.js'
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type resolveHookFn = (
   originalSpecifier: string,
@@ -12,9 +14,8 @@ export const resolveHook: resolveHookFn = async (
   context: { conditions: Array<string>; parentURL: string | undefined },
   nextResolve: resolveHookFn
 ): Promise<{ url: string; shortCircuit: boolean }> => {
-  const tsSpecifier = originalSpecifier
-    .replace(/\.(c|m)?js$/, `.$1ts`)
-    .replace(/\.(c|m)?jsx$/, '.$1tsx')
+  const tsSpecifier = getTypeScriptSpecifier(originalSpecifier)
+
   try {
     return await resolveBaseHook(tsSpecifier, context, nextResolve)
   } catch (err) {

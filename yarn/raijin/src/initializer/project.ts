@@ -6,6 +6,7 @@ import { join }      from 'node:path'
 
 interface PackageManifest extends Record<string, unknown> {
   packageManager?: string
+  type?: string
 }
 
 const PACKAGE_JSON = 'package.json'
@@ -51,6 +52,7 @@ export const ensurePackageManifest = async (cwd: string, packageManager: string)
     await writePackageManifest(cwd, {
       name: getPackageName(cwd),
       packageManager,
+      type: 'module',
     })
 
     return
@@ -65,6 +67,7 @@ export const ensurePackageManifest = async (cwd: string, packageManager: string)
   await writePackageManifest(cwd, {
     ...manifest,
     packageManager,
+    type: 'module',
   })
 }
 

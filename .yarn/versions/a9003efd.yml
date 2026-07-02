@@ -11,5 +11,6 @@ declined:
   - "@atls/code-typescript"
   - "@atls/yarn-plugin-checks"
   - "@atls/yarn-plugin-essentials"
+  - "@atls/yarn-plugin-pnp-patch"
   - "@atls/yarn-plugin-test"
   - "@atls/yarn-plugin-tools"

@@ -57,7 +57,7 @@ export class WebpackConfig {
         path: join(this.cwd, 'dist'),
         filename: '[name].js',
         library: { type: 'module' },
-        chunkFormat: environment === 'development' ? 'commonjs' : 'module', // WARNING: leave until HMR supports ESM for chunks import
+        chunkFormat: 'module',
         module: true,
         clean: false,
         assetModuleFilename: 'assets/[name][ext]',
@@ -66,7 +66,6 @@ export class WebpackConfig {
         extensionAlias: {
           '.js': ['.js', '.tsx', '.ts'],
           '.jsx': ['.jsx', '.tsx', '.ts'],
-          '.cjs': ['.cjs', '.cts'],
           '.mjs': ['.mjs', '.mts'],
         },
         extensions: ['.js', '.tsx', '.ts'],
@@ -75,7 +74,7 @@ export class WebpackConfig {
         },
       },
       externals,
-      externalsType: environment === 'production' ? 'import' : 'commonjs2',
+      externalsType: 'import',
       externalsPresets: {
         node: true,
       },
