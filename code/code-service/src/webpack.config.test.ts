@@ -107,3 +107,58 @@ test('should keep optional dependency imports lazy in ESM production builds', as
   assert.match(output, /import\("@fastify\/swagger-ui"\)/)
   assert.doesNotMatch(output, /import \* as .* from "@fastify\/swagger-ui"/)
 })
+
+test('should keep static dependency imports in the ESM async module graph', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-config-'))
+
+  await mkdir(join(cwd, 'src'))
+  await writeFile(
+    join(cwd, 'package.json'),
+    JSON.stringify({
+      type: 'module',
+      dependencies: {
+        react: '^19',
+      },
+    })
+  )
+  await writeFile(
+    join(cwd, 'src/index.ts'),
+    `import React from 'react'
+
+export const element = React.createElement('div')
+`
+  )
+
+  const config = await new WebpackConfig(
+    webpack,
+    {
+      nodeLoader: nodeLoaderPath,
+      protoLoader: protoLoaderPath,
+      tsLoader: tsLoaderPath,
+    },
+    cwd
+  ).build()
+
+  const compiler = webpack(config)
+
+  await new Promise<void>((resolve, reject) => {
+    compiler.run((error, stats) => {
+      compiler.close((closeError) => {
+        if (error || closeError) {
+          reject(error || closeError)
+        } else if (stats?.hasErrors()) {
+          reject(new Error(stats.toString({ all: false, errors: true })))
+        } else {
+          resolve()
+        }
+      })
+    })
+  })
+
+  const output = await readFile(join(cwd, 'dist/index.js'), 'utf-8')
+
+  assert.match(output, /module\.exports = import\("react"\)/)
+  assert.match(output, /__webpack_require__\.a\(/)
+  assert.match(output, /react__WEBPACK_IMPORTED_MODULE_0__\["default"\]\.createElement/)
+  assert.doesNotMatch(output, /react_1\.default\.createElement/)
+})

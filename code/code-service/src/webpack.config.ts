@@ -92,6 +92,8 @@ export class WebpackConfig {
                 onlyCompileBundledFiles: true,
                 compilerOptions: {
                   ...tsconfig.compilerOptions,
+                  module: 'ESNext',
+                  moduleResolution: 'Bundler',
                   sourceMap: true,
                 },
                 context: this.cwd,
