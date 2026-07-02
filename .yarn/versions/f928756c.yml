@@ -1,0 +1,7 @@
+releases:
+  "@atls/raijin": patch
+
+undecided:
+  - "@atls/code-schematics"
+  - "@atls/code-service"
+  - "@atls/yarn-plugin-service"
