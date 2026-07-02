@@ -1,6 +1,7 @@
 {
   "name": "@atls/code-icons",
   "version": "2.1.0",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -18,7 +19,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-typescript": "workspace:*",
     "@atls/raijin": "workspace:*",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",

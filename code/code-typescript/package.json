@@ -1,6 +1,7 @@
 {
   "name": "@atls/code-typescript",
   "version": "2.1.0",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -18,7 +19,6 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-typescript": "workspace:*",
     "@atls/raijin": "workspace:*"
   },
   "devDependencies": {

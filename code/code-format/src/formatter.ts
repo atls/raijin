@@ -16,8 +16,8 @@ import { globby }            from 'globby'
 import { format }            from 'prettier/standalone'
 import ignorer               from 'ignore'
 
-import { getPrettierPlugin } from '@atls/prettier-plugin'
-import config                from '@atls/config-prettier'
+import { getPrettierPlugin } from '@atls/raijin/prettier-plugin'
+import config                from '@atls/raijin/prettier'
 
 import { ignore }            from './formatter.patterns.js'
 import { createPatterns }    from './formatter.patterns.js'

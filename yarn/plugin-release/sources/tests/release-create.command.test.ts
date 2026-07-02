@@ -34,15 +34,15 @@ test('should keep release creation on the GitHub-native dependency boundary', as
 
 test('should create releases with GitHub generated release notes', () => {
   assert.deepEqual(
-    createGitHubReleaseOptions('@atls/yarn-cli', '1.2.3', 'Release body', 'atls', 'raijin', 'main'),
+    createGitHubReleaseOptions('@atls/raijin', '1.2.3', 'Release body', 'atls', 'raijin', 'main'),
     {
       body: 'Release body',
       draft: false,
       make_latest: true,
-      name: '@atls/yarn-cli@1.2.3',
+      name: '@atls/raijin@1.2.3',
       owner: 'atls',
       repo: 'raijin',
-      tag_name: '@atls/yarn-cli@1.2.3',
+      tag_name: '@atls/raijin@1.2.3',
       target_commitish: 'main',
     }
   )
@@ -51,28 +51,28 @@ test('should create releases with GitHub generated release notes', () => {
 test('should create release note options with package-specific previous tags', () => {
   assert.deepEqual(
     createGitHubReleaseNotesOptions(
-      '@atls/yarn-cli',
+      '@atls/raijin',
       '1.2.3',
       'atls',
       'raijin',
       'main',
-      '@atls/yarn-cli@1.2.2'
+      '@atls/raijin@1.2.2'
     ),
     {
       owner: 'atls',
-      previous_tag_name: '@atls/yarn-cli@1.2.2',
+      previous_tag_name: '@atls/raijin@1.2.2',
       repo: 'raijin',
-      tag_name: '@atls/yarn-cli@1.2.3',
+      tag_name: '@atls/raijin@1.2.3',
       target_commitish: 'main',
     }
   )
 })
 
-test('should create yarn runtime release asset options only for yarn cli release', () => {
+test('should create yarn runtime release asset options only for Raijin release', () => {
   const projectCwd = '/repo' as PortablePath
 
   assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/code-github', projectCwd), undefined)
-  assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/yarn-cli', projectCwd), {
+  assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/raijin', projectCwd), {
     content_type: 'text/javascript',
     name: 'yarn.mjs',
     path: '/repo/yarn/cli/dist/runtime/yarn.mjs',
@@ -108,14 +108,14 @@ test('should reject root package manifest without package manager', async () => 
   )
 })
 
-test('should create yarn runtime manifest from verified release asset', () => {
+test('should create legacy-compatible yarn runtime manifest from verified release asset', () => {
   assert.deepEqual(
     createYarnRuntimeManifest(
-      '@atls/yarn-cli',
+      '@atls/raijin',
       '1.2.3',
       {
         browser_download_url:
-          'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
+          'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
         name: 'yarn.mjs',
       },
       Buffer.from('runtime'),
@@ -124,12 +124,12 @@ test('should create yarn runtime manifest from verified release asset', () => {
     {
       assetName: 'yarn.mjs',
       assetUrl:
-        'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
+        'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
       packageName: '@atls/yarn-cli',
       packageManager: 'yarn@5.0.0',
       schemaVersion: 1,
       sha256: 'd92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23',
-      tagName: '@atls/yarn-cli@1.2.3',
+      tagName: '@atls/raijin@1.2.3',
       version: '1.2.3',
     }
   )
@@ -176,46 +176,46 @@ test('should reject existing yarn runtime release assets with mismatching conten
 
 test('should omit previous release tag from first package release notes', () => {
   assert.deepEqual(
-    createGitHubReleaseNotesOptions('@atls/yarn-cli', '1.2.3', 'atls', 'raijin', 'main'),
+    createGitHubReleaseNotesOptions('@atls/raijin', '1.2.3', 'atls', 'raijin', 'main'),
     {
       owner: 'atls',
       repo: 'raijin',
-      tag_name: '@atls/yarn-cli@1.2.3',
+      tag_name: '@atls/raijin@1.2.3',
       target_commitish: 'main',
     }
   )
 })
 
 test('should parse scoped package release tag versions', () => {
-  assert.equal(parseGitHubReleaseTagVersion('@atls/yarn-cli', '@atls/yarn-cli@1.2.3'), '1.2.3')
+  assert.equal(parseGitHubReleaseTagVersion('@atls/raijin', '@atls/raijin@1.2.3'), '1.2.3')
 })
 
 test('should ignore release tags from other packages', () => {
   assert.equal(
-    parseGitHubReleaseTagVersion('@atls/yarn-cli', '@atls/yarn-plugin-tools@1.2.3'),
+    parseGitHubReleaseTagVersion('@atls/raijin', '@atls/yarn-plugin-tools@1.2.3'),
     undefined
   )
 })
 
 test('should select previous package-specific release tag', () => {
   assert.equal(
-    selectPreviousGitHubReleaseTagName('@atls/yarn-cli', '1.2.3', [
+    selectPreviousGitHubReleaseTagName('@atls/raijin', '1.2.3', [
       '@atls/yarn-plugin-tools@1.2.2',
-      '@atls/yarn-cli@1.2.1',
-      '@atls/yarn-cli@1.2.2',
-      '@atls/yarn-cli@1.2.3',
-      '@atls/yarn-cli@1.2.4',
+      '@atls/raijin@1.2.1',
+      '@atls/raijin@1.2.2',
+      '@atls/raijin@1.2.3',
+      '@atls/raijin@1.2.4',
     ]),
-    '@atls/yarn-cli@1.2.2'
+    '@atls/raijin@1.2.2'
   )
 })
 
 test('should skip previous release tag when package has no older release', () => {
   assert.equal(
-    selectPreviousGitHubReleaseTagName('@atls/yarn-cli', '1.2.3', [
+    selectPreviousGitHubReleaseTagName('@atls/raijin', '1.2.3', [
       '@atls/yarn-plugin-tools@1.2.2',
-      '@atls/yarn-cli@1.2.3',
-      '@atls/yarn-cli@1.2.4',
+      '@atls/raijin@1.2.3',
+      '@atls/raijin@1.2.4',
     ]),
     undefined
   )
@@ -223,24 +223,24 @@ test('should skip previous release tag when package has no older release', () =>
 
 test('should select previous package prerelease tag', () => {
   assert.equal(
-    selectPreviousGitHubReleaseTagName('@atls/yarn-cli', '1.2.3-1', [
-      '@atls/yarn-cli@1.2.2',
-      '@atls/yarn-cli@1.2.3-0',
-      '@atls/yarn-cli@1.2.3-1',
-      '@atls/yarn-cli@1.2.3',
+    selectPreviousGitHubReleaseTagName('@atls/raijin', '1.2.3-1', [
+      '@atls/raijin@1.2.2',
+      '@atls/raijin@1.2.3-0',
+      '@atls/raijin@1.2.3-1',
+      '@atls/raijin@1.2.3',
     ]),
-    '@atls/yarn-cli@1.2.3-0'
+    '@atls/raijin@1.2.3-0'
   )
 })
 
 test('should treat stable releases as newer than prereleases', () => {
   assert.equal(
-    selectPreviousGitHubReleaseTagName('@atls/yarn-cli', '1.2.3', [
-      '@atls/yarn-cli@1.2.2',
-      '@atls/yarn-cli@1.2.3-0',
-      '@atls/yarn-cli@1.2.3-1',
+    selectPreviousGitHubReleaseTagName('@atls/raijin', '1.2.3', [
+      '@atls/raijin@1.2.2',
+      '@atls/raijin@1.2.3-0',
+      '@atls/raijin@1.2.3-1',
     ]),
-    '@atls/yarn-cli@1.2.3-1'
+    '@atls/raijin@1.2.3-1'
   )
 })
 

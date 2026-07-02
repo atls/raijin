@@ -312,7 +312,7 @@
 
 ### Домен `release`
 
-- Команды: `release create`, `release plan create`, `release plan foreach`, `release version defer`
+- Команды: `release create`, `release version apply`, `release version defer`
 
 <details>
 <summary>Подробности домена `release`</summary>
@@ -326,23 +326,14 @@
 - Плагин: `@atls/yarn-plugin-release`
 - Исходник: `yarn/plugin-release/sources/release-create.command.ts`
 
-<!-- sync:command-card:release-plan-create -->
+<!-- sync:command-card:release-version-apply -->
 
-#### `release plan create`
-
-- Статус: `active`
-- Пример: `yarn release plan create`
-- Плагин: `@atls/yarn-plugin-release`
-- Исходник: `yarn/plugin-release/sources/release-plan-create.command.ts`
-
-<!-- sync:command-card:release-plan-foreach -->
-
-#### `release plan foreach`
+#### `release version apply`
 
 - Статус: `active`
-- Пример: `yarn release plan foreach`
+- Пример: `yarn release version apply`
 - Плагин: `@atls/yarn-plugin-release`
-- Исходник: `yarn/plugin-release/sources/release-plan-foreach.command.ts`
+- Исходник: `yarn/plugin-release/sources/release-version-apply.command.ts`
 
 <!-- sync:command-card:release-version-defer -->
 

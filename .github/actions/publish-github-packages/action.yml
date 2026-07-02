@@ -4,64 +4,21 @@ description: Publish packages to GitHub Packages
 inputs:
   GITHUB_PACKAGES_TOKEN:
     required: true
-  WORKSPACE:
-    required: false
-    default: ''
 
 runs:
   using: composite
 
   steps:
-    - name: List changed workspaces
-      if: ${{ inputs.WORKSPACE == '' }}
-      shell: bash
-      run: |
-        source .env
-        export NODE_OPTIONS
-        yarn workspaces changed list
-
-    - name: Show selected workspace
-      if: ${{ inputs.WORKSPACE != '' }}
-      shell: bash
-      run: |
-        echo "Selected workspace: $SELECTED_WORKSPACE"
-      env:
-        SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}
-
-    - name: Validate selected workspace
-      if: ${{ inputs.WORKSPACE != '' }}
-      shell: bash
-      run: |
-        yarn workspace "$SELECTED_WORKSPACE" exec true
-      env:
-        SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}
-
     - name: Verify GitHub Packages auth
       shell: bash
       run: |
-        source .env
-        export NODE_OPTIONS
         yarn npm whoami --publish
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
 
     - name: Publish to GitHub Packages
-      if: ${{ inputs.WORKSPACE == '' }}
       shell: bash
       run: |
-        source .env
-        export NODE_OPTIONS
-        yarn workspaces changed foreach -vt --no-private npm publish --tolerate-republish --access public
+        yarn workspace @atls/raijin npm publish --tolerate-republish --access public
       env:
         YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
-
-    - name: Publish selected workspace to GitHub Packages
-      if: ${{ inputs.WORKSPACE != '' }}
-      shell: bash
-      run: |
-        source .env
-        export NODE_OPTIONS
-        yarn workspace "$SELECTED_WORKSPACE" npm publish --tolerate-republish --access public
-      env:
-        YARN_NPM_AUTH_TOKEN: ${{ inputs.GITHUB_PACKAGES_TOKEN }}
-        SELECTED_WORKSPACE: ${{ inputs.WORKSPACE }}

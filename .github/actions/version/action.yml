@@ -5,16 +5,19 @@ inputs:
   GITHUB_TOKEN:
     required: true
 
+outputs:
+  release_required:
+    description: Whether merged changes produced a Raijin deferred version record
+    value: ${{ steps.version.outputs.release_required }}
+
 runs:
   using: composite
 
   steps:
     - name: Apply deferred versions
+      id: version
       shell: bash
       run: |
-        source .env
-        export NODE_OPTIONS
-        yarn release version defer
-        yarn version apply --all
+        yarn release version apply --workspace @atls/raijin --github-output release_required
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}

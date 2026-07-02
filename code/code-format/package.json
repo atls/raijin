@@ -1,6 +1,7 @@
 {
   "name": "@atls/code-format",
   "version": "2.0.11",
+  "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -17,8 +18,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/config-prettier": "workspace:*",
-    "@atls/prettier-plugin": "workspace:*",
+    "@atls/raijin": "workspace:*",
     "globby": "13.2.2",
     "ignore": "5.3.2",
     "prettier": "3.5.3"

@@ -8,5 +8,10 @@ test('should allow generated project config files outside tsconfig scope', () =>
   const allowDefaultProject =
     baseConfig.languageOptions?.parserOptions?.projectService?.allowDefaultProject
 
-  assert.deepEqual(allowDefaultProject, ['scripts/raijin/*.mjs', '.eslintrc.js', '.prettierrc.mjs'])
+  assert.deepEqual(allowDefaultProject, [
+    'scripts/raijin/*.mjs',
+    '.eslintrc.js',
+    '.prettierrc.mjs',
+    'eslint.config.mjs',
+  ])
 })

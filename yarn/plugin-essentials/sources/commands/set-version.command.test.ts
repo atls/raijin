@@ -127,24 +127,24 @@ test('should parse Raijin runtime manifest', () => {
   assert.deepEqual(
     parseRaijinRuntimeManifest({
       schemaVersion: 1,
-      packageName: '@atls/yarn-cli',
+      packageName: '@atls/raijin',
       packageManager: 'yarn@4.15.0',
       version: '1.2.3',
-      tagName: '@atls/yarn-cli@1.2.3',
+      tagName: '@atls/raijin@1.2.3',
       assetName: 'yarn.mjs',
       assetUrl:
-        'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
+        'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
       sha256: 'a'.repeat(64),
     }),
     {
       schemaVersion: 1,
-      packageName: '@atls/yarn-cli',
+      packageName: '@atls/raijin',
       packageManager: 'yarn@4.15.0',
       version: '1.2.3',
-      tagName: '@atls/yarn-cli@1.2.3',
+      tagName: '@atls/raijin@1.2.3',
       assetName: 'yarn.mjs',
       assetUrl:
-        'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
+        'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
       sha256: 'a'.repeat(64),
     }
   )
@@ -162,7 +162,7 @@ test('should reject runtime manifest from another package', () => {
         assetUrl: 'https://github.com/atls/raijin/releases/download/plugin/yarn.mjs',
         sha256: 'a'.repeat(64),
       }),
-    /expected @atls\/yarn-cli/
+    /expected @atls\/raijin/
   )
 })
 
@@ -171,9 +171,9 @@ test('should reject runtime manifest with invalid digest', () => {
     () =>
       parseRaijinRuntimeManifest({
         schemaVersion: 1,
-        packageName: '@atls/yarn-cli',
+        packageName: '@atls/raijin',
         version: '1.2.3',
-        tagName: '@atls/yarn-cli@1.2.3',
+        tagName: '@atls/raijin@1.2.3',
         assetName: 'yarn.mjs',
         assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
         sha256: 'not-a-digest',

@@ -8,7 +8,7 @@ import { mkdtemp }                          from 'node:fs/promises'
 import { tmpdir }                           from 'node:os'
 import { join }                             from 'node:path'
 
-import tsconfig                             from '@atls/config-typescript'
+import tsconfig                             from '@atls/raijin/typescript-config'
 
 import { WebpackExternals }                 from './webpack.externals.js'
 import { createOptionalImportIgnorePlugin } from './webpack.ignore.js'

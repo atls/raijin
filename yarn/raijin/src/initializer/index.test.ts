@@ -32,13 +32,12 @@ const getRequestHref = (url: Request | URL | string): string => {
 const createFetch = (runtime: Buffer, packageManager = TEST_PACKAGE_MANAGER): typeof fetch => {
   const manifest = {
     assetName: 'yarn.mjs',
-    assetUrl:
-      'https://github.com/atls/raijin/releases/download/%40atls%2Fyarn-cli%401.2.3/yarn.mjs',
-    packageName: '@atls/yarn-cli',
+    assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
+    packageName: '@atls/raijin',
     packageManager,
     schemaVersion: 1,
     sha256: createSha256Digest(runtime),
-    tagName: '@atls/yarn-cli@1.2.3',
+    tagName: '@atls/raijin@1.2.3',
     version: '1.2.3',
   }
 
