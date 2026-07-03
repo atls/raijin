@@ -28,6 +28,7 @@ test('should update service start scripts to owned service start command', async
     JSON.stringify(
       {
         scripts: {
+          build: 'yarn renderer build',
           dev: 'yarn renderer dev',
           start: 'yarn node dist/index.js',
         },
@@ -45,7 +46,8 @@ test('should update service start scripts to owned service start command', async
     start: 'yarn service start',
   })
   assert.deepEqual(JSON.parse(tree.read('/renderer/package.json')!.toString()).scripts, {
+    build: 'yarn renderer build',
     dev: 'yarn renderer dev',
-    start: 'yarn node dist/index.js',
+    start: 'yarn renderer start',
   })
 })

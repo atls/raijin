@@ -1,4 +1,5 @@
 import type { createRuntimeExecArgv as createRuntimeExecArgvFn } from '@atls/raijin/runtime-exec-argv'
+import type { createRuntimeEnvironment as createRuntimeEnvironmentFn } from '@atls/raijin/runtime-exec-argv'
 import type { findPnpEsmLoader as findPnpEsmLoaderFn } from '@atls/raijin/runtime-exec-argv'
 import type { resolveTypeScriptLoader as resolveTypeScriptLoaderFn } from '@atls/raijin/runtime-exec-argv'
 
@@ -6,6 +7,7 @@ const TYPESCRIPT_LOADER_SPECIFIER = '@atls/raijin/typescript-loader'
 
 type RuntimeExecArgvModule = {
   createRuntimeExecArgv: typeof createRuntimeExecArgvFn
+  createRuntimeEnvironment: typeof createRuntimeEnvironmentFn
   findPnpEsmLoader: typeof findPnpEsmLoaderFn
   resolveTypeScriptLoader: typeof resolveTypeScriptLoaderFn
 }
@@ -45,4 +47,12 @@ export const createServiceRuntimeExecArgv = async (cwd: string): Promise<Array<s
   const { createRuntimeExecArgv } = await importRuntimeExecArgvModule()
 
   return createRuntimeExecArgv(cwd)
+}
+
+export const createServiceRuntimeEnvironment = async (
+  environment?: NodeJS.ProcessEnv
+): Promise<NodeJS.ProcessEnv> => {
+  const { createRuntimeEnvironment } = await importRuntimeExecArgvModule()
+
+  return createRuntimeEnvironment(environment)
 }

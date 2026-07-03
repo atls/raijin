@@ -17,9 +17,16 @@ const TYPESCRIPT_LOADER_DIST_PATH = 'dist/runtime/typescript-loader.js'
 const TYPESCRIPT_LOADER_SOURCE_PATH = 'src/runtime/typescript-loader.ts'
 const TYPESCRIPT_LOADER_RUNTIME_REQUIRE = 'createRequire(import.meta.url)'
 const TYPESCRIPT_LOADER_SPECIFIER = '@atls/raijin/typescript-loader'
+const PNP_ESM_NODE_OPTION = /(?:^|[\\/])\.pnp\.loader\.mjs$/
+const NODE_OPTIONS_WITH_VALUE = new Set(['--experimental-loader', '--loader'])
 
 const require = createRequire(import.meta.url)
 const materializedTypeScriptLoaders = new Map<string, Promise<string>>()
+
+type NodeOptionToken = {
+  raw: string
+  value: string
+}
 
 const fileExists = async (path: string): Promise<boolean> => {
   try {
@@ -41,6 +48,90 @@ const getPnpEsmLoaderPaths = (cwd: string): Array<string> => {
   }
 
   return paths
+}
+
+const isPnPEsmNodeOptionValue = (value: string): boolean => PNP_ESM_NODE_OPTION.test(value)
+
+const splitNodeOptions = (nodeOptions: string): Array<NodeOptionToken> => {
+  const tokens: Array<NodeOptionToken> = []
+  let raw = ''
+  let value = ''
+  let quote: string | undefined
+
+  for (let index = 0; index < nodeOptions.length; index += 1) {
+    const char = nodeOptions[index]
+
+    if (quote) {
+      raw += char
+
+      if (char === '\\' && nodeOptions[index + 1] === quote) {
+        index += 1
+        raw += nodeOptions[index]
+        value += nodeOptions[index]
+        continue
+      }
+
+      if (char === quote) {
+        quote = undefined
+        continue
+      }
+
+      value += char
+      continue
+    }
+
+    if (char === '"' || char === "'") {
+      raw += char
+      quote = char
+      continue
+    }
+
+    if (/\s/.test(char)) {
+      if (raw) {
+        tokens.push({ raw, value })
+        raw = ''
+        value = ''
+      }
+
+      continue
+    }
+
+    raw += char
+    value += char
+  }
+
+  if (raw) {
+    tokens.push({ raw, value })
+  }
+
+  return tokens
+}
+
+const removePnPEsmLoaderNodeOptions = (nodeOptions: string): string => {
+  const options = splitNodeOptions(nodeOptions)
+  const filtered: Array<string> = []
+
+  for (let index = 0; index < options.length; index += 1) {
+    const option = options[index]
+    const [name, value] = option.value.split('=', 2)
+
+    if (value && NODE_OPTIONS_WITH_VALUE.has(name) && isPnPEsmNodeOptionValue(value)) {
+      continue
+    }
+
+    if (NODE_OPTIONS_WITH_VALUE.has(option.value)) {
+      const next = options.at(index + 1)
+
+      if (next && isPnPEsmNodeOptionValue(next.value)) {
+        index += 1
+        continue
+      }
+    }
+
+    filtered.push(option.raw)
+  }
+
+  return filtered.join(' ')
 }
 
 export const findPnpEsmLoader = async (cwd: string): Promise<string | undefined> => {
@@ -149,4 +240,25 @@ export const createRuntimeExecArgv = async (cwd: string): Promise<Array<string>>
   ])
 
   return createTypeScriptRuntimeExecArgv(pnpEsmLoader, typeScriptLoader)
+}
+
+export const createRuntimeEnvironment = (
+  environment: NodeJS.ProcessEnv = process.env
+): NodeJS.ProcessEnv => {
+  const runtimeEnvironment = { ...environment }
+  const nodeOptions = runtimeEnvironment.NODE_OPTIONS
+
+  if (!nodeOptions) {
+    return runtimeEnvironment
+  }
+
+  const sanitizedNodeOptions = removePnPEsmLoaderNodeOptions(nodeOptions)
+
+  if (sanitizedNodeOptions) {
+    runtimeEnvironment.NODE_OPTIONS = sanitizedNodeOptions
+  } else {
+    delete runtimeEnvironment.NODE_OPTIONS
+  }
+
+  return runtimeEnvironment
 }

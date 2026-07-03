@@ -11,6 +11,7 @@ import { fileURLToPath }                   from 'node:url'
 import { pathToFileURL }                   from 'node:url'
 
 import { createRuntimeExecArgv }           from './runtime-exec-argv.js'
+import { createRuntimeEnvironment }        from './runtime-exec-argv.js'
 import { createTypeScriptRuntimeExecArgv } from './runtime-exec-argv.js'
 import { resolveTypeScriptLoader }         from './runtime-exec-argv.js'
 
@@ -35,6 +36,30 @@ test('should keep PnP loader before TypeScript runtime loader', () => {
       'file:///runtime/typescript-loader.js',
       '--enable-source-maps',
     ]
+  )
+})
+
+test('should remove only PnP ESM loader from runtime child environment', () => {
+  assert.deepEqual(
+    createRuntimeEnvironment({
+      NODE_OPTIONS:
+        '--require /repo/.pnp.cjs --experimental-loader file:///repo/.pnp.loader.mjs --trace-warnings --loader file:///tmp/custom-loader.mjs',
+    }),
+    {
+      NODE_OPTIONS:
+        '--require /repo/.pnp.cjs --trace-warnings --loader file:///tmp/custom-loader.mjs',
+    }
+  )
+})
+
+test('should keep PnP CJS hook when removing PnP ESM loader state', () => {
+  assert.deepEqual(
+    createRuntimeEnvironment({
+      NODE_OPTIONS: '--require=/repo/.pnp.cjs --experimental-loader=file:///repo/.pnp.loader.mjs',
+    }),
+    {
+      NODE_OPTIONS: '--require=/repo/.pnp.cjs',
+    }
   )
 })
 

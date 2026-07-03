@@ -18,6 +18,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/raijin": "workspace:*",
     "@atls/yarn-plugin-tools": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "cross-spawn": "7.0.3",

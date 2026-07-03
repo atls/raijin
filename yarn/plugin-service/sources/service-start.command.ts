@@ -1,14 +1,15 @@
-import { spawn }                        from 'node:child_process'
+import { spawn }                           from 'node:child_process'
 
-import { BaseCommand }                  from '@yarnpkg/cli'
-import { Configuration }                from '@yarnpkg/core'
-import { Project }                      from '@yarnpkg/core'
-import { Filename }                     from '@yarnpkg/fslib'
-import { execUtils }                    from '@yarnpkg/core'
-import { xfs }                          from '@yarnpkg/fslib'
+import { BaseCommand }                     from '@yarnpkg/cli'
+import { Configuration }                   from '@yarnpkg/core'
+import { Project }                         from '@yarnpkg/core'
+import { Filename }                        from '@yarnpkg/fslib'
+import { execUtils }                       from '@yarnpkg/core'
+import { xfs }                             from '@yarnpkg/fslib'
 
-import { createServiceRuntimeExecArgv } from '@atls/code-service'
-import { makeCurrentYarnExecutable }    from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { createServiceRuntimeEnvironment } from '@atls/code-service'
+import { createServiceRuntimeExecArgv }    from '@atls/code-service'
+import { makeCurrentYarnExecutable }       from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 export class ServiceStartCommand extends BaseCommand {
   static override paths = [['service', 'start']]
@@ -57,7 +58,7 @@ export class ServiceStartCommand extends BaseCommand {
       [...(await createServiceRuntimeExecArgv(this.context.cwd)), 'dist/index.js'],
       {
         cwd: this.context.cwd,
-        env: process.env,
+        env: await createServiceRuntimeEnvironment(process.env),
         stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
       }
     )
