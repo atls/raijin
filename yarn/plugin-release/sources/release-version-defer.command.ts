@@ -1,14 +1,15 @@
-import { BaseCommand }                           from '@yarnpkg/cli'
-import { WorkspaceRequiredError }                from '@yarnpkg/cli'
-import { Configuration }                         from '@yarnpkg/core'
-import { Project }                               from '@yarnpkg/core'
-import { StreamReport }                          from '@yarnpkg/core'
-import { Option }                                from 'clipanion'
+import { BaseCommand }                            from '@yarnpkg/cli'
+import { WorkspaceRequiredError }                 from '@yarnpkg/cli'
+import { Configuration }                          from '@yarnpkg/core'
+import { Project }                                from '@yarnpkg/core'
+import { StreamReport }                           from '@yarnpkg/core'
+import { Option }                                 from 'clipanion'
 
-import { resolveReleaseVersionDeferredStrategy } from './release-version-policy.utils.js'
-import { getDeferredReleaseDecisions }           from './release-version.utils.js'
-import { getReleaseVersionChanges }              from './release-version.utils.js'
-import { resolveReleaseVersionStrategies }       from './release-version.utils.js'
+import { resolveReleaseVersionDeferredStrategy }  from './release-version-policy.utils.js'
+import { getDeferredReleaseDecisions }            from './release-version.utils.js'
+import { getReleaseVersionChanges }               from './release-version.utils.js'
+import { resolveReleaseVersionDeclineStrategies } from './release-version.utils.js'
+import { resolveReleaseVersionStrategies }        from './release-version.utils.js'
 
 export { isReleaseVersionWorkspace }     from './release-version.utils.js'
 export { parseDeferredReleaseDecisions } from './release-version.utils.js'
@@ -36,8 +37,9 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
       async (report) => {
         const changes = await getReleaseVersionChanges(project, this.since)
         const strategies = resolveReleaseVersionStrategies(project, changes)
+        const declineStrategies = resolveReleaseVersionDeclineStrategies(project, changes)
 
-        if (!strategies.length) {
+        if (!strategies.length && !declineStrategies.length) {
           report.reportInfo(null, 'No released workspaces need deferred version records')
 
           return
@@ -68,6 +70,31 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
 
           if (code > 0) {
             throw new Error(`Failed to defer ${changedWorkspace.ident} as ${effectiveStrategy}`)
+          }
+        }
+
+        for (const { workspace: changedWorkspace } of declineStrategies) {
+          if (deferredDecisions.has(changedWorkspace.ident)) {
+            continue
+          }
+
+          report.reportInfo(null, `Declining ${changedWorkspace.ident}`)
+
+          if (this.dryRun) {
+            continue
+          }
+
+          // Deferred version records share the same `.yarn/versions` state.
+          // eslint-disable-next-line no-await-in-loop
+          const code = await this.cli.run(
+            ['workspace', changedWorkspace.ident, 'version', 'decline', '--deferred'],
+            {
+              cwd: project.cwd,
+            }
+          )
+
+          if (code > 0) {
+            throw new Error(`Failed to decline ${changedWorkspace.ident}`)
           }
         }
       }

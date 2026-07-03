@@ -358,3 +358,22 @@ export const resolveReleaseVersionStrategies = (
   return [...publicStrategies.values()].sort((left, right) =>
     left.workspace.relativeCwd.localeCompare(right.workspace.relativeCwd))
 }
+
+export const resolveReleaseVersionDeclineStrategies = (
+  project: Project,
+  changes: ReadonlyArray<ReleaseVersionChange>
+): Array<ReleaseVersionWorkspaceStrategy> => {
+  const workspaces = project.workspaces
+    .map(toReleaseWorkspace)
+    .filter((item): item is ReleaseVersionWorkspace => Boolean(item))
+  const workspaceOwners = project.workspaces.map(toReleaseWorkspaceOwner)
+  const publicWorkspace = workspaces.find((workspace) => workspace.ident === '@atls/raijin')
+
+  if (!publicWorkspace) {
+    return []
+  }
+
+  return resolveReleaseVersionWorkspaceStrategies(workspaces, changes, workspaceOwners).filter(
+    ({ workspace }) => !isPublicReleaseWorkspace(workspace)
+  )
+}

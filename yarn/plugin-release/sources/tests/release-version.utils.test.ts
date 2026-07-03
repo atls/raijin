@@ -1,15 +1,16 @@
-import type { Project }                    from '@yarnpkg/core'
-import type { Workspace }                  from '@yarnpkg/core'
-import type { PortablePath }               from '@yarnpkg/fslib'
+import type { Project }                           from '@yarnpkg/core'
+import type { Workspace }                         from '@yarnpkg/core'
+import type { PortablePath }                      from '@yarnpkg/fslib'
 
-import assert                              from 'node:assert/strict'
-import { test }                            from 'node:test'
+import assert                                     from 'node:assert/strict'
+import { test }                                   from 'node:test'
 
-import { structUtils }                     from '@yarnpkg/core'
-import { ppath }                           from '@yarnpkg/fslib'
+import { structUtils }                            from '@yarnpkg/core'
+import { ppath }                                  from '@yarnpkg/fslib'
 
-import { isDeferredReleaseRequired }       from '../release-version.utils.js'
-import { resolveReleaseVersionStrategies } from '../release-version.utils.js'
+import { isDeferredReleaseRequired }              from '../release-version.utils.js'
+import { resolveReleaseVersionDeclineStrategies } from '../release-version.utils.js'
+import { resolveReleaseVersionStrategies }        from '../release-version.utils.js'
 
 const createWorkspace = (
   ident: string,
@@ -58,6 +59,27 @@ test('should route internal workspace changes through public Raijin release work
       workspace: {
         ident: '@atls/raijin',
         relativeCwd: 'yarn/raijin',
+      },
+      strategy: 'patch',
+    },
+  ])
+})
+
+test('should decline internal workspace changes when public Raijin release workspace is present', () => {
+  const project = createProject([rootWorkspace, runtimeWorkspace, cliWorkspace])
+
+  const strategies = resolveReleaseVersionDeclineStrategies(project, [
+    {
+      message: 'fix(cli): repair runtime bundle',
+      files: ['yarn/cli/src/cli.ts'],
+    },
+  ])
+
+  assert.deepEqual(strategies, [
+    {
+      workspace: {
+        ident: '@atls/yarn-cli',
+        relativeCwd: 'yarn/cli',
       },
       strategy: 'patch',
     },
@@ -130,6 +152,20 @@ test('should keep workspace strategies when public Raijin workspace is absent', 
       strategy: 'patch',
     },
   ])
+})
+
+test('should not decline workspace changes when public Raijin workspace is absent', () => {
+  const appWorkspace = createWorkspace('@atls/example-app', 'apps/example', '0.1.0')
+  const project = createProject([rootWorkspace, appWorkspace])
+
+  const strategies = resolveReleaseVersionDeclineStrategies(project, [
+    {
+      message: 'fix(app): repair generated app',
+      files: ['apps/example/src/index.ts'],
+    },
+  ])
+
+  assert.deepEqual(strategies, [])
 })
 
 test('should detect deferred release requirement only from release strategies', () => {
