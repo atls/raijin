@@ -44,10 +44,7 @@ export class LintCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
-    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { project } = await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
 
     const binFolder = await xfs.mktempPromise()
 
@@ -70,7 +67,7 @@ export class LintCommand extends BaseCommand {
     })
 
     const { code } = await execUtils.pipevp(executable, ['lint', ...args, ...this.files], {
-      cwd: workspaceCwd,
+      cwd: this.context.cwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
