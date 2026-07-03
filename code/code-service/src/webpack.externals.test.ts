@@ -50,17 +50,30 @@ test('should externalize dependency ranges from all manifest blocks as ESM impor
 
   assert.deepEqual(await resolveExternal('@nestjs/common'), {
     result: '@nestjs/common',
-    type: 'import',
+    type: 'module',
   })
   assert.deepEqual(await resolveExternal('@nestjs/terminus'), {
     result: '@nestjs/terminus',
-    type: 'import',
+    type: 'module',
   })
   assert.deepEqual(await resolveExternal('@fastify/swagger-ui'), {
-    result: '@fastify/swagger-ui',
-    type: 'import',
+    result: 'import @fastify/swagger-ui',
+    type: undefined,
   })
-  assert.deepEqual(await resolveExternal('rxjs'), { result: 'rxjs', type: 'import' })
+  assert.deepEqual(await resolveExternal('rxjs'), { result: 'rxjs', type: 'module' })
+  assert.deepEqual(await resolveExternal('@internal/module'), {
+    result: undefined,
+    type: undefined,
+  })
+})
+
+test('should keep undeclared transitive npm package roots bundled', async () => {
+  const resolveExternal = await createResolver()
+
+  assert.deepEqual(await resolveExternal('@nestjs/cqrs'), {
+    result: undefined,
+    type: undefined,
+  })
   assert.deepEqual(await resolveExternal('@internal/module'), {
     result: undefined,
     type: undefined,

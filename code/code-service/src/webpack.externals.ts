@@ -11,6 +11,8 @@ export class WebpackExternals {
 
   #dependencies: Array<string> = []
 
+  #optionalDependencies: Array<string> = []
+
   constructor(private readonly cwd: string) {}
 
   async loadPackageJson(): Promise<IPackageJson> {
@@ -25,16 +27,22 @@ export class WebpackExternals {
     const {
       dependencies = {},
       devDependencies = {},
-      optionalDependencies = {},
       peerDependencies = {},
     } = await this.loadPackageJson()
 
     return Object.entries({
       ...dependencies,
       ...devDependencies,
-      ...optionalDependencies,
       ...peerDependencies,
     })
+      .filter(([, range]) => !range.startsWith('workspace:'))
+      .map(([name]) => name)
+  }
+
+  async loadOptionalDependencies(): Promise<Array<string>> {
+    const { optionalDependencies = {} } = await this.loadPackageJson()
+
+    return Object.entries(optionalDependencies)
       .filter(([, range]) => !range.startsWith('workspace:'))
       .map(([name]) => name)
   }
@@ -48,6 +56,7 @@ export class WebpackExternals {
   async build(): Promise<typeof this.externals> {
     this.#externals = await this.loadExternals()
     this.#dependencies = await this.loadDependencies()
+    this.#optionalDependencies = await this.loadOptionalDependencies()
 
     return this.externals
   }
@@ -60,10 +69,12 @@ export class WebpackExternals {
       type?: webpack.Configuration['externalsType']
     ) => void
   ): void => {
-    if (request && this.#dependencies.includes(request)) {
-      callback(undefined, request, 'import')
+    if (request && this.#optionalDependencies.includes(request)) {
+      callback(undefined, `import ${request}`)
+    } else if (request && this.#dependencies.includes(request)) {
+      callback(undefined, request, 'module')
     } else if (request && this.#externals.includes(request)) {
-      callback(undefined, request, 'import')
+      callback(undefined, request, 'module')
     } else {
       callback()
     }

@@ -134,7 +134,7 @@ test('should keep optional dependency imports lazy in ESM production builds', as
   assert.doesNotMatch(output, /import \* as .* from "@fastify\/swagger-ui"/)
 })
 
-test('should keep static dependency imports in the ESM async module graph', async () => {
+test('should keep static dependency imports as ESM module externals', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-config-'))
 
   await mkdir(join(cwd, 'src'))
@@ -183,8 +183,8 @@ export const element = React.createElement('div')
 
   const output = await readFile(join(cwd, 'dist/index.js'), 'utf-8')
 
-  assert.match(output, /module\.exports = import\("react"\)/)
-  assert.match(output, /__webpack_require__\.a\(/)
-  assert.match(output, /react__WEBPACK_IMPORTED_MODULE_0__\["default"\]\.createElement/)
+  assert.match(output, /import \* as __WEBPACK_EXTERNAL_MODULE_react__ from "react"/)
+  assert.match(output, /__WEBPACK_EXTERNAL_MODULE_react__\["default"\]/)
+  assert.match(output, /external_react_namespaceObject\["default"\]\.createElement/)
   assert.doesNotMatch(output, /react_1\.default\.createElement/)
 })
