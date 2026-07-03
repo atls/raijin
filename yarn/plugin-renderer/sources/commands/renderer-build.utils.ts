@@ -33,8 +33,6 @@ type RendererBuildPathSegments = ReadonlyArray<Filename>
 const RENDERER_BUILD_STALE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegments> = [
   [DIST_DIR],
   [SRC_DIR, NEXT_DIR],
-  // Renderer source is not a workspace boundary; this temporary manifest poisons Yarn discovery.
-  [SRC_DIR, PACKAGE_MANIFEST],
 ]
 const RENDERER_BUILD_WORKSPACE_MANIFEST_PATHS: ReadonlyArray<RendererBuildPathSegments> = [
   [DIST_DIR, PACKAGE_MANIFEST],
@@ -43,6 +41,16 @@ const RENDERER_BUILD_WORKSPACE_MANIFEST_PATHS: ReadonlyArray<RendererBuildPathSe
 const RENDERER_BUILD_SOURCE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegments> = [
   [SRC_DIR, NEXT_DIR],
 ]
+
+const isTemporaryRendererSourceManifest = (manifest: unknown): boolean => {
+  if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) {
+    return false
+  }
+
+  const entries = Object.entries(manifest)
+
+  return entries.length === 1 && entries[0][0] === 'type' && entries[0][1] === 'module'
+}
 
 const findRendererBuildSourceCwd = (cwd: PortablePath): PortablePath | undefined => {
   let current = cwd
@@ -243,8 +251,23 @@ const removeRendererBuildPaths = async (
   )
 }
 
+const cleanupRendererBuildSourceManifest = async (sourceCwd: PortablePath): Promise<void> => {
+  const manifestPath = ppath.join(sourceCwd, PACKAGE_MANIFEST)
+
+  if (!(await xfs.existsPromise(manifestPath))) {
+    return
+  }
+
+  const manifest = (await xfs.readJsonPromise(manifestPath)) as unknown
+
+  if (isTemporaryRendererSourceManifest(manifest)) {
+    await xfs.removePromise(manifestPath)
+  }
+}
+
 export const cleanupRendererBuildStaleArtifacts = async (cwd: PortablePath): Promise<void> => {
   await removeRendererBuildPaths(cwd, RENDERER_BUILD_STALE_ARTIFACT_PATHS)
+  await cleanupRendererBuildSourceManifest(ppath.join(cwd, SRC_DIR))
 }
 
 export const cleanupRendererBuildDiscoveryArtifacts = async (cwd: PortablePath): Promise<void> => {
@@ -254,7 +277,7 @@ export const cleanupRendererBuildDiscoveryArtifacts = async (cwd: PortablePath):
     return
   }
 
-  await xfs.removePromise(ppath.join(sourceCwd, PACKAGE_MANIFEST))
+  await cleanupRendererBuildSourceManifest(sourceCwd)
 }
 
 export const cleanupRendererBuildWorkspaceManifests = async (cwd: PortablePath): Promise<void> => {

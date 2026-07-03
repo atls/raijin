@@ -302,7 +302,7 @@ test('should remove stale renderer artifacts before project discovery', async ()
   await xfs.mkdirPromise(ppath.join(cwd, 'src/.next'), { recursive: true })
   await xfs.writeJsonPromise(ppath.join(cwd, 'dist/package.json'), {})
   await xfs.writeJsonPromise(ppath.join(cwd, 'src/.next/package.json'), {})
-  await xfs.writeJsonPromise(ppath.join(cwd, 'src/package.json'), {})
+  await xfs.writeJsonPromise(ppath.join(cwd, 'src/package.json'), { type: 'module' })
 
   await cleanupRendererBuildStaleArtifacts(cwd)
 
@@ -316,11 +316,48 @@ test('should remove stale renderer source manifest from nested source cwd before
   const nestedCwd = ppath.join(cwd, 'src/app/pages')
 
   await xfs.mkdirPromise(nestedCwd, { recursive: true })
-  await xfs.writeJsonPromise(ppath.join(cwd, 'src/package.json'), {})
+  await xfs.writeJsonPromise(ppath.join(cwd, 'src/package.json'), { type: 'module' })
 
   await cleanupRendererBuildDiscoveryArtifacts(nestedCwd)
 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/package.json')), false)
+})
+
+test('should keep real source workspace manifest before project discovery', async () => {
+  const cwd = await xfs.mktempPromise()
+  const nestedCwd = ppath.join(cwd, 'packages/src/app')
+  const manifestPath = ppath.join(cwd, 'packages/src/package.json')
+  const manifest = {
+    name: '@internal/src',
+    type: 'module',
+  }
+
+  await xfs.mkdirPromise(nestedCwd, { recursive: true })
+  await xfs.writeJsonPromise(manifestPath, manifest)
+
+  await cleanupRendererBuildDiscoveryArtifacts(nestedCwd)
+
+  assert.equal(await xfs.existsPromise(manifestPath), true)
+  assert.deepEqual(await xfs.readJsonPromise(manifestPath), manifest)
+})
+
+test('should keep real renderer source manifest during stale cleanup', async () => {
+  const cwd = await xfs.mktempPromise()
+  const manifestPath = ppath.join(cwd, 'src/package.json')
+  const manifest = {
+    dependencies: {
+      next: '16.0.0',
+    },
+    type: 'module',
+  }
+
+  await xfs.mkdirPromise(ppath.dirname(manifestPath), { recursive: true })
+  await xfs.writeJsonPromise(manifestPath, manifest)
+
+  await cleanupRendererBuildStaleArtifacts(cwd)
+
+  assert.equal(await xfs.existsPromise(manifestPath), true)
+  assert.deepEqual(await xfs.readJsonPromise(manifestPath), manifest)
 })
 
 test('should remove renderer workspace manifests without removing dist output', async () => {
