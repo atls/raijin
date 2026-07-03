@@ -1,5 +1,4 @@
 import { strict as assert } from 'node:assert'
-import { mkdir }            from 'node:fs/promises'
 import { mkdtemp }          from 'node:fs/promises'
 import { writeFile }        from 'node:fs/promises'
 import { tmpdir }           from 'node:os'
@@ -113,51 +112,26 @@ test('should keep undeclared transitive npm package roots bundled', async () => 
   })
 })
 
-test('should keep local workspace dependency ranges bundled', async () => {
+test('should keep Yarn-discovered workspace dependencies bundled', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-externals-'))
 
-  await mkdir(join(cwd, 'packages/domain'), { recursive: true })
-  await mkdir(join(cwd, 'packages/internal'), { recursive: true })
-  await mkdir(join(cwd, 'service'))
   await writeFile(
     join(cwd, 'package.json'),
-    JSON.stringify({
-      private: true,
-      workspaces: ['packages/*', 'service'],
-      packageManager: 'yarn@1.3.25-atls',
-    })
-  )
-  await writeFile(
-    join(cwd, 'packages/domain/package.json'),
-    JSON.stringify({
-      name: '@internal/domain',
-      version: '0.1.1',
-    })
-  )
-  await writeFile(
-    join(cwd, 'packages/internal/package.json'),
-    JSON.stringify({
-      name: '@internal/module',
-      version: '0.1.1',
-      dependencies: {
-        '@internal/domain': '0.1.1',
-        lodash: '^4',
-      },
-    })
-  )
-  await writeFile(
-    join(cwd, 'service/package.json'),
     JSON.stringify({
       name: '@internal/service',
       type: 'module',
       dependencies: {
+        '@internal/domain': '0.1.1',
         '@internal/module': '0.1.1',
         react: '^19',
       },
     })
   )
 
-  const externals = await new WebpackExternals(join(cwd, 'service')).build()
+  const externals = await new WebpackExternals(cwd, [
+    '@internal/domain',
+    '@internal/module',
+  ]).build()
   const resolveExternal = async (request: string): Promise<{ result?: string; type?: string }> =>
     new Promise((resolve, reject) => {
       externals({ request }, (error, result, type) => {

@@ -28,7 +28,10 @@ export class Service extends EventEmitter {
     super()
   }
 
-  static async initialize(cwd: string): Promise<Service> {
+  static async initialize(
+    cwd: string,
+    workspaceDependencies: Iterable<string> = []
+  ): Promise<Service> {
     const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } = (await import(
       '@atls/raijin/webpack'
     )) as WebpackRuntime
@@ -40,7 +43,8 @@ export class Service extends EventEmitter {
         tsLoader: tsLoaderPath,
         protoLoader: protoLoaderPath,
       },
-      cwd
+      cwd,
+      workspaceDependencies
     )
 
     return new Service(webpack, config, await createServiceRuntimeExecArgv(cwd))

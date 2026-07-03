@@ -14,6 +14,8 @@ import { WebpackExternals }                 from './webpack.externals.js'
 import { createOptionalImportIgnorePlugin } from './webpack.ignore.js'
 
 export class WebpackConfig {
+  private readonly workspaceDependencies: Set<string>
+
   constructor(
     private readonly webpack: typeof wp,
     private readonly loaders: {
@@ -21,8 +23,11 @@ export class WebpackConfig {
       nodeLoader: string
       protoLoader: string
     },
-    private readonly cwd: string
-  ) {}
+    private readonly cwd: string,
+    workspaceDependencies: Iterable<string> = []
+  ) {
+    this.workspaceDependencies = new Set(workspaceDependencies)
+  }
 
   async build(
     environment: WebpackEnvironment = 'production',
@@ -34,7 +39,7 @@ export class WebpackConfig {
 
     await this.assertEsmWorkspace()
 
-    const webpackExternals = new WebpackExternals(this.cwd)
+    const webpackExternals = new WebpackExternals(this.cwd, this.workspaceDependencies)
     const externals = ['webpack/hot/poll?100', await webpackExternals.build()]
 
     const plugins = this.createPlugins(environment, additionalPlugins, true)
