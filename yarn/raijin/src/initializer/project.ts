@@ -60,7 +60,7 @@ export const ensurePackageManifest = async (cwd: string, packageManager: string)
 
   const manifest = JSON.parse(await readFile(join(cwd, PACKAGE_JSON), 'utf-8')) as PackageManifest
 
-  if (manifest.packageManager === packageManager) {
+  if (manifest.packageManager === packageManager && manifest.type === 'module') {
     return
   }
 

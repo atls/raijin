@@ -260,6 +260,57 @@ test('should normalize package manager in existing package manifest', async () =
   })
 })
 
+test('should normalize module type in existing current package manifest', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const manifest = {
+    name: 'wallet',
+    packageManager: TEST_PACKAGE_MANAGER,
+    private: true,
+    scripts: {
+      check: 'raijin check',
+    },
+  }
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+
+  await runRaijinInitializer({
+    argv: ['init', '--type', 'project'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime')),
+    installSchematicArtifact: noopYarnCommand,
+    runYarnCommand: noopYarnCommand,
+  })
+
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
+    ...manifest,
+    type: 'module',
+  })
+})
+
+test('should rewrite commonjs type in existing current package manifest', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const manifest = {
+    name: 'wallet',
+    packageManager: TEST_PACKAGE_MANAGER,
+    type: 'commonjs',
+  }
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+
+  await runRaijinInitializer({
+    argv: ['init', '--type', 'project'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime')),
+    installSchematicArtifact: noopYarnCommand,
+    runYarnCommand: noopYarnCommand,
+  })
+
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
+    ...manifest,
+    type: 'module',
+  })
+})
+
 test('should normalize package manager from runtime manifest', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
   const packageManager = 'yarn@4.15.0'

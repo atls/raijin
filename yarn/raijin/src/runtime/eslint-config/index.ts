@@ -19,6 +19,12 @@ import { react }              from './rules/index.js'
 import { node }               from './rules/index.js'
 import { base }               from './rules/index.js'
 
+const typeAwareJavaScriptRules = (
+  typescriptEslintPlugin as unknown as {
+    configs: Record<string, { rules: Linter.RulesRecord }>
+  }
+).configs['flat/disable-type-checked'].rules
+
 const config: Array<Linter.Config> = [
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
@@ -81,13 +87,23 @@ const config: Array<Linter.Config> = [
   {
     files: ['**/*.{js,mjs,cjs,jsx}'],
     rules: {
+      ...typeAwareJavaScriptRules,
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unnecessary-condition': 'off',
+    },
+  },
+  {
+    files: ['**/next.config.{js,mjs}'],
+    languageOptions: {
+      parserOptions: {
+        project: false,
+        projectService: false,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-var-requires': 'off',
+      'n/no-sync': 'off',
     },
   },
   {
