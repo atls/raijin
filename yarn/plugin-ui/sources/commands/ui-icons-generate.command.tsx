@@ -1,22 +1,21 @@
-import { join }                      from 'node:path'
-import { relative }                  from 'node:path'
+import { join }                           from 'node:path'
+import { relative }                       from 'node:path'
 
-import { BaseCommand }               from '@yarnpkg/cli'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
-import { Option }                    from 'clipanion'
-import { globby }                    from 'globby'
-import { render }                    from 'ink'
-import React                         from 'react'
+import { BaseCommand }                    from '@yarnpkg/cli'
+import { Filename }                       from '@yarnpkg/fslib'
+import { execUtils }                      from '@yarnpkg/core'
+import { xfs }                            from '@yarnpkg/fslib'
+import { Option }                         from 'clipanion'
+import { globby }                         from 'globby'
+import { render }                         from 'ink'
+import React                              from 'react'
 
-import { ErrorInfo }                 from '@atls/cli-ui-error-info-component'
-import { IconsProgress }             from '@atls/cli-ui-icons-progress-component'
-import { Icons }                     from '@atls/code-icons'
-import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
+import { IconsProgress }                  from '@atls/cli-ui-icons-progress-component'
+import { Icons }                          from '@atls/code-icons'
+import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 export class UiIconsGenerateCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
@@ -38,8 +37,10 @@ export class UiIconsGenerateCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const binFolder = await xfs.mktempPromise()
 
@@ -58,7 +59,7 @@ export class UiIconsGenerateCommand extends BaseCommand {
     })
 
     const { code } = await execUtils.pipevp(executable, ['ui', 'icons', 'generate', ...args], {
-      cwd: this.context.cwd,
+      cwd: workspaceCwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
@@ -69,10 +70,12 @@ export class UiIconsGenerateCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
-    const icons = await Icons.initialize(this.context.cwd)
+    const icons = await Icons.initialize(workspaceCwd)
 
     const { clear } = render(<IconsProgress icons={icons} />)
 
@@ -81,9 +84,9 @@ export class UiIconsGenerateCommand extends BaseCommand {
 
       const files = (
         await globby('*.tsx', {
-          cwd: join(this.context.cwd, 'src'),
+          cwd: join(workspaceCwd, 'src'),
         })
-      ).map((file) => join(relative(project.cwd, this.context.cwd), 'src', file))
+      ).map((file) => join(relative(project.cwd, workspaceCwd), 'src', file))
 
       await this.cli.run(['format', ...files], {
         cwd: project.cwd,

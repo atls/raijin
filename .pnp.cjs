@@ -1810,6 +1810,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-badges-virtual-0dfc1e2ea5/1/yarn/plugin-badges/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-badges", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-badges"],\
+          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@types/child-process-promise", "npm:2.2.6"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -1830,6 +1831,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./yarn/plugin-badges/",\
         "packageDependencies": [\
           ["@atls/yarn-plugin-badges", "workspace:yarn/plugin-badges"],\
+          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@types/child-process-promise", "npm:2.2.6"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
@@ -2168,6 +2170,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/code-format", "workspace:code/code-format"],\
           ["@atls/yarn-plugin-format", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-format"],\
+          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@types/react", "npm:18.3.18"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -2195,6 +2198,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
           ["@atls/code-format", "workspace:code/code-format"],\
           ["@atls/yarn-plugin-format", "workspace:yarn/plugin-format"],\
+          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@types/react", "npm:18.3.18"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
@@ -2214,6 +2218,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-pack", "workspace:code/code-pack"],\
           ["@atls/yarn-pack-utils", "workspace:yarn/pack-utils"],\
           ["@atls/yarn-plugin-image", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-image"],\
+          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@iarna/toml", "npm:2.2.5"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -2242,6 +2247,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-pack", "workspace:code/code-pack"],\
           ["@atls/yarn-pack-utils", "workspace:yarn/pack-utils"],\
           ["@atls/yarn-plugin-image", "workspace:yarn/plugin-image"],\
+          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@iarna/toml", "npm:2.2.5"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\

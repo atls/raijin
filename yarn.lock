@@ -944,6 +944,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-badges@workspace:yarn/plugin-badges"
   dependencies:
+    "@atls/yarn-plugin-tools": "workspace:*"
     "@types/child-process-promise": "npm:2.2.6"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1107,6 +1108,7 @@ __metadata:
     "@atls/cli-ui-format-progress-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/code-format": "workspace:*"
+    "@atls/yarn-plugin-tools": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1127,6 +1129,7 @@ __metadata:
   dependencies:
     "@atls/code-pack": "workspace:*"
     "@atls/yarn-pack-utils": "workspace:*"
+    "@atls/yarn-plugin-tools": "workspace:*"
     "@iarna/toml": "npm:2.2.5"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"

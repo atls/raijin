@@ -1,23 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { LocatorHash }       from '@yarnpkg/core'
-import type { Package }           from '@yarnpkg/core'
-import type { Workspace }         from '@yarnpkg/core'
+import type { LocatorHash }               from '@yarnpkg/core'
+import type { Package }                   from '@yarnpkg/core'
+import type { Workspace }                 from '@yarnpkg/core'
 
-import { readFileSync }           from 'node:fs'
-import { writeFileSync }          from 'node:fs'
-import { join }                   from 'node:path'
+import { readFileSync }                   from 'node:fs'
+import { writeFileSync }                  from 'node:fs'
+import { join }                           from 'node:path'
 
-import { BaseCommand }            from '@yarnpkg/cli'
-import { WorkspaceRequiredError } from '@yarnpkg/cli'
-import { StreamReport }           from '@yarnpkg/core'
-import { Configuration }          from '@yarnpkg/core'
-import { Project }                from '@yarnpkg/core'
-import { structUtils }            from '@yarnpkg/core'
-import { miscUtils }              from '@yarnpkg/core'
+import { BaseCommand }                    from '@yarnpkg/cli'
+import { StreamReport }                   from '@yarnpkg/core'
+import { structUtils }                    from '@yarnpkg/core'
+import { miscUtils }                      from '@yarnpkg/core'
 
-import { BADGES }                 from './badges.constants.js'
-import { COLORS }                 from './badges.constants.js'
-import { SpinnerProgress }        from './spinner.progress.js'
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+
+import { BADGES }                         from './badges.constants.js'
+import { COLORS }                         from './badges.constants.js'
+import { SpinnerProgress }                from './spinner.progress.js'
 
 class BadgesCommand extends BaseCommand {
   static paths = [['badges', 'generate']]
@@ -33,13 +32,10 @@ class BadgesCommand extends BaseCommand {
   static REGISTRY_PACKAGE_PATH = '/package'
 
   async execute(): Promise<0 | 1> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project, workspace: projectWorkspace } = await Project.find(
-      configuration,
-      this.context.cwd
+    const { configuration, project } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
     )
-
-    if (!projectWorkspace) throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
 
     await project.restoreInstallState()
 
@@ -118,7 +114,7 @@ class BadgesCommand extends BaseCommand {
             return ''
           }
 
-          const readmePath = join(process.cwd(), 'README.md')
+          const readmePath = join(project.cwd, 'README.md')
           // eslint-disable-next-line n/no-sync
           const readme = readFileSync(readmePath).toString('utf-8')
 
