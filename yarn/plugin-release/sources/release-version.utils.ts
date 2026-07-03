@@ -54,6 +54,45 @@ const isErrorWithCode = (error: unknown, code: string): boolean =>
   'code' in error &&
   (error as { code?: unknown }).code === code
 
+const isDigit = (char: string): boolean => char >= '0' && char <= '9'
+
+const isAsciiLetter = (char: string): boolean =>
+  (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z')
+
+const isSemverIdentifierChar = (char: string): boolean =>
+  isAsciiLetter(char) || isDigit(char) || char === '-'
+
+const isSemverNumber = (value: string): boolean =>
+  value.length > 0 && [...value].every(isDigit) && (value.length === 1 || !value.startsWith('0'))
+
+const isSemverIdentifier = (value: string, allowNumericLeadingZero: boolean): boolean =>
+  value.length > 0 &&
+  [...value].every(isSemverIdentifierChar) &&
+  (allowNumericLeadingZero || ![...value].every(isDigit) || isSemverNumber(value))
+
+const isSemverIdentifierList = (value: string, allowNumericLeadingZero: boolean): boolean =>
+  value.split('.').every((part) => isSemverIdentifier(part, allowNumericLeadingZero))
+
+const isExactSemverDecision = (decision: string): boolean => {
+  const buildIndex = decision.indexOf('+')
+  const main = buildIndex === -1 ? decision : decision.slice(0, buildIndex)
+  const build = buildIndex === -1 ? undefined : decision.slice(buildIndex + 1)
+
+  if (build !== undefined && !isSemverIdentifierList(build, true)) {
+    return false
+  }
+
+  const prereleaseIndex = main.indexOf('-')
+  const core = prereleaseIndex === -1 ? main : main.slice(0, prereleaseIndex)
+  const prerelease = prereleaseIndex === -1 ? undefined : main.slice(prereleaseIndex + 1)
+
+  if (prerelease !== undefined && !isSemverIdentifierList(prerelease, false)) {
+    return false
+  }
+
+  return core.split('.').length === 3 && core.split('.').every(isSemverNumber)
+}
+
 const toWorkspaceIdent = (
   workspace: Pick<ReleaseVersionWorkspaceCandidate, 'manifest'>
 ): string | undefined =>
@@ -283,7 +322,10 @@ export const isDeferredReleaseRequired = (
 ): boolean => {
   const decision = decisions.get(ident)
 
-  return typeof decision === 'string' && isReleaseVersionStrategy(decision)
+  return (
+    typeof decision === 'string' &&
+    (isReleaseVersionStrategy(decision) || isExactSemverDecision(decision))
+  )
 }
 
 export const resolveReleaseVersionStrategies = (

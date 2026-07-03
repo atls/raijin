@@ -151,6 +151,14 @@ test('should detect deferred release requirement only from release strategies', 
   )
   assert.equal(
     isDeferredReleaseRequired(new Map([['@atls/raijin', '1.2.3']]), '@atls/raijin'),
+    true
+  )
+  assert.equal(
+    isDeferredReleaseRequired(new Map([['@atls/raijin', '1.2.3-next.0']]), '@atls/raijin'),
+    true
+  )
+  assert.equal(
+    isDeferredReleaseRequired(new Map([['@atls/raijin', 'workspace:*']]), '@atls/raijin'),
     false
   )
   assert.equal(

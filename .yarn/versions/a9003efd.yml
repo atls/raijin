@@ -2,6 +2,7 @@ releases:
   "@atls/raijin": patch
 
 declined:
+  - "@atls/code-commit"
   - "@atls/code-format"
   - "@atls/code-icons"
   - "@atls/code-lint"
@@ -12,5 +13,8 @@ declined:
   - "@atls/yarn-plugin-checks"
   - "@atls/yarn-plugin-essentials"
   - "@atls/yarn-plugin-pnp-patch"
+  - "@atls/yarn-plugin-release"
+  - "@atls/yarn-plugin-renderer"
+  - "@atls/yarn-plugin-service"
   - "@atls/yarn-plugin-test"
   - "@atls/yarn-plugin-tools"
