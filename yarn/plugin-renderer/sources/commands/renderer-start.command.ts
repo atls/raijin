@@ -1,14 +1,16 @@
 import type { createRuntimeEnvironment as createRuntimeEnvironmentFn } from '@atls/raijin/runtime-exec-argv'
 
-import { spawn }                          from 'node:child_process'
+import { spawn }                                 from 'node:child_process'
 
-import { BaseCommand }                    from '@yarnpkg/cli'
-import { Filename }                       from '@yarnpkg/fslib'
-import { execUtils }                      from '@yarnpkg/core'
-import { xfs }                            from '@yarnpkg/fslib'
+import { BaseCommand }                           from '@yarnpkg/cli'
+import { Filename }                              from '@yarnpkg/fslib'
+import { execUtils }                             from '@yarnpkg/core'
+import { xfs }                                   from '@yarnpkg/fslib'
 
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { resolveWorkspaceCommandContext }        from '@atls/yarn-plugin-tools/command-context'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+
+import { RENDERER_STANDALONE_SERVER_ENTRYPOINT } from './renderer-build.constants.js'
 
 type RuntimeExecArgvModule = {
   createRuntimeEnvironment: typeof createRuntimeEnvironmentFn
@@ -76,7 +78,7 @@ export class RendererStartCommand extends BaseCommand {
       this.context.plugins
     )
 
-    const child = spawn(process.execPath, ['dist/index.js'], {
+    const child = spawn(process.execPath, [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`], {
       cwd: workspaceCwd,
       env: await createRendererRuntimeEnvironment(process.env),
       stdio: [this.context.stdin, this.context.stdout, this.context.stderr],

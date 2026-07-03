@@ -1,9 +1,10 @@
-import assert                   from 'node:assert/strict'
-import { test }                 from 'node:test'
+import assert                                    from 'node:assert/strict'
+import { test }                                  from 'node:test'
 
-import { Filename }             from '@yarnpkg/fslib'
+import { Filename }                              from '@yarnpkg/fslib'
 
-import { RendererStartCommand } from './renderer-start.command.js'
+import { RENDERER_STANDALONE_SERVER_ENTRYPOINT } from './renderer-build.constants.js'
+import { RendererStartCommand }                  from './renderer-start.command.js'
 
 class TestRendererStartCommand extends RendererStartCommand {
   calls: Array<string> = []
@@ -106,4 +107,8 @@ test('should execute start command regularly when pnp runtime is already active'
       assert.deepEqual(command.calls, ['regular'])
     }
   )
+})
+
+test('should preserve commonjs extension for Next standalone server entrypoint', () => {
+  assert.equal(RENDERER_STANDALONE_SERVER_ENTRYPOINT, 'index.cjs')
 })

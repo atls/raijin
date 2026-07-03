@@ -4,3 +4,4 @@ export const NEXT_CONFIG_REQUIRE_HOOK_PATH = '/dist/build/next-config-ts/require
 export const NEXT_PACKAGE_PATH = '/node_modules/next/'
 export const NEXT_REQUIRE_CACHE_PATH = '/dist/server/dev/require-cache.js'
 export const NEXT_WEBPACK_CONFIG_PATH = '/dist/build/webpack-config.js'
+export const RENDERER_STANDALONE_SERVER_ENTRYPOINT = 'index.cjs'

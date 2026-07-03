@@ -11,6 +11,7 @@ import { ppath }                                         from '@yarnpkg/fslib'
 import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
+import { RENDERER_STANDALONE_SERVER_ENTRYPOINT }         from './renderer-build.constants.js'
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
@@ -163,7 +164,7 @@ export class RendererBuildCommand extends BaseCommand {
         await report.startTimerPromise('Move server start files', async () => {
           await xfs.movePromise(
             ppath.join(rendererCwd, 'dist/server.js'),
-            ppath.join(rendererCwd, 'dist/index.js')
+            ppath.join(rendererCwd, 'dist', RENDERER_STANDALONE_SERVER_ENTRYPOINT)
           )
         })
 
