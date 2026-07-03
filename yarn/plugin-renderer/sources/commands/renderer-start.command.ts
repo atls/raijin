@@ -26,7 +26,7 @@ const createRendererRuntimeEnvironment = async (
 ): Promise<NodeJS.ProcessEnv> => {
   const { createRuntimeEnvironment } = await importRuntimeExecArgvModule()
 
-  return createRuntimeEnvironment(environment)
+  return createRuntimeEnvironment(environment, { preservePnpEsmLoader: true })
 }
 
 export class RendererStartCommand extends BaseCommand {

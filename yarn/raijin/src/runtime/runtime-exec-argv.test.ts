@@ -39,11 +39,11 @@ test('should keep PnP loader before TypeScript runtime loader', () => {
   )
 })
 
-test('should remove only PnP ESM loader from runtime child environment', () => {
+test('should remove managed loaders from TypeScript runtime child environment', () => {
   assert.deepEqual(
     createRuntimeEnvironment({
       NODE_OPTIONS:
-        '--require /repo/.pnp.cjs --experimental-loader file:///repo/.pnp.loader.mjs --trace-warnings --loader file:///tmp/custom-loader.mjs',
+        '--require /repo/.pnp.cjs --experimental-loader file:///repo/.pnp.loader.mjs --loader @atls/raijin/typescript-loader --trace-warnings --loader file:///tmp/custom-loader.mjs',
     }),
     {
       NODE_OPTIONS:
@@ -52,13 +52,17 @@ test('should remove only PnP ESM loader from runtime child environment', () => {
   )
 })
 
-test('should keep PnP CJS hook when removing PnP ESM loader state', () => {
+test('should keep PnP loader for plain runtime child environment', () => {
   assert.deepEqual(
-    createRuntimeEnvironment({
-      NODE_OPTIONS: '--require=/repo/.pnp.cjs --experimental-loader=file:///repo/.pnp.loader.mjs',
-    }),
+    createRuntimeEnvironment(
+      {
+        NODE_OPTIONS:
+          '--require=/repo/.pnp.cjs --experimental-loader=file:///repo/.pnp.loader.mjs --loader @atls/raijin/typescript-loader',
+      },
+      { preservePnpEsmLoader: true }
+    ),
     {
-      NODE_OPTIONS: '--require=/repo/.pnp.cjs',
+      NODE_OPTIONS: '--require=/repo/.pnp.cjs --experimental-loader=file:///repo/.pnp.loader.mjs',
     }
   )
 })
