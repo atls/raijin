@@ -322,7 +322,7 @@ export class Tester extends EventEmitter {
     } catch (error) {
       if (isMissingPathError(error)) {
         if (this.isGlobPattern(pattern)) {
-          return globby([pattern], globbyOptions)
+          return this.collectGlobPatternTestFiles(cwd, pattern)
         }
 
         if (this.isFilename(pattern)) {
@@ -343,6 +343,26 @@ export class Tester extends EventEmitter {
     }
 
     return [target.path]
+  }
+
+  private async collectGlobPatternTestFiles(cwd: string, pattern: string): Promise<Array<string>> {
+    const files = await globby([pattern], {
+      cwd,
+      dot: true,
+      absolute: true,
+      ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+    })
+
+    if (files.length > 0 || cwd === this.projectCwd) {
+      return files
+    }
+
+    return globby([pattern], {
+      cwd: this.projectCwd,
+      dot: true,
+      absolute: true,
+      ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+    })
   }
 
   private async findExistingTargetPath(cwd: string, pattern: string): Promise<ExistingTargetPath> {

@@ -131,6 +131,34 @@ test('should resolve root-relative explicit test files when collecting from work
   assert.deepEqual(files, [testFile])
 })
 
+test('should resolve root-relative glob test files when collecting from workspace target', async () => {
+  const cwd = await createProject()
+  const workspace = join(cwd, 'packages/tools')
+  const testFile = join(workspace, 'sources/sample.test.js')
+
+  await mkdir(join(workspace, 'sources'), { recursive: true })
+  await writeFile(join(workspace, 'package.json'), `${JSON.stringify({ type: 'module' })}\n`)
+  const tester = await Tester.initialize(workspace, { projectCwd: cwd })
+  await writeFile(
+    testFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('sample', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(workspace, 'unit', [
+    'packages/tools/**/*.test.js',
+  ])
+
+  assert.deepEqual(files, [testFile])
+})
+
 test('should keep workspace ignore patterns with root-relative explicit test files', async () => {
   const cwd = await createProject()
   const workspace = join(cwd, 'packages/tools')
