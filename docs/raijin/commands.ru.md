@@ -348,7 +348,7 @@
 
 ### Домен `renderer`
 
-- Команды: `renderer build`, `renderer dev`
+- Команды: `renderer build`, `renderer dev`, `renderer start`
 
 <details>
 <summary>Подробности домена `renderer`</summary>
@@ -370,6 +370,15 @@
 - Пример: `yarn renderer dev`
 - Плагин: `@atls/yarn-plugin-renderer`
 - Исходник: `yarn/plugin-renderer/sources/commands/renderer-dev.command.ts`
+
+<!-- sync:command-card:renderer-start -->
+
+#### `renderer start`
+
+- Статус: `active`
+- Пример: `yarn renderer start`
+- Плагин: `@atls/yarn-plugin-renderer`
+- Исходник: `yarn/plugin-renderer/sources/commands/renderer-start.command.ts`
 
 </details>
 

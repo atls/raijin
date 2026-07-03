@@ -6431,14 +6431,18 @@ async function load$1(urlString, context, nextLoad) {
   };
 }
 
-const getFileFormatByPackageType = (extension, packageType) => {
+const isPnpPackageSource = (filepath) => {
+  const normalized = filepath.replaceAll("\\", "/");
+  return normalized.includes("/.yarn/") && normalized.includes("/node_modules/");
+};
+const getFileFormatByPackageType = (extension, packageType, pnpPackageSource = false) => {
   switch (extension) {
     case ".mts": {
       return "module";
     }
     case ".ts":
     case ".tsx": {
-      if (packageType === "module") {
+      if (packageType === "module" || pnpPackageSource) {
         return "module";
       }
       throw new Error(
@@ -6456,7 +6460,7 @@ const getFileFormat = (filepath) => {
   const ext = extname(filepath);
   const pkg = ext === ".ts" || ext === ".tsx" ? readPackageScope(filepath) : void 0;
   const packageType = pkg ? pkg.data.type : void 0;
-  return getFileFormatByPackageType(ext, packageType);
+  return getFileFormatByPackageType(ext, packageType, isPnpPackageSource(filepath));
 };
 const transformSource = (source, format, ext) => {
   const { transformSync } = require("esbuild");

@@ -1235,6 +1235,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-renderer@workspace:yarn/plugin-renderer"
   dependencies:
+    "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
     "@types/cross-spawn": "npm:6.0.6"
     "@types/localtunnel": "npm:2.0.4"

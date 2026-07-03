@@ -2432,6 +2432,7 @@ const RAW_RUNTIME_STATE =
       ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-renderer", {\
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-renderer-virtual-6308f5533f/1/yarn/plugin-renderer/",\
         "packageDependencies": [\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-renderer", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-renderer"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@types/cross-spawn", "npm:6.0.6"],\
@@ -2457,6 +2458,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:yarn/plugin-renderer", {\
         "packageLocation": "./yarn/plugin-renderer/",\
         "packageDependencies": [\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-renderer", "workspace:yarn/plugin-renderer"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@types/cross-spawn", "npm:6.0.6"],\
