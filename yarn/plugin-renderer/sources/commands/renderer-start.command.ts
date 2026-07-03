@@ -1,15 +1,14 @@
 import type { createRuntimeEnvironment as createRuntimeEnvironmentFn } from '@atls/raijin/runtime-exec-argv'
 
-import { spawn }                     from 'node:child_process'
+import { spawn }                          from 'node:child_process'
 
-import { BaseCommand }               from '@yarnpkg/cli'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
+import { BaseCommand }                    from '@yarnpkg/cli'
+import { Filename }                       from '@yarnpkg/fslib'
+import { execUtils }                      from '@yarnpkg/core'
+import { xfs }                            from '@yarnpkg/fslib'
 
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 type RuntimeExecArgvModule = {
   createRuntimeEnvironment: typeof createRuntimeEnvironmentFn
@@ -46,8 +45,10 @@ export class RendererStartCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const binFolder = await xfs.mktempPromise()
     const { executable, env } = await makeCurrentYarnExecutable({
@@ -59,7 +60,7 @@ export class RendererStartCommand extends BaseCommand {
     })
 
     const { code } = await execUtils.pipevp(executable, ['renderer', 'start'], {
-      cwd: this.context.cwd,
+      cwd: workspaceCwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
@@ -70,8 +71,13 @@ export class RendererStartCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
+    const { workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
+
     const child = spawn(process.execPath, ['dist/index.js'], {
-      cwd: this.context.cwd,
+      cwd: workspaceCwd,
       env: await createRendererRuntimeEnvironment(process.env),
       stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
     })

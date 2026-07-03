@@ -1,3 +1,5 @@
+import type { PortablePath }                              from '@yarnpkg/fslib'
+
 import assert                                             from 'node:assert/strict'
 import test                                               from 'node:test'
 import { pathToFileURL }                                  from 'node:url'
@@ -20,6 +22,7 @@ import { extractNodeLoaderOption }                        from './renderer-build
 import { normalizeNextPackageVersion }                    from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                      from './renderer-build.utils.js'
 import { resolveRendererBuildPnpLoader }                  from './renderer-build.utils.js'
+import { resolveRendererBuildStandaloneWorkspaceCwd }     from './renderer-build.utils.js'
 
 test('should disable Next telemetry for renderer build', () => {
   const env = createRendererBuildEnv(
@@ -322,6 +325,23 @@ test('should remove renderer workspace manifests without removing dist output', 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/index.js')), true)
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/package.json')), false)
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/.next')), false)
+})
+
+test('should resolve renderer standalone workspace path from nested workspace cwd', () => {
+  assert.equal(
+    resolveRendererBuildStandaloneWorkspaceCwd(
+      '/repo' as PortablePath,
+      '/repo/client' as PortablePath
+    ),
+    '/repo/client/src/.next/standalone/client'
+  )
+})
+
+test('should resolve renderer standalone workspace path from project root cwd', () => {
+  assert.equal(
+    resolveRendererBuildStandaloneWorkspaceCwd('/repo' as PortablePath, '/repo' as PortablePath),
+    '/repo/src/.next/standalone'
+  )
 })
 
 test('should copy renderer public assets into standalone artifact', async () => {

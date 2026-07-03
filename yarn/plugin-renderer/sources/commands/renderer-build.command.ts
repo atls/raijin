@@ -1,10 +1,6 @@
-import type { PortablePath }                             from '@yarnpkg/fslib'
-
 import { PassThrough }                                   from 'node:stream'
 
 import { BaseCommand }                                   from '@yarnpkg/cli'
-import { Configuration }                                 from '@yarnpkg/core'
-import { Project }                                       from '@yarnpkg/core'
 import { StreamReport }                                  from '@yarnpkg/core'
 import { MessageName }                                   from '@yarnpkg/core'
 import { execUtils }                                     from '@yarnpkg/core'
@@ -12,6 +8,7 @@ import { scriptUtils }                                   from '@yarnpkg/core'
 import { xfs }                                           from '@yarnpkg/fslib'
 import { ppath }                                         from '@yarnpkg/fslib'
 
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
@@ -25,22 +22,20 @@ import { extractNodeLoaderOption }                       from './renderer-build.
 import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
 import { resolveRendererBuildPnpLoader }                 from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
+import { resolveRendererBuildStandaloneWorkspaceCwd }    from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
   static paths = [['renderer', 'build']]
 
   async execute(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const {
+      configuration,
+      project,
+      workspace,
+      workspaceCwd: rendererCwd,
+    } = await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
 
-    await cleanupRendererBuildStaleArtifacts(this.context.cwd)
-
-    const { project, workspace } = await Project.find(configuration, this.context.cwd)
-
-    if (!workspace) {
-      throw new Error('Renderer build must be executed from a workspace')
-    }
-
-    const rendererCwd = workspace.cwd
+    await cleanupRendererBuildStaleArtifacts(rendererCwd)
 
     await project.restoreInstallState()
 
@@ -130,14 +125,14 @@ export class RendererBuildCommand extends BaseCommand {
         })
 
         await report.startTimerPromise('Copy standalone files', async () => {
+          const standaloneWorkspaceCwd = resolveRendererBuildStandaloneWorkspaceCwd(
+            project.cwd,
+            rendererCwd
+          )
+
           await xfs.copyPromise(
             ppath.join(rendererCwd, 'dist'),
-            ppath.join(
-              rendererCwd,
-              'src/.next/standalone',
-              rendererCwd.replace(`${configuration.projectCwd || ''}/`, '') as PortablePath,
-              'src'
-            )
+            ppath.join(standaloneWorkspaceCwd, 'src')
           )
         })
 

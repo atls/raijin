@@ -1,15 +1,14 @@
-import type { Tunnel }               from 'localtunnel'
+import type { Tunnel }                    from 'localtunnel'
 
-import { BaseCommand }               from '@yarnpkg/cli'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
-import { ppath }                     from '@yarnpkg/fslib'
-import { Option }                    from 'clipanion'
-import spawn                         from 'cross-spawn'
-import localtunnel                   from 'localtunnel'
+import { BaseCommand }                    from '@yarnpkg/cli'
+import { xfs }                            from '@yarnpkg/fslib'
+import { ppath }                          from '@yarnpkg/fslib'
+import { Option }                         from 'clipanion'
+import spawn                              from 'cross-spawn'
+import localtunnel                        from 'localtunnel'
 
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
@@ -42,8 +41,10 @@ export class RendererDevCommand extends BaseCommand {
   }
 
   async execute(): Promise<void> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, workspace, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const args = ['next', 'dev', 'src']
 
@@ -67,11 +68,9 @@ export class RendererDevCommand extends BaseCommand {
       project,
     })
 
-    spawn(executable, args, { stdio: 'inherit', cwd: this.context.cwd, env })
+    spawn(executable, args, { stdio: 'inherit', cwd: workspaceCwd, env })
 
     if (this.tunnel) {
-      const workspace = project.getWorkspaceByCwd(this.context.cwd)
-
       const { tunnel: config }: { tunnel?: { host?: string; port?: number } } =
         workspace.manifest.raw.tools || {}
 

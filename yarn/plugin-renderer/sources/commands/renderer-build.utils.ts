@@ -251,6 +251,20 @@ export const copyRendererBuildPublicAssets = async (cwd: PortablePath): Promise<
   await xfs.copyPromise(ppath.join(cwd, DIST_DIR, PUBLIC_DIR), source)
 }
 
+export const resolveRendererBuildStandaloneWorkspaceCwd = (
+  projectCwd: PortablePath,
+  rendererCwd: PortablePath
+): PortablePath => {
+  const relativeRendererCwd = ppath.relative(projectCwd, rendererCwd)
+  const standaloneCwd = ppath.join(rendererCwd, SRC_DIR, NEXT_DIR, 'standalone' as Filename)
+
+  if (relativeRendererCwd === '.') {
+    return standaloneCwd
+  }
+
+  return ppath.join(standaloneCwd, relativeRendererCwd)
+}
+
 export const createRendererBuildEnv = (
   env: NodeJS.ProcessEnv,
   nextCompiledConfRequireCacheLoader: string
