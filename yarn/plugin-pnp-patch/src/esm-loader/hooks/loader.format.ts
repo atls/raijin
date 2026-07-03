@@ -1,6 +1,13 @@
+export const isPnpPackageSource = (filepath: string): boolean => {
+  const normalized = filepath.replaceAll('\\', '/')
+
+  return normalized.includes('/.yarn/') && normalized.includes('/node_modules/')
+}
+
 export const getFileFormatByPackageType = (
   extension: string,
-  packageType?: string
+  packageType?: string,
+  pnpPackageSource = false
 ): 'module' | null => {
   switch (extension) {
     case '.mts': {
@@ -8,7 +15,7 @@ export const getFileFormatByPackageType = (
     }
     case '.ts':
     case '.tsx': {
-      if (packageType === 'module') {
+      if (packageType === 'module' || pnpPackageSource) {
         return 'module'
       }
 

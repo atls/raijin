@@ -4,6 +4,7 @@ import { extname }                    from 'node:path'
 import * as nodeUtils                 from '@yarnpkg/pnp/lib/loader/nodeUtils.js'
 
 import { getFileFormatByPackageType } from './loader.format.js'
+import { isPnpPackageSource }         from './loader.format.js'
 
 const require = createRequire(import.meta.url)
 
@@ -13,7 +14,7 @@ export const getFileFormat = (filepath: string): 'module' | null => {
   const pkg = ext === '.ts' || ext === '.tsx' ? nodeUtils.readPackageScope(filepath) : undefined
   const packageType = pkg ? (pkg.data.type as string | undefined) : undefined
 
-  return getFileFormatByPackageType(ext, packageType)
+  return getFileFormatByPackageType(ext, packageType, isPnpPackageSource(filepath))
 }
 
 export const transformSource = (source: string, format: 'module', ext: 'ts' | 'tsx'): string => {
