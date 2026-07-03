@@ -38,6 +38,18 @@ test('should allow multiple scopes', async () => {
   assert.ok(valid)
 })
 
+test('should allow breaking change header shorthand', async () => {
+  assert.equal((await new CommitLinter({}).lint('feat(common)!: drop old API')).valid, true)
+
+  const { valid, errors } = await new CommitLinter({}).lint('feat!: drop old API')
+
+  assert.equal(valid, false)
+  assert.deepEqual(
+    errors.map((error) => error.name),
+    ['scope-empty']
+  )
+})
+
 test('should lint breaking change footer line length', async () => {
   const { valid, errors } = await new CommitLinter({}).lint(
     ['feat(common): update runtime', '', `BREAKING CHANGE: ${'runtime '.repeat(20)}`].join('\n')
