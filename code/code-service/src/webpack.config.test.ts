@@ -188,3 +188,45 @@ export const element = React.createElement('div')
   assert.match(output, /external_react_namespaceObject\["default"\]\.createElement/)
   assert.doesNotMatch(output, /react_1\.default\.createElement/)
 })
+
+test('should preserve native import.meta in bundled workspace code', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-config-'))
+
+  await mkdir(join(cwd, 'src'))
+  await writeFile(join(cwd, 'package.json'), JSON.stringify({ type: 'module' }))
+  await writeFile(
+    join(cwd, 'src/index.ts'),
+    `export const resolved = import.meta.resolve('node:path')\n`
+  )
+
+  const config = await new WebpackConfig(
+    webpack,
+    {
+      nodeLoader: nodeLoaderPath,
+      protoLoader: protoLoaderPath,
+      tsLoader: tsLoaderPath,
+    },
+    cwd
+  ).build()
+
+  const compiler = webpack(config)
+
+  await new Promise<void>((resolve, reject) => {
+    compiler.run((error, stats) => {
+      compiler.close((closeError) => {
+        if (error || closeError) {
+          reject(error || closeError)
+        } else if (stats?.hasErrors()) {
+          reject(new Error(stats.toString({ all: false, errors: true })))
+        } else {
+          resolve()
+        }
+      })
+    })
+  })
+
+  const output = await readFile(join(cwd, 'dist/index.js'), 'utf-8')
+
+  assert.match(output, /import\.meta\.resolve\(['"]node:path['"]\)/)
+  assert.doesNotMatch(output, /\{\}\.resolve\(['"]node:path['"]\)/)
+})

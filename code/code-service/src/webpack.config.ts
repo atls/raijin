@@ -81,6 +81,11 @@ export class WebpackConfig {
       },
       devtool: environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
       module: {
+        parser: {
+          javascript: {
+            importMeta: false,
+          },
+        },
         rules: [
           {
             test: /(^.?|\.[^d]|[^.]d|[^.][^d])\.tsx?$/,
