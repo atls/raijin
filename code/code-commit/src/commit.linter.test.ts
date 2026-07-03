@@ -25,6 +25,28 @@ test('should allow workspace scopes', async () => {
   assert.ok(valid)
 })
 
+test('should allow default ignored merge commits', async () => {
+  const { valid, errors } = await new CommitLinter({}).lint("Merge branch 'main' into feature")
+
+  assert.ok(valid)
+  assert.deepEqual(errors, [])
+})
+
+test('should allow multiple scopes', async () => {
+  const { valid } = await new CommitLinter({}).lint('fix(common,github): update workflow')
+
+  assert.ok(valid)
+})
+
+test('should lint breaking change footer line length', async () => {
+  const { valid, errors } = await new CommitLinter({}).lint(
+    ['feat(common): update runtime', '', `BREAKING CHANGE: ${'runtime '.repeat(20)}`].join('\n')
+  )
+
+  assert.ok(!valid)
+  assert.ok(errors.some((error) => error.name === 'footer-max-line-length'))
+})
+
 test('should reject unknown scopes', async () => {
   const { valid, errors } = await new CommitLinter({}).lint('fix(service): keep esm externals')
 

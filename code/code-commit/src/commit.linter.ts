@@ -27,6 +27,13 @@ type LintRules = Record<string, RuleTuple | undefined>
 
 // eslint-disable-next-line security/detect-unsafe-regex
 const headerPattern = /^(\w*)(?:\((.*)\))?: (.*)$/
+const footerPattern = /^(?:[A-Za-z0-9-]+|BREAKING CHANGE)(?:: | #).+/
+const ignoredCommitPatterns = [
+  /^Merge (?:branch|pull request|remote-tracking branch)\b/,
+  /^Revert\s"?[\s\S]+?"?\s*This reverts commit \w{7,40}\b/i,
+  /^revert:/i,
+]
+const scopeSeparatorPattern = /[,/\\]/
 
 const isLowerCase = (value: string): boolean => value === value.toLowerCase()
 
@@ -45,15 +52,59 @@ const isSubjectCaseDenied = (value: string): boolean => {
   )
 }
 
+const isBlankLine = (line: string): boolean => line.trim().length === 0
+
+const isFooterLine = (line: string): boolean => footerPattern.test(line)
+
+const isIgnoredCommit = (message: string): boolean =>
+  ignoredCommitPatterns.some((pattern) => pattern.test(message.trim()))
+
+const parseCommitBodyAndFooter = (lines: Array<string>): Pick<ParsedCommit, 'body' | 'footer'> => {
+  const bodyStartIndex = lines.findIndex((line) => !isBlankLine(line))
+
+  if (bodyStartIndex === -1) {
+    return {
+      body: [],
+      footer: [],
+    }
+  }
+
+  let footerStartIndex = lines.length
+
+  while (footerStartIndex > bodyStartIndex && !isBlankLine(lines[footerStartIndex - 1])) {
+    footerStartIndex -= 1
+  }
+
+  const footer = lines.slice(footerStartIndex)
+
+  if (footer.length === 0 || !isFooterLine(footer[0])) {
+    return {
+      body: lines.slice(bodyStartIndex),
+      footer: [],
+    }
+  }
+
+  return {
+    body: lines.slice(bodyStartIndex, footerStartIndex).filter((line) => !isBlankLine(line)),
+    footer,
+  }
+}
+
+const getScopes = (scope: string): Array<string> =>
+  scope
+    .split(scopeSeparatorPattern)
+    .map((value) => value.trim())
+    .filter(Boolean)
+
 const parseCommit = (message: string): ParsedCommit => {
   const input = message.trim()
   const [header = '', ...lines] = input.split(/\r?\n/)
   const headerMatch = header.match(headerPattern)
-  const bodyStartIndex = lines.findIndex((line) => line.trim() !== '')
+  const { body, footer } = parseCommitBodyAndFooter(lines)
 
   return {
-    body: bodyStartIndex === -1 ? [] : lines.slice(bodyStartIndex),
-    footer: [],
+    body,
+    footer,
     header,
     scope: headerMatch?.[2] ?? '',
     subject: headerMatch?.[3] ?? '',
@@ -77,6 +128,15 @@ export class CommitLinter {
   }
 
   async lint(message: string): Promise<LintOutcome> {
+    if (isIgnoredCommit(message)) {
+      return {
+        errors: [],
+        input: message,
+        valid: true,
+        warnings: [],
+      }
+    }
+
     const lintRules = this.prepareConfig(rules)
     const parsed = parseCommit(message)
     const problems = this.lintParsedCommit(parsed, lintRules)
@@ -175,10 +235,12 @@ export class CommitLinter {
       }
     }
 
+    const scopes = getScopes(parsed.scope)
+
     if (parsed.scope && lintRules['scope-case']) {
       const [level] = lintRules['scope-case']
 
-      if (level !== RuleConfigSeverity.Disabled && !isLowerCase(parsed.scope)) {
+      if (level !== RuleConfigSeverity.Disabled && scopes.some((scope) => !isLowerCase(scope))) {
         pushProblem(level, 'scope-case', 'scope must be lower-case')
       }
     }
@@ -189,7 +251,7 @@ export class CommitLinter {
       if (
         level !== RuleConfigSeverity.Disabled &&
         Array.isArray(values) &&
-        !values.includes(parsed.scope)
+        scopes.some((scope) => !values.includes(scope))
       ) {
         pushProblem(level, 'scope-enum', `scope must be one of [${values.join(', ')}]`)
       }
