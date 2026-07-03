@@ -44,6 +44,9 @@ type TestOptions = {
 }
 
 type TestType = 'integration' | 'unit' | undefined
+type TesterOptions = {
+  projectCwd?: string
+}
 
 const TEST_STREAM_KEEP_ALIVE_INTERVAL = 1000
 
@@ -63,9 +66,15 @@ const isExistingTargetPath = (result: TargetPathResult): result is ExistingTarge
 export class Tester extends EventEmitter {
   private ignore: ignorer.Ignore
 
-  constructor(private readonly cwd: string) {
+  private readonly projectCwd: string
+
+  constructor(
+    private readonly cwd: string,
+    { projectCwd = cwd }: TesterOptions = {}
+  ) {
     super()
 
+    this.projectCwd = projectCwd
     this.ignore = ignorer.default().add(this.getProjectIgnorePatterns())
   }
 
@@ -78,7 +87,9 @@ export class Tester extends EventEmitter {
   ): Promise<Array<TestEvent>> {
     const explicitExecArgv = parseTestExecArgv()
     const execArgv =
-      explicitExecArgv.length > 0 ? explicitExecArgv : await createTestRuntimeExecArgv(this.cwd)
+      explicitExecArgv.length > 0
+        ? explicitExecArgv
+        : await createTestRuntimeExecArgv(this.projectCwd)
     const runOptions = {
       files,
       timeout,
@@ -136,8 +147,8 @@ export class Tester extends EventEmitter {
     }
   }
 
-  static async initialize(cwd: string): Promise<Tester> {
-    return new Tester(cwd)
+  static async initialize(cwd: string, options?: TesterOptions): Promise<Tester> {
+    return new Tester(cwd, options)
   }
 
   private async collectTestsStream(
@@ -378,7 +389,7 @@ export class Tester extends EventEmitter {
     }
 
     const cwdTargetPath = resolvePath(cwd, pattern)
-    const projectTargetPath = resolvePath(this.cwd, pattern)
+    const projectTargetPath = resolvePath(this.projectCwd, pattern)
 
     return cwdTargetPath === projectTargetPath
       ? [cwdTargetPath]

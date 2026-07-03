@@ -131,6 +131,61 @@ test('should resolve root-relative explicit test files when collecting from work
   assert.deepEqual(files, [testFile])
 })
 
+test('should keep workspace ignore patterns with root-relative explicit test files', async () => {
+  const cwd = await createProject()
+  const workspace = join(cwd, 'packages/tools')
+  const ignoredFile = join(workspace, 'sources/ignored.test.js')
+  const keptFile = join(workspace, 'sources/kept.test.js')
+
+  await mkdir(join(workspace, 'sources'), { recursive: true })
+  await writeFile(
+    join(workspace, 'package.json'),
+    `${JSON.stringify({ type: 'module', testIgnorePatterns: ['sources/ignored.test.js'] })}\n`
+  )
+  const tester = await Tester.initialize(workspace, { projectCwd: cwd })
+  await writeFile(
+    ignoredFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('ignored', () => {",
+      '  assert.equal(1, 2)',
+      '})',
+      '',
+    ].join('\n')
+  )
+  await writeFile(
+    keptFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('kept', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  const results = await tester.unit(workspace, {
+    files: ['packages/tools/sources/ignored.test.js', 'packages/tools/sources/kept.test.js'],
+    testReporter: 'tap',
+  })
+
+  assert.equal(
+    results.some((result) => result.type === 'test:fail'),
+    false
+  )
+  assert.deepEqual(
+    await (tester as unknown as TestFileCollector).collectTestFiles(workspace, 'unit', [
+      'packages/tools/sources/ignored.test.js',
+      'packages/tools/sources/kept.test.js',
+    ]),
+    [ignoredFile, keptFile]
+  )
+})
+
 test('should expand explicit directory targets with glob metacharacters as literal paths', async () => {
   const cwd = await createProject()
   const unit = join(cwd, 'src/[id]/unit')
