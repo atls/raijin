@@ -9,6 +9,7 @@ import { relative }                  from 'node:path'
 import { resolve as resolvePath }    from 'node:path'
 import { join }                      from 'node:path'
 import { basename }                  from 'node:path'
+import { isAbsolute }                from 'node:path'
 import { run }                       from 'node:test'
 import { tap }                       from 'node:test/reporters'
 
@@ -26,6 +27,15 @@ type TestPass = EventData.TestPass
 type TestStderr = EventData.TestStderr
 type TestStdout = EventData.TestStdout
 type TestSummary = EventData.TestSummary
+type TargetStat = Awaited<ReturnType<typeof stat>>
+type ExistingTargetPath = {
+  path: string
+  stat: TargetStat
+}
+type MissingTargetPath = {
+  error: unknown
+}
+type TargetPathResult = ExistingTargetPath | MissingTargetPath
 
 type TestOptions = {
   files?: Array<string>
@@ -43,6 +53,12 @@ const isFinalSummary = (data: TestSummary): boolean => !data.file
 
 const hasReporterFailures = (output: string): boolean =>
   output.includes('\nnot ok ') || /# (?:fail|cancelled) [1-9]\d*/.test(output)
+
+const isMissingPathError = (error: unknown): boolean =>
+  !!(error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT')
+
+const isExistingTargetPath = (result: TargetPathResult): result is ExistingTargetPath =>
+  'stat' in result
 
 export class Tester extends EventEmitter {
   private ignore: ignorer.Ignore
@@ -288,13 +304,12 @@ export class Tester extends EventEmitter {
       ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
     }
 
-    const targetPath = resolvePath(cwd, pattern)
-    let targetStat
+    let target
 
     try {
-      targetStat = await stat(targetPath)
+      target = await this.findExistingTargetPath(cwd, pattern)
     } catch (error) {
-      if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      if (isMissingPathError(error)) {
         if (this.isGlobPattern(pattern)) {
           return globby([pattern], globbyOptions)
         }
@@ -309,14 +324,65 @@ export class Tester extends EventEmitter {
       throw error
     }
 
-    if (targetStat.isDirectory()) {
-      return globby(this.createDirectoryTargetPatterns(folderPattern, type, targetPath), {
+    if (target.stat.isDirectory()) {
+      return globby(this.createDirectoryTargetPatterns(folderPattern, type, target.path), {
         ...globbyOptions,
-        cwd: targetPath,
+        cwd: target.path,
       })
     }
 
-    return [targetPath]
+    return [target.path]
+  }
+
+  private async findExistingTargetPath(cwd: string, pattern: string): Promise<ExistingTargetPath> {
+    const targetPaths = this.createTargetPaths(cwd, pattern)
+    const targetResults = await Promise.all(
+      targetPaths.map(async (targetPath): Promise<TargetPathResult> => {
+        try {
+          return {
+            path: targetPath,
+            stat: await stat(targetPath),
+          }
+        } catch (error) {
+          return { error }
+        }
+      })
+    )
+    const existingTarget = targetResults.find(isExistingTargetPath)
+
+    if (existingTarget) {
+      return existingTarget
+    }
+
+    const unexpectedTarget = targetResults.find(
+      (result): result is MissingTargetPath =>
+        'error' in result && !isMissingPathError(result.error)
+    )
+
+    if (unexpectedTarget) {
+      throw unexpectedTarget.error
+    }
+
+    for (const targetResult of targetResults) {
+      if ('error' in targetResult) {
+        throw targetResult.error
+      }
+    }
+
+    throw new Error(`Test target does not exist: ${pattern}`)
+  }
+
+  private createTargetPaths(cwd: string, pattern: string): Array<string> {
+    if (isAbsolute(pattern)) {
+      return [pattern]
+    }
+
+    const cwdTargetPath = resolvePath(cwd, pattern)
+    const projectTargetPath = resolvePath(this.cwd, pattern)
+
+    return cwdTargetPath === projectTargetPath
+      ? [cwdTargetPath]
+      : [cwdTargetPath, projectTargetPath]
   }
 
   private isFilename(pattern: string): boolean {

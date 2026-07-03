@@ -1,14 +1,15 @@
-import assert            from 'node:assert/strict'
-import { mkdtemp }       from 'node:fs/promises'
-import { rm }            from 'node:fs/promises'
-import { writeFile }     from 'node:fs/promises'
-import { tmpdir }        from 'node:os'
-import { join }          from 'node:path'
-import { test }          from 'node:test'
-import { pathToFileURL } from 'node:url'
+import assert                 from 'node:assert/strict'
+import { mkdtemp }            from 'node:fs/promises'
+import { rm }                 from 'node:fs/promises'
+import { writeFile }          from 'node:fs/promises'
+import { tmpdir }             from 'node:os'
+import { join }               from 'node:path'
+import { test }               from 'node:test'
+import { pathToFileURL }      from 'node:url'
 
-import { load }          from './typescript-loader.js'
-import { resolve }       from './typescript-loader.js'
+import { isPnpPackageSource } from './typescript-loader.js'
+import { load }               from './typescript-loader.js'
+import { resolve }            from './typescript-loader.js'
 
 const createNextLoad = () =>
   (() => {
@@ -91,7 +92,7 @@ test('should preserve decorator metadata compiler options from tsconfig', async 
 
     assert.match(output, /__metadata\("design:type", Dependency\)/)
   } finally {
-    await rm(workspace, { recursive: true, force: true })
+    await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
   }
 })
 
@@ -107,8 +108,19 @@ test('should reject TypeScript sources without ESM package boundary', async () =
       /supports only ESM TypeScript sources/
     )
   } finally {
-    await rm(workspace, { recursive: true, force: true })
+    await rm(workspace, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
   }
+})
+
+test('should classify PnP package TypeScript sources as dependency boundary', () => {
+  assert.equal(
+    isPnpPackageSource(
+      '/repo/.yarn/__virtual__/package-virtual/2/.yarn/berry/cache/package.zip/node_modules/package/sources/dependency.ts'
+    ),
+    true
+  )
+
+  assert.equal(isPnpPackageSource('/repo/yarn/plugin-tools/sources/dependency.ts'), false)
 })
 
 test('should reject TypeScript sources from CommonJS package boundary', async () => {

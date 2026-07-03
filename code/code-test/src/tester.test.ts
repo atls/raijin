@@ -104,6 +104,33 @@ test('should collect tests directly under explicit integration directory targets
   assert.deepEqual(files, [join(integration, 'sample.test.js')])
 })
 
+test('should resolve root-relative explicit test files when collecting from workspace target', async () => {
+  const cwd = await createProject()
+  const workspace = join(cwd, 'packages/tools')
+  const testFile = join(workspace, 'sources/sample.test.js')
+  const tester = await Tester.initialize(cwd)
+
+  await mkdir(join(workspace, 'sources'), { recursive: true })
+  await writeFile(
+    testFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('sample', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(workspace, 'unit', [
+    'packages/tools/sources/sample.test.js',
+  ])
+
+  assert.deepEqual(files, [testFile])
+})
+
 test('should expand explicit directory targets with glob metacharacters as literal paths', async () => {
   const cwd = await createProject()
   const unit = join(cwd, 'src/[id]/unit')

@@ -168,7 +168,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
         })
     }
 
-    const tester = await Tester.initialize(this.context.cwd)
+    const tester = await Tester.initialize(project.cwd)
 
     if (this.testReporter === 'tap') {
       const results =
