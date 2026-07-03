@@ -44,6 +44,20 @@ const RENDERER_BUILD_SOURCE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegme
   [SRC_DIR, NEXT_DIR],
 ]
 
+const findRendererBuildSourceCwd = (cwd: PortablePath): PortablePath | undefined => {
+  let current = cwd
+
+  while (current !== ppath.dirname(current)) {
+    if (ppath.basename(current) === SRC_DIR) {
+      return current
+    }
+
+    current = ppath.dirname(current)
+  }
+
+  return undefined
+}
+
 const isPnpNodeLoader = (value: string | undefined): boolean =>
   value?.includes('.pnp.loader.mjs') ?? false
 
@@ -231,6 +245,16 @@ const removeRendererBuildPaths = async (
 
 export const cleanupRendererBuildStaleArtifacts = async (cwd: PortablePath): Promise<void> => {
   await removeRendererBuildPaths(cwd, RENDERER_BUILD_STALE_ARTIFACT_PATHS)
+}
+
+export const cleanupRendererBuildDiscoveryArtifacts = async (cwd: PortablePath): Promise<void> => {
+  const sourceCwd = findRendererBuildSourceCwd(cwd)
+
+  if (!sourceCwd) {
+    return
+  }
+
+  await xfs.removePromise(ppath.join(sourceCwd, PACKAGE_MANIFEST))
 }
 
 export const cleanupRendererBuildWorkspaceManifests = async (cwd: PortablePath): Promise<void> => {

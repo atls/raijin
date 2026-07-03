@@ -11,6 +11,7 @@ import { xfs }                                            from '@yarnpkg/fslib'
 import { NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE } from './renderer-build.utils.js'
 import { assertRendererBuildExitCode }                    from './renderer-build.utils.js'
 import { assertSupportedRendererNextVersion }             from './renderer-build.utils.js'
+import { cleanupRendererBuildDiscoveryArtifacts }         from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }             from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }         from './renderer-build.utils.js'
@@ -307,6 +308,18 @@ test('should remove stale renderer artifacts before project discovery', async ()
 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist')), false)
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/.next')), false)
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/package.json')), false)
+})
+
+test('should remove stale renderer source manifest from nested source cwd before project discovery', async () => {
+  const cwd = await xfs.mktempPromise()
+  const nestedCwd = ppath.join(cwd, 'src/app/pages')
+
+  await xfs.mkdirPromise(nestedCwd, { recursive: true })
+  await xfs.writeJsonPromise(ppath.join(cwd, 'src/package.json'), {})
+
+  await cleanupRendererBuildDiscoveryArtifacts(nestedCwd)
+
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/package.json')), false)
 })
 

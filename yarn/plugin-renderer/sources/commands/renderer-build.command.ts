@@ -13,6 +13,7 @@ import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-
 
 import { RENDERER_STANDALONE_SERVER_ENTRYPOINT }         from './renderer-build.constants.js'
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
+import { cleanupRendererBuildDiscoveryArtifacts }        from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }        from './renderer-build.utils.js'
@@ -29,6 +30,8 @@ export class RendererBuildCommand extends BaseCommand {
   static paths = [['renderer', 'build']]
 
   async execute(): Promise<number> {
+    await cleanupRendererBuildDiscoveryArtifacts(this.context.cwd)
+
     const {
       configuration,
       project,
