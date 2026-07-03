@@ -57,7 +57,8 @@ export class WebpackConfig {
         path: join(this.cwd, 'dist'),
         filename: '[name].js',
         library: { type: 'module' },
-        chunkFormat: 'module',
+        // Webpack HMR still cannot emit module-format hot-update chunks.
+        chunkFormat: environment === 'development' ? 'commonjs' : 'module',
         module: true,
         clean: false,
         assetModuleFilename: 'assets/[name][ext]',

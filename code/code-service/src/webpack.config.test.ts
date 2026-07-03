@@ -57,7 +57,7 @@ test('should reject non ESM service workspaces', async () => {
   )
 })
 
-test('should keep development service builds in the ESM module graph', async () => {
+test('should keep development service output as ESM while using HMR-supported chunks', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-config-'))
 
   await writeFile(join(cwd, 'package.json'), JSON.stringify({ type: 'module' }))
@@ -76,7 +76,7 @@ test('should keep development service builds in the ESM module graph', async () 
 
   const { output } = config
 
-  assert.equal(output.chunkFormat, 'module')
+  assert.equal(output.chunkFormat, 'commonjs')
   assert.equal(output.module, true)
   assert.deepEqual(output.library, { type: 'module' })
   assert.deepEqual(config.experiments, { outputModule: true })
