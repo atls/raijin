@@ -12,6 +12,7 @@ import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-
 import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 import { AbstractServiceCommand }         from './abstract-service.command.jsx'
+import { getWorkspacePackageNames }       from './workspace-package-names.js'
 
 export class ServiceBuildCommand extends AbstractServiceCommand {
   static override paths = [['service', 'build']]
@@ -63,11 +64,11 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { workspaceCwd } = await resolveWorkspaceCommandContext(
+    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
       this.context.cwd,
       this.context.plugins
     )
-    const service = await Service.initialize(workspaceCwd)
+    const service = await Service.initialize(workspaceCwd, getWorkspacePackageNames(project))
 
     const { clear } = render(<ServiceProgress service={service} />)
 
