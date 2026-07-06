@@ -1,20 +1,29 @@
-import { BaseCommand }               from '@yarnpkg/cli'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { ppath }                     from '@yarnpkg/fslib'
-import { xfs }                       from '@yarnpkg/fslib'
-import { Option }                    from 'clipanion'
-import { render }                    from 'ink'
-import React                         from 'react'
+import type { Project }                   from '@yarnpkg/core'
+import type { PortablePath }              from '@yarnpkg/fslib'
 
-import { ErrorInfo }                 from '@atls/cli-ui-error-info-component'
-import { TypeScriptDiagnostic }      from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptProgress }        from '@atls/cli-ui-typescript-progress-component'
-import { TypeScript }                from '@atls/code-typescript'
-import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { isAbsolute }                     from 'node:path'
+import { relative }                       from 'node:path'
+import { resolve }                        from 'node:path'
+
+import { BaseCommand }                    from '@yarnpkg/cli'
+import { Filename }                       from '@yarnpkg/fslib'
+import { execUtils }                      from '@yarnpkg/core'
+import { ppath }                          from '@yarnpkg/fslib'
+import { xfs }                            from '@yarnpkg/fslib'
+import { npath }                          from '@yarnpkg/fslib'
+import { Option }                         from 'clipanion'
+import { render }                         from 'ink'
+import React                              from 'react'
+
+import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
+import { TypeScriptDiagnostic }           from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScriptProgress }             from '@atls/cli-ui-typescript-progress-component'
+import { TypeScript }                     from '@atls/code-typescript'
+import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
+import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
+import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -28,7 +37,7 @@ export class TypeCheckCommand extends BaseCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -36,20 +45,20 @@ export class TypeCheckCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const binFolder = await xfs.mktempPromise()
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, ['typecheck', ...this.args], {
-      cwd: this.context.cwd,
+      cwd: workspaceCwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
@@ -60,15 +69,20 @@ export class TypeCheckCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
+    const typecheckCwd = await this.resolveTypecheckCwd(project, workspaceCwd)
 
-    const typescript = await TypeScript.initialize(project.cwd)
+    const typescript = await TypeScript.initialize(typecheckCwd)
 
     const { clear } = render(<TypeScriptProgress typescript={typescript} />)
 
     try {
-      const diagnostics = await typescript.check(await this.getIncludes(project))
+      const diagnostics = await typescript.check(
+        await this.getIncludes(project, invocationCwd, typecheckCwd)
+      )
 
       diagnostics.forEach((diagnostic) => {
         renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
@@ -92,14 +106,33 @@ export class TypeCheckCommand extends BaseCommand {
     }
   }
 
-  protected async getIncludes(project: Project): Promise<Array<string>> {
-    if (this.args.length > 0) {
-      return this.args
+  protected async resolveTypecheckCwd(
+    project: Project,
+    workspaceCwd: PortablePath
+  ): Promise<PortablePath> {
+    if (await xfs.existsPromise(ppath.join(workspaceCwd, 'tsconfig.json'))) {
+      return workspaceCwd
     }
 
-    if (await xfs.existsPromise(ppath.join(project.cwd, 'tsconfig.json'))) {
+    return project.cwd
+  }
+
+  protected async getIncludes(
+    project: Project,
+    invocationCwd: PortablePath,
+    typecheckCwd: PortablePath
+  ): Promise<Array<string>> {
+    if (this.args.length > 0) {
+      const cwdRoot = npath.fromPortablePath(typecheckCwd)
+      const cwd = npath.fromPortablePath(invocationCwd)
+
+      return this.args.map((target) =>
+        isAbsolute(target) ? relative(cwdRoot, target) : relative(cwdRoot, resolve(cwd, target)))
+    }
+
+    if (await xfs.existsPromise(ppath.join(typecheckCwd, 'tsconfig.json'))) {
       const tsconfig: { include?: Array<string> } = await xfs.readJsonPromise(
-        ppath.join(project.cwd, 'tsconfig.json')
+        ppath.join(typecheckCwd, 'tsconfig.json')
       )
 
       if (tsconfig.include && tsconfig.include.length > 0) {

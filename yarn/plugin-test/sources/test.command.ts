@@ -1,10 +1,10 @@
-import { Configuration }       from '@yarnpkg/core'
-import { Project }             from '@yarnpkg/core'
-import { Filename }            from '@yarnpkg/fslib'
+import { Filename }                       from '@yarnpkg/fslib'
 
-import { Tester }              from '@atls/code-test'
+import { Tester }                         from '@atls/code-test'
+import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 
-import { AbstractTestCommand } from './abstract-test.command.jsx'
+import { AbstractTestCommand }            from './abstract-test.command.jsx'
 
 export class TestCommand extends AbstractTestCommand {
   static override paths = [['test']]
@@ -16,7 +16,7 @@ export class TestCommand extends AbstractTestCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -24,13 +24,16 @@ export class TestCommand extends AbstractTestCommand {
   }
 
   override async executeRegular(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
-    const tester = await Tester.initialize(this.context.cwd, { projectCwd: project.cwd })
+    const tester = await Tester.initialize(workspaceCwd, { projectCwd: project.cwd })
+    const target = this.target ?? (this.files.length > 0 ? invocationCwd : project.cwd)
 
     try {
-      const results = await tester.general(this.target ?? project.cwd, {
+      const results = await tester.general(target, {
         files: this.files,
         watch: this.watch,
         testReporter: this.testReporter,

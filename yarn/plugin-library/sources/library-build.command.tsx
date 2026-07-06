@@ -13,7 +13,9 @@ import { ErrorInfo }                      from '@atls/cli-ui-error-info-componen
 import { TypeScriptDiagnostic }           from '@atls/cli-ui-typescript-diagnostic-component'
 import { TypeScriptProgress }             from '@atls/cli-ui-typescript-progress-component'
 import { TypeScript }                     from '@atls/code-typescript'
+import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
 import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
+import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
 import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
 
@@ -29,7 +31,7 @@ export class LibraryBuildCommand extends BaseCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -53,9 +55,7 @@ export class LibraryBuildCommand extends BaseCommand {
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, ['library', 'build', ...args], {

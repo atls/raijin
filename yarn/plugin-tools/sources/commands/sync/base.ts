@@ -1,12 +1,13 @@
-import { BaseCommand }               from '@yarnpkg/cli'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
-import { Command }                   from 'clipanion'
+import { BaseCommand }                   from '@yarnpkg/cli'
+import { Configuration }                 from '@yarnpkg/core'
+import { Project }                       from '@yarnpkg/core'
+import { Filename }                      from '@yarnpkg/fslib'
+import { execUtils }                     from '@yarnpkg/core'
+import { xfs }                           from '@yarnpkg/fslib'
+import { Command }                       from 'clipanion'
 
-import { makeCurrentYarnExecutable } from '../../current-yarn-executable.js'
+import { createCommandProxyEnvironment } from '../../command-context.js'
+import { makeCurrentYarnExecutable }     from '../../current-yarn-executable.js'
 
 export abstract class AbstractRaijinSyncCommand extends BaseCommand {
   static override usage = Command.Usage({
@@ -44,9 +45,7 @@ export abstract class AbstractRaijinSyncCommand extends BaseCommand {
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, command, {

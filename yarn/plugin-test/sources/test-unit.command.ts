@@ -1,6 +1,8 @@
-import { Filename }            from '@yarnpkg/fslib'
+import { Filename }                from '@yarnpkg/fslib'
 
-import { AbstractTestCommand } from './abstract-test.command.jsx'
+import { COMMAND_PROXY_EXECUTION } from '@atls/yarn-plugin-tools/command-context'
+
+import { AbstractTestCommand }     from './abstract-test.command.jsx'
 
 export class TestUnitCommand extends AbstractTestCommand {
   static override paths = [['test', 'unit']]
@@ -12,7 +14,7 @@ export class TestUnitCommand extends AbstractTestCommand {
       return this.executeRegular('unit')
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular('unit')
     }
 

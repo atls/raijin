@@ -1,12 +1,13 @@
-import assert        from 'node:assert/strict'
-import { mkdir }     from 'node:fs/promises'
-import { mkdtemp }   from 'node:fs/promises'
-import { writeFile } from 'node:fs/promises'
-import { tmpdir }    from 'node:os'
-import { join }      from 'node:path'
-import { test }      from 'node:test'
+import assert                 from 'node:assert/strict'
+import { mkdir }              from 'node:fs/promises'
+import { mkdtemp }            from 'node:fs/promises'
+import { writeFile }          from 'node:fs/promises'
+import { tmpdir }             from 'node:os'
+import { join }               from 'node:path'
+import { test }               from 'node:test'
 
-import { Tester }    from './tester.js'
+import { TEST_EXEC_ARGV_ENV } from './test-exec-argv.js'
+import { Tester }             from './tester.js'
 
 type TestFileCollector = {
   collectTestFiles: (
@@ -196,10 +197,24 @@ test('should keep workspace ignore patterns with root-relative explicit test fil
     ].join('\n')
   )
 
-  const results = await tester.unit(workspace, {
-    files: ['packages/tools/sources/ignored.test.js', 'packages/tools/sources/kept.test.js'],
-    testReporter: 'tap',
-  })
+  const previousExecArgv = process.env[TEST_EXEC_ARGV_ENV]
+
+  process.env[TEST_EXEC_ARGV_ENV] = JSON.stringify(['--enable-source-maps'])
+
+  let results: Awaited<ReturnType<typeof tester.unit>>
+
+  try {
+    results = await tester.unit(workspace, {
+      files: ['packages/tools/sources/ignored.test.js', 'packages/tools/sources/kept.test.js'],
+      testReporter: 'tap',
+    })
+  } finally {
+    if (previousExecArgv === undefined) {
+      Reflect.deleteProperty(process.env, TEST_EXEC_ARGV_ENV)
+    } else {
+      process.env[TEST_EXEC_ARGV_ENV] = previousExecArgv
+    }
+  }
 
   assert.equal(
     results.some((result) => result.type === 'test:fail'),

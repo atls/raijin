@@ -87,9 +87,7 @@ export class Tester extends EventEmitter {
   ): Promise<Array<TestEvent>> {
     const explicitExecArgv = parseTestExecArgv()
     const execArgv =
-      explicitExecArgv.length > 0
-        ? explicitExecArgv
-        : await createTestRuntimeExecArgv(this.projectCwd)
+      explicitExecArgv.length > 0 ? explicitExecArgv : await createTestRuntimeExecArgv(this.cwd)
     const runOptions = {
       files,
       timeout,
