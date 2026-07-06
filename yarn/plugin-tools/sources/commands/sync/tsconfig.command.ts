@@ -20,6 +20,21 @@ const implicitTSConfigIncludeEntry = '**/*'
 
 type TSConfigShape = Record<string, unknown>
 type TSCompilerOptions = Record<string, unknown>
+type TSConfigSyncProject = {
+  topLevelWorkspace: {
+    cwd: PortablePath
+    manifest: {
+      raw: {
+        workspaces?: unknown
+      }
+    }
+  }
+}
+
+export type TSConfigSyncTarget = {
+  cwd: PortablePath
+  workspaces: Array<string>
+}
 
 const convertWorkspacesToIncludes = (workspaces: string): string => {
   if (workspaces.endsWith('/**/*')) {
@@ -41,6 +56,15 @@ export const mergeTSCompilerOptions = (
 ): TSCompilerOptions => ({
   ...defaults,
   ...(existing || {}),
+})
+
+export const createTSConfigSyncTarget = (project: TSConfigSyncProject): TSConfigSyncTarget => ({
+  cwd: project.topLevelWorkspace.cwd,
+  workspaces: Array.isArray(project.topLevelWorkspace.manifest.raw.workspaces)
+    ? project.topLevelWorkspace.manifest.raw.workspaces.filter(
+        (workspace): workspace is string => typeof workspace === 'string'
+      )
+    : [],
 })
 
 export const getTSConfigIncludeEntries = (
@@ -88,7 +112,7 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
   }
 
   override async executeRegular(): Promise<number> {
-    const { configuration, workspace } = await resolveWorkspaceCommandContext(
+    const { configuration, project } = await resolveWorkspaceCommandContext(
       this.context.cwd,
       this.context.plugins
     )
@@ -100,7 +124,8 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
       },
       async (report) => {
         await report.startTimerPromise('Raijin sync typescript config', async () => {
-          const tsconfigpath = ppath.join(workspace.cwd, 'tsconfig.json' as PortablePath)
+          const syncTarget = createTSConfigSyncTarget(project)
+          const tsconfigpath = ppath.join(syncTarget.cwd, 'tsconfig.json' as PortablePath)
 
           const exists: TSConfigShape & { compilerOptions?: TSCompilerOptions } =
             (await xfs.existsPromise(tsconfigpath))
@@ -108,7 +133,7 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
               : { compilerOptions: {} }
 
           await xfs.writeFilePromise(
-            ppath.join(workspace.cwd, 'project.types.d.ts' as PortablePath),
+            ppath.join(syncTarget.cwd, 'project.types.d.ts' as PortablePath),
             projectTypesReference
           )
 
@@ -120,9 +145,7 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
             ),
           }
 
-          const includes: Array<string> = (
-            (workspace.manifest.raw.workspaces as Array<string> | undefined) || []
-          ).map(convertWorkspacesToIncludes)
+          const includes: Array<string> = syncTarget.workspaces.map(convertWorkspacesToIncludes)
 
           const include = getTSConfigIncludeEntries(config, includes)
 
