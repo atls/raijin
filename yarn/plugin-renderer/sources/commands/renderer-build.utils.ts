@@ -33,6 +33,12 @@ const NPM_PROTOCOL = 'npm:'
 const NPM_REFERENCE_PATTERN = /(?:^|@)npm:([^#@]+)/
 const NEXT_MAJOR_WEBPACK_BY_DEFAULT = 16
 type RendererBuildPathSegments = ReadonlyArray<Filename>
+export type RendererBuildContext = {
+  appCwd: PortablePath
+  distCwd: PortablePath
+  nextOutputCwd: PortablePath
+  rendererCwd: PortablePath
+}
 
 const RENDERER_BUILD_STALE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegments> = [
   [DIST_DIR],
@@ -334,6 +340,17 @@ const resolveRendererBuildPath = (
   segments: RendererBuildPathSegments
 ): PortablePath => ppath.join(cwd, ...segments)
 
+export const createRendererBuildContext = (rendererCwd: PortablePath): RendererBuildContext => {
+  const appCwd = ppath.join(rendererCwd, SRC_DIR)
+
+  return {
+    appCwd,
+    distCwd: ppath.join(rendererCwd, DIST_DIR),
+    nextOutputCwd: ppath.join(appCwd, NEXT_DIR),
+    rendererCwd,
+  }
+}
+
 const removeRendererBuildPaths = async (
   cwd: PortablePath,
   paths: ReadonlyArray<RendererBuildPathSegments>
@@ -403,7 +420,8 @@ export const resolveRendererBuildStandaloneWorkspaceCwd = (
   rendererCwd: PortablePath
 ): PortablePath => {
   const relativeRendererCwd = ppath.relative(projectCwd, rendererCwd)
-  const standaloneCwd = ppath.join(rendererCwd, NEXT_DIR, 'standalone' as Filename)
+  const { nextOutputCwd } = createRendererBuildContext(rendererCwd)
+  const standaloneCwd = ppath.join(nextOutputCwd, 'standalone' as Filename)
 
   if (relativeRendererCwd === '.') {
     return standaloneCwd
@@ -416,7 +434,8 @@ export const resolveRendererBuildStandaloneSourceCwd = async (
   projectCwd: PortablePath,
   rendererCwd: PortablePath
 ): Promise<PortablePath> => {
-  const standaloneCwd = ppath.join(rendererCwd, NEXT_DIR, 'standalone' as Filename)
+  const { nextOutputCwd } = createRendererBuildContext(rendererCwd)
+  const standaloneCwd = ppath.join(nextOutputCwd, 'standalone' as Filename)
   const workspaceStandaloneCwd = resolveRendererBuildStandaloneWorkspaceCwd(projectCwd, rendererCwd)
 
   if (await xfs.existsPromise(workspaceStandaloneCwd)) {

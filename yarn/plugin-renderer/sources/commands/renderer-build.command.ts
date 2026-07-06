@@ -18,6 +18,7 @@ import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.
 import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }        from './renderer-build.utils.js'
 import { copyRendererBuildPublicAssets }                 from './renderer-build.utils.js'
+import { createRendererBuildContext }                    from './renderer-build.utils.js'
 import { createRendererBuildArgs }                       from './renderer-build.utils.js'
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
@@ -38,6 +39,7 @@ export class RendererBuildCommand extends BaseCommand {
       workspace,
       workspaceCwd: rendererCwd,
     } = await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
+    const rendererBuildContext = createRendererBuildContext(rendererCwd)
 
     await cleanupRendererBuildStaleArtifacts(rendererCwd)
 
@@ -138,7 +140,7 @@ export class RendererBuildCommand extends BaseCommand {
         await report.startTimerPromise('Copy static files', async () => {
           await xfs.copyPromise(
             ppath.join(rendererCwd, 'dist/.next/static'),
-            ppath.join(rendererCwd, '.next/static')
+            ppath.join(rendererBuildContext.nextOutputCwd, 'static')
           )
         })
 
@@ -147,10 +149,12 @@ export class RendererBuildCommand extends BaseCommand {
         })
 
         await report.startTimerPromise('Copy edge chunks files', async () => {
-          if (await xfs.existsPromise(ppath.join(rendererCwd, '.next/server/edge-chunks'))) {
+          const edgeChunksCwd = ppath.join(rendererBuildContext.nextOutputCwd, 'server/edge-chunks')
+
+          if (await xfs.existsPromise(edgeChunksCwd)) {
             await xfs.copyPromise(
               ppath.join(rendererCwd, 'dist/.next/server/edge-chunks'),
-              ppath.join(rendererCwd, '.next/server/edge-chunks')
+              edgeChunksCwd
             )
           }
         })
@@ -163,7 +167,7 @@ export class RendererBuildCommand extends BaseCommand {
         })
 
         await report.startTimerPromise('Clean source build artifacts', async () => {
-          await cleanupRendererBuildSourceArtifacts(rendererCwd)
+          await cleanupRendererBuildSourceArtifacts(rendererBuildContext.appCwd)
         })
       }
     )

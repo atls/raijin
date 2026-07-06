@@ -515,14 +515,14 @@ test('should resolve renderer standalone workspace path from nested workspace cw
       '/repo' as PortablePath,
       '/repo/client' as PortablePath
     ),
-    '/repo/client/.next/standalone/client'
+    '/repo/client/src/.next/standalone/client'
   )
 })
 
 test('should resolve renderer standalone workspace path from project root cwd', () => {
   assert.equal(
     resolveRendererBuildStandaloneWorkspaceCwd('/repo' as PortablePath, '/repo' as PortablePath),
-    '/repo/.next/standalone'
+    '/repo/src/.next/standalone'
   )
 })
 
@@ -531,7 +531,7 @@ test('should use nested standalone workspace path when Next creates it', async (
   const rendererCwd = ppath.join(cwd, 'client', 'next-app')
   const nestedStandaloneCwd = ppath.join(
     rendererCwd,
-    '.next/standalone/client/next-app' as PortablePath
+    'src/.next/standalone/client/next-app' as PortablePath
   )
 
   await xfs.mkdirPromise(nestedStandaloneCwd, { recursive: true })
@@ -542,7 +542,7 @@ test('should use nested standalone workspace path when Next creates it', async (
 test('should fall back to standalone root when Next does not create nested workspace path', async () => {
   const cwd = await xfs.mktempPromise()
   const rendererCwd = ppath.join(cwd, 'client', 'next-app')
-  const standaloneCwd = ppath.join(rendererCwd, '.next/standalone' as PortablePath)
+  const standaloneCwd = ppath.join(rendererCwd, 'src/.next/standalone' as PortablePath)
 
   await xfs.mkdirPromise(standaloneCwd, { recursive: true })
 
