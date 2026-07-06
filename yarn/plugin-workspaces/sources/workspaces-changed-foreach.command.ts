@@ -12,7 +12,7 @@ import { getChangedWorkspaces }   from './get-changed-workspaces.util.js'
 import { createForeachInput }     from './workspaces-changed-foreach.input.js'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
-  static paths = [['workspaces', 'changed', 'foreach']]
+  static override paths = [['workspaces', 'changed', 'foreach']]
 
   exclude = Option.String('--exclude', '')
 

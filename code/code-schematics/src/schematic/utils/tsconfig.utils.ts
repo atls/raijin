@@ -10,8 +10,8 @@ export const mergeTsCompilerOptions = (
   existingCompilerOptions: object | undefined,
   compilerOptions: object
 ): object => ({
-  ...existingCompilerOptions,
   ...compilerOptions,
+  ...existingCompilerOptions,
 })
 
 export const updateTsConfigInTree = (compilerOptions: object) =>

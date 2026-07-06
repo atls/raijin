@@ -3,12 +3,43 @@
 import type { ts as typescript }     from '@atls/raijin/typescript'
 
 import EventEmitter                  from 'node:events'
+import { existsSync }                from 'node:fs'
 import { readFileSync }              from 'node:fs'
+import { createRequire }             from 'node:module'
 import { join }                      from 'node:path'
+import { pathToFileURL }             from 'node:url'
 
 import tsconfig                      from '@atls/raijin/typescript-config'
 
 import { transformJsxToJsExtension } from './transformers/index.js'
+
+const PROJECT_TS_CONFIG = 'tsconfig.json'
+const PACKAGE_MANIFEST = 'package.json'
+const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
+
+type TSConfigShape = Record<string, unknown> & {
+  compilerOptions?: Record<string, unknown>
+  exclude?: unknown
+}
+
+type PackageManifestShape = Record<string, unknown> & {
+  typecheckIgnorePatterns?: Array<string>
+  typecheckSkipLibCheck?: boolean
+}
+
+const asCompilerOptions = (value: unknown): Record<string, unknown> =>
+  value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {}
+
+const asStringArray = (value: unknown): Array<string> =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
+
+export const resolveTypeScriptRuntimeUrl = (cwd: string): string => {
+  const workspaceRequire = createRequire(join(cwd, PACKAGE_MANIFEST))
+
+  return pathToFileURL(workspaceRequire.resolve(TYPESCRIPT_RUNTIME_SPECIFIER)).href
+}
 
 export class TypeScript extends EventEmitter {
   constructor(
@@ -19,7 +50,7 @@ export class TypeScript extends EventEmitter {
   }
 
   static async initialize(cwd: string): Promise<TypeScript> {
-    const { ts } = (await import('@atls/raijin/typescript')) as { ts: typeof typescript }
+    const { ts } = (await import(resolveTypeScriptRuntimeUrl(cwd))) as { ts: typeof typescript }
 
     return new TypeScript(ts, cwd)
   }
@@ -40,25 +71,41 @@ export class TypeScript extends EventEmitter {
     override: Partial<typescript.CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<typescript.Diagnostic>> {
-    const projectIgnorePatterns = this.getProjectIgnorePatterns()
+    const projectConfig = this.readProjectTSConfig()
 
-    const skipLibCheck = this.getLibCheckOption()
+    if (projectConfig.errors.length > 0) {
+      this.emit('start', { files: [] })
+      this.emit('end', { diagnostics: projectConfig.errors })
+
+      return projectConfig.errors
+    }
+
+    const projectCompilerOptions = asCompilerOptions(projectConfig.config.compilerOptions)
+    const projectIgnorePatterns = this.getProjectIgnorePatterns()
+    const projectExcludePatterns = asStringArray(projectConfig.config.exclude)
+    const skipLibCheck = this.getLibCheckOption(projectCompilerOptions)
 
     const config = {
       ...tsconfig,
+      ...projectConfig.config,
       compilerOptions: {
         ...tsconfig.compilerOptions,
+        ...projectCompilerOptions,
         ...override,
         skipLibCheck,
       },
       include,
-      exclude: [...tsconfig.exclude, ...projectIgnorePatterns],
+      exclude: Array.from(
+        new Set([...tsconfig.exclude, ...projectExcludePatterns, ...projectIgnorePatterns])
+      ),
     }
 
     const { fileNames, options, errors } = this.ts.parseJsonConfigFileContent(
       config,
       this.ts.sys,
-      this.cwd
+      this.cwd,
+      undefined,
+      projectConfig.configFileName
     )
 
     if (errors.length > 0) {
@@ -146,18 +193,63 @@ export class TypeScript extends EventEmitter {
   }
 
   private getProjectIgnorePatterns(): Array<string> {
-    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+    const { typecheckIgnorePatterns = [] } = this.readPackageManifest()
 
-    const { typecheckIgnorePatterns = [] } = JSON.parse(content)
-
-    return typecheckIgnorePatterns as Array<string>
+    return typecheckIgnorePatterns
   }
 
-  private getLibCheckOption(): boolean {
-    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+  private getLibCheckOption(projectCompilerOptions: Record<string, unknown>): boolean {
+    const manifest = this.readPackageManifest()
+    const defaultCompilerOptions = asCompilerOptions(tsconfig.compilerOptions)
 
-    const { typecheckSkipLibCheck = false } = JSON.parse(content)
+    if (Object.hasOwn(manifest, 'typecheckSkipLibCheck')) {
+      return manifest.typecheckSkipLibCheck!
+    }
 
-    return typecheckSkipLibCheck as boolean
+    if (typeof projectCompilerOptions.skipLibCheck === 'boolean') {
+      return projectCompilerOptions.skipLibCheck
+    }
+
+    if (typeof defaultCompilerOptions.skipLibCheck === 'boolean') {
+      return defaultCompilerOptions.skipLibCheck
+    }
+
+    return false
+  }
+
+  private readPackageManifest(): PackageManifestShape {
+    const content = readFileSync(join(this.cwd, PACKAGE_MANIFEST), 'utf-8')
+
+    return JSON.parse(content) as PackageManifestShape
+  }
+
+  private readProjectTSConfig(): {
+    config: TSConfigShape
+    configFileName?: string
+    errors: Array<typescript.Diagnostic>
+  } {
+    const tsconfigPath = join(this.cwd, PROJECT_TS_CONFIG)
+
+    if (!existsSync(tsconfigPath)) {
+      return {
+        config: {},
+        errors: [],
+      }
+    }
+
+    const result = this.ts.readConfigFile(tsconfigPath, this.ts.sys.readFile)
+
+    if (result.error) {
+      return {
+        config: {},
+        errors: [result.error],
+      }
+    }
+
+    return {
+      config: result.config as TSConfigShape,
+      configFileName: tsconfigPath,
+      errors: [],
+    }
   }
 }

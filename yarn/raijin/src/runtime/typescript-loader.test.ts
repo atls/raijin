@@ -1,4 +1,5 @@
 import assert                 from 'node:assert/strict'
+import { mkdir }              from 'node:fs/promises'
 import { mkdtemp }            from 'node:fs/promises'
 import { rm }                 from 'node:fs/promises'
 import { writeFile }          from 'node:fs/promises'
@@ -36,6 +37,59 @@ test('should resolve js specifier to ts source when physical virtual path is una
 
   assert.deepEqual(attemptedSpecifiers, ['./dependency.ts'])
   assert.equal(result.url, 'file:///workspace/src/dependency.ts')
+})
+
+test('should resolve extensionless relative specifier to tsx source', async () => {
+  const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))
+  const sourceDir = join(workspace, 'src')
+  const parentPath = join(sourceDir, 'index.ts')
+  const pagePath = join(sourceDir, 'page.tsx')
+
+  try {
+    await mkdir(sourceDir, { recursive: true })
+    await writeFile(join(workspace, 'package.json'), JSON.stringify({ type: 'module' }), 'utf-8')
+    await writeFile(parentPath, `import Page from './page'\nexport { Page }\n`, 'utf-8')
+    await writeFile(pagePath, `export default function Page() { return null }\n`, 'utf-8')
+
+    const result = await resolve(
+      './page',
+      { parentURL: pathToFileURL(parentPath).href } as never,
+      createNextLoad()
+    )
+
+    assert.equal(result.url, pathToFileURL(pagePath).href)
+  } finally {
+    await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
+  }
+})
+
+test('should resolve package subpath through package manager fallback', async () => {
+  const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))
+  const sourceDir = join(workspace, 'src')
+  const packageDir = join(workspace, 'node_modules/fixture')
+  const parentPath = join(sourceDir, 'index.ts')
+  const subpath = join(packageDir, 'image.js')
+
+  try {
+    await mkdir(sourceDir, { recursive: true })
+    await mkdir(packageDir, { recursive: true })
+    await writeFile(join(workspace, 'package.json'), JSON.stringify({ type: 'module' }), 'utf-8')
+    await writeFile(join(packageDir, 'package.json'), JSON.stringify({ name: 'fixture' }), 'utf-8')
+    await writeFile(parentPath, `import image from 'fixture/image'\nexport { image }\n`, 'utf-8')
+    await writeFile(subpath, `module.exports = true\n`, 'utf-8')
+
+    const result = await resolve(
+      'fixture/image',
+      { parentURL: pathToFileURL(parentPath).href } as never,
+      (() => {
+        throw new Error('Cannot resolve fixture/image')
+      }) as never
+    )
+
+    assert.match(result.url, /\/node_modules\/fixture\/image\.js$/)
+  } finally {
+    await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
+  }
 })
 
 test('should not resolve cjs specifier to cts source', async () => {

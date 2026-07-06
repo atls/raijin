@@ -14,6 +14,7 @@ import { dirname }                 from 'node:path'
 import { extname }                 from 'node:path'
 import { join }                    from 'node:path'
 import { fileURLToPath }           from 'node:url'
+import { pathToFileURL }           from 'node:url'
 
 const require = createRequire(import.meta.url)
 const ts = require('typescript') as typeof TypeScript
@@ -123,6 +124,57 @@ const readCompilerOptions = (filepath: string): TypeScript.CompilerOptions => {
   return options
 }
 
+const resolveExtensionlessTypeScriptSource = (
+  specifier: string,
+  parentURL: string
+): ResolveFnOutput | undefined => {
+  const parentPath = fileURLToPath(parentURL)
+  const { resolvedModule } = ts.resolveModuleName(
+    specifier,
+    parentPath,
+    readCompilerOptions(parentPath),
+    ts.sys
+  )
+
+  if (!resolvedModule) {
+    return undefined
+  }
+
+  if (!typescriptExtensions.has(extname(resolvedModule.resolvedFileName))) {
+    return undefined
+  }
+
+  return {
+    shortCircuit: true,
+    url: pathToFileURL(resolvedModule.resolvedFileName).href,
+  }
+}
+
+const resolvePackageSubpathSource = (
+  specifier: string,
+  parentURL: string | undefined
+): ResolveFnOutput | undefined => {
+  if (!parentURL?.startsWith('file:')) {
+    return undefined
+  }
+
+  try {
+    const parentRequire = createRequire(parentURL)
+    const resolvedPath = parentRequire.resolve(specifier)
+
+    if (!resolvedPath.startsWith('/')) {
+      return undefined
+    }
+
+    return {
+      shortCircuit: true,
+      url: pathToFileURL(resolvedPath).href,
+    }
+  } catch {
+    return undefined
+  }
+}
+
 const getCompilerOptions = (filepath: string, _format: 'module'): TypeScript.CompilerOptions => {
   const options = readCompilerOptions(filepath)
 
@@ -148,7 +200,17 @@ const transformSource = (source: string, filepath: string, format: 'module'): st
 
 export const resolve: ResolveHook = async (specifier, context, next) => {
   if (!specifier.startsWith('.')) {
-    return next(specifier, context)
+    try {
+      return await next(specifier, context)
+    } catch (error) {
+      const resolved = resolvePackageSubpathSource(specifier, context.parentURL)
+
+      if (resolved) {
+        return resolved
+      }
+
+      throw error
+    }
   }
 
   const { parentURL } = context
@@ -157,6 +219,16 @@ export const resolve: ResolveHook = async (specifier, context, next) => {
   }
 
   const specifiedExtension = extname(specifier)
+  if (!specifiedExtension) {
+    const resolved = resolveExtensionlessTypeScriptSource(specifier, parentURL)
+
+    if (resolved) {
+      return resolved
+    }
+
+    return next(specifier, context)
+  }
+
   const sourceExtensions = sourceExtensionsBySpecifier.get(specifiedExtension)
   if (!sourceExtensions) {
     return next(specifier, context)

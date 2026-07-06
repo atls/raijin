@@ -19,7 +19,7 @@ import { COLORS }                         from './badges.constants.js'
 import { SpinnerProgress }                from './spinner.progress.js'
 
 class BadgesCommand extends BaseCommand {
-  static paths = [['badges', 'generate']]
+  static override paths = [['badges', 'generate']]
 
   static VERSIONS_SEPARATOR = '[//]: # (VERSIONS)'
 
