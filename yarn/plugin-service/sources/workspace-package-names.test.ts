@@ -53,6 +53,29 @@ test('should read package names from workspace dependencies resolved by Yarn', (
   ])
 })
 
+test('should read package names from workspace peer dependencies resolved by Yarn', () => {
+  const peerDescriptor = structUtils.parseDescriptor('@internal/peer@workspace:*')
+  const dependencyByDescriptor = new Map<string, Workspace>()
+  const project = {
+    tryWorkspaceByDescriptor: (descriptor: Descriptor) =>
+      dependencyByDescriptor.get(descriptor.descriptorHash) ?? null,
+  } as Workspace['project']
+  const peerWorkspace = {
+    manifest: createManifest('@internal/peer'),
+    project,
+  } as Workspace
+  const serviceWorkspace = {
+    manifest: createManifest('service', {
+      peerDependencies: new Map([['@internal/peer', peerDescriptor]]),
+    }),
+    project,
+  } as Workspace
+
+  dependencyByDescriptor.set(peerDescriptor.descriptorHash, peerWorkspace)
+
+  assert.deepEqual(getWorkspacePackageNames(serviceWorkspace), ['@internal/peer'])
+})
+
 test('should ignore registry dependencies with colliding workspace names', () => {
   const registryDescriptor = structUtils.parseDescriptor('@internal/module@npm:^2.0.0')
   const dependencyByDescriptor = new Map<string, Workspace>()
