@@ -134,7 +134,7 @@ test('should reject unsupported Next versions before 16', () => {
 })
 
 test('should use explicit webpack build arguments for Next versions after 15', () => {
-  assert.deepEqual(createRendererBuildArgs('16.0.7'), ['node', 'next', 'build', '--webpack'])
+  assert.deepEqual(createRendererBuildArgs('16.0.7'), ['node', 'next', 'build', '--webpack', 'src'])
 })
 
 test('should normalize Next npm package references before version checks', () => {
@@ -144,6 +144,7 @@ test('should normalize Next npm package references before version checks', () =>
     'next',
     'build',
     '--webpack',
+    'src',
   ])
 })
 
@@ -159,6 +160,7 @@ test('should devirtualize Next locator references before version checks', () => 
     'next',
     'build',
     '--webpack',
+    'src',
   ])
 })
 
@@ -171,11 +173,12 @@ test('should normalize patched Next package references before version checks', (
     'next',
     'build',
     '--webpack',
+    'src',
   ])
 })
 
 test('should avoid version-specific Next build arguments when version is unknown', () => {
-  assert.deepEqual(createRendererBuildArgs(undefined), ['node', 'next', 'build'])
+  assert.deepEqual(createRendererBuildArgs(undefined), ['node', 'next', 'build', 'src'])
 })
 
 test('should patch Next compiled conf require cache deletion in loader source', async () => {

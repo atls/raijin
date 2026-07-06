@@ -542,6 +542,8 @@ export const createRendererBuildArgs = (
     args.push('--webpack')
   }
 
+  args.push(SRC_DIR)
+
   return args
 }
 
