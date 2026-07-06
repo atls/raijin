@@ -121,7 +121,7 @@ export class TypeCheckCommand extends BaseCommand {
     project: Project,
     invocationCwd: PortablePath,
     typecheckCwd: PortablePath
-  ): Promise<Array<string>> {
+  ): Promise<Array<string> | undefined> {
     if (this.args.length > 0) {
       const cwdRoot = npath.fromPortablePath(typecheckCwd)
       const cwd = npath.fromPortablePath(invocationCwd)
@@ -138,6 +138,8 @@ export class TypeCheckCommand extends BaseCommand {
       if (tsconfig.include && tsconfig.include.length > 0) {
         return tsconfig.include
       }
+
+      return undefined
     }
 
     return project.topLevelWorkspace.manifest.workspaceDefinitions.map(

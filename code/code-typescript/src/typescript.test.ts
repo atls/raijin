@@ -58,6 +58,45 @@ test('should preserve project module resolution options during typecheck', async
   )
 })
 
+test('should preserve inherited tsconfig scope during typecheck', async () => {
+  const cwd = await createProject({
+    'tsconfig.base.json': JSON.stringify(
+      {
+        include: ['src/**/*.ts'],
+      },
+      null,
+      2
+    ),
+    'tsconfig.json': JSON.stringify(
+      {
+        extends: './tsconfig.base.json',
+      },
+      null,
+      2
+    ),
+    'src/index.ts': 'export const value = 1\n',
+    'packages/broken.ts': 'export const broken = missing.value\n',
+  })
+  const typescript = new TypeScript(ts, cwd)
+  let files: Array<string> = []
+
+  typescript.on('start', ({ files: nextFiles }: { files: Array<string> }) => {
+    files = nextFiles
+  })
+
+  const diagnostics = await typescript.check()
+
+  assert.equal(diagnostics.length, 0)
+  assert.equal(
+    files.some((file) => file.endsWith('/src/index.ts')),
+    true
+  )
+  assert.equal(
+    files.some((file) => file.endsWith('/packages/broken.ts')),
+    false
+  )
+})
+
 test('should import TypeScript runtime through workspace package boundary', async () => {
   const cwd = await createProject(
     {

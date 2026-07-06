@@ -15,7 +15,7 @@ class TestTypeCheckCommand extends TypeCheckCommand {
     projectCwd: string,
     invocationCwd: string,
     typecheckCwd: string
-  ): Promise<Array<string>> {
+  ): Promise<Array<string> | undefined> {
     return this.getIncludes(
       {
         cwd: npath.toPortablePath(projectCwd),
@@ -47,6 +47,17 @@ test('should read includes from workspace tsconfig', async () => {
     'next-env.d.ts',
     'src/**/*.ts',
   ])
+})
+
+test('should preserve workspace tsconfig scope without include override', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-'))
+  const workspaceCwd = join(cwd, 'client/next-app')
+  const command = new TestTypeCheckCommand()
+
+  await mkdir(workspaceCwd, { recursive: true })
+  await writeFile(join(workspaceCwd, 'tsconfig.json'), '{"extends":"../../tsconfig.base.json"}\n')
+
+  assert.equal(await command.resolveIncludes(cwd, workspaceCwd, workspaceCwd), undefined)
 })
 
 test('should resolve explicit typecheck targets from invocation cwd to typecheck root', async () => {

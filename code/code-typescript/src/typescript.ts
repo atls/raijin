@@ -56,19 +56,19 @@ export class TypeScript extends EventEmitter {
     return new TypeScript(ts, cwd)
   }
 
-  async check(include: Array<string> = []): Promise<Array<typescript.Diagnostic>> {
+  async check(include?: Array<string>): Promise<Array<typescript.Diagnostic>> {
     return this.run(include)
   }
 
   async build(
-    include: Array<string> = [],
+    include?: Array<string>,
     override: Partial<typescript.CompilerOptions> = {}
   ): Promise<Array<typescript.Diagnostic>> {
     return this.run(include, override, false)
   }
 
   private async run(
-    include: Array<string> = [],
+    include: Array<string> | undefined = undefined,
     override: Partial<typescript.CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<typescript.Diagnostic>> {
@@ -95,7 +95,7 @@ export class TypeScript extends EventEmitter {
         ...override,
         skipLibCheck,
       },
-      include,
+      ...(include === undefined ? {} : { include }),
       exclude: Array.from(
         new Set([...tsconfig.exclude, ...projectExcludePatterns, ...projectIgnorePatterns])
       ),
