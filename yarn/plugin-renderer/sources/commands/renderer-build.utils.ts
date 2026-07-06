@@ -403,16 +403,20 @@ export const cleanupRendererBuildSourceArtifacts = async (cwd: PortablePath): Pr
   await removeRendererBuildPaths(cwd, RENDERER_BUILD_SOURCE_ARTIFACT_PATHS)
 }
 
-export const copyRendererBuildPublicAssets = async (cwd: PortablePath): Promise<void> => {
-  const source = (await xfs.existsPromise(ppath.join(cwd, PUBLIC_DIR)))
-    ? ppath.join(cwd, PUBLIC_DIR)
-    : ppath.join(cwd, SRC_DIR, PUBLIC_DIR)
+export const copyRendererBuildPublicAssets = async ({
+  appCwd,
+  distCwd,
+  rendererCwd,
+}: RendererBuildContext): Promise<void> => {
+  const appPublicCwd = ppath.join(appCwd, PUBLIC_DIR)
+  const rootPublicCwd = ppath.join(rendererCwd, PUBLIC_DIR)
+  const source = (await xfs.existsPromise(appPublicCwd)) ? appPublicCwd : rootPublicCwd
 
   if (!(await xfs.existsPromise(source))) {
     return
   }
 
-  await xfs.copyPromise(ppath.join(cwd, DIST_DIR, PUBLIC_DIR), source)
+  await xfs.copyPromise(ppath.join(distCwd, PUBLIC_DIR), source)
 }
 
 export const resolveRendererBuildStandaloneWorkspaceCwd = (

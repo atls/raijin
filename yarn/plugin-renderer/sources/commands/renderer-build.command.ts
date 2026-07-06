@@ -145,7 +145,7 @@ export class RendererBuildCommand extends BaseCommand {
         })
 
         await report.startTimerPromise('Copy public assets', async () => {
-          await copyRendererBuildPublicAssets(rendererCwd)
+          await copyRendererBuildPublicAssets(rendererBuildContext)
         })
 
         await report.startTimerPromise('Copy edge chunks files', async () => {

@@ -17,6 +17,7 @@ import { cleanupRendererBuildStaleArtifacts }             from './renderer-build
 import { cleanupRendererBuildWorkspaceManifests }         from './renderer-build.utils.js'
 import { copyRendererBuildPublicAssets }                  from './renderer-build.utils.js'
 import { createNextRendererLoaderSource }                 from './renderer-build.utils.js'
+import { createRendererBuildContext }                     from './renderer-build.utils.js'
 import { createRendererBuildArgs }                        from './renderer-build.utils.js'
 import { createRendererBuildEnv }                         from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                        from './renderer-build.utils.js'
@@ -556,7 +557,7 @@ test('should copy renderer root public assets into standalone artifact', async (
   await xfs.writeFilePromise(ppath.join(cwd, 'public/Bg.png'), '')
   await xfs.writeFilePromise(ppath.join(cwd, 'public/organization-logos/atlantis.png'), '')
 
-  await copyRendererBuildPublicAssets(cwd)
+  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/Bg.png')), true)
   assert.equal(
@@ -571,15 +572,33 @@ test('should copy renderer source public assets when root public assets are miss
   await xfs.mkdirPromise(ppath.join(cwd, 'src/public'), { recursive: true })
   await xfs.writeFilePromise(ppath.join(cwd, 'src/public/Bg.png'), '')
 
-  await copyRendererBuildPublicAssets(cwd)
+  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/Bg.png')), true)
+})
+
+test('should prefer renderer source public assets over root public assets', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.mkdirPromise(ppath.join(cwd, 'public'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(cwd, 'src/public'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(cwd, 'public/Bg.png'), 'root')
+  await xfs.writeFilePromise(ppath.join(cwd, 'public/root-only.png'), '')
+  await xfs.writeFilePromise(ppath.join(cwd, 'src/public/Bg.png'), 'source')
+
+  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
+
+  assert.equal(
+    (await xfs.readFilePromise(ppath.join(cwd, 'dist/public/Bg.png'))).toString(),
+    'source'
+  )
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/root-only.png')), false)
 })
 
 test('should ignore missing renderer public assets', async () => {
   const cwd = await xfs.mktempPromise()
 
-  await copyRendererBuildPublicAssets(cwd)
+  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public')), false)
 })
