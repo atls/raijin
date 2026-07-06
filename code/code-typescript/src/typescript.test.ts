@@ -97,6 +97,82 @@ test('should preserve inherited tsconfig scope during typecheck', async () => {
   )
 })
 
+test('should preserve project manifest options with workspace tsconfig', async () => {
+  const cwd = await createProject(
+    {
+      'packages/app/package.json': JSON.stringify(
+        {
+          name: '@scope/app',
+          type: 'module',
+        },
+        null,
+        2
+      ),
+      'packages/app/tsconfig.json': JSON.stringify(
+        {
+          include: ['src/**/*.ts', 'generated/**/*.ts', 'types/**/*.d.ts'],
+        },
+        null,
+        2
+      ),
+      'packages/app/src/index.ts':
+        "import type { MissingType } from '../types/problem.js'\n\nexport type Value = MissingType\n",
+      'packages/app/generated/broken.ts': 'export const broken = missing.value\n',
+      'packages/app/types/problem.d.ts':
+        "import type { MissingType } from 'missing-package'\n\nexport type { MissingType }\n",
+    },
+    {
+      typecheckIgnorePatterns: ['generated/**/*.ts'],
+      typecheckSkipLibCheck: true,
+    }
+  )
+  const workspaceCwd = join(cwd, 'packages/app')
+  const diagnostics = await new TypeScript(ts, workspaceCwd, {
+    manifestCwds: [cwd, workspaceCwd],
+  }).check()
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('should prefer workspace manifest skipLibCheck option over project manifest', async () => {
+  const cwd = await createProject(
+    {
+      'packages/app/package.json': JSON.stringify(
+        {
+          name: '@scope/app',
+          type: 'module',
+          typecheckSkipLibCheck: false,
+        },
+        null,
+        2
+      ),
+      'packages/app/tsconfig.json': JSON.stringify(
+        {
+          include: ['src/**/*.ts', 'types/**/*.d.ts'],
+        },
+        null,
+        2
+      ),
+      'packages/app/src/index.ts':
+        "import type { MissingType } from '../types/problem.js'\n\nexport type Value = MissingType\n",
+      'packages/app/types/problem.d.ts':
+        "import type { MissingType } from 'missing-package'\n\nexport type { MissingType }\n",
+    },
+    {
+      typecheckSkipLibCheck: true,
+    }
+  )
+  const workspaceCwd = join(cwd, 'packages/app')
+  const diagnostics = await new TypeScript(ts, workspaceCwd, {
+    manifestCwds: [cwd, workspaceCwd],
+  }).check()
+
+  assert.equal(
+    diagnostics.some((diagnostic) => diagnostic.code === 2307),
+    true
+  )
+})
+
 test('should import TypeScript runtime through workspace package boundary', async () => {
   const cwd = await createProject(
     {

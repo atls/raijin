@@ -75,7 +75,9 @@ export class TypeCheckCommand extends BaseCommand {
     )
     const typecheckCwd = await this.resolveTypecheckCwd(project, workspaceCwd)
 
-    const typescript = await TypeScript.initialize(typecheckCwd)
+    const typescript = await TypeScript.initialize(typecheckCwd, {
+      manifestCwds: [project.cwd, typecheckCwd],
+    })
 
     const { clear } = render(<TypeScriptProgress typescript={typescript} />)
 

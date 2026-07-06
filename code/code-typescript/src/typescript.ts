@@ -31,6 +31,10 @@ type PackageManifestShape = Record<string, unknown> & {
   typecheckSkipLibCheck?: boolean
 }
 
+export type TypeScriptOptions = {
+  manifestCwds?: Array<string>
+}
+
 const asCompilerOptions = (value: unknown): Record<string, unknown> =>
   value && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -43,17 +47,26 @@ export const resolveTypeScriptRuntimeUrl = (cwd: string): string =>
   resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_RUNTIME_SPECIFIER)
 
 export class TypeScript extends EventEmitter {
+  private readonly manifestCwds: Array<string>
+
   constructor(
     private readonly ts: typeof typescript,
-    private readonly cwd: string
+    private readonly cwd: string,
+    options: TypeScriptOptions = {}
   ) {
     super()
+
+    this.manifestCwds = Array.from(
+      new Set(
+        options.manifestCwds && options.manifestCwds.length > 0 ? options.manifestCwds : [cwd]
+      )
+    )
   }
 
-  static async initialize(cwd: string): Promise<TypeScript> {
+  static async initialize(cwd: string, options: TypeScriptOptions = {}): Promise<TypeScript> {
     const { ts } = (await import(resolveTypeScriptRuntimeUrl(cwd))) as { ts: typeof typescript }
 
-    return new TypeScript(ts, cwd)
+    return new TypeScript(ts, cwd, options)
   }
 
   async check(include?: Array<string>): Promise<Array<typescript.Diagnostic>> {
@@ -194,16 +207,22 @@ export class TypeScript extends EventEmitter {
   }
 
   private getProjectIgnorePatterns(): Array<string> {
-    const { typecheckIgnorePatterns = [] } = this.readPackageManifest()
-
-    return typecheckIgnorePatterns
+    return Array.from(
+      new Set(
+        this.readPackageManifests().flatMap(
+          ({ typecheckIgnorePatterns = [] }) => typecheckIgnorePatterns
+        )
+      )
+    )
   }
 
   private getLibCheckOption(projectCompilerOptions: Record<string, unknown>): boolean {
-    const manifest = this.readPackageManifest()
+    const manifest = [...this.readPackageManifests()]
+      .reverse()
+      .find((item) => Object.hasOwn(item, 'typecheckSkipLibCheck'))
     const defaultCompilerOptions = asCompilerOptions(tsconfig.compilerOptions)
 
-    if (Object.hasOwn(manifest, 'typecheckSkipLibCheck')) {
+    if (manifest) {
       return manifest.typecheckSkipLibCheck!
     }
 
@@ -218,8 +237,12 @@ export class TypeScript extends EventEmitter {
     return false
   }
 
-  private readPackageManifest(): PackageManifestShape {
-    const content = readFileSync(join(this.cwd, PACKAGE_MANIFEST), 'utf-8')
+  private readPackageManifests(): Array<PackageManifestShape> {
+    return this.manifestCwds.map((cwd) => this.readPackageManifest(cwd))
+  }
+
+  private readPackageManifest(cwd: string): PackageManifestShape {
+    const content = readFileSync(join(cwd, PACKAGE_MANIFEST), 'utf-8')
 
     return JSON.parse(content) as PackageManifestShape
   }
