@@ -3,7 +3,10 @@ import type { webpack as wp }           from '@atls/raijin/webpack'
 import type { ServiceLogRecord }        from './service.interfaces.js'
 
 import EventEmitter                     from 'node:events'
+import { createRequire }                from 'node:module'
+import { join }                         from 'node:path'
 import { PassThrough }                  from 'node:stream'
+import { pathToFileURL }                from 'node:url'
 
 import { SeverityNumber }               from '@monstrs/logger'
 
@@ -19,6 +22,15 @@ type WebpackRuntime = {
   protoLoaderPath: string
 }
 
+const WEBPACK_RUNTIME_SPECIFIER = '@atls/raijin/webpack'
+
+const importWebpackRuntime = async (cwd: string): Promise<WebpackRuntime> => {
+  const workspaceRequire = createRequire(join(cwd, 'package.json'))
+  const runtimePath = workspaceRequire.resolve(WEBPACK_RUNTIME_SPECIFIER)
+
+  return (await import(pathToFileURL(runtimePath).href)) as WebpackRuntime
+}
+
 export class Service extends EventEmitter {
   protected constructor(
     private readonly webpack: typeof wp,
@@ -32,9 +44,8 @@ export class Service extends EventEmitter {
     cwd: string,
     workspaceDependencies: Iterable<string> = []
   ): Promise<Service> {
-    const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } = (await import(
-      '@atls/raijin/webpack'
-    )) as WebpackRuntime
+    const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } =
+      await importWebpackRuntime(cwd)
 
     const config = new WebpackConfig(
       webpack,

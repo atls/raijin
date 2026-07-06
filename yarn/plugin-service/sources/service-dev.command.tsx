@@ -6,6 +6,8 @@ import React                              from 'react'
 
 import { ServiceProgress }                from '@atls/cli-ui-service-progress-component'
 import { Service }                        from '@atls/code-service'
+import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
+import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
 import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
 
@@ -22,7 +24,7 @@ export class ServiceDevCommand extends AbstractServiceCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -45,9 +47,7 @@ export class ServiceDevCommand extends AbstractServiceCommand {
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, ['service', 'dev', ...args], {

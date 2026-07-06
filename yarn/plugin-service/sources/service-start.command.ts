@@ -5,8 +5,10 @@ import { Filename }                        from '@yarnpkg/fslib'
 import { execUtils }                       from '@yarnpkg/core'
 import { xfs }                             from '@yarnpkg/fslib'
 
+import { COMMAND_PROXY_EXECUTION }         from '@atls/yarn-plugin-tools/command-context'
 import { createServiceRuntimeEnvironment } from '@atls/code-service'
 import { createServiceRuntimeExecArgv }    from '@atls/code-service'
+import { createCommandProxyEnvironment }   from '@atls/yarn-plugin-tools/command-context'
 import { resolveWorkspaceCommandContext }  from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable }       from '@atls/yarn-plugin-tools/current-yarn-executable'
 
@@ -20,7 +22,7 @@ export class ServiceStartCommand extends BaseCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -37,9 +39,7 @@ export class ServiceStartCommand extends BaseCommand {
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, ['service', 'start'], {
@@ -64,7 +64,7 @@ export class ServiceStartCommand extends BaseCommand {
       [...(await createServiceRuntimeExecArgv(workspaceCwd)), 'dist/index.js'],
       {
         cwd: workspaceCwd,
-        env: await createServiceRuntimeEnvironment(process.env),
+        env: await createServiceRuntimeEnvironment(workspaceCwd, process.env),
         stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
       }
     )
