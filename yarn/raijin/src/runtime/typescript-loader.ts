@@ -12,6 +12,7 @@ import { readFile }                from 'node:fs/promises'
 import { createRequire }           from 'node:module'
 import { dirname }                 from 'node:path'
 import { extname }                 from 'node:path'
+import { isAbsolute }              from 'node:path'
 import { join }                    from 'node:path'
 import { fileURLToPath }           from 'node:url'
 import { pathToFileURL }           from 'node:url'
@@ -29,11 +30,19 @@ const sourceExtensionsBySpecifier = new Map([
 ])
 
 const typescriptExtensions = new Set(['.ts', '.tsx', '.mts'])
+const packageSubpathFallbackErrorCodes = new Set(['ERR_MODULE_NOT_FOUND', 'MODULE_NOT_FOUND'])
 
 type NextResolve = (
   specifier: string,
   context?: ResolveHookContext
 ) => Promise<ResolveFnOutput> | ResolveFnOutput
+
+const isPackageSubpathFallbackError = (error: unknown): boolean =>
+  error !== null &&
+  typeof error === 'object' &&
+  'code' in error &&
+  typeof error.code === 'string' &&
+  packageSubpathFallbackErrorCodes.has(error.code)
 
 const resolveSourceSpecifier = async (
   context: ResolveHookContext,
@@ -162,7 +171,7 @@ const resolvePackageSubpathSource = (
     const parentRequire = createRequire(parentURL)
     const resolvedPath = parentRequire.resolve(specifier)
 
-    if (!resolvedPath.startsWith('/')) {
+    if (!isAbsolute(resolvedPath)) {
       return undefined
     }
 
@@ -203,6 +212,10 @@ export const resolve: ResolveHook = async (specifier, context, next) => {
     try {
       return await next(specifier, context)
     } catch (error) {
+      if (!isPackageSubpathFallbackError(error)) {
+        throw error
+      }
+
       const resolved = resolvePackageSubpathSource(specifier, context.parentURL)
 
       if (resolved) {

@@ -17,6 +17,9 @@ const createNextLoad = () =>
     throw new Error('Unexpected fallback loader call')
   }) as never
 
+const createModuleNotFoundError = (message: string): Error & { code: string } =>
+  Object.assign(new Error(message), { code: 'ERR_MODULE_NOT_FOUND' })
+
 test('should resolve js specifier to ts source when physical virtual path is unavailable', async () => {
   const parentURL = pathToFileURL('/virtual/workspace/src/index.ts').href
   const attemptedSpecifiers: Array<string> = []
@@ -82,11 +85,56 @@ test('should resolve package subpath through package manager fallback', async ()
       'fixture/image',
       { parentURL: pathToFileURL(parentPath).href } as never,
       (() => {
-        throw new Error('Cannot resolve fixture/image')
+        throw createModuleNotFoundError('Cannot resolve fixture/image')
       }) as never
     )
 
     assert.match(result.url, /\/node_modules\/fixture\/image\.js$/)
+  } finally {
+    await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
+  }
+})
+
+test('should not resolve package subpath fallback for export condition errors', async () => {
+  const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))
+  const sourceDir = join(workspace, 'src')
+  const packageDir = join(workspace, 'node_modules/fixture')
+  const parentPath = join(sourceDir, 'index.ts')
+
+  try {
+    await mkdir(sourceDir, { recursive: true })
+    await mkdir(packageDir, { recursive: true })
+    await writeFile(join(workspace, 'package.json'), JSON.stringify({ type: 'module' }), 'utf-8')
+    await writeFile(
+      join(packageDir, 'package.json'),
+      JSON.stringify({
+        name: 'fixture',
+        exports: {
+          '.': {
+            require: './cjs.js',
+          },
+        },
+      }),
+      'utf-8'
+    )
+    await writeFile(parentPath, `import fixture from 'fixture'\nexport { fixture }\n`, 'utf-8')
+    await writeFile(join(packageDir, 'cjs.js'), `module.exports = true\n`, 'utf-8')
+
+    const error = Object.assign(new Error('Package path is not exported'), {
+      code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
+    })
+
+    await assert.rejects(
+      async () =>
+        resolve(
+          'fixture',
+          { parentURL: pathToFileURL(parentPath).href } as never,
+          (() => {
+            throw error
+          }) as never
+        ),
+      (actual) => actual === error
+    )
   } finally {
     await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
   }
