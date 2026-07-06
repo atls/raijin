@@ -3,14 +3,12 @@ import type { webpack as wp }           from '@atls/raijin/webpack'
 import type { ServiceLogRecord }        from './service.interfaces.js'
 
 import EventEmitter                     from 'node:events'
-import { createRequire }                from 'node:module'
-import { join }                         from 'node:path'
 import { PassThrough }                  from 'node:stream'
-import { pathToFileURL }                from 'node:url'
 
 import { SeverityNumber }               from '@monstrs/logger'
 
 import { StartServerPlugin }            from '@atls/webpack-start-server-plugin'
+import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
 
 import { WebpackConfig }                from './webpack.config.js'
 import { createServiceRuntimeExecArgv } from './service-exec-argv.js'
@@ -25,10 +23,9 @@ type WebpackRuntime = {
 const WEBPACK_RUNTIME_SPECIFIER = '@atls/raijin/webpack'
 
 const importWebpackRuntime = async (cwd: string): Promise<WebpackRuntime> => {
-  const workspaceRequire = createRequire(join(cwd, 'package.json'))
-  const runtimePath = workspaceRequire.resolve(WEBPACK_RUNTIME_SPECIFIER)
+  const runtimeUrl = resolveRaijinRuntimeUrl(cwd, WEBPACK_RUNTIME_SPECIFIER)
 
-  return (await import(pathToFileURL(runtimePath).href)) as WebpackRuntime
+  return (await import(runtimeUrl)) as WebpackRuntime
 }
 
 export class Service extends EventEmitter {

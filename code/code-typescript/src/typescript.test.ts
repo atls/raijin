@@ -59,26 +59,80 @@ test('should preserve project module resolution options during typecheck', async
 })
 
 test('should import TypeScript runtime through workspace package boundary', async () => {
-  const cwd = await createProject({
-    'node_modules/@atls/raijin/package.json': JSON.stringify(
-      {
-        type: 'module',
-        devDependencies: {
-          '@atls/raijin': 'workspace:*',
+  const cwd = await createProject(
+    {
+      'node_modules/@atls/raijin/package.json': JSON.stringify(
+        {
+          type: 'module',
+          exports: {
+            './typescript': './typescript.js',
+          },
         },
-        exports: {
-          './typescript': './typescript.js',
-        },
+        null,
+        2
+      ),
+      'node_modules/@atls/raijin/typescript.js': 'export const ts = { workspaceRuntime: true }\n',
+    },
+    {
+      devDependencies: {
+        '@atls/raijin': 'workspace:*',
       },
-      null,
-      2
-    ),
-    'node_modules/@atls/raijin/typescript.js': 'export const ts = { workspaceRuntime: true }\n',
-  })
+    }
+  )
 
   const typescript = await TypeScript.initialize(cwd)
 
   assert.deepEqual(Reflect.get(typescript, 'ts'), { workspaceRuntime: true })
+})
+
+test('should import TypeScript runtime through direct Raijin workspace boundary', async () => {
+  const cwd = await createProject(
+    {
+      'node_modules/@atls/raijin/package.json': JSON.stringify(
+        {
+          type: 'module',
+          exports: {
+            './typescript': './typescript.js',
+          },
+        },
+        null,
+        2
+      ),
+      'node_modules/@atls/raijin/typescript.js': 'export const ts = { workspaceRuntime: true }\n',
+    },
+    {
+      name: '@atls/raijin',
+    }
+  )
+
+  const typescript = await TypeScript.initialize(cwd)
+
+  assert.deepEqual(Reflect.get(typescript, 'ts'), { workspaceRuntime: true })
+})
+
+test('should not import TypeScript runtime through unrelated leaf workspace boundary', async () => {
+  const cwd = await createProject(
+    {
+      'node_modules/@atls/raijin/package.json': JSON.stringify(
+        {
+          type: 'module',
+          exports: {
+            './typescript': './typescript.js',
+          },
+        },
+        null,
+        2
+      ),
+      'node_modules/@atls/raijin/typescript.js': 'export const ts = { leafRuntime: true }\n',
+    },
+    {
+      name: '@scope/internal',
+    }
+  )
+
+  const typescript = await TypeScript.initialize(cwd)
+
+  assert.notDeepEqual(Reflect.get(typescript, 'ts'), { leafRuntime: true })
 })
 
 test('should import TypeScript runtime through ancestor package boundary', async () => {

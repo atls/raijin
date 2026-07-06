@@ -3,11 +3,8 @@ import type { createRuntimeEnvironment as createRuntimeEnvironmentFn } from '@at
 import type { findPnpEsmLoader as findPnpEsmLoaderFn } from '@atls/raijin/runtime-exec-argv'
 import type { resolveTypeScriptLoader as resolveTypeScriptLoaderFn } from '@atls/raijin/runtime-exec-argv'
 
-import { createRequire }                               from 'node:module'
-import { join }                                        from 'node:path'
-import { pathToFileURL }                               from 'node:url'
+import { resolveRaijinRuntimeUrl }                     from '@atls/raijin/runtime-resolver'
 
-const PACKAGE_MANIFEST = 'package.json'
 const RUNTIME_EXEC_ARGV_SPECIFIER = '@atls/raijin/runtime-exec-argv'
 const TYPESCRIPT_LOADER_SPECIFIER = '@atls/raijin/typescript-loader'
 
@@ -18,11 +15,8 @@ type RuntimeExecArgvModule = {
   resolveTypeScriptLoader: typeof resolveTypeScriptLoaderFn
 }
 
-export const resolveRuntimeExecArgvModuleUrl = (cwd: string): string => {
-  const workspaceRequire = createRequire(join(cwd, PACKAGE_MANIFEST))
-
-  return pathToFileURL(workspaceRequire.resolve(RUNTIME_EXEC_ARGV_SPECIFIER)).href
-}
+export const resolveRuntimeExecArgvModuleUrl = (cwd: string): string =>
+  resolveRaijinRuntimeUrl(cwd, RUNTIME_EXEC_ARGV_SPECIFIER)
 
 const importRuntimeExecArgvModule = async (cwd: string): Promise<RuntimeExecArgvModule> =>
   (await import(resolveRuntimeExecArgvModuleUrl(cwd))) as RuntimeExecArgvModule

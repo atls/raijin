@@ -24,12 +24,22 @@ test('should expose service exec argv through runtime contract', () => {
   )
 })
 
-test('should resolve service runtime module through workspace package boundary', async () => {
+test('should resolve service runtime module through ancestor package boundary', async () => {
   const root = await mkdtemp(join(tmpdir(), 'service-exec-argv-workspace-'))
   const workspace = join(root, 'server', 'api')
-  const runtime = join(workspace, 'node_modules/@atls/raijin')
+  const runtime = join(root, 'node_modules/@atls/raijin')
 
   await mkdir(runtime, { recursive: true })
+  await mkdir(workspace, { recursive: true })
+  await writeFile(
+    join(root, 'package.json'),
+    JSON.stringify({
+      type: 'module',
+      devDependencies: {
+        '@atls/raijin': 'workspace:*',
+      },
+    })
+  )
   await writeFile(join(workspace, 'package.json'), '{"type":"module"}\n')
   await writeFile(
     join(runtime, 'package.json'),

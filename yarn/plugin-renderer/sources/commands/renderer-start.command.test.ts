@@ -120,12 +120,22 @@ test('should preserve CommonJS extension for Next standalone server entrypoint',
   assert.equal(RENDERER_STANDALONE_SERVER_ENTRYPOINT, 'index.cjs')
 })
 
-test('should resolve renderer runtime module through workspace package boundary', async () => {
+test('should resolve renderer runtime module through ancestor package boundary', async () => {
   const root = await mkdtemp(join(tmpdir(), 'renderer-start-workspace-'))
   const workspace = join(root, 'client', 'next-app')
-  const runtime = join(workspace, 'node_modules/@atls/raijin')
+  const runtime = join(root, 'node_modules/@atls/raijin')
 
   await mkdir(runtime, { recursive: true })
+  await mkdir(workspace, { recursive: true })
+  await writeFile(
+    join(root, 'package.json'),
+    JSON.stringify({
+      type: 'module',
+      devDependencies: {
+        '@atls/raijin': 'workspace:*',
+      },
+    })
+  )
   await writeFile(join(workspace, 'package.json'), '{"type":"module"}\n')
   await writeFile(
     join(runtime, 'package.json'),

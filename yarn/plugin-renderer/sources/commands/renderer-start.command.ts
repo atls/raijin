@@ -1,9 +1,6 @@
 import type { createRuntimeEnvironment as createRuntimeEnvironmentFn } from '@atls/raijin/runtime-exec-argv'
 
 import { spawn }                                 from 'node:child_process'
-import { createRequire }                         from 'node:module'
-import { join }                                  from 'node:path'
-import { pathToFileURL }                         from 'node:url'
 
 import { BaseCommand }                           from '@yarnpkg/cli'
 import { Filename }                              from '@yarnpkg/fslib'
@@ -11,6 +8,7 @@ import { execUtils }                             from '@yarnpkg/core'
 import { xfs }                                   from '@yarnpkg/fslib'
 
 import { COMMAND_PROXY_EXECUTION }               from '@atls/yarn-plugin-tools/command-context'
+import { resolveRaijinRuntimeUrl }               from '@atls/raijin/runtime-resolver'
 import { createCommandProxyEnvironment }         from '@atls/yarn-plugin-tools/command-context'
 import { resolveWorkspaceCommandContext }        from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
@@ -23,11 +21,8 @@ type RuntimeExecArgvModule = {
 
 const RUNTIME_EXEC_ARGV_SPECIFIER = '@atls/raijin/runtime-exec-argv'
 
-export const resolveRuntimeExecArgvModuleUrl = (cwd: string): string => {
-  const workspaceRequire = createRequire(join(cwd, 'package.json'))
-
-  return pathToFileURL(workspaceRequire.resolve(RUNTIME_EXEC_ARGV_SPECIFIER)).href
-}
+export const resolveRuntimeExecArgvModuleUrl = (cwd: string): string =>
+  resolveRaijinRuntimeUrl(cwd, RUNTIME_EXEC_ARGV_SPECIFIER)
 
 const importRuntimeExecArgvModule = async (cwd: string): Promise<RuntimeExecArgvModule> =>
   (await import(resolveRuntimeExecArgvModuleUrl(cwd))) as RuntimeExecArgvModule

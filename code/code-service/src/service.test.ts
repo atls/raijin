@@ -9,12 +9,22 @@ import test          from 'node:test'
 
 import { Service }   from './service.js'
 
-test('should import service webpack runtime through workspace package boundary', async () => {
+test('should import service webpack runtime through ancestor package boundary', async () => {
   const root = await mkdtemp(join(tmpdir(), 'service-runtime-workspace-'))
   const workspace = join(root, 'server', 'api')
-  const runtime = join(workspace, 'node_modules/@atls/raijin')
+  const runtime = join(root, 'node_modules/@atls/raijin')
 
   await mkdir(runtime, { recursive: true })
+  await mkdir(workspace, { recursive: true })
+  await writeFile(
+    join(root, 'package.json'),
+    JSON.stringify({
+      type: 'module',
+      devDependencies: {
+        '@atls/raijin': 'workspace:*',
+      },
+    })
+  )
   await writeFile(join(workspace, 'package.json'), '{"type":"module"}\n')
   await writeFile(
     join(runtime, 'package.json'),

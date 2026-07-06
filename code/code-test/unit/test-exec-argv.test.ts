@@ -73,12 +73,22 @@ test('should create test runtime exec argv with loadable TypeScript loader', asy
   }
 })
 
-test('should resolve test runtime module through workspace package boundary', async () => {
+test('should resolve test runtime module through ancestor package boundary', async () => {
   const root = await mkdtemp(join(tmpdir(), 'test-exec-argv-workspace-'))
   const workspace = join(root, 'client', 'next-app')
-  const runtime = join(workspace, 'node_modules/@atls/raijin')
+  const runtime = join(root, 'node_modules/@atls/raijin')
 
   await mkdir(runtime, { recursive: true })
+  await mkdir(workspace, { recursive: true })
+  await writeFile(
+    join(root, 'package.json'),
+    JSON.stringify({
+      type: 'module',
+      devDependencies: {
+        '@atls/raijin': 'workspace:*',
+      },
+    })
+  )
   await writeFile(join(workspace, 'package.json'), '{"type":"module"}\n')
   await writeFile(
     join(runtime, 'package.json'),
