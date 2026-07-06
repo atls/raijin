@@ -6,6 +6,7 @@ import EventEmitter                  from 'node:events'
 import { existsSync }                from 'node:fs'
 import { readFileSync }              from 'node:fs'
 import { createRequire }             from 'node:module'
+import { dirname }                   from 'node:path'
 import { join }                      from 'node:path'
 import { pathToFileURL }             from 'node:url'
 
@@ -15,7 +16,14 @@ import { transformJsxToJsExtension } from './transformers/index.js'
 
 const PROJECT_TS_CONFIG = 'tsconfig.json'
 const PACKAGE_MANIFEST = 'package.json'
+const RAIJIN_PACKAGE_NAME = '@atls/raijin'
 const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
+const PACKAGE_DEPENDENCY_FIELDS = [
+  'dependencies',
+  'devDependencies',
+  'peerDependencies',
+  'optionalDependencies',
+] as const
 
 type TSConfigShape = Record<string, unknown> & {
   compilerOptions?: Record<string, unknown>
@@ -23,6 +31,11 @@ type TSConfigShape = Record<string, unknown> & {
 }
 
 type PackageManifestShape = Record<string, unknown> & {
+  dependencies?: Record<string, unknown>
+  devDependencies?: Record<string, unknown>
+  name?: unknown
+  optionalDependencies?: Record<string, unknown>
+  peerDependencies?: Record<string, unknown>
   typecheckIgnorePatterns?: Array<string>
   typecheckSkipLibCheck?: boolean
 }
@@ -35,7 +48,42 @@ const asCompilerOptions = (value: unknown): Record<string, unknown> =>
 const asStringArray = (value: unknown): Array<string> =>
   Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
 
+const readPackageManifestAt = (cwd: string): PackageManifestShape | undefined => {
+  const path = join(cwd, PACKAGE_MANIFEST)
+
+  if (!existsSync(path)) {
+    return undefined
+  }
+
+  return JSON.parse(readFileSync(path, 'utf-8')) as PackageManifestShape
+}
+
+const hasRaijinPackageBoundary = (manifest: PackageManifestShape): boolean =>
+  manifest.name === RAIJIN_PACKAGE_NAME ||
+  PACKAGE_DEPENDENCY_FIELDS.some((field) =>
+    Object.hasOwn(manifest[field] ?? {}, RAIJIN_PACKAGE_NAME))
+
 export const resolveTypeScriptRuntimeUrl = (cwd: string): string => {
+  let current = cwd
+
+  while (true) {
+    const manifest = readPackageManifestAt(current)
+
+    if (manifest && hasRaijinPackageBoundary(manifest)) {
+      const workspaceRequire = createRequire(join(current, PACKAGE_MANIFEST))
+
+      return pathToFileURL(workspaceRequire.resolve(TYPESCRIPT_RUNTIME_SPECIFIER)).href
+    }
+
+    const parent = dirname(current)
+
+    if (parent === current) {
+      break
+    }
+
+    current = parent
+  }
+
   const workspaceRequire = createRequire(join(cwd, PACKAGE_MANIFEST))
 
   return pathToFileURL(workspaceRequire.resolve(TYPESCRIPT_RUNTIME_SPECIFIER)).href

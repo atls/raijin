@@ -63,6 +63,9 @@ test('should import TypeScript runtime through workspace package boundary', asyn
     'node_modules/@atls/raijin/package.json': JSON.stringify(
       {
         type: 'module',
+        devDependencies: {
+          '@atls/raijin': 'workspace:*',
+        },
         exports: {
           './typescript': './typescript.js',
         },
@@ -76,6 +79,41 @@ test('should import TypeScript runtime through workspace package boundary', asyn
   const typescript = await TypeScript.initialize(cwd)
 
   assert.deepEqual(Reflect.get(typescript, 'ts'), { workspaceRuntime: true })
+})
+
+test('should import TypeScript runtime through ancestor package boundary', async () => {
+  const cwd = await createProject(
+    {
+      'node_modules/@atls/raijin/package.json': JSON.stringify(
+        {
+          type: 'module',
+          exports: {
+            './typescript': './typescript.js',
+          },
+        },
+        null,
+        2
+      ),
+      'node_modules/@atls/raijin/typescript.js': 'export const ts = { rootRuntime: true }\n',
+      'packages/internal/package.json': JSON.stringify(
+        {
+          name: '@scope/internal',
+          type: 'module',
+        },
+        null,
+        2
+      ),
+    },
+    {
+      devDependencies: {
+        '@atls/raijin': 'workspace:*',
+      },
+    }
+  )
+
+  const typescript = await TypeScript.initialize(join(cwd, 'packages/internal'))
+
+  assert.deepEqual(Reflect.get(typescript, 'ts'), { rootRuntime: true })
 })
 
 test('should ignore generated artifacts during typecheck', async () => {
