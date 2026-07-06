@@ -13,7 +13,9 @@ import { ErrorInfo }                      from '@atls/cli-ui-error-info-componen
 import { LintProgress }                   from '@atls/cli-ui-lint-progress-component'
 import { LintResult }                     from '@atls/cli-ui-lint-result-component'
 import { Linter }                         from '@atls/code-lint'
+import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
 import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
+import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
 import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
 
@@ -36,7 +38,7 @@ export class LintCommand extends BaseCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -61,9 +63,7 @@ export class LintCommand extends BaseCommand {
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, ['lint', ...args, ...this.files], {
@@ -104,7 +104,7 @@ export class LintCommand extends BaseCommand {
         cache: this.cache,
       })
 
-      return results.find((result) => result.messages.length > 0) ? 1 : 0
+      return results.find((result) => result.errorCount > 0 || result.fatalErrorCount > 0) ? 1 : 0
     } catch (error) {
       if (error instanceof Error) {
         renderStatic(<ErrorInfo error={error} />)

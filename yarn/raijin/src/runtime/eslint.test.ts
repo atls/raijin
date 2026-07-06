@@ -13,6 +13,7 @@ test('should allow generated project config files outside tsconfig scope', () =>
     '.eslintrc.js',
     '.prettierrc.mjs',
     'eslint.config.mjs',
+    'postcss.config.mjs',
   ])
 })
 
@@ -44,4 +45,28 @@ test('should disable type-aware TypeScript rules for JavaScript files', () => {
   assert.equal(javascriptConfig.rules['@typescript-eslint/consistent-type-exports'], 'off')
   assert.equal(javascriptConfig.rules['@typescript-eslint/prefer-optional-chain'], 'off')
   assert.equal(javascriptConfig.rules['@typescript-eslint/restrict-template-expressions'], 'off')
+})
+
+test('should accept stock Next.js application component style', () => {
+  const [baseConfig] = eslintconfig
+
+  assert.ok(baseConfig.rules)
+  assert.deepEqual(baseConfig.rules['react/function-component-definition'], [
+    'error',
+    {
+      namedComponents: ['function-declaration', 'arrow-function'],
+      unnamedComponents: 'arrow-function',
+    },
+  ])
+  assert.deepEqual(baseConfig.rules['react/jsx-sort-props'], [
+    'error',
+    {
+      ignoreCase: true,
+      multiline: 'last',
+      reservedFirst: true,
+      callbacksLast: true,
+      shorthandFirst: false,
+      noSortAlphabetically: true,
+    },
+  ])
 })

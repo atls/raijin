@@ -72,6 +72,7 @@ const config: Array<Linter.Config> = [
             '.eslintrc.js',
             '.prettierrc.mjs',
             'eslint.config.mjs',
+            'postcss.config.mjs',
           ],
         },
         ecmaFeatures: {

@@ -161,7 +161,7 @@ export const rules: Linter.RulesRecord = {
   'react/function-component-definition': [
     'error',
     {
-      namedComponents: 'arrow-function',
+      namedComponents: ['function-declaration', 'arrow-function'],
       unnamedComponents: 'arrow-function',
     },
   ],
@@ -294,7 +294,7 @@ export const rules: Linter.RulesRecord = {
       multiline: 'last',
       reservedFirst: true,
       callbacksLast: true,
-      shorthandFirst: true,
+      shorthandFirst: false,
       noSortAlphabetically: true,
     },
   ],
