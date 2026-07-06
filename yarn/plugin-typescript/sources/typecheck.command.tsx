@@ -133,14 +133,6 @@ export class TypeCheckCommand extends BaseCommand {
     }
 
     if (await xfs.existsPromise(ppath.join(typecheckCwd, 'tsconfig.json'))) {
-      const tsconfig: { include?: Array<string> } = await xfs.readJsonPromise(
-        ppath.join(typecheckCwd, 'tsconfig.json')
-      )
-
-      if (tsconfig.include && tsconfig.include.length > 0) {
-        return tsconfig.include
-      }
-
       return undefined
     }
 

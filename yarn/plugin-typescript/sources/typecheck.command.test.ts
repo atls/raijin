@@ -31,7 +31,7 @@ class TestTypeCheckCommand extends TypeCheckCommand {
   }
 }
 
-test('should read includes from workspace tsconfig', async () => {
+test('should leave workspace tsconfig include as config-owned scope', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-'))
   const workspaceCwd = join(cwd, 'client/next-app')
   const command = new TestTypeCheckCommand()
@@ -43,10 +43,7 @@ test('should read includes from workspace tsconfig', async () => {
     '{"include":["next-env.d.ts","src/**/*.ts"]}\n'
   )
 
-  assert.deepEqual(await command.resolveIncludes(cwd, workspaceCwd, workspaceCwd), [
-    'next-env.d.ts',
-    'src/**/*.ts',
-  ])
+  assert.equal(await command.resolveIncludes(cwd, workspaceCwd, workspaceCwd), undefined)
 })
 
 test('should preserve workspace tsconfig scope without include override', async () => {

@@ -43,6 +43,22 @@ const asCompilerOptions = (value: unknown): Record<string, unknown> =>
 const asStringArray = (value: unknown): Array<string> =>
   Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
 
+const createProjectConfig = (
+  projectConfig: TSConfigShape,
+  include: Array<string> | undefined
+): TSConfigShape => {
+  if (include === undefined) {
+    return projectConfig
+  }
+
+  const config = { ...projectConfig }
+
+  delete config.files
+  delete config.references
+
+  return config
+}
+
 export const resolveTypeScriptRuntimeUrl = (cwd: string): string =>
   resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_RUNTIME_SPECIFIER)
 
@@ -94,14 +110,15 @@ export class TypeScript extends EventEmitter {
       return projectConfig.errors
     }
 
-    const projectCompilerOptions = asCompilerOptions(projectConfig.config.compilerOptions)
+    const effectiveProjectConfig = createProjectConfig(projectConfig.config, include)
+    const projectCompilerOptions = asCompilerOptions(effectiveProjectConfig.compilerOptions)
     const projectIgnorePatterns = this.getProjectIgnorePatterns()
-    const projectExcludePatterns = asStringArray(projectConfig.config.exclude)
+    const projectExcludePatterns = asStringArray(effectiveProjectConfig.exclude)
     const skipLibCheck = this.getLibCheckOption(projectCompilerOptions)
 
     const config = {
       ...tsconfig,
-      ...projectConfig.config,
+      ...effectiveProjectConfig,
       compilerOptions: {
         ...tsconfig.compilerOptions,
         ...projectCompilerOptions,

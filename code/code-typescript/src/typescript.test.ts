@@ -97,6 +97,36 @@ test('should preserve inherited tsconfig scope during typecheck', async () => {
   )
 })
 
+test('should replace file-list tsconfig scope for explicit targets', async () => {
+  const cwd = await createProject({
+    'tsconfig.json': JSON.stringify(
+      {
+        files: [],
+      },
+      null,
+      2
+    ),
+    'src/index.ts': 'export const value = 1\n',
+  })
+  const typescript = new TypeScript(ts, cwd)
+  let files: Array<string> = []
+
+  typescript.on('start', ({ files: nextFiles }: { files: Array<string> }) => {
+    files = nextFiles
+  })
+
+  const diagnostics = await typescript.check(['src/index.ts'])
+
+  assert.equal(
+    diagnostics.some((diagnostic) => diagnostic.code === 18002),
+    false
+  )
+  assert.equal(
+    files.some((file) => file.endsWith('/src/index.ts')),
+    true
+  )
+})
+
 test('should preserve project manifest options with workspace tsconfig', async () => {
   const cwd = await createProject(
     {
