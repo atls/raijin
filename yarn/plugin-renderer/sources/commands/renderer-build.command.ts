@@ -24,10 +24,10 @@ import { extractNodeLoaderOption }                       from './renderer-build.
 import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
 import { resolveRendererBuildPnpLoader }                 from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
-import { resolveRendererBuildStandaloneWorkspaceCwd }    from './renderer-build.utils.js'
+import { resolveRendererBuildStandaloneSourceCwd }       from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
-  static paths = [['renderer', 'build']]
+  static override paths = [['renderer', 'build']]
 
   async execute(): Promise<number> {
     await cleanupRendererBuildDiscoveryArtifacts(this.context.cwd)
@@ -73,71 +73,62 @@ export class RendererBuildCommand extends BaseCommand {
               })
           })
 
-          await xfs.writeJsonPromise(ppath.join(rendererCwd, 'src/package.json'), {
-            type: 'module',
+          const binFolder = await xfs.mktempPromise()
+          const executableContext = {
+            binFolder,
+            locator: workspace.anchoredLocator,
+            project,
+          }
+          const scriptEnvironment = await makeCurrentYarnExecutable(executableContext)
+          const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
+          const loader = await resolveRendererBuildPnpLoader(
+            project.cwd,
+            scriptEnvironment.env.NODE_OPTIONS
+          )
+          const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
+          const nextBinary = binaries.get('next')
+
+          if (!nextBinary) {
+            throw new Error('Renderer build requires Next.js 16 or newer')
+          }
+
+          const [nextPackage, nextBin] = nextBinary
+          const nextVersion = resolveNextPackageVersion(nextPackage)
+          const nextCompiledConfRequireCacheLoader =
+            await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
+          const { executable, env } = await makeCurrentYarnExecutable({
+            ...executableContext,
+            env: {
+              NODE_OPTIONS: nodeOptions,
+            },
+            nodeLoader: nextCompiledConfRequireCacheLoader,
           })
 
-          try {
-            const binFolder = await xfs.mktempPromise()
-            const executableContext = {
-              binFolder,
-              locator: workspace.anchoredLocator,
-              project,
+          const { code } = await execUtils.pipevp(
+            executable,
+            createRendererBuildArgs(nextVersion, nextBin),
+            {
+              end: execUtils.EndStrategy.ErrorCode,
+              cwd: rendererCwd,
+              stdin: this.context.stdin,
+              stdout,
+              stderr,
+              env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, rendererCwd, {
+                output: 'standalone',
+              }),
             }
-            const scriptEnvironment = await makeCurrentYarnExecutable(executableContext)
-            const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
-            const loader = await resolveRendererBuildPnpLoader(
-              project.cwd,
-              scriptEnvironment.env.NODE_OPTIONS
-            )
-            const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
-            const nextBinary = binaries.get('next')
+          )
 
-            if (!nextBinary) {
-              throw new Error('Renderer build requires Next.js 16 or newer')
-            }
-
-            const [nextPackage, nextBin] = nextBinary
-            const nextVersion = resolveNextPackageVersion(nextPackage)
-            const nextCompiledConfRequireCacheLoader =
-              await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
-            const { executable, env } = await makeCurrentYarnExecutable({
-              ...executableContext,
-              env: {
-                NODE_OPTIONS: nodeOptions,
-              },
-              nodeLoader: nextCompiledConfRequireCacheLoader,
-            })
-
-            const { code } = await execUtils.pipevp(
-              executable,
-              createRendererBuildArgs(nextVersion, nextBin),
-              {
-                end: execUtils.EndStrategy.ErrorCode,
-                cwd: rendererCwd,
-                stdin: this.context.stdin,
-                stdout,
-                stderr,
-                env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader),
-              }
-            )
-
-            assertRendererBuildExitCode(code)
-          } finally {
-            await xfs.removePromise(ppath.join(rendererCwd, 'src/package.json'))
-          }
+          assertRendererBuildExitCode(code)
         })
 
         await report.startTimerPromise('Copy standalone files', async () => {
-          const standaloneWorkspaceCwd = resolveRendererBuildStandaloneWorkspaceCwd(
+          const standaloneSourceCwd = await resolveRendererBuildStandaloneSourceCwd(
             project.cwd,
             rendererCwd
           )
 
-          await xfs.copyPromise(
-            ppath.join(rendererCwd, 'dist'),
-            ppath.join(standaloneWorkspaceCwd, 'src')
-          )
+          await xfs.copyPromise(ppath.join(rendererCwd, 'dist'), standaloneSourceCwd)
         })
 
         await report.startTimerPromise('Clean workspace manifests', async () => {
@@ -147,7 +138,7 @@ export class RendererBuildCommand extends BaseCommand {
         await report.startTimerPromise('Copy static files', async () => {
           await xfs.copyPromise(
             ppath.join(rendererCwd, 'dist/.next/static'),
-            ppath.join(rendererCwd, 'src/.next/static')
+            ppath.join(rendererCwd, '.next/static')
           )
         })
 
@@ -156,10 +147,10 @@ export class RendererBuildCommand extends BaseCommand {
         })
 
         await report.startTimerPromise('Copy edge chunks files', async () => {
-          if (await xfs.existsPromise(ppath.join(rendererCwd, 'src/.next/server/edge-chunks'))) {
+          if (await xfs.existsPromise(ppath.join(rendererCwd, '.next/server/edge-chunks'))) {
             await xfs.copyPromise(
               ppath.join(rendererCwd, 'dist/.next/server/edge-chunks'),
-              ppath.join(rendererCwd, 'src/.next/server/edge-chunks')
+              ppath.join(rendererCwd, '.next/server/edge-chunks')
             )
           }
         })

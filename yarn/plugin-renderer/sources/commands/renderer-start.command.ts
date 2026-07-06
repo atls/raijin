@@ -1,12 +1,17 @@
 import type { createRuntimeEnvironment as createRuntimeEnvironmentFn } from '@atls/raijin/runtime-exec-argv'
 
 import { spawn }                                 from 'node:child_process'
+import { createRequire }                         from 'node:module'
+import { join }                                  from 'node:path'
+import { pathToFileURL }                         from 'node:url'
 
 import { BaseCommand }                           from '@yarnpkg/cli'
 import { Filename }                              from '@yarnpkg/fslib'
 import { execUtils }                             from '@yarnpkg/core'
 import { xfs }                                   from '@yarnpkg/fslib'
 
+import { COMMAND_PROXY_EXECUTION }               from '@atls/yarn-plugin-tools/command-context'
+import { createCommandProxyEnvironment }         from '@atls/yarn-plugin-tools/command-context'
 import { resolveWorkspaceCommandContext }        from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
@@ -18,13 +23,20 @@ type RuntimeExecArgvModule = {
 
 const RUNTIME_EXEC_ARGV_SPECIFIER = '@atls/raijin/runtime-exec-argv'
 
-const importRuntimeExecArgvModule = async (): Promise<RuntimeExecArgvModule> =>
-  (await import(RUNTIME_EXEC_ARGV_SPECIFIER)) as RuntimeExecArgvModule
+export const resolveRuntimeExecArgvModuleUrl = (cwd: string): string => {
+  const workspaceRequire = createRequire(join(cwd, 'package.json'))
+
+  return pathToFileURL(workspaceRequire.resolve(RUNTIME_EXEC_ARGV_SPECIFIER)).href
+}
+
+const importRuntimeExecArgvModule = async (cwd: string): Promise<RuntimeExecArgvModule> =>
+  (await import(resolveRuntimeExecArgvModuleUrl(cwd))) as RuntimeExecArgvModule
 
 const createRendererRuntimeEnvironment = async (
+  cwd: string,
   environment?: NodeJS.ProcessEnv
 ): Promise<NodeJS.ProcessEnv> => {
-  const { createRuntimeEnvironment } = await importRuntimeExecArgvModule()
+  const { createRuntimeEnvironment } = await importRuntimeExecArgvModule(cwd)
 
   return createRuntimeEnvironment(environment, { preservePnpEsmLoader: true })
 }
@@ -39,7 +51,7 @@ export class RendererStartCommand extends BaseCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -56,9 +68,7 @@ export class RendererStartCommand extends BaseCommand {
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, ['renderer', 'start'], {
@@ -80,7 +90,7 @@ export class RendererStartCommand extends BaseCommand {
 
     const child = spawn(process.execPath, [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`], {
       cwd: workspaceCwd,
-      env: await createRendererRuntimeEnvironment(process.env),
+      env: await createRendererRuntimeEnvironment(workspaceCwd, process.env),
       stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
     })
 

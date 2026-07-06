@@ -1,24 +1,28 @@
-import type { Locator }                  from '@yarnpkg/core'
-import type { Filename }                 from '@yarnpkg/fslib'
-import type { PortablePath }             from '@yarnpkg/fslib'
+import type { Locator }                   from '@yarnpkg/core'
+import type { Filename }                  from '@yarnpkg/fslib'
+import type { PortablePath }              from '@yarnpkg/fslib'
 
-import { pathToFileURL }                 from 'node:url'
+import { pathToFileURL }                  from 'node:url'
 
-import { structUtils }                   from '@yarnpkg/core'
-import { npath }                         from '@yarnpkg/fslib'
-import { ppath }                         from '@yarnpkg/fslib'
-import { xfs }                           from '@yarnpkg/fslib'
+import { structUtils }                    from '@yarnpkg/core'
+import { npath }                          from '@yarnpkg/fslib'
+import { ppath }                          from '@yarnpkg/fslib'
+import { xfs }                            from '@yarnpkg/fslib'
 
-import { NEXT_COMPILED_CONF_PATH }       from './renderer-build.constants.js'
-import { NEXT_COMPILED_WEBPACK_PATH }    from './renderer-build.constants.js'
-import { NEXT_CONFIG_REQUIRE_HOOK_PATH } from './renderer-build.constants.js'
-import { NEXT_PACKAGE_PATH }             from './renderer-build.constants.js'
-import { NEXT_REQUIRE_CACHE_PATH }       from './renderer-build.constants.js'
-import { NEXT_WEBPACK_CONFIG_PATH }      from './renderer-build.constants.js'
+import { NEXT_COMPILED_CONF_PATH }        from './renderer-build.constants.js'
+import { NEXT_COMPILED_WEBPACK_PATH }     from './renderer-build.constants.js'
+import { NEXT_CONFIG_REQUIRE_HOOK_PATH }  from './renderer-build.constants.js'
+import { NEXT_NODE_MANIFEST_LOADER_PATH } from './renderer-build.constants.js'
+import { NEXT_PACKAGE_PATH }              from './renderer-build.constants.js'
+import { NEXT_REQUIRE_CACHE_PATH }        from './renderer-build.constants.js'
+import { NEXT_SERVER_CONFIG_PATH }        from './renderer-build.constants.js'
+import { NEXT_WEBPACK_CONFIG_PATH }       from './renderer-build.constants.js'
 
 const NEXT_COMPILED_CONF_LOADER_FILENAME = 'next-compiled-conf-require-cache-loader.mjs'
 const NODE_LOADER_OPTIONS = new Set(['--experimental-loader', '--loader'])
 const RAIJIN_NODE_LOADER = 'RAIJIN_NODE_LOADER'
+const RAIJIN_RENDERER_OUTPUT = 'RAIJIN_RENDERER_OUTPUT'
+const RAIJIN_RENDERER_WORKSPACE_CWD = 'RAIJIN_RENDERER_WORKSPACE_CWD'
 const DIST_DIR = 'dist' as Filename
 const NEXT_DIR = '.next' as Filename
 const PACKAGE_MANIFEST = 'package.json' as Filename
@@ -32,15 +36,13 @@ type RendererBuildPathSegments = ReadonlyArray<Filename>
 
 const RENDERER_BUILD_STALE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegments> = [
   [DIST_DIR],
-  [SRC_DIR, NEXT_DIR],
+  [NEXT_DIR],
 ]
 const RENDERER_BUILD_WORKSPACE_MANIFEST_PATHS: ReadonlyArray<RendererBuildPathSegments> = [
   [DIST_DIR, PACKAGE_MANIFEST],
-  [SRC_DIR, NEXT_DIR, PACKAGE_MANIFEST],
+  [NEXT_DIR, PACKAGE_MANIFEST],
 ]
-const RENDERER_BUILD_SOURCE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegments> = [
-  [SRC_DIR, NEXT_DIR],
-]
+const RENDERER_BUILD_SOURCE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegments> = [[NEXT_DIR]]
 
 const isTemporaryRendererSourceManifest = (manifest: unknown): boolean => {
   if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) {
@@ -72,20 +74,83 @@ const isPnpNodeLoader = (value: string | undefined): boolean =>
 export const NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE = `
 const pnpLoader = {}
 
+const RAIJIN_RENDERER_WORKSPACE_CWD = ${JSON.stringify(RAIJIN_RENDERER_WORKSPACE_CWD)}
 const NEXT_PACKAGE_PATH = ${JSON.stringify(NEXT_PACKAGE_PATH)}
 const NEXT_COMPILED_CONF_PATH = ${JSON.stringify(NEXT_COMPILED_CONF_PATH)}
 const NEXT_CONFIG_REQUIRE_HOOK_PATH = ${JSON.stringify(NEXT_CONFIG_REQUIRE_HOOK_PATH)}
+const NEXT_NODE_MANIFEST_LOADER_PATH = ${JSON.stringify(NEXT_NODE_MANIFEST_LOADER_PATH)}
 const NEXT_REQUIRE_CACHE_PATH = ${JSON.stringify(NEXT_REQUIRE_CACHE_PATH)}
+const NEXT_SERVER_CONFIG_PATH = ${JSON.stringify(NEXT_SERVER_CONFIG_PATH)}
 const NEXT_COMPILED_WEBPACK_PATH = ${JSON.stringify(NEXT_COMPILED_WEBPACK_PATH)}
 const NEXT_WEBPACK_CONFIG_PATH = ${JSON.stringify(NEXT_WEBPACK_CONFIG_PATH)}
 const REQUIRE_CACHE_NEEDLE = 'delete require.cache[__filename]'
 const REQUIRE_CACHE_REPLACEMENT = 'if (require.cache) delete require.cache[__filename]'
+const NEXT_CONFIG_RESULT_NEEDLE = [
+  'const result = {',
+  '        ..._configshared.defaultConfig,',
+  '        ...config,',
+  '        experimental: {',
+  '            ..._configshared.defaultConfig.experimental,',
+  '            ...config.experimental',
+  '        }',
+  '    };',
+].join('\\n')
+const NEXT_CONFIG_RESULT_REPLACEMENT = [
+  NEXT_CONFIG_RESULT_NEEDLE,
+  '    result.experimental.extensionAlias ??= {',
+  "        '.js': ['.js', '.tsx', '.ts'],",
+  "        '.jsx': ['.jsx', '.tsx', '.ts'],",
+  "        '.mjs': ['.mjs', '.mts'],",
+  '    };',
+  '    result.output ??= process.env["RAIJIN_RENDERER_OUTPUT"];',
+  '    result.turbopack ??= {};',
+  '    result.turbopack.root ??= process.env["RAIJIN_RENDERER_WORKSPACE_CWD"];',
+  '    const raijinWebpack = result.webpack;',
+  '    result.webpack = (webpackConfig, context) => {',
+  '        webpackConfig.resolve ??= {};',
+  '        webpackConfig.resolve.extensionAlias ??= result.experimental.extensionAlias;',
+  '',
+  "        if (typeof raijinWebpack === 'function') {",
+  '            return raijinWebpack(webpackConfig, context);',
+  '        }',
+  '',
+  '        return webpackConfig;',
+  '    };',
+].join('\\n')
 const REQUIRE_CACHE_FILE_NEEDLE = 'const mod = require.cache[filePath];'
 const REQUIRE_CACHE_FILE_REPLACEMENT = 'const mod = require.cache?.[filePath];'
 const REQUIRE_CACHE_VALUES_NEEDLE = 'const modules = Object.values(require.cache);'
 const REQUIRE_CACHE_VALUES_REPLACEMENT = 'const modules = Object.values(require.cache || {});'
 const REQUIRE_CACHE_DELETE_FILE_NEEDLE = 'delete require.cache[filePath];'
 const REQUIRE_CACHE_DELETE_FILE_REPLACEMENT = 'if (require.cache) delete require.cache[filePath];'
+const NODE_MANIFEST_LOADER_PATH_NEEDLE =
+  'const _path = /*#__PURE__*/ _interop_require_default(require("../../../../shared/lib/isomorphic/path"));'
+const NODE_MANIFEST_LOADER_PATH_REPLACEMENT = [
+  NODE_MANIFEST_LOADER_PATH_NEEDLE,
+  'const _fs = /*#__PURE__*/ _interop_require_default(require("node:fs"));',
+].join('\\n')
+const NODE_MANIFEST_LOADER_REQUIRE_NEEDLE = [
+  'static require(id) {',
+  '        try {',
+  '            return require(id);',
+  '        } catch  {',
+  '            return null;',
+  '        }',
+  '    }',
+].join('\\n')
+const NODE_MANIFEST_LOADER_REQUIRE_REPLACEMENT = [
+  'static require(id) {',
+  '        try {',
+  "            if (id.endsWith('.json')) {",
+  "                return JSON.parse(_fs.default.readFileSync(id, 'utf8'));",
+  '            }',
+  '',
+  '            return require(id);',
+  '        } catch  {',
+  '            return null;',
+  '        }',
+  '    }',
+].join('\\n')
 const WEBPACK_REQUIRE_CACHE_NEEDLE = 'const $=require.cache[ct];'
 const WEBPACK_REQUIRE_CACHE_REPLACEMENT = 'const $=require.cache?.[ct];'
 const WEBPACK_NODE_PROTOCOL_PLUGIN_NEEDLE =
@@ -96,6 +161,14 @@ const WEBPACK_NODE_PROTOCOL_PLUGIN_REPLACEMENT = [
   '            }),',
   WEBPACK_NODE_PROTOCOL_PLUGIN_NEEDLE,
 ].join('\\n            ')
+const WEBPACK_EXTENSION_ALIAS_NEEDLE = 'extensionAlias: config.experimental.extensionAlias,'
+const WEBPACK_EXTENSION_ALIAS_REPLACEMENT = [
+  'extensionAlias: config.experimental.extensionAlias ?? {',
+  "            '.js': ['.js', '.tsx', '.ts'],",
+  "            '.jsx': ['.jsx', '.tsx', '.ts'],",
+  "            '.mjs': ['.mjs', '.mts'],",
+  '        },',
+].join('\\n        ')
 const REQUIRE_EXTENSIONS_NEEDLE = "const oldJSHook = requireExtensions['.js'];"
 const REQUIRE_EXTENSIONS_REPLACEMENT = "const requireExtensions = require.extensions || _nodemodule.default._extensions;\\nconst oldJSHook = requireExtensions['.js'];"
 
@@ -106,7 +179,11 @@ const isNextCompiledConf = (url) => isNextSource(url, NEXT_COMPILED_CONF_PATH)
 
 const isNextConfigRequireHook = (url) => isNextSource(url, NEXT_CONFIG_REQUIRE_HOOK_PATH)
 
+const isNextNodeManifestLoader = (url) => isNextSource(url, NEXT_NODE_MANIFEST_LOADER_PATH)
+
 const isNextRequireCache = (url) => isNextSource(url, NEXT_REQUIRE_CACHE_PATH)
+
+const isNextServerConfig = (url) => isNextSource(url, NEXT_SERVER_CONFIG_PATH)
 
 const isNextCompiledWebpack = (url) => isNextSource(url, NEXT_COMPILED_WEBPACK_PATH)
 
@@ -115,7 +192,9 @@ const isNextWebpackConfig = (url) => isNextSource(url, NEXT_WEBPACK_CONFIG_PATH)
 const isPatchableNextSource = (url) =>
   isNextCompiledConf(url) ||
   isNextConfigRequireHook(url) ||
+  isNextNodeManifestLoader(url) ||
   isNextRequireCache(url) ||
+  isNextServerConfig(url) ||
   isNextCompiledWebpack(url) ||
   isNextWebpackConfig(url)
 
@@ -123,6 +202,8 @@ const patchNextCompiledConfSource = (source) =>
   source
     .split(REQUIRE_CACHE_NEEDLE)
     .join(REQUIRE_CACHE_REPLACEMENT)
+    .split(NEXT_CONFIG_RESULT_NEEDLE)
+    .join(NEXT_CONFIG_RESULT_REPLACEMENT)
 
 const patchNextConfigRequireHookSource = (source) =>
   source
@@ -130,6 +211,13 @@ const patchNextConfigRequireHookSource = (source) =>
     .join('requireExtensions')
     .split(REQUIRE_EXTENSIONS_NEEDLE)
     .join(REQUIRE_EXTENSIONS_REPLACEMENT)
+
+const patchNextNodeManifestLoaderSource = (source) =>
+  source
+    .split(NODE_MANIFEST_LOADER_PATH_NEEDLE)
+    .join(NODE_MANIFEST_LOADER_PATH_REPLACEMENT)
+    .split(NODE_MANIFEST_LOADER_REQUIRE_NEEDLE)
+    .join(NODE_MANIFEST_LOADER_REQUIRE_REPLACEMENT)
 
 const patchNextRequireCacheSource = (source) =>
   source
@@ -149,6 +237,8 @@ const patchNextWebpackConfigSource = (source) =>
   source
     .split(WEBPACK_NODE_PROTOCOL_PLUGIN_NEEDLE)
     .join(WEBPACK_NODE_PROTOCOL_PLUGIN_REPLACEMENT)
+    .split(WEBPACK_EXTENSION_ALIAS_NEEDLE)
+    .join(WEBPACK_EXTENSION_ALIAS_REPLACEMENT)
 
 const transformNextSource = (url, source) => {
   if (isNextCompiledConf(url)) {
@@ -159,8 +249,16 @@ const transformNextSource = (url, source) => {
     return patchNextConfigRequireHookSource(source)
   }
 
+  if (isNextNodeManifestLoader(url)) {
+    return patchNextNodeManifestLoaderSource(source)
+  }
+
   if (isNextRequireCache(url)) {
     return patchNextRequireCacheSource(source)
+  }
+
+  if (isNextServerConfig(url)) {
+    return patchNextCompiledConfSource(source)
   }
 
   if (isNextCompiledWebpack(url)) {
@@ -289,7 +387,9 @@ export const cleanupRendererBuildSourceArtifacts = async (cwd: PortablePath): Pr
 }
 
 export const copyRendererBuildPublicAssets = async (cwd: PortablePath): Promise<void> => {
-  const source = ppath.join(cwd, SRC_DIR, PUBLIC_DIR)
+  const source = (await xfs.existsPromise(ppath.join(cwd, PUBLIC_DIR)))
+    ? ppath.join(cwd, PUBLIC_DIR)
+    : ppath.join(cwd, SRC_DIR, PUBLIC_DIR)
 
   if (!(await xfs.existsPromise(source))) {
     return
@@ -303,7 +403,7 @@ export const resolveRendererBuildStandaloneWorkspaceCwd = (
   rendererCwd: PortablePath
 ): PortablePath => {
   const relativeRendererCwd = ppath.relative(projectCwd, rendererCwd)
-  const standaloneCwd = ppath.join(rendererCwd, SRC_DIR, NEXT_DIR, 'standalone' as Filename)
+  const standaloneCwd = ppath.join(rendererCwd, NEXT_DIR, 'standalone' as Filename)
 
   if (relativeRendererCwd === '.') {
     return standaloneCwd
@@ -312,13 +412,31 @@ export const resolveRendererBuildStandaloneWorkspaceCwd = (
   return ppath.join(standaloneCwd, relativeRendererCwd)
 }
 
+export const resolveRendererBuildStandaloneSourceCwd = async (
+  projectCwd: PortablePath,
+  rendererCwd: PortablePath
+): Promise<PortablePath> => {
+  const standaloneCwd = ppath.join(rendererCwd, NEXT_DIR, 'standalone' as Filename)
+  const workspaceStandaloneCwd = resolveRendererBuildStandaloneWorkspaceCwd(projectCwd, rendererCwd)
+
+  if (await xfs.existsPromise(workspaceStandaloneCwd)) {
+    return workspaceStandaloneCwd
+  }
+
+  return standaloneCwd
+}
+
 export const createRendererBuildEnv = (
   env: NodeJS.ProcessEnv,
-  nextCompiledConfRequireCacheLoader: string
+  nextCompiledConfRequireCacheLoader: string,
+  rendererCwd: PortablePath,
+  options: { output?: string } = {}
 ): NodeJS.ProcessEnv => ({
   ...env,
   NEXT_TELEMETRY_DISABLED: '1',
+  [RAIJIN_RENDERER_WORKSPACE_CWD]: npath.fromPortablePath(rendererCwd),
   [RAIJIN_NODE_LOADER]: nextCompiledConfRequireCacheLoader,
+  ...(options.output ? { [RAIJIN_RENDERER_OUTPUT]: options.output } : {}),
 })
 
 export const extractNodeLoaderOption = (
@@ -404,22 +522,25 @@ export const resolveNextPackageVersion = (locator: Locator): string => {
   return normalizeNextPackageVersion(nextLocator.reference)
 }
 
+export const shouldUseWebpackRendererRoute = (nextVersion: string | undefined): boolean => {
+  const nextMajor = parseMajorVersion(nextVersion)
+
+  return nextMajor !== null && nextMajor >= NEXT_MAJOR_WEBPACK_BY_DEFAULT
+}
+
 export const createRendererBuildArgs = (
   nextVersion: string | undefined,
   nextBin = 'next'
 ): Array<string> => {
-  const nextMajor = parseMajorVersion(nextVersion)
   const args = ['node', nextBin, 'build']
 
   assertSupportedRendererNextVersion(nextVersion)
 
   // TODO(atls/raijin#629): replace the explicit webpack renderer route with the
   // planned Turbopack contract once the Raijin v3 Next build stream owns it.
-  if (nextMajor !== null && nextMajor >= NEXT_MAJOR_WEBPACK_BY_DEFAULT) {
+  if (shouldUseWebpackRendererRoute(nextVersion)) {
     args.push('--webpack')
   }
-
-  args.push('src')
 
   return args
 }

@@ -1,7 +1,10 @@
 export const NEXT_COMPILED_CONF_PATH = '/dist/compiled/conf/index.js'
 export const NEXT_COMPILED_WEBPACK_PATH = '/dist/compiled/webpack/bundle5.js'
 export const NEXT_CONFIG_REQUIRE_HOOK_PATH = '/dist/build/next-config-ts/require-hook.js'
+export const NEXT_NODE_MANIFEST_LOADER_PATH =
+  '/dist/server/route-matcher-providers/helpers/manifest-loaders/node-manifest-loader.js'
 export const NEXT_PACKAGE_PATH = '/node_modules/next/'
 export const NEXT_REQUIRE_CACHE_PATH = '/dist/server/dev/require-cache.js'
+export const NEXT_SERVER_CONFIG_PATH = '/dist/server/config.js'
 export const NEXT_WEBPACK_CONFIG_PATH = '/dist/build/webpack-config.js'
 export const RENDERER_STANDALONE_SERVER_ENTRYPOINT = 'index.cjs'

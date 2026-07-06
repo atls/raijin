@@ -1,14 +1,34 @@
-import type { Tunnel }                    from 'localtunnel'
+import type { Tunnel }                                   from 'localtunnel'
 
-import { BaseCommand }                    from '@yarnpkg/cli'
-import { xfs }                            from '@yarnpkg/fslib'
-import { ppath }                          from '@yarnpkg/fslib'
-import { Option }                         from 'clipanion'
-import spawn                              from 'cross-spawn'
-import localtunnel                        from 'localtunnel'
+import { BaseCommand }                                   from '@yarnpkg/cli'
+import { execUtils }                                     from '@yarnpkg/core'
+import { scriptUtils }                                   from '@yarnpkg/core'
+import { xfs }                                           from '@yarnpkg/fslib'
+import { ppath }                                         from '@yarnpkg/fslib'
+import { Option }                                        from 'clipanion'
+import localtunnel                                       from 'localtunnel'
 
 import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+
+import { createRendererBuildEnv }                        from './renderer-build.utils.js'
+import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
+import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
+import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
+import { resolveRendererBuildPnpLoader }                 from './renderer-build.utils.js'
+import { shouldUseWebpackRendererRoute }                 from './renderer-build.utils.js'
+
+export const createRendererDevArgs = (nextVersion: string | undefined): Array<string> => {
+  const args = ['next', 'dev']
+
+  // TODO(atls/raijin#629): replace the explicit webpack renderer route with the
+  // planned Turbopack contract once the Raijin v3 Next dev stream owns it.
+  if (shouldUseWebpackRendererRoute(nextVersion)) {
+    args.push('--webpack')
+  }
+
+  return args
+}
 
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
@@ -40,13 +60,24 @@ export class RendererDevCommand extends BaseCommand {
     })
   }
 
-  async execute(): Promise<void> {
+  async execute(): Promise<number> {
     const { project, workspace, workspaceCwd } = await resolveWorkspaceCommandContext(
       this.context.cwd,
       this.context.plugins
     )
 
-    const args = ['next', 'dev', 'src']
+    await project.restoreInstallState()
+
+    const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
+    const nextBinary = binaries.get('next')
+
+    if (!nextBinary) {
+      throw new Error('Renderer dev requires Next.js')
+    }
+
+    const [nextPackage] = nextBinary
+    const nextVersion = resolveNextPackageVersion(nextPackage)
+    const args = createRendererDevArgs(nextVersion)
 
     if (this.https) {
       if (!(await xfs.existsPromise(ppath.join(project.cwd, '.config/certs/local/dev.key')))) {
@@ -63,12 +94,29 @@ export class RendererDevCommand extends BaseCommand {
     }
 
     const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeCurrentYarnExecutable({
+    const scriptEnvironment = await makeCurrentYarnExecutable({
       binFolder,
+      locator: workspace.anchoredLocator,
       project,
     })
-
-    spawn(executable, args, { stdio: 'inherit', cwd: workspaceCwd, env })
+    const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
+    const loader = await resolveRendererBuildPnpLoader(
+      project.cwd,
+      scriptEnvironment.env.NODE_OPTIONS
+    )
+    const nextCompiledConfRequireCacheLoader = await materializeNextCompiledConfRequireCacheLoader(
+      binFolder,
+      loader
+    )
+    const { executable, env } = await makeCurrentYarnExecutable({
+      binFolder,
+      locator: workspace.anchoredLocator,
+      project,
+      env: {
+        NODE_OPTIONS: nodeOptions,
+      },
+      nodeLoader: nextCompiledConfRequireCacheLoader,
+    })
 
     if (this.tunnel) {
       const { tunnel: config }: { tunnel?: { host?: string; port?: number } } =
@@ -80,5 +128,15 @@ export class RendererDevCommand extends BaseCommand {
 
       this.startTunnel(config.host, config.port)
     }
+
+    const { code } = await execUtils.pipevp(executable, args, {
+      cwd: workspaceCwd,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
+      env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, workspaceCwd),
+    })
+
+    return code
   }
 }
