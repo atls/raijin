@@ -48,7 +48,8 @@ export const getRaijinTypeScriptRange = (project: Project): string | undefined =
 export const shouldSyncTypeScriptRange = (
   currentRange: string | undefined,
   raijinTypeScriptRange: string
-): boolean => currentRange !== raijinTypeScriptRange
+): boolean =>
+  normalizeTypeScriptRange(currentRange) !== normalizeTypeScriptRange(raijinTypeScriptRange)
 
 export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'typescript']]

@@ -76,4 +76,18 @@ test('should not invent TypeScript range when Raijin is absent', () => {
 test('should sync broad TypeScript ranges to exact Raijin runtime range', () => {
   assert.equal(shouldSyncTypeScriptRange('^5', '5.9.3'), true)
   assert.equal(shouldSyncTypeScriptRange('5.9.3', '5.9.3'), false)
+  assert.equal(
+    shouldSyncTypeScriptRange(
+      'patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>',
+      '5.9.3'
+    ),
+    false
+  )
+  assert.equal(
+    shouldSyncTypeScriptRange(
+      'patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>',
+      '5.9.3'
+    ),
+    true
+  )
 })
