@@ -18,8 +18,10 @@ import { resolveNextPackageVersion }                     from './renderer-build.
 import { resolveRendererBuildPnpLoader }                 from './renderer-build.utils.js'
 import { shouldUseWebpackRendererRoute }                 from './renderer-build.utils.js'
 
+const RENDERER_NEXT_APP_DIR = 'src'
+
 export const createRendererDevArgs = (nextVersion: string | undefined): Array<string> => {
-  const args = ['next', 'dev']
+  const args = ['next', 'dev', RENDERER_NEXT_APP_DIR]
 
   // TODO(atls/raijin#629): replace the explicit webpack renderer route with the
   // planned Turbopack contract once the Raijin v3 Next dev stream owns it.
