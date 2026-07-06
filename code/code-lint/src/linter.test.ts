@@ -1,18 +1,19 @@
-import type { LintOptions } from './linter.js'
+import type { LintOptions }        from './linter.js'
 
-import assert               from 'node:assert/strict'
-import { mkdir }            from 'node:fs/promises'
-import { mkdtemp }          from 'node:fs/promises'
-import { symlink }          from 'node:fs/promises'
-import { writeFile }        from 'node:fs/promises'
-import { tmpdir }           from 'node:os'
-import { dirname }          from 'node:path'
-import { join }             from 'node:path'
-import { resolve }          from 'node:path'
-import { test }             from 'node:test'
-import { fileURLToPath }    from 'node:url'
+import assert                      from 'node:assert/strict'
+import { mkdir }                   from 'node:fs/promises'
+import { mkdtemp }                 from 'node:fs/promises'
+import { symlink }                 from 'node:fs/promises'
+import { writeFile }               from 'node:fs/promises'
+import { tmpdir }                  from 'node:os'
+import { dirname }                 from 'node:path'
+import { join }                    from 'node:path'
+import { resolve }                 from 'node:path'
+import { test }                    from 'node:test'
+import { fileURLToPath }           from 'node:url'
 
-import { Linter }           from './linter.js'
+import { Linter }                  from './linter.js'
+import { resolveEslintRuntimeUrl } from './linter.js'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const raijinPackagePath = resolve(currentDir, '../../../yarn/raijin')
@@ -93,6 +94,40 @@ test('should lint workspace file with root tsconfig', async () => {
     result.messages.map((message) => message.message).join('\n'),
     /was not found by the project service/
   )
+})
+
+test('should import ESLint runtime through ancestor package boundary', async () => {
+  const rootCwd = await mkdtemp(join(tmpdir(), 'raijin-lint-'))
+  const workspaceCwd = join(rootCwd, 'packages/internal')
+
+  await mkdir(workspaceCwd, { recursive: true })
+  await writeFile(
+    join(rootCwd, 'package.json'),
+    JSON.stringify(
+      {
+        type: 'module',
+        devDependencies: {
+          '@atls/raijin': 'workspace:*',
+        },
+      },
+      null,
+      2
+    )
+  )
+  await writeFile(
+    join(workspaceCwd, 'package.json'),
+    JSON.stringify(
+      {
+        name: '@scope/internal',
+        type: 'module',
+      },
+      null,
+      2
+    )
+  )
+  await linkRaijinRuntime(rootCwd)
+
+  assert.match(resolveEslintRuntimeUrl(workspaceCwd), /\/yarn\/raijin\/src\/runtime\/eslint\.ts$/)
 })
 
 test('should lint workspace config files outside workspace tsconfig scope', async () => {

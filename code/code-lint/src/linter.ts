@@ -1,3 +1,5 @@
+/* eslint-disable n/no-sync */
+
 import type { ESLintInstance }          from '@atls/raijin/eslint'
 import type { ESLint as RuntimeESLint } from '@atls/raijin/eslint'
 import type { LinterConfig }            from '@atls/raijin/eslint'
@@ -11,6 +13,7 @@ import { readFile }                     from 'node:fs/promises'
 import { stat }                         from 'node:fs/promises'
 import { writeFile }                    from 'node:fs/promises'
 import { createRequire }                from 'node:module'
+import { dirname }                      from 'node:path'
 import { isAbsolute }                   from 'node:path'
 import { relative }                     from 'node:path'
 import { resolve }                      from 'node:path'
@@ -31,14 +34,64 @@ type EslintRuntime = {
 }
 
 const ESLINT_RUNTIME_SPECIFIER = '@atls/raijin/eslint'
+const PACKAGE_MANIFEST = 'package.json'
+const RAIJIN_PACKAGE_NAME = '@atls/raijin'
+const PACKAGE_DEPENDENCY_FIELDS = [
+  'dependencies',
+  'devDependencies',
+  'peerDependencies',
+  'optionalDependencies',
+] as const
 
-const importEslintRuntime = async (cwd: string): Promise<EslintRuntime> => {
-  const workspaceRequire = createRequire(join(cwd, 'package.json'))
-  const runtimePath = workspaceRequire.resolve(ESLINT_RUNTIME_SPECIFIER)
-  const runtimeUrl = pathToFileURL(runtimePath).href
-
-  return (await import(runtimeUrl)) as EslintRuntime
+type PackageManifestShape = Record<string, unknown> & {
+  dependencies?: Record<string, unknown>
+  devDependencies?: Record<string, unknown>
+  name?: unknown
+  optionalDependencies?: Record<string, unknown>
+  peerDependencies?: Record<string, unknown>
 }
+
+const readPackageManifestAt = (cwd: string): PackageManifestShape | undefined => {
+  try {
+    return JSON.parse(readFileSync(join(cwd, PACKAGE_MANIFEST), 'utf-8')) as PackageManifestShape
+  } catch {
+    return undefined
+  }
+}
+
+const hasRaijinPackageBoundary = (manifest: PackageManifestShape): boolean =>
+  manifest.name === RAIJIN_PACKAGE_NAME ||
+  PACKAGE_DEPENDENCY_FIELDS.some((field) =>
+    Object.hasOwn(manifest[field] ?? {}, RAIJIN_PACKAGE_NAME))
+
+export const resolveEslintRuntimeUrl = (cwd: string): string => {
+  let current = cwd
+
+  while (true) {
+    const manifest = readPackageManifestAt(current)
+
+    if (manifest && hasRaijinPackageBoundary(manifest)) {
+      const workspaceRequire = createRequire(join(current, PACKAGE_MANIFEST))
+
+      return pathToFileURL(workspaceRequire.resolve(ESLINT_RUNTIME_SPECIFIER)).href
+    }
+
+    const parent = dirname(current)
+
+    if (parent === current) {
+      break
+    }
+
+    current = parent
+  }
+
+  const workspaceRequire = createRequire(join(cwd, PACKAGE_MANIFEST))
+
+  return pathToFileURL(workspaceRequire.resolve(ESLINT_RUNTIME_SPECIFIER)).href
+}
+
+const importEslintRuntime = async (cwd: string): Promise<EslintRuntime> =>
+  (await import(resolveEslintRuntimeUrl(cwd))) as EslintRuntime
 
 const exists = async (path: string): Promise<boolean> => {
   try {
@@ -181,7 +234,6 @@ export class Linter extends EventEmitter {
   }
 
   private getProjectIgnorePatterns(): Array<string> {
-    // eslint-disable-next-line n/no-sync
     const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
 
     const { linterIgnorePatterns = [] } = JSON.parse(content)
