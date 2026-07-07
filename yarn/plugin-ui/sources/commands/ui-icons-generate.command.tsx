@@ -1,5 +1,4 @@
 import { join }                           from 'node:path'
-import { relative }                       from 'node:path'
 
 import { BaseCommand }                    from '@yarnpkg/cli'
 import { Filename }                       from '@yarnpkg/fslib'
@@ -18,6 +17,11 @@ import { renderStatic }                   from '@atls/cli-ui-renderer-static-com
 import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
 import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+
+export const createGeneratedIconTargets = (
+  workspaceCwd: string,
+  files: Array<string>
+): Array<string> => files.map((file) => join(workspaceCwd, 'src', file))
 
 export class UiIconsGenerateCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
@@ -82,16 +86,16 @@ export class UiIconsGenerateCommand extends BaseCommand {
     try {
       await icons.generate({ native: this.native })
 
-      const files = (
-        await globby('*.tsx', {
-          cwd: join(workspaceCwd, 'src'),
-        })
-      ).map((file) => join(relative(project.cwd, workspaceCwd), 'src', file))
+      const files = await globby('*.tsx', {
+        cwd: join(workspaceCwd, 'src'),
+      })
 
-      await this.cli.run(['format', ...files], {
+      const generatedFiles = createGeneratedIconTargets(workspaceCwd, files)
+
+      await this.cli.run(['format', ...generatedFiles], {
         cwd: project.cwd,
       })
-      await this.cli.run(['lint', '--fix', ...files], {
+      await this.cli.run(['lint', '--fix', ...generatedFiles], {
         cwd: project.cwd,
       })
 
