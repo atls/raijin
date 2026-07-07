@@ -7034,17 +7034,32 @@ async function resolve$1(originalSpecifier, context, nextResolve) {
   };
 }
 
-const getTypeScriptSpecifier = (specifier) => specifier.replace(/\.mjs$/, ".mts").replace(/\.js$/, ".ts").replace(/\.jsx$/, ".tsx");
+const getTypeScriptCandidates = (specifier) => {
+  if (specifier.endsWith(".mjs")) {
+    return [specifier.replace(/\.mjs$/, ".mts")];
+  }
+  if (specifier.endsWith(".jsx")) {
+    return [specifier.replace(/\.jsx$/, ".tsx")];
+  }
+  if (specifier.endsWith(".js")) {
+    return [specifier.replace(/\.js$/, ".ts"), specifier.replace(/\.js$/, ".tsx")];
+  }
+  return [];
+};
+const getTypeScriptSpecifiers = (specifier) => [
+  ...getTypeScriptCandidates(specifier),
+  specifier
+];
 
-const resolveHook = async (originalSpecifier, context, nextResolve) => {
-  const tsSpecifier = getTypeScriptSpecifier(originalSpecifier);
+const resolveSpecifiers = async (specifiers, context, nextResolve, index = 0) => {
   try {
-    return await resolve$1(tsSpecifier, context, nextResolve);
+    return await resolve$1(specifiers[index], context, nextResolve);
   } catch (err) {
-    if (tsSpecifier === originalSpecifier) throw err;
-    return resolve$1(originalSpecifier, context, nextResolve);
+    if (index === specifiers.length - 1) throw err;
+    return resolveSpecifiers(specifiers, context, nextResolve, index + 1);
   }
 };
+const resolveHook = async (originalSpecifier, context, nextResolve) => resolveSpecifiers(getTypeScriptSpecifiers(originalSpecifier), context, nextResolve);
 
 const resolve = resolveHook;
 const load = loadHook;
