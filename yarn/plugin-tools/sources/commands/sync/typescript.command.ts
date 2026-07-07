@@ -1,4 +1,5 @@
 import type { Ident }                     from '@yarnpkg/core'
+import type { Manifest }                  from '@yarnpkg/core'
 import type { Package }                   from '@yarnpkg/core'
 import type { Project }                   from '@yarnpkg/core'
 
@@ -9,6 +10,7 @@ import { structUtils }                    from '@yarnpkg/core'
 import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 
 import { AbstractRaijinSyncCommand }      from './base.js'
+import { createRaijinSyncTarget }         from './target.js'
 
 const NPM_PROTOCOL = 'npm:'
 const PATCH_PROTOCOL = 'patch:'
@@ -51,6 +53,27 @@ export const shouldSyncTypeScriptRange = (
 ): boolean =>
   normalizeTypeScriptRange(currentRange) !== normalizeTypeScriptRange(raijinTypeScriptRange)
 
+export const syncTypeScriptManifest = (
+  manifest: Manifest,
+  raijinTypeScriptRange: string | undefined
+): boolean => {
+  if (!raijinTypeScriptRange || !manifest.raw.devDependencies) {
+    return false
+  }
+
+  let descriptor = Array.from(manifest.devDependencies.values()).find(
+    (target) => target.scope === typescriptIdent.scope && target.name === typescriptIdent.name
+  )
+
+  if (!descriptor || shouldSyncTypeScriptRange(descriptor.range, raijinTypeScriptRange)) {
+    descriptor = structUtils.makeDescriptor(typescriptIdent, raijinTypeScriptRange)
+  }
+
+  manifest.devDependencies.set(descriptor.identHash, descriptor)
+
+  return true
+}
+
 export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'typescript']]
 
@@ -69,7 +92,7 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   }
 
   override async executeRegular(): Promise<number> {
-    const { configuration, project, workspace } = await resolveWorkspaceCommandContext(
+    const { configuration, project } = await resolveWorkspaceCommandContext(
       this.context.cwd,
       this.context.plugins
     )
@@ -85,23 +108,9 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
       },
       async (report) => {
         await report.startTimerPromise('Raijin sync typescript version', async () => {
-          if (!raijinTypeScriptRange) {
-            return
-          }
+          const syncTarget = createRaijinSyncTarget(project)
 
-          if (workspace.manifest.raw.devDependencies) {
-            const ident = structUtils.parseIdent('typescript')
-
-            let descriptor = Array.from(workspace.manifest.devDependencies.values()).find(
-              (target) => target.scope === ident.scope && target.name === ident.name
-            )
-
-            if (!descriptor || shouldSyncTypeScriptRange(descriptor.range, raijinTypeScriptRange)) {
-              descriptor = structUtils.makeDescriptor(ident, raijinTypeScriptRange)
-            }
-
-            workspace.manifest.devDependencies.set(descriptor.identHash, descriptor)
-
+          if (syncTypeScriptManifest(syncTarget.workspace.manifest, raijinTypeScriptRange)) {
             await project.persist()
           }
         })

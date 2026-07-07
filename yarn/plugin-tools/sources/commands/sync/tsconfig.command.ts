@@ -11,6 +11,7 @@ import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-
 import tsconfig                           from '@atls/raijin/typescript-config'
 
 import { AbstractRaijinSyncCommand }      from './base.js'
+import { createRaijinSyncTarget }         from './target.js'
 
 const projectTypesIncludeEntry = 'project.types.d.ts'
 
@@ -20,21 +21,6 @@ const implicitTSConfigIncludeEntry = '**/*'
 
 type TSConfigShape = Record<string, unknown>
 type TSCompilerOptions = Record<string, unknown>
-type TSConfigSyncProject = {
-  topLevelWorkspace: {
-    cwd: PortablePath
-    manifest: {
-      raw: {
-        workspaces?: unknown
-      }
-    }
-  }
-}
-
-export type TSConfigSyncTarget = {
-  cwd: PortablePath
-  workspaces: Array<string>
-}
 
 const convertWorkspacesToIncludes = (workspaces: string): string => {
   if (workspaces.endsWith('/**/*')) {
@@ -56,15 +42,6 @@ export const mergeTSCompilerOptions = (
 ): TSCompilerOptions => ({
   ...defaults,
   ...(existing || {}),
-})
-
-export const createTSConfigSyncTarget = (project: TSConfigSyncProject): TSConfigSyncTarget => ({
-  cwd: project.topLevelWorkspace.cwd,
-  workspaces: Array.isArray(project.topLevelWorkspace.manifest.raw.workspaces)
-    ? project.topLevelWorkspace.manifest.raw.workspaces.filter(
-        (workspace): workspace is string => typeof workspace === 'string'
-      )
-    : [],
 })
 
 export const getTSConfigIncludeEntries = (
@@ -124,7 +101,7 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
       },
       async (report) => {
         await report.startTimerPromise('Raijin sync typescript config', async () => {
-          const syncTarget = createTSConfigSyncTarget(project)
+          const syncTarget = createRaijinSyncTarget(project)
           const tsconfigpath = ppath.join(syncTarget.cwd, 'tsconfig.json' as PortablePath)
 
           const exists: TSConfigShape & { compilerOptions?: TSCompilerOptions } =

@@ -5,10 +5,12 @@ import test                          from 'node:test'
 
 import { structUtils }               from '@yarnpkg/core'
 
+import { createRaijinSyncTarget }    from './target.js'
 import { findStoredPackageByIdent }  from './typescript.command.js'
 import { getRaijinTypeScriptRange }  from './typescript.command.js'
 import { normalizeTypeScriptRange }  from './typescript.command.js'
 import { shouldSyncTypeScriptRange } from './typescript.command.js'
+import { syncTypeScriptManifest }    from './typescript.command.js'
 
 const createPackage = (ident: string, dependencies: Record<string, string> = {}): Package => {
   const locator = structUtils.makeLocator(structUtils.parseIdent(ident), 'npm:0.0.0')
@@ -31,6 +33,22 @@ const createPackage = (ident: string, dependencies: Record<string, string> = {})
     bin: new Map(),
   } as Package
 }
+
+const createWorkspaceManifest = (devDependencies: Record<string, string>) => ({
+  raw: {
+    devDependencies,
+  },
+  devDependencies: new Map(
+    Object.entries(devDependencies).map(([name, range]) => {
+      const ident = structUtils.parseIdent(name)
+
+      return [ident.identHash, structUtils.makeDescriptor(ident, range)]
+    })
+  ),
+})
+
+const getTypeScriptRange = (manifest: ReturnType<typeof createWorkspaceManifest>): string =>
+  manifest.devDependencies.get(structUtils.parseIdent('typescript').identHash)?.range ?? ''
 
 test('should find stored package by ident', () => {
   const raijinPackage = createPackage('@atls/raijin')
@@ -90,4 +108,26 @@ test('should sync broad TypeScript ranges to exact Raijin runtime range', () => 
     ),
     true
   )
+})
+
+test('should sync TypeScript range through project root workspace target', () => {
+  const rootManifest = createWorkspaceManifest({ typescript: '^5' })
+  const leafManifest = createWorkspaceManifest({ typescript: '5.8.0' })
+  const rootWorkspace = {
+    cwd: '/repo',
+    manifest: rootManifest,
+  }
+  const leafWorkspace = {
+    cwd: '/repo/packages/client',
+    manifest: leafManifest,
+  }
+  const project = {
+    topLevelWorkspace: rootWorkspace,
+  }
+  const target = createRaijinSyncTarget(project as never)
+
+  assert.notEqual(target.workspace, leafWorkspace)
+  assert.equal(syncTypeScriptManifest(target.workspace.manifest, '5.9.3'), true)
+  assert.equal(getTypeScriptRange(rootManifest), '5.9.3')
+  assert.equal(getTypeScriptRange(leafManifest), '5.8.0')
 })
