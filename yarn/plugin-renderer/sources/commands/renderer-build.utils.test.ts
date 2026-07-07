@@ -16,6 +16,7 @@ import { cleanupRendererBuildSourceArtifacts }            from './renderer-build
 import { cleanupRendererBuildStaleArtifacts }             from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }         from './renderer-build.utils.js'
 import { copyRendererBuildPublicAssets }                  from './renderer-build.utils.js'
+import { copyRendererBuildStandaloneFiles }               from './renderer-build.utils.js'
 import { createNextRendererLoaderSource }                 from './renderer-build.utils.js'
 import { createRendererBuildContext }                     from './renderer-build.utils.js'
 import { createRendererBuildArgs }                        from './renderer-build.utils.js'
@@ -24,8 +25,7 @@ import { extractNodeLoaderOption }                        from './renderer-build
 import { normalizeNextPackageVersion }                    from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                      from './renderer-build.utils.js'
 import { resolveRendererBuildPnpLoader }                  from './renderer-build.utils.js'
-import { resolveRendererBuildStandaloneSourceCwd }        from './renderer-build.utils.js'
-import { resolveRendererBuildStandaloneWorkspaceCwd }     from './renderer-build.utils.js'
+import { resolveRendererBuildStandaloneCwd }              from './renderer-build.utils.js'
 
 test('should disable Next telemetry for renderer build', () => {
   const env = createRendererBuildEnv(
@@ -510,44 +510,38 @@ test('should remove renderer workspace manifests without removing dist output', 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, '.next')), false)
 })
 
-test('should resolve renderer standalone workspace path from nested workspace cwd', () => {
+test('should resolve renderer standalone root from renderer cwd', () => {
   assert.equal(
-    resolveRendererBuildStandaloneWorkspaceCwd(
-      '/repo' as PortablePath,
-      '/repo/client' as PortablePath
-    ),
-    '/repo/client/src/.next/standalone/client'
+    resolveRendererBuildStandaloneCwd('/repo/client/next-app' as PortablePath),
+    '/repo/client/next-app/src/.next/standalone'
   )
 })
 
-test('should resolve renderer standalone workspace path from project root cwd', () => {
+test('should copy full renderer standalone root into dist artifact', async () => {
+  const cwd = await xfs.mktempPromise()
+  const context = createRendererBuildContext(cwd)
+  const standaloneCwd = resolveRendererBuildStandaloneCwd(cwd)
+
+  await xfs.mkdirPromise(ppath.join(standaloneCwd, 'node_modules/next'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(standaloneCwd, 'client/next-app'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(standaloneCwd, 'server.js'), 'root server')
+  await xfs.writeFilePromise(ppath.join(standaloneCwd, 'node_modules/next/package.json'), '{}')
+  await xfs.writeFilePromise(
+    ppath.join(standaloneCwd, 'client/next-app/server.js'),
+    'nested server'
+  )
+
+  await copyRendererBuildStandaloneFiles(context)
+
   assert.equal(
-    resolveRendererBuildStandaloneWorkspaceCwd('/repo' as PortablePath, '/repo' as PortablePath),
-    '/repo/src/.next/standalone'
+    (await xfs.readFilePromise(ppath.join(cwd, 'dist/server.js'))).toString(),
+    'root server'
   )
-})
-
-test('should use nested standalone workspace path when Next creates it', async () => {
-  const cwd = await xfs.mktempPromise()
-  const rendererCwd = ppath.join(cwd, 'client', 'next-app')
-  const nestedStandaloneCwd = ppath.join(
-    rendererCwd,
-    'src/.next/standalone/client/next-app' as PortablePath
+  assert.equal(
+    await xfs.existsPromise(ppath.join(cwd, 'dist/node_modules/next/package.json')),
+    true
   )
-
-  await xfs.mkdirPromise(nestedStandaloneCwd, { recursive: true })
-
-  assert.equal(await resolveRendererBuildStandaloneSourceCwd(cwd, rendererCwd), nestedStandaloneCwd)
-})
-
-test('should fall back to standalone root when Next does not create nested workspace path', async () => {
-  const cwd = await xfs.mktempPromise()
-  const rendererCwd = ppath.join(cwd, 'client', 'next-app')
-  const standaloneCwd = ppath.join(rendererCwd, 'src/.next/standalone' as PortablePath)
-
-  await xfs.mkdirPromise(standaloneCwd, { recursive: true })
-
-  assert.equal(await resolveRendererBuildStandaloneSourceCwd(cwd, rendererCwd), standaloneCwd)
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/client/next-app/server.js')), true)
 })
 
 test('should copy renderer root public assets into standalone artifact', async () => {

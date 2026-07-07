@@ -18,6 +18,7 @@ import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.
 import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }        from './renderer-build.utils.js'
 import { copyRendererBuildPublicAssets }                 from './renderer-build.utils.js'
+import { copyRendererBuildStandaloneFiles }              from './renderer-build.utils.js'
 import { createRendererBuildContext }                    from './renderer-build.utils.js'
 import { createRendererBuildArgs }                       from './renderer-build.utils.js'
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
@@ -25,7 +26,6 @@ import { extractNodeLoaderOption }                       from './renderer-build.
 import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
 import { resolveRendererBuildPnpLoader }                 from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
-import { resolveRendererBuildStandaloneSourceCwd }       from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
   static override paths = [['renderer', 'build']]
@@ -125,12 +125,7 @@ export class RendererBuildCommand extends BaseCommand {
         })
 
         await report.startTimerPromise('Copy standalone files', async () => {
-          const standaloneSourceCwd = await resolveRendererBuildStandaloneSourceCwd(
-            project.cwd,
-            rendererCwd
-          )
-
-          await xfs.copyPromise(ppath.join(rendererCwd, 'dist'), standaloneSourceCwd)
+          await copyRendererBuildStandaloneFiles(rendererBuildContext)
         })
 
         await report.startTimerPromise('Clean workspace manifests', async () => {
