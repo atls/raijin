@@ -29,7 +29,17 @@ const sourceExtensionsBySpecifier = new Map([
   ['.css', ['.css.ts', '.css.tsx', '.css.js', '.css.mjs', '.css.mts', '.css']],
 ])
 
-const typescriptExtensions = new Set(['.ts', '.tsx', '.mts'])
+const typescriptRuntimeExtensions = new Set<string>([
+  ts.Extension.Ts,
+  ts.Extension.Tsx,
+  ts.Extension.Mts,
+])
+
+const typescriptDeclarationExtensions = new Set<string>([
+  ts.Extension.Dts,
+  ts.Extension.Dmts,
+  ts.Extension.Dcts,
+])
 const packageSubpathFallbackErrorCodes = new Set(['ERR_MODULE_NOT_FOUND', 'MODULE_NOT_FOUND'])
 
 type NextResolve = (
@@ -43,6 +53,18 @@ const isPackageSubpathFallbackError = (error: unknown): boolean =>
   'code' in error &&
   typeof error.code === 'string' &&
   packageSubpathFallbackErrorCodes.has(error.code)
+
+const hasTypeScriptDeclarationExtension = (filepath: string): boolean =>
+  Array.from(typescriptDeclarationExtensions).some((extension) => filepath.endsWith(extension))
+
+const isTypeScriptRuntimePath = (filepath: string): boolean =>
+  !hasTypeScriptDeclarationExtension(filepath) && typescriptRuntimeExtensions.has(extname(filepath))
+
+const isTypeScriptRuntimeResolvedModule = (
+  resolvedModule: TypeScript.ResolvedModuleFull
+): boolean =>
+  !typescriptDeclarationExtensions.has(resolvedModule.extension) &&
+  typescriptRuntimeExtensions.has(resolvedModule.extension)
 
 const resolveSourceSpecifier = async (
   context: ResolveHookContext,
@@ -149,7 +171,7 @@ const resolveExtensionlessTypeScriptSource = (
     return undefined
   }
 
-  if (!typescriptExtensions.has(extname(resolvedModule.resolvedFileName))) {
+  if (!isTypeScriptRuntimeResolvedModule(resolvedModule)) {
     return undefined
   }
 
@@ -284,7 +306,7 @@ export const load: LoadHook = async (urlString, context, next) => {
 
   const filepath = fileURLToPath(url)
 
-  if (!typescriptExtensions.has(extname(filepath))) {
+  if (!isTypeScriptRuntimePath(filepath)) {
     return next(urlString, context)
   }
 

@@ -66,6 +66,39 @@ test('should resolve extensionless relative specifier to tsx source', async () =
   }
 })
 
+test('should not resolve extensionless relative specifier to declaration source', async () => {
+  const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))
+  const sourceDir = join(workspace, 'src')
+  const parentPath = join(sourceDir, 'index.ts')
+  const declarationPath = join(sourceDir, 'setup.d.ts')
+  let fallbackSpecifier: string | undefined
+
+  try {
+    await mkdir(sourceDir, { recursive: true })
+    await writeFile(join(workspace, 'package.json'), JSON.stringify({ type: 'module' }), 'utf-8')
+    await writeFile(parentPath, `import './setup'\nexport const ready = true\n`, 'utf-8')
+    await writeFile(declarationPath, `export interface Setup {}\n`, 'utf-8')
+
+    await assert.rejects(
+      async () =>
+        resolve(
+          './setup',
+          { parentURL: pathToFileURL(parentPath).href } as never,
+          ((specifier: string) => {
+            fallbackSpecifier = specifier
+
+            throw createModuleNotFoundError(`Cannot resolve ${specifier}`)
+          }) as never
+        ),
+      /Cannot resolve \.\/setup/
+    )
+
+    assert.equal(fallbackSpecifier, './setup')
+  } finally {
+    await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
+  }
+})
+
 test('should resolve package subpath through package manager fallback', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))
   const sourceDir = join(workspace, 'src')
@@ -193,6 +226,26 @@ test('should preserve decorator metadata compiler options from tsconfig', async 
     const output = String((result as { source: string }).source)
 
     assert.match(output, /__metadata\("design:type", Dependency\)/)
+  } finally {
+    await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
+  }
+})
+
+test('should not load declaration files as runtime sources', async () => {
+  const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))
+  const sourcePath = join(workspace, 'types.d.ts')
+
+  try {
+    await writeFile(join(workspace, 'package.json'), JSON.stringify({ type: 'module' }), 'utf-8')
+    await writeFile(sourcePath, `export interface RuntimeOnly {}\n`, 'utf-8')
+
+    const result = await load(
+      pathToFileURL(sourcePath).href,
+      {} as never,
+      (() => ({ format: 'module', shortCircuit: true, source: 'fallback' })) as never
+    )
+
+    assert.equal((result as { source: string }).source, 'fallback')
   } finally {
     await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
   }
