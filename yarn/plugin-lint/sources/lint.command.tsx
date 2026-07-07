@@ -22,6 +22,12 @@ import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-
 const resolveTargetFiles = (files: Array<string>, invocationCwd: string): Array<string> =>
   files.map((file) => (isAbsolute(file) ? file : resolve(invocationCwd, file)))
 
+interface LintCommandResult {
+  messages: Array<unknown>
+}
+
+export const hasLintMessages = (result: LintCommandResult): boolean => result.messages.length > 0
+
 export class LintCommand extends BaseCommand {
   static override paths = [['lint']]
 
@@ -104,7 +110,7 @@ export class LintCommand extends BaseCommand {
         cache: this.cache,
       })
 
-      return results.find((result) => result.errorCount > 0 || result.fatalErrorCount > 0) ? 1 : 0
+      return results.find(hasLintMessages) ? 1 : 0
     } catch (error) {
       if (error instanceof Error) {
         renderStatic(<ErrorInfo error={error} />)
