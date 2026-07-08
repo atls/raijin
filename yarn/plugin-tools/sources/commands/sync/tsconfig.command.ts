@@ -1,18 +1,17 @@
-import type { PortablePath }         from '@yarnpkg/fslib'
+import type { PortablePath }              from '@yarnpkg/fslib'
 
-import assert                        from 'node:assert'
+import assert                             from 'node:assert'
 
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { StreamReport }              from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { xfs }                       from '@yarnpkg/fslib'
-import { ppath }                     from '@yarnpkg/fslib'
-import deepmerge                     from 'deepmerge'
+import { StreamReport }                   from '@yarnpkg/core'
+import { Filename }                       from '@yarnpkg/fslib'
+import { xfs }                            from '@yarnpkg/fslib'
+import { ppath }                          from '@yarnpkg/fslib'
 
-import tsconfig                      from '@atls/raijin/typescript-config'
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+import tsconfig                           from '@atls/raijin/typescript-config'
 
-import { AbstractRaijinSyncCommand } from './base.js'
+import { AbstractRaijinSyncCommand }      from './base.js'
+import { createRaijinSyncTarget }         from './target.js'
 
 const projectTypesIncludeEntry = 'project.types.d.ts'
 
@@ -21,31 +20,7 @@ export const projectTypesReference = '/// <reference types="@atls/raijin/types" 
 const implicitTSConfigIncludeEntry = '**/*'
 
 type TSConfigShape = Record<string, unknown>
-
-const combineMerge = (
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  target: Array<any>,
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  source: Array<any>,
-  options?: deepmerge.ArrayMergeOptions
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-): Array<any> => {
-  const destination = target.slice()
-
-  /* eslint-disable @typescript-eslint/no-unsafe-argument */
-  source.forEach((item, index: number) => {
-    if (typeof destination[index] === 'undefined') {
-      destination[index] = options?.cloneUnlessOtherwiseSpecified(item, options)
-    } else if (options?.isMergeableObject(item)) {
-      destination[index] = deepmerge(target[index], item, options)
-    } else if (!target.includes(item)) {
-      destination.push(item)
-    }
-  })
-  /* eslint-enable @typescript-eslint/no-unsafe-argument */
-
-  return destination
-}
+type TSCompilerOptions = Record<string, unknown>
 
 const convertWorkspacesToIncludes = (workspaces: string): string => {
   if (workspaces.endsWith('/**/*')) {
@@ -60,6 +35,14 @@ const convertWorkspacesToIncludes = (workspaces: string): string => {
 }
 
 const hasTSConfigEntry = (config: TSConfigShape, key: string): boolean => Object.hasOwn(config, key)
+
+export const mergeTSCompilerOptions = (
+  defaults: TSCompilerOptions,
+  existing: TSCompilerOptions | undefined
+): TSCompilerOptions => ({
+  ...defaults,
+  ...(existing || {}),
+})
 
 export const getTSConfigIncludeEntries = (
   config: TSConfigShape,
@@ -106,8 +89,10 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
   }
 
   override async executeRegular(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { configuration, project } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const commandReport = await StreamReport.start(
       {
@@ -116,28 +101,28 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
       },
       async (report) => {
         await report.startTimerPromise('Raijin sync typescript config', async () => {
-          const tsconfigpath = ppath.join(
-            project.topLevelWorkspace.cwd,
-            'tsconfig.json' as PortablePath
-          )
+          const syncTarget = createRaijinSyncTarget(project)
+          const tsconfigpath = ppath.join(syncTarget.cwd, 'tsconfig.json' as PortablePath)
 
-          const exists: typeof tsconfig.compilerOptions = (await xfs.existsPromise(tsconfigpath))
-            ? await xfs.readJsonPromise(tsconfigpath)
-            : { compilerOptions: {} }
+          const exists: TSConfigShape & { compilerOptions?: TSCompilerOptions } =
+            (await xfs.existsPromise(tsconfigpath))
+              ? await xfs.readJsonPromise(tsconfigpath)
+              : { compilerOptions: {} }
 
           await xfs.writeFilePromise(
-            ppath.join(project.topLevelWorkspace.cwd, 'project.types.d.ts' as PortablePath),
+            ppath.join(syncTarget.cwd, 'project.types.d.ts' as PortablePath),
             projectTypesReference
           )
 
-          const config = deepmerge<
-            typeof exists & { include: any },
-            { compilerOptions: typeof tsconfig.compilerOptions }
-          >(exists, { compilerOptions: tsconfig.compilerOptions }, { arrayMerge: combineMerge })
+          const config = {
+            ...exists,
+            compilerOptions: mergeTSCompilerOptions(
+              tsconfig.compilerOptions,
+              exists.compilerOptions
+            ),
+          }
 
-          const includes: Array<string> = (
-            (project.topLevelWorkspace.manifest.raw.workspaces as Array<string> | undefined) || []
-          ).map(convertWorkspacesToIncludes)
+          const includes: Array<string> = syncTarget.workspaces.map(convertWorkspacesToIncludes)
 
           const include = getTSConfigIncludeEntries(config, includes)
 

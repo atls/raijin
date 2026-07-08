@@ -45,5 +45,10 @@
   "formatterIgnorePatterns": [
     "CHANGELOG.md"
   ],
+  "typecheckIgnorePatterns": [
+    "yarn/cli/src/cli.dev.mjs",
+    "yarn/plugin-checks/sources/*.test.js",
+    "yarn/plugin-pnp-patch/rollup.config.mjs"
+  ],
   "typecheckSkipLibCheck": true
 }

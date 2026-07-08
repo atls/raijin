@@ -14,6 +14,7 @@ import { dirname }                 from 'node:path'
 import { extname }                 from 'node:path'
 import { join }                    from 'node:path'
 import { fileURLToPath }           from 'node:url'
+import { pathToFileURL }           from 'node:url'
 
 const require = createRequire(import.meta.url)
 const ts = require('typescript') as typeof TypeScript
@@ -23,20 +24,38 @@ const compilerOptionsByConfigPath = new Map<string, TypeScript.CompilerOptions>(
 const sourceExtensionsBySpecifier = new Map([
   ['.js', ['.js', '.ts', '.tsx', '.jsx']],
   ['.mjs', ['.mjs', '.mts']],
-  ['.cjs', ['.cjs', '.cts']],
   ['.jsx', ['.jsx', '.tsx']],
-  [
-    '.css',
-    ['.css.ts', '.css.tsx', '.css.js', '.css.mjs', '.css.mts', '.css.cjs', '.css.cts', '.css'],
-  ],
+  ['.css', ['.css.ts', '.css.tsx', '.css.js', '.css.mjs', '.css.mts', '.css']],
 ])
 
-const typescriptExtensions = new Set(['.ts', '.tsx', '.mts', '.cts'])
+const typescriptRuntimeExtensions = new Set<string>([
+  ts.Extension.Ts,
+  ts.Extension.Tsx,
+  ts.Extension.Mts,
+])
+
+const typescriptDeclarationExtensions = new Set<string>([
+  ts.Extension.Dts,
+  ts.Extension.Dmts,
+  ts.Extension.Dcts,
+])
 
 type NextResolve = (
   specifier: string,
   context?: ResolveHookContext
 ) => Promise<ResolveFnOutput> | ResolveFnOutput
+
+const hasTypeScriptDeclarationExtension = (filepath: string): boolean =>
+  Array.from(typescriptDeclarationExtensions).some((extension) => filepath.endsWith(extension))
+
+const isTypeScriptRuntimePath = (filepath: string): boolean =>
+  !hasTypeScriptDeclarationExtension(filepath) && typescriptRuntimeExtensions.has(extname(filepath))
+
+const isTypeScriptRuntimeResolvedModule = (
+  resolvedModule: TypeScript.ResolvedModuleFull
+): boolean =>
+  !typescriptDeclarationExtensions.has(resolvedModule.extension) &&
+  typescriptRuntimeExtensions.has(resolvedModule.extension)
 
 const resolveSourceSpecifier = async (
   context: ResolveHookContext,
@@ -56,7 +75,7 @@ const resolveSourceSpecifier = async (
   }
 }
 
-const findPackageType = (filepath: string): string => {
+const findPackageType = (filepath: string): string | undefined => {
   let current = dirname(filepath)
 
   while (current !== dirname(current)) {
@@ -65,37 +84,43 @@ const findPackageType = (filepath: string): string => {
     if (existsSync(packagePath)) {
       const pkg = JSON.parse(readFileSync(packagePath, 'utf8')) as { type?: string }
 
-      return pkg.type ?? 'commonjs'
+      return pkg.type
     }
 
     current = dirname(current)
   }
 
-  return 'commonjs'
+  return undefined
 }
 
-const getFormat = (filepath: string): 'commonjs' | 'module' | null => {
+export const isPnpPackageSource = (filepath: string): boolean => {
+  const normalized = filepath.replaceAll('\\', '/')
+
+  return normalized.includes('/.yarn/') && normalized.includes('/node_modules/')
+}
+
+const getFormat = (filepath: string): 'module' | null => {
   const ext = extname(filepath)
 
   switch (ext) {
     case '.mts': {
       return 'module'
     }
-    case '.cts': {
-      return 'commonjs'
-    }
     case '.ts':
     case '.tsx': {
-      return findPackageType(filepath) === 'module' ? 'module' : 'commonjs'
+      if (findPackageType(filepath) === 'module' || isPnpPackageSource(filepath)) {
+        return 'module'
+      }
+
+      throw new Error(
+        `Raijin TypeScript loader supports only ESM TypeScript sources with package.json type=module`
+      )
     }
     default: {
       return null
     }
   }
 }
-
-const getModuleKind = (format: 'commonjs' | 'module'): TypeScript.ModuleKind =>
-  format === 'module' ? ts.ModuleKind.ESNext : ts.ModuleKind.CommonJS
 
 const readCompilerOptions = (filepath: string): TypeScript.CompilerOptions => {
   const configPath = ts.findConfigFile(dirname(filepath), ts.sys.fileExists, 'tsconfig.json')
@@ -121,10 +146,33 @@ const readCompilerOptions = (filepath: string): TypeScript.CompilerOptions => {
   return options
 }
 
-const getCompilerOptions = (
-  filepath: string,
-  format: 'commonjs' | 'module'
-): TypeScript.CompilerOptions => {
+const resolveExtensionlessTypeScriptSource = (
+  specifier: string,
+  parentURL: string
+): ResolveFnOutput | undefined => {
+  const parentPath = fileURLToPath(parentURL)
+  const { resolvedModule } = ts.resolveModuleName(
+    specifier,
+    parentPath,
+    readCompilerOptions(parentPath),
+    ts.sys
+  )
+
+  if (!resolvedModule) {
+    return undefined
+  }
+
+  if (!isTypeScriptRuntimeResolvedModule(resolvedModule)) {
+    return undefined
+  }
+
+  return {
+    shortCircuit: true,
+    url: pathToFileURL(resolvedModule.resolvedFileName).href,
+  }
+}
+
+const getCompilerOptions = (filepath: string, _format: 'module'): TypeScript.CompilerOptions => {
   const options = readCompilerOptions(filepath)
 
   return {
@@ -132,17 +180,13 @@ const getCompilerOptions = (
     esModuleInterop: true,
     inlineSourceMap: true,
     jsx: options.jsx ?? ts.JsxEmit.ReactJSX,
-    module: getModuleKind(format),
+    module: ts.ModuleKind.ESNext,
     sourceMap: false,
     target: options.target ?? ts.ScriptTarget.ES2022,
   }
 }
 
-const transformSource = (
-  source: string,
-  filepath: string,
-  format: 'commonjs' | 'module'
-): string => {
+const transformSource = (source: string, filepath: string, format: 'module'): string => {
   const { outputText } = ts.transpileModule(source, {
     fileName: filepath,
     compilerOptions: getCompilerOptions(filepath, format),
@@ -162,6 +206,16 @@ export const resolve: ResolveHook = async (specifier, context, next) => {
   }
 
   const specifiedExtension = extname(specifier)
+  if (!specifiedExtension) {
+    const resolved = resolveExtensionlessTypeScriptSource(specifier, parentURL)
+
+    if (resolved) {
+      return resolved
+    }
+
+    return next(specifier, context)
+  }
+
   const sourceExtensions = sourceExtensionsBySpecifier.get(specifiedExtension)
   if (!sourceExtensions) {
     return next(specifier, context)
@@ -204,7 +258,7 @@ export const load: LoadHook = async (urlString, context, next) => {
 
   const filepath = fileURLToPath(url)
 
-  if (!typescriptExtensions.has(extname(filepath))) {
+  if (!isTypeScriptRuntimePath(filepath)) {
     return next(urlString, context)
   }
 

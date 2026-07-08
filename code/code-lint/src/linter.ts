@@ -1,3 +1,5 @@
+/* eslint-disable n/no-sync */
+
 import type { ESLintInstance }          from '@atls/raijin/eslint'
 import type { ESLint as RuntimeESLint } from '@atls/raijin/eslint'
 import type { LinterConfig }            from '@atls/raijin/eslint'
@@ -18,6 +20,8 @@ import { join }                         from 'node:path'
 import { globby }                       from 'globby'
 import ignorer                          from 'ignore'
 
+import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
+
 import { ignore }                       from './linter.patterns.js'
 import { createPatterns }               from './linter.patterns.js'
 import { createLintResult }             from './linter.utils.js'
@@ -26,6 +30,28 @@ type EslintRuntime = {
   Linter: typeof RuntimeLinter
   ESLint: typeof RuntimeESLint
   eslintconfig: Array<LinterConfig>
+}
+
+const ESLINT_RUNTIME_SPECIFIER = '@atls/raijin/eslint'
+
+export const resolveEslintRuntimeUrl = (cwd: string): string =>
+  resolveRaijinRuntimeUrl(cwd, ESLINT_RUNTIME_SPECIFIER)
+
+const importEslintRuntime = async (cwd: string): Promise<EslintRuntime> =>
+  (await import(resolveEslintRuntimeUrl(cwd))) as EslintRuntime
+
+const exists = async (path: string): Promise<boolean> => {
+  try {
+    await stat(path)
+
+    return true
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return false
+    }
+
+    throw error
+  }
 }
 
 export interface LintOptions {
@@ -40,6 +66,8 @@ export class Linter extends EventEmitter {
     private readonly linter: LinterInstance,
     private readonly cacheLinter: ESLintInstance,
     private readonly config: Array<LinterConfig>,
+    private readonly rootCwd: string,
+    private readonly tsconfigRootCwd: string,
     private readonly cwd: string
   ) {
     super()
@@ -48,13 +76,10 @@ export class Linter extends EventEmitter {
   }
 
   static async initialize(rootCwd: string, cwd: string): Promise<Linter> {
-    const {
-      Linter: LinterConstructor,
-      ESLint,
-      eslintconfig,
-    } = (await import('@atls/raijin/eslint')) as EslintRuntime
+    const { Linter: LinterConstructor, ESLint, eslintconfig } = await importEslintRuntime(cwd)
 
     const linter = new LinterConstructor({ configType: 'flat' })
+    const tsconfigRootCwd = (await exists(join(cwd, 'tsconfig.json'))) ? cwd : rootCwd
 
     const config: Array<LinterConfig> = eslintconfig.map((item) => ({
       ...item,
@@ -62,7 +87,7 @@ export class Linter extends EventEmitter {
         ...(item.languageOptions || {}),
         parserOptions: {
           ...(item.languageOptions?.parserOptions || {}),
-          tsconfigRootDir: rootCwd,
+          tsconfigRootDir: tsconfigRootCwd,
         },
       },
     }))
@@ -75,12 +100,12 @@ export class Linter extends EventEmitter {
       cacheLocation: join(rootCwd, '.config/eslint/.eslintcache'),
     })
 
-    return new Linter(linter, eslint, config, cwd)
+    return new Linter(linter, eslint, config, rootCwd, tsconfigRootCwd, cwd)
   }
 
   async lintFile(filename: string, options?: LintOptions): Promise<LintResult> {
     const filePath = this.resolveFilePath(filename)
-    const lintFilename = relative(this.cwd, filePath)
+    const lintFilename = relative(this.tsconfigRootCwd, filePath)
     const source = await readFile(filePath, 'utf8')
 
     if (options?.fix) {
@@ -156,7 +181,6 @@ export class Linter extends EventEmitter {
   }
 
   private getProjectIgnorePatterns(): Array<string> {
-    // eslint-disable-next-line n/no-sync
     const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
 
     const { linterIgnorePatterns = [] } = JSON.parse(content)

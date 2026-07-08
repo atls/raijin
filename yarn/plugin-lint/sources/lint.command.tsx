@@ -1,19 +1,32 @@
-import { BaseCommand }               from '@yarnpkg/cli'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
-import { Option }                    from 'clipanion'
-import { render }                    from 'ink'
-import React                         from 'react'
+import { resolve }                        from 'node:path'
+import { isAbsolute }                     from 'node:path'
 
-import { ErrorInfo }                 from '@atls/cli-ui-error-info-component'
-import { LintProgress }              from '@atls/cli-ui-lint-progress-component'
-import { LintResult }                from '@atls/cli-ui-lint-result-component'
-import { Linter }                    from '@atls/code-lint'
-import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { BaseCommand }                    from '@yarnpkg/cli'
+import { Filename }                       from '@yarnpkg/fslib'
+import { execUtils }                      from '@yarnpkg/core'
+import { xfs }                            from '@yarnpkg/fslib'
+import { Option }                         from 'clipanion'
+import { render }                         from 'ink'
+import React                              from 'react'
+
+import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
+import { LintProgress }                   from '@atls/cli-ui-lint-progress-component'
+import { LintResult }                     from '@atls/cli-ui-lint-result-component'
+import { Linter }                         from '@atls/code-lint'
+import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
+import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
+import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+
+const resolveTargetFiles = (files: Array<string>, invocationCwd: string): Array<string> =>
+  files.map((file) => (isAbsolute(file) ? file : resolve(invocationCwd, file)))
+
+interface LintCommandResult {
+  messages: Array<unknown>
+}
+
+export const hasLintMessages = (result: LintCommandResult): boolean => result.messages.length > 0
 
 export class LintCommand extends BaseCommand {
   static override paths = [['lint']]
@@ -31,7 +44,7 @@ export class LintCommand extends BaseCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -39,8 +52,7 @@ export class LintCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project } = await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
 
     const binFolder = await xfs.mktempPromise()
 
@@ -57,9 +69,7 @@ export class LintCommand extends BaseCommand {
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, ['lint', ...args, ...this.files], {
@@ -74,10 +84,13 @@ export class LintCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
-    const linter = await Linter.initialize(project.cwd, this.context.cwd)
+    const linter = await Linter.initialize(project.cwd, workspaceCwd)
+    const files = resolveTargetFiles(this.files, invocationCwd)
 
     const { clear } = render(<LintProgress cwd={project.cwd} linter={linter} />)
 
@@ -92,12 +105,12 @@ export class LintCommand extends BaseCommand {
     })
 
     try {
-      const results = await linter.lint(this.files, {
+      const results = await linter.lint(files, {
         fix: this.fix,
         cache: this.cache,
       })
 
-      return results.find((result) => result.messages.length > 0) ? 1 : 0
+      return results.find(hasLintMessages) ? 1 : 0
     } catch (error) {
       if (error instanceof Error) {
         renderStatic(<ErrorInfo error={error} />)

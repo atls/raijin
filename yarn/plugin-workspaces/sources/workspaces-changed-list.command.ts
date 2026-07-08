@@ -11,7 +11,7 @@ import { getChangedFiles }        from '@atls/yarn-plugin-files'
 import { getChangedWorkspaces }   from './get-changed-workspaces.util.js'
 
 class WorkspacesChangedListCommand extends BaseCommand {
-  static paths = [['workspaces', 'changed', 'list']]
+  static override paths = [['workspaces', 'changed', 'list']]
 
   json = Option.Boolean('--json', false)
 

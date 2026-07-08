@@ -18,6 +18,6 @@ runs:
       id: version
       shell: bash
       run: |
-        yarn release version apply --workspace @atls/raijin --github-output release_required
+        yarn release version apply --github-output release_required
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}

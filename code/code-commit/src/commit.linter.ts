@@ -15,8 +15,8 @@ import { rules }                  from './commitlint.rules.js'
 
 const defaultParserOpts = {
   // eslint-disable-next-line security/detect-unsafe-regex
-  headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/,
-  headerCorrespondence: ['type', 'scope', 'subject'],
+  headerPattern: /^(\w*)(?:\((.*)\))?(!)?: (.*)$/,
+  headerCorrespondence: ['type', 'scope', 'breaking', 'subject'],
   noteKeywords: ['BREAKING CHANGE'],
   revertPattern: /^(?:Revert|revert:)\s"?([\s\S]+?)"?\s*This reverts commit (\w{7,40})\b/i,
   revertCorrespondence: ['header', 'hash'],

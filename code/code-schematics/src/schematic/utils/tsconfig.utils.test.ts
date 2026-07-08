@@ -11,7 +11,8 @@ test('should preserve project-specific compiler options while applying raijin de
       rootDir: '.',
       skipLibCheck: true,
       noImplicitOverride: true,
-      module: 'NodeNext',
+      module: 'esnext',
+      moduleResolution: 'bundler',
     },
     tsconfig.compilerOptions
   )
@@ -19,5 +20,6 @@ test('should preserve project-specific compiler options while applying raijin de
   assert.equal((actual as Record<string, unknown>).rootDir, '.')
   assert.equal((actual as Record<string, unknown>).skipLibCheck, true)
   assert.equal((actual as Record<string, unknown>).noImplicitOverride, true)
-  assert.equal((actual as Record<string, unknown>).module, 'NodeNext')
+  assert.equal((actual as Record<string, unknown>).module, 'esnext')
+  assert.equal((actual as Record<string, unknown>).moduleResolution, 'bundler')
 })

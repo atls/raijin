@@ -1,12 +1,13 @@
-import assert        from 'node:assert/strict'
-import { mkdir }     from 'node:fs/promises'
-import { mkdtemp }   from 'node:fs/promises'
-import { writeFile } from 'node:fs/promises'
-import { tmpdir }    from 'node:os'
-import { join }      from 'node:path'
-import { test }      from 'node:test'
+import assert                 from 'node:assert/strict'
+import { mkdir }              from 'node:fs/promises'
+import { mkdtemp }            from 'node:fs/promises'
+import { writeFile }          from 'node:fs/promises'
+import { tmpdir }             from 'node:os'
+import { join }               from 'node:path'
+import { test }               from 'node:test'
 
-import { Tester }    from './tester.js'
+import { TEST_EXEC_ARGV_ENV } from './test-exec-argv.js'
+import { Tester }             from './tester.js'
 
 type TestFileCollector = {
   collectTestFiles: (
@@ -102,6 +103,130 @@ test('should collect tests directly under explicit integration directory targets
   )
 
   assert.deepEqual(files, [join(integration, 'sample.test.js')])
+})
+
+test('should resolve root-relative explicit test files when collecting from workspace target', async () => {
+  const cwd = await createProject()
+  const workspace = join(cwd, 'packages/tools')
+  const testFile = join(workspace, 'sources/sample.test.js')
+  const tester = await Tester.initialize(cwd)
+
+  await mkdir(join(workspace, 'sources'), { recursive: true })
+  await writeFile(
+    testFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('sample', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(workspace, 'unit', [
+    'packages/tools/sources/sample.test.js',
+  ])
+
+  assert.deepEqual(files, [testFile])
+})
+
+test('should resolve root-relative glob test files when collecting from workspace target', async () => {
+  const cwd = await createProject()
+  const workspace = join(cwd, 'packages/tools')
+  const testFile = join(workspace, 'sources/sample.test.js')
+
+  await mkdir(join(workspace, 'sources'), { recursive: true })
+  await writeFile(join(workspace, 'package.json'), `${JSON.stringify({ type: 'module' })}\n`)
+  const tester = await Tester.initialize(workspace, { projectCwd: cwd })
+  await writeFile(
+    testFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('sample', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(workspace, 'unit', [
+    'packages/tools/**/*.test.js',
+  ])
+
+  assert.deepEqual(files, [testFile])
+})
+
+test('should keep workspace ignore patterns with root-relative explicit test files', async () => {
+  const cwd = await createProject()
+  const workspace = join(cwd, 'packages/tools')
+  const ignoredFile = join(workspace, 'sources/ignored.test.js')
+  const keptFile = join(workspace, 'sources/kept.test.js')
+
+  await mkdir(join(workspace, 'sources'), { recursive: true })
+  await writeFile(
+    join(workspace, 'package.json'),
+    `${JSON.stringify({ type: 'module', testIgnorePatterns: ['sources/ignored.test.js'] })}\n`
+  )
+  const tester = await Tester.initialize(workspace, { projectCwd: cwd })
+  await writeFile(
+    ignoredFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('ignored', () => {",
+      '  assert.equal(1, 2)',
+      '})',
+      '',
+    ].join('\n')
+  )
+  await writeFile(
+    keptFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('kept', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  const previousExecArgv = process.env[TEST_EXEC_ARGV_ENV]
+
+  process.env[TEST_EXEC_ARGV_ENV] = JSON.stringify(['--enable-source-maps'])
+
+  let results: Awaited<ReturnType<typeof tester.unit>>
+
+  try {
+    results = await tester.unit(workspace, {
+      files: ['packages/tools/sources/ignored.test.js', 'packages/tools/sources/kept.test.js'],
+      testReporter: 'tap',
+    })
+  } finally {
+    if (previousExecArgv === undefined) {
+      Reflect.deleteProperty(process.env, TEST_EXEC_ARGV_ENV)
+    } else {
+      process.env[TEST_EXEC_ARGV_ENV] = previousExecArgv
+    }
+  }
+
+  assert.equal(
+    results.some((result) => result.type === 'test:fail'),
+    false
+  )
+  assert.deepEqual(
+    await (tester as unknown as TestFileCollector).collectTestFiles(workspace, 'unit', [
+      'packages/tools/sources/ignored.test.js',
+      'packages/tools/sources/kept.test.js',
+    ]),
+    [ignoredFile, keptFile]
+  )
 })
 
 test('should expand explicit directory targets with glob metacharacters as literal paths', async () => {

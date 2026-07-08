@@ -12,12 +12,8 @@ import { fileURLToPath }        from 'node:url'
 const mapping = new Map([
   ['.js', ['.js', '.ts', '.tsx', '.jsx']],
   ['.mjs', ['.mjs', '.mts']],
-  ['.cjs', ['.cjs', '.cts']],
   ['.jsx', ['.jsx', '.tsx']],
-  [
-    '.css',
-    ['.css.ts', '.css.tsx', '.css.js', '.css.mjs', '.css.mts', '.css.cjs', '.css.cts', '.css'],
-  ],
+  ['.css', ['.css.ts', '.css.tsx', '.css.js', '.css.mjs', '.css.mts', '.css']],
 ])
 
 export const resolve: ResolveHook = (

@@ -1,3 +1,5 @@
+import type { PortablePath }                              from '@yarnpkg/fslib'
+
 import assert                                             from 'node:assert/strict'
 import test                                               from 'node:test'
 import { pathToFileURL }                                  from 'node:url'
@@ -9,17 +11,21 @@ import { xfs }                                            from '@yarnpkg/fslib'
 import { NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE } from './renderer-build.utils.js'
 import { assertRendererBuildExitCode }                    from './renderer-build.utils.js'
 import { assertSupportedRendererNextVersion }             from './renderer-build.utils.js'
+import { cleanupRendererBuildDiscoveryArtifacts }         from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }             from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }         from './renderer-build.utils.js'
 import { copyRendererBuildPublicAssets }                  from './renderer-build.utils.js'
+import { copyRendererBuildStandaloneFiles }               from './renderer-build.utils.js'
 import { createNextRendererLoaderSource }                 from './renderer-build.utils.js'
+import { createRendererBuildContext }                     from './renderer-build.utils.js'
 import { createRendererBuildArgs }                        from './renderer-build.utils.js'
 import { createRendererBuildEnv }                         from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                        from './renderer-build.utils.js'
 import { normalizeNextPackageVersion }                    from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                      from './renderer-build.utils.js'
 import { resolveRendererBuildPnpLoader }                  from './renderer-build.utils.js'
+import { resolveRendererBuildStandaloneCwd }              from './renderer-build.utils.js'
 
 test('should disable Next telemetry for renderer build', () => {
   const env = createRendererBuildEnv(
@@ -27,11 +33,27 @@ test('should disable Next telemetry for renderer build', () => {
       NEXT_TELEMETRY_DISABLED: '0',
       NODE_ENV: 'production',
     },
-    'file:///tmp/next-compiled-conf-require-cache-loader.mjs'
+    'file:///tmp/next-compiled-conf-require-cache-loader.mjs',
+    '/repo/client' as PortablePath
   )
 
   assert.equal(env.NEXT_TELEMETRY_DISABLED, '1')
   assert.equal(env.NODE_ENV, 'production')
+  assert.equal(env.RAIJIN_RENDERER_WORKSPACE_CWD, '/repo/client')
+  assert.equal(env.RAIJIN_RENDERER_OUTPUT, undefined)
+})
+
+test('should pass renderer build output when requested', () => {
+  const env = createRendererBuildEnv(
+    {},
+    'file:///tmp/next-compiled-conf-require-cache-loader.mjs',
+    '/repo/client' as PortablePath,
+    {
+      output: 'standalone',
+    }
+  )
+
+  assert.equal(env.RAIJIN_RENDERER_OUTPUT, 'standalone')
 })
 
 test('should pass Next renderer loader through managed loader env', () => {
@@ -39,7 +61,8 @@ test('should pass Next renderer loader through managed loader env', () => {
     {
       NODE_OPTIONS: '--require ./.pnp.cjs --experimental-loader file:///.pnp.loader.mjs',
     },
-    'file:///tmp/next-compiled-conf-require-cache-loader.mjs'
+    'file:///tmp/next-compiled-conf-require-cache-loader.mjs',
+    '/repo/client' as PortablePath
   )
 
   assert.equal(
@@ -181,6 +204,51 @@ test('should patch Next compiled conf require cache deletion in loader source', 
   assert.equal(result.source, 'before if (require.cache) delete require.cache[__filename] after')
 })
 
+test('should patch Next config with default ESM source extension aliases', async () => {
+  const loader = (await import(
+    `data:text/javascript,${encodeURIComponent(NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE)}`
+  )) as {
+    load: (
+      url: string,
+      context: Record<string, unknown>,
+      nextLoad: (url: string, context: Record<string, unknown>) => Promise<{ source: string }>
+    ) => Promise<{ source: string }>
+  }
+
+  const result = await loader.load(
+    'file:///repo/.yarn/cache/next.zip/node_modules/next/dist/server/config.js',
+    {},
+    async () => ({
+      source: [
+        'const result = {',
+        '        ..._configshared.defaultConfig,',
+        '        ...config,',
+        '        experimental: {',
+        '            ..._configshared.defaultConfig.experimental,',
+        '            ...config.experimental',
+        '        }',
+        '    };',
+      ].join('\n'),
+    })
+  )
+
+  assert.equal(result.source.includes('result.experimental.extensionAlias ??= {'), true)
+  assert.equal(result.source.includes("'.js': ['.js', '.tsx', '.ts']"), true)
+  assert.equal(result.source.includes("'.mjs': ['.mjs', '.mts']"), true)
+  assert.equal(
+    result.source.includes('result.output ??= process.env["RAIJIN_RENDERER_OUTPUT"]'),
+    true
+  )
+  assert.equal(
+    result.source.includes(
+      'result.turbopack.root ??= process.env["RAIJIN_RENDERER_WORKSPACE_CWD"]'
+    ),
+    true
+  )
+  assert.equal(result.source.includes('const raijinWebpack = result.webpack'), true)
+  assert.equal(result.source.includes('webpackConfig.resolve.extensionAlias ??='), true)
+})
+
 test('should patch Next config require hook extensions access in loader source', async () => {
   const loader = (await import(
     `data:text/javascript,${encodeURIComponent(NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE)}`
@@ -205,6 +273,47 @@ test('should patch Next config require hook extensions access in loader source',
     result.source,
     "const requireExtensions = require.extensions || _nodemodule.default._extensions;\nconst oldJSHook = requireExtensions['.js']; requireExtensions['.js'] = hook; delete requireExtensions[ext];"
   )
+})
+
+test('should patch Next node manifest loader to read JSON manifests from disk', async () => {
+  const loader = (await import(
+    `data:text/javascript,${encodeURIComponent(NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE)}`
+  )) as {
+    load: (
+      url: string,
+      context: Record<string, unknown>,
+      nextLoad: (url: string, context: Record<string, unknown>) => Promise<{ source: string }>
+    ) => Promise<{ source: string }>
+  }
+
+  const result = await loader.load(
+    'file:///repo/.yarn/cache/next.zip/node_modules/next/dist/server/route-matcher-providers/helpers/manifest-loaders/node-manifest-loader.js',
+    {},
+    async () => ({
+      source: [
+        'const _path = /*#__PURE__*/ _interop_require_default(require("../../../../shared/lib/isomorphic/path"));',
+        'static require(id) {',
+        '        try {',
+        '            return require(id);',
+        '        } catch  {',
+        '            return null;',
+        '        }',
+        '    }',
+      ].join('\n'),
+    })
+  )
+
+  assert.equal(
+    result.source.includes(
+      'const _fs = /*#__PURE__*/ _interop_require_default(require("node:fs"));'
+    ),
+    true
+  )
+  assert.equal(
+    result.source.includes("return JSON.parse(_fs.default.readFileSync(id, 'utf8'));"),
+    true
+  )
+  assert.equal(result.source.includes('return require(id);'), true)
 })
 
 test('should patch Next require cache scanner access in loader source', async () => {
@@ -253,6 +362,33 @@ test('should patch Next webpack config node protocol handling in loader source',
   assert.equal(result.source.includes('new bundler.ProvidePlugin'), true)
 })
 
+test('should patch Next webpack config with ESM source extension aliases', async () => {
+  const loader = (await import(
+    `data:text/javascript,${encodeURIComponent(NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE)}`
+  )) as {
+    load: (
+      url: string,
+      context: Record<string, unknown>,
+      nextLoad: (url: string, context: Record<string, unknown>) => Promise<{ source: string }>
+    ) => Promise<{ source: string }>
+  }
+
+  const result = await loader.load(
+    'file:///repo/.yarn/cache/next.zip/node_modules/next/dist/build/webpack-config.js',
+    {},
+    async () => ({
+      source: 'extensionAlias: config.experimental.extensionAlias,',
+    })
+  )
+
+  assert.equal(
+    result.source.includes('extensionAlias: config.experimental.extensionAlias ?? {'),
+    true
+  )
+  assert.equal(result.source.includes("'.js': ['.js', '.tsx', '.ts']"), true)
+  assert.equal(result.source.includes("'.mjs': ['.mjs', '.mts']"), true)
+})
+
 test('should leave Next SWC source unchanged in loader source', async () => {
   const loader = (await import(
     `data:text/javascript,${encodeURIComponent(NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE)}`
@@ -295,43 +431,127 @@ test('should remove stale renderer artifacts before project discovery', async ()
   const cwd = await xfs.mktempPromise()
 
   await xfs.mkdirPromise(ppath.join(cwd, 'dist'), { recursive: true })
-  await xfs.mkdirPromise(ppath.join(cwd, 'src/.next'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(cwd, '.next'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(cwd, 'src'), { recursive: true })
   await xfs.writeJsonPromise(ppath.join(cwd, 'dist/package.json'), {})
-  await xfs.writeJsonPromise(ppath.join(cwd, 'src/.next/package.json'), {})
-  await xfs.writeJsonPromise(ppath.join(cwd, 'src/package.json'), {})
+  await xfs.writeJsonPromise(ppath.join(cwd, '.next/package.json'), {})
+  await xfs.writeJsonPromise(ppath.join(cwd, 'src/package.json'), { type: 'module' })
 
   await cleanupRendererBuildStaleArtifacts(cwd)
 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist')), false)
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/.next')), false)
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, '.next')), false)
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/package.json')), false)
+})
+
+test('should remove stale renderer source manifest from nested source cwd before project discovery', async () => {
+  const cwd = await xfs.mktempPromise()
+  const nestedCwd = ppath.join(cwd, 'src/app/pages')
+
+  await xfs.mkdirPromise(nestedCwd, { recursive: true })
+  await xfs.writeJsonPromise(ppath.join(cwd, 'src/package.json'), { type: 'module' })
+
+  await cleanupRendererBuildDiscoveryArtifacts(nestedCwd)
+
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/package.json')), false)
+})
+
+test('should keep real source workspace manifest before project discovery', async () => {
+  const cwd = await xfs.mktempPromise()
+  const nestedCwd = ppath.join(cwd, 'packages/src/app')
+  const manifestPath = ppath.join(cwd, 'packages/src/package.json')
+  const manifest = {
+    name: '@internal/src',
+    type: 'module',
+  }
+
+  await xfs.mkdirPromise(nestedCwd, { recursive: true })
+  await xfs.writeJsonPromise(manifestPath, manifest)
+
+  await cleanupRendererBuildDiscoveryArtifacts(nestedCwd)
+
+  assert.equal(await xfs.existsPromise(manifestPath), true)
+  assert.deepEqual(await xfs.readJsonPromise(manifestPath), manifest)
+})
+
+test('should keep real renderer source manifest during stale cleanup', async () => {
+  const cwd = await xfs.mktempPromise()
+  const manifestPath = ppath.join(cwd, 'src/package.json')
+  const manifest = {
+    dependencies: {
+      next: '16.0.0',
+    },
+    type: 'module',
+  }
+
+  await xfs.mkdirPromise(ppath.dirname(manifestPath), { recursive: true })
+  await xfs.writeJsonPromise(manifestPath, manifest)
+
+  await cleanupRendererBuildStaleArtifacts(cwd)
+
+  assert.equal(await xfs.existsPromise(manifestPath), true)
+  assert.deepEqual(await xfs.readJsonPromise(manifestPath), manifest)
 })
 
 test('should remove renderer workspace manifests without removing dist output', async () => {
   const cwd = await xfs.mktempPromise()
 
   await xfs.mkdirPromise(ppath.join(cwd, 'dist'), { recursive: true })
-  await xfs.mkdirPromise(ppath.join(cwd, 'src/.next'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(cwd, '.next'), { recursive: true })
   await xfs.writeFilePromise(ppath.join(cwd, 'dist/index.js'), '')
   await xfs.writeJsonPromise(ppath.join(cwd, 'dist/package.json'), {})
-  await xfs.writeJsonPromise(ppath.join(cwd, 'src/.next/package.json'), {})
+  await xfs.writeJsonPromise(ppath.join(cwd, '.next/package.json'), {})
 
   await cleanupRendererBuildWorkspaceManifests(cwd)
   await cleanupRendererBuildSourceArtifacts(cwd)
 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/index.js')), true)
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/package.json')), false)
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'src/.next')), false)
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, '.next')), false)
 })
 
-test('should copy renderer public assets into standalone artifact', async () => {
+test('should resolve renderer standalone root from renderer cwd', () => {
+  assert.equal(
+    resolveRendererBuildStandaloneCwd('/repo/client/next-app' as PortablePath),
+    '/repo/client/next-app/src/.next/standalone'
+  )
+})
+
+test('should copy full renderer standalone root into dist artifact', async () => {
+  const cwd = await xfs.mktempPromise()
+  const context = createRendererBuildContext(cwd)
+  const standaloneCwd = resolveRendererBuildStandaloneCwd(cwd)
+
+  await xfs.mkdirPromise(ppath.join(standaloneCwd, 'node_modules/next'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(standaloneCwd, 'client/next-app'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(standaloneCwd, 'server.js'), 'root server')
+  await xfs.writeFilePromise(ppath.join(standaloneCwd, 'node_modules/next/package.json'), '{}')
+  await xfs.writeFilePromise(
+    ppath.join(standaloneCwd, 'client/next-app/server.js'),
+    'nested server'
+  )
+
+  await copyRendererBuildStandaloneFiles(context)
+
+  assert.equal(
+    (await xfs.readFilePromise(ppath.join(cwd, 'dist/server.js'))).toString(),
+    'root server'
+  )
+  assert.equal(
+    await xfs.existsPromise(ppath.join(cwd, 'dist/node_modules/next/package.json')),
+    true
+  )
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/client/next-app/server.js')), true)
+})
+
+test('should copy renderer root public assets into standalone artifact', async () => {
   const cwd = await xfs.mktempPromise()
 
-  await xfs.mkdirPromise(ppath.join(cwd, 'src/public/organization-logos'), { recursive: true })
-  await xfs.writeFilePromise(ppath.join(cwd, 'src/public/Bg.png'), '')
-  await xfs.writeFilePromise(ppath.join(cwd, 'src/public/organization-logos/atlantis.png'), '')
+  await xfs.mkdirPromise(ppath.join(cwd, 'public/organization-logos'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(cwd, 'public/Bg.png'), '')
+  await xfs.writeFilePromise(ppath.join(cwd, 'public/organization-logos/atlantis.png'), '')
 
-  await copyRendererBuildPublicAssets(cwd)
+  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/Bg.png')), true)
   assert.equal(
@@ -340,10 +560,39 @@ test('should copy renderer public assets into standalone artifact', async () => 
   )
 })
 
+test('should copy renderer source public assets when root public assets are missing', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.mkdirPromise(ppath.join(cwd, 'src/public'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(cwd, 'src/public/Bg.png'), '')
+
+  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
+
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/Bg.png')), true)
+})
+
+test('should prefer renderer source public assets over root public assets', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await xfs.mkdirPromise(ppath.join(cwd, 'public'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(cwd, 'src/public'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(cwd, 'public/Bg.png'), 'root')
+  await xfs.writeFilePromise(ppath.join(cwd, 'public/root-only.png'), '')
+  await xfs.writeFilePromise(ppath.join(cwd, 'src/public/Bg.png'), 'source')
+
+  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
+
+  assert.equal(
+    (await xfs.readFilePromise(ppath.join(cwd, 'dist/public/Bg.png'))).toString(),
+    'source'
+  )
+  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/root-only.png')), false)
+})
+
 test('should ignore missing renderer public assets', async () => {
   const cwd = await xfs.mktempPromise()
 
-  await copyRendererBuildPublicAssets(cwd)
+  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
 
   assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public')), false)
 })

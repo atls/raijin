@@ -8,6 +8,7 @@ import { PassThrough }                  from 'node:stream'
 import { SeverityNumber }               from '@monstrs/logger'
 
 import { StartServerPlugin }            from '@atls/webpack-start-server-plugin'
+import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
 
 import { WebpackConfig }                from './webpack.config.js'
 import { createServiceRuntimeExecArgv } from './service-exec-argv.js'
@@ -19,6 +20,14 @@ type WebpackRuntime = {
   protoLoaderPath: string
 }
 
+const WEBPACK_RUNTIME_SPECIFIER = '@atls/raijin/webpack'
+
+const importWebpackRuntime = async (cwd: string): Promise<WebpackRuntime> => {
+  const runtimeUrl = resolveRaijinRuntimeUrl(cwd, WEBPACK_RUNTIME_SPECIFIER)
+
+  return (await import(runtimeUrl)) as WebpackRuntime
+}
+
 export class Service extends EventEmitter {
   protected constructor(
     private readonly webpack: typeof wp,
@@ -28,10 +37,12 @@ export class Service extends EventEmitter {
     super()
   }
 
-  static async initialize(cwd: string): Promise<Service> {
-    const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } = (await import(
-      '@atls/raijin/webpack'
-    )) as WebpackRuntime
+  static async initialize(
+    cwd: string,
+    workspaceDependencies: Iterable<string> = []
+  ): Promise<Service> {
+    const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } =
+      await importWebpackRuntime(cwd)
 
     const config = new WebpackConfig(
       webpack,
@@ -40,7 +51,8 @@ export class Service extends EventEmitter {
         tsLoader: tsLoaderPath,
         protoLoader: protoLoaderPath,
       },
-      cwd
+      cwd,
+      workspaceDependencies
     )
 
     return new Service(webpack, config, await createServiceRuntimeExecArgv(cwd))

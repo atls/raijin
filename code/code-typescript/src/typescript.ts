@@ -3,62 +3,140 @@
 import type { ts as typescript }     from '@atls/raijin/typescript'
 
 import EventEmitter                  from 'node:events'
+import { existsSync }                from 'node:fs'
 import { readFileSync }              from 'node:fs'
 import { join }                      from 'node:path'
 
+import { resolveRaijinRuntimeUrl }   from '@atls/raijin/runtime-resolver'
 import tsconfig                      from '@atls/raijin/typescript-config'
 
 import { transformJsxToJsExtension } from './transformers/index.js'
 
+const PROJECT_TS_CONFIG = 'tsconfig.json'
+const PACKAGE_MANIFEST = 'package.json'
+const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
+
+type TSConfigShape = Record<string, unknown> & {
+  compilerOptions?: Record<string, unknown>
+  exclude?: unknown
+}
+
+type PackageManifestShape = Record<string, unknown> & {
+  dependencies?: Record<string, unknown>
+  devDependencies?: Record<string, unknown>
+  name?: unknown
+  optionalDependencies?: Record<string, unknown>
+  peerDependencies?: Record<string, unknown>
+  typecheckIgnorePatterns?: Array<string>
+  typecheckSkipLibCheck?: boolean
+}
+
+export type TypeScriptOptions = {
+  manifestCwds?: Array<string>
+}
+
+const asCompilerOptions = (value: unknown): Record<string, unknown> =>
+  value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {}
+
+const asStringArray = (value: unknown): Array<string> =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
+
+const createProjectConfig = (
+  projectConfig: TSConfigShape,
+  include: Array<string> | undefined
+): TSConfigShape => {
+  if (include === undefined) {
+    return projectConfig
+  }
+
+  const config = { ...projectConfig }
+
+  delete config.files
+  delete config.references
+
+  return config
+}
+
+export const resolveTypeScriptRuntimeUrl = (cwd: string): string =>
+  resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_RUNTIME_SPECIFIER)
+
 export class TypeScript extends EventEmitter {
+  private readonly manifestCwds: Array<string>
+
   constructor(
     private readonly ts: typeof typescript,
-    private readonly cwd: string
+    private readonly cwd: string,
+    options: TypeScriptOptions = {}
   ) {
     super()
+
+    this.manifestCwds = Array.from(
+      new Set(
+        options.manifestCwds && options.manifestCwds.length > 0 ? options.manifestCwds : [cwd]
+      )
+    )
   }
 
-  static async initialize(cwd: string): Promise<TypeScript> {
-    const { ts } = (await import('@atls/raijin/typescript')) as { ts: typeof typescript }
+  static async initialize(cwd: string, options: TypeScriptOptions = {}): Promise<TypeScript> {
+    const { ts } = (await import(resolveTypeScriptRuntimeUrl(cwd))) as { ts: typeof typescript }
 
-    return new TypeScript(ts, cwd)
+    return new TypeScript(ts, cwd, options)
   }
 
-  async check(include: Array<string> = []): Promise<Array<typescript.Diagnostic>> {
+  async check(include?: Array<string>): Promise<Array<typescript.Diagnostic>> {
     return this.run(include)
   }
 
   async build(
-    include: Array<string> = [],
+    include?: Array<string>,
     override: Partial<typescript.CompilerOptions> = {}
   ): Promise<Array<typescript.Diagnostic>> {
     return this.run(include, override, false)
   }
 
   private async run(
-    include: Array<string> = [],
+    include: Array<string> | undefined = undefined,
     override: Partial<typescript.CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<typescript.Diagnostic>> {
-    const projectIgnorePatterns = this.getProjectIgnorePatterns()
+    const projectConfig = this.readProjectTSConfig()
 
-    const skipLibCheck = this.getLibCheckOption()
+    if (projectConfig.errors.length > 0) {
+      this.emit('start', { files: [] })
+      this.emit('end', { diagnostics: projectConfig.errors })
+
+      return projectConfig.errors
+    }
+
+    const effectiveProjectConfig = createProjectConfig(projectConfig.config, include)
+    const projectCompilerOptions = asCompilerOptions(effectiveProjectConfig.compilerOptions)
+    const projectIgnorePatterns = this.getProjectIgnorePatterns()
+    const projectExcludePatterns = asStringArray(effectiveProjectConfig.exclude)
+    const skipLibCheck = this.getLibCheckOption(projectCompilerOptions)
 
     const config = {
       ...tsconfig,
+      ...effectiveProjectConfig,
       compilerOptions: {
         ...tsconfig.compilerOptions,
+        ...projectCompilerOptions,
         ...override,
         skipLibCheck,
       },
-      include,
-      exclude: [...tsconfig.exclude, ...projectIgnorePatterns],
+      ...(include === undefined ? {} : { include }),
+      exclude: Array.from(
+        new Set([...tsconfig.exclude, ...projectExcludePatterns, ...projectIgnorePatterns])
+      ),
     }
 
     const { fileNames, options, errors } = this.ts.parseJsonConfigFileContent(
       config,
       this.ts.sys,
-      this.cwd
+      this.cwd,
+      undefined,
+      projectConfig.configFileName
     )
 
     if (errors.length > 0) {
@@ -146,18 +224,73 @@ export class TypeScript extends EventEmitter {
   }
 
   private getProjectIgnorePatterns(): Array<string> {
-    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
-
-    const { typecheckIgnorePatterns = [] } = JSON.parse(content)
-
-    return typecheckIgnorePatterns as Array<string>
+    return Array.from(
+      new Set(
+        this.readPackageManifests().flatMap(
+          ({ typecheckIgnorePatterns = [] }) => typecheckIgnorePatterns
+        )
+      )
+    )
   }
 
-  private getLibCheckOption(): boolean {
-    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
+  private getLibCheckOption(projectCompilerOptions: Record<string, unknown>): boolean {
+    const manifest = [...this.readPackageManifests()]
+      .reverse()
+      .find((item) => Object.hasOwn(item, 'typecheckSkipLibCheck'))
+    const defaultCompilerOptions = asCompilerOptions(tsconfig.compilerOptions)
 
-    const { typecheckSkipLibCheck = false } = JSON.parse(content)
+    if (manifest) {
+      return manifest.typecheckSkipLibCheck!
+    }
 
-    return typecheckSkipLibCheck as boolean
+    if (typeof projectCompilerOptions.skipLibCheck === 'boolean') {
+      return projectCompilerOptions.skipLibCheck
+    }
+
+    if (typeof defaultCompilerOptions.skipLibCheck === 'boolean') {
+      return defaultCompilerOptions.skipLibCheck
+    }
+
+    return false
+  }
+
+  private readPackageManifests(): Array<PackageManifestShape> {
+    return this.manifestCwds.map((cwd) => this.readPackageManifest(cwd))
+  }
+
+  private readPackageManifest(cwd: string): PackageManifestShape {
+    const content = readFileSync(join(cwd, PACKAGE_MANIFEST), 'utf-8')
+
+    return JSON.parse(content) as PackageManifestShape
+  }
+
+  private readProjectTSConfig(): {
+    config: TSConfigShape
+    configFileName?: string
+    errors: Array<typescript.Diagnostic>
+  } {
+    const tsconfigPath = join(this.cwd, PROJECT_TS_CONFIG)
+
+    if (!existsSync(tsconfigPath)) {
+      return {
+        config: {},
+        errors: [],
+      }
+    }
+
+    const result = this.ts.readConfigFile(tsconfigPath, this.ts.sys.readFile)
+
+    if (result.error) {
+      return {
+        config: {},
+        errors: [result.error],
+      }
+    }
+
+    return {
+      config: result.config as TSConfigShape,
+      configFileName: tsconfigPath,
+      errors: [],
+    }
   }
 }

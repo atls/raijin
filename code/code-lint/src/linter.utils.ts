@@ -13,7 +13,7 @@ export const createLintResult = (
   fixableWarningCount: 0,
   usedDeprecatedRules: [],
   suppressedMessages: [],
-  errorCount: messages.filter((message) => message.severity === 1).length,
+  errorCount: messages.filter((message) => message.severity === 2).length,
   fatalErrorCount: messages.filter((message) => message.fatal).length,
-  warningCount: messages.filter((message) => message.severity === 2).length,
+  warningCount: messages.filter((message) => message.severity === 1).length,
 })

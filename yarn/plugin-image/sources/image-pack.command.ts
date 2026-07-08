@@ -7,8 +7,6 @@ import { readFileSync }                      from 'node:fs'
 import { join }                              from 'node:path'
 
 import { BaseCommand }                       from '@yarnpkg/cli'
-import { Configuration }                     from '@yarnpkg/core'
-import { Project }                           from '@yarnpkg/core'
 import { StreamReport }                      from '@yarnpkg/core'
 import { structUtils }                       from '@yarnpkg/core'
 import { xfs }                               from '@yarnpkg/fslib'
@@ -16,6 +14,7 @@ import { Option }                            from 'clipanion'
 
 import { pack }                              from '@atls/code-pack'
 import { packUtils }                         from '@atls/yarn-pack-utils'
+import { resolveWorkspaceCommandContext }    from '@atls/yarn-plugin-tools/command-context'
 
 import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
 import { resolveBuildpackReference }         from './image-pack.utils.js'
@@ -33,11 +32,8 @@ class ImagePackCommand extends BaseCommand {
   platform?: string = Option.String('--platform')
 
   async execute(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-
-    const { project } = await Project.find(configuration, this.context.cwd)
-
-    const workspace: Workspace = project.getWorkspaceByFilePath(this.context.cwd)
+    const { configuration, project, workspace, workspaceCwd } =
+      await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
 
     const commandReport = await StreamReport.start(
       {
@@ -69,7 +65,7 @@ class ImagePackCommand extends BaseCommand {
         )
 
         // eslint-disable-next-line n/no-sync
-        const content = readFileSync(join(this.context.cwd, 'package.json'), 'utf-8')
+        const content = readFileSync(join(workspaceCwd, 'package.json'), 'utf-8')
         const { packConfiguration = {} } = JSON.parse(content) as {
           packConfiguration?: ImagePackConfiguration
         }

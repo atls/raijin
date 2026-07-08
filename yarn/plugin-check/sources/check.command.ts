@@ -2,7 +2,7 @@ import { BaseCommand } from '@yarnpkg/cli'
 import { Option }      from 'clipanion'
 
 export class CheckCommand extends BaseCommand {
-  static paths = [['check']]
+  static override paths = [['check']]
 
   targets: Array<string> = Option.Rest({ required: 0 })
 

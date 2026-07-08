@@ -14,6 +14,8 @@ import { WebpackExternals }                 from './webpack.externals.js'
 import { createOptionalImportIgnorePlugin } from './webpack.ignore.js'
 
 export class WebpackConfig {
+  private readonly workspaceDependencies: Set<string>
+
   constructor(
     private readonly webpack: typeof wp,
     private readonly loaders: {
@@ -21,8 +23,11 @@ export class WebpackConfig {
       nodeLoader: string
       protoLoader: string
     },
-    private readonly cwd: string
-  ) {}
+    private readonly cwd: string,
+    workspaceDependencies: Iterable<string> = []
+  ) {
+    this.workspaceDependencies = new Set(workspaceDependencies)
+  }
 
   async build(
     environment: WebpackEnvironment = 'production',
@@ -32,12 +37,12 @@ export class WebpackConfig {
 
     await writeFile(configFile, '{"include":["**/*"]}')
 
-    const type = await this.getWorkspaceType()
+    await this.assertEsmWorkspace()
 
-    const webpackExternals = new WebpackExternals(this.cwd)
+    const webpackExternals = new WebpackExternals(this.cwd, this.workspaceDependencies)
     const externals = ['webpack/hot/poll?100', await webpackExternals.build()]
 
-    const plugins = this.createPlugins(environment, additionalPlugins, type === 'module')
+    const plugins = this.createPlugins(environment, additionalPlugins, true)
 
     return {
       mode: environment,
@@ -45,7 +50,7 @@ export class WebpackConfig {
       target: 'node',
       optimization: { minimize: false },
       experiments: {
-        outputModule: type === 'module',
+        outputModule: true,
       },
       plugins,
       entry: {
@@ -56,9 +61,10 @@ export class WebpackConfig {
       output: {
         path: join(this.cwd, 'dist'),
         filename: '[name].js',
-        library: { type },
-        chunkFormat: environment === 'development' ? 'commonjs' : type, // WARNING: leave until HMR supports ESM for chunks import
-        module: type === 'module',
+        library: { type: 'module' },
+        // Webpack HMR still cannot emit module-format hot-update chunks.
+        chunkFormat: environment === 'development' ? 'commonjs' : 'module',
+        module: true,
         clean: false,
         assetModuleFilename: 'assets/[name][ext]',
       },
@@ -66,7 +72,6 @@ export class WebpackConfig {
         extensionAlias: {
           '.js': ['.js', '.tsx', '.ts'],
           '.jsx': ['.jsx', '.tsx', '.ts'],
-          '.cjs': ['.cjs', '.cts'],
           '.mjs': ['.mjs', '.mts'],
         },
         extensions: ['.js', '.tsx', '.ts'],
@@ -75,14 +80,17 @@ export class WebpackConfig {
         },
       },
       externals,
-      externalsType:
-        // eslint-disable-next-line no-nested-ternary
-        environment === 'production' ? (type === 'module' ? 'import' : 'commonjs') : 'commonjs2',
+      externalsType: 'import',
       externalsPresets: {
         node: true,
       },
       devtool: environment === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
       module: {
+        parser: {
+          javascript: {
+            importMeta: false,
+          },
+        },
         rules: [
           {
             test: /(^.?|\.[^d]|[^.]d|[^.][^d])\.tsx?$/,
@@ -94,6 +102,8 @@ export class WebpackConfig {
                 onlyCompileBundledFiles: true,
                 compilerOptions: {
                   ...tsconfig.compilerOptions,
+                  module: 'ESNext',
+                  moduleResolution: 'Bundler',
                   sourceMap: true,
                 },
                 context: this.cwd,
@@ -110,14 +120,22 @@ export class WebpackConfig {
     }
   }
 
-  private async getWorkspaceType(): Promise<string> {
+  private async assertEsmWorkspace(): Promise<void> {
     try {
       const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-      const { type = 'commonjs' } = JSON.parse(content)
+      const { type } = JSON.parse(content) as { type?: string }
 
-      return type as string
+      if (type === 'module') {
+        return
+      }
+
+      throw new Error(
+        `Raijin service build supports only ESM workspaces with package.json type=module`
+      )
     } catch {
-      return 'module'
+      throw new Error(
+        `Raijin service build supports only ESM workspaces with package.json type=module`
+      )
     }
   }
 

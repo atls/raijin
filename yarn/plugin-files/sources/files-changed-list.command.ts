@@ -8,7 +8,7 @@ import { Option }                 from 'clipanion'
 import { getChangedFiles }        from './changed-files.util.js'
 
 class FilesChangedListCommand extends BaseCommand {
-  static paths = [['files', 'changed', 'list']]
+  static override paths = [['files', 'changed', 'list']]
 
   json = Option.Boolean('--json', false)
 

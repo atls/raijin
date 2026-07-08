@@ -23,6 +23,7 @@
     "./webpack-proto-imports-loader": "./src/runtime/webpack/proto-imports.loader.ts",
     "./typescript": "./src/runtime/typescript.ts",
     "./runtime-exec-argv": "./src/runtime/runtime-exec-argv.ts",
+    "./runtime-resolver": "./src/runtime/runtime-resolver.ts",
     "./typescript-loader": "./src/runtime/typescript-loader.ts",
     "./svgr": "./src/runtime/svgr.ts",
     "./ts-node-register": "./src/runtime/ts-node-register.ts",
@@ -70,7 +71,7 @@
     "react": "18.3.1",
     "sort-package-json": "2.4.1",
     "ts-loader": "9.5.2",
-    "typescript": "5.5.4",
+    "typescript": "5.9.3",
     "webpack": "5.98.0",
     "zod": "4.1.13",
     "zod-validation-error": "4.0.2"
@@ -121,6 +122,11 @@
         "import": "./dist/runtime/runtime-exec-argv.js",
         "types": "./dist/runtime/runtime-exec-argv.d.ts",
         "default": "./dist/runtime/runtime-exec-argv.js"
+      },
+      "./runtime-resolver": {
+        "import": "./dist/runtime/runtime-resolver.js",
+        "types": "./dist/runtime/runtime-resolver.d.ts",
+        "default": "./dist/runtime/runtime-resolver.js"
       },
       "./typescript-loader": {
         "import": "./dist/runtime/typescript-loader.js",

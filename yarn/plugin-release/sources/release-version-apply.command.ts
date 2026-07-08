@@ -11,6 +11,7 @@ import { getDeferredReleaseDecisions } from './release-version.utils.js'
 import { isDeferredReleaseRequired }   from './release-version.utils.js'
 
 const GITHUB_OUTPUT_PATH = 'GITHUB_OUTPUT'
+const DEFAULT_WORKSPACE_IDENT = '@atls/raijin'
 
 const writeGitHubOutput = async (name: string, value: string): Promise<void> => {
   const outputPath = process.env[GITHUB_OUTPUT_PATH]
@@ -25,7 +26,9 @@ const writeGitHubOutput = async (name: string, value: string): Promise<void> => 
 export class ReleaseVersionApplyCommand extends BaseCommand {
   static override paths = [['release', 'version', 'apply']]
 
-  workspaceIdent = Option.String('--workspace', { required: true })
+  workspaceIdent = Option.String('--workspace', {
+    required: false,
+  })
 
   githubOutput = Option.String('--github-output')
 
@@ -52,7 +55,8 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
     }
 
     const decisions = await getDeferredReleaseDecisions(configuration)
-    const releaseRequired = isDeferredReleaseRequired(decisions, this.workspaceIdent)
+    const workspaceIdent = this.workspaceIdent ?? DEFAULT_WORKSPACE_IDENT
+    const releaseRequired = isDeferredReleaseRequired(decisions, workspaceIdent)
 
     if (this.githubOutput) {
       await writeGitHubOutput(this.githubOutput, releaseRequired ? 'true' : 'false')
@@ -65,7 +69,7 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
           configuration,
         },
         async (report) => {
-          report.reportInfo(null, `No release target for ${this.workspaceIdent}`)
+          report.reportInfo(null, `No release target for ${workspaceIdent}`)
         }
       )
 

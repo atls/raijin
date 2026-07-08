@@ -348,7 +348,7 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 ### Domain `renderer`
 
-- Commands: `renderer build`, `renderer dev`
+- Commands: `renderer build`, `renderer dev`, `renderer start`
 
 <details>
 <summary>Domain details: `renderer`</summary>
@@ -370,6 +370,15 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Example: `yarn renderer dev`
 - Plugin: `@atls/yarn-plugin-renderer`
 - Source: `yarn/plugin-renderer/sources/commands/renderer-dev.command.ts`
+
+<!-- sync:command-card:renderer-start -->
+
+#### `renderer start`
+
+- Status: `active`
+- Example: `yarn renderer start`
+- Plugin: `@atls/yarn-plugin-renderer`
+- Source: `yarn/plugin-renderer/sources/commands/renderer-start.command.ts`
 
 </details>
 

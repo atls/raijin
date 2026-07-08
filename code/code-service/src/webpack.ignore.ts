@@ -14,6 +14,9 @@ const manifestCache = new Map<string, PackageManifest | null>()
 const NODE_MODULES_SEGMENT = '/node_modules/'
 const PACKAGE_MANIFEST = 'package.json'
 const OPTIONAL_IMPORT_IGNORE_PLUGIN = 'OptionalImportIgnorePlugin'
+const PACKAGE_OPTIONAL_IMPORTS = new Map<string, Set<string>>([
+  ['typeorm', new Set(['expo-sqlite'])],
+])
 
 interface WebpackResolver {
   resolve: (
@@ -160,6 +163,16 @@ const isOptionalByManifest = (manifest: PackageManifest, packageName: string): b
   manifest.peerDependenciesMeta?.[packageName]?.optional === true ||
   Boolean(manifest.optionalDependencies?.[packageName])
 
+const isOptionalByPackage = (context: string, packageName: string): boolean => {
+  const issuerPackageName = getPackageNameFromContext(context)
+
+  if (!issuerPackageName) {
+    return false
+  }
+
+  return PACKAGE_OPTIONAL_IMPORTS.get(issuerPackageName)?.has(packageName) ?? false
+}
+
 export const isOptionalImport = (
   request: string,
   context: string,
@@ -173,6 +186,10 @@ export const isOptionalImport = (
 
   if (!getPackageNameFromContext(context)) {
     return false
+  }
+
+  if (isOptionalByPackage(context, packageName)) {
+    return true
   }
 
   const manifestPath = findPackageManifestPath(context)

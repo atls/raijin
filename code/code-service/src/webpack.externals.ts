@@ -6,12 +6,23 @@ import { join }                   from 'node:path'
 
 import { WorkspaceConfiguration } from '@atls/code-configuration'
 
+const BUNDLED_DEPENDENCIES = new Set(['@nestjs/common'])
+
 export class WebpackExternals {
   #externals: Array<string> = []
 
   #dependencies: Array<string> = []
 
-  constructor(private readonly cwd: string) {}
+  #optionalDependencies: Array<string> = []
+
+  #workspaceDependencies: Set<string>
+
+  constructor(
+    private readonly cwd: string,
+    workspaceDependencies: Iterable<string> = []
+  ) {
+    this.#workspaceDependencies = new Set(workspaceDependencies)
+  }
 
   async loadPackageJson(): Promise<IPackageJson> {
     try {
@@ -25,18 +36,20 @@ export class WebpackExternals {
     const {
       dependencies = {},
       devDependencies = {},
-      optionalDependencies = {},
       peerDependencies = {},
     } = await this.loadPackageJson()
 
-    return Object.entries({
+    return Object.keys({
       ...dependencies,
       ...devDependencies,
-      ...optionalDependencies,
       ...peerDependencies,
     })
-      .filter(([, range]) => !range.startsWith('workspace:'))
-      .map(([name]) => name)
+  }
+
+  async loadOptionalDependencies(): Promise<Array<string>> {
+    const { optionalDependencies = {} } = await this.loadPackageJson()
+
+    return Object.keys(optionalDependencies)
   }
 
   async loadExternals(): Promise<Array<string>> {
@@ -48,24 +61,43 @@ export class WebpackExternals {
   async build(): Promise<typeof this.externals> {
     this.#externals = await this.loadExternals()
     this.#dependencies = await this.loadDependencies()
+    this.#optionalDependencies = await this.loadOptionalDependencies()
 
-    return this.externals
+    return this.externals.bind(this)
   }
 
-  private externals = (
+  private externals(
     { request }: webpack.ExternalItemFunctionData,
     callback: (
       error?: Error,
       result?: string,
       type?: webpack.Configuration['externalsType']
     ) => void
-  ): void => {
-    if (request && this.#dependencies.includes(request)) {
-      callback(undefined, request, 'commonjs')
-    } else if (request && this.#externals.includes(request)) {
-      callback(undefined, request, 'import')
+  ): void {
+    if (request && this.#externals.includes(request)) {
+      callback(undefined, request, 'module')
+    } else if (request && BUNDLED_DEPENDENCIES.has(this.getPackageRequestName(request))) {
+      callback()
+    } else if (request && this.#workspaceDependencies.has(this.getPackageRequestName(request))) {
+      callback()
+    } else if (request && this.#optionalDependencies.includes(request)) {
+      callback(undefined, `import ${request}`)
+    } else if (request && this.#dependencies.includes(request)) {
+      callback(undefined, request, 'module')
     } else {
       callback()
     }
+  }
+
+  private getPackageRequestName(request: string): string {
+    if (request.startsWith('@')) {
+      const [scope, name] = request.split('/')
+
+      return [scope, name].join('/')
+    }
+
+    const [name] = request.split('/')
+
+    return name
   }
 }

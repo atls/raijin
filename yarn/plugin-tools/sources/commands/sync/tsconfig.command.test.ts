@@ -1,11 +1,34 @@
 import assert                        from 'node:assert/strict'
 import test                          from 'node:test'
 
+import { npath }                     from '@yarnpkg/fslib'
+
+import { createRaijinSyncTarget }    from './target.js'
 import { getTSConfigIncludeEntries } from './tsconfig.command.js'
+import { mergeTSCompilerOptions }    from './tsconfig.command.js'
 import { projectTypesReference }     from './tsconfig.command.js'
 
 test('should point generated project types to public Raijin package', () => {
   assert.equal(projectTypesReference, '/// <reference types="@atls/raijin/types" />\n')
+})
+
+test('should keep tsconfig sync target at the project root workspace', () => {
+  const projectRoot = npath.toPortablePath('/repo')
+  const topLevelWorkspace = {
+    cwd: projectRoot,
+    manifest: {
+      raw: {
+        workspaces: ['packages/*', 'apps/**/*'],
+      },
+    },
+  }
+  const target = createRaijinSyncTarget({
+    topLevelWorkspace,
+  } as never)
+
+  assert.equal(target.cwd, projectRoot)
+  assert.equal(target.workspace, topLevelWorkspace)
+  assert.deepEqual(target.workspaces, ['packages/*', 'apps/**/*'])
 })
 
 test('should preserve implicit include when tsconfig include is missing', () => {
@@ -18,6 +41,27 @@ test('should preserve existing include entries and workspace includes', () => {
     'src/**/*',
     'packages/**/*',
   ])
+})
+
+test('should preserve project-specific module resolution options', () => {
+  assert.deepEqual(
+    mergeTSCompilerOptions(
+      {
+        module: 'NodeNext',
+        moduleResolution: 'NodeNext',
+        strict: true,
+      },
+      {
+        module: 'esnext',
+        moduleResolution: 'bundler',
+      }
+    ),
+    {
+      module: 'esnext',
+      moduleResolution: 'bundler',
+      strict: true,
+    }
+  )
 })
 
 test('should not create include for file-only tsconfig', () => {

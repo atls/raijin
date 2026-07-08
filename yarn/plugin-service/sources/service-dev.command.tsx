@@ -1,16 +1,18 @@
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
-import { render }                    from 'ink'
-import React                         from 'react'
+import { Filename }                       from '@yarnpkg/fslib'
+import { execUtils }                      from '@yarnpkg/core'
+import { xfs }                            from '@yarnpkg/fslib'
+import { render }                         from 'ink'
+import React                              from 'react'
 
-import { ServiceProgress }           from '@atls/cli-ui-service-progress-component'
-import { Service }                   from '@atls/code-service'
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { ServiceProgress }                from '@atls/cli-ui-service-progress-component'
+import { Service }                        from '@atls/code-service'
+import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
+import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
 
-import { AbstractServiceCommand }    from './abstract-service.command.jsx'
+import { AbstractServiceCommand }         from './abstract-service.command.jsx'
+import { getWorkspacePackageNames }       from './workspace-package-names.js'
 
 export class ServiceDevCommand extends AbstractServiceCommand {
   static override paths = [['service', 'dev']]
@@ -22,7 +24,7 @@ export class ServiceDevCommand extends AbstractServiceCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -30,8 +32,10 @@ export class ServiceDevCommand extends AbstractServiceCommand {
   }
 
   async executeProxy(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const args: Array<string> = []
 
@@ -43,13 +47,11 @@ export class ServiceDevCommand extends AbstractServiceCommand {
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, ['service', 'dev', ...args], {
-      cwd: this.context.cwd,
+      cwd: workspaceCwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
@@ -60,7 +62,11 @@ export class ServiceDevCommand extends AbstractServiceCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const service = await Service.initialize(this.context.cwd)
+    const { workspace, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
+    const service = await Service.initialize(workspaceCwd, getWorkspacePackageNames(workspace))
 
     const { clear } = render(<ServiceProgress service={service} />)
 

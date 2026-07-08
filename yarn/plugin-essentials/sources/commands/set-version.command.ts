@@ -13,9 +13,9 @@ import { preparePackageProjectBoundary } from './set-version.utils.js'
 const RAIJIN_PUBLIC_PACKAGE = '@atls/raijin'
 
 export class SetVersionCommand extends BaseCommand {
-  static paths = [['set', 'version', 'atls']]
+  static override paths = [['set', 'version', 'atls']]
 
-  static usage = Command.Usage({
+  static override usage = Command.Usage({
     description: 'lock the Yarn version used by the project',
     details: `
     This command will get the latest Atlantis bundle from [Atlantis Raijin repo](https://github.com/atls/raijin) and update the public Raijin package

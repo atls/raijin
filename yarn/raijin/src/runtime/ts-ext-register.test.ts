@@ -52,6 +52,25 @@ test('should resolve css imports to css source if css.ts is absent', async () =>
   }
 })
 
+test('should not resolve cjs imports to cts source', async () => {
+  const workspace = await mkdtemp(join(tmpdir(), 'ts-ext-register-'))
+  const parentPath = join(workspace, 'entry.ts')
+
+  try {
+    await writeFile(join(workspace, 'dependency.cts'), 'export const dependency = true', 'utf-8')
+
+    const actual = resolve(
+      './dependency.cjs',
+      createContext(parentPath),
+      (specifier) => ({ format: 'module', url: specifier }) as never
+    ) as { url: string }
+
+    assert.equal(actual.url, './dependency.cjs')
+  } finally {
+    await rm(workspace, { recursive: true, force: true })
+  }
+})
+
 test('should keep original specifier if css source is absent', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'ts-ext-register-'))
   const parentPath = join(workspace, 'entry.ts')

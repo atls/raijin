@@ -1,14 +1,16 @@
-import { spawn }                        from 'node:child_process'
+import { spawn }                           from 'node:child_process'
 
-import { BaseCommand }                  from '@yarnpkg/cli'
-import { Configuration }                from '@yarnpkg/core'
-import { Project }                      from '@yarnpkg/core'
-import { Filename }                     from '@yarnpkg/fslib'
-import { execUtils }                    from '@yarnpkg/core'
-import { xfs }                          from '@yarnpkg/fslib'
+import { BaseCommand }                     from '@yarnpkg/cli'
+import { Filename }                        from '@yarnpkg/fslib'
+import { execUtils }                       from '@yarnpkg/core'
+import { xfs }                             from '@yarnpkg/fslib'
 
-import { createServiceRuntimeExecArgv } from '@atls/code-service'
-import { makeCurrentYarnExecutable }    from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { COMMAND_PROXY_EXECUTION }         from '@atls/yarn-plugin-tools/command-context'
+import { createServiceRuntimeEnvironment } from '@atls/code-service'
+import { createServiceRuntimeExecArgv }    from '@atls/code-service'
+import { createCommandProxyEnvironment }   from '@atls/yarn-plugin-tools/command-context'
+import { resolveWorkspaceCommandContext }  from '@atls/yarn-plugin-tools/command-context'
+import { makeCurrentYarnExecutable }       from '@atls/yarn-plugin-tools/current-yarn-executable'
 
 export class ServiceStartCommand extends BaseCommand {
   static override paths = [['service', 'start']]
@@ -20,7 +22,7 @@ export class ServiceStartCommand extends BaseCommand {
       return this.executeRegular()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
+    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
       return this.executeRegular()
     }
 
@@ -28,20 +30,20 @@ export class ServiceStartCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const binFolder = await xfs.mktempPromise()
     const { executable, env } = await makeCurrentYarnExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+      env: createCommandProxyEnvironment(this.context.cwd),
     })
 
     const { code } = await execUtils.pipevp(executable, ['service', 'start'], {
-      cwd: this.context.cwd,
+      cwd: workspaceCwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
@@ -52,12 +54,17 @@ export class ServiceStartCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
+    const { workspaceCwd } = await resolveWorkspaceCommandContext(
+      this.context.cwd,
+      this.context.plugins
+    )
+
     const child = spawn(
       process.execPath,
-      [...(await createServiceRuntimeExecArgv(this.context.cwd)), 'dist/index.js'],
+      [...(await createServiceRuntimeExecArgv(workspaceCwd)), 'dist/index.js'],
       {
-        cwd: this.context.cwd,
-        env: process.env,
+        cwd: workspaceCwd,
+        env: await createServiceRuntimeEnvironment(workspaceCwd, process.env),
         stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
       }
     )

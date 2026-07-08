@@ -347,6 +347,17 @@
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
     {
+      "command": "renderer start",
+      "pathTokens": ["renderer", "start"],
+      "className": "RendererStartCommand",
+      "plugin": "@atls/yarn-plugin-renderer",
+      "pluginDir": "plugin-renderer",
+      "domain": "renderer",
+      "source": "yarn/plugin-renderer/sources/commands/renderer-start.command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
+    },
+    {
       "command": "generate project",
       "pathTokens": ["generate", "project"],
       "className": "GenerateProjectCommand",
@@ -988,6 +999,7 @@
       "release version defer",
       "renderer build",
       "renderer dev",
+      "renderer start",
       "service build",
       "service dev",
       "service start",
@@ -1033,5 +1045,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-07-02T19:10:52.064Z"
+  "lastGenerated": "2026-07-03T14:50:45.554Z"
 }

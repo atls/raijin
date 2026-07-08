@@ -1,46 +1,28 @@
-import { createRequire } from 'node:module'
-import { extname }       from 'node:path'
+import { createRequire }              from 'node:module'
+import { extname }                    from 'node:path'
 
-import * as nodeUtils    from '@yarnpkg/pnp/lib/loader/nodeUtils.js'
+import * as nodeUtils                 from '@yarnpkg/pnp/lib/loader/nodeUtils.js'
+
+import { getFileFormatByPackageType } from './loader.format.js'
+import { isPnpPackageSource }         from './loader.format.js'
 
 const require = createRequire(import.meta.url)
 
-export const getFileFormat = (filepath: string): string | null => {
+export const getFileFormat = (filepath: string): 'module' | null => {
   const ext = extname(filepath)
 
-  switch (ext) {
-    case '.mts': {
-      return 'module'
-    }
-    case '.cts': {
-      return 'commonjs'
-    }
-    case '.ts': {
-      const pkg = nodeUtils.readPackageScope(filepath)
+  const pkg = ext === '.ts' || ext === '.tsx' ? nodeUtils.readPackageScope(filepath) : undefined
+  const packageType = pkg ? (pkg.data.type as string | undefined) : undefined
 
-      if (!pkg) return 'commonjs'
-
-      return (pkg.data.type as string | undefined) ?? 'commonjs'
-    }
-    case '.tsx': {
-      const pkg = nodeUtils.readPackageScope(filepath)
-
-      if (!pkg) return 'commonjs'
-
-      return (pkg.data.type as string | undefined) ?? 'commonjs'
-    }
-    default: {
-      return null
-    }
-  }
+  return getFileFormatByPackageType(ext, packageType, isPnpPackageSource(filepath))
 }
 
-export const transformSource = (source: string, format: string, ext: 'ts' | 'tsx'): string => {
+export const transformSource = (source: string, format: 'module', ext: 'ts' | 'tsx'): string => {
   const { transformSync } = require('esbuild')
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, n/no-sync
   const { code } = transformSync(source, {
-    format: format === 'module' ? 'esm' : 'cjs',
+    format: 'esm',
     loader: ext === 'tsx' ? 'tsx' : 'ts',
     target: `node${process.versions.node}`,
   })

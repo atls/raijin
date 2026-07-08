@@ -201,6 +201,20 @@ test('should not infer optional imports from package names without metadata', as
   assert.equal(isOptionalImport('driver/subpath', context), false)
 })
 
+test('should ignore known guarded optional package imports from issuer package code', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
+  const packagePath = join(root, 'node_modules', 'typeorm')
+  const context = join(packagePath, 'driver', 'expo')
+
+  await writeManifest(packagePath, {
+    name: 'typeorm',
+  })
+  await mkdir(context, { recursive: true })
+
+  assert.equal(isOptionalImport('expo-sqlite', context), true)
+  assert.equal(await shouldIgnoreOptionalImport('expo-sqlite', context, createResolver([])), true)
+})
+
 test('should ignore unresolved optional imports marked by webpack dependencies', async () => {
   const root = await mkdtemp(join(tmpdir(), 'webpack-ignore-'))
   const packagePath = join(root, 'node_modules', 'framework')

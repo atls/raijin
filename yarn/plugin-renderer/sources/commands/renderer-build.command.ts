@@ -1,10 +1,6 @@
-import type { PortablePath }                             from '@yarnpkg/fslib'
-
 import { PassThrough }                                   from 'node:stream'
 
 import { BaseCommand }                                   from '@yarnpkg/cli'
-import { Configuration }                                 from '@yarnpkg/core'
-import { Project }                                       from '@yarnpkg/core'
 import { StreamReport }                                  from '@yarnpkg/core'
 import { MessageName }                                   from '@yarnpkg/core'
 import { execUtils }                                     from '@yarnpkg/core'
@@ -12,13 +8,18 @@ import { scriptUtils }                                   from '@yarnpkg/core'
 import { xfs }                                           from '@yarnpkg/fslib'
 import { ppath }                                         from '@yarnpkg/fslib'
 
+import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
+import { RENDERER_STANDALONE_SERVER_ENTRYPOINT }         from './renderer-build.constants.js'
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
+import { cleanupRendererBuildDiscoveryArtifacts }        from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildWorkspaceManifests }        from './renderer-build.utils.js'
 import { copyRendererBuildPublicAssets }                 from './renderer-build.utils.js'
+import { copyRendererBuildStandaloneFiles }              from './renderer-build.utils.js'
+import { createRendererBuildContext }                    from './renderer-build.utils.js'
 import { createRendererBuildArgs }                       from './renderer-build.utils.js'
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
@@ -27,20 +28,20 @@ import { resolveRendererBuildPnpLoader }                 from './renderer-build.
 import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
-  static paths = [['renderer', 'build']]
+  static override paths = [['renderer', 'build']]
 
   async execute(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    await cleanupRendererBuildDiscoveryArtifacts(this.context.cwd)
 
-    await cleanupRendererBuildStaleArtifacts(this.context.cwd)
+    const {
+      configuration,
+      project,
+      workspace,
+      workspaceCwd: rendererCwd,
+    } = await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
+    const rendererBuildContext = createRendererBuildContext(rendererCwd)
 
-    const { project, workspace } = await Project.find(configuration, this.context.cwd)
-
-    if (!workspace) {
-      throw new Error('Renderer build must be executed from a workspace')
-    }
-
-    const rendererCwd = workspace.cwd
+    await cleanupRendererBuildStaleArtifacts(rendererCwd)
 
     await project.restoreInstallState()
 
@@ -74,71 +75,57 @@ export class RendererBuildCommand extends BaseCommand {
               })
           })
 
-          await xfs.writeJsonPromise(ppath.join(rendererCwd, 'src/package.json'), {
-            type: 'module',
+          const binFolder = await xfs.mktempPromise()
+          const executableContext = {
+            binFolder,
+            locator: workspace.anchoredLocator,
+            project,
+          }
+          const scriptEnvironment = await makeCurrentYarnExecutable(executableContext)
+          const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
+          const loader = await resolveRendererBuildPnpLoader(
+            project.cwd,
+            scriptEnvironment.env.NODE_OPTIONS
+          )
+          const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
+          const nextBinary = binaries.get('next')
+
+          if (!nextBinary) {
+            throw new Error('Renderer build requires Next.js 16 or newer')
+          }
+
+          const [nextPackage, nextBin] = nextBinary
+          const nextVersion = resolveNextPackageVersion(nextPackage)
+          const nextCompiledConfRequireCacheLoader =
+            await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
+          const { executable, env } = await makeCurrentYarnExecutable({
+            ...executableContext,
+            env: {
+              NODE_OPTIONS: nodeOptions,
+            },
+            nodeLoader: nextCompiledConfRequireCacheLoader,
           })
 
-          try {
-            const binFolder = await xfs.mktempPromise()
-            const executableContext = {
-              binFolder,
-              locator: workspace.anchoredLocator,
-              project,
+          const { code } = await execUtils.pipevp(
+            executable,
+            createRendererBuildArgs(nextVersion, nextBin),
+            {
+              end: execUtils.EndStrategy.ErrorCode,
+              cwd: rendererCwd,
+              stdin: this.context.stdin,
+              stdout,
+              stderr,
+              env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, rendererCwd, {
+                output: 'standalone',
+              }),
             }
-            const scriptEnvironment = await makeCurrentYarnExecutable(executableContext)
-            const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
-            const loader = await resolveRendererBuildPnpLoader(
-              project.cwd,
-              scriptEnvironment.env.NODE_OPTIONS
-            )
-            const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
-            const nextBinary = binaries.get('next')
+          )
 
-            if (!nextBinary) {
-              throw new Error('Renderer build requires Next.js 16 or newer')
-            }
-
-            const [nextPackage, nextBin] = nextBinary
-            const nextVersion = resolveNextPackageVersion(nextPackage)
-            const nextCompiledConfRequireCacheLoader =
-              await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
-            const { executable, env } = await makeCurrentYarnExecutable({
-              ...executableContext,
-              env: {
-                NODE_OPTIONS: nodeOptions,
-              },
-              nodeLoader: nextCompiledConfRequireCacheLoader,
-            })
-
-            const { code } = await execUtils.pipevp(
-              executable,
-              createRendererBuildArgs(nextVersion, nextBin),
-              {
-                end: execUtils.EndStrategy.ErrorCode,
-                cwd: rendererCwd,
-                stdin: this.context.stdin,
-                stdout,
-                stderr,
-                env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader),
-              }
-            )
-
-            assertRendererBuildExitCode(code)
-          } finally {
-            await xfs.removePromise(ppath.join(rendererCwd, 'src/package.json'))
-          }
+          assertRendererBuildExitCode(code)
         })
 
         await report.startTimerPromise('Copy standalone files', async () => {
-          await xfs.copyPromise(
-            ppath.join(rendererCwd, 'dist'),
-            ppath.join(
-              rendererCwd,
-              'src/.next/standalone',
-              rendererCwd.replace(`${configuration.projectCwd || ''}/`, '') as PortablePath,
-              'src'
-            )
-          )
+          await copyRendererBuildStandaloneFiles(rendererBuildContext)
         })
 
         await report.startTimerPromise('Clean workspace manifests', async () => {
@@ -148,19 +135,21 @@ export class RendererBuildCommand extends BaseCommand {
         await report.startTimerPromise('Copy static files', async () => {
           await xfs.copyPromise(
             ppath.join(rendererCwd, 'dist/.next/static'),
-            ppath.join(rendererCwd, 'src/.next/static')
+            ppath.join(rendererBuildContext.nextOutputCwd, 'static')
           )
         })
 
         await report.startTimerPromise('Copy public assets', async () => {
-          await copyRendererBuildPublicAssets(rendererCwd)
+          await copyRendererBuildPublicAssets(rendererBuildContext)
         })
 
         await report.startTimerPromise('Copy edge chunks files', async () => {
-          if (await xfs.existsPromise(ppath.join(rendererCwd, 'src/.next/server/edge-chunks'))) {
+          const edgeChunksCwd = ppath.join(rendererBuildContext.nextOutputCwd, 'server/edge-chunks')
+
+          if (await xfs.existsPromise(edgeChunksCwd)) {
             await xfs.copyPromise(
               ppath.join(rendererCwd, 'dist/.next/server/edge-chunks'),
-              ppath.join(rendererCwd, 'src/.next/server/edge-chunks')
+              edgeChunksCwd
             )
           }
         })
@@ -168,12 +157,12 @@ export class RendererBuildCommand extends BaseCommand {
         await report.startTimerPromise('Move server start files', async () => {
           await xfs.movePromise(
             ppath.join(rendererCwd, 'dist/server.js'),
-            ppath.join(rendererCwd, 'dist/index.js')
+            ppath.join(rendererCwd, 'dist', RENDERER_STANDALONE_SERVER_ENTRYPOINT)
           )
         })
 
         await report.startTimerPromise('Clean source build artifacts', async () => {
-          await cleanupRendererBuildSourceArtifacts(rendererCwd)
+          await cleanupRendererBuildSourceArtifacts(rendererBuildContext.appCwd)
         })
       }
     )

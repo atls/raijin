@@ -6431,35 +6431,41 @@ async function load$1(urlString, context, nextLoad) {
   };
 }
 
-const require = createRequire(import.meta.url);
-const getFileFormat = (filepath) => {
-  const ext = extname(filepath);
-  switch (ext) {
+const isPnpPackageSource = (filepath) => {
+  const normalized = filepath.replaceAll("\\", "/");
+  return normalized.includes("/.yarn/") && normalized.includes("/node_modules/");
+};
+const getFileFormatByPackageType = (extension, packageType, pnpPackageSource = false) => {
+  switch (extension) {
     case ".mts": {
       return "module";
     }
-    case ".cts": {
-      return "commonjs";
-    }
-    case ".ts": {
-      const pkg = readPackageScope(filepath);
-      if (!pkg) return "commonjs";
-      return pkg.data.type ?? "commonjs";
-    }
+    case ".ts":
     case ".tsx": {
-      const pkg = readPackageScope(filepath);
-      if (!pkg) return "commonjs";
-      return pkg.data.type ?? "commonjs";
+      if (packageType === "module" || pnpPackageSource) {
+        return "module";
+      }
+      throw new Error(
+        `Raijin PnP TypeScript loader supports only ESM TypeScript sources with package.json type=module`
+      );
     }
     default: {
       return null;
     }
   }
 };
+
+const require = createRequire(import.meta.url);
+const getFileFormat = (filepath) => {
+  const ext = extname(filepath);
+  const pkg = ext === ".ts" || ext === ".tsx" ? readPackageScope(filepath) : void 0;
+  const packageType = pkg ? pkg.data.type : void 0;
+  return getFileFormatByPackageType(ext, packageType, isPnpPackageSource(filepath));
+};
 const transformSource = (source, format, ext) => {
   const { transformSync } = require("esbuild");
   const { code } = transformSync(source, {
-    format: format === "module" ? "esm" : "cjs",
+    format: "esm",
     loader: ext === "tsx" ? "tsx" : "ts",
     target: `node${process.versions.node}`
   });
@@ -7028,15 +7034,32 @@ async function resolve$1(originalSpecifier, context, nextResolve) {
   };
 }
 
-const resolveHook = async (originalSpecifier, context, nextResolve) => {
-  const tsSpecifier = originalSpecifier.replace(/\.(c|m)?js$/, `.$1ts`).replace(/\.(c|m)?jsx$/, ".$1tsx");
+const getTypeScriptCandidates = (specifier) => {
+  if (specifier.endsWith(".mjs")) {
+    return [specifier.replace(/\.mjs$/, ".mts")];
+  }
+  if (specifier.endsWith(".jsx")) {
+    return [specifier.replace(/\.jsx$/, ".tsx")];
+  }
+  if (specifier.endsWith(".js")) {
+    return [specifier.replace(/\.js$/, ".ts"), specifier.replace(/\.js$/, ".tsx")];
+  }
+  return [];
+};
+const getTypeScriptSpecifiers = (specifier) => [
+  ...getTypeScriptCandidates(specifier),
+  specifier
+];
+
+const resolveSpecifiers = async (specifiers, context, nextResolve, index = 0) => {
   try {
-    return await resolve$1(tsSpecifier, context, nextResolve);
+    return await resolve$1(specifiers[index], context, nextResolve);
   } catch (err) {
-    if (tsSpecifier === originalSpecifier) throw err;
-    return resolve$1(originalSpecifier, context, nextResolve);
+    if (index === specifiers.length - 1) throw err;
+    return resolveSpecifiers(specifiers, context, nextResolve, index + 1);
   }
 };
+const resolveHook = async (originalSpecifier, context, nextResolve) => resolveSpecifiers(getTypeScriptSpecifiers(originalSpecifier), context, nextResolve);
 
 const resolve = resolveHook;
 const load = loadHook;
