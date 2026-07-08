@@ -1,10 +1,10 @@
 {
   "assetName": "yarn.mjs",
-  "assetUrl": "https://github.com/atls/raijin/releases/download/%40atls/raijin%400.6.2/yarn.mjs",
+  "assetUrl": "https://github.com/atls/raijin/releases/download/%40atls/raijin%400.6.3/yarn.mjs",
   "packageName": "@atls/yarn-cli",
   "packageManager": "yarn@4.14.1",
   "schemaVersion": 1,
-  "sha256": "61ca6a2e20664bef9aa1b00f1b8848b7ceb3531443fff29b35c262e10c51af43",
-  "tagName": "@atls/raijin@0.6.2",
-  "version": "0.6.2"
+  "sha256": "25211b94fe887e19651ffadb4c6e714bcadb5d61466ee14f987dd63f624dcf52",
+  "tagName": "@atls/raijin@0.6.3",
+  "version": "0.6.3"
 }
