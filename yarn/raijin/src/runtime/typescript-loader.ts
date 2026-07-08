@@ -12,7 +12,6 @@ import { readFile }                from 'node:fs/promises'
 import { createRequire }           from 'node:module'
 import { dirname }                 from 'node:path'
 import { extname }                 from 'node:path'
-import { isAbsolute }              from 'node:path'
 import { join }                    from 'node:path'
 import { fileURLToPath }           from 'node:url'
 import { pathToFileURL }           from 'node:url'
@@ -40,19 +39,11 @@ const typescriptDeclarationExtensions = new Set<string>([
   ts.Extension.Dmts,
   ts.Extension.Dcts,
 ])
-const packageSubpathFallbackErrorCodes = new Set(['ERR_MODULE_NOT_FOUND', 'MODULE_NOT_FOUND'])
 
 type NextResolve = (
   specifier: string,
   context?: ResolveHookContext
 ) => Promise<ResolveFnOutput> | ResolveFnOutput
-
-const isPackageSubpathFallbackError = (error: unknown): boolean =>
-  error !== null &&
-  typeof error === 'object' &&
-  'code' in error &&
-  typeof error.code === 'string' &&
-  packageSubpathFallbackErrorCodes.has(error.code)
 
 const hasTypeScriptDeclarationExtension = (filepath: string): boolean =>
   Array.from(typescriptDeclarationExtensions).some((extension) => filepath.endsWith(extension))
@@ -181,31 +172,6 @@ const resolveExtensionlessTypeScriptSource = (
   }
 }
 
-const resolvePackageSubpathSource = (
-  specifier: string,
-  parentURL: string | undefined
-): ResolveFnOutput | undefined => {
-  if (!parentURL?.startsWith('file:')) {
-    return undefined
-  }
-
-  try {
-    const parentRequire = createRequire(parentURL)
-    const resolvedPath = parentRequire.resolve(specifier)
-
-    if (!isAbsolute(resolvedPath)) {
-      return undefined
-    }
-
-    return {
-      shortCircuit: true,
-      url: pathToFileURL(resolvedPath).href,
-    }
-  } catch {
-    return undefined
-  }
-}
-
 const getCompilerOptions = (filepath: string, _format: 'module'): TypeScript.CompilerOptions => {
   const options = readCompilerOptions(filepath)
 
@@ -231,21 +197,7 @@ const transformSource = (source: string, filepath: string, format: 'module'): st
 
 export const resolve: ResolveHook = async (specifier, context, next) => {
   if (!specifier.startsWith('.')) {
-    try {
-      return await next(specifier, context)
-    } catch (error) {
-      if (!isPackageSubpathFallbackError(error)) {
-        throw error
-      }
-
-      const resolved = resolvePackageSubpathSource(specifier, context.parentURL)
-
-      if (resolved) {
-        return resolved
-      }
-
-      throw error
-    }
+    return next(specifier, context)
   }
 
   const { parentURL } = context

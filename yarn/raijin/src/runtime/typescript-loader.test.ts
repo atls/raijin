@@ -3,6 +3,7 @@ import { mkdir }              from 'node:fs/promises'
 import { mkdtemp }            from 'node:fs/promises'
 import { rm }                 from 'node:fs/promises'
 import { writeFile }          from 'node:fs/promises'
+import { createRequire }      from 'node:module'
 import { tmpdir }             from 'node:os'
 import { join }               from 'node:path'
 import { test }               from 'node:test'
@@ -99,35 +100,6 @@ test('should not resolve extensionless relative specifier to declaration source'
   }
 })
 
-test('should resolve package subpath through package manager fallback', async () => {
-  const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))
-  const sourceDir = join(workspace, 'src')
-  const packageDir = join(workspace, 'node_modules/fixture')
-  const parentPath = join(sourceDir, 'index.ts')
-  const subpath = join(packageDir, 'image.js')
-
-  try {
-    await mkdir(sourceDir, { recursive: true })
-    await mkdir(packageDir, { recursive: true })
-    await writeFile(join(workspace, 'package.json'), JSON.stringify({ type: 'module' }), 'utf-8')
-    await writeFile(join(packageDir, 'package.json'), JSON.stringify({ name: 'fixture' }), 'utf-8')
-    await writeFile(parentPath, `import image from 'fixture/image'\nexport { image }\n`, 'utf-8')
-    await writeFile(subpath, `module.exports = true\n`, 'utf-8')
-
-    const result = await resolve(
-      'fixture/image',
-      { parentURL: pathToFileURL(parentPath).href } as never,
-      (() => {
-        throw createModuleNotFoundError('Cannot resolve fixture/image')
-      }) as never
-    )
-
-    assert.match(result.url, /\/node_modules\/fixture\/image\.js$/)
-  } finally {
-    await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
-  }
-})
-
 test('should not resolve package subpath fallback for export condition errors', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))
   const sourceDir = join(workspace, 'src')
@@ -162,6 +134,57 @@ test('should not resolve package subpath fallback for export condition errors', 
         resolve(
           'fixture',
           { parentURL: pathToFileURL(parentPath).href } as never,
+          (() => {
+            throw error
+          }) as never
+        ),
+      (actual) => actual === error
+    )
+  } finally {
+    await rm(workspace, { recursive: true, force: true, maxRetries: 3 })
+  }
+})
+
+test('should preserve missing ESM import condition when CommonJS condition exists', async () => {
+  const workspace = await mkdtemp(join(tmpdir(), 'typescript-loader-'))
+  const sourceDir = join(workspace, 'src')
+  const packageDir = join(workspace, 'node_modules/fixture')
+  const parentPath = join(sourceDir, 'index.ts')
+  const parentURL = pathToFileURL(parentPath).href
+
+  try {
+    await mkdir(sourceDir, { recursive: true })
+    await mkdir(packageDir, { recursive: true })
+    await writeFile(join(workspace, 'package.json'), JSON.stringify({ type: 'module' }), 'utf-8')
+    await writeFile(
+      join(packageDir, 'package.json'),
+      JSON.stringify({
+        name: 'fixture',
+        exports: {
+          '.': {
+            import: './missing.js',
+            require: './cjs.cjs',
+          },
+        },
+      }),
+      'utf-8'
+    )
+    await writeFile(parentPath, `import fixture from 'fixture'\nexport { fixture }\n`, 'utf-8')
+    await writeFile(join(packageDir, 'cjs.cjs'), `module.exports = true\n`, 'utf-8')
+
+    assert.ok(
+      createRequire(parentURL)
+        .resolve('fixture')
+        .endsWith(join('node_modules', 'fixture', 'cjs.cjs'))
+    )
+
+    const error = createModuleNotFoundError('Cannot find fixture import condition target')
+
+    await assert.rejects(
+      async () =>
+        resolve(
+          'fixture',
+          { parentURL } as never,
           (() => {
             throw error
           }) as never
