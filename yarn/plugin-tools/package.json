@@ -8,6 +8,7 @@
     "./package.json": "./package.json",
     "./command-context": "./sources/command-context.ts",
     "./current-yarn-executable": "./sources/current-yarn-executable.ts",
+    "./project": "./sources/project/index.ts",
     ".": "./sources/index.ts"
   },
   "main": "sources/index.ts",
@@ -46,6 +47,11 @@
           "import": "./dist/current-yarn-executable.js",
           "types": "./dist/current-yarn-executable.d.ts",
           "default": "./dist/current-yarn-executable.js"
+        },
+        "./project": {
+          "import": "./dist/project/index.js",
+          "types": "./dist/project/index.d.ts",
+          "default": "./dist/project/index.js"
         },
         ".": {
           "import": "./dist/index.js",

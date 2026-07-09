@@ -24,6 +24,7 @@ test('should keep tsconfig sync target at the project root workspace', () => {
   }
   const target = createRaijinSyncTarget({
     topLevelWorkspace,
+    workspaces: [topLevelWorkspace],
   } as never)
 
   assert.equal(target.cwd, projectRoot)

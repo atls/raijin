@@ -123,6 +123,7 @@ test('should sync TypeScript range through project root workspace target', () =>
   }
   const project = {
     topLevelWorkspace: rootWorkspace,
+    workspaces: [rootWorkspace, leafWorkspace],
   }
   const target = createRaijinSyncTarget(project as never)
 
