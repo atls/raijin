@@ -47,11 +47,6 @@
           "types": "./dist/current-yarn-executable.d.ts",
           "default": "./dist/current-yarn-executable.js"
         },
-        "./project": {
-          "import": "./dist/project/index.js",
-          "types": "./dist/project/index.d.ts",
-          "default": "./dist/project/index.js"
-        },
         ".": {
           "import": "./dist/index.js",
           "types": "./dist/index.d.ts",
