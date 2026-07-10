@@ -1,9 +1,8 @@
-import type { ProjectSource }           from './workspaces.js'
-import type { ProjectWorkspaceSource }  from './workspaces.js'
+import type { ProjectSource }           from './project.interfaces.js'
+import type { ProjectType }             from './project.interfaces.js'
+import type { ProjectWorkspaceSource }  from './project.interfaces.js'
 
 import { getManifestWorkspacePatterns } from './manifest.js'
-
-export type ProjectType = 'monorepo' | 'single'
 
 export const resolveProjectType = <TWorkspace extends ProjectWorkspaceSource>(
   project: ProjectSource<TWorkspace>
