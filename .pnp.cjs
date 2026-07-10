@@ -1621,6 +1621,8 @@ const RAW_RUNTIME_STATE =
           ["@types/protocol-buffers-schema", "npm:3.4.3"],\
           ["@typescript-eslint/eslint-plugin", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:8.48.1"],\
           ["@typescript-eslint/parser", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:8.48.1"],\
+          ["@yarnpkg/core", "npm:4.7.0"],\
+          ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["eslint", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:9.14.0"],\
           ["eslint-plugin-jsx-a11y", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:6.10.2"],\
           ["eslint-plugin-n", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:17.23.1"],\
@@ -1689,7 +1691,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/plugin-catalog", "virtual:40121ced4b27d9d659a46768606bf2be09872adad0e73b3316ab37ce2e8d9c6f00af7a6a30ecbe8f6dffb31389bc47456d03c989ede476606541a2286bb9ee2b#npm:1.0.2"],\
           ["@yarnpkg/plugin-compat", "virtual:40121ced4b27d9d659a46768606bf2be09872adad0e73b3316ab37ce2e8d9c6f00af7a6a30ecbe8f6dffb31389bc47456d03c989ede476606541a2286bb9ee2b#npm:4.0.12"],\
@@ -1754,7 +1756,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/plugin-catalog", "virtual:40121ced4b27d9d659a46768606bf2be09872adad0e73b3316ab37ce2e8d9c6f00af7a6a30ecbe8f6dffb31389bc47456d03c989ede476606541a2286bb9ee2b#npm:1.0.2"],\
           ["@yarnpkg/plugin-compat", "virtual:40121ced4b27d9d659a46768606bf2be09872adad0e73b3316ab37ce2e8d9c6f00af7a6a30ecbe8f6dffb31389bc47456d03c989ede476606541a2286bb9ee2b#npm:4.0.12"],\
@@ -2690,6 +2692,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-typescript-diagnostic-component", "virtual:cfd1d378f54fd81159858d6b376c9d8d7f9fe732664d0429ca1989ce499bbba36d2031641c5753b68e5a629b737a1c234868133c669f8507b82de4b421fb768f#workspace:cli/cli-ui-typescript-diagnostic"],\
           ["@atls/cli-ui-typescript-progress-component", "virtual:cfd1d378f54fd81159858d6b376c9d8d7f9fe732664d0429ca1989ce499bbba36d2031641c5753b68e5a629b737a1c234868133c669f8507b82de4b421fb768f#workspace:cli/cli-ui-types-check-progress"],\
           ["@atls/code-typescript", "workspace:code/code-typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@atls/yarn-plugin-typescript", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-typescript"],\
           ["@types/react", "npm:18.3.18"],\
@@ -2721,6 +2724,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/cli-ui-typescript-diagnostic-component", "virtual:cfd1d378f54fd81159858d6b376c9d8d7f9fe732664d0429ca1989ce499bbba36d2031641c5753b68e5a629b737a1c234868133c669f8507b82de4b421fb768f#workspace:cli/cli-ui-typescript-diagnostic"],\
           ["@atls/cli-ui-typescript-progress-component", "virtual:cfd1d378f54fd81159858d6b376c9d8d7f9fe732664d0429ca1989ce499bbba36d2031641c5753b68e5a629b737a1c234868133c669f8507b82de4b421fb768f#workspace:cli/cli-ui-types-check-progress"],\
           ["@atls/code-typescript", "workspace:code/code-typescript"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@atls/yarn-plugin-typescript", "workspace:yarn/plugin-typescript"],\
           ["@types/react", "npm:18.3.18"],\
@@ -6947,7 +6951,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:8a30278457b205e209000bf65a2ed805f03a5e794feb3abb5f0358d8736094aa404016e345e1e826adb88d597c88925cef1e753b934e93637f96e5e5d20c6212#npm:4.17.0"],\
           ["@yarnpkg/core", "npm:4.9.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/plugin-catalog", "virtual:d67e49e7858deffe934ea5e85ef47448fee7fea8efa89e5fb872525b2e14d1605b1954419347d0d914d1e54404c0df0fbe50a4fa675262beb53ccb20a223f32f#npm:1.0.2"],\
           ["@yarnpkg/plugin-compat", "virtual:d67e49e7858deffe934ea5e85ef47448fee7fea8efa89e5fb872525b2e14d1605b1954419347d0d914d1e54404c0df0fbe50a4fa675262beb53ccb20a223f32f#npm:4.0.12"],\
@@ -6994,7 +6998,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/plugin-catalog", "virtual:40121ced4b27d9d659a46768606bf2be09872adad0e73b3316ab37ce2e8d9c6f00af7a6a30ecbe8f6dffb31389bc47456d03c989ede476606541a2286bb9ee2b#npm:1.0.2"],\
           ["@yarnpkg/plugin-compat", "virtual:40121ced4b27d9d659a46768606bf2be09872adad0e73b3316ab37ce2e8d9c6f00af7a6a30ecbe8f6dffb31389bc47456d03c989ede476606541a2286bb9ee2b#npm:4.0.12"],\
@@ -7045,7 +7049,7 @@ const RAW_RUNTIME_STATE =
           ["@types/treeify", "npm:1.0.3"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/shell", "npm:4.1.3"],\
           ["camelcase", "npm:5.3.1"],\
@@ -7079,7 +7083,7 @@ const RAW_RUNTIME_STATE =
           ["@types/treeify", "npm:1.0.3"],\
           ["@yarnpkg/core", "npm:4.9.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/shell", "npm:4.1.3"],\
           ["camelcase", "npm:5.3.1"],\
@@ -7233,13 +7237,13 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2", {\
-        "packageLocation": "./.yarn/__virtual__/@yarnpkg-libzip-virtual-de2dd851d3/2/.yarn/berry/cache/@yarnpkg-libzip-npm-3.2.2-d780966da7-10.zip/node_modules/@yarnpkg/libzip/",\
+      ["virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2", {\
+        "packageLocation": "./.yarn/__virtual__/@yarnpkg-libzip-virtual-4186260d10/2/.yarn/berry/cache/@yarnpkg-libzip-npm-3.2.2-d780966da7-10.zip/node_modules/@yarnpkg/libzip/",\
         "packageDependencies": [\
           ["@types/emscripten", "npm:1.39.13"],\
           ["@types/yarnpkg__fslib", null],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["tslib", "npm:2.8.1"]\
         ],\
         "packagePeers": [\
@@ -7607,7 +7611,7 @@ const RAW_RUNTIME_STATE =
           ["@types/yarnpkg__core", null],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/plugin-file", "virtual:40121ced4b27d9d659a46768606bf2be09872adad0e73b3316ab37ce2e8d9c6f00af7a6a30ecbe8f6dffb31389bc47456d03c989ede476606541a2286bb9ee2b#npm:3.0.2"],\
           ["tslib", "npm:2.8.1"]\
         ],\
@@ -7623,7 +7627,7 @@ const RAW_RUNTIME_STATE =
           ["@types/yarnpkg__core", null],\
           ["@yarnpkg/core", "npm:4.9.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/plugin-file", "virtual:d67e49e7858deffe934ea5e85ef47448fee7fea8efa89e5fb872525b2e14d1605b1954419347d0d914d1e54404c0df0fbe50a4fa675262beb53ccb20a223f32f#npm:3.0.2"],\
           ["tslib", "npm:2.8.1"]\
         ],\
@@ -7988,7 +7992,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/nm", "npm:4.0.7"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/plugin-nm", "virtual:40121ced4b27d9d659a46768606bf2be09872adad0e73b3316ab37ce2e8d9c6f00af7a6a30ecbe8f6dffb31389bc47456d03c989ede476606541a2286bb9ee2b#npm:4.0.8"],\
@@ -8014,7 +8018,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:8a30278457b205e209000bf65a2ed805f03a5e794feb3abb5f0358d8736094aa404016e345e1e826adb88d597c88925cef1e753b934e93637f96e5e5d20c6212#npm:4.17.0"],\
           ["@yarnpkg/core", "npm:4.9.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/nm", "npm:4.1.0"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/plugin-nm", "virtual:d67e49e7858deffe934ea5e85ef47448fee7fea8efa89e5fb872525b2e14d1605b1954419347d0d914d1e54404c0df0fbe50a4fa675262beb53ccb20a223f32f#npm:4.1.0"],\
@@ -8255,7 +8259,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:8e172b7de094f5df1f73b42159c07665b055baad33e200e181c35f4b480aea8d16ffc372d00e648328df631585117e06bc25130971454d9a1b4c4c91cb25ff1f#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/plugin-patch", "virtual:40121ced4b27d9d659a46768606bf2be09872adad0e73b3316ab37ce2e8d9c6f00af7a6a30ecbe8f6dffb31389bc47456d03c989ede476606541a2286bb9ee2b#npm:4.0.3"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
           ["tslib", "npm:2.8.1"]\
@@ -8276,7 +8280,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:8a30278457b205e209000bf65a2ed805f03a5e794feb3abb5f0358d8736094aa404016e345e1e826adb88d597c88925cef1e753b934e93637f96e5e5d20c6212#npm:4.17.0"],\
           ["@yarnpkg/core", "npm:4.9.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/libzip", "virtual:e8fae2dce7578390abad230f643583f512cc2050b9ce0f3b3b35727ddb7bd8fd5f78e7a3f4adcbe1167762dc65ac7cf4e0707402a1adbe82271c38d352add85d#npm:3.2.2"],\
+          ["@yarnpkg/libzip", "virtual:503a130fd8e64990398ff3fd81fbf8c858e67a6f7b7e9ec6f12c26f03141194f90bf8d5e420aea02f5e9208897c7784604bacbbfdca319209fc4f39b3fd33bed#npm:3.2.2"],\
           ["@yarnpkg/plugin-patch", "virtual:d67e49e7858deffe934ea5e85ef47448fee7fea8efa89e5fb872525b2e14d1605b1954419347d0d914d1e54404c0df0fbe50a4fa675262beb53ccb20a223f32f#npm:4.0.4"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
           ["tslib", "npm:2.8.1"]\

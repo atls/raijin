@@ -22,6 +22,7 @@
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
     "@atls/cli-ui-typescript-progress-component": "workspace:*",
     "@atls/code-typescript": "workspace:*",
+    "@atls/raijin": "workspace:*",
     "@atls/yarn-plugin-tools": "workspace:*",
     "clipanion": "4.0.0-rc.2",
     "ink": "3.2.0",

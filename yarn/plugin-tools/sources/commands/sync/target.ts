@@ -2,7 +2,7 @@ import type { Project }       from '@yarnpkg/core'
 import type { Workspace }     from '@yarnpkg/core'
 import type { PortablePath }  from '@yarnpkg/fslib'
 
-import { createProjectModel } from '../../project/index.js'
+import { createProjectModel } from '@atls/raijin/project'
 
 export type RaijinSyncTarget = {
   cwd: PortablePath

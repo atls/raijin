@@ -13,9 +13,9 @@ import { npath }                     from '@yarnpkg/fslib'
 import { ppath }                     from '@yarnpkg/fslib'
 import { Option }                    from 'clipanion'
 
+import { createProjectModel }        from '@atls/raijin/project'
 import { getChangedFiles }           from '@atls/yarn-plugin-files'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
-import { createProjectModel }        from '@atls/yarn-plugin-tools/project'
 
 import { GitHubChecks }              from './github.checks.js'
 

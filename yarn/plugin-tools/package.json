@@ -8,7 +8,6 @@
     "./package.json": "./package.json",
     "./command-context": "./sources/command-context.ts",
     "./current-yarn-executable": "./sources/current-yarn-executable.ts",
-    "./project": "./sources/project/index.ts",
     ".": "./sources/index.ts"
   },
   "main": "sources/index.ts",
