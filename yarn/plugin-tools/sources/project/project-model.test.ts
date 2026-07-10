@@ -1,47 +1,16 @@
-import type { Manifest }                     from '@yarnpkg/core'
-import type { Project }                      from '@yarnpkg/core'
-import type { Workspace }                    from '@yarnpkg/core'
-import type { PortablePath }                 from '@yarnpkg/fslib'
+import type { Project }       from '@yarnpkg/core'
+import type { Workspace }     from '@yarnpkg/core'
+import type { PortablePath }  from '@yarnpkg/fslib'
 
-import assert                                from 'node:assert/strict'
-import test                                  from 'node:test'
+import assert                 from 'node:assert/strict'
+import test                   from 'node:test'
 
-import { structUtils }                       from '@yarnpkg/core'
+import { Manifest }           from '@yarnpkg/core'
 
-import { createProjectModel }                from './workspaces.js'
-import { getRaijinLeafDependencyWorkspaces } from './workspaces.js'
+import { createProjectModel } from './workspaces.js'
 
-const createDescriptors = (dependencies: Record<string, string>) =>
-  new Map(
-    Object.entries(dependencies).map(([name, range]) => {
-      const ident = structUtils.parseIdent(name)
-
-      return [ident.identHash, structUtils.makeDescriptor(ident, range)]
-    })
-  )
-
-const createManifest = ({
-  dependencies = {},
-  devDependencies = {},
-  peerDependencies = {},
-  workspaces,
-}: {
-  dependencies?: Record<string, string>
-  devDependencies?: Record<string, string>
-  peerDependencies?: Record<string, string>
-  workspaces?: unknown
-}): Manifest =>
-  ({
-    raw: {
-      dependencies,
-      devDependencies,
-      peerDependencies,
-      ...(typeof workspaces === 'undefined' ? {} : { workspaces }),
-    },
-    dependencies: createDescriptors(dependencies),
-    devDependencies: createDescriptors(devDependencies),
-    peerDependencies: createDescriptors(peerDependencies),
-  }) as unknown as Manifest
+const createManifest = (manifest: Record<string, unknown> = {}): Manifest =>
+  Manifest.fromText(JSON.stringify(manifest))
 
 const createWorkspace = (cwd: string, manifest: Manifest): Workspace =>
   ({
@@ -91,7 +60,19 @@ test('should resolve monorepo project model from object workspace patterns', () 
   assert.deepEqual(model.workspacePatterns, ['apps/*', 'packages/*'])
 })
 
-test('should report leaf workspaces with direct Raijin dependency', () => {
+test('should follow normalized Yarn workspace definitions', () => {
+  const manifest = createManifest()
+
+  manifest.workspaceDefinitions.push({ pattern: 'packages/*' })
+
+  const rootWorkspace = createWorkspace('/repo', manifest)
+  const model = createProjectModel(createProject([rootWorkspace]))
+
+  assert.equal(model.type, 'monorepo')
+  assert.deepEqual(model.workspacePatterns, ['packages/*'])
+})
+
+test('should keep the project boundary at the root when a leaf declares Raijin', () => {
   const rootWorkspace = createWorkspace(
     '/repo',
     createManifest({
@@ -112,5 +93,7 @@ test('should report leaf workspaces with direct Raijin dependency', () => {
   const serverWorkspace = createWorkspace('/repo/packages/server', createManifest({}))
   const model = createProjectModel(createProject([rootWorkspace, clientWorkspace, serverWorkspace]))
 
-  assert.deepEqual(getRaijinLeafDependencyWorkspaces(model), [clientWorkspace])
+  assert.equal(model.cwd, rootWorkspace.cwd)
+  assert.equal(model.topLevelWorkspace, rootWorkspace)
+  assert.deepEqual(model.workspaces, [rootWorkspace, clientWorkspace, serverWorkspace])
 })

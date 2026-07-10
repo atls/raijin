@@ -3,6 +3,7 @@ import type { Package }              from '@yarnpkg/core'
 import assert                        from 'node:assert/strict'
 import test                          from 'node:test'
 
+import { Manifest }                  from '@yarnpkg/core'
 import { structUtils }               from '@yarnpkg/core'
 
 import { createRaijinSyncTarget }    from './target.js'
@@ -34,20 +35,10 @@ const createPackage = (ident: string, dependencies: Record<string, string> = {})
   } as Package
 }
 
-const createWorkspaceManifest = (devDependencies: Record<string, string>) => ({
-  raw: {
-    devDependencies,
-  },
-  devDependencies: new Map(
-    Object.entries(devDependencies).map(([name, range]) => {
-      const ident = structUtils.parseIdent(name)
+const createWorkspaceManifest = (devDependencies: Record<string, string>): Manifest =>
+  Manifest.fromText(JSON.stringify({ devDependencies }))
 
-      return [ident.identHash, structUtils.makeDescriptor(ident, range)]
-    })
-  ),
-})
-
-const getTypeScriptRange = (manifest: ReturnType<typeof createWorkspaceManifest>): string =>
+const getTypeScriptRange = (manifest: Manifest): string =>
   manifest.devDependencies.get(structUtils.parseIdent('typescript').identHash)?.range ?? ''
 
 test('should find stored package by ident', () => {

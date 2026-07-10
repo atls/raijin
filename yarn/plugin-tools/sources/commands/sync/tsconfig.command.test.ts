@@ -1,6 +1,7 @@
 import assert                        from 'node:assert/strict'
 import test                          from 'node:test'
 
+import { Manifest }                  from '@yarnpkg/core'
 import { npath }                     from '@yarnpkg/fslib'
 
 import { createRaijinSyncTarget }    from './target.js'
@@ -16,11 +17,7 @@ test('should keep tsconfig sync target at the project root workspace', () => {
   const projectRoot = npath.toPortablePath('/repo')
   const topLevelWorkspace = {
     cwd: projectRoot,
-    manifest: {
-      raw: {
-        workspaces: ['packages/*', 'apps/**/*'],
-      },
-    },
+    manifest: Manifest.fromText(JSON.stringify({ workspaces: ['packages/*', 'apps/**/*'] })),
   }
   const target = createRaijinSyncTarget({
     topLevelWorkspace,

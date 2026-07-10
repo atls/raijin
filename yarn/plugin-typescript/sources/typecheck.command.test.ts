@@ -6,6 +6,7 @@ import { tmpdir }           from 'node:os'
 import { join }             from 'node:path'
 import { test }             from 'node:test'
 
+import { Manifest }         from '@yarnpkg/core'
 import { npath }            from '@yarnpkg/fslib'
 
 import { TypeCheckCommand } from './typecheck.command.js'
@@ -16,14 +17,17 @@ class TestTypeCheckCommand extends TypeCheckCommand {
     invocationCwd: string,
     typecheckCwd: string
   ): Promise<Array<string> | undefined> {
+    const projectCwdPortable = npath.toPortablePath(projectCwd)
+    const topLevelWorkspace = {
+      cwd: projectCwdPortable,
+      manifest: Manifest.fromText(JSON.stringify({ workspaces: ['packages/*'] })),
+    }
+
     return this.getIncludes(
       {
-        cwd: npath.toPortablePath(projectCwd),
-        topLevelWorkspace: {
-          manifest: {
-            workspaceDefinitions: [{ pattern: 'packages/*' }],
-          },
-        },
+        cwd: projectCwdPortable,
+        topLevelWorkspace,
+        workspaces: [topLevelWorkspace],
       } as never,
       npath.toPortablePath(invocationCwd),
       npath.toPortablePath(typecheckCwd)
@@ -68,4 +72,11 @@ test('should resolve explicit typecheck targets from invocation cwd to typecheck
   assert.deepEqual(await command.resolveIncludes(cwd, invocationCwd, workspaceCwd), [
     'src/app/page.tsx',
   ])
+})
+
+test('should use project workspace patterns when tsconfig is absent', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-'))
+  const command = new TestTypeCheckCommand()
+
+  assert.deepEqual(await command.resolveIncludes(cwd, cwd, cwd), ['packages/*'])
 })

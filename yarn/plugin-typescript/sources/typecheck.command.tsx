@@ -24,6 +24,7 @@ import { renderStatic }                   from '@atls/cli-ui-renderer-static-com
 import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
 import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { createProjectModel }             from '@atls/yarn-plugin-tools/project'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -136,8 +137,6 @@ export class TypeCheckCommand extends BaseCommand {
       return undefined
     }
 
-    return project.topLevelWorkspace.manifest.workspaceDefinitions.map(
-      (definition) => definition.pattern
-    )
+    return createProjectModel(project).workspacePatterns
   }
 }

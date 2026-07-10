@@ -15,6 +15,7 @@ import { Option }                    from 'clipanion'
 
 import { getChangedFiles }           from '@atls/yarn-plugin-files'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { createProjectModel }        from '@atls/yarn-plugin-tools/project'
 
 import { GitHubChecks }              from './github.checks.js'
 
@@ -169,9 +170,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
       }
     }
 
-    return project.topLevelWorkspace.manifest.workspaceDefinitions.map(
-      (definition) => definition.pattern
-    )
+    return createProjectModel(project).workspacePatterns
   }
 
   private async runTypecheck(project: Project, includes: Array<string>): Promise<number> {
