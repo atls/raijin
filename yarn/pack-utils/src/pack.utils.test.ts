@@ -1,5 +1,6 @@
 import type { Project }                  from '@yarnpkg/core'
 import type { Report }                   from '@yarnpkg/core'
+import type { Workspace }                from '@yarnpkg/core'
 import type { PortablePath }             from '@yarnpkg/fslib'
 
 import assert                            from 'node:assert/strict'
@@ -143,6 +144,7 @@ test('should copy project-relative protocol files', async () => {
           cwd: source,
           storedDescriptors: new Map([[patchDescriptor.descriptorHash, patchDescriptor]]),
         } as unknown as Project,
+        {} as unknown as Workspace,
         destination,
         { reportInfo: () => undefined } as unknown as Report,
         (descriptor) => {
@@ -164,7 +166,50 @@ test('should copy project-relative protocol files', async () => {
   })
 })
 
-test('should preserve parent-workspace-relative protocol file copying', async () => {
+test('should copy packed-workspace-relative protocol files to the packed root', async () => {
+  await xfs.mktempPromise(async (source) => {
+    await xfs.mktempPromise(async (destination) => {
+      const parentRelativeCwd = 'packages/parent' as PortablePath
+      const parentCwd = ppath.join(source, parentRelativeCwd)
+      const protocolPath = 'protocol/example.txt' as PortablePath
+      const sourceProtocolPath = ppath.join(parentCwd, protocolPath)
+      const parentLocator = structUtils.makeLocator(
+        structUtils.makeIdent(null, 'parent'),
+        'workspace:packages/parent'
+      )
+
+      await mkdir(npath.dirname(npath.fromPortablePath(sourceProtocolPath)), { recursive: true })
+      await writeFile(npath.fromPortablePath(sourceProtocolPath), 'protocol content\n')
+
+      const workspace = { cwd: parentCwd, relativeCwd: parentRelativeCwd } as unknown as Workspace
+
+      await copyProtocolFiles(
+        {
+          cwd: source,
+          getWorkspaceByLocator: (locator: typeof parentLocator) => {
+            assert.equal(locator, parentLocator)
+
+            return workspace
+          },
+          storedDescriptors: new Map([
+            ['protocol', structUtils.makeDescriptor(parentLocator, 'protocol:example')],
+          ]),
+        } as unknown as Project,
+        workspace,
+        destination,
+        { reportInfo: () => undefined } as unknown as Report,
+        () => ({ parentLocator, paths: [protocolPath] })
+      )
+
+      assert.equal(
+        await xfs.readFilePromise(ppath.join(destination, protocolPath), 'utf8'),
+        'protocol content\n'
+      )
+    })
+  })
+})
+
+test('should preserve other-workspace-relative protocol file copying', async () => {
   await xfs.mktempPromise(async (source) => {
     await xfs.mktempPromise(async (destination) => {
       const parentRelativeCwd = 'packages/parent' as PortablePath
@@ -191,6 +236,7 @@ test('should preserve parent-workspace-relative protocol file copying', async ()
             ['protocol', structUtils.makeDescriptor(parentLocator, 'protocol:example')],
           ]),
         } as unknown as Project,
+        {} as unknown as Workspace,
         destination,
         { reportInfo: () => undefined } as unknown as Report,
         () => ({ parentLocator, paths: [protocolPath] })

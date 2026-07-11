@@ -67,6 +67,7 @@ const BUILTIN_REGEXP = /^builtin<([^>]+)>$/
 
 export const copyProtocolFiles = async (
   project: Project,
+  workspace: Workspace,
   destination: PortablePath,
   report: Report,
   parseDescriptor: (
@@ -107,7 +108,8 @@ export const copyProtocolFiles = async (
 
         const parentWorkspace = project.getWorkspaceByLocator(parentLocator)
 
-        relativePath = ppath.join(parentWorkspace.relativeCwd, path)
+        relativePath =
+          parentWorkspace === workspace ? path : ppath.join(parentWorkspace.relativeCwd, path)
         src = ppath.join(parentWorkspace.cwd, path)
       }
 

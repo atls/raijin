@@ -88,7 +88,7 @@ export const pack = async (
 
     await tgzUtils.extractArchiveTo(tgz, baseFs, { stripComponents: 1 })
     await copyRcFile(project, destination, report)
-    await copyProtocolFiles(project, destination, report, (descriptor) => {
+    await copyProtocolFiles(project, workspace, destination, report, (descriptor) => {
       if (!patchUtils.isPatchDescriptor(descriptor)) {
         return undefined
       }
