@@ -2,6 +2,7 @@ import type { Project }                  from '@yarnpkg/core'
 import type { Report }                   from '@yarnpkg/core'
 import type { Workspace }                from '@yarnpkg/core'
 import type { Locator }                  from '@yarnpkg/core'
+import type { Descriptor }               from '@yarnpkg/core'
 import type { PortablePath }             from '@yarnpkg/fslib'
 
 import assert                            from 'node:assert/strict'
@@ -14,11 +15,13 @@ import { structUtils }                   from '@yarnpkg/core'
 import { npath }                         from '@yarnpkg/fslib'
 import { ppath }                         from '@yarnpkg/fslib'
 import { xfs }                           from '@yarnpkg/fslib'
+import { packUtils }                     from '@yarnpkg/plugin-pack'
 import { patchUtils }                    from '@yarnpkg/plugin-patch'
 
 import { IMAGE_PACK_NODE_LINKER }        from './pack.utils.js'
 import { copyYarnRelease }               from './copy.utils.js'
 import { copyPatchFiles }                from './copy.utils.js'
+import { getWorkspacePackFiles }         from './export/exportUtils.js'
 import { resolveSupportedArchitectures } from './pack.utils.js'
 
 const makePatchDescriptor = (
@@ -49,19 +52,36 @@ const makeResolution = (descriptor: ReturnType<typeof makePatchDescriptor>) => (
 
 const makeWorkspace = (
   cwd: PortablePath,
-  dependencies: Array<ReturnType<typeof makePatchDescriptor>> = [],
+  dependencies: Array<Descriptor> = [],
   resolutions: Array<ReturnType<typeof makeResolution>> = []
-): Workspace =>
-  ({
+): Workspace => {
+  const dependencyMap = new Map(
+    dependencies.map((descriptor) => [descriptor.identHash, descriptor] as const)
+  )
+  const peerDependencyMap = new Map()
+
+  return {
     cwd,
     manifest: {
-      dependencies: new Map(
-        dependencies.map((descriptor) => [descriptor.identHash, descriptor] as const)
-      ),
-      peerDependencies: new Map(),
+      dependencies: dependencyMap,
+      getForScope: (scope: string) =>
+        scope === 'peerDependencies' ? peerDependencyMap : dependencyMap,
+      peerDependencies: peerDependencyMap,
       resolutions,
     },
-  }) as unknown as Workspace
+  } as unknown as Workspace
+}
+
+const makeProject = (
+  cwd: PortablePath,
+  topLevelWorkspace: Workspace,
+  tryWorkspaceByDescriptor: (descriptor: Descriptor) => Workspace | null = () => null
+): Project =>
+  ({
+    cwd,
+    topLevelWorkspace,
+    tryWorkspaceByDescriptor,
+  }) as unknown as Project
 
 test('should materialize image pack runtime with PnP linker', () => {
   assert.equal(IMAGE_PACK_NODE_LINKER, 'pnp')
@@ -178,15 +198,9 @@ test('should copy project-relative patch files', async () => {
       await mkdir(npath.dirname(npath.fromPortablePath(sourcePatchPath)), { recursive: true })
       await writeFile(npath.fromPortablePath(sourcePatchPath), 'patch content\n')
 
-      await copyPatchFiles(
-        {
-          cwd: source,
-          topLevelWorkspace,
-        } as unknown as Project,
-        workspace,
-        destination,
-        { reportInfo: () => undefined } as unknown as Report
-      )
+      await copyPatchFiles(makeProject(source, topLevelWorkspace), workspace, destination, {
+        reportInfo: () => undefined,
+      } as unknown as Report)
 
       assert.equal(
         await xfs.readFilePromise(ppath.join(destination, patchPath), 'utf8'),
@@ -212,15 +226,9 @@ test('should copy top-level-workspace-relative patch files to the packed root', 
       await mkdir(npath.dirname(npath.fromPortablePath(sourcePatchPath)), { recursive: true })
       await writeFile(npath.fromPortablePath(sourcePatchPath), 'patch content\n')
 
-      await copyPatchFiles(
-        {
-          cwd: source,
-          topLevelWorkspace,
-        } as unknown as Project,
-        workspace,
-        destination,
-        { reportInfo: () => undefined } as unknown as Report
-      )
+      await copyPatchFiles(makeProject(source, topLevelWorkspace), workspace, destination, {
+        reportInfo: () => undefined,
+      } as unknown as Report)
 
       assert.equal(
         await xfs.readFilePromise(ppath.join(destination, patchPath), 'utf8'),
@@ -230,75 +238,41 @@ test('should copy top-level-workspace-relative patch files to the packed root', 
   })
 })
 
-test('should copy packed-workspace-relative patch files to the packed root', async () => {
+test('should include workspace-relative patch files in the workspace pack', async (context) => {
   await xfs.mktempPromise(async (source) => {
-    await xfs.mktempPromise(async (destination) => {
-      const workspaceCwd = ppath.join(source, 'packages/app')
-      const patchPath = 'patches/example.patch' as PortablePath
-      const sourcePatchPath = ppath.join(workspaceCwd, patchPath)
-      const parentLocator = structUtils.makeLocator(
-        structUtils.makeIdent(null, 'app'),
-        'workspace:packages/app'
-      )
-      const patchDescriptor = makePatchDescriptor('example', parentLocator, [patchPath])
-      const topLevelWorkspace = makeWorkspace(source)
-      const workspace = makeWorkspace(workspaceCwd, [patchDescriptor])
+    const workspaceCwd = ppath.join(source, 'packages/app')
+    const patchPath = 'patches/example.patch' as PortablePath
+    const parentLocator = structUtils.makeLocator(
+      structUtils.makeIdent(null, 'app'),
+      'workspace:packages/app'
+    )
+    const patchDescriptor = makePatchDescriptor('example', parentLocator, [patchPath])
+    const workspace = makeWorkspace(workspaceCwd, [patchDescriptor])
 
-      await mkdir(npath.dirname(npath.fromPortablePath(sourcePatchPath)), { recursive: true })
-      await writeFile(npath.fromPortablePath(sourcePatchPath), 'patch content\n')
+    context.mock.method(packUtils, 'genPackList', async () => ['package.json' as PortablePath])
 
-      await copyPatchFiles(
-        {
-          cwd: source,
-          topLevelWorkspace,
-        } as unknown as Project,
-        workspace,
-        destination,
-        { reportInfo: () => undefined } as unknown as Report
-      )
-
-      assert.equal(
-        await xfs.readFilePromise(ppath.join(destination, patchPath), 'utf8'),
-        'patch content\n'
-      )
-    })
+    assert.deepEqual(await getWorkspacePackFiles(workspace), ['package.json', patchPath])
   })
 })
 
-test('should reject packed-workspace patch files outside the packed root', async () => {
+test('should reject workspace patch files outside the workspace pack', async (context) => {
   await xfs.mktempPromise(async (source) => {
-    await xfs.mktempPromise(async (destination) => {
-      const workspaceCwd = ppath.join(source, 'packages/app')
-      const patchPath = '../patches/example.patch' as PortablePath
-      const parentLocator = structUtils.makeLocator(
-        structUtils.makeIdent(null, 'app'),
-        'workspace:packages/app'
-      )
-      const patchDescriptor = makePatchDescriptor('example', parentLocator, [patchPath])
-      const workspace = makeWorkspace(workspaceCwd, [patchDescriptor])
+    const workspaceCwd = ppath.join(source, 'packages/app')
+    const patchPath = '../patches/example.patch' as PortablePath
+    const parentLocator = structUtils.makeLocator(
+      structUtils.makeIdent(null, 'app'),
+      'workspace:packages/app'
+    )
+    const patchDescriptor = makePatchDescriptor('example', parentLocator, [patchPath])
+    const workspace = makeWorkspace(workspaceCwd, [patchDescriptor])
 
-      await assert.rejects(
-        copyPatchFiles(
-          {
-            cwd: source,
-            topLevelWorkspace: makeWorkspace(source),
-          } as unknown as Project,
-          workspace,
-          destination,
-          { reportInfo: () => undefined } as unknown as Report
-        ),
-        /resolves outside the standalone workspace/
-      )
+    context.mock.method(packUtils, 'genPackList', async () => ['package.json' as PortablePath])
 
-      assert.equal(
-        await xfs.existsPromise(ppath.join(ppath.dirname(destination), 'patches/example.patch')),
-        false
-      )
-    })
+    await assert.rejects(getWorkspacePackFiles(workspace), /resolves outside the packed workspace/)
   })
 })
 
-test('should reject patch files collapsed onto the same packed path', async () => {
+test('should keep project and workspace patch paths in separate artifacts', async (context) => {
   await xfs.mktempPromise(async (source) => {
     await xfs.mktempPromise(async (destination) => {
       const patchPath = 'patches/example.patch' as PortablePath
@@ -323,18 +297,17 @@ test('should reject patch files collapsed onto the same packed path', async () =
       await writeFile(npath.fromPortablePath(projectPatchPath), 'project patch\n')
       await writeFile(npath.fromPortablePath(workspacePatchPath), 'workspace patch\n')
 
-      await assert.rejects(
-        copyPatchFiles(
-          {
-            cwd: source,
-            topLevelWorkspace,
-          } as unknown as Project,
-          workspace,
-          destination,
-          { reportInfo: () => undefined } as unknown as Report
-        ),
-        /resolve to patches\/example\.patch/
+      context.mock.method(packUtils, 'genPackList', async () => ['package.json' as PortablePath])
+
+      await copyPatchFiles(makeProject(source, topLevelWorkspace), workspace, destination, {
+        reportInfo: () => undefined,
+      } as unknown as Report)
+
+      assert.equal(
+        await xfs.readFilePromise(ppath.join(destination, patchPath), 'utf8'),
+        'project patch\n'
       )
+      assert.deepEqual(await getWorkspacePackFiles(workspace), ['package.json', patchPath])
     })
   })
 })
@@ -347,17 +320,49 @@ test('should ignore patch descriptors outside the packed manifest', async () => 
     )
     const patchPath = 'patches/example.patch' as PortablePath
     const patchDescriptor = makePatchDescriptor('example', parentLocator, [patchPath])
+    const topLevelWorkspace = makeWorkspace(destination)
 
     await copyPatchFiles(
-      {
-        topLevelWorkspace: makeWorkspace(destination),
+      Object.assign(makeProject(destination, topLevelWorkspace), {
         storedDescriptors: new Map([[patchDescriptor.descriptorHash, patchDescriptor]]),
-      } as unknown as Project,
+      }),
       makeWorkspace(destination),
       destination,
       {
         reportInfo: () => assert.fail('unrelated patch file should not be copied'),
       } as unknown as Report
     )
+  })
+})
+
+test('should copy project-relative patches from required workspaces', async () => {
+  await xfs.mktempPromise(async (source) => {
+    await xfs.mktempPromise(async (destination) => {
+      const patchPath = '.yarn/patches/example.patch' as PortablePath
+      const sourcePatchPath = ppath.join(source, patchPath)
+      const childIdent = structUtils.makeIdent(null, 'child')
+      const childDescriptor = structUtils.makeDescriptor(childIdent, 'workspace:*')
+      const childLocator = structUtils.makeLocator(childIdent, 'workspace:packages/child')
+      const patchDescriptor = makePatchDescriptor('example', childLocator, [
+        `~/${patchPath}` as PortablePath,
+      ])
+      const topLevelWorkspace = makeWorkspace(source)
+      const workspace = makeWorkspace(ppath.join(source, 'packages/app'), [childDescriptor])
+      const childWorkspace = makeWorkspace(ppath.join(source, 'packages/child'), [patchDescriptor])
+      const project = makeProject(source, topLevelWorkspace, (descriptor) =>
+        descriptor.identHash === childDescriptor.identHash ? childWorkspace : null)
+
+      await mkdir(npath.dirname(npath.fromPortablePath(sourcePatchPath)), { recursive: true })
+      await writeFile(npath.fromPortablePath(sourcePatchPath), 'patch content\n')
+
+      await copyPatchFiles(project, workspace, destination, {
+        reportInfo: () => undefined,
+      } as unknown as Report)
+
+      assert.equal(
+        await xfs.readFilePromise(ppath.join(destination, patchPath), 'utf8'),
+        'patch content\n'
+      )
+    })
   })
 })

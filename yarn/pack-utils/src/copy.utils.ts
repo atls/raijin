@@ -1,15 +1,17 @@
-import type { Workspace }    from '@yarnpkg/core'
-import type { Cache }        from '@yarnpkg/core'
-import type { Descriptor }   from '@yarnpkg/core'
-import type { Project }      from '@yarnpkg/core'
-import type { Report }       from '@yarnpkg/core'
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { Workspace }                 from '@yarnpkg/core'
+import type { Cache }                     from '@yarnpkg/core'
+import type { Project }                   from '@yarnpkg/core'
+import type { Report }                    from '@yarnpkg/core'
+import type { PortablePath }              from '@yarnpkg/fslib'
 
-import { Manifest }          from '@yarnpkg/core'
-import { structUtils }       from '@yarnpkg/core'
-import { xfs }               from '@yarnpkg/fslib'
-import { ppath }             from '@yarnpkg/fslib'
-import { patchUtils }        from '@yarnpkg/plugin-patch'
+import { Manifest }                       from '@yarnpkg/core'
+import { xfs }                            from '@yarnpkg/fslib'
+import { ppath }                          from '@yarnpkg/fslib'
+
+import { getProjectResolutionPatchPaths } from './patch-files/paths.js'
+import { getWorkspacePatchPaths }         from './patch-files/paths.js'
+import { resolvePatchPath }               from './patch-files/paths.js'
+import { getRequiredWorkspaces }          from './workspaces.utils.js'
 
 export const copyCacheMarkedFiles = async (
   project: Project,
@@ -62,81 +64,38 @@ export const copyPlugins = async (
   }
 }
 
-const BUILTIN_REGEXP = /^builtin<([^>]+)>$/
-
-function* getPatchDescriptorSources(
-  project: Project,
-  workspace: Workspace
-): Generator<[Descriptor, Workspace]> {
-  for (const descriptor of workspace.manifest.dependencies.values()) {
-    yield [descriptor, workspace]
-  }
-
-  for (const descriptor of workspace.manifest.peerDependencies.values()) {
-    yield [descriptor, workspace]
-  }
-
-  for (const resolution of project.topLevelWorkspace.manifest.resolutions) {
-    const ident = structUtils.parseIdent(resolution.pattern.descriptor.fullName)
-
-    yield [structUtils.makeDescriptor(ident, resolution.reference), project.topLevelWorkspace]
-  }
-}
-
 export const copyPatchFiles = async (
   project: Project,
   workspace: Workspace,
   destination: PortablePath,
   report: Report
 ): Promise<void> => {
-  const copiedPaths = new Map<PortablePath, PortablePath>()
+  const copiedPaths = new Set<PortablePath>()
   const copyOperations = new Array<{ dest: PortablePath; src: PortablePath }>()
 
-  for (const [descriptor, ownerWorkspace] of getPatchDescriptorSources(project, workspace)) {
-    if (!patchUtils.isPatchDescriptor(descriptor)) continue
+  const registerPatchFile = (path: PortablePath): void => {
+    const { relativePath, src } = resolvePatchPath(project.cwd, path, 'standalone workspace')
 
-    const { patchPaths } = patchUtils.parseDescriptor(descriptor)
+    if (copiedPaths.has(relativePath)) return
 
-    for (const rawPath of patchPaths) {
-      const flagIndex = rawPath.lastIndexOf('!')
-      const path = (flagIndex === -1 ? rawPath : rawPath.slice(flagIndex + 1)) as PortablePath
+    copiedPaths.add(relativePath)
 
-      if (BUILTIN_REGEXP.test(path)) continue
-      if (ppath.isAbsolute(path)) continue
+    const dest = ppath.join(destination, relativePath)
 
-      const isProjectPath = path.startsWith('~/')
-      let sourceCwd: PortablePath
-      let src: PortablePath
+    report.reportInfo(null, relativePath)
 
-      if (isProjectPath) {
-        sourceCwd = project.cwd
-        src = ppath.resolve(sourceCwd, path.slice(2) as PortablePath)
-      } else {
-        sourceCwd = ownerWorkspace.cwd
-        src = ppath.resolve(sourceCwd, path)
-      }
+    copyOperations.push({ dest, src })
+  }
 
-      const relativePath = ppath.contains(sourceCwd, src)
+  for (const path of getProjectResolutionPatchPaths(project)) {
+    registerPatchFile(path.startsWith('~/') ? (path.slice(2) as PortablePath) : path)
+  }
 
-      if (relativePath === null) {
-        throw new Error(`Patch path ${path} resolves outside the standalone workspace`)
-      }
+  for (const requiredWorkspace of getRequiredWorkspaces(project, [workspace], true)) {
+    for (const path of getWorkspacePatchPaths(requiredWorkspace)) {
+      if (!path.startsWith('~/')) continue
 
-      const previousSrc = copiedPaths.get(relativePath)
-
-      if (previousSrc === src) continue
-
-      if (previousSrc) {
-        throw new Error(`Patch files ${previousSrc} and ${src} resolve to ${relativePath}`)
-      }
-
-      copiedPaths.set(relativePath, src)
-
-      const dest = ppath.join(destination, relativePath)
-
-      report.reportInfo(null, relativePath)
-
-      copyOperations.push({ dest, src })
+      registerPatchFile(path.slice(2) as PortablePath)
     }
   }
 
