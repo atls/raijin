@@ -1,6 +1,5 @@
 import type { Project }                  from '@yarnpkg/core'
 import type { Report }                   from '@yarnpkg/core'
-import type { Descriptor }               from '@yarnpkg/core'
 import type { PortablePath }             from '@yarnpkg/fslib'
 
 import assert                            from 'node:assert/strict'
@@ -9,9 +8,11 @@ import { writeFile }                     from 'node:fs/promises'
 import { arch }                          from 'node:os'
 import test                              from 'node:test'
 
+import { structUtils }                   from '@yarnpkg/core'
 import { npath }                         from '@yarnpkg/fslib'
 import { ppath }                         from '@yarnpkg/fslib'
 import { xfs }                           from '@yarnpkg/fslib'
+import { patchUtils }                    from '@yarnpkg/plugin-patch'
 
 import { IMAGE_PACK_NODE_LINKER }        from './pack.utils.js'
 import { copyYarnRelease }               from './copy.utils.js'
@@ -124,6 +125,15 @@ test('should copy project-relative protocol files', async () => {
     await xfs.mktempPromise(async (destination) => {
       const patchPath = '.yarn/patches/example.patch'
       const sourcePatchPath = ppath.join(source, patchPath)
+      const sourceDescriptor = structUtils.makeDescriptor(
+        structUtils.makeIdent(null, 'example'),
+        'npm:1.0.0'
+      )
+      const patchDescriptor = patchUtils.makeDescriptor(sourceDescriptor, {
+        parentLocator: null,
+        patchPaths: [`optional!~/${patchPath}` as PortablePath],
+        sourceDescriptor,
+      })
 
       await mkdir(npath.dirname(npath.fromPortablePath(sourcePatchPath)), { recursive: true })
       await writeFile(npath.fromPortablePath(sourcePatchPath), 'patch content\n')
@@ -131,16 +141,64 @@ test('should copy project-relative protocol files', async () => {
       await copyProtocolFiles(
         {
           cwd: source,
-          storedDescriptors: new Map([['patch', { range: 'patch:example' } as Descriptor]]),
+          storedDescriptors: new Map([[patchDescriptor.descriptorHash, patchDescriptor]]),
         } as unknown as Project,
         destination,
         { reportInfo: () => undefined } as unknown as Report,
-        () => ({ parentLocator: null, paths: [`~/${patchPath}` as PortablePath] })
+        (descriptor) => {
+          if (!patchUtils.isPatchDescriptor(descriptor)) {
+            return undefined
+          }
+
+          const { parentLocator, patchPaths } = patchUtils.parseDescriptor(descriptor)
+
+          return { parentLocator, paths: patchPaths }
+        }
       )
 
       assert.equal(
         await xfs.readFilePromise(ppath.join(destination, patchPath), 'utf8'),
         'patch content\n'
+      )
+    })
+  })
+})
+
+test('should preserve parent-workspace-relative protocol file copying', async () => {
+  await xfs.mktempPromise(async (source) => {
+    await xfs.mktempPromise(async (destination) => {
+      const parentRelativeCwd = 'packages/parent' as PortablePath
+      const parentCwd = ppath.join(source, parentRelativeCwd)
+      const protocolPath = 'protocol/example.txt' as PortablePath
+      const sourceProtocolPath = ppath.join(parentCwd, protocolPath)
+      const parentLocator = structUtils.makeLocator(
+        structUtils.makeIdent(null, 'parent'),
+        'workspace:packages/parent'
+      )
+
+      await mkdir(npath.dirname(npath.fromPortablePath(sourceProtocolPath)), { recursive: true })
+      await writeFile(npath.fromPortablePath(sourceProtocolPath), 'protocol content\n')
+
+      await copyProtocolFiles(
+        {
+          cwd: source,
+          getWorkspaceByLocator: (locator: typeof parentLocator) => {
+            assert.equal(locator, parentLocator)
+
+            return { cwd: parentCwd, relativeCwd: parentRelativeCwd }
+          },
+          storedDescriptors: new Map([
+            ['protocol', structUtils.makeDescriptor(parentLocator, 'protocol:example')],
+          ]),
+        } as unknown as Project,
+        destination,
+        { reportInfo: () => undefined } as unknown as Report,
+        () => ({ parentLocator, paths: [protocolPath] })
+      )
+
+      assert.equal(
+        await xfs.readFilePromise(ppath.join(destination, parentRelativeCwd, protocolPath), 'utf8'),
+        'protocol content\n'
       )
     })
   })
