@@ -13,9 +13,11 @@ import { CwdFS }                      from '@yarnpkg/fslib'
 import { tgzUtils }                   from '@yarnpkg/core'
 import { ppath }                      from '@yarnpkg/fslib'
 import { packUtils }                  from '@yarnpkg/plugin-pack'
+import { patchUtils }                 from '@yarnpkg/plugin-patch'
 
 import { ExportCache }                from './export/ExportCache.js'
 import { copyRcFile }                 from './copy.utils.js'
+import { copyProtocolFiles }          from './copy.utils.js'
 import { copyYarnRelease }            from './copy.utils.js'
 import { genPackTgz }                 from './export/exportUtils.js'
 import { makeFetcher }                from './export/exportUtils.js'
@@ -86,6 +88,15 @@ export const pack = async (
 
     await tgzUtils.extractArchiveTo(tgz, baseFs, { stripComponents: 1 })
     await copyRcFile(project, destination, report)
+    await copyProtocolFiles(project, destination, report, (descriptor) => {
+      if (!patchUtils.isPatchDescriptor(descriptor)) {
+        return undefined
+      }
+
+      const { parentLocator, patchPaths } = patchUtils.parseDescriptor(descriptor)
+
+      return { parentLocator, paths: patchPaths }
+    })
 
     if (project.configuration.get('yarnPath')) {
       await copyYarnRelease(project, destination, report)

@@ -71,7 +71,7 @@ export const copyProtocolFiles = async (
   report: Report,
   parseDescriptor: (
     descriptor: Descriptor
-  ) => { parentLocator: Locator; paths: Array<PortablePath> } | undefined
+  ) => { parentLocator: Locator | null; paths: Array<PortablePath> } | undefined
 ): Promise<void> => {
   const copiedPaths = new Set<string>()
 
@@ -86,20 +86,35 @@ export const copyProtocolFiles = async (
 
     const { parentLocator, paths } = parsed
 
-    for await (const path of paths) {
-      if (BUILTIN_REGEXP.test(path)) continue
+    for await (const rawPath of paths) {
+      const flagIndex = rawPath.lastIndexOf('!')
+      const path = (flagIndex === -1 ? rawPath : rawPath.slice(flagIndex + 1)) as PortablePath
 
+      if (BUILTIN_REGEXP.test(path)) continue
       if (ppath.isAbsolute(path)) continue
 
-      const parentWorkspace = project.getWorkspaceByLocator(parentLocator)
+      const isProjectPath = path.startsWith('~/')
+      let relativePath: PortablePath
+      let src: PortablePath
 
-      const relativePath = ppath.join(parentWorkspace.relativeCwd, path)
+      if (isProjectPath) {
+        relativePath = path.slice(2) as PortablePath
+        src = ppath.join(project.cwd, relativePath)
+      } else {
+        if (parentLocator === null) {
+          throw new Error(`Protocol path ${path} requires a parent locator`)
+        }
+
+        const parentWorkspace = project.getWorkspaceByLocator(parentLocator)
+
+        relativePath = ppath.join(parentWorkspace.relativeCwd, path)
+        src = ppath.join(parentWorkspace.cwd, path)
+      }
 
       if (copiedPaths.has(relativePath)) continue
 
       copiedPaths.add(relativePath)
 
-      const src = ppath.join(parentWorkspace.cwd, path)
       const dest = ppath.join(destination, relativePath)
 
       report.reportInfo(null, relativePath)

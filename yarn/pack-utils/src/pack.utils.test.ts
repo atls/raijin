@@ -1,5 +1,7 @@
 import type { Project }                  from '@yarnpkg/core'
 import type { Report }                   from '@yarnpkg/core'
+import type { Descriptor }               from '@yarnpkg/core'
+import type { PortablePath }             from '@yarnpkg/fslib'
 
 import assert                            from 'node:assert/strict'
 import { mkdir }                         from 'node:fs/promises'
@@ -13,6 +15,7 @@ import { xfs }                           from '@yarnpkg/fslib'
 
 import { IMAGE_PACK_NODE_LINKER }        from './pack.utils.js'
 import { copyYarnRelease }               from './copy.utils.js'
+import { copyProtocolFiles }             from './copy.utils.js'
 import { resolveSupportedArchitectures } from './pack.utils.js'
 
 test('should materialize image pack runtime with PnP linker', () => {
@@ -111,6 +114,33 @@ test('should copy yarn release from native yarn path', async (context) => {
       assert.equal(
         await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
         true
+      )
+    })
+  })
+})
+
+test('should copy project-relative protocol files', async () => {
+  await xfs.mktempPromise(async (source) => {
+    await xfs.mktempPromise(async (destination) => {
+      const patchPath = '.yarn/patches/example.patch'
+      const sourcePatchPath = ppath.join(source, patchPath)
+
+      await mkdir(npath.dirname(npath.fromPortablePath(sourcePatchPath)), { recursive: true })
+      await writeFile(npath.fromPortablePath(sourcePatchPath), 'patch content\n')
+
+      await copyProtocolFiles(
+        {
+          cwd: source,
+          storedDescriptors: new Map([['patch', { range: 'patch:example' } as Descriptor]]),
+        } as unknown as Project,
+        destination,
+        { reportInfo: () => undefined } as unknown as Report,
+        () => ({ parentLocator: null, paths: [`~/${patchPath}` as PortablePath] })
+      )
+
+      assert.equal(
+        await xfs.readFilePromise(ppath.join(destination, patchPath), 'utf8'),
+        'patch content\n'
       )
     })
   })
