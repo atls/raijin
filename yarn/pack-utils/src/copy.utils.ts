@@ -1,5 +1,6 @@
 import type { Workspace }    from '@yarnpkg/core'
 import type { Cache }        from '@yarnpkg/core'
+import type { Descriptor }   from '@yarnpkg/core'
 import type { Project }      from '@yarnpkg/core'
 import type { Report }       from '@yarnpkg/core'
 import type { PortablePath } from '@yarnpkg/fslib'
@@ -63,6 +64,25 @@ export const copyPlugins = async (
 
 const BUILTIN_REGEXP = /^builtin<([^>]+)>$/
 
+function* getPatchDescriptorSources(
+  project: Project,
+  workspace: Workspace
+): Generator<[Descriptor, Workspace]> {
+  for (const descriptor of workspace.manifest.dependencies.values()) {
+    yield [descriptor, workspace]
+  }
+
+  for (const descriptor of workspace.manifest.peerDependencies.values()) {
+    yield [descriptor, workspace]
+  }
+
+  for (const resolution of project.topLevelWorkspace.manifest.resolutions) {
+    const ident = structUtils.parseIdent(resolution.pattern.descriptor.fullName)
+
+    yield [structUtils.makeDescriptor(ident, resolution.reference), project.topLevelWorkspace]
+  }
+}
+
 export const copyPatchFiles = async (
   project: Project,
   workspace: Workspace,
@@ -70,17 +90,14 @@ export const copyPatchFiles = async (
   report: Report
 ): Promise<void> => {
   const copiedPaths = new Map<PortablePath, PortablePath>()
+  const copyOperations = new Array<{ dest: PortablePath; src: PortablePath }>()
 
-  for await (const descriptor of project.storedDescriptors.values()) {
-    const resolvedDescriptor = structUtils.isVirtualDescriptor(descriptor)
-      ? structUtils.devirtualizeDescriptor(descriptor)
-      : descriptor
+  for (const [descriptor, ownerWorkspace] of getPatchDescriptorSources(project, workspace)) {
+    if (!patchUtils.isPatchDescriptor(descriptor)) continue
 
-    if (!patchUtils.isPatchDescriptor(resolvedDescriptor)) continue
+    const { patchPaths } = patchUtils.parseDescriptor(descriptor)
 
-    const { parentLocator, patchPaths } = patchUtils.parseDescriptor(resolvedDescriptor)
-
-    for await (const rawPath of patchPaths) {
+    for (const rawPath of patchPaths) {
       const flagIndex = rawPath.lastIndexOf('!')
       const path = (flagIndex === -1 ? rawPath : rawPath.slice(flagIndex + 1)) as PortablePath
 
@@ -95,14 +112,7 @@ export const copyPatchFiles = async (
         sourceCwd = project.cwd
         src = ppath.resolve(sourceCwd, path.slice(2) as PortablePath)
       } else {
-        if (parentLocator === null) continue
-
-        const parentWorkspace = project.tryWorkspaceByLocator(parentLocator)
-
-        if (!parentWorkspace) continue
-        if (parentWorkspace !== project.topLevelWorkspace && parentWorkspace !== workspace) continue
-
-        sourceCwd = parentWorkspace.cwd
+        sourceCwd = ownerWorkspace.cwd
         src = ppath.resolve(sourceCwd, path)
       }
 
@@ -126,11 +136,16 @@ export const copyPatchFiles = async (
 
       report.reportInfo(null, relativePath)
 
-      await xfs.mkdirpPromise(ppath.dirname(dest))
-
-      await xfs.copyFilePromise(src, dest)
+      copyOperations.push({ dest, src })
     }
   }
+
+  await Promise.all(
+    copyOperations.map(async ({ dest, src }) => {
+      await xfs.mkdirpPromise(ppath.dirname(dest))
+      await xfs.copyFilePromise(src, dest)
+    })
+  )
 }
 
 export const copyRcFile = async (
