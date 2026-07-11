@@ -106,7 +106,9 @@ export const copyProtocolFiles = async (
           throw new Error(`Protocol path ${path} requires a parent locator`)
         }
 
-        const parentWorkspace = project.getWorkspaceByLocator(parentLocator)
+        const parentWorkspace = project.tryWorkspaceByLocator(parentLocator)
+
+        if (!parentWorkspace) continue
 
         relativePath =
           parentWorkspace === workspace ? path : ppath.join(parentWorkspace.relativeCwd, path)

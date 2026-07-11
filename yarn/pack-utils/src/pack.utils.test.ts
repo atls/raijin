@@ -186,7 +186,7 @@ test('should copy packed-workspace-relative protocol files to the packed root', 
       await copyProtocolFiles(
         {
           cwd: source,
-          getWorkspaceByLocator: (locator: typeof parentLocator) => {
+          tryWorkspaceByLocator: (locator: typeof parentLocator) => {
             assert.equal(locator, parentLocator)
 
             return workspace
@@ -227,7 +227,7 @@ test('should preserve other-workspace-relative protocol file copying', async () 
       await copyProtocolFiles(
         {
           cwd: source,
-          getWorkspaceByLocator: (locator: typeof parentLocator) => {
+          tryWorkspaceByLocator: (locator: typeof parentLocator) => {
             assert.equal(locator, parentLocator)
 
             return { cwd: parentCwd, relativeCwd: parentRelativeCwd }
@@ -247,5 +247,34 @@ test('should preserve other-workspace-relative protocol file copying', async () 
         'protocol content\n'
       )
     })
+  })
+})
+
+test('should skip relative protocol files owned by non-workspace packages', async () => {
+  await xfs.mktempPromise(async (destination) => {
+    const parentLocator = structUtils.makeLocator(
+      structUtils.makeIdent(null, 'parent'),
+      'npm:1.0.0'
+    )
+    const protocolPath = 'protocol/example.txt' as PortablePath
+
+    await copyProtocolFiles(
+      {
+        tryWorkspaceByLocator: (locator: typeof parentLocator) => {
+          assert.equal(locator, parentLocator)
+
+          return null
+        },
+        storedDescriptors: new Map([
+          ['protocol', structUtils.makeDescriptor(parentLocator, 'protocol:example')],
+        ]),
+      } as unknown as Project,
+      {} as unknown as Workspace,
+      destination,
+      {
+        reportInfo: () => assert.fail('non-workspace protocol file should not be copied'),
+      } as unknown as Report,
+      () => ({ parentLocator, paths: [protocolPath] })
+    )
   })
 })
