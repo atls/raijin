@@ -3,28 +3,30 @@
 
 // @ts-nocheck
 
-import { createGzip }            from 'node:zlib'
+import { createGzip }             from 'node:zlib'
 
-import { Project }               from '@yarnpkg/core'
-import { VirtualFetcher }        from '@yarnpkg/core'
-import { Workspace }             from '@yarnpkg/core'
-import { MultiFetcher }          from '@yarnpkg/core'
-import { CwdFS }                 from '@yarnpkg/fslib'
-import { Filename }              from '@yarnpkg/fslib'
-import { PortablePath }          from '@yarnpkg/fslib'
-import { ZipCompression }        from '@yarnpkg/fslib'
-import { structUtils }           from '@yarnpkg/core'
-import { tgzUtils }              from '@yarnpkg/core'
-import { ppath }                 from '@yarnpkg/fslib'
-import { xfs }                   from '@yarnpkg/fslib'
-import { packUtils }             from '@yarnpkg/plugin-pack'
-import tar                       from 'tar-stream'
+import { Project }                from '@yarnpkg/core'
+import { VirtualFetcher }         from '@yarnpkg/core'
+import { Workspace }              from '@yarnpkg/core'
+import { MultiFetcher }           from '@yarnpkg/core'
+import { CwdFS }                  from '@yarnpkg/fslib'
+import { Filename }               from '@yarnpkg/fslib'
+import { PortablePath }           from '@yarnpkg/fslib'
+import { ZipCompression }         from '@yarnpkg/fslib'
+import { structUtils }            from '@yarnpkg/core'
+import { tgzUtils }               from '@yarnpkg/core'
+import { ppath }                  from '@yarnpkg/fslib'
+import { xfs }                    from '@yarnpkg/fslib'
+import { packUtils }              from '@yarnpkg/plugin-pack'
+import tar                        from 'tar-stream'
 
-import { MultiResolver }         from './MultiResolver.js'
-import { ProtocolResolver }      from './ProtocolResolver.js'
-import { VirtualResolver }       from './VirtualResolver.js'
-import { WorkspacePackFetcher }  from './WorkspacePackFetcher.js'
-import { WorkspacePackResolver } from './WorkspacePackResolver.js'
+import { MultiResolver }          from './MultiResolver.js'
+import { ProtocolResolver }       from './ProtocolResolver.js'
+import { VirtualResolver }        from './VirtualResolver.js'
+import { WorkspacePackFetcher }   from './WorkspacePackFetcher.js'
+import { WorkspacePackResolver }  from './WorkspacePackResolver.js'
+import { getWorkspacePatchPaths } from '../patch-files/paths.js'
+import { resolvePatchPath }       from '../patch-files/paths.js'
 
 /**
  * Make a MultiFetcher that resolves workspaces using WorkspacePackFetcher
@@ -75,9 +77,23 @@ export const makeExportDir = async ({ locator, project }: Workspace) => {
   return exportDir
 }
 
+export const getWorkspacePackFiles = async (workspace: Workspace) => {
+  const files = new Set(await packUtils.genPackList(workspace))
+
+  for (const path of getWorkspacePatchPaths(workspace)) {
+    if (path.startsWith('~/')) continue
+
+    const { relativePath } = resolvePatchPath(workspace.cwd, path, 'packed workspace')
+
+    files.add(relativePath)
+  }
+
+  return Array.from(files).sort()
+}
+
 export const genPackTgz = async (workspace: Workspace) => {
   const packDir = await xfs.mktempPromise()
-  const pack = await packUtils.genPackStream(workspace)
+  const pack = await packUtils.genPackStream(workspace, await getWorkspacePackFiles(workspace))
   const target = ppath.join(packDir, `package.tgz` as Filename)
   const write = xfs.createWriteStream(target)
 
@@ -98,7 +114,7 @@ export const genPackZip = async (
   }
 ) => {
   return await xfs.mktempPromise(async (packDir) => {
-    const pack = await packUtils.genPackStream(workspace)
+    const pack = await packUtils.genPackStream(workspace, await getWorkspacePackFiles(workspace))
     const target = ppath.join(packDir, `package.tgz` as Filename)
     const write = xfs.createWriteStream(target)
 

@@ -16,6 +16,7 @@ import { packUtils }                  from '@yarnpkg/plugin-pack'
 
 import { ExportCache }                from './export/ExportCache.js'
 import { copyRcFile }                 from './copy.utils.js'
+import { copyPatchFiles }             from './copy.utils.js'
 import { copyYarnRelease }            from './copy.utils.js'
 import { genPackTgz }                 from './export/exportUtils.js'
 import { makeFetcher }                from './export/exportUtils.js'
@@ -86,6 +87,7 @@ export const pack = async (
 
     await tgzUtils.extractArchiveTo(tgz, baseFs, { stripComponents: 1 })
     await copyRcFile(project, destination, report)
+    await copyPatchFiles(project, workspace, destination, report)
 
     if (project.configuration.get('yarnPath')) {
       await copyYarnRelease(project, destination, report)
