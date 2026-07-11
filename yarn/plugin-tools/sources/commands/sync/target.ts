@@ -1,6 +1,8 @@
-import type { Project }      from '@yarnpkg/core'
-import type { Workspace }    from '@yarnpkg/core'
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { Project }       from '@yarnpkg/core'
+import type { Workspace }     from '@yarnpkg/core'
+import type { PortablePath }  from '@yarnpkg/fslib'
+
+import { createProjectModel } from '@atls/raijin/project'
 
 export type RaijinSyncTarget = {
   cwd: PortablePath
@@ -8,17 +10,12 @@ export type RaijinSyncTarget = {
   workspaces: Array<string>
 }
 
-const getWorkspacePatterns = (workspaces: unknown): Array<string> =>
-  Array.isArray(workspaces)
-    ? workspaces.filter((workspace): workspace is string => typeof workspace === 'string')
-    : []
-
 export const createRaijinSyncTarget = (project: Project): RaijinSyncTarget => {
-  const workspace = project.topLevelWorkspace
+  const model = createProjectModel(project)
 
   return {
-    cwd: workspace.cwd,
-    workspace,
-    workspaces: getWorkspacePatterns(workspace.manifest.raw.workspaces),
+    cwd: model.cwd,
+    workspace: model.topLevelWorkspace,
+    workspaces: model.workspacePatterns,
   }
 }

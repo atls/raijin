@@ -13,6 +13,7 @@ import { npath }                     from '@yarnpkg/fslib'
 import { ppath }                     from '@yarnpkg/fslib'
 import { Option }                    from 'clipanion'
 
+import { createProjectModel }        from '@atls/raijin/project'
 import { getChangedFiles }           from '@atls/yarn-plugin-files'
 import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
 
@@ -169,9 +170,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
       }
     }
 
-    return project.topLevelWorkspace.manifest.workspaceDefinitions.map(
-      (definition) => definition.pattern
-    )
+    return createProjectModel(project).workspacePatterns
   }
 
   private async runTypecheck(project: Project, includes: Array<string>): Promise<number> {

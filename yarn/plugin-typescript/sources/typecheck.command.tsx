@@ -21,6 +21,7 @@ import { TypeScriptProgress }             from '@atls/cli-ui-typescript-progress
 import { TypeScript }                     from '@atls/code-typescript'
 import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
 import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
+import { createProjectModel }             from '@atls/raijin/project'
 import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
 import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
 import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
@@ -136,8 +137,6 @@ export class TypeCheckCommand extends BaseCommand {
       return undefined
     }
 
-    return project.topLevelWorkspace.manifest.workspaceDefinitions.map(
-      (definition) => definition.pattern
-    )
+    return createProjectModel(project).workspacePatterns
   }
 }

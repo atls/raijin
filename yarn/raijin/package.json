@@ -16,6 +16,7 @@
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
+    "./project": "./src/project/index.ts",
     "./runtime": "./src/runtime.ts",
     "./types": "./types/index.d.ts",
     "./eslint": "./src/runtime/eslint.ts",
@@ -78,7 +79,9 @@
   },
   "devDependencies": {
     "@types/node": "24.12.2",
-    "@types/protocol-buffers-schema": "3.4.3"
+    "@types/protocol-buffers-schema": "3.4.3",
+    "@yarnpkg/core": "4.7.0",
+    "@yarnpkg/fslib": "3.1.5"
   },
   "publishConfig": {
     "access": "public",
@@ -88,6 +91,11 @@
     "exports": {
       "./package.json": "./package.json",
       "./types": "./types/index.d.ts",
+      "./project": {
+        "import": "./dist/project/index.js",
+        "types": "./dist/project/index.d.ts",
+        "default": "./dist/project/index.js"
+      },
       "./runtime": {
         "import": "./dist/runtime.js",
         "types": "./dist/runtime.d.ts",
