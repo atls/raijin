@@ -1,15 +1,17 @@
-import type { Workspace }    from '@yarnpkg/core'
-import type { Cache }        from '@yarnpkg/core'
-import type { Project }      from '@yarnpkg/core'
-import type { Report }       from '@yarnpkg/core'
-import type { Descriptor }   from '@yarnpkg/core'
-import type { Locator }      from '@yarnpkg/core'
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { Workspace }                 from '@yarnpkg/core'
+import type { Cache }                     from '@yarnpkg/core'
+import type { Project }                   from '@yarnpkg/core'
+import type { Report }                    from '@yarnpkg/core'
+import type { PortablePath }              from '@yarnpkg/fslib'
 
-import { Manifest }          from '@yarnpkg/core'
-import { structUtils }       from '@yarnpkg/core'
-import { xfs }               from '@yarnpkg/fslib'
-import { ppath }             from '@yarnpkg/fslib'
+import { Manifest }                       from '@yarnpkg/core'
+import { xfs }                            from '@yarnpkg/fslib'
+import { ppath }                          from '@yarnpkg/fslib'
+
+import { getProjectResolutionPatchPaths } from './patch-files/paths.js'
+import { getWorkspacePatchPaths }         from './patch-files/paths.js'
+import { resolvePatchPath }               from './patch-files/paths.js'
+import { getRequiredWorkspaces }          from './workspaces.utils.js'
 
 export const copyCacheMarkedFiles = async (
   project: Project,
@@ -62,53 +64,47 @@ export const copyPlugins = async (
   }
 }
 
-// https://github.com/yarnpkg/berry/blob/d38d573/packages/plugin-patch/sources/patchUtils.js#L10
-const BUILTIN_REGEXP = /^builtin<([^>]+)>$/
-
-export const copyProtocolFiles = async (
+export const copyPatchFiles = async (
   project: Project,
+  workspace: Workspace,
   destination: PortablePath,
-  report: Report,
-  parseDescriptor: (
-    descriptor: Descriptor
-  ) => { parentLocator: Locator; paths: Array<PortablePath> } | undefined
+  report: Report
 ): Promise<void> => {
-  const copiedPaths = new Set<string>()
+  const copiedPaths = new Set<PortablePath>()
+  const copyOperations = new Array<{ dest: PortablePath; src: PortablePath }>()
 
-  for await (const descriptor of project.storedDescriptors.values()) {
-    const resolvedDescriptor = structUtils.isVirtualDescriptor(descriptor)
-      ? structUtils.devirtualizeDescriptor(descriptor)
-      : descriptor
+  const registerPatchFile = (path: PortablePath): void => {
+    const { relativePath, src } = resolvePatchPath(project.cwd, path, 'standalone workspace')
 
-    const parsed = parseDescriptor(resolvedDescriptor)
+    if (copiedPaths.has(relativePath)) return
 
-    if (!parsed) continue
+    copiedPaths.add(relativePath)
 
-    const { parentLocator, paths } = parsed
+    const dest = ppath.join(destination, relativePath)
 
-    for await (const path of paths) {
-      if (BUILTIN_REGEXP.test(path)) continue
+    report.reportInfo(null, relativePath)
 
-      if (ppath.isAbsolute(path)) continue
+    copyOperations.push({ dest, src })
+  }
 
-      const parentWorkspace = project.getWorkspaceByLocator(parentLocator)
+  for (const path of getProjectResolutionPatchPaths(project)) {
+    registerPatchFile(path.startsWith('~/') ? (path.slice(2) as PortablePath) : path)
+  }
 
-      const relativePath = ppath.join(parentWorkspace.relativeCwd, path)
+  for (const requiredWorkspace of getRequiredWorkspaces(project, [workspace], true)) {
+    for (const path of getWorkspacePatchPaths(requiredWorkspace)) {
+      if (!path.startsWith('~/')) continue
 
-      if (copiedPaths.has(relativePath)) continue
-
-      copiedPaths.add(relativePath)
-
-      const src = ppath.join(parentWorkspace.cwd, path)
-      const dest = ppath.join(destination, relativePath)
-
-      report.reportInfo(null, relativePath)
-
-      await xfs.mkdirpPromise(ppath.dirname(dest))
-
-      await xfs.copyFilePromise(src, dest)
+      registerPatchFile(path.slice(2) as PortablePath)
     }
   }
+
+  await Promise.all(
+    copyOperations.map(async ({ dest, src }) => {
+      await xfs.mkdirpPromise(ppath.dirname(dest))
+      await xfs.copyFilePromise(src, dest)
+    })
+  )
 }
 
 export const copyRcFile = async (
