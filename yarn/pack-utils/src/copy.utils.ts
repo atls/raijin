@@ -2,14 +2,13 @@ import type { Workspace }    from '@yarnpkg/core'
 import type { Cache }        from '@yarnpkg/core'
 import type { Project }      from '@yarnpkg/core'
 import type { Report }       from '@yarnpkg/core'
-import type { Descriptor }   from '@yarnpkg/core'
-import type { Locator }      from '@yarnpkg/core'
 import type { PortablePath } from '@yarnpkg/fslib'
 
 import { Manifest }          from '@yarnpkg/core'
 import { structUtils }       from '@yarnpkg/core'
 import { xfs }               from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
+import { patchUtils }        from '@yarnpkg/plugin-patch'
 
 export const copyCacheMarkedFiles = async (
   project: Project,
@@ -62,32 +61,26 @@ export const copyPlugins = async (
   }
 }
 
-// https://github.com/yarnpkg/berry/blob/d38d573/packages/plugin-patch/sources/patchUtils.js#L10
 const BUILTIN_REGEXP = /^builtin<([^>]+)>$/
 
-export const copyProtocolFiles = async (
+export const copyPatchFiles = async (
   project: Project,
   workspace: Workspace,
   destination: PortablePath,
-  report: Report,
-  parseDescriptor: (
-    descriptor: Descriptor
-  ) => { parentLocator: Locator | null; paths: Array<PortablePath> } | undefined
+  report: Report
 ): Promise<void> => {
-  const copiedPaths = new Set<string>()
+  const copiedPaths = new Map<PortablePath, PortablePath>()
 
   for await (const descriptor of project.storedDescriptors.values()) {
     const resolvedDescriptor = structUtils.isVirtualDescriptor(descriptor)
       ? structUtils.devirtualizeDescriptor(descriptor)
       : descriptor
 
-    const parsed = parseDescriptor(resolvedDescriptor)
+    if (!patchUtils.isPatchDescriptor(resolvedDescriptor)) continue
 
-    if (!parsed) continue
+    const { parentLocator, patchPaths } = patchUtils.parseDescriptor(resolvedDescriptor)
 
-    const { parentLocator, paths } = parsed
-
-    for await (const rawPath of paths) {
+    for await (const rawPath of patchPaths) {
       const flagIndex = rawPath.lastIndexOf('!')
       const path = (flagIndex === -1 ? rawPath : rawPath.slice(flagIndex + 1)) as PortablePath
 
@@ -95,29 +88,39 @@ export const copyProtocolFiles = async (
       if (ppath.isAbsolute(path)) continue
 
       const isProjectPath = path.startsWith('~/')
-      let relativePath: PortablePath
+      let sourceCwd: PortablePath
       let src: PortablePath
 
       if (isProjectPath) {
-        relativePath = path.slice(2) as PortablePath
-        src = ppath.join(project.cwd, relativePath)
+        sourceCwd = project.cwd
+        src = ppath.resolve(sourceCwd, path.slice(2) as PortablePath)
       } else {
-        if (parentLocator === null) {
-          throw new Error(`Protocol path ${path} requires a parent locator`)
-        }
+        if (parentLocator === null) continue
 
         const parentWorkspace = project.tryWorkspaceByLocator(parentLocator)
 
         if (!parentWorkspace) continue
+        if (parentWorkspace !== project.topLevelWorkspace && parentWorkspace !== workspace) continue
 
-        relativePath =
-          parentWorkspace === workspace ? path : ppath.join(parentWorkspace.relativeCwd, path)
-        src = ppath.join(parentWorkspace.cwd, path)
+        sourceCwd = parentWorkspace.cwd
+        src = ppath.resolve(sourceCwd, path)
       }
 
-      if (copiedPaths.has(relativePath)) continue
+      const relativePath = ppath.contains(sourceCwd, src)
 
-      copiedPaths.add(relativePath)
+      if (relativePath === null) {
+        throw new Error(`Patch path ${path} resolves outside the standalone workspace`)
+      }
+
+      const previousSrc = copiedPaths.get(relativePath)
+
+      if (previousSrc === src) continue
+
+      if (previousSrc) {
+        throw new Error(`Patch files ${previousSrc} and ${src} resolve to ${relativePath}`)
+      }
+
+      copiedPaths.set(relativePath, src)
 
       const dest = ppath.join(destination, relativePath)
 
