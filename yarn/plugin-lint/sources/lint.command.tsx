@@ -77,10 +77,12 @@ export class LintCommand extends BaseCommand {
       this.context.plugins
     )
 
-    const linter = await Linter.initialize(project.cwd, workspaceCwd)
+    const projectCwd = resolveNativeCommandCwd(project.cwd)
+    const workspaceNativeCwd = resolveNativeCommandCwd(workspaceCwd)
+    const linter = await Linter.initialize(projectCwd, workspaceNativeCwd)
     const files = resolveLintTargetFiles(this.files, invocationCwd)
 
-    const { clear } = render(<LintProgress cwd={project.cwd} linter={linter} />)
+    const { clear } = render(<LintProgress cwd={projectCwd} linter={linter} />)
 
     linter.on('lint:end', ({ result }) => {
       if (result.messages.length > 0) {

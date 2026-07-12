@@ -35,10 +35,11 @@ export class FormatCommand extends BaseCommand {
       this.context.plugins
     )
 
-    const formatter = await Formatter.initialize(workspaceCwd)
+    const projectCwd = resolveNativeCommandCwd(project.cwd)
+    const formatter = await Formatter.initialize(resolveNativeCommandCwd(workspaceCwd))
     const files = resolveFormatTargetFiles(this.files, invocationCwd)
 
-    const { clear } = render(<FormatProgress cwd={project.cwd} formatter={formatter} />)
+    const { clear } = render(<FormatProgress cwd={projectCwd} formatter={formatter} />)
 
     try {
       await formatter.format(files)
