@@ -1,3 +1,5 @@
+import type { PortablePath }                 from '@yarnpkg/fslib'
+
 import { resolve }                           from 'node:path'
 import { isAbsolute }                        from 'node:path'
 
@@ -10,10 +12,17 @@ import { ErrorInfo }                         from '@atls/cli-ui-error-info-compo
 import { FormatProgress }                    from '@atls/cli-ui-format-progress-component'
 import { Formatter }                         from '@atls/code-format'
 import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
+import { resolveNativeCommandCwd }           from '@atls/raijin/commands'
 import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
 
-const resolveTargetFiles = (files: Array<string>, invocationCwd: string): Array<string> =>
-  files.map((file) => (isAbsolute(file) ? file : resolve(invocationCwd, file)))
+export const resolveFormatTargetFiles = (
+  files: Array<string>,
+  invocationCwd: PortablePath
+): Array<string> => {
+  const nativeInvocationCwd = resolveNativeCommandCwd(invocationCwd)
+
+  return files.map((file) => (isAbsolute(file) ? file : resolve(nativeInvocationCwd, file)))
+}
 
 export class FormatCommand extends BaseCommand {
   static override paths = [['format']]
@@ -27,7 +36,7 @@ export class FormatCommand extends BaseCommand {
     )
 
     const formatter = await Formatter.initialize(workspaceCwd)
-    const files = resolveTargetFiles(this.files, invocationCwd)
+    const files = resolveFormatTargetFiles(this.files, invocationCwd)
 
     const { clear } = render(<FormatProgress cwd={project.cwd} formatter={formatter} />)
 

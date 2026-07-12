@@ -1,3 +1,5 @@
+import type { PortablePath }                 from '@yarnpkg/fslib'
+
 import { resolve }                           from 'node:path'
 import { isAbsolute }                        from 'node:path'
 
@@ -11,12 +13,19 @@ import { LintProgress }                      from '@atls/cli-ui-lint-progress-co
 import { LintResult }                        from '@atls/cli-ui-lint-result-component'
 import { Linter }                            from '@atls/code-lint'
 import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
+import { resolveNativeCommandCwd }           from '@atls/raijin/commands'
 import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
 import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
 import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
 
-const resolveTargetFiles = (files: Array<string>, invocationCwd: string): Array<string> =>
-  files.map((file) => (isAbsolute(file) ? file : resolve(invocationCwd, file)))
+export const resolveLintTargetFiles = (
+  files: Array<string>,
+  invocationCwd: PortablePath
+): Array<string> => {
+  const nativeInvocationCwd = resolveNativeCommandCwd(invocationCwd)
+
+  return files.map((file) => (isAbsolute(file) ? file : resolve(nativeInvocationCwd, file)))
+}
 
 interface LintCommandResult {
   messages: Array<unknown>
@@ -69,7 +78,7 @@ export class LintCommand extends BaseCommand {
     )
 
     const linter = await Linter.initialize(project.cwd, workspaceCwd)
-    const files = resolveTargetFiles(this.files, invocationCwd)
+    const files = resolveLintTargetFiles(this.files, invocationCwd)
 
     const { clear } = render(<LintProgress cwd={project.cwd} linter={linter} />)
 
