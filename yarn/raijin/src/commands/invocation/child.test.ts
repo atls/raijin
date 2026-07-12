@@ -4,7 +4,7 @@ import test                                 from 'node:test'
 
 import { createCommandChildProcessOptions } from './child.js'
 import { waitForCommandChild }              from './child.js'
-import { resolveCommandPlatformAdapter }    from './platform/index.js'
+import { resolveNativeCommandCwd }          from './native-cwd.js'
 
 test('should create child options from command execution boundary', () => {
   const environment = { NODE_ENV: 'test' }
@@ -14,10 +14,7 @@ test('should create child options from command execution boundary', () => {
     stdio: 'inherit',
   })
 
-  assert.equal(
-    options.cwd,
-    resolveCommandPlatformAdapter().resolveNativeCwd('/repo/client' as never)
-  )
+  assert.equal(options.cwd, resolveNativeCommandCwd('/repo/client' as never))
   assert.equal(options.env, environment)
   assert.equal(options.stdio, 'inherit')
 })

@@ -1,16 +1,16 @@
-import type { ChildProcess }             from 'node:child_process'
-import type { SpawnOptions }             from 'node:child_process'
+import type { ChildProcess }        from 'node:child_process'
+import type { SpawnOptions }        from 'node:child_process'
 
-import type { CommandChildOptions }      from './invocation.interfaces.js'
+import type { CommandChildOptions } from './invocation.interfaces.js'
 
-import { resolveCommandPlatformAdapter } from './platform/index.js'
+import { resolveNativeCommandCwd }  from './native-cwd.js'
 
 export const createCommandChildProcessOptions = ({
   env,
   invocation,
   stdio,
 }: CommandChildOptions): SpawnOptions => ({
-  cwd: resolveCommandPlatformAdapter().resolveNativeCwd(invocation.executionCwd),
+  cwd: resolveNativeCommandCwd(invocation.executionCwd),
   env,
   stdio,
 })

@@ -1,3 +1,5 @@
+import type { PortablePath }               from '@yarnpkg/fslib'
+
 import { BaseCommand }                     from '@yarnpkg/cli'
 import { StreamReport }                    from '@yarnpkg/core'
 import { Option }                          from 'clipanion'
@@ -5,10 +7,11 @@ import { Option }                          from 'clipanion'
 import { getStreamReportCallback }         from '@atls/code-schematics'
 import { getStreamReportOptions }          from '@atls/code-schematics'
 import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
+import { resolveNativeCommandCwd }         from '@atls/raijin/commands'
 
-export const createGenerateProjectOptions = (type: string, invocationCwd: string) => ({
+export const createGenerateProjectOptions = (type: string, invocationCwd: PortablePath) => ({
   type,
-  cwd: invocationCwd,
+  cwd: resolveNativeCommandCwd(invocationCwd),
 })
 
 export class GenerateProjectCommand extends BaseCommand {
