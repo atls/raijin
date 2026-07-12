@@ -86,6 +86,10 @@
     "@yarnpkg/core": "4.7.0",
     "@yarnpkg/fslib": "3.1.5"
   },
+  "peerDependencies": {
+    "@yarnpkg/core": "*",
+    "@yarnpkg/fslib": "*"
+  },
   "publishConfig": {
     "access": "public",
     "bin": {

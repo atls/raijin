@@ -788,6 +788,9 @@ __metadata:
     webpack: "npm:5.98.0"
     zod: "npm:4.1.13"
     zod-validation-error: "npm:4.0.2"
+  peerDependencies:
+    "@yarnpkg/core": "*"
+    "@yarnpkg/fslib": "*"
   bin:
     raijin: ./bin/raijin.mjs
   languageName: unknown
