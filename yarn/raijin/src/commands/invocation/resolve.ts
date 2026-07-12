@@ -7,7 +7,8 @@ import type { WorkspaceInvocation } from './resolve.interfaces.js'
 import { npath }                    from '@yarnpkg/fslib'
 import { ppath }                    from '@yarnpkg/fslib'
 
-import { createProjectModel }       from '../../project/index.js'
+import { createProjectModel }       from '@atls/raijin/project'
+
 import { resolveProject }           from './adapters/yarn/project.js'
 
 export const INVOCATION_CWD_ENV = 'RAIJIN_COMMAND_INVOCATION_CWD'

@@ -10,9 +10,10 @@ import { npath }                          from '@yarnpkg/fslib'
 import { ppath }                          from '@yarnpkg/fslib'
 import { xfs }                            from '@yarnpkg/fslib'
 
-import { MANAGED_NODE_LOADER_ENV }        from '../../../../runtime/node/bootstrap/loader.js'
-import { applyManagedNodeLoader }         from '../../../../runtime/node/bootstrap/loader.js'
-import { sanitizeYarnCommandEnvironment } from '../../../../yarn/environment.js'
+import { MANAGED_NODE_LOADER_ENV }        from '@atls/raijin/runtime/node/bootstrap'
+import { applyManagedNodeLoader }         from '@atls/raijin/runtime/node/bootstrap'
+import { sanitizeYarnCommandEnvironment } from '@atls/raijin/yarn'
+
 import { toNativeCwd }                    from '../path/index.js'
 
 const YARN_EXECUTABLE_NAME = (process.platform === 'win32' ? 'yarn.cmd' : 'yarn') as Filename
