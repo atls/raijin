@@ -6,11 +6,10 @@ import type { ProjectCommandInvocation }     from './invocation.interfaces.js'
 import { npath }                             from '@yarnpkg/fslib'
 
 import { COMMAND_INVOCATION_CWD }            from './context.js'
+import { COMMAND_PROXY_EXECUTION }           from './context.js'
 import { resolveProjectCommandInvocation }   from './context.js'
 import { resolveWorkspaceCommandInvocation } from './context.js'
 import { executeYarnCommand }                from './executable.js'
-
-export const COMMAND_PROXY_EXECUTION = 'COMMAND_PROXY_EXECUTION'
 
 export const shouldExecuteCommandProxy = (environment: NodeJS.ProcessEnv = process.env): boolean =>
   environment[COMMAND_PROXY_EXECUTION] !== 'true'

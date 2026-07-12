@@ -10,6 +10,7 @@ import { npath }                           from '@yarnpkg/fslib'
 import { ppath }                           from '@yarnpkg/fslib'
 
 export const COMMAND_INVOCATION_CWD = 'RAIJIN_COMMAND_INVOCATION_CWD'
+export const COMMAND_PROXY_EXECUTION = 'COMMAND_PROXY_EXECUTION'
 
 export const resolveInvocationCwd = (
   cwd: PortablePath,
@@ -34,12 +35,26 @@ export const resolveInvocationCwd = (
   return cwd
 }
 
+const consumeCommandInvocationCwd = (
+  cwd: PortablePath,
+  environment: NodeJS.ProcessEnv
+): PortablePath => {
+  const invocationCwd = resolveInvocationCwd(cwd, environment)
+
+  if (environment[COMMAND_PROXY_EXECUTION] === 'true') {
+    Reflect.deleteProperty(environment, COMMAND_PROXY_EXECUTION)
+    Reflect.deleteProperty(environment, COMMAND_INVOCATION_CWD)
+  }
+
+  return invocationCwd
+}
+
 export const resolveProjectCommandInvocation = async (
   cwd: PortablePath,
   plugins: CommandPluginConfiguration,
   environment: NodeJS.ProcessEnv = process.env
 ): Promise<ProjectCommandInvocation> => {
-  const invocationCwd = resolveInvocationCwd(cwd, environment)
+  const invocationCwd = consumeCommandInvocationCwd(cwd, environment)
   const configuration = await Configuration.find(invocationCwd, plugins)
   const { project } = await Project.find(configuration, invocationCwd)
 
@@ -56,7 +71,7 @@ export const resolveWorkspaceCommandInvocation = async (
   plugins: CommandPluginConfiguration,
   environment: NodeJS.ProcessEnv = process.env
 ): Promise<WorkspaceCommandInvocation> => {
-  const invocationCwd = resolveInvocationCwd(cwd, environment)
+  const invocationCwd = consumeCommandInvocationCwd(cwd, environment)
   const configuration = await Configuration.find(invocationCwd, plugins)
   const { project, workspace } = await Project.find(configuration, invocationCwd)
   const resolvedWorkspace = workspace ?? project.getWorkspaceByFilePath(invocationCwd)

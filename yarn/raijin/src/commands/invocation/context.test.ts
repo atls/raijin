@@ -9,6 +9,7 @@ import { npath }                             from '@yarnpkg/fslib'
 import { ppath }                             from '@yarnpkg/fslib'
 
 import { COMMAND_INVOCATION_CWD }            from './context.js'
+import { COMMAND_PROXY_EXECUTION }           from './context.js'
 import { resolveInvocationCwd }              from './context.js'
 import { resolveProjectCommandInvocation }   from './context.js'
 import { resolveWorkspaceCommandInvocation } from './context.js'
@@ -107,6 +108,28 @@ test('should preserve original invocation cwd across proxy re-entry', async () =
     assert.equal(context.workspaceCwd, rendererWorkspaceCwd)
     assert.equal(context.workspace.manifest.raw.name, '@atls/yarn-plugin-renderer')
   })
+})
+
+test('should consume proxy invocation state before resolving nested commands', async () => {
+  const environment = createCommandProxyEnvironment(rendererNestedCwd)
+  const proxyInvocation = await resolveProjectCommandInvocation(
+    repoRoot,
+    getPluginConfiguration(),
+    environment
+  )
+
+  assert.equal(proxyInvocation.invocationCwd, rendererNestedCwd)
+  assert.equal(environment[COMMAND_PROXY_EXECUTION], undefined)
+  assert.equal(environment[COMMAND_INVOCATION_CWD], undefined)
+
+  const nestedInvocation = await resolveWorkspaceCommandInvocation(
+    rendererWorkspaceCwd,
+    getPluginConfiguration(),
+    environment
+  )
+
+  assert.equal(nestedInvocation.invocationCwd, rendererWorkspaceCwd)
+  assert.equal(nestedInvocation.workspaceCwd, rendererWorkspaceCwd)
 })
 
 test('should resolve original invocation cwd from yarn init cwd', async () => {

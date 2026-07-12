@@ -2,7 +2,7 @@ import assert                            from 'node:assert/strict'
 import test                              from 'node:test'
 
 import { COMMAND_INVOCATION_CWD }        from './context.js'
-import { COMMAND_PROXY_EXECUTION }       from './proxy.js'
+import { COMMAND_PROXY_EXECUTION }       from './context.js'
 import { createCommandProxyEnvironment } from './proxy.js'
 import { shouldExecuteCommandProxy }     from './proxy.js'
 
