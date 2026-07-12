@@ -1,4 +1,4 @@
-import type { CommandPlatformAdapter }   from '../invocation.interfaces.js'
+import type { CommandPlatformAdapter }   from './platform.interfaces.js'
 
 import { posixCommandPlatformAdapter }   from './posix.js'
 import { windowsCommandPlatformAdapter } from './windows.js'
