@@ -1,14 +1,14 @@
-import assert                               from 'node:assert/strict'
-import { EventEmitter }                     from 'node:events'
-import test                                 from 'node:test'
+import assert                        from 'node:assert/strict'
+import { EventEmitter }              from 'node:events'
+import test                          from 'node:test'
 
-import { createCommandChildProcessOptions } from './child.js'
-import { waitForCommandChild }              from './child.js'
+import { createChildProcessOptions } from './child-process.js'
+import { waitForChildProcess }       from './child-process.js'
 
-test('should create child options from command execution boundary', () => {
+test('should create child options from the execution boundary', () => {
   const environment = { NODE_ENV: 'test' }
-  const options = createCommandChildProcessOptions({
-    invocation: { cwd: { execution: { native: '/repo/client' } } } as never,
+  const options = createChildProcessOptions({
+    invocation: { executionCwd: '/repo/client' } as never,
     env: environment,
     stdio: 'inherit',
   })
@@ -20,7 +20,7 @@ test('should create child options from command execution boundary', () => {
 
 test('should wait for child stdio to close before returning its code', async () => {
   const child = new EventEmitter()
-  const result = waitForCommandChild(child as never)
+  const result = waitForChildProcess(child as never)
   let settled = false
 
   const settlement = result.then(() => {
@@ -40,7 +40,7 @@ test('should wait for child stdio to close before returning its code', async () 
 
 test('should reject child process errors', async () => {
   const child = new EventEmitter()
-  const result = waitForCommandChild(child as never)
+  const result = waitForChildProcess(child as never)
   const error = new Error('spawn failed')
 
   child.emit('error', error)
@@ -51,7 +51,7 @@ test('should reject child process errors', async () => {
 
 test('should return a failure code when child closes from a signal', async () => {
   const child = new EventEmitter()
-  const result = waitForCommandChild(child as never)
+  const result = waitForChildProcess(child as never)
 
   child.emit('close', null, 'SIGTERM')
 

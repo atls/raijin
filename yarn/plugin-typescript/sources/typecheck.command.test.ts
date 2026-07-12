@@ -29,8 +29,9 @@ class TestTypeCheckCommand extends TypeCheckCommand {
         topLevelWorkspace,
         workspaces: [topLevelWorkspace],
       } as never,
-      { native: invocationCwd, portable: npath.toPortablePath(invocationCwd) },
-      { native: typecheckCwd, portable: npath.toPortablePath(typecheckCwd) }
+      ['packages/*'],
+      npath.toPortablePath(invocationCwd),
+      npath.toPortablePath(typecheckCwd)
     )
   }
 }

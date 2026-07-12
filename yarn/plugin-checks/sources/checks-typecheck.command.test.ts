@@ -20,6 +20,7 @@ class TestChecksTypeCheckCommand extends ChecksTypeCheckCommand {
         topLevelWorkspace,
         workspaces: [topLevelWorkspace],
       } as never,
+      ['packages/*'],
       cwd
     )
   }

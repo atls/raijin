@@ -1,24 +1,24 @@
-import type { Filename }               from '@yarnpkg/fslib'
+import type { Filename }          from '@yarnpkg/fslib'
 
-import assert                          from 'node:assert/strict'
-import { execFile }                    from 'node:child_process'
-import { dirname }                     from 'node:path'
-import { resolve }                     from 'node:path'
-import test                            from 'node:test'
-import { fileURLToPath }               from 'node:url'
-import { pathToFileURL }               from 'node:url'
+import assert                     from 'node:assert/strict'
+import { execFile }               from 'node:child_process'
+import { dirname }                from 'node:path'
+import { resolve }                from 'node:path'
+import test                       from 'node:test'
+import { fileURLToPath }          from 'node:url'
+import { pathToFileURL }          from 'node:url'
 
-import { Configuration }               from '@yarnpkg/core'
-import { Project }                     from '@yarnpkg/core'
-import { getPluginConfiguration }      from '@yarnpkg/cli'
-import { npath }                       from '@yarnpkg/fslib'
-import { ppath }                       from '@yarnpkg/fslib'
-import { xfs }                         from '@yarnpkg/fslib'
+import { Configuration }          from '@yarnpkg/core'
+import { Project }                from '@yarnpkg/core'
+import { getPluginConfiguration } from '@yarnpkg/cli'
+import { npath }                  from '@yarnpkg/fslib'
+import { ppath }                  from '@yarnpkg/fslib'
+import { xfs }                    from '@yarnpkg/fslib'
 
-import { createYarnCommandExecutable } from './executable.js'
+import { createYarnExecutable }   from './execution.js'
 
 const repoRoot = npath.toPortablePath(
-  resolve(dirname(fileURLToPath(import.meta.url)), '../../../../..')
+  resolve(dirname(fileURLToPath(import.meta.url)), '../../../../../../..')
 )
 const execFileAsync = async (
   file: string,
@@ -41,7 +41,7 @@ test('should use the Corepack-managed Yarn executable', async () => {
   const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
   const { project } = await Project.find(configuration, repoRoot)
   const binFolder = await xfs.mktempPromise()
-  const { executable, env } = await createYarnCommandExecutable({ binFolder, project })
+  const { executable, env } = await createYarnExecutable({ binFolder, project })
 
   assert.equal(executable, process.platform === 'win32' ? 'yarn.cmd' : 'yarn')
 
@@ -61,7 +61,7 @@ test('should create script env for the selected workspace locator', async () => 
     ppath.join(repoRoot, 'yarn/plugin-renderer')
   )
   const binFolder = await xfs.mktempPromise()
-  const { env } = await createYarnCommandExecutable({
+  const { env } = await createYarnExecutable({
     binFolder,
     locator: workspace?.anchoredLocator,
     project,
@@ -75,7 +75,7 @@ test('should preserve Yarn PnP options when adding command node options', async 
   const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
   const { project } = await Project.find(configuration, repoRoot)
   const binFolder = await xfs.mktempPromise()
-  const { env } = await createYarnCommandExecutable({
+  const { env } = await createYarnExecutable({
     binFolder,
     env: { NODE_OPTIONS: '--no-warnings=DeprecationWarning' },
     project,
@@ -90,7 +90,7 @@ test('should materialize managed node wrapper for current Yarn executable', asyn
   const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
   const { project } = await Project.find(configuration, repoRoot)
   const binFolder = await xfs.mktempPromise()
-  const { env } = await createYarnCommandExecutable({
+  const { env } = await createYarnExecutable({
     binFolder,
     nodeLoader: 'file:///tmp/managed-loader.mjs',
     project,
@@ -111,14 +111,14 @@ test('should keep managed node loader options idempotent', async () => {
   const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
   const { project } = await Project.find(configuration, repoRoot)
   const binFolder = await xfs.mktempPromise()
-  const { env } = await createYarnCommandExecutable({
+  const { env } = await createYarnExecutable({
     binFolder,
     nodeLoader: 'file:///tmp/managed-loader.mjs',
     project,
   })
   const firstNodeOptions = env.NODE_OPTIONS
 
-  await createYarnCommandExecutable({
+  await createYarnExecutable({
     binFolder,
     env,
     nodeLoader: 'file:///tmp/managed-loader.mjs',
@@ -146,7 +146,7 @@ test('should forward node flags from managed node wrapper', async () => {
     ].join('\n')
   )
 
-  const { env } = await createYarnCommandExecutable({
+  const { env } = await createYarnExecutable({
     binFolder,
     nodeLoader: pathToFileURL(npath.fromPortablePath(loaderPath)).href,
     project,

@@ -13,7 +13,8 @@ import { xfs }                               from '@yarnpkg/fslib'
 import { Option }                            from 'clipanion'
 
 import { pack }                              from '@atls/code-pack'
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation }        from '@atls/raijin/commands'
+import { toNativeCwd }                       from '@atls/raijin/commands'
 import { packUtils }                         from '@atls/yarn-pack-utils'
 
 import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
@@ -32,10 +33,11 @@ class ImagePackCommand extends BaseCommand {
   platform?: string = Option.String('--platform')
 
   async execute(): Promise<number> {
-    const { configuration, cwd, project, workspace } = await resolveWorkspaceCommandInvocation(
+    const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
       this.context.cwd,
       this.context.plugins
     )
+    const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
       {
@@ -67,7 +69,7 @@ class ImagePackCommand extends BaseCommand {
         )
 
         // eslint-disable-next-line n/no-sync
-        const content = readFileSync(join(cwd.execution.native, 'package.json'), 'utf-8')
+        const content = readFileSync(join(toNativeCwd(executionCwd), 'package.json'), 'utf-8')
         const { packConfiguration = {} } = JSON.parse(content) as {
           packConfiguration?: ImagePackConfiguration
         }

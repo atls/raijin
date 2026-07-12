@@ -1,19 +1,20 @@
-import { rm }                                from 'node:fs/promises'
-import { join }                              from 'node:path'
+import { rm }                         from 'node:fs/promises'
+import { join }                       from 'node:path'
 
-import { BaseCommand }                       from '@yarnpkg/cli'
-import { Option }                            from 'clipanion'
-import { render }                            from 'ink'
-import React                                 from 'react'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { Option }                     from 'clipanion'
+import { render }                     from 'ink'
+import React                          from 'react'
 
-import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
-import { TypeScriptDiagnostic }              from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptProgress }                from '@atls/cli-ui-typescript-progress-component'
-import { TypeScript }                        from '@atls/code-typescript'
-import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
-import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
+import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
+import { TypeScriptDiagnostic }       from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScriptProgress }         from '@atls/cli-ui-typescript-progress-component'
+import { TypeScript }                 from '@atls/code-typescript'
+import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
+import { shouldProxyCommand }         from '@atls/raijin/commands'
+import { toNativeCwd }                from '@atls/raijin/commands'
 
 export class LibraryBuildCommand extends BaseCommand {
   static override paths = [['library', 'build']]
@@ -21,7 +22,7 @@ export class LibraryBuildCommand extends BaseCommand {
   target = Option.String('-t,--target', './dist')
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -36,7 +37,7 @@ export class LibraryBuildCommand extends BaseCommand {
       args.push(this.target)
     }
 
-    return executeWorkspaceCommandProxy({
+    return proxyWorkspaceCommand({
       args: ['library', 'build', ...args],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -47,17 +48,21 @@ export class LibraryBuildCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { cwd } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
+    const { executionCwd } = await resolveWorkspaceInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
+    const cwd = toNativeCwd(executionCwd)
 
-    await this.cleanTarget(cwd.execution.native)
+    await this.cleanTarget(cwd)
 
-    const typescript = await TypeScript.initialize(cwd.execution.native)
+    const typescript = await TypeScript.initialize(cwd)
 
     const { clear } = render(<TypeScriptProgress typescript={typescript} />)
 
     try {
-      const diagnostics = await typescript.build([join(cwd.execution.native, './src')], {
-        outDir: join(cwd.execution.native, this.target),
+      const diagnostics = await typescript.build([join(cwd, './src')], {
+        outDir: join(cwd, this.target),
         declaration: true,
       })
 

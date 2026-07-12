@@ -8,8 +8,8 @@ import { ppath }                                         from '@yarnpkg/fslib'
 import { Option }                                        from 'clipanion'
 import localtunnel                                       from 'localtunnel'
 
-import { resolveWorkspaceCommandInvocation }             from '@atls/raijin/commands'
-import { createYarnCommandExecutable }                   from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation }                    from '@atls/raijin/commands'
+import { createYarnExecutable }                          from '@atls/raijin/commands'
 
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
@@ -63,10 +63,11 @@ export class RendererDevCommand extends BaseCommand {
   }
 
   async execute(): Promise<number> {
-    const { cwd, project, workspace } = await resolveWorkspaceCommandInvocation(
+    const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
       this.context.cwd,
       this.context.plugins
     )
+    const { project } = yarn
 
     await project.restoreInstallState()
 
@@ -96,7 +97,7 @@ export class RendererDevCommand extends BaseCommand {
     }
 
     const binFolder = await xfs.mktempPromise()
-    const scriptEnvironment = await createYarnCommandExecutable({
+    const scriptEnvironment = await createYarnExecutable({
       binFolder,
       locator: workspace.anchoredLocator,
       project,
@@ -110,7 +111,7 @@ export class RendererDevCommand extends BaseCommand {
       binFolder,
       loader
     )
-    const { executable, env } = await createYarnCommandExecutable({
+    const { executable, env } = await createYarnExecutable({
       binFolder,
       locator: workspace.anchoredLocator,
       project,
@@ -132,11 +133,11 @@ export class RendererDevCommand extends BaseCommand {
     }
 
     const { code } = await execUtils.pipevp(executable, args, {
-      cwd: cwd.execution.portable,
+      cwd: executionCwd,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, cwd.execution.portable),
+      env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, executionCwd),
     })
 
     return code

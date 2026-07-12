@@ -1,8 +1,8 @@
-import { BaseCommand }                     from '@yarnpkg/cli'
+import { BaseCommand }              from '@yarnpkg/cli'
 
-import { CommitLinter }                    from '@atls/code-commit'
-import { read }                            from '@atls/code-commit'
-import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
+import { CommitLinter }             from '@atls/code-commit'
+import { read }                     from '@atls/code-commit'
+import { resolveProjectInvocation } from '@atls/raijin/commands'
 
 class CommitMessageLintCommand extends BaseCommand {
   static override paths = [['commit', 'message', 'lint']]
@@ -10,7 +10,7 @@ class CommitMessageLintCommand extends BaseCommand {
   async execute(): Promise<number> {
     const {
       project: { workspaces },
-    } = await resolveProjectCommandInvocation(this.context.cwd, this.context.plugins)
+    } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
 
     const workspaceNames = new Set(workspaces.map(({ manifest }) => manifest.name?.name ?? ''))
     const scopes = new Set(workspaces.map(({ manifest }) => manifest.name?.scope ?? ''))

@@ -1,16 +1,16 @@
-import type { Ident }                        from '@yarnpkg/core'
-import type { Manifest }                     from '@yarnpkg/core'
-import type { Package }                      from '@yarnpkg/core'
-import type { Project }                      from '@yarnpkg/core'
+import type { Ident }                 from '@yarnpkg/core'
+import type { Manifest }              from '@yarnpkg/core'
+import type { Package }               from '@yarnpkg/core'
+import type { Project }               from '@yarnpkg/core'
 
-import { StreamReport }                      from '@yarnpkg/core'
-import { structUtils }                       from '@yarnpkg/core'
+import { StreamReport }               from '@yarnpkg/core'
+import { structUtils }                from '@yarnpkg/core'
 
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
+import { shouldProxyCommand }         from '@atls/raijin/commands'
 
-import { AbstractRaijinSyncCommand }         from './base.js'
-import { createRaijinSyncTarget }            from './target.js'
+import { AbstractRaijinSyncCommand }  from './base.js'
+import { createRaijinSyncTarget }     from './target.js'
 
 const NPM_PROTOCOL = 'npm:'
 const PATCH_PROTOCOL = 'patch:'
@@ -78,7 +78,7 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'typescript']]
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy(['raijin', 'sync', 'typescript'])
     }
 
@@ -86,10 +86,8 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   }
 
   override async executeRegular(): Promise<number> {
-    const { configuration, project } = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, project } = yarn
 
     await project.restoreInstallState()
 

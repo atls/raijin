@@ -4,11 +4,12 @@ import { spawn }                                 from 'node:child_process'
 
 import { BaseCommand }                           from '@yarnpkg/cli'
 
-import { createCommandChildProcessOptions }      from '@atls/raijin/commands'
-import { executeWorkspaceCommandProxy }          from '@atls/raijin/commands'
-import { resolveWorkspaceCommandInvocation }     from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }             from '@atls/raijin/commands'
-import { waitForCommandChild }                   from '@atls/raijin/commands'
+import { createChildProcessOptions }             from '@atls/raijin/commands'
+import { proxyWorkspaceCommand }                 from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation }            from '@atls/raijin/commands'
+import { shouldProxyCommand }                    from '@atls/raijin/commands'
+import { waitForChildProcess }                   from '@atls/raijin/commands'
+import { toNativeCwd }                           from '@atls/raijin/commands'
 import { resolveRaijinRuntimeUrl }               from '@atls/raijin/runtime-resolver'
 
 import { RENDERER_STANDALONE_SERVER_ENTRYPOINT } from './renderer-build.constants.js'
@@ -38,7 +39,7 @@ export class RendererStartCommand extends BaseCommand {
   static override paths = [['renderer', 'start']]
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -46,7 +47,7 @@ export class RendererStartCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
-    return executeWorkspaceCommandProxy({
+    return proxyWorkspaceCommand({
       args: ['renderer', 'start'],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -57,22 +58,19 @@ export class RendererStartCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const invocation = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
-    const rendererCwd = invocation.cwd.execution.native
+    const invocation = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+    const rendererCwd = toNativeCwd(invocation.executionCwd)
 
     const child = spawn(
       process.execPath,
       [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`],
-      createCommandChildProcessOptions({
+      createChildProcessOptions({
         invocation,
         env: await createRendererRuntimeEnvironment(rendererCwd, process.env),
         stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
       })
     )
 
-    return waitForCommandChild(child)
+    return waitForChildProcess(child)
   }
 }

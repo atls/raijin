@@ -1,10 +1,10 @@
-import { BaseCommand }                       from '@yarnpkg/cli'
-import { StreamReport }                      from '@yarnpkg/core'
-import { Option }                            from 'clipanion'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { StreamReport }               from '@yarnpkg/core'
+import { Option }                     from 'clipanion'
 
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 
-import { getChangedFiles }                   from './changed-files.util.js'
+import { getChangedFiles }            from './changed-files.util.js'
 
 class FilesChangedListCommand extends BaseCommand {
   static override paths = [['files', 'changed', 'list']]
@@ -12,10 +12,8 @@ class FilesChangedListCommand extends BaseCommand {
   json = Option.Boolean('--json', false)
 
   async execute(): Promise<number> {
-    const { configuration, project } = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
       {

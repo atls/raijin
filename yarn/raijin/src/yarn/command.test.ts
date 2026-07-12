@@ -3,7 +3,7 @@ import { delimiter }                      from 'node:path'
 import { test }                           from 'node:test'
 
 import { createYarnCommandEnvironment }   from './command.js'
-import { sanitizeYarnCommandEnvironment } from './command.js'
+import { sanitizeYarnCommandEnvironment } from './environment.js'
 
 test('should allow nested yarn commands to follow configured yarnPath', () => {
   assert.deepEqual(

@@ -1,19 +1,20 @@
-import { resolve }                           from 'node:path'
-import { isAbsolute }                        from 'node:path'
+import { resolve }                    from 'node:path'
+import { isAbsolute }                 from 'node:path'
 
-import { BaseCommand }                       from '@yarnpkg/cli'
-import { Option }                            from 'clipanion'
-import { render }                            from 'ink'
-import React                                 from 'react'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { Option }                     from 'clipanion'
+import { render }                     from 'ink'
+import React                          from 'react'
 
-import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
-import { LintProgress }                      from '@atls/cli-ui-lint-progress-component'
-import { LintResult }                        from '@atls/cli-ui-lint-result-component'
-import { Linter }                            from '@atls/code-lint'
-import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
-import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
+import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
+import { LintProgress }               from '@atls/cli-ui-lint-progress-component'
+import { LintResult }                 from '@atls/cli-ui-lint-result-component'
+import { Linter }                     from '@atls/code-lint'
+import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
+import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
+import { shouldProxyCommand }         from '@atls/raijin/commands'
+import { toNativeCwd }                from '@atls/raijin/commands'
 
 export const resolveLintTargetFiles = (
   files: Array<string>,
@@ -36,7 +37,7 @@ export class LintCommand extends BaseCommand {
   cache: boolean = Option.Boolean('--cache', false)
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -54,7 +55,7 @@ export class LintCommand extends BaseCommand {
       args.push('--cache')
     }
 
-    return executeWorkspaceCommandProxy({
+    return proxyWorkspaceCommand({
       args: ['lint', ...args, ...this.files],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -65,12 +66,16 @@ export class LintCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { cwd } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
+    const { executionCwd, invocationCwd, project } = await resolveWorkspaceInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
+    const projectCwd = toNativeCwd(project.cwd)
 
-    const linter = await Linter.initialize(cwd.project.native, cwd.execution.native)
-    const files = resolveLintTargetFiles(this.files, cwd.invocation.native)
+    const linter = await Linter.initialize(projectCwd, toNativeCwd(executionCwd))
+    const files = resolveLintTargetFiles(this.files, toNativeCwd(invocationCwd))
 
-    const { clear } = render(<LintProgress cwd={cwd.project.native} linter={linter} />)
+    const { clear } = render(<LintProgress cwd={projectCwd} linter={linter} />)
 
     linter.on('lint:end', ({ result }) => {
       if (result.messages.length > 0) {

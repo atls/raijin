@@ -1,33 +1,34 @@
 /* eslint-disable n/no-sync */
 
-import type { LintMessage }                from '@atls/raijin/eslint'
-import type { LintResult as Result }       from '@atls/raijin/eslint'
-import type { Project }                    from '@yarnpkg/core'
+import type { LintMessage }          from '@atls/raijin/eslint'
+import type { LintResult as Result } from '@atls/raijin/eslint'
+import type { Project }              from '@yarnpkg/core'
 
-import type { Annotation }                 from './github.checks.js'
+import type { Annotation }           from './github.checks.js'
 
-import { readFileSync }                    from 'node:fs'
-import { resolve }                         from 'node:path'
+import { readFileSync }              from 'node:fs'
+import { resolve }                   from 'node:path'
 
-import { BaseCommand }                     from '@yarnpkg/cli'
-import { StreamReport }                    from '@yarnpkg/core'
-import { MessageName }                     from '@yarnpkg/core'
-import { codeFrameColumns }                from '@babel/code-frame'
-import { xfs }                             from '@yarnpkg/fslib'
-import { npath }                           from '@yarnpkg/fslib'
-import { Option }                          from 'clipanion'
-import React                               from 'react'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { StreamReport }              from '@yarnpkg/core'
+import { MessageName }               from '@yarnpkg/core'
+import { codeFrameColumns }          from '@babel/code-frame'
+import { xfs }                       from '@yarnpkg/fslib'
+import { npath }                     from '@yarnpkg/fslib'
+import { Option }                    from 'clipanion'
+import React                         from 'react'
 
-import { LintResult }                      from '@atls/cli-ui-lint-result-component'
-import { Linter }                          from '@atls/code-lint'
-import { renderStatic }                    from '@atls/cli-ui-renderer-static-component'
-import { executeProjectCommandProxy }      from '@atls/raijin/commands'
-import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }       from '@atls/raijin/commands'
-import { getChangedFiles }                 from '@atls/yarn-plugin-files'
+import { LintResult }                from '@atls/cli-ui-lint-result-component'
+import { Linter }                    from '@atls/code-lint'
+import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
+import { proxyProjectCommand }       from '@atls/raijin/commands'
+import { resolveProjectInvocation }  from '@atls/raijin/commands'
+import { shouldProxyCommand }        from '@atls/raijin/commands'
+import { toNativeCwd }               from '@atls/raijin/commands'
+import { getChangedFiles }           from '@atls/yarn-plugin-files'
 
-import { GitHubChecks }                    from './github.checks.js'
-import { AnnotationLevel }                 from './github.checks.js'
+import { GitHubChecks }              from './github.checks.js'
+import { AnnotationLevel }           from './github.checks.js'
 
 class ChecksLintCommand extends BaseCommand {
   static override paths = [['checks', 'lint']]
@@ -35,7 +36,7 @@ class ChecksLintCommand extends BaseCommand {
   changed = Option.Boolean('--changed', false)
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -45,7 +46,7 @@ class ChecksLintCommand extends BaseCommand {
   async executeProxy(): Promise<number> {
     const args = ['checks', 'lint', ...(this.changed ? ['--changed'] : [])]
 
-    return executeProjectCommandProxy({
+    return proxyProjectCommand({
       args,
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -56,10 +57,11 @@ class ChecksLintCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { configuration, cwd, project } = await resolveProjectCommandInvocation(
+    const { project: projectModel, yarn } = await resolveProjectInvocation(
       this.context.cwd,
       this.context.plugins
     )
+    const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
       {
@@ -73,8 +75,9 @@ class ChecksLintCommand extends BaseCommand {
 
         await report.startTimerPromise('Lint', async () => {
           try {
-            const linter = await Linter.initialize(cwd.project.native, cwd.project.native)
-            const lintTargets = await this.getLintTargets(project, cwd.project.native)
+            const projectCwd = toNativeCwd(projectModel.cwd)
+            const linter = await Linter.initialize(projectCwd, projectCwd)
+            const lintTargets = await this.getLintTargets(project, projectCwd)
             let results: Array<Result> = []
 
             if (lintTargets === null) {
@@ -93,7 +96,7 @@ class ChecksLintCommand extends BaseCommand {
                 })
               })
 
-            const annotations = this.formatResults(results, cwd.project.native)
+            const annotations = this.formatResults(results, projectCwd)
 
             const warnings: number = annotations.filter(
               (annotation) => annotation.annotation_level === AnnotationLevel.Warning

@@ -1,26 +1,26 @@
-import type { CommandPath }                  from '@atls/raijin/commands'
-import type { Project }                      from '@yarnpkg/core'
+import type { Project }               from '@yarnpkg/core'
+import type { PortablePath }          from '@yarnpkg/fslib'
 
-import { isAbsolute }                        from 'node:path'
-import { relative }                          from 'node:path'
-import { resolve }                           from 'node:path'
+import { isAbsolute }                 from 'node:path'
+import { relative }                   from 'node:path'
+import { resolve }                    from 'node:path'
 
-import { BaseCommand }                       from '@yarnpkg/cli'
-import { ppath }                             from '@yarnpkg/fslib'
-import { xfs }                               from '@yarnpkg/fslib'
-import { Option }                            from 'clipanion'
-import { render }                            from 'ink'
-import React                                 from 'react'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { ppath }                      from '@yarnpkg/fslib'
+import { xfs }                        from '@yarnpkg/fslib'
+import { Option }                     from 'clipanion'
+import { render }                     from 'ink'
+import React                          from 'react'
 
-import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
-import { TypeScriptDiagnostic }              from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptProgress }                from '@atls/cli-ui-typescript-progress-component'
-import { TypeScript }                        from '@atls/code-typescript'
-import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
-import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
-import { createProjectModel }                from '@atls/raijin/project'
+import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
+import { TypeScriptDiagnostic }       from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScriptProgress }         from '@atls/cli-ui-typescript-progress-component'
+import { TypeScript }                 from '@atls/code-typescript'
+import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
+import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
+import { shouldProxyCommand }         from '@atls/raijin/commands'
+import { toNativeCwd }                from '@atls/raijin/commands'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -28,7 +28,7 @@ export class TypeCheckCommand extends BaseCommand {
   args: Array<string> = Option.Rest({ required: 0 })
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -36,7 +36,7 @@ export class TypeCheckCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
-    return executeWorkspaceCommandProxy({
+    return proxyWorkspaceCommand({
       args: ['typecheck', ...this.args],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -47,21 +47,22 @@ export class TypeCheckCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { cwd, project } = await resolveWorkspaceCommandInvocation(
+    const { executionCwd, invocationCwd, project, yarn } = await resolveWorkspaceInvocation(
       this.context.cwd,
       this.context.plugins
     )
-    const typecheckCwd = await this.resolveTypecheckCwd(cwd.execution, cwd.project)
+    const typecheckCwd = await this.resolveTypecheckCwd(executionCwd, project.cwd)
+    const nativeTypecheckCwd = toNativeCwd(typecheckCwd)
 
-    const typescript = await TypeScript.initialize(typecheckCwd.native, {
-      manifestCwds: [cwd.project.native, typecheckCwd.native],
+    const typescript = await TypeScript.initialize(nativeTypecheckCwd, {
+      manifestCwds: [toNativeCwd(project.cwd), nativeTypecheckCwd],
     })
 
     const { clear } = render(<TypeScriptProgress typescript={typescript} />)
 
     try {
       const diagnostics = await typescript.check(
-        await this.getIncludes(project, cwd.invocation, typecheckCwd)
+        await this.getIncludes(yarn.project, project.workspacePatterns, invocationCwd, typecheckCwd)
       )
 
       diagnostics.forEach((diagnostic) => {
@@ -87,10 +88,10 @@ export class TypeCheckCommand extends BaseCommand {
   }
 
   protected async resolveTypecheckCwd(
-    workspaceCwd: CommandPath,
-    projectCwd: CommandPath
-  ): Promise<CommandPath> {
-    if (await xfs.existsPromise(ppath.join(workspaceCwd.portable, 'tsconfig.json'))) {
+    workspaceCwd: PortablePath,
+    projectCwd: PortablePath
+  ): Promise<PortablePath> {
+    if (await xfs.existsPromise(ppath.join(workspaceCwd, 'tsconfig.json'))) {
       return workspaceCwd
     }
 
@@ -99,21 +100,22 @@ export class TypeCheckCommand extends BaseCommand {
 
   protected async getIncludes(
     project: Project,
-    invocationCwd: CommandPath,
-    typecheckCwd: CommandPath
+    workspacePatterns: Array<string>,
+    invocationCwd: PortablePath,
+    typecheckCwd: PortablePath
   ): Promise<Array<string> | undefined> {
     if (this.args.length > 0) {
-      const cwdRoot = typecheckCwd.native
-      const cwd = invocationCwd.native
+      const cwdRoot = toNativeCwd(typecheckCwd)
+      const cwd = toNativeCwd(invocationCwd)
 
       return this.args.map((target) =>
         isAbsolute(target) ? relative(cwdRoot, target) : relative(cwdRoot, resolve(cwd, target)))
     }
 
-    if (await xfs.existsPromise(ppath.join(typecheckCwd.portable, 'tsconfig.json'))) {
+    if (await xfs.existsPromise(ppath.join(typecheckCwd, 'tsconfig.json'))) {
       return undefined
     }
 
-    return createProjectModel(project).workspacePatterns
+    return workspacePatterns
   }
 }

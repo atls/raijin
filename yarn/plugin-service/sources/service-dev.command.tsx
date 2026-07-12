@@ -1,20 +1,21 @@
-import { render }                            from 'ink'
-import React                                 from 'react'
+import { render }                     from 'ink'
+import React                          from 'react'
 
-import { ServiceProgress }                   from '@atls/cli-ui-service-progress-component'
-import { Service }                           from '@atls/code-service'
-import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
+import { ServiceProgress }            from '@atls/cli-ui-service-progress-component'
+import { Service }                    from '@atls/code-service'
+import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
+import { shouldProxyCommand }         from '@atls/raijin/commands'
+import { toNativeCwd }                from '@atls/raijin/commands'
 
-import { AbstractServiceCommand }            from './abstract-service.command.jsx'
-import { getWorkspacePackageNames }          from './workspace-package-names.js'
+import { AbstractServiceCommand }     from './abstract-service.command.jsx'
+import { getWorkspacePackageNames }   from './workspace-package-names.js'
 
 export class ServiceDevCommand extends AbstractServiceCommand {
   static override paths = [['service', 'dev']]
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -28,7 +29,7 @@ export class ServiceDevCommand extends AbstractServiceCommand {
       args.push('-s')
     }
 
-    return executeWorkspaceCommandProxy({
+    return proxyWorkspaceCommand({
       args: ['service', 'dev', ...args],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -39,12 +40,12 @@ export class ServiceDevCommand extends AbstractServiceCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { cwd, workspace } = await resolveWorkspaceCommandInvocation(
+    const { executionCwd, workspace } = await resolveWorkspaceInvocation(
       this.context.cwd,
       this.context.plugins
     )
     const service = await Service.initialize(
-      cwd.execution.native,
+      toNativeCwd(executionCwd),
       getWorkspacePackageNames(workspace)
     )
 
