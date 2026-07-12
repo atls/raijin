@@ -1,30 +1,27 @@
-import type { Project }                   from '@yarnpkg/core'
-import type { PortablePath }              from '@yarnpkg/fslib'
+import type { Project }                      from '@yarnpkg/core'
+import type { PortablePath }                 from '@yarnpkg/fslib'
 
-import { isAbsolute }                     from 'node:path'
-import { relative }                       from 'node:path'
-import { resolve }                        from 'node:path'
+import { isAbsolute }                        from 'node:path'
+import { relative }                          from 'node:path'
+import { resolve }                           from 'node:path'
 
-import { BaseCommand }                    from '@yarnpkg/cli'
-import { Filename }                       from '@yarnpkg/fslib'
-import { execUtils }                      from '@yarnpkg/core'
-import { ppath }                          from '@yarnpkg/fslib'
-import { xfs }                            from '@yarnpkg/fslib'
-import { npath }                          from '@yarnpkg/fslib'
-import { Option }                         from 'clipanion'
-import { render }                         from 'ink'
-import React                              from 'react'
+import { BaseCommand }                       from '@yarnpkg/cli'
+import { ppath }                             from '@yarnpkg/fslib'
+import { npath }                             from '@yarnpkg/fslib'
+import { xfs }                               from '@yarnpkg/fslib'
+import { Option }                            from 'clipanion'
+import { render }                            from 'ink'
+import React                                 from 'react'
 
-import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
-import { TypeScriptDiagnostic }           from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptProgress }             from '@atls/cli-ui-typescript-progress-component'
-import { TypeScript }                     from '@atls/code-typescript'
-import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
-import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
-import { createProjectModel }             from '@atls/raijin/project'
-import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
+import { TypeScriptDiagnostic }              from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScriptProgress }                from '@atls/cli-ui-typescript-progress-component'
+import { TypeScript }                        from '@atls/code-typescript'
+import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
+import { createProjectModel }                from '@atls/raijin/project'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -32,45 +29,26 @@ export class TypeCheckCommand extends BaseCommand {
   args: Array<string> = Option.Rest({ required: 0 })
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy()
     }
 
-    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return this.executeRegular()
   }
 
   async executeProxy(): Promise<number> {
-    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
-      this.context.cwd,
-      this.context.plugins
-    )
-
-    const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeCurrentYarnExecutable({
-      binFolder,
-      project,
-      env: createCommandProxyEnvironment(this.context.cwd),
-    })
-
-    const { code } = await execUtils.pipevp(executable, ['typecheck', ...this.args], {
-      cwd: workspaceCwd,
+    return executeWorkspaceCommandProxy({
+      args: ['typecheck', ...this.args],
+      cwd: this.context.cwd,
+      plugins: this.context.plugins,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env,
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandContext(
+    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )

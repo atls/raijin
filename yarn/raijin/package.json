@@ -16,8 +16,10 @@
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
+    "./commands": "./src/commands/index.ts",
     "./project": "./src/project/index.ts",
     "./runtime": "./src/runtime.ts",
+    "./runtime/node/bootstrap": "./src/runtime/node/bootstrap/index.ts",
     "./types": "./types/index.d.ts",
     "./eslint": "./src/runtime/eslint.ts",
     "./webpack": "./src/runtime/webpack.ts",
@@ -80,8 +82,13 @@
   "devDependencies": {
     "@types/node": "24.12.2",
     "@types/protocol-buffers-schema": "3.4.3",
+    "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",
     "@yarnpkg/fslib": "3.1.5"
+  },
+  "peerDependencies": {
+    "@yarnpkg/core": "*",
+    "@yarnpkg/fslib": "*"
   },
   "publishConfig": {
     "access": "public",
@@ -91,6 +98,11 @@
     "exports": {
       "./package.json": "./package.json",
       "./types": "./types/index.d.ts",
+      "./commands": {
+        "import": "./dist/commands/index.js",
+        "types": "./dist/commands/index.d.ts",
+        "default": "./dist/commands/index.js"
+      },
       "./project": {
         "import": "./dist/project/index.js",
         "types": "./dist/project/index.d.ts",
@@ -100,6 +112,11 @@
         "import": "./dist/runtime.js",
         "types": "./dist/runtime.d.ts",
         "default": "./dist/runtime.js"
+      },
+      "./runtime/node/bootstrap": {
+        "import": "./dist/runtime/node/bootstrap/index.js",
+        "types": "./dist/runtime/node/bootstrap/index.d.ts",
+        "default": "./dist/runtime/node/bootstrap/index.js"
       },
       ".": {
         "import": "./dist/index.js",

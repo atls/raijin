@@ -22,13 +22,14 @@ const TARGET_SOURCE_DIRS = [
   'yarn/plugin-ui/sources',
   'yarn/plugin-tools/sources',
   'yarn/plugin-renderer/sources',
+  'yarn/raijin/src/commands',
 ]
 
 const YARN_LITERAL_REENTRY_REGEXP =
   /\b(?:execUtils\.)?(?:pipevp|execvp)\(\s*['"]yarn['"]|\bspawn\(\s*['"]yarn['"]/g
 
 const SCRIPT_ENV_REGEXP = /scriptUtils\.makeScriptEnv\(\s*\{[\s\S]*?\}\s*\)/g
-const CURRENT_YARN_EXECUTABLE_OWNER = 'yarn/plugin-tools/sources/current-yarn-executable.ts'
+const YARN_COMMAND_EXECUTABLE_OWNER = 'yarn/raijin/src/commands/invocation/executable.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 
@@ -56,7 +57,7 @@ const collectSourceFiles = async (dir) => {
   return files.flat()
 }
 
-test('should keep current Yarn executable calls on the current Yarn executable', async () => {
+test('should keep Yarn command executable calls in the command invocation owner', async () => {
   const sourceFiles = (
     await Promise.all(TARGET_SOURCE_DIRS.map((dir) => collectSourceFiles(join(repoRoot, dir))))
   ).flat()
@@ -72,10 +73,10 @@ test('should keep current Yarn executable calls on the current Yarn executable',
   for (const { path, source } of sources) {
     const relativePath = relative(repoRoot, path)
 
-    if (relativePath !== CURRENT_YARN_EXECUTABLE_OWNER) {
+    if (relativePath !== YARN_COMMAND_EXECUTABLE_OWNER) {
       for (const match of source.matchAll(SCRIPT_ENV_REGEXP)) {
         errors.push(
-          `${relativePath}:${getLine(source, match.index ?? 0)} current Yarn executable must use makeCurrentYarnExecutable`
+          `${relativePath}:${getLine(source, match.index ?? 0)} Yarn command executable must use createYarnCommandExecutable`
         )
       }
     }
@@ -83,9 +84,7 @@ test('should keep current Yarn executable calls on the current Yarn executable',
     for (const match of source.matchAll(YARN_LITERAL_REENTRY_REGEXP)) {
       const line = getLine(source, match.index ?? 0)
 
-      errors.push(
-        `${relativePath}:${line} current Yarn executable must use makeCurrentYarnExecutable executable`
-      )
+      errors.push(`${relativePath}:${line} Yarn command execution must use executeYarnCommand`)
     }
   }
 

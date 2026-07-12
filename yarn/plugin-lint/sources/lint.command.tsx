@@ -1,26 +1,31 @@
-import { resolve }                        from 'node:path'
-import { isAbsolute }                     from 'node:path'
+import type { PortablePath }                 from '@yarnpkg/fslib'
 
-import { BaseCommand }                    from '@yarnpkg/cli'
-import { Filename }                       from '@yarnpkg/fslib'
-import { execUtils }                      from '@yarnpkg/core'
-import { xfs }                            from '@yarnpkg/fslib'
-import { Option }                         from 'clipanion'
-import { render }                         from 'ink'
-import React                              from 'react'
+import { resolve }                           from 'node:path'
+import { isAbsolute }                        from 'node:path'
 
-import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
-import { LintProgress }                   from '@atls/cli-ui-lint-progress-component'
-import { LintResult }                     from '@atls/cli-ui-lint-result-component'
-import { Linter }                         from '@atls/code-lint'
-import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
-import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
-import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { BaseCommand }                       from '@yarnpkg/cli'
+import { Option }                            from 'clipanion'
+import { render }                            from 'ink'
+import React                                 from 'react'
 
-const resolveTargetFiles = (files: Array<string>, invocationCwd: string): Array<string> =>
-  files.map((file) => (isAbsolute(file) ? file : resolve(invocationCwd, file)))
+import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
+import { LintProgress }                      from '@atls/cli-ui-lint-progress-component'
+import { LintResult }                        from '@atls/cli-ui-lint-result-component'
+import { Linter }                            from '@atls/code-lint'
+import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
+import { resolveNativeCommandCwd }           from '@atls/raijin/commands'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
+
+export const resolveLintTargetFiles = (
+  files: Array<string>,
+  invocationCwd: PortablePath
+): Array<string> => {
+  const nativeInvocationCwd = resolveNativeCommandCwd(invocationCwd)
+
+  return files.map((file) => (isAbsolute(file) ? file : resolve(nativeInvocationCwd, file)))
+}
 
 interface LintCommandResult {
   messages: Array<unknown>
@@ -38,25 +43,15 @@ export class LintCommand extends BaseCommand {
   cache: boolean = Option.Boolean('--cache', false)
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy()
     }
 
-    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return this.executeRegular()
   }
 
   async executeProxy(): Promise<number> {
-    const { project } = await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
-
-    const binFolder = await xfs.mktempPromise()
-
-    const args = []
+    const args: Array<string> = []
 
     if (this.fix) {
       args.push('--fix')
@@ -66,33 +61,28 @@ export class LintCommand extends BaseCommand {
       args.push('--cache')
     }
 
-    const { executable, env } = await makeCurrentYarnExecutable({
-      binFolder,
-      project,
-      env: createCommandProxyEnvironment(this.context.cwd),
-    })
-
-    const { code } = await execUtils.pipevp(executable, ['lint', ...args, ...this.files], {
+    return executeWorkspaceCommandProxy({
+      args: ['lint', ...args, ...this.files],
       cwd: this.context.cwd,
+      plugins: this.context.plugins,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env,
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandContext(
+    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )
 
-    const linter = await Linter.initialize(project.cwd, workspaceCwd)
-    const files = resolveTargetFiles(this.files, invocationCwd)
+    const projectCwd = resolveNativeCommandCwd(project.cwd)
+    const workspaceNativeCwd = resolveNativeCommandCwd(workspaceCwd)
+    const linter = await Linter.initialize(projectCwd, workspaceNativeCwd)
+    const files = resolveLintTargetFiles(this.files, invocationCwd)
 
-    const { clear } = render(<LintProgress cwd={project.cwd} linter={linter} />)
+    const { clear } = render(<LintProgress cwd={projectCwd} linter={linter} />)
 
     linter.on('lint:end', ({ result }) => {
       if (result.messages.length > 0) {

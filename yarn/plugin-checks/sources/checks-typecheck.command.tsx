@@ -1,23 +1,25 @@
-import { spawn }                     from 'node:child_process'
-import { resolve }                   from 'node:path'
+import type { Project }                     from '@yarnpkg/core'
 
-import { BaseCommand }               from '@yarnpkg/cli'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { StreamReport }              from '@yarnpkg/core'
-import { MessageName }               from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
-import { npath }                     from '@yarnpkg/fslib'
-import { ppath }                     from '@yarnpkg/fslib'
-import { Option }                    from 'clipanion'
+import { spawn }                            from 'node:child_process'
+import { resolve }                          from 'node:path'
 
-import { createProjectModel }        from '@atls/raijin/project'
-import { getChangedFiles }           from '@atls/yarn-plugin-files'
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { BaseCommand }                      from '@yarnpkg/cli'
+import { StreamReport }                     from '@yarnpkg/core'
+import { MessageName }                      from '@yarnpkg/core'
+import { xfs }                              from '@yarnpkg/fslib'
+import { npath }                            from '@yarnpkg/fslib'
+import { ppath }                            from '@yarnpkg/fslib'
+import { Option }                           from 'clipanion'
 
-import { GitHubChecks }              from './github.checks.js'
+import { createCommandChildProcessOptions } from '@atls/raijin/commands'
+import { createYarnCommandExecutable }      from '@atls/raijin/commands'
+import { executeProjectCommandProxy }       from '@atls/raijin/commands'
+import { resolveProjectCommandInvocation }  from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }        from '@atls/raijin/commands'
+import { createProjectModel }               from '@atls/raijin/project'
+import { getChangedFiles }                  from '@atls/yarn-plugin-files'
+
+import { GitHubChecks }                     from './github.checks.js'
 
 const TYPECHECK_TIMEOUT_MS = 5 * 60 * 1000
 
@@ -27,47 +29,29 @@ class ChecksTypeCheckCommand extends BaseCommand {
   changed = Option.Boolean('--changed', false)
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return this.executeRegular()
   }
 
   async executeProxy(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
-
-    const binFolder = await xfs.mktempPromise()
     const args = ['checks', 'typecheck', ...(this.changed ? ['--changed'] : [])]
-    const { executable, env } = await makeCurrentYarnExecutable({
-      binFolder,
-      project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
-    })
 
-    const { code } = await execUtils.pipevp(executable, args, {
+    return executeProjectCommandProxy({
+      args,
       cwd: this.context.cwd,
+      plugins: this.context.plugins,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env,
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const invocation = await resolveProjectCommandInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, project } = invocation
 
     const commandReport = await StreamReport.start(
       {
@@ -98,7 +82,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
               report.reportInfo(MessageName.UNNAMED, `TypeCheck targets: ${includes.length}`)
 
-              const code = await this.runTypecheck(project, includes)
+              const code = await this.runTypecheck(invocation, includes)
 
               if (code === 0) {
                 await checks.complete(checkId, {
@@ -173,27 +157,32 @@ class ChecksTypeCheckCommand extends BaseCommand {
     return createProjectModel(project).workspacePatterns
   }
 
-  private async runTypecheck(project: Project, includes: Array<string>): Promise<number> {
+  private async runTypecheck(
+    invocation: Awaited<ReturnType<typeof resolveProjectCommandInvocation>>,
+    includes: Array<string>
+  ): Promise<number> {
+    const { project } = invocation
     const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeCurrentYarnExecutable({
+    const { executable, env } = await createYarnCommandExecutable({
       binFolder,
       project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
     })
     let timeout: NodeJS.Timeout | undefined
 
     return new Promise((resolvePromise, rejectPromise) => {
       let timedOut = false
-      const child = spawn(executable, ['typecheck', ...includes], {
-        cwd: npath.fromPortablePath(project.cwd),
-        env,
-        stdio: ['ignore', 'pipe', 'pipe'],
-      })
+      const child = spawn(
+        executable,
+        ['typecheck', ...includes],
+        createCommandChildProcessOptions({
+          invocation,
+          env,
+          stdio: ['ignore', 'pipe', 'pipe'],
+        })
+      )
 
-      child.stdout.pipe(this.context.stdout, { end: false })
-      child.stderr.pipe(this.context.stderr, { end: false })
+      child.stdout?.pipe(this.context.stdout, { end: false })
+      child.stderr?.pipe(this.context.stderr, { end: false })
 
       timeout = setTimeout(() => {
         timedOut = true

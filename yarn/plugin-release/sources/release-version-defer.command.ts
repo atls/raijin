@@ -1,9 +1,8 @@
 import { BaseCommand }                            from '@yarnpkg/cli'
-import { WorkspaceRequiredError }                 from '@yarnpkg/cli'
-import { Configuration }                          from '@yarnpkg/core'
-import { Project }                                from '@yarnpkg/core'
 import { StreamReport }                           from '@yarnpkg/core'
 import { Option }                                 from 'clipanion'
+
+import { resolveWorkspaceCommandInvocation }      from '@atls/raijin/commands'
 
 import { resolveReleaseVersionDeferredStrategy }  from './release-version-policy.utils.js'
 import { getDeferredReleaseDecisions }            from './release-version.utils.js'
@@ -24,10 +23,10 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
   dryRun = Option.Boolean('--dry-run', false)
 
   override async execute(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project, workspace } = await Project.find(configuration, this.context.cwd)
-
-    if (!workspace) throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
+    const { configuration, project } = await resolveWorkspaceCommandInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const commandReport = await StreamReport.start(
       {

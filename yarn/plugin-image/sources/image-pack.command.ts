@@ -13,8 +13,8 @@ import { xfs }                               from '@yarnpkg/fslib'
 import { Option }                            from 'clipanion'
 
 import { pack }                              from '@atls/code-pack'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
 import { packUtils }                         from '@atls/yarn-pack-utils'
-import { resolveWorkspaceCommandContext }    from '@atls/yarn-plugin-tools/command-context'
 
 import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
 import { resolveBuildpackReference }         from './image-pack.utils.js'
@@ -33,7 +33,7 @@ class ImagePackCommand extends BaseCommand {
 
   async execute(): Promise<number> {
     const { configuration, project, workspace, workspaceCwd } =
-      await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
+      await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
 
     const commandReport = await StreamReport.start(
       {

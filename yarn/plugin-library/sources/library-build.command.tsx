@@ -1,23 +1,19 @@
-import { rm }                             from 'node:fs/promises'
-import { join }                           from 'node:path'
+import { rm }                                from 'node:fs/promises'
+import { join }                              from 'node:path'
 
-import { BaseCommand }                    from '@yarnpkg/cli'
-import { Filename }                       from '@yarnpkg/fslib'
-import { execUtils }                      from '@yarnpkg/core'
-import { xfs }                            from '@yarnpkg/fslib'
-import { Option }                         from 'clipanion'
-import { render }                         from 'ink'
-import React                              from 'react'
+import { BaseCommand }                       from '@yarnpkg/cli'
+import { Option }                            from 'clipanion'
+import { render }                            from 'ink'
+import React                                 from 'react'
 
-import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
-import { TypeScriptDiagnostic }           from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptProgress }             from '@atls/cli-ui-typescript-progress-component'
-import { TypeScript }                     from '@atls/code-typescript'
-import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
-import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
-import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
+import { TypeScriptDiagnostic }              from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScriptProgress }                from '@atls/cli-ui-typescript-progress-component'
+import { TypeScript }                        from '@atls/code-typescript'
+import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
+import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
 
 export class LibraryBuildCommand extends BaseCommand {
   static override paths = [['library', 'build']]
@@ -25,25 +21,14 @@ export class LibraryBuildCommand extends BaseCommand {
   target = Option.String('-t,--target', './dist')
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy()
     }
 
-    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return this.executeRegular()
   }
 
   async executeProxy(): Promise<number> {
-    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
-      this.context.cwd,
-      this.context.plugins
-    )
-
     const args: Array<string> = []
 
     if (this.target) {
@@ -51,26 +36,18 @@ export class LibraryBuildCommand extends BaseCommand {
       args.push(this.target)
     }
 
-    const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeCurrentYarnExecutable({
-      binFolder,
-      project,
-      env: createCommandProxyEnvironment(this.context.cwd),
-    })
-
-    const { code } = await execUtils.pipevp(executable, ['library', 'build', ...args], {
-      cwd: workspaceCwd,
+    return executeWorkspaceCommandProxy({
+      args: ['library', 'build', ...args],
+      cwd: this.context.cwd,
+      plugins: this.context.plugins,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env,
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {
-    const { workspaceCwd } = await resolveWorkspaceCommandContext(
+    const { workspaceCwd } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )

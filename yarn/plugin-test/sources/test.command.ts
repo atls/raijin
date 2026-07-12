@@ -1,30 +1,22 @@
-import { Filename }                       from '@yarnpkg/fslib'
+import { Tester }                            from '@atls/code-test'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
 
-import { Tester }                         from '@atls/code-test'
-import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-
-import { AbstractTestCommand }            from './abstract-test.command.jsx'
+import { AbstractTestCommand }               from './abstract-test.command.jsx'
 
 export class TestCommand extends AbstractTestCommand {
   static override paths = [['test']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy()
     }
 
-    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return this.executeRegular()
   }
 
   override async executeRegular(): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandContext(
+    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )

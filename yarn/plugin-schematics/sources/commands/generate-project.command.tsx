@@ -1,10 +1,18 @@
-import { BaseCommand }             from '@yarnpkg/cli'
-import { Configuration }           from '@yarnpkg/core'
-import { StreamReport }            from '@yarnpkg/core'
-import { Option }                  from 'clipanion'
+import type { PortablePath }               from '@yarnpkg/fslib'
 
-import { getStreamReportCallback } from '@atls/code-schematics'
-import { getStreamReportOptions }  from '@atls/code-schematics'
+import { BaseCommand }                     from '@yarnpkg/cli'
+import { StreamReport }                    from '@yarnpkg/core'
+import { Option }                          from 'clipanion'
+
+import { getStreamReportCallback }         from '@atls/code-schematics'
+import { getStreamReportOptions }          from '@atls/code-schematics'
+import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
+import { resolveNativeCommandCwd }         from '@atls/raijin/commands'
+
+export const createGenerateProjectOptions = (type: string, invocationCwd: PortablePath) => ({
+  type,
+  cwd: resolveNativeCommandCwd(invocationCwd),
+})
 
 export class GenerateProjectCommand extends BaseCommand {
   static override paths = [['generate', 'project']]
@@ -12,7 +20,10 @@ export class GenerateProjectCommand extends BaseCommand {
   type = Option.String('-t,--type', 'project')
 
   async execute() {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
+    const { configuration, invocationCwd } = await resolveProjectCommandInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const allowedTypes = ['library', 'project']
 
@@ -20,10 +31,7 @@ export class GenerateProjectCommand extends BaseCommand {
       throw new Error(`Allowed only ${allowedTypes.join(', ')} types`)
     }
 
-    const options = {
-      type: this.type,
-      cwd: process.cwd(),
-    }
+    const options = createGenerateProjectOptions(this.type, invocationCwd)
 
     const streamReportOptions = getStreamReportOptions(this, configuration)
     const streamReportCallback = await getStreamReportCallback(options)

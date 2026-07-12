@@ -1,25 +1,22 @@
-import type { Annotation }            from './github.checks.js'
+import type { Annotation }                 from './github.checks.js'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { Configuration }              from '@yarnpkg/core'
-import { Project }                    from '@yarnpkg/core'
-import { Filename }                   from '@yarnpkg/fslib'
-import { execUtils }                  from '@yarnpkg/core'
-import { ppath }                      from '@yarnpkg/fslib'
-import { xfs }                        from '@yarnpkg/fslib'
-import { Command }                    from 'clipanion'
-import { Option }                     from 'clipanion'
-import stripAnsi                      from 'strip-ansi'
+import { BaseCommand }                     from '@yarnpkg/cli'
+import { ppath }                           from '@yarnpkg/fslib'
+import { Command }                         from 'clipanion'
+import { Option }                          from 'clipanion'
+import stripAnsi                           from 'strip-ansi'
 
-import { getChangedFiles }            from '@atls/yarn-plugin-files'
-import { makeCurrentYarnExecutable }  from '@atls/yarn-plugin-tools/current-yarn-executable'
-import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
+import { executeProjectCommandProxy }      from '@atls/raijin/commands'
+import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }       from '@atls/raijin/commands'
+import { getChangedFiles }                 from '@atls/yarn-plugin-files'
+import { getChangedWorkspaces }            from '@atls/yarn-plugin-workspaces'
 
-import { GitHubChecks }               from './github.checks.js'
-import { AnnotationLevel }            from './github.checks.js'
-import { PassThroughRunContext }      from './pass-through-run.context.js'
-import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
-import { resolveChecksReleaseConfig } from './checks-release.config.js'
+import { GitHubChecks }                    from './github.checks.js'
+import { AnnotationLevel }                 from './github.checks.js'
+import { PassThroughRunContext }           from './pass-through-run.context.js'
+import { isReleaseWorkspaceAllowed }       from './checks-release.config.js'
+import { resolveChecksReleaseConfig }      from './checks-release.config.js'
 
 export const createChecksReleaseProxyArgs = (noPrivate: boolean): Array<string> => [
   'checks',
@@ -43,51 +40,28 @@ class ChecksReleaseCommand extends BaseCommand {
   noPrivate = Option.Boolean('--no-private', false)
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return this.executeRegular()
   }
 
   async executeProxy(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
-
-    const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeCurrentYarnExecutable({
-      binFolder,
-      project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
+    return executeProjectCommandProxy({
+      args: createChecksReleaseProxyArgs(this.noPrivate),
+      cwd: this.context.cwd,
+      plugins: this.context.plugins,
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
     })
-
-    const { code } = await execUtils.pipevp(
-      executable,
-      createChecksReleaseProxyArgs(this.noPrivate),
-      {
-        cwd: this.context.cwd,
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-        env,
-      }
-    )
-
-    return code
   }
 
   async executeRegular(): Promise<number> {
-    const { project } = await Project.find(
-      await Configuration.find(this.context.cwd, this.context.plugins),
-      this.context.cwd
+    const { project } = await resolveProjectCommandInvocation(
+      this.context.cwd,
+      this.context.plugins
     )
 
     const releaseConfig = resolveChecksReleaseConfig(project)

@@ -19,6 +19,7 @@
   "dependencies": {
     "@atls/cli-ui-git-commit-component": "workspace:*",
     "@atls/code-commit": "workspace:*",
+    "@atls/raijin": "workspace:*",
     "@yarnpkg/libui": "3.0.1",
     "clipanion": "4.0.0-rc.2",
     "commitizen": "4.3.0",

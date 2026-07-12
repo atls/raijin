@@ -6,8 +6,6 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    "./command-context": "./sources/command-context.ts",
-    "./current-yarn-executable": "./sources/current-yarn-executable.ts",
     ".": "./sources/index.ts"
   },
   "main": "sources/index.ts",
@@ -37,16 +35,6 @@
     "pack": {
       "exports": {
         "./package.json": "./package.json",
-        "./command-context": {
-          "import": "./dist/command-context.js",
-          "types": "./dist/command-context.d.ts",
-          "default": "./dist/command-context.js"
-        },
-        "./current-yarn-executable": {
-          "import": "./dist/current-yarn-executable.js",
-          "types": "./dist/current-yarn-executable.d.ts",
-          "default": "./dist/current-yarn-executable.js"
-        },
         ".": {
           "import": "./dist/index.js",
           "types": "./dist/index.d.ts",

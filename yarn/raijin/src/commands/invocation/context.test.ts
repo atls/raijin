@@ -1,19 +1,23 @@
-import assert                             from 'node:assert/strict'
-import { dirname }                        from 'node:path'
-import { resolve }                        from 'node:path'
-import test                               from 'node:test'
-import { fileURLToPath }                  from 'node:url'
+import assert                                from 'node:assert/strict'
+import { dirname }                           from 'node:path'
+import { resolve }                           from 'node:path'
+import test                                  from 'node:test'
+import { fileURLToPath }                     from 'node:url'
 
-import { getPluginConfiguration }         from '@yarnpkg/cli'
-import { npath }                          from '@yarnpkg/fslib'
-import { ppath }                          from '@yarnpkg/fslib'
+import { getPluginConfiguration }            from '@yarnpkg/cli'
+import { npath }                             from '@yarnpkg/fslib'
+import { ppath }                             from '@yarnpkg/fslib'
 
-import { COMMAND_INVOCATION_CWD }         from './command-context.js'
-import { createCommandProxyEnvironment }  from './command-context.js'
-import { resolveProjectCommandContext }   from './command-context.js'
-import { resolveWorkspaceCommandContext } from './command-context.js'
+import { COMMAND_INVOCATION_CWD }            from './context.js'
+import { COMMAND_PROXY_EXECUTION }           from './context.js'
+import { resolveInvocationCwd }              from './context.js'
+import { resolveProjectCommandInvocation }   from './context.js'
+import { resolveWorkspaceCommandInvocation } from './context.js'
+import { createCommandProxyEnvironment }     from './proxy.js'
 
-const repoRoot = npath.toPortablePath(resolve(dirname(fileURLToPath(import.meta.url)), '../../..'))
+const repoRoot = npath.toPortablePath(
+  resolve(dirname(fileURLToPath(import.meta.url)), '../../../../..')
+)
 const rendererWorkspaceCwd = ppath.join(repoRoot, 'yarn/plugin-renderer')
 const rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'sources/commands')
 
@@ -56,31 +60,36 @@ const withCommandEnvironment = async (
   }
 }
 
-test('should resolve project command context from a nested cwd', async () => {
+test('should resolve project command invocation from a nested cwd', async () => {
   await withCommandEnvironment({}, async () => {
-    const context = await resolveProjectCommandContext(rendererNestedCwd, getPluginConfiguration())
+    const context = await resolveProjectCommandInvocation(
+      rendererNestedCwd,
+      getPluginConfiguration()
+    )
 
     assert.equal(context.invocationCwd, rendererNestedCwd)
+    assert.equal(context.executionCwd, repoRoot)
     assert.equal(context.project.cwd, repoRoot)
   })
 })
 
-test('should resolve workspace command context from a workspace root', async () => {
+test('should resolve workspace command invocation from a workspace root', async () => {
   await withCommandEnvironment({}, async () => {
-    const context = await resolveWorkspaceCommandContext(
+    const context = await resolveWorkspaceCommandInvocation(
       rendererWorkspaceCwd,
       getPluginConfiguration()
     )
 
     assert.equal(context.invocationCwd, rendererWorkspaceCwd)
+    assert.equal(context.executionCwd, rendererWorkspaceCwd)
     assert.equal(context.workspaceCwd, rendererWorkspaceCwd)
     assert.equal(context.workspace.manifest.raw.name, '@atls/yarn-plugin-renderer')
   })
 })
 
-test('should resolve workspace command context from a nested cwd', async () => {
+test('should resolve workspace command invocation from a nested cwd', async () => {
   await withCommandEnvironment({}, async () => {
-    const context = await resolveWorkspaceCommandContext(
+    const context = await resolveWorkspaceCommandInvocation(
       rendererNestedCwd,
       getPluginConfiguration()
     )
@@ -93,7 +102,7 @@ test('should resolve workspace command context from a nested cwd', async () => {
 
 test('should preserve original invocation cwd across proxy re-entry', async () => {
   await withCommandEnvironment({ invocationCwd: rendererNestedCwd }, async () => {
-    const context = await resolveWorkspaceCommandContext(repoRoot, getPluginConfiguration())
+    const context = await resolveWorkspaceCommandInvocation(repoRoot, getPluginConfiguration())
 
     assert.equal(context.invocationCwd, rendererNestedCwd)
     assert.equal(context.workspaceCwd, rendererWorkspaceCwd)
@@ -101,9 +110,31 @@ test('should preserve original invocation cwd across proxy re-entry', async () =
   })
 })
 
+test('should consume proxy invocation state before resolving nested commands', async () => {
+  const environment = createCommandProxyEnvironment(rendererNestedCwd)
+  const proxyInvocation = await resolveProjectCommandInvocation(
+    repoRoot,
+    getPluginConfiguration(),
+    environment
+  )
+
+  assert.equal(proxyInvocation.invocationCwd, rendererNestedCwd)
+  assert.equal(environment[COMMAND_PROXY_EXECUTION], undefined)
+  assert.equal(environment[COMMAND_INVOCATION_CWD], undefined)
+
+  const nestedInvocation = await resolveWorkspaceCommandInvocation(
+    rendererWorkspaceCwd,
+    getPluginConfiguration(),
+    environment
+  )
+
+  assert.equal(nestedInvocation.invocationCwd, rendererWorkspaceCwd)
+  assert.equal(nestedInvocation.workspaceCwd, rendererWorkspaceCwd)
+})
+
 test('should resolve original invocation cwd from yarn init cwd', async () => {
   await withCommandEnvironment({ initCwd: rendererNestedCwd }, async () => {
-    const context = await resolveWorkspaceCommandContext(repoRoot, getPluginConfiguration())
+    const context = await resolveWorkspaceCommandInvocation(repoRoot, getPluginConfiguration())
 
     assert.equal(context.invocationCwd, rendererNestedCwd)
     assert.equal(context.workspaceCwd, rendererWorkspaceCwd)
@@ -113,7 +144,7 @@ test('should resolve original invocation cwd from yarn init cwd', async () => {
 
 test('should create proxy environment with preserved invocation cwd', async () => {
   await withCommandEnvironment({}, () => {
-    const env = createCommandProxyEnvironment(rendererNestedCwd)
+    const env = createCommandProxyEnvironment(resolveInvocationCwd(rendererNestedCwd))
 
     assert.equal(env.COMMAND_PROXY_EXECUTION, 'true')
     assert.equal(env.RAIJIN_COMMAND_INVOCATION_CWD, npath.fromPortablePath(rendererNestedCwd))
@@ -122,7 +153,7 @@ test('should create proxy environment with preserved invocation cwd', async () =
 
 test('should create proxy environment from yarn init cwd', async () => {
   await withCommandEnvironment({ initCwd: rendererNestedCwd }, () => {
-    const env = createCommandProxyEnvironment(repoRoot)
+    const env = createCommandProxyEnvironment(resolveInvocationCwd(repoRoot))
 
     assert.equal(env.COMMAND_PROXY_EXECUTION, 'true')
     assert.equal(env.RAIJIN_COMMAND_INVOCATION_CWD, npath.fromPortablePath(rendererNestedCwd))

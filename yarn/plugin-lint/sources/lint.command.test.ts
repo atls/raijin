@@ -1,27 +1,15 @@
-import assert              from 'node:assert/strict'
-import { test }            from 'node:test'
+import assert                     from 'node:assert/strict'
+import { resolve }                from 'node:path'
+import test                       from 'node:test'
 
-import { hasLintMessages } from './lint.command.js'
+import { resolveLintTargetFiles } from './lint.command.js'
 
-test('should keep lint warnings blocking command success', () => {
-  assert.equal(
-    hasLintMessages({
-      messages: [
-        {
-          ruleId: 'no-console',
-          severity: 1,
-        },
-      ],
-    }),
-    true
-  )
-})
+test('should resolve lint targets from the native invocation cwd', () => {
+  const invocationCwd = '/repo/client' as never
+  const absoluteTarget = resolve('/repo/shared/index.ts')
 
-test('should allow lint success without messages', () => {
-  assert.equal(
-    hasLintMessages({
-      messages: [],
-    }),
-    false
-  )
+  assert.deepEqual(resolveLintTargetFiles(['src/index.ts', absoluteTarget], invocationCwd), [
+    resolve('/repo/client/src/index.ts'),
+    absoluteTarget,
+  ])
 })

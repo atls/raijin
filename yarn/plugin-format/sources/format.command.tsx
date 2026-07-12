@@ -1,19 +1,28 @@
-import { resolve }                        from 'node:path'
-import { isAbsolute }                     from 'node:path'
+import type { PortablePath }                 from '@yarnpkg/fslib'
 
-import { BaseCommand }                    from '@yarnpkg/cli'
-import { Option }                         from 'clipanion'
-import { render }                         from 'ink'
-import React                              from 'react'
+import { resolve }                           from 'node:path'
+import { isAbsolute }                        from 'node:path'
 
-import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
-import { FormatProgress }                 from '@atls/cli-ui-format-progress-component'
-import { Formatter }                      from '@atls/code-format'
-import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+import { BaseCommand }                       from '@yarnpkg/cli'
+import { Option }                            from 'clipanion'
+import { render }                            from 'ink'
+import React                                 from 'react'
 
-const resolveTargetFiles = (files: Array<string>, invocationCwd: string): Array<string> =>
-  files.map((file) => (isAbsolute(file) ? file : resolve(invocationCwd, file)))
+import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
+import { FormatProgress }                    from '@atls/cli-ui-format-progress-component'
+import { Formatter }                         from '@atls/code-format'
+import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
+import { resolveNativeCommandCwd }           from '@atls/raijin/commands'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+
+export const resolveFormatTargetFiles = (
+  files: Array<string>,
+  invocationCwd: PortablePath
+): Array<string> => {
+  const nativeInvocationCwd = resolveNativeCommandCwd(invocationCwd)
+
+  return files.map((file) => (isAbsolute(file) ? file : resolve(nativeInvocationCwd, file)))
+}
 
 export class FormatCommand extends BaseCommand {
   static override paths = [['format']]
@@ -21,15 +30,16 @@ export class FormatCommand extends BaseCommand {
   files: Array<string> = Option.Rest({ required: 0 })
 
   async execute(): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandContext(
+    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )
 
-    const formatter = await Formatter.initialize(workspaceCwd)
-    const files = resolveTargetFiles(this.files, invocationCwd)
+    const projectCwd = resolveNativeCommandCwd(project.cwd)
+    const formatter = await Formatter.initialize(resolveNativeCommandCwd(workspaceCwd))
+    const files = resolveFormatTargetFiles(this.files, invocationCwd)
 
-    const { clear } = render(<FormatProgress cwd={project.cwd} formatter={formatter} />)
+    const { clear } = render(<FormatProgress cwd={projectCwd} formatter={formatter} />)
 
     try {
       await formatter.format(files)

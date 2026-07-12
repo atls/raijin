@@ -8,8 +8,8 @@ import { ppath }                                         from '@yarnpkg/fslib'
 import { Option }                                        from 'clipanion'
 import localtunnel                                       from 'localtunnel'
 
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { resolveWorkspaceCommandInvocation }             from '@atls/raijin/commands'
+import { createYarnCommandExecutable }                   from '@atls/raijin/commands'
 
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
@@ -63,7 +63,7 @@ export class RendererDevCommand extends BaseCommand {
   }
 
   async execute(): Promise<number> {
-    const { project, workspace, workspaceCwd } = await resolveWorkspaceCommandContext(
+    const { project, workspace, workspaceCwd } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )
@@ -96,7 +96,7 @@ export class RendererDevCommand extends BaseCommand {
     }
 
     const binFolder = await xfs.mktempPromise()
-    const scriptEnvironment = await makeCurrentYarnExecutable({
+    const scriptEnvironment = await createYarnCommandExecutable({
       binFolder,
       locator: workspace.anchoredLocator,
       project,
@@ -110,7 +110,7 @@ export class RendererDevCommand extends BaseCommand {
       binFolder,
       loader
     )
-    const { executable, env } = await makeCurrentYarnExecutable({
+    const { executable, env } = await createYarnCommandExecutable({
       binFolder,
       locator: workspace.anchoredLocator,
       project,

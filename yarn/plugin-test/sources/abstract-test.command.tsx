@@ -1,29 +1,27 @@
 /* eslint-disable n/no-sync */
 
-import type { EventData }                 from 'node:test'
+import type { EventData }                    from 'node:test'
 
-import { readFileSync }                   from 'node:fs'
-import { relative }                       from 'node:path'
+import { readFileSync }                      from 'node:fs'
+import { relative }                          from 'node:path'
 
-import { BaseCommand }                    from '@yarnpkg/cli'
-import { execUtils }                      from '@yarnpkg/core'
-import { xfs }                            from '@yarnpkg/fslib'
-import { Option }                         from 'clipanion'
-import { Command }                        from 'clipanion'
-import { render }                         from 'ink'
-import { isEnum }                         from 'typanion'
-import React                              from 'react'
+import { BaseCommand }                       from '@yarnpkg/cli'
+import { Option }                            from 'clipanion'
+import { Command }                           from 'clipanion'
+import { render }                            from 'ink'
+import { isEnum }                            from 'typanion'
+import React                                 from 'react'
 
-import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
-import { LogRecord }                      from '@atls/cli-ui-log-record-component'
-import { RawOutput }                      from '@atls/cli-ui-raw-output-component'
-import { TestFailure }                    from '@atls/cli-ui-test-failure-component'
-import { TestProgress }                   from '@atls/cli-ui-test-progress-component'
-import { Tester }                         from '@atls/code-test'
-import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
-import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
+import { LogRecord }                         from '@atls/cli-ui-log-record-component'
+import { RawOutput }                         from '@atls/cli-ui-raw-output-component'
+import { TestFailure }                       from '@atls/cli-ui-test-failure-component'
+import { TestProgress }                      from '@atls/cli-ui-test-progress-component'
+import { Tester }                            from '@atls/code-test'
+import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
+import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
+import { resolveInvocationCwd }              from '@atls/raijin/commands'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
 
 type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
@@ -100,10 +98,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
   private bufferedStdTimeout: NodeJS.Timeout | undefined
 
   async executeProxy(type?: 'integration' | 'unit'): Promise<number> {
-    const { invocationCwd, project, workspaceCwd } = await resolveWorkspaceCommandContext(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const invocationCwd = resolveInvocationCwd(this.context.cwd)
     const args = createProxyTestArgs({
       files: this.files,
       watch: this.watch,
@@ -111,31 +106,23 @@ export abstract class AbstractTestCommand extends BaseCommand {
       testReporter: this.testReporter,
     })
 
-    const binFolder = await xfs.mktempPromise()
+    const nodeOptions = process.env.NODE_OPTIONS?.includes('--no-warnings')
+      ? process.env.NODE_OPTIONS
+      : `${process.env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
 
-    const { executable, env } = await makeCurrentYarnExecutable({
-      binFolder,
-      project,
-      env: createCommandProxyEnvironment(this.context.cwd),
-    })
-
-    if (!env.NODE_OPTIONS?.includes('--no-warnings')) {
-      env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
-    }
-
-    const { code } = await execUtils.pipevp(executable, ['test', type ?? '', ...args], {
-      cwd: workspaceCwd,
+    return executeWorkspaceCommandProxy({
+      args: ['test', type ?? '', ...args],
+      cwd: this.context.cwd,
+      plugins: this.context.plugins,
+      env: { NODE_OPTIONS: nodeOptions },
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env,
     })
-
-    return code
   }
 
   async executeRegular(type: 'integration' | 'unit'): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandContext(
+    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )
