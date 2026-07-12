@@ -58,3 +58,7 @@ export interface CommandChildOptions {
   env: NodeJS.ProcessEnv
   stdio: SpawnOptions['stdio']
 }
+
+export interface CommandPlatformAdapter {
+  resolveNativeCwd: (cwd: PortablePath) => string
+}
