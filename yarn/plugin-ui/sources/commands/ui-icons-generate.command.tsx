@@ -50,12 +50,9 @@ export class UiIconsGenerateCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { project, workspaceCwd } = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { cwd } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
 
-    const icons = await Icons.initialize(workspaceCwd)
+    const icons = await Icons.initialize(cwd.execution.native)
 
     const { clear } = render(<IconsProgress icons={icons} />)
 
@@ -63,16 +60,16 @@ export class UiIconsGenerateCommand extends BaseCommand {
       await icons.generate({ native: this.native })
 
       const files = await globby('*.tsx', {
-        cwd: join(workspaceCwd, 'src'),
+        cwd: join(cwd.execution.native, 'src'),
       })
 
-      const generatedFiles = createGeneratedIconTargets(workspaceCwd, files)
+      const generatedFiles = createGeneratedIconTargets(cwd.execution.native, files)
 
       await this.cli.run(['format', ...generatedFiles], {
-        cwd: project.cwd,
+        cwd: cwd.project.portable,
       })
       await this.cli.run(['lint', '--fix', ...generatedFiles], {
-        cwd: project.cwd,
+        cwd: cwd.project.portable,
       })
 
       return 0

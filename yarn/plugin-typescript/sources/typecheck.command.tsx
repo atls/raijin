@@ -1,5 +1,5 @@
+import type { CommandPath }                  from '@atls/raijin/commands'
 import type { Project }                      from '@yarnpkg/core'
-import type { PortablePath }                 from '@yarnpkg/fslib'
 
 import { isAbsolute }                        from 'node:path'
 import { relative }                          from 'node:path'
@@ -7,7 +7,6 @@ import { resolve }                           from 'node:path'
 
 import { BaseCommand }                       from '@yarnpkg/cli'
 import { ppath }                             from '@yarnpkg/fslib'
-import { npath }                             from '@yarnpkg/fslib'
 import { xfs }                               from '@yarnpkg/fslib'
 import { Option }                            from 'clipanion'
 import { render }                            from 'ink'
@@ -48,21 +47,21 @@ export class TypeCheckCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
+    const { cwd, project } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )
-    const typecheckCwd = await this.resolveTypecheckCwd(project, workspaceCwd)
+    const typecheckCwd = await this.resolveTypecheckCwd(cwd.execution, cwd.project)
 
-    const typescript = await TypeScript.initialize(typecheckCwd, {
-      manifestCwds: [project.cwd, typecheckCwd],
+    const typescript = await TypeScript.initialize(typecheckCwd.native, {
+      manifestCwds: [cwd.project.native, typecheckCwd.native],
     })
 
     const { clear } = render(<TypeScriptProgress typescript={typescript} />)
 
     try {
       const diagnostics = await typescript.check(
-        await this.getIncludes(project, invocationCwd, typecheckCwd)
+        await this.getIncludes(project, cwd.invocation, typecheckCwd)
       )
 
       diagnostics.forEach((diagnostic) => {
@@ -88,30 +87,30 @@ export class TypeCheckCommand extends BaseCommand {
   }
 
   protected async resolveTypecheckCwd(
-    project: Project,
-    workspaceCwd: PortablePath
-  ): Promise<PortablePath> {
-    if (await xfs.existsPromise(ppath.join(workspaceCwd, 'tsconfig.json'))) {
+    workspaceCwd: CommandPath,
+    projectCwd: CommandPath
+  ): Promise<CommandPath> {
+    if (await xfs.existsPromise(ppath.join(workspaceCwd.portable, 'tsconfig.json'))) {
       return workspaceCwd
     }
 
-    return project.cwd
+    return projectCwd
   }
 
   protected async getIncludes(
     project: Project,
-    invocationCwd: PortablePath,
-    typecheckCwd: PortablePath
+    invocationCwd: CommandPath,
+    typecheckCwd: CommandPath
   ): Promise<Array<string> | undefined> {
     if (this.args.length > 0) {
-      const cwdRoot = npath.fromPortablePath(typecheckCwd)
-      const cwd = npath.fromPortablePath(invocationCwd)
+      const cwdRoot = typecheckCwd.native
+      const cwd = invocationCwd.native
 
       return this.args.map((target) =>
         isAbsolute(target) ? relative(cwdRoot, target) : relative(cwdRoot, resolve(cwd, target)))
     }
 
-    if (await xfs.existsPromise(ppath.join(typecheckCwd, 'tsconfig.json'))) {
+    if (await xfs.existsPromise(ppath.join(typecheckCwd.portable, 'tsconfig.json'))) {
       return undefined
     }
 

@@ -39,11 +39,14 @@ export class ServiceDevCommand extends AbstractServiceCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { workspace, workspaceCwd } = await resolveWorkspaceCommandInvocation(
+    const { cwd, workspace } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )
-    const service = await Service.initialize(workspaceCwd, getWorkspacePackageNames(workspace))
+    const service = await Service.initialize(
+      cwd.execution.native,
+      getWorkspacePackageNames(workspace)
+    )
 
     const { clear } = render(<ServiceProgress service={service} />)
 

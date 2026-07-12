@@ -90,11 +90,11 @@ export const executeYarnCommand = async ({
   })
   const executableEnv = sanitizeYarnCommandEnvironment(executable.env, { preservePnp: true })
 
-  executableEnv.INIT_CWD = npath.fromPortablePath(invocation.invocationCwd)
+  executableEnv.INIT_CWD = invocation.cwd.invocation.native
   executableEnv.PROJECT_CWD = npath.fromPortablePath(invocation.project.cwd)
 
   const { code } = await execUtils.pipevp(executable.executable, args, {
-    cwd: invocation.executionCwd,
+    cwd: invocation.cwd.execution.portable,
     env: executableEnv,
     stderr,
     stdin,

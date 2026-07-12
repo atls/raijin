@@ -1,9 +1,9 @@
 import assert                            from 'node:assert/strict'
 import test                              from 'node:test'
 
-import { COMMAND_INVOCATION_CWD }        from './context.js'
-import { COMMAND_PROXY_EXECUTION }       from './context.js'
-import { createCommandProxyEnvironment } from './proxy.js'
+import { COMMAND_INVOCATION_CWD }        from './proxy-state.js'
+import { COMMAND_PROXY_EXECUTION }       from './proxy-state.js'
+import { createCommandProxyEnvironment } from './proxy-state.js'
 import { shouldExecuteCommandProxy }     from './proxy.js'
 
 test('should proxy before the managed PnP runtime is active', () => {
@@ -24,7 +24,7 @@ test('should proxy when loader options exist without a Raijin re-entry marker', 
 })
 
 test('should preserve invocation cwd across proxy re-entry', () => {
-  const environment = createCommandProxyEnvironment('/repo/client' as never, {
+  const environment = createCommandProxyEnvironment('/repo/client', {
     NODE_ENV: 'test',
   })
 

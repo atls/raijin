@@ -32,8 +32,10 @@ class ImagePackCommand extends BaseCommand {
   platform?: string = Option.String('--platform')
 
   async execute(): Promise<number> {
-    const { configuration, project, workspace, workspaceCwd } =
-      await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, cwd, project, workspace } = await resolveWorkspaceCommandInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const commandReport = await StreamReport.start(
       {
@@ -65,7 +67,7 @@ class ImagePackCommand extends BaseCommand {
         )
 
         // eslint-disable-next-line n/no-sync
-        const content = readFileSync(join(workspaceCwd, 'package.json'), 'utf-8')
+        const content = readFileSync(join(cwd.execution.native, 'package.json'), 'utf-8')
         const { packConfiguration = {} } = JSON.parse(content) as {
           packConfiguration?: ImagePackConfiguration
         }

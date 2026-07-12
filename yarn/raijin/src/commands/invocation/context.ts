@@ -6,48 +6,9 @@ import type { CommandPluginConfiguration } from './invocation.interfaces.js'
 
 import { Configuration }                   from '@yarnpkg/core'
 import { Project }                         from '@yarnpkg/core'
-import { npath }                           from '@yarnpkg/fslib'
-import { ppath }                           from '@yarnpkg/fslib'
 
-export const COMMAND_INVOCATION_CWD = 'RAIJIN_COMMAND_INVOCATION_CWD'
-export const COMMAND_PROXY_EXECUTION = 'COMMAND_PROXY_EXECUTION'
-
-export const resolveInvocationCwd = (
-  cwd: PortablePath,
-  environment: NodeJS.ProcessEnv = process.env
-): PortablePath => {
-  const explicitInvocationCwd = environment[COMMAND_INVOCATION_CWD]
-
-  if (explicitInvocationCwd) {
-    return npath.toPortablePath(explicitInvocationCwd)
-  }
-
-  const initCwd = environment.INIT_CWD
-
-  if (initCwd) {
-    const portableInitCwd = npath.toPortablePath(initCwd)
-
-    if (ppath.contains(cwd, portableInitCwd) !== null) {
-      return portableInitCwd
-    }
-  }
-
-  return cwd
-}
-
-const consumeCommandInvocationCwd = (
-  cwd: PortablePath,
-  environment: NodeJS.ProcessEnv
-): PortablePath => {
-  const invocationCwd = resolveInvocationCwd(cwd, environment)
-
-  if (environment[COMMAND_PROXY_EXECUTION] === 'true') {
-    Reflect.deleteProperty(environment, COMMAND_PROXY_EXECUTION)
-    Reflect.deleteProperty(environment, COMMAND_INVOCATION_CWD)
-  }
-
-  return invocationCwd
-}
+import { createCommandPath }               from './path.js'
+import { consumeCommandInvocationCwd }     from './proxy-state.js'
 
 export const resolveProjectCommandInvocation = async (
   cwd: PortablePath,
@@ -57,11 +18,15 @@ export const resolveProjectCommandInvocation = async (
   const invocationCwd = consumeCommandInvocationCwd(cwd, environment)
   const configuration = await Configuration.find(invocationCwd, plugins)
   const { project } = await Project.find(configuration, invocationCwd)
+  const projectCwd = createCommandPath(project.cwd)
 
   return {
     configuration,
-    executionCwd: project.cwd,
-    invocationCwd,
+    cwd: {
+      execution: projectCwd,
+      invocation: createCommandPath(invocationCwd),
+      project: projectCwd,
+    },
     project,
   }
 }
@@ -78,10 +43,12 @@ export const resolveWorkspaceCommandInvocation = async (
 
   return {
     configuration,
-    executionCwd: resolvedWorkspace.cwd,
-    invocationCwd,
+    cwd: {
+      execution: createCommandPath(resolvedWorkspace.cwd),
+      invocation: createCommandPath(invocationCwd),
+      project: createCommandPath(project.cwd),
+    },
     project,
     workspace: resolvedWorkspace,
-    workspaceCwd: resolvedWorkspace.cwd,
   }
 }

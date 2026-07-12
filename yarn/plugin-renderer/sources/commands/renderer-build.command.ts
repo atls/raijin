@@ -33,12 +33,11 @@ export class RendererBuildCommand extends BaseCommand {
   async execute(): Promise<number> {
     await cleanupRendererBuildDiscoveryArtifacts(this.context.cwd)
 
-    const {
-      configuration,
-      project,
-      workspace,
-      workspaceCwd: rendererCwd,
-    } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, project, workspace, cwd } = await resolveWorkspaceCommandInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
+    const rendererCwd = cwd.execution.portable
     const rendererBuildContext = createRendererBuildContext(rendererCwd)
 
     await cleanupRendererBuildStaleArtifacts(rendererCwd)

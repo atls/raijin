@@ -14,11 +14,14 @@ class TestChecksTypeCheckCommand extends ChecksTypeCheckCommand {
       manifest: Manifest.fromText(JSON.stringify({ workspaces: ['packages/*'] })),
     }
 
-    return this.getIncludes({
-      cwd: projectCwd,
-      topLevelWorkspace,
-      workspaces: [topLevelWorkspace],
-    } as never)
+    return this.getIncludes(
+      {
+        cwd: projectCwd,
+        topLevelWorkspace,
+        workspaces: [topLevelWorkspace],
+      } as never,
+      cwd
+    )
   }
 }
 

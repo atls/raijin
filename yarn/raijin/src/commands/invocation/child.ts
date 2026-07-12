@@ -3,14 +3,12 @@ import type { SpawnOptions }        from 'node:child_process'
 
 import type { CommandChildOptions } from './invocation.interfaces.js'
 
-import { resolveNativeCommandCwd }  from './native-cwd.js'
-
 export const createCommandChildProcessOptions = ({
   env,
   invocation,
   stdio,
 }: CommandChildOptions): SpawnOptions => ({
-  cwd: resolveNativeCommandCwd(invocation.executionCwd),
+  cwd: invocation.cwd.execution.native,
   env,
   stdio,
 })
@@ -18,7 +16,7 @@ export const createCommandChildProcessOptions = ({
 export const waitForCommandChild = async (child: ChildProcess): Promise<number> =>
   new Promise<number>((resolve, reject) => {
     child.once('error', reject)
-    child.once('exit', (code) => {
+    child.once('close', (code) => {
       resolve(code ?? 1)
     })
   })

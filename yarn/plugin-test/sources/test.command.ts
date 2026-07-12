@@ -16,13 +16,13 @@ export class TestCommand extends AbstractTestCommand {
   }
 
   override async executeRegular(): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { cwd } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
 
-    const tester = await Tester.initialize(workspaceCwd, { projectCwd: project.cwd })
-    const target = this.target ?? (this.files.length > 0 ? invocationCwd : project.cwd)
+    const tester = await Tester.initialize(cwd.execution.native, {
+      projectCwd: cwd.project.native,
+    })
+    const target =
+      this.target ?? (this.files.length > 0 ? cwd.invocation.native : cwd.project.native)
 
     try {
       const results = await tester.general(target, {

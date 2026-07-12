@@ -66,7 +66,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
           await report.startTimerPromise('TypeCheck', async () => {
             try {
-              const includes = await this.getIncludes(project)
+              const includes = await this.getIncludes(project, invocation.cwd.project.native)
 
               if (this.changed && includes.length === 0) {
                 report.reportInfo(MessageName.UNNAMED, 'No TypeScript files changed')
@@ -131,14 +131,14 @@ class ChecksTypeCheckCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
-  protected async getIncludes(project: Project): Promise<Array<string>> {
+  protected async getIncludes(project: Project, projectNativeCwd: string): Promise<Array<string>> {
     if (this.changed) {
       const includes = (await getChangedFiles(project)).filter((file) =>
         /\.(cts|mts|ts|tsx)$/.test(file))
 
       const existsMap = await Promise.all(
         includes.map(async (file) =>
-          xfs.existsPromise(npath.toPortablePath(resolve(project.cwd, file))))
+          xfs.existsPromise(npath.toPortablePath(resolve(projectNativeCwd, file))))
       )
 
       return includes.filter((_, index) => existsMap[index])

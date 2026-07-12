@@ -20,7 +20,7 @@ import { TestProgress }                      from '@atls/cli-ui-test-progress-co
 import { Tester }                            from '@atls/code-test'
 import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
 import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
-import { resolveInvocationCwd }              from '@atls/raijin/commands'
+import { resolveProjectCommandInvocation }   from '@atls/raijin/commands'
 import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
 
 type TestFail = EventData.TestFail
@@ -98,11 +98,11 @@ export abstract class AbstractTestCommand extends BaseCommand {
   private bufferedStdTimeout: NodeJS.Timeout | undefined
 
   async executeProxy(type?: 'integration' | 'unit'): Promise<number> {
-    const invocationCwd = resolveInvocationCwd(this.context.cwd)
+    const { cwd } = await resolveProjectCommandInvocation(this.context.cwd, this.context.plugins)
     const args = createProxyTestArgs({
       files: this.files,
       watch: this.watch,
-      target: invocationCwd,
+      target: cwd.invocation.native,
       testReporter: this.testReporter,
     })
 
@@ -122,10 +122,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
   }
 
   async executeRegular(type: 'integration' | 'unit'): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { cwd } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
 
     const onStdout = (data: TestStdout): void => {
       this.bufferedStd(data, (stdBuffer) => {
@@ -146,7 +143,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
         <TestFailure
           details={data.details}
           source={source}
-          file={data.file ? relative(project.cwd, data.file) : undefined}
+          file={data.file ? relative(cwd.project.native, data.file) : undefined}
           column={data.column}
           line={data.line}
         />
@@ -157,8 +154,11 @@ export abstract class AbstractTestCommand extends BaseCommand {
         })
     }
 
-    const tester = await Tester.initialize(workspaceCwd, { projectCwd: project.cwd })
-    const target = this.target ?? (this.files.length > 0 ? invocationCwd : project.cwd)
+    const tester = await Tester.initialize(cwd.execution.native, {
+      projectCwd: cwd.project.native,
+    })
+    const target =
+      this.target ?? (this.files.length > 0 ? cwd.invocation.native : cwd.project.native)
 
     if (this.testReporter === 'tap') {
       const results =
@@ -181,7 +181,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
     tester.on('test:stderr', onStderr)
     tester.on('test:fail', onFail)
 
-    const { clear, unmount } = render(<TestProgress cwd={project.cwd} tester={tester} />)
+    const { clear, unmount } = render(<TestProgress cwd={cwd.project.native} tester={tester} />)
 
     try {
       const results =

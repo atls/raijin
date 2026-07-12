@@ -56,7 +56,7 @@ class ChecksLintCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { configuration, project } = await resolveProjectCommandInvocation(
+    const { configuration, cwd, project } = await resolveProjectCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )
@@ -73,8 +73,8 @@ class ChecksLintCommand extends BaseCommand {
 
         await report.startTimerPromise('Lint', async () => {
           try {
-            const linter = await Linter.initialize(project.cwd, project.cwd)
-            const lintTargets = await this.getLintTargets(project)
+            const linter = await Linter.initialize(cwd.project.native, cwd.project.native)
+            const lintTargets = await this.getLintTargets(project, cwd.project.native)
             let results: Array<Result> = []
 
             if (lintTargets === null) {
@@ -93,7 +93,7 @@ class ChecksLintCommand extends BaseCommand {
                 })
               })
 
-            const annotations = this.formatResults(results, project.cwd)
+            const annotations = this.formatResults(results, cwd.project.native)
 
             const warnings: number = annotations.filter(
               (annotation) => annotation.annotation_level === AnnotationLevel.Warning
@@ -128,7 +128,10 @@ class ChecksLintCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
-  private async getLintTargets(project: Project): Promise<Array<string> | null> {
+  private async getLintTargets(
+    project: Project,
+    projectNativeCwd: string
+  ): Promise<Array<string> | null> {
     if (!this.changed) {
       return null
     }
@@ -138,7 +141,7 @@ class ChecksLintCommand extends BaseCommand {
 
     const existsMap = await Promise.all(
       lintTargets.map(async (file) =>
-        xfs.existsPromise(npath.toPortablePath(resolve(project.cwd, file))))
+        xfs.existsPromise(npath.toPortablePath(resolve(projectNativeCwd, file))))
     )
 
     return lintTargets.filter((_, index) => existsMap[index])

@@ -47,20 +47,17 @@ export class LibraryBuildCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { workspaceCwd } = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { cwd } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
 
-    await this.cleanTarget(workspaceCwd)
+    await this.cleanTarget(cwd.execution.native)
 
-    const typescript = await TypeScript.initialize(workspaceCwd)
+    const typescript = await TypeScript.initialize(cwd.execution.native)
 
     const { clear } = render(<TypeScriptProgress typescript={typescript} />)
 
     try {
-      const diagnostics = await typescript.build([join(workspaceCwd, './src')], {
-        outDir: join(workspaceCwd, this.target),
+      const diagnostics = await typescript.build([join(cwd.execution.native, './src')], {
+        outDir: join(cwd.execution.native, this.target),
         declaration: true,
       })
 

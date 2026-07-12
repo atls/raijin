@@ -37,14 +37,14 @@ export class ServiceStartCommand extends BaseCommand {
       this.context.cwd,
       this.context.plugins
     )
-    const { workspaceCwd } = invocation
+    const serviceCwd = invocation.cwd.execution.native
 
     const child = spawn(
       process.execPath,
-      [...(await createServiceRuntimeExecArgv(workspaceCwd)), 'dist/index.js'],
+      [...(await createServiceRuntimeExecArgv(serviceCwd)), 'dist/index.js'],
       createCommandChildProcessOptions({
         invocation,
-        env: await createServiceRuntimeEnvironment(workspaceCwd, process.env),
+        env: await createServiceRuntimeEnvironment(serviceCwd, process.env),
         stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
       })
     )

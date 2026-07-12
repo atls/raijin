@@ -9,16 +9,25 @@ import type { Writable }               from 'node:stream'
 
 export type CommandPluginConfiguration = Parameters<typeof Configuration.find>[1]
 
+export interface CommandPath {
+  readonly native: string
+  readonly portable: PortablePath
+}
+
+export interface CommandInvocationCwds {
+  readonly execution: CommandPath
+  readonly invocation: CommandPath
+  readonly project: CommandPath
+}
+
 export interface ProjectCommandInvocation {
-  configuration: Configuration
-  executionCwd: PortablePath
-  invocationCwd: PortablePath
-  project: YarnProject
+  readonly configuration: Configuration
+  readonly cwd: CommandInvocationCwds
+  readonly project: YarnProject
 }
 
 export interface WorkspaceCommandInvocation extends ProjectCommandInvocation {
-  workspace: Workspace
-  workspaceCwd: PortablePath
+  readonly workspace: Workspace
 }
 
 export interface CommandStreams {

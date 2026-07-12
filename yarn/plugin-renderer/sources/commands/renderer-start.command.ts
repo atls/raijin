@@ -61,14 +61,14 @@ export class RendererStartCommand extends BaseCommand {
       this.context.cwd,
       this.context.plugins
     )
-    const { workspaceCwd } = invocation
+    const rendererCwd = invocation.cwd.execution.native
 
     const child = spawn(
       process.execPath,
       [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`],
       createCommandChildProcessOptions({
         invocation,
-        env: await createRendererRuntimeEnvironment(workspaceCwd, process.env),
+        env: await createRendererRuntimeEnvironment(rendererCwd, process.env),
         stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
       })
     )

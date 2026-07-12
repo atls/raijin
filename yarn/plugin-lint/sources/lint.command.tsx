@@ -1,5 +1,3 @@
-import type { PortablePath }                 from '@yarnpkg/fslib'
-
 import { resolve }                           from 'node:path'
 import { isAbsolute }                        from 'node:path'
 
@@ -13,19 +11,14 @@ import { LintProgress }                      from '@atls/cli-ui-lint-progress-co
 import { LintResult }                        from '@atls/cli-ui-lint-result-component'
 import { Linter }                            from '@atls/code-lint'
 import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
-import { resolveNativeCommandCwd }           from '@atls/raijin/commands'
 import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
 import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
 import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
 
 export const resolveLintTargetFiles = (
   files: Array<string>,
-  invocationCwd: PortablePath
-): Array<string> => {
-  const nativeInvocationCwd = resolveNativeCommandCwd(invocationCwd)
-
-  return files.map((file) => (isAbsolute(file) ? file : resolve(nativeInvocationCwd, file)))
-}
+  invocationCwd: string
+): Array<string> => files.map((file) => (isAbsolute(file) ? file : resolve(invocationCwd, file)))
 
 interface LintCommandResult {
   messages: Array<unknown>
@@ -72,17 +65,12 @@ export class LintCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { cwd } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
 
-    const projectCwd = resolveNativeCommandCwd(project.cwd)
-    const workspaceNativeCwd = resolveNativeCommandCwd(workspaceCwd)
-    const linter = await Linter.initialize(projectCwd, workspaceNativeCwd)
-    const files = resolveLintTargetFiles(this.files, invocationCwd)
+    const linter = await Linter.initialize(cwd.project.native, cwd.execution.native)
+    const files = resolveLintTargetFiles(this.files, cwd.invocation.native)
 
-    const { clear } = render(<LintProgress cwd={projectCwd} linter={linter} />)
+    const { clear } = render(<LintProgress cwd={cwd.project.native} linter={linter} />)
 
     linter.on('lint:end', ({ result }) => {
       if (result.messages.length > 0) {

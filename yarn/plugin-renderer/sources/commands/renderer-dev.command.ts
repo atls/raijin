@@ -63,7 +63,7 @@ export class RendererDevCommand extends BaseCommand {
   }
 
   async execute(): Promise<number> {
-    const { project, workspace, workspaceCwd } = await resolveWorkspaceCommandInvocation(
+    const { cwd, project, workspace } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )
@@ -132,11 +132,11 @@ export class RendererDevCommand extends BaseCommand {
     }
 
     const { code } = await execUtils.pipevp(executable, args, {
-      cwd: workspaceCwd,
+      cwd: cwd.execution.portable,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, workspaceCwd),
+      env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, cwd.execution.portable),
     })
 
     return code

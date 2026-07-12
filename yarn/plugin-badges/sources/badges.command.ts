@@ -32,7 +32,7 @@ class BadgesCommand extends BaseCommand {
   static REGISTRY_PACKAGE_PATH = '/package'
 
   async execute(): Promise<0 | 1> {
-    const { configuration, project } = await resolveWorkspaceCommandInvocation(
+    const { configuration, cwd, project } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )
@@ -114,7 +114,7 @@ class BadgesCommand extends BaseCommand {
             return ''
           }
 
-          const readmePath = join(project.cwd, 'README.md')
+          const readmePath = join(cwd.project.native, 'README.md')
           // eslint-disable-next-line n/no-sync
           const readme = readFileSync(readmePath).toString('utf-8')
 
