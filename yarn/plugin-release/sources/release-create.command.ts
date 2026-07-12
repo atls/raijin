@@ -1,27 +1,26 @@
-import type { PortablePath }      from '@yarnpkg/fslib'
+import type { Project }                      from '@yarnpkg/core'
+import type { PortablePath }                 from '@yarnpkg/fslib'
 
-import assert                     from 'node:assert/strict'
-import { Buffer }                 from 'node:buffer'
-import { execSync }               from 'node:child_process'
-import { createHash }             from 'node:crypto'
-import { mkdir }                  from 'node:fs/promises'
-import { readFile }               from 'node:fs/promises'
-import { writeFile }              from 'node:fs/promises'
-import { dirname }                from 'node:path'
+import assert                                from 'node:assert/strict'
+import { Buffer }                            from 'node:buffer'
+import { execSync }                          from 'node:child_process'
+import { createHash }                        from 'node:crypto'
+import { mkdir }                             from 'node:fs/promises'
+import { readFile }                          from 'node:fs/promises'
+import { writeFile }                         from 'node:fs/promises'
+import { dirname }                           from 'node:path'
 
-import { BaseCommand }            from '@yarnpkg/cli'
-import { WorkspaceRequiredError } from '@yarnpkg/cli'
-import { Configuration }          from '@yarnpkg/core'
-import { Project }                from '@yarnpkg/core'
-import { StreamReport }           from '@yarnpkg/core'
-import { execUtils }              from '@yarnpkg/core'
-import { npath }                  from '@yarnpkg/fslib'
-import { ppath }                  from '@yarnpkg/fslib'
-import { xfs }                    from '@yarnpkg/fslib'
+import { BaseCommand }                       from '@yarnpkg/cli'
+import { StreamReport }                      from '@yarnpkg/core'
+import { execUtils }                         from '@yarnpkg/core'
+import { npath }                             from '@yarnpkg/fslib'
+import { ppath }                             from '@yarnpkg/fslib'
+import { xfs }                               from '@yarnpkg/fslib'
 
-import { Release }                from '@atls/code-github'
+import { Release }                           from '@atls/code-github'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
 
-import { parseGitHubUrl }         from './utils/parse-git-url.js'
+import { parseGitHubUrl }                    from './utils/parse-git-url.js'
 
 const RELEASE_ALREADY_EXISTS_STATUS = 422
 const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
@@ -448,10 +447,10 @@ export class ReleaseCreateCommand extends BaseCommand {
   static override paths = [['release', 'create']]
 
   override async execute(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project, workspace } = await Project.find(configuration, this.context.cwd)
-
-    if (!workspace) throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
+    const { configuration, project, workspace } = await resolveWorkspaceCommandInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const commandReport = await StreamReport.start(
       {

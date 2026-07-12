@@ -8,8 +8,8 @@ import { scriptUtils }                                   from '@yarnpkg/core'
 import { xfs }                                           from '@yarnpkg/fslib'
 import { ppath }                                         from '@yarnpkg/fslib'
 
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { resolveWorkspaceCommandInvocation }             from '@atls/raijin/commands'
+import { createYarnCommandExecutable }                   from '@atls/raijin/commands'
 
 import { RENDERER_STANDALONE_SERVER_ENTRYPOINT }         from './renderer-build.constants.js'
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
@@ -38,7 +38,7 @@ export class RendererBuildCommand extends BaseCommand {
       project,
       workspace,
       workspaceCwd: rendererCwd,
-    } = await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
+    } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
     const rendererBuildContext = createRendererBuildContext(rendererCwd)
 
     await cleanupRendererBuildStaleArtifacts(rendererCwd)
@@ -81,7 +81,7 @@ export class RendererBuildCommand extends BaseCommand {
             locator: workspace.anchoredLocator,
             project,
           }
-          const scriptEnvironment = await makeCurrentYarnExecutable(executableContext)
+          const scriptEnvironment = await createYarnCommandExecutable(executableContext)
           const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
           const loader = await resolveRendererBuildPnpLoader(
             project.cwd,
@@ -98,7 +98,7 @@ export class RendererBuildCommand extends BaseCommand {
           const nextVersion = resolveNextPackageVersion(nextPackage)
           const nextCompiledConfRequireCacheLoader =
             await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
-          const { executable, env } = await makeCurrentYarnExecutable({
+          const { executable, env } = await createYarnCommandExecutable({
             ...executableContext,
             env: {
               NODE_OPTIONS: nodeOptions,

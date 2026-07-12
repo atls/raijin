@@ -1,70 +1,47 @@
-import { Filename }                       from '@yarnpkg/fslib'
-import { execUtils }                      from '@yarnpkg/core'
-import { xfs }                            from '@yarnpkg/fslib'
-import { render }                         from 'ink'
-import React                              from 'react'
+import { render }                            from 'ink'
+import React                                 from 'react'
 
-import { ErrorInfo }                      from '@atls/cli-ui-error-info-component'
-import { ServiceProgress }                from '@atls/cli-ui-service-progress-component'
-import { Service }                        from '@atls/code-service'
-import { COMMAND_PROXY_EXECUTION }        from '@atls/yarn-plugin-tools/command-context'
-import { renderStatic }                   from '@atls/cli-ui-renderer-static-component'
-import { createCommandProxyEnvironment }  from '@atls/yarn-plugin-tools/command-context'
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
-import { makeCurrentYarnExecutable }      from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
+import { ServiceProgress }                   from '@atls/cli-ui-service-progress-component'
+import { Service }                           from '@atls/code-service'
+import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
+import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
 
-import { AbstractServiceCommand }         from './abstract-service.command.jsx'
-import { getWorkspacePackageNames }       from './workspace-package-names.js'
+import { AbstractServiceCommand }            from './abstract-service.command.jsx'
+import { getWorkspacePackageNames }          from './workspace-package-names.js'
 
 export class ServiceBuildCommand extends AbstractServiceCommand {
   static override paths = [['service', 'build']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy()
     }
 
-    if (process.env[COMMAND_PROXY_EXECUTION] === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return this.executeRegular()
   }
 
   async executeProxy(): Promise<number> {
-    const { project, workspaceCwd } = await resolveWorkspaceCommandContext(
-      this.context.cwd,
-      this.context.plugins
-    )
-
     const args: Array<string> = []
 
     if (this.showWarnings) {
       args.push('-s')
     }
 
-    const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeCurrentYarnExecutable({
-      binFolder,
-      project,
-      env: createCommandProxyEnvironment(this.context.cwd),
-    })
-
-    const { code } = await execUtils.pipevp(executable, ['service', 'build', ...args], {
-      cwd: workspaceCwd,
+    return executeWorkspaceCommandProxy({
+      args: ['service', 'build', ...args],
+      cwd: this.context.cwd,
+      plugins: this.context.plugins,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env,
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {
-    const { workspace, workspaceCwd } = await resolveWorkspaceCommandContext(
+    const { workspace, workspaceCwd } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )

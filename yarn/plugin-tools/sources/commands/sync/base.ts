@@ -1,13 +1,8 @@
-import { BaseCommand }                   from '@yarnpkg/cli'
-import { Configuration }                 from '@yarnpkg/core'
-import { Project }                       from '@yarnpkg/core'
-import { Filename }                      from '@yarnpkg/fslib'
-import { execUtils }                     from '@yarnpkg/core'
-import { xfs }                           from '@yarnpkg/fslib'
-import { Command }                       from 'clipanion'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { Command }                    from 'clipanion'
 
-import { createCommandProxyEnvironment } from '../../command-context.js'
-import { makeCurrentYarnExecutable }     from '../../current-yarn-executable.js'
+import { executeProjectCommandProxy } from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }  from '@atls/raijin/commands'
 
 export abstract class AbstractRaijinSyncCommand extends BaseCommand {
   static override usage = Command.Usage({
@@ -24,39 +19,22 @@ export abstract class AbstractRaijinSyncCommand extends BaseCommand {
   })
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return this.executeRegular()
   }
 
   async executeProxy(command: Array<string> = ['raijin', 'sync']): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
-
-    const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await makeCurrentYarnExecutable({
-      binFolder,
-      project,
-      env: createCommandProxyEnvironment(this.context.cwd),
-    })
-
-    const { code } = await execUtils.pipevp(executable, command, {
+    return executeProjectCommandProxy({
+      args: command,
       cwd: this.context.cwd,
+      plugins: this.context.plugins,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env,
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {

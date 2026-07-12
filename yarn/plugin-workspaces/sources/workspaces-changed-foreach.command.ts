@@ -1,15 +1,13 @@
-import { BaseCommand }            from '@yarnpkg/cli'
-import { WorkspaceRequiredError } from '@yarnpkg/cli'
-import { Configuration }          from '@yarnpkg/core'
-import { Project }                from '@yarnpkg/core'
-import { StreamReport }           from '@yarnpkg/core'
-import { structUtils }            from '@yarnpkg/core'
-import { Option }                 from 'clipanion'
+import { BaseCommand }                       from '@yarnpkg/cli'
+import { StreamReport }                      from '@yarnpkg/core'
+import { structUtils }                       from '@yarnpkg/core'
+import { Option }                            from 'clipanion'
 
-import { getChangedFiles }        from '@atls/yarn-plugin-files'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { getChangedFiles }                   from '@atls/yarn-plugin-files'
 
-import { getChangedWorkspaces }   from './get-changed-workspaces.util.js'
-import { createForeachInput }     from './workspaces-changed-foreach.input.js'
+import { getChangedWorkspaces }              from './get-changed-workspaces.util.js'
+import { createForeachInput }                from './workspaces-changed-foreach.input.js'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'foreach']]
@@ -43,13 +41,10 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
   args = Option.Proxy()
 
   async execute(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-
-    const { project, workspace } = await Project.find(configuration, this.context.cwd)
-
-    if (!workspace) {
-      throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
-    }
+    const { configuration, project } = await resolveWorkspaceCommandInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const files = await getChangedFiles(project, this.since)
     const workspaces = getChangedWorkspaces(project, files)

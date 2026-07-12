@@ -1,8 +1,9 @@
-import assert                           from 'node:assert/strict'
-import { delimiter }                    from 'node:path'
-import { test }                         from 'node:test'
+import assert                             from 'node:assert/strict'
+import { delimiter }                      from 'node:path'
+import { test }                           from 'node:test'
 
-import { createYarnCommandEnvironment } from './command.js'
+import { createYarnCommandEnvironment }   from './command.js'
+import { sanitizeYarnCommandEnvironment } from './command.js'
 
 test('should allow nested yarn commands to follow configured yarnPath', () => {
   assert.deepEqual(
@@ -59,6 +60,26 @@ test('should remove quoted dlx pnp loader values from node options', () => {
       INIT_CWD: '/repo/package',
       NODE_OPTIONS: '--trace-warnings --loader "file:///tmp/custom loader.mjs"',
       PROJECT_CWD: '/repo/package',
+    }
+  )
+})
+
+test('should remove launcher state while preserving same-project PnP runtime', () => {
+  assert.deepEqual(
+    sanitizeYarnCommandEnvironment(
+      {
+        BERRY_BIN_FOLDER: '/private/tmp/xfs-123',
+        NODE_OPTIONS: '--require /repo/.pnp.cjs --experimental-loader file:///repo/.pnp.loader.mjs',
+        PATH: ['/private/tmp/xfs-123', '/usr/local/bin', '/usr/bin'].join(delimiter),
+        PROJECT_CWD: '/repo',
+        npm_execpath: '/private/tmp/xfs-123/yarn',
+      },
+      { preservePnp: true }
+    ),
+    {
+      NODE_OPTIONS: '--require /repo/.pnp.cjs --experimental-loader file:///repo/.pnp.loader.mjs',
+      PATH: ['/usr/local/bin', '/usr/bin'].join(delimiter),
+      PROJECT_CWD: '/repo',
     }
   )
 })

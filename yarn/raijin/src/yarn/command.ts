@@ -15,6 +15,10 @@ type NodeOptionToken = {
   value: string
 }
 
+export interface YarnCommandEnvironmentOptions {
+  preservePnp?: boolean
+}
+
 const isPnPNodeOptionValue = (value: string): boolean => PNP_NODE_OPTION.test(value)
 
 const splitNodeOptions = (nodeOptions: string): Array<NodeOptionToken> => {
@@ -129,9 +133,9 @@ const setPathEnvironment = (environment: NodeJS.ProcessEnv): void => {
   }
 }
 
-export const createYarnCommandEnvironment = (
-  cwd: string,
-  environment: NodeJS.ProcessEnv = process.env
+export const sanitizeYarnCommandEnvironment = (
+  environment: NodeJS.ProcessEnv = process.env,
+  { preservePnp = false }: YarnCommandEnvironmentOptions = {}
 ): NodeJS.ProcessEnv => {
   const yarnEnvironment = { ...environment }
   const nodeOptions = yarnEnvironment.NODE_OPTIONS
@@ -141,7 +145,7 @@ export const createYarnCommandEnvironment = (
   delete yarnEnvironment.npm_execpath
   delete yarnEnvironment.YARN_IGNORE_PATH
 
-  if (nodeOptions) {
+  if (nodeOptions && !preservePnp) {
     const sanitizedNodeOptions = removePnPNodeOptions(nodeOptions)
 
     if (sanitizedNodeOptions) {
@@ -152,6 +156,15 @@ export const createYarnCommandEnvironment = (
   }
 
   setPathEnvironment(yarnEnvironment)
+
+  return yarnEnvironment
+}
+
+export const createYarnCommandEnvironment = (
+  cwd: string,
+  environment: NodeJS.ProcessEnv = process.env
+): NodeJS.ProcessEnv => {
+  const yarnEnvironment = sanitizeYarnCommandEnvironment(environment)
 
   yarnEnvironment.INIT_CWD = cwd
   yarnEnvironment.PROJECT_CWD = cwd

@@ -1,14 +1,13 @@
-import { appendFile }                  from 'node:fs/promises'
+import { appendFile }                        from 'node:fs/promises'
 
-import { BaseCommand }                 from '@yarnpkg/cli'
-import { WorkspaceRequiredError }      from '@yarnpkg/cli'
-import { Configuration }               from '@yarnpkg/core'
-import { Project }                     from '@yarnpkg/core'
-import { StreamReport }                from '@yarnpkg/core'
-import { Option }                      from 'clipanion'
+import { BaseCommand }                       from '@yarnpkg/cli'
+import { StreamReport }                      from '@yarnpkg/core'
+import { Option }                            from 'clipanion'
 
-import { getDeferredReleaseDecisions } from './release-version.utils.js'
-import { isDeferredReleaseRequired }   from './release-version.utils.js'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+
+import { getDeferredReleaseDecisions }       from './release-version.utils.js'
+import { isDeferredReleaseRequired }         from './release-version.utils.js'
 
 const GITHUB_OUTPUT_PATH = 'GITHUB_OUTPUT'
 const DEFAULT_WORKSPACE_IDENT = '@atls/raijin'
@@ -35,10 +34,10 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
   since = Option.String('--since')
 
   override async execute(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project, workspace } = await Project.find(configuration, this.context.cwd)
-
-    if (!workspace) throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
+    const { configuration, project } = await resolveWorkspaceCommandInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const deferArgs = ['release', 'version', 'defer']
 

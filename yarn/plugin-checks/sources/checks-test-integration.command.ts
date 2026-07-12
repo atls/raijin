@@ -1,56 +1,33 @@
-import { StreamReport }              from '@yarnpkg/core'
-import { Configuration }             from '@yarnpkg/core'
-import { Project }                   from '@yarnpkg/core'
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
+import { StreamReport }                    from '@yarnpkg/core'
 
-import { Tester }                    from '@atls/code-test'
-import { makeCurrentYarnExecutable } from '@atls/yarn-plugin-tools/current-yarn-executable'
+import { Tester }                          from '@atls/code-test'
+import { executeProjectCommandProxy }      from '@atls/raijin/commands'
+import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }       from '@atls/raijin/commands'
 
-import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
-import { GitHubChecks }              from './github.checks.js'
+import { AbstractChecksTestCommand }       from './abstract-checks-test.command.js'
+import { GitHubChecks }                    from './github.checks.js'
 
 class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
   static override paths = [['checks', 'test', 'integration']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy()
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy()
+    return this.executeRegular()
   }
 
   async executeProxy(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
-
-    const binFolder = await xfs.mktempPromise()
-
-    const { executable, env } = await makeCurrentYarnExecutable({
-      binFolder,
-      project,
-      env: {
-        COMMAND_PROXY_EXECUTION: 'true',
-      },
-    })
-
-    const { code } = await execUtils.pipevp(executable, ['checks', 'test', 'integration'], {
+    return executeProjectCommandProxy({
+      args: ['checks', 'test', 'integration'],
       cwd: this.context.cwd,
+      plugins: this.context.plugins,
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env,
     })
-
-    return code
   }
 
   async executeRegular(): Promise<number> {
@@ -58,8 +35,10 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
       return this.cli.run(['test', 'integration'])
     }
 
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const { configuration, project } = await resolveProjectCommandInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
 
     const commandReport = await StreamReport.start(
       {

@@ -1,16 +1,16 @@
-import type { Ident }                     from '@yarnpkg/core'
-import type { Manifest }                  from '@yarnpkg/core'
-import type { Package }                   from '@yarnpkg/core'
-import type { Project }                   from '@yarnpkg/core'
+import type { Ident }                        from '@yarnpkg/core'
+import type { Manifest }                     from '@yarnpkg/core'
+import type { Package }                      from '@yarnpkg/core'
+import type { Project }                      from '@yarnpkg/core'
 
-import { StreamReport }                   from '@yarnpkg/core'
-import { Filename }                       from '@yarnpkg/fslib'
-import { structUtils }                    from '@yarnpkg/core'
+import { StreamReport }                      from '@yarnpkg/core'
+import { structUtils }                       from '@yarnpkg/core'
 
-import { resolveWorkspaceCommandContext } from '@atls/yarn-plugin-tools/command-context'
+import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
 
-import { AbstractRaijinSyncCommand }      from './base.js'
-import { createRaijinSyncTarget }         from './target.js'
+import { AbstractRaijinSyncCommand }         from './base.js'
+import { createRaijinSyncTarget }            from './target.js'
 
 const NPM_PROTOCOL = 'npm:'
 const PATCH_PROTOCOL = 'patch:'
@@ -78,21 +78,15 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'typescript']]
 
   override async execute(): Promise<number> {
-    const nodeOptions = process.env.NODE_OPTIONS ?? ''
-
-    if (nodeOptions.includes(Filename.pnpCjs) && nodeOptions.includes(Filename.pnpEsmLoader)) {
-      return this.executeRegular()
+    if (shouldExecuteCommandProxy()) {
+      return this.executeProxy(['raijin', 'sync', 'typescript'])
     }
 
-    if (process.env.COMMAND_PROXY_EXECUTION === 'true') {
-      return this.executeRegular()
-    }
-
-    return this.executeProxy(['raijin', 'sync', 'typescript'])
+    return this.executeRegular()
   }
 
   override async executeRegular(): Promise<number> {
-    const { configuration, project } = await resolveWorkspaceCommandContext(
+    const { configuration, project } = await resolveWorkspaceCommandInvocation(
       this.context.cwd,
       this.context.plugins
     )

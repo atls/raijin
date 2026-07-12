@@ -1,18 +1,13 @@
-import type { PortablePath }          from '@yarnpkg/fslib'
+import { BaseCommand }                     from '@yarnpkg/cli'
+import { StreamReport }                    from '@yarnpkg/core'
+import { MessageName }                     from '@yarnpkg/core'
+import { Command }                         from 'clipanion'
+import { Option }                          from 'clipanion'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
-import { Configuration }              from '@yarnpkg/core'
-import { MessageName }                from '@yarnpkg/core'
-import { Project }                    from '@yarnpkg/core'
-import { execUtils }                  from '@yarnpkg/core'
-import { xfs }                        from '@yarnpkg/fslib'
-import { Command }                    from 'clipanion'
-import { Option }                     from 'clipanion'
+import { executeYarnCommand }              from '@atls/raijin/commands'
+import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
 
-import { makeCurrentYarnExecutable }  from '@atls/yarn-plugin-tools/current-yarn-executable'
-
-import { resolveChecksReleaseConfig } from './checks-release.config.js'
+import { resolveChecksReleaseConfig }      from './checks-release.config.js'
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
@@ -31,8 +26,8 @@ class ChecksRunCommand extends BaseCommand {
   noRelease = Option.Boolean('--no-release', false)
 
   async execute(): Promise<number> {
-    const configuration = await Configuration.find(this.context.cwd, this.context.plugins)
-    const { project } = await Project.find(configuration, this.context.cwd)
+    const invocation = await resolveProjectCommandInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, project } = invocation
     const releaseConfig = resolveChecksReleaseConfig(project)
 
     const commandReport = await StreamReport.start(
@@ -41,17 +36,17 @@ class ChecksRunCommand extends BaseCommand {
         configuration,
       },
       async (report) => {
-        if ((await this.runCheck(project, project.cwd, ['typecheck'], report)) !== 0) {
+        if ((await this.runCheck(invocation, ['typecheck'], report)) !== 0) {
           return
         }
 
-        if ((await this.runCheck(project, project.cwd, ['lint'], report)) !== 0) {
+        if ((await this.runCheck(invocation, ['lint'], report)) !== 0) {
           return
         }
 
         const testResults = await Promise.all([
-          this.runCheck(project, project.cwd, ['test', 'unit'], report),
-          this.runCheck(project, project.cwd, ['test', 'integration'], report),
+          this.runCheck(invocation, ['test', 'unit'], report),
+          this.runCheck(invocation, ['test', 'integration'], report),
         ])
 
         if (testResults.some((code) => code !== 0)) {
@@ -59,7 +54,7 @@ class ChecksRunCommand extends BaseCommand {
         }
 
         if (!this.noRelease && releaseConfig.enabled) {
-          await this.runCheck(project, project.cwd, ['release'], report)
+          await this.runCheck(invocation, ['release'], report)
         }
       }
     )
@@ -68,8 +63,7 @@ class ChecksRunCommand extends BaseCommand {
   }
 
   private async runCheck(
-    project: Project,
-    cwd: PortablePath,
+    invocation: Awaited<ReturnType<typeof resolveProjectCommandInvocation>>,
     args: Array<string>,
     report: StreamReport
   ): Promise<number> {
@@ -79,12 +73,9 @@ class ChecksRunCommand extends BaseCommand {
         (args[0] === 'lint' || args[0] === 'typecheck') &&
         !args.includes('--changed')
       const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
-      const binFolder = await xfs.mktempPromise()
-      const { executable, env } = await makeCurrentYarnExecutable({ binFolder, project })
-
-      const { code } = await execUtils.pipevp(executable, ['checks', ...checkArgs], {
-        cwd,
-        env,
+      const code = await executeYarnCommand({
+        args: ['checks', ...checkArgs],
+        invocation,
         stdin: this.context.stdin,
         stdout: this.context.stdout,
         stderr: this.context.stderr,

@@ -17,7 +17,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/yarn-plugin-tools": "workspace:*"
+    "@atls/raijin": "workspace:*"
   },
   "devDependencies": {
     "@types/child-process-promise": "2.2.6",

@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@atls/code-pack": "workspace:*",
+    "@atls/raijin": "workspace:*",
     "@atls/yarn-pack-utils": "workspace:*",
-    "@atls/yarn-plugin-tools": "workspace:*",
     "@iarna/toml": "2.2.5",
     "@yarnpkg/plugin-patch": "4.0.3",
     "clipanion": "4.0.0-rc.2"

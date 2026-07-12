@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@actions/github": "6.0.0",
+    "@atls/raijin": "workspace:*",
     "@octokit/types": "13.5.0",
     "clipanion": "4.0.0-rc.2"
   },

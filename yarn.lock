@@ -763,6 +763,7 @@ __metadata:
     "@types/protocol-buffers-schema": "npm:3.4.3"
     "@typescript-eslint/eslint-plugin": "npm:8.48.1"
     "@typescript-eslint/parser": "npm:8.48.1"
+    "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
     eslint: "npm:9.22.0"
@@ -947,7 +948,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-badges@workspace:yarn/plugin-badges"
   dependencies:
-    "@atls/yarn-plugin-tools": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/child-process-promise": "npm:2.2.6"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1031,6 +1032,7 @@ __metadata:
   dependencies:
     "@atls/cli-ui-git-commit-component": "workspace:*"
     "@atls/code-commit": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/lint-staged": "npm:13.3.0"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
@@ -1074,6 +1076,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-export@workspace:yarn/plugin-export"
   dependencies:
+    "@atls/raijin": "workspace:*"
     "@atls/yarn-pack-utils": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1092,6 +1095,7 @@ __metadata:
   resolution: "@atls/yarn-plugin-files@workspace:yarn/plugin-files"
   dependencies:
     "@actions/github": "npm:6.0.0"
+    "@atls/raijin": "workspace:*"
     "@octokit/types": "npm:13.5.0"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1111,7 +1115,7 @@ __metadata:
     "@atls/cli-ui-format-progress-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/code-format": "workspace:*"
-    "@atls/yarn-plugin-tools": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1131,8 +1135,8 @@ __metadata:
   resolution: "@atls/yarn-plugin-image@workspace:yarn/plugin-image"
   dependencies:
     "@atls/code-pack": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@atls/yarn-pack-utils": "workspace:*"
-    "@atls/yarn-plugin-tools": "workspace:*"
     "@iarna/toml": "npm:2.2.5"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1159,7 +1163,7 @@ __metadata:
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
     "@atls/cli-ui-typescript-progress-component": "workspace:*"
     "@atls/code-typescript": "workspace:*"
-    "@atls/yarn-plugin-tools": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1183,7 +1187,7 @@ __metadata:
     "@atls/cli-ui-lint-result-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/code-lint": "workspace:*"
-    "@atls/yarn-plugin-tools": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1222,6 +1226,7 @@ __metadata:
   resolution: "@atls/yarn-plugin-release@workspace:yarn/plugin-release"
   dependencies:
     "@atls/code-github": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1266,6 +1271,7 @@ __metadata:
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-schematics-component": "workspace:*"
     "@atls/code-schematics": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1296,8 +1302,8 @@ __metadata:
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-service-progress-component": "workspace:*"
     "@atls/code-service": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@atls/yarn-pack-utils": "workspace:*"
-    "@atls/yarn-plugin-tools": "workspace:*"
     "@monstrs/logger": "npm:0.0.20"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
@@ -1395,7 +1401,7 @@ __metadata:
     "@atls/cli-ui-icons-progress-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/code-icons": "workspace:*"
-    "@atls/yarn-plugin-tools": "workspace:*"
+    "@atls/raijin": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1415,6 +1421,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-workspaces@workspace:yarn/plugin-workspaces"
   dependencies:
+    "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
