@@ -1,9 +1,11 @@
 import assert                         from 'node:assert/strict'
 import { dirname }                    from 'node:path'
-import { resolve }                    from 'node:path'
+import { before }                     from 'node:test'
 import test                           from 'node:test'
 import { fileURLToPath }              from 'node:url'
 
+import { Configuration }              from '@yarnpkg/core'
+import { Project }                    from '@yarnpkg/core'
 import { getPluginConfiguration }     from '@yarnpkg/cli'
 import { npath }                      from '@yarnpkg/fslib'
 import { ppath }                      from '@yarnpkg/fslib'
@@ -14,11 +16,20 @@ import { createProxyEnvironment }     from './proxy.js'
 import { resolveProjectInvocation }   from './resolve.js'
 import { resolveWorkspaceInvocation } from './resolve.js'
 
-const repoRoot = npath.toPortablePath(
-  resolve(dirname(fileURLToPath(import.meta.url)), '../../../../..')
-)
-const rendererWorkspaceCwd = ppath.join(repoRoot, 'yarn/plugin-renderer')
-const rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'sources/commands')
+const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
+
+let repoRoot = testCwd
+let rendererWorkspaceCwd = testCwd
+let rendererNestedCwd = testCwd
+
+before(async () => {
+  const configuration = await Configuration.find(testCwd, getPluginConfiguration())
+  const { project } = await Project.find(configuration, testCwd)
+
+  repoRoot = project.cwd
+  rendererWorkspaceCwd = ppath.join(repoRoot, 'yarn/plugin-renderer')
+  rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'sources/commands')
+})
 
 test('should resolve project command invocation from a nested cwd', async () => {
   const invocation = await resolveProjectInvocation(rendererNestedCwd, getPluginConfiguration(), {})

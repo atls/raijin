@@ -3,7 +3,6 @@ import type { Filename }          from '@yarnpkg/fslib'
 import assert                     from 'node:assert/strict'
 import { execFile }               from 'node:child_process'
 import { dirname }                from 'node:path'
-import { resolve }                from 'node:path'
 import test                       from 'node:test'
 import { fileURLToPath }          from 'node:url'
 import { pathToFileURL }          from 'node:url'
@@ -17,9 +16,13 @@ import { xfs }                    from '@yarnpkg/fslib'
 
 import { createYarnExecutable }   from './execution.js'
 
-const repoRoot = npath.toPortablePath(
-  resolve(dirname(fileURLToPath(import.meta.url)), '../../../../../../..')
-)
+const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
+
+const resolveTestProject = async () => {
+  const configuration = await Configuration.find(testCwd, getPluginConfiguration())
+
+  return Project.find(configuration, testCwd)
+}
 const execFileAsync = async (
   file: string,
   args: Array<string>,
@@ -38,15 +41,14 @@ const execFileAsync = async (
   })
 
 test('should use the Corepack-managed Yarn executable', async () => {
-  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
-  const { project } = await Project.find(configuration, repoRoot)
+  const { project } = await resolveTestProject()
   const binFolder = await xfs.mktempPromise()
   const { executable, env } = await createYarnExecutable({ binFolder, project })
 
   assert.equal(executable, process.platform === 'win32' ? 'yarn.cmd' : 'yarn')
 
   const { stdout } = await execFileAsync(executable, ['--version'], {
-    cwd: npath.fromPortablePath(repoRoot),
+    cwd: npath.fromPortablePath(project.cwd),
     env,
     shell: process.platform === 'win32',
   })
@@ -55,15 +57,12 @@ test('should use the Corepack-managed Yarn executable', async () => {
 })
 
 test('should create script env for the selected workspace locator', async () => {
-  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
-  const { project, workspace } = await Project.find(
-    configuration,
-    ppath.join(repoRoot, 'yarn/plugin-renderer')
-  )
+  const { project } = await resolveTestProject()
+  const workspace = project.getWorkspaceByCwd(ppath.join(project.cwd, 'yarn/plugin-renderer'))
   const binFolder = await xfs.mktempPromise()
   const { env } = await createYarnExecutable({
     binFolder,
-    locator: workspace?.anchoredLocator,
+    locator: workspace.anchoredLocator,
     project,
   })
 
@@ -72,8 +71,7 @@ test('should create script env for the selected workspace locator', async () => 
 })
 
 test('should preserve Yarn PnP options when adding command node options', async () => {
-  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
-  const { project } = await Project.find(configuration, repoRoot)
+  const { project } = await resolveTestProject()
   const binFolder = await xfs.mktempPromise()
   const { env } = await createYarnExecutable({
     binFolder,
@@ -87,8 +85,7 @@ test('should preserve Yarn PnP options when adding command node options', async 
 })
 
 test('should materialize managed node wrapper for current Yarn executable', async () => {
-  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
-  const { project } = await Project.find(configuration, repoRoot)
+  const { project } = await resolveTestProject()
   const binFolder = await xfs.mktempPromise()
   const { env } = await createYarnExecutable({
     binFolder,
@@ -108,8 +105,7 @@ test('should materialize managed node wrapper for current Yarn executable', asyn
 })
 
 test('should keep managed node loader options idempotent', async () => {
-  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
-  const { project } = await Project.find(configuration, repoRoot)
+  const { project } = await resolveTestProject()
   const binFolder = await xfs.mktempPromise()
   const { env } = await createYarnExecutable({
     binFolder,
@@ -129,8 +125,7 @@ test('should keep managed node loader options idempotent', async () => {
 })
 
 test('should forward node flags from managed node wrapper', async () => {
-  const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
-  const { project } = await Project.find(configuration, repoRoot)
+  const { project } = await resolveTestProject()
   const binFolder = await xfs.mktempPromise()
   const loaderPath = ppath.join(binFolder, 'managed-loader.mjs' as Filename)
 
