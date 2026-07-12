@@ -22,13 +22,16 @@ test('should preserve POSIX command cwd', () => {
   )
 })
 
-test(
-  'should convert Windows command cwd on Windows',
-  { skip: process.platform !== 'win32' },
-  () => {
-    assert.equal(
-      windowsCommandPlatformAdapter.resolveNativeCwd('/C:/repo/client' as never),
-      String.raw`C:\repo\client`
-    )
-  }
-)
+test('should convert a Windows drive portable cwd independently from the host platform', () => {
+  assert.equal(
+    windowsCommandPlatformAdapter.resolveNativeCwd('/C:/repo/client' as never),
+    String.raw`C:\repo\client`
+  )
+})
+
+test('should convert a Windows UNC portable cwd independently from the host platform', () => {
+  assert.equal(
+    windowsCommandPlatformAdapter.resolveNativeCwd('//server/share/repo' as never),
+    String.raw`\\server\share\repo`
+  )
+})

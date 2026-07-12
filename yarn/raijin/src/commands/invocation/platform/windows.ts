@@ -1,7 +1,10 @@
 import type { CommandPlatformAdapter } from './platform.interfaces.js'
 
-import { npath }                       from '@yarnpkg/fslib'
+import { win32 }                       from 'node:path'
+
+const WINDOWS_DRIVE_PORTABLE_PATH = /^\/[A-Za-z]:\//u
 
 export const windowsCommandPlatformAdapter: CommandPlatformAdapter = {
-  resolveNativeCwd: (cwd) => npath.fromPortablePath(cwd),
+  resolveNativeCwd: (cwd) =>
+    win32.normalize(WINDOWS_DRIVE_PORTABLE_PATH.test(cwd) ? cwd.slice(1) : cwd),
 }
