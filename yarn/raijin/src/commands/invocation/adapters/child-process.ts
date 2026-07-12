@@ -1,15 +1,9 @@
-import type { ChildProcess }      from 'node:child_process'
-import type { SpawnOptions }      from 'node:child_process'
+import type { ChildProcess }        from 'node:child_process'
+import type { SpawnOptions }        from 'node:child_process'
 
-import type { ProjectInvocation } from '../resolve.js'
+import type { ChildProcessOptions } from './child-process.interfaces.js'
 
-import { toNativeCwd }            from './path/index.js'
-
-interface ChildProcessOptions {
-  invocation: ProjectInvocation
-  env: NodeJS.ProcessEnv
-  stdio: SpawnOptions['stdio']
-}
+import { toNativeCwd }              from './path/index.js'
 
 export const createChildProcessOptions = ({
   env,

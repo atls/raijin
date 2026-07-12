@@ -1,11 +1,9 @@
 import type { PortablePath }           from '@yarnpkg/fslib'
 
+import type { PathAdapter }            from './path.interfaces.js'
+
 import { toNative as toPosixNative }   from './posix.js'
 import { toNative as toWindowsNative } from './windows.js'
-
-interface PathAdapter {
-  toNative: (cwd: PortablePath) => string
-}
 
 const POSIX_ADAPTER: PathAdapter = { toNative: toPosixNative }
 const WINDOWS_ADAPTER: PathAdapter = { toNative: toWindowsNative }

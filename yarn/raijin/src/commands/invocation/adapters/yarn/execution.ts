@@ -1,11 +1,8 @@
-import type { Locator }                   from '@yarnpkg/core'
-import type { Project as YarnProject }    from '@yarnpkg/core'
 import type { Filename }                  from '@yarnpkg/fslib'
-import type { PortablePath }              from '@yarnpkg/fslib'
-import type { Readable }                  from 'node:stream'
-import type { Writable }                  from 'node:stream'
 
-import type { ProjectInvocation }         from '../../resolve.js'
+import type { YarnCommandOptions }        from './execution.interfaces.js'
+import type { YarnExecutable }            from './execution.interfaces.js'
+import type { YarnExecutableOptions }     from './execution.interfaces.js'
 
 import { execUtils }                      from '@yarnpkg/core'
 import { scriptUtils }                    from '@yarnpkg/core'
@@ -20,28 +17,6 @@ import { toNativeCwd }                    from '../path/index.js'
 
 const YARN_EXECUTABLE_NAME = (process.platform === 'win32' ? 'yarn.cmd' : 'yarn') as Filename
 const NODE_EXECUTABLE_NAME = (process.platform === 'win32' ? 'node.cmd' : 'node') as Filename
-
-export interface YarnExecutableOptions {
-  binFolder: PortablePath
-  project: YarnProject
-  locator?: Locator
-  env?: NodeJS.ProcessEnv
-  nodeLoader?: string
-}
-
-export interface YarnExecutable {
-  env: NodeJS.ProcessEnv
-  executable: string
-}
-
-interface YarnCommandOptions {
-  args: Array<string>
-  invocation: ProjectInvocation
-  stderr: Writable
-  stdin: Readable
-  stdout: Writable
-  env?: NodeJS.ProcessEnv
-}
 
 const shellQuote = (value: string): string => `'${value.replaceAll("'", "'\\''")}'`
 

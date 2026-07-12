@@ -1,18 +1,10 @@
-import type { Configuration as YarnConfiguration } from '@yarnpkg/core'
-import type { Project as YarnProject }             from '@yarnpkg/core'
-import type { Workspace }                          from '@yarnpkg/core'
-import type { PortablePath }                       from '@yarnpkg/fslib'
+import type { PluginConfiguration } from '@yarnpkg/core'
+import type { PortablePath }        from '@yarnpkg/fslib'
 
-import { Configuration }                           from '@yarnpkg/core'
-import { Project }                                 from '@yarnpkg/core'
+import type { ProjectResolution }   from './project.interfaces.js'
 
-export type PluginConfiguration = Parameters<typeof Configuration.find>[1]
-
-export interface ProjectResolution {
-  configuration: YarnConfiguration
-  project: YarnProject
-  workspace: Workspace | null
-}
+import { Configuration }            from '@yarnpkg/core'
+import { Project }                  from '@yarnpkg/core'
 
 export const resolveProject = async (
   cwd: PortablePath,

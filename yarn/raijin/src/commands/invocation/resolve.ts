@@ -1,33 +1,17 @@
-import type { Configuration }          from '@yarnpkg/core'
-import type { Project as YarnProject } from '@yarnpkg/core'
-import type { Workspace }              from '@yarnpkg/core'
-import type { PortablePath }           from '@yarnpkg/fslib'
+import type { PluginConfiguration } from '@yarnpkg/core'
+import type { PortablePath }        from '@yarnpkg/fslib'
 
-import type { RaijinProjectModel }     from '../../project/index.js'
-import type { PluginConfiguration }    from './adapters/yarn/project.js'
+import type { ProjectInvocation }   from './resolve.interfaces.js'
+import type { WorkspaceInvocation } from './resolve.interfaces.js'
 
-import { npath }                       from '@yarnpkg/fslib'
-import { ppath }                       from '@yarnpkg/fslib'
+import { npath }                    from '@yarnpkg/fslib'
+import { ppath }                    from '@yarnpkg/fslib'
 
-import { createProjectModel }          from '../../project/index.js'
-import { resolveProject }              from './adapters/yarn/project.js'
+import { createProjectModel }       from '../../project/index.js'
+import { resolveProject }           from './adapters/yarn/project.js'
 
 export const INVOCATION_CWD_ENV = 'RAIJIN_COMMAND_INVOCATION_CWD'
 export const PROXY_ENV = 'RAIJIN_COMMAND_PROXY_EXECUTION'
-
-export interface ProjectInvocation {
-  readonly executionCwd: PortablePath
-  readonly invocationCwd: PortablePath
-  readonly project: RaijinProjectModel<Workspace>
-  readonly yarn: {
-    configuration: Configuration
-    project: YarnProject
-  }
-}
-
-export interface WorkspaceInvocation extends ProjectInvocation {
-  readonly workspace: Workspace
-}
 
 const resolveInitCwd = (cwd: PortablePath, environment: NodeJS.ProcessEnv): PortablePath => {
   const initCwd = environment.INIT_CWD

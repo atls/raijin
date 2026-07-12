@@ -1,9 +1,7 @@
-import type { Configuration }         from '@yarnpkg/core'
 import type { PortablePath }          from '@yarnpkg/fslib'
-import type { Readable }              from 'node:stream'
-import type { Writable }              from 'node:stream'
 
-import type { ProjectInvocation }     from './resolve.js'
+import type { ProxyOptions }          from './proxy.interfaces.js'
+import type { ProjectInvocation }     from './resolve.interfaces.js'
 
 import { INVOCATION_CWD_ENV }         from './resolve.js'
 import { PROXY_ENV }                  from './resolve.js'
@@ -11,16 +9,6 @@ import { toNativeCwd }                from './adapters/path/index.js'
 import { executeYarnCommand }         from './adapters/yarn/execution.js'
 import { resolveProjectInvocation }   from './resolve.js'
 import { resolveWorkspaceInvocation } from './resolve.js'
-
-interface ProxyOptions {
-  args: Array<string>
-  cwd: PortablePath
-  plugins: Parameters<typeof Configuration.find>[1]
-  stderr: Writable
-  stdin: Readable
-  stdout: Writable
-  env?: NodeJS.ProcessEnv
-}
 
 export const shouldProxyCommand = (environment: NodeJS.ProcessEnv = process.env): boolean =>
   environment[PROXY_ENV] !== 'true'
