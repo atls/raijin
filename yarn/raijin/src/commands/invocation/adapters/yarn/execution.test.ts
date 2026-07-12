@@ -84,7 +84,37 @@ test('should preserve Yarn PnP options when adding command node options', async 
   assert.match(env.NODE_OPTIONS ?? '', /--no-warnings=DeprecationWarning/)
 })
 
-test('should materialize managed node wrapper for current Yarn executable', async () => {
+test('should rebuild the selected project environment after launcher cleanup', async () => {
+  const { project } = await resolveTestProject()
+  const binFolder = await xfs.mktempPromise()
+  const nativeBinFolder = npath.fromPortablePath(binFolder)
+  const launcherBinFolder = npath.join(npath.fromPortablePath(project.cwd), 'xfs-launcher')
+  const launcherPnpPath = npath.join(launcherBinFolder, '.pnp.cjs')
+  const launcherPnpLoaderPath = pathToFileURL(npath.join(launcherBinFolder, '.pnp.loader.mjs')).href
+  const { env } = await createYarnExecutable({
+    binFolder,
+    env: {
+      BERRY_BIN_FOLDER: launcherBinFolder,
+      NODE_OPTIONS: `--require ${launcherPnpPath} --experimental-loader ${launcherPnpLoaderPath} --trace-warnings`,
+      PATH: [launcherBinFolder, project.configuration.env.PATH]
+        .filter(Boolean)
+        .join(npath.delimiter),
+      npm_execpath: npath.join(launcherBinFolder, 'yarn'),
+    },
+    project,
+  })
+
+  assert.equal(env.BERRY_BIN_FOLDER, nativeBinFolder)
+  assert.equal(env.PATH?.split(npath.delimiter)[0], nativeBinFolder)
+  assert.doesNotMatch(env.PATH, /xfs-launcher/)
+  assert.equal(env.npm_execpath, npath.join(nativeBinFolder, 'yarn'))
+  assert.match(env.NODE_OPTIONS ?? '', /\.pnp\.cjs/)
+  assert.match(env.NODE_OPTIONS ?? '', /\.pnp\.loader\.mjs/)
+  assert.doesNotMatch(env.NODE_OPTIONS ?? '', /xfs-launcher/)
+  assert.match(env.NODE_OPTIONS ?? '', /--trace-warnings/)
+})
+
+test('should use the node wrapper materialized by Yarn', async () => {
   const { project } = await resolveTestProject()
   const binFolder = await xfs.mktempPromise()
   const { env } = await createYarnExecutable({
@@ -112,16 +142,14 @@ test('should keep managed node loader options idempotent', async () => {
     nodeLoader: 'file:///tmp/managed-loader.mjs',
     project,
   })
-  const firstNodeOptions = env.NODE_OPTIONS
-
-  await createYarnExecutable({
+  const { env: secondEnv } = await createYarnExecutable({
     binFolder,
     env,
     nodeLoader: 'file:///tmp/managed-loader.mjs',
     project,
   })
 
-  assert.equal(env.NODE_OPTIONS, firstNodeOptions)
+  assert.equal(secondEnv.NODE_OPTIONS?.match(/--import data:text\/javascript,/g)?.length, 1)
 })
 
 test('should forward node flags from managed node wrapper', async () => {

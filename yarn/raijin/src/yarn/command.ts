@@ -1,15 +1,15 @@
-import type { YarnCommandRunner }         from './runner.js'
+import type { YarnCommandRunner }        from './runner.js'
 
-import { spawn }                          from 'node:child_process'
+import { spawn }                         from 'node:child_process'
 
-import { RaijinYarnCommandException }     from './exceptions/command.js'
-import { sanitizeYarnCommandEnvironment } from './environment.js'
+import { RaijinYarnCommandException }    from './exceptions/command.js'
+import { createLauncherBaseEnvironment } from './launcher.js'
 
 export const createYarnCommandEnvironment = (
   cwd: string,
   environment: NodeJS.ProcessEnv = process.env
 ): NodeJS.ProcessEnv => {
-  const yarnEnvironment = sanitizeYarnCommandEnvironment(environment)
+  const yarnEnvironment = createLauncherBaseEnvironment(environment)
 
   yarnEnvironment.INIT_CWD = cwd
   yarnEnvironment.PROJECT_CWD = cwd

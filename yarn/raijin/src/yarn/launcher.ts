@@ -10,10 +10,6 @@ type NodeOptionToken = {
   value: string
 }
 
-export interface YarnCommandEnvironmentOptions {
-  preservePnp?: boolean
-}
-
 const splitNodeOptions = (nodeOptions: string): Array<NodeOptionToken> => {
   const tokens: Array<NodeOptionToken> = []
   let raw = ''
@@ -119,9 +115,8 @@ const setPathEnvironment = (environment: NodeJS.ProcessEnv): void => {
   }
 }
 
-export const sanitizeYarnCommandEnvironment = (
-  environment: NodeJS.ProcessEnv = process.env,
-  { preservePnp = false }: YarnCommandEnvironmentOptions = {}
+export const createLauncherBaseEnvironment = (
+  environment: NodeJS.ProcessEnv = process.env
 ): NodeJS.ProcessEnv => {
   const yarnEnvironment = { ...environment }
   const nodeOptions = yarnEnvironment.NODE_OPTIONS
@@ -131,7 +126,7 @@ export const sanitizeYarnCommandEnvironment = (
   delete yarnEnvironment.npm_execpath
   delete yarnEnvironment.YARN_IGNORE_PATH
 
-  if (nodeOptions && !preservePnp) {
+  if (nodeOptions) {
     const sanitizedNodeOptions = removePnPNodeOptions(nodeOptions)
 
     if (sanitizedNodeOptions) {

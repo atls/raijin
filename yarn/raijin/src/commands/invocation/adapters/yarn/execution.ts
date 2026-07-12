@@ -1,47 +1,20 @@
-import type { Filename }                  from '@yarnpkg/fslib'
+import type { Filename }                 from '@yarnpkg/fslib'
 
-import type { YarnCommandOptions }        from './execution.interfaces.js'
-import type { YarnExecutable }            from './execution.interfaces.js'
-import type { YarnExecutableOptions }     from './execution.interfaces.js'
+import type { YarnCommandOptions }       from './execution.interfaces.js'
+import type { YarnExecutable }           from './execution.interfaces.js'
+import type { YarnExecutableOptions }    from './execution.interfaces.js'
 
-import { execUtils }                      from '@yarnpkg/core'
-import { scriptUtils }                    from '@yarnpkg/core'
-import { npath }                          from '@yarnpkg/fslib'
-import { ppath }                          from '@yarnpkg/fslib'
-import { xfs }                            from '@yarnpkg/fslib'
+import { execUtils }                     from '@yarnpkg/core'
+import { scriptUtils }                   from '@yarnpkg/core'
+import { xfs }                           from '@yarnpkg/fslib'
 
-import { MANAGED_NODE_LOADER_ENV }        from '@atls/raijin/runtime/node/bootstrap'
-import { applyManagedNodeLoader }         from '@atls/raijin/runtime/node/bootstrap'
-import { sanitizeYarnCommandEnvironment } from '@atls/raijin/yarn'
+import { MANAGED_NODE_LOADER_ENV }       from '@atls/raijin/runtime/node/bootstrap'
+import { applyManagedNodeLoader }        from '@atls/raijin/runtime/node/bootstrap'
+import { createLauncherBaseEnvironment } from '@atls/raijin/yarn'
 
-import { toNativeCwd }                    from '../path/index.js'
+import { toNativeCwd }                   from '../path/index.js'
 
 const YARN_EXECUTABLE_NAME = (process.platform === 'win32' ? 'yarn.cmd' : 'yarn') as Filename
-const NODE_EXECUTABLE_NAME = (process.platform === 'win32' ? 'node.cmd' : 'node') as Filename
-
-const shellQuote = (value: string): string => `'${value.replaceAll("'", "'\\''")}'`
-
-const createExecutableWrapper = (argv0: string, args: Array<string>): string => {
-  if (process.platform === 'win32') {
-    return `@echo off\r\n"${argv0}" ${args.map((arg) => `"${arg.replaceAll('"', '""')}"`).join(' ')} %*\r\n`
-  }
-
-  return `#!/bin/sh\nexec ${shellQuote(argv0)} ${args.map(shellQuote).join(' ')} "$@"\n`
-}
-
-const materializeNodeWrapper = async (binFolder: string, nodeLoader?: string): Promise<void> => {
-  if (!nodeLoader) {
-    return
-  }
-
-  const portableBinFolder = npath.toPortablePath(binFolder)
-
-  await xfs.writeFilePromise(
-    ppath.join(portableBinFolder, NODE_EXECUTABLE_NAME),
-    createExecutableWrapper(process.execPath, []),
-    { mode: 0o755 }
-  )
-}
 
 export const createYarnExecutable = async ({
   binFolder,
@@ -50,29 +23,28 @@ export const createYarnExecutable = async ({
   env = {},
   nodeLoader,
 }: YarnExecutableOptions): Promise<YarnExecutable> => {
+  const nodeOptions = [project.configuration.env.NODE_OPTIONS, env.NODE_OPTIONS]
+    .filter(Boolean)
+    .join(' ')
+  const baseEnv = createLauncherBaseEnvironment({
+    ...project.configuration.env,
+    ...env,
+    ...(nodeLoader ? { [MANAGED_NODE_LOADER_ENV]: nodeLoader } : {}),
+    ...(nodeOptions ? { NODE_OPTIONS: nodeOptions } : {}),
+  })
   const scriptEnv = await scriptUtils.makeScriptEnv({
+    baseEnv,
     binFolder,
     locator,
     project,
     ignoreCorepack: false,
   })
-  const nodeOptions = [scriptEnv.NODE_OPTIONS, env.NODE_OPTIONS].filter(Boolean).join(' ')
 
-  const executableEnv: NodeJS.ProcessEnv = {
-    ...scriptEnv,
-    ...env,
-    ...(nodeOptions ? { NODE_OPTIONS: nodeOptions } : {}),
-    ...(nodeLoader ? { [MANAGED_NODE_LOADER_ENV]: nodeLoader } : {}),
-  }
-
-  applyManagedNodeLoader(executableEnv)
-  delete executableEnv.YARN_IGNORE_PATH
-
-  await materializeNodeWrapper(scriptEnv.BERRY_BIN_FOLDER, nodeLoader)
+  applyManagedNodeLoader(scriptEnv)
 
   return {
     executable: YARN_EXECUTABLE_NAME,
-    env: executableEnv,
+    env: scriptEnv,
   }
 }
 
@@ -90,14 +62,12 @@ export const executeYarnCommand = async ({
     env,
     project: invocation.yarn.project,
   })
-  const executableEnv = sanitizeYarnCommandEnvironment(executable.env, { preservePnp: true })
-
-  executableEnv.INIT_CWD = toNativeCwd(invocation.invocationCwd)
-  executableEnv.PROJECT_CWD = toNativeCwd(invocation.project.cwd)
+  executable.env.INIT_CWD = toNativeCwd(invocation.invocationCwd)
+  executable.env.PROJECT_CWD = toNativeCwd(invocation.project.cwd)
 
   const { code } = await execUtils.pipevp(executable.executable, args, {
     cwd: invocation.executionCwd,
-    env: executableEnv,
+    env: executable.env,
     stderr,
     stdin,
     stdout,
