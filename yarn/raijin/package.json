@@ -18,6 +18,7 @@
     ".": "./src/index.ts",
     "./commands": "./src/commands/index.ts",
     "./project": "./src/project/index.ts",
+    "./yarn": "./src/yarn/index.ts",
     "./runtime": "./src/runtime.ts",
     "./runtime/node/bootstrap": "./src/runtime/node/bootstrap/index.ts",
     "./types": "./types/index.d.ts",
@@ -107,6 +108,11 @@
         "import": "./dist/project/index.js",
         "types": "./dist/project/index.d.ts",
         "default": "./dist/project/index.js"
+      },
+      "./yarn": {
+        "import": "./dist/yarn/index.js",
+        "types": "./dist/yarn/index.d.ts",
+        "default": "./dist/yarn/index.js"
       },
       "./runtime": {
         "import": "./dist/runtime.js",

@@ -1,17 +1,17 @@
-import type { PortablePath }                 from '@yarnpkg/fslib'
+import type { PortablePath }          from '@yarnpkg/fslib'
 
-import assert                                from 'node:assert'
+import assert                         from 'node:assert'
 
-import { StreamReport }                      from '@yarnpkg/core'
-import { xfs }                               from '@yarnpkg/fslib'
-import { ppath }                             from '@yarnpkg/fslib'
+import { StreamReport }               from '@yarnpkg/core'
+import { xfs }                        from '@yarnpkg/fslib'
+import { ppath }                      from '@yarnpkg/fslib'
 
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
-import tsconfig                              from '@atls/raijin/typescript-config'
+import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
+import { shouldProxyCommand }         from '@atls/raijin/commands'
+import tsconfig                       from '@atls/raijin/typescript-config'
 
-import { AbstractRaijinSyncCommand }         from './base.js'
-import { createRaijinSyncTarget }            from './target.js'
+import { AbstractRaijinSyncCommand }  from './base.js'
+import { createRaijinSyncTarget }     from './target.js'
 
 const projectTypesIncludeEntry = 'project.types.d.ts'
 
@@ -75,7 +75,7 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'tsconfig']]
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy(['raijin', 'sync', 'tsconfig'])
     }
 
@@ -83,10 +83,8 @@ export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
   }
 
   override async executeRegular(): Promise<number> {
-    const { configuration, project } = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
       {

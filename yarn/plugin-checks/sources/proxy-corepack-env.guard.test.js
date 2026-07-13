@@ -29,7 +29,7 @@ const YARN_LITERAL_REENTRY_REGEXP =
   /\b(?:execUtils\.)?(?:pipevp|execvp)\(\s*['"]yarn['"]|\bspawn\(\s*['"]yarn['"]/g
 
 const SCRIPT_ENV_REGEXP = /scriptUtils\.makeScriptEnv\(\s*\{[\s\S]*?\}\s*\)/g
-const YARN_COMMAND_EXECUTABLE_OWNER = 'yarn/raijin/src/commands/invocation/executable.ts'
+const YARN_EXECUTION_OWNER = 'yarn/raijin/src/commands/invocation/adapters/yarn/execution.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 
@@ -73,10 +73,10 @@ test('should keep Yarn command executable calls in the command invocation owner'
   for (const { path, source } of sources) {
     const relativePath = relative(repoRoot, path)
 
-    if (relativePath !== YARN_COMMAND_EXECUTABLE_OWNER) {
+    if (relativePath !== YARN_EXECUTION_OWNER) {
       for (const match of source.matchAll(SCRIPT_ENV_REGEXP)) {
         errors.push(
-          `${relativePath}:${getLine(source, match.index ?? 0)} Yarn command executable must use createYarnCommandExecutable`
+          `${relativePath}:${getLine(source, match.index ?? 0)} Yarn executable must use createYarnExecutable`
         )
       }
     }

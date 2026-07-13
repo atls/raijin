@@ -8,8 +8,8 @@ import { scriptUtils }                                   from '@yarnpkg/core'
 import { xfs }                                           from '@yarnpkg/fslib'
 import { ppath }                                         from '@yarnpkg/fslib'
 
-import { resolveWorkspaceCommandInvocation }             from '@atls/raijin/commands'
-import { createYarnCommandExecutable }                   from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation }                    from '@atls/raijin/commands'
+import { createYarnExecutable }                          from '@atls/raijin/commands'
 
 import { RENDERER_STANDALONE_SERVER_ENTRYPOINT }         from './renderer-build.constants.js'
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
@@ -33,12 +33,12 @@ export class RendererBuildCommand extends BaseCommand {
   async execute(): Promise<number> {
     await cleanupRendererBuildDiscoveryArtifacts(this.context.cwd)
 
-    const {
-      configuration,
-      project,
-      workspace,
-      workspaceCwd: rendererCwd,
-    } = await resolveWorkspaceCommandInvocation(this.context.cwd, this.context.plugins)
+    const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
+      this.context.cwd,
+      this.context.plugins
+    )
+    const { configuration, project } = yarn
+    const rendererCwd = executionCwd
     const rendererBuildContext = createRendererBuildContext(rendererCwd)
 
     await cleanupRendererBuildStaleArtifacts(rendererCwd)
@@ -81,7 +81,7 @@ export class RendererBuildCommand extends BaseCommand {
             locator: workspace.anchoredLocator,
             project,
           }
-          const scriptEnvironment = await createYarnCommandExecutable(executableContext)
+          const scriptEnvironment = await createYarnExecutable(executableContext)
           const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
           const loader = await resolveRendererBuildPnpLoader(
             project.cwd,
@@ -98,7 +98,7 @@ export class RendererBuildCommand extends BaseCommand {
           const nextVersion = resolveNextPackageVersion(nextPackage)
           const nextCompiledConfRequireCacheLoader =
             await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
-          const { executable, env } = await createYarnCommandExecutable({
+          const { executable, env } = await createYarnExecutable({
             ...executableContext,
             env: {
               NODE_OPTIONS: nodeOptions,

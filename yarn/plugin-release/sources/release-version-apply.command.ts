@@ -1,13 +1,13 @@
-import { appendFile }                        from 'node:fs/promises'
+import { appendFile }                  from 'node:fs/promises'
 
-import { BaseCommand }                       from '@yarnpkg/cli'
-import { StreamReport }                      from '@yarnpkg/core'
-import { Option }                            from 'clipanion'
+import { BaseCommand }                 from '@yarnpkg/cli'
+import { StreamReport }                from '@yarnpkg/core'
+import { Option }                      from 'clipanion'
 
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation }  from '@atls/raijin/commands'
 
-import { getDeferredReleaseDecisions }       from './release-version.utils.js'
-import { isDeferredReleaseRequired }         from './release-version.utils.js'
+import { getDeferredReleaseDecisions } from './release-version.utils.js'
+import { isDeferredReleaseRequired }   from './release-version.utils.js'
 
 const GITHUB_OUTPUT_PATH = 'GITHUB_OUTPUT'
 const DEFAULT_WORKSPACE_IDENT = '@atls/raijin'
@@ -34,10 +34,8 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
   since = Option.String('--since')
 
   override async execute(): Promise<number> {
-    const { configuration, project } = await resolveWorkspaceCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, project } = yarn
 
     const deferArgs = ['release', 'version', 'defer']
 

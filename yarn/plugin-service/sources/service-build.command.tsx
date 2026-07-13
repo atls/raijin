@@ -1,22 +1,23 @@
-import { render }                            from 'ink'
-import React                                 from 'react'
+import { render }                     from 'ink'
+import React                          from 'react'
 
-import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
-import { ServiceProgress }                   from '@atls/cli-ui-service-progress-component'
-import { Service }                           from '@atls/code-service'
-import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
-import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }         from '@atls/raijin/commands'
+import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
+import { ServiceProgress }            from '@atls/cli-ui-service-progress-component'
+import { Service }                    from '@atls/code-service'
+import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
+import { shouldProxyCommand }         from '@atls/raijin/commands'
+import { toNativeCwd }                from '@atls/raijin/commands'
 
-import { AbstractServiceCommand }            from './abstract-service.command.jsx'
-import { getWorkspacePackageNames }          from './workspace-package-names.js'
+import { AbstractServiceCommand }     from './abstract-service.command.jsx'
+import { getWorkspacePackageNames }   from './workspace-package-names.js'
 
 export class ServiceBuildCommand extends AbstractServiceCommand {
   static override paths = [['service', 'build']]
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -30,7 +31,7 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
       args.push('-s')
     }
 
-    return executeWorkspaceCommandProxy({
+    return proxyWorkspaceCommand({
       args: ['service', 'build', ...args],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -41,11 +42,14 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { workspace, workspaceCwd } = await resolveWorkspaceCommandInvocation(
+    const { executionCwd, workspace } = await resolveWorkspaceInvocation(
       this.context.cwd,
       this.context.plugins
     )
-    const service = await Service.initialize(workspaceCwd, getWorkspacePackageNames(workspace))
+    const service = await Service.initialize(
+      toNativeCwd(executionCwd),
+      getWorkspacePackageNames(workspace)
+    )
 
     const { clear } = render(<ServiceProgress service={service} />)
 

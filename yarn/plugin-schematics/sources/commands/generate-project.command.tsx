@@ -1,17 +1,15 @@
-import type { PortablePath }               from '@yarnpkg/fslib'
+import { BaseCommand }              from '@yarnpkg/cli'
+import { StreamReport }             from '@yarnpkg/core'
+import { Option }                   from 'clipanion'
 
-import { BaseCommand }                     from '@yarnpkg/cli'
-import { StreamReport }                    from '@yarnpkg/core'
-import { Option }                          from 'clipanion'
+import { getStreamReportCallback }  from '@atls/code-schematics'
+import { getStreamReportOptions }   from '@atls/code-schematics'
+import { resolveProjectInvocation } from '@atls/raijin/commands'
+import { toNativeCwd }              from '@atls/raijin/commands'
 
-import { getStreamReportCallback }         from '@atls/code-schematics'
-import { getStreamReportOptions }          from '@atls/code-schematics'
-import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
-import { resolveNativeCommandCwd }         from '@atls/raijin/commands'
-
-export const createGenerateProjectOptions = (type: string, invocationCwd: PortablePath) => ({
+export const createGenerateProjectOptions = (type: string, invocationCwd: string) => ({
   type,
-  cwd: resolveNativeCommandCwd(invocationCwd),
+  cwd: invocationCwd,
 })
 
 export class GenerateProjectCommand extends BaseCommand {
@@ -20,10 +18,11 @@ export class GenerateProjectCommand extends BaseCommand {
   type = Option.String('-t,--type', 'project')
 
   async execute() {
-    const { configuration, invocationCwd } = await resolveProjectCommandInvocation(
+    const { invocationCwd, yarn } = await resolveProjectInvocation(
       this.context.cwd,
       this.context.plugins
     )
+    const { configuration } = yarn
 
     const allowedTypes = ['library', 'project']
 
@@ -31,7 +30,7 @@ export class GenerateProjectCommand extends BaseCommand {
       throw new Error(`Allowed only ${allowedTypes.join(', ')} types`)
     }
 
-    const options = createGenerateProjectOptions(this.type, invocationCwd)
+    const options = createGenerateProjectOptions(this.type, toNativeCwd(invocationCwd))
 
     const streamReportOptions = getStreamReportOptions(this, configuration)
     const streamReportCallback = await getStreamReportCallback(options)

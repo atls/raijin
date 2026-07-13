@@ -1,27 +1,28 @@
 /* eslint-disable n/no-sync */
 
-import type { EventData }                    from 'node:test'
+import type { EventData }             from 'node:test'
 
-import { readFileSync }                      from 'node:fs'
-import { relative }                          from 'node:path'
+import { readFileSync }               from 'node:fs'
+import { relative }                   from 'node:path'
 
-import { BaseCommand }                       from '@yarnpkg/cli'
-import { Option }                            from 'clipanion'
-import { Command }                           from 'clipanion'
-import { render }                            from 'ink'
-import { isEnum }                            from 'typanion'
-import React                                 from 'react'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { Option }                     from 'clipanion'
+import { Command }                    from 'clipanion'
+import { render }                     from 'ink'
+import { isEnum }                     from 'typanion'
+import React                          from 'react'
 
-import { ErrorInfo }                         from '@atls/cli-ui-error-info-component'
-import { LogRecord }                         from '@atls/cli-ui-log-record-component'
-import { RawOutput }                         from '@atls/cli-ui-raw-output-component'
-import { TestFailure }                       from '@atls/cli-ui-test-failure-component'
-import { TestProgress }                      from '@atls/cli-ui-test-progress-component'
-import { Tester }                            from '@atls/code-test'
-import { renderStatic }                      from '@atls/cli-ui-renderer-static-component'
-import { executeWorkspaceCommandProxy }      from '@atls/raijin/commands'
-import { resolveInvocationCwd }              from '@atls/raijin/commands'
-import { resolveWorkspaceCommandInvocation } from '@atls/raijin/commands'
+import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
+import { LogRecord }                  from '@atls/cli-ui-log-record-component'
+import { RawOutput }                  from '@atls/cli-ui-raw-output-component'
+import { TestFailure }                from '@atls/cli-ui-test-failure-component'
+import { TestProgress }               from '@atls/cli-ui-test-progress-component'
+import { Tester }                     from '@atls/code-test'
+import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
+import { resolveProjectInvocation }   from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
+import { toNativeCwd }                from '@atls/raijin/commands'
 
 type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
@@ -98,11 +99,11 @@ export abstract class AbstractTestCommand extends BaseCommand {
   private bufferedStdTimeout: NodeJS.Timeout | undefined
 
   async executeProxy(type?: 'integration' | 'unit'): Promise<number> {
-    const invocationCwd = resolveInvocationCwd(this.context.cwd)
+    const { invocationCwd } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
     const args = createProxyTestArgs({
       files: this.files,
       watch: this.watch,
-      target: invocationCwd,
+      target: toNativeCwd(invocationCwd),
       testReporter: this.testReporter,
     })
 
@@ -110,7 +111,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
       ? process.env.NODE_OPTIONS
       : `${process.env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
 
-    return executeWorkspaceCommandProxy({
+    return proxyWorkspaceCommand({
       args: ['test', type ?? '', ...args],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -122,10 +123,11 @@ export abstract class AbstractTestCommand extends BaseCommand {
   }
 
   async executeRegular(type: 'integration' | 'unit'): Promise<number> {
-    const { project, invocationCwd, workspaceCwd } = await resolveWorkspaceCommandInvocation(
+    const { executionCwd, invocationCwd, project } = await resolveWorkspaceInvocation(
       this.context.cwd,
       this.context.plugins
     )
+    const projectCwd = toNativeCwd(project.cwd)
 
     const onStdout = (data: TestStdout): void => {
       this.bufferedStd(data, (stdBuffer) => {
@@ -146,7 +148,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
         <TestFailure
           details={data.details}
           source={source}
-          file={data.file ? relative(project.cwd, data.file) : undefined}
+          file={data.file ? relative(projectCwd, data.file) : undefined}
           column={data.column}
           line={data.line}
         />
@@ -157,8 +159,10 @@ export abstract class AbstractTestCommand extends BaseCommand {
         })
     }
 
-    const tester = await Tester.initialize(workspaceCwd, { projectCwd: project.cwd })
-    const target = this.target ?? (this.files.length > 0 ? invocationCwd : project.cwd)
+    const tester = await Tester.initialize(toNativeCwd(executionCwd), {
+      projectCwd,
+    })
+    const target = this.target ?? toNativeCwd(this.files.length > 0 ? invocationCwd : project.cwd)
 
     if (this.testReporter === 'tap') {
       const results =
@@ -181,7 +185,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
     tester.on('test:stderr', onStderr)
     tester.on('test:fail', onFail)
 
-    const { clear, unmount } = render(<TestProgress cwd={project.cwd} tester={tester} />)
+    const { clear, unmount } = render(<TestProgress cwd={projectCwd} tester={tester} />)
 
     try {
       const results =

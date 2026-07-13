@@ -1,22 +1,22 @@
-import type { Annotation }                 from './github.checks.js'
+import type { Annotation }            from './github.checks.js'
 
-import { BaseCommand }                     from '@yarnpkg/cli'
-import { ppath }                           from '@yarnpkg/fslib'
-import { Command }                         from 'clipanion'
-import { Option }                          from 'clipanion'
-import stripAnsi                           from 'strip-ansi'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { ppath }                      from '@yarnpkg/fslib'
+import { Command }                    from 'clipanion'
+import { Option }                     from 'clipanion'
+import stripAnsi                      from 'strip-ansi'
 
-import { executeProjectCommandProxy }      from '@atls/raijin/commands'
-import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }       from '@atls/raijin/commands'
-import { getChangedFiles }                 from '@atls/yarn-plugin-files'
-import { getChangedWorkspaces }            from '@atls/yarn-plugin-workspaces'
+import { proxyProjectCommand }        from '@atls/raijin/commands'
+import { resolveProjectInvocation }   from '@atls/raijin/commands'
+import { shouldProxyCommand }         from '@atls/raijin/commands'
+import { getChangedFiles }            from '@atls/yarn-plugin-files'
+import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
 
-import { GitHubChecks }                    from './github.checks.js'
-import { AnnotationLevel }                 from './github.checks.js'
-import { PassThroughRunContext }           from './pass-through-run.context.js'
-import { isReleaseWorkspaceAllowed }       from './checks-release.config.js'
-import { resolveChecksReleaseConfig }      from './checks-release.config.js'
+import { GitHubChecks }               from './github.checks.js'
+import { AnnotationLevel }            from './github.checks.js'
+import { PassThroughRunContext }      from './pass-through-run.context.js'
+import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
+import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
 export const createChecksReleaseProxyArgs = (noPrivate: boolean): Array<string> => [
   'checks',
@@ -40,7 +40,7 @@ class ChecksReleaseCommand extends BaseCommand {
   noPrivate = Option.Boolean('--no-private', false)
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -48,7 +48,7 @@ class ChecksReleaseCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
-    return executeProjectCommandProxy({
+    return proxyProjectCommand({
       args: createChecksReleaseProxyArgs(this.noPrivate),
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -59,10 +59,8 @@ class ChecksReleaseCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const { project } = await resolveProjectCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { yarn } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const { project } = yarn
 
     const releaseConfig = resolveChecksReleaseConfig(project)
     const effectiveReleaseConfig = {

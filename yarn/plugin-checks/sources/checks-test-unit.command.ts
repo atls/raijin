@@ -1,18 +1,18 @@
-import { StreamReport }                    from '@yarnpkg/core'
+import { StreamReport }              from '@yarnpkg/core'
 
-import { Tester }                          from '@atls/code-test'
-import { executeProjectCommandProxy }      from '@atls/raijin/commands'
-import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }       from '@atls/raijin/commands'
+import { Tester }                    from '@atls/code-test'
+import { proxyProjectCommand }       from '@atls/raijin/commands'
+import { resolveProjectInvocation }  from '@atls/raijin/commands'
+import { shouldProxyCommand }        from '@atls/raijin/commands'
 
-import { AbstractChecksTestCommand }       from './abstract-checks-test.command.js'
-import { GitHubChecks }                    from './github.checks.js'
+import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
+import { GitHubChecks }              from './github.checks.js'
 
 export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static override paths = [['checks', 'test', 'unit']]
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -20,7 +20,7 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   }
 
   async executeProxy(): Promise<number> {
-    return executeProjectCommandProxy({
+    return proxyProjectCommand({
       args: ['checks', 'test', 'unit'],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -35,10 +35,8 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
       return this.cli.run(['test', 'unit'])
     }
 
-    const { configuration, project } = await resolveProjectCommandInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { yarn } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
       {

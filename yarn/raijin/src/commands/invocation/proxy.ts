@@ -1,46 +1,42 @@
-import type { PortablePath }                 from '@yarnpkg/fslib'
+import type { PortablePath }          from '@yarnpkg/fslib'
 
-import type { CommandProxyOptions }          from './invocation.interfaces.js'
-import type { ProjectCommandInvocation }     from './invocation.interfaces.js'
+import type { ProxyOptions }          from './proxy.interfaces.js'
+import type { ProjectInvocation }     from './resolve.interfaces.js'
 
-import { npath }                             from '@yarnpkg/fslib'
+import { INVOCATION_CWD_ENV }         from './resolve.js'
+import { PROXY_ENV }                  from './resolve.js'
+import { toNativeCwd }                from './adapters/path/index.js'
+import { executeYarnCommand }         from './adapters/yarn/execution.js'
+import { resolveProjectInvocation }   from './resolve.js'
+import { resolveWorkspaceInvocation } from './resolve.js'
 
-import { COMMAND_INVOCATION_CWD }            from './context.js'
-import { COMMAND_PROXY_EXECUTION }           from './context.js'
-import { resolveProjectCommandInvocation }   from './context.js'
-import { resolveWorkspaceCommandInvocation } from './context.js'
-import { executeYarnCommand }                from './executable.js'
+export const shouldProxyCommand = (environment: NodeJS.ProcessEnv = process.env): boolean =>
+  environment[PROXY_ENV] !== 'true'
 
-export const shouldExecuteCommandProxy = (environment: NodeJS.ProcessEnv = process.env): boolean =>
-  environment[COMMAND_PROXY_EXECUTION] !== 'true'
-
-export const createCommandProxyEnvironment = (
+export const createProxyEnvironment = (
   invocationCwd: PortablePath,
   environment: NodeJS.ProcessEnv = {}
 ): NodeJS.ProcessEnv => ({
   ...environment,
-  [COMMAND_PROXY_EXECUTION]: 'true',
-  [COMMAND_INVOCATION_CWD]: npath.fromPortablePath(invocationCwd),
+  [INVOCATION_CWD_ENV]: toNativeCwd(invocationCwd),
+  [PROXY_ENV]: 'true',
 })
 
-const executeCommandProxy = async (
-  invocation: ProjectCommandInvocation,
-  { args, env, stderr, stdin, stdout }: CommandProxyOptions
+const proxyCommand = async (
+  invocation: ProjectInvocation,
+  { args, env, stderr, stdin, stdout }: ProxyOptions
 ): Promise<number> =>
   executeYarnCommand({
     args,
-    env: createCommandProxyEnvironment(invocation.invocationCwd, env),
+    env: createProxyEnvironment(invocation.invocationCwd, env),
     invocation,
     stderr,
     stdin,
     stdout,
   })
 
-export const executeProjectCommandProxy = async (options: CommandProxyOptions): Promise<number> =>
-  executeCommandProxy(await resolveProjectCommandInvocation(options.cwd, options.plugins), options)
+export const proxyProjectCommand = async (options: ProxyOptions): Promise<number> =>
+  proxyCommand(await resolveProjectInvocation(options.cwd, options.plugins), options)
 
-export const executeWorkspaceCommandProxy = async (options: CommandProxyOptions): Promise<number> =>
-  executeCommandProxy(
-    await resolveWorkspaceCommandInvocation(options.cwd, options.plugins),
-    options
-  )
+export const proxyWorkspaceCommand = async (options: ProxyOptions): Promise<number> =>
+  proxyCommand(await resolveWorkspaceInvocation(options.cwd, options.plugins), options)

@@ -1,25 +1,25 @@
-import type { Project }                     from '@yarnpkg/core'
+import type { Project }              from '@yarnpkg/core'
 
-import { spawn }                            from 'node:child_process'
-import { resolve }                          from 'node:path'
+import { spawn }                     from 'node:child_process'
+import { resolve }                   from 'node:path'
 
-import { BaseCommand }                      from '@yarnpkg/cli'
-import { StreamReport }                     from '@yarnpkg/core'
-import { MessageName }                      from '@yarnpkg/core'
-import { xfs }                              from '@yarnpkg/fslib'
-import { npath }                            from '@yarnpkg/fslib'
-import { ppath }                            from '@yarnpkg/fslib'
-import { Option }                           from 'clipanion'
+import { BaseCommand }               from '@yarnpkg/cli'
+import { StreamReport }              from '@yarnpkg/core'
+import { MessageName }               from '@yarnpkg/core'
+import { xfs }                       from '@yarnpkg/fslib'
+import { npath }                     from '@yarnpkg/fslib'
+import { ppath }                     from '@yarnpkg/fslib'
+import { Option }                    from 'clipanion'
 
-import { createCommandChildProcessOptions } from '@atls/raijin/commands'
-import { createYarnCommandExecutable }      from '@atls/raijin/commands'
-import { executeProjectCommandProxy }       from '@atls/raijin/commands'
-import { resolveProjectCommandInvocation }  from '@atls/raijin/commands'
-import { shouldExecuteCommandProxy }        from '@atls/raijin/commands'
-import { createProjectModel }               from '@atls/raijin/project'
-import { getChangedFiles }                  from '@atls/yarn-plugin-files'
+import { createChildProcessOptions } from '@atls/raijin/commands'
+import { createYarnExecutable }      from '@atls/raijin/commands'
+import { proxyProjectCommand }       from '@atls/raijin/commands'
+import { resolveProjectInvocation }  from '@atls/raijin/commands'
+import { shouldProxyCommand }        from '@atls/raijin/commands'
+import { toNativeCwd }               from '@atls/raijin/commands'
+import { getChangedFiles }           from '@atls/yarn-plugin-files'
 
-import { GitHubChecks }                     from './github.checks.js'
+import { GitHubChecks }              from './github.checks.js'
 
 const TYPECHECK_TIMEOUT_MS = 5 * 60 * 1000
 
@@ -29,7 +29,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
   changed = Option.Boolean('--changed', false)
 
   override async execute(): Promise<number> {
-    if (shouldExecuteCommandProxy()) {
+    if (shouldProxyCommand()) {
       return this.executeProxy()
     }
 
@@ -39,7 +39,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
   async executeProxy(): Promise<number> {
     const args = ['checks', 'typecheck', ...(this.changed ? ['--changed'] : [])]
 
-    return executeProjectCommandProxy({
+    return proxyProjectCommand({
       args,
       cwd: this.context.cwd,
       plugins: this.context.plugins,
@@ -50,8 +50,9 @@ class ChecksTypeCheckCommand extends BaseCommand {
   }
 
   async executeRegular(): Promise<number> {
-    const invocation = await resolveProjectCommandInvocation(this.context.cwd, this.context.plugins)
-    const { configuration, project } = invocation
+    const invocation = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const { project, yarn } = invocation
+    const { configuration } = yarn
 
     const commandReport = await StreamReport.start(
       {
@@ -66,7 +67,11 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
           await report.startTimerPromise('TypeCheck', async () => {
             try {
-              const includes = await this.getIncludes(project)
+              const includes = await this.getIncludes(
+                yarn.project,
+                project.workspacePatterns,
+                toNativeCwd(project.cwd)
+              )
 
               if (this.changed && includes.length === 0) {
                 report.reportInfo(MessageName.UNNAMED, 'No TypeScript files changed')
@@ -131,14 +136,18 @@ class ChecksTypeCheckCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
-  protected async getIncludes(project: Project): Promise<Array<string>> {
+  protected async getIncludes(
+    project: Project,
+    workspacePatterns: Array<string>,
+    projectNativeCwd: string
+  ): Promise<Array<string>> {
     if (this.changed) {
       const includes = (await getChangedFiles(project)).filter((file) =>
         /\.(cts|mts|ts|tsx)$/.test(file))
 
       const existsMap = await Promise.all(
         includes.map(async (file) =>
-          xfs.existsPromise(npath.toPortablePath(resolve(project.cwd, file))))
+          xfs.existsPromise(npath.toPortablePath(resolve(projectNativeCwd, file))))
       )
 
       return includes.filter((_, index) => existsMap[index])
@@ -154,16 +163,16 @@ class ChecksTypeCheckCommand extends BaseCommand {
       }
     }
 
-    return createProjectModel(project).workspacePatterns
+    return workspacePatterns
   }
 
   private async runTypecheck(
-    invocation: Awaited<ReturnType<typeof resolveProjectCommandInvocation>>,
+    invocation: Awaited<ReturnType<typeof resolveProjectInvocation>>,
     includes: Array<string>
   ): Promise<number> {
-    const { project } = invocation
+    const { project } = invocation.yarn
     const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await createYarnCommandExecutable({
+    const { executable, env } = await createYarnExecutable({
       binFolder,
       project,
     })
@@ -174,7 +183,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
       const child = spawn(
         executable,
         ['typecheck', ...includes],
-        createCommandChildProcessOptions({
+        createChildProcessOptions({
           invocation,
           env,
           stdio: ['ignore', 'pipe', 'pipe'],

@@ -1,13 +1,13 @@
-import { BaseCommand }                     from '@yarnpkg/cli'
-import { StreamReport }                    from '@yarnpkg/core'
-import { MessageName }                     from '@yarnpkg/core'
-import { Command }                         from 'clipanion'
-import { Option }                          from 'clipanion'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { StreamReport }               from '@yarnpkg/core'
+import { MessageName }                from '@yarnpkg/core'
+import { Command }                    from 'clipanion'
+import { Option }                     from 'clipanion'
 
-import { executeYarnCommand }              from '@atls/raijin/commands'
-import { resolveProjectCommandInvocation } from '@atls/raijin/commands'
+import { executeYarnCommand }         from '@atls/raijin/commands'
+import { resolveProjectInvocation }   from '@atls/raijin/commands'
 
-import { resolveChecksReleaseConfig }      from './checks-release.config.js'
+import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
@@ -26,8 +26,8 @@ class ChecksRunCommand extends BaseCommand {
   noRelease = Option.Boolean('--no-release', false)
 
   async execute(): Promise<number> {
-    const invocation = await resolveProjectCommandInvocation(this.context.cwd, this.context.plugins)
-    const { configuration, project } = invocation
+    const invocation = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const { configuration, project } = invocation.yarn
     const releaseConfig = resolveChecksReleaseConfig(project)
 
     const commandReport = await StreamReport.start(
@@ -63,7 +63,7 @@ class ChecksRunCommand extends BaseCommand {
   }
 
   private async runCheck(
-    invocation: Awaited<ReturnType<typeof resolveProjectCommandInvocation>>,
+    invocation: Awaited<ReturnType<typeof resolveProjectInvocation>>,
     args: Array<string>,
     report: StreamReport
   ): Promise<number> {
