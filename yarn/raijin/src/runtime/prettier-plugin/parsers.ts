@@ -60,5 +60,3 @@ export const createParsers = (
     },
   },
 })
-
-export const parsers = createParsers()

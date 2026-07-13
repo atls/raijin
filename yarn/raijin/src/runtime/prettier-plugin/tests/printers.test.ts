@@ -9,9 +9,10 @@ import * as typescript       from 'prettier/plugins/typescript'
 import { format }            from 'prettier/standalone'
 
 import { getPrettierPlugin } from '../index.js'
+import defaultPlugin         from '../index.js'
 
 const formatTypeScript = async (source: string, options: Partial<Config> = {}): Promise<string> => {
-  const plugin = await getPrettierPlugin()
+  const plugin = await getPrettierPlugin({ workspacePackageNames: [] })
 
   return format(source, {
     parser: 'typescript',
@@ -78,6 +79,32 @@ test('should separate Yarn project packages from external modules', async () => 
       '',
     ].join('\n')
   )
+})
+
+test('should preserve Yarn workspace classification for plugin defaults', async () => {
+  const source = [
+    "import { Formatter } from '@atls/code-format'",
+    "import { Project } from '@yarnpkg/core'",
+  ].join('\n')
+  const expected = [
+    "import { Project }   from '@yarnpkg/core'",
+    '',
+    "import { Formatter } from '@atls/code-format'",
+    '',
+  ].join('\n')
+
+  const plugins = [defaultPlugin, await getPrettierPlugin()]
+  const results = await Promise.all(
+    plugins.map(async (plugin) =>
+      format(source, {
+        parser: 'typescript',
+        semi: false,
+        singleQuote: true,
+        plugins: [estree, babel, typescript, plugin] as Config['plugins'],
+      }))
+  )
+
+  assert.deepEqual(results, [expected, expected])
 })
 
 test('should align namespace export all declarations by their exported binding', async () => {

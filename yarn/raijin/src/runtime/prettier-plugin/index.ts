@@ -1,10 +1,6 @@
-import { parsers }  from './parsers.js'
-import { printers } from './printers/index.js'
+import { getPrettierPlugin } from './getters/index.js'
 
-const plugin = {
-  printers,
-  parsers,
-}
+const plugin = await getPrettierPlugin()
 
 export default plugin
 export * from './getters/index.js'
