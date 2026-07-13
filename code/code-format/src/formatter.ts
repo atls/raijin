@@ -23,8 +23,8 @@ import { createCommandInput }    from '@atls/raijin/commands'
 import { discoverFiles }         from '@atls/raijin/commands'
 import { toNativeCwd }           from '@atls/raijin/commands'
 import { toPortableCwd }         from '@atls/raijin/commands'
-import { getPrettierPlugin }     from '@atls/raijin/prettier-plugin'
-import config                    from '@atls/raijin/prettier'
+import { getPrettierPlugin }     from '@atls/raijin/prettier-plugin/factory'
+import prettierOptions           from '@atls/raijin/prettier-options'
 
 import { ignore }                from './formatter.patterns.js'
 import { ignorePatterns }        from './formatter.patterns.js'
@@ -71,7 +71,7 @@ export class Formatter extends EventEmitter {
       const source = await readFile(targetFile, 'utf8')
 
       const output = await format(source, {
-        ...config,
+        ...prettierOptions,
         filepath: filename,
         // @ts-expect-error type not assignable
         plugins: [estree, yaml, markdown, graphql, babel, typescript, prettierPlugin],

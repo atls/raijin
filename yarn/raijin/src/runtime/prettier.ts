@@ -7,16 +7,13 @@ import * as markdown   from 'prettier/plugins/markdown'
 import * as typescript from 'prettier/plugins/typescript'
 import * as yaml       from 'prettier/plugins/yaml'
 
+import prettierOptions from './prettier-options.js'
 import plugin          from './prettier-plugin/index.js'
 
 export const prettierconfig: Config = {
-  semi: false,
-  singleQuote: true,
-  tabWidth: 2,
-  jsxSingleQuote: true,
-  printWidth: 100,
-  trailingComma: 'es5',
+  ...prettierOptions,
   plugins: [estree, yaml, markdown, graphql, babel, typescript, plugin] as Config['plugins'],
 }
 
+export { prettierOptions }
 export default prettierconfig
