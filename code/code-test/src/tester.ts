@@ -16,9 +16,11 @@ import { tap }                       from 'node:test/reporters'
 
 import ignorer                       from 'ignore'
 
-import { discoverFiles }             from '@atls/raijin/commands'
 import { toNativeCwd }               from '@atls/raijin/commands'
 import { toPortableCwd }             from '@atls/raijin/commands'
+import { discoverFiles }             from '@atls/raijin/filesystem'
+import { toNativePath }              from '@atls/raijin/filesystem'
+import { toPortablePath }            from '@atls/raijin/filesystem'
 
 import { Tests }                     from './tests.js'
 import { parseTestExecArgv }         from './test-exec-argv.js'
@@ -67,7 +69,7 @@ const isExistingTargetPath = (result: TargetPathResult): result is ExistingTarge
   'stat' in result
 
 const toNativeFiles = (files: Awaited<ReturnType<typeof discoverFiles>>): Array<string> =>
-  files.map((file) => toNativeCwd(file))
+  files.map((file) => toNativePath(file))
 
 export class Tester extends EventEmitter {
   private ignore: ignorer.Ignore
@@ -346,7 +348,7 @@ export class Tester extends EventEmitter {
       return toNativeFiles(
         await discoverFiles({
           ...discoveryOptions,
-          cwd: toPortableCwd(targetPath.path),
+          cwd: toPortablePath(targetPath.path),
           patterns: this.createDirectoryTargetPatterns(folderPattern, type, targetPath.path),
         })
       )
@@ -416,7 +418,7 @@ export class Tester extends EventEmitter {
   }
 
   private createTargetPaths(target: CommandTarget): Array<string> {
-    const cwdTargetPath = toNativeCwd(target.path)
+    const cwdTargetPath = toNativePath(target.path)
     const projectTargetPath = resolvePath(this.projectCwd, target.request)
 
     return cwdTargetPath === projectTargetPath

@@ -6,3 +6,5 @@ export interface FileDiscoveryOptions {
   readonly ignore?: ReadonlyArray<string>
   readonly dot?: boolean
 }
+
+export type FileDiscovery = (options: FileDiscoveryOptions) => Promise<Array<PortablePath>>

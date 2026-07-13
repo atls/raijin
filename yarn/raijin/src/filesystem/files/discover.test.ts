@@ -11,7 +11,7 @@ import { test }              from 'node:test'
 import { npath }             from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
 
-import { discoverFiles }     from './discovery.js'
+import { discoverFiles }     from './discover.js'
 
 const createFixture = async (): Promise<PortablePath> => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-file-discovery-'))

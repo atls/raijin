@@ -17,6 +17,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts",
     "./commands": "./src/commands/index.ts",
+    "./filesystem": "./src/filesystem/index.ts",
     "./project": "./src/project/index.ts",
     "./yarn": "./src/yarn/index.ts",
     "./runtime": "./src/runtime.ts",
@@ -105,6 +106,11 @@
         "import": "./dist/commands/index.js",
         "types": "./dist/commands/index.d.ts",
         "default": "./dist/commands/index.js"
+      },
+      "./filesystem": {
+        "import": "./dist/filesystem/index.js",
+        "types": "./dist/filesystem/index.d.ts",
+        "default": "./dist/filesystem/index.js"
       },
       "./project": {
         "import": "./dist/project/index.js",

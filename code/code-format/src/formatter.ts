@@ -20,9 +20,9 @@ import { format }                from 'prettier/standalone'
 import ignorer                   from 'ignore'
 
 import { createCommandInput }    from '@atls/raijin/commands'
-import { discoverFiles }         from '@atls/raijin/commands'
-import { toNativeCwd }           from '@atls/raijin/commands'
 import { toPortableCwd }         from '@atls/raijin/commands'
+import { discoverFiles }         from '@atls/raijin/filesystem'
+import { toNativePath }          from '@atls/raijin/filesystem'
 import { getPrettierPlugin }     from '@atls/raijin/prettier-plugin/factory'
 import prettierOptions           from '@atls/raijin/prettier-options'
 
@@ -110,7 +110,7 @@ export class Formatter extends EventEmitter {
     const resolvedFiles: Array<string> = []
 
     for await (const target of input.targets) {
-      const targetPath = toNativeCwd(target.path)
+      const targetPath = toNativePath(target.path)
       let targetStat
 
       try {
@@ -132,7 +132,7 @@ export class Formatter extends EventEmitter {
               ignore: ignorePatterns,
               dot: true,
             })
-          ).map((file) => toNativeCwd(file))
+          ).map((file) => toNativePath(file))
         )
       } else {
         resolvedFiles.push(targetPath)

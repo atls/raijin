@@ -19,9 +19,9 @@ import { join }                         from 'node:path'
 import ignorer                          from 'ignore'
 
 import { createCommandInput }           from '@atls/raijin/commands'
-import { discoverFiles }                from '@atls/raijin/commands'
-import { toNativeCwd }                  from '@atls/raijin/commands'
 import { toPortableCwd }                from '@atls/raijin/commands'
+import { discoverFiles }                from '@atls/raijin/filesystem'
+import { toNativePath }                 from '@atls/raijin/filesystem'
 import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
 
 import { ignore }                       from './linter.patterns.js'
@@ -167,7 +167,7 @@ export class Linter extends EventEmitter {
       })
     const filesForLint = input
       ? await this.resolveLintFiles(lintInput)
-      : lintInput.targets.map(({ path }) => toNativeCwd(path))
+      : lintInput.targets.map(({ path }) => toNativePath(path))
 
     const finalFiles = filesForLint.filter(
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
@@ -206,7 +206,7 @@ export class Linter extends EventEmitter {
     const resolvedFiles: Array<string> = []
 
     for await (const target of input.targets) {
-      const targetPath = toNativeCwd(target.path)
+      const targetPath = toNativePath(target.path)
       let targetStat
 
       try {
@@ -228,7 +228,7 @@ export class Linter extends EventEmitter {
               ignore: ignorePatterns,
               dot: true,
             })
-          ).map((file) => toNativeCwd(file))
+          ).map((file) => toNativePath(file))
         )
       } else {
         resolvedFiles.push(targetPath)
