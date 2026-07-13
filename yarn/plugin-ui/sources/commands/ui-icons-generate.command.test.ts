@@ -1,17 +1,17 @@
-import assert                         from 'node:assert/strict'
-import { isAbsolute }                 from 'node:path'
-import { join }                       from 'node:path'
-import { test }                       from 'node:test'
+import type { PortablePath }        from '@yarnpkg/fslib'
 
-import { createGeneratedIconTargets } from './ui-icons-generate.command.js'
+import assert                       from 'node:assert/strict'
+import { test }                     from 'node:test'
 
-test('should create absolute generated icon targets from workspace cwd', () => {
-  const projectCwd = join('/', 'tmp', 'raijin-project')
-  const workspaceCwd = join(projectCwd, 'packages', 'ui')
-  const nestedInvocationCwd = join(workspaceCwd, 'src', 'components')
-  const targets = createGeneratedIconTargets(workspaceCwd, ['Icon.tsx'])
+import { toCommandArguments }       from '@atls/raijin/commands'
 
-  assert.deepEqual(targets, [join(workspaceCwd, 'src', 'Icon.tsx')])
-  assert.equal(isAbsolute(targets[0]), true)
-  assert.notEqual(targets[0], join(nestedInvocationCwd, 'packages', 'ui', 'src', 'Icon.tsx'))
+import { createGeneratedIconInput } from './ui-icons-generate.command.js'
+
+test('should represent generated icon targets from workspace cwd', () => {
+  const projectCwd = '/tmp/raijin-project' as PortablePath
+  const workspaceCwd = '/tmp/raijin-project/packages/ui' as PortablePath
+  const input = createGeneratedIconInput(workspaceCwd, ['Icon.tsx'])
+
+  assert.equal(input.source, 'generated')
+  assert.deepEqual(toCommandArguments(input, projectCwd), ['packages/ui/src/Icon.tsx'])
 })

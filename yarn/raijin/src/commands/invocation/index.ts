@@ -1,6 +1,7 @@
 export { createChildProcessOptions }  from './adapters/child-process.js'
 export { waitForChildProcess }        from './adapters/child-process.js'
 export { toNativeCwd }                from './adapters/path/index.js'
+export { toPortableCwd }              from './adapters/path/index.js'
 export { createYarnExecutable }       from './adapters/yarn/execution.js'
 export { executeYarnCommand }         from './adapters/yarn/execution.js'
 export { proxyProjectCommand }        from './proxy.js'

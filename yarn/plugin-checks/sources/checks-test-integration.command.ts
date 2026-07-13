@@ -1,6 +1,7 @@
 import { StreamReport }              from '@yarnpkg/core'
 
 import { Tester }                    from '@atls/code-test'
+import { createCommandInput }        from '@atls/raijin/commands'
 import { proxyProjectCommand }       from '@atls/raijin/commands'
 import { resolveProjectInvocation }  from '@atls/raijin/commands'
 import { shouldProxyCommand }        from '@atls/raijin/commands'
@@ -51,7 +52,9 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
         try {
           const tester = await Tester.initialize(this.context.cwd)
 
-          const results = await tester.integration(project.cwd)
+          const results = await tester.integration(
+            createCommandInput({ cwd: project.cwd, source: 'generated', targets: [] })
+          )
 
           const annotations = this.formatResults(
             results.filter((result) => result.type === 'test:fail').map((result) => result.data),

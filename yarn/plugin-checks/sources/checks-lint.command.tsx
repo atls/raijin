@@ -1,5 +1,6 @@
 /* eslint-disable n/no-sync */
 
+import type { CommandInput }         from '@atls/raijin/commands'
 import type { LintMessage }          from '@atls/raijin/eslint'
 import type { LintResult as Result } from '@atls/raijin/eslint'
 import type { Project }              from '@yarnpkg/core'
@@ -7,20 +8,19 @@ import type { Project }              from '@yarnpkg/core'
 import type { Annotation }           from './github.checks.js'
 
 import { readFileSync }              from 'node:fs'
-import { resolve }                   from 'node:path'
 
 import { BaseCommand }               from '@yarnpkg/cli'
 import { StreamReport }              from '@yarnpkg/core'
 import { MessageName }               from '@yarnpkg/core'
 import { codeFrameColumns }          from '@babel/code-frame'
 import { xfs }                       from '@yarnpkg/fslib'
-import { npath }                     from '@yarnpkg/fslib'
 import { Option }                    from 'clipanion'
 import React                         from 'react'
 
 import { LintResult }                from '@atls/cli-ui-lint-result-component'
 import { Linter }                    from '@atls/code-lint'
 import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }        from '@atls/raijin/commands'
 import { proxyProjectCommand }       from '@atls/raijin/commands'
 import { resolveProjectInvocation }  from '@atls/raijin/commands'
 import { shouldProxyCommand }        from '@atls/raijin/commands'
@@ -77,12 +77,12 @@ class ChecksLintCommand extends BaseCommand {
           try {
             const projectCwd = toNativeCwd(projectModel.cwd)
             const linter = await Linter.initialize(projectCwd, projectCwd)
-            const lintTargets = await this.getLintTargets(project, projectCwd)
+            const lintTargets = await this.getLintTargets(project)
             let results: Array<Result> = []
 
             if (lintTargets === null) {
               results = await linter.lint()
-            } else if (lintTargets.length > 0) {
+            } else if (lintTargets.targets.length > 0) {
               results = await linter.lint(lintTargets)
             }
 
@@ -131,23 +131,25 @@ class ChecksLintCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
-  private async getLintTargets(
-    project: Project,
-    projectNativeCwd: string
-  ): Promise<Array<string> | null> {
+  private async getLintTargets(project: Project): Promise<CommandInput | null> {
     if (!this.changed) {
       return null
     }
 
-    const lintTargets = (await getChangedFiles(project)).filter((file) =>
-      /\.(c|m)?(j|t)sx?$/.test(file))
+    const input = createCommandInput({
+      cwd: project.cwd,
+      source: 'changed',
+      targets: (await getChangedFiles(project)).filter((file) => /\.(c|m)?(j|t)sx?$/.test(file)),
+    })
 
     const existsMap = await Promise.all(
-      lintTargets.map(async (file) =>
-        xfs.existsPromise(npath.toPortablePath(resolve(projectNativeCwd, file))))
+      input.targets.map(async ({ path }) => xfs.existsPromise(path))
     )
 
-    return lintTargets.filter((_, index) => existsMap[index])
+    return {
+      ...input,
+      targets: input.targets.filter((_, index) => existsMap[index]),
+    }
   }
 
   private getAnnotationLevel(severity: LintMessage['severity']): AnnotationLevel {

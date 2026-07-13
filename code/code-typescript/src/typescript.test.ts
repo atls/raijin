@@ -1,14 +1,23 @@
-import assert         from 'node:assert/strict'
-import { mkdir }      from 'node:fs/promises'
-import { mkdtemp }    from 'node:fs/promises'
-import { writeFile }  from 'node:fs/promises'
-import { tmpdir }     from 'node:os'
-import { join }       from 'node:path'
-import { test }       from 'node:test'
+import assert                 from 'node:assert/strict'
+import { mkdir }              from 'node:fs/promises'
+import { mkdtemp }            from 'node:fs/promises'
+import { writeFile }          from 'node:fs/promises'
+import { tmpdir }             from 'node:os'
+import { join }               from 'node:path'
+import { test }               from 'node:test'
 
-import { ts }         from '@atls/raijin/typescript'
+import { createCommandInput } from '@atls/raijin/commands'
+import { toPortableCwd }      from '@atls/raijin/commands'
+import { ts }                 from '@atls/raijin/typescript'
 
-import { TypeScript } from './typescript.js'
+import { TypeScript }         from './typescript.js'
+
+const createInput = (cwd: string, targets: Array<string>) =>
+  createCommandInput({
+    cwd: toPortableCwd(cwd),
+    source: 'explicit',
+    targets,
+  })
 
 const createProject = async (
   files: Record<string, string>,
@@ -50,7 +59,7 @@ test('should preserve project module resolution options during typecheck', async
     'src/index.ts': "import { value } from './lib'\n\nexport { value }\n",
   })
 
-  const diagnostics = await new TypeScript(ts, cwd).check(['src/index.ts'])
+  const diagnostics = await new TypeScript(ts, cwd).check(createInput(cwd, ['src/index.ts']))
 
   assert.equal(
     diagnostics.some((diagnostic) => diagnostic.code === 2835),
@@ -115,7 +124,7 @@ test('should replace file-list tsconfig scope for explicit targets', async () =>
     files = nextFiles
   })
 
-  const diagnostics = await typescript.check(['src/index.ts'])
+  const diagnostics = await typescript.check(createInput(cwd, ['src/index.ts']))
 
   assert.equal(
     diagnostics.some((diagnostic) => diagnostic.code === 18002),
@@ -334,12 +343,9 @@ test('should ignore generated artifacts during typecheck', async () => {
     'src/generated.val.js': 'const broken = missing.value\n',
   })
 
-  const diagnostics = await new TypeScript(ts, cwd).check([
-    'src/**/*.ts',
-    'bundles/**/*.js',
-    'dist/**/*.js',
-    'src/**/*.val.js',
-  ])
+  const diagnostics = await new TypeScript(ts, cwd).check(
+    createInput(cwd, ['src/**/*.ts', 'bundles/**/*.js', 'dist/**/*.js', 'src/**/*.val.js'])
+  )
 
   assert.equal(
     diagnostics.some(
@@ -370,7 +376,7 @@ test('should use project skipLibCheck when manifest does not override it', async
       "import type { MissingType } from 'missing-package'\n\nexport type { MissingType }\n",
   })
 
-  const diagnostics = await new TypeScript(ts, cwd).check(['src/index.ts'])
+  const diagnostics = await new TypeScript(ts, cwd).check(createInput(cwd, ['src/index.ts']))
 
   assert.equal(
     diagnostics.some((diagnostic) => diagnostic.code === 2307),

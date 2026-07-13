@@ -1,5 +1,7 @@
 /* eslint-disable n/no-sync */
 
+import type { CommandInput }          from '@atls/raijin/commands'
+import type { PortablePath }          from '@yarnpkg/fslib'
 import type { EventData }             from 'node:test'
 
 import { readFileSync }               from 'node:fs'
@@ -19,10 +21,12 @@ import { TestFailure }                from '@atls/cli-ui-test-failure-component'
 import { TestProgress }               from '@atls/cli-ui-test-progress-component'
 import { Tester }                     from '@atls/code-test'
 import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }         from '@atls/raijin/commands'
 import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
 import { resolveProjectInvocation }   from '@atls/raijin/commands'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 import { toNativeCwd }                from '@atls/raijin/commands'
+import { toCommandArguments }         from '@atls/raijin/commands'
 
 type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
@@ -100,8 +104,13 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
   async executeProxy(type?: 'integration' | 'unit'): Promise<number> {
     const { invocationCwd } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const input = createCommandInput({
+      cwd: invocationCwd,
+      source: 'explicit',
+      targets: this.files,
+    })
     const args = createProxyTestArgs({
-      files: this.files,
+      files: toCommandArguments(input),
       watch: this.watch,
       target: toNativeCwd(invocationCwd),
       testReporter: this.testReporter,
@@ -162,18 +171,16 @@ export abstract class AbstractTestCommand extends BaseCommand {
     const tester = await Tester.initialize(toNativeCwd(executionCwd), {
       projectCwd,
     })
-    const target = this.target ?? toNativeCwd(this.files.length > 0 ? invocationCwd : project.cwd)
+    const input = this.createInput(invocationCwd, project.cwd)
 
     if (this.testReporter === 'tap') {
       const results =
         type === 'integration'
-          ? await tester.integration(target, {
-              files: this.files,
+          ? await tester.integration(input, {
               watch: this.watch,
               testReporter: this.testReporter,
             })
-          : await tester.unit(target, {
-              files: this.files,
+          : await tester.unit(input, {
               watch: this.watch,
               testReporter: this.testReporter,
             })
@@ -190,13 +197,11 @@ export abstract class AbstractTestCommand extends BaseCommand {
     try {
       const results =
         type === 'integration'
-          ? await tester.integration(target, {
-              files: this.files,
+          ? await tester.integration(input, {
               watch: this.watch,
               testReporter: this.testReporter,
             })
-          : await tester.unit(target, {
-              files: this.files,
+          : await tester.unit(input, {
               watch: this.watch,
               testReporter: this.testReporter,
             })
@@ -224,6 +229,16 @@ export abstract class AbstractTestCommand extends BaseCommand {
       unmount()
       clear()
     }
+  }
+
+  protected createInput(invocationCwd: PortablePath, projectCwd: PortablePath): CommandInput {
+    const targetInput = this.target
+      ? createCommandInput({ cwd: invocationCwd, source: 'explicit', targets: [this.target] })
+      : undefined
+    const target = targetInput?.targets.at(0)
+    const cwd = target?.path ?? (this.files.length > 0 ? invocationCwd : projectCwd)
+
+    return createCommandInput({ cwd, source: 'explicit', targets: this.files })
   }
 
   private bufferedStd(

@@ -1,26 +1,31 @@
-import EventEmitter          from 'node:events'
-import { stat }              from 'node:fs/promises'
-import { writeFile }         from 'node:fs/promises'
-import { readFile }          from 'node:fs/promises'
-import { relative }          from 'node:path'
-import { resolve }           from 'node:path'
-import { join }              from 'node:path'
+import type { CommandInput }  from '@atls/raijin/commands'
 
-import * as babel            from 'prettier/plugins/babel'
-import * as estree           from 'prettier/plugins/estree'
-import * as graphql          from 'prettier/plugins/graphql'
-import * as markdown         from 'prettier/plugins/markdown'
-import * as typescript       from 'prettier/plugins/typescript'
-import * as yaml             from 'prettier/plugins/yaml'
-import { globby }            from 'globby'
-import { format }            from 'prettier/standalone'
-import ignorer               from 'ignore'
+import EventEmitter           from 'node:events'
+import { stat }               from 'node:fs/promises'
+import { writeFile }          from 'node:fs/promises'
+import { readFile }           from 'node:fs/promises'
+import { relative }           from 'node:path'
+import { resolve }            from 'node:path'
+import { join }               from 'node:path'
 
-import { getPrettierPlugin } from '@atls/raijin/prettier-plugin'
-import config                from '@atls/raijin/prettier'
+import * as babel             from 'prettier/plugins/babel'
+import * as estree            from 'prettier/plugins/estree'
+import * as graphql           from 'prettier/plugins/graphql'
+import * as markdown          from 'prettier/plugins/markdown'
+import * as typescript        from 'prettier/plugins/typescript'
+import * as yaml              from 'prettier/plugins/yaml'
+import { globby }             from 'globby'
+import { format }             from 'prettier/standalone'
+import ignorer                from 'ignore'
 
-import { ignore }            from './formatter.patterns.js'
-import { createPatterns }    from './formatter.patterns.js'
+import { createCommandInput } from '@atls/raijin/commands'
+import { toNativeCwd }        from '@atls/raijin/commands'
+import { toPortableCwd }      from '@atls/raijin/commands'
+import { getPrettierPlugin }  from '@atls/raijin/prettier-plugin'
+import config                 from '@atls/raijin/prettier'
+
+import { ignore }             from './formatter.patterns.js'
+import { createPatterns }     from './formatter.patterns.js'
 
 export class Formatter extends EventEmitter {
   constructor(private readonly cwd: string) {
@@ -31,17 +36,17 @@ export class Formatter extends EventEmitter {
     return new Formatter(cwd)
   }
 
-  async format(files?: Array<string>): Promise<void> {
-    if (files && files.length > 0) {
-      await this.formatFiles(files)
+  async format(input?: CommandInput): Promise<void> {
+    if (input) {
+      await this.formatFiles(input)
     } else {
       await this.formatProject()
     }
   }
 
-  protected async formatFiles(files: Array<string> = []): Promise<void> {
+  protected async formatFiles(input: CommandInput): Promise<void> {
     const prettierPlugin = await getPrettierPlugin()
-    const targetFiles = await this.resolveFormatFiles(files)
+    const targetFiles = await this.resolveFormatFiles(input)
 
     const formatFiles = ignorer
       .default()
@@ -55,16 +60,16 @@ export class Formatter extends EventEmitter {
       this.emit('format:start', { file: filename })
 
       const targetFile = resolve(this.cwd, filename)
-      const input = await readFile(targetFile, 'utf8')
+      const source = await readFile(targetFile, 'utf8')
 
-      const output = await format(input, {
+      const output = await format(source, {
         ...config,
         filepath: filename,
         // @ts-expect-error type not assignable
         plugins: [estree, yaml, markdown, graphql, babel, typescript, prettierPlugin],
       })
 
-      if (output !== input && output) {
+      if (output !== source && output) {
         await writeFile(targetFile, output, 'utf8')
 
         this.emit('format:end', { file: filename, changed: true })
@@ -81,21 +86,27 @@ export class Formatter extends EventEmitter {
       dot: true,
     })
 
-    await this.formatFiles(files)
+    await this.formatFiles(
+      createCommandInput({
+        cwd: toPortableCwd(this.cwd),
+        source: 'generated',
+        targets: files,
+      })
+    )
   }
 
-  protected async resolveFormatFiles(files: Array<string>): Promise<Array<string>> {
+  protected async resolveFormatFiles(input: CommandInput): Promise<Array<string>> {
     const resolvedFiles: Array<string> = []
 
-    for await (const filepath of files) {
-      const targetPath = resolve(this.cwd, filepath)
+    for await (const target of input.targets) {
+      const targetPath = toNativeCwd(target.path)
       let targetStat
 
       try {
         targetStat = await stat(targetPath)
       } catch (error) {
         if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
-          throw new Error(`Formatter target does not exist: ${filepath}`)
+          throw new Error(`Formatter target does not exist: ${target.request}`)
         }
 
         throw error

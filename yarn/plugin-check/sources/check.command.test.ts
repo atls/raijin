@@ -10,6 +10,7 @@ const runCheckCommand = async (
   const commands: Array<Array<string>> = []
   const command = Object.assign(Object.create(CheckCommand.prototype), {
     targets,
+    context: { cwd: '/repo' },
     cli: {
       run: async (args: Array<string>) => {
         commands.push(args)
@@ -35,6 +36,16 @@ test('should forward explicit targets to every check command', async () => {
   const { exitCode, commands } = await runCheckCommand(['yarn/plugin-check/sources'])
 
   assert.equal(exitCode, 0)
+  assert.deepEqual(commands, [
+    ['format', 'yarn/plugin-check/sources'],
+    ['typecheck', 'yarn/plugin-check/sources'],
+    ['lint', 'yarn/plugin-check/sources'],
+  ])
+})
+
+test('should serialize normalized targets from the invocation cwd', async () => {
+  const { commands } = await runCheckCommand(['/repo/yarn/plugin-check/sources'])
+
   assert.deepEqual(commands, [
     ['format', 'yarn/plugin-check/sources'],
     ['typecheck', 'yarn/plugin-check/sources'],
