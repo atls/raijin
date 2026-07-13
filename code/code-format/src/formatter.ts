@@ -10,12 +10,6 @@ import { relative }              from 'node:path'
 import { resolve }               from 'node:path'
 import { join }                  from 'node:path'
 
-import * as babel                from 'prettier/plugins/babel'
-import * as estree               from 'prettier/plugins/estree'
-import * as graphql              from 'prettier/plugins/graphql'
-import * as markdown             from 'prettier/plugins/markdown'
-import * as typescript           from 'prettier/plugins/typescript'
-import * as yaml                 from 'prettier/plugins/yaml'
 import { format }                from 'prettier/standalone'
 import ignorer                   from 'ignore'
 
@@ -23,8 +17,7 @@ import { createCommandInput }    from '@atls/raijin/commands'
 import { toPortableCwd }         from '@atls/raijin/commands'
 import { discoverFiles }         from '@atls/raijin/filesystem'
 import { toNativePath }          from '@atls/raijin/filesystem'
-import { getPrettierPlugin }     from '@atls/raijin/prettier-plugin/factory'
-import prettierOptions           from '@atls/raijin/prettier-options'
+import { createPrettierConfig }  from '@atls/raijin/prettier/config'
 
 import { ignore }                from './formatter.patterns.js'
 import { ignorePatterns }        from './formatter.patterns.js'
@@ -51,7 +44,7 @@ export class Formatter extends EventEmitter {
   }
 
   protected async formatFiles(input: CommandInput): Promise<void> {
-    const prettierPlugin = await getPrettierPlugin({
+    const prettierConfig = await createPrettierConfig({
       workspacePackageNames: this.options.workspacePackageNames,
     })
     const targetFiles = await this.resolveFormatFiles(input)
@@ -71,10 +64,8 @@ export class Formatter extends EventEmitter {
       const source = await readFile(targetFile, 'utf8')
 
       const output = await format(source, {
-        ...prettierOptions,
+        ...prettierConfig,
         filepath: filename,
-        // @ts-expect-error type not assignable
-        plugins: [estree, yaml, markdown, graphql, babel, typescript, prettierPlugin],
       })
 
       if (output !== source && output) {

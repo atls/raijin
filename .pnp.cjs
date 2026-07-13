@@ -1629,7 +1629,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react-compiler", "virtual:c4feca895a045f7a94a987c242372f03d64ae02edf85a2edd3b7f592799432e02437aec537e47f3e43c22ca397bcaa8eeac98bca136e671d3e3a05964a45dd60#npm:19.1.0-rc.2"],\
           ["eslint-plugin-react-hooks", "virtual:c4feca895a045f7a94a987c242372f03d64ae02edf85a2edd3b7f592799432e02437aec537e47f3e43c22ca397bcaa8eeac98bca136e671d3e3a05964a45dd60#npm:7.0.1"],\
           ["eslint-plugin-security", "npm:3.0.1"],\
-          ["globby", "npm:13.2.2"],\
+          ["fast-glob", "npm:3.3.2"],\
           ["import-sort", "npm:6.0.0"],\
           ["import-sort-parser", "npm:6.0.0"],\
           ["import-sort-parser-typescript", "npm:6.0.0"],\
@@ -1673,7 +1673,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react-compiler", "virtual:c4feca895a045f7a94a987c242372f03d64ae02edf85a2edd3b7f592799432e02437aec537e47f3e43c22ca397bcaa8eeac98bca136e671d3e3a05964a45dd60#npm:19.1.0-rc.2"],\
           ["eslint-plugin-react-hooks", "virtual:c4feca895a045f7a94a987c242372f03d64ae02edf85a2edd3b7f592799432e02437aec537e47f3e43c22ca397bcaa8eeac98bca136e671d3e3a05964a45dd60#npm:7.0.1"],\
           ["eslint-plugin-security", "npm:3.0.1"],\
-          ["globby", "npm:13.2.2"],\
+          ["fast-glob", "npm:3.3.2"],\
           ["import-sort", "npm:6.0.0"],\
           ["import-sort-parser", "npm:6.0.0"],\
           ["import-sort-parser-typescript", "npm:6.0.0"],\

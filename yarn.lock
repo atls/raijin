@@ -770,7 +770,7 @@ __metadata:
     eslint-plugin-react-compiler: "npm:19.1.0-rc.2"
     eslint-plugin-react-hooks: "npm:7.0.1"
     eslint-plugin-security: "npm:3.0.1"
-    globby: "npm:13.2.2"
+    fast-glob: "npm:3.3.2"
     import-sort: "npm:6.0.0"
     import-sort-parser: "npm:6.0.0"
     import-sort-parser-typescript: "npm:6.0.0"
@@ -7675,7 +7675,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.2, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0":
+"fast-glob@npm:3.3.2, fast-glob@npm:^3.2.2, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0":
   version: 3.3.2
   resolution: "fast-glob@npm:3.3.2"
   dependencies:
@@ -8239,7 +8239,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globby@npm:13.2.2, globby@npm:^13.1.2":
+"globby@npm:^13.1.2":
   version: 13.2.2
   resolution: "globby@npm:13.2.2"
   dependencies:

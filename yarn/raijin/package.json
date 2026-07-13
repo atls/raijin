@@ -33,10 +33,9 @@
     "./svgr": "./src/runtime/svgr.ts",
     "./ts-node-register": "./src/runtime/ts-node-register.ts",
     "./ts-ext-register": "./src/runtime/ts-ext-register.ts",
-    "./prettier": "./src/runtime/prettier.ts",
-    "./prettier-options": "./src/runtime/prettier-options.ts",
-    "./prettier-plugin": "./src/runtime/prettier-plugin/index.ts",
-    "./prettier-plugin/factory": "./src/runtime/prettier-plugin/factory.ts",
+    "./prettier": "./src/runtime/prettier/index.ts",
+    "./prettier/config": "./src/runtime/prettier/config.ts",
+    "./prettier-plugin": "./src/runtime/prettier/plugin/index.ts",
     "./typescript-config": "./src/runtime/typescript-config.ts"
   },
   "main": "src/index.ts",
@@ -67,7 +66,7 @@
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-security": "3.0.1",
-    "globby": "13.2.2",
+    "fast-glob": "3.3.2",
     "import-sort": "6.0.0",
     "import-sort-parser": "6.0.0",
     "import-sort-parser-typescript": "6.0.0",
@@ -188,24 +187,19 @@
         "default": "./dist/runtime/ts-ext-register.js"
       },
       "./prettier": {
-        "import": "./dist/runtime/prettier.js",
-        "types": "./dist/runtime/prettier.d.ts",
-        "default": "./dist/runtime/prettier.js"
+        "import": "./dist/runtime/prettier/index.js",
+        "types": "./dist/runtime/prettier/index.d.ts",
+        "default": "./dist/runtime/prettier/index.js"
       },
-      "./prettier-options": {
-        "import": "./dist/runtime/prettier-options.js",
-        "types": "./dist/runtime/prettier-options.d.ts",
-        "default": "./dist/runtime/prettier-options.js"
+      "./prettier/config": {
+        "import": "./dist/runtime/prettier/config.js",
+        "types": "./dist/runtime/prettier/config.d.ts",
+        "default": "./dist/runtime/prettier/config.js"
       },
       "./prettier-plugin": {
-        "import": "./dist/runtime/prettier-plugin/index.js",
-        "types": "./dist/runtime/prettier-plugin/index.d.ts",
-        "default": "./dist/runtime/prettier-plugin/index.js"
-      },
-      "./prettier-plugin/factory": {
-        "import": "./dist/runtime/prettier-plugin/factory.js",
-        "types": "./dist/runtime/prettier-plugin/factory.d.ts",
-        "default": "./dist/runtime/prettier-plugin/factory.js"
+        "import": "./dist/runtime/prettier/plugin/index.js",
+        "types": "./dist/runtime/prettier/plugin/index.d.ts",
+        "default": "./dist/runtime/prettier/plugin/index.js"
       },
       "./typescript-config": {
         "import": "./dist/runtime/typescript-config.js",
