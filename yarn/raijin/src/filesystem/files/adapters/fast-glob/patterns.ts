@@ -15,16 +15,21 @@ const joinPattern = (base: string, pattern: string): string => {
 }
 
 const translatePattern = (pattern: string): Array<string> => {
+  const directTasks = fastGlob.generateTasks([pattern])
   const negation = pattern.match(NEGATION)?.[0] ?? ''
   const source = pattern.slice(negation.length)
+  const tasks = directTasks.length > 0 ? directTasks : fastGlob.generateTasks([source])
 
-  return fastGlob.generateTasks([source]).flatMap((task) => {
+  return tasks.flatMap((task) => {
     const base = task.base as PortablePath
     const providerBase = fastGlob.convertPathToPattern(npath.fromPortablePath(base))
 
     return task.positive.map(
       (positive) =>
-        `${negation}${joinPattern(providerBase, ppath.relative(base, positive as PortablePath))}`
+        `${directTasks.length > 0 ? '' : negation}${joinPattern(
+          providerBase,
+          ppath.relative(base, positive as PortablePath)
+        )}`
     )
   })
 }

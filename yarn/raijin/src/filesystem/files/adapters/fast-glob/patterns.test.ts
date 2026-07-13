@@ -20,5 +20,8 @@ test('should preserve explicit file and directory patterns', () => {
 })
 
 test('should preserve extglob semantics', () => {
-  assert.deepEqual(translatePatterns(['src/**/!(*.test).ts']), ['src/**/!(*.test).ts'])
+  assert.deepEqual(translatePatterns(['!(*.test).ts', 'src/**/!(*.test).ts']), [
+    '!(*.test).ts',
+    'src/**/!(*.test).ts',
+  ])
 })
