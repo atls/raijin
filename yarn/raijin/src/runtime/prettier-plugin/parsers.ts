@@ -8,9 +8,6 @@ import sortPackageJson                        from 'sort-package-json'
 
 import { preprocess as importSortPreprocess } from './import-sort/index.js'
 
-const preprocess: Parser['preprocess'] = (source, options): string =>
-  importSortPreprocess(source, options)
-
 const parse: Parser['parse'] = async (source, { plugins }) => {
   // @ts-expect-error parser options type is wider at runtime than @types/prettier declares
   const program = typescript.parsers.typescript.parse(source, { plugins })
@@ -40,11 +37,14 @@ const parse: Parser['parse'] = async (source, { plugins }) => {
   return program // eslint-disable-line @typescript-eslint/no-unsafe-return
 }
 
-export const parsers: Record<string, Parser> = {
+export const createParsers = (
+  workspacePackageNames: ReadonlyArray<string> = []
+): Record<string, Parser> => ({
   typescript: {
     ...typescript.parsers.typescript,
     astFormat: 'typescript-custom',
-    preprocess,
+    preprocess: (source, options): string =>
+      importSortPreprocess(source, options, workspacePackageNames),
     parse,
   },
   'json-stringify': {
@@ -59,4 +59,6 @@ export const parsers: Record<string, Parser> = {
         : text
     },
   },
-}
+})
+
+export const parsers = createParsers()

@@ -1415,7 +1415,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-format", "workspace:code/code-format"],\
           ["@atls/raijin", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
-          ["globby", "npm:13.2.2"],\
           ["ignore", "npm:5.3.2"],\
           ["prettier", "npm:3.5.3"]\
         ],\
@@ -1476,7 +1475,6 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:24.12.2"],\
           ["@types/react", "npm:18.3.18"],\
           ["@types/typescript", null],\
-          ["globby", "npm:13.2.2"],\
           ["ignore", "npm:5.3.2"],\
           ["react", "npm:18.3.1"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
@@ -1495,7 +1493,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-lint", "workspace:code/code-lint"],\
           ["@atls/raijin", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
-          ["globby", "npm:13.2.2"],\
           ["ignore", "npm:5.3.2"]\
         ],\
         "linkType": "SOFT"\
@@ -1590,7 +1587,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-test", "workspace:code/code-test"],\
           ["@atls/raijin", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:yarn/raijin"],\
           ["@types/node", "npm:24.12.2"],\
-          ["globby", "npm:13.2.2"],\
           ["ignore", "npm:5.3.2"]\
         ],\
         "linkType": "SOFT"\
@@ -2818,7 +2814,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
-          ["globby", "npm:13.2.2"],\
           ["ink", "virtual:41e75c4e884651becc23cd9371ff80957cda61af29333e93f2626446035dbe0bc3aae6938e95657a19bd4e897a1338289ce6044a41933fe389051ed80db43003#npm:3.2.0"],\
           ["react", "npm:18.3.1"]\
         ],\
@@ -2845,7 +2840,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
-          ["globby", "npm:13.2.2"],\
           ["ink", "virtual:41e75c4e884651becc23cd9371ff80957cda61af29333e93f2626446035dbe0bc3aae6938e95657a19bd4e897a1338289ce6044a41933fe389051ed80db43003#npm:3.2.0"],\
           ["react", "npm:18.3.1"]\
         ],\

@@ -4,6 +4,10 @@ import type { Parser }  from 'prettier'
 export type PrintersType = Record<string, Printer>
 export type ParsersType = Record<string, Parser>
 
+export interface GetPrettierPluginOptions {
+  workspacePackageNames?: ReadonlyArray<string>
+}
+
 export type GetPrettierPluginReturn = Promise<{
   printers: PrintersType
   parsers: ParsersType

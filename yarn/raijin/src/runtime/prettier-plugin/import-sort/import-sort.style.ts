@@ -1,26 +1,30 @@
-import type { IStyleAPI }    from 'import-sort-style'
-import type { IStyleItem }   from 'import-sort-style'
+import type { IImport }                 from 'import-sort-parser'
+import type { IStyleAPI }               from 'import-sort-style'
+import type { IStyleItem }              from 'import-sort-style'
 
-import { isWorkspaceModule } from './import-sort.api.js'
-import { isNodeModule }      from './import-sort.api.js'
-import { isImportType }      from './import-sort.api.js'
+import { createWorkspaceModuleMatcher } from './import-sort.api.js'
+import { isNodeModule }                 from './import-sort.api.js'
+import { isImportType }                 from './import-sort.api.js'
 
-export const style = ({
-  and,
-  hasDefaultMember,
-  hasOnlyNamedMembers,
-  hasNoMember,
-  hasNamespaceMember,
-  isAbsoluteModule,
-  isRelativeModule,
-  isScopedModule,
-  moduleName,
-  naturally,
-  member,
-  not,
-  startsWithLowerCase,
-  startsWithUpperCase,
-}: IStyleAPI): Array<IStyleItem> => {
+const createStyleItems = (
+  {
+    and,
+    hasDefaultMember,
+    hasOnlyNamedMembers,
+    hasNoMember,
+    hasNamespaceMember,
+    isAbsoluteModule,
+    isRelativeModule,
+    isScopedModule,
+    moduleName,
+    naturally,
+    member,
+    not,
+    startsWithLowerCase,
+    startsWithUpperCase,
+  }: IStyleAPI,
+  isWorkspaceModule: (imported: IImport) => boolean
+): Array<IStyleItem> => {
   const noMember = [
     {
       // import 'foo'
@@ -272,4 +276,10 @@ export const style = ({
     ...local,
     { separator: true },
   ]
+}
+
+export const createStyle = (workspacePackageNames: ReadonlyArray<string>) => {
+  const isWorkspaceModule = createWorkspaceModuleMatcher(workspacePackageNames)
+
+  return (api: IStyleAPI): Array<IStyleItem> => createStyleItems(api, isWorkspaceModule)
 }

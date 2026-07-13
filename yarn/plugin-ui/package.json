@@ -24,7 +24,6 @@
     "@atls/code-icons": "workspace:*",
     "@atls/raijin": "workspace:*",
     "clipanion": "4.0.0-rc.2",
-    "globby": "13.2.2",
     "ink": "3.2.0",
     "react": "18.3.1"
   },

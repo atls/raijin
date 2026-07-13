@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
-    "globby": "13.2.2",
     "ignore": "5.3.2"
   },
   "devDependencies": {

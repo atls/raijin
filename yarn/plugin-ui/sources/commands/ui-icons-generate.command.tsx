@@ -1,11 +1,9 @@
 import type { CommandInput }          from '@atls/raijin/commands'
 import type { PortablePath }          from '@yarnpkg/fslib'
 
-import { join }                       from 'node:path'
-
 import { BaseCommand }                from '@yarnpkg/cli'
+import { ppath }                      from '@yarnpkg/fslib'
 import { Option }                     from 'clipanion'
-import { globby }                     from 'globby'
 import { render }                     from 'ink'
 import React                          from 'react'
 
@@ -14,6 +12,7 @@ import { IconsProgress }              from '@atls/cli-ui-icons-progress-componen
 import { Icons }                      from '@atls/code-icons'
 import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }         from '@atls/raijin/commands'
+import { discoverFiles }              from '@atls/raijin/commands'
 import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 import { shouldProxyCommand }         from '@atls/raijin/commands'
@@ -29,6 +28,16 @@ export const createGeneratedIconInput = (
     source: 'generated',
     targets: files.map((file) => `src/${file}`),
   })
+
+export const discoverGeneratedIconFiles = async (
+  workspaceCwd: PortablePath
+): Promise<Array<string>> =>
+  (
+    await discoverFiles({
+      cwd: ppath.join(workspaceCwd, 'src'),
+      patterns: ['*.tsx'],
+    })
+  ).map((file) => ppath.basename(file))
 
 export class UiIconsGenerateCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
@@ -74,9 +83,7 @@ export class UiIconsGenerateCommand extends BaseCommand {
     try {
       await icons.generate({ native: this.native })
 
-      const files = await globby('*.tsx', {
-        cwd: join(cwd, 'src'),
-      })
+      const files = await discoverGeneratedIconFiles(executionCwd)
 
       const input = createGeneratedIconInput(executionCwd, files)
       const generatedFiles = toCommandArguments(input, project.cwd)

@@ -55,6 +55,31 @@ test('should align source clauses in export barrel declarations', async () => {
   )
 })
 
+test('should separate Yarn project packages from external modules', async () => {
+  const plugin = await getPrettierPlugin({ workspacePackageNames: ['@atls/code-format'] })
+  const source = [
+    "import { Formatter } from '@atls/code-format'",
+    "import { Project } from '@yarnpkg/core'",
+  ].join('\n')
+
+  const formatted = await format(source, {
+    parser: 'typescript',
+    semi: false,
+    singleQuote: true,
+    plugins: [estree, babel, typescript, plugin] as Config['plugins'],
+  })
+
+  assert.equal(
+    formatted,
+    [
+      "import { Project }   from '@yarnpkg/core'",
+      '',
+      "import { Formatter } from '@atls/code-format'",
+      '',
+    ].join('\n')
+  )
+})
+
 test('should align namespace export all declarations by their exported binding', async () => {
   const source = [
     "export * from './short.js'",

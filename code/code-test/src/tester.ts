@@ -14,10 +14,11 @@ import { basename }                  from 'node:path'
 import { run }                       from 'node:test'
 import { tap }                       from 'node:test/reporters'
 
-import { globby }                    from 'globby'
 import ignorer                       from 'ignore'
 
+import { discoverFiles }             from '@atls/raijin/commands'
 import { toNativeCwd }               from '@atls/raijin/commands'
+import { toPortableCwd }             from '@atls/raijin/commands'
 
 import { Tests }                     from './tests.js'
 import { parseTestExecArgv }         from './test-exec-argv.js'
@@ -64,6 +65,9 @@ const isMissingPathError = (error: unknown): boolean =>
 
 const isExistingTargetPath = (result: TargetPathResult): result is ExistingTargetPath =>
   'stat' in result
+
+const toNativeFiles = (files: Awaited<ReturnType<typeof discoverFiles>>): Array<string> =>
+  files.map((file) => toNativeCwd(file))
 
 export class Tester extends EventEmitter {
   private ignore: ignorer.Ignore
@@ -283,12 +287,14 @@ export class Tester extends EventEmitter {
     }
 
     if (input.targets.length < 1) {
-      return globby([`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], {
-        cwd,
-        dot: true,
-        absolute: true,
-        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
-      })
+      return toNativeFiles(
+        await discoverFiles({
+          cwd: input.cwd,
+          patterns: [`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`],
+          ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+          dot: true,
+        })
+      )
     }
 
     const testFiles = await Promise.all(
@@ -305,10 +311,9 @@ export class Tester extends EventEmitter {
     type: TestType,
     target: CommandTarget
   ): Promise<Array<string>> {
-    const globbyOptions = {
-      cwd,
+    const discoveryOptions = {
+      cwd: toPortableCwd(cwd),
       dot: true,
-      absolute: true,
       ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
     }
 
@@ -323,9 +328,11 @@ export class Tester extends EventEmitter {
         }
 
         if (this.isFilename(target.request)) {
-          return globby(
-            [`**/${folderPattern}/*${target.request}*.test.{ts,tsx,js,jsx}`],
-            globbyOptions
+          return toNativeFiles(
+            await discoverFiles({
+              ...discoveryOptions,
+              patterns: [`**/${folderPattern}/*${target.request}*.test.{ts,tsx,js,jsx}`],
+            })
           )
         }
 
@@ -336,33 +343,38 @@ export class Tester extends EventEmitter {
     }
 
     if (targetPath.stat.isDirectory()) {
-      return globby(this.createDirectoryTargetPatterns(folderPattern, type, targetPath.path), {
-        ...globbyOptions,
-        cwd: targetPath.path,
-      })
+      return toNativeFiles(
+        await discoverFiles({
+          ...discoveryOptions,
+          cwd: toPortableCwd(targetPath.path),
+          patterns: this.createDirectoryTargetPatterns(folderPattern, type, targetPath.path),
+        })
+      )
     }
 
     return [targetPath.path]
   }
 
   private async collectGlobPatternTestFiles(cwd: string, pattern: string): Promise<Array<string>> {
-    const files = await globby([pattern], {
-      cwd,
-      dot: true,
-      absolute: true,
+    const files = await discoverFiles({
+      cwd: toPortableCwd(cwd),
+      patterns: [pattern],
       ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+      dot: true,
     })
 
     if (files.length > 0 || cwd === this.projectCwd) {
-      return files
+      return toNativeFiles(files)
     }
 
-    return globby([pattern], {
-      cwd: this.projectCwd,
-      dot: true,
-      absolute: true,
-      ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
-    })
+    return toNativeFiles(
+      await discoverFiles({
+        cwd: toPortableCwd(this.projectCwd),
+        patterns: [pattern],
+        ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
+        dot: true,
+      })
+    )
   }
 
   private async findExistingTargetPath(target: CommandTarget): Promise<ExistingTargetPath> {

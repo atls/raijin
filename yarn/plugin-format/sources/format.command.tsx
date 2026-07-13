@@ -10,6 +10,7 @@ import { renderStatic }               from '@atls/cli-ui-renderer-static-compone
 import { createCommandInput }         from '@atls/raijin/commands'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 import { toNativeCwd }                from '@atls/raijin/commands'
+import { getWorkspacePackageNames }   from '@atls/raijin/project'
 
 export class FormatCommand extends BaseCommand {
   static override paths = [['format']]
@@ -17,12 +18,14 @@ export class FormatCommand extends BaseCommand {
   files: Array<string> = Option.Rest({ required: 0 })
 
   async execute(): Promise<number> {
-    const { executionCwd, invocationCwd, project } = await resolveWorkspaceInvocation(
+    const { executionCwd, invocationCwd, project, yarn } = await resolveWorkspaceInvocation(
       this.context.cwd,
       this.context.plugins
     )
 
-    const formatter = await Formatter.initialize(toNativeCwd(executionCwd))
+    const formatter = await Formatter.initialize(toNativeCwd(executionCwd), {
+      workspacePackageNames: getWorkspacePackageNames(yarn.project),
+    })
     const input = createCommandInput({
       cwd: invocationCwd,
       source: 'explicit',

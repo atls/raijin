@@ -624,7 +624,6 @@ __metadata:
   dependencies:
     "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
-    globby: "npm:13.2.2"
     ignore: "npm:5.3.2"
     prettier: "npm:3.5.3"
   languageName: unknown
@@ -665,7 +664,6 @@ __metadata:
   dependencies:
     "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
-    globby: "npm:13.2.2"
     ignore: "npm:5.3.2"
   peerDependencies:
     react: "*"
@@ -736,7 +734,6 @@ __metadata:
   dependencies:
     "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
-    globby: "npm:13.2.2"
     ignore: "npm:5.3.2"
   languageName: unknown
   linkType: soft
@@ -1412,7 +1409,6 @@ __metadata:
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
     clipanion: "npm:4.0.0-rc.2"
-    globby: "npm:13.2.2"
     ink: "npm:3.2.0"
     react: "npm:18.3.1"
   peerDependencies:
