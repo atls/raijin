@@ -1,3 +1,5 @@
+import type { CommandInput }         from '@atls/raijin/commands'
+import type { CommandTarget }        from '@atls/raijin/commands'
 import type { EventData }            from 'node:test'
 import type { TestEvent }            from 'node:test/reporters'
 
@@ -9,12 +11,13 @@ import { relative }                  from 'node:path'
 import { resolve as resolvePath }    from 'node:path'
 import { join }                      from 'node:path'
 import { basename }                  from 'node:path'
-import { isAbsolute }                from 'node:path'
 import { run }                       from 'node:test'
 import { tap }                       from 'node:test/reporters'
 
 import { globby }                    from 'globby'
 import ignorer                       from 'ignore'
+
+import { toNativeCwd }               from '@atls/raijin/commands'
 
 import { Tests }                     from './tests.js'
 import { parseTestExecArgv }         from './test-exec-argv.js'
@@ -38,7 +41,6 @@ type MissingTargetPath = {
 type TargetPathResult = ExistingTargetPath | MissingTargetPath
 
 type TestOptions = {
-  files?: Array<string>
   watch?: boolean
   testReporter?: string
 }
@@ -243,8 +245,8 @@ export class Tester extends EventEmitter {
     })
   }
 
-  async unit(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
-    const testFiles = await this.collectTestFiles(cwd, 'unit', options?.files)
+  async unit(input: CommandInput, options?: TestOptions): Promise<Array<TestEvent>> {
+    const testFiles = await this.collectTestFiles(input, 'unit')
 
     const finalFiles = testFiles.filter(
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
@@ -253,8 +255,8 @@ export class Tester extends EventEmitter {
     return this.run(finalFiles, 240_000, true, options?.watch, options?.testReporter)
   }
 
-  async integration(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
-    const testFiles = await this.collectTestFiles(cwd, 'integration', options?.files)
+  async integration(input: CommandInput, options?: TestOptions): Promise<Array<TestEvent>> {
+    const testFiles = await this.collectTestFiles(input, 'integration')
 
     const finalFiles = testFiles.filter(
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
@@ -263,8 +265,8 @@ export class Tester extends EventEmitter {
     return this.run(finalFiles, 420_000, false, options?.watch, options?.testReporter)
   }
 
-  async general(cwd: string, options?: TestOptions): Promise<Array<TestEvent>> {
-    const testFiles = await this.collectTestFiles(cwd, undefined, options?.files)
+  async general(input: CommandInput, options?: TestOptions): Promise<Array<TestEvent>> {
+    const testFiles = await this.collectTestFiles(input, undefined)
 
     const finalFiles = testFiles.filter(
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
@@ -273,17 +275,14 @@ export class Tester extends EventEmitter {
     return this.run(finalFiles, 420_000, true, options?.watch, options?.testReporter)
   }
 
-  private async collectTestFiles(
-    cwd: string,
-    type: TestType,
-    patterns: Array<string> | undefined
-  ): Promise<Array<string>> {
+  private async collectTestFiles(input: CommandInput, type: TestType): Promise<Array<string>> {
+    const cwd = toNativeCwd(input.cwd)
     let folderPattern = '*'
     if (type !== undefined) {
       folderPattern = type === 'unit' ? '!(integration)' : 'integration'
     }
 
-    if (!patterns || patterns.length < 1) {
+    if (input.targets.length < 1) {
       return globby([`**/${folderPattern}/*.test.{ts,tsx,js,jsx}`], {
         cwd,
         dot: true,
@@ -293,8 +292,8 @@ export class Tester extends EventEmitter {
     }
 
     const testFiles = await Promise.all(
-      patterns.map(async (pattern) =>
-        this.collectPatternTestFiles(cwd, folderPattern, type, pattern))
+      input.targets.map(async (target) =>
+        this.collectPatternTestFiles(cwd, folderPattern, type, target))
     )
 
     return Array.from(new Set(testFiles.flat()))
@@ -304,7 +303,7 @@ export class Tester extends EventEmitter {
     cwd: string,
     folderPattern: string,
     type: TestType,
-    pattern: string
+    target: CommandTarget
   ): Promise<Array<string>> {
     const globbyOptions = {
       cwd,
@@ -313,34 +312,37 @@ export class Tester extends EventEmitter {
       ignore: ['**/node_modules/**', '**/dist/**', '**/.yarn/**'],
     }
 
-    let target
+    let targetPath
 
     try {
-      target = await this.findExistingTargetPath(cwd, pattern)
+      targetPath = await this.findExistingTargetPath(target)
     } catch (error) {
       if (isMissingPathError(error)) {
-        if (this.isGlobPattern(pattern)) {
-          return this.collectGlobPatternTestFiles(cwd, pattern)
+        if (this.isGlobPattern(target.request)) {
+          return this.collectGlobPatternTestFiles(cwd, target.request)
         }
 
-        if (this.isFilename(pattern)) {
-          return globby([`**/${folderPattern}/*${pattern}*.test.{ts,tsx,js,jsx}`], globbyOptions)
+        if (this.isFilename(target.request)) {
+          return globby(
+            [`**/${folderPattern}/*${target.request}*.test.{ts,tsx,js,jsx}`],
+            globbyOptions
+          )
         }
 
-        throw new Error(`Test target does not exist: ${pattern}`)
+        throw new Error(`Test target does not exist: ${target.request}`)
       }
 
       throw error
     }
 
-    if (target.stat.isDirectory()) {
-      return globby(this.createDirectoryTargetPatterns(folderPattern, type, target.path), {
+    if (targetPath.stat.isDirectory()) {
+      return globby(this.createDirectoryTargetPatterns(folderPattern, type, targetPath.path), {
         ...globbyOptions,
-        cwd: target.path,
+        cwd: targetPath.path,
       })
     }
 
-    return [target.path]
+    return [targetPath.path]
   }
 
   private async collectGlobPatternTestFiles(cwd: string, pattern: string): Promise<Array<string>> {
@@ -363,8 +365,8 @@ export class Tester extends EventEmitter {
     })
   }
 
-  private async findExistingTargetPath(cwd: string, pattern: string): Promise<ExistingTargetPath> {
-    const targetPaths = this.createTargetPaths(cwd, pattern)
+  private async findExistingTargetPath(target: CommandTarget): Promise<ExistingTargetPath> {
+    const targetPaths = this.createTargetPaths(target)
     const targetResults = await Promise.all(
       targetPaths.map(async (targetPath): Promise<TargetPathResult> => {
         try {
@@ -398,16 +400,12 @@ export class Tester extends EventEmitter {
       }
     }
 
-    throw new Error(`Test target does not exist: ${pattern}`)
+    throw new Error(`Test target does not exist: ${target.request}`)
   }
 
-  private createTargetPaths(cwd: string, pattern: string): Array<string> {
-    if (isAbsolute(pattern)) {
-      return [pattern]
-    }
-
-    const cwdTargetPath = resolvePath(cwd, pattern)
-    const projectTargetPath = resolvePath(this.projectCwd, pattern)
+  private createTargetPaths(target: CommandTarget): Array<string> {
+    const cwdTargetPath = toNativeCwd(target.path)
+    const projectTargetPath = resolvePath(this.projectCwd, target.request)
 
     return cwdTargetPath === projectTargetPath
       ? [cwdTargetPath]

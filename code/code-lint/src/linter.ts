@@ -1,5 +1,6 @@
 /* eslint-disable n/no-sync */
 
+import type { CommandInput }            from '@atls/raijin/commands'
 import type { ESLintInstance }          from '@atls/raijin/eslint'
 import type { ESLint as RuntimeESLint } from '@atls/raijin/eslint'
 import type { LinterConfig }            from '@atls/raijin/eslint'
@@ -12,14 +13,15 @@ import { readFileSync }                 from 'node:fs'
 import { readFile }                     from 'node:fs/promises'
 import { stat }                         from 'node:fs/promises'
 import { writeFile }                    from 'node:fs/promises'
-import { isAbsolute }                   from 'node:path'
 import { relative }                     from 'node:path'
-import { resolve }                      from 'node:path'
 import { join }                         from 'node:path'
 
 import { globby }                       from 'globby'
 import ignorer                          from 'ignore'
 
+import { createCommandInput }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
+import { toPortableCwd }                from '@atls/raijin/commands'
 import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
 
 import { ignore }                       from './linter.patterns.js'
@@ -104,7 +106,7 @@ export class Linter extends EventEmitter {
   }
 
   async lintFile(filename: string, options?: LintOptions): Promise<LintResult> {
-    const filePath = this.resolveFilePath(filename)
+    const filePath = filename
     const lintFilename = relative(this.tsconfigRootCwd, filePath)
     const source = await readFile(filePath, 'utf8')
 
@@ -149,11 +151,17 @@ export class Linter extends EventEmitter {
     return results
   }
 
-  async lint(files?: Array<string>, options?: LintOptions): Promise<Array<LintResult>> {
-    const filesForLint =
-      files && files.length > 0
-        ? await this.resolveLintFiles(files)
-        : await globby(createPatterns(this.cwd), { dot: true })
+  async lint(input?: CommandInput, options?: LintOptions): Promise<Array<LintResult>> {
+    const lintInput =
+      input ??
+      createCommandInput({
+        cwd: toPortableCwd(this.cwd),
+        source: 'generated',
+        targets: await globby(createPatterns(this.cwd), { dot: true }),
+      })
+    const filesForLint = input
+      ? await this.resolveLintFiles(lintInput)
+      : lintInput.targets.map(({ path }) => toNativeCwd(path))
 
     const finalFiles = filesForLint.filter(
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
@@ -188,18 +196,18 @@ export class Linter extends EventEmitter {
     return linterIgnorePatterns as Array<string>
   }
 
-  private async resolveLintFiles(files: Array<string>): Promise<Array<string>> {
+  private async resolveLintFiles(input: CommandInput): Promise<Array<string>> {
     const resolvedFiles: Array<string> = []
 
-    for await (const file of files) {
-      const targetPath = this.resolveFilePath(file)
+    for await (const target of input.targets) {
+      const targetPath = toNativeCwd(target.path)
       let targetStat
 
       try {
         targetStat = await stat(targetPath)
       } catch (error) {
         if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
-          throw new Error(`Linter target does not exist: ${file}`)
+          throw new Error(`Linter target does not exist: ${target.request}`)
         }
 
         throw error
@@ -219,9 +227,5 @@ export class Linter extends EventEmitter {
     }
 
     return Array.from(new Set(resolvedFiles))
-  }
-
-  private resolveFilePath(file: string): string {
-    return isAbsolute(file) ? file : resolve(this.cwd, file)
   }
 }

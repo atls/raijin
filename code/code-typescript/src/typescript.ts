@@ -1,5 +1,6 @@
 /* eslint-disable n/no-sync, @typescript-eslint/no-shadow */
 
+import type { CommandInput }         from '@atls/raijin/commands'
 import type { ts as typescript }     from '@atls/raijin/typescript'
 
 import EventEmitter                  from 'node:events'
@@ -7,6 +8,8 @@ import { existsSync }                from 'node:fs'
 import { readFileSync }              from 'node:fs'
 import { join }                      from 'node:path'
 
+import { toCommandArguments }        from '@atls/raijin/commands'
+import { toPortableCwd }             from '@atls/raijin/commands'
 import { resolveRaijinRuntimeUrl }   from '@atls/raijin/runtime-resolver'
 import tsconfig                      from '@atls/raijin/typescript-config'
 
@@ -85,8 +88,8 @@ export class TypeScript extends EventEmitter {
     return new TypeScript(ts, cwd, options)
   }
 
-  async check(include?: Array<string>): Promise<Array<typescript.Diagnostic>> {
-    return this.run(include)
+  async check(input?: CommandInput): Promise<Array<typescript.Diagnostic>> {
+    return this.run(input ? toCommandArguments(input, toPortableCwd(this.cwd)) : undefined)
   }
 
   async build(

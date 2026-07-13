@@ -12,11 +12,21 @@ import { resolve }                 from 'node:path'
 import { test }                    from 'node:test'
 import { fileURLToPath }           from 'node:url'
 
+import { createCommandInput }      from '@atls/raijin/commands'
+import { toPortableCwd }           from '@atls/raijin/commands'
+
 import { Linter }                  from './linter.js'
 import { resolveEslintRuntimeUrl } from './linter.js'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const raijinPackagePath = resolve(currentDir, '../../../yarn/raijin')
+
+const createInput = (cwd: string, targets: Array<string>) =>
+  createCommandInput({
+    cwd: toPortableCwd(cwd),
+    source: 'explicit',
+    targets,
+  })
 
 const linkRaijinRuntime = async (cwd: string): Promise<void> => {
   const scopePath = join(cwd, 'node_modules/@atls')
@@ -41,7 +51,7 @@ const lintGeneratedEslintConfig = async (options?: LintOptions): Promise<string>
   const cwd = await createProjectWithGeneratedEslintConfig()
   const linter = await Linter.initialize(cwd, cwd)
 
-  const [result] = await linter.lint([join(cwd, '.eslintrc.js')], options)
+  const [result] = await linter.lint(createInput(cwd, ['.eslintrc.js']), options)
 
   return result.messages.map((message) => message.message).join('\n')
 }
@@ -67,7 +77,7 @@ test('should expand explicit directory targets before linting files', async () =
   await mkdir(src)
   await writeFile(join(src, 'index.ts'), 'export const value = 1\n')
 
-  const results = await linter.lint(['src'])
+  const results = await linter.lint(createInput(cwd, ['src']))
 
   assert.deepEqual(
     results.map((result) => result.filePath),
@@ -87,7 +97,7 @@ test('should lint workspace file with root tsconfig', async () => {
   await writeFile(join(src, 'index.ts'), 'export const value = 1\n')
 
   const linter = await Linter.initialize(rootCwd, workspaceCwd)
-  const [result] = await linter.lint([join(src, 'index.ts')])
+  const [result] = await linter.lint(createInput(workspaceCwd, [join(src, 'index.ts')]))
 
   assert.equal(result.filePath, join(src, 'index.ts'))
   assert.doesNotMatch(
@@ -142,7 +152,9 @@ test('should lint workspace config files outside workspace tsconfig scope', asyn
   await writeFile(join(workspaceCwd, 'postcss.config.mjs'), 'export default {}\n')
 
   const linter = await Linter.initialize(rootCwd, workspaceCwd)
-  const [result] = await linter.lint([join(workspaceCwd, 'postcss.config.mjs')])
+  const [result] = await linter.lint(
+    createInput(workspaceCwd, [join(workspaceCwd, 'postcss.config.mjs')])
+  )
 
   assert.equal(result.filePath, join(workspaceCwd, 'postcss.config.mjs'))
   assert.doesNotMatch(
@@ -159,7 +171,7 @@ test('should expand explicit directory targets with glob metacharacters as liter
   await mkdir(src, { recursive: true })
   await writeFile(join(src, 'index.ts'), 'export const value = 1\n')
 
-  const results = await linter.lint(['src/[id]'])
+  const results = await linter.lint(createInput(cwd, ['src/[id]']))
 
   assert.deepEqual(
     results.map((result) => result.filePath),
@@ -172,7 +184,7 @@ test('should fail clearly when explicit linter target does not exist', async () 
   const linter = await Linter.initialize(cwd, cwd)
 
   await assert.rejects(
-    async () => linter.lint(['missing']),
+    async () => linter.lint(createInput(cwd, ['missing'])),
     new Error('Linter target does not exist: missing')
   )
 })

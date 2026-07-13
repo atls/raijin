@@ -1,3 +1,5 @@
+import type { CommandInput }  from '@atls/raijin/commands'
+
 import assert                 from 'node:assert/strict'
 import { mkdir }              from 'node:fs/promises'
 import { mkdtemp }            from 'node:fs/promises'
@@ -6,16 +8,21 @@ import { tmpdir }             from 'node:os'
 import { join }               from 'node:path'
 import { test }               from 'node:test'
 
+import { createCommandInput } from '@atls/raijin/commands'
+import { toPortableCwd }      from '@atls/raijin/commands'
+
 import { TEST_EXEC_ARGV_ENV } from './test-exec-argv.js'
 import { Tester }             from './tester.js'
 
 type TestFileCollector = {
   collectTestFiles: (
-    cwd: string,
-    type: 'integration' | 'unit' | undefined,
-    patterns: Array<string> | undefined
+    input: CommandInput,
+    type: 'integration' | 'unit' | undefined
   ) => Promise<Array<string>>
 }
+
+const createInput = (cwd: string, targets: Array<string> = []): CommandInput =>
+  createCommandInput({ cwd: toPortableCwd(cwd), source: 'explicit', targets })
 
 const createProject = async (): Promise<string> => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-test-'))
@@ -44,9 +51,10 @@ test('should expand explicit directory targets before collecting unit tests', as
     ].join('\n')
   )
 
-  const files = await (tester as unknown as TestFileCollector).collectTestFiles(cwd, 'unit', [
-    'src',
-  ])
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(
+    createInput(cwd, ['src']),
+    'unit'
+  )
 
   assert.deepEqual(files, [join(unit, 'sample.test.js')])
 })
@@ -70,9 +78,10 @@ test('should collect unit tests directly under explicit directory targets', asyn
     ].join('\n')
   )
 
-  const files = await (tester as unknown as TestFileCollector).collectTestFiles(cwd, 'unit', [
-    'src',
-  ])
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(
+    createInput(cwd, ['src']),
+    'unit'
+  )
 
   assert.deepEqual(files, [join(src, 'formatter.test.js')])
 })
@@ -97,9 +106,8 @@ test('should collect tests directly under explicit integration directory targets
   )
 
   const files = await (tester as unknown as TestFileCollector).collectTestFiles(
-    cwd,
-    'integration',
-    ['integration']
+    createInput(cwd, ['integration']),
+    'integration'
   )
 
   assert.deepEqual(files, [join(integration, 'sample.test.js')])
@@ -125,9 +133,10 @@ test('should resolve root-relative explicit test files when collecting from work
     ].join('\n')
   )
 
-  const files = await (tester as unknown as TestFileCollector).collectTestFiles(workspace, 'unit', [
-    'packages/tools/sources/sample.test.js',
-  ])
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(
+    createInput(workspace, ['packages/tools/sources/sample.test.js']),
+    'unit'
+  )
 
   assert.deepEqual(files, [testFile])
 })
@@ -153,9 +162,10 @@ test('should resolve root-relative glob test files when collecting from workspac
     ].join('\n')
   )
 
-  const files = await (tester as unknown as TestFileCollector).collectTestFiles(workspace, 'unit', [
-    'packages/tools/**/*.test.js',
-  ])
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(
+    createInput(workspace, ['packages/tools/**/*.test.js']),
+    'unit'
+  )
 
   assert.deepEqual(files, [testFile])
 })
@@ -204,10 +214,15 @@ test('should keep workspace ignore patterns with root-relative explicit test fil
   let results: Awaited<ReturnType<typeof tester.unit>>
 
   try {
-    results = await tester.unit(workspace, {
-      files: ['packages/tools/sources/ignored.test.js', 'packages/tools/sources/kept.test.js'],
-      testReporter: 'tap',
-    })
+    results = await tester.unit(
+      createInput(workspace, [
+        'packages/tools/sources/ignored.test.js',
+        'packages/tools/sources/kept.test.js',
+      ]),
+      {
+        testReporter: 'tap',
+      }
+    )
   } finally {
     if (previousExecArgv === undefined) {
       Reflect.deleteProperty(process.env, TEST_EXEC_ARGV_ENV)
@@ -221,10 +236,13 @@ test('should keep workspace ignore patterns with root-relative explicit test fil
     false
   )
   assert.deepEqual(
-    await (tester as unknown as TestFileCollector).collectTestFiles(workspace, 'unit', [
-      'packages/tools/sources/ignored.test.js',
-      'packages/tools/sources/kept.test.js',
-    ]),
+    await (tester as unknown as TestFileCollector).collectTestFiles(
+      createInput(workspace, [
+        'packages/tools/sources/ignored.test.js',
+        'packages/tools/sources/kept.test.js',
+      ]),
+      'unit'
+    ),
     [ignoredFile, keptFile]
   )
 })
@@ -248,9 +266,10 @@ test('should expand explicit directory targets with glob metacharacters as liter
     ].join('\n')
   )
 
-  const files = await (tester as unknown as TestFileCollector).collectTestFiles(cwd, 'unit', [
-    'src/[id]',
-  ])
+  const files = await (tester as unknown as TestFileCollector).collectTestFiles(
+    createInput(cwd, ['src/[id]']),
+    'unit'
+  )
 
   assert.deepEqual(files, [join(unit, 'sample.test.js')])
 })
@@ -261,8 +280,7 @@ test('should fail clearly when explicit test target does not exist', async () =>
 
   await assert.rejects(
     async () =>
-      tester.unit(cwd, {
-        files: ['src/missing'],
+      tester.unit(createInput(cwd, ['src/missing']), {
         testReporter: 'tap',
       }),
     new Error('Test target does not exist: src/missing')

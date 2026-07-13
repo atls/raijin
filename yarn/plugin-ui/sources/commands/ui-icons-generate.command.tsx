@@ -1,3 +1,6 @@
+import type { CommandInput }          from '@atls/raijin/commands'
+import type { PortablePath }          from '@yarnpkg/fslib'
+
 import { join }                       from 'node:path'
 
 import { BaseCommand }                from '@yarnpkg/cli'
@@ -10,15 +13,22 @@ import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
 import { IconsProgress }              from '@atls/cli-ui-icons-progress-component'
 import { Icons }                      from '@atls/code-icons'
 import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }         from '@atls/raijin/commands'
 import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 import { shouldProxyCommand }         from '@atls/raijin/commands'
 import { toNativeCwd }                from '@atls/raijin/commands'
+import { toCommandArguments }         from '@atls/raijin/commands'
 
-export const createGeneratedIconTargets = (
-  workspaceCwd: string,
+export const createGeneratedIconInput = (
+  workspaceCwd: PortablePath,
   files: Array<string>
-): Array<string> => files.map((file) => join(workspaceCwd, 'src', file))
+): CommandInput =>
+  createCommandInput({
+    cwd: workspaceCwd,
+    source: 'generated',
+    targets: files.map((file) => `src/${file}`),
+  })
 
 export class UiIconsGenerateCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
@@ -68,7 +78,8 @@ export class UiIconsGenerateCommand extends BaseCommand {
         cwd: join(cwd, 'src'),
       })
 
-      const generatedFiles = createGeneratedIconTargets(cwd, files)
+      const input = createGeneratedIconInput(executionCwd, files)
+      const generatedFiles = toCommandArguments(input, project.cwd)
 
       await this.cli.run(['format', ...generatedFiles], {
         cwd: project.cwd,

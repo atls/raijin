@@ -1,22 +1,22 @@
+import type { CommandInput }         from '@atls/raijin/commands'
 import type { Project }              from '@yarnpkg/core'
 
 import { spawn }                     from 'node:child_process'
-import { resolve }                   from 'node:path'
 
 import { BaseCommand }               from '@yarnpkg/cli'
 import { StreamReport }              from '@yarnpkg/core'
 import { MessageName }               from '@yarnpkg/core'
 import { xfs }                       from '@yarnpkg/fslib'
-import { npath }                     from '@yarnpkg/fslib'
 import { ppath }                     from '@yarnpkg/fslib'
 import { Option }                    from 'clipanion'
 
 import { createChildProcessOptions } from '@atls/raijin/commands'
+import { createCommandInput }        from '@atls/raijin/commands'
 import { createYarnExecutable }      from '@atls/raijin/commands'
 import { proxyProjectCommand }       from '@atls/raijin/commands'
 import { resolveProjectInvocation }  from '@atls/raijin/commands'
 import { shouldProxyCommand }        from '@atls/raijin/commands'
-import { toNativeCwd }               from '@atls/raijin/commands'
+import { toCommandArguments }        from '@atls/raijin/commands'
 import { getChangedFiles }           from '@atls/yarn-plugin-files'
 
 import { GitHubChecks }              from './github.checks.js'
@@ -67,13 +67,9 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
           await report.startTimerPromise('TypeCheck', async () => {
             try {
-              const includes = await this.getIncludes(
-                yarn.project,
-                project.workspacePatterns,
-                toNativeCwd(project.cwd)
-              )
+              const includes = await this.getIncludes(yarn.project, project.workspacePatterns)
 
-              if (this.changed && includes.length === 0) {
+              if (this.changed && includes.targets.length === 0) {
                 report.reportInfo(MessageName.UNNAMED, 'No TypeScript files changed')
 
                 await checks.complete(checkId, {
@@ -85,7 +81,10 @@ class ChecksTypeCheckCommand extends BaseCommand {
                 return
               }
 
-              report.reportInfo(MessageName.UNNAMED, `TypeCheck targets: ${includes.length}`)
+              report.reportInfo(
+                MessageName.UNNAMED,
+                `TypeCheck targets: ${includes.targets.length}`
+              )
 
               const code = await this.runTypecheck(invocation, includes)
 
@@ -138,19 +137,24 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
   protected async getIncludes(
     project: Project,
-    workspacePatterns: Array<string>,
-    projectNativeCwd: string
-  ): Promise<Array<string>> {
+    workspacePatterns: Array<string>
+  ): Promise<CommandInput> {
     if (this.changed) {
-      const includes = (await getChangedFiles(project)).filter((file) =>
-        /\.(cts|mts|ts|tsx)$/.test(file))
+      const input = createCommandInput({
+        cwd: project.cwd,
+        source: 'changed',
+        targets: (await getChangedFiles(project)).filter((file) =>
+          /\.(cts|mts|ts|tsx)$/.test(file)),
+      })
 
       const existsMap = await Promise.all(
-        includes.map(async (file) =>
-          xfs.existsPromise(npath.toPortablePath(resolve(projectNativeCwd, file))))
+        input.targets.map(async ({ path }) => xfs.existsPromise(path))
       )
 
-      return includes.filter((_, index) => existsMap[index])
+      return {
+        ...input,
+        targets: input.targets.filter((_, index) => existsMap[index]),
+      }
     }
 
     if (await xfs.existsPromise(ppath.join(project.cwd, 'tsconfig.json'))) {
@@ -159,16 +163,24 @@ class ChecksTypeCheckCommand extends BaseCommand {
       )
 
       if (tsconfig.include && tsconfig.include.length > 0) {
-        return tsconfig.include
+        return createCommandInput({
+          cwd: project.cwd,
+          source: 'generated',
+          targets: tsconfig.include,
+        })
       }
     }
 
-    return workspacePatterns
+    return createCommandInput({
+      cwd: project.cwd,
+      source: 'generated',
+      targets: workspacePatterns,
+    })
   }
 
   private async runTypecheck(
     invocation: Awaited<ReturnType<typeof resolveProjectInvocation>>,
-    includes: Array<string>
+    input: CommandInput
   ): Promise<number> {
     const { project } = invocation.yarn
     const binFolder = await xfs.mktempPromise()
@@ -182,7 +194,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
       let timedOut = false
       const child = spawn(
         executable,
-        ['typecheck', ...includes],
+        ['typecheck', ...toCommandArguments(input, invocation.project.cwd)],
         createChildProcessOptions({
           invocation,
           env,

@@ -1,6 +1,3 @@
-import { resolve }                    from 'node:path'
-import { isAbsolute }                 from 'node:path'
-
 import { BaseCommand }                from '@yarnpkg/cli'
 import { Option }                     from 'clipanion'
 import { render }                     from 'ink'
@@ -10,13 +7,9 @@ import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
 import { FormatProgress }             from '@atls/cli-ui-format-progress-component'
 import { Formatter }                  from '@atls/code-format'
 import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }         from '@atls/raijin/commands'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 import { toNativeCwd }                from '@atls/raijin/commands'
-
-export const resolveFormatTargetFiles = (
-  files: Array<string>,
-  invocationCwd: string
-): Array<string> => files.map((file) => (isAbsolute(file) ? file : resolve(invocationCwd, file)))
 
 export class FormatCommand extends BaseCommand {
   static override paths = [['format']]
@@ -30,14 +23,18 @@ export class FormatCommand extends BaseCommand {
     )
 
     const formatter = await Formatter.initialize(toNativeCwd(executionCwd))
-    const files = resolveFormatTargetFiles(this.files, toNativeCwd(invocationCwd))
+    const input = createCommandInput({
+      cwd: invocationCwd,
+      source: 'explicit',
+      targets: this.files,
+    })
 
     const { clear } = render(
       <FormatProgress cwd={toNativeCwd(project.cwd)} formatter={formatter} />
     )
 
     try {
-      await formatter.format(files)
+      await formatter.format(input.targets.length > 0 ? input : undefined)
 
       return 0
     } catch (error) {

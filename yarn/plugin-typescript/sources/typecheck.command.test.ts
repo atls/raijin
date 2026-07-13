@@ -1,22 +1,26 @@
-import assert               from 'node:assert/strict'
-import { mkdir }            from 'node:fs/promises'
-import { mkdtemp }          from 'node:fs/promises'
-import { writeFile }        from 'node:fs/promises'
-import { tmpdir }           from 'node:os'
-import { join }             from 'node:path'
-import { test }             from 'node:test'
+import type { CommandInput }  from '@atls/raijin/commands'
 
-import { Manifest }         from '@yarnpkg/core'
-import { npath }            from '@yarnpkg/fslib'
+import assert                 from 'node:assert/strict'
+import { mkdir }              from 'node:fs/promises'
+import { mkdtemp }            from 'node:fs/promises'
+import { writeFile }          from 'node:fs/promises'
+import { tmpdir }             from 'node:os'
+import { join }               from 'node:path'
+import { test }               from 'node:test'
 
-import { TypeCheckCommand } from './typecheck.command.js'
+import { Manifest }           from '@yarnpkg/core'
+import { npath }              from '@yarnpkg/fslib'
+
+import { toCommandArguments } from '@atls/raijin/commands'
+
+import { TypeCheckCommand }   from './typecheck.command.js'
 
 class TestTypeCheckCommand extends TypeCheckCommand {
   async resolveIncludes(
     projectCwd: string,
     invocationCwd: string,
     typecheckCwd: string
-  ): Promise<Array<string> | undefined> {
+  ): Promise<CommandInput | undefined> {
     const projectCwdPortable = npath.toPortablePath(projectCwd)
     const topLevelWorkspace = {
       cwd: projectCwdPortable,
@@ -70,7 +74,10 @@ test('should resolve explicit typecheck targets from invocation cwd to typecheck
 
   command.args = ['page.tsx']
 
-  assert.deepEqual(await command.resolveIncludes(cwd, invocationCwd, workspaceCwd), [
+  const input = await command.resolveIncludes(cwd, invocationCwd, workspaceCwd)
+
+  assert.ok(input)
+  assert.deepEqual(toCommandArguments(input, npath.toPortablePath(workspaceCwd)), [
     'src/app/page.tsx',
   ])
 })
@@ -79,5 +86,8 @@ test('should use project workspace patterns when tsconfig is absent', async () =
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-'))
   const command = new TestTypeCheckCommand()
 
-  assert.deepEqual(await command.resolveIncludes(cwd, cwd, cwd), ['packages/*'])
+  const input = await command.resolveIncludes(cwd, cwd, cwd)
+
+  assert.ok(input)
+  assert.deepEqual(toCommandArguments(input), ['packages/*'])
 })

@@ -1,9 +1,6 @@
+import type { CommandInput }          from '@atls/raijin/commands'
 import type { Project }               from '@yarnpkg/core'
 import type { PortablePath }          from '@yarnpkg/fslib'
-
-import { isAbsolute }                 from 'node:path'
-import { relative }                   from 'node:path'
-import { resolve }                    from 'node:path'
 
 import { BaseCommand }                from '@yarnpkg/cli'
 import { ppath }                      from '@yarnpkg/fslib'
@@ -17,10 +14,13 @@ import { TypeScriptDiagnostic }       from '@atls/cli-ui-typescript-diagnostic-c
 import { TypeScriptProgress }         from '@atls/cli-ui-typescript-progress-component'
 import { TypeScript }                 from '@atls/code-typescript'
 import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }         from '@atls/raijin/commands'
+import { resolveProjectInvocation }   from '@atls/raijin/commands'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
 import { shouldProxyCommand }         from '@atls/raijin/commands'
 import { toNativeCwd }                from '@atls/raijin/commands'
+import { toCommandArguments }         from '@atls/raijin/commands'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -36,8 +36,15 @@ export class TypeCheckCommand extends BaseCommand {
   }
 
   async executeProxy(): Promise<number> {
+    const { invocationCwd } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const input = createCommandInput({
+      cwd: invocationCwd,
+      source: 'explicit',
+      targets: this.args,
+    })
+
     return proxyWorkspaceCommand({
-      args: ['typecheck', ...this.args],
+      args: ['typecheck', ...toCommandArguments(input)],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
       stdin: this.context.stdin,
@@ -103,19 +110,21 @@ export class TypeCheckCommand extends BaseCommand {
     workspacePatterns: Array<string>,
     invocationCwd: PortablePath,
     typecheckCwd: PortablePath
-  ): Promise<Array<string> | undefined> {
+  ): Promise<CommandInput | undefined> {
     if (this.args.length > 0) {
-      const cwdRoot = toNativeCwd(typecheckCwd)
-      const cwd = toNativeCwd(invocationCwd)
-
-      return this.args.map((target) =>
-        isAbsolute(target) ? relative(cwdRoot, target) : relative(cwdRoot, resolve(cwd, target)))
+      return createCommandInput({
+        cwd: invocationCwd,
+        source: 'explicit',
+        targets: this.args,
+      })
     }
 
-    if (await xfs.existsPromise(ppath.join(typecheckCwd, 'tsconfig.json'))) {
-      return undefined
-    }
-
-    return workspacePatterns
+    return (await xfs.existsPromise(ppath.join(typecheckCwd, 'tsconfig.json')))
+      ? undefined
+      : createCommandInput({
+          cwd: typecheckCwd,
+          source: 'generated',
+          targets: workspacePatterns,
+        })
   }
 }

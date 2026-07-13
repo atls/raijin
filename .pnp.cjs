@@ -1895,6 +1895,7 @@ const RAW_RUNTIME_STATE =
       ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-check", {\
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-check-virtual-1540b846f2/1/yarn/plugin-check/",\
         "packageDependencies": [\
+          ["@atls/raijin", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-check", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-check"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -1914,6 +1915,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:yarn/plugin-check", {\
         "packageLocation": "./yarn/plugin-check/",\
         "packageDependencies": [\
+          ["@atls/raijin", "virtual:93762f395d50e2410536eefd1c9656e618c9e599e2d023ef5341f0dd44b7c10b9c8541440da9da71a8fae8443bde146c84aabb5f6bc6020be89f6fe1913af10c#workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-check", "workspace:yarn/plugin-check"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:c4feca895a045f7a94a987c242372f03d64ae02edf85a2edd3b7f592799432e02437aec537e47f3e43c22ca397bcaa8eeac98bca136e671d3e3a05964a45dd60#npm:4.14.1"],\

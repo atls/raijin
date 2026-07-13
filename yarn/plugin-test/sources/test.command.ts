@@ -25,11 +25,10 @@ export class TestCommand extends AbstractTestCommand {
     const tester = await Tester.initialize(toNativeCwd(executionCwd), {
       projectCwd: toNativeCwd(project.cwd),
     })
-    const target = this.target ?? toNativeCwd(this.files.length > 0 ? invocationCwd : project.cwd)
+    const input = this.createInput(invocationCwd, project.cwd)
 
     try {
-      const results = await tester.general(target, {
-        files: this.files,
+      const results = await tester.general(input, {
         watch: this.watch,
         testReporter: this.testReporter,
       })

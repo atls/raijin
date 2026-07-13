@@ -1,6 +1,3 @@
-import { resolve }                    from 'node:path'
-import { isAbsolute }                 from 'node:path'
-
 import { BaseCommand }                from '@yarnpkg/cli'
 import { Option }                     from 'clipanion'
 import { render }                     from 'ink'
@@ -11,15 +8,13 @@ import { LintProgress }               from '@atls/cli-ui-lint-progress-component
 import { LintResult }                 from '@atls/cli-ui-lint-result-component'
 import { Linter }                     from '@atls/code-lint'
 import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }         from '@atls/raijin/commands'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
+import { resolveProjectInvocation }   from '@atls/raijin/commands'
 import { shouldProxyCommand }         from '@atls/raijin/commands'
+import { toCommandArguments }         from '@atls/raijin/commands'
 import { toNativeCwd }                from '@atls/raijin/commands'
-
-export const resolveLintTargetFiles = (
-  files: Array<string>,
-  invocationCwd: string
-): Array<string> => files.map((file) => (isAbsolute(file) ? file : resolve(invocationCwd, file)))
 
 interface LintCommandResult {
   messages: Array<unknown>
@@ -46,6 +41,12 @@ export class LintCommand extends BaseCommand {
 
   async executeProxy(): Promise<number> {
     const args: Array<string> = []
+    const { invocationCwd } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const input = createCommandInput({
+      cwd: invocationCwd,
+      source: 'explicit',
+      targets: this.files,
+    })
 
     if (this.fix) {
       args.push('--fix')
@@ -56,7 +57,7 @@ export class LintCommand extends BaseCommand {
     }
 
     return proxyWorkspaceCommand({
-      args: ['lint', ...args, ...this.files],
+      args: ['lint', ...args, ...toCommandArguments(input)],
       cwd: this.context.cwd,
       plugins: this.context.plugins,
       stdin: this.context.stdin,
@@ -73,7 +74,11 @@ export class LintCommand extends BaseCommand {
     const projectCwd = toNativeCwd(project.cwd)
 
     const linter = await Linter.initialize(projectCwd, toNativeCwd(executionCwd))
-    const files = resolveLintTargetFiles(this.files, toNativeCwd(invocationCwd))
+    const input = createCommandInput({
+      cwd: invocationCwd,
+      source: 'explicit',
+      targets: this.files,
+    })
 
     const { clear } = render(<LintProgress cwd={projectCwd} linter={linter} />)
 
@@ -88,7 +93,7 @@ export class LintCommand extends BaseCommand {
     })
 
     try {
-      const results = await linter.lint(files, {
+      const results = await linter.lint(input.targets.length > 0 ? input : undefined, {
         fix: this.fix,
         cache: this.cache,
       })

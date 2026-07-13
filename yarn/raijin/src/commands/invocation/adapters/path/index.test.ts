@@ -8,17 +8,23 @@ test('should select the Windows path adapter', () => {
     selectPathAdapter('win32').toNative('/C:/repo/client' as never),
     String.raw`C:\repo\client`
   )
+  assert.equal(selectPathAdapter('win32').toPortable(String.raw`C:\repo\client`), '/C:/repo/client')
 })
 
 test('should select the POSIX path adapter for Unix platforms', () => {
   assert.equal(selectPathAdapter('linux').toNative('/repo/client' as never), '/repo/client')
   assert.equal(selectPathAdapter('darwin').toNative('/repo/client' as never), '/repo/client')
   assert.equal(selectPathAdapter('freebsd').toNative('/repo/client' as never), '/repo/client')
+  assert.equal(selectPathAdapter('linux').toPortable('/repo/client'), '/repo/client')
 })
 
 test('should convert a Windows UNC cwd independently from the host platform', () => {
   assert.equal(
     selectPathAdapter('win32').toNative('//server/share/repo' as never),
     String.raw`\\server\share\repo`
+  )
+  assert.equal(
+    selectPathAdapter('win32').toPortable(String.raw`\\server\share\repo`),
+    '//server/share/repo'
   )
 })

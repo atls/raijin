@@ -1,13 +1,17 @@
+import type { CommandInput }      from '@atls/raijin/commands'
+
 import assert                     from 'node:assert/strict'
 import test                       from 'node:test'
 
 import { Manifest }               from '@yarnpkg/core'
 import { npath }                  from '@yarnpkg/fslib'
 
+import { toCommandArguments }     from '@atls/raijin/commands'
+
 import { ChecksTypeCheckCommand } from './checks-typecheck.command.jsx'
 
 class TestChecksTypeCheckCommand extends ChecksTypeCheckCommand {
-  async resolveIncludes(cwd: string): Promise<Array<string>> {
+  async resolveIncludes(cwd: string): Promise<CommandInput> {
     const projectCwd = npath.toPortablePath(cwd)
     const topLevelWorkspace = {
       cwd: projectCwd,
@@ -20,8 +24,7 @@ class TestChecksTypeCheckCommand extends ChecksTypeCheckCommand {
         topLevelWorkspace,
         workspaces: [topLevelWorkspace],
       } as never,
-      ['packages/*'],
-      cwd
+      ['packages/*']
     )
   }
 }
@@ -31,5 +34,5 @@ test('should use project workspace patterns when tsconfig is absent', async () =
 
   command.changed = false
 
-  assert.deepEqual(await command.resolveIncludes('/repo'), ['packages/*'])
+  assert.deepEqual(toCommandArguments(await command.resolveIncludes('/repo')), ['packages/*'])
 })
