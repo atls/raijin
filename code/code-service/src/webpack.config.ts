@@ -3,12 +3,10 @@ import type { webpack as wp }               from '@atls/raijin/webpack'
 import type { WebpackEnvironment }          from './webpack.interfaces.js'
 
 import { readFile }                         from 'node:fs/promises'
-import { writeFile }                        from 'node:fs/promises'
-import { mkdtemp }                          from 'node:fs/promises'
-import { tmpdir }                           from 'node:os'
 import { join }                             from 'node:path'
 
-import tsconfig                             from '@atls/raijin/typescript-config'
+import { materializeTypeScriptConfig }      from '@atls/raijin/config/typescript'
+import { typescriptDefaults as tsconfig }   from '@atls/raijin/config/typescript'
 
 import { WebpackExternals }                 from './webpack.externals.js'
 import { createOptionalImportIgnorePlugin } from './webpack.ignore.js'
@@ -33,9 +31,10 @@ export class WebpackConfig {
     environment: WebpackEnvironment = 'production',
     additionalPlugins: Array<wp.WebpackPluginInstance> = []
   ): Promise<wp.Configuration> {
-    const configFile = join(await mkdtemp(join(tmpdir(), 'code-service-')), 'tsconfig.json')
-
-    await writeFile(configFile, '{"include":["**/*"]}')
+    const configFile = await materializeTypeScriptConfig({
+      config: { include: ['**/*'] },
+      prefix: 'code-service-',
+    })
 
     await this.assertEsmWorkspace()
 

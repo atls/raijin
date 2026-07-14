@@ -17,6 +17,12 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts",
     "./commands": "./src/commands/index.ts",
+    "./config": "./src/config/index.ts",
+    "./config/eslint": "./src/config/eslint/index.ts",
+    "./config/next": "./src/config/next/index.ts",
+    "./config/prettier": "./src/config/prettier/index.ts",
+    "./config/sync": "./src/config/sync/index.ts",
+    "./config/typescript": "./src/config/typescript/index.ts",
     "./filesystem": "./src/filesystem/index.ts",
     "./project": "./src/project/index.ts",
     "./yarn": "./src/yarn/index.ts",
@@ -105,6 +111,36 @@
         "import": "./dist/commands/index.js",
         "types": "./dist/commands/index.d.ts",
         "default": "./dist/commands/index.js"
+      },
+      "./config": {
+        "import": "./dist/config/index.js",
+        "types": "./dist/config/index.d.ts",
+        "default": "./dist/config/index.js"
+      },
+      "./config/eslint": {
+        "import": "./dist/config/eslint/index.js",
+        "types": "./dist/config/eslint/index.d.ts",
+        "default": "./dist/config/eslint/index.js"
+      },
+      "./config/next": {
+        "import": "./dist/config/next/index.js",
+        "types": "./dist/config/next/index.d.ts",
+        "default": "./dist/config/next/index.js"
+      },
+      "./config/prettier": {
+        "import": "./dist/config/prettier/index.js",
+        "types": "./dist/config/prettier/index.d.ts",
+        "default": "./dist/config/prettier/index.js"
+      },
+      "./config/sync": {
+        "import": "./dist/config/sync/index.js",
+        "types": "./dist/config/sync/index.d.ts",
+        "default": "./dist/config/sync/index.js"
+      },
+      "./config/typescript": {
+        "import": "./dist/config/typescript/index.js",
+        "types": "./dist/config/typescript/index.d.ts",
+        "default": "./dist/config/typescript/index.js"
       },
       "./filesystem": {
         "import": "./dist/filesystem/index.js",

@@ -10,6 +10,7 @@ import { ppath }                                         from '@yarnpkg/fslib'
 
 import { resolveWorkspaceInvocation }                    from '@atls/raijin/commands'
 import { createYarnExecutable }                          from '@atls/raijin/commands'
+import { materializeNextConfigAdapter }                  from '@atls/raijin/config/next'
 
 import { RENDERER_STANDALONE_SERVER_ENTRYPOINT }         from './renderer-build.constants.js'
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
@@ -98,6 +99,7 @@ export class RendererBuildCommand extends BaseCommand {
           const nextVersion = resolveNextPackageVersion(nextPackage)
           const nextCompiledConfRequireCacheLoader =
             await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
+          const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
           const { executable, env } = await createYarnExecutable({
             ...executableContext,
             env: {
@@ -116,6 +118,7 @@ export class RendererBuildCommand extends BaseCommand {
               stdout,
               stderr,
               env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, rendererCwd, {
+                nextConfigAdapterPath,
                 output: 'standalone',
               }),
             }

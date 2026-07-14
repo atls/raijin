@@ -3,8 +3,6 @@ import type { Project }               from '@yarnpkg/core'
 import type { PortablePath }          from '@yarnpkg/fslib'
 
 import { BaseCommand }                from '@yarnpkg/cli'
-import { ppath }                      from '@yarnpkg/fslib'
-import { xfs }                        from '@yarnpkg/fslib'
 import { Option }                     from 'clipanion'
 import { render }                     from 'ink'
 import React                          from 'react'
@@ -21,6 +19,7 @@ import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
 import { shouldProxyCommand }         from '@atls/raijin/commands'
 import { toNativeCwd }                from '@atls/raijin/commands'
 import { toCommandArguments }         from '@atls/raijin/commands'
+import { hasTypeScriptProject }       from '@atls/raijin/config/typescript'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -98,7 +97,7 @@ export class TypeCheckCommand extends BaseCommand {
     workspaceCwd: PortablePath,
     projectCwd: PortablePath
   ): Promise<PortablePath> {
-    if (await xfs.existsPromise(ppath.join(workspaceCwd, 'tsconfig.json'))) {
+    if (hasTypeScriptProject(toNativeCwd(workspaceCwd))) {
       return workspaceCwd
     }
 
@@ -119,7 +118,7 @@ export class TypeCheckCommand extends BaseCommand {
       })
     }
 
-    return (await xfs.existsPromise(ppath.join(typecheckCwd, 'tsconfig.json')))
+    return hasTypeScriptProject(toNativeCwd(typecheckCwd))
       ? undefined
       : createCommandInput({
           cwd: typecheckCwd,

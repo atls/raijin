@@ -1,24 +1,9 @@
 /* eslint-disable */
 
-import { updateJsonInTree } from './json.utils.js'
+import { applyTypeScriptCompilerOptions } from '@atls/raijin/config/typescript'
 
-interface TsConfig {
-  compilerOptions?: object
-}
-
-export const mergeTsCompilerOptions = (
-  existingCompilerOptions: object | undefined,
-  compilerOptions: object
-): object => ({
-  ...compilerOptions,
-  ...existingCompilerOptions,
-})
+import { updateJsonInTree }               from './json.utils.js'
 
 export const updateTsConfigInTree = (compilerOptions: object) =>
-  updateJsonInTree('tsconfig.json', (tsconfig) => ({
-    ...tsconfig,
-    compilerOptions: mergeTsCompilerOptions(
-      (tsconfig as TsConfig).compilerOptions,
-      compilerOptions
-    ),
-  }))
+  updateJsonInTree('tsconfig.json', (tsconfig) =>
+    applyTypeScriptCompilerOptions(tsconfig, compilerOptions as Record<string, unknown>))

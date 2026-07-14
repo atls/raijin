@@ -106,7 +106,7 @@ test('should preserve inherited tsconfig scope during typecheck', async () => {
   )
 })
 
-test('should replace file-list tsconfig scope for explicit targets', async () => {
+test('should preserve file-list config while resolving explicit targets', async () => {
   const cwd = await createProject({
     'tsconfig.json': JSON.stringify(
       {

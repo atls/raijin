@@ -1,0 +1,10 @@
+export { findStoredPackageByIdent }         from './manifest.js'
+export { getRaijinTypeScriptRange }         from './manifest.js'
+export { normalizeTypeScriptRange }         from './manifest.js'
+export { shouldSyncTypeScriptRange }        from './manifest.js'
+export { syncTypeScriptManifest }           from './manifest.js'
+export { projectTypesReference }            from './tsconfig.js'
+export { resolveTypeScriptIncludes }        from './tsconfig.js'
+export { syncTypeScriptConfig }             from './tsconfig.js'
+
+export type { SyncTypeScriptConfigOptions } from './tsconfig.interfaces.js'
