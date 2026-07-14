@@ -1,15 +1,15 @@
-import type { Config }                   from 'prettier'
+import type { Config }              from 'prettier'
 
-import type { GetPrettierPluginOptions } from './plugin/interfaces/index.js'
+import type { CreatePluginOptions } from './plugin/create.interfaces.js'
 
-import * as babel                        from 'prettier/plugins/babel'
-import * as estree                       from 'prettier/plugins/estree'
-import * as graphql                      from 'prettier/plugins/graphql'
-import * as markdown                     from 'prettier/plugins/markdown'
-import * as typescript                   from 'prettier/plugins/typescript'
-import * as yaml                         from 'prettier/plugins/yaml'
+import * as babel                   from 'prettier/plugins/babel'
+import * as estree                  from 'prettier/plugins/estree'
+import * as graphql                 from 'prettier/plugins/graphql'
+import * as markdown                from 'prettier/plugins/markdown'
+import * as typescript              from 'prettier/plugins/typescript'
+import * as yaml                    from 'prettier/plugins/yaml'
 
-import { getPrettierPlugin }             from './plugin/getters/index.js'
+import { createPlugin }             from './plugin/create.js'
 
 const options: Config = {
   semi: false,
@@ -21,7 +21,7 @@ const options: Config = {
 }
 
 export const createPrettierConfig = async (
-  pluginOptions: GetPrettierPluginOptions = {}
+  pluginOptions: CreatePluginOptions = {}
 ): Promise<Config> => ({
   ...options,
   plugins: [
@@ -31,6 +31,6 @@ export const createPrettierConfig = async (
     graphql,
     babel,
     typescript,
-    await getPrettierPlugin(pluginOptions),
+    await createPlugin(pluginOptions),
   ] as Config['plugins'],
 })

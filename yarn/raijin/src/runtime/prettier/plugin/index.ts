@@ -1,6 +1,7 @@
-import { getPrettierPlugin } from './getters/index.js'
+import { createPlugin } from './create.js'
 
-const plugin = await getPrettierPlugin()
+const plugin = await createPlugin()
 
 export default plugin
-export * from './getters/index.js'
+export *      from './create.js'
+export type * from './create.interfaces.js'
