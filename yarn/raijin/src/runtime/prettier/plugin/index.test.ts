@@ -1,15 +1,16 @@
-import type { Config }  from 'prettier'
+import type { Config }       from 'prettier'
 
-import assert           from 'node:assert/strict'
-import { test }         from 'node:test'
+import assert                from 'node:assert/strict'
+import { test }              from 'node:test'
 
-import * as babel       from 'prettier/plugins/babel'
-import * as estree      from 'prettier/plugins/estree'
-import * as typescript  from 'prettier/plugins/typescript'
-import { format }       from 'prettier/standalone'
+import * as babel            from 'prettier/plugins/babel'
+import * as estree           from 'prettier/plugins/estree'
+import * as typescript       from 'prettier/plugins/typescript'
+import { format }            from 'prettier/standalone'
 
-import { createPlugin } from './index.js'
-import defaultPlugin    from './index.js'
+import { createPlugin }      from './index.js'
+import { getPrettierPlugin } from './index.js'
+import defaultPlugin         from './index.js'
 
 const formatTypeScript = async (source: string, options: Partial<Config> = {}): Promise<string> => {
   const plugin = await createPlugin({ workspacePackageNames: [] })
@@ -33,6 +34,10 @@ const assertFormatted = async (
   assert.equal(formatted, expected)
   assert.equal(await formatTypeScript(formatted, options), expected)
 }
+
+test('should preserve the legacy plugin factory export', () => {
+  assert.equal(getPrettierPlugin, createPlugin)
+})
 
 test('should align source clauses in export barrel declarations', async () => {
   const source = [
