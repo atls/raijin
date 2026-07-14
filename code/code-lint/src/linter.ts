@@ -16,16 +16,17 @@ import { writeFile }                    from 'node:fs/promises'
 import { relative }                     from 'node:path'
 import { join }                         from 'node:path'
 
-import { globby }                       from 'globby'
 import ignorer                          from 'ignore'
 
 import { createCommandInput }           from '@atls/raijin/commands'
-import { toNativeCwd }                  from '@atls/raijin/commands'
 import { toPortableCwd }                from '@atls/raijin/commands'
+import { discoverFiles }                from '@atls/raijin/filesystem'
+import { toNativePath }                 from '@atls/raijin/filesystem'
 import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
 
 import { ignore }                       from './linter.patterns.js'
-import { createPatterns }               from './linter.patterns.js'
+import { ignorePatterns }               from './linter.patterns.js'
+import { patterns }                     from './linter.patterns.js'
 import { createLintResult }             from './linter.utils.js'
 
 type EslintRuntime = {
@@ -157,11 +158,16 @@ export class Linter extends EventEmitter {
       createCommandInput({
         cwd: toPortableCwd(this.cwd),
         source: 'generated',
-        targets: await globby(createPatterns(this.cwd), { dot: true }),
+        targets: await discoverFiles({
+          cwd: toPortableCwd(this.cwd),
+          patterns,
+          ignore: ignorePatterns,
+          dot: true,
+        }),
       })
     const filesForLint = input
       ? await this.resolveLintFiles(lintInput)
-      : lintInput.targets.map(({ path }) => toNativeCwd(path))
+      : lintInput.targets.map(({ path }) => toNativePath(path))
 
     const finalFiles = filesForLint.filter(
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
@@ -200,7 +206,7 @@ export class Linter extends EventEmitter {
     const resolvedFiles: Array<string> = []
 
     for await (const target of input.targets) {
-      const targetPath = toNativeCwd(target.path)
+      const targetPath = toNativePath(target.path)
       let targetStat
 
       try {
@@ -215,11 +221,14 @@ export class Linter extends EventEmitter {
 
       if (targetStat.isDirectory()) {
         resolvedFiles.push(
-          ...(await globby(createPatterns('.'), {
-            cwd: targetPath,
-            dot: true,
-            absolute: true,
-          }))
+          ...(
+            await discoverFiles({
+              cwd: target.path,
+              patterns,
+              ignore: ignorePatterns,
+              dot: true,
+            })
+          ).map((file) => toNativePath(file))
         )
       } else {
         resolvedFiles.push(targetPath)

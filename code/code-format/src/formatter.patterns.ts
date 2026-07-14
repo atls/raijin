@@ -1,5 +1,3 @@
-import { join } from 'node:path'
-
 export const ignore = [
   '.c9',
   '.pnp.js',
@@ -19,20 +17,11 @@ export const ignore = [
   '.idea',
 ]
 
-const patterns: Array<string> = ['./**/*.{js,mjs,cjs,ts,tsx,yml,yaml,json,graphql,md,mdx}']
+export const patterns: Array<string> = ['**/*.{js,mjs,cjs,ts,tsx,yml,yaml,json,graphql,md,mdx}']
 
-const ignorePatterns: Array<string> = [
-  '!**/node_modules/**',
-  '!./node_modules/**',
-  '!**/.{git,svn,hg}/**',
-  '!./.{git,svn,hg}/**',
-  '!**/.yarn/**',
-  '!./.yarn/**',
-  '!**/.idea/**',
-  '!./.idea/**',
-]
-
-export const createPatterns = (cwd: string): Array<string> => [
-  ...patterns.map((pattern) => join(cwd, pattern)),
-  ...ignorePatterns,
+export const ignorePatterns: Array<string> = [
+  '**/node_modules/**',
+  '**/.{git,svn,hg}/**',
+  '**/.yarn/**',
+  '**/.idea/**',
 ]
