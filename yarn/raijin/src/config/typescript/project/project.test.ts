@@ -27,7 +27,7 @@ const createProject = async (): Promise<string> => {
   return cwd
 }
 
-test('should preserve inherited options, excludes, and references for explicit targets', async () => {
+test('should preserve inherited options and excludes for explicit targets', async () => {
   const cwd = await createProject()
   const configPath = join(cwd, 'tsconfig.json')
   const source =
@@ -64,11 +64,11 @@ test('should preserve inherited options, excludes, and references for explicit t
   )
   assert.equal(config.options.allowJs, true)
   assert.equal(config.options.strict, false)
-  assert.equal(config.projectReferences?.[0]?.path, join(cwd, 'packages/lib'))
+  assert.equal(config.projectReferences, undefined)
   assert.equal(await readFile(configPath, 'utf8'), source)
 })
 
-test('should not replace configured scope with fallback targets', async () => {
+test('should replace an empty solution scope with fallback targets', async () => {
   const cwd = await createProject()
 
   await writeFile(
@@ -84,9 +84,9 @@ test('should not replace configured scope with fallback targets', async () => {
 
   assert.equal(
     config.fileNames.some((file) => file.endsWith('/src/index.ts')),
-    false
+    true
   )
-  assert.equal(config.projectReferences?.[0]?.path, join(cwd, 'packages/lib'))
+  assert.equal(config.projectReferences, undefined)
 })
 
 test('should apply fallback targets when project config is absent', async () => {

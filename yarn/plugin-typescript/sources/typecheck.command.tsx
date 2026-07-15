@@ -3,6 +3,7 @@ import type { Project }               from '@yarnpkg/core'
 import type { PortablePath }          from '@yarnpkg/fslib'
 
 import { BaseCommand }                from '@yarnpkg/cli'
+import { ppath }                      from '@yarnpkg/fslib'
 import { Option }                     from 'clipanion'
 import { render }                     from 'ink'
 import React                          from 'react'
@@ -61,6 +62,9 @@ export class TypeCheckCommand extends BaseCommand {
     const nativeTypecheckCwd = toNativeCwd(typecheckCwd)
 
     const typescript = await TypeScript.initialize(nativeTypecheckCwd, {
+      fallbackPatterns: project.workspaces
+        .filter((workspace) => workspace.cwd !== project.cwd && workspace.cwd !== typecheckCwd)
+        .map((workspace) => ppath.relative(typecheckCwd, workspace.cwd)),
       manifestCwds: [toNativeCwd(project.cwd), nativeTypecheckCwd],
     })
 

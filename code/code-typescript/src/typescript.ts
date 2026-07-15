@@ -16,6 +16,7 @@ import { transformJsxToJsExtension }       from './transformers/index.js'
 const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
 
 export type TypeScriptOptions = {
+  fallbackPatterns?: Array<string>
   manifestCwds?: Array<string>
 }
 
@@ -23,6 +24,8 @@ export const resolveTypeScriptRuntimeUrl = (cwd: string): string =>
   resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_RUNTIME_SPECIFIER)
 
 export class TypeScript extends EventEmitter {
+  private readonly fallbackPatterns: Array<string>
+
   private readonly manifestCwds: Array<string>
 
   constructor(
@@ -32,6 +35,7 @@ export class TypeScript extends EventEmitter {
   ) {
     super()
 
+    this.fallbackPatterns = options.fallbackPatterns ?? []
     this.manifestCwds = Array.from(
       new Set(
         options.manifestCwds && options.manifestCwds.length > 0 ? options.manifestCwds : [cwd]
@@ -68,13 +72,33 @@ export class TypeScript extends EventEmitter {
     override: Partial<typescript.CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<typescript.Diagnostic>> {
-    const projectConfig = await resolveTypeScriptProject({
+    let projectConfig = await resolveTypeScriptProject({
       compilerOptions: override,
       cwd: this.cwd,
       manifestCwds: this.manifestCwds,
       selection,
       typescript: this.ts,
     })
+
+    if (
+      noEmit &&
+      selection === undefined &&
+      projectConfig.errors.length === 0 &&
+      projectConfig.fileNames.length === 0 &&
+      (projectConfig.projectReferences?.length ?? 0) > 0 &&
+      this.fallbackPatterns.length > 0
+    ) {
+      projectConfig = await resolveTypeScriptProject({
+        compilerOptions: override,
+        cwd: this.cwd,
+        manifestCwds: this.manifestCwds,
+        selection: {
+          kind: 'fallback',
+          patterns: this.fallbackPatterns,
+        },
+        typescript: this.ts,
+      })
+    }
 
     if (projectConfig.errors.length > 0) {
       this.emit('start', { files: [] })

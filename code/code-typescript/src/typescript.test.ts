@@ -1,6 +1,7 @@
 import assert                 from 'node:assert/strict'
 import { mkdir }              from 'node:fs/promises'
 import { mkdtemp }            from 'node:fs/promises'
+import { readdir }            from 'node:fs/promises'
 import { writeFile }          from 'node:fs/promises'
 import { tmpdir }             from 'node:os'
 import { join }               from 'node:path'
@@ -133,6 +134,52 @@ test('should preserve file-list config while resolving explicit targets', async 
   assert.equal(
     files.some((file) => file.endsWith('/src/index.ts')),
     true
+  )
+})
+
+test('should typecheck solution workspace sources without emitting files', async () => {
+  const cwd = await createProject({
+    'tsconfig.json': JSON.stringify(
+      {
+        files: [],
+        references: [{ path: './packages/app' }],
+      },
+      null,
+      2
+    ),
+    'packages/app/tsconfig.json': JSON.stringify(
+      {
+        compilerOptions: {
+          composite: true,
+          outDir: 'dist',
+        },
+        include: ['src/**/*.ts'],
+      },
+      null,
+      2
+    ),
+    'packages/app/src/index.ts': 'export const value: string = 1\n',
+  })
+  const diagnostics = await new TypeScript(ts, cwd, {
+    fallbackPatterns: ['packages/app'],
+  }).check()
+  const files = await readdir(cwd, { recursive: true })
+
+  assert.equal(
+    diagnostics.some((diagnostic) => diagnostic.code === 2322),
+    true
+  )
+  assert.equal(
+    files.some((file) => file.endsWith('.js')),
+    false
+  )
+  assert.equal(
+    files.some((file) => file.endsWith('.d.ts')),
+    false
+  )
+  assert.equal(
+    files.some((file) => file.endsWith('.tsbuildinfo')),
+    false
   )
 })
 

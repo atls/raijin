@@ -120,8 +120,8 @@ export const resolveTypeScriptProject = async ({
     }
   }
 
-  const explicitSelection = selection?.kind === 'explicit' && configFileName !== undefined
-  const selected = explicitSelection
+  const hasProjectSelection = selection !== undefined && configFileName !== undefined
+  const selected = hasProjectSelection
     ? parseSelection(configFileName, host, compilerOptions, selection.patterns, typescript)
     : undefined
   const ignoredProjectErrors = new Set([18002, 18003])
@@ -132,7 +132,9 @@ export const resolveTypeScriptProject = async ({
     errors: [
       ...fatalDiagnostics,
       ...convertedDefaults.errors,
-      ...parsed.errors.filter(({ code }) => !explicitSelection || !ignoredProjectErrors.has(code)),
+      ...parsed.errors.filter(
+        ({ code }) => !hasProjectSelection || !ignoredProjectErrors.has(code)
+      ),
       ...(selected?.errors ?? []),
     ],
     fileNames: selected?.fileNames ?? parsed.fileNames,
@@ -141,6 +143,6 @@ export const resolveTypeScriptProject = async ({
       ...parsed.options,
       skipLibCheck: resolveSkipLibCheck(manifests, parsed.options.skipLibCheck),
     },
-    projectReferences: parsed.projectReferences,
+    projectReferences: hasProjectSelection ? undefined : parsed.projectReferences,
   }
 }
