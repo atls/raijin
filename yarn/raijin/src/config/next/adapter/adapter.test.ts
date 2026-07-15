@@ -60,12 +60,14 @@ test('should preserve project adapters during explicit config composition', () =
       },
     },
     {
+      RAIJIN_RENDERER_OUTPUT: 'standalone',
       RAIJIN_RENDERER_WORKSPACE_CWD: '/workspace',
     }
   )
 
   assert.equal(config.adapterPath, '/project/stable-adapter.js')
   assert.equal(config.experimental?.adapterPath, '/project/experimental-adapter.js')
+  assert.equal(config.output, 'standalone')
   assert.equal(config.turbopack?.root, '/workspace')
 })
 

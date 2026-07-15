@@ -14,6 +14,7 @@ import { materializeNextConfigAdapter }                  from '@atls/raijin/conf
 
 import { RENDERER_STANDALONE_SERVER_ENTRYPOINT }         from './renderer-build.constants.js'
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
+import { assertRendererBuildStandaloneOutput }           from './renderer-build.utils.js'
 import { cleanupRendererBuildDiscoveryArtifacts }        from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
@@ -125,6 +126,7 @@ export class RendererBuildCommand extends BaseCommand {
           )
 
           assertRendererBuildExitCode(code)
+          await assertRendererBuildStandaloneOutput(rendererBuildContext)
         })
 
         await report.startTimerPromise('Copy standalone files', async () => {

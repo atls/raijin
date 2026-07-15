@@ -380,6 +380,18 @@ export const resolveRendererBuildStandaloneCwd = (rendererCwd: PortablePath): Po
   return ppath.join(nextOutputCwd, 'standalone' as Filename)
 }
 
+export const assertRendererBuildStandaloneOutput = async ({
+  rendererCwd,
+}: RendererBuildContext): Promise<void> => {
+  if (await xfs.existsPromise(resolveRendererBuildStandaloneCwd(rendererCwd))) {
+    return
+  }
+
+  throw new Error(
+    'Renderer build did not produce Next standalone output. If next.config defines adapterPath, compose it with withRaijinRendererConfig from @atls/raijin/config/next.'
+  )
+}
+
 export const copyRendererBuildStandaloneFiles = async ({
   distCwd,
   rendererCwd,

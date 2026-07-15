@@ -10,6 +10,7 @@ import { xfs }                                            from '@yarnpkg/fslib'
 
 import { NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE } from './renderer-build.utils.js'
 import { assertRendererBuildExitCode }                    from './renderer-build.utils.js'
+import { assertRendererBuildStandaloneOutput }            from './renderer-build.utils.js'
 import { assertSupportedRendererNextVersion }             from './renderer-build.utils.js'
 import { cleanupRendererBuildDiscoveryArtifacts }         from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }            from './renderer-build.utils.js'
@@ -514,6 +515,27 @@ test('should resolve renderer standalone root from renderer cwd', () => {
     resolveRendererBuildStandaloneCwd('/repo/client/next-app' as PortablePath),
     '/repo/client/next-app/src/.next/standalone'
   )
+})
+
+test('should reject renderer builds without standalone output', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await assert.rejects(
+    async () => assertRendererBuildStandaloneOutput(createRendererBuildContext(cwd)),
+    new Error(
+      'Renderer build did not produce Next standalone output. If next.config defines adapterPath, compose it with withRaijinRendererConfig from @atls/raijin/config/next.'
+    )
+  )
+})
+
+test('should accept renderer builds with standalone output', async () => {
+  const cwd = await xfs.mktempPromise()
+  const standaloneCwd = resolveRendererBuildStandaloneCwd(cwd)
+
+  await xfs.mkdirPromise(standaloneCwd, { recursive: true })
+
+  await assert.doesNotReject(async () =>
+    assertRendererBuildStandaloneOutput(createRendererBuildContext(cwd)))
 })
 
 test('should copy full renderer standalone root into dist artifact', async () => {
