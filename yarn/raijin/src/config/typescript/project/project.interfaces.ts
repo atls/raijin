@@ -7,6 +7,11 @@ export interface TypeScriptProjectSelection {
   readonly patterns: ReadonlyArray<string>
 }
 
+export interface TypeScriptPackageManifest {
+  readonly typecheckIgnorePatterns?: ReadonlyArray<string>
+  readonly typecheckSkipLibCheck?: boolean
+}
+
 export interface ResolveTypeScriptProjectOptions {
   readonly compilerOptions?: Partial<ts.CompilerOptions>
   readonly cwd: string
