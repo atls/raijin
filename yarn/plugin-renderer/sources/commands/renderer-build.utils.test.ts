@@ -58,6 +58,20 @@ test('should pass renderer build output when requested', () => {
   assert.equal(env.RAIJIN_RENDERER_OUTPUT, 'standalone')
 })
 
+test('should pass the Next adapter without forcing renderer build output', () => {
+  const env = createRendererBuildEnv(
+    {},
+    'file:///tmp/next-compiled-conf-require-cache-loader.mjs',
+    '/repo/client' as PortablePath,
+    {
+      nextConfigAdapterPath: '/tmp/raijin-next-config-adapter.cjs' as PortablePath,
+    }
+  )
+
+  assert.equal(env.NEXT_ADAPTER_PATH, '/tmp/raijin-next-config-adapter.cjs')
+  assert.equal(env.RAIJIN_RENDERER_OUTPUT, undefined)
+})
+
 test('should pass Next renderer loader through managed loader env', () => {
   const env = createRendererBuildEnv(
     {

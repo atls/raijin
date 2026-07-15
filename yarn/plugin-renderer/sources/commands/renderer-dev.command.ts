@@ -10,6 +10,7 @@ import localtunnel                                       from 'localtunnel'
 
 import { resolveWorkspaceInvocation }                    from '@atls/raijin/commands'
 import { createYarnExecutable }                          from '@atls/raijin/commands'
+import { materializeNextConfigAdapter }                  from '@atls/raijin/config/next'
 
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
@@ -111,6 +112,7 @@ export class RendererDevCommand extends BaseCommand {
       binFolder,
       loader
     )
+    const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
     const { executable, env } = await createYarnExecutable({
       binFolder,
       locator: workspace.anchoredLocator,
@@ -137,7 +139,9 @@ export class RendererDevCommand extends BaseCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, executionCwd),
+      env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, executionCwd, {
+        nextConfigAdapterPath,
+      }),
     })
 
     return code
