@@ -161,9 +161,14 @@ export class Linter extends EventEmitter {
   }
 
   private async lintWithCache(files: Array<string> = []): Promise<Array<LintResult>> {
-    this.emit('start', { files })
+    const ignored = await Promise.all(
+      files.map(async (file) => this.cacheLinter.isPathIgnored(file))
+    )
+    const lintableFiles = files.filter((_, index) => !ignored[index])
 
-    const results = await this.cacheLinter.lintFiles(files)
+    this.emit('start', { files: lintableFiles })
+
+    const results = lintableFiles.length ? await this.cacheLinter.lintFiles(lintableFiles) : []
 
     for (const result of results) {
       this.emit('lint:end', { result })

@@ -209,3 +209,24 @@ test('should skip explicit files ignored by the project ESLint config', async ()
 
   assert.deepEqual(results, [])
 })
+
+test('should skip cached files ignored by the project ESLint config', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-lint-ignore-'))
+  const src = join(cwd, 'src')
+  const filePath = join(src, 'generated.ts')
+
+  await mkdir(src, { recursive: true })
+  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
+  await linkRaijinRuntime(cwd)
+  await writeFile(join(cwd, 'tsconfig.json'), '{"include":["src/**/*.ts"]}\n')
+  await writeFile(
+    join(cwd, 'eslint.config.mjs'),
+    `export default [{ ignores: ['src/generated.ts'] }]\n`
+  )
+  await writeFile(filePath, 'export const generated=true\n')
+
+  const linter = await Linter.initialize(cwd, cwd)
+  const results = await linter.lint(createInput(cwd, [filePath]), { cache: true })
+
+  assert.deepEqual(results, [])
+})
