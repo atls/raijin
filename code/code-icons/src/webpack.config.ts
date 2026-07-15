@@ -1,13 +1,11 @@
-import type { webpack } from '@atls/raijin/webpack'
+import type { webpack }                   from '@atls/raijin/webpack'
 
-import { writeFile }    from 'node:fs/promises'
-import { mkdtemp }      from 'node:fs/promises'
-import { tmpdir }       from 'node:os'
-import { join }         from 'node:path'
+import { join }                           from 'node:path'
 
-import Config           from 'webpack-chain-5'
+import Config                             from 'webpack-chain-5'
 
-import tsconfig         from '@atls/raijin/typescript-config'
+import { materializeTypeScriptConfig }    from '@atls/raijin/config/typescript'
+import { typescriptDefaults as tsconfig } from '@atls/raijin/config/typescript'
 
 export class WebpackConfig {
   constructor(
@@ -51,9 +49,10 @@ export class WebpackConfig {
   }
 
   private async applyModules(config: Config): Promise<void> {
-    const configFile = join(await mkdtemp(join(tmpdir(), 'tools-icons-')), 'tsconfig.json')
-
-    await writeFile(configFile, '{"include":["**/*"]}')
+    const configFile = await materializeTypeScriptConfig({
+      config: { include: ['**/*'] },
+      prefix: 'tools-icons-',
+    })
 
     config.module
       .rule('ts')

@@ -82,19 +82,34 @@ test('should resolve TypeScript loader to loadable JavaScript', async () => {
 test('should materialize source-only TypeScript loader to JavaScript', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'runtime-exec-argv-loader-'))
   const sourceDir = join(workspace, 'src', 'runtime')
+  const compilerOptionsSourceDir = join(
+    workspace,
+    'src',
+    'config',
+    'typescript',
+    'compiler-options'
+  )
   const packageJsonPath = join(workspace, 'package.json')
 
   try {
     await mkdir(sourceDir, { recursive: true })
+    await mkdir(compilerOptionsSourceDir, { recursive: true })
     await writeFile(packageJsonPath, JSON.stringify({ type: 'module' }), 'utf8')
+    await writeFile(
+      join(compilerOptionsSourceDir, 'compiler-options.ts'),
+      `export const configOwner = 'typescript-config-owner'\n`,
+      'utf8'
+    )
     await writeFile(
       join(sourceDir, 'typescript-loader.ts'),
       `
         import type { LoadHook } from 'node:module'
         import { createRequire } from 'node:module'
+        import { configOwner } from '../config/typescript/compiler-options/compiler-options.js'
 
         const require = createRequire(import.meta.url)
 
+        export { configOwner }
         export const resolvedPath = require.resolve('node:path')
         export const load: LoadHook = () => ({ format: 'module', shortCircuit: true, source: 'export {}' })
       `,
@@ -108,6 +123,7 @@ test('should materialize source-only TypeScript loader to JavaScript', async () 
 
     assert.ok(typeScriptLoaderPath.endsWith('typescript-loader.mjs'))
     assert.match(typeScriptLoaderSource, /package\.json/)
+    assert.equal(typeScriptLoaderModule.configOwner, 'typescript-config-owner')
     assert.equal(typeScriptLoaderModule.resolvedPath, 'node:path')
     assert.equal(typeof typeScriptLoaderModule.load, 'function')
   } finally {

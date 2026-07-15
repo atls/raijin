@@ -1,8 +1,8 @@
-import type { Rule }            from '@angular-devkit/schematics'
+import type { Rule }                      from '@angular-devkit/schematics'
 
-import tsconfig                 from '@atls/raijin/typescript-config'
+import { typescriptDefaults as tsconfig } from '@atls/raijin/config/typescript'
 
-import { updateTsConfigInTree } from '../utils/tsconfig.utils.js'
+import { updateTsConfigInTree }           from '../utils/tsconfig.utils.js'
 
 interface UpdateTsConfigRuleOptions extends Record<string, string | undefined> {
   cwd?: string

@@ -16,10 +16,10 @@ import { join }                    from 'node:path'
 import { fileURLToPath }           from 'node:url'
 import { pathToFileURL }           from 'node:url'
 
+import { resolveTypeScriptCompilerOptions } from '../config/typescript/compiler-options/compiler-options.js'
+
 const require = createRequire(import.meta.url)
 const ts = require('typescript') as typeof TypeScript
-
-const compilerOptionsByConfigPath = new Map<string, TypeScript.CompilerOptions>()
 
 const sourceExtensionsBySpecifier = new Map([
   ['.js', ['.js', '.ts', '.tsx', '.jsx']],
@@ -122,29 +122,8 @@ const getFormat = (filepath: string): 'module' | null => {
   }
 }
 
-const readCompilerOptions = (filepath: string): TypeScript.CompilerOptions => {
-  const configPath = ts.findConfigFile(dirname(filepath), ts.sys.fileExists, 'tsconfig.json')
-
-  if (!configPath) {
-    return {}
-  }
-
-  const cached = compilerOptionsByConfigPath.get(configPath)
-  if (cached) {
-    return cached
-  }
-
-  const configFile = ts.readConfigFile(configPath, ts.sys.readFile)
-  if (configFile.error) {
-    return {}
-  }
-
-  const { options } = ts.parseJsonConfigFileContent(configFile.config, ts.sys, dirname(configPath))
-
-  compilerOptionsByConfigPath.set(configPath, options)
-
-  return options
-}
+const readCompilerOptions = (filepath: string): TypeScript.CompilerOptions =>
+  resolveTypeScriptCompilerOptions({ filepath, typescript: ts })
 
 const resolveExtensionlessTypeScriptSource = (
   specifier: string,

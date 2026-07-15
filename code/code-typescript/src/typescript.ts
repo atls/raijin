@@ -1,72 +1,46 @@
-/* eslint-disable n/no-sync, @typescript-eslint/no-shadow */
+/* eslint-disable @typescript-eslint/no-shadow */
 
-import type { CommandInput }         from '@atls/raijin/commands'
-import type { ts as typescript }     from '@atls/raijin/typescript'
+import type { CommandInput }               from '@atls/raijin/commands'
+import type { TypeScriptProjectSelection } from '@atls/raijin/config/typescript'
+import type { resolveTypeScriptProject }   from '@atls/raijin/config/typescript'
+import type { ts as typescript }           from '@atls/raijin/typescript'
 
-import EventEmitter                  from 'node:events'
-import { existsSync }                from 'node:fs'
-import { readFileSync }              from 'node:fs'
-import { join }                      from 'node:path'
+import EventEmitter                        from 'node:events'
 
-import { toCommandArguments }        from '@atls/raijin/commands'
-import { toPortableCwd }             from '@atls/raijin/commands'
-import { resolveRaijinRuntimeUrl }   from '@atls/raijin/runtime-resolver'
-import tsconfig                      from '@atls/raijin/typescript-config'
+import { toCommandArguments }              from '@atls/raijin/commands'
+import { toPortableCwd }                   from '@atls/raijin/commands'
+import { findRaijinPackageBoundary }       from '@atls/raijin/runtime-resolver'
+import { resolveRaijinRuntimeUrl }         from '@atls/raijin/runtime-resolver'
 
-import { transformJsxToJsExtension } from './transformers/index.js'
+import { transformJsxToJsExtension }       from './transformers/index.js'
 
-const PROJECT_TS_CONFIG = 'tsconfig.json'
-const PACKAGE_MANIFEST = 'package.json'
+type TypeScriptConfig = {
+  resolveTypeScriptProject: typeof resolveTypeScriptProject
+}
+
+type TypeScriptRuntime = {
+  ts: typeof typescript
+}
+
+const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
 const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
 
-type TSConfigShape = Record<string, unknown> & {
-  compilerOptions?: Record<string, unknown>
-  exclude?: unknown
-}
-
-type PackageManifestShape = Record<string, unknown> & {
-  dependencies?: Record<string, unknown>
-  devDependencies?: Record<string, unknown>
-  name?: unknown
-  optionalDependencies?: Record<string, unknown>
-  peerDependencies?: Record<string, unknown>
-  typecheckIgnorePatterns?: Array<string>
-  typecheckSkipLibCheck?: boolean
-}
-
 export type TypeScriptOptions = {
+  fallbackPatterns?: Array<string>
   manifestCwds?: Array<string>
-}
-
-const asCompilerOptions = (value: unknown): Record<string, unknown> =>
-  value && typeof value === 'object' && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : {}
-
-const asStringArray = (value: unknown): Array<string> =>
-  Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
-
-const createProjectConfig = (
-  projectConfig: TSConfigShape,
-  include: Array<string> | undefined
-): TSConfigShape => {
-  if (include === undefined) {
-    return projectConfig
-  }
-
-  const config = { ...projectConfig }
-
-  delete config.files
-  delete config.references
-
-  return config
 }
 
 export const resolveTypeScriptRuntimeUrl = (cwd: string): string =>
   resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_RUNTIME_SPECIFIER)
 
 export class TypeScript extends EventEmitter {
+  private config?: Promise<TypeScriptConfig>
+
+  private readonly fallbackPatterns: Array<string>
+
   private readonly manifestCwds: Array<string>
+
+  private readonly packageCwd: string
 
   constructor(
     private readonly ts: typeof typescript,
@@ -75,85 +49,96 @@ export class TypeScript extends EventEmitter {
   ) {
     super()
 
+    this.fallbackPatterns = options.fallbackPatterns ?? []
     this.manifestCwds = Array.from(
       new Set(
         options.manifestCwds && options.manifestCwds.length > 0 ? options.manifestCwds : [cwd]
       )
     )
+    this.packageCwd = findRaijinPackageBoundary(cwd) ?? cwd
   }
 
   static async initialize(cwd: string, options: TypeScriptOptions = {}): Promise<TypeScript> {
-    const { ts } = (await import(resolveTypeScriptRuntimeUrl(cwd))) as { ts: typeof typescript }
+    const packageCwd = findRaijinPackageBoundary(cwd) ?? cwd
+    const { ts } = (await import(
+      resolveRaijinRuntimeUrl(packageCwd, TYPESCRIPT_RUNTIME_SPECIFIER)
+    )) as TypeScriptRuntime
 
     return new TypeScript(ts, cwd, options)
   }
 
   async check(input?: CommandInput): Promise<Array<typescript.Diagnostic>> {
-    return this.run(input ? toCommandArguments(input, toPortableCwd(this.cwd)) : undefined)
+    const selection: TypeScriptProjectSelection | undefined = input
+      ? {
+          kind: input.source === 'generated' ? 'fallback' : 'explicit',
+          patterns: toCommandArguments(input, toPortableCwd(this.cwd)),
+        }
+      : undefined
+
+    return this.run(selection)
   }
 
   async build(
     include?: Array<string>,
     override: Partial<typescript.CompilerOptions> = {}
   ): Promise<Array<typescript.Diagnostic>> {
-    return this.run(include, override, false)
+    return this.run(include ? { kind: 'explicit', patterns: include } : undefined, override, false)
   }
 
   private async run(
-    include: Array<string> | undefined = undefined,
+    selection: TypeScriptProjectSelection | undefined = undefined,
     override: Partial<typescript.CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<typescript.Diagnostic>> {
-    const projectConfig = this.readProjectTSConfig()
+    const { resolveTypeScriptProject } = await this.importConfig()
+    let projectConfig = await resolveTypeScriptProject({
+      compilerOptions: override,
+      cwd: this.cwd,
+      manifestCwds: this.manifestCwds,
+      selection,
+      typescript: this.ts,
+    })
+
+    if (
+      noEmit &&
+      selection === undefined &&
+      projectConfig.errors.length === 0 &&
+      projectConfig.fileNames.length === 0 &&
+      (projectConfig.projectReferences?.length ?? 0) > 0 &&
+      this.fallbackPatterns.length > 0
+    ) {
+      projectConfig = await resolveTypeScriptProject({
+        compilerOptions: override,
+        cwd: this.cwd,
+        manifestCwds: this.manifestCwds,
+        selection: {
+          kind: 'fallback',
+          patterns: this.fallbackPatterns,
+        },
+        typescript: this.ts,
+      })
+    }
 
     if (projectConfig.errors.length > 0) {
       this.emit('start', { files: [] })
       this.emit('end', { diagnostics: projectConfig.errors })
 
-      return projectConfig.errors
+      return [...projectConfig.errors]
     }
 
-    const effectiveProjectConfig = createProjectConfig(projectConfig.config, include)
-    const projectCompilerOptions = asCompilerOptions(effectiveProjectConfig.compilerOptions)
-    const projectIgnorePatterns = this.getProjectIgnorePatterns()
-    const projectExcludePatterns = asStringArray(effectiveProjectConfig.exclude)
-    const skipLibCheck = this.getLibCheckOption(projectCompilerOptions)
-
-    const config = {
-      ...tsconfig,
-      ...effectiveProjectConfig,
-      compilerOptions: {
-        ...tsconfig.compilerOptions,
-        ...projectCompilerOptions,
-        ...override,
-        skipLibCheck,
-      },
-      ...(include === undefined ? {} : { include }),
-      exclude: Array.from(
-        new Set([...tsconfig.exclude, ...projectExcludePatterns, ...projectIgnorePatterns])
-      ),
-    }
-
-    const { fileNames, options, errors } = this.ts.parseJsonConfigFileContent(
-      config,
-      this.ts.sys,
-      this.cwd,
-      undefined,
-      projectConfig.configFileName
-    )
-
-    if (errors.length > 0) {
-      this.emit('start', { files: [] })
-      this.emit('end', { diagnostics: errors })
-
-      return errors
-    }
+    const fileNames = [...projectConfig.fileNames]
 
     this.emit('start', { files: fileNames })
 
-    const program = this.ts.createProgram(fileNames, {
-      ...options,
-      noEmit,
+    const program = this.ts.createProgram({
+      rootNames: fileNames,
+      options: {
+        ...projectConfig.options,
+        noEmit,
+      },
+      projectReferences: projectConfig.projectReferences
+        ? [...projectConfig.projectReferences]
+        : undefined,
     })
 
     const beforeTransformer: typescript.TransformerFactory<typescript.SourceFile> = (_) =>
@@ -182,6 +167,14 @@ export class TypeScript extends EventEmitter {
     this.emit('end', { diagnostics })
 
     return diagnostics
+  }
+
+  private async importConfig(): Promise<TypeScriptConfig> {
+    this.config ??= import(
+      resolveRaijinRuntimeUrl(this.packageCwd, TYPESCRIPT_CONFIG_SPECIFIER)
+    ) as Promise<TypeScriptConfig>
+
+    return this.config
   }
 
   private filterDiagnostics(
@@ -224,76 +217,5 @@ export class TypeScript extends EventEmitter {
             diagnostics.file?.fileName.includes('/@nestjs/testing/')
           )
       )
-  }
-
-  private getProjectIgnorePatterns(): Array<string> {
-    return Array.from(
-      new Set(
-        this.readPackageManifests().flatMap(
-          ({ typecheckIgnorePatterns = [] }) => typecheckIgnorePatterns
-        )
-      )
-    )
-  }
-
-  private getLibCheckOption(projectCompilerOptions: Record<string, unknown>): boolean {
-    const manifest = [...this.readPackageManifests()]
-      .reverse()
-      .find((item) => Object.hasOwn(item, 'typecheckSkipLibCheck'))
-    const defaultCompilerOptions = asCompilerOptions(tsconfig.compilerOptions)
-
-    if (manifest) {
-      return manifest.typecheckSkipLibCheck!
-    }
-
-    if (typeof projectCompilerOptions.skipLibCheck === 'boolean') {
-      return projectCompilerOptions.skipLibCheck
-    }
-
-    if (typeof defaultCompilerOptions.skipLibCheck === 'boolean') {
-      return defaultCompilerOptions.skipLibCheck
-    }
-
-    return false
-  }
-
-  private readPackageManifests(): Array<PackageManifestShape> {
-    return this.manifestCwds.map((cwd) => this.readPackageManifest(cwd))
-  }
-
-  private readPackageManifest(cwd: string): PackageManifestShape {
-    const content = readFileSync(join(cwd, PACKAGE_MANIFEST), 'utf-8')
-
-    return JSON.parse(content) as PackageManifestShape
-  }
-
-  private readProjectTSConfig(): {
-    config: TSConfigShape
-    configFileName?: string
-    errors: Array<typescript.Diagnostic>
-  } {
-    const tsconfigPath = join(this.cwd, PROJECT_TS_CONFIG)
-
-    if (!existsSync(tsconfigPath)) {
-      return {
-        config: {},
-        errors: [],
-      }
-    }
-
-    const result = this.ts.readConfigFile(tsconfigPath, this.ts.sys.readFile)
-
-    if (result.error) {
-      return {
-        config: {},
-        errors: [result.error],
-      }
-    }
-
-    return {
-      config: result.config as TSConfigShape,
-      configFileName: tsconfigPath,
-      errors: [],
-    }
   }
 }

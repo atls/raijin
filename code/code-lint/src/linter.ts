@@ -1,59 +1,56 @@
-/* eslint-disable n/no-sync */
+import type { CommandInput }                       from '@atls/raijin/commands'
+import type { ESLintInstance }                     from '@atls/raijin/eslint'
+import type { ESLint as RuntimeESLint }            from '@atls/raijin/eslint'
+import type { LintResult }                         from '@atls/raijin/eslint'
+import type { resolveEslintProject }               from '@atls/raijin/config/eslint'
+import type { resolveEslintProjectIgnorePatterns } from '@atls/raijin/config/eslint'
 
-import type { CommandInput }            from '@atls/raijin/commands'
-import type { ESLintInstance }          from '@atls/raijin/eslint'
-import type { ESLint as RuntimeESLint } from '@atls/raijin/eslint'
-import type { LinterConfig }            from '@atls/raijin/eslint'
-import type { LinterInstance }          from '@atls/raijin/eslint'
-import type { Linter as RuntimeLinter } from '@atls/raijin/eslint'
-import type { LintResult }              from '@atls/raijin/eslint'
+import EventEmitter                                from 'node:events'
+import { readFile }                                from 'node:fs/promises'
+import { stat }                                    from 'node:fs/promises'
+import { writeFile }                               from 'node:fs/promises'
+import { relative }                                from 'node:path'
+import { join }                                    from 'node:path'
 
-import EventEmitter                     from 'node:events'
-import { readFileSync }                 from 'node:fs'
-import { readFile }                     from 'node:fs/promises'
-import { stat }                         from 'node:fs/promises'
-import { writeFile }                    from 'node:fs/promises'
-import { relative }                     from 'node:path'
-import { join }                         from 'node:path'
+import ignorer                                     from 'ignore'
 
-import ignorer                          from 'ignore'
+import { createCommandInput }                      from '@atls/raijin/commands'
+import { toPortableCwd }                           from '@atls/raijin/commands'
+import { discoverFiles }                           from '@atls/raijin/filesystem'
+import { toNativePath }                            from '@atls/raijin/filesystem'
+import { findRaijinPackageBoundary }               from '@atls/raijin/runtime-resolver'
+import { resolveRaijinRuntimeUrl }                 from '@atls/raijin/runtime-resolver'
 
-import { createCommandInput }           from '@atls/raijin/commands'
-import { toPortableCwd }                from '@atls/raijin/commands'
-import { discoverFiles }                from '@atls/raijin/filesystem'
-import { toNativePath }                 from '@atls/raijin/filesystem'
-import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
-
-import { ignore }                       from './linter.patterns.js'
-import { ignorePatterns }               from './linter.patterns.js'
-import { patterns }                     from './linter.patterns.js'
-import { createLintResult }             from './linter.utils.js'
+import { ignore }                                  from './linter.patterns.js'
+import { ignorePatterns }                          from './linter.patterns.js'
+import { patterns }                                from './linter.patterns.js'
 
 type EslintRuntime = {
-  Linter: typeof RuntimeLinter
   ESLint: typeof RuntimeESLint
-  eslintconfig: Array<LinterConfig>
+}
+
+type EslintConfig = {
+  resolveEslintProject: typeof resolveEslintProject
+  resolveEslintProjectIgnorePatterns: typeof resolveEslintProjectIgnorePatterns
 }
 
 const ESLINT_RUNTIME_SPECIFIER = '@atls/raijin/eslint'
+const ESLINT_CONFIG_SPECIFIER = '@atls/raijin/config/eslint'
 
 export const resolveEslintRuntimeUrl = (cwd: string): string =>
   resolveRaijinRuntimeUrl(cwd, ESLINT_RUNTIME_SPECIFIER)
 
-const importEslintRuntime = async (cwd: string): Promise<EslintRuntime> =>
-  (await import(resolveEslintRuntimeUrl(cwd))) as EslintRuntime
+const importEslintModules = async (cwd: string): Promise<EslintConfig & EslintRuntime> => {
+  const packageCwd = findRaijinPackageBoundary(cwd) ?? cwd
+  const [runtime, config] = await Promise.all([
+    import(resolveRaijinRuntimeUrl(packageCwd, ESLINT_RUNTIME_SPECIFIER)) as Promise<EslintRuntime>,
+    import(resolveRaijinRuntimeUrl(packageCwd, ESLINT_CONFIG_SPECIFIER)) as Promise<EslintConfig>,
+  ])
 
-const exists = async (path: string): Promise<boolean> => {
-  try {
-    await stat(path)
-
-    return true
-  } catch (error) {
-    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
-      return false
-    }
-
-    throw error
+  return {
+    ESLint: runtime.ESLint,
+    resolveEslintProject: config.resolveEslintProject,
+    resolveEslintProjectIgnorePatterns: config.resolveEslintProjectIgnorePatterns,
   }
 }
 
@@ -66,81 +63,60 @@ export class Linter extends EventEmitter {
   private ignore: ignorer.Ignore
 
   constructor(
-    private readonly linter: LinterInstance,
+    private readonly linter: ESLintInstance,
+    private readonly fixLinter: ESLintInstance,
     private readonly cacheLinter: ESLintInstance,
-    private readonly config: Array<LinterConfig>,
-    private readonly rootCwd: string,
-    private readonly tsconfigRootCwd: string,
+    projectIgnorePatterns: ReadonlyArray<string>,
     private readonly cwd: string
   ) {
     super()
 
-    this.ignore = ignorer.default().add(ignore).add(this.getProjectIgnorePatterns())
+    this.ignore = ignorer
+      .default()
+      .add(ignore)
+      .add([...projectIgnorePatterns])
   }
 
   static async initialize(rootCwd: string, cwd: string): Promise<Linter> {
-    const { Linter: LinterConstructor, ESLint, eslintconfig } = await importEslintRuntime(cwd)
-
-    const linter = new LinterConstructor({ configType: 'flat' })
-    const tsconfigRootCwd = (await exists(join(cwd, 'tsconfig.json'))) ? cwd : rootCwd
-
-    const config: Array<LinterConfig> = eslintconfig.map((item) => ({
-      ...item,
-      languageOptions: {
-        ...(item.languageOptions || {}),
-        parserOptions: {
-          ...(item.languageOptions?.parserOptions || {}),
-          tsconfigRootDir: tsconfigRootCwd,
-        },
-      },
-    }))
-
-    const eslint = new ESLint({
-      cache: true,
-      baseConfig: config,
-      overrideConfigFile: true,
-      cwd,
-      cacheLocation: join(rootCwd, '.config/eslint/.eslintcache'),
-    })
-
-    return new Linter(linter, eslint, config, rootCwd, tsconfigRootCwd, cwd)
-  }
-
-  async lintFile(filename: string, options?: LintOptions): Promise<LintResult> {
-    const filePath = filename
-    const lintFilename = relative(this.tsconfigRootCwd, filePath)
-    const source = await readFile(filePath, 'utf8')
-
-    if (options?.fix) {
-      const { messages, fixed, output } = this.linter.verifyAndFix(source, this.config, {
-        filename: lintFilename,
-      })
-
-      if (fixed) {
-        await writeFile(filePath, output, 'utf8')
-      }
-
-      return createLintResult(filePath, output, messages)
-    }
-
-    return createLintResult(
-      filePath,
-      source,
-      this.linter.verify(source, this.config, {
-        filename: lintFilename,
+    const { ESLint, resolveEslintProject, resolveEslintProjectIgnorePatterns } =
+      await importEslintModules(cwd)
+    const project = { cwd, eslint: ESLint, rootCwd }
+    const linter = new ESLint(await resolveEslintProject(project))
+    const fixLinter = new ESLint(await resolveEslintProject({ ...project, fix: true }))
+    const cacheLinter = new ESLint(
+      await resolveEslintProject({
+        ...project,
+        cache: true,
+        cacheLocation: join(rootCwd, '.config/eslint/.eslintcache'),
       })
     )
+    const projectIgnorePatterns = await resolveEslintProjectIgnorePatterns(cwd)
+
+    return new Linter(linter, fixLinter, cacheLinter, projectIgnorePatterns, cwd)
+  }
+
+  async lintFile(filename: string, options?: LintOptions): Promise<LintResult | undefined> {
+    const eslint = this.resolveLinter(options)
+
+    if (await eslint.isPathIgnored(filename)) {
+      return undefined
+    }
+
+    return this.lintUnignoredFile(filename, eslint, options)
   }
 
   async lintFiles(files: Array<string> = [], options?: LintOptions): Promise<Array<LintResult>> {
     const results: Array<LintResult> = []
+    const eslint = this.resolveLinter(options)
+    const ignored = await Promise.all(files.map(async (file) => eslint.isPathIgnored(file)))
+    const lintableFiles = files.filter((_, index) => !ignored[index])
 
-    this.emit('start', { files })
+    this.emit('start', { files: lintableFiles })
 
-    for await (const file of files) {
+    for await (const file of lintableFiles) {
       this.emit('lint:start', { file })
 
-      const result = await this.lintFile(file, options)
+      const result = await this.lintUnignoredFile(file, eslint, options)
 
       results.push(result)
 
@@ -180,10 +156,38 @@ export class Linter extends EventEmitter {
     return this.lintFiles(finalFiles, options)
   }
 
-  private async lintWithCache(files: Array<string> = []): Promise<Array<LintResult>> {
-    this.emit('start', { files })
+  private resolveLinter(options?: LintOptions): ESLintInstance {
+    return options?.fix ? this.fixLinter : this.linter
+  }
 
-    const results = await this.cacheLinter.lintFiles(files)
+  private async lintUnignoredFile(
+    filename: string,
+    eslint: ESLintInstance,
+    options?: LintOptions
+  ): Promise<LintResult> {
+    const filePath = filename
+    const source = await readFile(filePath, 'utf8')
+    const [result] = await eslint.lintText(source, { filePath })
+
+    if (options?.fix && result.output !== undefined) {
+      await writeFile(filePath, result.output, 'utf8')
+    }
+
+    return {
+      ...result,
+      source: result.source ?? source,
+    }
+  }
+
+  private async lintWithCache(files: Array<string> = []): Promise<Array<LintResult>> {
+    const ignored = await Promise.all(
+      files.map(async (file) => this.cacheLinter.isPathIgnored(file))
+    )
+    const lintableFiles = files.filter((_, index) => !ignored[index])
+
+    this.emit('start', { files: lintableFiles })
+
+    const results = lintableFiles.length ? await this.cacheLinter.lintFiles(lintableFiles) : []
 
     for (const result of results) {
       this.emit('lint:end', { result })
@@ -192,14 +196,6 @@ export class Linter extends EventEmitter {
     this.emit('end', { results })
 
     return results
-  }
-
-  private getProjectIgnorePatterns(): Array<string> {
-    const content = readFileSync(join(this.cwd, 'package.json'), 'utf-8')
-
-    const { linterIgnorePatterns = [] } = JSON.parse(content)
-
-    return linterIgnorePatterns as Array<string>
   }
 
   private async resolveLintFiles(input: CommandInput): Promise<Array<string>> {

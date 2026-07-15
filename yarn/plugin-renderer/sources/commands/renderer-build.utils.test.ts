@@ -10,6 +10,7 @@ import { xfs }                                            from '@yarnpkg/fslib'
 
 import { NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE } from './renderer-build.utils.js'
 import { assertRendererBuildExitCode }                    from './renderer-build.utils.js'
+import { assertRendererBuildStandaloneOutput }            from './renderer-build.utils.js'
 import { assertSupportedRendererNextVersion }             from './renderer-build.utils.js'
 import { cleanupRendererBuildDiscoveryArtifacts }         from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }            from './renderer-build.utils.js'
@@ -49,11 +50,27 @@ test('should pass renderer build output when requested', () => {
     'file:///tmp/next-compiled-conf-require-cache-loader.mjs',
     '/repo/client' as PortablePath,
     {
+      nextConfigAdapterPath: '/tmp/raijin-next-config-adapter.cjs' as PortablePath,
       output: 'standalone',
     }
   )
 
+  assert.equal(env.NEXT_ADAPTER_PATH, '/tmp/raijin-next-config-adapter.cjs')
   assert.equal(env.RAIJIN_RENDERER_OUTPUT, 'standalone')
+})
+
+test('should pass the Next adapter without forcing renderer build output', () => {
+  const env = createRendererBuildEnv(
+    {},
+    'file:///tmp/next-compiled-conf-require-cache-loader.mjs',
+    '/repo/client' as PortablePath,
+    {
+      nextConfigAdapterPath: '/tmp/raijin-next-config-adapter.cjs' as PortablePath,
+    }
+  )
+
+  assert.equal(env.NEXT_ADAPTER_PATH, '/tmp/raijin-next-config-adapter.cjs')
+  assert.equal(env.RAIJIN_RENDERER_OUTPUT, undefined)
 })
 
 test('should pass Next renderer loader through managed loader env', () => {
@@ -204,7 +221,7 @@ test('should patch Next compiled conf require cache deletion in loader source', 
   assert.equal(result.source, 'before if (require.cache) delete require.cache[__filename] after')
 })
 
-test('should patch Next config with default ESM source extension aliases', async () => {
+test('should leave Next config values to the adapter boundary', async () => {
   const loader = (await import(
     `data:text/javascript,${encodeURIComponent(NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE)}`
   )) as {
@@ -232,21 +249,9 @@ test('should patch Next config with default ESM source extension aliases', async
     })
   )
 
-  assert.equal(result.source.includes('result.experimental.extensionAlias ??= {'), true)
-  assert.equal(result.source.includes("'.js': ['.js', '.tsx', '.ts']"), true)
-  assert.equal(result.source.includes("'.mjs': ['.mjs', '.mts']"), true)
-  assert.equal(
-    result.source.includes('result.output ??= process.env["RAIJIN_RENDERER_OUTPUT"]'),
-    true
-  )
-  assert.equal(
-    result.source.includes(
-      'result.turbopack.root ??= process.env["RAIJIN_RENDERER_WORKSPACE_CWD"]'
-    ),
-    true
-  )
-  assert.equal(result.source.includes('const raijinWebpack = result.webpack'), true)
-  assert.equal(result.source.includes('webpackConfig.resolve.extensionAlias ??='), true)
+  assert.equal(result.source.includes('result.experimental.extensionAlias ??= {'), false)
+  assert.equal(result.source.includes('RAIJIN_RENDERER_OUTPUT'), false)
+  assert.equal(result.source.includes('RAIJIN_RENDERER_WORKSPACE_CWD'), false)
 })
 
 test('should patch Next config require hook extensions access in loader source', async () => {
@@ -362,7 +367,7 @@ test('should patch Next webpack config node protocol handling in loader source',
   assert.equal(result.source.includes('new bundler.ProvidePlugin'), true)
 })
 
-test('should patch Next webpack config with ESM source extension aliases', async () => {
+test('should leave Next webpack extension aliases to the adapter boundary', async () => {
   const loader = (await import(
     `data:text/javascript,${encodeURIComponent(NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE)}`
   )) as {
@@ -381,12 +386,7 @@ test('should patch Next webpack config with ESM source extension aliases', async
     })
   )
 
-  assert.equal(
-    result.source.includes('extensionAlias: config.experimental.extensionAlias ?? {'),
-    true
-  )
-  assert.equal(result.source.includes("'.js': ['.js', '.tsx', '.ts']"), true)
-  assert.equal(result.source.includes("'.mjs': ['.mjs', '.mts']"), true)
+  assert.equal(result.source, 'extensionAlias: config.experimental.extensionAlias,')
 })
 
 test('should leave Next SWC source unchanged in loader source', async () => {
@@ -515,6 +515,27 @@ test('should resolve renderer standalone root from renderer cwd', () => {
     resolveRendererBuildStandaloneCwd('/repo/client/next-app' as PortablePath),
     '/repo/client/next-app/src/.next/standalone'
   )
+})
+
+test('should reject renderer builds without standalone output', async () => {
+  const cwd = await xfs.mktempPromise()
+
+  await assert.rejects(
+    async () => assertRendererBuildStandaloneOutput(createRendererBuildContext(cwd)),
+    new Error(
+      'Renderer build did not produce Next standalone output. If next.config defines adapterPath, compose it with withRaijinRendererConfig from @atls/raijin/config/next.'
+    )
+  )
+})
+
+test('should accept renderer builds with standalone output', async () => {
+  const cwd = await xfs.mktempPromise()
+  const standaloneCwd = resolveRendererBuildStandaloneCwd(cwd)
+
+  await xfs.mkdirPromise(standaloneCwd, { recursive: true })
+
+  await assert.doesNotReject(async () =>
+    assertRendererBuildStandaloneOutput(createRendererBuildContext(cwd)))
 })
 
 test('should copy full renderer standalone root into dist artifact', async () => {

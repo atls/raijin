@@ -1,4 +1,6 @@
 [
+  "@atls/raijin/config/eslint",
+  "@atls/raijin/config/typescript",
   "@atls/raijin/eslint",
   "@atls/raijin/runtime-exec-argv",
   "@atls/raijin/svgr",

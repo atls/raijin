@@ -1,27 +1,27 @@
-import type { CommandInput }     from '@atls/raijin/commands'
+import type { CommandInput }                    from '@atls/raijin/commands'
 
-import type { FormatterOptions } from './formatter.interfaces.js'
+import type { FormatterOptions }                from './formatter.interfaces.js'
 
-import EventEmitter              from 'node:events'
-import { stat }                  from 'node:fs/promises'
-import { writeFile }             from 'node:fs/promises'
-import { readFile }              from 'node:fs/promises'
-import { relative }              from 'node:path'
-import { resolve }               from 'node:path'
-import { join }                  from 'node:path'
+import EventEmitter                             from 'node:events'
+import { stat }                                 from 'node:fs/promises'
+import { writeFile }                            from 'node:fs/promises'
+import { readFile }                             from 'node:fs/promises'
+import { relative }                             from 'node:path'
+import { resolve }                              from 'node:path'
 
-import { format }                from 'prettier/standalone'
-import ignorer                   from 'ignore'
+import { format }                               from 'prettier/standalone'
+import ignorer                                  from 'ignore'
 
-import { createCommandInput }    from '@atls/raijin/commands'
-import { toPortableCwd }         from '@atls/raijin/commands'
-import { discoverFiles }         from '@atls/raijin/filesystem'
-import { toNativePath }          from '@atls/raijin/filesystem'
-import { createPrettierConfig }  from '@atls/raijin/prettier/config'
+import { createCommandInput }                   from '@atls/raijin/commands'
+import { toPortableCwd }                        from '@atls/raijin/commands'
+import { resolvePrettierProject }               from '@atls/raijin/config/prettier'
+import { resolvePrettierProjectIgnorePatterns } from '@atls/raijin/config/prettier'
+import { discoverFiles }                        from '@atls/raijin/filesystem'
+import { toNativePath }                         from '@atls/raijin/filesystem'
 
-import { ignore }                from './formatter.patterns.js'
-import { ignorePatterns }        from './formatter.patterns.js'
-import { patterns }              from './formatter.patterns.js'
+import { ignore }                               from './formatter.patterns.js'
+import { ignorePatterns }                       from './formatter.patterns.js'
+import { patterns }                             from './formatter.patterns.js'
 
 export class Formatter extends EventEmitter {
   constructor(
@@ -44,15 +44,12 @@ export class Formatter extends EventEmitter {
   }
 
   protected async formatFiles(input: CommandInput): Promise<void> {
-    const prettierConfig = await createPrettierConfig({
-      workspacePackageNames: this.options.workspacePackageNames,
-    })
     const targetFiles = await this.resolveFormatFiles(input)
 
     const formatFiles = ignorer
       .default()
       .add(ignore)
-      .add(await this.getProjectIgnorePatterns())
+      .add(await resolvePrettierProjectIgnorePatterns(this.cwd))
       .filter(targetFiles.map((filepath) => relative(this.cwd, filepath)))
 
     this.emit('start', { files: formatFiles })
@@ -62,6 +59,12 @@ export class Formatter extends EventEmitter {
 
       const targetFile = resolve(this.cwd, filename)
       const source = await readFile(targetFile, 'utf8')
+      const prettierConfig = await resolvePrettierProject({
+        filepath: targetFile,
+        plugin: {
+          workspacePackageNames: this.options.workspacePackageNames,
+        },
+      })
 
       const output = await format(source, {
         ...prettierConfig,
@@ -131,14 +134,5 @@ export class Formatter extends EventEmitter {
     }
 
     return Array.from(new Set(resolvedFiles))
-  }
-
-  protected async getProjectIgnorePatterns(): Promise<Array<string>> {
-    const content = await readFile(join(this.cwd, 'package.json'), 'utf-8')
-
-    const { formatterIgnorePatterns = [] }: { formatterIgnorePatterns: Array<string> } =
-      JSON.parse(content)
-
-    return formatterIgnorePatterns
   }
 }

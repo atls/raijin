@@ -1,28 +1,30 @@
-import type { Locator }                   from '@yarnpkg/core'
-import type { Filename }                  from '@yarnpkg/fslib'
-import type { PortablePath }              from '@yarnpkg/fslib'
+import type { Locator }                      from '@yarnpkg/core'
+import type { Filename }                     from '@yarnpkg/fslib'
+import type { PortablePath }                 from '@yarnpkg/fslib'
 
-import { pathToFileURL }                  from 'node:url'
+import { pathToFileURL }                     from 'node:url'
 
-import { structUtils }                    from '@yarnpkg/core'
-import { npath }                          from '@yarnpkg/fslib'
-import { ppath }                          from '@yarnpkg/fslib'
-import { xfs }                            from '@yarnpkg/fslib'
+import { structUtils }                       from '@yarnpkg/core'
+import { npath }                             from '@yarnpkg/fslib'
+import { ppath }                             from '@yarnpkg/fslib'
+import { xfs }                               from '@yarnpkg/fslib'
 
-import { NEXT_COMPILED_CONF_PATH }        from './renderer-build.constants.js'
-import { NEXT_COMPILED_WEBPACK_PATH }     from './renderer-build.constants.js'
-import { NEXT_CONFIG_REQUIRE_HOOK_PATH }  from './renderer-build.constants.js'
-import { NEXT_NODE_MANIFEST_LOADER_PATH } from './renderer-build.constants.js'
-import { NEXT_PACKAGE_PATH }              from './renderer-build.constants.js'
-import { NEXT_REQUIRE_CACHE_PATH }        from './renderer-build.constants.js'
-import { NEXT_SERVER_CONFIG_PATH }        from './renderer-build.constants.js'
-import { NEXT_WEBPACK_CONFIG_PATH }       from './renderer-build.constants.js'
+import { NEXT_CONFIG_ADAPTER_PATH_ENV }      from '@atls/raijin/config/next'
+import { RAIJIN_RENDERER_OUTPUT_ENV }        from '@atls/raijin/config/next'
+import { RAIJIN_RENDERER_WORKSPACE_CWD_ENV } from '@atls/raijin/config/next'
+
+import { NEXT_COMPILED_CONF_PATH }           from './renderer-build.constants.js'
+import { NEXT_COMPILED_WEBPACK_PATH }        from './renderer-build.constants.js'
+import { NEXT_CONFIG_REQUIRE_HOOK_PATH }     from './renderer-build.constants.js'
+import { NEXT_NODE_MANIFEST_LOADER_PATH }    from './renderer-build.constants.js'
+import { NEXT_PACKAGE_PATH }                 from './renderer-build.constants.js'
+import { NEXT_REQUIRE_CACHE_PATH }           from './renderer-build.constants.js'
+import { NEXT_SERVER_CONFIG_PATH }           from './renderer-build.constants.js'
+import { NEXT_WEBPACK_CONFIG_PATH }          from './renderer-build.constants.js'
 
 const NEXT_COMPILED_CONF_LOADER_FILENAME = 'next-compiled-conf-require-cache-loader.mjs'
 const NODE_LOADER_OPTIONS = new Set(['--experimental-loader', '--loader'])
 const RAIJIN_NODE_LOADER = 'RAIJIN_NODE_LOADER'
-const RAIJIN_RENDERER_OUTPUT = 'RAIJIN_RENDERER_OUTPUT'
-const RAIJIN_RENDERER_WORKSPACE_CWD = 'RAIJIN_RENDERER_WORKSPACE_CWD'
 const DIST_DIR = 'dist' as Filename
 const NEXT_DIR = '.next' as Filename
 const PACKAGE_MANIFEST = 'package.json' as Filename
@@ -80,7 +82,6 @@ const isPnpNodeLoader = (value: string | undefined): boolean =>
 export const NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE = `
 const pnpLoader = {}
 
-const RAIJIN_RENDERER_WORKSPACE_CWD = ${JSON.stringify(RAIJIN_RENDERER_WORKSPACE_CWD)}
 const NEXT_PACKAGE_PATH = ${JSON.stringify(NEXT_PACKAGE_PATH)}
 const NEXT_COMPILED_CONF_PATH = ${JSON.stringify(NEXT_COMPILED_CONF_PATH)}
 const NEXT_CONFIG_REQUIRE_HOOK_PATH = ${JSON.stringify(NEXT_CONFIG_REQUIRE_HOOK_PATH)}
@@ -91,38 +92,6 @@ const NEXT_COMPILED_WEBPACK_PATH = ${JSON.stringify(NEXT_COMPILED_WEBPACK_PATH)}
 const NEXT_WEBPACK_CONFIG_PATH = ${JSON.stringify(NEXT_WEBPACK_CONFIG_PATH)}
 const REQUIRE_CACHE_NEEDLE = 'delete require.cache[__filename]'
 const REQUIRE_CACHE_REPLACEMENT = 'if (require.cache) delete require.cache[__filename]'
-const NEXT_CONFIG_RESULT_NEEDLE = [
-  'const result = {',
-  '        ..._configshared.defaultConfig,',
-  '        ...config,',
-  '        experimental: {',
-  '            ..._configshared.defaultConfig.experimental,',
-  '            ...config.experimental',
-  '        }',
-  '    };',
-].join('\\n')
-const NEXT_CONFIG_RESULT_REPLACEMENT = [
-  NEXT_CONFIG_RESULT_NEEDLE,
-  '    result.experimental.extensionAlias ??= {',
-  "        '.js': ['.js', '.tsx', '.ts'],",
-  "        '.jsx': ['.jsx', '.tsx', '.ts'],",
-  "        '.mjs': ['.mjs', '.mts'],",
-  '    };',
-  '    result.output ??= process.env["RAIJIN_RENDERER_OUTPUT"];',
-  '    result.turbopack ??= {};',
-  '    result.turbopack.root ??= process.env["RAIJIN_RENDERER_WORKSPACE_CWD"];',
-  '    const raijinWebpack = result.webpack;',
-  '    result.webpack = (webpackConfig, context) => {',
-  '        webpackConfig.resolve ??= {};',
-  '        webpackConfig.resolve.extensionAlias ??= result.experimental.extensionAlias;',
-  '',
-  "        if (typeof raijinWebpack === 'function') {",
-  '            return raijinWebpack(webpackConfig, context);',
-  '        }',
-  '',
-  '        return webpackConfig;',
-  '    };',
-].join('\\n')
 const REQUIRE_CACHE_FILE_NEEDLE = 'const mod = require.cache[filePath];'
 const REQUIRE_CACHE_FILE_REPLACEMENT = 'const mod = require.cache?.[filePath];'
 const REQUIRE_CACHE_VALUES_NEEDLE = 'const modules = Object.values(require.cache);'
@@ -167,14 +136,6 @@ const WEBPACK_NODE_PROTOCOL_PLUGIN_REPLACEMENT = [
   '            }),',
   WEBPACK_NODE_PROTOCOL_PLUGIN_NEEDLE,
 ].join('\\n            ')
-const WEBPACK_EXTENSION_ALIAS_NEEDLE = 'extensionAlias: config.experimental.extensionAlias,'
-const WEBPACK_EXTENSION_ALIAS_REPLACEMENT = [
-  'extensionAlias: config.experimental.extensionAlias ?? {',
-  "            '.js': ['.js', '.tsx', '.ts'],",
-  "            '.jsx': ['.jsx', '.tsx', '.ts'],",
-  "            '.mjs': ['.mjs', '.mts'],",
-  '        },',
-].join('\\n        ')
 const REQUIRE_EXTENSIONS_NEEDLE = "const oldJSHook = requireExtensions['.js'];"
 const REQUIRE_EXTENSIONS_REPLACEMENT = "const requireExtensions = require.extensions || _nodemodule.default._extensions;\\nconst oldJSHook = requireExtensions['.js'];"
 
@@ -205,11 +166,7 @@ const isPatchableNextSource = (url) =>
   isNextWebpackConfig(url)
 
 const patchNextCompiledConfSource = (source) =>
-  source
-    .split(REQUIRE_CACHE_NEEDLE)
-    .join(REQUIRE_CACHE_REPLACEMENT)
-    .split(NEXT_CONFIG_RESULT_NEEDLE)
-    .join(NEXT_CONFIG_RESULT_REPLACEMENT)
+  source.split(REQUIRE_CACHE_NEEDLE).join(REQUIRE_CACHE_REPLACEMENT)
 
 const patchNextConfigRequireHookSource = (source) =>
   source
@@ -243,8 +200,6 @@ const patchNextWebpackConfigSource = (source) =>
   source
     .split(WEBPACK_NODE_PROTOCOL_PLUGIN_NEEDLE)
     .join(WEBPACK_NODE_PROTOCOL_PLUGIN_REPLACEMENT)
-    .split(WEBPACK_EXTENSION_ALIAS_NEEDLE)
-    .join(WEBPACK_EXTENSION_ALIAS_REPLACEMENT)
 
 const transformNextSource = (url, source) => {
   if (isNextCompiledConf(url)) {
@@ -425,6 +380,18 @@ export const resolveRendererBuildStandaloneCwd = (rendererCwd: PortablePath): Po
   return ppath.join(nextOutputCwd, 'standalone' as Filename)
 }
 
+export const assertRendererBuildStandaloneOutput = async ({
+  rendererCwd,
+}: RendererBuildContext): Promise<void> => {
+  if (await xfs.existsPromise(resolveRendererBuildStandaloneCwd(rendererCwd))) {
+    return
+  }
+
+  throw new Error(
+    'Renderer build did not produce Next standalone output. If next.config defines adapterPath, compose it with withRaijinRendererConfig from @atls/raijin/config/next.'
+  )
+}
+
 export const copyRendererBuildStandaloneFiles = async ({
   distCwd,
   rendererCwd,
@@ -436,13 +403,18 @@ export const createRendererBuildEnv = (
   env: NodeJS.ProcessEnv,
   nextCompiledConfRequireCacheLoader: string,
   rendererCwd: PortablePath,
-  options: { output?: string } = {}
+  options: { nextConfigAdapterPath?: PortablePath; output?: string } = {}
 ): NodeJS.ProcessEnv => ({
   ...env,
   NEXT_TELEMETRY_DISABLED: '1',
-  [RAIJIN_RENDERER_WORKSPACE_CWD]: npath.fromPortablePath(rendererCwd),
+  [RAIJIN_RENDERER_WORKSPACE_CWD_ENV]: npath.fromPortablePath(rendererCwd),
   [RAIJIN_NODE_LOADER]: nextCompiledConfRequireCacheLoader,
-  ...(options.output ? { [RAIJIN_RENDERER_OUTPUT]: options.output } : {}),
+  ...(options.nextConfigAdapterPath
+    ? {
+        [NEXT_CONFIG_ADAPTER_PATH_ENV]: npath.fromPortablePath(options.nextConfigAdapterPath),
+      }
+    : {}),
+  ...(options.output ? { [RAIJIN_RENDERER_OUTPUT_ENV]: options.output } : {}),
 })
 
 export const extractNodeLoaderOption = (

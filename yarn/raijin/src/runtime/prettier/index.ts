@@ -1,7 +1,7 @@
-import type { Config }          from 'prettier'
+import type { Config }            from 'prettier'
 
-import { createPrettierConfig } from './config.js'
+import { createPrettierDefaults } from '../../config/prettier/index.js'
 
-export const prettierconfig: Config = await createPrettierConfig()
+export const prettierconfig: Config = await createPrettierDefaults()
 
 export default prettierconfig
