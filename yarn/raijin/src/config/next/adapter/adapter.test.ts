@@ -5,8 +5,8 @@ import test                             from 'node:test'
 import { npath }                        from '@yarnpkg/fslib'
 import { xfs }                          from '@yarnpkg/fslib'
 
-import { applyNextConfig }              from './adapter.js'
 import { materializeNextConfigAdapter } from './adapter.js'
+import { withRaijinRendererConfig }     from './adapter.js'
 
 const require = createRequire(import.meta.url)
 
@@ -15,7 +15,7 @@ test('should apply renderer defaults without replacing project config', () => {
     ...config,
     project: true,
   })
-  const config = applyNextConfig(
+  const config = withRaijinRendererConfig(
     {
       experimental: {
         extensionAlias: { '.js': ['.js'] },
@@ -38,7 +38,7 @@ test('should apply renderer defaults without replacing project config', () => {
 })
 
 test('should apply renderer config through the adapter boundary', () => {
-  const config = applyNextConfig(
+  const config = withRaijinRendererConfig(
     {},
     {
       RAIJIN_RENDERER_OUTPUT: 'standalone',
@@ -49,6 +49,24 @@ test('should apply renderer config through the adapter boundary', () => {
   assert.equal(config.output, 'standalone')
   assert.equal(config.turbopack?.root, '/workspace')
   assert.deepEqual(config.experimental?.extensionAlias?.['.mjs'], ['.mjs', '.mts'])
+})
+
+test('should preserve project adapters during explicit config composition', () => {
+  const config = withRaijinRendererConfig(
+    {
+      adapterPath: '/project/stable-adapter.js',
+      experimental: {
+        adapterPath: '/project/experimental-adapter.js',
+      },
+    },
+    {
+      RAIJIN_RENDERER_WORKSPACE_CWD: '/workspace',
+    }
+  )
+
+  assert.equal(config.adapterPath, '/project/stable-adapter.js')
+  assert.equal(config.experimental?.adapterPath, '/project/experimental-adapter.js')
+  assert.equal(config.turbopack?.root, '/workspace')
 })
 
 test('should materialize a loadable Next adapter module', async () => {

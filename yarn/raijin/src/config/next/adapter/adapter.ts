@@ -13,9 +13,9 @@ export const RAIJIN_RENDERER_WORKSPACE_CWD_ENV = 'RAIJIN_RENDERER_WORKSPACE_CWD'
 
 const ADAPTER_FILENAME = 'raijin-next-config-adapter.cjs' as Filename
 
-export const applyNextConfig = (
+export const withRaijinRendererConfig = (
   config: NextConfigShape,
-  env: NodeJS.ProcessEnv
+  env: NodeJS.ProcessEnv = process.env
 ): NextConfigShape => {
   const extensionAlias = config.experimental?.extensionAlias ?? {
     '.js': ['.js', '.tsx', '.ts'],
@@ -55,12 +55,12 @@ export const applyNextConfig = (
 
 export const createNextConfigAdapterSource = (): string =>
   `
-const applyNextConfig = ${applyNextConfig.toString()}
+const withRaijinRendererConfig = ${withRaijinRendererConfig.toString()}
 
 module.exports = {
   name: 'raijin-renderer',
   modifyConfig(config) {
-    return applyNextConfig(config, process.env)
+    return withRaijinRendererConfig(config, process.env)
   },
 }
 `.trimStart()
