@@ -43,6 +43,34 @@ const createProject = async (
   return cwd
 }
 
+const createDistinctRaijinRuntime = async (cwd: string): Promise<void> => {
+  const runtimePath = join(cwd, 'node_modules/@atls/raijin')
+
+  await mkdir(runtimePath, { recursive: true })
+  await writeFile(
+    join(runtimePath, 'package.json'),
+    JSON.stringify({
+      name: '@atls/raijin',
+      type: 'module',
+      exports: {
+        './config/typescript': './typescript-config.js',
+        './typescript': './typescript.js',
+      },
+    })
+  )
+  await writeFile(join(runtimePath, 'typescript.js'), 'export const ts = { target: true }\n')
+  await writeFile(
+    join(runtimePath, 'typescript-config.js'),
+    [
+      'export const resolveTypeScriptProject = async () => ({',
+      "  errors: [{ code: 9999, messageText: 'target config' }],",
+      '  fileNames: [],',
+      '  options: {},',
+      '})',
+    ].join('\n')
+  )
+}
+
 test('should preserve project module resolution options during typecheck', async () => {
   const cwd = await createProject({
     'tsconfig.json': JSON.stringify(
@@ -369,6 +397,35 @@ test('should import TypeScript runtime through ancestor package boundary', async
   const typescript = await TypeScript.initialize(join(cwd, 'packages/internal'))
 
   assert.deepEqual(Reflect.get(typescript, 'ts'), { rootRuntime: true })
+})
+
+test('should import TypeScript config through the same package boundary as its runtime', async () => {
+  const cwd = await createProject(
+    {
+      'packages/internal/package.json': JSON.stringify(
+        {
+          name: '@scope/internal',
+          type: 'module',
+        },
+        null,
+        2
+      ),
+    },
+    {
+      devDependencies: {
+        '@atls/raijin': 'workspace:*',
+      },
+    }
+  )
+  const workspaceCwd = join(cwd, 'packages/internal')
+
+  await createDistinctRaijinRuntime(cwd)
+
+  const typescript = await TypeScript.initialize(workspaceCwd)
+  const diagnostics = await typescript.check()
+
+  assert.deepEqual(Reflect.get(typescript, 'ts'), { target: true })
+  assert.equal(diagnostics[0]?.code, 9999)
 })
 
 test('should ignore generated artifacts during typecheck', async () => {

@@ -2,17 +2,27 @@
 
 import type { CommandInput }               from '@atls/raijin/commands'
 import type { TypeScriptProjectSelection } from '@atls/raijin/config/typescript'
+import type { resolveTypeScriptProject }   from '@atls/raijin/config/typescript'
 import type { ts as typescript }           from '@atls/raijin/typescript'
 
 import EventEmitter                        from 'node:events'
 
 import { toCommandArguments }              from '@atls/raijin/commands'
 import { toPortableCwd }                   from '@atls/raijin/commands'
-import { resolveTypeScriptProject }        from '@atls/raijin/config/typescript'
+import { findRaijinPackageBoundary }       from '@atls/raijin/runtime-resolver'
 import { resolveRaijinRuntimeUrl }         from '@atls/raijin/runtime-resolver'
 
 import { transformJsxToJsExtension }       from './transformers/index.js'
 
+type TypeScriptConfig = {
+  resolveTypeScriptProject: typeof resolveTypeScriptProject
+}
+
+type TypeScriptRuntime = {
+  ts: typeof typescript
+}
+
+const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
 const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
 
 export type TypeScriptOptions = {
@@ -24,9 +34,13 @@ export const resolveTypeScriptRuntimeUrl = (cwd: string): string =>
   resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_RUNTIME_SPECIFIER)
 
 export class TypeScript extends EventEmitter {
+  private config?: Promise<TypeScriptConfig>
+
   private readonly fallbackPatterns: Array<string>
 
   private readonly manifestCwds: Array<string>
+
+  private readonly packageCwd: string
 
   constructor(
     private readonly ts: typeof typescript,
@@ -41,10 +55,14 @@ export class TypeScript extends EventEmitter {
         options.manifestCwds && options.manifestCwds.length > 0 ? options.manifestCwds : [cwd]
       )
     )
+    this.packageCwd = findRaijinPackageBoundary(cwd) ?? cwd
   }
 
   static async initialize(cwd: string, options: TypeScriptOptions = {}): Promise<TypeScript> {
-    const { ts } = (await import(resolveTypeScriptRuntimeUrl(cwd))) as { ts: typeof typescript }
+    const packageCwd = findRaijinPackageBoundary(cwd) ?? cwd
+    const { ts } = (await import(
+      resolveRaijinRuntimeUrl(packageCwd, TYPESCRIPT_RUNTIME_SPECIFIER)
+    )) as TypeScriptRuntime
 
     return new TypeScript(ts, cwd, options)
   }
@@ -72,6 +90,7 @@ export class TypeScript extends EventEmitter {
     override: Partial<typescript.CompilerOptions> = {},
     noEmit = true
   ): Promise<Array<typescript.Diagnostic>> {
+    const { resolveTypeScriptProject } = await this.importConfig()
     let projectConfig = await resolveTypeScriptProject({
       compilerOptions: override,
       cwd: this.cwd,
@@ -148,6 +167,14 @@ export class TypeScript extends EventEmitter {
     this.emit('end', { diagnostics })
 
     return diagnostics
+  }
+
+  private async importConfig(): Promise<TypeScriptConfig> {
+    this.config ??= import(
+      resolveRaijinRuntimeUrl(this.packageCwd, TYPESCRIPT_CONFIG_SPECIFIER)
+    ) as Promise<TypeScriptConfig>
+
+    return this.config
   }
 
   private filterDiagnostics(
