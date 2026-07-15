@@ -8,6 +8,7 @@ import { StreamReport }              from '@yarnpkg/core'
 import { MessageName }               from '@yarnpkg/core'
 import { xfs }                       from '@yarnpkg/fslib'
 import { Option }                    from 'clipanion'
+import typescript                    from 'typescript'
 
 import { createChildProcessOptions } from '@atls/raijin/commands'
 import { createCommandInput }        from '@atls/raijin/commands'
@@ -18,6 +19,7 @@ import { shouldProxyCommand }        from '@atls/raijin/commands'
 import { toCommandArguments }        from '@atls/raijin/commands'
 import { toNativeCwd }               from '@atls/raijin/commands'
 import { hasTypeScriptProject }      from '@atls/raijin/config/typescript'
+import { resolveTypeScriptProject }  from '@atls/raijin/config/typescript'
 import { getChangedFiles }           from '@atls/yarn-plugin-files'
 
 import { GitHubChecks }              from './github.checks.js'
@@ -160,8 +162,18 @@ class ChecksTypeCheckCommand extends BaseCommand {
       }
     }
 
-    if (hasTypeScriptProject(toNativeCwd(project.cwd))) {
-      return undefined
+    const cwd = toNativeCwd(project.cwd)
+
+    if (hasTypeScriptProject(cwd)) {
+      const config = await resolveTypeScriptProject({ cwd, typescript })
+      const ownsSourceScope =
+        config.errors.length > 0 ||
+        config.fileNames.length > 0 ||
+        (config.projectReferences?.length ?? 0) === 0
+
+      if (ownsSourceScope) {
+        return undefined
+      }
     }
 
     return createCommandInput({
