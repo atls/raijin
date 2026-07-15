@@ -76,31 +76,28 @@ export class Linter extends EventEmitter {
     return new Linter(linter, fixLinter, cacheLinter, projectIgnorePatterns, cwd)
   }
 
-  async lintFile(filename: string, options?: LintOptions): Promise<LintResult> {
-    const filePath = filename
-    const source = await readFile(filePath, 'utf8')
-    const eslint = options?.fix ? this.fixLinter : this.linter
-    const [result] = await eslint.lintText(source, { filePath })
+  async lintFile(filename: string, options?: LintOptions): Promise<LintResult | undefined> {
+    const eslint = this.resolveLinter(options)
 
-    if (options?.fix && result.output !== undefined) {
-      await writeFile(filePath, result.output, 'utf8')
+    if (await eslint.isPathIgnored(filename)) {
+      return undefined
     }
 
-    return {
-      ...result,
-      source: result.source ?? source,
-    }
+    return this.lintUnignoredFile(filename, eslint, options)
   }
 
   async lintFiles(files: Array<string> = [], options?: LintOptions): Promise<Array<LintResult>> {
     const results: Array<LintResult> = []
+    const eslint = this.resolveLinter(options)
+    const ignored = await Promise.all(files.map(async (file) => eslint.isPathIgnored(file)))
+    const lintableFiles = files.filter((_, index) => !ignored[index])
 
-    this.emit('start', { files })
+    this.emit('start', { files: lintableFiles })
 
-    for await (const file of files) {
+    for await (const file of lintableFiles) {
       this.emit('lint:start', { file })
 
-      const result = await this.lintFile(file, options)
+      const result = await this.lintUnignoredFile(file, eslint, options)
 
       results.push(result)
 
@@ -138,6 +135,29 @@ export class Linter extends EventEmitter {
     }
 
     return this.lintFiles(finalFiles, options)
+  }
+
+  private resolveLinter(options?: LintOptions): ESLintInstance {
+    return options?.fix ? this.fixLinter : this.linter
+  }
+
+  private async lintUnignoredFile(
+    filename: string,
+    eslint: ESLintInstance,
+    options?: LintOptions
+  ): Promise<LintResult> {
+    const filePath = filename
+    const source = await readFile(filePath, 'utf8')
+    const [result] = await eslint.lintText(source, { filePath })
+
+    if (options?.fix && result.output !== undefined) {
+      await writeFile(filePath, result.output, 'utf8')
+    }
+
+    return {
+      ...result,
+      source: result.source ?? source,
+    }
   }
 
   private async lintWithCache(files: Array<string> = []): Promise<Array<LintResult>> {
