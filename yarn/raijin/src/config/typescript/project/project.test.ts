@@ -27,16 +27,26 @@ const createProject = async (): Promise<string> => {
   return cwd
 }
 
-test('should preserve files and references while applying explicit targets', async () => {
+test('should preserve inherited options, excludes, and references for explicit targets', async () => {
   const cwd = await createProject()
   const configPath = join(cwd, 'tsconfig.json')
-  const source = '{"files":[],"references":[{"path":"./packages/lib"}]}\n'
+  const source =
+    '{"extends":"./tsconfig.base.json","files":[],"references":[{"path":"./packages/lib"}]}\n'
 
+  await mkdir(join(cwd, 'excluded'))
+  await writeFile(join(cwd, 'excluded/ignored.ts'), 'export const ignored = true\n')
+  await writeFile(
+    join(cwd, 'tsconfig.base.json'),
+    '{"compilerOptions":{"allowJs":true,"strict":false},"exclude":["excluded"]}\n'
+  )
   await writeFile(configPath, source)
 
   const config = await resolveTypeScriptProject({
     cwd,
-    selection: { kind: 'explicit', patterns: ['src/index.ts'] },
+    selection: {
+      kind: 'explicit',
+      patterns: ['src/index.ts', 'src/runtime.js', 'excluded/ignored.ts'],
+    },
     typescript,
   })
 
@@ -44,6 +54,16 @@ test('should preserve files and references while applying explicit targets', asy
     config.fileNames.some((file) => file.endsWith('/src/index.ts')),
     true
   )
+  assert.equal(
+    config.fileNames.some((file) => file.endsWith('/src/runtime.js')),
+    true
+  )
+  assert.equal(
+    config.fileNames.some((file) => file.endsWith('/excluded/ignored.ts')),
+    false
+  )
+  assert.equal(config.options.allowJs, true)
+  assert.equal(config.options.strict, false)
   assert.equal(config.projectReferences?.[0]?.path, join(cwd, 'packages/lib'))
   assert.equal(await readFile(configPath, 'utf8'), source)
 })

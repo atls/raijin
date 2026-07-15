@@ -1,5 +1,6 @@
 import type { Diagnostic }                      from 'typescript'
 import type { ParseConfigFileHost }             from 'typescript'
+import type { ParsedCommandLine }               from 'typescript'
 
 import type { TypeScriptPackageManifest }       from './project.interfaces.js'
 import type { TypeScriptProjectConfig }         from './project.interfaces.js'
@@ -56,6 +57,27 @@ const createParseHost = (
     ),
 })
 
+const parseSelection = (
+  configFileName: string,
+  host: ParseConfigFileHost,
+  options: ResolveTypeScriptProjectOptions['compilerOptions'],
+  patterns: ReadonlyArray<string>,
+  typescript: ResolveTypeScriptProjectOptions['typescript']
+): ParsedCommandLine => {
+  const cwd = dirname(configFileName)
+
+  return typescript.parseJsonConfigFileContent(
+    {
+      extends: `./${PROJECT_CONFIG}`,
+      include: patterns,
+    },
+    host,
+    cwd,
+    options,
+    join(cwd, '.raijin-selection.json')
+  )
+}
+
 export const resolveTypeScriptProject = async ({
   compilerOptions = {},
   cwd,
@@ -100,12 +122,7 @@ export const resolveTypeScriptProject = async ({
 
   const explicitSelection = selection?.kind === 'explicit' && configFileName !== undefined
   const selected = explicitSelection
-    ? typescript.parseJsonConfigFileContent(
-        { include: selection.patterns },
-        host,
-        dirname(configFileName),
-        compilerOptions
-      )
+    ? parseSelection(configFileName, host, compilerOptions, selection.patterns, typescript)
     : undefined
   const ignoredProjectErrors = new Set([18002, 18003])
   const convertedDefaults = typescript.convertCompilerOptionsFromJson(defaults.compilerOptions, cwd)
