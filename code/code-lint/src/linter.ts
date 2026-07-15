@@ -1,40 +1,58 @@
-import type { CommandInput }                  from '@atls/raijin/commands'
-import type { ESLintInstance }                from '@atls/raijin/eslint'
-import type { ESLint as RuntimeESLint }       from '@atls/raijin/eslint'
-import type { LintResult }                    from '@atls/raijin/eslint'
+import type { CommandInput }                       from '@atls/raijin/commands'
+import type { ESLintInstance }                     from '@atls/raijin/eslint'
+import type { ESLint as RuntimeESLint }            from '@atls/raijin/eslint'
+import type { LintResult }                         from '@atls/raijin/eslint'
+import type { resolveEslintProject }               from '@atls/raijin/config/eslint'
+import type { resolveEslintProjectIgnorePatterns } from '@atls/raijin/config/eslint'
 
-import EventEmitter                           from 'node:events'
-import { readFile }                           from 'node:fs/promises'
-import { stat }                               from 'node:fs/promises'
-import { writeFile }                          from 'node:fs/promises'
-import { relative }                           from 'node:path'
-import { join }                               from 'node:path'
+import EventEmitter                                from 'node:events'
+import { readFile }                                from 'node:fs/promises'
+import { stat }                                    from 'node:fs/promises'
+import { writeFile }                               from 'node:fs/promises'
+import { relative }                                from 'node:path'
+import { join }                                    from 'node:path'
 
-import ignorer                                from 'ignore'
+import ignorer                                     from 'ignore'
 
-import { createCommandInput }                 from '@atls/raijin/commands'
-import { toPortableCwd }                      from '@atls/raijin/commands'
-import { resolveEslintProject }               from '@atls/raijin/config/eslint'
-import { resolveEslintProjectIgnorePatterns } from '@atls/raijin/config/eslint'
-import { discoverFiles }                      from '@atls/raijin/filesystem'
-import { toNativePath }                       from '@atls/raijin/filesystem'
-import { resolveRaijinRuntimeUrl }            from '@atls/raijin/runtime-resolver'
+import { createCommandInput }                      from '@atls/raijin/commands'
+import { toPortableCwd }                           from '@atls/raijin/commands'
+import { discoverFiles }                           from '@atls/raijin/filesystem'
+import { toNativePath }                            from '@atls/raijin/filesystem'
+import { findRaijinPackageBoundary }               from '@atls/raijin/runtime-resolver'
+import { resolveRaijinRuntimeUrl }                 from '@atls/raijin/runtime-resolver'
 
-import { ignore }                             from './linter.patterns.js'
-import { ignorePatterns }                     from './linter.patterns.js'
-import { patterns }                           from './linter.patterns.js'
+import { ignore }                                  from './linter.patterns.js'
+import { ignorePatterns }                          from './linter.patterns.js'
+import { patterns }                                from './linter.patterns.js'
 
 type EslintRuntime = {
   ESLint: typeof RuntimeESLint
 }
 
+type EslintConfig = {
+  resolveEslintProject: typeof resolveEslintProject
+  resolveEslintProjectIgnorePatterns: typeof resolveEslintProjectIgnorePatterns
+}
+
 const ESLINT_RUNTIME_SPECIFIER = '@atls/raijin/eslint'
+const ESLINT_CONFIG_SPECIFIER = '@atls/raijin/config/eslint'
 
 export const resolveEslintRuntimeUrl = (cwd: string): string =>
   resolveRaijinRuntimeUrl(cwd, ESLINT_RUNTIME_SPECIFIER)
 
-const importEslintRuntime = async (cwd: string): Promise<EslintRuntime> =>
-  (await import(resolveEslintRuntimeUrl(cwd))) as EslintRuntime
+const importEslintModules = async (cwd: string): Promise<EslintConfig & EslintRuntime> => {
+  const packageCwd = findRaijinPackageBoundary(cwd) ?? cwd
+  const [runtime, config] = await Promise.all([
+    import(resolveRaijinRuntimeUrl(packageCwd, ESLINT_RUNTIME_SPECIFIER)) as Promise<EslintRuntime>,
+    import(resolveRaijinRuntimeUrl(packageCwd, ESLINT_CONFIG_SPECIFIER)) as Promise<EslintConfig>,
+  ])
+
+  return {
+    ESLint: runtime.ESLint,
+    resolveEslintProject: config.resolveEslintProject,
+    resolveEslintProjectIgnorePatterns: config.resolveEslintProjectIgnorePatterns,
+  }
+}
 
 export interface LintOptions {
   fix?: boolean
@@ -60,7 +78,8 @@ export class Linter extends EventEmitter {
   }
 
   static async initialize(rootCwd: string, cwd: string): Promise<Linter> {
-    const { ESLint } = await importEslintRuntime(cwd)
+    const { ESLint, resolveEslintProject, resolveEslintProjectIgnorePatterns } =
+      await importEslintModules(cwd)
     const project = { cwd, eslint: ESLint, rootCwd }
     const linter = new ESLint(await resolveEslintProject(project))
     const fixLinter = new ESLint(await resolveEslintProject({ ...project, fix: true }))

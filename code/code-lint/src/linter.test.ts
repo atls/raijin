@@ -35,6 +35,38 @@ const linkRaijinRuntime = async (cwd: string): Promise<void> => {
   await symlink(raijinPackagePath, join(scopePath, 'raijin'), 'dir')
 }
 
+const createDistinctRaijinRuntime = async (cwd: string): Promise<void> => {
+  const runtimePath = join(cwd, 'node_modules/@atls/raijin')
+
+  await mkdir(runtimePath, { recursive: true })
+  await writeFile(
+    join(runtimePath, 'package.json'),
+    JSON.stringify({
+      name: '@atls/raijin',
+      type: 'module',
+      exports: {
+        './config/eslint': './eslint-config.js',
+        './eslint': './eslint.js',
+      },
+    })
+  )
+  await writeFile(
+    join(runtimePath, 'eslint.js'),
+    [
+      'export class ESLint {',
+      '  constructor(options) { globalThis.raijinEslintOptions.push(options) }',
+      '}',
+    ].join('\n')
+  )
+  await writeFile(
+    join(runtimePath, 'eslint-config.js'),
+    [
+      "export const resolveEslintProject = async () => ({ source: 'target-config' })",
+      'export const resolveEslintProjectIgnorePatterns = async () => []',
+    ].join('\n')
+  )
+}
+
 const createProjectWithGeneratedEslintConfig = async (): Promise<string> => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-lint-'))
 
@@ -138,6 +170,40 @@ test('should import ESLint runtime through ancestor package boundary', async () 
   await linkRaijinRuntime(rootCwd)
 
   assert.match(resolveEslintRuntimeUrl(workspaceCwd), /\/yarn\/raijin\/src\/runtime\/eslint\.ts$/)
+})
+
+test('should import ESLint config through the same package boundary as its runtime', async () => {
+  const rootCwd = await mkdtemp(join(tmpdir(), 'raijin-lint-boundary-'))
+  const workspaceCwd = join(rootCwd, 'packages/internal')
+  const globalWithOptions = globalThis as typeof globalThis & {
+    raijinEslintOptions: Array<Record<string, unknown>>
+  }
+
+  await mkdir(workspaceCwd, { recursive: true })
+  await writeFile(
+    join(rootCwd, 'package.json'),
+    JSON.stringify({
+      type: 'module',
+      devDependencies: {
+        '@atls/raijin': 'workspace:*',
+      },
+    })
+  )
+  await writeFile(join(workspaceCwd, 'package.json'), '{"type":"module"}\n')
+  await createDistinctRaijinRuntime(rootCwd)
+  globalWithOptions.raijinEslintOptions = []
+
+  try {
+    await Linter.initialize(rootCwd, workspaceCwd)
+
+    assert.equal(globalWithOptions.raijinEslintOptions.length, 3)
+    assert.deepEqual(
+      globalWithOptions.raijinEslintOptions.map(({ source }) => source),
+      ['target-config', 'target-config', 'target-config']
+    )
+  } finally {
+    Reflect.deleteProperty(globalWithOptions, 'raijinEslintOptions')
+  }
 })
 
 test('should lint workspace config files outside workspace tsconfig scope', async () => {
