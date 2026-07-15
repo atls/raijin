@@ -36,7 +36,7 @@
     "@atls/raijin": "workspace:*",
     "@types/node": "24.12.2",
     "@yarnpkg/builder": "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6",
-    "esbuild": "npm:esbuild-wasm@^0.23.1",
+    "esbuild": "npm:esbuild-wasm@0.24.0",
     "prettier": "3.5.3",
     "react": "18.3.1",
     "typescript": "5.9.3"

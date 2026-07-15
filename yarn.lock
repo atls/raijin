@@ -7259,7 +7259,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:esbuild-wasm@^0.23.0, esbuild@npm:esbuild-wasm@^0.23.1":
+"esbuild@npm:esbuild-wasm@0.24.0":
+  version: 0.24.0
+  resolution: "esbuild-wasm@npm:0.24.0"
+  bin:
+    esbuild: bin/esbuild
+  checksum: 10/73353a7256a235d819652ad6dc41a4f6a68ea5b96f8ee926eb6eaf59b2d58ef163488505fe8e3850f6f20c18e9afe217120c36a7e1a35faa254891bc57cff472
+  languageName: node
+  linkType: hard
+
+"esbuild@npm:esbuild-wasm@^0.23.0":
   version: 0.23.1
   resolution: "esbuild-wasm@npm:0.23.1"
   bin:
@@ -11962,7 +11971,7 @@ __metadata:
     "@atls/raijin": "workspace:*"
     "@types/node": "npm:24.12.2"
     "@yarnpkg/builder": "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"
-    esbuild: "npm:esbuild-wasm@^0.23.1"
+    esbuild: "npm:esbuild-wasm@0.24.0"
     prettier: "npm:3.5.3"
     react: "npm:18.3.1"
     typescript: "npm:5.9.3"

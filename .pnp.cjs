@@ -328,7 +328,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["esbuild", [\
             "esbuild-wasm",\
-            "npm:0.23.1"\
+            "npm:0.24.0"\
           ]],\
           ["prettier", "npm:3.5.3"],\
           ["react", "npm:18.3.1"],\
@@ -10953,6 +10953,13 @@ const RAW_RUNTIME_STATE =
           ["esbuild-wasm", "npm:0.23.1"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:0.24.0", {\
+        "packageLocation": "../.yarn/berry/cache/esbuild-wasm-npm-0.24.0-df844cf64e-10.zip/node_modules/esbuild-wasm/",\
+        "packageDependencies": [\
+          ["esbuild-wasm", "npm:0.24.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["escalade", [\
@@ -16328,7 +16335,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["esbuild", [\
             "esbuild-wasm",\
-            "npm:0.23.1"\
+            "npm:0.24.0"\
           ]],\
           ["prettier", "npm:3.5.3"],\
           ["react", "npm:18.3.1"],\
