@@ -6,28 +6,30 @@ import { MessageName }                                   from '@yarnpkg/core'
 import { execUtils }                                     from '@yarnpkg/core'
 import { scriptUtils }                                   from '@yarnpkg/core'
 import { xfs }                                           from '@yarnpkg/fslib'
-import { ppath }                                         from '@yarnpkg/fslib'
 
 import { resolveWorkspaceInvocation }                    from '@atls/raijin/commands'
 import { createYarnExecutable }                          from '@atls/raijin/commands'
 import { materializeNextConfigAdapter }                  from '@atls/raijin/config/next'
 
-import { RENDERER_STANDALONE_SERVER_ENTRYPOINT }         from './renderer-build.constants.js'
 import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
 import { assertRendererBuildStandaloneOutput }           from './renderer-build.utils.js'
 import { cleanupRendererBuildDiscoveryArtifacts }        from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
-import { cleanupRendererBuildWorkspaceManifests }        from './renderer-build.utils.js'
+import { copyRendererBuildEdgeChunks }                   from './renderer-build.utils.js'
 import { copyRendererBuildPublicAssets }                 from './renderer-build.utils.js'
 import { copyRendererBuildStandaloneFiles }              from './renderer-build.utils.js'
+import { copyRendererBuildStaticAssets }                 from './renderer-build.utils.js'
 import { createRendererBuildContext }                    from './renderer-build.utils.js'
 import { createRendererBuildArgs }                       from './renderer-build.utils.js'
 import { createRendererBuildEnv }                        from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
+import { materializeRendererBuildEntrypoint }            from './renderer-build.utils.js'
 import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
+import { resolveRendererBuildArtifactContext }           from './renderer-build.utils.js'
 import { resolveRendererBuildPnpLoader }                 from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
+import { snapshotRendererBuildManifests }                from './renderer-build.utils.js'
 
 export class RendererBuildCommand extends BaseCommand {
   static override paths = [['renderer', 'build']]
@@ -46,6 +48,9 @@ export class RendererBuildCommand extends BaseCommand {
     await cleanupRendererBuildStaleArtifacts(rendererCwd)
 
     await project.restoreInstallState()
+
+    const binFolder = await xfs.mktempPromise()
+    const manifestSnapshot = await snapshotRendererBuildManifests(rendererBuildContext)
 
     const commandReport = await StreamReport.start(
       {
@@ -77,7 +82,6 @@ export class RendererBuildCommand extends BaseCommand {
               })
           })
 
-          const binFolder = await xfs.mktempPromise()
           const executableContext = {
             binFolder,
             locator: workspace.anchoredLocator,
@@ -126,48 +130,37 @@ export class RendererBuildCommand extends BaseCommand {
           )
 
           assertRendererBuildExitCode(code)
-          await assertRendererBuildStandaloneOutput(rendererBuildContext)
         })
+
+        const rendererBuildArtifactContext = await resolveRendererBuildArtifactContext(
+          rendererBuildContext,
+          manifestSnapshot
+        )
+
+        await assertRendererBuildStandaloneOutput(rendererBuildArtifactContext)
 
         await report.startTimerPromise('Copy standalone files', async () => {
-          await copyRendererBuildStandaloneFiles(rendererBuildContext)
-        })
-
-        await report.startTimerPromise('Clean workspace manifests', async () => {
-          await cleanupRendererBuildWorkspaceManifests(rendererCwd)
+          await copyRendererBuildStandaloneFiles(rendererBuildArtifactContext)
         })
 
         await report.startTimerPromise('Copy static files', async () => {
-          await xfs.copyPromise(
-            ppath.join(rendererCwd, 'dist/.next/static'),
-            ppath.join(rendererBuildContext.nextOutputCwd, 'static')
-          )
+          await copyRendererBuildStaticAssets(rendererBuildArtifactContext)
         })
 
         await report.startTimerPromise('Copy public assets', async () => {
-          await copyRendererBuildPublicAssets(rendererBuildContext)
+          await copyRendererBuildPublicAssets(rendererBuildArtifactContext)
         })
 
         await report.startTimerPromise('Copy edge chunks files', async () => {
-          const edgeChunksCwd = ppath.join(rendererBuildContext.nextOutputCwd, 'server/edge-chunks')
-
-          if (await xfs.existsPromise(edgeChunksCwd)) {
-            await xfs.copyPromise(
-              ppath.join(rendererCwd, 'dist/.next/server/edge-chunks'),
-              edgeChunksCwd
-            )
-          }
+          await copyRendererBuildEdgeChunks(rendererBuildArtifactContext)
         })
 
-        await report.startTimerPromise('Move server start files', async () => {
-          await xfs.movePromise(
-            ppath.join(rendererCwd, 'dist/server.js'),
-            ppath.join(rendererCwd, 'dist', RENDERER_STANDALONE_SERVER_ENTRYPOINT)
-          )
+        await report.startTimerPromise('Create server entrypoint', async () => {
+          await materializeRendererBuildEntrypoint(rendererBuildArtifactContext)
         })
 
         await report.startTimerPromise('Clean source build artifacts', async () => {
-          await cleanupRendererBuildSourceArtifacts(rendererBuildContext.appCwd)
+          await cleanupRendererBuildSourceArtifacts(rendererBuildArtifactContext)
         })
       }
     )

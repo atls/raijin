@@ -1,28 +1,41 @@
-import type { Locator }                      from '@yarnpkg/core'
-import type { Filename }                     from '@yarnpkg/fslib'
-import type { PortablePath }                 from '@yarnpkg/fslib'
+import type { Locator }                          from '@yarnpkg/core'
+import type { Filename }                         from '@yarnpkg/fslib'
+import type { PortablePath }                     from '@yarnpkg/fslib'
 
-import { pathToFileURL }                     from 'node:url'
+import type { RendererBuildArtifactContext }     from './renderer-build.interfaces.js'
+import type { RendererBuildContext }             from './renderer-build.interfaces.js'
+import type { RendererBuildEnvOptions }          from './renderer-build.interfaces.js'
+import type { RendererBuildManifestCandidate }   from './renderer-build.interfaces.js'
+import type { RendererBuildManifestSnapshot }    from './renderer-build.interfaces.js'
+import type { RendererBuildManifestState }       from './renderer-build.interfaces.js'
+import type { NextRequiredServerFilesManifest }  from './renderer-build.interfaces.js'
 
-import { structUtils }                       from '@yarnpkg/core'
-import { npath }                             from '@yarnpkg/fslib'
-import { ppath }                             from '@yarnpkg/fslib'
-import { xfs }                               from '@yarnpkg/fslib'
+import { pathToFileURL }                         from 'node:url'
 
-import { NEXT_CONFIG_ADAPTER_PATH_ENV }      from '@atls/raijin/config/next'
-import { RAIJIN_RENDERER_OUTPUT_ENV }        from '@atls/raijin/config/next'
-import { RAIJIN_RENDERER_WORKSPACE_CWD_ENV } from '@atls/raijin/config/next'
+import { structUtils }                           from '@yarnpkg/core'
+import { npath }                                 from '@yarnpkg/fslib'
+import { ppath }                                 from '@yarnpkg/fslib'
+import { xfs }                                   from '@yarnpkg/fslib'
 
-import { NEXT_COMPILED_CONF_PATH }           from './renderer-build.constants.js'
-import { NEXT_COMPILED_WEBPACK_PATH }        from './renderer-build.constants.js'
-import { NEXT_CONFIG_REQUIRE_HOOK_PATH }     from './renderer-build.constants.js'
-import { NEXT_NODE_MANIFEST_LOADER_PATH }    from './renderer-build.constants.js'
-import { NEXT_PACKAGE_PATH }                 from './renderer-build.constants.js'
-import { NEXT_REQUIRE_CACHE_PATH }           from './renderer-build.constants.js'
-import { NEXT_SERVER_CONFIG_PATH }           from './renderer-build.constants.js'
-import { NEXT_WEBPACK_CONFIG_PATH }          from './renderer-build.constants.js'
+import { NEXT_CONFIG_ADAPTER_PATH_ENV }          from '@atls/raijin/config/next'
+import { RAIJIN_RENDERER_OUTPUT_ENV }            from '@atls/raijin/config/next'
+import { RAIJIN_RENDERER_WORKSPACE_CWD_ENV }     from '@atls/raijin/config/next'
+import { discoverFiles }                         from '@atls/raijin/filesystem'
+
+import { RENDERER_STANDALONE_SERVER_ENTRYPOINT } from './renderer-build.constants.js'
+import { NEXT_COMPILED_CONF_PATH }               from './renderer-build.constants.js'
+import { NEXT_COMPILED_WEBPACK_PATH }            from './renderer-build.constants.js'
+import { NEXT_CONFIG_REQUIRE_HOOK_PATH }         from './renderer-build.constants.js'
+import { NEXT_NODE_MANIFEST_LOADER_PATH }        from './renderer-build.constants.js'
+import { NEXT_PACKAGE_PATH }                     from './renderer-build.constants.js'
+import { NEXT_REQUIRE_CACHE_PATH }               from './renderer-build.constants.js'
+import { NEXT_SERVER_CONFIG_PATH }               from './renderer-build.constants.js'
+import { NEXT_WEBPACK_CONFIG_PATH }              from './renderer-build.constants.js'
 
 const NEXT_COMPILED_CONF_LOADER_FILENAME = 'next-compiled-conf-require-cache-loader.mjs'
+const NEXT_REQUIRED_SERVER_FILES_MANIFEST = 'required-server-files.json' as Filename
+const RENDERER_STANDALONE_SERVER_COMMONJS_FILENAME = 'server.cjs' as Filename
+const RENDERER_STANDALONE_SERVER_FILENAME = 'server.js' as Filename
 const NODE_LOADER_OPTIONS = new Set(['--experimental-loader', '--loader'])
 const RAIJIN_NODE_LOADER = 'RAIJIN_NODE_LOADER'
 const DIST_DIR = 'dist' as Filename
@@ -35,23 +48,11 @@ const NPM_PROTOCOL = 'npm:'
 const NPM_REFERENCE_PATTERN = /(?:^|@)npm:([^#@]+)/
 const NEXT_MAJOR_WEBPACK_BY_DEFAULT = 16
 type RendererBuildPathSegments = ReadonlyArray<Filename>
-export type RendererBuildContext = {
-  appCwd: PortablePath
-  distCwd: PortablePath
-  nextOutputCwd: PortablePath
-  rendererCwd: PortablePath
-}
 
 const RENDERER_BUILD_STALE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegments> = [
   [DIST_DIR],
   [NEXT_DIR],
 ]
-const RENDERER_BUILD_WORKSPACE_MANIFEST_PATHS: ReadonlyArray<RendererBuildPathSegments> = [
-  [DIST_DIR, PACKAGE_MANIFEST],
-  [NEXT_DIR, PACKAGE_MANIFEST],
-]
-const RENDERER_BUILD_SOURCE_ARTIFACT_PATHS: ReadonlyArray<RendererBuildPathSegments> = [[NEXT_DIR]]
-
 const isTemporaryRendererSourceManifest = (manifest: unknown): boolean => {
   if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) {
     return false
@@ -301,8 +302,146 @@ export const createRendererBuildContext = (rendererCwd: PortablePath): RendererB
   return {
     appCwd,
     distCwd: ppath.join(rendererCwd, DIST_DIR),
-    nextOutputCwd: ppath.join(appCwd, NEXT_DIR),
     rendererCwd,
+  }
+}
+
+const isNextRequiredServerFilesManifest = (
+  value: unknown
+): value is NextRequiredServerFilesManifest => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return false
+  }
+
+  const manifest = value as Record<string, unknown>
+  const { config } = manifest
+
+  return (
+    typeof manifest.appDir === 'string' &&
+    manifest.appDir.length > 0 &&
+    typeof manifest.relativeAppDir === 'string' &&
+    manifest.relativeAppDir.length > 0 &&
+    !!config &&
+    typeof config === 'object' &&
+    !Array.isArray(config) &&
+    (config as Record<string, unknown>).output === 'standalone' &&
+    typeof (config as Record<string, unknown>).outputFileTracingRoot === 'string' &&
+    ((config as Record<string, unknown>).outputFileTracingRoot as string).length > 0
+  )
+}
+
+const discoverRendererBuildManifestPaths = async (
+  appCwd: PortablePath
+): Promise<Array<PortablePath>> =>
+  discoverFiles({
+    cwd: appCwd,
+    patterns: [`**/${NEXT_REQUIRED_SERVER_FILES_MANIFEST}`],
+    ignore: ['**/standalone/**'],
+    dot: true,
+  })
+
+const readRendererBuildManifestState = async (
+  path: PortablePath
+): Promise<RendererBuildManifestState> => {
+  const { mtimeMs, size } = await xfs.statPromise(path)
+
+  return { mtimeMs, size }
+}
+
+export const snapshotRendererBuildManifests = async ({
+  appCwd,
+}: RendererBuildContext): Promise<RendererBuildManifestSnapshot> => {
+  const paths = await discoverRendererBuildManifestPaths(appCwd)
+  const entries = await Promise.all(
+    paths.map(async (path) => [path, await readRendererBuildManifestState(path)] as const)
+  )
+
+  return new Map(entries)
+}
+
+const hasRendererBuildManifestChanged = (
+  previous: RendererBuildManifestState | undefined,
+  current: RendererBuildManifestState
+): boolean => !previous || previous.mtimeMs !== current.mtimeMs || previous.size !== current.size
+
+export const resolveRendererBuildStandaloneCwd = (nextOutputCwd: PortablePath): PortablePath =>
+  ppath.join(nextOutputCwd, 'standalone' as Filename)
+
+export const resolveRendererBuildArtifactContext = async (
+  context: RendererBuildContext,
+  snapshot: RendererBuildManifestSnapshot
+): Promise<RendererBuildArtifactContext> => {
+  const paths = await discoverRendererBuildManifestPaths(context.appCwd)
+  const changedPaths = (
+    await Promise.all(
+      paths.map(async (path) => ({
+        changed: hasRendererBuildManifestChanged(
+          snapshot.get(path),
+          await readRendererBuildManifestState(path)
+        ),
+        path,
+      }))
+    )
+  ).filter(({ changed }) => changed)
+  const appCwd = await xfs.realpathPromise(context.appCwd)
+  const manifests = (
+    await Promise.all(
+      changedPaths.map(async ({ path }): Promise<RendererBuildManifestCandidate | undefined> => {
+        const manifest = (await xfs.readJsonPromise(path)) as unknown
+
+        if (!isNextRequiredServerFilesManifest(manifest)) {
+          return undefined
+        }
+
+        const manifestAppPath = npath.toPortablePath(manifest.appDir)
+
+        if (!ppath.isAbsolute(manifestAppPath)) {
+          return undefined
+        }
+
+        const manifestAppCwd = await xfs.realpathPromise(manifestAppPath)
+
+        return manifestAppCwd === appCwd ? { manifest, path } : undefined
+      })
+    )
+  ).filter((candidate): candidate is RendererBuildManifestCandidate => candidate !== undefined)
+
+  if (manifests.length === 0) {
+    throw new Error('Renderer build did not produce a current Next standalone manifest')
+  }
+
+  if (manifests.length > 1) {
+    throw new Error('Renderer build produced multiple current Next standalone manifests')
+  }
+
+  const [{ manifest, path }] = manifests
+  const nextOutputCwd = await xfs.realpathPromise(ppath.dirname(path))
+  const projectCwd = await xfs.realpathPromise(npath.toPortablePath(manifest.appDir))
+  const repoRootPath = npath.toPortablePath(manifest.config.outputFileTracingRoot)
+  const relativeProjectCwd = npath.toPortablePath(manifest.relativeAppDir)
+
+  if (!ppath.isAbsolute(repoRootPath) || ppath.isAbsolute(relativeProjectCwd)) {
+    throw new Error('Renderer build received inconsistent Next standalone manifest paths')
+  }
+
+  const repoRoot = await xfs.realpathPromise(repoRootPath)
+  const reportedProjectCwd = ppath.resolve(repoRoot, relativeProjectCwd)
+  const relativeNextOutputCwd = ppath.relative(projectCwd, nextOutputCwd)
+
+  if (reportedProjectCwd !== projectCwd || ppath.contains(projectCwd, nextOutputCwd) === null) {
+    throw new Error('Renderer build received inconsistent Next standalone manifest paths')
+  }
+
+  const standaloneCwd = resolveRendererBuildStandaloneCwd(nextOutputCwd)
+  const artifactAppCwd = ppath.join(context.distCwd, relativeProjectCwd)
+
+  return {
+    ...context,
+    artifactAppCwd,
+    artifactNextOutputCwd: ppath.join(artifactAppCwd, relativeNextOutputCwd),
+    nextOutputCwd,
+    standaloneAppCwd: ppath.join(standaloneCwd, relativeProjectCwd),
+    standaloneCwd,
   }
 }
 
@@ -350,19 +489,19 @@ export const cleanupRendererBuildDiscoveryArtifacts = async (cwd: PortablePath):
   await cleanupRendererBuildSourceManifest(sourceCwd)
 }
 
-export const cleanupRendererBuildWorkspaceManifests = async (cwd: PortablePath): Promise<void> => {
-  await removeRendererBuildPaths(cwd, RENDERER_BUILD_WORKSPACE_MANIFEST_PATHS)
-}
-
-export const cleanupRendererBuildSourceArtifacts = async (cwd: PortablePath): Promise<void> => {
-  await removeRendererBuildPaths(cwd, RENDERER_BUILD_SOURCE_ARTIFACT_PATHS)
+export const cleanupRendererBuildSourceArtifacts = async ({
+  nextOutputCwd,
+}: RendererBuildArtifactContext): Promise<void> => {
+  if (await xfs.existsPromise(nextOutputCwd)) {
+    await xfs.removePromise(nextOutputCwd)
+  }
 }
 
 export const copyRendererBuildPublicAssets = async ({
   appCwd,
-  distCwd,
+  artifactAppCwd,
   rendererCwd,
-}: RendererBuildContext): Promise<void> => {
+}: RendererBuildArtifactContext): Promise<void> => {
   const appPublicCwd = ppath.join(appCwd, PUBLIC_DIR)
   const rootPublicCwd = ppath.join(rendererCwd, PUBLIC_DIR)
   const source = (await xfs.existsPromise(appPublicCwd)) ? appPublicCwd : rootPublicCwd
@@ -371,39 +510,87 @@ export const copyRendererBuildPublicAssets = async ({
     return
   }
 
-  await xfs.copyPromise(ppath.join(distCwd, PUBLIC_DIR), source)
-}
-
-export const resolveRendererBuildStandaloneCwd = (rendererCwd: PortablePath): PortablePath => {
-  const { nextOutputCwd } = createRendererBuildContext(rendererCwd)
-
-  return ppath.join(nextOutputCwd, 'standalone' as Filename)
+  await xfs.copyPromise(ppath.join(artifactAppCwd, PUBLIC_DIR), source)
 }
 
 export const assertRendererBuildStandaloneOutput = async ({
-  rendererCwd,
-}: RendererBuildContext): Promise<void> => {
-  if (await xfs.existsPromise(resolveRendererBuildStandaloneCwd(rendererCwd))) {
+  standaloneAppCwd,
+  standaloneCwd,
+}: RendererBuildArtifactContext): Promise<void> => {
+  if (
+    (await xfs.existsPromise(standaloneCwd)) &&
+    (await xfs.existsPromise(ppath.join(standaloneAppCwd, RENDERER_STANDALONE_SERVER_FILENAME)))
+  ) {
     return
   }
 
-  throw new Error(
-    'Renderer build did not produce Next standalone output. If next.config defines adapterPath, compose it with withRaijinRendererConfig from @atls/raijin/config/next.'
-  )
+  throw new Error('Renderer build metadata does not reference a runnable Next standalone server')
 }
 
 export const copyRendererBuildStandaloneFiles = async ({
   distCwd,
-  rendererCwd,
-}: RendererBuildContext): Promise<void> => {
-  await xfs.copyPromise(distCwd, resolveRendererBuildStandaloneCwd(rendererCwd))
+  standaloneCwd,
+}: RendererBuildArtifactContext): Promise<void> => {
+  await xfs.copyPromise(distCwd, standaloneCwd)
+}
+
+export const copyRendererBuildStaticAssets = async ({
+  artifactNextOutputCwd,
+  nextOutputCwd,
+}: RendererBuildArtifactContext): Promise<void> => {
+  await xfs.copyPromise(
+    ppath.join(artifactNextOutputCwd, 'static' as Filename),
+    ppath.join(nextOutputCwd, 'static' as Filename)
+  )
+}
+
+export const copyRendererBuildEdgeChunks = async ({
+  artifactNextOutputCwd,
+  nextOutputCwd,
+}: RendererBuildArtifactContext): Promise<void> => {
+  const edgeChunksCwd = ppath.join(nextOutputCwd, 'server/edge-chunks')
+
+  if (await xfs.existsPromise(edgeChunksCwd)) {
+    await xfs.copyPromise(ppath.join(artifactNextOutputCwd, 'server/edge-chunks'), edgeChunksCwd)
+  }
+}
+
+const createRendererBuildEntrypointSource = (
+  distCwd: PortablePath,
+  serverPath: PortablePath
+): string => {
+  const relativeServerPath = ppath.relative(distCwd, serverPath)
+  const serverSpecifier = relativeServerPath.startsWith('.')
+    ? relativeServerPath
+    : `./${relativeServerPath}`
+
+  return `import(${JSON.stringify(serverSpecifier)}).catch((error) => {\n  console.error(error)\n  process.exitCode = 1\n})\n`
+}
+
+export const materializeRendererBuildEntrypoint = async ({
+  artifactAppCwd,
+  distCwd,
+}: RendererBuildArtifactContext): Promise<void> => {
+  const manifestPath = ppath.join(artifactAppCwd, PACKAGE_MANIFEST)
+  const serverPath = ppath.join(artifactAppCwd, RENDERER_STANDALONE_SERVER_FILENAME)
+  let runtimeServerPath = serverPath
+
+  if (!(await xfs.existsPromise(manifestPath))) {
+    runtimeServerPath = ppath.join(artifactAppCwd, RENDERER_STANDALONE_SERVER_COMMONJS_FILENAME)
+    await xfs.movePromise(serverPath, runtimeServerPath)
+  }
+
+  await xfs.writeFilePromise(
+    ppath.join(distCwd, RENDERER_STANDALONE_SERVER_ENTRYPOINT),
+    createRendererBuildEntrypointSource(distCwd, runtimeServerPath)
+  )
 }
 
 export const createRendererBuildEnv = (
   env: NodeJS.ProcessEnv,
   nextCompiledConfRequireCacheLoader: string,
   rendererCwd: PortablePath,
-  options: { nextConfigAdapterPath?: PortablePath; output?: string } = {}
+  options: RendererBuildEnvOptions = {}
 ): NodeJS.ProcessEnv => ({
   ...env,
   NEXT_TELEMETRY_DISABLED: '1',

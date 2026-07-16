@@ -15,18 +15,22 @@ import { assertSupportedRendererNextVersion }             from './renderer-build
 import { cleanupRendererBuildDiscoveryArtifacts }         from './renderer-build.utils.js'
 import { cleanupRendererBuildSourceArtifacts }            from './renderer-build.utils.js'
 import { cleanupRendererBuildStaleArtifacts }             from './renderer-build.utils.js'
-import { cleanupRendererBuildWorkspaceManifests }         from './renderer-build.utils.js'
+import { copyRendererBuildEdgeChunks }                    from './renderer-build.utils.js'
 import { copyRendererBuildPublicAssets }                  from './renderer-build.utils.js'
 import { copyRendererBuildStandaloneFiles }               from './renderer-build.utils.js'
+import { copyRendererBuildStaticAssets }                  from './renderer-build.utils.js'
 import { createNextRendererLoaderSource }                 from './renderer-build.utils.js'
 import { createRendererBuildContext }                     from './renderer-build.utils.js'
 import { createRendererBuildArgs }                        from './renderer-build.utils.js'
 import { createRendererBuildEnv }                         from './renderer-build.utils.js'
 import { extractNodeLoaderOption }                        from './renderer-build.utils.js'
+import { materializeRendererBuildEntrypoint }             from './renderer-build.utils.js'
 import { normalizeNextPackageVersion }                    from './renderer-build.utils.js'
 import { resolveNextPackageVersion }                      from './renderer-build.utils.js'
+import { resolveRendererBuildArtifactContext }            from './renderer-build.utils.js'
 import { resolveRendererBuildPnpLoader }                  from './renderer-build.utils.js'
 import { resolveRendererBuildStandaloneCwd }              from './renderer-build.utils.js'
+import { snapshotRendererBuildManifests }                 from './renderer-build.utils.js'
 
 test('should disable Next telemetry for renderer build', () => {
   const env = createRendererBuildEnv(
@@ -493,127 +497,299 @@ test('should keep real renderer source manifest during stale cleanup', async () 
   assert.deepEqual(await xfs.readJsonPromise(manifestPath), manifest)
 })
 
-test('should remove renderer workspace manifests without removing dist output', async () => {
-  const cwd = await xfs.mktempPromise()
+const createRendererArtifactFixture = async (nested = false) => {
+  const repoRoot = await xfs.mktempPromise()
+  const rendererCwd = nested ? ppath.join(repoRoot, 'apps/web') : repoRoot
+  const projectDir = ppath.join(rendererCwd, 'src')
+  const distDir = ppath.join(projectDir, '.next')
+  const rendererBuildContext = createRendererBuildContext(rendererCwd)
 
-  await xfs.mkdirPromise(ppath.join(cwd, 'dist'), { recursive: true })
-  await xfs.mkdirPromise(ppath.join(cwd, '.next'), { recursive: true })
-  await xfs.writeFilePromise(ppath.join(cwd, 'dist/index.js'), '')
-  await xfs.writeJsonPromise(ppath.join(cwd, 'dist/package.json'), {})
-  await xfs.writeJsonPromise(ppath.join(cwd, '.next/package.json'), {})
+  await xfs.mkdirPromise(projectDir, { recursive: true })
+  const snapshot = await snapshotRendererBuildManifests(rendererBuildContext)
+  const resolvedRepoRoot = await xfs.realpathPromise(repoRoot)
+  const resolvedProjectDir = await xfs.realpathPromise(projectDir)
 
-  await cleanupRendererBuildWorkspaceManifests(cwd)
-  await cleanupRendererBuildSourceArtifacts(cwd)
+  await xfs.mkdirPromise(distDir, { recursive: true })
+  await xfs.writeJsonPromise(ppath.join(distDir, 'required-server-files.json'), {
+    appDir: resolvedProjectDir,
+    relativeAppDir: ppath.relative(resolvedRepoRoot, resolvedProjectDir),
+    config: {
+      distDir: '.next',
+      output: 'standalone',
+      outputFileTracingRoot: resolvedRepoRoot,
+    },
+  })
 
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/index.js')), true)
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/package.json')), false)
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, '.next')), false)
+  const context = await resolveRendererBuildArtifactContext(rendererBuildContext, snapshot)
+
+  return {
+    context,
+    distDir: await xfs.realpathPromise(distDir),
+    projectDir: resolvedProjectDir,
+    rendererCwd,
+    repoRoot: resolvedRepoRoot,
+  }
+}
+
+test('should resolve nested standalone topology from the current Next manifest', async () => {
+  const { context, distDir, rendererCwd, repoRoot } = await createRendererArtifactFixture(true)
+
+  assert.equal(context.nextOutputCwd, distDir)
+  assert.equal(context.artifactNextOutputCwd, ppath.join(rendererCwd, 'dist/apps/web/src/.next'))
+  assert.equal(context.standaloneCwd, ppath.join(distDir, 'standalone'))
+  assert.equal(context.standaloneAppCwd, ppath.join(distDir, 'standalone/apps/web/src'))
+  assert.equal(context.artifactAppCwd, ppath.join(rendererCwd, 'dist/apps/web/src'))
+  assert.equal(resolveRendererBuildStandaloneCwd(distDir), ppath.join(distDir, 'standalone'))
+  assert.equal(ppath.contains(repoRoot, context.standaloneAppCwd) !== null, true)
 })
 
-test('should resolve renderer standalone root from renderer cwd', () => {
-  assert.equal(
-    resolveRendererBuildStandaloneCwd('/repo/client/next-app' as PortablePath),
-    '/repo/client/next-app/src/.next/standalone'
-  )
-})
-
-test('should reject renderer builds without standalone output', async () => {
-  const cwd = await xfs.mktempPromise()
-
-  await assert.rejects(
-    async () => assertRendererBuildStandaloneOutput(createRendererBuildContext(cwd)),
-    new Error(
-      'Renderer build did not produce Next standalone output. If next.config defines adapterPath, compose it with withRaijinRendererConfig from @atls/raijin/config/next.'
-    )
-  )
-})
-
-test('should accept renderer builds with standalone output', async () => {
-  const cwd = await xfs.mktempPromise()
-  const standaloneCwd = resolveRendererBuildStandaloneCwd(cwd)
-
-  await xfs.mkdirPromise(standaloneCwd, { recursive: true })
-
-  await assert.doesNotReject(async () =>
-    assertRendererBuildStandaloneOutput(createRendererBuildContext(cwd)))
-})
-
-test('should copy full renderer standalone root into dist artifact', async () => {
+test('should reject renderer builds without a current Next standalone manifest', async () => {
   const cwd = await xfs.mktempPromise()
   const context = createRendererBuildContext(cwd)
-  const standaloneCwd = resolveRendererBuildStandaloneCwd(cwd)
 
-  await xfs.mkdirPromise(ppath.join(standaloneCwd, 'node_modules/next'), { recursive: true })
-  await xfs.mkdirPromise(ppath.join(standaloneCwd, 'client/next-app'), { recursive: true })
-  await xfs.writeFilePromise(ppath.join(standaloneCwd, 'server.js'), 'root server')
-  await xfs.writeFilePromise(ppath.join(standaloneCwd, 'node_modules/next/package.json'), '{}')
-  await xfs.writeFilePromise(
-    ppath.join(standaloneCwd, 'client/next-app/server.js'),
-    'nested server'
+  await xfs.mkdirPromise(context.appCwd, { recursive: true })
+
+  await assert.rejects(
+    async () => resolveRendererBuildArtifactContext(context, new Map()),
+    new Error('Renderer build did not produce a current Next standalone manifest')
   )
+})
+
+test('should ignore unchanged stale Next manifests when resolving custom dist output', async () => {
+  const cwd = await xfs.mktempPromise()
+  const context = createRendererBuildContext(cwd)
+  const projectDir = context.appCwd
+  const staleDistDir = ppath.join(projectDir, '.next')
+  const currentDistDir = ppath.join(projectDir, 'build')
+
+  await xfs.mkdirPromise(staleDistDir, { recursive: true })
+  const resolvedCwd = await xfs.realpathPromise(cwd)
+  const resolvedProjectDir = await xfs.realpathPromise(projectDir)
+  const manifest = {
+    appDir: resolvedProjectDir,
+    relativeAppDir: 'src',
+    config: {
+      output: 'standalone',
+      outputFileTracingRoot: resolvedCwd,
+    },
+  }
+
+  await xfs.writeJsonPromise(ppath.join(staleDistDir, 'required-server-files.json'), manifest)
+  const snapshot = await snapshotRendererBuildManifests(context)
+
+  await xfs.mkdirPromise(currentDistDir, { recursive: true })
+  await xfs.writeJsonPromise(ppath.join(currentDistDir, 'required-server-files.json'), manifest)
+
+  const artifactContext = await resolveRendererBuildArtifactContext(context, snapshot)
+
+  assert.equal(artifactContext.nextOutputCwd, await xfs.realpathPromise(currentDistDir))
+  assert.equal(artifactContext.artifactNextOutputCwd, ppath.join(cwd, 'dist/src/build'))
+
+  await xfs.mkdirPromise(ppath.join(currentDistDir, 'static/chunks'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(currentDistDir, 'server/edge-chunks'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(currentDistDir, 'static/chunks/app.js'), '')
+  await xfs.writeFilePromise(ppath.join(currentDistDir, 'server/edge-chunks/edge.js'), '')
+
+  await copyRendererBuildStaticAssets(artifactContext)
+  await copyRendererBuildEdgeChunks(artifactContext)
+
+  assert.equal(
+    await xfs.existsPromise(
+      ppath.join(artifactContext.artifactNextOutputCwd, 'static/chunks/app.js')
+    ),
+    true
+  )
+  assert.equal(
+    await xfs.existsPromise(
+      ppath.join(artifactContext.artifactNextOutputCwd, 'server/edge-chunks/edge.js')
+    ),
+    true
+  )
+
+  await cleanupRendererBuildSourceArtifacts(artifactContext)
+
+  assert.equal(await xfs.existsPromise(currentDistDir), false)
+})
+
+test('should reject inconsistent paths in the current Next standalone manifest', async () => {
+  const cwd = await xfs.mktempPromise()
+  const context = createRendererBuildContext(cwd)
+  const distDir = ppath.join(context.appCwd, '.next')
+
+  await xfs.mkdirPromise(context.appCwd, { recursive: true })
+  const snapshot = await snapshotRendererBuildManifests(context)
+  const resolvedCwd = await xfs.realpathPromise(cwd)
+  const resolvedAppCwd = await xfs.realpathPromise(context.appCwd)
+
+  await xfs.mkdirPromise(distDir, { recursive: true })
+  await xfs.writeJsonPromise(ppath.join(distDir, 'required-server-files.json'), {
+    appDir: resolvedAppCwd,
+    relativeAppDir: '../outside',
+    config: {
+      output: 'standalone',
+      outputFileTracingRoot: resolvedCwd,
+    },
+  })
+
+  await assert.rejects(
+    async () => resolveRendererBuildArtifactContext(context, snapshot),
+    new Error('Renderer build received inconsistent Next standalone manifest paths')
+  )
+})
+
+test('should reject relative owner paths in the current Next standalone manifest', async () => {
+  const cwd = await xfs.mktempPromise()
+  const context = createRendererBuildContext(cwd)
+  const distDir = ppath.join(context.appCwd, '.next')
+
+  await xfs.mkdirPromise(context.appCwd, { recursive: true })
+  const snapshot = await snapshotRendererBuildManifests(context)
+  const resolvedAppCwd = await xfs.realpathPromise(context.appCwd)
+
+  await xfs.mkdirPromise(distDir, { recursive: true })
+  await xfs.writeJsonPromise(ppath.join(distDir, 'required-server-files.json'), {
+    appDir: resolvedAppCwd,
+    relativeAppDir: 'src',
+    config: {
+      output: 'standalone',
+      outputFileTracingRoot: '..',
+    },
+  })
+
+  await assert.rejects(
+    async () => resolveRendererBuildArtifactContext(context, snapshot),
+    new Error('Renderer build received inconsistent Next standalone manifest paths')
+  )
+})
+
+test('should reject renderer builds without the metadata-selected standalone server', async () => {
+  const { context } = await createRendererArtifactFixture()
+
+  await xfs.mkdirPromise(context.standaloneCwd, { recursive: true })
+
+  await assert.rejects(
+    async () => assertRendererBuildStandaloneOutput(context),
+    new Error('Renderer build metadata does not reference a runnable Next standalone server')
+  )
+})
+
+test('should preserve the full Next standalone root and launch its nested CommonJS server', async () => {
+  const { context, rendererCwd } = await createRendererArtifactFixture(true)
+
+  await xfs.mkdirPromise(ppath.join(context.standaloneCwd, 'node_modules/next'), {
+    recursive: true,
+  })
+  await xfs.mkdirPromise(context.standaloneAppCwd, { recursive: true })
+  await xfs.writeFilePromise(
+    ppath.join(context.standaloneCwd, 'node_modules/next/package.json'),
+    '{}'
+  )
+  await xfs.writeFilePromise(ppath.join(context.standaloneAppCwd, 'server.js'), 'server')
+
+  await assertRendererBuildStandaloneOutput(context)
+  await copyRendererBuildStandaloneFiles(context)
+  await materializeRendererBuildEntrypoint(context)
+
+  assert.equal(
+    await xfs.existsPromise(ppath.join(rendererCwd, 'dist/node_modules/next/package.json')),
+    true
+  )
+  assert.equal(await xfs.existsPromise(ppath.join(context.artifactAppCwd, 'server.cjs')), true)
+  assert.equal(await xfs.existsPromise(ppath.join(context.artifactAppCwd, 'server.js')), false)
+  assert.equal(
+    (await xfs.readFilePromise(ppath.join(context.distCwd, 'index.cjs'))).toString(),
+    'import("./apps/web/src/server.cjs").catch((error) => {\n  console.error(error)\n  process.exitCode = 1\n})\n'
+  )
+})
+
+test('should preserve Next module classification for a standalone ESM server', async () => {
+  const { context } = await createRendererArtifactFixture()
+
+  await xfs.mkdirPromise(context.standaloneAppCwd, { recursive: true })
+  await xfs.writeJsonPromise(ppath.join(context.standaloneAppCwd, 'package.json'), {
+    type: 'module',
+  })
+  await xfs.writeFilePromise(ppath.join(context.standaloneAppCwd, 'server.js'), 'export {}')
 
   await copyRendererBuildStandaloneFiles(context)
+  await materializeRendererBuildEntrypoint(context)
 
+  assert.equal(await xfs.existsPromise(ppath.join(context.artifactAppCwd, 'package.json')), true)
+  assert.equal(await xfs.existsPromise(ppath.join(context.artifactAppCwd, 'server.js')), true)
   assert.equal(
-    (await xfs.readFilePromise(ppath.join(cwd, 'dist/server.js'))).toString(),
-    'root server'
-  )
-  assert.equal(
-    await xfs.existsPromise(ppath.join(cwd, 'dist/node_modules/next/package.json')),
-    true
-  )
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/client/next-app/server.js')), true)
-})
-
-test('should copy renderer root public assets into standalone artifact', async () => {
-  const cwd = await xfs.mktempPromise()
-
-  await xfs.mkdirPromise(ppath.join(cwd, 'public/organization-logos'), { recursive: true })
-  await xfs.writeFilePromise(ppath.join(cwd, 'public/Bg.png'), '')
-  await xfs.writeFilePromise(ppath.join(cwd, 'public/organization-logos/atlantis.png'), '')
-
-  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
-
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/Bg.png')), true)
-  assert.equal(
-    await xfs.existsPromise(ppath.join(cwd, 'dist/public/organization-logos/atlantis.png')),
-    true
+    (await xfs.readFilePromise(ppath.join(context.distCwd, 'index.cjs'))).toString(),
+    'import("./src/server.js").catch((error) => {\n  console.error(error)\n  process.exitCode = 1\n})\n'
   )
 })
 
-test('should copy renderer source public assets when root public assets are missing', async () => {
-  const cwd = await xfs.mktempPromise()
+test('should copy Next static and edge assets beside the nested standalone server', async () => {
+  const { context } = await createRendererArtifactFixture(true)
 
-  await xfs.mkdirPromise(ppath.join(cwd, 'src/public'), { recursive: true })
-  await xfs.writeFilePromise(ppath.join(cwd, 'src/public/Bg.png'), '')
+  await xfs.mkdirPromise(ppath.join(context.nextOutputCwd, 'static/chunks'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(context.nextOutputCwd, 'server/edge-chunks'), {
+    recursive: true,
+  })
+  await xfs.writeFilePromise(ppath.join(context.nextOutputCwd, 'static/chunks/app.js'), '')
+  await xfs.writeFilePromise(ppath.join(context.nextOutputCwd, 'server/edge-chunks/edge.js'), '')
 
-  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
+  await copyRendererBuildStaticAssets(context)
+  await copyRendererBuildEdgeChunks(context)
 
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/Bg.png')), true)
+  assert.equal(
+    await xfs.existsPromise(ppath.join(context.artifactAppCwd, '.next/static/chunks/app.js')),
+    true
+  )
+  assert.equal(
+    await xfs.existsPromise(ppath.join(context.artifactAppCwd, '.next/server/edge-chunks/edge.js')),
+    true
+  )
+})
+
+test('should copy renderer public assets beside the nested standalone server', async () => {
+  const { context, rendererCwd } = await createRendererArtifactFixture(true)
+
+  await xfs.mkdirPromise(ppath.join(rendererCwd, 'public/organization-logos'), {
+    recursive: true,
+  })
+  await xfs.writeFilePromise(ppath.join(rendererCwd, 'public/Bg.png'), '')
+  await xfs.writeFilePromise(ppath.join(rendererCwd, 'public/organization-logos/atlantis.png'), '')
+
+  await copyRendererBuildPublicAssets(context)
+
+  assert.equal(await xfs.existsPromise(ppath.join(context.artifactAppCwd, 'public/Bg.png')), true)
+  assert.equal(
+    await xfs.existsPromise(
+      ppath.join(context.artifactAppCwd, 'public/organization-logos/atlantis.png')
+    ),
+    true
+  )
 })
 
 test('should prefer renderer source public assets over root public assets', async () => {
-  const cwd = await xfs.mktempPromise()
+  const { context, rendererCwd } = await createRendererArtifactFixture()
 
-  await xfs.mkdirPromise(ppath.join(cwd, 'public'), { recursive: true })
-  await xfs.mkdirPromise(ppath.join(cwd, 'src/public'), { recursive: true })
-  await xfs.writeFilePromise(ppath.join(cwd, 'public/Bg.png'), 'root')
-  await xfs.writeFilePromise(ppath.join(cwd, 'public/root-only.png'), '')
-  await xfs.writeFilePromise(ppath.join(cwd, 'src/public/Bg.png'), 'source')
+  await xfs.mkdirPromise(ppath.join(rendererCwd, 'public'), { recursive: true })
+  await xfs.mkdirPromise(ppath.join(rendererCwd, 'src/public'), { recursive: true })
+  await xfs.writeFilePromise(ppath.join(rendererCwd, 'public/Bg.png'), 'root')
+  await xfs.writeFilePromise(ppath.join(rendererCwd, 'public/root-only.png'), '')
+  await xfs.writeFilePromise(ppath.join(rendererCwd, 'src/public/Bg.png'), 'source')
 
-  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
+  await copyRendererBuildPublicAssets(context)
 
   assert.equal(
-    (await xfs.readFilePromise(ppath.join(cwd, 'dist/public/Bg.png'))).toString(),
+    (await xfs.readFilePromise(ppath.join(context.artifactAppCwd, 'public/Bg.png'))).toString(),
     'source'
   )
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public/root-only.png')), false)
+  assert.equal(
+    await xfs.existsPromise(ppath.join(context.artifactAppCwd, 'public/root-only.png')),
+    false
+  )
 })
 
 test('should ignore missing renderer public assets', async () => {
-  const cwd = await xfs.mktempPromise()
+  const { context } = await createRendererArtifactFixture()
 
-  await copyRendererBuildPublicAssets(createRendererBuildContext(cwd))
+  await copyRendererBuildPublicAssets(context)
 
-  assert.equal(await xfs.existsPromise(ppath.join(cwd, 'dist/public')), false)
+  assert.equal(await xfs.existsPromise(ppath.join(context.artifactAppCwd, 'public')), false)
 })
