@@ -1,28 +1,36 @@
-import type { CommandInput }         from '@atls/raijin/commands'
-import type { Project }              from '@yarnpkg/core'
+import type { CommandInput }            from '@atls/raijin/commands'
+import type { Project }                 from '@yarnpkg/core'
 
-import { spawn }                     from 'node:child_process'
+import type { TypeScriptConfigRuntime } from './checks-typecheck.interfaces.js'
 
-import { BaseCommand }               from '@yarnpkg/cli'
-import { StreamReport }              from '@yarnpkg/core'
-import { MessageName }               from '@yarnpkg/core'
-import { xfs }                       from '@yarnpkg/fslib'
-import { Option }                    from 'clipanion'
+import { spawn }                        from 'node:child_process'
 
-import { createChildProcessOptions } from '@atls/raijin/commands'
-import { createCommandInput }        from '@atls/raijin/commands'
-import { createYarnExecutable }      from '@atls/raijin/commands'
-import { proxyProjectCommand }       from '@atls/raijin/commands'
-import { resolveProjectInvocation }  from '@atls/raijin/commands'
-import { shouldProxyCommand }        from '@atls/raijin/commands'
-import { toCommandArguments }        from '@atls/raijin/commands'
-import { toNativeCwd }               from '@atls/raijin/commands'
-import { hasTypeScriptProject }      from '@atls/raijin/config/typescript'
-import { getChangedFiles }           from '@atls/yarn-plugin-files'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { MessageName }                  from '@yarnpkg/core'
+import { xfs }                          from '@yarnpkg/fslib'
+import { Option }                       from 'clipanion'
 
-import { GitHubChecks }              from './github.checks.js'
+import { createChildProcessOptions }    from '@atls/raijin/commands'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { createYarnExecutable }         from '@atls/raijin/commands'
+import { proxyProjectCommand }          from '@atls/raijin/commands'
+import { resolveProjectInvocation }     from '@atls/raijin/commands'
+import { shouldProxyCommand }           from '@atls/raijin/commands'
+import { toCommandArguments }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
+import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
+import { getChangedFiles }              from '@atls/yarn-plugin-files'
+
+import { GitHubChecks }                 from './github.checks.js'
 
 const TYPECHECK_TIMEOUT_MS = 5 * 60 * 1000
+const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
+
+const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptConfigRuntime> =>
+  (await import(
+    resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_CONFIG_SPECIFIER)
+  )) as TypeScriptConfigRuntime
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
@@ -160,7 +168,10 @@ class ChecksTypeCheckCommand extends BaseCommand {
       }
     }
 
-    if (hasTypeScriptProject(toNativeCwd(project.cwd))) {
+    const nativeProjectCwd = toNativeCwd(project.cwd)
+    const { hasTypeScriptProject } = await importTypeScriptConfigRuntime(nativeProjectCwd)
+
+    if (hasTypeScriptProject(nativeProjectCwd)) {
       return undefined
     }
 

@@ -1,15 +1,22 @@
 import type { webpack as wp }               from '@atls/raijin/webpack'
 
+import type { TypeScriptConfigRuntime }     from './webpack.interfaces.js'
 import type { WebpackEnvironment }          from './webpack.interfaces.js'
 
 import { readFile }                         from 'node:fs/promises'
 import { join }                             from 'node:path'
 
-import { materializeTypeScriptConfig }      from '@atls/raijin/config/typescript'
-import { typescriptDefaults as tsconfig }   from '@atls/raijin/config/typescript'
+import { resolveRaijinRuntimeUrl }          from '@atls/raijin/runtime-resolver'
 
 import { WebpackExternals }                 from './webpack.externals.js'
 import { createOptionalImportIgnorePlugin } from './webpack.ignore.js'
+
+const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
+
+const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptConfigRuntime> =>
+  (await import(
+    resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_CONFIG_SPECIFIER)
+  )) as TypeScriptConfigRuntime
 
 export class WebpackConfig {
   private readonly workspaceDependencies: Set<string>
@@ -31,6 +38,8 @@ export class WebpackConfig {
     environment: WebpackEnvironment = 'production',
     additionalPlugins: Array<wp.WebpackPluginInstance> = []
   ): Promise<wp.Configuration> {
+    const { materializeTypeScriptConfig, typescriptDefaults: tsconfig } =
+      await importTypeScriptConfigRuntime(this.cwd)
     const configFile = await materializeTypeScriptConfig({
       config: { include: ['**/*'] },
       prefix: 'code-service-',

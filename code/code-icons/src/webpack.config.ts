@@ -1,11 +1,19 @@
-import type { webpack }                   from '@atls/raijin/webpack'
+import type { webpack }                 from '@atls/raijin/webpack'
 
-import { join }                           from 'node:path'
+import type { TypeScriptConfigRuntime } from './webpack.interfaces.js'
 
-import Config                             from 'webpack-chain-5'
+import { join }                         from 'node:path'
 
-import { materializeTypeScriptConfig }    from '@atls/raijin/config/typescript'
-import { typescriptDefaults as tsconfig } from '@atls/raijin/config/typescript'
+import Config                           from 'webpack-chain-5'
+
+import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
+
+const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
+
+const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptConfigRuntime> =>
+  (await import(
+    resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_CONFIG_SPECIFIER)
+  )) as TypeScriptConfigRuntime
 
 export class WebpackConfig {
   constructor(
@@ -49,6 +57,8 @@ export class WebpackConfig {
   }
 
   private async applyModules(config: Config): Promise<void> {
+    const { materializeTypeScriptConfig, typescriptDefaults: tsconfig } =
+      await importTypeScriptConfigRuntime(this.cwd)
     const configFile = await materializeTypeScriptConfig({
       config: { include: ['**/*'] },
       prefix: 'tools-icons-',
