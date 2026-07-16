@@ -24,6 +24,22 @@ test('should map a nested Next standalone source into the renderer artifact', ()
   assert.equal(layout.artifactNextOutputCwd, ppath.join(rendererCwd, 'dist/apps/web/src/.next'))
 })
 
+test('should map a root-relative Next app directly into the artifact root', () => {
+  const rendererCwd = '/repo' as PortablePath
+  const target = createArtifactTarget(rendererCwd)
+  const layout = createArtifactLayout(target, {
+    appCwd: '/repo/src' as PortablePath,
+    appRelativeCwd: '' as PortablePath,
+    nextOutputCwd: '/repo/src/.next' as PortablePath,
+    nextOutputRelativeCwd: '.next' as PortablePath,
+    standaloneAppCwd: '/repo/src/.next/standalone' as PortablePath,
+    standaloneCwd: '/repo/src/.next/standalone' as PortablePath,
+  })
+
+  assert.equal(layout.artifactAppCwd, target.distCwd)
+  assert.equal(layout.artifactNextOutputCwd, ppath.join(target.distCwd, '.next'))
+})
+
 test('should reject a source that belongs to another application', () => {
   const target = createArtifactTarget('/repo' as PortablePath)
 

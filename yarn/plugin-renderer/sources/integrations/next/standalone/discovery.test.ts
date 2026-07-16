@@ -71,6 +71,21 @@ test('should resolve nested standalone topology from current Next metadata', asy
   assert.equal(source.standaloneAppCwd, ppath.join(source.nextOutputCwd, 'standalone/apps/web/src'))
 })
 
+test('should accept an application at the Next tracing root', async () => {
+  const fixture = await createFixture()
+  const snapshot = await snapshotNextStandaloneManifests(fixture.appCwd)
+
+  await writeManifest(fixture, {
+    appRelativeCwd: '' as PortablePath,
+    tracingRoot: fixture.appCwd,
+  })
+  const source = await resolveNextStandaloneArtifactSource(fixture.appCwd, snapshot)
+
+  assert.equal(source.appRelativeCwd, '')
+  assert.equal(source.nextOutputRelativeCwd, '.next')
+  assert.equal(source.standaloneAppCwd, source.standaloneCwd)
+})
+
 test('should reject builds without a current Next standalone manifest', async () => {
   const fixture = await createFixture()
 

@@ -42,7 +42,6 @@ const isRequiredServerFilesManifest = (
     typeof manifest.appDir === 'string' &&
     manifest.appDir.length > 0 &&
     typeof manifest.relativeAppDir === 'string' &&
-    manifest.relativeAppDir.length > 0 &&
     !!config &&
     typeof config === 'object' &&
     !Array.isArray(config) &&
