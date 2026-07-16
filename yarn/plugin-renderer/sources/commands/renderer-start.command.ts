@@ -12,7 +12,7 @@ import { waitForChildProcess }                   from '@atls/raijin/commands'
 import { toNativeCwd }                           from '@atls/raijin/commands'
 import { resolveRaijinRuntimeUrl }               from '@atls/raijin/runtime-resolver'
 
-import { RENDERER_STANDALONE_SERVER_ENTRYPOINT } from './renderer-build.constants.js'
+import { RENDERER_STANDALONE_SERVER_ENTRYPOINT } from '../artifact/entrypoint.js'
 
 type RuntimeExecArgvModule = {
   createRuntimeEnvironment: typeof createRuntimeEnvironmentFn

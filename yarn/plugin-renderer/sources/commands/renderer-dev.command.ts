@@ -1,37 +1,23 @@
-import type { Tunnel }                                   from 'localtunnel'
+import type { Tunnel }                    from 'localtunnel'
 
-import { BaseCommand }                                   from '@yarnpkg/cli'
-import { execUtils }                                     from '@yarnpkg/core'
-import { scriptUtils }                                   from '@yarnpkg/core'
-import { xfs }                                           from '@yarnpkg/fslib'
-import { ppath }                                         from '@yarnpkg/fslib'
-import { Option }                                        from 'clipanion'
-import localtunnel                                       from 'localtunnel'
+import { BaseCommand }                    from '@yarnpkg/cli'
+import { execUtils }                      from '@yarnpkg/core'
+import { scriptUtils }                    from '@yarnpkg/core'
+import { xfs }                            from '@yarnpkg/fslib'
+import { ppath }                          from '@yarnpkg/fslib'
+import { Option }                         from 'clipanion'
+import localtunnel                        from 'localtunnel'
 
-import { resolveWorkspaceInvocation }                    from '@atls/raijin/commands'
-import { createYarnExecutable }                          from '@atls/raijin/commands'
-import { materializeNextConfigAdapter }                  from '@atls/raijin/config/next'
+import { resolveWorkspaceInvocation }     from '@atls/raijin/commands'
+import { createYarnExecutable }           from '@atls/raijin/commands'
+import { materializeNextConfigAdapter }   from '@atls/raijin/config/next'
 
-import { createRendererBuildEnv }                        from './renderer-build.utils.js'
-import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
-import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
-import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
-import { resolveRendererBuildPnpLoader }                 from './renderer-build.utils.js'
-import { shouldUseWebpackRendererRoute }                 from './renderer-build.utils.js'
-
-const RENDERER_NEXT_APP_DIR = 'src'
-
-export const createRendererDevArgs = (nextVersion: string | undefined): Array<string> => {
-  const args = ['next', 'dev', RENDERER_NEXT_APP_DIR]
-
-  // TODO(atls/raijin#629): replace the explicit webpack renderer route with the
-  // planned Turbopack contract once the Raijin v3 Next dev stream owns it.
-  if (shouldUseWebpackRendererRoute(nextVersion)) {
-    args.push('--webpack')
-  }
-
-  return args
-}
+import { createNextDevArguments }         from '../integrations/next/execution/arguments.js'
+import { createNextExecutionEnvironment } from '../integrations/next/execution/environment.js'
+import { extractPnpLoaderOption }         from '../integrations/next/execution/environment.js'
+import { resolvePnpLoader }               from '../integrations/next/execution/environment.js'
+import { materializeNextLoader }          from '../integrations/next/execution/loader.js'
+import { resolveNextPackageVersion }      from '../integrations/next/execution/version.js'
 
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
@@ -81,7 +67,7 @@ export class RendererDevCommand extends BaseCommand {
 
     const [nextPackage] = nextBinary
     const nextVersion = resolveNextPackageVersion(nextPackage)
-    const args = createRendererDevArgs(nextVersion)
+    const args = createNextDevArguments(nextVersion)
 
     if (this.https) {
       if (!(await xfs.existsPromise(ppath.join(project.cwd, '.config/certs/local/dev.key')))) {
@@ -103,15 +89,9 @@ export class RendererDevCommand extends BaseCommand {
       locator: workspace.anchoredLocator,
       project,
     })
-    const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
-    const loader = await resolveRendererBuildPnpLoader(
-      project.cwd,
-      scriptEnvironment.env.NODE_OPTIONS
-    )
-    const nextCompiledConfRequireCacheLoader = await materializeNextCompiledConfRequireCacheLoader(
-      binFolder,
-      loader
-    )
+    const { nodeOptions } = extractPnpLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
+    const loader = await resolvePnpLoader(project.cwd, scriptEnvironment.env.NODE_OPTIONS)
+    const nextLoader = await materializeNextLoader(binFolder, loader)
     const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
     const { executable, env } = await createYarnExecutable({
       binFolder,
@@ -120,7 +100,7 @@ export class RendererDevCommand extends BaseCommand {
       env: {
         NODE_OPTIONS: nodeOptions,
       },
-      nodeLoader: nextCompiledConfRequireCacheLoader,
+      nodeLoader: nextLoader,
     })
 
     if (this.tunnel) {
@@ -139,7 +119,7 @@ export class RendererDevCommand extends BaseCommand {
       stdin: this.context.stdin,
       stdout: this.context.stdout,
       stderr: this.context.stderr,
-      env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, executionCwd, {
+      env: createNextExecutionEnvironment(env, nextLoader, executionCwd, {
         nextConfigAdapterPath,
       }),
     })

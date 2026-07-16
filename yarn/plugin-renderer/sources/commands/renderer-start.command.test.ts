@@ -7,7 +7,7 @@ import { tmpdir }                                from 'node:os'
 import { join }                                  from 'node:path'
 import { test }                                  from 'node:test'
 
-import { RENDERER_STANDALONE_SERVER_ENTRYPOINT } from './renderer-build.constants.js'
+import { RENDERER_STANDALONE_SERVER_ENTRYPOINT } from '../artifact/entrypoint.js'
 import { resolveRuntimeExecArgvModuleUrl }       from './renderer-start.command.js'
 
 test('should preserve CommonJS extension for Next standalone server entrypoint', () => {
