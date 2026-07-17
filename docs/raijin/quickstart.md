@@ -84,7 +84,7 @@ yarn schematic:test
 
 Expected result:
 
-- Temporary fixture is created through public `@atls/code-schematics` exports
+- Temporary fixture is created through the `@atls/raijin` project-generation owner API
 - Check fails if helper or Markdown docs invoke an inactive command
 
 <!-- sync:consumer-howto -->

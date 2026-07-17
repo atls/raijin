@@ -364,9 +364,9 @@
       "plugin": "@atls/yarn-plugin-schematics",
       "pluginDir": "plugin-schematics",
       "domain": "schematics",
-      "source": "yarn/plugin-schematics/sources/commands/generate-project.command.tsx",
-      "status": "inactive",
-      "availabilityReason": "plugin is in bundle but not exported from plugin index"
+      "source": "yarn/raijin/src/commands/generate/project/command.ts",
+      "status": "active",
+      "availabilityReason": "plugin in bundle and exported from plugin index"
     },
     {
       "command": "service build",
@@ -448,11 +448,11 @@
     {
       "command": "ui icons generate",
       "pathTokens": ["ui", "icons", "generate"],
-      "className": "UiIconsGenerateCommand",
+      "className": "GenerateIconsCommand",
       "plugin": "@atls/yarn-plugin-ui",
       "pluginDir": "plugin-ui",
       "domain": "ui",
-      "source": "yarn/plugin-ui/sources/commands/ui-icons-generate.command.tsx",
+      "source": "yarn/raijin/src/commands/generate/icons/command.ts",
       "status": "active",
       "availabilityReason": "plugin in bundle and exported from plugin index"
     },
@@ -681,14 +681,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-icons",
-      "location": "code/code-icons",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/code-lint",
       "location": "code/code-lint",
       "group": "code",
@@ -703,21 +695,6 @@
       "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/code-schematics",
-      "location": "code/code-schematics",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": [
-        "build",
-        "build:library",
-        "build:schematic-factory",
-        "postpack",
-        "prepack",
-        "smoke:schematic"
-      ]
     },
     {
       "name": "@atls/code-service",
@@ -757,7 +734,14 @@
       "group": "yarn",
       "private": false,
       "description": "Public Raijin initializer and runtime package",
-      "scripts": ["build", "build:library", "build:schematic", "postpack", "prepack"]
+      "scripts": [
+        "build",
+        "build:library",
+        "build:schematic",
+        "postpack",
+        "prepack",
+        "smoke:generate-project"
+      ]
     },
     {
       "name": "@atls/yarn-cli",
@@ -771,7 +755,7 @@
         "build:clean",
         "build:dist",
         "build:fix",
-        "build:schemaic",
+        "build:schematic",
         "build:verify",
         "build:version",
         "fix",
@@ -1001,6 +985,7 @@
       "renderer build",
       "renderer dev",
       "renderer start",
+      "generate project",
       "service build",
       "service dev",
       "service start",
@@ -1012,7 +997,7 @@
       "workspaces changed foreach",
       "workspaces changed list"
     ],
-    "inactiveCommands": ["generate project"],
+    "inactiveCommands": [],
     "activePlugins": [
       "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-check",
@@ -1028,6 +1013,7 @@
       "@atls/yarn-plugin-lint",
       "@atls/yarn-plugin-release",
       "@atls/yarn-plugin-renderer",
+      "@atls/yarn-plugin-schematics",
       "@atls/yarn-plugin-service",
       "@atls/yarn-plugin-test",
       "@atls/yarn-plugin-tools",
@@ -1039,12 +1025,8 @@
       {
         "name": "@atls/yarn-plugin-pnp-patch",
         "reason": "plugin is not in bundle"
-      },
-      {
-        "name": "@atls/yarn-plugin-schematics",
-        "reason": "plugin is in bundle but not exported from index"
       }
     ]
   },
-  "lastGenerated": "2026-07-16T16:24:32.450Z"
+  "lastGenerated": "2026-07-17T15:01:38.915Z"
 }

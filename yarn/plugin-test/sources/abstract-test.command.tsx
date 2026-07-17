@@ -47,10 +47,6 @@ export const createProxyTestArgs = ({
 }: ProxyTestArgsOptions): Array<string> => {
   const args: Array<string> = []
 
-  if (files.length) {
-    args.push(...files)
-  }
-
   if (watch) {
     args.push('-w')
   }
@@ -62,6 +58,10 @@ export const createProxyTestArgs = ({
 
   if (testReporter) {
     args.push(`--test-reporter=${testReporter}`)
+  }
+
+  if (files.length) {
+    args.push(...files)
   }
 
   return args

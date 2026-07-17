@@ -1,12 +1,12 @@
 import type { RunRaijinInitializerOptions } from './interface.js'
 
+import { installProjectGenerationArtifact } from '../commands/generate/index.js'
 import { installRaijinRuntime }             from '../runtime/installer.js'
 import { runYarnCommand }                   from '../yarn/command.js'
 import { ensurePackageManifest }            from './project.js'
 import { ensureYarnLock }                   from './project.js'
 import { parseRaijinInitializerArguments }  from './scaffold.js'
 import { selectRaijinScaffoldType }         from './scaffold.js'
-import { installRaijinSchematicArtifact }   from './schematic.js'
 
 const RAIJIN_PACKAGE = '@atls/raijin@latest'
 
@@ -14,7 +14,7 @@ export const runRaijinInitializer = async ({
   argv = [],
   cwd = process.cwd(),
   fetchImpl = fetch,
-  installSchematicArtifact = installRaijinSchematicArtifact,
+  installSchematicArtifact = installProjectGenerationArtifact,
   runYarnCommand: runCommand = runYarnCommand,
   selectScaffoldType = selectRaijinScaffoldType,
 }: RunRaijinInitializerOptions = {}): Promise<void> => {

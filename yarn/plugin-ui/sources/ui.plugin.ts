@@ -1,7 +1,7 @@
-import type { Plugin }            from '@yarnpkg/core'
+import type { Plugin }          from '@yarnpkg/core'
 
-import { UiIconsGenerateCommand } from './commands/index.js'
+import { GenerateIconsCommand } from '@atls/raijin/commands/generate/icons/command'
 
 export const plugin: Plugin = {
-  commands: [UiIconsGenerateCommand],
+  commands: [GenerateIconsCommand],
 }

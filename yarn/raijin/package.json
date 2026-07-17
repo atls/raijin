@@ -17,6 +17,10 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts",
     "./commands": "./src/commands/index.ts",
+    "./commands/generate/icons/command": "./src/commands/generate/icons/command.ts",
+    "./commands/generate/project/command": "./src/commands/generate/project/command.ts",
+    "./commands/input": "./src/commands/input/index.ts",
+    "./commands/invocation": "./src/commands/invocation/index.ts",
     "./config": "./src/config/index.ts",
     "./config/eslint": "./src/config/eslint/index.ts",
     "./config/next": "./src/config/next/index.ts",
@@ -54,17 +58,22 @@
   "scripts": {
     "build": "yarn run build:library && yarn run build:schematic",
     "build:library": "yarn library build",
-    "build:schematic": "yarn workspace @atls/code-schematics build:schematic-factory && rm -rf dist/schematic && cp -R ../../code/code-schematics/dist/schematic dist/schematic",
+    "build:schematic": "yarn node ./src/commands/generate/project/schematic/build.ts",
     "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "postpack": "rm -rf dist",
+    "smoke:generate-project": "yarn run build:schematic && yarn node ./tests/smoke/generate-project.ts"
   },
   "dependencies": {
+    "@angular-devkit/core": "19.1.5",
+    "@angular-devkit/schematics": "19.1.5",
     "@babel/types": "7.25.6",
     "@next/eslint-plugin-next": "16.0.7",
     "@svgr/core": "8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
     "@typescript-eslint/eslint-plugin": "8.48.1",
     "@typescript-eslint/parser": "8.48.1",
+    "camelcase": "8.0.0",
+    "clipanion": "4.0.0-rc.2",
     "eslint": "9.22.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-n": "17.23.1",
@@ -77,14 +86,18 @@
     "import-sort-parser": "6.0.0",
     "import-sort-parser-typescript": "6.0.0",
     "import-sort-style": "6.0.0",
+    "js-yaml": "4.1.0",
     "node-loader": "2.1.0",
     "prettier": "3.5.3",
     "protocol-buffers-schema": "3.6.0",
     "react": "18.3.1",
+    "rxjs": "7.8.1",
     "sort-package-json": "2.4.1",
+    "strip-json-comments": "3.1.1",
     "ts-loader": "9.5.2",
     "typescript": "5.9.3",
     "webpack": "5.98.0",
+    "webpack-chain-5": "8.0.2",
     "zod": "4.1.13",
     "zod-validation-error": "4.0.2"
   },
@@ -93,7 +106,9 @@
     "@types/protocol-buffers-schema": "3.4.3",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",
-    "@yarnpkg/fslib": "3.1.5"
+    "@yarnpkg/esbuild-plugin-pnp": "3.0.0-rc.15",
+    "@yarnpkg/fslib": "3.1.5",
+    "esbuild": "0.24.2"
   },
   "peerDependencies": {
     "@yarnpkg/core": "*",
@@ -111,6 +126,26 @@
         "import": "./dist/commands/index.js",
         "types": "./dist/commands/index.d.ts",
         "default": "./dist/commands/index.js"
+      },
+      "./commands/generate/icons/command": {
+        "import": "./dist/commands/generate/icons/command.js",
+        "types": "./dist/commands/generate/icons/command.d.ts",
+        "default": "./dist/commands/generate/icons/command.js"
+      },
+      "./commands/generate/project/command": {
+        "import": "./dist/commands/generate/project/command.js",
+        "types": "./dist/commands/generate/project/command.d.ts",
+        "default": "./dist/commands/generate/project/command.js"
+      },
+      "./commands/input": {
+        "import": "./dist/commands/input/index.js",
+        "types": "./dist/commands/input/index.d.ts",
+        "default": "./dist/commands/input/index.js"
+      },
+      "./commands/invocation": {
+        "import": "./dist/commands/invocation/index.js",
+        "types": "./dist/commands/invocation/index.d.ts",
+        "default": "./dist/commands/invocation/index.js"
       },
       "./config": {
         "import": "./dist/config/index.js",

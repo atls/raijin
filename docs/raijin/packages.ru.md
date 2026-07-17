@@ -56,7 +56,7 @@
 - Группа: `yarn`
 - Видимость: `public`
 - Описание: Public Raijin initializer and runtime package
-- Скрипты: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
+- Скрипты: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`, `smoke:generate-project`
 
 <!-- sync:package-card:atls-yarn-cli -->
 
@@ -65,7 +65,7 @@
 - Локация: `yarn/cli`
 - Группа: `yarn`
 - Видимость: `private`
-- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:schemaic`, `build:verify`, `build:version`, `fix`, `postpack`, `prepack`
+- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:schematic`, `build:verify`, `build:version`, `fix`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
 
@@ -295,10 +295,8 @@
 - `@atls/code-configuration` — `code/code-configuration`
 - `@atls/code-format` — `code/code-format`
 - `@atls/code-github` — `code/code-github`
-- `@atls/code-icons` — `code/code-icons`
 - `@atls/code-lint` — `code/code-lint`
 - `@atls/code-pack` — `code/code-pack`
-- `@atls/code-schematics` — `code/code-schematics`
 - `@atls/code-service` — `code/code-service`
 - `@atls/code-test` — `code/code-test`
 - `@atls/code-typescript` — `code/code-typescript`
@@ -342,15 +340,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-code-icons -->
-
-#### `@atls/code-icons`
-
-- Локация: `code/code-icons`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-lint -->
 
 #### `@atls/code-lint`
@@ -368,15 +357,6 @@
 - Группа: `code`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-schematics -->
-
-#### `@atls/code-schematics`
-
-- Локация: `code/code-schematics`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`, `smoke:schematic`
 
 <!-- sync:package-card:atls-code-service -->
 
