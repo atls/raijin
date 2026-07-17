@@ -2,7 +2,6 @@ import type { CommandInput }          from '@atls/raijin/commands/input'
 import type { PortablePath }          from '@yarnpkg/fslib'
 
 import { BaseCommand }                from '@yarnpkg/cli'
-import { ppath }                      from '@yarnpkg/fslib'
 import { Option }                     from 'clipanion'
 
 import { createCommandInput }         from '@atls/raijin/commands/input'
@@ -10,7 +9,6 @@ import { toCommandArguments }         from '@atls/raijin/commands/input'
 import { proxyWorkspaceCommand }      from '@atls/raijin/commands/invocation'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands/invocation'
 import { shouldProxyCommand }         from '@atls/raijin/commands/invocation'
-import { discoverFiles }              from '@atls/raijin/filesystem'
 
 import { Generator }                  from './generator.js'
 
@@ -24,20 +22,10 @@ export const createGeneratedIconInput = (
     targets: files.map((file) => `src/${file}`),
   })
 
-export const discoverGeneratedIconFiles = async (
-  workspaceCwd: PortablePath
-): Promise<Array<string>> =>
-  (
-    await discoverFiles({
-      cwd: ppath.join(workspaceCwd, 'src'),
-      patterns: ['*.tsx'],
-    })
-  ).map((file) => ppath.basename(file))
-
 export class GenerateIconsCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
 
-  native: boolean = Option.Boolean('-n, --native', false)
+  native: boolean = Option.Boolean('-n,--native', false)
 
   override async execute(): Promise<number> {
     if (shouldProxyCommand()) {
@@ -71,11 +59,9 @@ export class GenerateIconsCommand extends BaseCommand {
     )
     const generator = await Generator.initialize(executionCwd)
 
-    await generator.generate({ native: this.native })
-
     const input = createGeneratedIconInput(
       executionCwd,
-      await discoverGeneratedIconFiles(executionCwd)
+      await generator.generate({ native: this.native })
     )
     const generatedFiles = toCommandArguments(input, project.cwd)
     const formatExitCode = await this.cli.run(['format', ...generatedFiles], {

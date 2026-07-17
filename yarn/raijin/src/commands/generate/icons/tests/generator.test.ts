@@ -1,6 +1,6 @@
 import type { Config } from '@atls/raijin/svgr'
 
-import type { Source } from './generator.interfaces.js'
+import type { Source } from '../generator.interfaces.js'
 
 import assert          from 'node:assert/strict'
 import { mkdir }       from 'node:fs/promises'
@@ -14,7 +14,7 @@ import { test }        from 'node:test'
 
 import { npath }       from '@yarnpkg/fslib'
 
-import { Generator }   from './generator.js'
+import { Generator }   from '../generator.js'
 
 type ReplaceAttrValues = Record<string, string>
 
@@ -114,10 +114,17 @@ test('should generate icon components through the Raijin runtime', async () => {
   try {
     await mkdir(join(cwd, 'icons'))
     await writeFile(
+      join(cwd, 'icons/alert.svg'),
+      '<svg viewBox="0 0 16 16"><path fill="#fff" d="M8 1l7 14H1z"/></svg>\n'
+    )
+    await writeFile(
       join(cwd, 'icons/check.svg'),
       '<svg viewBox="0 0 16 16"><path fill="#000" d="M1 8l4 4 10-10"/></svg>\n'
     )
-    await writeFile(join(cwd, 'replacements.ts'), 'export default {}\n')
+    await writeFile(
+      join(cwd, 'replacements.ts'),
+      "export default { CheckIcon: { '#000': 'currentColor' } }\n"
+    )
     await writeFile(
       join(cwd, 'template.ts'),
       [
@@ -133,12 +140,15 @@ test('should generate icon components through the Raijin runtime', async () => {
 
     const generator = await Generator.initialize(npath.toPortablePath(cwd))
 
-    await generator.generate()
+    assert.deepEqual(await generator.generate(), ['alert.icon.tsx', 'check.icon.tsx', 'index.ts'])
 
+    assert.match(await readFile(join(cwd, 'src/alert.icon.tsx'), 'utf8'), /AlertIcon/)
     assert.match(await readFile(join(cwd, 'src/check.icon.tsx'), 'utf8'), /CheckIcon/)
+    assert.match(await readFile(join(cwd, 'src/check.icon.tsx'), 'utf8'), /currentColor/)
+    assert.doesNotMatch(await readFile(join(cwd, 'src/check.icon.tsx'), 'utf8'), /#000/)
     assert.equal(
       await readFile(join(cwd, 'src/index.ts'), 'utf8'),
-      "export * from './check.icon.jsx'"
+      "export * from './alert.icon.jsx'\nexport * from './check.icon.jsx'"
     )
   } finally {
     await rm(cwd, { recursive: true, force: true })

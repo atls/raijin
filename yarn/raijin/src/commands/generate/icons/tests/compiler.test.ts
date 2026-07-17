@@ -3,7 +3,7 @@ import type { webpack } from '@atls/raijin/webpack'
 import assert           from 'node:assert/strict'
 import { test }         from 'node:test'
 
-import { Compiler }     from './compiler.js'
+import { Compiler }     from '../compiler.js'
 
 type WebpackOutput = {
   chunkFormat?: string

@@ -48,8 +48,8 @@ export class Generator extends EventEmitter {
     )
   }
 
-  async generate(config: Partial<Config> = {}): Promise<void> {
-    await this.save(await this.transform(await this.read(join(this.cwd, 'icons')), config))
+  async generate(config: Partial<Config> = {}): Promise<Array<string>> {
+    return this.save(await this.transform(await this.read(join(this.cwd, 'icons')), config))
   }
 
   protected async compileReplacementsAndTemplate(): Promise<CompiledConfiguration> {
@@ -77,7 +77,7 @@ export class Generator extends EventEmitter {
   protected async read(iconsPath: string): Promise<Array<Source>> {
     this.emit('read:start')
 
-    const files = await readdir(iconsPath)
+    const files = (await readdir(iconsPath)).sort()
     const source = await Promise.all(
       files
         .filter((file) => file.endsWith('.svg'))
@@ -127,7 +127,7 @@ export class Generator extends EventEmitter {
     return outputs
   }
 
-  protected async save(icons: Array<Output>): Promise<void> {
+  protected async save(icons: Array<Output>): Promise<Array<string>> {
     this.emit('save:start')
 
     const target = join(this.cwd, 'src')
@@ -138,8 +138,10 @@ export class Generator extends EventEmitter {
       await mkdir(target, { recursive: true })
     }
 
+    const componentFiles = icons.map((icon) => `${icon.name}.icon.tsx`)
+
     await Promise.all(
-      icons.map(async (icon) => writeFile(join(target, `${icon.name}.icon.tsx`), icon.output))
+      icons.map(async (icon, index) => writeFile(join(target, componentFiles[index]), icon.output))
     )
     await writeFile(
       join(target, 'index.ts'),
@@ -147,5 +149,7 @@ export class Generator extends EventEmitter {
     )
 
     this.emit('save:end')
+
+    return [...componentFiles, 'index.ts']
   }
 }
