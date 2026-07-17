@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
 import type { CommandContext }    from '@yarnpkg/core'
+import type { CommandClass }      from 'clipanion'
 
 import assert                     from 'node:assert/strict'
 import { access }                 from 'node:fs/promises'
@@ -11,14 +12,24 @@ import { rm }                     from 'node:fs/promises'
 import { writeFile }              from 'node:fs/promises'
 import { tmpdir }                 from 'node:os'
 import { join }                   from 'node:path'
+import { pathToFileURL }          from 'node:url'
 
 import { getPluginConfiguration } from '@yarnpkg/cli'
 import { npath }                  from '@yarnpkg/fslib'
 import { Cli }                    from 'clipanion'
 
-import { GenerateProjectCommand } from '../../dist/commands/generate/project/command.js'
-
 type ScaffoldType = 'library' | 'project'
+
+const loadGenerateProjectCommand = async (): Promise<CommandClass<CommandContext>> => {
+  const commandPath = pathToFileURL(
+    join(import.meta.dirname, '../../dist/commands/generate/project/command.js')
+  ).href
+  const commandModule = (await import(commandPath)) as {
+    GenerateProjectCommand: CommandClass<CommandContext>
+  }
+
+  return commandModule.GenerateProjectCommand
+}
 
 const pathExists = async (path: string): Promise<boolean> => {
   try {
@@ -50,7 +61,7 @@ const writeFixture = async (projectRoot: string, target: string): Promise<void> 
 const runCommand = async (target: string, type: ScaffoldType): Promise<number> => {
   const cli = new Cli<CommandContext>({ binaryName: 'yarn', enableCapture: false })
 
-  cli.register(GenerateProjectCommand)
+  cli.register(await loadGenerateProjectCommand())
 
   return cli.run(['generate', 'project', '--type', type], {
     cwd: npath.toPortablePath(target),
