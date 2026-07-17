@@ -3,7 +3,7 @@ import { test }                      from 'node:test'
 
 import { HostTree }                  from '@angular-devkit/schematics'
 
-import { updateServiceStartScripts } from './start-scripts.js'
+import { updateServiceStartScripts } from '../start-scripts.js'
 
 test('should update service start scripts to owned service start command', async () => {
   const tree = new HostTree()

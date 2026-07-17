@@ -1,7 +1,7 @@
 import assert                    from 'node:assert/strict'
 import { test }                  from 'node:test'
 
-import { mergeGitIgnoreContent } from './merge.js'
+import { mergeGitIgnoreContent } from '../merge.js'
 
 test('should preserve project-specific entries while keeping template section deterministic', () => {
   const templateContent = ['node_modules', '.yarn/install-state.gz', 'dist/'].join('\n')

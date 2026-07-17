@@ -12,7 +12,7 @@ import { test }                  from 'node:test'
 import { callSource }            from '@angular-devkit/schematics'
 import { lastValueFrom }         from 'rxjs'
 
-import { templateSource }        from './template-source.js'
+import { templateSource }        from '../template-source.js'
 
 const createSchematicContext = (schematicPath: string): SchematicContext =>
   ({
