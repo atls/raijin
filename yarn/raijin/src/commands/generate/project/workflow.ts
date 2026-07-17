@@ -10,7 +10,6 @@ import { NodeWorkflow }                  from '@angular-devkit/schematics/tools'
 import { npath }                         from '@yarnpkg/fslib'
 import { lastValueFrom }                 from 'rxjs'
 
-import { resolveProjectCollectionPath }  from './artifact.js'
 import { reportProjectGenerationEvent }  from './reporter.js'
 
 export const resolveProjectTarget = (input: CommandInput): PortablePath => {
@@ -23,9 +22,13 @@ export const resolveProjectTarget = (input: CommandInput): PortablePath => {
   return target.path
 }
 
-export const generateProject = async ({ input, project, type }: Options): Promise<0 | 1> => {
+export const generateProject = async ({
+  collection,
+  input,
+  project,
+  type,
+}: Options): Promise<0 | 1> => {
   const target = resolveProjectTarget(input)
-  const collection = await resolveProjectCollectionPath()
   const workflow = new NodeWorkflow(npath.fromPortablePath(target), {
     force: false,
     dryRun: false,
@@ -38,7 +41,7 @@ export const generateProject = async ({ input, project, type }: Options): Promis
   try {
     await lastValueFrom(
       workflow.execute({
-        collection,
+        collection: npath.fromPortablePath(collection),
         schematic: 'project',
         options: {
           type,

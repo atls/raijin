@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 
-import type { CommandContext }    from '@yarnpkg/core'
-import type { CommandClass }      from 'clipanion'
+import type { PortablePath }      from '@yarnpkg/fslib'
 
 import assert                     from 'node:assert/strict'
+import { execFile }               from 'node:child_process'
 import { access }                 from 'node:fs/promises'
 import { mkdir }                  from 'node:fs/promises'
 import { mkdtemp }                from 'node:fs/promises'
@@ -12,24 +12,31 @@ import { rm }                     from 'node:fs/promises'
 import { writeFile }              from 'node:fs/promises'
 import { tmpdir }                 from 'node:os'
 import { join }                   from 'node:path'
-import { pathToFileURL }          from 'node:url'
+import { promisify }              from 'node:util'
 
+import { Configuration }          from '@yarnpkg/core'
+import { Project }                from '@yarnpkg/core'
 import { getPluginConfiguration } from '@yarnpkg/cli'
 import { npath }                  from '@yarnpkg/fslib'
-import { Cli }                    from 'clipanion'
+import { ppath }                  from '@yarnpkg/fslib'
 
+type Linker = 'node-modules' | 'pnp'
 type ScaffoldType = 'library' | 'project'
 
-const loadGenerateProjectCommand = async (): Promise<CommandClass<CommandContext>> => {
-  const commandPath = pathToFileURL(
-    join(import.meta.dirname, '../../dist/commands/generate/project/command.js')
-  ).href
-  const commandModule = (await import(commandPath)) as {
-    GenerateProjectCommand: CommandClass<CommandContext>
-  }
-
-  return commandModule.GenerateProjectCommand
+interface RuntimeContext {
+  globalFolder: PortablePath
+  packageManager: string
+  projectCwd: PortablePath
+  runtimePath: PortablePath
 }
+
+interface RuntimeExecutionError extends Error {
+  stderr?: string
+  stdout?: string
+}
+
+const execute = promisify(execFile)
+const STALE_ARTIFACT = '{"stale":true}\n'
 
 const pathExists = async (path: string): Promise<boolean> => {
   try {
@@ -41,33 +48,140 @@ const pathExists = async (path: string): Promise<boolean> => {
   }
 }
 
-const writeFixture = async (projectRoot: string, target: string): Promise<void> => {
+const createRuntimeEnvironment = (): NodeJS.ProcessEnv => {
+  const environment: NodeJS.ProcessEnv = {
+    ...process.env,
+    YARN_ENABLE_IMMUTABLE_INSTALLS: 'false',
+  }
+
+  delete environment.INIT_CWD
+  delete environment.NODE_OPTIONS
+  delete environment.NODE_PATH
+  delete environment.PROJECT_CWD
+  delete environment.RAIJIN_COMMAND_INVOCATION_CWD
+  delete environment.RAIJIN_COMMAND_PROXY_EXECUTION
+
+  return environment
+}
+
+const runRuntime = async (
+  runtimePath: PortablePath,
+  cwd: string,
+  args: Array<string>
+): Promise<void> => {
+  try {
+    await execute(process.execPath, [npath.fromPortablePath(runtimePath), ...args], {
+      cwd,
+      encoding: 'utf8',
+      env: createRuntimeEnvironment(),
+      maxBuffer: 20 * 1024 * 1024,
+    })
+  } catch (error) {
+    const executionError = error as RuntimeExecutionError
+
+    throw new Error(
+      [executionError.message, executionError.stdout, executionError.stderr]
+        .filter(Boolean)
+        .join('\n')
+    )
+  }
+}
+
+const resolveRuntimeContext = async (): Promise<RuntimeContext> => {
+  const cwd = npath.toPortablePath(process.cwd())
+  const configuration = await Configuration.find(cwd, getPluginConfiguration())
+  const { project, workspace } = await Project.find(configuration, cwd)
+  const { packageManager } = project.topLevelWorkspace.manifest
+
+  if (!workspace || !packageManager) {
+    throw new Error('Raijin smoke requires the package workspace and project packageManager')
+  }
+
+  return {
+    globalFolder: configuration.get('globalFolder'),
+    packageManager,
+    projectCwd: project.cwd,
+    runtimePath: ppath.join(project.cwd, '.yarn/releases/yarn.mjs' as PortablePath),
+  }
+}
+
+const packRaijin = async (context: RuntimeContext, fixture: string): Promise<string> => {
+  const tarball = join(fixture, 'atls-raijin.tgz')
+
+  await runRuntime(context.runtimePath, npath.fromPortablePath(context.projectCwd), [
+    'workspace',
+    '@atls/raijin',
+    'pack',
+    '--out',
+    tarball,
+  ])
+
+  return tarball
+}
+
+const writeTarget = async (target: string, linker: Linker, type: ScaffoldType): Promise<void> => {
   await mkdir(target, { recursive: true })
-  await mkdir(join(projectRoot, '.yarn/schematic'), { recursive: true })
-  await writeFile(
-    join(projectRoot, 'package.json'),
-    `${JSON.stringify({ private: true, workspaces: ['packages/*'] }, null, 2)}\n`
-  )
-  await writeFile(join(projectRoot, 'yarn.lock'), '')
   await writeFile(
     join(target, 'package.json'),
-    `${JSON.stringify({ name: '@fixture/client', private: true, type: 'module' }, null, 2)}\n`
+    `${JSON.stringify(
+      {
+        name: `@fixture/${linker}-${type}`,
+        private: true,
+        type: 'module',
+      },
+      null,
+      2
+    )}\n`
   )
   await writeFile(join(target, 'tsconfig.json'), '{"compilerOptions":{"composite":true}}\n')
   await writeFile(join(target, '.gitignore'), 'fixture-cache/\n')
-  await writeFile(join(projectRoot, '.yarn/schematic/collection.json'), '{"stale":true}\n')
 }
 
-const runCommand = async (target: string, type: ScaffoldType): Promise<number> => {
-  const cli = new Cli<CommandContext>({ binaryName: 'yarn', enableCapture: false })
+const writeConsumer = async (
+  context: RuntimeContext,
+  projectRoot: string,
+  tarball: string,
+  linker: Linker
+): Promise<Map<ScaffoldType, string>> => {
+  const targets = new Map<ScaffoldType, string>([
+    ['project', join(projectRoot, 'packages/project')],
+    ['library', join(projectRoot, 'packages/library')],
+  ])
 
-  cli.register(await loadGenerateProjectCommand())
+  await mkdir(join(projectRoot, '.yarn/schematic'), { recursive: true })
+  await writeFile(
+    join(projectRoot, 'package.json'),
+    `${JSON.stringify(
+      {
+        private: true,
+        workspaces: ['packages/*'],
+        packageManager: context.packageManager,
+        devDependencies: {
+          '@atls/raijin': `file:${npath.toPortablePath(tarball)}`,
+        },
+      },
+      null,
+      2
+    )}\n`
+  )
+  await writeFile(
+    join(projectRoot, '.yarnrc.yml'),
+    [
+      'enableGlobalCache: true',
+      `globalFolder: ${JSON.stringify(context.globalFolder)}`,
+      `nodeLinker: ${linker}`,
+      'pnpEnableEsmLoader: true',
+      `yarnPath: ${JSON.stringify(context.runtimePath)}`,
+      '',
+    ].join('\n')
+  )
+  await writeFile(join(projectRoot, '.yarn/schematic/collection.json'), STALE_ARTIFACT)
 
-  return cli.run(['generate', 'project', '--type', type], {
-    cwd: npath.toPortablePath(target),
-    plugins: getPluginConfiguration(),
-    quiet: false,
-  })
+  await Promise.all(
+    Array.from(targets, async ([type, target]) => writeTarget(target, linker, type))
+  )
+
+  return targets
 }
 
 const assertCommonContract = async (target: string): Promise<void> => {
@@ -94,14 +208,13 @@ const assertCommonContract = async (target: string): Promise<void> => {
 
 const assertTypeContract = async (target: string, type: ScaffoldType): Promise<void> => {
   if (type === 'project') {
-    assert.match(
-      await readFile(join(target, '.github/workflows/release.yaml'), 'utf8'),
-      /@fixture\/client-/
-    )
-    assert.match(
-      await readFile(join(target, '.github/workflows/preview.yaml'), 'utf8'),
-      /@fixture\/client-/
-    )
+    const releaseWorkflow = await readFile(join(target, '.github/workflows/release.yaml'), 'utf8')
+    const previewWorkflow = await readFile(join(target, '.github/workflows/preview.yaml'), 'utf8')
+
+    assert.match(releaseWorkflow, /types: \[closed\]/)
+    assert.match(releaseWorkflow, /--tag-policy hash-timestamp/)
+    assert.match(previewWorkflow, /types: \[opened, reopened, synchronize\]/)
+    assert.match(previewWorkflow, /--tag-policy ctx-hash-timestamp/)
     assert.equal(await pathExists(join(target, '.github/workflows/publish.yaml')), false)
     assert.equal(await pathExists(join(target, '.github/workflows/version.yaml')), false)
 
@@ -120,32 +233,55 @@ const assertTypeContract = async (target: string, type: ScaffoldType): Promise<v
   assert.equal(await pathExists(join(target, '.github/workflows/preview.yaml')), false)
 }
 
-const runScenario = async (type: ScaffoldType): Promise<void> => {
-  const fixture = await mkdtemp(join(tmpdir(), `raijin-${type}-generation-`))
-  const projectRoot = join(fixture, 'project')
-  const target = join(projectRoot, 'packages/client')
+const runConsumer = async (
+  context: RuntimeContext,
+  fixture: string,
+  tarball: string,
+  linker: Linker
+): Promise<void> => {
+  const projectRoot = join(fixture, linker)
+  const targets = await writeConsumer(context, projectRoot, tarball, linker)
 
-  try {
-    await writeFixture(projectRoot, target)
+  await runRuntime(context.runtimePath, projectRoot, ['install'])
 
-    assert.equal(await runCommand(target, type), 0)
+  await Promise.all(
+    Array.from(targets, async ([type, target]) => {
+      await runRuntime(context.runtimePath, target, ['generate', 'project', '--type', type])
+      await assertCommonContract(target)
+      await assertTypeContract(target, type)
+    })
+  )
+
+  assert.equal(
+    await readFile(join(projectRoot, '.yarn/schematic/collection.json'), 'utf8'),
+    STALE_ARTIFACT
+  )
+
+  if (linker === 'pnp') {
+    assert.equal(await pathExists(join(projectRoot, 'node_modules')), false)
+  } else {
     assert.equal(
-      await readFile(join(projectRoot, '.yarn/schematic/collection.json'), 'utf8'),
-      '{"stale":true}\n'
+      await pathExists(
+        join(projectRoot, 'node_modules/@atls/raijin/dist/schematic/collection.json')
+      ),
+      true
     )
-
-    await assertCommonContract(target)
-    await assertTypeContract(target, type)
-  } finally {
-    await rm(fixture, { recursive: true, force: true })
   }
 }
 
+const fixture = await mkdtemp(join(tmpdir(), 'raijin-project-generation-'))
+
 try {
-  await runScenario('project')
-  await runScenario('library')
-  console.info('Project generation command smoke passed')
+  const context = await resolveRuntimeContext()
+  const tarball = await packRaijin(context, fixture)
+
+  await runConsumer(context, fixture, tarball, 'pnp')
+  await runConsumer(context, fixture, tarball, 'node-modules')
+
+  console.info('Project generation runtime smoke passed for pnp and node-modules')
 } catch (error) {
   console.error(error instanceof Error ? error.stack : String(error))
   process.exitCode = 1
+} finally {
+  await rm(fixture, { recursive: true, force: true })
 }

@@ -6,6 +6,7 @@ import type { PortablePath }           from '@yarnpkg/fslib'
 import type { ScaffoldType }           from './scaffold.interfaces.js'
 
 export interface Options {
+  collection: PortablePath
   input: CommandInput
   project: RaijinProjectModel<ProjectWorkspaceSource<PortablePath>>
   type: ScaffoldType

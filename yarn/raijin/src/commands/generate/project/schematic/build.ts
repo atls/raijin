@@ -1,18 +1,18 @@
 /* eslint-disable no-console */
 
-import type { Plugin }                     from 'esbuild'
+import type { Plugin }                              from 'esbuild'
 
-import { cp }                              from 'node:fs/promises'
-import { mkdir }                           from 'node:fs/promises'
-import { rm }                              from 'node:fs/promises'
-import { writeFile }                       from 'node:fs/promises'
-import { join }                            from 'node:path'
-import { resolve }                         from 'node:path'
+import { cp }                                       from 'node:fs/promises'
+import { mkdir }                                    from 'node:fs/promises'
+import { rm }                                       from 'node:fs/promises'
+import { writeFile }                                from 'node:fs/promises'
+import { join }                                     from 'node:path'
+import { resolve }                                  from 'node:path'
 
-import { pnpPlugin }                       from '@yarnpkg/esbuild-plugin-pnp'
-import esbuild                             from 'esbuild'
+import { pnpPlugin }                                from '@yarnpkg/esbuild-plugin-pnp'
+import esbuild                                      from 'esbuild'
 
-import { getProjectGenerationArtifactDir } from '../artifact.js'
+import { resolveProjectGenerationArtifactBuildDir } from '../artifact/build.js'
 
 const sourceExtensionPlugin: Plugin = {
   name: 'raijin-source-extension',
@@ -24,7 +24,7 @@ const sourceExtensionPlugin: Plugin = {
 }
 
 export const buildProjectGenerationArtifact = async (): Promise<void> => {
-  const artifactDir = getProjectGenerationArtifactDir()
+  const artifactDir = resolveProjectGenerationArtifactBuildDir()
   const collectionDir = join(import.meta.dirname, 'collection')
   const result = await esbuild.build({
     entryPoints: [join(import.meta.dirname, 'index.ts')],
