@@ -61,7 +61,7 @@
     "build:schematic": "yarn node ./src/commands/generate/project/schematic/build.ts",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist",
-    "smoke:generate-project": "yarn run build:schematic && yarn node ./tests/smoke/generate-project.ts"
+    "smoke:generate-project": "yarn run build && yarn node ./tests/smoke/generate-project.ts"
   },
   "dependencies": {
     "@angular-devkit/core": "19.1.5",

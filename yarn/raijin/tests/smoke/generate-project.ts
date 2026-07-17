@@ -1,32 +1,24 @@
 /* eslint-disable no-console */
 
-import type { RaijinProjectModel }          from '@atls/raijin/project'
+import type { CommandContext }    from '@yarnpkg/core'
 
-import { access }                           from 'node:fs/promises'
-import { mkdir }                            from 'node:fs/promises'
-import { mkdtemp }                          from 'node:fs/promises'
-import { readFile }                         from 'node:fs/promises'
-import { rm }                               from 'node:fs/promises'
-import { writeFile }                        from 'node:fs/promises'
-import { tmpdir }                           from 'node:os'
-import { join }                             from 'node:path'
+import assert                     from 'node:assert/strict'
+import { access }                 from 'node:fs/promises'
+import { mkdir }                  from 'node:fs/promises'
+import { mkdtemp }                from 'node:fs/promises'
+import { readFile }               from 'node:fs/promises'
+import { rm }                     from 'node:fs/promises'
+import { writeFile }              from 'node:fs/promises'
+import { tmpdir }                 from 'node:os'
+import { join }                   from 'node:path'
 
-import { npath }                            from '@yarnpkg/fslib'
+import { getPluginConfiguration } from '@yarnpkg/cli'
+import { npath }                  from '@yarnpkg/fslib'
+import { Cli }                    from 'clipanion'
 
-import { createCommandInput }               from '@atls/raijin/commands/input'
+import { GenerateProjectCommand } from '../../dist/commands/generate/project/command.js'
 
-import { generateProject }                  from '../../src/commands/generate/project/index.js'
-
-import { installProjectGenerationArtifact } from '../../src/commands/generate/project/index.js'
-
-const requiredGeneratedFiles = [
-  '.gitignore',
-  '.prettierrc.mjs',
-  '.github/workflows/checks.yaml',
-  '.github/workflows/preview.yaml',
-  '.github/workflows/release.yaml',
-  'tsconfig.json',
-]
+type ScaffoldType = 'library' | 'project'
 
 const pathExists = async (path: string): Promise<boolean> => {
   try {
@@ -40,94 +32,109 @@ const pathExists = async (path: string): Promise<boolean> => {
 
 const writeFixture = async (projectRoot: string, target: string): Promise<void> => {
   await mkdir(target, { recursive: true })
+  await mkdir(join(projectRoot, '.yarn/schematic'), { recursive: true })
   await writeFile(
     join(projectRoot, 'package.json'),
     `${JSON.stringify({ private: true, workspaces: ['packages/*'] }, null, 2)}\n`
   )
+  await writeFile(join(projectRoot, 'yarn.lock'), '')
   await writeFile(
     join(target, 'package.json'),
     `${JSON.stringify({ name: '@fixture/client', private: true, type: 'module' }, null, 2)}\n`
   )
-  await writeFile(join(target, 'tsconfig.json'), '{}\n')
+  await writeFile(join(target, 'tsconfig.json'), '{"compilerOptions":{"composite":true}}\n')
+  await writeFile(join(target, '.gitignore'), 'fixture-cache/\n')
+  await writeFile(join(projectRoot, '.yarn/schematic/collection.json'), '{"stale":true}\n')
 }
 
-const assertGeneratedFixture = async (target: string): Promise<void> => {
-  const missingFiles = (
-    await Promise.all(
-      requiredGeneratedFiles.map(async (file) => ({
-        file,
-        exists: await pathExists(join(target, file)),
-      }))
-    )
-  )
-    .filter(({ exists }) => !exists)
-    .map(({ file }) => file)
+const runCommand = async (target: string, type: ScaffoldType): Promise<number> => {
+  const cli = new Cli<CommandContext>({ binaryName: 'yarn', enableCapture: false })
 
-  if (missingFiles.length > 0) {
-    throw new Error(`Project generation did not create:\n${missingFiles.join('\n')}`)
+  cli.register(GenerateProjectCommand)
+
+  return cli.run(['generate', 'project', '--type', type], {
+    cwd: npath.toPortablePath(target),
+    plugins: getPluginConfiguration(),
+    quiet: false,
+  })
+}
+
+const assertCommonContract = async (target: string): Promise<void> => {
+  const tsconfig = JSON.parse(await readFile(join(target, 'tsconfig.json'), 'utf8')) as {
+    compilerOptions: Record<string, unknown>
   }
+
+  assert.equal(
+    await readFile(join(target, '.prettierrc.mjs'), 'utf8'),
+    "import config from '@atls/raijin/prettier'\n\nexport default config\n"
+  )
+  assert.match(await readFile(join(target, 'eslint.config.mjs'), 'utf8'), /@atls\/raijin\/eslint/)
+  assert.match(await readFile(join(target, '.github/workflows/checks.yaml'), 'utf8'), /yarn check/)
+  assert.equal(tsconfig.compilerOptions.composite, true)
+  assert.equal(tsconfig.compilerOptions.module, 'NodeNext')
+  assert.equal(tsconfig.compilerOptions.target, 'es2022')
 
   const gitignore = await readFile(join(target, '.gitignore'), 'utf8')
 
-  if (!gitignore.includes('node_modules') || !gitignore.includes('dist/')) {
-    throw new Error('Generated .gitignore does not contain expected baseline entries')
-  }
-
-  const tsconfig = JSON.parse(await readFile(join(target, 'tsconfig.json'), 'utf8')) as {
-    compilerOptions?: unknown
-  }
-
-  if (!tsconfig.compilerOptions || typeof tsconfig.compilerOptions !== 'object') {
-    throw new Error('Generated tsconfig.json does not contain compilerOptions')
-  }
+  assert.match(gitignore, /node_modules/)
+  assert.match(gitignore, /dist\//)
+  assert.equal(gitignore.match(/fixture-cache\//g)?.length, 1)
 }
 
-const runSmoke = async (): Promise<void> => {
-  const fixture = await mkdtemp(join(tmpdir(), 'raijin-project-generation-'))
+const assertTypeContract = async (target: string, type: ScaffoldType): Promise<void> => {
+  if (type === 'project') {
+    assert.match(
+      await readFile(join(target, '.github/workflows/release.yaml'), 'utf8'),
+      /@fixture\/client-/
+    )
+    assert.match(
+      await readFile(join(target, '.github/workflows/preview.yaml'), 'utf8'),
+      /@fixture\/client-/
+    )
+    assert.equal(await pathExists(join(target, '.github/workflows/publish.yaml')), false)
+    assert.equal(await pathExists(join(target, '.github/workflows/version.yaml')), false)
+
+    return
+  }
+
+  assert.match(
+    await readFile(join(target, '.github/workflows/publish.yaml'), 'utf8'),
+    /npm publish --access public/
+  )
+  assert.match(
+    await readFile(join(target, '.github/workflows/version.yaml'), 'utf8'),
+    /version patch --deferred/
+  )
+  assert.equal(await pathExists(join(target, '.github/workflows/release.yaml')), false)
+  assert.equal(await pathExists(join(target, '.github/workflows/preview.yaml')), false)
+}
+
+const runScenario = async (type: ScaffoldType): Promise<void> => {
+  const fixture = await mkdtemp(join(tmpdir(), `raijin-${type}-generation-`))
   const projectRoot = join(fixture, 'project')
   const target = join(projectRoot, 'packages/client')
-  const projectCwd = npath.toPortablePath(projectRoot)
-  const targetCwd = npath.toPortablePath(target)
 
   try {
     await writeFixture(projectRoot, target)
-    await installProjectGenerationArtifact(projectRoot)
 
-    const topLevelWorkspace = {
-      cwd: projectCwd,
-      manifest: { workspaceDefinitions: [{ pattern: 'packages/*' }] },
-    }
-    const project: RaijinProjectModel<typeof topLevelWorkspace> = {
-      cwd: projectCwd,
-      topLevelWorkspace,
-      type: 'monorepo',
-      workspacePatterns: ['packages/*'],
-      workspaces: [topLevelWorkspace],
-    }
-    const exitCode = await generateProject({
-      input: createCommandInput({
-        cwd: targetCwd,
-        source: 'explicit',
-        targets: ['.'],
-      }),
-      project,
-      type: 'project',
-    })
+    assert.equal(await runCommand(target, type), 0)
+    assert.equal(
+      await readFile(join(projectRoot, '.yarn/schematic/collection.json'), 'utf8'),
+      '{"stale":true}\n'
+    )
 
-    if (exitCode !== 0) {
-      throw new Error(`Project generation failed with exit code ${exitCode}`)
-    }
-
-    await assertGeneratedFixture(target)
+    await assertCommonContract(target)
+    await assertTypeContract(target, type)
   } finally {
     await rm(fixture, { recursive: true, force: true })
   }
 }
 
 try {
-  await runSmoke()
-  console.info('Project generation smoke passed')
+  await runScenario('project')
+  await runScenario('library')
+  console.info('Project generation command smoke passed')
 } catch (error) {
-  console.error(error instanceof Error ? error.message : String(error))
+  console.error(error instanceof Error ? error.stack : String(error))
   process.exitCode = 1
 }

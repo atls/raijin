@@ -25,6 +25,7 @@ export const resolveProjectTarget = (input: CommandInput): PortablePath => {
 
 export const generateProject = async ({ input, project, type }: Options): Promise<0 | 1> => {
   const target = resolveProjectTarget(input)
+  const collection = await resolveProjectCollectionPath()
   const workflow = new NodeWorkflow(npath.fromPortablePath(target), {
     force: false,
     dryRun: false,
@@ -37,7 +38,7 @@ export const generateProject = async ({ input, project, type }: Options): Promis
   try {
     await lastValueFrom(
       workflow.execute({
-        collection: npath.fromPortablePath(resolveProjectCollectionPath(project.cwd)),
+        collection,
         schematic: 'project',
         options: {
           type,

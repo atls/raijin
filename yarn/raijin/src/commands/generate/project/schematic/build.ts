@@ -12,7 +12,7 @@ import { resolve }                         from 'node:path'
 import { pnpPlugin }                       from '@yarnpkg/esbuild-plugin-pnp'
 import esbuild                             from 'esbuild'
 
-import { getProjectGenerationArtifactDir } from '../installation.js'
+import { getProjectGenerationArtifactDir } from '../artifact.js'
 
 const sourceExtensionPlugin: Plugin = {
   name: 'raijin-source-extension',
