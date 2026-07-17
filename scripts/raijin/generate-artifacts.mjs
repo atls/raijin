@@ -955,15 +955,12 @@ const renderCommandsDoc = (commands, language) => {
     lines.push('')
   }
 
-  lines.push('<!-- sync:commands-inactive -->')
-  lines.push('')
-  lines.push(isRu ? '## Inactive (не маршрутизировать)' : '## Inactive (do not route)')
-  lines.push('')
-
-  if (inactiveGroups.length === 0) {
-    lines.push(isRu ? '_Нет inactive-команд_' : '_No inactive commands_')
+  if (inactiveGroups.length > 0) {
+    lines.push('<!-- sync:commands-inactive -->')
     lines.push('')
-  } else {
+    lines.push(isRu ? '## Inactive (не маршрутизировать)' : '## Inactive (do not route)')
+    lines.push('')
+
     for (const [domain, domainCommands] of inactiveGroups) {
       lines.push(`### ${domainLabel(domain, language)}`)
       lines.push('')

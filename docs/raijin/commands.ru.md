@@ -534,9 +534,3 @@
 - Исходник: `yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts`
 
 </details>
-
-<!-- sync:commands-inactive -->
-
-## Inactive (не маршрутизировать)
-
-_Нет inactive-команд_

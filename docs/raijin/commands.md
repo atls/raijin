@@ -534,9 +534,3 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Source: `yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts`
 
 </details>
-
-<!-- sync:commands-inactive -->
-
-## Inactive (do not route)
-
-_No inactive commands_
