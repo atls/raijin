@@ -1,39 +1,42 @@
-import { PassThrough }                                   from 'node:stream'
+import { PassThrough }                         from 'node:stream'
 
-import { BaseCommand }                                   from '@yarnpkg/cli'
-import { StreamReport }                                  from '@yarnpkg/core'
-import { MessageName }                                   from '@yarnpkg/core'
-import { execUtils }                                     from '@yarnpkg/core'
-import { scriptUtils }                                   from '@yarnpkg/core'
-import { xfs }                                           from '@yarnpkg/fslib'
-import { ppath }                                         from '@yarnpkg/fslib'
+import { BaseCommand }                         from '@yarnpkg/cli'
+import { StreamReport }                        from '@yarnpkg/core'
+import { MessageName }                         from '@yarnpkg/core'
+import { execUtils }                           from '@yarnpkg/core'
+import { scriptUtils }                         from '@yarnpkg/core'
+import { xfs }                                 from '@yarnpkg/fslib'
 
-import { resolveWorkspaceInvocation }                    from '@atls/raijin/commands'
-import { createYarnExecutable }                          from '@atls/raijin/commands'
-import { materializeNextConfigAdapter }                  from '@atls/raijin/config/next'
+import { resolveWorkspaceInvocation }          from '@atls/raijin/commands'
+import { createYarnExecutable }                from '@atls/raijin/commands'
+import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
 
-import { RENDERER_STANDALONE_SERVER_ENTRYPOINT }         from './renderer-build.constants.js'
-import { assertRendererBuildExitCode }                   from './renderer-build.utils.js'
-import { assertRendererBuildStandaloneOutput }           from './renderer-build.utils.js'
-import { cleanupRendererBuildDiscoveryArtifacts }        from './renderer-build.utils.js'
-import { cleanupRendererBuildSourceArtifacts }           from './renderer-build.utils.js'
-import { cleanupRendererBuildStaleArtifacts }            from './renderer-build.utils.js'
-import { cleanupRendererBuildWorkspaceManifests }        from './renderer-build.utils.js'
-import { copyRendererBuildPublicAssets }                 from './renderer-build.utils.js'
-import { copyRendererBuildStandaloneFiles }              from './renderer-build.utils.js'
-import { createRendererBuildContext }                    from './renderer-build.utils.js'
-import { createRendererBuildArgs }                       from './renderer-build.utils.js'
-import { createRendererBuildEnv }                        from './renderer-build.utils.js'
-import { extractNodeLoaderOption }                       from './renderer-build.utils.js'
-import { materializeNextCompiledConfRequireCacheLoader } from './renderer-build.utils.js'
-import { resolveRendererBuildPnpLoader }                 from './renderer-build.utils.js'
-import { resolveNextPackageVersion }                     from './renderer-build.utils.js'
+import { cleanupDiscoveryArtifacts }           from '../artifact/cleanup.js'
+import { cleanupSourceArtifacts }              from '../artifact/cleanup.js'
+import { cleanupTargetArtifacts }              from '../artifact/cleanup.js'
+import { materializeEntrypoint }               from '../artifact/entrypoint.js'
+import { createArtifactLayout }                from '../artifact/layout.js'
+import { createArtifactTarget }                from '../artifact/layout.js'
+import { assertArtifactSource }                from '../artifact/materialization.js'
+import { copyEdgeChunks }                      from '../artifact/materialization.js'
+import { copyPublicAssets }                    from '../artifact/materialization.js'
+import { copyStandalone }                      from '../artifact/materialization.js'
+import { copyStaticAssets }                    from '../artifact/materialization.js'
+import { assertNextBuildExitCode }             from '../integrations/next/execution/arguments.js'
+import { createNextBuildArguments }            from '../integrations/next/execution/arguments.js'
+import { createNextExecutionEnvironment }      from '../integrations/next/execution/environment.js'
+import { extractPnpLoaderOption }              from '../integrations/next/execution/environment.js'
+import { resolvePnpLoader }                    from '../integrations/next/execution/environment.js'
+import { materializeNextLoader }               from '../integrations/next/execution/loader.js'
+import { resolveNextPackageVersion }           from '../integrations/next/execution/version.js'
+import { resolveNextStandaloneArtifactSource } from '../integrations/next/standalone/discovery.js'
+import { snapshotNextStandaloneManifests }     from '../integrations/next/standalone/discovery.js'
 
 export class RendererBuildCommand extends BaseCommand {
   static override paths = [['renderer', 'build']]
 
   async execute(): Promise<number> {
-    await cleanupRendererBuildDiscoveryArtifacts(this.context.cwd)
+    await cleanupDiscoveryArtifacts(this.context.cwd)
 
     const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
       this.context.cwd,
@@ -41,11 +44,14 @@ export class RendererBuildCommand extends BaseCommand {
     )
     const { configuration, project } = yarn
     const rendererCwd = executionCwd
-    const rendererBuildContext = createRendererBuildContext(rendererCwd)
+    const artifactTarget = createArtifactTarget(rendererCwd)
 
-    await cleanupRendererBuildStaleArtifacts(rendererCwd)
+    await cleanupTargetArtifacts(artifactTarget)
 
     await project.restoreInstallState()
+
+    const binFolder = await xfs.mktempPromise()
+    const manifestSnapshot = await snapshotNextStandaloneManifests(artifactTarget.appCwd)
 
     const commandReport = await StreamReport.start(
       {
@@ -77,18 +83,14 @@ export class RendererBuildCommand extends BaseCommand {
               })
           })
 
-          const binFolder = await xfs.mktempPromise()
           const executableContext = {
             binFolder,
             locator: workspace.anchoredLocator,
             project,
           }
           const scriptEnvironment = await createYarnExecutable(executableContext)
-          const { nodeOptions } = extractNodeLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
-          const loader = await resolveRendererBuildPnpLoader(
-            project.cwd,
-            scriptEnvironment.env.NODE_OPTIONS
-          )
+          const { nodeOptions } = extractPnpLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
+          const loader = await resolvePnpLoader(project.cwd, scriptEnvironment.env.NODE_OPTIONS)
           const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
           const nextBinary = binaries.get('next')
 
@@ -98,76 +100,65 @@ export class RendererBuildCommand extends BaseCommand {
 
           const [nextPackage, nextBin] = nextBinary
           const nextVersion = resolveNextPackageVersion(nextPackage)
-          const nextCompiledConfRequireCacheLoader =
-            await materializeNextCompiledConfRequireCacheLoader(binFolder, loader)
+          const nextLoader = await materializeNextLoader(binFolder, loader)
           const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
           const { executable, env } = await createYarnExecutable({
             ...executableContext,
             env: {
               NODE_OPTIONS: nodeOptions,
             },
-            nodeLoader: nextCompiledConfRequireCacheLoader,
+            nodeLoader: nextLoader,
           })
 
           const { code } = await execUtils.pipevp(
             executable,
-            createRendererBuildArgs(nextVersion, nextBin),
+            createNextBuildArguments(nextVersion, nextBin),
             {
               end: execUtils.EndStrategy.ErrorCode,
               cwd: rendererCwd,
               stdin: this.context.stdin,
               stdout,
               stderr,
-              env: createRendererBuildEnv(env, nextCompiledConfRequireCacheLoader, rendererCwd, {
+              env: createNextExecutionEnvironment(env, nextLoader, rendererCwd, {
                 nextConfigAdapterPath,
                 output: 'standalone',
               }),
             }
           )
 
-          assertRendererBuildExitCode(code)
-          await assertRendererBuildStandaloneOutput(rendererBuildContext)
+          assertNextBuildExitCode(code)
         })
+
+        const artifactSource = await resolveNextStandaloneArtifactSource(
+          artifactTarget.appCwd,
+          manifestSnapshot
+        )
+        const artifactLayout = createArtifactLayout(artifactTarget, artifactSource)
+
+        await assertArtifactSource(artifactLayout)
 
         await report.startTimerPromise('Copy standalone files', async () => {
-          await copyRendererBuildStandaloneFiles(rendererBuildContext)
-        })
-
-        await report.startTimerPromise('Clean workspace manifests', async () => {
-          await cleanupRendererBuildWorkspaceManifests(rendererCwd)
+          await copyStandalone(artifactLayout)
         })
 
         await report.startTimerPromise('Copy static files', async () => {
-          await xfs.copyPromise(
-            ppath.join(rendererCwd, 'dist/.next/static'),
-            ppath.join(rendererBuildContext.nextOutputCwd, 'static')
-          )
+          await copyStaticAssets(artifactLayout)
         })
 
         await report.startTimerPromise('Copy public assets', async () => {
-          await copyRendererBuildPublicAssets(rendererBuildContext)
+          await copyPublicAssets(artifactLayout)
         })
 
         await report.startTimerPromise('Copy edge chunks files', async () => {
-          const edgeChunksCwd = ppath.join(rendererBuildContext.nextOutputCwd, 'server/edge-chunks')
-
-          if (await xfs.existsPromise(edgeChunksCwd)) {
-            await xfs.copyPromise(
-              ppath.join(rendererCwd, 'dist/.next/server/edge-chunks'),
-              edgeChunksCwd
-            )
-          }
+          await copyEdgeChunks(artifactLayout)
         })
 
-        await report.startTimerPromise('Move server start files', async () => {
-          await xfs.movePromise(
-            ppath.join(rendererCwd, 'dist/server.js'),
-            ppath.join(rendererCwd, 'dist', RENDERER_STANDALONE_SERVER_ENTRYPOINT)
-          )
+        await report.startTimerPromise('Create server entrypoint', async () => {
+          await materializeEntrypoint(artifactLayout)
         })
 
         await report.startTimerPromise('Clean source build artifacts', async () => {
-          await cleanupRendererBuildSourceArtifacts(rendererBuildContext.appCwd)
+          await cleanupSourceArtifacts(artifactLayout)
         })
       }
     )
