@@ -8,6 +8,7 @@ import { Project }                       from '@yarnpkg/core'
 import { getPluginConfiguration }        from '@yarnpkg/cli'
 import { npath }                         from '@yarnpkg/fslib'
 import { ppath }                         from '@yarnpkg/fslib'
+import { xfs }                           from '@yarnpkg/fslib'
 
 import { withProjectGenerationArtifact } from '../materialize.js'
 
@@ -15,40 +16,52 @@ test('should materialize the installed Raijin artifact for one consumer lifecycl
   const cwd = npath.toPortablePath(process.cwd())
   const configuration = await Configuration.find(cwd, getPluginConfiguration())
   const { project } = await Project.find(configuration, cwd)
-  const makeFetcher = configuration.makeFetcher.bind(configuration)
+  const { makeFetcher } = configuration
   let materializedArtifactDir: string | undefined
   let released = false
 
-  configuration.makeFetcher = () => {
-    const fetcher = makeFetcher()
-    const fetch = fetcher.fetch.bind(fetcher)
+  await xfs.mktempPromise(async (packageRoot) => {
+    const artifactDir = ppath.join(packageRoot, 'dist/schematic')
 
-    fetcher.fetch = async (...args) => {
-      const result = await fetch(...args)
-      const { releaseFs } = result
+    await xfs.mkdirPromise(ppath.join(artifactDir, 'project'), { recursive: true })
+    await xfs.writeJsonPromise(ppath.join(artifactDir, 'collection.json'), {
+      schematics: { project: {} },
+    })
+    await xfs.writeFilePromise(
+      ppath.join(artifactDir, 'project/project.factory.cjs'),
+      'module.exports = {}\n'
+    )
 
-      return {
-        ...result,
+    configuration.makeFetcher = () => {
+      const fetcher = makeFetcher.call(configuration)
+
+      fetcher.fetch = async () => ({
+        localPath: packageRoot,
+        packageFs: xfs,
+        prefixPath: packageRoot,
         releaseFs: () => {
           released = true
-          releaseFs?.()
         },
-      }
+      })
+
+      return fetcher
     }
 
-    return fetcher
-  }
+    try {
+      await withProjectGenerationArtifact({ configuration, project }, async (collection) => {
+        assert.equal(released, false)
+        materializedArtifactDir = npath.fromPortablePath(ppath.dirname(collection))
+        const manifest = JSON.parse(await readFile(npath.fromPortablePath(collection), 'utf8')) as {
+          schematics?: Record<string, unknown>
+        }
 
-  await withProjectGenerationArtifact({ configuration, project }, async (collection) => {
-    assert.equal(released, false)
-    materializedArtifactDir = npath.fromPortablePath(ppath.dirname(collection))
-    const manifest = JSON.parse(await readFile(npath.fromPortablePath(collection), 'utf8')) as {
-      schematics?: Record<string, unknown>
+        assert.ok(manifest.schematics?.project)
+
+        return undefined
+      })
+    } finally {
+      configuration.makeFetcher = makeFetcher
     }
-
-    assert.ok(manifest.schematics?.project)
-
-    return undefined
   })
 
   assert.ok(materializedArtifactDir)
