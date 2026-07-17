@@ -1,5 +1,7 @@
-import type { SeverityNumber } from '@monstrs/logger'
-import type { webpack }        from '@atls/raijin/webpack'
+import type { SeverityNumber }              from '@monstrs/logger'
+import type { materializeTypeScriptConfig } from '@atls/raijin/config/typescript'
+import type { typescriptDefaults }          from '@atls/raijin/config/typescript'
+import type { webpack }                     from '@atls/raijin/webpack'
 
 export interface WebpackLogRecord {
   record: webpack.StatsError
@@ -7,6 +9,11 @@ export interface WebpackLogRecord {
 }
 
 export type WebpackEnvironment = 'development' | 'production'
+
+export interface TypeScriptConfigRuntime {
+  materializeTypeScriptConfig: typeof materializeTypeScriptConfig
+  typescriptDefaults: typeof typescriptDefaults
+}
 
 export interface WebpackConfigPlugin {
   name: string

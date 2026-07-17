@@ -772,6 +772,7 @@
         "build:dist",
         "build:fix",
         "build:schemaic",
+        "build:verify",
         "build:version",
         "fix",
         "postpack",
@@ -1045,5 +1046,5 @@
       }
     ]
   },
-  "lastGenerated": "2026-07-03T14:50:45.554Z"
+  "lastGenerated": "2026-07-16T16:24:32.450Z"
 }

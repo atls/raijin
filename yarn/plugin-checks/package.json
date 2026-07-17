@@ -12,7 +12,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build plugin --external-file ../builder/externals.json",
+    "build": "builder build plugin --external-file ../builder/externals.json --external @atls/raijin/runtime-resolver",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },

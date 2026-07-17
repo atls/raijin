@@ -1,26 +1,35 @@
-import type { CommandInput }          from '@atls/raijin/commands'
-import type { Project }               from '@yarnpkg/core'
-import type { PortablePath }          from '@yarnpkg/fslib'
+import type { CommandInput }            from '@atls/raijin/commands'
+import type { Project }                 from '@yarnpkg/core'
+import type { PortablePath }            from '@yarnpkg/fslib'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { ppath }                      from '@yarnpkg/fslib'
-import { Option }                     from 'clipanion'
-import { render }                     from 'ink'
-import React                          from 'react'
+import type { TypeScriptConfigRuntime } from './typecheck.interfaces.js'
 
-import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
-import { TypeScriptDiagnostic }       from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptProgress }         from '@atls/cli-ui-typescript-progress-component'
-import { TypeScript }                 from '@atls/code-typescript'
-import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }         from '@atls/raijin/commands'
-import { resolveProjectInvocation }   from '@atls/raijin/commands'
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
-import { shouldProxyCommand }         from '@atls/raijin/commands'
-import { toNativeCwd }                from '@atls/raijin/commands'
-import { toCommandArguments }         from '@atls/raijin/commands'
-import { hasTypeScriptProject }       from '@atls/raijin/config/typescript'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { ppath }                        from '@yarnpkg/fslib'
+import { Option }                       from 'clipanion'
+import { render }                       from 'ink'
+import React                            from 'react'
+
+import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScriptProgress }           from '@atls/cli-ui-typescript-progress-component'
+import { TypeScript }                   from '@atls/code-typescript'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { resolveProjectInvocation }     from '@atls/raijin/commands'
+import { resolveWorkspaceInvocation }   from '@atls/raijin/commands'
+import { proxyWorkspaceCommand }        from '@atls/raijin/commands'
+import { shouldProxyCommand }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
+import { toCommandArguments }           from '@atls/raijin/commands'
+import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
+
+const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
+
+const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptConfigRuntime> =>
+  (await import(
+    resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_CONFIG_SPECIFIER)
+  )) as TypeScriptConfigRuntime
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -101,7 +110,10 @@ export class TypeCheckCommand extends BaseCommand {
     workspaceCwd: PortablePath,
     projectCwd: PortablePath
   ): Promise<PortablePath> {
-    if (hasTypeScriptProject(toNativeCwd(workspaceCwd))) {
+    const nativeWorkspaceCwd = toNativeCwd(workspaceCwd)
+    const { hasTypeScriptProject } = await importTypeScriptConfigRuntime(nativeWorkspaceCwd)
+
+    if (hasTypeScriptProject(nativeWorkspaceCwd)) {
       return workspaceCwd
     }
 
@@ -122,7 +134,10 @@ export class TypeCheckCommand extends BaseCommand {
       })
     }
 
-    return hasTypeScriptProject(toNativeCwd(typecheckCwd))
+    const nativeTypecheckCwd = toNativeCwd(typecheckCwd)
+    const { hasTypeScriptProject } = await importTypeScriptConfigRuntime(nativeTypecheckCwd)
+
+    return hasTypeScriptProject(nativeTypecheckCwd)
       ? undefined
       : createCommandInput({
           cwd: typecheckCwd,
