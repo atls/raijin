@@ -1,24 +1,23 @@
 /* eslint-disable no-console */
 
-import type { RaijinProjectModel } from '@atls/raijin/project'
+import type { RaijinProjectModel }          from '@atls/raijin/project'
 
-import { access }                  from 'node:fs/promises'
-import { mkdir }                   from 'node:fs/promises'
-import { mkdtemp }                 from 'node:fs/promises'
-import { readFile }                from 'node:fs/promises'
-import { rm }                      from 'node:fs/promises'
-import { writeFile }               from 'node:fs/promises'
-import { tmpdir }                  from 'node:os'
-import { join }                    from 'node:path'
+import { access }                           from 'node:fs/promises'
+import { mkdir }                            from 'node:fs/promises'
+import { mkdtemp }                          from 'node:fs/promises'
+import { readFile }                         from 'node:fs/promises'
+import { rm }                               from 'node:fs/promises'
+import { writeFile }                        from 'node:fs/promises'
+import { tmpdir }                           from 'node:os'
+import { join }                             from 'node:path'
 
-import { npath }                   from '@yarnpkg/fslib'
+import { npath }                            from '@yarnpkg/fslib'
 
-import { createCommandInput }      from '@atls/raijin/commands/input'
+import { createCommandInput }               from '@atls/raijin/commands/input'
 
-import {
-  generateProject,
-  installProjectGenerationArtifact,
-} from '../../src/commands/generate/project/index.js'
+import { generateProject }                  from '../../src/commands/generate/project/index.js'
+
+import { installProjectGenerationArtifact } from '../../src/commands/generate/project/index.js'
 
 const requiredGeneratedFiles = [
   '.gitignore',
