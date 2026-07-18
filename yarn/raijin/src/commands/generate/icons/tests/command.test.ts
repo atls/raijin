@@ -2,6 +2,10 @@ import type { CommandContext }      from '@yarnpkg/core'
 import type { PortablePath }        from '@yarnpkg/fslib'
 import type { CommandClass }        from 'clipanion'
 
+import type { Calls }               from './command.interfaces.js'
+import type { Fixture }             from './command.interfaces.js'
+import type { RecordingHandler }    from './command.interfaces.js'
+
 import assert                       from 'node:assert/strict'
 import { mkdir }                    from 'node:fs/promises'
 import { mkdtemp }                  from 'node:fs/promises'
@@ -20,16 +24,10 @@ import { Option }                   from 'clipanion'
 
 import { toCommandArguments }       from '@atls/raijin/commands/input'
 
+import { INVOCATION_CWD_ENV }       from '../../../invocation/resolve.js'
+import { PROXY_ENV }                from '../../../invocation/resolve.js'
 import { GenerateIconsCommand }     from '../command.js'
 import { createGeneratedIconInput } from '../command.js'
-
-const INVOCATION_CWD_ENV = 'RAIJIN_COMMAND_INVOCATION_CWD'
-const PROXY_ENV = 'RAIJIN_COMMAND_PROXY_EXECUTION'
-
-interface CommandCalls {
-  format: Array<Array<string>>
-  lint: Array<{ files: Array<string>; fix: boolean }>
-}
 
 const restoreEnvironment = (name: string, value: string | undefined): void => {
   if (value === undefined) {
@@ -43,7 +41,7 @@ const interpolate = (value: string): string => `${String.fromCodePoint(36)}{${va
 
 const createRecordingCommand = (
   path: string,
-  execute: (files: Array<string>, fix: boolean) => number
+  execute: RecordingHandler
 ): CommandClass<CommandContext> =>
   class RecordingCommand extends BaseCommand {
     static override paths = [[path]]
@@ -57,7 +55,7 @@ const createRecordingCommand = (
     }
   }
 
-const createCli = (calls: CommandCalls, formatExitCode = 0): Cli<CommandContext> => {
+const createCli = (calls: Calls, formatExitCode = 0): Cli<CommandContext> => {
   const cli = new Cli<CommandContext>({ binaryName: 'yarn', enableCapture: false })
 
   cli.register(GenerateIconsCommand)
@@ -79,7 +77,7 @@ const createCli = (calls: CommandCalls, formatExitCode = 0): Cli<CommandContext>
   return cli
 }
 
-const writeFixture = async (): Promise<{ projectCwd: string; workspaceCwd: string }> => {
+const writeFixture = async (): Promise<Fixture> => {
   const projectCwd = await mkdtemp(join(tmpdir(), 'raijin-icons-command-'))
   const workspaceCwd = join(projectCwd, 'packages/ui')
 
@@ -156,7 +154,7 @@ test('should represent generated icon targets from workspace cwd', () => {
 
 test('should execute native icon generation and post-process every generated file', async () => {
   const { projectCwd, workspaceCwd } = await writeFixture()
-  const calls: CommandCalls = { format: [], lint: [] }
+  const calls: Calls = { format: [], lint: [] }
 
   try {
     assert.equal(await runGenerateIcons(createCli(calls), workspaceCwd, ['--native']), 0)
@@ -179,7 +177,7 @@ test('should execute native icon generation and post-process every generated fil
 
 test('should return the formatter failure without running lint', async () => {
   const { projectCwd, workspaceCwd } = await writeFixture()
-  const calls: CommandCalls = { format: [], lint: [] }
+  const calls: Calls = { format: [], lint: [] }
 
   try {
     assert.equal(await runGenerateIcons(createCli(calls, 7), workspaceCwd), 7)

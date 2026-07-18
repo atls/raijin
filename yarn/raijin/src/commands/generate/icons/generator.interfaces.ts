@@ -3,6 +3,9 @@ import type { jsx as svgrJsx }             from '@atls/raijin/svgr'
 import type { transform as svgrTransform } from '@atls/raijin/svgr'
 import type { webpack }                    from '@atls/raijin/webpack'
 
+export type AttributeReplacements = NonNullable<Config['replaceAttrValues']>
+export type IconReplacements = Record<string, AttributeReplacements>
+
 export interface SvgrRuntime {
   transform: typeof svgrTransform
   jsx: typeof svgrJsx
@@ -25,6 +28,6 @@ export interface Output extends Source {
 }
 
 export interface CompiledConfiguration {
-  replacements: Record<string, Record<string, string>>
+  replacements: IconReplacements
   template: Config['template']
 }

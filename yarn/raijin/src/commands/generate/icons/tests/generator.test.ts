@@ -1,26 +1,23 @@
-import type { Config } from '@atls/raijin/svgr'
+import type { Config }                from '@atls/raijin/svgr'
 
-import type { Source } from '../generator.interfaces.js'
+import type { AttributeReplacements } from '../generator.interfaces.js'
+import type { CompiledConfiguration } from '../generator.interfaces.js'
+import type { IconReplacements }      from '../generator.interfaces.js'
+import type { Source }                from '../generator.interfaces.js'
 
-import assert          from 'node:assert/strict'
-import { mkdir }       from 'node:fs/promises'
-import { mkdtemp }     from 'node:fs/promises'
-import { readFile }    from 'node:fs/promises'
-import { rm }          from 'node:fs/promises'
-import { writeFile }   from 'node:fs/promises'
-import { tmpdir }      from 'node:os'
-import { join }        from 'node:path'
-import { test }        from 'node:test'
+import assert                         from 'node:assert/strict'
+import { mkdir }                      from 'node:fs/promises'
+import { mkdtemp }                    from 'node:fs/promises'
+import { readFile }                   from 'node:fs/promises'
+import { rm }                         from 'node:fs/promises'
+import { writeFile }                  from 'node:fs/promises'
+import { tmpdir }                     from 'node:os'
+import { join }                       from 'node:path'
+import { test }                       from 'node:test'
 
-import { npath }       from '@yarnpkg/fslib'
+import { npath }                      from '@yarnpkg/fslib'
 
-import { Generator }   from '../generator.js'
-
-type ReplaceAttrValues = Record<string, string>
-
-type TransformConfig = Partial<Config> & {
-  replaceAttrValues?: ReplaceAttrValues
-}
+import { Generator }                  from '../generator.js'
 
 const TEMPLATE_PLACEHOLDER_PREFIX = '$'
 
@@ -29,13 +26,12 @@ const createTemplatePlaceholder = (expression: string): string =>
 
 class TestGenerator extends Generator {
   constructor(
-    private readonly replacementsFixture: Record<string, ReplaceAttrValues>,
-    onTransform: (config: TransformConfig) => Promise<string>
+    private readonly replacementsFixture: IconReplacements,
+    onTransform: (config: Config) => Promise<string>
   ) {
     super(
       {
-        transform: (async (_source: string, config: TransformConfig) =>
-          onTransform(config)) as never,
+        transform: (async (_source: string, config: Config) => onTransform(config)) as never,
         jsx: (() => null) as never,
       },
       (() => {
@@ -50,10 +46,7 @@ class TestGenerator extends Generator {
     await this.transform(icons, {})
   }
 
-  protected override async compileReplacementsAndTemplate(): Promise<{
-    replacements: Record<string, ReplaceAttrValues>
-    template: Config['template']
-  }> {
+  protected override async compileReplacementsAndTemplate(): Promise<CompiledConfiguration> {
     return {
       replacements: this.replacementsFixture,
       template: undefined as unknown as Config['template'],
@@ -62,7 +55,7 @@ class TestGenerator extends Generator {
 }
 
 test('should pass empty replacements when replacement entry is missing', async () => {
-  const replaceAttrValuesCalls: Array<ReplaceAttrValues | undefined> = []
+  const replaceAttrValuesCalls: Array<AttributeReplacements | undefined> = []
 
   const icons = new TestGenerator({}, async ({ replaceAttrValues }) => {
     replaceAttrValuesCalls.push(replaceAttrValues)
@@ -83,8 +76,8 @@ test('should pass empty replacements when replacement entry is missing', async (
 })
 
 test('should pass configured replacements when replacement entry exists', async () => {
-  const replaceAttrValuesCalls: Array<ReplaceAttrValues | undefined> = []
-  const replacement: ReplaceAttrValues = {
+  const replaceAttrValuesCalls: Array<AttributeReplacements | undefined> = []
+  const replacement: AttributeReplacements = {
     '#000': 'currentColor',
   }
 
