@@ -38,6 +38,10 @@ const createRendererRuntimeEnvironment = async (
 export class RendererStartCommand extends BaseCommand {
   static override paths = [['renderer', 'start']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'start a built renderer artifact',
+  })
+
   override async execute(): Promise<number> {
     if (shouldProxyCommand()) {
       return this.executeProxy()

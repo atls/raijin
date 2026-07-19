@@ -3,6 +3,8 @@ import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 
+import { loadRuntimeCliSurface } from './cli-surface/runtime-inventory.mjs'
+
 const repoRoot = process.cwd()
 
 const DOCS_DIR = 'docs/raijin'
@@ -182,116 +184,6 @@ const loadWorkspacePackages = () => {
 
     return left.name.localeCompare(right.name)
   })
-}
-
-const loadPluginRegistry = (bundlePlugins) => {
-  const pluginDirs = fs
-    .readdirSync(path.join(repoRoot, 'yarn'), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name.startsWith('plugin-'))
-    .map((entry) => entry.name)
-    .sort(sortByLocale)
-
-  const registry = new Map()
-
-  for (const pluginDir of pluginDirs) {
-    const packageJsonPath = path.join(repoRoot, 'yarn', pluginDir, 'package.json')
-    if (!fs.existsSync(packageJsonPath)) continue
-
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
-
-    const indexCandidates = [
-      path.join(repoRoot, 'yarn', pluginDir, 'sources', 'index.ts'),
-      path.join(repoRoot, 'yarn', pluginDir, 'src', 'index.ts'),
-    ]
-
-    let exported = false
-
-    for (const indexCandidate of indexCandidates) {
-      if (!fs.existsSync(indexCandidate)) continue
-
-      const content = fs.readFileSync(indexCandidate, 'utf8')
-      if (/^\s*export\s*\{\s*plugin\s+as\s+default\s*\}/m.test(content)) {
-        exported = true
-        break
-      }
-    }
-
-    registry.set(pluginDir, {
-      dir: pluginDir,
-      packageName: packageJson.name,
-      domain: commandDomainFromPlugin(packageJson.name),
-      inBundle: bundlePlugins.includes(packageJson.name),
-      exported,
-    })
-  }
-
-  return registry
-}
-
-const parseCommandFile = (filePath) => {
-  const source = fs.readFileSync(filePath, 'utf8')
-
-  const pathsMatch = source.match(/static\s+(?:override\s+)?paths\s*=\s*\[\[(.*?)\]\]/s)
-  if (!pathsMatch) return null
-
-  const tokenMatches = [...pathsMatch[1].matchAll(/['"`]([^'"`]+)['"`]/g)]
-  const pathTokens = tokenMatches.map((match) => match[1]).filter(Boolean)
-  if (pathTokens.length === 0) return null
-
-  const classMatch = source.match(/(?:export\s+)?(?:abstract\s+)?class\s+([A-Za-z0-9_]+)/)
-
-  return {
-    className: classMatch ? classMatch[1] : 'UnknownCommandClass',
-    pathTokens,
-    command: pathTokens.join(' '),
-  }
-}
-
-const loadCommands = (pluginRegistry) => {
-  const commandFiles = walkFiles(path.join(repoRoot, 'yarn'), (filePath) =>
-    /yarn\/plugin-[^/]+\/sources\/.+\.command\.(ts|tsx)$/.test(
-      toPosix(path.relative(repoRoot, filePath))
-    )
-  )
-
-  const commands = []
-
-  for (const filePath of commandFiles) {
-    const parsed = parseCommandFile(filePath)
-    if (!parsed) continue
-
-    const relativePath = toPosix(path.relative(repoRoot, filePath))
-    const pluginDir = relativePath.split('/')[1]
-    const pluginInfo = pluginRegistry.get(pluginDir)
-    if (!pluginInfo) continue
-
-    const isActive = pluginInfo.inBundle && pluginInfo.exported
-
-    commands.push({
-      command: parsed.command,
-      pathTokens: parsed.pathTokens,
-      className: parsed.className,
-      plugin: pluginInfo.packageName,
-      pluginDir,
-      domain: pluginInfo.domain,
-      source: relativePath,
-      status: isActive ? 'active' : 'inactive',
-      availabilityReason: isActive
-        ? 'plugin in bundle and exported from plugin index'
-        : pluginInfo.inBundle
-          ? 'plugin is in bundle but not exported from plugin index'
-          : 'plugin is not included in @atls/yarn-cli standard bundle',
-    })
-  }
-
-  commands.sort((left, right) => {
-    if (left.domain !== right.domain) return left.domain.localeCompare(right.domain)
-    if (left.command !== right.command) return left.command.localeCompare(right.command)
-    if (left.plugin !== right.plugin) return left.plugin.localeCompare(right.plugin)
-    return left.source.localeCompare(right.source)
-  })
-
-  return commands
 }
 
 const linkByLanguage = (basePath, language) => `${basePath}${language === 'ru' ? '.ru' : ''}.md`
@@ -749,19 +641,17 @@ const renderCommandCard = (command, language) => {
     isRu ? `- Статус: \`${command.status}\`` : `- Status: \`${command.status}\``,
   ]
 
-  if (command.status === 'active') {
-    const examples = COMMAND_EXAMPLES[command.command] ?? [`yarn ${command.command}`]
+  lines.push(isRu ? `- Описание: ${command.description}` : `- Description: ${command.description}`)
+  lines.push(isRu ? `- Использование: \`${command.usage}\`` : `- Usage: \`${command.usage}\``)
 
-    examples.forEach((example) => {
-      lines.push(isRu ? `- Пример: \`${example}\`` : `- Example: \`${example}\``)
-    })
-  } else {
-    lines.push(
-      isRu
-        ? '- Пример: недоступен для inactive-команды'
-        : '- Example: unavailable for inactive command'
-    )
-  }
+  const examples =
+    command.examples.length > 0
+      ? command.examples.map((example) => example.command)
+      : (COMMAND_EXAMPLES[command.command] ?? [`yarn ${command.command}`])
+
+  examples.forEach((example) => {
+    lines.push(isRu ? `- Пример: \`${example}\`` : `- Example: \`${example}\``)
+  })
 
   const notes = COMMAND_NOTES[command.command]?.[isRu ? 'ru' : 'en']
 
@@ -770,7 +660,6 @@ const renderCommandCard = (command, language) => {
   })
 
   lines.push(isRu ? `- Плагин: \`${command.plugin}\`` : `- Plugin: \`${command.plugin}\``)
-  lines.push(isRu ? `- Исходник: \`${command.source}\`` : `- Source: \`${command.source}\``)
 
   return lines
 }
@@ -786,8 +675,8 @@ const renderCommandsDoc = (commands, language) => {
     '# Raijin Commands',
     '',
     isRu
-      ? 'Карта команд из `yarn/plugin-*` и bundle `@atls/yarn-cli`'
-      : 'Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle',
+      ? 'Карта команд, собранная из runtime `@atls/yarn-cli`'
+      : 'Command map assembled from the `@atls/yarn-cli` runtime',
     '',
     '<!-- sync:commands-active -->',
     '',
@@ -835,15 +724,12 @@ const renderCommandsDoc = (commands, language) => {
     lines.push('')
   }
 
-  lines.push('<!-- sync:commands-inactive -->')
-  lines.push('')
-  lines.push(isRu ? '## Inactive (не маршрутизировать)' : '## Inactive (do not route)')
-  lines.push('')
-
-  if (inactiveGroups.length === 0) {
-    lines.push(isRu ? '_Нет inactive-команд_' : '_No inactive commands_')
+  if (inactiveGroups.length > 0) {
+    lines.push('<!-- sync:commands-inactive -->')
     lines.push('')
-  } else {
+    lines.push(isRu ? '## Inactive (не маршрутизировать)' : '## Inactive (do not route)')
+    lines.push('')
+
     for (const [domain, domainCommands] of inactiveGroups) {
       lines.push(`### ${domainLabel(domain, language)}`)
       lines.push('')
@@ -1037,7 +923,7 @@ const renderPackagesDoc = (workspaces, language) => {
 }
 
 const smokeFixture = {
-  version: 3,
+  version: 4,
   cases: [
     {
       id: 'check-before-pr',
@@ -1072,16 +958,10 @@ const smokeFixture = {
       expectedStatus: 'active',
     },
     {
-      id: 'prefer-active-over-inactive',
-      prompt: 'generate project and run check',
-      expectedCommand: 'check',
-      expectedStatus: 'active',
-    },
-    {
-      id: 'inactive-generate-project',
+      id: 'generate-project',
       prompt: 'generate project scaffold',
-      expectedCommand: '',
-      expectedStatus: 'unavailable',
+      expectedCommand: 'generate project',
+      expectedStatus: 'active',
     },
     {
       id: 'no-route-unavailable',
@@ -1102,33 +982,28 @@ const stripLastGenerated = (value) => {
 const rootPackage = readJson('package.json')
 const yarnCliPackage = readJson('yarn/cli/package.json')
 const yarnRc = fs.readFileSync(path.join(repoRoot, '.yarnrc.yml'), 'utf8')
-
-const bundlePlugins = [...yarnCliPackage['@yarnpkg/builder'].bundles.standard].sort(sortByLocale)
-const pluginRegistry = loadPluginRegistry(bundlePlugins)
-const commands = loadCommands(pluginRegistry)
+const runtimePath = path.join(repoRoot, '.yarn/releases/yarn.mjs')
+const runtimeCliSurface = await loadRuntimeCliSurface({ cwd: repoRoot, runtimePath })
+const bundlePlugins = runtimeCliSurface.plugins
+const commands = runtimeCliSurface.commands
+  .map((command) => ({
+    ...command,
+    availabilityReason: 'registered by the assembled @atls/yarn-cli runtime',
+    domain: commandDomainFromPlugin(command.plugin),
+    pluginDir: command.plugin.replace('@atls/yarn-plugin-', 'plugin-'),
+    status: 'active',
+  }))
+  .sort((left, right) => {
+    if (left.domain !== right.domain) return left.domain.localeCompare(right.domain)
+    if (left.command !== right.command) return left.command.localeCompare(right.command)
+    return left.plugin.localeCompare(right.plugin)
+  })
 const workspaces = loadWorkspacePackages()
 
-const activeCommands = commands
-  .filter((command) => command.status === 'active')
-  .map((command) => command.command)
-const inactiveCommands = commands
-  .filter((command) => command.status === 'inactive')
-  .map((command) => command.command)
-
-const activePlugins = [...pluginRegistry.values()]
-  .filter((plugin) => plugin.inBundle && plugin.exported)
-  .map((plugin) => plugin.packageName)
-  .sort(sortByLocale)
-
-const inactivePlugins = [...pluginRegistry.values()]
-  .filter((plugin) => !plugin.inBundle || !plugin.exported)
-  .map((plugin) => ({
-    name: plugin.packageName,
-    reason: plugin.inBundle
-      ? 'plugin is in bundle but not exported from index'
-      : 'plugin is not in bundle',
-  }))
-  .sort((left, right) => left.name.localeCompare(right.name))
+const activeCommands = commands.map((command) => command.command)
+const inactiveCommands = []
+const activePlugins = bundlePlugins.filter((plugin) => plugin.startsWith('@atls/'))
+const inactivePlugins = []
 
 const yarnPathMatch = yarnRc.match(/^\s*yarnPath:\s*(.+)\s*$/m)
 

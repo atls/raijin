@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "cases": [
     {
       "id": "check-before-pr",
@@ -34,16 +34,10 @@
       "expectedStatus": "active"
     },
     {
-      "id": "prefer-active-over-inactive",
-      "prompt": "generate project and run check",
-      "expectedCommand": "check",
-      "expectedStatus": "active"
-    },
-    {
-      "id": "inactive-generate-project",
+      "id": "generate-project",
       "prompt": "generate project scaffold",
-      "expectedCommand": "",
-      "expectedStatus": "unavailable"
+      "expectedCommand": "generate project",
+      "expectedStatus": "active"
     },
     {
       "id": "no-route-unavailable",

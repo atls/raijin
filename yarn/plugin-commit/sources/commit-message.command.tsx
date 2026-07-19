@@ -49,6 +49,10 @@ const RequestCommitMessageApp = ({
 export class CommitMessageCommand extends BaseCommand {
   static override paths = [['commit', 'message']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'create a conventional commit message interactively',
+  })
+
   args: Array<string> = Option.Rest({ required: 0 })
 
   async execute(): Promise<number> {

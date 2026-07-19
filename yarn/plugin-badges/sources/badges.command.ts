@@ -22,6 +22,10 @@ import { SpinnerProgress }            from './spinner.progress.js'
 class BadgesCommand extends BaseCommand {
   static override paths = [['badges', 'generate']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'generate package badges in the project README',
+  })
+
   static VERSIONS_SEPARATOR = '[//]: # (VERSIONS)'
 
   static BADGE_URL = 'https://img.shields.io/static/v1'

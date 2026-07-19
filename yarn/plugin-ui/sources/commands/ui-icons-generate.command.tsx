@@ -42,6 +42,10 @@ export const discoverGeneratedIconFiles = async (
 export class UiIconsGenerateCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'generate icon components from source assets',
+  })
+
   native: boolean = Option.Boolean('-n, --native', false)
 
   override async execute(): Promise<number> {

@@ -25,6 +25,10 @@ export const hasLintMessages = (result: LintCommandResult): boolean => result.me
 export class LintCommand extends BaseCommand {
   static override paths = [['lint']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'lint project files',
+  })
+
   fix = Option.Boolean('--fix')
 
   files: Array<string> = Option.Rest({ required: 0 })

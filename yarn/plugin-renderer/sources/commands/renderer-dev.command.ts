@@ -22,6 +22,10 @@ import { resolveNextPackageVersion }      from '../integrations/next/execution/v
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'run a renderer in development mode',
+  })
+
   tunnel = Option.Boolean('--tunnel')
 
   https = Option.Boolean('--https')

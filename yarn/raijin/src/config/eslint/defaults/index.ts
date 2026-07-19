@@ -69,6 +69,7 @@ const config: Array<Linter.Config> = [
         projectService: {
           allowDefaultProject: [
             'scripts/raijin/*.mjs',
+            'scripts/raijin/cli-surface/*.mjs',
             '.eslintrc.js',
             '.prettierrc.mjs',
             'eslint.config.mjs',

@@ -18,6 +18,10 @@ export { toGitHubChange }                from './release-version.utils.js'
 export class ReleaseVersionDeferCommand extends BaseCommand {
   static override paths = [['release', 'version', 'defer']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'defer version bumps for changed workspaces',
+  })
+
   since = Option.String('--since')
 
   dryRun = Option.Boolean('--dry-run', false)
