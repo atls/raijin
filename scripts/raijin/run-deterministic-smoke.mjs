@@ -80,10 +80,8 @@ const isBetterMatch = (candidate, best) => {
 
 const routePrompt = (prompt, commands) => {
   const promptTokens = tokenize(prompt)
-  const minimumActiveFallbackScore = 5
 
   let best = null
-  let bestActive = null
 
   for (const command of commands) {
     const commandTokens = command.pathTokens.map((token) => normalize(token)).filter(Boolean)
@@ -97,10 +95,6 @@ const routePrompt = (prompt, commands) => {
     if (isBetterMatch(candidate, best)) {
       best = candidate
     }
-
-    if (command.status === 'active' && isBetterMatch(candidate, bestActive)) {
-      bestActive = candidate
-    }
   }
 
   if (!best) {
@@ -111,19 +105,7 @@ const routePrompt = (prompt, commands) => {
     }
   }
 
-  if (best.command.status === 'active') {
-    return best.command
-  }
-
-  if (bestActive && bestActive.score >= minimumActiveFallbackScore) {
-    return bestActive.command
-  }
-
-  return {
-    command: '',
-    status: 'unavailable',
-    availabilityReason: `Best semantic match "${best.command.command}" is inactive and no strong active match exists`,
-  }
+  return best.command
 }
 
 const index = readJson('docs/raijin/index.v1.json')

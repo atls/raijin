@@ -25,6 +25,10 @@ const writeGitHubOutput = async (name: string, value: string): Promise<void> => 
 export class ReleaseVersionApplyCommand extends BaseCommand {
   static override paths = [['release', 'version', 'apply']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'apply deferred workspace versions',
+  })
+
   workspaceIdent = Option.String('--workspace', {
     required: false,
   })

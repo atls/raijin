@@ -10,6 +10,7 @@ test('should allow generated project config files outside tsconfig scope', () =>
 
   assert.deepEqual(allowDefaultProject, [
     'scripts/raijin/*.mjs',
+    'scripts/raijin/cli-surface/*.mjs',
     '.eslintrc.js',
     '.prettierrc.mjs',
     'eslint.config.mjs',

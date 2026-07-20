@@ -1,6 +1,6 @@
 # Raijin Commands
 
-Карта команд из `yarn/plugin-*` и bundle `@atls/yarn-cli`
+Карта команд, собранная из runtime `@atls/yarn-cli`
 
 <!-- sync:commands-active -->
 
@@ -18,9 +18,10 @@
 #### `badges generate`
 
 - Статус: `active`
+- Описание: generate package badges in the project README
+- Использование: `yarn badges generate`
 - Пример: `yarn badges generate`
 - Плагин: `@atls/yarn-plugin-badges`
-- Исходник: `yarn/plugin-badges/sources/badges.command.ts`
 
 </details>
 
@@ -36,10 +37,11 @@
 #### `check`
 
 - Статус: `active`
+- Описание: run formatting, type checking, and linting
+- Использование: `yarn check ...`
 - Пример: `yarn check`
 - Пример: `yarn check yarn/plugin-check/sources`
 - Плагин: `@atls/yarn-plugin-check`
-- Исходник: `yarn/plugin-check/sources/check.command.ts`
 
 </details>
 
@@ -57,54 +59,60 @@
 #### `checks lint`
 
 - Статус: `active`
+- Описание: report lint results to GitHub Checks
+- Использование: `yarn checks lint [--changed]`
 - Пример: `yarn checks lint`
 - Плагин: `@atls/yarn-plugin-checks`
-- Исходник: `yarn/plugin-checks/sources/checks-lint.command.tsx`
 
 <!-- sync:command-card:checks-release -->
 
 #### `checks release`
 
 - Статус: `active`
+- Описание: run the release GitHub check for changed workspaces
+- Использование: `yarn checks release [--no-private]`
 - Пример: `yarn checks release`
 - Плагин: `@atls/yarn-plugin-checks`
-- Исходник: `yarn/plugin-checks/sources/checks-release.command.ts`
 
 <!-- sync:command-card:checks-run -->
 
 #### `checks run`
 
 - Статус: `active`
+- Описание: run the standard GitHub check sequence
+- Использование: `yarn checks run [--changed] [--no-release]`
 - Пример: `yarn checks run`
 - Плагин: `@atls/yarn-plugin-checks`
-- Исходник: `yarn/plugin-checks/sources/checks-run.command.ts`
 
 <!-- sync:command-card:checks-test-integration -->
 
 #### `checks test integration`
 
 - Статус: `active`
+- Описание: report integration test results to GitHub Checks
+- Использование: `yarn checks test integration`
 - Пример: `yarn checks test integration`
 - Плагин: `@atls/yarn-plugin-checks`
-- Исходник: `yarn/plugin-checks/sources/checks-test-integration.command.ts`
 
 <!-- sync:command-card:checks-test-unit -->
 
 #### `checks test unit`
 
 - Статус: `active`
+- Описание: report unit test results to GitHub Checks
+- Использование: `yarn checks test unit`
 - Пример: `yarn checks test unit`
 - Плагин: `@atls/yarn-plugin-checks`
-- Исходник: `yarn/plugin-checks/sources/checks-test-unit.command.ts`
 
 <!-- sync:command-card:checks-typecheck -->
 
 #### `checks typecheck`
 
 - Статус: `active`
+- Описание: report TypeScript diagnostics to GitHub Checks
+- Использование: `yarn checks typecheck [--changed]`
 - Пример: `yarn checks typecheck`
 - Плагин: `@atls/yarn-plugin-checks`
-- Исходник: `yarn/plugin-checks/sources/checks-typecheck.command.tsx`
 
 </details>
 
@@ -120,27 +128,30 @@
 #### `commit message`
 
 - Статус: `active`
+- Описание: create a conventional commit message interactively
+- Использование: `yarn commit message ...`
 - Пример: `yarn commit message`
 - Плагин: `@atls/yarn-plugin-commit`
-- Исходник: `yarn/plugin-commit/sources/commit-message.command.tsx`
 
 <!-- sync:command-card:commit-message-lint -->
 
 #### `commit message lint`
 
 - Статус: `active`
+- Описание: validate commit messages against project scopes
+- Использование: `yarn commit message lint`
 - Пример: `yarn commit message lint`
 - Плагин: `@atls/yarn-plugin-commit`
-- Исходник: `yarn/plugin-commit/sources/commit-message-lint.command.ts`
 
 <!-- sync:command-card:commit-staged -->
 
 #### `commit staged`
 
 - Статус: `active`
+- Описание: run project checks for staged files
+- Использование: `yarn commit staged ...`
 - Пример: `yarn commit staged`
 - Плагин: `@atls/yarn-plugin-commit`
-- Исходник: `yarn/plugin-commit/sources/commit-staged.command.ts`
 
 </details>
 
@@ -156,9 +167,10 @@
 #### `set version atls`
 
 - Статус: `active`
+- Описание: lock the Yarn version used by the project
+- Использование: `yarn set version atls`
 - Пример: `yarn set version atls`
 - Плагин: `@atls/yarn-plugin-essentials`
-- Исходник: `yarn/plugin-essentials/sources/commands/set-version.command.ts`
 
 </details>
 
@@ -174,9 +186,10 @@
 #### `export`
 
 - Статус: `active`
+- Описание: export a workspace and its production dependencies
+- Использование: `yarn export <-d,--destination #0>`
 - Пример: `yarn export`
 - Плагин: `@atls/yarn-plugin-export`
-- Исходник: `yarn/plugin-export/sources/commands/workspace-export.command.ts`
 
 </details>
 
@@ -192,9 +205,10 @@
 #### `files changed list`
 
 - Статус: `active`
+- Описание: list files changed since the comparison base
+- Использование: `yarn files changed list [--json]`
 - Пример: `yarn files changed list`
 - Плагин: `@atls/yarn-plugin-files`
-- Исходник: `yarn/plugin-files/sources/files-changed-list.command.ts`
 
 </details>
 
@@ -210,9 +224,10 @@
 #### `format`
 
 - Статус: `active`
+- Описание: format project files
+- Использование: `yarn format ...`
 - Пример: `yarn format`
 - Плагин: `@atls/yarn-plugin-format`
-- Исходник: `yarn/plugin-format/sources/format.command.tsx`
 
 </details>
 
@@ -228,13 +243,14 @@
 #### `image pack`
 
 - Статус: `active`
+- Описание: build and optionally publish a container image
+- Использование: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0]`
 - Пример: `yarn image pack`
 - Контракт: `packConfiguration` по умолчанию использует `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Контракт: `packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.
 - Контракт: `packConfiguration.buildpackVersion` фиксирует неизменяемый buildpack tag для rollback.
 - Контракт: `packConfiguration.buildpack` переопределяет полную buildpack-ссылку.
 - Плагин: `@atls/yarn-plugin-image`
-- Исходник: `yarn/plugin-image/sources/image-pack.command.ts`
 
 </details>
 
@@ -250,9 +266,10 @@
 #### `library build`
 
 - Статус: `active`
+- Описание: build a library workspace
+- Использование: `yarn library build [-t,--target #0]`
 - Пример: `yarn library build`
 - Плагин: `@atls/yarn-plugin-library`
-- Исходник: `yarn/plugin-library/sources/library-build.command.tsx`
 
 </details>
 
@@ -268,9 +285,10 @@
 #### `lint`
 
 - Статус: `active`
+- Описание: lint project files
+- Использование: `yarn lint [--fix] [--cache] ...`
 - Пример: `yarn lint`
 - Плагин: `@atls/yarn-plugin-lint`
-- Исходник: `yarn/plugin-lint/sources/lint.command.tsx`
 
 </details>
 
@@ -286,27 +304,30 @@
 #### `raijin sync`
 
 - Статус: `active`
+- Описание: synchronize Raijin project support files
+- Использование: `yarn raijin sync`
 - Пример: `yarn raijin sync`
 - Плагин: `@atls/yarn-plugin-tools`
-- Исходник: `yarn/plugin-tools/sources/commands/sync/sync.command.ts`
 
 <!-- sync:command-card:raijin-sync-tsconfig -->
 
 #### `raijin sync tsconfig`
 
 - Статус: `active`
+- Описание: synchronize Raijin TypeScript configuration
+- Использование: `yarn raijin sync tsconfig`
 - Пример: `yarn raijin sync tsconfig`
 - Плагин: `@atls/yarn-plugin-tools`
-- Исходник: `yarn/plugin-tools/sources/commands/sync/tsconfig.command.ts`
 
 <!-- sync:command-card:raijin-sync-typescript -->
 
 #### `raijin sync typescript`
 
 - Статус: `active`
+- Описание: synchronize the Raijin TypeScript dependency
+- Использование: `yarn raijin sync typescript`
 - Пример: `yarn raijin sync typescript`
 - Плагин: `@atls/yarn-plugin-tools`
-- Исходник: `yarn/plugin-tools/sources/commands/sync/typescript.command.ts`
 
 </details>
 
@@ -322,27 +343,30 @@
 #### `release create`
 
 - Статус: `active`
+- Описание: create and publish a project release
+- Использование: `yarn release create`
 - Пример: `yarn release create`
 - Плагин: `@atls/yarn-plugin-release`
-- Исходник: `yarn/plugin-release/sources/release-create.command.ts`
 
 <!-- sync:command-card:release-version-apply -->
 
 #### `release version apply`
 
 - Статус: `active`
+- Описание: apply deferred workspace versions
+- Использование: `yarn release version apply [--workspace #0] [--github-output #0] [--since #0]`
 - Пример: `yarn release version apply`
 - Плагин: `@atls/yarn-plugin-release`
-- Исходник: `yarn/plugin-release/sources/release-version-apply.command.ts`
 
 <!-- sync:command-card:release-version-defer -->
 
 #### `release version defer`
 
 - Статус: `active`
+- Описание: defer version bumps for changed workspaces
+- Использование: `yarn release version defer [--since #0] [--dry-run]`
 - Пример: `yarn release version defer`
 - Плагин: `@atls/yarn-plugin-release`
-- Исходник: `yarn/plugin-release/sources/release-version-defer.command.ts`
 
 </details>
 
@@ -358,27 +382,49 @@
 #### `renderer build`
 
 - Статус: `active`
+- Описание: build a renderer production artifact
+- Использование: `yarn renderer build`
 - Пример: `yarn renderer build`
 - Плагин: `@atls/yarn-plugin-renderer`
-- Исходник: `yarn/plugin-renderer/sources/commands/renderer-build.command.ts`
 
 <!-- sync:command-card:renderer-dev -->
 
 #### `renderer dev`
 
 - Статус: `active`
+- Описание: run a renderer in development mode
+- Использование: `yarn renderer dev [--tunnel] [--https]`
 - Пример: `yarn renderer dev`
 - Плагин: `@atls/yarn-plugin-renderer`
-- Исходник: `yarn/plugin-renderer/sources/commands/renderer-dev.command.ts`
 
 <!-- sync:command-card:renderer-start -->
 
 #### `renderer start`
 
 - Статус: `active`
+- Описание: start a built renderer artifact
+- Использование: `yarn renderer start`
 - Пример: `yarn renderer start`
 - Плагин: `@atls/yarn-plugin-renderer`
-- Исходник: `yarn/plugin-renderer/sources/commands/renderer-start.command.ts`
+
+</details>
+
+### Домен `schematics`
+
+- Команды: `generate project`
+
+<details>
+<summary>Подробности домена `schematics`</summary>
+
+<!-- sync:command-card:generate-project -->
+
+#### `generate project`
+
+- Статус: `active`
+- Описание: generate a Raijin project scaffold
+- Использование: `yarn generate project [-t,--type #0]`
+- Пример: `yarn generate project`
+- Плагин: `@atls/yarn-plugin-schematics`
 
 </details>
 
@@ -394,27 +440,30 @@
 #### `service build`
 
 - Статус: `active`
+- Описание: build a service production artifact
+- Использование: `yarn service build [-w,--show-warnings]`
 - Пример: `yarn service build`
 - Плагин: `@atls/yarn-plugin-service`
-- Исходник: `yarn/plugin-service/sources/service-build.command.tsx`
 
 <!-- sync:command-card:service-dev -->
 
 #### `service dev`
 
 - Статус: `active`
+- Описание: run a service in development mode
+- Использование: `yarn service dev [-w,--show-warnings]`
 - Пример: `yarn service dev`
 - Плагин: `@atls/yarn-plugin-service`
-- Исходник: `yarn/plugin-service/sources/service-dev.command.tsx`
 
 <!-- sync:command-card:service-start -->
 
 #### `service start`
 
 - Статус: `active`
+- Описание: start a built service artifact
+- Использование: `yarn service start`
 - Пример: `yarn service start`
 - Плагин: `@atls/yarn-plugin-service`
-- Исходник: `yarn/plugin-service/sources/service-start.command.ts`
 
 </details>
 
@@ -430,27 +479,30 @@
 #### `test`
 
 - Статус: `active`
+- Описание: run all workspace tests
+- Использование: `yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
 - Пример: `yarn test`
 - Плагин: `@atls/yarn-plugin-test`
-- Исходник: `yarn/plugin-test/sources/test.command.ts`
 
 <!-- sync:command-card:test-integration -->
 
 #### `test integration`
 
 - Статус: `active`
+- Описание: run integration tests
+- Использование: `yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
 - Пример: `yarn test integration`
 - Плагин: `@atls/yarn-plugin-test`
-- Исходник: `yarn/plugin-test/sources/test-integration.command.ts`
 
 <!-- sync:command-card:test-unit -->
 
 #### `test unit`
 
 - Статус: `active`
+- Описание: run unit tests
+- Использование: `yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
 - Пример: `yarn test unit`
 - Плагин: `@atls/yarn-plugin-test`
-- Исходник: `yarn/plugin-test/sources/test-unit.command.ts`
 
 </details>
 
@@ -466,9 +518,10 @@
 #### `typecheck`
 
 - Статус: `active`
+- Описание: type-check project sources
+- Использование: `yarn typecheck ...`
 - Пример: `yarn typecheck`
 - Плагин: `@atls/yarn-plugin-typescript`
-- Исходник: `yarn/plugin-typescript/sources/typecheck.command.tsx`
 
 </details>
 
@@ -484,9 +537,10 @@
 #### `ui icons generate`
 
 - Статус: `active`
+- Описание: generate icon components from source assets
+- Использование: `yarn ui icons generate [-n, --native]`
 - Пример: `yarn ui icons generate`
 - Плагин: `@atls/yarn-plugin-ui`
-- Исходник: `yarn/plugin-ui/sources/commands/ui-icons-generate.command.tsx`
 
 </details>
 
@@ -502,40 +556,19 @@
 #### `workspaces changed foreach`
 
 - Статус: `active`
+- Описание: run a command in changed workspaces
+- Использование: `yarn workspaces changed foreach [--exclude #0] [-v,--verbose] [-p,--parallel] [-W,--worktree] [-A,--all] [-R,--recursive] [--since #0] [-i,--interlaced] [--no-private] [-t,--topological] [--topological-dev] [-j,--jobs #0] <commandName> ...`
 - Пример: `yarn workspaces changed foreach`
 - Плагин: `@atls/yarn-plugin-workspaces`
-- Исходник: `yarn/plugin-workspaces/sources/workspaces-changed-foreach.command.ts`
 
 <!-- sync:command-card:workspaces-changed-list -->
 
 #### `workspaces changed list`
 
 - Статус: `active`
+- Описание: list changed workspaces
+- Использование: `yarn workspaces changed list [--json]`
 - Пример: `yarn workspaces changed list`
 - Плагин: `@atls/yarn-plugin-workspaces`
-- Исходник: `yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts`
-
-</details>
-
-<!-- sync:commands-inactive -->
-
-## Inactive (не маршрутизировать)
-
-### Домен `schematics`
-
-- Команды: `generate project`
-
-<details>
-<summary>Подробности домена `schematics`</summary>
-
-<!-- sync:command-card:generate-project -->
-
-#### `generate project`
-
-- Статус: `inactive`
-- Пример: недоступен для inactive-команды
-- Плагин: `@atls/yarn-plugin-schematics`
-- Исходник: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
-- Маршрутизация: не использовать (plugin is in bundle but not exported from plugin index)
 
 </details>

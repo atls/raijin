@@ -446,6 +446,10 @@ export const getGitHubReleaseTargetCommitish = async (project: Project): Promise
 export class ReleaseCreateCommand extends BaseCommand {
   static override paths = [['release', 'create']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'create and publish a project release',
+  })
+
   override async execute(): Promise<number> {
     const { workspace, yarn } = await resolveWorkspaceInvocation(
       this.context.cwd,

@@ -8,6 +8,10 @@ import { toPortableCwd }      from '@atls/raijin/commands'
 export class CheckCommand extends BaseCommand {
   static override paths = [['check']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'run formatting, type checking, and linting',
+  })
+
   targets: Array<string> = Option.Rest({ required: 0 })
 
   async execute(): Promise<number> {

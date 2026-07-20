@@ -11,6 +11,10 @@ import { packUtils }                  from '@atls/yarn-pack-utils'
 export class WorkspaceExportCommand extends BaseCommand {
   static override paths = [['export']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'export a workspace and its production dependencies',
+  })
+
   destination: string = Option.String('-d,--destination', { required: true })
 
   async execute(): Promise<number> {

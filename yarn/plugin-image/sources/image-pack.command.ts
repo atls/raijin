@@ -24,6 +24,10 @@ import { resolveBuilderReference }           from './image-pack.utils.js'
 class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'build and optionally publish a container image',
+  })
+
   registry: string = Option.String('-r,--registry', '')
 
   tagPolicy: TagPolicy = Option.String('-t,--tag-policy', 'revision')

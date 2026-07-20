@@ -1,3 +1,5 @@
+import { BaseCommand }                from '@yarnpkg/cli'
+
 import { Tester }                     from '@atls/code-test'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 import { shouldProxyCommand }         from '@atls/raijin/commands'
@@ -7,6 +9,10 @@ import { AbstractTestCommand }        from './abstract-test.command.jsx'
 
 export class TestCommand extends AbstractTestCommand {
   static override paths = [['test']]
+
+  static override usage = BaseCommand.Usage({
+    description: 'run all workspace tests',
+  })
 
   override async execute(): Promise<number> {
     if (shouldProxyCommand()) {

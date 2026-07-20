@@ -14,6 +14,10 @@ import { toNativeCwd }                     from '@atls/raijin/commands'
 export class ServiceStartCommand extends BaseCommand {
   static override paths = [['service', 'start']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'start a built service artifact',
+  })
+
   override async execute(): Promise<number> {
     if (shouldProxyCommand()) {
       return this.executeProxy()

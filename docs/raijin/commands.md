@@ -1,6 +1,6 @@
 # Raijin Commands
 
-Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
+Command map assembled from the `@atls/yarn-cli` runtime
 
 <!-- sync:commands-active -->
 
@@ -18,9 +18,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `badges generate`
 
 - Status: `active`
+- Description: generate package badges in the project README
+- Usage: `yarn badges generate`
 - Example: `yarn badges generate`
 - Plugin: `@atls/yarn-plugin-badges`
-- Source: `yarn/plugin-badges/sources/badges.command.ts`
 
 </details>
 
@@ -36,10 +37,11 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `check`
 
 - Status: `active`
+- Description: run formatting, type checking, and linting
+- Usage: `yarn check ...`
 - Example: `yarn check`
 - Example: `yarn check yarn/plugin-check/sources`
 - Plugin: `@atls/yarn-plugin-check`
-- Source: `yarn/plugin-check/sources/check.command.ts`
 
 </details>
 
@@ -57,54 +59,60 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `checks lint`
 
 - Status: `active`
+- Description: report lint results to GitHub Checks
+- Usage: `yarn checks lint [--changed]`
 - Example: `yarn checks lint`
 - Plugin: `@atls/yarn-plugin-checks`
-- Source: `yarn/plugin-checks/sources/checks-lint.command.tsx`
 
 <!-- sync:command-card:checks-release -->
 
 #### `checks release`
 
 - Status: `active`
+- Description: run the release GitHub check for changed workspaces
+- Usage: `yarn checks release [--no-private]`
 - Example: `yarn checks release`
 - Plugin: `@atls/yarn-plugin-checks`
-- Source: `yarn/plugin-checks/sources/checks-release.command.ts`
 
 <!-- sync:command-card:checks-run -->
 
 #### `checks run`
 
 - Status: `active`
+- Description: run the standard GitHub check sequence
+- Usage: `yarn checks run [--changed] [--no-release]`
 - Example: `yarn checks run`
 - Plugin: `@atls/yarn-plugin-checks`
-- Source: `yarn/plugin-checks/sources/checks-run.command.ts`
 
 <!-- sync:command-card:checks-test-integration -->
 
 #### `checks test integration`
 
 - Status: `active`
+- Description: report integration test results to GitHub Checks
+- Usage: `yarn checks test integration`
 - Example: `yarn checks test integration`
 - Plugin: `@atls/yarn-plugin-checks`
-- Source: `yarn/plugin-checks/sources/checks-test-integration.command.ts`
 
 <!-- sync:command-card:checks-test-unit -->
 
 #### `checks test unit`
 
 - Status: `active`
+- Description: report unit test results to GitHub Checks
+- Usage: `yarn checks test unit`
 - Example: `yarn checks test unit`
 - Plugin: `@atls/yarn-plugin-checks`
-- Source: `yarn/plugin-checks/sources/checks-test-unit.command.ts`
 
 <!-- sync:command-card:checks-typecheck -->
 
 #### `checks typecheck`
 
 - Status: `active`
+- Description: report TypeScript diagnostics to GitHub Checks
+- Usage: `yarn checks typecheck [--changed]`
 - Example: `yarn checks typecheck`
 - Plugin: `@atls/yarn-plugin-checks`
-- Source: `yarn/plugin-checks/sources/checks-typecheck.command.tsx`
 
 </details>
 
@@ -120,27 +128,30 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `commit message`
 
 - Status: `active`
+- Description: create a conventional commit message interactively
+- Usage: `yarn commit message ...`
 - Example: `yarn commit message`
 - Plugin: `@atls/yarn-plugin-commit`
-- Source: `yarn/plugin-commit/sources/commit-message.command.tsx`
 
 <!-- sync:command-card:commit-message-lint -->
 
 #### `commit message lint`
 
 - Status: `active`
+- Description: validate commit messages against project scopes
+- Usage: `yarn commit message lint`
 - Example: `yarn commit message lint`
 - Plugin: `@atls/yarn-plugin-commit`
-- Source: `yarn/plugin-commit/sources/commit-message-lint.command.ts`
 
 <!-- sync:command-card:commit-staged -->
 
 #### `commit staged`
 
 - Status: `active`
+- Description: run project checks for staged files
+- Usage: `yarn commit staged ...`
 - Example: `yarn commit staged`
 - Plugin: `@atls/yarn-plugin-commit`
-- Source: `yarn/plugin-commit/sources/commit-staged.command.ts`
 
 </details>
 
@@ -156,9 +167,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `set version atls`
 
 - Status: `active`
+- Description: lock the Yarn version used by the project
+- Usage: `yarn set version atls`
 - Example: `yarn set version atls`
 - Plugin: `@atls/yarn-plugin-essentials`
-- Source: `yarn/plugin-essentials/sources/commands/set-version.command.ts`
 
 </details>
 
@@ -174,9 +186,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `export`
 
 - Status: `active`
+- Description: export a workspace and its production dependencies
+- Usage: `yarn export <-d,--destination #0>`
 - Example: `yarn export`
 - Plugin: `@atls/yarn-plugin-export`
-- Source: `yarn/plugin-export/sources/commands/workspace-export.command.ts`
 
 </details>
 
@@ -192,9 +205,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `files changed list`
 
 - Status: `active`
+- Description: list files changed since the comparison base
+- Usage: `yarn files changed list [--json]`
 - Example: `yarn files changed list`
 - Plugin: `@atls/yarn-plugin-files`
-- Source: `yarn/plugin-files/sources/files-changed-list.command.ts`
 
 </details>
 
@@ -210,9 +224,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `format`
 
 - Status: `active`
+- Description: format project files
+- Usage: `yarn format ...`
 - Example: `yarn format`
 - Plugin: `@atls/yarn-plugin-format`
-- Source: `yarn/plugin-format/sources/format.command.tsx`
 
 </details>
 
@@ -228,13 +243,14 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `image pack`
 
 - Status: `active`
+- Description: build and optionally publish a container image
+- Usage: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0]`
 - Example: `yarn image pack`
 - Contract: `packConfiguration` defaults to `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Contract: `packConfiguration.builderTag` selects the supported Node/buildpack channel.
 - Contract: `packConfiguration.buildpackVersion` pins an immutable buildpack tag for rollback.
 - Contract: `packConfiguration.buildpack` overrides the full buildpack reference.
 - Plugin: `@atls/yarn-plugin-image`
-- Source: `yarn/plugin-image/sources/image-pack.command.ts`
 
 </details>
 
@@ -250,9 +266,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `library build`
 
 - Status: `active`
+- Description: build a library workspace
+- Usage: `yarn library build [-t,--target #0]`
 - Example: `yarn library build`
 - Plugin: `@atls/yarn-plugin-library`
-- Source: `yarn/plugin-library/sources/library-build.command.tsx`
 
 </details>
 
@@ -268,9 +285,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `lint`
 
 - Status: `active`
+- Description: lint project files
+- Usage: `yarn lint [--fix] [--cache] ...`
 - Example: `yarn lint`
 - Plugin: `@atls/yarn-plugin-lint`
-- Source: `yarn/plugin-lint/sources/lint.command.tsx`
 
 </details>
 
@@ -286,27 +304,30 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `raijin sync`
 
 - Status: `active`
+- Description: synchronize Raijin project support files
+- Usage: `yarn raijin sync`
 - Example: `yarn raijin sync`
 - Plugin: `@atls/yarn-plugin-tools`
-- Source: `yarn/plugin-tools/sources/commands/sync/sync.command.ts`
 
 <!-- sync:command-card:raijin-sync-tsconfig -->
 
 #### `raijin sync tsconfig`
 
 - Status: `active`
+- Description: synchronize Raijin TypeScript configuration
+- Usage: `yarn raijin sync tsconfig`
 - Example: `yarn raijin sync tsconfig`
 - Plugin: `@atls/yarn-plugin-tools`
-- Source: `yarn/plugin-tools/sources/commands/sync/tsconfig.command.ts`
 
 <!-- sync:command-card:raijin-sync-typescript -->
 
 #### `raijin sync typescript`
 
 - Status: `active`
+- Description: synchronize the Raijin TypeScript dependency
+- Usage: `yarn raijin sync typescript`
 - Example: `yarn raijin sync typescript`
 - Plugin: `@atls/yarn-plugin-tools`
-- Source: `yarn/plugin-tools/sources/commands/sync/typescript.command.ts`
 
 </details>
 
@@ -322,27 +343,30 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `release create`
 
 - Status: `active`
+- Description: create and publish a project release
+- Usage: `yarn release create`
 - Example: `yarn release create`
 - Plugin: `@atls/yarn-plugin-release`
-- Source: `yarn/plugin-release/sources/release-create.command.ts`
 
 <!-- sync:command-card:release-version-apply -->
 
 #### `release version apply`
 
 - Status: `active`
+- Description: apply deferred workspace versions
+- Usage: `yarn release version apply [--workspace #0] [--github-output #0] [--since #0]`
 - Example: `yarn release version apply`
 - Plugin: `@atls/yarn-plugin-release`
-- Source: `yarn/plugin-release/sources/release-version-apply.command.ts`
 
 <!-- sync:command-card:release-version-defer -->
 
 #### `release version defer`
 
 - Status: `active`
+- Description: defer version bumps for changed workspaces
+- Usage: `yarn release version defer [--since #0] [--dry-run]`
 - Example: `yarn release version defer`
 - Plugin: `@atls/yarn-plugin-release`
-- Source: `yarn/plugin-release/sources/release-version-defer.command.ts`
 
 </details>
 
@@ -358,27 +382,49 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `renderer build`
 
 - Status: `active`
+- Description: build a renderer production artifact
+- Usage: `yarn renderer build`
 - Example: `yarn renderer build`
 - Plugin: `@atls/yarn-plugin-renderer`
-- Source: `yarn/plugin-renderer/sources/commands/renderer-build.command.ts`
 
 <!-- sync:command-card:renderer-dev -->
 
 #### `renderer dev`
 
 - Status: `active`
+- Description: run a renderer in development mode
+- Usage: `yarn renderer dev [--tunnel] [--https]`
 - Example: `yarn renderer dev`
 - Plugin: `@atls/yarn-plugin-renderer`
-- Source: `yarn/plugin-renderer/sources/commands/renderer-dev.command.ts`
 
 <!-- sync:command-card:renderer-start -->
 
 #### `renderer start`
 
 - Status: `active`
+- Description: start a built renderer artifact
+- Usage: `yarn renderer start`
 - Example: `yarn renderer start`
 - Plugin: `@atls/yarn-plugin-renderer`
-- Source: `yarn/plugin-renderer/sources/commands/renderer-start.command.ts`
+
+</details>
+
+### Domain `schematics`
+
+- Commands: `generate project`
+
+<details>
+<summary>Domain details: `schematics`</summary>
+
+<!-- sync:command-card:generate-project -->
+
+#### `generate project`
+
+- Status: `active`
+- Description: generate a Raijin project scaffold
+- Usage: `yarn generate project [-t,--type #0]`
+- Example: `yarn generate project`
+- Plugin: `@atls/yarn-plugin-schematics`
 
 </details>
 
@@ -394,27 +440,30 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `service build`
 
 - Status: `active`
+- Description: build a service production artifact
+- Usage: `yarn service build [-w,--show-warnings]`
 - Example: `yarn service build`
 - Plugin: `@atls/yarn-plugin-service`
-- Source: `yarn/plugin-service/sources/service-build.command.tsx`
 
 <!-- sync:command-card:service-dev -->
 
 #### `service dev`
 
 - Status: `active`
+- Description: run a service in development mode
+- Usage: `yarn service dev [-w,--show-warnings]`
 - Example: `yarn service dev`
 - Plugin: `@atls/yarn-plugin-service`
-- Source: `yarn/plugin-service/sources/service-dev.command.tsx`
 
 <!-- sync:command-card:service-start -->
 
 #### `service start`
 
 - Status: `active`
+- Description: start a built service artifact
+- Usage: `yarn service start`
 - Example: `yarn service start`
 - Plugin: `@atls/yarn-plugin-service`
-- Source: `yarn/plugin-service/sources/service-start.command.ts`
 
 </details>
 
@@ -430,27 +479,30 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `test`
 
 - Status: `active`
+- Description: run all workspace tests
+- Usage: `yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
 - Example: `yarn test`
 - Plugin: `@atls/yarn-plugin-test`
-- Source: `yarn/plugin-test/sources/test.command.ts`
 
 <!-- sync:command-card:test-integration -->
 
 #### `test integration`
 
 - Status: `active`
+- Description: run integration tests
+- Usage: `yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
 - Example: `yarn test integration`
 - Plugin: `@atls/yarn-plugin-test`
-- Source: `yarn/plugin-test/sources/test-integration.command.ts`
 
 <!-- sync:command-card:test-unit -->
 
 #### `test unit`
 
 - Status: `active`
+- Description: run unit tests
+- Usage: `yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
 - Example: `yarn test unit`
 - Plugin: `@atls/yarn-plugin-test`
-- Source: `yarn/plugin-test/sources/test-unit.command.ts`
 
 </details>
 
@@ -466,9 +518,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `typecheck`
 
 - Status: `active`
+- Description: type-check project sources
+- Usage: `yarn typecheck ...`
 - Example: `yarn typecheck`
 - Plugin: `@atls/yarn-plugin-typescript`
-- Source: `yarn/plugin-typescript/sources/typecheck.command.tsx`
 
 </details>
 
@@ -484,9 +537,10 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `ui icons generate`
 
 - Status: `active`
+- Description: generate icon components from source assets
+- Usage: `yarn ui icons generate [-n, --native]`
 - Example: `yarn ui icons generate`
 - Plugin: `@atls/yarn-plugin-ui`
-- Source: `yarn/plugin-ui/sources/commands/ui-icons-generate.command.tsx`
 
 </details>
 
@@ -502,40 +556,19 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 #### `workspaces changed foreach`
 
 - Status: `active`
+- Description: run a command in changed workspaces
+- Usage: `yarn workspaces changed foreach [--exclude #0] [-v,--verbose] [-p,--parallel] [-W,--worktree] [-A,--all] [-R,--recursive] [--since #0] [-i,--interlaced] [--no-private] [-t,--topological] [--topological-dev] [-j,--jobs #0] <commandName> ...`
 - Example: `yarn workspaces changed foreach`
 - Plugin: `@atls/yarn-plugin-workspaces`
-- Source: `yarn/plugin-workspaces/sources/workspaces-changed-foreach.command.ts`
 
 <!-- sync:command-card:workspaces-changed-list -->
 
 #### `workspaces changed list`
 
 - Status: `active`
+- Description: list changed workspaces
+- Usage: `yarn workspaces changed list [--json]`
 - Example: `yarn workspaces changed list`
 - Plugin: `@atls/yarn-plugin-workspaces`
-- Source: `yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts`
-
-</details>
-
-<!-- sync:commands-inactive -->
-
-## Inactive (do not route)
-
-### Domain `schematics`
-
-- Commands: `generate project`
-
-<details>
-<summary>Domain details: `schematics`</summary>
-
-<!-- sync:command-card:generate-project -->
-
-#### `generate project`
-
-- Status: `inactive`
-- Example: unavailable for inactive command
-- Plugin: `@atls/yarn-plugin-schematics`
-- Source: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
-- Routing: do not use (plugin is in bundle but not exported from plugin index)
 
 </details>

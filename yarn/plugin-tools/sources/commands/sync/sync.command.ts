@@ -1,3 +1,5 @@
+import { BaseCommand }               from '@yarnpkg/cli'
+
 import { AbstractRaijinSyncCommand } from './base.js'
 
 const commands: Array<Array<string>> = [
@@ -8,6 +10,10 @@ const commands: Array<Array<string>> = [
 
 export class RaijinSyncCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync']]
+
+  static override usage = BaseCommand.Usage({
+    description: 'synchronize Raijin project support files',
+  })
 
   override async executeRegular(): Promise<number> {
     for (const command of commands) {
