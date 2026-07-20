@@ -45,7 +45,7 @@ Expected result:
 
 - Project scaffold is created and the versioned Raijin runtime is installed
 - `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.mjs` file
-- Project schematics and the first sync run automatically
+- The project scaffold and first sync are created automatically
 - Raijin commands are available via `yarn`
 
 ### Existing project
@@ -58,7 +58,7 @@ Use `--type library` for the library scaffold
 
 Expected result:
 
-- The project gets the same Raijin runtime, schematics, and first sync without manual bootstrap steps
+- The project gets the same Raijin runtime, scaffold, and first sync without manual bootstrap steps
 
 ### Upgrade
 

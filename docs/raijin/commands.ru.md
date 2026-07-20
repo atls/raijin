@@ -231,6 +231,25 @@
 
 </details>
 
+### Домен `generate`
+
+- Команды: `generate project`
+
+<details>
+<summary>Подробности домена `generate`</summary>
+
+<!-- sync:command-card:generate-project -->
+
+#### `generate project`
+
+- Статус: `active`
+- Описание: generate a Raijin project scaffold
+- Использование: `yarn generate project [-t,--type #0]`
+- Пример: `yarn generate project`
+- Плагин: `@atls/yarn-plugin-generate`
+
+</details>
+
 ### Домен `image`
 
 - Команды: `image pack`
@@ -406,25 +425,6 @@
 - Использование: `yarn renderer start`
 - Пример: `yarn renderer start`
 - Плагин: `@atls/yarn-plugin-renderer`
-
-</details>
-
-### Домен `schematics`
-
-- Команды: `generate project`
-
-<details>
-<summary>Подробности домена `schematics`</summary>
-
-<!-- sync:command-card:generate-project -->
-
-#### `generate project`
-
-- Статус: `active`
-- Описание: generate a Raijin project scaffold
-- Использование: `yarn generate project [-t,--type #0]`
-- Пример: `yarn generate project`
-- Плагин: `@atls/yarn-plugin-schematics`
 
 </details>
 
