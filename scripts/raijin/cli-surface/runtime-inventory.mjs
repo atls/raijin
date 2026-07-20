@@ -6,6 +6,7 @@ const execFileAsync = promisify(execFile)
 const createRuntimeEnvironment = (environment = process.env) => {
   const env = {
     ...environment,
+    FORCE_COLOR: '0',
     YARN_IGNORE_PATH: '1',
   }
 

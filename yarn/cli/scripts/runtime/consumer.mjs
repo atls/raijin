@@ -100,7 +100,7 @@ try {
   )
   await writeFile(join(fixtureCwd, 'source.ts'), "export const value='test'\n")
 
-  await runYarn(['install'])
+  await runYarn(['install', '--no-immutable'])
 
   const version = (await runYarn(['--version'])).trim()
 
