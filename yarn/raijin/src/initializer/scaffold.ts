@@ -1,19 +1,15 @@
 import type { Readable }                          from 'node:stream'
 import type { Writable }                          from 'node:stream'
 
-import type { ScaffoldType } from '../commands/generate/project/scaffold.interfaces.js'
-
 import { createInterface }                        from 'node:readline'
 
-import { SCAFFOLD_TYPES }                         from '../commands/generate/project/scaffold.js'
 import { RaijinInitializerScaffoldTypeRequiredException } from './exceptions/scaffold-type-required.js'
 import { RaijinInitializerScaffoldTypeException } from './exceptions/scaffold-type.js'
 import { RaijinInitializerUsageException }        from './exceptions/usage.js'
-import { isScaffoldType }                         from '../commands/generate/project/scaffold.js'
 
-export const RAIJIN_SCAFFOLD_TYPES = SCAFFOLD_TYPES
+export const RAIJIN_SCAFFOLD_TYPES = ['project', 'library'] as const
 
-export type RaijinScaffoldType = ScaffoldType
+export type RaijinScaffoldType = (typeof RAIJIN_SCAFFOLD_TYPES)[number]
 
 export type RaijinScaffoldTypeSelector = () => Promise<RaijinScaffoldType>
 
@@ -49,6 +45,9 @@ const SCAFFOLD_TYPE_PROMPT = [
   '  2. library',
   'Enter scaffold type or number: ',
 ].join('\n')
+
+const isRaijinScaffoldType = (value: string): value is RaijinScaffoldType =>
+  (RAIJIN_SCAFFOLD_TYPES as ReadonlyArray<string>).includes(value)
 
 const readScaffoldTypeAnswer = async (input: TtyReadable, output: TtyWritable): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -86,7 +85,7 @@ const readScaffoldTypeAnswer = async (input: TtyReadable, output: TtyWritable): 
   })
 
 export const parseRaijinScaffoldType = (value: string): RaijinScaffoldType => {
-  if (isScaffoldType(value)) {
+  if (isRaijinScaffoldType(value)) {
     return value
   }
 

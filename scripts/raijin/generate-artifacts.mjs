@@ -3,8 +3,6 @@ import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 
-import typescript from 'typescript'
-
 const repoRoot = process.cwd()
 
 const DOCS_DIR = 'docs/raijin'
@@ -212,24 +210,7 @@ const loadPluginRegistry = (bundlePlugins) => {
       if (!fs.existsSync(indexCandidate)) continue
 
       const content = fs.readFileSync(indexCandidate, 'utf8')
-      const sourceFile = typescript.createSourceFile(
-        indexCandidate,
-        content,
-        typescript.ScriptTarget.Latest,
-        true,
-        typescript.ScriptKind.TS
-      )
-      const hasDefaultExport = sourceFile.statements.some((statement) => {
-        if (typescript.isExportAssignment(statement)) return true
-        if (!typescript.isExportDeclaration(statement)) return false
-        if (!statement.exportClause || !typescript.isNamedExports(statement.exportClause)) {
-          return false
-        }
-
-        return statement.exportClause.elements.some((element) => element.name.text === 'default')
-      })
-
-      if (hasDefaultExport) {
+      if (/^\s*export\s*\{\s*plugin\s+as\s+default\s*\}/m.test(content)) {
         exported = true
         break
       }
@@ -266,88 +247,6 @@ const parseCommandFile = (filePath) => {
   }
 }
 
-const loadRegisteredRaijinCommands = (pluginRegistry) => {
-  const raijinPackageLocation = path.join(repoRoot, 'yarn', 'raijin')
-  const raijinPackage = readJson('yarn/raijin/package.json')
-  const registeredCommands = []
-
-  const resolveCommandSource = (specifier) => {
-    const exportName = `.${specifier.slice(raijinPackage.name.length)}`
-    const exportTarget = raijinPackage.exports?.[exportName]
-
-    if (typeof exportTarget !== 'string') {
-      throw new Error(`Unable to resolve registered Raijin command export: ${specifier}`)
-    }
-
-    return path.resolve(raijinPackageLocation, exportTarget)
-  }
-
-  for (const pluginInfo of pluginRegistry.values()) {
-    const sourceRoot = path.join(repoRoot, 'yarn', pluginInfo.dir, 'sources')
-    const registrationFiles = walkFiles(sourceRoot, (filePath) => /\.(ts|tsx)$/.test(filePath))
-
-    for (const registrationFile of registrationFiles) {
-      const source = fs.readFileSync(registrationFile, 'utf8')
-      const sourceFile = typescript.createSourceFile(
-        registrationFile,
-        source,
-        typescript.ScriptTarget.Latest,
-        true,
-        registrationFile.endsWith('.tsx') ? typescript.ScriptKind.TSX : typescript.ScriptKind.TS
-      )
-      const imports = new Map()
-      const registeredIdentifiers = new Set()
-
-      for (const statement of sourceFile.statements) {
-        if (!typescript.isImportDeclaration(statement)) continue
-        if (!typescript.isStringLiteral(statement.moduleSpecifier)) continue
-        if (!statement.moduleSpecifier.text.startsWith(`${raijinPackage.name}/commands/`)) continue
-
-        const bindings = statement.importClause?.namedBindings
-        if (!bindings || !typescript.isNamedImports(bindings)) continue
-
-        for (const element of bindings.elements) {
-          imports.set(element.name.text, {
-            className: element.propertyName?.text || element.name.text,
-            specifier: statement.moduleSpecifier.text,
-          })
-        }
-      }
-
-      const collectRegisteredIdentifiers = (node) => {
-        if (
-          typescript.isPropertyAssignment(node) &&
-          node.name.getText(sourceFile) === 'commands' &&
-          typescript.isArrayLiteralExpression(node.initializer)
-        ) {
-          for (const element of node.initializer.elements) {
-            if (typescript.isIdentifier(element)) {
-              registeredIdentifiers.add(element.text)
-            }
-          }
-        }
-
-        typescript.forEachChild(node, collectRegisteredIdentifiers)
-      }
-
-      collectRegisteredIdentifiers(sourceFile)
-
-      for (const identifier of registeredIdentifiers) {
-        const importedCommand = imports.get(identifier)
-        if (!importedCommand) continue
-
-        registeredCommands.push({
-          className: importedCommand.className,
-          filePath: resolveCommandSource(importedCommand.specifier),
-          pluginInfo,
-        })
-      }
-    }
-  }
-
-  return registeredCommands
-}
-
 const loadCommands = (pluginRegistry) => {
   const commandFiles = walkFiles(path.join(repoRoot, 'yarn'), (filePath) =>
     /yarn\/plugin-[^/]+\/sources\/.+\.command\.(ts|tsx)$/.test(
@@ -357,17 +256,15 @@ const loadCommands = (pluginRegistry) => {
 
   const commands = []
 
-  const addCommand = (filePath, pluginInfo, registeredClassName) => {
+  for (const filePath of commandFiles) {
     const parsed = parseCommandFile(filePath)
-    if (!parsed) return
-
-    if (registeredClassName && registeredClassName !== parsed.className) {
-      throw new Error(
-        `Registered command class ${registeredClassName} does not match ${parsed.className} in ${filePath}`
-      )
-    }
+    if (!parsed) continue
 
     const relativePath = toPosix(path.relative(repoRoot, filePath))
+    const pluginDir = relativePath.split('/')[1]
+    const pluginInfo = pluginRegistry.get(pluginDir)
+    if (!pluginInfo) continue
+
     const isActive = pluginInfo.inBundle && pluginInfo.exported
 
     commands.push({
@@ -375,7 +272,7 @@ const loadCommands = (pluginRegistry) => {
       pathTokens: parsed.pathTokens,
       className: parsed.className,
       plugin: pluginInfo.packageName,
-      pluginDir: pluginInfo.dir,
+      pluginDir,
       domain: pluginInfo.domain,
       source: relativePath,
       status: isActive ? 'active' : 'inactive',
@@ -385,23 +282,6 @@ const loadCommands = (pluginRegistry) => {
           ? 'plugin is in bundle but not exported from plugin index'
           : 'plugin is not included in @atls/yarn-cli standard bundle',
     })
-  }
-
-  for (const filePath of commandFiles) {
-    const relativePath = toPosix(path.relative(repoRoot, filePath))
-    const pluginDir = relativePath.split('/')[1]
-    const pluginInfo = pluginRegistry.get(pluginDir)
-    if (!pluginInfo) continue
-
-    addCommand(filePath, pluginInfo)
-  }
-
-  for (const registeredCommand of loadRegisteredRaijinCommands(pluginRegistry)) {
-    addCommand(
-      registeredCommand.filePath,
-      registeredCommand.pluginInfo,
-      registeredCommand.className
-    )
   }
 
   commands.sort((left, right) => {
@@ -817,8 +697,8 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Временный проект создаётся через owner API генерации проекта `@atls/raijin`'
-      : '- Temporary fixture is created through the `@atls/raijin` project-generation owner API',
+      ? '- Временный проект создаётся через публичные экспорты `@atls/code-schematics`'
+      : '- Temporary fixture is created through public `@atls/code-schematics` exports',
     isRu
       ? '- Проверка падает, если вспомогательный код или Markdown-документация вызывают отключённую команду'
       : '- Check fails if helper or Markdown docs invoke an inactive command',
@@ -955,12 +835,15 @@ const renderCommandsDoc = (commands, language) => {
     lines.push('')
   }
 
-  if (inactiveGroups.length > 0) {
-    lines.push('<!-- sync:commands-inactive -->')
-    lines.push('')
-    lines.push(isRu ? '## Inactive (не маршрутизировать)' : '## Inactive (do not route)')
-    lines.push('')
+  lines.push('<!-- sync:commands-inactive -->')
+  lines.push('')
+  lines.push(isRu ? '## Inactive (не маршрутизировать)' : '## Inactive (do not route)')
+  lines.push('')
 
+  if (inactiveGroups.length === 0) {
+    lines.push(isRu ? '_Нет inactive-команд_' : '_No inactive commands_')
+    lines.push('')
+  } else {
     for (const [domain, domainCommands] of inactiveGroups) {
       lines.push(`### ${domainLabel(domain, language)}`)
       lines.push('')
@@ -1189,17 +1072,16 @@ const smokeFixture = {
       expectedStatus: 'active',
     },
     {
-      id: 'prefer-generate-project-over-check',
+      id: 'prefer-active-over-inactive',
       prompt: 'generate project and run check',
-      routingHint: 'Prefer the more specific generate project route over the generic check route',
-      expectedCommand: 'generate project',
+      expectedCommand: 'check',
       expectedStatus: 'active',
     },
     {
-      id: 'generate-project',
+      id: 'inactive-generate-project',
       prompt: 'generate project scaffold',
-      expectedCommand: 'generate project',
-      expectedStatus: 'active',
+      expectedCommand: '',
+      expectedStatus: 'unavailable',
     },
     {
       id: 'no-route-unavailable',

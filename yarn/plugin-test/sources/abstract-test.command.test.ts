@@ -3,7 +3,7 @@ import { test }                from 'node:test'
 
 import { createProxyTestArgs } from './abstract-test.command.jsx'
 
-test('should keep proxy options before separate file targets', () => {
+test('should keep proxy test file targets as separate arguments', () => {
   assert.deepEqual(
     createProxyTestArgs({
       files: ['/repo/src/a.test.ts', '/repo/src/b.test.ts'],
@@ -11,6 +11,6 @@ test('should keep proxy options before separate file targets', () => {
       target: '/repo',
       testReporter: 'tap',
     }),
-    ['-w', '-t', '/repo', '--test-reporter=tap', '/repo/src/a.test.ts', '/repo/src/b.test.ts']
+    ['/repo/src/a.test.ts', '/repo/src/b.test.ts', '-w', '-t', '/repo', '--test-reporter=tap']
   )
 })

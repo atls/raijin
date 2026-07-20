@@ -18,7 +18,7 @@
     "raijin:check:localization": "node scripts/raijin/check-localization-sync.mjs",
     "raijin:generate": "node scripts/raijin/generate-artifacts.mjs",
     "raijin:smoke:deterministic": "node scripts/raijin/run-deterministic-smoke.mjs",
-    "raijin:smoke:schematic": "yarn workspace @atls/raijin smoke:generate-project",
+    "raijin:smoke:schematic": "yarn workspace @atls/code-schematics smoke:schematic",
     "schematic:test": "yarn raijin:smoke:schematic",
     "yarn:download": "yarn workspace @atls/yarn-plugin-pnp-patch yarn:download"
   },

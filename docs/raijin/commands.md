@@ -382,24 +382,6 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 
 </details>
 
-### Domain `schematics`
-
-- Commands: `generate project`
-
-<details>
-<summary>Domain details: `schematics`</summary>
-
-<!-- sync:command-card:generate-project -->
-
-#### `generate project`
-
-- Status: `active`
-- Example: `yarn generate project`
-- Plugin: `@atls/yarn-plugin-schematics`
-- Source: `yarn/raijin/src/commands/generate/project/command.ts`
-
-</details>
-
 ### Domain `service`
 
 - Commands: `service build`, `service dev`, `service start`
@@ -504,7 +486,7 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Status: `active`
 - Example: `yarn ui icons generate`
 - Plugin: `@atls/yarn-plugin-ui`
-- Source: `yarn/raijin/src/commands/generate/icons/command.ts`
+- Source: `yarn/plugin-ui/sources/commands/ui-icons-generate.command.tsx`
 
 </details>
 
@@ -532,5 +514,28 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Example: `yarn workspaces changed list`
 - Plugin: `@atls/yarn-plugin-workspaces`
 - Source: `yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts`
+
+</details>
+
+<!-- sync:commands-inactive -->
+
+## Inactive (do not route)
+
+### Domain `schematics`
+
+- Commands: `generate project`
+
+<details>
+<summary>Domain details: `schematics`</summary>
+
+<!-- sync:command-card:generate-project -->
+
+#### `generate project`
+
+- Status: `inactive`
+- Example: unavailable for inactive command
+- Plugin: `@atls/yarn-plugin-schematics`
+- Source: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
+- Routing: do not use (plugin is in bundle but not exported from plugin index)
 
 </details>

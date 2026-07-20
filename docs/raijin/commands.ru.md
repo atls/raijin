@@ -382,24 +382,6 @@
 
 </details>
 
-### Домен `schematics`
-
-- Команды: `generate project`
-
-<details>
-<summary>Подробности домена `schematics`</summary>
-
-<!-- sync:command-card:generate-project -->
-
-#### `generate project`
-
-- Статус: `active`
-- Пример: `yarn generate project`
-- Плагин: `@atls/yarn-plugin-schematics`
-- Исходник: `yarn/raijin/src/commands/generate/project/command.ts`
-
-</details>
-
 ### Домен `service`
 
 - Команды: `service build`, `service dev`, `service start`
@@ -504,7 +486,7 @@
 - Статус: `active`
 - Пример: `yarn ui icons generate`
 - Плагин: `@atls/yarn-plugin-ui`
-- Исходник: `yarn/raijin/src/commands/generate/icons/command.ts`
+- Исходник: `yarn/plugin-ui/sources/commands/ui-icons-generate.command.tsx`
 
 </details>
 
@@ -532,5 +514,28 @@
 - Пример: `yarn workspaces changed list`
 - Плагин: `@atls/yarn-plugin-workspaces`
 - Исходник: `yarn/plugin-workspaces/sources/workspaces-changed-list.command.ts`
+
+</details>
+
+<!-- sync:commands-inactive -->
+
+## Inactive (не маршрутизировать)
+
+### Домен `schematics`
+
+- Команды: `generate project`
+
+<details>
+<summary>Подробности домена `schematics`</summary>
+
+<!-- sync:command-card:generate-project -->
+
+#### `generate project`
+
+- Статус: `inactive`
+- Пример: недоступен для inactive-команды
+- Плагин: `@atls/yarn-plugin-schematics`
+- Исходник: `yarn/plugin-schematics/sources/commands/generate-project.command.tsx`
+- Маршрутизация: не использовать (plugin is in bundle but not exported from plugin index)
 
 </details>

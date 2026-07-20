@@ -1,0 +1,49 @@
+{
+  "name": "@atls/code-icons",
+  "version": "2.1.0",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "main": "src/index.ts",
+  "files": [
+    "dist",
+    "tsconfig.stub.json"
+  ],
+  "scripts": {
+    "build": "yarn library build",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/raijin": "workspace:*",
+    "@yarnpkg/cli": "4.14.1",
+    "@yarnpkg/core": "4.7.0",
+    "camelcase": "8.0.0",
+    "typescript": "5.9.3",
+    "webpack-chain-5": "8.0.2"
+  },
+  "devDependencies": {
+    "@monstrs/logger": "0.0.20",
+    "@types/node": "24.12.2",
+    "@types/webpack": "5.28.5",
+    "@yarnpkg/fslib": "3.1.5"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
+  },
+  "typecheckSkipLibCheck": true
+}

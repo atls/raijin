@@ -34,17 +34,16 @@
       "expectedStatus": "active"
     },
     {
-      "id": "prefer-generate-project-over-check",
+      "id": "prefer-active-over-inactive",
       "prompt": "generate project and run check",
-      "routingHint": "Prefer the more specific generate project route over the generic check route",
-      "expectedCommand": "generate project",
+      "expectedCommand": "check",
       "expectedStatus": "active"
     },
     {
-      "id": "generate-project",
+      "id": "inactive-generate-project",
       "prompt": "generate project scaffold",
-      "expectedCommand": "generate project",
-      "expectedStatus": "active"
+      "expectedCommand": "",
+      "expectedStatus": "unavailable"
     },
     {
       "id": "no-route-unavailable",
