@@ -35,6 +35,10 @@ import { snapshotNextStandaloneManifests }     from '../integrations/next/standa
 export class RendererBuildCommand extends BaseCommand {
   static override paths = [['renderer', 'build']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'build a renderer production artifact',
+  })
+
   async execute(): Promise<number> {
     await cleanupDiscoveryArtifacts(this.context.cwd)
 

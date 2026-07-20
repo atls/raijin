@@ -33,6 +33,10 @@ export const createConfig = (yarnCommandPath = resolveYarnCommandPath()): lintSt
 export class CommitStagedCommand extends BaseCommand {
   static override paths = [['commit', 'staged']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'run project checks for staged files',
+  })
+
   args: Array<string> = Option.Rest({ required: 0 })
 
   async execute(): Promise<number> {

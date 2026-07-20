@@ -19,6 +19,10 @@ import { toNativeCwd }                from '@atls/raijin/commands'
 export class LibraryBuildCommand extends BaseCommand {
   static override paths = [['library', 'build']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'build a library workspace',
+  })
+
   target = Option.String('-t,--target', './dist')
 
   override async execute(): Promise<number> {

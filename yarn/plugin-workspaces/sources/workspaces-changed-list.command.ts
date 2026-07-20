@@ -11,6 +11,10 @@ import { getChangedWorkspaces }       from './get-changed-workspaces.util.js'
 class WorkspacesChangedListCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'list']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'list changed workspaces',
+  })
+
   json = Option.Boolean('--json', false)
 
   async execute(): Promise<number> {

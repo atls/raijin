@@ -1,3 +1,4 @@
+import { BaseCommand }                from '@yarnpkg/cli'
 import { StreamReport }               from '@yarnpkg/core'
 
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
@@ -9,6 +10,10 @@ import { createRaijinSyncTarget }     from './target.js'
 
 export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'tsconfig']]
+
+  static override usage = BaseCommand.Usage({
+    description: 'synchronize Raijin TypeScript configuration',
+  })
 
   override async execute(): Promise<number> {
     if (shouldProxyCommand()) {

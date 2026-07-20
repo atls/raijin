@@ -1,3 +1,4 @@
+import { BaseCommand }                from '@yarnpkg/cli'
 import { render }                     from 'ink'
 import React                          from 'react'
 
@@ -13,6 +14,10 @@ import { getWorkspacePackageNames }   from './workspace-package-names.js'
 
 export class ServiceDevCommand extends AbstractServiceCommand {
   static override paths = [['service', 'dev']]
+
+  static override usage = BaseCommand.Usage({
+    description: 'run a service in development mode',
+  })
 
   override async execute(): Promise<number> {
     if (shouldProxyCommand()) {

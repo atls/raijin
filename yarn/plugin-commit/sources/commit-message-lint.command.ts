@@ -7,6 +7,10 @@ import { resolveProjectInvocation } from '@atls/raijin/commands'
 class CommitMessageLintCommand extends BaseCommand {
   static override paths = [['commit', 'message', 'lint']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'validate commit messages against project scopes',
+  })
+
   async execute(): Promise<number> {
     const {
       project: { workspaces },

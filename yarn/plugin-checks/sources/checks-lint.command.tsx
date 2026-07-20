@@ -33,6 +33,10 @@ import { AnnotationLevel }           from './github.checks.js'
 class ChecksLintCommand extends BaseCommand {
   static override paths = [['checks', 'lint']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'report lint results to GitHub Checks',
+  })
+
   changed = Option.Boolean('--changed', false)
 
   override async execute(): Promise<number> {

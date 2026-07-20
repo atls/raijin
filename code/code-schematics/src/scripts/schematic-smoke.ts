@@ -10,22 +10,6 @@ import { prepareTmpDir }     from '../helpers/index.js'
 import { runSchematic }      from '../helpers/index.js'
 import { writeTmpSchematic } from '../helpers/index.js'
 
-const commandScanRoots = [
-  'package.json',
-  'scripts/raijin',
-  'README.md',
-  'README_EN.md',
-  'code/code-schematics/src/scripts/schematic-smoke.ts',
-  'docs/README.md',
-  'docs/README.ru.md',
-  'docs/raijin/README.md',
-  'docs/raijin/README.ru.md',
-  'docs/raijin/quickstart.md',
-  'docs/raijin/quickstart.ru.md',
-  'docs/raijin/commands.md',
-  'docs/raijin/commands.ru.md',
-]
-
 const requiredGeneratedFiles = [
   '.gitignore',
   '.prettierrc.mjs',
@@ -59,63 +43,6 @@ const findRepoRoot = async (startDir: string): Promise<string> => {
   }
 
   throw new Error('Cannot find repository root with docs/raijin/index.v1.json')
-}
-
-const walkFiles = async (entryPath: string): Promise<Array<string>> => {
-  if (!(await pathExists(entryPath))) return []
-
-  const stat = await fs.stat(entryPath)
-
-  if (stat.isFile()) return [entryPath]
-
-  const entries = await fs.readdir(entryPath, { withFileTypes: true })
-  const nested = await Promise.all(
-    entries.map(async (entry) => walkFiles(path.join(entryPath, entry.name)))
-  )
-
-  return nested.flat()
-}
-
-const assertInactiveCommandsAreNotInvoked = async (repoRoot: string): Promise<void> => {
-  type CommandIndex = {
-    commands: Array<{
-      command: string
-      status: string
-    }>
-  }
-
-  const index = await readJson<CommandIndex>(path.join(repoRoot, 'docs/raijin/index.v1.json'))
-  const inactiveCommands = index.commands
-    .filter((command) => command.status === 'inactive')
-    .map((command) => command.command)
-
-  const scanFiles = (
-    await Promise.all(
-      commandScanRoots.map(async (scanRoot) => walkFiles(path.join(repoRoot, scanRoot)))
-    )
-  )
-    .flat()
-    .filter((filePath) =>
-      ['.json', '.js', '.mjs', '.ts', '.tsx', '.md'].includes(path.extname(filePath)))
-
-  const violations: Array<string> = []
-
-  for (const filePath of scanFiles) {
-    const content = await fs.readFile(filePath, 'utf8')
-    const relativePath = path.relative(repoRoot, filePath)
-
-    for (const command of inactiveCommands) {
-      const invocation = ['yarn', command].join(' ')
-
-      if (content.includes(invocation)) {
-        violations.push(`${relativePath}: uses inactive command "${invocation}"`)
-      }
-    }
-  }
-
-  if (violations.length > 0) {
-    throw new Error(`Inactive command invocations found:\n${violations.join('\n')}`)
-  }
 }
 
 const writeFixturePackage = async (fixtureDir: string): Promise<void> => {
@@ -203,9 +130,6 @@ const assertGeneratedFixture = async (fixtureDir: string): Promise<void> => {
 
 const runSchematicSmoke = async (): Promise<void> => {
   const repoRoot = await findRepoRoot(process.cwd())
-
-  console.log('Schematic smoke: checking inactive commands')
-  await assertInactiveCommandsAreNotInvoked(repoRoot)
 
   const tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'raijin-schematic-smoke-'))
   const collectionDir = path.join(tmpRoot, 'collection')

@@ -15,6 +15,10 @@ export const createGenerateProjectOptions = (type: string, invocationCwd: string
 export class GenerateProjectCommand extends BaseCommand {
   static override paths = [['generate', 'project']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'generate a Raijin project scaffold',
+  })
+
   type = Option.String('-t,--type', 'project')
 
   async execute() {

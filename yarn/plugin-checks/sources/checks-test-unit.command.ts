@@ -1,3 +1,4 @@
+import { BaseCommand }               from '@yarnpkg/cli'
 import { StreamReport }              from '@yarnpkg/core'
 
 import { Tester }                    from '@atls/code-test'
@@ -11,6 +12,10 @@ import { GitHubChecks }              from './github.checks.js'
 
 export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static override paths = [['checks', 'test', 'unit']]
+
+  static override usage = BaseCommand.Usage({
+    description: 'report unit test results to GitHub Checks',
+  })
 
   override async execute(): Promise<number> {
     if (shouldProxyCommand()) {

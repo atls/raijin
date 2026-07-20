@@ -9,6 +9,10 @@ import { getChangedFiles }            from './changed-files.util.js'
 class FilesChangedListCommand extends BaseCommand {
   static override paths = [['files', 'changed', 'list']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'list files changed since the comparison base',
+  })
+
   json = Option.Boolean('--json', false)
 
   async execute(): Promise<number> {

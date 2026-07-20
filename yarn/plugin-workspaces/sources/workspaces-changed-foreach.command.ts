@@ -12,6 +12,10 @@ import { createForeachInput }         from './workspaces-changed-foreach.input.j
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'foreach']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'run a command in changed workspaces',
+  })
+
   exclude = Option.String('--exclude', '')
 
   verbose = Option.Boolean('-v,--verbose', false)

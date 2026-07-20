@@ -34,6 +34,10 @@ const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptCon
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
 
+  static override usage = BaseCommand.Usage({
+    description: 'type-check project sources',
+  })
+
   args: Array<string> = Option.Rest({ required: 0 })
 
   override async execute(): Promise<number> {
