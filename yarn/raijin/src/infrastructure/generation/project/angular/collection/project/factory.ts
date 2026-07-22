@@ -1,8 +1,10 @@
 import type { Rule }                      from '@angular-devkit/schematics'
-import type { SchematicContext }          from '@angular-devkit/schematics'
 import type { Source }                    from '@angular-devkit/schematics'
 import type { Tree }                      from '@angular-devkit/schematics'
-import type { ProjectScaffoldType }       from '@atls/raijin/application/generation'
+
+import type { CapturedState }             from '../../rules/gitignore/rule.interfaces.js'
+import type { PackageManifest }           from './factory.interfaces.js'
+import type { SchematicOptions }          from './factory.interfaces.js'
 
 import { MergeStrategy }                  from '@angular-devkit/schematics'
 import { strings }                        from '@angular-devkit/core'
@@ -16,27 +18,15 @@ import { url }                            from '@angular-devkit/schematics'
 import { applyTypeScriptCompilerOptions } from '@atls/raijin/config/typescript'
 import { typescriptDefaults }             from '@atls/raijin/config/typescript'
 
-import { mergeProjectGitIgnore }          from '../../rules/gitignore.js'
-import { readProjectJson }                from '../../rules/json.js'
-import { updateProjectJson }              from '../../rules/json.js'
+import { captureGitIgnore }               from '../../rules/gitignore/rule.js'
+import { mergeCapturedGitIgnore }         from '../../rules/gitignore/rule.js'
+import { readProjectJson }                from '../../rules/json/rule.js'
+import { updateProjectJson }              from '../../rules/json/rule.js'
 
-const GITIGNORE_PATH = '.gitignore'
 const PACKAGE_JSON_PATH = 'package.json'
 const TSCONFIG_PATH = 'tsconfig.json'
 
-interface ProjectSchematicOptions {
-  readonly type: ProjectScaffoldType
-}
-
-interface ProjectScaffoldPackageManifest {
-  readonly name: string
-}
-
-interface ProjectGitIgnoreState {
-  content?: string
-}
-
-const templateDirectories: Record<ProjectSchematicOptions['type'], string> = {
+const templateDirectories: Record<SchematicOptions['type'], string> = {
   library: 'libraries',
   project: 'project',
 }
@@ -55,12 +45,12 @@ const updateTypeScriptConfiguration = (): Rule =>
   updateProjectJson(TSCONFIG_PATH, (configuration) =>
     applyTypeScriptCompilerOptions(configuration, typescriptDefaults.compilerOptions))
 
-const mergeCommonTemplates = (options: ProjectSchematicOptions): Rule =>
+const mergeCommonTemplates = (options: SchematicOptions): Rule =>
   mergeWith(createTemplateSource('common', options), MergeStrategy.Overwrite)
 
-const mergeScaffoldTemplates = (options: ProjectSchematicOptions): Rule =>
+const mergeScaffoldTemplates = (options: SchematicOptions): Rule =>
   (tree: Tree): Rule => {
-    const manifest = readProjectJson<ProjectScaffoldPackageManifest>(tree, PACKAGE_JSON_PATH)
+    const manifest = readProjectJson<PackageManifest>(tree, PACKAGE_JSON_PATH)
     const templateDirectory = templateDirectories[options.type]
 
     return mergeWith(
@@ -72,47 +62,14 @@ const mergeScaffoldTemplates = (options: ProjectSchematicOptions): Rule =>
     )
   }
 
-const captureProjectGitIgnore = (state: ProjectGitIgnoreState): Rule =>
-  (tree: Tree): Tree => {
-    const content = tree.read(GITIGNORE_PATH)
-
-    if (content) {
-      state.content = content.toString('utf-8')
-    }
-
-    return tree
-  }
-
-const mergeCapturedProjectGitIgnore = (state: ProjectGitIgnoreState): Rule =>
-  (tree: Tree, context: SchematicContext): Tree => {
-    const templateFile = tree.read(GITIGNORE_PATH)
-
-    if (state.content === undefined || !templateFile) {
-      return tree
-    }
-
-    const templateContent = templateFile.toString('utf-8')
-    const mergedContent = mergeProjectGitIgnore({
-      existingContent: state.content,
-      templateContent,
-    })
-
-    if (mergedContent !== templateContent) {
-      context.logger.info('Preserving project-specific .gitignore entries')
-      tree.overwrite(GITIGNORE_PATH, mergedContent)
-    }
-
-    return tree
-  }
-
-export const generateProjectScaffold = (options: ProjectSchematicOptions): Rule => {
-  const gitIgnoreState: ProjectGitIgnoreState = {}
+export const scaffold = (options: SchematicOptions): Rule => {
+  const gitIgnoreState: CapturedState = {}
 
   return chain([
-    captureProjectGitIgnore(gitIgnoreState),
+    captureGitIgnore(gitIgnoreState),
     updateTypeScriptConfiguration(),
     mergeCommonTemplates(options),
     mergeScaffoldTemplates(options),
-    mergeCapturedProjectGitIgnore(gitIgnoreState),
+    mergeCapturedGitIgnore(gitIgnoreState),
   ])
 }

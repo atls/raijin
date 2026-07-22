@@ -1,20 +1,20 @@
-import type { ProjectScaffoldType } from '@atls/raijin/application/generation'
+import type { ScaffoldType } from '@atls/raijin/application/generation'
 
-import assert                       from 'node:assert/strict'
-import { execFile }                 from 'node:child_process'
-import { cp }                       from 'node:fs/promises'
-import { mkdir }                    from 'node:fs/promises'
-import { mkdtemp }                  from 'node:fs/promises'
-import { readFile }                 from 'node:fs/promises'
-import { readdir }                  from 'node:fs/promises'
-import { rm }                       from 'node:fs/promises'
-import { writeFile }                from 'node:fs/promises'
-import { tmpdir }                   from 'node:os'
-import { join }                     from 'node:path'
-import { relative }                 from 'node:path'
-import { resolve }                  from 'node:path'
-import { sep }                      from 'node:path'
-import { promisify }                from 'node:util'
+import assert                from 'node:assert/strict'
+import { execFile }          from 'node:child_process'
+import { cp }                from 'node:fs/promises'
+import { mkdir }             from 'node:fs/promises'
+import { mkdtemp }           from 'node:fs/promises'
+import { readFile }          from 'node:fs/promises'
+import { readdir }           from 'node:fs/promises'
+import { rm }                from 'node:fs/promises'
+import { writeFile }         from 'node:fs/promises'
+import { tmpdir }            from 'node:os'
+import { join }              from 'node:path'
+import { relative }          from 'node:path'
+import { resolve }           from 'node:path'
+import { sep }               from 'node:path'
+import { promisify }         from 'node:util'
 
 type NodeLinker = 'node-modules' | 'pnp'
 
@@ -68,7 +68,7 @@ const expectedCommonFiles = [
   'tsconfig.json',
 ]
 
-const scaffoldFiles: Record<ProjectScaffoldType, Array<string>> = {
+const scaffoldFiles: Record<ScaffoldType, Array<string>> = {
   library: ['.github/workflows/publish.yaml', '.github/workflows/version.yaml'],
   project: ['.github/workflows/preview.yaml', '.github/workflows/release.yaml'],
 }
@@ -125,7 +125,7 @@ const createTarget = async (name: string): Promise<string> => {
 
 const assertGeneratedScaffold = async (
   target: string,
-  scaffoldType: ProjectScaffoldType
+  scaffoldType: ScaffoldType
 ): Promise<void> => {
   assert.deepEqual(
     await listFiles(target),
@@ -164,7 +164,7 @@ const assertGeneratedScaffold = async (
 
 const assertGeneratedScaffoldCommand = async (
   target: string,
-  scaffoldType: ProjectScaffoldType
+  scaffoldType: ScaffoldType
 ): Promise<void> => {
   const { stdout } = await runYarn(['generate', 'project', '--type', scaffoldType], target)
 
@@ -218,7 +218,7 @@ try {
     ].join('\n')
   )
 
-  const targets: Record<ProjectScaffoldType | 'invalid', string> = {
+  const targets: Record<ScaffoldType | 'invalid', string> = {
     invalid: await createTarget('invalid'),
     library: await createTarget('library'),
     project: await createTarget('project'),
