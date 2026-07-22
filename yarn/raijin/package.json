@@ -24,7 +24,7 @@
     "./config/prettier": "./src/config/prettier/index.ts",
     "./config/sync": "./src/config/sync/index.ts",
     "./config/typescript": {
-      "raijin-project-schematic-build": "./dist/config/typescript/index.js",
+      "raijin-project-collection-build": "./dist/config/typescript/index.js",
       "default": "./src/config/typescript/index.ts"
     },
     "./filesystem": "./src/filesystem/index.ts",
@@ -58,7 +58,7 @@
   ],
   "scripts": {
     "build": "yarn run build:generation",
-    "build:generation": "yarn run build:library && yarn node ./scripts/generation/project/build-project-schematic.ts",
+    "build:generation": "yarn run build:library && yarn node ./scripts/generation/project/build.ts",
     "build:library": "yarn library build",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
@@ -267,5 +267,6 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts"
   },
+  "schematics": "./dist/generation/project/collection/collection.json",
   "typecheckSkipLibCheck": true
 }

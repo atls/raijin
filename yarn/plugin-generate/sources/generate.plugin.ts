@@ -1,7 +1,7 @@
-import type { Plugin }            from '@yarnpkg/core'
+import type { Plugin }    from '@yarnpkg/core'
 
-import { GenerateProjectCommand } from './project/generate-project.command.js'
+import { ProjectCommand } from './commands/project.js'
 
 export const generatePlugin: Plugin = {
-  commands: [GenerateProjectCommand],
+  commands: [ProjectCommand],
 }
