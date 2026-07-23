@@ -233,6 +233,7 @@
 - Контракт: `packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.
 - Контракт: `packConfiguration.buildpackVersion` фиксирует неизменяемый buildpack tag для rollback.
 - Контракт: `packConfiguration.buildpack` переопределяет полную buildpack-ссылку.
+- Контракт: `--tags <alias,...>` добавляет дополнительные image tags в тот же вызов `pack build`.
 - Плагин: `@atls/yarn-plugin-image`
 - Исходник: `yarn/plugin-image/sources/image-pack.command.ts`
 

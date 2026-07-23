@@ -233,6 +233,7 @@ Command map extracted from `yarn/plugin-*` and `@atls/yarn-cli` bundle
 - Contract: `packConfiguration.builderTag` selects the supported Node/buildpack channel.
 - Contract: `packConfiguration.buildpackVersion` pins an immutable buildpack tag for rollback.
 - Contract: `packConfiguration.buildpack` overrides the full buildpack reference.
+- Contract: `--tags <alias,...>` adds additional image tags to the same `pack build` invocation.
 - Plugin: `@atls/yarn-plugin-image`
 - Source: `yarn/plugin-image/sources/image-pack.command.ts`
 

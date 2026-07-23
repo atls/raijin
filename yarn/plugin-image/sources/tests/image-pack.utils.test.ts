@@ -1,6 +1,7 @@
 import assert                        from 'node:assert/strict'
 import { test }                      from 'node:test'
 
+import { parseAdditionalTags }       from '../image-pack.utils.js'
 import { resolveBuildpackReference } from '../image-pack.utils.js'
 import { resolveBuilderReference }   from '../image-pack.utils.js'
 
@@ -58,4 +59,14 @@ test('should keep builder default and explicit override contract', () => {
     }),
     'registry.example.com/custom/builder:latest'
   )
+})
+
+test('should parse additional image tag aliases', () => {
+  assert.deepEqual(parseAdditionalTags(''), [])
+  assert.deepEqual(parseAdditionalTags('stage, production'), ['stage', 'production'])
+})
+
+test('should reject invalid additional image tag aliases', () => {
+  assert.throws(() => parseAdditionalTags('stage,,production'), /Invalid image tag alias/)
+  assert.throws(() => parseAdditionalTags('stage/latest'), /Invalid image tag alias/)
 })
