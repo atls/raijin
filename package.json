@@ -9,7 +9,9 @@
     "webpack/**/*",
     "config/**/*",
     "yarn/**/*",
-    "cli/**/*"
+    "cli/**/*",
+    "!**/dist",
+    "!**/dist/**"
   ],
   "scripts": {
     "cli:build": "yarn workspace @atls/yarn-cli build",
