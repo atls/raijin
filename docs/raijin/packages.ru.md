@@ -65,7 +65,7 @@
 - Локация: `yarn/cli`
 - Группа: `yarn`
 - Видимость: `private`
-- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:raijin`, `build:verify`, `build:version`, `fix`, `postpack`, `prepack`
+- Скрипты: `build`, `build:fix`, `build:verify`, `fix`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
 

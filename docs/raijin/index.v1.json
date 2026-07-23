@@ -829,19 +829,7 @@
       "group": "yarn",
       "private": true,
       "description": "",
-      "scripts": [
-        "build",
-        "build:bundle",
-        "build:clean",
-        "build:dist",
-        "build:fix",
-        "build:raijin",
-        "build:verify",
-        "build:version",
-        "fix",
-        "postpack",
-        "prepack"
-      ]
+      "scripts": ["build", "build:fix", "build:verify", "fix", "postpack", "prepack"]
     },
     {
       "name": "@atls/yarn-cli-tools",
@@ -1103,5 +1091,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-07-20T19:13:18.742Z"
+  "lastGenerated": "2026-07-23T20:16:41.140Z"
 }

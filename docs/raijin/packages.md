@@ -65,7 +65,7 @@ Compact list:
 - Location: `yarn/cli`
 - Group: `yarn`
 - Visibility: `private`
-- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:raijin`, `build:verify`, `build:version`, `fix`, `postpack`, `prepack`
+- Scripts: `build`, `build:fix`, `build:verify`, `fix`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
 

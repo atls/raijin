@@ -13,14 +13,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn workspace @atls/raijin build && rm -rf dist/runtime && node patches/version-postfix-toggle.mjs && builder build bundle --no-git-hash --format esm --target esnext --external-file ../builder/externals.json && mv bundles/yarn.js bundles/yarn.mjs && node patches/cli.patch.mjs && mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs && node scripts/runtime/bootstrap.mjs && node patches/version-postfix-toggle.mjs && rm -r ../raijin/dist",
-    "build:bundle": "builder build bundle --no-git-hash --format esm --target esnext --external-file ../builder/externals.json && mv bundles/yarn.js bundles/yarn.mjs",
-    "build:clean": "rm -rf dist/runtime",
-    "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs",
-    "build:fix": "yarn node patches/cli.patch.mjs",
-    "build:raijin": "yarn workspace @atls/raijin build",
-    "build:verify": "yarn node scripts/runtime/bootstrap.mjs",
-    "build:version": "yarn node patches/version-postfix-toggle.mjs",
+    "build": "node scripts/build/runtime.js",
+    "build:fix": "node patches/cli.patch.mjs",
+    "build:verify": "node scripts/runtime/bootstrap.js",
     "fix": "yarn run build:fix",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
