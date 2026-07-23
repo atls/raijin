@@ -82,12 +82,14 @@ const COMMAND_NOTES = {
       '`packConfiguration.builderTag` selects the supported Node/buildpack channel.',
       '`packConfiguration.buildpackVersion` pins an immutable buildpack tag for rollback.',
       '`packConfiguration.buildpack` overrides the full buildpack reference.',
+      '`--tags <alias,...>` adds additional image tags to the same `pack build` invocation.',
     ],
     ru: [
       '`packConfiguration` по умолчанию использует `ghcr.io/atls/buildpack-yarn-workspace:24`.',
       '`packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.',
       '`packConfiguration.buildpackVersion` фиксирует неизменяемый buildpack tag для rollback.',
       '`packConfiguration.buildpack` переопределяет полную buildpack-ссылку.',
+      '`--tags <alias,...>` добавляет дополнительные image tags в тот же вызов `pack build`.',
     ],
   },
 }

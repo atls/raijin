@@ -17,6 +17,7 @@ import { packUtils }                         from '@atls/yarn-pack-utils'
 import { resolveWorkspaceCommandContext }    from '@atls/yarn-plugin-tools/command-context'
 
 import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
+import { parseAdditionalTags }               from './image-pack.utils.js'
 import { resolveBuildpackReference }         from './image-pack.utils.js'
 import { resolveBuilderReference }           from './image-pack.utils.js'
 
@@ -27,6 +28,8 @@ class ImagePackCommand extends BaseCommand {
 
   tagPolicy: TagPolicy = Option.String('-t,--tag-policy', 'revision')
 
+  tags: string = Option.String('--tags', '')
+
   publish: boolean = Option.Boolean('-p,--publish', false)
 
   platform?: string = Option.String('--platform')
@@ -34,6 +37,7 @@ class ImagePackCommand extends BaseCommand {
   async execute(): Promise<number> {
     const { configuration, project, workspace, workspaceCwd } =
       await resolveWorkspaceCommandContext(this.context.cwd, this.context.plugins)
+    const additionalTags = parseAdditionalTags(this.tags)
 
     const commandReport = await StreamReport.start(
       {
@@ -81,6 +85,7 @@ class ImagePackCommand extends BaseCommand {
             registry: this.registry,
             publish: this.publish,
             tagPolicy: this.tagPolicy,
+            additionalTags,
             buildpack: resolveBuildpackReference(packConfiguration),
             builder: resolveBuilderReference(packConfiguration),
             platform: this.platform,
