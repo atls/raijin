@@ -13,14 +13,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: <%= workflowPolicy.checkoutAction %>
         with:
           ref: master
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: <%= workflowPolicy.setupNodeAction %>
         with:
-          node-version: '18.19'
+          node-version: '<%= workflowPolicy.nodeVersion %>'
 
       - name: Install
         run: yarn install

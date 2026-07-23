@@ -6,6 +6,11 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+  packages: write
+  pull-requests: read
+
 jobs:
   run:
     name: Preview
@@ -13,12 +18,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: <%= workflowPolicy.checkoutAction %>
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: <%= workflowPolicy.setupNodeAction %>
         with:
-          node-version: '18.19'
+          node-version: '<%= workflowPolicy.nodeVersion %>'
 
       - name: Install
         run: yarn install
@@ -32,16 +37,14 @@ jobs:
         run: |
           (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.40.4/pack-v0.40.4-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
 
-      - name: Login to Google Container Registry
-        run: echo -e $GCR_KEYFILE | docker login -u _json_key --password-stdin https://eu.gcr.io
-        env:
-          GCR_KEYFILE: ${{ secrets.GCR_KEYFILE }}
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login <%= workflowPolicy.containerRegistry %> -u "${{ github.actor }}" --password-stdin
 
       - name: Preview
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         run: |
           yarn workspaces changed foreach run app pack \
-            --registry 'eu.gcr.io/${{ secrets.GCR_PROJECT_ID }}/<%= projectName %>-' \
+            --registry '<%= workflowPolicy.containerRegistry %>/${{ <%= workflowPolicy.containerRegistryOwnerExpression %> }}/<%= projectName %>-' \
             --tag-policy ctx-hash-timestamp \
             --publish

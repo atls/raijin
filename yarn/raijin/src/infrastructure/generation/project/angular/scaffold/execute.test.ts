@@ -76,6 +76,7 @@ before(async () => {
 
 after(async () => {
   await rm(fixtureRoot, { recursive: true, force: true })
+  await rm(join(packageRoot, 'dist'), { recursive: true, force: true })
 })
 
 const assertExactScaffoldFiles = async (scaffoldType: 'library' | 'project'): Promise<void> => {
@@ -89,7 +90,7 @@ const assertExactScaffoldFiles = async (scaffoldType: 'library' | 'project'): Pr
       ? ['/.github/workflows/preview.yaml', '/.github/workflows/release.yaml']
       : ['/.github/workflows/publish.yaml', '/.github/workflows/version.yaml']
 
-  assert.equal(result.status, 'succeeded')
+  assert.equal(result.status, 'succeeded', JSON.stringify(result, null, 2))
   assert.deepEqual(getChangedPaths(result), [...expectedCommonFiles, ...scaffoldFiles].sort())
   assert.equal(
     await readFile(join(target, '.prettierrc.mjs'), 'utf-8'),
@@ -115,11 +116,13 @@ const assertExactScaffoldFiles = async (scaffoldType: 'library' | 'project'): Pr
 
   if (scaffoldType === 'project') {
     const preview = await readFile(join(target, '.github/workflows/preview.yaml'), 'utf-8')
+    const release = await readFile(join(target, '.github/workflows/release.yaml'), 'utf-8')
 
     assert.match(
       preview,
-      /--registry 'eu\.gcr\.io\/\$\{\{ secrets\.GCR_PROJECT_ID \}\}\/project-fixture-'/
+      /--registry 'ghcr\.io\/\$\{\{ github\.repository_owner \}\}\/project-fixture-'/
     )
+    assert.match(release, /docker login ghcr\.io -u "\$\{\{ github\.actor \}\}"/)
     await assertFileMissing(join(target, '.github/workflows/publish.yaml'))
   } else {
     const publish = await readFile(join(target, '.github/workflows/publish.yaml'), 'utf-8')
@@ -128,6 +131,7 @@ const assertExactScaffoldFiles = async (scaffoldType: 'library' | 'project'): Pr
       publish,
       /yarn workspaces changed foreach --verbose --topological --no-private npm publish --access public/
     )
+    assert.match(publish, /YARN_NPM_AUTH_TOKEN: \$\{\{ secrets\.NPM_TOKEN \}\}/)
     await assertFileMissing(join(target, '.github/workflows/preview.yaml'))
   }
 }
@@ -156,7 +160,7 @@ test('should preserve existing workspace package scripts while applying the scaf
     scripts: Record<string, string>
   }
 
-  assert.equal(result.status, 'succeeded')
+  assert.equal(result.status, 'succeeded', JSON.stringify(result, null, 2))
   assert.equal(manifest.name, 'existing-fixture')
   assert.deepEqual(manifest.scripts, scripts)
 })

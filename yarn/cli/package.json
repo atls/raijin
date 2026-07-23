@@ -13,7 +13,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn run build:raijin && yarn run build:clean && yarn run build:version && yarn run build:bundle && yarn run build:fix && yarn run build:dist && yarn run build:verify && yarn run build:version",
+    "build": "yarn workspace @atls/raijin build && rm -rf dist/runtime && node patches/version-postfix-toggle.mjs && builder build bundle --no-git-hash --format esm --target esnext --external-file ../builder/externals.json && mv bundles/yarn.js bundles/yarn.mjs && node patches/cli.patch.mjs && mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs && node scripts/runtime/bootstrap.mjs && node patches/version-postfix-toggle.mjs && rm -r ../raijin/dist",
     "build:bundle": "builder build bundle --no-git-hash --format esm --target esnext --external-file ../builder/externals.json && mv bundles/yarn.js bundles/yarn.mjs",
     "build:clean": "rm -rf dist/runtime",
     "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs",
