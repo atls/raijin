@@ -15,9 +15,10 @@
   ],
   "scripts": {
     "cli:build": "yarn workspace @atls/yarn-cli build",
-    "raijin:check": "yarn raijin:check:drift && yarn raijin:check:runtime && yarn raijin:check:localization && yarn raijin:smoke:deterministic && yarn raijin:smoke:generate-project && yarn raijin:smoke:cli",
+    "raijin:check": "yarn raijin:check:drift && yarn raijin:check:runtime && yarn raijin:check:localization && yarn raijin:check:package && yarn raijin:smoke:deterministic && yarn raijin:smoke:generate-project && yarn raijin:smoke:cli",
     "raijin:check:drift": "node scripts/raijin/generate-artifacts.mjs && git diff --exit-code -- README.md README_EN.md docs/README.md docs/README.ru.md docs/raijin && test -z \"$(git ls-files --others --exclude-standard -- README.md README_EN.md docs/README.md docs/README.ru.md docs/raijin)\"",
     "raijin:check:localization": "node scripts/raijin/check-localization-sync.mjs",
+    "raijin:check:package": "yarn workspace @atls/raijin pack --out /tmp/atls-raijin-package.tgz && node scripts/raijin/check-package-exports.mjs yarn/raijin /tmp/atls-raijin-package.tgz",
     "raijin:check:runtime": "yarn cli:build && node scripts/raijin/cli-surface/check-runtime.mjs yarn/cli/dist/runtime/yarn.mjs .yarn/releases/yarn.mjs docs/raijin/index.v1.json",
     "raijin:generate": "node scripts/raijin/generate-artifacts.mjs",
     "raijin:smoke:cli": "node yarn/cli/scripts/runtime/consumer.mjs .yarn/releases/yarn.mjs yarn@4.14.1",

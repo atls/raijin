@@ -20,7 +20,6 @@ const COLLECTION_SOURCE_PATH = join(
 )
 const COMPILED_FACTORY_PATH = join(
   'dist',
-  'src',
   'infrastructure',
   'generation',
   'project',

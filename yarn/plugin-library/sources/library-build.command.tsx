@@ -66,8 +66,9 @@ export class LibraryBuildCommand extends BaseCommand {
 
     try {
       const diagnostics = await typescript.build([join(cwd, './src')], {
-        outDir: join(cwd, this.target),
         declaration: true,
+        outDir: join(cwd, this.target),
+        rootDir: join(cwd, './src'),
       })
 
       diagnostics.forEach((diagnostic) => {

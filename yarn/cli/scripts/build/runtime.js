@@ -3,7 +3,13 @@ import { mkdir } from 'node:fs/promises'
 import { rename } from 'node:fs/promises'
 import { rm } from 'node:fs/promises'
 
+/**
+ * @param {string} file
+ * @param {Array<string>} args
+ * @returns {Promise<void>}
+ */
 const run = async (file, args) =>
+  /** @type {Promise<void>} */
   new Promise((resolve, reject) => {
     const child = spawn(file, args, {
       stdio: 'inherit',
