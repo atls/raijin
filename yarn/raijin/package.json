@@ -57,11 +57,9 @@
     "types"
   ],
   "scripts": {
-    "build": "yarn run build:generation",
-    "build:generation": "yarn run build:library && node --require ../../.pnp.cjs --loader ../../.pnp.loader.mjs --loader ./dist/runtime/typescript-loader.js ./scripts/generation/project/build.ts",
-    "build:library": "yarn library build",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "build": "node package/build/execute.js",
+    "prepack": "node package/build/execute.js",
+    "postpack": "node package/build/clean.js"
   },
   "dependencies": {
     "@angular-devkit/core": "19.1.5",
@@ -72,6 +70,8 @@
     "@svgr/plugin-jsx": "8.1.0",
     "@typescript-eslint/eslint-plugin": "8.48.1",
     "@typescript-eslint/parser": "8.48.1",
+    "@yarnpkg/core": "4.7.0",
+    "@yarnpkg/fslib": "3.1.5",
     "eslint": "9.22.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-n": "17.23.1",
@@ -101,14 +101,8 @@
     "@types/node": "24.12.2",
     "@types/protocol-buffers-schema": "3.4.3",
     "@yarnpkg/cli": "4.14.1",
-    "@yarnpkg/core": "4.7.0",
     "@yarnpkg/esbuild-plugin-pnp": "3.0.0-rc.15",
-    "@yarnpkg/fslib": "3.1.5",
     "esbuild": "0.24.2"
-  },
-  "peerDependencies": {
-    "@yarnpkg/core": "*",
-    "@yarnpkg/fslib": "*"
   },
   "publishConfig": {
     "access": "public",

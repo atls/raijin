@@ -1,22 +1,21 @@
-import assert                  from 'node:assert/strict'
-import { execFile }            from 'node:child_process'
-import { access }              from 'node:fs/promises'
-import { mkdir }               from 'node:fs/promises'
-import { readFile }            from 'node:fs/promises'
-import { rm }                  from 'node:fs/promises'
-import { writeFile }           from 'node:fs/promises'
-import { join }                from 'node:path'
-import { dirname }             from 'node:path'
-import { after }               from 'node:test'
-import { before }              from 'node:test'
-import { test }                from 'node:test'
-import { fileURLToPath }       from 'node:url'
-import { promisify }           from 'node:util'
+import assert                   from 'node:assert/strict'
+import { access }               from 'node:fs/promises'
+import { mkdir }                from 'node:fs/promises'
+import { readFile }             from 'node:fs/promises'
+import { rm }                   from 'node:fs/promises'
+import { writeFile }            from 'node:fs/promises'
+import { join }                 from 'node:path'
+import { dirname }              from 'node:path'
+import { after }                from 'node:test'
+import { before }               from 'node:test'
+import { test }                 from 'node:test'
+import { fileURLToPath }        from 'node:url'
 
-import { xfs }                 from '@yarnpkg/fslib'
+import { xfs }                  from '@yarnpkg/fslib'
 
-import { buildCollection }     from '../artifact/build.js'
-import { scaffoldWithAngular } from './execute.js'
+import { buildLibraryArtifact } from '../../../../../../package/build/library.js'
+import { buildCollection }      from '../artifact/build.js'
+import { scaffoldWithAngular }  from './execute.js'
 
 const expectedCommonFiles = [
   '/.config/husky/.gitignore',
@@ -26,11 +25,9 @@ const expectedCommonFiles = [
   '/.github/workflows/checks.yaml',
   '/.gitignore',
   '/.prettierrc.mjs',
-  '/eslint.config.mjs',
   '/tsconfig.json',
 ]
 
-const execFileAsync = promisify(execFile)
 const packageRoot = dirname(fileURLToPath(import.meta.resolve('@atls/raijin/package.json')))
 
 let fixtureRoot = ''
@@ -66,10 +63,7 @@ const assertFileMissing = async (path: string): Promise<void> => {
 before(async () => {
   fixtureRoot = await xfs.mktempPromise()
 
-  await execFileAsync('yarn', ['workspace', '@atls/raijin', 'build:library'], {
-    cwd: packageRoot,
-    encoding: 'utf8',
-  })
+  await buildLibraryArtifact({ packageRoot })
   await buildCollection({ packageRoot })
   collectionPath = join(packageRoot, 'dist/generation/project/collection/collection.json')
 })

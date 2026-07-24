@@ -1,6 +1,3 @@
-import { rm }                         from 'node:fs/promises'
-import { join }                       from 'node:path'
-
 import { BaseCommand }                from '@yarnpkg/cli'
 import { Option }                     from 'clipanion'
 import { render }                     from 'ink'
@@ -15,6 +12,8 @@ import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
 import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
 import { shouldProxyCommand }         from '@atls/raijin/commands'
 import { toNativeCwd }                from '@atls/raijin/commands'
+
+import { buildLibraryWorkspace }      from '../../workspace/index.js'
 
 export class LibraryBuildCommand extends BaseCommand {
   static override paths = [['library', 'build']]
@@ -57,18 +56,14 @@ export class LibraryBuildCommand extends BaseCommand {
       this.context.plugins
     )
     const cwd = toNativeCwd(executionCwd)
-
-    await this.cleanTarget(cwd)
-
     const typescript = await TypeScript.initialize(cwd)
-
     const { clear } = render(<TypeScriptProgress typescript={typescript} />)
 
     try {
-      const diagnostics = await typescript.build([join(cwd, './src')], {
-        declaration: true,
-        outDir: join(cwd, this.target),
-        rootDir: join(cwd, './src'),
+      const diagnostics = await buildLibraryWorkspace({
+        cwd,
+        target: this.target,
+        typescript,
       })
 
       diagnostics.forEach((diagnostic) => {
@@ -91,12 +86,5 @@ export class LibraryBuildCommand extends BaseCommand {
     } finally {
       clear()
     }
-  }
-
-  protected async cleanTarget(workspaceCwd: string): Promise<void> {
-    try {
-      await rm(join(workspaceCwd, this.target), { recursive: true, force: true })
-      // eslint-disable-next-line no-empty
-    } catch {}
   }
 }
