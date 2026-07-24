@@ -120,7 +120,16 @@ const assertExactScaffoldFiles = async (scaffoldType: 'library' | 'project'): Pr
     const preview = await readFile(join(target, '.github/workflows/preview.yaml'), 'utf-8')
     const release = await readFile(join(target, '.github/workflows/release.yaml'), 'utf-8')
 
-    assert.match(preview, /--registry 'ghcr\.io\/\$\{\{ github\.repository \}\}-'/)
+    assert.match(
+      preview,
+      /repository="\$\(printf '%s' '\$\{\{ github\.repository \}\}' \| tr '\[:upper:\]' '\[:lower:\]'\)"/
+    )
+    assert.match(preview, /--registry "ghcr\.io\/\$\{repository\}-"/)
+    assert.match(
+      release,
+      /repository="\$\(printf '%s' '\$\{\{ github\.repository \}\}' \| tr '\[:upper:\]' '\[:lower:\]'\)"/
+    )
+    assert.match(release, /--registry "ghcr\.io\/\$\{repository\}-"/)
     assert.match(release, /docker login ghcr\.io -u "\$\{\{ github\.actor \}\}"/)
     await assertFileMissing(join(target, '.github/workflows/publish.yaml'))
   } else {
@@ -180,7 +189,7 @@ test('should derive the image repository from GitHub independently of the packag
       const preview = await readFile(join(target, '.github/workflows/preview.yaml'), 'utf-8')
 
       assert.equal(result.status, 'succeeded', JSON.stringify(result, null, 2))
-      assert.match(preview, /--registry 'ghcr\.io\/\$\{\{ github\.repository \}\}-'/)
+      assert.match(preview, /--registry "ghcr\.io\/\$\{repository\}-"/)
       assert.doesNotMatch(preview, /@acme/)
     })
   )

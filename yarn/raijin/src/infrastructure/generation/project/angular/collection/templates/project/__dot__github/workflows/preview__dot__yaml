@@ -44,7 +44,8 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         run: |
+          repository="$(printf '%s' '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
           yarn workspaces changed foreach run app pack \
-            --registry '<%= workflowPolicy.containerRegistry %>/${{ <%= workflowPolicy.containerRepositoryExpression %> }}-' \
+            --registry "<%= workflowPolicy.containerRegistry %>/${repository}-" \
             --tag-policy ctx-hash-timestamp \
             --publish
