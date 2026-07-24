@@ -231,6 +231,25 @@ Command map assembled from the `@atls/yarn-cli` runtime
 
 </details>
 
+### Domain `generate`
+
+- Commands: `generate project`
+
+<details>
+<summary>Domain details: `generate`</summary>
+
+<!-- sync:command-card:generate-project -->
+
+#### `generate project`
+
+- Status: `active`
+- Description: generate a Raijin project scaffold
+- Usage: `yarn generate project [-t,--type #0]`
+- Example: `yarn generate project`
+- Plugin: `@atls/yarn-plugin-generate`
+
+</details>
+
 ### Domain `image`
 
 - Commands: `image pack`
@@ -406,25 +425,6 @@ Command map assembled from the `@atls/yarn-cli` runtime
 - Usage: `yarn renderer start`
 - Example: `yarn renderer start`
 - Plugin: `@atls/yarn-plugin-renderer`
-
-</details>
-
-### Domain `schematics`
-
-- Commands: `generate project`
-
-<details>
-<summary>Domain details: `schematics`</summary>
-
-<!-- sync:command-card:generate-project -->
-
-#### `generate project`
-
-- Status: `active`
-- Description: generate a Raijin project scaffold
-- Usage: `yarn generate project [-t,--type #0]`
-- Example: `yarn generate project`
-- Plugin: `@atls/yarn-plugin-schematics`
 
 </details>
 

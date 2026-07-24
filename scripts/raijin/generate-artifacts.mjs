@@ -271,8 +271,8 @@ const renderRootReadme = (language) => {
       ? '- `.yarnrc.yml` сразу указывает на стабильный файл `.yarn/releases/yarn.mjs`'
       : '- `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.mjs` file',
     isRu
-      ? '- Схемы проекта и первичная синхронизация выполняются автоматически'
-      : '- Project schematics and the first sync run automatically',
+      ? '- Каркас проекта и первичная синхронизация создаются автоматически'
+      : '- The project scaffold and first sync are created automatically',
     isRu
       ? '- Команды `raijin` становятся доступны через `yarn`'
       : '- Raijin commands are available via `yarn`',
@@ -289,8 +289,8 @@ const renderRootReadme = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Проект получает ту же среду выполнения Raijin, схемы и первичную синхронизацию без ручных шагов первичного подключения'
-      : '- The project gets the same Raijin runtime, schematics, and first sync without manual bootstrap steps',
+      ? '- Проект получает ту же среду выполнения Raijin, каркас и первичную синхронизацию без ручных шагов первичного подключения'
+      : '- The project gets the same Raijin runtime, scaffold, and first sync without manual bootstrap steps',
     '',
     isRu ? '### Обновление' : '### Upgrade',
     '',
@@ -463,7 +463,7 @@ const renderRaijinReadme = (index, language) => {
     '',
     '- `yarn raijin:generate`',
     '- `yarn raijin:check`',
-    '- `yarn schematic:test`',
+    '- `yarn raijin:smoke:generate-project`',
     '',
     '<!-- sync:router-coverage -->',
     '',
@@ -530,8 +530,8 @@ const renderQuickstart = (language) => {
       ? '- `.yarnrc.yml` сразу получает `nodeLinker: pnp` и финальный `yarnPath` без временного файла'
       : '- `.yarnrc.yml` gets `nodeLinker: pnp` and the final `yarnPath` directly without a temporary file',
     isRu
-      ? '- Проектный каркас создаётся через существующие схемы Raijin'
-      : '- Project scaffold is created through the existing Raijin schematics',
+      ? '- Проектный каркас создаётся командой `generate project` из установленного бандла Raijin'
+      : '- Project scaffold is created by the installed Raijin bundle through `generate project`',
     isRu
       ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
       : '- Bundle commands (`check`, `files changed list`, etc.) become available',
@@ -549,8 +549,8 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Установленный проект получает публичный пакет `@atls/raijin`, среду выполнения Raijin, проектные схемы, первичную синхронизацию и значение `packageManager` из манифеста установленной среды выполнения'
-      : '- Existing project gets the public `@atls/raijin` package, Raijin runtime, project schematics, the first sync, and `packageManager` from the installed runtime manifest',
+      ? '- Установленный проект получает публичный пакет `@atls/raijin`, среду выполнения Raijin, проектный каркас, первичную синхронизацию и значение `packageManager` из манифеста установленной среды выполнения'
+      : '- Existing project gets the public `@atls/raijin` package, Raijin runtime, project scaffold, the first sync, and `packageManager` from the installed runtime manifest',
     '',
     '<!-- sync:bundle-upgrade -->',
     isRu ? '## 4. Обновление установленного бандла' : '## 4. Upgrade installed bundle',
@@ -580,20 +580,20 @@ const renderQuickstart = (language) => {
       ? '- `yarn files changed list` возвращает список файлов или пустой список, если изменений нет'
       : '- `yarn files changed list` returns file list (or empty list if no changes)',
     '',
-    '<!-- sync:schematic-smoke -->',
-    isRu ? '## 6. Локальная проверка схем' : '## 6. Local schematics smoke check',
+    '<!-- sync:generate-project-smoke -->',
+    isRu ? '## 6. Проверка генератора проекта' : '## 6. Project generator smoke check',
     '',
     '```bash',
-    'yarn schematic:test',
+    'yarn raijin:smoke:generate-project',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Временный проект создаётся через публичные экспорты `@atls/code-schematics`'
-      : '- Temporary fixture is created through public `@atls/code-schematics` exports',
+      ? '- Упакованный `@atls/raijin` устанавливается во временные PnP- и `node-modules`-монорепозитории и вызывается через checked-in `yarnPath`'
+      : '- Packed `@atls/raijin` is installed into temporary PnP and `node-modules` monorepos and invoked through the checked-in `yarnPath`',
     isRu
-      ? '- Проверка падает, если вспомогательный код или Markdown-документация вызывают отключённую команду'
-      : '- Check fails if helper or Markdown docs invoke an inactive command',
+      ? '- Проверка подтверждает точные каркасы `project` и `library`, вложенный cwd и атомарный отказ для неподдерживаемого типа'
+      : '- The check proves exact `project` and `library` scaffolds, nested cwd, and atomic failure for an unsupported type',
     '',
     '<!-- sync:consumer-howto -->',
     isRu ? '## 7. Как использовать в чужом проекте' : '## 7. How to use in an external project',

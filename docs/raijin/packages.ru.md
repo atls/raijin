@@ -31,13 +31,13 @@
 - `@atls/yarn-plugin-export` — `yarn/plugin-export`
 - `@atls/yarn-plugin-files` — `yarn/plugin-files`
 - `@atls/yarn-plugin-format` — `yarn/plugin-format`
+- `@atls/yarn-plugin-generate` — `yarn/plugin-generate`
 - `@atls/yarn-plugin-image` — `yarn/plugin-image`
 - `@atls/yarn-plugin-library` — `yarn/plugin-library`
 - `@atls/yarn-plugin-lint` — `yarn/plugin-lint`
 - `@atls/yarn-plugin-pnp-patch` — `yarn/plugin-pnp-patch`
 - `@atls/yarn-plugin-release` — `yarn/plugin-release`
 - `@atls/yarn-plugin-renderer` — `yarn/plugin-renderer`
-- `@atls/yarn-plugin-schematics` — `yarn/plugin-schematics`
 - `@atls/yarn-plugin-service` — `yarn/plugin-service`
 - `@atls/yarn-plugin-test` — `yarn/plugin-test`
 - `@atls/yarn-plugin-tools` — `yarn/plugin-tools`
@@ -56,7 +56,7 @@
 - Группа: `yarn`
 - Видимость: `public`
 - Описание: Public Raijin initializer and runtime package
-- Скрипты: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
+- Скрипты: `build`, `build:generation`, `build:library`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli -->
 
@@ -65,7 +65,7 @@
 - Локация: `yarn/cli`
 - Группа: `yarn`
 - Видимость: `private`
-- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:schemaic`, `build:verify`, `build:version`, `fix`, `postpack`, `prepack`
+- Скрипты: `build`, `build:fix`, `build:verify`, `fix`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
 
@@ -166,6 +166,15 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-generate -->
+
+#### `@atls/yarn-plugin-generate`
+
+- Локация: `yarn/plugin-generate`
+- Группа: `yarn`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-image -->
 
 #### `@atls/yarn-plugin-image`
@@ -216,15 +225,6 @@
 #### `@atls/yarn-plugin-renderer`
 
 - Локация: `yarn/plugin-renderer`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-schematics -->
-
-#### `@atls/yarn-plugin-schematics`
-
-- Локация: `yarn/plugin-schematics`
 - Группа: `yarn`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
@@ -298,7 +298,6 @@
 - `@atls/code-icons` — `code/code-icons`
 - `@atls/code-lint` — `code/code-lint`
 - `@atls/code-pack` — `code/code-pack`
-- `@atls/code-schematics` — `code/code-schematics`
 - `@atls/code-service` — `code/code-service`
 - `@atls/code-test` — `code/code-test`
 - `@atls/code-typescript` — `code/code-typescript`
@@ -368,15 +367,6 @@
 - Группа: `code`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-schematics -->
-
-#### `@atls/code-schematics`
-
-- Локация: `code/code-schematics`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`, `smoke:schematic`
 
 <!-- sync:package-card:atls-code-service -->
 
