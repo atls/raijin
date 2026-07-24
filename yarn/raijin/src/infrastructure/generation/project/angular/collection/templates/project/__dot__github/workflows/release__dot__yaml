@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+permissions:
+  contents: read
+  packages: write
+  pull-requests: read
+
+jobs:
+  run:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: <%= workflowPolicy.checkoutAction %>
+        with:
+          ref: master
+
+      - name: Setup Node
+        uses: <%= workflowPolicy.setupNodeAction %>
+        with:
+          node-version: '<%= workflowPolicy.nodeVersion %>'
+
+      - name: Install
+        run: yarn install
+
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login <%= workflowPolicy.containerRegistry %> -u "${{ github.actor }}" --password-stdin
+
+      - name: Install Buildpack Cli
+        run: |
+          (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.40.4/pack-v0.40.4-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        run: |
+          yarn workspaces changed foreach run app pack \
+            --registry '<%= workflowPolicy.containerRegistry %>/${{ <%= workflowPolicy.containerRegistryOwnerExpression %> }}/<%= projectName %>-' \
+            --tag-policy hash-timestamp \
+            --publish

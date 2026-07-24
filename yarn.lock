@@ -454,7 +454,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-schematics-component@workspace:*, @atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component":
+"@atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-schematics-component@workspace:cli/cli-ui-schematics-component"
   dependencies:
@@ -688,28 +688,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-schematics@workspace:*, @atls/code-schematics@workspace:code/code-schematics":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-schematics@workspace:code/code-schematics"
-  dependencies:
-    "@angular-devkit/core": "npm:19.1.5"
-    "@angular-devkit/schematics": "npm:19.1.5"
-    "@atls/raijin": "workspace:*"
-    "@types/node": "npm:24.12.2"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    "@yarnpkg/esbuild-plugin-pnp": "npm:3.0.0-rc.15"
-    "@yarnpkg/fslib": "npm:3.1.5"
-    esbuild: "npm:0.24.2"
-    js-yaml: "npm:4.1.0"
-    rxjs: "npm:7.8.1"
-    strip-json-comments: "npm:3.1.1"
-  peerDependencies:
-    "@yarnpkg/cli": "*"
-    "@yarnpkg/core": "*"
-  languageName: unknown
-  linkType: soft
-
 "@atls/code-service@workspace:*, @atls/code-service@workspace:code/code-service":
   version: 0.0.0-use.local
   resolution: "@atls/code-service@workspace:code/code-service"
@@ -752,6 +730,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/raijin@workspace:yarn/raijin"
   dependencies:
+    "@angular-devkit/core": "npm:19.1.5"
+    "@angular-devkit/schematics": "npm:19.1.5"
     "@babel/types": "npm:7.25.6"
     "@next/eslint-plugin-next": "npm:16.0.7"
     "@svgr/core": "npm:8.1.0"
@@ -762,7 +742,9 @@ __metadata:
     "@typescript-eslint/parser": "npm:8.48.1"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
+    "@yarnpkg/esbuild-plugin-pnp": "npm:3.0.0-rc.15"
     "@yarnpkg/fslib": "npm:3.1.5"
+    esbuild: "npm:0.24.2"
     eslint: "npm:9.22.0"
     eslint-plugin-jsx-a11y: "npm:6.10.2"
     eslint-plugin-n: "npm:17.23.1"
@@ -779,15 +761,14 @@ __metadata:
     prettier: "npm:3.5.3"
     protocol-buffers-schema: "npm:3.6.0"
     react: "npm:18.3.1"
+    rxjs: "npm:7.8.1"
     sort-package-json: "npm:2.4.1"
+    strip-json-comments: "npm:3.1.1"
     ts-loader: "npm:9.5.2"
     typescript: "npm:5.9.3"
     webpack: "npm:5.98.0"
     zod: "npm:4.1.13"
     zod-validation-error: "npm:4.0.2"
-  peerDependencies:
-    "@yarnpkg/core": "*"
-    "@yarnpkg/fslib": "*"
   bin:
     raijin: ./bin/raijin.mjs
   languageName: unknown
@@ -815,12 +796,12 @@ __metadata:
     "@atls/yarn-plugin-export": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-format": "workspace:*"
+    "@atls/yarn-plugin-generate": "workspace:*"
     "@atls/yarn-plugin-image": "workspace:*"
     "@atls/yarn-plugin-library": "workspace:*"
     "@atls/yarn-plugin-lint": "workspace:*"
     "@atls/yarn-plugin-release": "workspace:*"
     "@atls/yarn-plugin-renderer": "workspace:*"
-    "@atls/yarn-plugin-schematics": "workspace:*"
     "@atls/yarn-plugin-service": "workspace:*"
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
@@ -879,12 +860,12 @@ __metadata:
     "@atls/yarn-plugin-export": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-format": "workspace:*"
+    "@atls/yarn-plugin-generate": "workspace:*"
     "@atls/yarn-plugin-image": "workspace:*"
     "@atls/yarn-plugin-library": "workspace:*"
     "@atls/yarn-plugin-lint": "workspace:*"
     "@atls/yarn-plugin-release": "workspace:*"
     "@atls/yarn-plugin-renderer": "workspace:*"
-    "@atls/yarn-plugin-schematics": "workspace:*"
     "@atls/yarn-plugin-service": "workspace:*"
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
@@ -1131,6 +1112,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@atls/yarn-plugin-generate@workspace:*, @atls/yarn-plugin-generate@workspace:yarn/plugin-generate":
+  version: 0.0.0-use.local
+  resolution: "@atls/yarn-plugin-generate@workspace:yarn/plugin-generate"
+  dependencies:
+    "@atls/raijin": "workspace:*"
+    "@yarnpkg/builder": "npm:4.2.0"
+    "@yarnpkg/cli": "npm:4.14.1"
+    "@yarnpkg/core": "npm:4.7.0"
+    "@yarnpkg/fslib": "npm:3.1.5"
+    clipanion: "npm:4.0.0-rc.2"
+    typescript: "npm:5.9.3"
+  peerDependencies:
+    "@yarnpkg/cli": "*"
+    "@yarnpkg/core": "*"
+    "@yarnpkg/fslib": "*"
+  languageName: unknown
+  linkType: soft
+
 "@atls/yarn-plugin-image@workspace:*, @atls/yarn-plugin-image@workspace:yarn/plugin-image":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-image@workspace:yarn/plugin-image"
@@ -1261,36 +1260,6 @@ __metadata:
   peerDependencies:
     "@yarnpkg/cli": ^4
     "@yarnpkg/core": ^4
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-plugin-schematics@workspace:*, @atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-schematics@workspace:yarn/plugin-schematics"
-  dependencies:
-    "@atls/cli-ui-error-info-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
-    "@atls/cli-ui-schematics-component": "workspace:*"
-    "@atls/code-schematics": "workspace:*"
-    "@atls/raijin": "workspace:*"
-    "@types/react": "npm:18.3.18"
-    "@yarnpkg/builder": "npm:4.2.0"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    "@yarnpkg/fslib": "npm:3.1.5"
-    "@yarnpkg/libui": "npm:3.0.1"
-    clipanion: "npm:4.0.0-rc.2"
-    force-stdin-tty: "npm:0.0.1"
-    ink: "npm:3.2.0"
-    react: "npm:18.3.1"
-    typanion: "npm:3.14.0"
-    typescript: "npm:5.9.3"
-  peerDependencies:
-    "@yarnpkg/cli": "*"
-    "@yarnpkg/core": "*"
-    "@yarnpkg/fslib": "*"
-    ink: "*"
-    react: "*"
   languageName: unknown
   linkType: soft
 
@@ -9272,17 +9241,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:4.1.0, js-yaml@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "js-yaml@npm:4.1.0"
-  dependencies:
-    argparse: "npm:^2.0.1"
-  bin:
-    js-yaml: bin/js-yaml.js
-  checksum: 10/c138a34a3fd0d08ebaf71273ad4465569a483b8a639e0b118ff65698d257c2791d3199e3f303631f2cb98213fa7b5f5d6a4621fd0fff819421b990d30d967140
-  languageName: node
-  linkType: hard
-
 "js-yaml@npm:^3.10.0":
   version: 3.14.1
   resolution: "js-yaml@npm:3.14.1"
@@ -9292,6 +9250,17 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: 10/9e22d80b4d0105b9899135365f746d47466ed53ef4223c529b3c0f7a39907743fdbd3c4379f94f1106f02755b5e90b2faaf84801a891135544e1ea475d1a1379
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "js-yaml@npm:4.1.0"
+  dependencies:
+    argparse: "npm:^2.0.1"
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: 10/c138a34a3fd0d08ebaf71273ad4465569a483b8a639e0b118ff65698d257c2791d3199e3f303631f2cb98213fa7b5f5d6a4621fd0fff819421b990d30d967140
   languageName: node
   linkType: hard
 

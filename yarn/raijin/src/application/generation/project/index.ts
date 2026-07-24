@@ -1,0 +1,5 @@
+export *      from './scaffold/use-case.js'
+export type * from './scaffold/input.interfaces.js'
+export type * from './scaffold/port.interfaces.js'
+export type * from './scaffold/result.interfaces.js'
+export type * from './scaffold/use-case.interfaces.js'

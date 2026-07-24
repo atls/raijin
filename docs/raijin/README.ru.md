@@ -31,12 +31,12 @@
 
 - `yarn raijin:generate`
 - `yarn raijin:check`
-- `yarn schematic:test`
+- `yarn raijin:smoke:generate-project`
 
 <!-- sync:router-coverage -->
 
 ## Покрытие текущей версии
 
 - Команд: 38 (active: 38, inactive: 0)
-- Workspace-пакетов: 59
-- Последняя генерация: 2026-07-18T23:07:35.246Z
+- Workspace-пакетов: 58
+- Последняя генерация: 2026-07-23T20:16:41.140Z

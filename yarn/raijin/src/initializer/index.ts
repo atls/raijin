@@ -6,7 +6,6 @@ import { ensurePackageManifest }            from './project.js'
 import { ensureYarnLock }                   from './project.js'
 import { parseRaijinInitializerArguments }  from './scaffold.js'
 import { selectRaijinScaffoldType }         from './scaffold.js'
-import { installRaijinSchematicArtifact }   from './schematic.js'
 
 const RAIJIN_PACKAGE = '@atls/raijin@latest'
 
@@ -14,7 +13,6 @@ export const runRaijinInitializer = async ({
   argv = [],
   cwd = process.cwd(),
   fetchImpl = fetch,
-  installSchematicArtifact = installRaijinSchematicArtifact,
   runYarnCommand: runCommand = runYarnCommand,
   selectScaffoldType = selectRaijinScaffoldType,
 }: RunRaijinInitializerOptions = {}): Promise<void> => {
@@ -22,7 +20,6 @@ export const runRaijinInitializer = async ({
   const scaffoldType = parsedScaffoldType ?? (await selectScaffoldType())
 
   const runtimeManifest = await installRaijinRuntime({ cwd, fetchImpl })
-  await installSchematicArtifact(cwd)
   await ensurePackageManifest(cwd, runtimeManifest.packageManager)
   await ensureYarnLock(cwd)
   await runCommand(['add', '-D', RAIJIN_PACKAGE], cwd)

@@ -31,7 +31,7 @@ Expected result:
 - `package.json` is created when it does not exist yet, and `packageManager` is normalized to the installed runtime manifest value
 - Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.mjs`
 - `.yarnrc.yml` gets `nodeLinker: pnp` and the final `yarnPath` directly without a temporary file
-- Project scaffold is created through the existing Raijin schematics
+- Project scaffold is created by the installed Raijin bundle through `generate project`
 - Bundle commands (`check`, `files changed list`, etc.) become available
 
 <!-- sync:existing-project -->
@@ -46,7 +46,7 @@ Use `--type library` for the library scaffold
 
 Expected result:
 
-- Existing project gets the public `@atls/raijin` package, Raijin runtime, project schematics, the first sync, and `packageManager` from the installed runtime manifest
+- Existing project gets the public `@atls/raijin` package, Raijin runtime, project scaffold, the first sync, and `packageManager` from the installed runtime manifest
 
 <!-- sync:bundle-upgrade -->
 
@@ -74,18 +74,18 @@ Expected result:
 - `yarn check` runs a complete validation pass without routing errors
 - `yarn files changed list` returns file list (or empty list if no changes)
 
-<!-- sync:schematic-smoke -->
+<!-- sync:generate-project-smoke -->
 
-## 6. Local schematics smoke check
+## 6. Project generator smoke check
 
 ```bash
-yarn schematic:test
+yarn raijin:smoke:generate-project
 ```
 
 Expected result:
 
-- Temporary fixture is created through public `@atls/code-schematics` exports
-- Check fails if helper or Markdown docs invoke an inactive command
+- Packed `@atls/raijin` is installed into temporary PnP and `node-modules` monorepos and invoked through the checked-in `yarnPath`
+- The check proves exact `project` and `library` scaffolds, nested cwd, and atomic failure for an unsupported type
 
 <!-- sync:consumer-howto -->
 

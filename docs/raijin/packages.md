@@ -31,13 +31,13 @@ Compact list:
 - `@atls/yarn-plugin-export` — `yarn/plugin-export`
 - `@atls/yarn-plugin-files` — `yarn/plugin-files`
 - `@atls/yarn-plugin-format` — `yarn/plugin-format`
+- `@atls/yarn-plugin-generate` — `yarn/plugin-generate`
 - `@atls/yarn-plugin-image` — `yarn/plugin-image`
 - `@atls/yarn-plugin-library` — `yarn/plugin-library`
 - `@atls/yarn-plugin-lint` — `yarn/plugin-lint`
 - `@atls/yarn-plugin-pnp-patch` — `yarn/plugin-pnp-patch`
 - `@atls/yarn-plugin-release` — `yarn/plugin-release`
 - `@atls/yarn-plugin-renderer` — `yarn/plugin-renderer`
-- `@atls/yarn-plugin-schematics` — `yarn/plugin-schematics`
 - `@atls/yarn-plugin-service` — `yarn/plugin-service`
 - `@atls/yarn-plugin-test` — `yarn/plugin-test`
 - `@atls/yarn-plugin-tools` — `yarn/plugin-tools`
@@ -56,7 +56,7 @@ Compact list:
 - Group: `yarn`
 - Visibility: `public`
 - Description: Public Raijin initializer and runtime package
-- Scripts: `build`, `build:library`, `build:schematic`, `postpack`, `prepack`
+- Scripts: `build`, `build:generation`, `build:library`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli -->
 
@@ -65,7 +65,7 @@ Compact list:
 - Location: `yarn/cli`
 - Group: `yarn`
 - Visibility: `private`
-- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:schemaic`, `build:verify`, `build:version`, `fix`, `postpack`, `prepack`
+- Scripts: `build`, `build:fix`, `build:verify`, `fix`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli-tools -->
 
@@ -166,6 +166,15 @@ Compact list:
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-generate -->
+
+#### `@atls/yarn-plugin-generate`
+
+- Location: `yarn/plugin-generate`
+- Group: `yarn`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-image -->
 
 #### `@atls/yarn-plugin-image`
@@ -216,15 +225,6 @@ Compact list:
 #### `@atls/yarn-plugin-renderer`
 
 - Location: `yarn/plugin-renderer`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-schematics -->
-
-#### `@atls/yarn-plugin-schematics`
-
-- Location: `yarn/plugin-schematics`
 - Group: `yarn`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
@@ -298,7 +298,6 @@ Compact list:
 - `@atls/code-icons` — `code/code-icons`
 - `@atls/code-lint` — `code/code-lint`
 - `@atls/code-pack` — `code/code-pack`
-- `@atls/code-schematics` — `code/code-schematics`
 - `@atls/code-service` — `code/code-service`
 - `@atls/code-test` — `code/code-test`
 - `@atls/code-typescript` — `code/code-typescript`
@@ -368,15 +367,6 @@ Compact list:
 - Group: `code`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-schematics -->
-
-#### `@atls/code-schematics`
-
-- Location: `code/code-schematics`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `build:library`, `build:schematic-factory`, `postpack`, `prepack`, `smoke:schematic`
 
 <!-- sync:package-card:atls-code-service -->
 

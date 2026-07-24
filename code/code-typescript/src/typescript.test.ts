@@ -211,6 +211,33 @@ test('should typecheck solution workspace sources without emitting files', async
   )
 })
 
+test('should emit explicit build sources into a flat target directory', async () => {
+  const cwd = await createProject({
+    'src/index.ts': 'export const value = 1\n',
+  })
+
+  const diagnostics = await new TypeScript(ts, cwd).build([join(cwd, './src')], {
+    declaration: true,
+    outDir: join(cwd, './dist'),
+    rootDir: join(cwd, './src'),
+  })
+  const files = await readdir(join(cwd, 'dist'), { recursive: true })
+
+  assert.equal(diagnostics.length, 0)
+  assert.equal(
+    files.some((file) => file === 'index.js'),
+    true
+  )
+  assert.equal(
+    files.some((file) => file === 'index.d.ts'),
+    true
+  )
+  assert.equal(
+    files.some((file) => file === 'src/index.js'),
+    false
+  )
+})
+
 test('should preserve project manifest options with workspace tsconfig', async () => {
   const cwd = await createProject(
     {

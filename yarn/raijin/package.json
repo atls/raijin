@@ -16,14 +16,19 @@
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
+    "./application/generation": "./src/application/generation/index.ts",
     "./commands": "./src/commands/index.ts",
     "./config": "./src/config/index.ts",
     "./config/eslint": "./src/config/eslint/index.ts",
     "./config/next": "./src/config/next/index.ts",
     "./config/prettier": "./src/config/prettier/index.ts",
     "./config/sync": "./src/config/sync/index.ts",
-    "./config/typescript": "./src/config/typescript/index.ts",
+    "./config/typescript": {
+      "raijin-project-collection-build": "./dist/config/typescript/index.js",
+      "default": "./src/config/typescript/index.ts"
+    },
     "./filesystem": "./src/filesystem/index.ts",
+    "./infrastructure/generation": "./src/infrastructure/generation/index.ts",
     "./project": "./src/project/index.ts",
     "./yarn": "./src/yarn/index.ts",
     "./runtime": "./src/runtime.ts",
@@ -52,19 +57,21 @@
     "types"
   ],
   "scripts": {
-    "build": "yarn run build:library && yarn run build:schematic",
-    "build:library": "yarn library build",
-    "build:schematic": "yarn workspace @atls/code-schematics build:schematic-factory && rm -rf dist/schematic && cp -R ../../code/code-schematics/dist/schematic dist/schematic",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "build": "node package/build/execute.js",
+    "prepack": "node package/build/execute.js",
+    "postpack": "node package/build/clean.js"
   },
   "dependencies": {
+    "@angular-devkit/core": "19.1.5",
+    "@angular-devkit/schematics": "19.1.5",
     "@babel/types": "7.25.6",
     "@next/eslint-plugin-next": "16.0.7",
     "@svgr/core": "8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
     "@typescript-eslint/eslint-plugin": "8.48.1",
     "@typescript-eslint/parser": "8.48.1",
+    "@yarnpkg/core": "4.7.0",
+    "@yarnpkg/fslib": "3.1.5",
     "eslint": "9.22.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-n": "17.23.1",
@@ -81,7 +88,9 @@
     "prettier": "3.5.3",
     "protocol-buffers-schema": "3.6.0",
     "react": "18.3.1",
+    "rxjs": "7.8.1",
     "sort-package-json": "2.4.1",
+    "strip-json-comments": "3.1.1",
     "ts-loader": "9.5.2",
     "typescript": "5.9.3",
     "webpack": "5.98.0",
@@ -92,12 +101,8 @@
     "@types/node": "24.12.2",
     "@types/protocol-buffers-schema": "3.4.3",
     "@yarnpkg/cli": "4.14.1",
-    "@yarnpkg/core": "4.7.0",
-    "@yarnpkg/fslib": "3.1.5"
-  },
-  "peerDependencies": {
-    "@yarnpkg/core": "*",
-    "@yarnpkg/fslib": "*"
+    "@yarnpkg/esbuild-plugin-pnp": "3.0.0-rc.15",
+    "esbuild": "0.24.2"
   },
   "publishConfig": {
     "access": "public",
@@ -107,6 +112,11 @@
     "exports": {
       "./package.json": "./package.json",
       "./types": "./types/index.d.ts",
+      "./application/generation": {
+        "import": "./dist/application/generation/index.js",
+        "types": "./dist/application/generation/index.d.ts",
+        "default": "./dist/application/generation/index.js"
+      },
       "./commands": {
         "import": "./dist/commands/index.js",
         "types": "./dist/commands/index.d.ts",
@@ -146,6 +156,11 @@
         "import": "./dist/filesystem/index.js",
         "types": "./dist/filesystem/index.d.ts",
         "default": "./dist/filesystem/index.js"
+      },
+      "./infrastructure/generation": {
+        "import": "./dist/infrastructure/generation/index.js",
+        "types": "./dist/infrastructure/generation/index.d.ts",
+        "default": "./dist/infrastructure/generation/index.js"
       },
       "./project": {
         "import": "./dist/project/index.js",
@@ -246,5 +261,6 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts"
   },
+  "schematics": "./dist/generation/project/collection/collection.json",
   "typecheckSkipLibCheck": true
 }
