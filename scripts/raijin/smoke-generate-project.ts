@@ -154,7 +154,8 @@ const assertGeneratedScaffold = async (
   if (scaffoldType === 'project') {
     const preview = await readFile(join(target, '.github/workflows/preview.yaml'), 'utf8')
 
-    assert.match(preview, /fixture-project-/)
+    assert.match(preview, /--registry 'ghcr\.io\/\$\{\{ github\.repository \}\}-'/)
+    assert.doesNotMatch(preview, /fixture-project-/)
   } else {
     const publish = await readFile(join(target, '.github/workflows/publish.yaml'), 'utf8')
 

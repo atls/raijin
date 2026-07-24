@@ -42,6 +42,6 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         run: |
           yarn workspaces changed foreach run app pack \
-            --registry '<%= workflowPolicy.containerRegistry %>/${{ <%= workflowPolicy.containerRegistryOwnerExpression %> }}/<%= projectName %>-' \
+            --registry '<%= workflowPolicy.containerRegistry %>/${{ <%= workflowPolicy.containerRepositoryExpression %> }}-' \
             --tag-policy hash-timestamp \
             --publish

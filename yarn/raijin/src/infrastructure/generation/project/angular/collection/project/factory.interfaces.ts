@@ -6,14 +6,6 @@ export interface SchematicOptions {
   readonly type: ScaffoldType
 }
 
-export interface ProjectManifest {
-  readonly name: string
-}
-
 export interface CommonTemplateVariables extends SchematicOptions {
   readonly workflowPolicy: GeneratedWorkflowPolicy
-}
-
-export interface ScaffoldTemplateVariables extends CommonTemplateVariables {
-  readonly projectName: string
 }

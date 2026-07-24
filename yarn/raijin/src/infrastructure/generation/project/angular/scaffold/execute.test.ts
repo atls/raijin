@@ -35,16 +35,19 @@ let fixtureRoot = ''
 let collectionPath = ''
 
 const createProjectTarget = async (
-  name: string,
-  scripts?: Record<string, string>
+  directory: string,
+  scripts?: Record<string, string>,
+  packageName: string | null = directory
 ): Promise<string> => {
-  const target = join(fixtureRoot, 'nested', name)
+  const target = join(fixtureRoot, 'nested', directory)
+  const manifest = {
+    ...(packageName ? { name: packageName } : {}),
+    private: true,
+    scripts,
+  }
 
   await mkdir(target, { recursive: true })
-  await writeFile(
-    join(target, 'package.json'),
-    `${JSON.stringify({ name, private: true, scripts }, null, 2)}\n`
-  )
+  await writeFile(join(target, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
   await writeFile(
     join(target, 'tsconfig.json'),
     `${JSON.stringify({ compilerOptions: { baseUrl: '.' }, include: ['src'] }, null, 2)}\n`
@@ -117,10 +120,7 @@ const assertExactScaffoldFiles = async (scaffoldType: 'library' | 'project'): Pr
     const preview = await readFile(join(target, '.github/workflows/preview.yaml'), 'utf-8')
     const release = await readFile(join(target, '.github/workflows/release.yaml'), 'utf-8')
 
-    assert.match(
-      preview,
-      /--registry 'ghcr\.io\/\$\{\{ github\.repository_owner \}\}\/project-fixture-'/
-    )
+    assert.match(preview, /--registry 'ghcr\.io\/\$\{\{ github\.repository \}\}-'/)
     assert.match(release, /docker login ghcr\.io -u "\$\{\{ github\.actor \}\}"/)
     await assertFileMissing(join(target, '.github/workflows/publish.yaml'))
   } else {
@@ -164,12 +164,34 @@ test('should preserve existing workspace package scripts while applying the scaf
   assert.deepEqual(manifest.scripts, scripts)
 })
 
+test('should derive the image repository from GitHub independently of the package name', async () => {
+  const targets: Array<readonly [directory: string, packageName: string | null]> = [
+    ['scoped-package-fixture', '@acme/web'],
+    ['nameless-package-fixture', null],
+  ]
+
+  await Promise.all(
+    targets.map(async ([directory, packageName]) => {
+      const target = await createProjectTarget(directory, undefined, packageName)
+      const result = await scaffoldWithAngular(collectionPath, {
+        scaffoldType: 'project',
+        targetPath: target,
+      })
+      const preview = await readFile(join(target, '.github/workflows/preview.yaml'), 'utf-8')
+
+      assert.equal(result.status, 'succeeded', JSON.stringify(result, null, 2))
+      assert.match(preview, /--registry 'ghcr\.io\/\$\{\{ github\.repository \}\}-'/)
+      assert.doesNotMatch(preview, /@acme/)
+    })
+  )
+})
+
 test('should roll back partial tree writes when a schematic rule fails', async () => {
   const target = await createProjectTarget('transaction-fixture')
+  const tsconfigPath = join(target, 'tsconfig.json')
 
-  const beforeTsconfig = await readFile(join(target, 'tsconfig.json'), 'utf-8')
-
-  await writeFile(join(target, 'package.json'), '{ invalid project manifest')
+  await writeFile(tsconfigPath, '{ invalid TypeScript configuration')
+  const beforeTsconfig = await readFile(tsconfigPath, 'utf-8')
 
   const result = await scaffoldWithAngular(collectionPath, {
     scaffoldType: 'project',
@@ -178,7 +200,7 @@ test('should roll back partial tree writes when a schematic rule fails', async (
 
   assert.equal(result.status, 'failed')
   assert.equal(result.failure.code, 'project-scaffold-failed')
-  assert.equal(await readFile(join(target, 'tsconfig.json'), 'utf-8'), beforeTsconfig)
+  assert.equal(await readFile(tsconfigPath, 'utf-8'), beforeTsconfig)
   await assertFileMissing(join(target, '.prettierrc.mjs'))
   await assertFileMissing(join(target, '.github/workflows/checks.yaml'))
 })

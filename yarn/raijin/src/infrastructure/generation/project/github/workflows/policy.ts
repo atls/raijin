@@ -30,7 +30,7 @@ export const createGeneratedWorkflowPolicy = (
 ): GeneratedWorkflowPolicy => ({
   checkoutAction: 'actions/checkout@v6',
   containerRegistry: 'ghcr.io',
-  containerRegistryOwnerExpression: 'github.repository_owner',
+  containerRepositoryExpression: 'github.repository',
   nodeVersion: resolveNodeVersion(packageManifest),
   npmTokenSecret: 'NPM_TOKEN',
   setupNodeAction: 'actions/setup-node@v6',

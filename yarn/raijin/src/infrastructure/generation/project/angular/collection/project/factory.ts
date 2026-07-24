@@ -1,11 +1,8 @@
 import type { Rule }                      from '@angular-devkit/schematics'
 import type { Source }                    from '@angular-devkit/schematics'
-import type { Tree }                      from '@angular-devkit/schematics'
 
 import type { CapturedState }             from '../../rules/gitignore/rule.interfaces.js'
 import type { CommonTemplateVariables }   from './factory.interfaces.js'
-import type { ProjectManifest }           from './factory.interfaces.js'
-import type { ScaffoldTemplateVariables } from './factory.interfaces.js'
 import type { SchematicOptions }          from './factory.interfaces.js'
 
 import { MergeStrategy }                  from '@angular-devkit/schematics'
@@ -24,10 +21,8 @@ import raijinPackageManifest from '@atls/raijin/package.json' with { type: 'json
 import { createGeneratedWorkflowPolicy }  from '../../../github/workflows/policy.js'
 import { captureGitIgnore }               from '../../rules/gitignore/rule.js'
 import { mergeCapturedGitIgnore }         from '../../rules/gitignore/rule.js'
-import { readProjectJson }                from '../../rules/json/rule.js'
 import { updateProjectJson }              from '../../rules/json/rule.js'
 
-const PACKAGE_JSON_PATH = 'package.json'
 const TSCONFIG_PATH = 'tsconfig.json'
 
 const templateDirectories: Record<SchematicOptions['type'], string> = {
@@ -60,24 +55,11 @@ const mergeCommonTemplates = (options: SchematicOptions): Rule =>
     MergeStrategy.Overwrite
   )
 
-const createScaffoldTemplateVariables = (
-  options: SchematicOptions,
-  manifest: ProjectManifest
-): ScaffoldTemplateVariables => ({
-  ...createCommonTemplateVariables(options),
-  projectName: manifest.name,
-})
-
 const mergeScaffoldTemplates = (options: SchematicOptions): Rule =>
-  (tree: Tree): Rule => {
-    const manifest = readProjectJson<ProjectManifest>(tree, PACKAGE_JSON_PATH)
-    const templateDirectory = templateDirectories[options.type]
-
-    return mergeWith(
-      createTemplateSource(templateDirectory, createScaffoldTemplateVariables(options, manifest)),
-      MergeStrategy.Overwrite
-    )
-  }
+  mergeWith(
+    createTemplateSource(templateDirectories[options.type], createCommonTemplateVariables(options)),
+    MergeStrategy.Overwrite
+  )
 
 export const scaffold = (options: SchematicOptions): Rule => {
   const gitIgnoreState: CapturedState = {}

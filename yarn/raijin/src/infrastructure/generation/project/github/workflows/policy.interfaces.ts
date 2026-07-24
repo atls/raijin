@@ -7,7 +7,7 @@ export interface PackageManifest {
 export interface GeneratedWorkflowPolicy {
   readonly checkoutAction: string
   readonly containerRegistry: 'ghcr.io'
-  readonly containerRegistryOwnerExpression: string
+  readonly containerRepositoryExpression: string
   readonly nodeVersion: string
   readonly npmTokenSecret: string
   readonly setupNodeAction: string
