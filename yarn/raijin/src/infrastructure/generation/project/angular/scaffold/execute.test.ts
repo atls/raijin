@@ -25,6 +25,7 @@ const expectedCommonFiles = [
   '/.github/workflows/checks.yaml',
   '/.gitignore',
   '/.prettierrc.mjs',
+  '/eslint.config.mjs',
   '/tsconfig.json',
 ]
 
@@ -89,6 +90,10 @@ const assertExactScaffoldFiles = async (scaffoldType: 'library' | 'project'): Pr
   assert.equal(
     await readFile(join(target, '.prettierrc.mjs'), 'utf-8'),
     "import config from '@atls/raijin/prettier'\n\nexport default config\n"
+  )
+  assert.equal(
+    await readFile(join(target, 'eslint.config.mjs'), 'utf-8'),
+    "import { eslintconfig } from '@atls/raijin/eslint'\n\nexport default [\n  ...eslintconfig,\n  {\n    ignores: ['.eslintrc.js', 'eslint.config.mjs', 'yarn.js', 'yarn-remote.cjs'],\n  },\n]\n"
   )
   assert.equal(
     await readFile(join(target, '.config/husky/pre-commit'), 'utf-8'),

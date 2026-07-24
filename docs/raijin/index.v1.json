@@ -821,7 +821,7 @@
       "group": "yarn",
       "private": false,
       "description": "Public Raijin initializer and runtime package",
-      "scripts": ["build", "build:generation", "build:library", "postpack", "prepack"]
+      "scripts": ["build", "postpack", "prepack"]
     },
     {
       "name": "@atls/yarn-cli",
@@ -1091,5 +1091,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-07-23T20:16:41.140Z"
+  "lastGenerated": "2026-07-24T19:27:59.119Z"
 }

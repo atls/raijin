@@ -56,7 +56,7 @@
 - Группа: `yarn`
 - Видимость: `public`
 - Описание: Public Raijin initializer and runtime package
-- Скрипты: `build`, `build:generation`, `build:library`, `postpack`, `prepack`
+- Скрипты: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-cli -->
 
