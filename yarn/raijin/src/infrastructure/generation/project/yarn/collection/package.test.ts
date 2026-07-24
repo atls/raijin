@@ -1,3 +1,4 @@
+import type { FetchResult }               from '@yarnpkg/core'
 import type { PortablePath }              from '@yarnpkg/fslib'
 
 import assert                             from 'node:assert/strict'
@@ -26,6 +27,14 @@ const createPackageCollection = async (root: PortablePath): Promise<PortablePath
 
   return collection
 }
+
+const createFetchResult = (prefixPath: PortablePath): FetchResult => ({
+  checksum: null,
+  localPath: null,
+  packageFs: new NodeFS(),
+  prefixPath,
+  releaseFs: undefined,
+})
 
 test('should materialize a package collection for the callback and clean it afterward', async () => {
   await xfs.mktempPromise(async (root) => {
@@ -98,17 +107,45 @@ test('should resolve the collection directory from package schematics metadata',
       '{"schematics":"./dist/generation/project/collection/collection.json"}\n'
     )
 
-    const source = await resolvePackageSource({
-      checksum: null,
-      localPath: null,
-      packageFs: new NodeFS(),
-      prefixPath: packageRoot,
-      releaseFs: undefined,
-    })
+    const source = await resolvePackageSource(createFetchResult(packageRoot))
 
     assert.equal(
       source.packageCollectionPath,
       ppath.join(packageRoot, 'dist/generation/project/collection' as PortablePath)
+    )
+  })
+})
+
+test('should classify invalid package manifest JSON as an unavailable collection', async () => {
+  await xfs.mktempPromise(async (root) => {
+    const packageRoot = ppath.join(root, 'package' as PortablePath)
+
+    await mkdir(npath.fromPortablePath(packageRoot), { recursive: true })
+    await writeFile(
+      npath.fromPortablePath(ppath.join(packageRoot, 'package.json' as PortablePath)),
+      '{invalid json}\n'
+    )
+
+    await assert.rejects(
+      resolvePackageSource(createFetchResult(packageRoot)),
+      CollectionUnavailableException
+    )
+  })
+})
+
+test('should classify missing schematics metadata as an unavailable collection', async () => {
+  await xfs.mktempPromise(async (root) => {
+    const packageRoot = ppath.join(root, 'package' as PortablePath)
+
+    await mkdir(npath.fromPortablePath(packageRoot), { recursive: true })
+    await writeFile(
+      npath.fromPortablePath(ppath.join(packageRoot, 'package.json' as PortablePath)),
+      '{}\n'
+    )
+
+    await assert.rejects(
+      resolvePackageSource(createFetchResult(packageRoot)),
+      CollectionUnavailableException
     )
   })
 })

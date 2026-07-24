@@ -78,17 +78,21 @@ const readRaijinPackageManifest = async ({
 }
 
 export const resolvePackageSource = async (fetched: FetchResult): Promise<PackageSource> => {
-  const manifest = await readRaijinPackageManifest(fetched)
+  try {
+    const manifest = await readRaijinPackageManifest(fetched)
 
-  if (typeof manifest.schematics !== 'string' || manifest.schematics.length === 0) {
-    throw new Error('The installed @atls/raijin package does not declare schematics')
-  }
+    if (typeof manifest.schematics !== 'string' || manifest.schematics.length === 0) {
+      throw new Error('The installed @atls/raijin package does not declare schematics')
+    }
 
-  return {
-    packageCollectionPath: ppath.dirname(
-      ppath.join(fetched.prefixPath, manifest.schematics as PortablePath)
-    ),
-    packageFs: fetched.packageFs,
+    return {
+      packageCollectionPath: ppath.dirname(
+        ppath.join(fetched.prefixPath, manifest.schematics as PortablePath)
+      ),
+      packageFs: fetched.packageFs,
+    }
+  } catch (error) {
+    throw new CollectionUnavailableException(error)
   }
 }
 
