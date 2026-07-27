@@ -36,7 +36,7 @@ test('should route package script Yarn wrappers through Corepack', async () => {
   }
 })
 
-test('should replace package script PnP loader with managed node loader', async () => {
+test('should add the managed node loader beside the package script PnP loader', async () => {
   const configuration = await Configuration.find(repoRoot, getPluginConfiguration())
   const { project } = await Project.find(configuration, repoRoot)
   const wrappers: Array<{ name: string; argv0: string; args: Array<string> }> = []
@@ -52,7 +52,10 @@ test('should replace package script PnP loader with managed node loader', async 
   const nodeWrapper = wrappers.find(({ name }) => name === 'node')
 
   assert.deepEqual(nodeWrapper, { name: 'node', argv0: process.execPath, args: [] })
-  assert.match(env.NODE_OPTIONS, /^--require \.\/\.pnp\.cjs --import data:text\/javascript,/)
+  assert.match(
+    env.NODE_OPTIONS,
+    /^--require \.\/\.pnp\.cjs --experimental-loader file:\/\/\/\.pnp\.loader\.mjs --import data:text\/javascript,/
+  )
   assert.match(
     decodeURIComponent(env.NODE_OPTIONS),
     /register\("file:\/\/\/tmp\/managed-loader\.mjs"/
@@ -71,7 +74,7 @@ test('should preserve unrelated package script node loaders', async () => {
   await setupScriptEnvironment(project, env, async () => undefined)
 
   assert.match(env.NODE_OPTIONS, /--loader file:\/\/\/tmp\/custom-loader\.mjs/)
-  assert.doesNotMatch(env.NODE_OPTIONS, /\.pnp\.loader\.mjs/)
+  assert.match(env.NODE_OPTIONS, /--experimental-loader file:\/\/\/\.pnp\.loader\.mjs/)
   assert.match(
     decodeURIComponent(env.NODE_OPTIONS),
     /register\("file:\/\/\/tmp\/managed-loader\.mjs"/

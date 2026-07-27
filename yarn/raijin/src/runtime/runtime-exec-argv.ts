@@ -248,6 +248,16 @@ const getMaterializedTypeScriptLoader = async (
 
 const resolveRaijinPackagePath = (): string => require.resolve(RAIJIN_PACKAGE_JSON)
 
+export const resolveSourceTypeScriptLoader = async (raijinPackagePath: string): Promise<string> => {
+  const typeScriptLoaderSourcePath = join(dirname(raijinPackagePath), TYPESCRIPT_LOADER_SOURCE_PATH)
+
+  if (!(await fileExists(typeScriptLoaderSourcePath))) {
+    throw new Error(`Unable to resolve source TypeScript loader for ${RAIJIN_PACKAGE_JSON}`)
+  }
+
+  return getMaterializedTypeScriptLoader(raijinPackagePath, typeScriptLoaderSourcePath)
+}
+
 export const resolveTypeScriptLoader = async (
   raijinPackagePath = resolveRaijinPackagePath()
 ): Promise<string> => {

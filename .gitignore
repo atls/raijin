@@ -50,14 +50,10 @@ yarn/cli/dist/*
 yarn/plugin-*/bundles/
 !yarn/plugin-badges/bundles/
 !yarn/plugin-badges/bundles/**
-!yarn/plugin-pnp-patch/bundles/
-!yarn/plugin-pnp-patch/bundles/**
 
 yarn/plugin-*/bundles/
 !yarn/plugin-badges/bundles/
 !yarn/plugin-badges/bundles/**
-!yarn/plugin-pnp-patch/bundles/
-!yarn/plugin-pnp-patch/bundles/**
 
 package.tgz
 
