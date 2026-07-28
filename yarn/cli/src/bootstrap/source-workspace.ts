@@ -61,8 +61,16 @@ export const registerRaijinSourceWorkspaceRuntime = async (
   const pnpPath = getPnpPath(project)
   const pnpApiPath = npath.fromPortablePath(pnpPath.cjs)
   const pnpLoaderPath = npath.fromPortablePath(pnpPath.esmLoader)
+  const pnpLoader = pathToFileURL(pnpLoaderPath).href
+  const inheritedTypeScriptLoader = process.env[MANAGED_NODE_LOADER_ENV]
 
-  await registerNodeLoaders([pathToFileURL(pnpLoaderPath).href])
+  if (inheritedTypeScriptLoader) {
+    await registerNodeLoaders([pnpLoader, inheritedTypeScriptLoader])
+
+    return
+  }
+
+  await registerNodeLoaders([pnpLoader])
 
   if (!isTypeScriptRuntimeAvailable(pnpApiPath, packagePath)) {
     return
