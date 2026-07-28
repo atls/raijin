@@ -923,6 +923,7 @@ __metadata:
     "@yarnpkg/plugin-typescript": "npm:4.1.3"
     "@yarnpkg/plugin-version": "npm:4.2.0"
     "@yarnpkg/plugin-workspace-tools": "npm:4.1.7"
+    "@yarnpkg/pnp": "npm:4.1.5"
     "@yarnpkg/shell": "npm:4.1.3"
     clipanion: "npm:4.0.0-rc.2"
     semver: "npm:7.6.3"
@@ -4842,7 +4843,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/pnp@npm:^4.1.1, @yarnpkg/pnp@npm:^4.1.2, @yarnpkg/pnp@npm:^4.1.5":
+"@yarnpkg/pnp@npm:4.1.5, @yarnpkg/pnp@npm:^4.1.1, @yarnpkg/pnp@npm:^4.1.2, @yarnpkg/pnp@npm:^4.1.5":
   version: 4.1.5
   resolution: "@yarnpkg/pnp@npm:4.1.5"
   dependencies:

@@ -1753,6 +1753,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/plugin-typescript", "virtual:cc07d1a2616e1760c5e91bca785c5de3c8bbf9fcf6760d2223da410ca52a8cfef60c4a5441d9cca648bf012790fb8462f1aedfa16dbb94b9c4fc352a0f9e4d67#npm:4.1.3"],\
           ["@yarnpkg/plugin-version", "virtual:cc07d1a2616e1760c5e91bca785c5de3c8bbf9fcf6760d2223da410ca52a8cfef60c4a5441d9cca648bf012790fb8462f1aedfa16dbb94b9c4fc352a0f9e4d67#npm:4.2.0"],\
           ["@yarnpkg/plugin-workspace-tools", "virtual:cc07d1a2616e1760c5e91bca785c5de3c8bbf9fcf6760d2223da410ca52a8cfef60c4a5441d9cca648bf012790fb8462f1aedfa16dbb94b9c4fc352a0f9e4d67#npm:4.1.7"],\
+          ["@yarnpkg/pnp", "npm:4.1.5"],\
           ["@yarnpkg/shell", "npm:4.1.3"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
           ["semver", "npm:7.6.3"],\
