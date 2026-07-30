@@ -67,6 +67,7 @@
     "@typescript-eslint/parser": "8.48.1",
     "@yarnpkg/core": "4.7.0",
     "@yarnpkg/fslib": "3.1.5",
+    "env-paths": "4.0.0",
     "eslint": "9.22.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-n": "17.23.1",

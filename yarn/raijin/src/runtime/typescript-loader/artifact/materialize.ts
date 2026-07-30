@@ -9,14 +9,14 @@ import { readFile }                from 'node:fs/promises'
 import { rename }                  from 'node:fs/promises'
 import { rm }                      from 'node:fs/promises'
 import { writeFile }               from 'node:fs/promises'
-import { tmpdir }                  from 'node:os'
 import { dirname }                 from 'node:path'
 import { join }                    from 'node:path'
 import { pathToFileURL }           from 'node:url'
 
 import ts                          from 'typescript'
 
-const CACHE_DIRECTORY = 'raijin-typescript-loader'
+import { getLocation }             from './cache/location.js'
+
 const COMPILER_OPTIONS_IMPORT = '../config/typescript/compiler-options/compiler-options.js'
 const COMPILER_OPTIONS_OUTPUT_PATH = 'config/typescript/compiler-options/compiler-options.js'
 const COMPILER_OPTIONS_SOURCE_PATH = 'src/config/typescript/compiler-options/compiler-options.ts'
@@ -119,7 +119,7 @@ const writeArtifact = async (artifactPath: string, files: Array<ArtifactFile>): 
 }
 
 export const materializeTypeScriptLoaderArtifact = async ({
-  cachePath = join(tmpdir(), CACHE_DIRECTORY),
+  cachePath = getLocation(),
   packagePath,
   sourcePath,
 }: MaterializeOptions): Promise<string> => {
