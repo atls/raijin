@@ -23,6 +23,7 @@ export default {
     pretty: true,
     removeComments: true,
     resolveJsonModule: true,
+    rewriteRelativeImportExtensions: true,
 
     strict: true,
     strictPropertyInitialization: false,

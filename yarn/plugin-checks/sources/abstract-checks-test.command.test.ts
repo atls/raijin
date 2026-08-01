@@ -15,7 +15,6 @@ type FormatTestResults = (
   events?: Array<TestEvent>
 ) => Array<Annotation>
 
-// @ts-expect-error node:test executes TypeScript sources directly in regular mode
 const { formatTestResults } = (await import('./test-results.formatter.ts')) as {
   formatTestResults: FormatTestResults
 }

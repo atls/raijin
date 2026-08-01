@@ -1,11 +1,9 @@
-import { access }                              from 'node:fs/promises'
-import { createRequire }                       from 'node:module'
-import { dirname }                             from 'node:path'
-import { join }                                from 'node:path'
-import { resolve }                             from 'node:path'
-import { pathToFileURL }                       from 'node:url'
-
-import { materializeTypeScriptLoaderArtifact } from './typescript-loader/artifact/materialize.js'
+import { access }        from 'node:fs/promises'
+import { createRequire } from 'node:module'
+import { dirname }       from 'node:path'
+import { join }          from 'node:path'
+import { resolve }       from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const PNP_ESM_LOADER_FILENAME = '.pnp.loader.mjs'
 const RAIJIN_PACKAGE_JSON = '@atls/raijin/package.json'
@@ -167,10 +165,7 @@ export const resolveSourceTypeScriptLoader = async (raijinPackagePath: string): 
     throw new Error(`Unable to resolve source TypeScript loader for ${RAIJIN_PACKAGE_JSON}`)
   }
 
-  return materializeTypeScriptLoaderArtifact({
-    packagePath: raijinPackagePath,
-    sourcePath: typeScriptLoaderSourcePath,
-  })
+  return pathToFileURL(typeScriptLoaderSourcePath).href
 }
 
 export const resolveTypeScriptLoader = async (
@@ -186,10 +181,7 @@ export const resolveTypeScriptLoader = async (
   const typeScriptLoaderSourcePath = join(raijinPath, TYPESCRIPT_LOADER_SOURCE_PATH)
 
   if (await fileExists(typeScriptLoaderSourcePath)) {
-    return materializeTypeScriptLoaderArtifact({
-      packagePath: raijinPackagePath,
-      sourcePath: typeScriptLoaderSourcePath,
-    })
+    return pathToFileURL(typeScriptLoaderSourcePath).href
   }
 
   throw new Error(`Unable to resolve loadable TypeScript loader for ${RAIJIN_PACKAGE_JSON}`)

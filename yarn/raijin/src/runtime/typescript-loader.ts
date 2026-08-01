@@ -16,7 +16,7 @@ import { join }                    from 'node:path'
 import { fileURLToPath }           from 'node:url'
 import { pathToFileURL }           from 'node:url'
 
-import { resolveTypeScriptCompilerOptions } from '../config/typescript/compiler-options/compiler-options.js'
+import { resolveTypeScriptCompilerOptions } from '../config/typescript/compiler-options/compiler-options.ts'
 
 const require = createRequire(import.meta.url)
 const ts = require('typescript') as typeof TypeScript

@@ -763,7 +763,6 @@ __metadata:
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
-    env-paths: "npm:4.0.0"
     eslint: "npm:9.22.0"
     eslint-plugin-jsx-a11y: "npm:6.10.2"
     eslint-plugin-n: "npm:17.23.1"
@@ -6433,15 +6432,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"env-paths@npm:4.0.0":
-  version: 4.0.0
-  resolution: "env-paths@npm:4.0.0"
-  dependencies:
-    is-safe-filename: "npm:^0.1.0"
-  checksum: 10/97a6ef4f7e05e9e7b464645c0539a31889947b8fe14545332af47ea61bb3556ce47f6d17491a5959c098a1ce0605d4f494e4c837f8fbc1f0a60b8201d8b19ce7
-  languageName: node
-  linkType: hard
-
 "env-paths@npm:^2.2.1":
   version: 2.2.1
   resolution: "env-paths@npm:2.2.1"
@@ -8476,13 +8466,6 @@ __metadata:
     has-tostringtag: "npm:^1.0.2"
     hasown: "npm:^2.0.2"
   checksum: 10/c42b7efc5868a5c9a4d8e6d3e9816e8815c611b09535c00fead18a1138455c5cb5e1887f0023a467ad3f9c419d62ba4dc3d9ba8bafe55053914d6d6454a945d2
-  languageName: node
-  linkType: hard
-
-"is-safe-filename@npm:^0.1.0":
-  version: 0.1.1
-  resolution: "is-safe-filename@npm:0.1.1"
-  checksum: 10/476f9a523810457df79575566820ddec29354d004d3a8ff02b8df281a56dde22bbb2eecbec2e79bd89ea9303028a22a3db56e00646002169ed9bb25dd3721e86
   languageName: node
   linkType: hard
 

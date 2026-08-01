@@ -1611,7 +1611,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["env-paths", "npm:4.0.0"],\
           ["eslint", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#patch:eslint@npm%3A9.14.0#./.yarn/patches/eslint-npm-9.14.0-6eb8e6f13b.patch::version=9.14.0&hash=c1a87e&locator=tools%40workspace%3A."],\
           ["eslint-plugin-jsx-a11y", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:6.10.2"],\
           ["eslint-plugin-n", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:17.23.1"],\
@@ -10082,14 +10081,6 @@ const RAW_RUNTIME_STATE =
           ["env-paths", "npm:2.2.1"]\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["npm:4.0.0", {\
-        "packageLocation": "../.yarn/berry/cache/env-paths-npm-4.0.0-223bd06116-10.zip/node_modules/env-paths/",\
-        "packageDependencies": [\
-          ["env-paths", "npm:4.0.0"],\
-          ["is-safe-filename", "npm:0.1.1"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["environment", [\
@@ -12446,15 +12437,6 @@ const RAW_RUNTIME_STATE =
           ["has-tostringtag", "npm:1.0.2"],\
           ["hasown", "npm:2.0.2"],\
           ["is-regex", "npm:1.2.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["is-safe-filename", [\
-      ["npm:0.1.1", {\
-        "packageLocation": "../.yarn/berry/cache/is-safe-filename-npm-0.1.1-96d2686f51-10.zip/node_modules/is-safe-filename/",\
-        "packageDependencies": [\
-          ["is-safe-filename", "npm:0.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
