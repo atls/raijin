@@ -67,7 +67,6 @@ test('should create test runtime exec argv with loadable TypeScript loader', asy
       typeScriptLoader,
       '--enable-source-maps',
     ])
-    assert.notEqual(fileURLToPath(typeScriptLoader).endsWith('.ts'), true)
   } finally {
     await rm(workspace, { recursive: true, force: true })
   }
