@@ -971,14 +971,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/yarn-plugin-pnp-patch",
-      "location": "yarn/plugin-pnp-patch",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "build:loader", "build:source", "postpack", "prepack", "yarn:download"]
-    },
-    {
       "name": "@atls/yarn-plugin-release",
       "location": "yarn/plugin-release",
       "group": "yarn",
@@ -1118,5 +1110,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-07-18T23:07:35.246Z"
+  "lastGenerated": "2026-07-27T16:34:31.828Z"
 }

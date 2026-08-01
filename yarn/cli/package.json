@@ -26,6 +26,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
+    "@atls/raijin": "workspace:*",
     "@atls/yarn-cli-tools": "workspace:*",
     "@atls/yarn-plugin-badges": "workspace:*",
     "@atls/yarn-plugin-check": "workspace:*",
@@ -79,6 +80,7 @@
     "@yarnpkg/plugin-typescript": "4.1.3",
     "@yarnpkg/plugin-version": "4.2.0",
     "@yarnpkg/plugin-workspace-tools": "4.1.7",
+    "@yarnpkg/pnp": "4.1.5",
     "@yarnpkg/shell": "4.1.3",
     "clipanion": "4.0.0-rc.2",
     "semver": "7.6.3",

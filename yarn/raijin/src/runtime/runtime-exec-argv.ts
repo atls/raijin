@@ -1,34 +1,21 @@
 import { access }        from 'node:fs/promises'
-import { mkdir }         from 'node:fs/promises'
-import { mkdtemp }       from 'node:fs/promises'
-import { readFile }      from 'node:fs/promises'
-import { writeFile }     from 'node:fs/promises'
 import { createRequire } from 'node:module'
-import { tmpdir }        from 'node:os'
 import { dirname }       from 'node:path'
 import { join }          from 'node:path'
 import { resolve }       from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-import ts                from 'typescript'
-
 const PNP_ESM_LOADER_FILENAME = '.pnp.loader.mjs'
 const RAIJIN_PACKAGE_JSON = '@atls/raijin/package.json'
 const TYPESCRIPT_LOADER_DIST_PATH = 'dist/runtime/typescript-loader.js'
 const TYPESCRIPT_LOADER_SOURCE_PATH = 'src/runtime/typescript-loader.ts'
-const TYPESCRIPT_LOADER_RUNTIME_REQUIRE = 'createRequire(import.meta.url)'
 const TYPESCRIPT_LOADER_SPECIFIER = '@atls/raijin/typescript-loader'
-const TYPESCRIPT_COMPILER_OPTIONS_IMPORT =
-  '../config/typescript/compiler-options/compiler-options.js'
-const TYPESCRIPT_COMPILER_OPTIONS_SOURCE_PATH =
-  'src/config/typescript/compiler-options/compiler-options.ts'
 const PNP_ESM_NODE_OPTION = /(?:^|[\\/])\.pnp\.loader\.mjs$/
 const TYPESCRIPT_LOADER_NODE_OPTION =
   /(?:^@atls\/raijin\/typescript-loader$|[\\/]typescript-loader\.(?:js|mjs)$)/
 const NODE_OPTIONS_WITH_VALUE = new Set(['--experimental-loader', '--loader'])
 
 const require = createRequire(import.meta.url)
-const materializedTypeScriptLoaders = new Map<string, Promise<string>>()
 
 type NodeOptionToken = {
   raw: string
@@ -169,84 +156,17 @@ export const findPnpEsmLoader = async (cwd: string): Promise<string | undefined>
   return pnpEsmLoaderPath ? pathToFileURL(pnpEsmLoaderPath).href : undefined
 }
 
-const transpileTypeScriptSource = (source: string, sourcePath: string): string => {
-  const { outputText } = ts.transpileModule(source, {
-    fileName: sourcePath,
-    compilerOptions: {
-      esModuleInterop: true,
-      module: ts.ModuleKind.ESNext,
-      sourceMap: false,
-      target: ts.ScriptTarget.ES2022,
-    },
-  })
-
-  return outputText
-}
-
-const transpileTypeScriptLoader = (source: string, raijinPackagePath: string): string =>
-  transpileTypeScriptSource(source, TYPESCRIPT_LOADER_SOURCE_PATH).replace(
-    TYPESCRIPT_LOADER_RUNTIME_REQUIRE,
-    `createRequire(${JSON.stringify(pathToFileURL(raijinPackagePath).href)})`
-  )
-
-const materializeTypeScriptLoader = async (
-  raijinPackagePath: string,
-  typeScriptLoaderSourcePath: string
-): Promise<string> => {
-  const outputRoot = await mkdtemp(join(tmpdir(), 'raijin-typescript-loader-'))
-  const outputPath = join(outputRoot, 'runtime', 'typescript-loader.mjs')
-  const source = await readFile(typeScriptLoaderSourcePath, 'utf8')
-
-  await mkdir(dirname(outputPath), { recursive: true })
-  await writeFile(join(outputRoot, 'package.json'), JSON.stringify({ type: 'module' }), 'utf8')
-
-  if (source.includes(TYPESCRIPT_COMPILER_OPTIONS_IMPORT)) {
-    const raijinPath = dirname(raijinPackagePath)
-    const compilerOptionsSourcePath = join(raijinPath, TYPESCRIPT_COMPILER_OPTIONS_SOURCE_PATH)
-    const compilerOptionsOutputPath = join(
-      outputRoot,
-      'config',
-      'typescript',
-      'compiler-options',
-      'compiler-options.js'
-    )
-    const compilerOptionsSource = await readFile(compilerOptionsSourcePath, 'utf8')
-
-    await mkdir(dirname(compilerOptionsOutputPath), { recursive: true })
-    await writeFile(
-      compilerOptionsOutputPath,
-      transpileTypeScriptSource(compilerOptionsSource, TYPESCRIPT_COMPILER_OPTIONS_SOURCE_PATH),
-      'utf8'
-    )
-  }
-
-  await writeFile(outputPath, transpileTypeScriptLoader(source, raijinPackagePath), 'utf8')
-
-  return pathToFileURL(outputPath).href
-}
-
-const getMaterializedTypeScriptLoader = async (
-  raijinPackagePath: string,
-  typeScriptLoaderSourcePath: string
-): Promise<string> => {
-  const key = `${raijinPackagePath}:${typeScriptLoaderSourcePath}`
-  const materializedTypeScriptLoader = materializedTypeScriptLoaders.get(key)
-
-  if (materializedTypeScriptLoader) {
-    return materializedTypeScriptLoader
-  }
-
-  const nextMaterializedTypeScriptLoader = materializeTypeScriptLoader(
-    raijinPackagePath,
-    typeScriptLoaderSourcePath
-  )
-
-  materializedTypeScriptLoaders.set(key, nextMaterializedTypeScriptLoader)
-
-  return nextMaterializedTypeScriptLoader
-}
-
 const resolveRaijinPackagePath = (): string => require.resolve(RAIJIN_PACKAGE_JSON)
+
+export const resolveSourceTypeScriptLoader = async (raijinPackagePath: string): Promise<string> => {
+  const typeScriptLoaderSourcePath = join(dirname(raijinPackagePath), TYPESCRIPT_LOADER_SOURCE_PATH)
+
+  if (!(await fileExists(typeScriptLoaderSourcePath))) {
+    throw new Error(`Unable to resolve source TypeScript loader for ${RAIJIN_PACKAGE_JSON}`)
+  }
+
+  return pathToFileURL(typeScriptLoaderSourcePath).href
+}
 
 export const resolveTypeScriptLoader = async (
   raijinPackagePath = resolveRaijinPackagePath()
@@ -261,7 +181,7 @@ export const resolveTypeScriptLoader = async (
   const typeScriptLoaderSourcePath = join(raijinPath, TYPESCRIPT_LOADER_SOURCE_PATH)
 
   if (await fileExists(typeScriptLoaderSourcePath)) {
-    return getMaterializedTypeScriptLoader(raijinPackagePath, typeScriptLoaderSourcePath)
+    return pathToFileURL(typeScriptLoaderSourcePath).href
   }
 
   throw new Error(`Unable to resolve loadable TypeScript loader for ${RAIJIN_PACKAGE_JSON}`)

@@ -34,7 +34,6 @@ Compact list:
 - `@atls/yarn-plugin-image` — `yarn/plugin-image`
 - `@atls/yarn-plugin-library` — `yarn/plugin-library`
 - `@atls/yarn-plugin-lint` — `yarn/plugin-lint`
-- `@atls/yarn-plugin-pnp-patch` — `yarn/plugin-pnp-patch`
 - `@atls/yarn-plugin-release` — `yarn/plugin-release`
 - `@atls/yarn-plugin-renderer` — `yarn/plugin-renderer`
 - `@atls/yarn-plugin-schematics` — `yarn/plugin-schematics`
@@ -192,15 +191,6 @@ Compact list:
 - Group: `yarn`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-pnp-patch -->
-
-#### `@atls/yarn-plugin-pnp-patch`
-
-- Location: `yarn/plugin-pnp-patch`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `build:loader`, `build:source`, `postpack`, `prepack`, `yarn:download`
 
 <!-- sync:package-card:atls-yarn-plugin-release -->
 

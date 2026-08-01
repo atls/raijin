@@ -1,7 +1,6 @@
 import assert                              from 'node:assert/strict'
 import { mkdir }                           from 'node:fs/promises'
 import { mkdtemp }                         from 'node:fs/promises'
-import { readFile }                        from 'node:fs/promises'
 import { rm }                              from 'node:fs/promises'
 import { writeFile }                       from 'node:fs/promises'
 import { tmpdir }                          from 'node:os'
@@ -13,6 +12,7 @@ import { pathToFileURL }                   from 'node:url'
 import { createRuntimeExecArgv }           from './runtime-exec-argv.js'
 import { createRuntimeEnvironment }        from './runtime-exec-argv.js'
 import { createTypeScriptRuntimeExecArgv } from './runtime-exec-argv.js'
+import { resolveSourceTypeScriptLoader }   from './runtime-exec-argv.js'
 import { resolveTypeScriptLoader }         from './runtime-exec-argv.js'
 
 test('should create TypeScript runtime exec argv without PnP loader', () => {
@@ -67,65 +67,37 @@ test('should keep PnP loader for plain runtime child environment', () => {
   )
 })
 
-test('should resolve TypeScript loader to loadable JavaScript', async () => {
+test('should resolve TypeScript loader to its package runtime', async () => {
   const typeScriptLoader = await resolveTypeScriptLoader()
   const typeScriptLoaderPath = fileURLToPath(typeScriptLoader)
   const typeScriptLoaderModule = await import(`${typeScriptLoader}?runtime-exec-argv`)
 
   assert.ok(
     typeScriptLoaderPath.endsWith(join('dist', 'runtime', 'typescript-loader.js')) ||
-      typeScriptLoaderPath.endsWith('typescript-loader.mjs')
+      typeScriptLoaderPath.endsWith(join('src', 'runtime', 'typescript-loader.ts'))
   )
   assert.equal(typeof typeScriptLoaderModule.load, 'function')
 })
 
-test('should materialize source-only TypeScript loader to JavaScript', async () => {
+test('should resolve source-only TypeScript loader to its source URL', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'runtime-exec-argv-loader-'))
   const sourceDir = join(workspace, 'src', 'runtime')
-  const compilerOptionsSourceDir = join(
-    workspace,
-    'src',
-    'config',
-    'typescript',
-    'compiler-options'
-  )
   const packageJsonPath = join(workspace, 'package.json')
+  const typeScriptLoaderPath = join(sourceDir, 'typescript-loader.ts')
 
   try {
     await mkdir(sourceDir, { recursive: true })
-    await mkdir(compilerOptionsSourceDir, { recursive: true })
     await writeFile(packageJsonPath, JSON.stringify({ type: 'module' }), 'utf8')
-    await writeFile(
-      join(compilerOptionsSourceDir, 'compiler-options.ts'),
-      `export const configOwner = 'typescript-config-owner'\n`,
-      'utf8'
+    await writeFile(typeScriptLoaderPath, 'export const load = () => ({})\n')
+
+    assert.equal(
+      await resolveSourceTypeScriptLoader(packageJsonPath),
+      pathToFileURL(typeScriptLoaderPath).href
     )
-    await writeFile(
-      join(sourceDir, 'typescript-loader.ts'),
-      `
-        import type { LoadHook } from 'node:module'
-        import { createRequire } from 'node:module'
-        import { configOwner } from '../config/typescript/compiler-options/compiler-options.js'
-
-        const require = createRequire(import.meta.url)
-
-        export { configOwner }
-        export const resolvedPath = require.resolve('node:path')
-        export const load: LoadHook = () => ({ format: 'module', shortCircuit: true, source: 'export {}' })
-      `,
-      'utf8'
+    assert.equal(
+      await resolveTypeScriptLoader(packageJsonPath),
+      pathToFileURL(typeScriptLoaderPath).href
     )
-
-    const typeScriptLoader = await resolveTypeScriptLoader(packageJsonPath)
-    const typeScriptLoaderPath = fileURLToPath(typeScriptLoader)
-    const typeScriptLoaderSource = await readFile(typeScriptLoaderPath, 'utf8')
-    const typeScriptLoaderModule = await import(`${typeScriptLoader}?source-only-runtime`)
-
-    assert.ok(typeScriptLoaderPath.endsWith('typescript-loader.mjs'))
-    assert.match(typeScriptLoaderSource, /package\.json/)
-    assert.equal(typeScriptLoaderModule.configOwner, 'typescript-config-owner')
-    assert.equal(typeScriptLoaderModule.resolvedPath, 'node:path')
-    assert.equal(typeof typeScriptLoaderModule.load, 'function')
   } finally {
     await rm(workspace, { recursive: true, force: true })
   }

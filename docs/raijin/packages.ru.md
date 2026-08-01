@@ -34,7 +34,6 @@
 - `@atls/yarn-plugin-image` — `yarn/plugin-image`
 - `@atls/yarn-plugin-library` — `yarn/plugin-library`
 - `@atls/yarn-plugin-lint` — `yarn/plugin-lint`
-- `@atls/yarn-plugin-pnp-patch` — `yarn/plugin-pnp-patch`
 - `@atls/yarn-plugin-release` — `yarn/plugin-release`
 - `@atls/yarn-plugin-renderer` — `yarn/plugin-renderer`
 - `@atls/yarn-plugin-schematics` — `yarn/plugin-schematics`
@@ -192,15 +191,6 @@
 - Группа: `yarn`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-pnp-patch -->
-
-#### `@atls/yarn-plugin-pnp-patch`
-
-- Локация: `yarn/plugin-pnp-patch`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `build:loader`, `build:source`, `postpack`, `prepack`, `yarn:download`
 
 <!-- sync:package-card:atls-yarn-plugin-release -->
 

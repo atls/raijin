@@ -50,7 +50,6 @@ declined:
   - "@atls/yarn-plugin-image"
   - "@atls/yarn-plugin-library"
   - "@atls/yarn-plugin-lint"
-  - "@atls/yarn-plugin-pnp-patch"
   - "@atls/yarn-plugin-release"
   - "@atls/yarn-plugin-renderer"
   - "@atls/yarn-plugin-schematics"
