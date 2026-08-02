@@ -37,7 +37,7 @@ export const createYarnExecutable = async ({
     binFolder,
     locator,
     project,
-    ignoreCorepack: false,
+    ignoreCorepack: true,
   })
 
   applyManagedNodeLoader(scriptEnv)

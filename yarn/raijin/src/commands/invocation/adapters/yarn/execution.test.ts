@@ -40,22 +40,6 @@ const execFileAsync = async (
     })
   })
 
-test('should use the Corepack-managed Yarn executable', async () => {
-  const { project } = await resolveTestProject()
-  const binFolder = await xfs.mktempPromise()
-  const { executable, env } = await createYarnExecutable({ binFolder, project })
-
-  assert.equal(executable, process.platform === 'win32' ? 'yarn.cmd' : 'yarn')
-
-  const { stdout } = await execFileAsync(executable, ['--version'], {
-    cwd: npath.fromPortablePath(project.cwd),
-    env,
-    shell: process.platform === 'win32',
-  })
-
-  assert.match(stdout, /-atls/)
-})
-
 test('should create script env for the selected workspace locator', async () => {
   const { project } = await resolveTestProject()
   const workspace = project.getWorkspaceByCwd(ppath.join(project.cwd, 'yarn/plugin-renderer'))
