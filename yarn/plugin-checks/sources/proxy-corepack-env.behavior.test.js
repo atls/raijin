@@ -68,6 +68,7 @@ test('should run checks proxy via Corepack shim without Corepack package resolut
       env: {
         ...process.env,
         COREPACK_ENABLE_DOWNLOAD_PROMPT: '0',
+        NODE_OPTIONS: '',
       },
     }
   )

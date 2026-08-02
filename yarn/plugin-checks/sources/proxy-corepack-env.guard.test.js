@@ -79,6 +79,14 @@ test('should keep Yarn command executable calls in the command invocation owner'
           `${relativePath}:${getLine(source, match.index ?? 0)} Yarn executable must use createYarnExecutable`
         )
       }
+    } else {
+      for (const match of source.matchAll(SCRIPT_ENV_REGEXP)) {
+        if (!match[0].includes('ignoreCorepack: true')) {
+          errors.push(
+            `${relativePath}:${getLine(source, match.index ?? 0)} Yarn executable must avoid nested Corepack re-entry`
+          )
+        }
+      }
     }
 
     for (const match of source.matchAll(YARN_LITERAL_REENTRY_REGEXP)) {
