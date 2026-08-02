@@ -9,7 +9,6 @@ export const setupScriptEnvironment: NonNullable<Hooks['setupScriptEnvironment']
 ) => {
   applyManagedNodeLoader(env)
 
-  // Yarn runs this hook after materializing its default Corepack wrappers.
   const selectedYarnRuntime = process.argv[1]
 
   await Promise.all([
