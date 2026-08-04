@@ -1,5 +1,7 @@
 import type { ChildProcess }             from 'node:child_process'
 import type { SpawnOptions }             from 'node:child_process'
+import type { Readable }                 from 'node:stream'
+import type { Writable }                 from 'node:stream'
 
 import type { CommandExecutionResult }   from '../resolve.interfaces.js'
 import type { ChildProcessOptions }      from './child-process.interfaces.js'
@@ -13,14 +15,41 @@ const FORWARDED_SIGNALS: ReadonlyArray<NodeJS.Signals> =
 
 const resolveSignalExitCode = (signal: NodeJS.Signals): number => 128 + constants.signals[signal]
 
+type FileDescriptorStream = { fd: number } & (Readable | Writable)
+
+const hasFileDescriptor = (stream: Readable | Writable): stream is FileDescriptorStream =>
+  typeof (stream as { fd?: unknown }).fd === 'number'
+
+const resolveInputStream = (
+  stream: Readable,
+  input: ChildProcessOptions['input']
+): Readable | 'ignore' | 'pipe' => {
+  if (input === 'ignore') {
+    return 'ignore'
+  }
+
+  return hasFileDescriptor(stream) ? stream : 'pipe'
+}
+
+const resolveOutputStream = (
+  stream: Writable,
+  output: ChildProcessOptions['output']
+): Writable | 'pipe' => (output || !hasFileDescriptor(stream) ? 'pipe' : stream)
+
 export const createChildProcessOptions = ({
+  context,
   cwd,
   env,
-  input = 'inherit',
+  input,
+  output,
 }: ChildProcessOptions): SpawnOptions => ({
   cwd,
   env,
-  stdio: [input === 'ignore' ? 'ignore' : 'pipe', 'pipe', 'pipe'],
+  stdio: [
+    resolveInputStream(context.stdin, input),
+    resolveOutputStream(context.stdout, output),
+    resolveOutputStream(context.stderr, output),
+  ],
 })
 
 export const forwardChildProcessSignals = (
@@ -58,7 +87,7 @@ export const executeChildProcess = async (
   args: Array<string>,
   options: ChildProcessOptions
 ): Promise<CommandExecutionResult> => {
-  const output = options.output ?? { mode: 'inherit' }
+  const { output } = options
   const stdoutChunks: Array<Buffer> = []
   const stderrChunks: Array<Buffer> = []
   const child = spawn(command, args, createChildProcessOptions(options))
@@ -73,7 +102,7 @@ export const executeChildProcess = async (
   }
 
   child.stdout?.on('data', (data: Buffer) => {
-    if (output.mode === 'inherit') {
+    if (!output) {
       options.context.stdout.write(data)
     } else if (output.mode === 'capture') {
       stdoutChunks.push(data)
@@ -86,7 +115,7 @@ export const executeChildProcess = async (
     }
   })
   child.stderr?.on('data', (data: Buffer) => {
-    if (output.mode === 'inherit') {
+    if (!output) {
       options.context.stderr.write(data)
     } else if (output.mode === 'capture') {
       stderrChunks.push(data)

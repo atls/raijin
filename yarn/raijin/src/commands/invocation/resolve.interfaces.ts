@@ -13,7 +13,6 @@ export interface CommandOutputEvent {
 export type CommandOutputPolicy =
   | { mode: 'capture'; forward?: boolean }
   | { mode: 'handle'; handler: (event: CommandOutputEvent) => void }
-  | { mode: 'inherit' }
 
 export type CommandEnvironmentPatch = Readonly<Record<string, string>>
 
@@ -66,7 +65,7 @@ export interface YarnCommandPreparation {
 }
 
 export interface YarnCommandRunOptions {
-  input?: 'ignore' | 'inherit'
+  input?: 'ignore'
   locator?: Locator
   output?: CommandOutputPolicy
   prepare?: (
@@ -90,7 +89,7 @@ export interface YarnRuntimeInvocation {
 }
 
 export interface ChildProcessRunOptions {
-  input?: 'ignore' | 'inherit'
+  input?: 'ignore'
   nodeOptions?: CommandNodeOptionsTransformer
   output?: CommandOutputPolicy
   timeout?: number

@@ -14,7 +14,7 @@ export interface ChildProcessOptions {
   context: InvocationExecutionContext
   cwd: string
   env: NodeJS.ProcessEnv
-  input?: 'ignore' | 'inherit'
+  input?: 'ignore'
   output?: CommandOutputPolicy
   timeout?: number
 }

@@ -28,6 +28,39 @@ test('should create child options from the execution boundary', () => {
   assert.deepEqual(options.stdio, ['pipe', 'pipe', 'pipe'])
 })
 
+test('should attach file descriptor streams without proxy pipes', () => {
+  const context = {
+    environment: { NODE_ENV: 'test' },
+    stderr: Object.assign(new PassThrough(), { fd: 2 }),
+    stdin: Object.assign(new PassThrough(), { fd: 0 }),
+    stdout: Object.assign(new PassThrough(), { fd: 1 }),
+  }
+  const options = createChildProcessOptions({
+    context,
+    cwd: '/repo/client',
+    env: { NODE_ENV: 'test' },
+  })
+
+  assert.deepEqual(options.stdio, [context.stdin, context.stdout, context.stderr])
+})
+
+test('should reserve output pipes for capture policies', () => {
+  const context = {
+    environment: { NODE_ENV: 'test' },
+    stderr: Object.assign(new PassThrough(), { fd: 2 }),
+    stdin: Object.assign(new PassThrough(), { fd: 0 }),
+    stdout: Object.assign(new PassThrough(), { fd: 1 }),
+  }
+  const options = createChildProcessOptions({
+    context,
+    cwd: '/repo/client',
+    env: { NODE_ENV: 'test' },
+    output: { mode: 'capture' },
+  })
+
+  assert.deepEqual(options.stdio, [context.stdin, 'pipe', 'pipe'])
+})
+
 test('should capture and forward child output before returning its code', async () => {
   const context = createContext()
   const forwarded: Array<Buffer> = []
