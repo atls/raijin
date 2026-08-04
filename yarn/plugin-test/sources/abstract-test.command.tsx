@@ -36,6 +36,25 @@ interface TestArgsOptions {
   watch: boolean
 }
 
+interface TestInputOptions {
+  files: Array<string>
+  invocationCwd: PortablePath
+  target?: string
+}
+
+export const createTestInput = ({
+  files,
+  invocationCwd,
+  target,
+}: TestInputOptions): CommandInput => {
+  const targetInput = target
+    ? createCommandInput({ cwd: invocationCwd, source: 'explicit', targets: [target] })
+    : undefined
+  const cwd = targetInput?.targets.at(0)?.path ?? invocationCwd
+
+  return createCommandInput({ cwd, source: 'explicit', targets: files })
+}
+
 export const createTestArgs = ({
   files,
   target,
@@ -139,7 +158,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
     const tester = await Tester.initialize(toNativeCwd(executionCwd), {
       projectCwd,
     })
-    const input = this.createInput(invocationCwd, project.cwd)
+    const input = this.createInput(invocationCwd)
 
     if (this.testReporter === 'tap') {
       const results =
@@ -199,14 +218,12 @@ export abstract class AbstractTestCommand extends BaseCommand {
     }
   }
 
-  protected createInput(invocationCwd: PortablePath, projectCwd: PortablePath): CommandInput {
-    const targetInput = this.target
-      ? createCommandInput({ cwd: invocationCwd, source: 'explicit', targets: [this.target] })
-      : undefined
-    const target = targetInput?.targets.at(0)
-    const cwd = target?.path ?? (this.files.length > 0 ? invocationCwd : projectCwd)
-
-    return createCommandInput({ cwd, source: 'explicit', targets: this.files })
+  protected createInput(invocationCwd: PortablePath): CommandInput {
+    return createTestInput({
+      files: this.files,
+      invocationCwd,
+      target: this.target,
+    })
   }
 
   private bufferedStd(

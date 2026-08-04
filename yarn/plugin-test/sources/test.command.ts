@@ -27,7 +27,7 @@ export class TestCommand extends AbstractTestCommand {
     const tester = await Tester.initialize(toNativeCwd(executionCwd), {
       projectCwd: toNativeCwd(project.cwd),
     })
-    const input = this.createInput(invocationCwd, project.cwd)
+    const input = this.createInput(invocationCwd)
 
     try {
       const results = await tester.general(input, {
