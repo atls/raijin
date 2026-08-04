@@ -9,6 +9,7 @@ import { relative } from 'node:path'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
+import ts from 'typescript'
 
 const SOURCE_EXTENSIONS = new Set(['.ts', '.tsx'])
 
@@ -19,7 +20,7 @@ const YARN_LITERAL_REENTRY_REGEXP =
 
 const SCRIPT_ENV_REGEXP = /scriptUtils\.makeScriptEnv\(\s*\{[\s\S]*?\}\s*\)/g
 const COMMAND_IMPORT_REENTRANT_HELPER_REGEXP =
-  /import\s*\{[^}]*\b(?:createChildProcessOptions|waitForChildProcess|createYarnExecutable|executeYarnCommand|proxyProjectCommand|proxyWorkspaceCommand|shouldProxyCommand)\b[^}]*\}\s*from\s*['"]@atls\/raijin\/commands['"]/g
+  /import\s*\{[^}]*\b(?:createChildProcessOptions|executeChildProcess|executeYarnCommand|spawnChildProcess|waitForChildProcess|createYarnExecutable|proxyProjectCommand|proxyWorkspaceCommand|shouldProxyCommand)\b[^}]*\}\s*from\s*['"]@atls\/raijin\/commands['"]/g
 const PROXY_ENV_REGEXP = /RAIJIN_COMMAND_(?:PROXY_EXECUTION|INVOCATION_CWD)/g
 const COMMAND_PATHS_REGEXP = /static\s+override\s+paths\s*=/g
 const YARN_EXECUTION_OWNER = 'yarn/raijin/src/commands/invocation/adapters/yarn/execution.ts'
@@ -28,6 +29,27 @@ const CHILD_PROCESS_OWNER = 'yarn/raijin/src/commands/invocation/adapters/child-
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 
 const getLine = (source, index) => source.slice(0, index).split('\n').length
+
+const getCallPath = (expression) => {
+  if (ts.isIdentifier(expression)) {
+    return expression.text
+  }
+
+  if (ts.isPropertyAccessExpression(expression)) {
+    const parentPath = getCallPath(expression.expression)
+
+    return parentPath ? `${parentPath}.${expression.name.text}` : expression.name.text
+  }
+
+  return undefined
+}
+
+const getPropertyName = (property) => {
+  if (!property.name) return undefined
+  if (ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) return property.name.text
+
+  return undefined
+}
 
 const isCommandFacingSource = (relativePath) =>
   relativePath.startsWith('yarn/plugin-') ||
@@ -81,6 +103,61 @@ test('should keep command invocation lifecycle in the invocation owner', async (
     }
 
     const isInvocationOwner = relativePath.startsWith('yarn/raijin/src/commands/invocation/')
+    const hasCommandClass = source.match(COMMAND_PATHS_REGEXP) !== null
+    const sourceFile = ts.createSourceFile(
+      relativePath,
+      source,
+      ts.ScriptTarget.Latest,
+      true,
+      relativePath.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS
+    )
+
+    const inspectNode = (node) => {
+      if (ts.isCallExpression(node)) {
+        const callPath = getCallPath(node.expression)
+        const line = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1
+
+        if (callPath?.match(/(?:^|\.)yarn\.execute$/)) {
+          const options = node.arguments.at(1)
+
+          if (options && ts.isObjectLiteralExpression(options)) {
+            const rawStreamOption = options.properties.find((property) =>
+              ['stderr', 'stdin', 'stdio', 'stdout'].includes(getPropertyName(property) ?? '')
+            )
+
+            if (rawStreamOption) {
+              errors.push(
+                `${relativePath}:${line} nested Yarn execution must use invocation-bound streams`
+              )
+            }
+          }
+        }
+
+        if (callPath?.match(/(?:^|\.)child\.(?:spawn|wait)$/)) {
+          errors.push(
+            `${relativePath}:${line} child execution must use the complete invocation lifecycle`
+          )
+        }
+
+        if (callPath?.match(/(?:^|\.)yarn\.createExecutable$/)) {
+          errors.push(
+            `${relativePath}:${line} Yarn executable assembly must stay inside command invocation`
+          )
+        }
+
+        if (hasCommandClass && callPath === 'execUtils.pipevp') {
+          errors.push(
+            `${relativePath}:${line} command process execution must use the invocation owner`
+          )
+        }
+      }
+
+      ts.forEachChild(node, inspectNode)
+    }
+
+    if (!isInvocationOwner) {
+      inspectNode(sourceFile)
+    }
 
     if (relativePath !== YARN_EXECUTION_OWNER) {
       for (const match of source.matchAll(SCRIPT_ENV_REGEXP)) {
@@ -122,7 +199,7 @@ test('should keep command invocation lifecycle in the invocation owner', async (
 
     if (
       relativePath.startsWith('yarn/plugin-') &&
-      source.match(COMMAND_PATHS_REGEXP) &&
+      hasCommandClass &&
       !source.includes('static raijinCommand = defineCommandInvocation')
     ) {
       errors.push(`${relativePath}:1 command class must declare a Raijin invocation scope`)
