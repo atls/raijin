@@ -18,3 +18,13 @@ test('should serialize normalized targets for a child command cwd', () => {
     'shared/index.ts',
   ])
 })
+
+test('should serialize the child command cwd as the current directory', () => {
+  const input = createCommandInput({
+    cwd: '/repo' as PortablePath,
+    source: 'explicit',
+    targets: ['/repo'],
+  })
+
+  assert.deepEqual(toCommandArguments(input, '/repo' as PortablePath), ['.'])
+})

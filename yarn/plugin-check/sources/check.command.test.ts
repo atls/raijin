@@ -32,11 +32,25 @@ const runCheckCommand = async (
   return { exitCode, commands }
 }
 
-test('should run full check sequence without explicit targets', async () => {
+test('should default targetless checks to the invocation cwd', async () => {
   const { exitCode, commands } = await runCheckCommand([])
 
   assert.equal(exitCode, 0)
-  assert.deepEqual(commands, [['format'], ['typecheck'], ['lint']])
+  assert.deepEqual(commands, [
+    ['format', '.'],
+    ['typecheck', '.'],
+    ['lint', '.'],
+  ])
+})
+
+test('should default nested targetless checks to the invoking workspace', async () => {
+  const { commands } = await runCheckCommand([], undefined, '/repo/packages/app')
+
+  assert.deepEqual(commands, [
+    ['format', 'packages/app'],
+    ['typecheck', 'packages/app'],
+    ['lint', 'packages/app'],
+  ])
 })
 
 test('should forward explicit targets to every check command', async () => {

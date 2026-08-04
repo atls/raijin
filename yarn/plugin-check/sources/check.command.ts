@@ -17,10 +17,11 @@ export class CheckCommand extends RaijinCommand {
 
   async executeProject(invocation: ProjectInvocation): Promise<number> {
     let exitCode = 0
+    const requestedTargets = this.targets.length > 0 ? this.targets : [invocation.invocationCwd]
     const input = createCommandInput({
       cwd: invocation.invocationCwd,
       source: 'explicit',
-      targets: this.targets,
+      targets: requestedTargets,
     })
     const targets = toCommandArguments(input, invocation.executionCwd)
 
