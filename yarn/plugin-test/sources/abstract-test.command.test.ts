@@ -11,8 +11,17 @@ test('should keep test file targets as separate arguments', () => {
       watch: true,
       target: '/repo',
       testReporter: 'tap',
+      testNamePattern: 'selected test',
     }),
-    ['/repo/src/a.test.ts', '/repo/src/b.test.ts', '-w', '-t', '/repo', '--test-reporter=tap']
+    [
+      '/repo/src/a.test.ts',
+      '/repo/src/b.test.ts',
+      '-w',
+      '-t',
+      '/repo',
+      '--test-reporter=tap',
+      '--test-name-pattern=selected test',
+    ]
   )
 })
 

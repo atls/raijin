@@ -480,7 +480,7 @@
 
 - Статус: `active`
 - Описание: run all workspace tests
-- Использование: `yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
+- Использование: `yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] [--test-name-pattern #0] ...`
 - Пример: `yarn test`
 - Плагин: `@atls/yarn-plugin-test`
 
@@ -490,7 +490,7 @@
 
 - Статус: `active`
 - Описание: run integration tests
-- Использование: `yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
+- Использование: `yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] [--test-name-pattern #0] ...`
 - Пример: `yarn test integration`
 - Плагин: `@atls/yarn-plugin-test`
 
@@ -500,7 +500,7 @@
 
 - Статус: `active`
 - Описание: run unit tests
-- Использование: `yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
+- Использование: `yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] [--test-name-pattern #0] ...`
 - Пример: `yarn test unit`
 - Плагин: `@atls/yarn-plugin-test`
 

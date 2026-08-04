@@ -480,7 +480,7 @@ Command map assembled from the `@atls/yarn-cli` runtime
 
 - Status: `active`
 - Description: run all workspace tests
-- Usage: `yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
+- Usage: `yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] [--test-name-pattern #0] ...`
 - Example: `yarn test`
 - Plugin: `@atls/yarn-plugin-test`
 
@@ -490,7 +490,7 @@ Command map assembled from the `@atls/yarn-cli` runtime
 
 - Status: `active`
 - Description: run integration tests
-- Usage: `yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
+- Usage: `yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] [--test-name-pattern #0] ...`
 - Example: `yarn test integration`
 - Plugin: `@atls/yarn-plugin-test`
 
@@ -500,7 +500,7 @@ Command map assembled from the `@atls/yarn-cli` runtime
 
 - Status: `active`
 - Description: run unit tests
-- Usage: `yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
+- Usage: `yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] [--test-name-pattern #0] ...`
 - Example: `yarn test unit`
 - Plugin: `@atls/yarn-plugin-test`
 

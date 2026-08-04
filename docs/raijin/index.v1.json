@@ -473,7 +473,7 @@
       "options": [],
       "pathTokens": ["test"],
       "plugin": "@atls/yarn-plugin-test",
-      "usage": "yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] ...",
+      "usage": "yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] [--test-name-pattern #0] ...",
       "availabilityReason": "registered by the assembled @atls/yarn-cli runtime",
       "domain": "test",
       "pluginDir": "plugin-test",
@@ -486,7 +486,7 @@
       "options": [],
       "pathTokens": ["test", "integration"],
       "plugin": "@atls/yarn-plugin-test",
-      "usage": "yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] ...",
+      "usage": "yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] [--test-name-pattern #0] ...",
       "availabilityReason": "registered by the assembled @atls/yarn-cli runtime",
       "domain": "test",
       "pluginDir": "plugin-test",
@@ -499,7 +499,7 @@
       "options": [],
       "pathTokens": ["test", "unit"],
       "plugin": "@atls/yarn-plugin-test",
-      "usage": "yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] ...",
+      "usage": "yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] [--test-name-pattern #0] ...",
       "availabilityReason": "registered by the assembled @atls/yarn-cli runtime",
       "domain": "test",
       "pluginDir": "plugin-test",
@@ -1110,5 +1110,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-07-27T16:34:31.828Z"
+  "lastGenerated": "2026-08-04T23:01:00.444Z"
 }

@@ -32,6 +32,7 @@ type TestStdout = EventData.TestStdout
 interface TestArgsOptions {
   files: Array<string>
   target?: string
+  testNamePattern?: string
   testReporter?: string
   watch: boolean
 }
@@ -58,6 +59,7 @@ export const createTestInput = ({
 export const createTestArgs = ({
   files,
   target,
+  testNamePattern,
   testReporter,
   watch,
 }: TestArgsOptions): Array<string> => {
@@ -78,6 +80,10 @@ export const createTestArgs = ({
 
   if (testReporter) {
     args.push(`--test-reporter=${testReporter}`)
+  }
+
+  if (testNamePattern) {
+    args.push(`--test-name-pattern=${testNamePattern}`)
   }
 
   return args
@@ -113,6 +119,8 @@ export abstract class AbstractTestCommand extends RaijinCommand {
   testReporter = Option.String('--test-reporter', {
     validator: isEnum(['tap']),
   })
+
+  testNamePattern = Option.String('--test-name-pattern')
 
   private std = new Map<string | undefined, Array<string>>()
 
@@ -159,18 +167,12 @@ export abstract class AbstractTestCommand extends RaijinCommand {
       projectCwd,
     })
     const input = this.createInput(invocationCwd)
+    const options = this.createTestOptions()
+    const executeTests = async (): ReturnType<Tester['unit']> =>
+      type === 'integration' ? tester.integration(input, options) : tester.unit(input, options)
 
     if (this.testReporter === 'tap') {
-      const results =
-        type === 'integration'
-          ? await tester.integration(input, {
-              watch: this.watch,
-              testReporter: this.testReporter,
-            })
-          : await tester.unit(input, {
-              watch: this.watch,
-              testReporter: this.testReporter,
-            })
+      const results = await executeTests()
 
       return results.find((result) => result.type === 'test:fail') ? 1 : 0
     }
@@ -182,16 +184,7 @@ export abstract class AbstractTestCommand extends RaijinCommand {
     const { clear, unmount } = render(<TestProgress cwd={projectCwd} tester={tester} />)
 
     try {
-      const results =
-        type === 'integration'
-          ? await tester.integration(input, {
-              watch: this.watch,
-              testReporter: this.testReporter,
-            })
-          : await tester.unit(input, {
-              watch: this.watch,
-              testReporter: this.testReporter,
-            })
+      const results = await executeTests()
 
       return results.find((result) => result.type === 'test:fail') ? 1 : 0
     } catch (error) {
@@ -224,6 +217,14 @@ export abstract class AbstractTestCommand extends RaijinCommand {
       invocationCwd,
       target: this.target,
     })
+  }
+
+  protected createTestOptions(): NonNullable<Parameters<Tester['unit']>[1]> {
+    return {
+      watch: this.watch,
+      testReporter: this.testReporter,
+      testNamePattern: this.testNamePattern,
+    }
   }
 
   private bufferedStd(

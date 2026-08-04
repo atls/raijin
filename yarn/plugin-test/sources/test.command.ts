@@ -21,10 +21,7 @@ export class TestCommand extends AbstractTestCommand {
     const input = this.createInput(invocationCwd)
 
     try {
-      const results = await tester.general(input, {
-        watch: this.watch,
-        testReporter: this.testReporter,
-      })
+      const results = await tester.general(input, this.createTestOptions())
 
       return results.some((result) => result.type === 'test:fail') ? 1 : 0
     } catch (error) {
