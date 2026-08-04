@@ -20,8 +20,8 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
       return invocation.yarn.execute(['test', 'unit'])
     }
 
-    const { yarn } = invocation
-    const { configuration, project } = yarn
+    const { executionCwd, yarn } = invocation
+    const { configuration } = yarn
 
     const commandReport = await StreamReport.start(
       {
@@ -34,15 +34,15 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
         const { id: checkId } = await checks.start()
 
         try {
-          const tester = await Tester.initialize(this.context.cwd)
+          const tester = await Tester.initialize(executionCwd)
 
           const results = await tester.unit(
-            createCommandInput({ cwd: project.cwd, source: 'generated', targets: [] })
+            createCommandInput({ cwd: executionCwd, source: 'generated', targets: [] })
           )
 
           const annotations = this.formatResults(
             results.filter((result) => result.type === 'test:fail').map((result) => result.data),
-            project.cwd,
+            executionCwd,
             results
           )
 

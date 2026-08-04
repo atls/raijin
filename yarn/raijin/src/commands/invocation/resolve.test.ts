@@ -143,3 +143,37 @@ test('should bind command environment to nested Yarn execution', async () => {
   assert.equal(result.exitCode, 0)
   assert.equal(result.stdout, 'nested')
 })
+
+test('should root nested Yarn execution at the resolved project cwd', async () => {
+  const invocation = expectInvocation(
+    await resolveProjectCommandInvocation(createContext(rendererNestedCwd))
+  )
+  const result = await invocation.yarn.capture([
+    'exec',
+    'node',
+    '-e',
+    "process.stdout.write(JSON.stringify({ cwd: process.cwd(), initCwd: process.env.INIT_CWD }))",
+  ])
+
+  assert.deepEqual(JSON.parse(result.stdout), {
+    cwd: npath.fromPortablePath(repoRoot),
+    initCwd: npath.fromPortablePath(repoRoot),
+  })
+})
+
+test('should root nested Yarn execution at the resolved workspace cwd', async () => {
+  const invocation = expectInvocation(
+    await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
+  )
+  const result = await invocation.yarn.capture([
+    'exec',
+    'node',
+    '-e',
+    "process.stdout.write(JSON.stringify({ cwd: process.cwd(), initCwd: process.env.INIT_CWD }))",
+  ])
+
+  assert.deepEqual(JSON.parse(result.stdout), {
+    cwd: npath.fromPortablePath(rendererWorkspaceCwd),
+    initCwd: npath.fromPortablePath(rendererWorkspaceCwd),
+  })
+})

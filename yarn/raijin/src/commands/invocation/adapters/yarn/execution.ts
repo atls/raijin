@@ -107,7 +107,7 @@ export const executeYarnCommand = async ({
 
   const environment = executable.env
 
-  environment.INIT_CWD = toNativeCwd(invocation.invocationCwd)
+  environment.INIT_CWD = toNativeCwd(invocation.executionCwd)
   environment.PROJECT_CWD = toNativeCwd(invocation.project.cwd)
 
   return executeChildProcess(executable.executable, args, {
