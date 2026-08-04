@@ -23,6 +23,7 @@ const COMMAND_IMPORT_REENTRANT_HELPER_REGEXP =
   /import\s*\{[^}]*\b(?:createChildProcessOptions|executeChildProcess|executeYarnCommand|spawnChildProcess|waitForChildProcess|createYarnExecutable|proxyProjectCommand|proxyWorkspaceCommand|shouldProxyCommand)\b[^}]*\}\s*from\s*['"]@atls\/raijin\/commands['"]/g
 const PROXY_ENV_REGEXP = /RAIJIN_COMMAND_(?:PROXY_EXECUTION|INVOCATION_CWD)/g
 const COMMAND_PATHS_REGEXP = /static\s+override\s+paths\s*=/g
+const COMMAND_HANDLER_REGEXP = /\bexecute(?:Entry|Project|Workspace)\s*\(/g
 const YARN_EXECUTION_OWNER = 'yarn/raijin/src/commands/invocation/adapters/yarn/execution.ts'
 const CHILD_PROCESS_OWNER = 'yarn/raijin/src/commands/invocation/adapters/child-process.ts'
 
@@ -197,12 +198,20 @@ test('should keep command invocation lifecycle in the invocation owner', async (
       }
     }
 
-    if (
-      relativePath.startsWith('yarn/plugin-') &&
-      hasCommandClass &&
-      !source.includes('static raijinCommand = defineCommandInvocation')
-    ) {
-      errors.push(`${relativePath}:1 command class must declare a Raijin invocation scope`)
+    if (relativePath.startsWith('yarn/plugin-') && hasCommandClass) {
+      const handlers = source.match(COMMAND_HANDLER_REGEXP) ?? []
+
+      if (handlers.length !== 1) {
+        errors.push(`${relativePath}:1 command class must implement exactly one invocation handler`)
+      }
+
+      if (source.includes('async execute(') || source.includes('extends BaseCommand')) {
+        errors.push(`${relativePath}:1 command execution must be owned by RaijinCommand`)
+      }
+
+      if (source.includes('Command invocation context is missing')) {
+        errors.push(`${relativePath}:1 command invocation must be guaranteed by RaijinCommand`)
+      }
     }
   }
 

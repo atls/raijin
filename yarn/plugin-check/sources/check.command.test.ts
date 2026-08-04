@@ -25,7 +25,7 @@ const runCheckCommand = async (
     },
   } as unknown as ProjectInvocation
 
-  const exitCode = await command.execute(invocation)
+  const exitCode = await command.executeProject(invocation)
 
   return { exitCode, commands }
 }

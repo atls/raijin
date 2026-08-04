@@ -58,8 +58,11 @@ test('should preserve Yarn PnP options when adding command node options', async 
   const { project } = await resolveTestProject()
   const binFolder = await xfs.mktempPromise()
   const { env } = await createYarnExecutable({
+    baseEnvironment: {
+      ...project.configuration.env,
+      NODE_OPTIONS: '--no-warnings=DeprecationWarning',
+    },
     binFolder,
-    env: { NODE_OPTIONS: '--no-warnings=DeprecationWarning' },
     project,
   })
 
@@ -76,8 +79,7 @@ test('should rebuild the selected project environment after launcher cleanup', a
   const launcherPnpPath = npath.join(launcherBinFolder, '.pnp.cjs')
   const launcherPnpLoaderPath = pathToFileURL(npath.join(launcherBinFolder, '.pnp.loader.mjs')).href
   const { env } = await createYarnExecutable({
-    binFolder,
-    env: {
+    baseEnvironment: {
       BERRY_BIN_FOLDER: launcherBinFolder,
       NODE_OPTIONS: `--require ${launcherPnpPath} --experimental-loader ${launcherPnpLoaderPath} --trace-warnings`,
       PATH: [launcherBinFolder, project.configuration.env.PATH]
@@ -85,6 +87,7 @@ test('should rebuild the selected project environment after launcher cleanup', a
         .join(npath.delimiter),
       npm_execpath: npath.join(launcherBinFolder, 'yarn'),
     },
+    binFolder,
     project,
   })
 
@@ -127,13 +130,26 @@ test('should keep managed node loader options idempotent', async () => {
     project,
   })
   const { env: secondEnv } = await createYarnExecutable({
+    baseEnvironment: env,
     binFolder,
-    env,
     nodeLoader: 'file:///tmp/managed-loader.mjs',
     project,
   })
 
   assert.equal(secondEnv.NODE_OPTIONS?.match(/--import data:text\/javascript,/g)?.length, 1)
+})
+
+test('should reject command patches for invocation-owned environment variables', async () => {
+  const { project } = await resolveTestProject()
+
+  await assert.rejects(
+    createYarnExecutable({
+      binFolder: await xfs.mktempPromise(),
+      environmentPatch: { NODE_OPTIONS: '--trace-warnings' },
+      project,
+    }),
+    /cannot override NODE_OPTIONS/
+  )
 })
 
 test('should forward node flags from managed node wrapper', async () => {

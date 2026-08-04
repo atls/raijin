@@ -46,6 +46,7 @@ test('should capture and forward child output before returning its code', async 
   )
 
   assert.equal(result.exitCode, 0)
+  assert.equal(result.termination, 'exit')
   assert.equal(result.stdout, 'ready')
   assert.equal(Buffer.concat(forwarded).toString(), 'ready')
 })
@@ -74,8 +75,30 @@ test('should stop a child after the configured timeout', async () => {
   )
 
   assert.equal(result.exitCode, 124)
+  assert.equal(result.termination, 'timeout')
   assert.equal(result.timedOut, true)
 })
+
+test(
+  'should preserve signal termination semantics',
+  { skip: process.platform === 'win32' },
+  async () => {
+    const result = await executeChildProcess(
+      process.execPath,
+      ['-e', "process.kill(process.pid, 'SIGTERM')"],
+      {
+        context: createContext(),
+        cwd: process.cwd(),
+        env: process.env,
+      }
+    )
+
+    assert.equal(result.exitCode, 143)
+    assert.equal(result.signal, 'SIGTERM')
+    assert.equal(result.termination, 'signal')
+    assert.equal(result.timedOut, false)
+  }
+)
 
 test('should forward process signals while the child is active', () => {
   const signalTarget = new EventEmitter()

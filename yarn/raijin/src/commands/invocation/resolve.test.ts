@@ -1,18 +1,23 @@
-import assert                         from 'node:assert/strict'
-import { dirname }                    from 'node:path'
-import { PassThrough }                from 'node:stream'
-import { before }                     from 'node:test'
-import test                           from 'node:test'
-import { fileURLToPath }              from 'node:url'
+import type { CommandContext }               from '@yarnpkg/core'
 
-import { Configuration }              from '@yarnpkg/core'
-import { Project }                    from '@yarnpkg/core'
-import { getPluginConfiguration }     from '@yarnpkg/cli'
-import { npath }                      from '@yarnpkg/fslib'
-import { ppath }                      from '@yarnpkg/fslib'
+import type { ProjectInvocation }            from './resolve.interfaces.js'
+import type { CommandInvocationResolution }  from './resolve.interfaces.js'
 
-import { resolveProjectInvocation }   from './resolve.js'
-import { resolveWorkspaceInvocation } from './resolve.js'
+import assert                                from 'node:assert/strict'
+import { dirname }                           from 'node:path'
+import { PassThrough }                       from 'node:stream'
+import { before }                            from 'node:test'
+import test                                  from 'node:test'
+import { fileURLToPath }                     from 'node:url'
+
+import { Configuration }                     from '@yarnpkg/core'
+import { Project }                           from '@yarnpkg/core'
+import { getPluginConfiguration }            from '@yarnpkg/cli'
+import { npath }                             from '@yarnpkg/fslib'
+import { ppath }                             from '@yarnpkg/fslib'
+
+import { resolveProjectCommandInvocation }   from './resolve.js'
+import { resolveWorkspaceCommandInvocation } from './resolve.js'
 
 const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
 
@@ -29,8 +34,37 @@ before(async () => {
   rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'sources/commands')
 })
 
+const createContext = (
+  cwd: typeof repoRoot,
+  environment: NodeJS.ProcessEnv = {},
+  streams: Partial<Pick<CommandContext, 'stderr' | 'stdin' | 'stdout'>> = {}
+): CommandContext => ({
+  colorDepth: 8,
+  cwd,
+  env: {
+    ...process.env,
+    ...environment,
+    RAIJIN_PROJECT_RUNTIME: npath.fromPortablePath(repoRoot),
+  },
+  plugins: getPluginConfiguration(),
+  quiet: false,
+  stderr: streams.stderr ?? new PassThrough(),
+  stdin: streams.stdin ?? new PassThrough(),
+  stdout: streams.stdout ?? new PassThrough(),
+})
+
+const expectInvocation = <Invocation extends ProjectInvocation>(
+  resolution: CommandInvocationResolution<Invocation>
+): Invocation => {
+  assert.equal('exitCode' in resolution, false)
+
+  return resolution as Invocation
+}
+
 test('should resolve project command invocation from a nested cwd', async () => {
-  const invocation = await resolveProjectInvocation(rendererNestedCwd, getPluginConfiguration(), {})
+  const invocation = expectInvocation(
+    await resolveProjectCommandInvocation(createContext(rendererNestedCwd))
+  )
 
   assert.equal(invocation.invocationCwd, rendererNestedCwd)
   assert.equal(invocation.executionCwd, repoRoot)
@@ -39,10 +73,8 @@ test('should resolve project command invocation from a nested cwd', async () => 
 })
 
 test('should resolve workspace execution cwd without a duplicate workspace cwd field', async () => {
-  const invocation = await resolveWorkspaceInvocation(
-    rendererNestedCwd,
-    getPluginConfiguration(),
-    {}
+  const invocation = expectInvocation(
+    await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
   )
 
   assert.equal(invocation.invocationCwd, rendererNestedCwd)
@@ -52,21 +84,23 @@ test('should resolve workspace execution cwd without a duplicate workspace cwd f
 })
 
 test('should use a nested Yarn init cwd within the command cwd', async () => {
-  const invocation = await resolveWorkspaceInvocation(repoRoot, getPluginConfiguration(), {
-    INIT_CWD: npath.fromPortablePath(rendererNestedCwd),
-  })
+  const invocation = expectInvocation(
+    await resolveWorkspaceCommandInvocation(
+      createContext(repoRoot, { INIT_CWD: npath.fromPortablePath(rendererNestedCwd) })
+    )
+  )
 
   assert.equal(invocation.invocationCwd, rendererNestedCwd)
   assert.equal(invocation.executionCwd, rendererWorkspaceCwd)
 })
 
 test('should ignore a nested Yarn init cwd outside the command cwd', async () => {
-  const invocation = await resolveWorkspaceInvocation(
-    rendererWorkspaceCwd,
-    getPluginConfiguration(),
-    {
-      INIT_CWD: npath.fromPortablePath(repoRoot),
-    }
+  const invocation = expectInvocation(
+    await resolveWorkspaceCommandInvocation(
+      createContext(rendererWorkspaceCwd, {
+        INIT_CWD: npath.fromPortablePath(repoRoot),
+      })
+    )
   )
 
   assert.equal(invocation.invocationCwd, rendererWorkspaceCwd)
@@ -79,14 +113,11 @@ test('should bind command environment and output to child execution', async () =
 
   stdout.on('data', (data: Buffer) => output.push(data))
 
-  const invocation = await resolveProjectInvocation({
-    cwd: repoRoot,
-    env: { ...process.env, RAIJIN_INVOCATION_CONTEXT_TEST: 'bound' },
-    plugins: getPluginConfiguration(),
-    stderr: new PassThrough(),
-    stdin: new PassThrough(),
-    stdout,
-  })
+  const invocation = expectInvocation(
+    await resolveProjectCommandInvocation(
+      createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'bound' }, { stdout })
+    )
+  )
   const result = await invocation.child.execute(process.execPath, [
     '-e',
     "process.stdout.write(process.env.RAIJIN_INVOCATION_CONTEXT_TEST ?? '')",
@@ -97,14 +128,11 @@ test('should bind command environment and output to child execution', async () =
 })
 
 test('should bind command environment to nested Yarn execution', async () => {
-  const invocation = await resolveProjectInvocation({
-    cwd: repoRoot,
-    env: { ...process.env, RAIJIN_INVOCATION_CONTEXT_TEST: 'nested' },
-    plugins: getPluginConfiguration(),
-    stderr: new PassThrough(),
-    stdin: new PassThrough(),
-    stdout: new PassThrough(),
-  })
+  const invocation = expectInvocation(
+    await resolveProjectCommandInvocation(
+      createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'nested' })
+    )
+  )
   const result = await invocation.yarn.capture([
     'exec',
     'node',
