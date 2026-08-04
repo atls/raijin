@@ -19,6 +19,7 @@ import { xfs }                         from '@yarnpkg/fslib'
 import { Release }                     from '@atls/code-github'
 import { RaijinCommand }               from '@atls/raijin/commands'
 
+import { captureGit }                  from './utils/git.js'
 import { parseGitHubUrl }              from './utils/parse-git-url.js'
 
 const RELEASE_ALREADY_EXISTS_STATUS = 422
@@ -417,19 +418,6 @@ export const selectPreviousGitHubReleaseTagName = (
     .filter((tag): tag is { tagName: string; version: string } => typeof tag.version === 'string')
     .filter((tag) => compareSemver(tag.version, version) < 0)
     .sort((leftTag, rightTag) => compareSemver(rightTag.version, leftTag.version))[0]?.tagName
-
-const captureGit = async (child: ChildProcessInvocation, args: Array<string>): Promise<string> => {
-  const result = await child.execute('git', args, {
-    output: { mode: 'capture' },
-    scope: 'project',
-  })
-
-  if (result.exitCode !== 0) {
-    throw new Error(result.stderr || `git ${args[0]} exited with code ${result.exitCode}`)
-  }
-
-  return result.stdout
-}
 
 export const getGitHubReleaseTagNames = async (
   child: ChildProcessInvocation,

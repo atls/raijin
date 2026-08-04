@@ -21,6 +21,7 @@ import { getChangedCommmits }                       from '@atls/yarn-plugin-file
 import { isReleaseVersionStrategy }                 from './release-version-policy.utils.js'
 import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
+import { captureGit }                               from './utils/git.js'
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
 type GitHubCommitFile = NonNullable<GitHubCommit['data']['files']>[number]
@@ -134,19 +135,6 @@ export const toGitHubChange = (commit: GitHubCommit): ReleaseVersionChange => ({
 
 const getGitHubChanges = async (): Promise<Array<ReleaseVersionChange>> =>
   (await getChangedCommmits()).map(toGitHubChange)
-
-const captureGit = async (child: ChildProcessInvocation, args: Array<string>): Promise<string> => {
-  const result = await child.execute('git', args, {
-    output: { mode: 'capture' },
-    scope: 'project',
-  })
-
-  if (result.exitCode !== 0) {
-    throw new Error(result.stderr || `git ${args[0]} exited with code ${result.exitCode}`)
-  }
-
-  return result.stdout
-}
 
 const getLocalCommitShas = async (
   child: ChildProcessInvocation,
