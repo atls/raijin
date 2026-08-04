@@ -28,11 +28,7 @@ export class RaijinSyncCommand extends AbstractRaijinSyncCommand {
 
     for (const command of commands) {
       // eslint-disable-next-line no-await-in-loop
-      const exitCode = await invocation.yarn.execute(command, {
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      })
+      const exitCode = await invocation.yarn.execute(command)
 
       if (exitCode !== 0) {
         return exitCode

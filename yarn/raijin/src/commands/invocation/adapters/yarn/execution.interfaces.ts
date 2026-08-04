@@ -1,12 +1,13 @@
-import type { Locator }           from '@yarnpkg/core'
-import type { Project }           from '@yarnpkg/core'
-import type { PortablePath }      from '@yarnpkg/fslib'
-import type { Readable }          from 'node:stream'
-import type { Writable }          from 'node:stream'
+import type { Locator }                    from '@yarnpkg/core'
+import type { Project }                    from '@yarnpkg/core'
+import type { PortablePath }               from '@yarnpkg/fslib'
 
-import type { ProjectInvocation } from '../../resolve.interfaces.js'
+import type { ProjectInvocation }          from '../../resolve.interfaces.js'
+import type { YarnCommandRunOptions }      from '../../resolve.interfaces.js'
+import type { InvocationExecutionContext } from '../child-process.interfaces.js'
 
 export interface YarnExecutableOptions {
+  baseEnvironment?: NodeJS.ProcessEnv
   binFolder: PortablePath
   project: Project
   locator?: Locator
@@ -21,9 +22,7 @@ export interface YarnExecutable {
 
 export interface YarnCommandOptions {
   args: Array<string>
+  context: InvocationExecutionContext
   invocation: ProjectInvocation
-  stderr: Writable
-  stdin: Readable
-  stdout: Writable
-  env?: NodeJS.ProcessEnv
+  options?: YarnCommandRunOptions
 }

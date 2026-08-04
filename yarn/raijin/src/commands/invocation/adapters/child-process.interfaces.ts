@@ -1,16 +1,22 @@
-import type { SpawnOptions }      from 'node:child_process'
+import type { Readable }            from 'node:stream'
+import type { Writable }            from 'node:stream'
 
-import type { ProjectInvocation } from '../resolve.interfaces.js'
+import type { CommandOutputPolicy } from '../resolve.interfaces.js'
 
-export interface ChildProcessOptions {
-  invocation: ProjectInvocation
-  env: NodeJS.ProcessEnv
-  stdio: SpawnOptions['stdio']
+export interface InvocationExecutionContext {
+  environment: NodeJS.ProcessEnv
+  stderr: Writable
+  stdin: Readable
+  stdout: Writable
 }
 
-export interface ChildProcessRunOptions {
+export interface ChildProcessOptions {
+  context: InvocationExecutionContext
+  cwd: string
   env: NodeJS.ProcessEnv
-  stdio: SpawnOptions['stdio']
+  input?: 'ignore' | 'inherit'
+  output?: CommandOutputPolicy
+  timeout?: number
 }
 
 export type ChildProcessSignalTarget = Pick<NodeJS.Process, 'off' | 'on'>

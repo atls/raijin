@@ -87,11 +87,7 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
       }
     )
 
-    return invocation.yarn.execute([...input, this.commandName, ...this.args], {
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
+    return invocation.yarn.execute([...input, this.commandName, ...this.args])
   }
 }
 

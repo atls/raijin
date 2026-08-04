@@ -14,7 +14,6 @@ import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
 
 import { GitHubChecks }               from './github.checks.js'
 import { AnnotationLevel }            from './github.checks.js'
-import { PassThroughRunContext }      from './pass-through-run.context.js'
 import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
@@ -68,39 +67,24 @@ class ChecksReleaseCommand extends BaseCommand {
 
       for await (const workspace of workspaces) {
         if (workspace.manifest.scripts.get('build')) {
-          const context = new PassThroughRunContext()
-
-          const outputWriter = (data: Buffer): ReturnType<typeof this.context.stdout.write> =>
-            this.context.stdout.write(data)
-
-          context.stdout.on('data', outputWriter)
-          context.stderr.on('data', outputWriter)
-
-          const code = await yarn.execute(
+          const result = await yarn.capture(
             ['workspace', workspace.manifest.raw.name as string, 'build'],
-            {
-              stdin: this.context.stdin,
-              stdout: context.stdout,
-              stderr: context.stderr,
-            }
+            { forwardOutput: true }
           )
 
-          if (code > 0) {
+          if (result.exitCode > 0) {
             annotations.push({
               annotation_level: AnnotationLevel.Failure,
               title: `Error release workspace ${
                 workspace.manifest.raw.name ?? workspace.relativeCwd
               }`,
-              message: `Exit code ${code}`,
-              raw_details: stripAnsi(context.output),
+              message: `Exit code ${result.exitCode}`,
+              raw_details: stripAnsi([result.stdout, result.stderr].filter(Boolean).join('\n')),
               path: ppath.join(workspace.relativeCwd, 'package.json'),
               start_line: 1,
               end_line: 1,
             })
           }
-
-          context.stdout.off('data', outputWriter)
-          context.stderr.off('data', outputWriter)
         }
       }
 

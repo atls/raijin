@@ -169,46 +169,13 @@ class ChecksTypeCheckCommand extends BaseCommand {
     invocation: ProjectInvocation,
     input: CommandInput | undefined
   ): Promise<number> {
-    const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await invocation.yarn.createExecutable({
-      binFolder,
-    })
-    let timeout: NodeJS.Timeout | undefined
-
-    return new Promise((resolvePromise, rejectPromise) => {
-      let timedOut = false
-      const child = invocation.child.spawn(
-        executable,
-        ['typecheck', ...(input ? toCommandArguments(input, invocation.project.cwd) : [])],
-        {
-          env,
-          stdio: ['ignore', 'pipe', 'pipe'],
-        }
-      )
-
-      child.stdout?.pipe(this.context.stdout, { end: false })
-      child.stderr?.pipe(this.context.stderr, { end: false })
-
-      timeout = setTimeout(() => {
-        timedOut = true
-        child.kill('SIGTERM')
-
-        setTimeout(() => {
-          if (!child.killed) {
-            child.kill('SIGKILL')
-          }
-        }, 5000).unref()
-      }, TYPECHECK_TIMEOUT_MS)
-
-      child.on('error', rejectPromise)
-      child.on('close', (code) => {
-        if (timeout) {
-          clearTimeout(timeout)
-        }
-
-        resolvePromise(timedOut ? 124 : (code ?? 1))
-      })
-    })
+    return invocation.yarn.execute(
+      ['typecheck', ...(input ? toCommandArguments(input, invocation.project.cwd) : [])],
+      {
+        input: 'ignore',
+        timeout: TYPECHECK_TIMEOUT_MS,
+      }
+    )
   }
 }
 

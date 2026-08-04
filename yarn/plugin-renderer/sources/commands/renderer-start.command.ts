@@ -46,15 +46,15 @@ export class RendererStartCommand extends BaseCommand {
 
     const rendererCwd = toNativeCwd(invocation.executionCwd)
 
-    const child = invocation.child.spawn(
+    const result = await invocation.child.execute(
       process.execPath,
       [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`],
       {
-        env: await createRendererRuntimeEnvironment(rendererCwd, process.env),
-        stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
+        environment: async (environment) =>
+          createRendererRuntimeEnvironment(rendererCwd, environment),
       }
     )
 
-    return invocation.child.wait(child)
+    return result.exitCode
   }
 }

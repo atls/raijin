@@ -25,11 +25,7 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
     }
 
     if (!process.env.GITHUB_TOKEN) {
-      return invocation.yarn.execute(['test', 'integration'], {
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      })
+      return invocation.yarn.execute(['test', 'integration'])
     }
 
     const { yarn } = invocation

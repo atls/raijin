@@ -69,16 +69,8 @@ export class UiIconsGenerateCommand extends BaseCommand {
       const input = createGeneratedIconInput(executionCwd, files)
       const generatedFiles = toCommandArguments(input, project.cwd)
 
-      await yarn.execute(['format', ...generatedFiles], {
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      })
-      await yarn.execute(['lint', '--fix', ...generatedFiles], {
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      })
+      await yarn.execute(['format', ...generatedFiles])
+      await yarn.execute(['lint', '--fix', ...generatedFiles])
 
       return 0
     } catch (error) {

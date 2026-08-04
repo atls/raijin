@@ -1,32 +1,37 @@
-import type { Project }              from '@yarnpkg/core'
+import type { Project }                    from '@yarnpkg/core'
 
-import { pathToFileURL }             from 'node:url'
+import type { InvocationExecutionContext } from '../child-process.interfaces.js'
 
-import { Filename }                  from '@yarnpkg/fslib'
-import { execUtils }                 from '@yarnpkg/core'
-import { npath }                     from '@yarnpkg/fslib'
-import { ppath }                     from '@yarnpkg/fslib'
-import { xfs }                       from '@yarnpkg/fslib'
+import { pathToFileURL }                   from 'node:url'
 
-import { MANAGED_NODE_LOADER_ENV }   from '@atls/raijin/runtime/node/bootstrap'
-import { REGISTERED_PNP_LOADER_ENV } from '@atls/raijin/runtime/node/bootstrap'
-import { registerNodeLoaders }       from '@atls/raijin/runtime/node/bootstrap'
+import { Filename }                        from '@yarnpkg/fslib'
+import { npath }                           from '@yarnpkg/fslib'
+import { ppath }                           from '@yarnpkg/fslib'
+import { xfs }                             from '@yarnpkg/fslib'
 
-import { createYarnExecutable }      from './execution.js'
+import { MANAGED_NODE_LOADER_ENV }         from '@atls/raijin/runtime/node/bootstrap'
+import { REGISTERED_PNP_LOADER_ENV }       from '@atls/raijin/runtime/node/bootstrap'
+import { registerNodeLoaders }             from '@atls/raijin/runtime/node/bootstrap'
+
+import { executeChildProcess }             from '../child-process.js'
+import { createYarnExecutable }            from './execution.js'
 
 const PROJECT_RUNTIME_ENV = 'RAIJIN_PROJECT_RUNTIME'
 
-const isProjectRuntimeReady = (project: Project): boolean => {
+const isProjectRuntimeReady = (project: Project, environment: NodeJS.ProcessEnv): boolean => {
   const pnpCjsPath = npath.fromPortablePath(ppath.join(project.cwd, Filename.pnpCjs))
 
   return (
-    process.env[PROJECT_RUNTIME_ENV] === npath.fromPortablePath(project.cwd) &&
-    (process.env.NODE_OPTIONS?.includes(pnpCjsPath) ?? false)
+    environment[PROJECT_RUNTIME_ENV] === npath.fromPortablePath(project.cwd) &&
+    (environment.NODE_OPTIONS?.includes(pnpCjsPath) ?? false)
   )
 }
 
-export const ensureProjectRuntime = async (project: Project): Promise<number | undefined> => {
-  if (isProjectRuntimeReady(project)) {
+export const ensureProjectRuntime = async (
+  project: Project,
+  context: InvocationExecutionContext
+): Promise<number | undefined> => {
+  if (isProjectRuntimeReady(project, context.environment)) {
     return undefined
   }
 
@@ -37,6 +42,7 @@ export const ensureProjectRuntime = async (project: Project): Promise<number | u
   }
 
   const { env } = await createYarnExecutable({
+    baseEnvironment: context.environment,
     binFolder: await xfs.mktempPromise(),
     project,
   })
@@ -48,19 +54,17 @@ export const ensureProjectRuntime = async (project: Project): Promise<number | u
     env[REGISTERED_PNP_LOADER_ENV] = pathToFileURL(npath.fromPortablePath(pnpEsmLoaderPath)).href
   }
 
-  const { code } = await execUtils.pipevp(
+  const result = await executeChildProcess(
     process.execPath,
     [runtimePath, ...process.argv.slice(2)],
     {
-      cwd: ppath.cwd(),
+      context,
+      cwd: npath.fromPortablePath(ppath.cwd()),
       env,
-      stderr: process.stderr,
-      stdin: process.stdin,
-      stdout: process.stdout,
     }
   )
 
-  return code
+  return result.exitCode
 }
 
 const activatePnpRuntime = async (project: Project): Promise<void> => {

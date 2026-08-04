@@ -25,11 +25,7 @@ export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
     }
 
     if (!process.env.GITHUB_TOKEN) {
-      return invocation.yarn.execute(['test', 'unit'], {
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      })
+      return invocation.yarn.execute(['test', 'unit'])
     }
 
     const { yarn } = invocation

@@ -1,13 +1,9 @@
 import type { WorkspaceInvocation }            from '@atls/raijin/commands'
 
-import { PassThrough }                         from 'node:stream'
-
 import { BaseCommand }                         from '@yarnpkg/cli'
 import { StreamReport }                        from '@yarnpkg/core'
 import { MessageName }                         from '@yarnpkg/core'
-import { execUtils }                           from '@yarnpkg/core'
 import { scriptUtils }                         from '@yarnpkg/core'
-import { xfs }                                 from '@yarnpkg/fslib'
 
 import { defineCommandInvocation }             from '@atls/raijin/commands'
 import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
@@ -58,7 +54,6 @@ export class RendererBuildCommand extends BaseCommand {
 
     await project.restoreInstallState()
 
-    const binFolder = await xfs.mktempPromise()
     const manifestSnapshot = await snapshotNextStandaloneManifests(artifactTarget.appCwd)
 
     const commandReport = await StreamReport.start(
@@ -68,36 +63,6 @@ export class RendererBuildCommand extends BaseCommand {
       },
       async (report) => {
         await report.startTimerPromise('Renderer build', async () => {
-          const stdout = new PassThrough()
-          const stderr = new PassThrough()
-
-          stdout.on('data', (data: Buffer) => {
-            data
-              .toString()
-              .split('\n')
-              .filter(Boolean)
-              .forEach((line) => {
-                report.reportInfo(MessageName.UNNAMED, line)
-              })
-          })
-
-          stderr.on('data', (data: Buffer) => {
-            data
-              .toString()
-              .split('\n')
-              .filter(Boolean)
-              .forEach((line) => {
-                report.reportInfo(MessageName.UNNAMED, line)
-              })
-          })
-
-          const executableContext = {
-            binFolder,
-            locator: workspace.anchoredLocator,
-          }
-          const scriptEnvironment = await yarn.createExecutable(executableContext)
-          const { nodeOptions } = extractPnpLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
-          const loader = await resolvePnpLoader(project.cwd, scriptEnvironment.env.NODE_OPTIONS)
           const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
           const nextBinary = binaries.get('next')
 
@@ -107,31 +72,36 @@ export class RendererBuildCommand extends BaseCommand {
 
           const [nextPackage, nextBin] = nextBinary
           const nextVersion = resolveNextPackageVersion(nextPackage)
-          const nextLoader = await materializeNextLoader(binFolder, loader)
-          const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
-          const { executable, env } = await yarn.createExecutable({
-            ...executableContext,
-            env: {
-              NODE_OPTIONS: nodeOptions,
+          const code = await yarn.execute(createNextBuildArguments(nextVersion, nextBin), {
+            locator: workspace.anchoredLocator,
+            output: {
+              mode: 'handle',
+              handler: ({ data }) => {
+                data
+                  .split('\n')
+                  .filter(Boolean)
+                  .forEach((line) => {
+                    report.reportInfo(MessageName.UNNAMED, line)
+                  })
+              },
             },
-            nodeLoader: nextLoader,
-          })
+            prepare: async ({ binFolder, environment }) => {
+              const { nodeOptions } = extractPnpLoaderOption(environment.NODE_OPTIONS)
+              const loader = await resolvePnpLoader(project.cwd, environment.NODE_OPTIONS)
+              const nextLoader = await materializeNextLoader(binFolder, loader)
+              const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
 
-          const { code } = await execUtils.pipevp(
-            executable,
-            createNextBuildArguments(nextVersion, nextBin),
-            {
-              end: execUtils.EndStrategy.ErrorCode,
-              cwd: rendererCwd,
-              stdin: this.context.stdin,
-              stdout,
-              stderr,
-              env: createNextExecutionEnvironment(env, nextLoader, rendererCwd, {
-                nextConfigAdapterPath,
-                output: 'standalone',
-              }),
-            }
-          )
+              return {
+                environment: { NODE_OPTIONS: nodeOptions },
+                nodeLoader: nextLoader,
+                finalizeEnvironment: (scriptEnvironment) =>
+                  createNextExecutionEnvironment(scriptEnvironment, nextLoader, rendererCwd, {
+                    nextConfigAdapterPath,
+                    output: 'standalone',
+                  }),
+              }
+            },
+          })
 
           assertNextBuildExitCode(code)
         })

@@ -1,35 +1,24 @@
 import type { ChildProcess }             from 'node:child_process'
 import type { SpawnOptions }             from 'node:child_process'
 
-import type { ProjectInvocation }        from '../resolve.interfaces.js'
+import type { CommandExecutionResult }   from '../resolve.interfaces.js'
 import type { ChildProcessOptions }      from './child-process.interfaces.js'
-import type { ChildProcessRunOptions }   from './child-process.interfaces.js'
 import type { ChildProcessSignalTarget } from './child-process.interfaces.js'
 
 import { spawn }                         from 'node:child_process'
-
-import { toNativeCwd }                   from './path/index.js'
 
 const FORWARDED_SIGNALS: ReadonlyArray<NodeJS.Signals> =
   process.platform === 'win32' ? ['SIGBREAK', 'SIGINT', 'SIGTERM'] : ['SIGHUP', 'SIGINT', 'SIGTERM']
 
 export const createChildProcessOptions = ({
+  cwd,
   env,
-  invocation,
-  stdio,
+  input = 'inherit',
 }: ChildProcessOptions): SpawnOptions => ({
-  cwd: toNativeCwd(invocation.executionCwd),
+  cwd,
   env,
-  stdio,
+  stdio: [input === 'ignore' ? 'ignore' : 'pipe', 'pipe', 'pipe'],
 })
-
-export const waitForChildProcess = async (child: ChildProcess): Promise<number> =>
-  new Promise<number>((resolve, reject) => {
-    child.once('error', reject)
-    child.once('close', (code) => {
-      resolve(code ?? 1)
-    })
-  })
 
 export const forwardChildProcessSignals = (
   child: ChildProcess,
@@ -61,23 +50,84 @@ export const forwardChildProcessSignals = (
   return cleanup
 }
 
-export const spawnChildProcess = (
-  invocation: ProjectInvocation,
+export const executeChildProcess = async (
   command: string,
   args: Array<string>,
-  options: ChildProcessRunOptions
-): ChildProcess => {
-  const child = spawn(
-    command,
-    args,
-    createChildProcessOptions({
-      invocation,
-      env: options.env,
-      stdio: options.stdio,
-    })
-  )
+  options: ChildProcessOptions
+): Promise<CommandExecutionResult> => {
+  const output = options.output ?? { mode: 'inherit' }
+  const stdoutChunks: Array<Buffer> = []
+  const stderrChunks: Array<Buffer> = []
+  const child = spawn(command, args, createChildProcessOptions(options))
+  let timedOut = false
+  let timeout: NodeJS.Timeout | undefined
+  let killTimeout: NodeJS.Timeout | undefined
 
   forwardChildProcessSignals(child)
 
-  return child
+  if (options.input !== 'ignore' && child.stdin) {
+    options.context.stdin.pipe(child.stdin)
+  }
+
+  child.stdout?.on('data', (data: Buffer) => {
+    if (output.mode === 'inherit') {
+      options.context.stdout.write(data)
+    } else if (output.mode === 'capture') {
+      stdoutChunks.push(data)
+
+      if (output.forward) {
+        options.context.stdout.write(data)
+      }
+    } else {
+      output.handler({ data: data.toString(), source: 'stdout' })
+    }
+  })
+  child.stderr?.on('data', (data: Buffer) => {
+    if (output.mode === 'inherit') {
+      options.context.stderr.write(data)
+    } else if (output.mode === 'capture') {
+      stderrChunks.push(data)
+
+      if (output.forward) {
+        options.context.stderr.write(data)
+      }
+    } else {
+      output.handler({ data: data.toString(), source: 'stderr' })
+    }
+  })
+
+  if (options.timeout !== undefined) {
+    timeout = setTimeout(() => {
+      timedOut = true
+      child.kill('SIGTERM')
+      killTimeout = setTimeout(() => {
+        if (child.exitCode === null && child.signalCode === null) {
+          child.kill('SIGKILL')
+        }
+      }, 5000)
+      killTimeout.unref()
+    }, options.timeout)
+  }
+
+  return new Promise<CommandExecutionResult>((resolve, reject) => {
+    const cleanup = (): void => {
+      if (timeout) clearTimeout(timeout)
+      if (killTimeout) clearTimeout(killTimeout)
+      if (child.stdin) options.context.stdin.unpipe(child.stdin)
+    }
+
+    child.once('error', (error) => {
+      cleanup()
+      reject(error)
+    })
+    child.once('close', (code) => {
+      cleanup()
+      resolve({
+        exitCode: timedOut ? 124 : (code ?? 1),
+        stderr: Buffer.concat(stderrChunks).toString(),
+        stdout: Buffer.concat(stdoutChunks).toString(),
+        timedOut,
+      })
+    })
+  })
 }

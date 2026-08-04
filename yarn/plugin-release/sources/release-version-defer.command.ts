@@ -70,14 +70,13 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
 
           // Deferred version records share the same `.yarn/versions` state.
           // eslint-disable-next-line no-await-in-loop
-          const code = await invocation.yarn.execute(
-            ['workspace', changedWorkspace.ident, 'version', effectiveStrategy, '--deferred'],
-            {
-              stdin: this.context.stdin,
-              stdout: this.context.stdout,
-              stderr: this.context.stderr,
-            }
-          )
+          const code = await invocation.yarn.execute([
+            'workspace',
+            changedWorkspace.ident,
+            'version',
+            effectiveStrategy,
+            '--deferred',
+          ])
 
           if (code > 0) {
             throw new Error(`Failed to defer ${changedWorkspace.ident} as ${effectiveStrategy}`)
@@ -97,14 +96,13 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
 
           // Deferred version records share the same `.yarn/versions` state.
           // eslint-disable-next-line no-await-in-loop
-          const code = await invocation.yarn.execute(
-            ['workspace', changedWorkspace.ident, 'version', 'decline', '--deferred'],
-            {
-              stdin: this.context.stdin,
-              stdout: this.context.stdout,
-              stderr: this.context.stderr,
-            }
-          )
+          const code = await invocation.yarn.execute([
+            'workspace',
+            changedWorkspace.ident,
+            'version',
+            'decline',
+            '--deferred',
+          ])
 
           if (code > 0) {
             throw new Error(`Failed to decline ${changedWorkspace.ident}`)

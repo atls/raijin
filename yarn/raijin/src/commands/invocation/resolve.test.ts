@@ -1,5 +1,6 @@
 import assert                         from 'node:assert/strict'
 import { dirname }                    from 'node:path'
+import { PassThrough }                from 'node:stream'
 import { before }                     from 'node:test'
 import test                           from 'node:test'
 import { fileURLToPath }              from 'node:url'
@@ -70,4 +71,47 @@ test('should ignore a nested Yarn init cwd outside the command cwd', async () =>
 
   assert.equal(invocation.invocationCwd, rendererWorkspaceCwd)
   assert.equal(invocation.executionCwd, rendererWorkspaceCwd)
+})
+
+test('should bind command environment and output to child execution', async () => {
+  const stdout = new PassThrough()
+  const output: Array<Buffer> = []
+
+  stdout.on('data', (data: Buffer) => output.push(data))
+
+  const invocation = await resolveProjectInvocation({
+    cwd: repoRoot,
+    env: { ...process.env, RAIJIN_INVOCATION_CONTEXT_TEST: 'bound' },
+    plugins: getPluginConfiguration(),
+    stderr: new PassThrough(),
+    stdin: new PassThrough(),
+    stdout,
+  })
+  const result = await invocation.child.execute(process.execPath, [
+    '-e',
+    "process.stdout.write(process.env.RAIJIN_INVOCATION_CONTEXT_TEST ?? '')",
+  ])
+
+  assert.equal(result.exitCode, 0)
+  assert.equal(Buffer.concat(output).toString(), 'bound')
+})
+
+test('should bind command environment to nested Yarn execution', async () => {
+  const invocation = await resolveProjectInvocation({
+    cwd: repoRoot,
+    env: { ...process.env, RAIJIN_INVOCATION_CONTEXT_TEST: 'nested' },
+    plugins: getPluginConfiguration(),
+    stderr: new PassThrough(),
+    stdin: new PassThrough(),
+    stdout: new PassThrough(),
+  })
+  const result = await invocation.yarn.capture([
+    'exec',
+    'node',
+    '-e',
+    "process.stdout.write(process.env.RAIJIN_INVOCATION_CONTEXT_TEST ?? '')",
+  ])
+
+  assert.equal(result.exitCode, 0)
+  assert.equal(result.stdout, 'nested')
 })

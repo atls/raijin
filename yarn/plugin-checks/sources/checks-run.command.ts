@@ -79,11 +79,7 @@ class ChecksRunCommand extends BaseCommand {
         (args[0] === 'lint' || args[0] === 'typecheck') &&
         !args.includes('--changed')
       const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
-      const code = await invocation.yarn.execute(['checks', ...checkArgs], {
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      })
+      const code = await invocation.yarn.execute(['checks', ...checkArgs])
 
       if (code !== 0) {
         report.reportError(MessageName.UNNAMED, `Run check ${args.join(' ')} failed: ${code}`)

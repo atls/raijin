@@ -55,11 +55,7 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
       deferArgs.push('--since', this.since)
     }
 
-    const deferCode = await invocation.yarn.execute(deferArgs, {
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
+    const deferCode = await invocation.yarn.execute(deferArgs)
 
     if (deferCode > 0) {
       return deferCode
@@ -87,10 +83,6 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
       return commandReport.exitCode()
     }
 
-    return invocation.yarn.execute(['version', 'apply', '--all'], {
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
+    return invocation.yarn.execute(['version', 'apply', '--all'])
   }
 }

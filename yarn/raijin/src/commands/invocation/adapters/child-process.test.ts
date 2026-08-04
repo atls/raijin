@@ -1,62 +1,80 @@
 import assert                         from 'node:assert/strict'
 import { EventEmitter }               from 'node:events'
+import { PassThrough }                from 'node:stream'
 import test                           from 'node:test'
 
 import { createChildProcessOptions }  from './child-process.js'
+import { executeChildProcess }        from './child-process.js'
 import { forwardChildProcessSignals } from './child-process.js'
-import { waitForChildProcess }        from './child-process.js'
+
+const createContext = () => ({
+  environment: { NODE_ENV: 'test' },
+  stderr: new PassThrough(),
+  stdin: new PassThrough(),
+  stdout: new PassThrough(),
+})
 
 test('should create child options from the execution boundary', () => {
+  const context = createContext()
   const environment = { NODE_ENV: 'test' }
   const options = createChildProcessOptions({
-    invocation: { executionCwd: '/repo/client' } as never,
+    context,
+    cwd: '/repo/client',
     env: environment,
-    stdio: 'inherit',
   })
 
   assert.equal(options.cwd, '/repo/client')
   assert.equal(options.env, environment)
-  assert.equal(options.stdio, 'inherit')
+  assert.deepEqual(options.stdio, ['pipe', 'pipe', 'pipe'])
 })
 
-test('should wait for child stdio to close before returning its code', async () => {
-  const child = new EventEmitter()
-  const result = waitForChildProcess(child as never)
-  let settled = false
+test('should capture and forward child output before returning its code', async () => {
+  const context = createContext()
+  const forwarded: Array<Buffer> = []
 
-  const settlement = result.then(() => {
-    settled = true
-  })
+  context.stdout.on('data', (data: Buffer) => forwarded.push(data))
 
-  child.emit('exit', 7)
-  await Promise.resolve()
+  const result = await executeChildProcess(
+    process.execPath,
+    ['-e', "process.stdout.write('ready')"],
+    {
+      context,
+      cwd: process.cwd(),
+      env: process.env,
+      output: { mode: 'capture', forward: true },
+    }
+  )
 
-  assert.equal(settled, false)
-
-  child.emit('close', 7)
-
-  await settlement
-  assert.equal(await result, 7)
+  assert.equal(result.exitCode, 0)
+  assert.equal(result.stdout, 'ready')
+  assert.equal(Buffer.concat(forwarded).toString(), 'ready')
 })
 
 test('should reject child process errors', async () => {
-  const child = new EventEmitter()
-  const result = waitForChildProcess(child as never)
-  const error = new Error('spawn failed')
-
-  child.emit('error', error)
-  child.emit('close', 1)
-
-  await assert.rejects(result, error)
+  await assert.rejects(
+    executeChildProcess('raijin-missing-executable', [], {
+      context: createContext(),
+      cwd: process.cwd(),
+      env: process.env,
+    }),
+    /ENOENT/
+  )
 })
 
-test('should return a failure code when child closes from a signal', async () => {
-  const child = new EventEmitter()
-  const result = waitForChildProcess(child as never)
+test('should stop a child after the configured timeout', async () => {
+  const result = await executeChildProcess(
+    process.execPath,
+    ['-e', 'setInterval(() => {}, 1000)'],
+    {
+      context: createContext(),
+      cwd: process.cwd(),
+      env: process.env,
+      timeout: 20,
+    }
+  )
 
-  child.emit('close', null, 'SIGTERM')
-
-  assert.equal(await result, 1)
+  assert.equal(result.exitCode, 124)
+  assert.equal(result.timedOut, true)
 })
 
 test('should forward process signals while the child is active', () => {

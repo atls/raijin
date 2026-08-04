@@ -27,13 +27,13 @@ const resolveInvocation = async <Scope extends CommandInvocationScope>(
   context: CommandContext
 ): Promise<CommandInvocationExit | CommandInvocationForScope<Scope>> => {
   if (definition.scope === 'workspace') {
-    return resolveWorkspaceCommandInvocation(context.cwd, context.plugins) as Promise<
+    return resolveWorkspaceCommandInvocation(context) as Promise<
       CommandInvocationExit | CommandInvocationForScope<Scope>
     >
   }
 
   if (definition.scope === 'project') {
-    return resolveProjectCommandInvocation(context.cwd, context.plugins) as Promise<
+    return resolveProjectCommandInvocation(context) as Promise<
       CommandInvocationExit | CommandInvocationForScope<Scope>
     >
   }

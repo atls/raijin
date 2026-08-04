@@ -7,11 +7,7 @@ export const afterYarnVersionSet = async (
   configuration: Configuration,
   context: CommandContext
 ): Promise<void> => {
-  const invocation = await resolveProjectInvocation(context.cwd, context.plugins)
+  const invocation = await resolveProjectInvocation(context)
 
-  await invocation.yarn.execute(['raijin', 'sync'], {
-    stdin: context.stdin,
-    stdout: context.stdout,
-    stderr: context.stderr,
-  })
+  await invocation.yarn.execute(['raijin', 'sync'])
 }

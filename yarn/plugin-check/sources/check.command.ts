@@ -29,11 +29,7 @@ export class CheckCommand extends BaseCommand {
     const targets = toCommandArguments(input, cwd)
 
     for await (const command of ['format', 'typecheck', 'lint']) {
-      const commandExitCode = await invocation.yarn.execute([command, ...targets], {
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      })
+      const commandExitCode = await invocation.yarn.execute([command, ...targets])
 
       if (commandExitCode) {
         exitCode = commandExitCode

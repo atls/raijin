@@ -64,9 +64,15 @@ test('should inject a workspace invocation before command execution', async () =
   const command = new ComposedCommand()
 
   command.context = {
+    colorDepth: 8,
     cwd: rendererNestedCwd,
+    env: process.env,
     plugins: getPluginConfiguration(),
-  } as CommandContext
+    quiet: false,
+    stderr: process.stderr,
+    stdin: process.stdin,
+    stdout: process.stdout,
+  }
 
   const previousProjectRuntime = process.env.RAIJIN_PROJECT_RUNTIME
   const previousNodeOptions = process.env.NODE_OPTIONS

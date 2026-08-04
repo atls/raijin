@@ -2,7 +2,6 @@ import type { WorkspaceInvocation }       from '@atls/raijin/commands'
 import type { Tunnel }                    from 'localtunnel'
 
 import { BaseCommand }                    from '@yarnpkg/cli'
-import { execUtils }                      from '@yarnpkg/core'
 import { scriptUtils }                    from '@yarnpkg/core'
 import { xfs }                            from '@yarnpkg/fslib'
 import { ppath }                          from '@yarnpkg/fslib'
@@ -48,8 +47,8 @@ export class RendererDevCommand extends BaseCommand {
   startTunnel(host: string, port: number = 3000): void {
     this.runTunnel(host, port)
 
-    process.stdin.on('data', (data) => {
-      if (data.toString().trim() === 'rs') {
+    this.context.stdin.on('data', (data) => {
+      if (String(data).trim() === 'rs') {
         this.runTunnel(host, port)
       }
     })
@@ -90,24 +89,6 @@ export class RendererDevCommand extends BaseCommand {
       args.push('--experimental-https-cert', ppath.join(project.cwd, '.config/certs/local/dev.crt'))
     }
 
-    const binFolder = await xfs.mktempPromise()
-    const scriptEnvironment = await yarn.createExecutable({
-      binFolder,
-      locator: workspace.anchoredLocator,
-    })
-    const { nodeOptions } = extractPnpLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
-    const loader = await resolvePnpLoader(project.cwd, scriptEnvironment.env.NODE_OPTIONS)
-    const nextLoader = await materializeNextLoader(binFolder, loader)
-    const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
-    const { executable, env } = await yarn.createExecutable({
-      binFolder,
-      locator: workspace.anchoredLocator,
-      env: {
-        NODE_OPTIONS: nodeOptions,
-      },
-      nodeLoader: nextLoader,
-    })
-
     if (this.tunnel) {
       const { tunnel: config }: { tunnel?: { host?: string; port?: number } } =
         workspace.manifest.raw.tools || {}
@@ -119,16 +100,23 @@ export class RendererDevCommand extends BaseCommand {
       this.startTunnel(config.host, config.port)
     }
 
-    const { code } = await execUtils.pipevp(executable, args, {
-      cwd: executionCwd,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-      env: createNextExecutionEnvironment(env, nextLoader, executionCwd, {
-        nextConfigAdapterPath,
-      }),
-    })
+    return yarn.execute(args, {
+      locator: workspace.anchoredLocator,
+      prepare: async ({ binFolder, environment }) => {
+        const { nodeOptions } = extractPnpLoaderOption(environment.NODE_OPTIONS)
+        const loader = await resolvePnpLoader(project.cwd, environment.NODE_OPTIONS)
+        const nextLoader = await materializeNextLoader(binFolder, loader)
+        const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
 
-    return code
+        return {
+          environment: { NODE_OPTIONS: nodeOptions },
+          nodeLoader: nextLoader,
+          finalizeEnvironment: (scriptEnvironment) =>
+            createNextExecutionEnvironment(scriptEnvironment, nextLoader, executionCwd, {
+              nextConfigAdapterPath,
+            }),
+        }
+      },
+    })
   }
 }
