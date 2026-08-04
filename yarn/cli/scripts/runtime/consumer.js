@@ -15,7 +15,7 @@ const execFileAsync = promisify(execFile)
 const [runtimeArgument, packageManager] = process.argv.slice(2)
 
 if (!runtimeArgument || !packageManager) {
-  throw new Error('Usage: consumer.mjs <runtime-path> <package-manager>')
+  throw new Error('Usage: consumer.js <runtime-path> <package-manager>')
 }
 
 const runtimePath = resolve(process.cwd(), runtimeArgument)
