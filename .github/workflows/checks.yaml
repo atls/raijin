@@ -61,3 +61,30 @@ jobs:
         shell: bash
         run: |
           yarn raijin:check
+
+  windows-invocation:
+    name: Windows invocation
+    env:
+      NODE_VERSION: '25'
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions: read-all
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install
+        uses: ./.github/actions/install
+
+      - name: Test Windows invocation
+        shell: bash
+        run: |
+          yarn test unit yarn/raijin/src/commands/invocation/resolve.test.ts yarn/raijin/src/commands/invocation/adapters/child-process.test.ts

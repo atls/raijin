@@ -178,6 +178,26 @@ test('should bind command environment to nested Yarn execution', async () => {
   assert.equal(result.stdout, 'nested')
 })
 
+test(
+  'should execute nested Yarn through the Windows command shim',
+  { skip: process.platform !== 'win32' },
+  async () => {
+    const invocation = expectInvocation(
+      await resolveProjectCommandInvocation(
+        createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'windows' })
+      )
+    )
+    const exitCode = await invocation.yarn.execute([
+      'exec',
+      'node',
+      '-e',
+      "process.exit(process.env.RAIJIN_INVOCATION_CONTEXT_TEST === 'windows' ? 0 : 1)",
+    ])
+
+    assert.equal(exitCode, 0)
+  }
+)
+
 test('should root nested Yarn execution at the resolved project cwd', async () => {
   const invocation = expectInvocation(
     await resolveProjectCommandInvocation(createContext(rendererNestedCwd))
