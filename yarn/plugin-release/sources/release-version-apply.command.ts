@@ -1,10 +1,12 @@
+import type { WorkspaceInvocation }    from '@atls/raijin/commands'
+
 import { appendFile }                  from 'node:fs/promises'
 
 import { BaseCommand }                 from '@yarnpkg/cli'
 import { StreamReport }                from '@yarnpkg/core'
 import { Option }                      from 'clipanion'
 
-import { resolveWorkspaceInvocation }  from '@atls/raijin/commands'
+import { defineCommandInvocation }     from '@atls/raijin/commands'
 
 import { getDeferredReleaseDecisions } from './release-version.utils.js'
 import { isDeferredReleaseRequired }   from './release-version.utils.js'
@@ -25,6 +27,8 @@ const writeGitHubOutput = async (name: string, value: string): Promise<void> => 
 export class ReleaseVersionApplyCommand extends BaseCommand {
   static override paths = [['release', 'version', 'apply']]
 
+  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
+
   static override usage = BaseCommand.Usage({
     description: 'apply deferred workspace versions',
   })
@@ -37,9 +41,13 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
 
   since = Option.String('--since')
 
-  override async execute(): Promise<number> {
-    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
-    const { configuration, project } = yarn
+  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
+    const { yarn } = invocation
+    const { configuration } = yarn
 
     const deferArgs = ['release', 'version', 'defer']
 
@@ -47,8 +55,10 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
       deferArgs.push('--since', this.since)
     }
 
-    const deferCode = await this.cli.run(deferArgs, {
-      cwd: project.cwd,
+    const deferCode = await invocation.yarn.execute(deferArgs, {
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
     })
 
     if (deferCode > 0) {
@@ -77,8 +87,10 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
       return commandReport.exitCode()
     }
 
-    return this.cli.run(['version', 'apply', '--all'], {
-      cwd: project.cwd,
+    return invocation.yarn.execute(['version', 'apply', '--all'], {
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
     })
   }
 }

@@ -1,4 +1,5 @@
 import type { TagPolicy }                    from '@atls/code-pack'
+import type { WorkspaceInvocation }          from '@atls/raijin/commands'
 import type { Workspace }                    from '@yarnpkg/core'
 
 import type { ImagePackConfiguration }       from './image-pack.utils.js'
@@ -13,7 +14,7 @@ import { xfs }                               from '@yarnpkg/fslib'
 import { Option }                            from 'clipanion'
 
 import { pack }                              from '@atls/code-pack'
-import { resolveWorkspaceInvocation }        from '@atls/raijin/commands'
+import { defineCommandInvocation }           from '@atls/raijin/commands'
 import { toNativeCwd }                       from '@atls/raijin/commands'
 import { packUtils }                         from '@atls/yarn-pack-utils'
 
@@ -23,6 +24,8 @@ import { resolveBuilderReference }           from './image-pack.utils.js'
 
 class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
 
   static override usage = BaseCommand.Usage({
     description: 'build and optionally publish a container image',
@@ -36,11 +39,12 @@ class ImagePackCommand extends BaseCommand {
 
   platform?: string = Option.String('--platform')
 
-  async execute(): Promise<number> {
-    const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  async execute(invocation?: WorkspaceInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
+    const { executionCwd, workspace, yarn } = invocation
     const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(

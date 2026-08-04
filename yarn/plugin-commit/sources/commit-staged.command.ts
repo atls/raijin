@@ -1,8 +1,10 @@
-import { execSync }    from 'node:child_process'
+import { execSync }                from 'node:child_process'
 
-import { BaseCommand } from '@yarnpkg/cli'
-import { Option }      from 'clipanion'
-import lintStaged      from 'lint-staged'
+import { BaseCommand }             from '@yarnpkg/cli'
+import { Option }                  from 'clipanion'
+import lintStaged                  from 'lint-staged'
+
+import { defineCommandInvocation } from '@atls/raijin/commands'
 
 const resolveRootDir = (): string => {
   try {
@@ -32,6 +34,8 @@ export const createConfig = (yarnCommandPath = resolveYarnCommandPath()): lintSt
 
 export class CommitStagedCommand extends BaseCommand {
   static override paths = [['commit', 'staged']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'entry' })
 
   static override usage = BaseCommand.Usage({
     description: 'run project checks for staged files',

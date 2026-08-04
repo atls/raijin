@@ -1,3 +1,4 @@
+import type { WorkspaceInvocation }       from '@atls/raijin/commands'
 import type { Tunnel }                    from 'localtunnel'
 
 import { BaseCommand }                    from '@yarnpkg/cli'
@@ -8,8 +9,7 @@ import { ppath }                          from '@yarnpkg/fslib'
 import { Option }                         from 'clipanion'
 import localtunnel                        from 'localtunnel'
 
-import { resolveWorkspaceInvocation }     from '@atls/raijin/commands'
-import { createYarnExecutable }           from '@atls/raijin/commands'
+import { defineCommandInvocation }        from '@atls/raijin/commands'
 import { materializeNextConfigAdapter }   from '@atls/raijin/config/next'
 
 import { createNextDevArguments }         from '../integrations/next/execution/arguments.js'
@@ -21,6 +21,8 @@ import { resolveNextPackageVersion }      from '../integrations/next/execution/v
 
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
 
   static override usage = BaseCommand.Usage({
     description: 'run a renderer in development mode',
@@ -53,11 +55,12 @@ export class RendererDevCommand extends BaseCommand {
     })
   }
 
-  async execute(): Promise<number> {
-    const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
+    const { executionCwd, workspace, yarn } = invocation
     const { project } = yarn
 
     await project.restoreInstallState()
@@ -88,19 +91,17 @@ export class RendererDevCommand extends BaseCommand {
     }
 
     const binFolder = await xfs.mktempPromise()
-    const scriptEnvironment = await createYarnExecutable({
+    const scriptEnvironment = await yarn.createExecutable({
       binFolder,
       locator: workspace.anchoredLocator,
-      project,
     })
     const { nodeOptions } = extractPnpLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
     const loader = await resolvePnpLoader(project.cwd, scriptEnvironment.env.NODE_OPTIONS)
     const nextLoader = await materializeNextLoader(binFolder, loader)
     const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
-    const { executable, env } = await createYarnExecutable({
+    const { executable, env } = await yarn.createExecutable({
       binFolder,
       locator: workspace.anchoredLocator,
-      project,
       env: {
         NODE_OPTIONS: nodeOptions,
       },

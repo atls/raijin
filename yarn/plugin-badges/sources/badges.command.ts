@@ -1,26 +1,29 @@
+import type { WorkspaceInvocation } from '@atls/raijin/commands'
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { LocatorHash }           from '@yarnpkg/core'
-import type { Package }               from '@yarnpkg/core'
-import type { Workspace }             from '@yarnpkg/core'
+import type { LocatorHash }         from '@yarnpkg/core'
+import type { Package }             from '@yarnpkg/core'
+import type { Workspace }           from '@yarnpkg/core'
 
-import { readFileSync }               from 'node:fs'
-import { writeFileSync }              from 'node:fs'
-import { join }                       from 'node:path'
+import { readFileSync }             from 'node:fs'
+import { writeFileSync }            from 'node:fs'
+import { join }                     from 'node:path'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
-import { structUtils }                from '@yarnpkg/core'
-import { miscUtils }                  from '@yarnpkg/core'
+import { BaseCommand }              from '@yarnpkg/cli'
+import { StreamReport }             from '@yarnpkg/core'
+import { structUtils }              from '@yarnpkg/core'
+import { miscUtils }                from '@yarnpkg/core'
 
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { toNativeCwd }                from '@atls/raijin/commands'
+import { defineCommandInvocation }  from '@atls/raijin/commands'
+import { toNativeCwd }              from '@atls/raijin/commands'
 
-import { BADGES }                     from './badges.constants.js'
-import { COLORS }                     from './badges.constants.js'
-import { SpinnerProgress }            from './spinner.progress.js'
+import { BADGES }                   from './badges.constants.js'
+import { COLORS }                   from './badges.constants.js'
+import { SpinnerProgress }          from './spinner.progress.js'
 
 class BadgesCommand extends BaseCommand {
   static override paths = [['badges', 'generate']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
 
   static override usage = BaseCommand.Usage({
     description: 'generate package badges in the project README',
@@ -36,11 +39,12 @@ class BadgesCommand extends BaseCommand {
 
   static REGISTRY_PACKAGE_PATH = '/package'
 
-  async execute(): Promise<0 | 1> {
-    const { project: projectModel, yarn } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  async execute(invocation?: WorkspaceInvocation): Promise<0 | 1> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
+    const { project: projectModel, yarn } = invocation
     const { configuration, project } = yarn
 
     await project.restoreInstallState()

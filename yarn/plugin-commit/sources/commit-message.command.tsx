@@ -15,6 +15,7 @@ import React                            from 'react'
 import wrap                             from 'word-wrap'
 
 import { RequestCommitMessage }         from '@atls/cli-ui-git-commit-component'
+import { defineCommandInvocation }      from '@atls/raijin/commands'
 
 const RequestCommitMessageSubmit = ({
   commit,
@@ -48,6 +49,8 @@ const RequestCommitMessageApp = ({
 
 export class CommitMessageCommand extends BaseCommand {
   static override paths = [['commit', 'message']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'entry' })
 
   static override usage = BaseCommand.Usage({
     description: 'create a conventional commit message interactively',

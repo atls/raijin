@@ -2,6 +2,8 @@ import { BaseCommand }                   from '@yarnpkg/cli'
 import { Configuration }                 from '@yarnpkg/core'
 import { Command }                       from 'clipanion'
 
+import { defineCommandInvocation }       from '@atls/raijin/commands'
+
 import { assertInstalledRaijinRuntime }  from './set-version.runtime.js'
 import { fetchRaijinRuntimeManifest }    from './set-version.runtime.js'
 import { installRaijinRuntime }          from './set-version.runtime.js'
@@ -14,6 +16,8 @@ const RAIJIN_PUBLIC_PACKAGE = '@atls/raijin'
 
 export class SetVersionCommand extends BaseCommand {
   static override paths = [['set', 'version', 'atls']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'entry' })
 
   static override usage = Command.Usage({
     description: 'lock the Yarn version used by the project',

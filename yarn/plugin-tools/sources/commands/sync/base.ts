@@ -1,8 +1,5 @@
-import { BaseCommand }         from '@yarnpkg/cli'
-import { Command }             from 'clipanion'
-
-import { proxyProjectCommand } from '@atls/raijin/commands'
-import { shouldProxyCommand }  from '@atls/raijin/commands'
+import { BaseCommand } from '@yarnpkg/cli'
+import { Command }     from 'clipanion'
 
 export abstract class AbstractRaijinSyncCommand extends BaseCommand {
   static override usage = Command.Usage({
@@ -17,27 +14,4 @@ export abstract class AbstractRaijinSyncCommand extends BaseCommand {
       [`Update all`, 'yarn raijin sync'],
     ],
   })
-
-  override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
-    }
-
-    return this.executeRegular()
-  }
-
-  async executeProxy(command: Array<string> = ['raijin', 'sync']): Promise<number> {
-    return proxyProjectCommand({
-      args: command,
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    return 0
-  }
 }

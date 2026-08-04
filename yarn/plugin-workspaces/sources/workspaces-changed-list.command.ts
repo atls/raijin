@@ -1,15 +1,19 @@
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
-import { structUtils }                from '@yarnpkg/core'
-import { Option }                     from 'clipanion'
+import type { WorkspaceInvocation } from '@atls/raijin/commands'
 
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { getChangedFiles }            from '@atls/yarn-plugin-files'
+import { BaseCommand }              from '@yarnpkg/cli'
+import { StreamReport }             from '@yarnpkg/core'
+import { structUtils }              from '@yarnpkg/core'
+import { Option }                   from 'clipanion'
 
-import { getChangedWorkspaces }       from './get-changed-workspaces.util.js'
+import { defineCommandInvocation }  from '@atls/raijin/commands'
+import { getChangedFiles }          from '@atls/yarn-plugin-files'
+
+import { getChangedWorkspaces }     from './get-changed-workspaces.util.js'
 
 class WorkspacesChangedListCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'list']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
 
   static override usage = BaseCommand.Usage({
     description: 'list changed workspaces',
@@ -17,8 +21,12 @@ class WorkspacesChangedListCommand extends BaseCommand {
 
   json = Option.Boolean('--json', false)
 
-  async execute(): Promise<number> {
-    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+  async execute(invocation?: WorkspaceInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
+    const { yarn } = invocation
     const { configuration, project } = yarn
 
     const report = await StreamReport.start(

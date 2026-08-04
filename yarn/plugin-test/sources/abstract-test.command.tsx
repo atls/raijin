@@ -1,50 +1,47 @@
 /* eslint-disable n/no-sync */
 
-import type { CommandInput }          from '@atls/raijin/commands'
-import type { PortablePath }          from '@yarnpkg/fslib'
-import type { EventData }             from 'node:test'
+import type { CommandInput }        from '@atls/raijin/commands'
+import type { WorkspaceInvocation } from '@atls/raijin/commands'
+import type { PortablePath }        from '@yarnpkg/fslib'
+import type { EventData }           from 'node:test'
 
-import { readFileSync }               from 'node:fs'
-import { relative }                   from 'node:path'
+import { readFileSync }             from 'node:fs'
+import { relative }                 from 'node:path'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { Option }                     from 'clipanion'
-import { Command }                    from 'clipanion'
-import { render }                     from 'ink'
-import { isEnum }                     from 'typanion'
-import React                          from 'react'
+import { BaseCommand }              from '@yarnpkg/cli'
+import { Option }                   from 'clipanion'
+import { Command }                  from 'clipanion'
+import { render }                   from 'ink'
+import { isEnum }                   from 'typanion'
+import React                        from 'react'
 
-import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
-import { LogRecord }                  from '@atls/cli-ui-log-record-component'
-import { RawOutput }                  from '@atls/cli-ui-raw-output-component'
-import { TestFailure }                from '@atls/cli-ui-test-failure-component'
-import { TestProgress }               from '@atls/cli-ui-test-progress-component'
-import { Tester }                     from '@atls/code-test'
-import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }         from '@atls/raijin/commands'
-import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
-import { resolveProjectInvocation }   from '@atls/raijin/commands'
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { toNativeCwd }                from '@atls/raijin/commands'
-import { toCommandArguments }         from '@atls/raijin/commands'
+import { ErrorInfo }                from '@atls/cli-ui-error-info-component'
+import { LogRecord }                from '@atls/cli-ui-log-record-component'
+import { RawOutput }                from '@atls/cli-ui-raw-output-component'
+import { TestFailure }              from '@atls/cli-ui-test-failure-component'
+import { TestProgress }             from '@atls/cli-ui-test-progress-component'
+import { Tester }                   from '@atls/code-test'
+import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }       from '@atls/raijin/commands'
+import { toNativeCwd }              from '@atls/raijin/commands'
 
 type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
 type TestStdout = EventData.TestStdout
 
-interface ProxyTestArgsOptions {
+interface TestArgsOptions {
   files: Array<string>
   target?: string
   testReporter?: string
   watch: boolean
 }
 
-export const createProxyTestArgs = ({
+export const createTestArgs = ({
   files,
   target,
   testReporter,
   watch,
-}: ProxyTestArgsOptions): Array<string> => {
+}: TestArgsOptions): Array<string> => {
   const args: Array<string> = []
 
   if (files.length) {
@@ -102,40 +99,11 @@ export abstract class AbstractTestCommand extends BaseCommand {
 
   private bufferedStdTimeout: NodeJS.Timeout | undefined
 
-  async executeProxy(type?: 'integration' | 'unit'): Promise<number> {
-    const { invocationCwd } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
-    const input = createCommandInput({
-      cwd: invocationCwd,
-      source: 'explicit',
-      targets: this.files,
-    })
-    const args = createProxyTestArgs({
-      files: toCommandArguments(input),
-      watch: this.watch,
-      target: toNativeCwd(invocationCwd),
-      testReporter: this.testReporter,
-    })
-
-    const nodeOptions = process.env.NODE_OPTIONS?.includes('--no-warnings')
-      ? process.env.NODE_OPTIONS
-      : `${process.env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
-
-    return proxyWorkspaceCommand({
-      args: ['test', type ?? '', ...args],
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      env: { NODE_OPTIONS: nodeOptions },
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(type: 'integration' | 'unit'): Promise<number> {
-    const { executionCwd, invocationCwd, project } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  async executeRegular(
+    type: 'integration' | 'unit',
+    invocation: WorkspaceInvocation
+  ): Promise<number> {
+    const { executionCwd, invocationCwd, project } = invocation
     const projectCwd = toNativeCwd(project.cwd)
 
     const onStdout = (data: TestStdout): void => {

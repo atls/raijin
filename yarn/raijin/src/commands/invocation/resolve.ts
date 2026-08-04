@@ -18,9 +18,6 @@ import { resolveProject }                   from './adapters/yarn/project.js'
 import { activateProjectRuntime }           from './adapters/yarn/runtime.js'
 import { ensureProjectRuntime }             from './adapters/yarn/runtime.js'
 
-export const INVOCATION_CWD_ENV = 'RAIJIN_COMMAND_INVOCATION_CWD'
-export const PROXY_ENV = 'RAIJIN_COMMAND_PROXY_EXECUTION'
-
 const resolveInitCwd = (cwd: PortablePath, environment: NodeJS.ProcessEnv): PortablePath => {
   const initCwd = environment.INIT_CWD
 
@@ -35,31 +32,13 @@ const resolveInitCwd = (cwd: PortablePath, environment: NodeJS.ProcessEnv): Port
   return cwd
 }
 
-const consumeInvocationCwd = (cwd: PortablePath, environment: NodeJS.ProcessEnv): PortablePath => {
-  const isProxy = environment[PROXY_ENV] === 'true'
-  const invocationCwd = environment[INVOCATION_CWD_ENV]
-
-  Reflect.deleteProperty(environment, PROXY_ENV)
-  Reflect.deleteProperty(environment, INVOCATION_CWD_ENV)
-
-  if (!isProxy) {
-    return resolveInitCwd(cwd, environment)
-  }
-
-  if (!invocationCwd) {
-    throw new Error('Command proxy invocation cwd is missing')
-  }
-
-  return npath.toPortablePath(invocationCwd)
-}
-
 const resolveProjectInvocationInternal = async (
   cwd: PortablePath,
   plugins: PluginConfiguration,
   environment: NodeJS.ProcessEnv,
   ensureRuntime: boolean
 ): Promise<CommandInvocationResolution<ProjectInvocation>> => {
-  const invocationCwd = consumeInvocationCwd(cwd, environment)
+  const invocationCwd = resolveInitCwd(cwd, environment)
   const { configuration, project } = await resolveProject(invocationCwd, plugins)
 
   if (ensureRuntime) {
@@ -68,9 +47,9 @@ const resolveProjectInvocationInternal = async (
     if (exitCode !== undefined) {
       return { exitCode }
     }
-
-    await activateProjectRuntime(project)
   }
+
+  await activateProjectRuntime(project)
 
   const invocation: ProjectInvocation = {
     executionCwd: project.cwd,
@@ -111,7 +90,7 @@ const resolveWorkspaceInvocationInternal = async (
   environment: NodeJS.ProcessEnv,
   ensureRuntime: boolean
 ): Promise<CommandInvocationResolution<WorkspaceInvocation>> => {
-  const invocationCwd = consumeInvocationCwd(cwd, environment)
+  const invocationCwd = resolveInitCwd(cwd, environment)
   const { configuration, project, workspace } = await resolveProject(invocationCwd, plugins)
 
   if (ensureRuntime) {
@@ -120,9 +99,9 @@ const resolveWorkspaceInvocationInternal = async (
     if (exitCode !== undefined) {
       return { exitCode }
     }
-
-    await activateProjectRuntime(project)
   }
+
+  await activateProjectRuntime(project)
 
   const resolvedWorkspace = workspace ?? project.getWorkspaceByFilePath(invocationCwd)
 

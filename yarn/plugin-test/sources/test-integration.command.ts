@@ -1,21 +1,25 @@
-import { BaseCommand }         from '@yarnpkg/cli'
+import type { WorkspaceInvocation } from '@atls/raijin/commands'
 
-import { shouldProxyCommand }  from '@atls/raijin/commands'
+import { BaseCommand }              from '@yarnpkg/cli'
 
-import { AbstractTestCommand } from './abstract-test.command.jsx'
+import { defineCommandInvocation }  from '@atls/raijin/commands'
+
+import { AbstractTestCommand }      from './abstract-test.command.jsx'
 
 export class TestIntegrationCommand extends AbstractTestCommand {
   static override paths = [['test', 'integration']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
 
   static override usage = BaseCommand.Usage({
     description: 'run integration tests',
   })
 
-  override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy('integration')
+  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
     }
 
-    return this.executeRegular('integration')
+    return this.executeRegular('integration', invocation)
   }
 }

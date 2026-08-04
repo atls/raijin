@@ -1,9 +1,8 @@
 import type { CommandInput }            from '@atls/raijin/commands'
+import type { ProjectInvocation }       from '@atls/raijin/commands'
 import type { Project }                 from '@yarnpkg/core'
 
 import type { TypeScriptConfigRuntime } from './checks-typecheck.interfaces.js'
-
-import { spawn }                        from 'node:child_process'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { StreamReport }                 from '@yarnpkg/core'
@@ -11,12 +10,8 @@ import { MessageName }                  from '@yarnpkg/core'
 import { xfs }                          from '@yarnpkg/fslib'
 import { Option }                       from 'clipanion'
 
-import { createChildProcessOptions }    from '@atls/raijin/commands'
 import { createCommandInput }           from '@atls/raijin/commands'
-import { createYarnExecutable }         from '@atls/raijin/commands'
-import { proxyProjectCommand }          from '@atls/raijin/commands'
-import { resolveProjectInvocation }     from '@atls/raijin/commands'
-import { shouldProxyCommand }           from '@atls/raijin/commands'
+import { defineCommandInvocation }      from '@atls/raijin/commands'
 import { toCommandArguments }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
 import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
@@ -35,35 +30,19 @@ const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptCon
 class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
 
+  static raijinCommand = defineCommandInvocation({ scope: 'project' })
+
   static override usage = BaseCommand.Usage({
     description: 'report TypeScript diagnostics to GitHub Checks',
   })
 
   changed = Option.Boolean('--changed', false)
 
-  override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
+  override async execute(invocation?: ProjectInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
     }
 
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    const args = ['checks', 'typecheck', ...(this.changed ? ['--changed'] : [])]
-
-    return proxyProjectCommand({
-      args,
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    const invocation = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
     const { project, yarn } = invocation
     const { configuration } = yarn
 
@@ -187,27 +166,24 @@ class ChecksTypeCheckCommand extends BaseCommand {
   }
 
   private async runTypecheck(
-    invocation: Awaited<ReturnType<typeof resolveProjectInvocation>>,
+    invocation: ProjectInvocation,
     input: CommandInput | undefined
   ): Promise<number> {
-    const { project } = invocation.yarn
     const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await createYarnExecutable({
+    const { executable, env } = await invocation.yarn.createExecutable({
       binFolder,
-      project,
     })
     let timeout: NodeJS.Timeout | undefined
 
     return new Promise((resolvePromise, rejectPromise) => {
       let timedOut = false
-      const child = spawn(
+      const child = invocation.child.spawn(
         executable,
         ['typecheck', ...(input ? toCommandArguments(input, invocation.project.cwd) : [])],
-        createChildProcessOptions({
-          invocation,
+        {
           env,
           stdio: ['ignore', 'pipe', 'pipe'],
-        })
+        }
       )
 
       child.stdout?.pipe(this.context.stdout, { end: false })

@@ -1,11 +1,11 @@
+import type { ProjectInvocation }    from '@atls/raijin/commands'
+
 import { BaseCommand }               from '@yarnpkg/cli'
 import { StreamReport }              from '@yarnpkg/core'
 
 import { Tester }                    from '@atls/code-test'
 import { createCommandInput }        from '@atls/raijin/commands'
-import { proxyProjectCommand }       from '@atls/raijin/commands'
-import { resolveProjectInvocation }  from '@atls/raijin/commands'
-import { shouldProxyCommand }        from '@atls/raijin/commands'
+import { defineCommandInvocation }   from '@atls/raijin/commands'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
@@ -13,35 +13,26 @@ import { GitHubChecks }              from './github.checks.js'
 export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static override paths = [['checks', 'test', 'unit']]
 
+  static raijinCommand = defineCommandInvocation({ scope: 'project' })
+
   static override usage = BaseCommand.Usage({
     description: 'report unit test results to GitHub Checks',
   })
 
-  override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
+  override async execute(invocation?: ProjectInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
     }
 
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    return proxyProjectCommand({
-      args: ['checks', 'test', 'unit'],
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
     if (!process.env.GITHUB_TOKEN) {
-      return this.cli.run(['test', 'unit'])
+      return invocation.yarn.execute(['test', 'unit'], {
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+        stderr: this.context.stderr,
+      })
     }
 
-    const { yarn } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const { yarn } = invocation
     const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(

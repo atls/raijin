@@ -12,28 +12,27 @@ import { test } from 'node:test'
 
 const SOURCE_EXTENSIONS = new Set(['.ts', '.tsx'])
 
-const TARGET_SOURCE_DIRS = [
-  'yarn/plugin-typescript/sources',
-  'yarn/plugin-lint/sources',
-  'yarn/plugin-checks/sources',
-  'yarn/plugin-test/sources',
-  'yarn/plugin-library/sources',
-  'yarn/plugin-service/sources',
-  'yarn/plugin-ui/sources',
-  'yarn/plugin-tools/sources',
-  'yarn/plugin-renderer/sources',
-  'yarn/raijin/src/commands',
-]
+const TARGET_SOURCE_DIRS = ['yarn']
 
 const YARN_LITERAL_REENTRY_REGEXP =
   /\b(?:execUtils\.)?(?:pipevp|execvp)\(\s*['"]yarn['"]|\bspawn\(\s*['"]yarn['"]/g
 
 const SCRIPT_ENV_REGEXP = /scriptUtils\.makeScriptEnv\(\s*\{[\s\S]*?\}\s*\)/g
+const COMMAND_IMPORT_REENTRANT_HELPER_REGEXP =
+  /import\s*\{[^}]*\b(?:createChildProcessOptions|waitForChildProcess|createYarnExecutable|executeYarnCommand|proxyProjectCommand|proxyWorkspaceCommand|shouldProxyCommand)\b[^}]*\}\s*from\s*['"]@atls\/raijin\/commands['"]/g
+const PROXY_ENV_REGEXP = /RAIJIN_COMMAND_(?:PROXY_EXECUTION|INVOCATION_CWD)/g
+const COMMAND_PATHS_REGEXP = /static\s+override\s+paths\s*=/g
 const YARN_EXECUTION_OWNER = 'yarn/raijin/src/commands/invocation/adapters/yarn/execution.ts'
+const CHILD_PROCESS_OWNER = 'yarn/raijin/src/commands/invocation/adapters/child-process.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 
 const getLine = (source, index) => source.slice(0, index).split('\n').length
+
+const isCommandFacingSource = (relativePath) =>
+  relativePath.startsWith('yarn/plugin-') ||
+  relativePath.startsWith('yarn/cli/src/') ||
+  relativePath.startsWith('yarn/raijin/src/commands/')
 
 const collectSourceFiles = async (dir) => {
   const entries = await readdir(dir)
@@ -46,7 +45,11 @@ const collectSourceFiles = async (dir) => {
         return collectSourceFiles(path)
       }
 
-      if (SOURCE_EXTENSIONS.has(extname(path))) {
+      if (
+        SOURCE_EXTENSIONS.has(extname(path)) &&
+        !path.endsWith('.test.ts') &&
+        !path.endsWith('.test.tsx')
+      ) {
         return [path]
       }
 
@@ -57,7 +60,7 @@ const collectSourceFiles = async (dir) => {
   return files.flat()
 }
 
-test('should keep Yarn command executable calls in the command invocation owner', async () => {
+test('should keep command invocation lifecycle in the invocation owner', async () => {
   const sourceFiles = (
     await Promise.all(TARGET_SOURCE_DIRS.map((dir) => collectSourceFiles(join(repoRoot, dir))))
   ).flat()
@@ -73,10 +76,16 @@ test('should keep Yarn command executable calls in the command invocation owner'
   for (const { path, source } of sources) {
     const relativePath = relative(repoRoot, path)
 
+    if (!isCommandFacingSource(relativePath)) {
+      continue
+    }
+
+    const isInvocationOwner = relativePath.startsWith('yarn/raijin/src/commands/invocation/')
+
     if (relativePath !== YARN_EXECUTION_OWNER) {
       for (const match of source.matchAll(SCRIPT_ENV_REGEXP)) {
         errors.push(
-          `${relativePath}:${getLine(source, match.index ?? 0)} Yarn executable must use createYarnExecutable`
+          `${relativePath}:${getLine(source, match.index ?? 0)} Yarn executable must be assembled by command invocation`
         )
       }
     } else {
@@ -92,7 +101,31 @@ test('should keep Yarn command executable calls in the command invocation owner'
     for (const match of source.matchAll(YARN_LITERAL_REENTRY_REGEXP)) {
       const line = getLine(source, match.index ?? 0)
 
-      errors.push(`${relativePath}:${line} Yarn command execution must use executeYarnCommand`)
+      errors.push(`${relativePath}:${line} Yarn command execution must use invocation.yarn`)
+    }
+
+    if (!isInvocationOwner) {
+      for (const match of source.matchAll(COMMAND_IMPORT_REENTRANT_HELPER_REGEXP)) {
+        errors.push(
+          `${relativePath}:${getLine(source, match.index ?? 0)} command-facing code must not import invocation adapters or proxy helpers`
+        )
+      }
+    }
+
+    if (relativePath !== CHILD_PROCESS_OWNER) {
+      for (const match of source.matchAll(PROXY_ENV_REGEXP)) {
+        errors.push(
+          `${relativePath}:${getLine(source, match.index ?? 0)} command proxy environment must not be used`
+        )
+      }
+    }
+
+    if (
+      relativePath.startsWith('yarn/plugin-') &&
+      source.match(COMMAND_PATHS_REGEXP) &&
+      !source.includes('static raijinCommand = defineCommandInvocation')
+    ) {
+      errors.push(`${relativePath}:1 command class must declare a Raijin invocation scope`)
     }
   }
 

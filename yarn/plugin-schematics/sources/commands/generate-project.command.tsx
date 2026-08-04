@@ -1,11 +1,13 @@
-import { BaseCommand }              from '@yarnpkg/cli'
-import { StreamReport }             from '@yarnpkg/core'
-import { Option }                   from 'clipanion'
+import type { ProjectInvocation }  from '@atls/raijin/commands'
 
-import { getStreamReportCallback }  from '@atls/code-schematics'
-import { getStreamReportOptions }   from '@atls/code-schematics'
-import { resolveProjectInvocation } from '@atls/raijin/commands'
-import { toNativeCwd }              from '@atls/raijin/commands'
+import { BaseCommand }             from '@yarnpkg/cli'
+import { StreamReport }            from '@yarnpkg/core'
+import { Option }                  from 'clipanion'
+
+import { getStreamReportCallback } from '@atls/code-schematics'
+import { getStreamReportOptions }  from '@atls/code-schematics'
+import { defineCommandInvocation } from '@atls/raijin/commands'
+import { toNativeCwd }             from '@atls/raijin/commands'
 
 export const createGenerateProjectOptions = (type: string, invocationCwd: string) => ({
   type,
@@ -15,17 +17,20 @@ export const createGenerateProjectOptions = (type: string, invocationCwd: string
 export class GenerateProjectCommand extends BaseCommand {
   static override paths = [['generate', 'project']]
 
+  static raijinCommand = defineCommandInvocation({ scope: 'project' })
+
   static override usage = BaseCommand.Usage({
     description: 'generate a Raijin project scaffold',
   })
 
   type = Option.String('-t,--type', 'project')
 
-  async execute() {
-    const { invocationCwd, yarn } = await resolveProjectInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  override async execute(invocation?: ProjectInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
+    const { invocationCwd, yarn } = invocation
     const { configuration } = yarn
 
     const allowedTypes = ['library', 'project']

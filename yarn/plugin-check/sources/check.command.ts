@@ -1,12 +1,16 @@
-import { BaseCommand }        from '@yarnpkg/cli'
-import { Option }             from 'clipanion'
+import type { ProjectInvocation }  from '@atls/raijin/commands'
 
-import { createCommandInput } from '@atls/raijin/commands'
-import { toCommandArguments } from '@atls/raijin/commands'
-import { toPortableCwd }      from '@atls/raijin/commands'
+import { BaseCommand }             from '@yarnpkg/cli'
+import { Option }                  from 'clipanion'
+
+import { createCommandInput }      from '@atls/raijin/commands'
+import { defineCommandInvocation } from '@atls/raijin/commands'
+import { toCommandArguments }      from '@atls/raijin/commands'
 
 export class CheckCommand extends BaseCommand {
   static override paths = [['check']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'project' })
 
   static override usage = BaseCommand.Usage({
     description: 'run formatting, type checking, and linting',
@@ -14,14 +18,22 @@ export class CheckCommand extends BaseCommand {
 
   targets: Array<string> = Option.Rest({ required: 0 })
 
-  async execute(): Promise<number> {
+  async execute(invocation?: ProjectInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
     let exitCode = 0
-    const cwd = toPortableCwd(this.context.cwd)
+    const cwd = invocation.invocationCwd
     const input = createCommandInput({ cwd, source: 'explicit', targets: this.targets })
     const targets = toCommandArguments(input, cwd)
 
     for await (const command of ['format', 'typecheck', 'lint']) {
-      const commandExitCode = await this.cli.run([command, ...targets])
+      const commandExitCode = await invocation.yarn.execute([command, ...targets], {
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+        stderr: this.context.stderr,
+      })
 
       if (commandExitCode) {
         exitCode = commandExitCode

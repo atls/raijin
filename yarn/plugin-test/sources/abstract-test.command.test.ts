@@ -1,11 +1,11 @@
-import assert                  from 'node:assert/strict'
-import { test }                from 'node:test'
+import assert             from 'node:assert/strict'
+import { test }           from 'node:test'
 
-import { createProxyTestArgs } from './abstract-test.command.jsx'
+import { createTestArgs } from './abstract-test.command.jsx'
 
-test('should keep proxy test file targets as separate arguments', () => {
+test('should keep test file targets as separate arguments', () => {
   assert.deepEqual(
-    createProxyTestArgs({
+    createTestArgs({
       files: ['/repo/src/a.test.ts', '/repo/src/b.test.ts'],
       watch: true,
       target: '/repo',

@@ -1,3 +1,5 @@
+import type { ProjectInvocation }     from '@atls/raijin/commands'
+
 import type { Annotation }            from './github.checks.js'
 
 import { BaseCommand }                from '@yarnpkg/cli'
@@ -6,9 +8,7 @@ import { Command }                    from 'clipanion'
 import { Option }                     from 'clipanion'
 import stripAnsi                      from 'strip-ansi'
 
-import { proxyProjectCommand }        from '@atls/raijin/commands'
-import { resolveProjectInvocation }   from '@atls/raijin/commands'
-import { shouldProxyCommand }         from '@atls/raijin/commands'
+import { defineCommandInvocation }    from '@atls/raijin/commands'
 import { getChangedFiles }            from '@atls/yarn-plugin-files'
 import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
 
@@ -18,7 +18,7 @@ import { PassThroughRunContext }      from './pass-through-run.context.js'
 import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
-export const createChecksReleaseProxyArgs = (noPrivate: boolean): Array<string> => [
+export const createChecksReleaseArgs = (noPrivate: boolean): Array<string> => [
   'checks',
   'release',
   ...(noPrivate ? ['--no-private'] : []),
@@ -26,6 +26,8 @@ export const createChecksReleaseProxyArgs = (noPrivate: boolean): Array<string> 
 
 class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'project' })
 
   static override usage = Command.Usage({
     description: 'run the release GitHub check for changed workspaces',
@@ -39,27 +41,12 @@ class ChecksReleaseCommand extends BaseCommand {
 
   noPrivate = Option.Boolean('--no-private', false)
 
-  override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
+  override async execute(invocation?: ProjectInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
     }
 
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    return proxyProjectCommand({
-      args: createChecksReleaseProxyArgs(this.noPrivate),
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    const { yarn } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const { yarn } = invocation
     const { project } = yarn
 
     const releaseConfig = resolveChecksReleaseConfig(project)
@@ -89,9 +76,13 @@ class ChecksReleaseCommand extends BaseCommand {
           context.stdout.on('data', outputWriter)
           context.stderr.on('data', outputWriter)
 
-          const code = await this.cli.run(
+          const code = await yarn.execute(
             ['workspace', workspace.manifest.raw.name as string, 'build'],
-            context
+            {
+              stdin: this.context.stdin,
+              stdout: context.stdout,
+              stderr: context.stderr,
+            }
           )
 
           if (code > 0) {

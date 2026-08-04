@@ -52,7 +52,7 @@ const isCorepackUnavailable = ({ code, error, stdout, stderr }) => {
   )
 }
 
-test('should run checks proxy via Corepack shim without Corepack package resolution errors', async (t) => {
+test('should run command invocation via Corepack shim without Corepack package resolution errors', async (t) => {
   const shimDir = await mkdtemp(join(tmpdir(), 'raijin-corepack-shim-'))
   const yarnShim = join(shimDir, process.platform === 'win32' ? 'yarn.cmd' : 'yarn')
 

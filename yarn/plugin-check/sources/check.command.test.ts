@@ -1,7 +1,9 @@
-import assert           from 'node:assert/strict'
-import test             from 'node:test'
+import type { ProjectInvocation } from '@atls/raijin/commands'
 
-import { CheckCommand } from './check.command.js'
+import assert                     from 'node:assert/strict'
+import test                       from 'node:test'
+
+import { CheckCommand }           from './check.command.js'
 
 const runCheckCommand = async (
   targets: Array<string>,
@@ -11,16 +13,19 @@ const runCheckCommand = async (
   const command = Object.assign(Object.create(CheckCommand.prototype), {
     targets,
     context: { cwd: '/repo' },
-    cli: {
-      run: async (args: Array<string>) => {
+  }) as CheckCommand
+  const invocation = {
+    invocationCwd: '/repo',
+    yarn: {
+      execute: async (args: Array<string>) => {
         commands.push(args)
 
         return exitCodes[commands.length - 1] ?? 0
       },
     },
-  }) as CheckCommand
+  } as unknown as ProjectInvocation
 
-  const exitCode = await command.execute()
+  const exitCode = await command.execute(invocation)
 
   return { exitCode, commands }
 }

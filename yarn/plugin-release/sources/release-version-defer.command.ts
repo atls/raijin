@@ -1,8 +1,10 @@
+import type { WorkspaceInvocation }               from '@atls/raijin/commands'
+
 import { BaseCommand }                            from '@yarnpkg/cli'
 import { StreamReport }                           from '@yarnpkg/core'
 import { Option }                                 from 'clipanion'
 
-import { resolveWorkspaceInvocation }             from '@atls/raijin/commands'
+import { defineCommandInvocation }                from '@atls/raijin/commands'
 
 import { resolveReleaseVersionDeferredStrategy }  from './release-version-policy.utils.js'
 import { getDeferredReleaseDecisions }            from './release-version.utils.js'
@@ -18,6 +20,8 @@ export { toGitHubChange }                from './release-version.utils.js'
 export class ReleaseVersionDeferCommand extends BaseCommand {
   static override paths = [['release', 'version', 'defer']]
 
+  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
+
   static override usage = BaseCommand.Usage({
     description: 'defer version bumps for changed workspaces',
   })
@@ -26,8 +30,12 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
 
   dryRun = Option.Boolean('--dry-run', false)
 
-  override async execute(): Promise<number> {
-    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
+    const { yarn } = invocation
     const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
@@ -62,10 +70,12 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
 
           // Deferred version records share the same `.yarn/versions` state.
           // eslint-disable-next-line no-await-in-loop
-          const code = await this.cli.run(
+          const code = await invocation.yarn.execute(
             ['workspace', changedWorkspace.ident, 'version', effectiveStrategy, '--deferred'],
             {
-              cwd: project.cwd,
+              stdin: this.context.stdin,
+              stdout: this.context.stdout,
+              stderr: this.context.stderr,
             }
           )
 
@@ -87,10 +97,12 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
 
           // Deferred version records share the same `.yarn/versions` state.
           // eslint-disable-next-line no-await-in-loop
-          const code = await this.cli.run(
+          const code = await invocation.yarn.execute(
             ['workspace', changedWorkspace.ident, 'version', 'decline', '--deferred'],
             {
-              cwd: project.cwd,
+              stdin: this.context.stdin,
+              stdout: this.context.stdout,
+              stderr: this.context.stderr,
             }
           )
 

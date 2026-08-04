@@ -1,16 +1,19 @@
+import type { ProjectInvocation }     from '@atls/raijin/commands'
+
 import { BaseCommand }                from '@yarnpkg/cli'
 import { StreamReport }               from '@yarnpkg/core'
 import { MessageName }                from '@yarnpkg/core'
 import { Command }                    from 'clipanion'
 import { Option }                     from 'clipanion'
 
-import { executeYarnCommand }         from '@atls/raijin/commands'
-import { resolveProjectInvocation }   from '@atls/raijin/commands'
+import { defineCommandInvocation }    from '@atls/raijin/commands'
 
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'project' })
 
   static override usage = Command.Usage({
     description: 'run the standard GitHub check sequence',
@@ -25,8 +28,11 @@ class ChecksRunCommand extends BaseCommand {
 
   noRelease = Option.Boolean('--no-release', false)
 
-  async execute(): Promise<number> {
-    const invocation = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+  override async execute(invocation?: ProjectInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
     const { configuration, project } = invocation.yarn
     const releaseConfig = resolveChecksReleaseConfig(project)
 
@@ -63,7 +69,7 @@ class ChecksRunCommand extends BaseCommand {
   }
 
   private async runCheck(
-    invocation: Awaited<ReturnType<typeof resolveProjectInvocation>>,
+    invocation: ProjectInvocation,
     args: Array<string>,
     report: StreamReport
   ): Promise<number> {
@@ -73,9 +79,7 @@ class ChecksRunCommand extends BaseCommand {
         (args[0] === 'lint' || args[0] === 'typecheck') &&
         !args.includes('--changed')
       const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
-      const code = await executeYarnCommand({
-        args: ['checks', ...checkArgs],
-        invocation,
+      const code = await invocation.yarn.execute(['checks', ...checkArgs], {
         stdin: this.context.stdin,
         stdout: this.context.stdout,
         stderr: this.context.stderr,

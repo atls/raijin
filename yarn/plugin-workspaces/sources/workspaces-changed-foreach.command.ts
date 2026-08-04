@@ -1,16 +1,20 @@
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
-import { structUtils }                from '@yarnpkg/core'
-import { Option }                     from 'clipanion'
+import type { WorkspaceInvocation } from '@atls/raijin/commands'
 
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { getChangedFiles }            from '@atls/yarn-plugin-files'
+import { BaseCommand }              from '@yarnpkg/cli'
+import { StreamReport }             from '@yarnpkg/core'
+import { structUtils }              from '@yarnpkg/core'
+import { Option }                   from 'clipanion'
 
-import { getChangedWorkspaces }       from './get-changed-workspaces.util.js'
-import { createForeachInput }         from './workspaces-changed-foreach.input.js'
+import { defineCommandInvocation }  from '@atls/raijin/commands'
+import { getChangedFiles }          from '@atls/yarn-plugin-files'
+
+import { getChangedWorkspaces }     from './get-changed-workspaces.util.js'
+import { createForeachInput }       from './workspaces-changed-foreach.input.js'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'foreach']]
+
+  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
 
   static override usage = BaseCommand.Usage({
     description: 'run a command in changed workspaces',
@@ -44,8 +48,12 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
 
   args = Option.Proxy()
 
-  async execute(): Promise<number> {
-    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+  async execute(invocation?: WorkspaceInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
+    const { yarn } = invocation
     const { configuration, project } = yarn
 
     const files = await getChangedFiles(project, this.since)
@@ -79,8 +87,10 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
       }
     )
 
-    return this.cli.run([...input, this.commandName, ...this.args], {
-      cwd: project.cwd,
+    return invocation.yarn.execute([...input, this.commandName, ...this.args], {
+      stdin: this.context.stdin,
+      stdout: this.context.stdout,
+      stderr: this.context.stderr,
     })
   }
 }

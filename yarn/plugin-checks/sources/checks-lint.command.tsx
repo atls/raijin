@@ -1,6 +1,7 @@
 /* eslint-disable n/no-sync */
 
 import type { CommandInput }         from '@atls/raijin/commands'
+import type { ProjectInvocation }    from '@atls/raijin/commands'
 import type { LintMessage }          from '@atls/raijin/eslint'
 import type { LintResult as Result } from '@atls/raijin/eslint'
 import type { Project }              from '@yarnpkg/core'
@@ -21,9 +22,7 @@ import { LintResult }                from '@atls/cli-ui-lint-result-component'
 import { Linter }                    from '@atls/code-lint'
 import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }        from '@atls/raijin/commands'
-import { proxyProjectCommand }       from '@atls/raijin/commands'
-import { resolveProjectInvocation }  from '@atls/raijin/commands'
-import { shouldProxyCommand }        from '@atls/raijin/commands'
+import { defineCommandInvocation }   from '@atls/raijin/commands'
 import { toNativeCwd }               from '@atls/raijin/commands'
 import { getChangedFiles }           from '@atls/yarn-plugin-files'
 
@@ -33,38 +32,20 @@ import { AnnotationLevel }           from './github.checks.js'
 class ChecksLintCommand extends BaseCommand {
   static override paths = [['checks', 'lint']]
 
+  static raijinCommand = defineCommandInvocation({ scope: 'project' })
+
   static override usage = BaseCommand.Usage({
     description: 'report lint results to GitHub Checks',
   })
 
   changed = Option.Boolean('--changed', false)
 
-  override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
+  override async execute(invocation?: ProjectInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
     }
 
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    const args = ['checks', 'lint', ...(this.changed ? ['--changed'] : [])]
-
-    return proxyProjectCommand({
-      args,
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    const { project: projectModel, yarn } = await resolveProjectInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { project: projectModel, yarn } = invocation
     const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(

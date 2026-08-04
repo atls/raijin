@@ -1,3 +1,5 @@
+import type { WorkspaceInvocation }            from '@atls/raijin/commands'
+
 import { PassThrough }                         from 'node:stream'
 
 import { BaseCommand }                         from '@yarnpkg/cli'
@@ -7,8 +9,7 @@ import { execUtils }                           from '@yarnpkg/core'
 import { scriptUtils }                         from '@yarnpkg/core'
 import { xfs }                                 from '@yarnpkg/fslib'
 
-import { resolveWorkspaceInvocation }          from '@atls/raijin/commands'
-import { createYarnExecutable }                from '@atls/raijin/commands'
+import { defineCommandInvocation }             from '@atls/raijin/commands'
 import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
 
 import { cleanupDiscoveryArtifacts }           from '../artifact/cleanup.js'
@@ -35,17 +36,20 @@ import { snapshotNextStandaloneManifests }     from '../integrations/next/standa
 export class RendererBuildCommand extends BaseCommand {
   static override paths = [['renderer', 'build']]
 
+  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
+
   static override usage = BaseCommand.Usage({
     description: 'build a renderer production artifact',
   })
 
-  async execute(): Promise<number> {
+  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
+    if (!invocation) {
+      throw new Error('Command invocation context is missing')
+    }
+
     await cleanupDiscoveryArtifacts(this.context.cwd)
 
-    const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { executionCwd, workspace, yarn } = invocation
     const { configuration, project } = yarn
     const rendererCwd = executionCwd
     const artifactTarget = createArtifactTarget(rendererCwd)
@@ -90,9 +94,8 @@ export class RendererBuildCommand extends BaseCommand {
           const executableContext = {
             binFolder,
             locator: workspace.anchoredLocator,
-            project,
           }
-          const scriptEnvironment = await createYarnExecutable(executableContext)
+          const scriptEnvironment = await yarn.createExecutable(executableContext)
           const { nodeOptions } = extractPnpLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
           const loader = await resolvePnpLoader(project.cwd, scriptEnvironment.env.NODE_OPTIONS)
           const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
@@ -106,7 +109,7 @@ export class RendererBuildCommand extends BaseCommand {
           const nextVersion = resolveNextPackageVersion(nextPackage)
           const nextLoader = await materializeNextLoader(binFolder, loader)
           const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
-          const { executable, env } = await createYarnExecutable({
+          const { executable, env } = await yarn.createExecutable({
             ...executableContext,
             env: {
               NODE_OPTIONS: nodeOptions,

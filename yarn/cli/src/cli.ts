@@ -6,6 +6,7 @@ import { runExit }                              from '@yarnpkg/cli'
 import { npath }                                from '@yarnpkg/fslib'
 import { ppath }                                from '@yarnpkg/fslib'
 
+import { composePluginConfigurationCommands }   from '@atls/raijin/commands'
 // @ts-expect-error: Cjs export
 import { getPluginConfiguration }               from '@atls/yarn-cli-tools'
 
@@ -17,6 +18,8 @@ const selfPath = npath.toPortablePath(npath.resolve(process.argv[1]))
 const pluginConfiguration = (await Promise.resolve(
   getPluginConfiguration(packageJson['@yarnpkg/builder'].bundles.standard)
 )) as PluginConfiguration
+
+composePluginConfigurationCommands(pluginConfiguration)
 
 await registerRaijinSourceWorkspaceRuntime(ppath.cwd(), pluginConfiguration)
 
