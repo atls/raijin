@@ -1,9 +1,10 @@
-import assert                        from 'node:assert/strict'
-import { EventEmitter }              from 'node:events'
-import test                          from 'node:test'
+import assert                         from 'node:assert/strict'
+import { EventEmitter }               from 'node:events'
+import test                           from 'node:test'
 
-import { createChildProcessOptions } from './child-process.js'
-import { waitForChildProcess }       from './child-process.js'
+import { createChildProcessOptions }  from './child-process.js'
+import { forwardChildProcessSignals } from './child-process.js'
+import { waitForChildProcess }        from './child-process.js'
 
 test('should create child options from the execution boundary', () => {
   const environment = { NODE_ENV: 'test' }
@@ -56,4 +57,36 @@ test('should return a failure code when child closes from a signal', async () =>
   child.emit('close', null, 'SIGTERM')
 
   assert.equal(await result, 1)
+})
+
+test('should forward process signals while the child is active', () => {
+  const signalTarget = new EventEmitter()
+  const child = new EventEmitter() as EventEmitter & {
+    exitCode: number | null
+    kill: (signal: NodeJS.Signals) => boolean
+    signalCode: NodeJS.Signals | null
+    signals: Array<NodeJS.Signals>
+  }
+
+  child.exitCode = null
+  child.signalCode = null
+  child.signals = []
+  child.kill = (signal): boolean => {
+    child.signals.push(signal)
+
+    return true
+  }
+
+  forwardChildProcessSignals(child as never, signalTarget as never)
+
+  signalTarget.emit('SIGTERM')
+  signalTarget.emit('SIGTERM')
+
+  assert.deepEqual(child.signals, ['SIGTERM', 'SIGTERM'])
+
+  child.emit('close', 0)
+  child.exitCode = 0
+  signalTarget.emit('SIGTERM')
+
+  assert.deepEqual(child.signals, ['SIGTERM', 'SIGTERM'])
 })
