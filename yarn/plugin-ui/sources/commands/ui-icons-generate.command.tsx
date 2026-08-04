@@ -47,7 +47,7 @@ export class UiIconsGenerateCommand extends RaijinCommand {
   native: boolean = Option.Boolean('-n, --native', false)
 
   async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
-    const { executionCwd, project, yarn } = invocation
+    const { executionCwd, yarn } = invocation
     const cwd = toNativeCwd(executionCwd)
 
     const icons = await Icons.initialize(cwd)
@@ -60,7 +60,7 @@ export class UiIconsGenerateCommand extends RaijinCommand {
       const files = await discoverGeneratedIconFiles(executionCwd)
 
       const input = createGeneratedIconInput(executionCwd, files)
-      const generatedFiles = toCommandArguments(input, project.cwd)
+      const generatedFiles = toCommandArguments(input, executionCwd)
 
       await yarn.execute(['format', ...generatedFiles])
       await yarn.execute(['lint', '--fix', ...generatedFiles])

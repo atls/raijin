@@ -17,9 +17,12 @@ export class CheckCommand extends RaijinCommand {
 
   async executeProject(invocation: ProjectInvocation): Promise<number> {
     let exitCode = 0
-    const cwd = invocation.invocationCwd
-    const input = createCommandInput({ cwd, source: 'explicit', targets: this.targets })
-    const targets = toCommandArguments(input, cwd)
+    const input = createCommandInput({
+      cwd: invocation.invocationCwd,
+      source: 'explicit',
+      targets: this.targets,
+    })
+    const targets = toCommandArguments(input, invocation.executionCwd)
 
     for await (const command of ['format', 'typecheck', 'lint']) {
       const commandExitCode = await invocation.yarn.execute([command, ...targets])

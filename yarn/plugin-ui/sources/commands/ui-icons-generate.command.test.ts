@@ -16,12 +16,11 @@ import { createGeneratedIconInput }   from './ui-icons-generate.command.js'
 import { discoverGeneratedIconFiles } from './ui-icons-generate.command.js'
 
 test('should represent generated icon targets from workspace cwd', () => {
-  const projectCwd = '/tmp/raijin-project' as PortablePath
   const workspaceCwd = '/tmp/raijin-project/packages/ui' as PortablePath
   const input = createGeneratedIconInput(workspaceCwd, ['Icon.tsx'])
 
   assert.equal(input.source, 'generated')
-  assert.deepEqual(toCommandArguments(input, projectCwd), ['packages/ui/src/Icon.tsx'])
+  assert.deepEqual(toCommandArguments(input, workspaceCwd), ['src/Icon.tsx'])
 })
 
 test('should discover generated icons from the workspace source directory', async () => {

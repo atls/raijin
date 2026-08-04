@@ -7,7 +7,8 @@ import { CheckCommand }           from './check.command.js'
 
 const runCheckCommand = async (
   targets: Array<string>,
-  exitCodes: Array<number> = [0, 0, 0]
+  exitCodes: Array<number> = [0, 0, 0],
+  invocationCwd = '/repo'
 ): Promise<{ exitCode: number; commands: Array<Array<string>> }> => {
   const commands: Array<Array<string>> = []
   const command = Object.assign(Object.create(CheckCommand.prototype), {
@@ -15,7 +16,8 @@ const runCheckCommand = async (
     context: { cwd: '/repo' },
   }) as CheckCommand
   const invocation = {
-    invocationCwd: '/repo',
+    executionCwd: '/repo',
+    invocationCwd,
     yarn: {
       execute: async (args: Array<string>) => {
         commands.push(args)
@@ -48,13 +50,13 @@ test('should forward explicit targets to every check command', async () => {
   ])
 })
 
-test('should serialize normalized targets from the invocation cwd', async () => {
-  const { commands } = await runCheckCommand(['/repo/yarn/plugin-check/sources'])
+test('should serialize nested workspace targets from the project execution cwd', async () => {
+  const { commands } = await runCheckCommand(['src/index.ts'], undefined, '/repo/packages/app')
 
   assert.deepEqual(commands, [
-    ['format', 'yarn/plugin-check/sources'],
-    ['typecheck', 'yarn/plugin-check/sources'],
-    ['lint', 'yarn/plugin-check/sources'],
+    ['format', 'packages/app/src/index.ts'],
+    ['typecheck', 'packages/app/src/index.ts'],
+    ['lint', 'packages/app/src/index.ts'],
   ])
 })
 
