@@ -1,9 +1,13 @@
-import type { ChildProcess }        from 'node:child_process'
-import type { SpawnOptions }        from 'node:child_process'
+import type { ChildProcess }           from 'node:child_process'
+import type { SpawnOptions }           from 'node:child_process'
 
-import type { ChildProcessOptions } from './child-process.interfaces.js'
+import type { ProjectInvocation }      from '../resolve.interfaces.js'
+import type { ChildProcessOptions }    from './child-process.interfaces.js'
+import type { ChildProcessRunOptions } from './child-process.interfaces.js'
 
-import { toNativeCwd }              from './path/index.js'
+import { spawn }                       from 'node:child_process'
+
+import { toNativeCwd }                 from './path/index.js'
 
 export const createChildProcessOptions = ({
   env,
@@ -22,3 +26,19 @@ export const waitForChildProcess = async (child: ChildProcess): Promise<number> 
       resolve(code ?? 1)
     })
   })
+
+export const spawnChildProcess = (
+  invocation: ProjectInvocation,
+  command: string,
+  args: Array<string>,
+  options: ChildProcessRunOptions
+): ChildProcess =>
+  spawn(
+    command,
+    args,
+    createChildProcessOptions({
+      invocation,
+      env: options.env,
+      stdio: options.stdio,
+    })
+  )

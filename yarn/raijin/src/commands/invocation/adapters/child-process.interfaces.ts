@@ -7,3 +7,8 @@ export interface ChildProcessOptions {
   env: NodeJS.ProcessEnv
   stdio: SpawnOptions['stdio']
 }
+
+export interface ChildProcessRunOptions {
+  env: NodeJS.ProcessEnv
+  stdio: SpawnOptions['stdio']
+}

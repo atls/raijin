@@ -1,19 +1,20 @@
-import type { PluginConfiguration } from '@yarnpkg/core'
-import type { PortablePath }        from '@yarnpkg/fslib'
-import type { PnpApi }              from '@yarnpkg/pnp'
+import type { PluginConfiguration }  from '@yarnpkg/core'
+import type { PortablePath }         from '@yarnpkg/fslib'
+import type { PnpApi }               from '@yarnpkg/pnp'
 
-import { pathToFileURL }            from 'node:url'
+import { pathToFileURL }             from 'node:url'
 
-import { Configuration }            from '@yarnpkg/core'
-import { Project }                  from '@yarnpkg/core'
-import { miscUtils }                from '@yarnpkg/core'
-import { structUtils }              from '@yarnpkg/core'
-import { npath }                    from '@yarnpkg/fslib'
-import { ppath }                    from '@yarnpkg/fslib'
-import { getPnpPath }               from '@yarnpkg/plugin-pnp'
+import { Configuration }             from '@yarnpkg/core'
+import { Project }                   from '@yarnpkg/core'
+import { miscUtils }                 from '@yarnpkg/core'
+import { structUtils }               from '@yarnpkg/core'
+import { npath }                     from '@yarnpkg/fslib'
+import { ppath }                     from '@yarnpkg/fslib'
+import { getPnpPath }                from '@yarnpkg/plugin-pnp'
 
-import { MANAGED_NODE_LOADER_ENV }  from '@atls/raijin/runtime/node/bootstrap'
-import { registerNodeLoaders }      from '@atls/raijin/runtime/node/bootstrap'
+import { MANAGED_NODE_LOADER_ENV }   from '@atls/raijin/runtime/node/bootstrap'
+import { REGISTERED_PNP_LOADER_ENV } from '@atls/raijin/runtime/node/bootstrap'
+import { registerNodeLoaders }       from '@atls/raijin/runtime/node/bootstrap'
 
 const RAIJIN_PACKAGE_IDENT = structUtils.parseIdent('@atls/raijin')
 const PACKAGE_MANIFEST = 'package.json'
@@ -22,9 +23,7 @@ const TYPESCRIPT_SPECIFIER = 'typescript'
 const isModuleNotFoundError = (error: unknown): boolean =>
   error instanceof Error && 'code' in error && error.code === 'MODULE_NOT_FOUND'
 
-const isTypeScriptRuntimeAvailable = (pnpApiPath: string, packagePath: string): boolean => {
-  const pnpApi = miscUtils.dynamicRequire(pnpApiPath) as PnpApi
-
+const isTypeScriptRuntimeAvailable = (pnpApi: PnpApi, packagePath: string): boolean => {
   try {
     pnpApi.resolveRequest(TYPESCRIPT_SPECIFIER, packagePath)
 
@@ -64,15 +63,23 @@ export const registerRaijinSourceWorkspaceRuntime = async (
   const pnpLoader = pathToFileURL(pnpLoaderPath).href
   const inheritedTypeScriptLoader = process.env[MANAGED_NODE_LOADER_ENV]
 
+  if (inheritedTypeScriptLoader && process.env[REGISTERED_PNP_LOADER_ENV] === pnpLoader) {
+    return
+  }
+
+  const pnpApi = miscUtils.dynamicRequire(pnpApiPath) as PnpApi
+
   if (inheritedTypeScriptLoader) {
     await registerNodeLoaders([pnpLoader, inheritedTypeScriptLoader])
+    process.env[REGISTERED_PNP_LOADER_ENV] = pnpLoader
 
     return
   }
 
   await registerNodeLoaders([pnpLoader])
+  process.env[REGISTERED_PNP_LOADER_ENV] = pnpLoader
 
-  if (!isTypeScriptRuntimeAvailable(pnpApiPath, packagePath)) {
+  if (!isTypeScriptRuntimeAvailable(pnpApi, packagePath)) {
     return
   }
 

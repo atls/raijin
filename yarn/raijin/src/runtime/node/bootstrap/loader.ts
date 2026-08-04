@@ -1,4 +1,5 @@
 export const MANAGED_NODE_LOADER_ENV = 'RAIJIN_NODE_LOADER'
+export const REGISTERED_PNP_LOADER_ENV = 'RAIJIN_REGISTERED_PNP_LOADER'
 const NODE_LOADER_IMPORT_OPTION = '--import'
 const NODE_LOADER_REGISTER_IMPORT_PREFIX =
   'data:text/javascript,import%20%7B%20register%20%7D%20from%20%22node%3Amodule%22%3B'
