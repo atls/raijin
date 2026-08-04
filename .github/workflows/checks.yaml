@@ -87,5 +87,6 @@ jobs:
       - name: Test Windows invocation
         shell: bash
         run: |
-          yarn test unit yarn/raijin/src/commands/invocation/resolve.test.ts
-          yarn test unit yarn/raijin/src/commands/invocation/adapters/child-process.test.ts
+          test_runtime=(yarn node --loader ./.pnp.loader.mjs --loader ./yarn/raijin/src/runtime/typescript-loader.ts --enable-source-maps --test)
+          "${test_runtime[@]}" --test-name-pattern="should execute nested Yarn through the Windows command shim" yarn/raijin/src/commands/invocation/resolve.test.ts
+          "${test_runtime[@]}" --test-name-pattern="should execute Windows command wrappers without a shell option" yarn/raijin/src/commands/invocation/adapters/child-process.test.ts
