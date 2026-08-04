@@ -10,6 +10,7 @@ import type { CommandInvocationExit }        from './resolve.interfaces.js'
 
 import { BaseCommand }                       from '@yarnpkg/cli'
 
+import { resolveEntryCommandInvocation }     from './resolve.js'
 import { resolveProjectCommandInvocation }   from './resolve.js'
 import { resolveWorkspaceCommandInvocation } from './resolve.js'
 
@@ -46,7 +47,7 @@ const resolveInvocation = async <Scope extends CommandInvocationScope>(
     >
   }
 
-  return undefined as CommandInvocationForScope<Scope>
+  return resolveEntryCommandInvocation(context) as CommandInvocationForScope<Scope>
 }
 
 const resolveCommandHandler = (command: RaijinCommand): CommandHandler => {

@@ -25,7 +25,16 @@ const PROXY_ENV_REGEXP = /RAIJIN_COMMAND_(?:PROXY_EXECUTION|INVOCATION_CWD)/g
 const COMMAND_PATHS_REGEXP = /static\s+override\s+paths\s*=/g
 const COMMAND_HANDLER_REGEXP = /\bexecute(?:Entry|Project|Workspace)\s*\(/g
 const YARN_EXECUTION_OWNER = 'yarn/raijin/src/commands/invocation/adapters/yarn/execution.ts'
-const CHILD_PROCESS_OWNER = 'yarn/raijin/src/commands/invocation/adapters/child-process.ts'
+const PROCESS_EXECUTION_OWNER = 'yarn/raijin/src/commands/invocation/adapters/child-process.ts'
+const NON_COMMAND_PROCESS_OWNERS = new Set([
+  'yarn/plugin-tools/sources/hooks/after-all-installed.hook.ts',
+])
+const PROCESS_EXECUTION_MODULES = new Set([
+  'child_process',
+  'cross-spawn',
+  'execa',
+  'node:child_process',
+])
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 
@@ -104,6 +113,8 @@ test('should keep command invocation lifecycle in the invocation owner', async (
     }
 
     const isInvocationOwner = relativePath.startsWith('yarn/raijin/src/commands/invocation/')
+    const isProcessExecutionOwner = relativePath === PROCESS_EXECUTION_OWNER
+    const isNonCommandProcessOwner = NON_COMMAND_PROCESS_OWNERS.has(relativePath)
     const hasCommandClass = source.match(COMMAND_PATHS_REGEXP) !== null
     const sourceFile = ts.createSourceFile(
       relativePath,
@@ -114,6 +125,18 @@ test('should keep command invocation lifecycle in the invocation owner', async (
     )
 
     const inspectNode = (node) => {
+      if (
+        ts.isImportDeclaration(node) &&
+        ts.isStringLiteral(node.moduleSpecifier) &&
+        PROCESS_EXECUTION_MODULES.has(node.moduleSpecifier.text) &&
+        !isProcessExecutionOwner &&
+        !isNonCommandProcessOwner
+      ) {
+        const line = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1
+
+        errors.push(`${relativePath}:${line} command process execution must use invocation.child`)
+      }
+
       if (ts.isCallExpression(node)) {
         const callPath = getCallPath(node.expression)
         const line = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1
@@ -146,7 +169,7 @@ test('should keep command invocation lifecycle in the invocation owner', async (
           )
         }
 
-        if (hasCommandClass && callPath === 'execUtils.pipevp') {
+        if (callPath === 'execUtils.pipevp' || callPath === 'execUtils.execvp') {
           errors.push(
             `${relativePath}:${line} command process execution must use the invocation owner`
           )
@@ -156,8 +179,16 @@ test('should keep command invocation lifecycle in the invocation owner', async (
       ts.forEachChild(node, inspectNode)
     }
 
-    if (!isInvocationOwner) {
-      inspectNode(sourceFile)
+    inspectNode(sourceFile)
+
+    if (isProcessExecutionOwner) {
+      if (!source.includes("from 'execa'")) {
+        errors.push(`${relativePath}:1 process execution owner must use Execa`)
+      }
+
+      if (source.includes("from 'node:child_process'") || source.includes("from 'cross-spawn'")) {
+        errors.push(`${relativePath}:1 process execution owner must not use low-level runners`)
+      }
     }
 
     if (relativePath !== YARN_EXECUTION_OWNER) {
@@ -190,7 +221,7 @@ test('should keep command invocation lifecycle in the invocation owner', async (
       }
     }
 
-    if (relativePath !== CHILD_PROCESS_OWNER) {
+    if (relativePath !== PROCESS_EXECUTION_OWNER) {
       for (const match of source.matchAll(PROXY_ENV_REGEXP)) {
         errors.push(
           `${relativePath}:${getLine(source, match.index ?? 0)} command proxy environment must not be used`

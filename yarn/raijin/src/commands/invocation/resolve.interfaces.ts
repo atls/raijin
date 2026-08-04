@@ -92,6 +92,7 @@ export interface ChildProcessRunOptions {
   input?: 'ignore'
   nodeOptions?: CommandNodeOptionsTransformer
   output?: CommandOutputPolicy
+  scope?: 'execution' | 'project'
   timeout?: number
 }
 
@@ -103,10 +104,13 @@ export interface ChildProcessInvocation {
   ) => Promise<CommandExecutionResult>
 }
 
-export interface ProjectInvocation {
+export interface EntryInvocation {
   readonly executionCwd: PortablePath
   readonly invocationCwd: PortablePath
   readonly child: ChildProcessInvocation
+}
+
+export interface ProjectInvocation extends EntryInvocation {
   readonly project: RaijinProjectModel<Workspace>
   readonly yarn: YarnRuntimeInvocation
 }

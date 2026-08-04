@@ -37,7 +37,7 @@ export class ReleaseVersionDeferCommand extends RaijinCommand {
         configuration,
       },
       async (report) => {
-        const changes = await getReleaseVersionChanges(project, this.since)
+        const changes = await getReleaseVersionChanges(invocation.child, this.since)
         const strategies = resolveReleaseVersionStrategies(project, changes)
         const declineStrategies = resolveReleaseVersionDeclineStrategies(project, changes)
 

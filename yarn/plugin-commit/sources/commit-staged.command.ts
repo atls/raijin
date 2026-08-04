@@ -1,17 +1,42 @@
-import { execSync }      from 'node:child_process'
+import type { EntryInvocation } from '@atls/raijin/commands'
 
-import { Option }        from 'clipanion'
-import lintStaged        from 'lint-staged'
+import { npath }                from '@yarnpkg/fslib'
+import { Option }               from 'clipanion'
+import lintStaged               from 'lint-staged'
 
-import { RaijinCommand } from '@atls/raijin/commands'
+import { RaijinCommand }        from '@atls/raijin/commands'
 
-const resolveRootDir = (): string => {
+const resolveRootDir = async (invocation: EntryInvocation): Promise<string> => {
   try {
-    // eslint-disable-next-line n/no-sync
-    return execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim()
+    const result = await invocation.child.execute('git', ['rev-parse', '--show-toplevel'], {
+      output: { mode: 'capture' },
+    })
+
+    if (result.exitCode === 0) {
+      return result.stdout.trim()
+    }
   } catch {
-    return process.cwd()
+    // Fall back to the invocation directory when Git is unavailable.
   }
+
+  return npath.fromPortablePath(invocation.invocationCwd)
+}
+
+const resolveSafeMaxArgLength = async (invocation: EntryInvocation): Promise<number> => {
+  try {
+    const result = await invocation.child.execute('getconf', ['ARG_MAX'], {
+      output: { mode: 'capture' },
+    })
+    const maxArgLength = Number.parseInt(result.stdout, 10)
+
+    if (result.exitCode === 0 && Number.isFinite(maxArgLength)) {
+      return Math.floor(maxArgLength * 0.5)
+    }
+  } catch {
+    // Use the Windows-compatible fallback when getconf is unavailable.
+  }
+
+  return 8190
 }
 
 const quoteShellArgument = (value: string): string => JSON.stringify(value)
@@ -40,23 +65,13 @@ export class CommitStagedCommand extends RaijinCommand {
 
   args: Array<string> = Option.Rest({ required: 0 })
 
-  async executeEntry(): Promise<number> {
+  async executeEntry(invocation: EntryInvocation): Promise<number> {
     try {
-      let safeMaxArgLength = 8190
-
-      try {
-        // eslint-disable-next-line n/no-sync
-        const ARG_MAX = parseInt(execSync('getconf ARG_MAX', { encoding: 'utf-8' }), 10)
-
-        safeMaxArgLength = Math.floor(ARG_MAX * 0.5)
-        // eslint-disable-next-line no-empty
-      } catch {}
-
       // @ts-expect-error: Fix import
       const passed = await lintStaged({
         config: createConfig(),
-        cwd: resolveRootDir(),
-        maxArgLength: safeMaxArgLength,
+        cwd: await resolveRootDir(invocation),
+        maxArgLength: await resolveSafeMaxArgLength(invocation),
       })
 
       return passed ? 0 : 1

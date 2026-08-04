@@ -49,7 +49,7 @@ class WorkspacesChangedForeachCommand extends RaijinCommand {
     const { yarn } = invocation
     const { configuration, project } = yarn
 
-    const files = await getChangedFiles(project, this.since)
+    const files = await getChangedFiles(invocation.child, this.since)
     const workspaces = getChangedWorkspaces(project, files)
 
     if (!workspaces.length) {

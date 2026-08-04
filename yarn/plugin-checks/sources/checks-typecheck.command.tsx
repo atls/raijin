@@ -1,4 +1,5 @@
 import type { CommandInput }            from '@atls/raijin/commands'
+import type { ChildProcessInvocation }  from '@atls/raijin/commands'
 import type { ProjectInvocation }       from '@atls/raijin/commands'
 import type { Project }                 from '@yarnpkg/core'
 
@@ -52,7 +53,11 @@ class ChecksTypeCheckCommand extends RaijinCommand {
 
           await report.startTimerPromise('TypeCheck', async () => {
             try {
-              const input = await this.getInput(yarn.project, project.workspacePatterns)
+              const input = await this.getInput(
+                yarn.project,
+                project.workspacePatterns,
+                invocation.child
+              )
 
               if (this.changed && input?.targets.length === 0) {
                 report.reportInfo(MessageName.UNNAMED, 'No TypeScript files changed')
@@ -124,14 +129,18 @@ class ChecksTypeCheckCommand extends RaijinCommand {
 
   protected async getInput(
     project: Project,
-    workspacePatterns: Array<string>
+    workspacePatterns: Array<string>,
+    child?: ChildProcessInvocation
   ): Promise<CommandInput | undefined> {
     if (this.changed) {
+      if (!child) {
+        throw new Error('Changed TypeScript targets require command invocation')
+      }
+
       const input = createCommandInput({
         cwd: project.cwd,
         source: 'changed',
-        targets: (await getChangedFiles(project)).filter((file) =>
-          /\.(cts|mts|ts|tsx)$/.test(file)),
+        targets: (await getChangedFiles(child)).filter((file) => /\.(cts|mts|ts|tsx)$/.test(file)),
       })
 
       const existsMap = await Promise.all(

@@ -30,7 +30,7 @@ class WorkspacesChangedListCommand extends RaijinCommand {
       },
 
       async (streamReport) => {
-        const files = await getChangedFiles(project)
+        const files = await getChangedFiles(invocation.child)
         const workspaces = getChangedWorkspaces(project, files)
 
         for (const ws of workspaces) {

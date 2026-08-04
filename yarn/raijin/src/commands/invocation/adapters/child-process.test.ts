@@ -1,20 +1,30 @@
-import assert                         from 'node:assert/strict'
-import { EventEmitter }               from 'node:events'
-import { PassThrough }                from 'node:stream'
-import test                           from 'node:test'
+import assert                        from 'node:assert/strict'
+import { mkdtemp }                   from 'node:fs/promises'
+import { writeFile }                 from 'node:fs/promises'
+import { tmpdir }                    from 'node:os'
+import { join }                      from 'node:path'
+import { PassThrough }               from 'node:stream'
+import test                          from 'node:test'
 
-import { createChildProcessOptions }  from './child-process.js'
-import { executeChildProcess }        from './child-process.js'
-import { forwardChildProcessSignals } from './child-process.js'
+import { createChildProcessOptions } from './child-process.js'
+import { executeChildProcess }       from './child-process.js'
 
-const createContext = () => ({
-  environment: { NODE_ENV: 'test' },
-  stderr: new PassThrough(),
-  stdin: new PassThrough(),
-  stdout: new PassThrough(),
-})
+const createContext = () => {
+  const stderr = new PassThrough()
+  const stdout = new PassThrough()
 
-test('should create child options from the execution boundary', () => {
+  stderr.resume()
+  stdout.resume()
+
+  return {
+    environment: { NODE_ENV: 'test' },
+    stderr,
+    stdin: new PassThrough(),
+    stdout,
+  }
+}
+
+test('should create Execa options from the execution boundary', () => {
   const context = createContext()
   const environment = { NODE_ENV: 'test' }
   const options = createChildProcessOptions({
@@ -25,10 +35,17 @@ test('should create child options from the execution boundary', () => {
 
   assert.equal(options.cwd, '/repo/client')
   assert.equal(options.env, environment)
-  assert.deepEqual(options.stdio, ['pipe', 'pipe', 'pipe'])
+  assert.equal(options.extendEnv, false)
+  assert.equal(options.input, undefined)
+  assert.notEqual(options.stdin, context.stdin)
+  assert.deepEqual(options.stdout, ['pipe', context.stdout])
+  assert.deepEqual(options.stderr, ['pipe', context.stderr])
+  assert.equal(options.buffer, false)
+  assert.equal(options.reject, false)
+  assert.equal(options.stripFinalNewline, false)
 })
 
-test('should attach file descriptor streams without proxy pipes', () => {
+test('should attach terminal descriptors directly', () => {
   const context = {
     environment: { NODE_ENV: 'test' },
     stderr: Object.assign(new PassThrough(), { fd: 2 }),
@@ -41,16 +58,14 @@ test('should attach file descriptor streams without proxy pipes', () => {
     env: { NODE_ENV: 'test' },
   })
 
-  assert.deepEqual(options.stdio, [context.stdin, context.stdout, context.stderr])
+  assert.equal(options.input, undefined)
+  assert.equal(options.stdin, context.stdin)
+  assert.equal(options.stdout, context.stdout)
+  assert.equal(options.stderr, context.stderr)
 })
 
 test('should reserve output pipes for capture policies', () => {
-  const context = {
-    environment: { NODE_ENV: 'test' },
-    stderr: Object.assign(new PassThrough(), { fd: 2 }),
-    stdin: Object.assign(new PassThrough(), { fd: 0 }),
-    stdout: Object.assign(new PassThrough(), { fd: 1 }),
-  }
+  const context = createContext()
   const options = createChildProcessOptions({
     context,
     cwd: '/repo/client',
@@ -58,7 +73,11 @@ test('should reserve output pipes for capture policies', () => {
     output: { mode: 'capture' },
   })
 
-  assert.deepEqual(options.stdio, [context.stdin, 'pipe', 'pipe'])
+  assert.equal(options.input, undefined)
+  assert.notEqual(options.stdin, context.stdin)
+  assert.equal(options.stdout, 'pipe')
+  assert.equal(options.stderr, 'pipe')
+  assert.equal(options.buffer, true)
 })
 
 test('should capture and forward child output before returning its code', async () => {
@@ -82,6 +101,30 @@ test('should capture and forward child output before returning its code', async 
   assert.equal(result.termination, 'exit')
   assert.equal(result.stdout, 'ready')
   assert.equal(Buffer.concat(forwarded).toString(), 'ready')
+})
+
+test('should handle child output without exposing process streams', async () => {
+  const events: Array<{ data: string; source: 'stderr' | 'stdout' }> = []
+  const result = await executeChildProcess(
+    process.execPath,
+    ['-e', "process.stdout.write('ready'); process.stderr.write('warning')"],
+    {
+      context: createContext(),
+      cwd: process.cwd(),
+      env: process.env,
+      output: { mode: 'handle', handler: (event) => events.push(event) },
+    }
+  )
+
+  assert.equal(result.stdout, '')
+  assert.equal(result.stderr, '')
+  assert.deepEqual(
+    events.sort((left, right) => left.source.localeCompare(right.source)),
+    [
+      { data: 'warning', source: 'stderr' },
+      { data: 'ready', source: 'stdout' },
+    ]
+  )
 })
 
 test('should reject child process errors', async () => {
@@ -133,34 +176,23 @@ test(
   }
 )
 
-test('should forward process signals while the child is active', () => {
-  const signalTarget = new EventEmitter()
-  const child = new EventEmitter() as EventEmitter & {
-    exitCode: number | null
-    kill: (signal: NodeJS.Signals) => boolean
-    signalCode: NodeJS.Signals | null
-    signals: Array<NodeJS.Signals>
+test(
+  'should execute Windows command wrappers without a shell option',
+  { skip: process.platform !== 'win32' },
+  async () => {
+    const cwd = await mkdtemp(join(tmpdir(), 'raijin-execa-cmd-'))
+    const command = join(cwd, 'fixture.cmd')
+
+    await writeFile(command, '@echo off\r\necho ready\r\n')
+
+    const result = await executeChildProcess(command, [], {
+      context: createContext(),
+      cwd,
+      env: process.env,
+      output: { mode: 'capture' },
+    })
+
+    assert.equal(result.exitCode, 0)
+    assert.equal(result.stdout.trim(), 'ready')
   }
-
-  child.exitCode = null
-  child.signalCode = null
-  child.signals = []
-  child.kill = (signal): boolean => {
-    child.signals.push(signal)
-
-    return true
-  }
-
-  forwardChildProcessSignals(child as never, signalTarget as never)
-
-  signalTarget.emit('SIGTERM')
-  signalTarget.emit('SIGTERM')
-
-  assert.deepEqual(child.signals, ['SIGTERM', 'SIGTERM'])
-
-  child.emit('close', 0)
-  child.exitCode = 0
-  signalTarget.emit('SIGTERM')
-
-  assert.deepEqual(child.signals, ['SIGTERM', 'SIGTERM'])
-})
+)

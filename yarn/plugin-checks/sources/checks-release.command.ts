@@ -47,7 +47,7 @@ class ChecksReleaseCommand extends RaijinCommand {
       privateWorkspaces: this.noPrivate ? false : releaseConfig.privateWorkspaces,
     }
     const workspaces = releaseConfig.enabled
-      ? getChangedWorkspaces(project, await getChangedFiles(project)).filter((workspace) =>
+      ? getChangedWorkspaces(project, await getChangedFiles(invocation.child)).filter((workspace) =>
           isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
       : []
 

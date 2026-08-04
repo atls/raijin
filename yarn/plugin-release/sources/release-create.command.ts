@@ -1,26 +1,25 @@
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
-import type { Project }             from '@yarnpkg/core'
-import type { PortablePath }        from '@yarnpkg/fslib'
+import type { WorkspaceInvocation }    from '@atls/raijin/commands'
+import type { ChildProcessInvocation } from '@atls/raijin/commands'
+import type { Project }                from '@yarnpkg/core'
+import type { PortablePath }           from '@yarnpkg/fslib'
 
-import assert                       from 'node:assert/strict'
-import { Buffer }                   from 'node:buffer'
-import { execSync }                 from 'node:child_process'
-import { createHash }               from 'node:crypto'
-import { mkdir }                    from 'node:fs/promises'
-import { readFile }                 from 'node:fs/promises'
-import { writeFile }                from 'node:fs/promises'
-import { dirname }                  from 'node:path'
+import assert                          from 'node:assert/strict'
+import { Buffer }                      from 'node:buffer'
+import { createHash }                  from 'node:crypto'
+import { mkdir }                       from 'node:fs/promises'
+import { readFile }                    from 'node:fs/promises'
+import { writeFile }                   from 'node:fs/promises'
+import { dirname }                     from 'node:path'
 
-import { StreamReport }             from '@yarnpkg/core'
-import { execUtils }                from '@yarnpkg/core'
-import { npath }                    from '@yarnpkg/fslib'
-import { ppath }                    from '@yarnpkg/fslib'
-import { xfs }                      from '@yarnpkg/fslib'
+import { StreamReport }                from '@yarnpkg/core'
+import { npath }                       from '@yarnpkg/fslib'
+import { ppath }                       from '@yarnpkg/fslib'
+import { xfs }                         from '@yarnpkg/fslib'
 
-import { Release }                  from '@atls/code-github'
-import { RaijinCommand }            from '@atls/raijin/commands'
+import { Release }                     from '@atls/code-github'
+import { RaijinCommand }               from '@atls/raijin/commands'
 
-import { parseGitHubUrl }           from './utils/parse-git-url.js'
+import { parseGitHubUrl }              from './utils/parse-git-url.js'
 
 const RELEASE_ALREADY_EXISTS_STATUS = 422
 const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
@@ -419,14 +418,24 @@ export const selectPreviousGitHubReleaseTagName = (
     .filter((tag) => compareSemver(tag.version, version) < 0)
     .sort((leftTag, rightTag) => compareSemver(rightTag.version, leftTag.version))[0]?.tagName
 
+const captureGit = async (child: ChildProcessInvocation, args: Array<string>): Promise<string> => {
+  const result = await child.execute('git', args, {
+    output: { mode: 'capture' },
+    scope: 'project',
+  })
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git ${args[0]} exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout
+}
+
 export const getGitHubReleaseTagNames = async (
-  project: Project,
+  child: ChildProcessInvocation,
   packageName: string
 ): Promise<Array<string>> => {
-  const { stdout } = await execUtils.execvp('git', ['tag', '--list', `${packageName}@*`], {
-    cwd: project.cwd,
-    strict: true,
-  })
+  const stdout = await captureGit(child, ['tag', '--list', `${packageName}@*`])
 
   return stdout
     .split('\n')
@@ -434,14 +443,9 @@ export const getGitHubReleaseTagNames = async (
     .filter(Boolean)
 }
 
-export const getGitHubReleaseTargetCommitish = async (project: Project): Promise<string> => {
-  const { stdout } = await execUtils.execvp('git', ['rev-parse', 'HEAD'], {
-    cwd: project.cwd,
-    strict: true,
-  })
-
-  return stdout.trim()
-}
+export const getGitHubReleaseTargetCommitish = async (
+  child: ChildProcessInvocation
+): Promise<string> => (await captureGit(child, ['rev-parse', 'HEAD'])).trim()
 
 export class ReleaseCreateCommand extends RaijinCommand {
   static override paths = [['release', 'create']]
@@ -451,7 +455,7 @@ export class ReleaseCreateCommand extends RaijinCommand {
   })
 
   async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
-    const { workspace, yarn } = invocation
+    const { child, workspace, yarn } = invocation
     const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
@@ -486,8 +490,7 @@ export class ReleaseCreateCommand extends RaijinCommand {
           let repo: string
           try {
             ;({ repository: repo, organization: owner } = parseGitHubUrl(
-              // eslint-disable-next-line n/no-sync
-              execSync('git remote get-url origin', { encoding: 'utf-8' })
+              await captureGit(child, ['remote', 'get-url', 'origin'])
             ))
           } catch {
             ;[owner, repo] = process.env.GITHUB_REPOSITORY?.split('/') ?? ['', '']
@@ -497,8 +500,8 @@ export class ReleaseCreateCommand extends RaijinCommand {
           assert.ok(repo, 'Could not get url of the repo')
 
           try {
-            const tagNames = await getGitHubReleaseTagNames(project, packageName)
-            const targetCommitish = await getGitHubReleaseTargetCommitish(project)
+            const tagNames = await getGitHubReleaseTagNames(child, packageName)
+            const targetCommitish = await getGitHubReleaseTargetCommitish(child)
             const previousTagName = selectPreviousGitHubReleaseTagName(
               packageName,
               version,

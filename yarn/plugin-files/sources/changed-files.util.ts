@@ -1,9 +1,8 @@
-import type { Endpoints } from '@octokit/types'
-import type { Project }   from '@yarnpkg/core'
+import type { ChildProcessInvocation } from '@atls/raijin/commands'
+import type { Endpoints }              from '@octokit/types'
 
-import { context }        from '@actions/github'
-import { getOctokit }     from '@actions/github'
-import { execUtils }      from '@yarnpkg/core'
+import { context }                     from '@actions/github'
+import { getOctokit }                  from '@actions/github'
 
 type GetCommitResponseData = Endpoints['GET /repos/{owner}/{repo}/commits/{ref}']['response']
 type GetCommitFileData = NonNullable<GetCommitResponseData['data']['files']>[number]
@@ -101,19 +100,20 @@ export const getGithubChangedFiles = async (): Promise<Array<string>> => {
 }
 
 export const getChangedFiles = async (
-  project: Project,
+  child: ChildProcessInvocation,
   gitRange?: string
 ): Promise<Array<string>> => {
-  const { stdout } = await execUtils.execvp(
+  const result = await child.execute(
     'git',
     ['diff', '--name-only', ...(gitRange ? [gitRange] : [])],
-    {
-      cwd: project.cwd,
-      strict: true,
-    }
+    { output: { mode: 'capture' }, scope: 'project' }
   )
 
-  const gitChangedFiles = stdout.split(/\r?\n/).filter(Boolean)
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git diff exited with code ${result.exitCode}`)
+  }
+
+  const gitChangedFiles = result.stdout.split(/\r?\n/).filter(Boolean)
 
   if (gitChangedFiles.length > 0) {
     return gitChangedFiles

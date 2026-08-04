@@ -1,32 +1,33 @@
 /* eslint-disable n/no-sync */
 
-import type { CommandInput }         from '@atls/raijin/commands'
-import type { ProjectInvocation }    from '@atls/raijin/commands'
-import type { LintMessage }          from '@atls/raijin/eslint'
-import type { LintResult as Result } from '@atls/raijin/eslint'
-import type { Project }              from '@yarnpkg/core'
+import type { CommandInput }           from '@atls/raijin/commands'
+import type { ChildProcessInvocation } from '@atls/raijin/commands'
+import type { ProjectInvocation }      from '@atls/raijin/commands'
+import type { LintMessage }            from '@atls/raijin/eslint'
+import type { LintResult as Result }   from '@atls/raijin/eslint'
+import type { Project }                from '@yarnpkg/core'
 
-import type { Annotation }           from './github.checks.js'
+import type { Annotation }             from './github.checks.js'
 
-import { readFileSync }              from 'node:fs'
+import { readFileSync }                from 'node:fs'
 
-import { StreamReport }              from '@yarnpkg/core'
-import { MessageName }               from '@yarnpkg/core'
-import { codeFrameColumns }          from '@babel/code-frame'
-import { xfs }                       from '@yarnpkg/fslib'
-import { Option }                    from 'clipanion'
-import React                         from 'react'
+import { StreamReport }                from '@yarnpkg/core'
+import { MessageName }                 from '@yarnpkg/core'
+import { codeFrameColumns }            from '@babel/code-frame'
+import { xfs }                         from '@yarnpkg/fslib'
+import { Option }                      from 'clipanion'
+import React                           from 'react'
 
-import { LintResult }                from '@atls/cli-ui-lint-result-component'
-import { Linter }                    from '@atls/code-lint'
-import { RaijinCommand }             from '@atls/raijin/commands'
-import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }        from '@atls/raijin/commands'
-import { toNativeCwd }               from '@atls/raijin/commands'
-import { getChangedFiles }           from '@atls/yarn-plugin-files'
+import { LintResult }                  from '@atls/cli-ui-lint-result-component'
+import { Linter }                      from '@atls/code-lint'
+import { RaijinCommand }               from '@atls/raijin/commands'
+import { renderStatic }                from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }          from '@atls/raijin/commands'
+import { toNativeCwd }                 from '@atls/raijin/commands'
+import { getChangedFiles }             from '@atls/yarn-plugin-files'
 
-import { GitHubChecks }              from './github.checks.js'
-import { AnnotationLevel }           from './github.checks.js'
+import { GitHubChecks }                from './github.checks.js'
+import { AnnotationLevel }             from './github.checks.js'
 
 class ChecksLintCommand extends RaijinCommand {
   static override paths = [['checks', 'lint']]
@@ -55,7 +56,7 @@ class ChecksLintCommand extends RaijinCommand {
           try {
             const projectCwd = toNativeCwd(projectModel.cwd)
             const linter = await Linter.initialize(projectCwd, projectCwd)
-            const lintTargets = await this.getLintTargets(project)
+            const lintTargets = await this.getLintTargets(project, invocation.child)
             let results: Array<Result> = []
 
             if (lintTargets === null) {
@@ -109,7 +110,10 @@ class ChecksLintCommand extends RaijinCommand {
     return commandReport.exitCode()
   }
 
-  private async getLintTargets(project: Project): Promise<CommandInput | null> {
+  private async getLintTargets(
+    project: Project,
+    child: ChildProcessInvocation
+  ): Promise<CommandInput | null> {
     if (!this.changed) {
       return null
     }
@@ -117,7 +121,7 @@ class ChecksLintCommand extends RaijinCommand {
     const input = createCommandInput({
       cwd: project.cwd,
       source: 'changed',
-      targets: (await getChangedFiles(project)).filter((file) => /\.(c|m)?(j|t)sx?$/.test(file)),
+      targets: (await getChangedFiles(child)).filter((file) => /\.(c|m)?(j|t)sx?$/.test(file)),
     })
 
     const existsMap = await Promise.all(

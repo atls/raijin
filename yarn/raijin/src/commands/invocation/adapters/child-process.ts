@@ -1,40 +1,65 @@
-import type { ChildProcess }             from 'node:child_process'
-import type { SpawnOptions }             from 'node:child_process'
-import type { Readable }                 from 'node:stream'
-import type { Writable }                 from 'node:stream'
+import type { Options }                from 'execa'
+import type { Result }                 from 'execa'
+import type { StdinOption }            from 'execa'
+import type { StdoutStderrOption }     from 'execa'
+import type { Writable }               from 'node:stream'
 
-import type { CommandExecutionResult }   from '../resolve.interfaces.js'
-import type { ChildProcessOptions }      from './child-process.interfaces.js'
-import type { ChildProcessSignalTarget } from './child-process.interfaces.js'
+import type { CommandExecutionResult } from '../resolve.interfaces.js'
+import type { CommandOutputEvent }     from '../resolve.interfaces.js'
+import type { ChildProcessOptions }    from './child-process.interfaces.js'
 
-import { spawn }                         from 'node:child_process'
-import { constants }                     from 'node:os'
+import { constants }                   from 'node:os'
+import { Readable }                    from 'node:stream'
 
-const FORWARDED_SIGNALS: ReadonlyArray<NodeJS.Signals> =
-  process.platform === 'win32' ? ['SIGBREAK', 'SIGINT', 'SIGTERM'] : ['SIGHUP', 'SIGINT', 'SIGTERM']
+import { execa }                       from 'execa'
 
 const resolveSignalExitCode = (signal: NodeJS.Signals): number => 128 + constants.signals[signal]
 
-type FileDescriptorStream = { fd: number } & (Readable | Writable)
-
-const hasFileDescriptor = (stream: Readable | Writable): stream is FileDescriptorStream =>
+const hasFileDescriptor = (stream: Readable | Writable): boolean =>
   typeof (stream as { fd?: unknown }).fd === 'number'
 
-const resolveInputStream = (
+const resolveInput = (
   stream: Readable,
   input: ChildProcessOptions['input']
-): Readable | 'ignore' | 'pipe' => {
+): { stdin: StdinOption } => {
   if (input === 'ignore') {
-    return 'ignore'
+    return { stdin: 'ignore' }
   }
 
-  return hasFileDescriptor(stream) ? stream : 'pipe'
+  if (hasFileDescriptor(stream)) {
+    return { stdin: stream }
+  }
+
+  // Node 22 exposes this bridge before the API's documented stabilization in 22.17.
+  return { stdin: Readable.toWeb(stream) } // eslint-disable-line n/no-unsupported-features/node-builtins
 }
 
-const resolveOutputStream = (
+const createOutputHandler = (
+  handler: (event: CommandOutputEvent) => void,
+  source: CommandOutputEvent['source']
+): StdoutStderrOption => ({
+  preserveNewlines: true,
+  *transform(data: string) {
+    handler({ data, source })
+    yield* []
+  },
+})
+
+const resolveOutput = (
   stream: Writable,
-  output: ChildProcessOptions['output']
-): Writable | 'pipe' => (output || !hasFileDescriptor(stream) ? 'pipe' : stream)
+  output: ChildProcessOptions['output'],
+  source: CommandOutputEvent['source']
+): StdoutStderrOption => {
+  if (!output) {
+    return hasFileDescriptor(stream) ? stream : ['pipe', stream]
+  }
+
+  if (output.mode === 'capture') {
+    return output.forward ? ['pipe', stream] : 'pipe'
+  }
+
+  return createOutputHandler(output.handler, source)
+}
 
 export const createChildProcessOptions = ({
   context,
@@ -42,147 +67,60 @@ export const createChildProcessOptions = ({
   env,
   input,
   output,
-}: ChildProcessOptions): SpawnOptions => ({
+  timeout,
+}: ChildProcessOptions): Options => ({
+  buffer: output?.mode === 'capture',
+  cleanup: true,
   cwd,
+  encoding: 'utf8',
   env,
-  stdio: [
-    resolveInputStream(context.stdin, input),
-    resolveOutputStream(context.stdout, output),
-    resolveOutputStream(context.stderr, output),
-  ],
+  extendEnv: false,
+  forceKillAfterDelay: 5000,
+  reject: false,
+  stderr: resolveOutput(context.stderr, output, 'stderr'),
+  ...resolveInput(context.stdin, input),
+  stdout: resolveOutput(context.stdout, output, 'stdout'),
+  stripFinalNewline: false,
+  timeout,
 })
 
-export const forwardChildProcessSignals = (
-  child: ChildProcess,
-  signalTarget: ChildProcessSignalTarget = process
-): (() => void) => {
-  const listeners = new Map<NodeJS.Signals, () => void>()
-  const cleanup = (): void => {
-    for (const [signal, listener] of listeners) {
-      signalTarget.off(signal, listener)
-    }
-
-    listeners.clear()
-  }
-
-  for (const signal of FORWARDED_SIGNALS) {
-    const listener = (): void => {
-      if (child.exitCode === null && child.signalCode === null) {
-        child.kill(signal)
-      }
-    }
-
-    listeners.set(signal, listener)
-    signalTarget.on(signal, listener)
-  }
-
-  child.once('close', cleanup)
-  child.once('error', cleanup)
-
-  return cleanup
-}
+const resolveExecutionOutput = (
+  result: Result
+): Pick<CommandExecutionResult, 'stderr' | 'stdout'> => ({
+  stderr: typeof result.stderr === 'string' ? result.stderr : '',
+  stdout: typeof result.stdout === 'string' ? result.stdout : '',
+})
 
 export const executeChildProcess = async (
   command: string,
   args: Array<string>,
   options: ChildProcessOptions
 ): Promise<CommandExecutionResult> => {
-  const { output } = options
-  const stdoutChunks: Array<Buffer> = []
-  const stderrChunks: Array<Buffer> = []
-  const child = spawn(command, args, createChildProcessOptions(options))
-  let timedOut = false
-  let timeout: NodeJS.Timeout | undefined
-  let killTimeout: NodeJS.Timeout | undefined
+  const result = await execa(command, args, createChildProcessOptions(options))
+  const output = resolveExecutionOutput(result)
 
-  forwardChildProcessSignals(child)
-
-  if (options.input !== 'ignore' && child.stdin) {
-    options.context.stdin.pipe(child.stdin)
+  if (result.timedOut) {
+    return { ...output, exitCode: 124, termination: 'timeout', timedOut: true }
   }
 
-  child.stdout?.on('data', (data: Buffer) => {
-    if (!output) {
-      options.context.stdout.write(data)
-    } else if (output.mode === 'capture') {
-      stdoutChunks.push(data)
-
-      if (output.forward) {
-        options.context.stdout.write(data)
-      }
-    } else {
-      output.handler({ data: data.toString(), source: 'stdout' })
+  if (result.signal) {
+    return {
+      ...output,
+      exitCode: resolveSignalExitCode(result.signal),
+      signal: result.signal,
+      termination: 'signal',
+      timedOut: false,
     }
-  })
-  child.stderr?.on('data', (data: Buffer) => {
-    if (!output) {
-      options.context.stderr.write(data)
-    } else if (output.mode === 'capture') {
-      stderrChunks.push(data)
-
-      if (output.forward) {
-        options.context.stderr.write(data)
-      }
-    } else {
-      output.handler({ data: data.toString(), source: 'stderr' })
-    }
-  })
-
-  if (options.timeout !== undefined) {
-    timeout = setTimeout(() => {
-      timedOut = true
-      child.kill('SIGTERM')
-      killTimeout = setTimeout(() => {
-        if (child.exitCode === null && child.signalCode === null) {
-          child.kill('SIGKILL')
-        }
-      }, 5000)
-      killTimeout.unref()
-    }, options.timeout)
   }
 
-  return new Promise<CommandExecutionResult>((resolve, reject) => {
-    const cleanup = (): void => {
-      if (timeout) clearTimeout(timeout)
-      if (killTimeout) clearTimeout(killTimeout)
-      if (child.stdin) options.context.stdin.unpipe(child.stdin)
-    }
+  if (result.exitCode === undefined) {
+    throw result
+  }
 
-    child.once('error', (error) => {
-      cleanup()
-      reject(error)
-    })
-    child.once('close', (code, terminationSignal) => {
-      cleanup()
-      const executionOutput = {
-        stderr: Buffer.concat(stderrChunks).toString(),
-        stdout: Buffer.concat(stdoutChunks).toString(),
-      }
-
-      if (timedOut) {
-        resolve({ ...executionOutput, exitCode: 124, termination: 'timeout', timedOut: true })
-
-        return
-      }
-
-      if (terminationSignal) {
-        resolve({
-          ...executionOutput,
-          exitCode: resolveSignalExitCode(terminationSignal),
-          signal: terminationSignal,
-          termination: 'signal',
-          timedOut: false,
-        })
-
-        return
-      }
-
-      resolve({
-        ...executionOutput,
-        exitCode: code ?? 1,
-        termination: 'exit',
-        timedOut: false,
-      })
-    })
-  })
+  return {
+    ...output,
+    exitCode: result.exitCode,
+    termination: 'exit',
+    timedOut: false,
+  }
 }

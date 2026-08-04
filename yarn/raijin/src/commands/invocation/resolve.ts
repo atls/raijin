@@ -3,7 +3,9 @@ import type { Workspace }                   from '@yarnpkg/core'
 import type { PortablePath }                from '@yarnpkg/fslib'
 
 import type { InvocationExecutionContext }  from './adapters/child-process.interfaces.js'
+import type { ChildProcessInvocation }      from './resolve.interfaces.js'
 import type { CommandInvocationExit }       from './resolve.interfaces.js'
+import type { EntryInvocation }             from './resolve.interfaces.js'
 import type { ProjectInvocation }           from './resolve.interfaces.js'
 import type { WorkspaceInvocation }         from './resolve.interfaces.js'
 import type { CommandInvocationResolution } from './resolve.interfaces.js'
@@ -40,36 +42,44 @@ const createExecutionContext = (context: InvocationContext): InvocationExecution
   stdout: context.stdout,
 })
 
+const createChildProcessInvocation = (
+  resolveExecutionCwd: (scope: 'execution' | 'project') => PortablePath,
+  context: InvocationExecutionContext
+): ChildProcessInvocation => ({
+  execute: async (command, args, options = {}) => {
+    const environment = { ...context.environment }
+    const nodeOptions = await options.nodeOptions?.(environment.NODE_OPTIONS)
+
+    if (options.nodeOptions) {
+      if (nodeOptions) {
+        environment.NODE_OPTIONS = nodeOptions
+      } else {
+        Reflect.deleteProperty(environment, 'NODE_OPTIONS')
+      }
+    }
+
+    return executeChildProcess(command, args, {
+      context,
+      cwd: toNativeCwd(resolveExecutionCwd(options.scope ?? 'execution')),
+      env: environment,
+      input: options.input,
+      output: options.output,
+      timeout: options.timeout,
+    })
+  },
+})
+
 const createInvocationRuntime = (
   getInvocation: () => ProjectInvocation,
   context: InvocationExecutionContext,
   configuration: ProjectInvocation['yarn']['configuration'],
   project: ProjectInvocation['yarn']['project']
 ): Pick<ProjectInvocation, 'child' | 'yarn'> => ({
-  child: {
-    execute: async (command, args, options = {}) => {
-      const invocation = getInvocation()
-      const environment = { ...context.environment }
-      const nodeOptions = await options.nodeOptions?.(environment.NODE_OPTIONS)
+  child: createChildProcessInvocation((scope) => {
+    const invocation = getInvocation()
 
-      if (options.nodeOptions) {
-        if (nodeOptions) {
-          environment.NODE_OPTIONS = nodeOptions
-        } else {
-          Reflect.deleteProperty(environment, 'NODE_OPTIONS')
-        }
-      }
-
-      return executeChildProcess(command, args, {
-        context,
-        cwd: toNativeCwd(invocation.executionCwd),
-        env: environment,
-        input: options.input,
-        output: options.output,
-        timeout: options.timeout,
-      })
-    },
-  },
+    return scope === 'project' ? invocation.project.cwd : invocation.executionCwd
+  }, context),
   yarn: {
     configuration,
     project,
@@ -110,6 +120,23 @@ const resolveInitCwd = (cwd: PortablePath, environment: NodeJS.ProcessEnv): Port
   }
 
   return cwd
+}
+
+export const resolveEntryCommandInvocation = (context: InvocationContext): EntryInvocation => {
+  const executionContext = createExecutionContext(context)
+  const invocationCwd = resolveInitCwd(context.cwd, context.env)
+
+  return {
+    child: createChildProcessInvocation((scope) => {
+      if (scope === 'project') {
+        throw new Error('Entry command invocation does not have project execution scope')
+      }
+
+      return invocationCwd
+    }, executionContext),
+    executionCwd: invocationCwd,
+    invocationCwd,
+  }
 }
 
 const resolveInvocationContext = async (

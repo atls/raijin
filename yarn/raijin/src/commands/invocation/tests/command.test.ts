@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 
 import type { WorkspaceInvocation } from '../resolve.interfaces.js'
+import type { EntryInvocation }     from '../resolve.interfaces.js'
 
 import assert                       from 'node:assert/strict'
 import { dirname }                  from 'node:path'
@@ -71,4 +72,34 @@ test('should resolve a workspace invocation before command execution', async () 
   assert.equal(invocation.invocationCwd, rendererNestedCwd)
   assert.equal(invocation.executionCwd, ppath.join(rendererNestedCwd, '../..'))
   assert.equal(invocation.workspace.manifest.raw.name, '@atls/yarn-plugin-renderer')
+})
+
+test('should resolve an entry invocation before command execution', async () => {
+  let invocation: EntryInvocation | undefined
+
+  class EntryCommand extends RaijinCommand {
+    async executeEntry(commandInvocation: EntryInvocation): Promise<number> {
+      invocation = commandInvocation
+
+      return 5
+    }
+  }
+
+  const command = new EntryCommand()
+
+  command.context = {
+    colorDepth: 8,
+    cwd: rendererNestedCwd,
+    env: process.env,
+    plugins: getPluginConfiguration(),
+    quiet: false,
+    stderr: process.stderr,
+    stdin: process.stdin,
+    stdout: process.stdout,
+  }
+
+  assert.equal(await command.execute(), 5)
+  assert.ok(invocation)
+  assert.equal(invocation.invocationCwd, rendererNestedCwd)
+  assert.equal(invocation.executionCwd, rendererNestedCwd)
 })

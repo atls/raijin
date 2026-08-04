@@ -18,7 +18,7 @@ class FilesChangedListCommand extends RaijinCommand {
 
   async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { yarn } = invocation
-    const { configuration, project } = yarn
+    const { configuration } = yarn
 
     const commandReport = await StreamReport.start(
       {
@@ -27,7 +27,7 @@ class FilesChangedListCommand extends RaijinCommand {
         stdout: this.context.stdout,
       },
       async (report) => {
-        const files = await getChangedFiles(project)
+        const files = await getChangedFiles(invocation.child)
 
         for (const file of files) {
           report.reportInfo(null, file)

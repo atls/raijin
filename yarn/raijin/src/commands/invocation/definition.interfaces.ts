@@ -1,5 +1,6 @@
 import type { CommandContext }      from '@yarnpkg/core'
 
+import type { EntryInvocation }     from './resolve.interfaces.js'
 import type { ProjectInvocation }   from './resolve.interfaces.js'
 import type { WorkspaceInvocation } from './resolve.interfaces.js'
 
@@ -10,14 +11,14 @@ export type CommandInvocationForScope<Scope extends CommandInvocationScope> =
     ? WorkspaceInvocation
     : Scope extends 'project'
       ? ProjectInvocation
-      : undefined
+      : EntryInvocation
 
 interface CommandInstance {
   context: CommandContext
 }
 
 export interface EntryInvokedCommand extends CommandInstance {
-  executeEntry: () => Promise<number | undefined>
+  executeEntry: (invocation: EntryInvocation) => Promise<number | undefined>
 }
 
 export interface ProjectInvokedCommand extends CommandInstance {

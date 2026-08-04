@@ -18,5 +18,3 @@ export interface ChildProcessOptions {
   output?: CommandOutputPolicy
   timeout?: number
 }
-
-export type ChildProcessSignalTarget = Pick<NodeJS.Process, 'off' | 'on'>

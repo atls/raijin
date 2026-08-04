@@ -1,3 +1,5 @@
+import type { EntryInvocation }          from '@atls/raijin/commands'
+
 import { Configuration }                 from '@yarnpkg/core'
 import { Command }                       from 'clipanion'
 
@@ -23,7 +25,7 @@ export class SetVersionCommand extends RaijinCommand {
     `,
   })
 
-  async executeEntry(): Promise<number> {
+  async executeEntry(_invocation: EntryInvocation): Promise<number> {
     const cwd = await findPackageCwd(this.context.cwd)
     const previousCwd = process.cwd()
 
