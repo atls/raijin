@@ -4,14 +4,13 @@ import type { Project }                 from '@yarnpkg/core'
 
 import type { TypeScriptConfigRuntime } from './checks-typecheck.interfaces.js'
 
-import { BaseCommand }                  from '@yarnpkg/cli'
 import { StreamReport }                 from '@yarnpkg/core'
 import { MessageName }                  from '@yarnpkg/core'
 import { xfs }                          from '@yarnpkg/fslib'
 import { Option }                       from 'clipanion'
 
+import { RaijinCommand }                from '@atls/raijin/commands'
 import { createCommandInput }           from '@atls/raijin/commands'
-import { defineCommandInvocation }      from '@atls/raijin/commands'
 import { toCommandArguments }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
 import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
@@ -27,22 +26,16 @@ const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptCon
     resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_CONFIG_SPECIFIER)
   )) as TypeScriptConfigRuntime
 
-class ChecksTypeCheckCommand extends BaseCommand {
+class ChecksTypeCheckCommand extends RaijinCommand {
   static override paths = [['checks', 'typecheck']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'project' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'report TypeScript diagnostics to GitHub Checks',
   })
 
   changed = Option.Boolean('--changed', false)
 
-  override async execute(invocation?: ProjectInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeProject(invocation: ProjectInvocation): Promise<number> {
     const { project, yarn } = invocation
     const { configuration } = yarn
 

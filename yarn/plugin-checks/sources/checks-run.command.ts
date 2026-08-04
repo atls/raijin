@@ -1,19 +1,16 @@
 import type { ProjectInvocation }     from '@atls/raijin/commands'
 
-import { BaseCommand }                from '@yarnpkg/cli'
 import { StreamReport }               from '@yarnpkg/core'
 import { MessageName }                from '@yarnpkg/core'
 import { Command }                    from 'clipanion'
 import { Option }                     from 'clipanion'
 
-import { defineCommandInvocation }    from '@atls/raijin/commands'
+import { RaijinCommand }              from '@atls/raijin/commands'
 
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
-class ChecksRunCommand extends BaseCommand {
+class ChecksRunCommand extends RaijinCommand {
   static override paths = [['checks', 'run']]
-
-  static raijinCommand = defineCommandInvocation({ scope: 'project' })
 
   static override usage = Command.Usage({
     description: 'run the standard GitHub check sequence',
@@ -28,11 +25,7 @@ class ChecksRunCommand extends BaseCommand {
 
   noRelease = Option.Boolean('--no-release', false)
 
-  override async execute(invocation?: ProjectInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeProject(invocation: ProjectInvocation): Promise<number> {
     const { configuration, project } = invocation.yarn
     const releaseConfig = resolveChecksReleaseConfig(project)
 

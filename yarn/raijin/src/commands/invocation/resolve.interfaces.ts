@@ -15,30 +15,57 @@ export type CommandOutputPolicy =
   | { mode: 'handle'; handler: (event: CommandOutputEvent) => void }
   | { mode: 'inherit' }
 
-export type CommandEnvironmentFactory = (
-  environment: NodeJS.ProcessEnv
-) => NodeJS.ProcessEnv | Promise<NodeJS.ProcessEnv>
+export type CommandEnvironmentPatch = Readonly<Record<string, string>>
 
-export interface CommandExecutionResult {
+export type CommandNodeOptionsTransformer = (
+  nodeOptions: string | undefined
+) => Promise<string | undefined> | string | undefined
+
+interface CommandExecutionExit {
   exitCode: number
+  signal?: never
+  termination: 'exit'
+  timedOut: false
+}
+
+interface CommandExecutionOutput {
   stderr: string
   stdout: string
-  timedOut: boolean
 }
+
+interface CommandExecutionSignal {
+  exitCode: number
+  signal: NodeJS.Signals
+  termination: 'signal'
+  timedOut: false
+}
+
+interface CommandExecutionTimeout {
+  exitCode: 124
+  signal?: never
+  termination: 'timeout'
+  timedOut: true
+}
+
+type CommandExecutionTermination =
+  | CommandExecutionExit
+  | CommandExecutionSignal
+  | CommandExecutionTimeout
+
+export type CommandExecutionResult = CommandExecutionOutput & CommandExecutionTermination
 
 export interface YarnCommandPreparationContext {
   binFolder: PortablePath
-  environment: NodeJS.ProcessEnv
+  nodeOptions: string | undefined
 }
 
 export interface YarnCommandPreparation {
-  environment?: NodeJS.ProcessEnv
-  finalizeEnvironment?: CommandEnvironmentFactory
+  environmentPatch?: CommandEnvironmentPatch
   nodeLoader?: string
+  nodeOptions?: string | null
 }
 
 export interface YarnCommandRunOptions {
-  environment?: NodeJS.ProcessEnv
   input?: 'ignore' | 'inherit'
   locator?: Locator
   output?: CommandOutputPolicy
@@ -63,8 +90,8 @@ export interface YarnRuntimeInvocation {
 }
 
 export interface ChildProcessRunOptions {
-  environment?: CommandEnvironmentFactory
   input?: 'ignore' | 'inherit'
+  nodeOptions?: CommandNodeOptionsTransformer
   output?: CommandOutputPolicy
   timeout?: number
 }

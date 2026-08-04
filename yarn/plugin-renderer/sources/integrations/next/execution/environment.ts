@@ -21,6 +21,20 @@ const RAIJIN_NODE_LOADER = 'RAIJIN_NODE_LOADER'
 const isPnpNodeLoader = (value: string | undefined): boolean =>
   value?.includes(PNP_ESM_LOADER) ?? false
 
+export const createNextExecutionEnvironmentPatch = (
+  rendererCwd: PortablePath,
+  options: NextExecutionEnvironmentOptions = {}
+): Readonly<Record<string, string>> => ({
+  NEXT_TELEMETRY_DISABLED: '1',
+  [RAIJIN_RENDERER_WORKSPACE_CWD_ENV]: npath.fromPortablePath(rendererCwd),
+  ...(options.nextConfigAdapterPath
+    ? {
+        [NEXT_CONFIG_ADAPTER_PATH_ENV]: npath.fromPortablePath(options.nextConfigAdapterPath),
+      }
+    : {}),
+  ...(options.output ? { [RAIJIN_RENDERER_OUTPUT_ENV]: options.output } : {}),
+})
+
 export const createNextExecutionEnvironment = (
   env: NodeJS.ProcessEnv,
   loader: string,
@@ -28,15 +42,8 @@ export const createNextExecutionEnvironment = (
   options: NextExecutionEnvironmentOptions = {}
 ): NodeJS.ProcessEnv => ({
   ...env,
-  NEXT_TELEMETRY_DISABLED: '1',
-  [RAIJIN_RENDERER_WORKSPACE_CWD_ENV]: npath.fromPortablePath(rendererCwd),
   [RAIJIN_NODE_LOADER]: loader,
-  ...(options.nextConfigAdapterPath
-    ? {
-        [NEXT_CONFIG_ADAPTER_PATH_ENV]: npath.fromPortablePath(options.nextConfigAdapterPath),
-      }
-    : {}),
-  ...(options.output ? { [RAIJIN_RENDERER_OUTPUT_ENV]: options.output } : {}),
+  ...createNextExecutionEnvironmentPatch(rendererCwd, options),
 })
 
 export const extractPnpLoaderOption = (nodeOptions: string | undefined): ExtractedNodeLoader => {

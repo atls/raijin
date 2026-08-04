@@ -2,13 +2,12 @@ import type { ProjectInvocation }     from '@atls/raijin/commands'
 
 import type { Annotation }            from './github.checks.js'
 
-import { BaseCommand }                from '@yarnpkg/cli'
 import { ppath }                      from '@yarnpkg/fslib'
 import { Command }                    from 'clipanion'
 import { Option }                     from 'clipanion'
 import stripAnsi                      from 'strip-ansi'
 
-import { defineCommandInvocation }    from '@atls/raijin/commands'
+import { RaijinCommand }              from '@atls/raijin/commands'
 import { getChangedFiles }            from '@atls/yarn-plugin-files'
 import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
 
@@ -23,10 +22,8 @@ export const createChecksReleaseArgs = (noPrivate: boolean): Array<string> => [
   ...(noPrivate ? ['--no-private'] : []),
 ]
 
-class ChecksReleaseCommand extends BaseCommand {
+class ChecksReleaseCommand extends RaijinCommand {
   static override paths = [['checks', 'release']]
-
-  static raijinCommand = defineCommandInvocation({ scope: 'project' })
 
   static override usage = Command.Usage({
     description: 'run the release GitHub check for changed workspaces',
@@ -40,11 +37,7 @@ class ChecksReleaseCommand extends BaseCommand {
 
   noPrivate = Option.Boolean('--no-private', false)
 
-  override async execute(invocation?: ProjectInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeProject(invocation: ProjectInvocation): Promise<number> {
     const { yarn } = invocation
     const { project } = yarn
 

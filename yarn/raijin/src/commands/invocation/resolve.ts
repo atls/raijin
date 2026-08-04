@@ -1,8 +1,9 @@
 import type { CommandContext }              from '@yarnpkg/core'
-import type { PluginConfiguration }         from '@yarnpkg/core'
+import type { Workspace }                   from '@yarnpkg/core'
 import type { PortablePath }                from '@yarnpkg/fslib'
 
 import type { InvocationExecutionContext }  from './adapters/child-process.interfaces.js'
+import type { CommandInvocationExit }       from './resolve.interfaces.js'
 import type { ProjectInvocation }           from './resolve.interfaces.js'
 import type { WorkspaceInvocation }         from './resolve.interfaces.js'
 import type { CommandInvocationResolution } from './resolve.interfaces.js'
@@ -16,26 +17,21 @@ import { executeChildProcess }              from './adapters/child-process.js'
 import { toNativeCwd }                      from './adapters/path/index.js'
 import { executeYarnCommand }               from './adapters/yarn/execution.js'
 import { resolveProject }                   from './adapters/yarn/project.js'
-import { activateProjectRuntime }           from './adapters/yarn/runtime.js'
 import { ensureProjectRuntime }             from './adapters/yarn/runtime.js'
+import { validateProjectRuntime }           from './adapters/yarn/runtime.js'
 
 type InvocationContext = Pick<
   CommandContext,
   'cwd' | 'env' | 'plugins' | 'stderr' | 'stdin' | 'stdout'
 >
 
-const createInvocationContext = (
-  cwd: PortablePath,
-  plugins: PluginConfiguration,
-  environment: NodeJS.ProcessEnv
-): InvocationContext => ({
-  cwd,
-  env: environment,
-  plugins,
-  stderr: process.stderr,
-  stdin: process.stdin,
-  stdout: process.stdout,
-})
+interface ResolvedInvocationContext {
+  configuration: ProjectInvocation['yarn']['configuration']
+  executionContext: InvocationExecutionContext
+  invocationCwd: PortablePath
+  project: ProjectInvocation['yarn']['project']
+  workspace: Workspace | null
+}
 
 const createExecutionContext = (context: InvocationContext): InvocationExecutionContext => ({
   environment: context.env,
@@ -53,13 +49,21 @@ const createInvocationRuntime = (
   child: {
     execute: async (command, args, options = {}) => {
       const invocation = getInvocation()
+      const environment = { ...context.environment }
+      const nodeOptions = await options.nodeOptions?.(environment.NODE_OPTIONS)
+
+      if (options.nodeOptions) {
+        if (nodeOptions) {
+          environment.NODE_OPTIONS = nodeOptions
+        } else {
+          Reflect.deleteProperty(environment, 'NODE_OPTIONS')
+        }
+      }
 
       return executeChildProcess(command, args, {
         context,
         cwd: toNativeCwd(invocation.executionCwd),
-        env: options.environment
-          ? await options.environment({ ...context.environment })
-          : { ...context.environment },
+        env: environment,
         input: options.input,
         output: options.output,
         timeout: options.timeout,
@@ -108,13 +112,15 @@ const resolveInitCwd = (cwd: PortablePath, environment: NodeJS.ProcessEnv): Port
   return cwd
 }
 
-const resolveProjectInvocationInternal = async (
+const resolveInvocationContext = async (
   context: InvocationContext,
   ensureRuntime: boolean
-): Promise<CommandInvocationResolution<ProjectInvocation>> => {
+): Promise<CommandInvocationExit | ResolvedInvocationContext> => {
   const executionContext = createExecutionContext(context)
   const invocationCwd = resolveInitCwd(context.cwd, context.env)
-  const { configuration, project } = await resolveProject(invocationCwd, context.plugins)
+  const { configuration, project, workspace } = await resolveProject(invocationCwd, context.plugins)
+
+  validateProjectRuntime(project)
 
   if (ensureRuntime) {
     const exitCode = await ensureProjectRuntime(project, executionContext)
@@ -124,7 +130,20 @@ const resolveProjectInvocationInternal = async (
     }
   }
 
-  await activateProjectRuntime(project)
+  return { configuration, executionContext, invocationCwd, project, workspace }
+}
+
+const resolveProjectInvocationInternal = async (
+  context: InvocationContext,
+  ensureRuntime: boolean
+): Promise<CommandInvocationResolution<ProjectInvocation>> => {
+  const resolution = await resolveInvocationContext(context, ensureRuntime)
+
+  if ('exitCode' in resolution) {
+    return resolution
+  }
+
+  const { configuration, executionContext, invocationCwd, project } = resolution
 
   const invocation: ProjectInvocation = {
     executionCwd: project.cwd,
@@ -136,19 +155,6 @@ const resolveProjectInvocationInternal = async (
   return invocation
 }
 
-export async function resolveProjectInvocation(
-  cwdOrContext: InvocationContext | PortablePath,
-  plugins?: PluginConfiguration,
-  environment: NodeJS.ProcessEnv = process.env
-): Promise<ProjectInvocation> {
-  const context =
-    typeof cwdOrContext === 'string'
-      ? createInvocationContext(cwdOrContext, plugins!, environment)
-      : cwdOrContext
-
-  return resolveProjectInvocationInternal(context, false) as Promise<ProjectInvocation>
-}
-
 export const resolveProjectCommandInvocation = async (
   context: InvocationContext
 ): Promise<CommandInvocationResolution<ProjectInvocation>> =>
@@ -158,19 +164,13 @@ const resolveWorkspaceInvocationInternal = async (
   context: InvocationContext,
   ensureRuntime: boolean
 ): Promise<CommandInvocationResolution<WorkspaceInvocation>> => {
-  const executionContext = createExecutionContext(context)
-  const invocationCwd = resolveInitCwd(context.cwd, context.env)
-  const { configuration, project, workspace } = await resolveProject(invocationCwd, context.plugins)
+  const resolution = await resolveInvocationContext(context, ensureRuntime)
 
-  if (ensureRuntime) {
-    const exitCode = await ensureProjectRuntime(project, executionContext)
-
-    if (exitCode !== undefined) {
-      return { exitCode }
-    }
+  if ('exitCode' in resolution) {
+    return resolution
   }
 
-  await activateProjectRuntime(project)
+  const { configuration, executionContext, invocationCwd, project, workspace } = resolution
 
   const resolvedWorkspace = workspace ?? project.getWorkspaceByFilePath(invocationCwd)
 
@@ -185,20 +185,20 @@ const resolveWorkspaceInvocationInternal = async (
   return invocation
 }
 
-export async function resolveWorkspaceInvocation(
-  cwdOrContext: InvocationContext | PortablePath,
-  plugins?: PluginConfiguration,
-  environment: NodeJS.ProcessEnv = process.env
-): Promise<WorkspaceInvocation> {
-  const context =
-    typeof cwdOrContext === 'string'
-      ? createInvocationContext(cwdOrContext, plugins!, environment)
-      : cwdOrContext
-
-  return resolveWorkspaceInvocationInternal(context, false) as Promise<WorkspaceInvocation>
-}
-
 export const resolveWorkspaceCommandInvocation = async (
   context: InvocationContext
 ): Promise<CommandInvocationResolution<WorkspaceInvocation>> =>
   resolveWorkspaceInvocationInternal(context, true)
+
+export const executeProjectYarnCommand = async (
+  context: InvocationContext,
+  args: Array<string>
+): Promise<number> => {
+  const invocation = await resolveProjectInvocationInternal(context, false)
+
+  if ('exitCode' in invocation) {
+    return invocation.exitCode
+  }
+
+  return invocation.yarn.execute(args)
+}

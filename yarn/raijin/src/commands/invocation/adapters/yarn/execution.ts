@@ -16,23 +16,42 @@ import { executeChildProcess }           from '../child-process.js'
 import { toNativeCwd }                   from '../path/index.js'
 
 const YARN_EXECUTABLE_NAME = (process.platform === 'win32' ? 'yarn.cmd' : 'yarn') as Filename
+const OWNED_ENVIRONMENT_NAMES = new Set([
+  'BERRY_BIN_FOLDER',
+  'INIT_CWD',
+  'NODE_OPTIONS',
+  'PROJECT_CWD',
+  'RAIJIN_NODE_LOADER',
+  'RAIJIN_PROJECT_RUNTIME',
+  'YARN_IGNORE_PATH',
+  'npm_config_user_agent',
+  'npm_execpath',
+])
+
+const validateEnvironmentPatch = (environmentPatch: Readonly<Record<string, string>>): void => {
+  for (const name of Object.keys(environmentPatch)) {
+    if (OWNED_ENVIRONMENT_NAMES.has(name) || name.toUpperCase() === 'PATH') {
+      throw new Error(`Yarn command preparation cannot override ${name}`)
+    }
+  }
+}
 
 export const createYarnExecutable = async ({
   baseEnvironment,
   binFolder,
   locator,
   project,
-  env = {},
+  environmentPatch = {},
   nodeLoader,
+  nodeOptions,
 }: YarnExecutableOptions): Promise<YarnExecutable> => {
-  const launcherEnvironment = baseEnvironment ?? project.configuration.env
-  const nodeOptions = [launcherEnvironment.NODE_OPTIONS, env.NODE_OPTIONS].filter(Boolean).join(' ')
+  validateEnvironmentPatch(environmentPatch)
+
   const baseEnv = createLauncherBaseEnvironment({
     ...project.configuration.env,
     ...baseEnvironment,
-    ...env,
+    ...environmentPatch,
     ...(nodeLoader ? { [MANAGED_NODE_LOADER_ENV]: nodeLoader } : {}),
-    ...(nodeOptions ? { NODE_OPTIONS: nodeOptions } : {}),
   })
   const scriptEnv = await scriptUtils.makeScriptEnv({
     baseEnv,
@@ -41,6 +60,12 @@ export const createYarnExecutable = async ({
     project,
     ignoreCorepack: true,
   })
+
+  if (nodeOptions === null) {
+    Reflect.deleteProperty(scriptEnv, 'NODE_OPTIONS')
+  } else if (nodeOptions !== undefined) {
+    scriptEnv.NODE_OPTIONS = nodeOptions
+  }
 
   applyManagedNodeLoader(scriptEnv)
 
@@ -60,29 +85,27 @@ export const executeYarnCommand = async ({
   let executable = await createYarnExecutable({
     baseEnvironment: context.environment,
     binFolder,
-    env: options.environment,
     locator: options.locator,
     project: invocation.yarn.project,
   })
   const preparation = await options.prepare?.({
     binFolder,
-    environment: executable.env,
+    nodeOptions: executable.env.NODE_OPTIONS,
   })
 
   if (preparation) {
     executable = await createYarnExecutable({
       baseEnvironment: context.environment,
       binFolder,
-      env: preparation.environment,
+      environmentPatch: preparation.environmentPatch,
       locator: options.locator,
       nodeLoader: preparation.nodeLoader,
+      nodeOptions: preparation.nodeOptions,
       project: invocation.yarn.project,
     })
   }
 
-  const environment = preparation?.finalizeEnvironment
-    ? await preparation.finalizeEnvironment(executable.env)
-    : executable.env
+  const environment = executable.env
 
   environment.INIT_CWD = toNativeCwd(invocation.invocationCwd)
   environment.PROJECT_CWD = toNativeCwd(invocation.project.cwd)

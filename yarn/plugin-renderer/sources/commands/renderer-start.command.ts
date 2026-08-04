@@ -1,9 +1,7 @@
 import type { WorkspaceInvocation }              from '@atls/raijin/commands'
 import type { createRuntimeEnvironment as createRuntimeEnvironmentFn } from '@atls/raijin/runtime-exec-argv'
 
-import { BaseCommand }                           from '@yarnpkg/cli'
-
-import { defineCommandInvocation }               from '@atls/raijin/commands'
+import { RaijinCommand }                         from '@atls/raijin/commands'
 import { toNativeCwd }                           from '@atls/raijin/commands'
 import { resolveRaijinRuntimeUrl }               from '@atls/raijin/runtime-resolver'
 
@@ -30,28 +28,23 @@ const createRendererRuntimeEnvironment = async (
   return createRuntimeEnvironment(environment, { preservePnpEsmLoader: true })
 }
 
-export class RendererStartCommand extends BaseCommand {
+export class RendererStartCommand extends RaijinCommand {
   static override paths = [['renderer', 'start']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'start a built renderer artifact',
   })
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const rendererCwd = toNativeCwd(invocation.executionCwd)
 
     const result = await invocation.child.execute(
       process.execPath,
       [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`],
       {
-        environment: async (environment) =>
-          createRendererRuntimeEnvironment(rendererCwd, environment),
+        nodeOptions: async (nodeOptions) =>
+          (await createRendererRuntimeEnvironment(rendererCwd, { NODE_OPTIONS: nodeOptions }))
+            .NODE_OPTIONS,
       }
     )
 

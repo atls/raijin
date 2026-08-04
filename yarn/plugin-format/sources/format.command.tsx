@@ -1,6 +1,5 @@
 import type { WorkspaceInvocation } from '@atls/raijin/commands'
 
-import { BaseCommand }              from '@yarnpkg/cli'
 import { Option }                   from 'clipanion'
 import { render }                   from 'ink'
 import React                        from 'react'
@@ -8,28 +7,22 @@ import React                        from 'react'
 import { ErrorInfo }                from '@atls/cli-ui-error-info-component'
 import { FormatProgress }           from '@atls/cli-ui-format-progress-component'
 import { Formatter }                from '@atls/code-format'
+import { RaijinCommand }            from '@atls/raijin/commands'
 import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }       from '@atls/raijin/commands'
-import { defineCommandInvocation }  from '@atls/raijin/commands'
 import { toNativeCwd }              from '@atls/raijin/commands'
 import { getWorkspacePackageNames } from '@atls/raijin/project'
 
-export class FormatCommand extends BaseCommand {
+export class FormatCommand extends RaijinCommand {
   static override paths = [['format']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'format project files',
   })
 
   files: Array<string> = Option.Rest({ required: 0 })
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { executionCwd, invocationCwd, project, yarn } = invocation
 
     const formatter = await Formatter.initialize(toNativeCwd(executionCwd), {

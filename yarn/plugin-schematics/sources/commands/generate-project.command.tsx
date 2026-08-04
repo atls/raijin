@@ -1,12 +1,11 @@
 import type { ProjectInvocation }  from '@atls/raijin/commands'
 
-import { BaseCommand }             from '@yarnpkg/cli'
 import { StreamReport }            from '@yarnpkg/core'
 import { Option }                  from 'clipanion'
 
+import { RaijinCommand }           from '@atls/raijin/commands'
 import { getStreamReportCallback } from '@atls/code-schematics'
 import { getStreamReportOptions }  from '@atls/code-schematics'
-import { defineCommandInvocation } from '@atls/raijin/commands'
 import { toNativeCwd }             from '@atls/raijin/commands'
 
 export const createGenerateProjectOptions = (type: string, invocationCwd: string) => ({
@@ -14,22 +13,16 @@ export const createGenerateProjectOptions = (type: string, invocationCwd: string
   cwd: invocationCwd,
 })
 
-export class GenerateProjectCommand extends BaseCommand {
+export class GenerateProjectCommand extends RaijinCommand {
   static override paths = [['generate', 'project']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'project' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'generate a Raijin project scaffold',
   })
 
   type = Option.String('-t,--type', 'project')
 
-  override async execute(invocation?: ProjectInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeProject(invocation: ProjectInvocation): Promise<number> {
     const { invocationCwd, yarn } = invocation
     const { configuration } = yarn
 

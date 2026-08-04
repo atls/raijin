@@ -6,9 +6,12 @@ import type { ChildProcessOptions }      from './child-process.interfaces.js'
 import type { ChildProcessSignalTarget } from './child-process.interfaces.js'
 
 import { spawn }                         from 'node:child_process'
+import { constants }                     from 'node:os'
 
 const FORWARDED_SIGNALS: ReadonlyArray<NodeJS.Signals> =
   process.platform === 'win32' ? ['SIGBREAK', 'SIGINT', 'SIGTERM'] : ['SIGHUP', 'SIGINT', 'SIGTERM']
+
+const resolveSignalExitCode = (signal: NodeJS.Signals): number => 128 + constants.signals[signal]
 
 export const createChildProcessOptions = ({
   cwd,
@@ -120,13 +123,36 @@ export const executeChildProcess = async (
       cleanup()
       reject(error)
     })
-    child.once('close', (code) => {
+    child.once('close', (code, terminationSignal) => {
       cleanup()
-      resolve({
-        exitCode: timedOut ? 124 : (code ?? 1),
+      const executionOutput = {
         stderr: Buffer.concat(stderrChunks).toString(),
         stdout: Buffer.concat(stdoutChunks).toString(),
-        timedOut,
+      }
+
+      if (timedOut) {
+        resolve({ ...executionOutput, exitCode: 124, termination: 'timeout', timedOut: true })
+
+        return
+      }
+
+      if (terminationSignal) {
+        resolve({
+          ...executionOutput,
+          exitCode: resolveSignalExitCode(terminationSignal),
+          signal: terminationSignal,
+          termination: 'signal',
+          timedOut: false,
+        })
+
+        return
+      }
+
+      resolve({
+        ...executionOutput,
+        exitCode: code ?? 1,
+        termination: 'exit',
+        timedOut: false,
       })
     })
   })

@@ -1,11 +1,9 @@
 import type { ProjectInvocation }    from '@atls/raijin/commands'
 
-import { BaseCommand }               from '@yarnpkg/cli'
 import { StreamReport }              from '@yarnpkg/core'
 
 import { Tester }                    from '@atls/code-test'
 import { createCommandInput }        from '@atls/raijin/commands'
-import { defineCommandInvocation }   from '@atls/raijin/commands'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
@@ -13,17 +11,11 @@ import { GitHubChecks }              from './github.checks.js'
 class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
   static override paths = [['checks', 'test', 'integration']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'project' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = AbstractChecksTestCommand.Usage({
     description: 'report integration test results to GitHub Checks',
   })
 
-  override async execute(invocation?: ProjectInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeProject(invocation: ProjectInvocation): Promise<number> {
     if (!process.env.GITHUB_TOKEN) {
       return invocation.yarn.execute(['test', 'integration'])
     }

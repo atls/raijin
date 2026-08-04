@@ -1,6 +1,5 @@
 import type { WorkspaceInvocation } from '@atls/raijin/commands'
 
-import { BaseCommand }              from '@yarnpkg/cli'
 import { Option }                   from 'clipanion'
 import { render }                   from 'ink'
 import React                        from 'react'
@@ -9,9 +8,9 @@ import { ErrorInfo }                from '@atls/cli-ui-error-info-component'
 import { LintProgress }             from '@atls/cli-ui-lint-progress-component'
 import { LintResult }               from '@atls/cli-ui-lint-result-component'
 import { Linter }                   from '@atls/code-lint'
+import { RaijinCommand }            from '@atls/raijin/commands'
 import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }       from '@atls/raijin/commands'
-import { defineCommandInvocation }  from '@atls/raijin/commands'
 import { toNativeCwd }              from '@atls/raijin/commands'
 
 interface LintCommandResult {
@@ -20,12 +19,10 @@ interface LintCommandResult {
 
 export const hasLintMessages = (result: LintCommandResult): boolean => result.messages.length > 0
 
-export class LintCommand extends BaseCommand {
+export class LintCommand extends RaijinCommand {
   static override paths = [['lint']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'lint project files',
   })
 
@@ -35,11 +32,7 @@ export class LintCommand extends BaseCommand {
 
   cache: boolean = Option.Boolean('--cache', false)
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { executionCwd, invocationCwd, project } = invocation
     const projectCwd = toNativeCwd(project.cwd)
 

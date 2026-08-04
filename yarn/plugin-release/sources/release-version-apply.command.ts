@@ -2,11 +2,10 @@ import type { WorkspaceInvocation }    from '@atls/raijin/commands'
 
 import { appendFile }                  from 'node:fs/promises'
 
-import { BaseCommand }                 from '@yarnpkg/cli'
 import { StreamReport }                from '@yarnpkg/core'
 import { Option }                      from 'clipanion'
 
-import { defineCommandInvocation }     from '@atls/raijin/commands'
+import { RaijinCommand }               from '@atls/raijin/commands'
 
 import { getDeferredReleaseDecisions } from './release-version.utils.js'
 import { isDeferredReleaseRequired }   from './release-version.utils.js'
@@ -24,12 +23,10 @@ const writeGitHubOutput = async (name: string, value: string): Promise<void> => 
   await appendFile(outputPath, `${name}=${value}\n`)
 }
 
-export class ReleaseVersionApplyCommand extends BaseCommand {
+export class ReleaseVersionApplyCommand extends RaijinCommand {
   static override paths = [['release', 'version', 'apply']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'apply deferred workspace versions',
   })
 
@@ -41,11 +38,7 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
 
   since = Option.String('--since')
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { yarn } = invocation
     const { configuration } = yarn
 

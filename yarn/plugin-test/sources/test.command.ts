@@ -1,9 +1,6 @@
 import type { WorkspaceInvocation } from '@atls/raijin/commands'
 
-import { BaseCommand }              from '@yarnpkg/cli'
-
 import { Tester }                   from '@atls/code-test'
-import { defineCommandInvocation }  from '@atls/raijin/commands'
 import { toNativeCwd }              from '@atls/raijin/commands'
 
 import { AbstractTestCommand }      from './abstract-test.command.jsx'
@@ -11,17 +8,11 @@ import { AbstractTestCommand }      from './abstract-test.command.jsx'
 export class TestCommand extends AbstractTestCommand {
   static override paths = [['test']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = AbstractTestCommand.Usage({
     description: 'run all workspace tests',
   })
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { executionCwd, invocationCwd, project } = invocation
 
     const tester = await Tester.initialize(toNativeCwd(executionCwd), {

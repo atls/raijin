@@ -8,7 +8,6 @@ import type { EventData }           from 'node:test'
 import { readFileSync }             from 'node:fs'
 import { relative }                 from 'node:path'
 
-import { BaseCommand }              from '@yarnpkg/cli'
 import { Option }                   from 'clipanion'
 import { Command }                  from 'clipanion'
 import { render }                   from 'ink'
@@ -21,6 +20,7 @@ import { RawOutput }                from '@atls/cli-ui-raw-output-component'
 import { TestFailure }              from '@atls/cli-ui-test-failure-component'
 import { TestProgress }             from '@atls/cli-ui-test-progress-component'
 import { Tester }                   from '@atls/code-test'
+import { RaijinCommand }            from '@atls/raijin/commands'
 import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }       from '@atls/raijin/commands'
 import { toNativeCwd }              from '@atls/raijin/commands'
@@ -83,7 +83,7 @@ export const createTestArgs = ({
   return args
 }
 
-export abstract class AbstractTestCommand extends BaseCommand {
+export abstract class AbstractTestCommand extends RaijinCommand {
   static override usage = Command.Usage({
     description: 'Run tests',
     details: `

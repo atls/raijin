@@ -1,29 +1,26 @@
-import type { WorkspaceInvocation }       from '@atls/raijin/commands'
-import type { Tunnel }                    from 'localtunnel'
+import type { WorkspaceInvocation }            from '@atls/raijin/commands'
+import type { Tunnel }                         from 'localtunnel'
 
-import { BaseCommand }                    from '@yarnpkg/cli'
-import { scriptUtils }                    from '@yarnpkg/core'
-import { xfs }                            from '@yarnpkg/fslib'
-import { ppath }                          from '@yarnpkg/fslib'
-import { Option }                         from 'clipanion'
-import localtunnel                        from 'localtunnel'
+import { scriptUtils }                         from '@yarnpkg/core'
+import { xfs }                                 from '@yarnpkg/fslib'
+import { ppath }                               from '@yarnpkg/fslib'
+import { Option }                              from 'clipanion'
+import localtunnel                             from 'localtunnel'
 
-import { defineCommandInvocation }        from '@atls/raijin/commands'
-import { materializeNextConfigAdapter }   from '@atls/raijin/config/next'
+import { RaijinCommand }                       from '@atls/raijin/commands'
+import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
 
-import { createNextDevArguments }         from '../integrations/next/execution/arguments.js'
-import { createNextExecutionEnvironment } from '../integrations/next/execution/environment.js'
-import { extractPnpLoaderOption }         from '../integrations/next/execution/environment.js'
-import { resolvePnpLoader }               from '../integrations/next/execution/environment.js'
-import { materializeNextLoader }          from '../integrations/next/execution/loader.js'
-import { resolveNextPackageVersion }      from '../integrations/next/execution/version.js'
+import { createNextDevArguments }              from '../integrations/next/execution/arguments.js'
+import { createNextExecutionEnvironmentPatch } from '../integrations/next/execution/environment.js'
+import { extractPnpLoaderOption }              from '../integrations/next/execution/environment.js'
+import { resolvePnpLoader }                    from '../integrations/next/execution/environment.js'
+import { materializeNextLoader }               from '../integrations/next/execution/loader.js'
+import { resolveNextPackageVersion }           from '../integrations/next/execution/version.js'
 
-export class RendererDevCommand extends BaseCommand {
+export class RendererDevCommand extends RaijinCommand {
   static override paths = [['renderer', 'dev']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'run a renderer in development mode',
   })
 
@@ -54,11 +51,7 @@ export class RendererDevCommand extends BaseCommand {
     })
   }
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { executionCwd, workspace, yarn } = invocation
     const { project } = yarn
 
@@ -102,19 +95,18 @@ export class RendererDevCommand extends BaseCommand {
 
     return yarn.execute(args, {
       locator: workspace.anchoredLocator,
-      prepare: async ({ binFolder, environment }) => {
-        const { nodeOptions } = extractPnpLoaderOption(environment.NODE_OPTIONS)
-        const loader = await resolvePnpLoader(project.cwd, environment.NODE_OPTIONS)
+      prepare: async ({ binFolder, nodeOptions: yarnNodeOptions }) => {
+        const { nodeOptions } = extractPnpLoaderOption(yarnNodeOptions)
+        const loader = await resolvePnpLoader(project.cwd, yarnNodeOptions)
         const nextLoader = await materializeNextLoader(binFolder, loader)
         const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
 
         return {
-          environment: { NODE_OPTIONS: nodeOptions },
+          environmentPatch: createNextExecutionEnvironmentPatch(executionCwd, {
+            nextConfigAdapterPath,
+          }),
           nodeLoader: nextLoader,
-          finalizeEnvironment: (scriptEnvironment) =>
-            createNextExecutionEnvironment(scriptEnvironment, nextLoader, executionCwd, {
-              nextConfigAdapterPath,
-            }),
+          nodeOptions: nodeOptions ?? null,
         }
       },
     })

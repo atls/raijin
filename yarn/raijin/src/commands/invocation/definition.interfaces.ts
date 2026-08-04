@@ -12,17 +12,20 @@ export type CommandInvocationForScope<Scope extends CommandInvocationScope> =
       ? ProjectInvocation
       : undefined
 
-export interface CommandInvocationDefinition<Scope extends CommandInvocationScope> {
-  readonly scope: Scope
-}
-
-export interface InvokedCommand<Scope extends CommandInvocationScope> {
+interface CommandInstance {
   context: CommandContext
-  execute: (invocation: CommandInvocationForScope<Scope>) => Promise<number | undefined>
 }
 
-export interface CommandClass<Scope extends CommandInvocationScope = CommandInvocationScope> {
-  readonly prototype: InvokedCommand<Scope>
-  readonly raijinCommand?: CommandInvocationDefinition<Scope>
-  new (): InvokedCommand<Scope>
+export interface EntryInvokedCommand extends CommandInstance {
+  executeEntry: () => Promise<number | undefined>
 }
+
+export interface ProjectInvokedCommand extends CommandInstance {
+  executeProject: (invocation: ProjectInvocation) => Promise<number | undefined>
+}
+
+export interface WorkspaceInvokedCommand extends CommandInstance {
+  executeWorkspace: (invocation: WorkspaceInvocation) => Promise<number | undefined>
+}
+
+export type InvokedCommand = EntryInvokedCommand | ProjectInvokedCommand | WorkspaceInvokedCommand

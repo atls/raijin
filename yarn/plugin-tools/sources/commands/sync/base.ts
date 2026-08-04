@@ -1,7 +1,8 @@
-import { BaseCommand } from '@yarnpkg/cli'
-import { Command }     from 'clipanion'
+import { Command }       from 'clipanion'
 
-export abstract class AbstractRaijinSyncCommand extends BaseCommand {
+import { RaijinCommand } from '@atls/raijin/commands'
+
+export abstract class AbstractRaijinSyncCommand extends RaijinCommand {
   static override usage = Command.Usage({
     description: 'Update Raijin project support files',
     details: `

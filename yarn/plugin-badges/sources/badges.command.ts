@@ -8,24 +8,21 @@ import { readFileSync }             from 'node:fs'
 import { writeFileSync }            from 'node:fs'
 import { join }                     from 'node:path'
 
-import { BaseCommand }              from '@yarnpkg/cli'
 import { StreamReport }             from '@yarnpkg/core'
 import { structUtils }              from '@yarnpkg/core'
 import { miscUtils }                from '@yarnpkg/core'
 
-import { defineCommandInvocation }  from '@atls/raijin/commands'
+import { RaijinCommand }            from '@atls/raijin/commands'
 import { toNativeCwd }              from '@atls/raijin/commands'
 
 import { BADGES }                   from './badges.constants.js'
 import { COLORS }                   from './badges.constants.js'
 import { SpinnerProgress }          from './spinner.progress.js'
 
-class BadgesCommand extends BaseCommand {
+class BadgesCommand extends RaijinCommand {
   static override paths = [['badges', 'generate']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'generate package badges in the project README',
   })
 
@@ -39,11 +36,7 @@ class BadgesCommand extends BaseCommand {
 
   static REGISTRY_PACKAGE_PATH = '/package'
 
-  async execute(invocation?: WorkspaceInvocation): Promise<0 | 1> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<0 | 1> {
     const { project: projectModel, yarn } = invocation
     const { configuration, project } = yarn
 

@@ -1,11 +1,10 @@
 import type { WorkspaceInvocation }            from '@atls/raijin/commands'
 
-import { BaseCommand }                         from '@yarnpkg/cli'
 import { StreamReport }                        from '@yarnpkg/core'
 import { MessageName }                         from '@yarnpkg/core'
 import { scriptUtils }                         from '@yarnpkg/core'
 
-import { defineCommandInvocation }             from '@atls/raijin/commands'
+import { RaijinCommand }                       from '@atls/raijin/commands'
 import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
 
 import { cleanupDiscoveryArtifacts }           from '../artifact/cleanup.js'
@@ -21,7 +20,7 @@ import { copyStandalone }                      from '../artifact/materialization
 import { copyStaticAssets }                    from '../artifact/materialization.js'
 import { assertNextBuildExitCode }             from '../integrations/next/execution/arguments.js'
 import { createNextBuildArguments }            from '../integrations/next/execution/arguments.js'
-import { createNextExecutionEnvironment }      from '../integrations/next/execution/environment.js'
+import { createNextExecutionEnvironmentPatch } from '../integrations/next/execution/environment.js'
 import { extractPnpLoaderOption }              from '../integrations/next/execution/environment.js'
 import { resolvePnpLoader }                    from '../integrations/next/execution/environment.js'
 import { materializeNextLoader }               from '../integrations/next/execution/loader.js'
@@ -29,20 +28,14 @@ import { resolveNextPackageVersion }           from '../integrations/next/execut
 import { resolveNextStandaloneArtifactSource } from '../integrations/next/standalone/discovery.js'
 import { snapshotNextStandaloneManifests }     from '../integrations/next/standalone/discovery.js'
 
-export class RendererBuildCommand extends BaseCommand {
+export class RendererBuildCommand extends RaijinCommand {
   static override paths = [['renderer', 'build']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'build a renderer production artifact',
   })
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     await cleanupDiscoveryArtifacts(this.context.cwd)
 
     const { executionCwd, workspace, yarn } = invocation
@@ -85,20 +78,19 @@ export class RendererBuildCommand extends BaseCommand {
                   })
               },
             },
-            prepare: async ({ binFolder, environment }) => {
-              const { nodeOptions } = extractPnpLoaderOption(environment.NODE_OPTIONS)
-              const loader = await resolvePnpLoader(project.cwd, environment.NODE_OPTIONS)
+            prepare: async ({ binFolder, nodeOptions: yarnNodeOptions }) => {
+              const { nodeOptions } = extractPnpLoaderOption(yarnNodeOptions)
+              const loader = await resolvePnpLoader(project.cwd, yarnNodeOptions)
               const nextLoader = await materializeNextLoader(binFolder, loader)
               const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
 
               return {
-                environment: { NODE_OPTIONS: nodeOptions },
+                environmentPatch: createNextExecutionEnvironmentPatch(rendererCwd, {
+                  nextConfigAdapterPath,
+                  output: 'standalone',
+                }),
                 nodeLoader: nextLoader,
-                finalizeEnvironment: (scriptEnvironment) =>
-                  createNextExecutionEnvironment(scriptEnvironment, nextLoader, rendererCwd, {
-                    nextConfigAdapterPath,
-                    output: 'standalone',
-                  }),
+                nodeOptions: nodeOptions ?? null,
               }
             },
           })

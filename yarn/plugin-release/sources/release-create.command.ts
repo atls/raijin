@@ -11,7 +11,6 @@ import { readFile }                 from 'node:fs/promises'
 import { writeFile }                from 'node:fs/promises'
 import { dirname }                  from 'node:path'
 
-import { BaseCommand }              from '@yarnpkg/cli'
 import { StreamReport }             from '@yarnpkg/core'
 import { execUtils }                from '@yarnpkg/core'
 import { npath }                    from '@yarnpkg/fslib'
@@ -19,7 +18,7 @@ import { ppath }                    from '@yarnpkg/fslib'
 import { xfs }                      from '@yarnpkg/fslib'
 
 import { Release }                  from '@atls/code-github'
-import { defineCommandInvocation }  from '@atls/raijin/commands'
+import { RaijinCommand }            from '@atls/raijin/commands'
 
 import { parseGitHubUrl }           from './utils/parse-git-url.js'
 
@@ -444,20 +443,14 @@ export const getGitHubReleaseTargetCommitish = async (project: Project): Promise
   return stdout.trim()
 }
 
-export class ReleaseCreateCommand extends BaseCommand {
+export class ReleaseCreateCommand extends RaijinCommand {
   static override paths = [['release', 'create']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'create and publish a project release',
   })
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { workspace, yarn } = invocation
     const { configuration, project } = yarn
 

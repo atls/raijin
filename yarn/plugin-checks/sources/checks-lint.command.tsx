@@ -10,7 +10,6 @@ import type { Annotation }           from './github.checks.js'
 
 import { readFileSync }              from 'node:fs'
 
-import { BaseCommand }               from '@yarnpkg/cli'
 import { StreamReport }              from '@yarnpkg/core'
 import { MessageName }               from '@yarnpkg/core'
 import { codeFrameColumns }          from '@babel/code-frame'
@@ -20,31 +19,25 @@ import React                         from 'react'
 
 import { LintResult }                from '@atls/cli-ui-lint-result-component'
 import { Linter }                    from '@atls/code-lint'
+import { RaijinCommand }             from '@atls/raijin/commands'
 import { renderStatic }              from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }        from '@atls/raijin/commands'
-import { defineCommandInvocation }   from '@atls/raijin/commands'
 import { toNativeCwd }               from '@atls/raijin/commands'
 import { getChangedFiles }           from '@atls/yarn-plugin-files'
 
 import { GitHubChecks }              from './github.checks.js'
 import { AnnotationLevel }           from './github.checks.js'
 
-class ChecksLintCommand extends BaseCommand {
+class ChecksLintCommand extends RaijinCommand {
   static override paths = [['checks', 'lint']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'project' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'report lint results to GitHub Checks',
   })
 
   changed = Option.Boolean('--changed', false)
 
-  override async execute(invocation?: ProjectInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeProject(invocation: ProjectInvocation): Promise<number> {
     const { project: projectModel, yarn } = invocation
     const { configuration, project } = yarn
 

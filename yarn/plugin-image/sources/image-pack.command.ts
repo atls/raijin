@@ -7,14 +7,13 @@ import type { ImagePackConfiguration }       from './image-pack.utils.js'
 import { readFileSync }                      from 'node:fs'
 import { join }                              from 'node:path'
 
-import { BaseCommand }                       from '@yarnpkg/cli'
 import { StreamReport }                      from '@yarnpkg/core'
 import { structUtils }                       from '@yarnpkg/core'
 import { xfs }                               from '@yarnpkg/fslib'
 import { Option }                            from 'clipanion'
 
+import { RaijinCommand }                     from '@atls/raijin/commands'
 import { pack }                              from '@atls/code-pack'
-import { defineCommandInvocation }           from '@atls/raijin/commands'
 import { toNativeCwd }                       from '@atls/raijin/commands'
 import { packUtils }                         from '@atls/yarn-pack-utils'
 
@@ -22,12 +21,10 @@ import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
 import { resolveBuildpackReference }         from './image-pack.utils.js'
 import { resolveBuilderReference }           from './image-pack.utils.js'
 
-class ImagePackCommand extends BaseCommand {
+class ImagePackCommand extends RaijinCommand {
   static override paths = [['image', 'pack']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'build and optionally publish a container image',
   })
 
@@ -39,11 +36,7 @@ class ImagePackCommand extends BaseCommand {
 
   platform?: string = Option.String('--platform')
 
-  async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { executionCwd, workspace, yarn } = invocation
     const { configuration, project } = yarn
 

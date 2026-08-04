@@ -1,12 +1,10 @@
 import type { WorkspaceInvocation } from '@atls/raijin/commands'
 
-import { BaseCommand }              from '@yarnpkg/cli'
 import { render }                   from 'ink'
 import React                        from 'react'
 
 import { ServiceProgress }          from '@atls/cli-ui-service-progress-component'
 import { Service }                  from '@atls/code-service'
-import { defineCommandInvocation }  from '@atls/raijin/commands'
 import { toNativeCwd }              from '@atls/raijin/commands'
 
 import { AbstractServiceCommand }   from './abstract-service.command.jsx'
@@ -15,17 +13,11 @@ import { getWorkspacePackageNames } from './workspace-package-names.js'
 export class ServiceDevCommand extends AbstractServiceCommand {
   static override paths = [['service', 'dev']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = AbstractServiceCommand.Usage({
     description: 'run a service in development mode',
   })
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { executionCwd, workspace } = invocation
     const service = await Service.initialize(
       toNativeCwd(executionCwd),

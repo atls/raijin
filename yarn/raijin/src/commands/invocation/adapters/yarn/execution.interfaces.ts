@@ -4,15 +4,17 @@ import type { PortablePath }               from '@yarnpkg/fslib'
 
 import type { ProjectInvocation }          from '../../resolve.interfaces.js'
 import type { YarnCommandRunOptions }      from '../../resolve.interfaces.js'
+import type { CommandEnvironmentPatch }    from '../../resolve.interfaces.js'
 import type { InvocationExecutionContext } from '../child-process.interfaces.js'
 
 export interface YarnExecutableOptions {
   baseEnvironment?: NodeJS.ProcessEnv
   binFolder: PortablePath
+  environmentPatch?: CommandEnvironmentPatch
   project: Project
   locator?: Locator
-  env?: NodeJS.ProcessEnv
   nodeLoader?: string
+  nodeOptions?: string | null
 }
 
 export interface YarnExecutable {

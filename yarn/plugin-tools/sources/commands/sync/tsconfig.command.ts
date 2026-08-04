@@ -1,9 +1,7 @@
 import type { WorkspaceInvocation }  from '@atls/raijin/commands'
 
-import { BaseCommand }               from '@yarnpkg/cli'
 import { StreamReport }              from '@yarnpkg/core'
 
-import { defineCommandInvocation }   from '@atls/raijin/commands'
 import { syncTypeScriptConfig }      from '@atls/raijin/config/sync'
 
 import { AbstractRaijinSyncCommand } from './base.js'
@@ -12,17 +10,11 @@ import { createRaijinSyncTarget }    from './target.js'
 export class RaijinSyncTSConfigCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'tsconfig']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = AbstractRaijinSyncCommand.Usage({
     description: 'synchronize Raijin TypeScript configuration',
   })
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { yarn } = invocation
     const { configuration, project } = yarn
 

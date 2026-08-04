@@ -3,7 +3,6 @@ import type { PortablePath }            from '@yarnpkg/fslib'
 import type { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
 import type { ReactElement }            from 'react'
 
-import { BaseCommand }                  from '@yarnpkg/cli'
 import { xfs }                          from '@yarnpkg/fslib'
 import { renderForm }                   from '@yarnpkg/libui/sources/misc/renderForm.js'
 import { Option }                       from 'clipanion'
@@ -15,7 +14,7 @@ import React                            from 'react'
 import wrap                             from 'word-wrap'
 
 import { RequestCommitMessage }         from '@atls/cli-ui-git-commit-component'
-import { defineCommandInvocation }      from '@atls/raijin/commands'
+import { RaijinCommand }                from '@atls/raijin/commands'
 
 const RequestCommitMessageSubmit = ({
   commit,
@@ -47,18 +46,16 @@ const RequestCommitMessageApp = ({
   return <RequestCommitMessageSubmit commit={commit} useSubmit={useSubmit} />
 }
 
-export class CommitMessageCommand extends BaseCommand {
+export class CommitMessageCommand extends RaijinCommand {
   static override paths = [['commit', 'message']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'entry' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'create a conventional commit message interactively',
   })
 
   args: Array<string> = Option.Rest({ required: 0 })
 
-  async execute(): Promise<number> {
+  async executeEntry(): Promise<number> {
     const [commitMessageFile, source] = this.args
 
     if (source) {

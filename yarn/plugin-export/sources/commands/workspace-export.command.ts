@@ -1,30 +1,23 @@
 import type { WorkspaceInvocation } from '@atls/raijin/commands'
 import type { PortablePath }        from '@yarnpkg/fslib'
 
-import { BaseCommand }              from '@yarnpkg/cli'
 import { StreamReport }             from '@yarnpkg/core'
 import { structUtils }              from '@yarnpkg/core'
 import { Option }                   from 'clipanion'
 
-import { defineCommandInvocation }  from '@atls/raijin/commands'
+import { RaijinCommand }            from '@atls/raijin/commands'
 import { packUtils }                from '@atls/yarn-pack-utils'
 
-export class WorkspaceExportCommand extends BaseCommand {
+export class WorkspaceExportCommand extends RaijinCommand {
   static override paths = [['export']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'export a workspace and its production dependencies',
   })
 
   destination: string = Option.String('-d,--destination', { required: true })
 
-  async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { workspace, yarn } = invocation
     const { configuration, project } = yarn
 

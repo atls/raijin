@@ -3,13 +3,13 @@ import type { TestEvent }    from 'node:test/reporters'
 
 import type { Annotation }   from './github.checks.js'
 
-import { BaseCommand }       from '@yarnpkg/cli'
+import { RaijinCommand }     from '@atls/raijin/commands'
 
 import { formatTestResults } from './test-results.formatter.js'
 
 type TestFail = EventData.TestFail
 
-export abstract class AbstractChecksTestCommand extends BaseCommand {
+export abstract class AbstractChecksTestCommand extends RaijinCommand {
   formatResults(
     results: Array<TestFail>,
     cwd: string,

@@ -2,7 +2,6 @@ import type { CommandInput }        from '@atls/raijin/commands'
 import type { WorkspaceInvocation } from '@atls/raijin/commands'
 import type { PortablePath }        from '@yarnpkg/fslib'
 
-import { BaseCommand }              from '@yarnpkg/cli'
 import { ppath }                    from '@yarnpkg/fslib'
 import { Option }                   from 'clipanion'
 import { render }                   from 'ink'
@@ -11,9 +10,9 @@ import React                        from 'react'
 import { ErrorInfo }                from '@atls/cli-ui-error-info-component'
 import { IconsProgress }            from '@atls/cli-ui-icons-progress-component'
 import { Icons }                    from '@atls/code-icons'
+import { RaijinCommand }            from '@atls/raijin/commands'
 import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }       from '@atls/raijin/commands'
-import { defineCommandInvocation }  from '@atls/raijin/commands'
 import { toNativeCwd }              from '@atls/raijin/commands'
 import { toCommandArguments }       from '@atls/raijin/commands'
 import { discoverFiles }            from '@atls/raijin/filesystem'
@@ -38,22 +37,16 @@ export const discoverGeneratedIconFiles = async (
     })
   ).map((file) => ppath.basename(file))
 
-export class UiIconsGenerateCommand extends BaseCommand {
+export class UiIconsGenerateCommand extends RaijinCommand {
   static override paths = [['ui', 'icons', 'generate']]
 
-  static raijinCommand = defineCommandInvocation({ scope: 'workspace' })
-
-  static override usage = BaseCommand.Usage({
+  static override usage = RaijinCommand.Usage({
     description: 'generate icon components from source assets',
   })
 
   native: boolean = Option.Boolean('-n, --native', false)
 
-  override async execute(invocation?: WorkspaceInvocation): Promise<number> {
-    if (!invocation) {
-      throw new Error('Command invocation context is missing')
-    }
-
+  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
     const { executionCwd, project, yarn } = invocation
     const cwd = toNativeCwd(executionCwd)
 
