@@ -65,7 +65,7 @@ jobs:
   windows-invocation:
     name: Windows invocation
     env:
-      NODE_VERSION: '24'
+      NODE_VERSION: '25'
     runs-on: windows-latest
     timeout-minutes: 10
     permissions: read-all
