@@ -1643,6 +1643,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:webpack/webpack-start-server-plugin", {\
         "packageLocation": "./webpack/webpack-start-server-plugin/",\
         "packageDependencies": [\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/webpack-start-server-plugin", "workspace:webpack/webpack-start-server-plugin"],\
           ["@types/node", "npm:22.13.10"],\
           ["webpack", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:5.98.0"]\

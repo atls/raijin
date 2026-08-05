@@ -796,6 +796,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/webpack-start-server-plugin@workspace:webpack/webpack-start-server-plugin"
   dependencies:
+    "@atls/raijin": "workspace:*"
     "@types/node": "npm:22.13.10"
     webpack: "npm:5.98.0"
   languageName: unknown

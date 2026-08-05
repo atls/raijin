@@ -22,6 +22,7 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
     const { executionCwd, workspace } = invocation
     const service = await Service.initialize(
       toNativeCwd(executionCwd),
+      invocation.process,
       getWorkspacePackageNames(workspace)
     )
 
