@@ -30,14 +30,6 @@ type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
 type TestStdout = EventData.TestStdout
 
-interface TestArgsOptions {
-  files: Array<string>
-  target?: string
-  testNamePattern?: string
-  testReporter?: string
-  watch: boolean
-}
-
 interface TestInputOptions {
   files: Array<string>
   invocationCwd: PortablePath
@@ -55,39 +47,6 @@ export const createTestInput = ({
   const cwd = targetInput?.targets.at(0)?.path ?? invocationCwd
 
   return createCommandInput({ cwd, source: 'explicit', targets: files })
-}
-
-export const createTestArgs = ({
-  files,
-  target,
-  testNamePattern,
-  testReporter,
-  watch,
-}: TestArgsOptions): Array<string> => {
-  const args: Array<string> = []
-
-  if (files.length) {
-    args.push(...files)
-  }
-
-  if (watch) {
-    args.push('-w')
-  }
-
-  if (target) {
-    args.push('-t')
-    args.push(target)
-  }
-
-  if (testReporter) {
-    args.push(`--test-reporter=${testReporter}`)
-  }
-
-  if (testNamePattern) {
-    args.push(`--test-name-pattern=${testNamePattern}`)
-  }
-
-  return args
 }
 
 export abstract class AbstractTestCommand extends BaseCommand {
