@@ -80,43 +80,43 @@ export const executeYarnCommand = async ({
   executionCwd,
   options = {},
   project,
-}: YarnCommandOptions): Promise<ProcessExecutionResult> => {
-  const binFolder = await xfs.mktempPromise()
-  let executable = await createYarnExecutable({
-    baseEnvironment: context.environment,
-    binFolder,
-    locator: options.locator,
-    project,
-  })
-  const preparation = await options.prepare?.({
-    binFolder,
-    nodeOptions: executable.env.NODE_OPTIONS,
-  })
-
-  if (preparation) {
-    executable = await createYarnExecutable({
+}: YarnCommandOptions): Promise<ProcessExecutionResult> =>
+  xfs.mktempPromise(async (binFolder) => {
+    let executable = await createYarnExecutable({
       baseEnvironment: context.environment,
       binFolder,
-      environmentPatch: preparation.environmentPatch,
       locator: options.locator,
-      nodeLoader: preparation.nodeLoader,
-      nodeOptions: preparation.nodeOptions,
       project,
     })
-  }
+    const preparation = await options.prepare?.({
+      binFolder,
+      nodeOptions: executable.env.NODE_OPTIONS,
+    })
 
-  const environment = executable.env
+    if (preparation) {
+      executable = await createYarnExecutable({
+        baseEnvironment: context.environment,
+        binFolder,
+        environmentPatch: preparation.environmentPatch,
+        locator: options.locator,
+        nodeLoader: preparation.nodeLoader,
+        nodeOptions: preparation.nodeOptions,
+        project,
+      })
+    }
 
-  environment.INIT_CWD = toNativeCwd(executionCwd)
-  environment.PROJECT_CWD = toNativeCwd(project.cwd)
+    const environment = executable.env
 
-  return executeProcess(executable.executable, args, {
-    context,
-    cwd: toNativeCwd(executionCwd),
-    env: environment,
-    input: options.input,
-    output: options.output,
-    signal: options.signal,
-    timeout: options.timeout,
+    environment.INIT_CWD = toNativeCwd(executionCwd)
+    environment.PROJECT_CWD = toNativeCwd(project.cwd)
+
+    return executeProcess(executable.executable, args, {
+      context,
+      cwd: toNativeCwd(executionCwd),
+      env: environment,
+      input: options.input,
+      output: options.output,
+      signal: options.signal,
+      timeout: options.timeout,
+    })
   })
-}
