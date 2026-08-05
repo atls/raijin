@@ -119,17 +119,21 @@ test('should reject Raijin package without loadable TypeScript loader', async ()
   }
 })
 
-test('should resolve PnP loader from parent project root', async () => {
+test('should resolve PnP runtime from parent project root', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'runtime-exec-argv-'))
   const nestedWorkspace = join(workspace, 'backend', 'wallet', 'service')
+  const pnpApiPath = join(workspace, '.pnp.cjs')
   const pnpEsmLoaderPath = join(workspace, '.pnp.loader.mjs')
   const typeScriptLoader = await resolveTypeScriptLoader()
 
   await mkdir(nestedWorkspace, { recursive: true })
+  await writeFile(pnpApiPath, '')
   await writeFile(pnpEsmLoaderPath, '')
 
   try {
     assert.deepEqual(await createRuntimeExecArgv(nestedWorkspace), [
+      '--require',
+      pnpApiPath,
       '--loader',
       pathToFileURL(pnpEsmLoaderPath).href,
       '--loader',

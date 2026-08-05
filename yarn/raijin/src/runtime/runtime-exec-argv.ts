@@ -5,6 +5,7 @@ import { join }          from 'node:path'
 import { resolve }       from 'node:path'
 import { pathToFileURL } from 'node:url'
 
+const PNP_API_FILENAME = '.pnp.cjs'
 const PNP_ESM_LOADER_FILENAME = '.pnp.loader.mjs'
 const RAIJIN_PACKAGE_JSON = '@atls/raijin/package.json'
 const TYPESCRIPT_LOADER_DIST_PATH = 'dist/runtime/typescript-loader.js'
@@ -36,12 +37,12 @@ const fileExists = async (path: string): Promise<boolean> => {
   }
 }
 
-const getPnpEsmLoaderPaths = (cwd: string): Array<string> => {
+const getPnpRuntimePaths = (cwd: string, filename: string): Array<string> => {
   let current = resolve(cwd)
   const paths: Array<string> = []
 
   while (current !== dirname(current)) {
-    paths.push(join(current, PNP_ESM_LOADER_FILENAME))
+    paths.push(join(current, filename))
     current = dirname(current)
   }
 
@@ -149,11 +150,21 @@ const removeRuntimeLoaderNodeOptions = (
 
 export const findPnpEsmLoader = async (cwd: string): Promise<string | undefined> => {
   const pnpEsmLoaderPaths = await Promise.all(
-    getPnpEsmLoaderPaths(cwd).map(async (path) => ((await fileExists(path)) ? path : undefined))
+    getPnpRuntimePaths(cwd, PNP_ESM_LOADER_FILENAME).map(async (path) =>
+      (await fileExists(path)) ? path : undefined)
   )
   const pnpEsmLoaderPath = pnpEsmLoaderPaths.find(Boolean)
 
   return pnpEsmLoaderPath ? pathToFileURL(pnpEsmLoaderPath).href : undefined
+}
+
+const findPnpApi = async (cwd: string): Promise<string | undefined> => {
+  const pnpApiPaths = await Promise.all(
+    getPnpRuntimePaths(cwd, PNP_API_FILENAME).map(async (path) =>
+      (await fileExists(path)) ? path : undefined)
+  )
+
+  return pnpApiPaths.find(Boolean)
 }
 
 const resolveRaijinPackagePath = (): string => require.resolve(RAIJIN_PACKAGE_JSON)
@@ -204,12 +215,14 @@ export const createTypeScriptRuntimeExecArgv = (
 }
 
 export const createRuntimeExecArgv = async (cwd: string): Promise<Array<string>> => {
-  const [pnpEsmLoader, typeScriptLoader] = await Promise.all([
+  const [pnpApi, pnpEsmLoader, typeScriptLoader] = await Promise.all([
+    findPnpApi(cwd),
     findPnpEsmLoader(cwd),
     resolveTypeScriptLoader(),
   ])
+  const execArgv = createTypeScriptRuntimeExecArgv(pnpEsmLoader, typeScriptLoader)
 
-  return createTypeScriptRuntimeExecArgv(pnpEsmLoader, typeScriptLoader)
+  return pnpApi ? ['--require', pnpApi, ...execArgv] : execArgv
 }
 
 export const createRuntimeEnvironment = (
