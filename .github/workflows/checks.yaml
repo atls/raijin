@@ -9,7 +9,7 @@ jobs:
   checks:
     name: Shared checks / Checks
     env:
-      NODE_VERSION: '25'
+      NODE_VERSION: '26'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: write-all
@@ -37,7 +37,7 @@ jobs:
   raijin:
     name: Raijin checks
     env:
-      NODE_VERSION: '25'
+      NODE_VERSION: '26'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: read-all
@@ -65,7 +65,7 @@ jobs:
   windows-invocation:
     name: Windows invocation
     env:
-      NODE_VERSION: '25'
+      NODE_VERSION: '26'
     runs-on: windows-latest
     timeout-minutes: 10
     permissions: read-all
