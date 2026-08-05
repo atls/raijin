@@ -50,8 +50,9 @@ class ChecksReleaseCommand extends BaseCommand {
       privateWorkspaces: this.noPrivate ? false : releaseConfig.privateWorkspaces,
     }
     const workspaces = releaseConfig.enabled
-      ? getChangedWorkspaces(project, await getChangedFiles(invocation.child)).filter((workspace) =>
-          isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
+      ? getChangedWorkspaces(project, await getChangedFiles(invocation.process)).filter((
+          workspace
+        ) => isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
       : []
 
     const checks = new GitHubChecks('Release')

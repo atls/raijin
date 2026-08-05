@@ -1,7 +1,8 @@
 import type { YarnCommandRunner }        from './runner.js'
 
+import { execa }                         from 'execa'
+
 import { RaijinYarnCommandException }    from './exceptions/command.js'
-import { executeChildProcess }           from '../commands/invocation/adapters/child-process.js'
 import { createLauncherBaseEnvironment } from './launcher.js'
 
 export const createYarnCommandEnvironment = (
@@ -21,15 +22,14 @@ export const runYarnCommand: YarnCommandRunner = async (
   cwd: string
 ): Promise<void> => {
   const environment = createYarnCommandEnvironment(cwd)
-  const result = await executeChildProcess('yarn', args, {
-    context: {
-      environment,
-      stderr: process.stderr,
-      stdin: process.stdin,
-      stdout: process.stdout,
-    },
+  const result = await execa('yarn', args, {
     cwd,
     env: environment,
+    extendEnv: false,
+    reject: false,
+    stderr: process.stderr,
+    stdin: process.stdin,
+    stdout: process.stdout,
   })
 
   if (result.exitCode !== 0) {

@@ -1,4 +1,4 @@
-import type { ChildProcessInvocation }  from '@atls/raijin/commands'
+import type { ProcessInvocation }       from '@atls/raijin/commands'
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 import type { Project }                 from '@yarnpkg/core'
 import type { PortablePath }            from '@yarnpkg/fslib'
@@ -419,10 +419,10 @@ export const selectPreviousGitHubReleaseTagName = (
     .sort((leftTag, rightTag) => compareSemver(rightTag.version, leftTag.version))[0]?.tagName
 
 export const getGitHubReleaseTagNames = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   packageName: string
 ): Promise<Array<string>> => {
-  const result = await child.execute('git', ['tag', '--list', `${packageName}@*`], {
+  const result = await processInvocation.execute('git', ['tag', '--list', `${packageName}@*`], {
     output: { mode: 'capture' },
     scope: 'project',
   })
@@ -438,9 +438,9 @@ export const getGitHubReleaseTagNames = async (
 }
 
 export const getGitHubReleaseTargetCommitish = async (
-  child: ChildProcessInvocation
+  processInvocation: ProcessInvocation
 ): Promise<string> => {
-  const result = await child.execute('git', ['rev-parse', 'HEAD'], {
+  const result = await processInvocation.execute('git', ['rev-parse', 'HEAD'], {
     output: { mode: 'capture' },
     scope: 'project',
   })
@@ -463,7 +463,7 @@ export class ReleaseCreateCommand extends BaseCommand {
 
   override async execute(): Promise<number> {
     const { invocation } = this.context
-    const { child, workspace, yarn } = invocation
+    const { process: processInvocation, workspace, yarn } = invocation
     const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
@@ -497,7 +497,7 @@ export class ReleaseCreateCommand extends BaseCommand {
           let owner: string
           let repo: string
           try {
-            const result = await child.execute('git', ['remote', 'get-url', 'origin'], {
+            const result = await processInvocation.execute('git', ['remote', 'get-url', 'origin'], {
               output: { mode: 'capture' },
               scope: 'project',
             })
@@ -515,8 +515,8 @@ export class ReleaseCreateCommand extends BaseCommand {
           assert.ok(repo, 'Could not get url of the repo')
 
           try {
-            const tagNames = await getGitHubReleaseTagNames(child, packageName)
-            const targetCommitish = await getGitHubReleaseTargetCommitish(child)
+            const tagNames = await getGitHubReleaseTagNames(processInvocation, packageName)
+            const targetCommitish = await getGitHubReleaseTargetCommitish(processInvocation)
             const previousTagName = selectPreviousGitHubReleaseTagName(
               packageName,
               version,

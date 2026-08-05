@@ -1,5 +1,5 @@
 import type { CommandInput }            from '@atls/raijin/commands'
-import type { ChildProcessInvocation }  from '@atls/raijin/commands'
+import type { ProcessInvocation }       from '@atls/raijin/commands'
 import type { ProjectCommandContext }   from '@atls/raijin/commands'
 import type { ProjectInvocation }       from '@atls/raijin/commands'
 import type { Project }                 from '@yarnpkg/core'
@@ -60,7 +60,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
               const input = await this.getInput(
                 yarn.project,
                 project.workspacePatterns,
-                invocation.child
+                invocation.process
               )
 
               if (this.changed && input?.targets.length === 0) {
@@ -134,17 +134,18 @@ class ChecksTypeCheckCommand extends BaseCommand {
   protected async getInput(
     project: Project,
     workspacePatterns: Array<string>,
-    child?: ChildProcessInvocation
+    processInvocation?: ProcessInvocation
   ): Promise<CommandInput | undefined> {
     if (this.changed) {
-      if (!child) {
+      if (!processInvocation) {
         throw new Error('Changed TypeScript targets require command invocation')
       }
 
       const input = createCommandInput({
         cwd: project.cwd,
         source: 'changed',
-        targets: (await getChangedFiles(child)).filter((file) => /\.(cts|mts|ts|tsx)$/.test(file)),
+        targets: (await getChangedFiles(processInvocation)).filter((file) =>
+          /\.(cts|mts|ts|tsx)$/.test(file)),
       })
 
       const existsMap = await Promise.all(

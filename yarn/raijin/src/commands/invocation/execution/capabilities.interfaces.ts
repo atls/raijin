@@ -2,9 +2,9 @@ import type { Configuration }              from '@yarnpkg/core'
 import type { Project }                    from '@yarnpkg/core'
 import type { PortablePath }               from '@yarnpkg/fslib'
 
-import type { InvocationExecutionContext } from '../adapters/child-process.interfaces.js'
+import type { InvocationExecutionContext } from './context.interfaces.js'
 
-export interface ChildProcessInvocationOptions {
+export interface ProcessInvocationOptions {
   context: InvocationExecutionContext
   executionCwd: PortablePath
   projectCwd?: PortablePath

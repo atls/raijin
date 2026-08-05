@@ -1,9 +1,9 @@
-import type { WorkspaceInvocation }     from '../resolve.interfaces.js'
 import type { InvocationContext }       from './context.interfaces.js'
+import type { WorkspaceInvocation }     from './invocation.interfaces.js'
 
 import { createProjectModel }           from '@atls/raijin/project'
 
-import { createInvocationCapabilities } from '../execution/create.js'
+import { createInvocationCapabilities } from '../execution/capabilities.js'
 import { resolveProjectScope }          from './project.js'
 
 export const resolveWorkspaceCommandInvocation = async (

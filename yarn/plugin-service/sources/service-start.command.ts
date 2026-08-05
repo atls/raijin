@@ -19,7 +19,7 @@ export class ServiceStartCommand extends BaseCommand {
     const { invocation } = this.context
     const serviceCwd = toNativeCwd(invocation.executionCwd)
 
-    const result = await invocation.child.execute(
+    const result = await invocation.process.execute(
       process.execPath,
       [...(await createServiceRuntimeExecArgv(serviceCwd)), 'dist/index.js'],
       {

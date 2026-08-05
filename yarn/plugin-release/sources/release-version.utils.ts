@@ -1,4 +1,4 @@
-import type { ChildProcessInvocation }              from '@atls/raijin/commands'
+import type { ProcessInvocation }                   from '@atls/raijin/commands'
 import type { Workspace }                           from '@yarnpkg/core'
 import type { Configuration }                       from '@yarnpkg/core'
 import type { Project }                             from '@yarnpkg/core'
@@ -136,10 +136,10 @@ const getGitHubChanges = async (): Promise<Array<ReleaseVersionChange>> =>
   (await getChangedCommmits()).map(toGitHubChange)
 
 const getLocalCommitShas = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   gitRange: string
 ): Promise<Array<string>> => {
-  const result = await child.execute('git', ['rev-list', '--reverse', gitRange], {
+  const result = await processInvocation.execute('git', ['rev-list', '--reverse', gitRange], {
     output: { mode: 'capture' },
     scope: 'project',
   })
@@ -152,10 +152,10 @@ const getLocalCommitShas = async (
 }
 
 const getLocalCommitMessage = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   sha: string
 ): Promise<string> => {
-  const result = await child.execute(
+  const result = await processInvocation.execute(
     'git',
     ['show', '--format=%B', '--no-patch', '--max-count=1', sha],
     {
@@ -172,10 +172,10 @@ const getLocalCommitMessage = async (
 }
 
 const getLocalCommitParentShas = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   sha: string
 ): Promise<Array<string>> => {
-  const result = await child.execute('git', ['rev-list', '--parents', '-n', '1', sha], {
+  const result = await processInvocation.execute('git', ['rev-list', '--parents', '-n', '1', sha], {
     output: { mode: 'capture' },
     scope: 'project',
   })
@@ -195,10 +195,10 @@ export const selectLocalCommitDiffParent = (
 ): string | undefined => parents.find((parent) => !rangeShas.has(parent)) ?? parents[0]
 
 const getLocalRootCommitFiles = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   sha: string
 ): Promise<Array<string>> => {
-  const result = await child.execute(
+  const result = await processInvocation.execute(
     'git',
     ['diff-tree', '--no-commit-id', '--name-only', '-r', '--root', '--no-renames', '-z', sha],
     {
@@ -218,20 +218,20 @@ const getLocalRootCommitFiles = async (
 }
 
 const getLocalCommitFiles = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   sha: string,
   rangeShas: ReadonlySet<string>
 ): Promise<Array<string>> => {
   const diffParent = selectLocalCommitDiffParent(
-    await getLocalCommitParentShas(child, sha),
+    await getLocalCommitParentShas(processInvocation, sha),
     rangeShas
   )
 
   if (!diffParent) {
-    return getLocalRootCommitFiles(child, sha)
+    return getLocalRootCommitFiles(processInvocation, sha)
   }
 
-  const result = await child.execute(
+  const result = await processInvocation.execute(
     'git',
     ['diff', '--name-only', '--no-renames', '-z', diffParent, sha],
     {
@@ -255,33 +255,35 @@ const getLocalCommitFiles = async (
 }
 
 const getLocalCommitChange = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   sha: string,
   rangeShas: ReadonlySet<string>
 ): Promise<ReleaseVersionChange> => ({
-  message: await getLocalCommitMessage(child, sha),
-  files: await getLocalCommitFiles(child, sha, rangeShas),
+  message: await getLocalCommitMessage(processInvocation, sha),
+  files: await getLocalCommitFiles(processInvocation, sha, rangeShas),
 })
 
 const getLocalChanges = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   gitRange: string
 ): Promise<Array<ReleaseVersionChange>> => {
-  const shas = await getLocalCommitShas(child, gitRange)
+  const shas = await getLocalCommitShas(processInvocation, gitRange)
   const rangeShas = new Set(shas)
 
-  return Promise.all(shas.map(async (sha) => getLocalCommitChange(child, sha, rangeShas)))
+  return Promise.all(
+    shas.map(async (sha) => getLocalCommitChange(processInvocation, sha, rangeShas))
+  )
 }
 
 export const getReleaseVersionChanges = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   gitRange?: string
 ): Promise<Array<ReleaseVersionChange>> => {
   if (gitRange === undefined && process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
     return getGitHubChanges()
   }
 
-  return getLocalChanges(child, gitRange ?? DEFAULT_GIT_RANGE)
+  return getLocalChanges(processInvocation, gitRange ?? DEFAULT_GIT_RANGE)
 }
 
 export const parseDeferredReleaseDecisions = (versionContent: string): Map<string, string> => {

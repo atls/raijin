@@ -42,7 +42,7 @@ export class RendererStartCommand extends BaseCommand {
     const { invocation } = this.context
     const rendererCwd = toNativeCwd(invocation.executionCwd)
 
-    const result = await invocation.child.execute(
+    const result = await invocation.process.execute(
       process.execPath,
       [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`],
       {

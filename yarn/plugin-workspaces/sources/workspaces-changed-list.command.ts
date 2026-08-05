@@ -33,7 +33,7 @@ class WorkspacesChangedListCommand extends BaseCommand {
       },
 
       async (streamReport) => {
-        const files = await getChangedFiles(invocation.child)
+        const files = await getChangedFiles(invocation.process)
         const workspaces = getChangedWorkspaces(project, files)
 
         for (const ws of workspaces) {

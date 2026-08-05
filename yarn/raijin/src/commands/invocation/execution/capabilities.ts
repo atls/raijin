@@ -1,18 +1,18 @@
-import type { ChildProcessInvocation }        from '../resolve.interfaces.js'
-import type { ProjectInvocation }             from '../resolve.interfaces.js'
-import type { ChildProcessInvocationOptions } from './create.interfaces.js'
-import type { InvocationCapabilitiesOptions } from './create.interfaces.js'
+import type { ProjectInvocation }             from '../scope/invocation.interfaces.js'
+import type { InvocationCapabilitiesOptions } from './capabilities.interfaces.js'
+import type { ProcessInvocationOptions }      from './capabilities.interfaces.js'
+import type { ProcessInvocation }             from './process.interfaces.js'
 
 import { ProjectScopeUnavailableError }       from '../exceptions/project-scope-unavailable.js'
-import { executeChildProcess }                from '../adapters/child-process.js'
+import { executeProcess }                     from '../adapters/execa/execute.js'
 import { toNativeCwd }                        from '../adapters/path/index.js'
 import { executeYarnCommand }                 from '../adapters/yarn/execution.js'
 
-export const createChildProcessInvocation = ({
+export const createProcessInvocation = ({
   context,
   executionCwd,
   projectCwd,
-}: ChildProcessInvocationOptions): ChildProcessInvocation => ({
+}: ProcessInvocationOptions): ProcessInvocation => ({
   execute: async (command, args, options = {}) => {
     if (options.scope === 'project' && !projectCwd) {
       throw new ProjectScopeUnavailableError()
@@ -29,12 +29,13 @@ export const createChildProcessInvocation = ({
       }
     }
 
-    return executeChildProcess(command, args, {
+    return executeProcess(command, args, {
       context,
       cwd: toNativeCwd(options.scope === 'project' && projectCwd ? projectCwd : executionCwd),
       env: environment,
       input: options.input,
       output: options.output,
+      signal: options.signal,
       timeout: options.timeout,
     })
   },
@@ -45,8 +46,8 @@ export const createInvocationCapabilities = ({
   context,
   executionCwd,
   project,
-}: InvocationCapabilitiesOptions): Pick<ProjectInvocation, 'child' | 'yarn'> => ({
-  child: createChildProcessInvocation({
+}: InvocationCapabilitiesOptions): Pick<ProjectInvocation, 'process' | 'yarn'> => ({
+  process: createProcessInvocation({
     context,
     executionCwd,
     projectCwd: project.cwd,

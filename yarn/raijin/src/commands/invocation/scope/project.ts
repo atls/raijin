@@ -1,12 +1,12 @@
-import type { ProjectInvocation }           from '../resolve.interfaces.js'
 import type { InvocationContext }           from './context.interfaces.js'
+import type { ProjectInvocation }           from './invocation.interfaces.js'
 import type { ResolvedProjectScope }        from './project.interfaces.js'
 
 import { createProjectModel }               from '@atls/raijin/project'
 
 import { UnsupportedNodeLinkerError }       from '../exceptions/unsupported-node-linker.js'
 import { resolveProject }                   from '../adapters/yarn/project.js'
-import { createInvocationCapabilities }     from '../execution/create.js'
+import { createInvocationCapabilities }     from '../execution/capabilities.js'
 import { createInvocationExecutionContext } from './context.js'
 import { resolveInvocationCwd }             from './context.js'
 

@@ -1,6 +1,6 @@
 import type { Filename }                 from '@yarnpkg/fslib'
 
-import type { CommandExecutionResult }   from '../../resolve.interfaces.js'
+import type { ProcessExecutionResult }   from '../../execution/process.interfaces.js'
 import type { YarnCommandOptions }       from './execution.interfaces.js'
 import type { YarnExecutable }           from './execution.interfaces.js'
 import type { YarnExecutableOptions }    from './execution.interfaces.js'
@@ -12,7 +12,7 @@ import { MANAGED_NODE_LOADER_ENV }       from '@atls/raijin/runtime/node/bootstr
 import { applyManagedNodeLoader }        from '@atls/raijin/runtime/node/bootstrap'
 import { createLauncherBaseEnvironment } from '@atls/raijin/yarn'
 
-import { executeChildProcess }           from '../child-process.js'
+import { executeProcess }                from '../execa/execute.js'
 import { toNativeCwd }                   from '../path/index.js'
 
 const YARN_EXECUTABLE_NAME = (process.platform === 'win32' ? 'yarn.cmd' : 'yarn') as Filename
@@ -80,7 +80,7 @@ export const executeYarnCommand = async ({
   executionCwd,
   options = {},
   project,
-}: YarnCommandOptions): Promise<CommandExecutionResult> => {
+}: YarnCommandOptions): Promise<ProcessExecutionResult> => {
   const binFolder = await xfs.mktempPromise()
   let executable = await createYarnExecutable({
     baseEnvironment: context.environment,
@@ -110,12 +110,13 @@ export const executeYarnCommand = async ({
   environment.INIT_CWD = toNativeCwd(executionCwd)
   environment.PROJECT_CWD = toNativeCwd(project.cwd)
 
-  return executeChildProcess(executable.executable, args, {
+  return executeProcess(executable.executable, args, {
     context,
     cwd: toNativeCwd(executionCwd),
     env: environment,
     input: options.input,
     output: options.output,
+    signal: options.signal,
     timeout: options.timeout,
   })
 }

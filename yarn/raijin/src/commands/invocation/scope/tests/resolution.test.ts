@@ -1,6 +1,6 @@
 import type { CommandContext }               from '@yarnpkg/core'
 
-import type { EntryInvocation }              from '../../resolve.interfaces.js'
+import type { EntryInvocation }              from '../invocation.interfaces.js'
 
 import assert                                from 'node:assert/strict'
 import { dirname }                           from 'node:path'
@@ -64,10 +64,10 @@ test('should bind entry command execution to the invocation cwd', async () => {
   const invocation: EntryInvocation = resolveEntryCommandInvocation(
     createContext(rendererNestedCwd)
   )
-  const result = await invocation.child.execute(
+  const result = await invocation.process.execute(
     process.execPath,
     ['-e', 'process.stdout.write(process.cwd())'],
-    { output: { mode: 'capture' } }
+    { input: 'ignore', output: { mode: 'capture' } }
   )
 
   assert.equal(invocation.invocationCwd, rendererNestedCwd)
@@ -75,11 +75,11 @@ test('should bind entry command execution to the invocation cwd', async () => {
   assert.equal(result.stdout, npath.fromPortablePath(rendererNestedCwd))
 })
 
-test('should reject project-scoped child execution for entry commands', async () => {
+test('should reject project-scoped process execution for entry commands', async () => {
   const invocation = resolveEntryCommandInvocation(createContext(rendererNestedCwd))
 
   await assert.rejects(
-    invocation.child.execute(process.execPath, [], { scope: 'project' }),
+    invocation.process.execute(process.execPath, [], { scope: 'project' }),
     /does not have project execution scope/
   )
 })
@@ -122,7 +122,7 @@ test('should ignore a nested Yarn init cwd outside the command cwd', async () =>
   assert.equal(invocation.executionCwd, rendererWorkspaceCwd)
 })
 
-test('should bind command environment and output to child execution', async () => {
+test('should bind command environment and output to process execution', async () => {
   const stdout = new PassThrough()
   const output: Array<Buffer> = []
 
@@ -131,10 +131,11 @@ test('should bind command environment and output to child execution', async () =
   const invocation = await resolveProjectCommandInvocation(
     createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'bound' }, { stdout })
   )
-  const result = await invocation.child.execute(process.execPath, [
-    '-e',
-    "process.stdout.write(process.env.RAIJIN_INVOCATION_CONTEXT_TEST ?? '')",
-  ])
+  const result = await invocation.process.execute(
+    process.execPath,
+    ['-e', "process.stdout.write(process.env.RAIJIN_INVOCATION_CONTEXT_TEST ?? '')"],
+    { input: 'ignore', output: { mode: 'capture', forward: true } }
+  )
 
   assert.equal(result.exitCode, 0)
   assert.equal(Buffer.concat(output).toString(), 'bound')
@@ -144,12 +145,15 @@ test('should bind command environment to nested Yarn execution', async () => {
   const invocation = await resolveProjectCommandInvocation(
     createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'nested' })
   )
-  const result = await invocation.yarn.capture([
-    'exec',
-    'node',
-    '-e',
-    "process.stdout.write(process.env.RAIJIN_INVOCATION_CONTEXT_TEST ?? '')",
-  ])
+  const result = await invocation.yarn.capture(
+    [
+      'exec',
+      'node',
+      '-e',
+      "process.stdout.write(process.env.RAIJIN_INVOCATION_CONTEXT_TEST ?? '')",
+    ],
+    { input: 'ignore' }
+  )
 
   assert.equal(result.exitCode, 0)
   assert.equal(result.stdout, 'nested')
@@ -162,12 +166,15 @@ test(
     const invocation = await resolveProjectCommandInvocation(
       createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'windows' })
     )
-    const exitCode = await invocation.yarn.execute([
-      'exec',
-      'node',
-      '-e',
-      "process.exit(process.env.RAIJIN_INVOCATION_CONTEXT_TEST === 'windows' ? 0 : 1)",
-    ])
+    const exitCode = await invocation.yarn.execute(
+      [
+        'exec',
+        'node',
+        '-e',
+        "process.exit(process.env.RAIJIN_INVOCATION_CONTEXT_TEST === 'windows' ? 0 : 1)",
+      ],
+      { input: 'ignore' }
+    )
 
     assert.equal(exitCode, 0)
   }
@@ -175,12 +182,15 @@ test(
 
 test('should root nested Yarn execution at the resolved project cwd', async () => {
   const invocation = await resolveProjectCommandInvocation(createContext(rendererNestedCwd))
-  const result = await invocation.yarn.capture([
-    'exec',
-    'node',
-    '-e',
-    'process.stdout.write(JSON.stringify({ cwd: process.cwd(), initCwd: process.env.INIT_CWD }))',
-  ])
+  const result = await invocation.yarn.capture(
+    [
+      'exec',
+      'node',
+      '-e',
+      'process.stdout.write(JSON.stringify({ cwd: process.cwd(), initCwd: process.env.INIT_CWD }))',
+    ],
+    { input: 'ignore' }
+  )
 
   assert.deepEqual(JSON.parse(result.stdout), {
     cwd: npath.fromPortablePath(repoRoot),
@@ -190,12 +200,15 @@ test('should root nested Yarn execution at the resolved project cwd', async () =
 
 test('should root nested Yarn execution at the resolved workspace cwd', async () => {
   const invocation = await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
-  const result = await invocation.yarn.capture([
-    'exec',
-    'node',
-    '-e',
-    'process.stdout.write(JSON.stringify({ cwd: process.cwd(), initCwd: process.env.INIT_CWD }))',
-  ])
+  const result = await invocation.yarn.capture(
+    [
+      'exec',
+      'node',
+      '-e',
+      'process.stdout.write(JSON.stringify({ cwd: process.cwd(), initCwd: process.env.INIT_CWD }))',
+    ],
+    { input: 'ignore' }
+  )
 
   assert.deepEqual(JSON.parse(result.stdout), {
     cwd: npath.fromPortablePath(rendererWorkspaceCwd),
@@ -203,12 +216,12 @@ test('should root nested Yarn execution at the resolved workspace cwd', async ()
   })
 })
 
-test('should bind project-scoped child execution to the project cwd', async () => {
+test('should bind project-scoped process execution to the project cwd', async () => {
   const invocation = await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
-  const result = await invocation.child.execute(
+  const result = await invocation.process.execute(
     process.execPath,
     ['-e', 'process.stdout.write(process.cwd())'],
-    { output: { mode: 'capture' }, scope: 'project' }
+    { input: 'ignore', output: { mode: 'capture' }, scope: 'project' }
   )
 
   assert.equal(result.stdout, npath.fromPortablePath(repoRoot))

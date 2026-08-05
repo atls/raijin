@@ -1,7 +1,7 @@
-import type { EntryInvocation }             from '../resolve.interfaces.js'
 import type { InvocationContext }           from './context.interfaces.js'
+import type { EntryInvocation }             from './invocation.interfaces.js'
 
-import { createChildProcessInvocation }     from '../execution/create.js'
+import { createProcessInvocation }          from '../execution/capabilities.js'
 import { createInvocationExecutionContext } from './context.js'
 import { resolveInvocationCwd }             from './context.js'
 
@@ -10,7 +10,7 @@ export const resolveEntryCommandInvocation = (context: InvocationContext): Entry
   const invocationCwd = resolveInvocationCwd(context)
 
   return {
-    child: createChildProcessInvocation({
+    process: createProcessInvocation({
       context: executionContext,
       executionCwd: invocationCwd,
     }),

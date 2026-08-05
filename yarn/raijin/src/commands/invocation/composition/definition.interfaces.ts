@@ -1,9 +1,9 @@
 import type { CommandContext }      from '@yarnpkg/core'
 import type { Plugin }              from '@yarnpkg/core'
 
-import type { EntryInvocation }     from '../resolve.interfaces.js'
-import type { ProjectInvocation }   from '../resolve.interfaces.js'
-import type { WorkspaceInvocation } from '../resolve.interfaces.js'
+import type { EntryInvocation }     from '../scope/invocation.interfaces.js'
+import type { ProjectInvocation }   from '../scope/invocation.interfaces.js'
+import type { WorkspaceInvocation } from '../scope/invocation.interfaces.js'
 
 export type CommandInvocationScope = 'entry' | 'project' | 'workspace'
 

@@ -1,8 +1,8 @@
-import type { ChildProcessInvocation } from '@atls/raijin/commands'
-import type { Endpoints }              from '@octokit/types'
+import type { ProcessInvocation } from '@atls/raijin/commands'
+import type { Endpoints }         from '@octokit/types'
 
-import { context }                     from '@actions/github'
-import { getOctokit }                  from '@actions/github'
+import { context }                from '@actions/github'
+import { getOctokit }             from '@actions/github'
 
 type GetCommitResponseData = Endpoints['GET /repos/{owner}/{repo}/commits/{ref}']['response']
 type GetCommitFileData = NonNullable<GetCommitResponseData['data']['files']>[number]
@@ -100,10 +100,10 @@ export const getGithubChangedFiles = async (): Promise<Array<string>> => {
 }
 
 export const getChangedFiles = async (
-  child: ChildProcessInvocation,
+  processInvocation: ProcessInvocation,
   gitRange?: string
 ): Promise<Array<string>> => {
-  const result = await child.execute(
+  const result = await processInvocation.execute(
     'git',
     ['diff', '--name-only', ...(gitRange ? [gitRange] : [])],
     { output: { mode: 'capture' }, scope: 'project' }

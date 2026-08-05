@@ -2,14 +2,14 @@ import type { Locator }                    from '@yarnpkg/core'
 import type { Project }                    from '@yarnpkg/core'
 import type { PortablePath }               from '@yarnpkg/fslib'
 
-import type { YarnCommandRunOptions }      from '../../resolve.interfaces.js'
-import type { CommandEnvironmentPatch }    from '../../resolve.interfaces.js'
-import type { InvocationExecutionContext } from '../child-process.interfaces.js'
+import type { InvocationExecutionContext } from '../../execution/context.interfaces.js'
+import type { ProcessEnvironmentPatch }    from '../../execution/process.interfaces.js'
+import type { YarnCommandRunOptions }      from '../../execution/yarn.interfaces.js'
 
 export interface YarnExecutableOptions {
   baseEnvironment?: NodeJS.ProcessEnv
   binFolder: PortablePath
-  environmentPatch?: CommandEnvironmentPatch
+  environmentPatch?: ProcessEnvironmentPatch
   project: Project
   locator?: Locator
   nodeLoader?: string

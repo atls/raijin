@@ -12,7 +12,7 @@ const resolveRootDir = async (invocation: EntryInvocation): Promise<string> => {
   const fallbackRootDir = npath.fromPortablePath(invocation.invocationCwd)
 
   try {
-    const result = await invocation.child.execute('git', ['rev-parse', '--show-toplevel'], {
+    const result = await invocation.process.execute('git', ['rev-parse', '--show-toplevel'], {
       output: { mode: 'capture' },
     })
 
@@ -28,7 +28,7 @@ const resolveRootDir = async (invocation: EntryInvocation): Promise<string> => {
 
 const resolveSafeMaxArgLength = async (invocation: EntryInvocation): Promise<number> => {
   try {
-    const result = await invocation.child.execute('getconf', ['ARG_MAX'], {
+    const result = await invocation.process.execute('getconf', ['ARG_MAX'], {
       output: { mode: 'capture' },
     })
     const maxArgLength = Number.parseInt(result.stdout, 10)

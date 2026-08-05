@@ -29,7 +29,7 @@ class FilesChangedListCommand extends BaseCommand {
         stdout: this.context.stdout,
       },
       async (report) => {
-        const files = await getChangedFiles(invocation.child)
+        const files = await getChangedFiles(invocation.process)
 
         for (const file of files) {
           report.reportInfo(null, file)
