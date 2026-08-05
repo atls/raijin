@@ -52,12 +52,6 @@ export const registerRaijinSourceWorkspaceRuntime = async (
 
   const { project } = await Project.find(configuration, cwd)
   const workspace = project.tryWorkspaceByIdent(RAIJIN_PACKAGE_IDENT)
-
-  if (!workspace) {
-    return
-  }
-
-  const packagePath = npath.fromPortablePath(ppath.join(workspace.cwd, PACKAGE_MANIFEST))
   const pnpPath = getPnpPath(project)
   const pnpApiPath = npath.fromPortablePath(pnpPath.cjs)
   const pnpLoaderPath = npath.fromPortablePath(pnpPath.esmLoader)
@@ -67,6 +61,14 @@ export const registerRaijinSourceWorkspaceRuntime = async (
   const pnpApi = miscUtils.dynamicRequire(pnpApiPath) as PnpRuntimeApi
 
   pnpApi.setup()
+
+  if (!workspace) {
+    await registerNodeLoaders([pnpLoader])
+
+    return
+  }
+
+  const packagePath = npath.fromPortablePath(ppath.join(workspace.cwd, PACKAGE_MANIFEST))
 
   if (inheritedTypeScriptLoader) {
     await registerNodeLoaders([pnpLoader, inheritedTypeScriptLoader])
