@@ -16,8 +16,6 @@ import { RAIJIN_RENDERER_WORKSPACE_CWD_ENV }    from '@atls/raijin/config/next'
 
 const NODE_LOADER_OPTIONS = new Set(['--experimental-loader', '--loader'])
 const PNP_ESM_LOADER = '.pnp.loader.mjs' as Filename
-const RAIJIN_NODE_LOADER = 'RAIJIN_NODE_LOADER'
-
 const isPnpNodeLoader = (value: string | undefined): boolean =>
   value?.includes(PNP_ESM_LOADER) ?? false
 
@@ -33,17 +31,6 @@ export const createNextExecutionEnvironmentPatch = (
       }
     : {}),
   ...(options.output ? { [RAIJIN_RENDERER_OUTPUT_ENV]: options.output } : {}),
-})
-
-export const createNextExecutionEnvironment = (
-  env: NodeJS.ProcessEnv,
-  loader: string,
-  rendererCwd: PortablePath,
-  options: NextExecutionEnvironmentOptions = {}
-): NodeJS.ProcessEnv => ({
-  ...env,
-  [RAIJIN_NODE_LOADER]: loader,
-  ...createNextExecutionEnvironmentPatch(rendererCwd, options),
 })
 
 export const extractPnpLoaderOption = (nodeOptions: string | undefined): ExtractedNodeLoader => {
