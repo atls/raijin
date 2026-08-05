@@ -1,5 +1,3 @@
-import type { ProjectInvocation }    from '@atls/raijin/commands'
-
 import { StreamReport }              from '@yarnpkg/core'
 
 import { Tester }                    from '@atls/code-test'
@@ -15,7 +13,9 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
     description: 'report integration test results to GitHub Checks',
   })
 
-  async executeProject(invocation: ProjectInvocation): Promise<number> {
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+
     if (!process.env.GITHUB_TOKEN) {
       return invocation.yarn.execute(['test', 'integration'])
     }

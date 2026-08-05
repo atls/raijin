@@ -1,17 +1,21 @@
-import type { ProjectInvocation } from '@atls/raijin/commands'
+import type { ProjectCommandContext } from '@atls/raijin/commands'
 
-import { CommitLinter }           from '@atls/code-commit'
-import { RaijinCommand }          from '@atls/raijin/commands'
-import { read }                   from '@atls/code-commit'
+import { BaseCommand }                from '@yarnpkg/cli'
 
-class CommitMessageLintCommand extends RaijinCommand {
+import { CommitLinter }               from '@atls/code-commit'
+import { read }                       from '@atls/code-commit'
+
+class CommitMessageLintCommand extends BaseCommand {
   static override paths = [['commit', 'message', 'lint']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'validate commit messages against project scopes',
   })
 
-  async executeProject(invocation: ProjectInvocation): Promise<number> {
+  declare context: ProjectCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const {
       project: { workspaces },
     } = invocation

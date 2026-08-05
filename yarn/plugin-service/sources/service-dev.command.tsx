@@ -1,5 +1,3 @@
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
-
 import { render }                   from 'ink'
 import React                        from 'react'
 
@@ -17,7 +15,8 @@ export class ServiceDevCommand extends AbstractServiceCommand {
     description: 'run a service in development mode',
   })
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { executionCwd, workspace } = invocation
     const service = await Service.initialize(
       toNativeCwd(executionCwd),

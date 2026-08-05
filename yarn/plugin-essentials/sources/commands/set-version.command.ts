@@ -1,9 +1,8 @@
-import type { EntryInvocation }          from '@atls/raijin/commands'
+import type { EntryCommandContext }      from '@atls/raijin/commands'
 
+import { BaseCommand }                   from '@yarnpkg/cli'
 import { Configuration }                 from '@yarnpkg/core'
 import { Command }                       from 'clipanion'
-
-import { RaijinCommand }                 from '@atls/raijin/commands'
 
 import { assertInstalledRaijinRuntime }  from './set-version.runtime.js'
 import { fetchRaijinRuntimeManifest }    from './set-version.runtime.js'
@@ -15,7 +14,7 @@ import { preparePackageProjectBoundary } from './set-version.utils.js'
 
 const RAIJIN_PUBLIC_PACKAGE = '@atls/raijin'
 
-export class SetVersionCommand extends RaijinCommand {
+export class SetVersionCommand extends BaseCommand {
   static override paths = [['set', 'version', 'atls']]
 
   static override usage = Command.Usage({
@@ -25,7 +24,9 @@ export class SetVersionCommand extends RaijinCommand {
     `,
   })
 
-  async executeEntry(_invocation: EntryInvocation): Promise<number> {
+  declare context: EntryCommandContext
+
+  override async execute(): Promise<number> {
     const cwd = await findPackageCwd(this.context.cwd)
     const previousCwd = process.cwd()
 

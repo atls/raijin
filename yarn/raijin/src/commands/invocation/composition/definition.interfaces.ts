@@ -5,6 +5,8 @@ import type { EntryInvocation }     from '../resolve.interfaces.js'
 import type { ProjectInvocation }   from '../resolve.interfaces.js'
 import type { WorkspaceInvocation } from '../resolve.interfaces.js'
 
+export type CommandInvocationScope = 'entry' | 'project' | 'workspace'
+
 export type EntryCommandContext = CommandContext & {
   invocation: EntryInvocation
 }

@@ -1,10 +1,10 @@
-import type { WorkspaceInvocation }            from '@atls/raijin/commands'
+import type { WorkspaceCommandContext }        from '@atls/raijin/commands'
 
+import { BaseCommand }                         from '@yarnpkg/cli'
 import { StreamReport }                        from '@yarnpkg/core'
 import { MessageName }                         from '@yarnpkg/core'
 import { scriptUtils }                         from '@yarnpkg/core'
 
-import { RaijinCommand }                       from '@atls/raijin/commands'
 import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
 
 import { cleanupDiscoveryArtifacts }           from '../artifact/cleanup.js'
@@ -28,14 +28,17 @@ import { resolveNextPackageVersion }           from '../integrations/next/execut
 import { resolveNextStandaloneArtifactSource } from '../integrations/next/standalone/discovery.js'
 import { snapshotNextStandaloneManifests }     from '../integrations/next/standalone/discovery.js'
 
-export class RendererBuildCommand extends RaijinCommand {
+export class RendererBuildCommand extends BaseCommand {
   static override paths = [['renderer', 'build']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'build a renderer production artifact',
   })
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     await cleanupDiscoveryArtifacts(this.context.cwd)
 
     const { executionCwd, workspace, yarn } = invocation

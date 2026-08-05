@@ -1,13 +1,13 @@
-import type { WorkspaceInvocation }            from '@atls/raijin/commands'
+import type { WorkspaceCommandContext }        from '@atls/raijin/commands'
 import type { Tunnel }                         from 'localtunnel'
 
+import { BaseCommand }                         from '@yarnpkg/cli'
 import { scriptUtils }                         from '@yarnpkg/core'
 import { xfs }                                 from '@yarnpkg/fslib'
 import { ppath }                               from '@yarnpkg/fslib'
 import { Option }                              from 'clipanion'
 import localtunnel                             from 'localtunnel'
 
-import { RaijinCommand }                       from '@atls/raijin/commands'
 import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
 
 import { createNextDevArguments }              from '../integrations/next/execution/arguments.js'
@@ -17,16 +17,18 @@ import { resolvePnpLoader }                    from '../integrations/next/execut
 import { materializeNextLoader }               from '../integrations/next/execution/loader.js'
 import { resolveNextPackageVersion }           from '../integrations/next/execution/version.js'
 
-export class RendererDevCommand extends RaijinCommand {
+export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'run a renderer in development mode',
   })
 
   tunnel = Option.Boolean('--tunnel')
 
   https = Option.Boolean('--https')
+
+  declare context: WorkspaceCommandContext
 
   #tunnel?: Tunnel
 
@@ -51,7 +53,8 @@ export class RendererDevCommand extends RaijinCommand {
     })
   }
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { executionCwd, workspace, yarn } = invocation
     const { project } = yarn
 

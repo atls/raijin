@@ -1,25 +1,25 @@
-import type { WorkspaceInvocation }    from '@atls/raijin/commands'
-import type { ChildProcessInvocation } from '@atls/raijin/commands'
-import type { Project }                from '@yarnpkg/core'
-import type { PortablePath }           from '@yarnpkg/fslib'
+import type { ChildProcessInvocation }  from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
+import type { Project }                 from '@yarnpkg/core'
+import type { PortablePath }            from '@yarnpkg/fslib'
 
-import assert                          from 'node:assert/strict'
-import { Buffer }                      from 'node:buffer'
-import { createHash }                  from 'node:crypto'
-import { mkdir }                       from 'node:fs/promises'
-import { readFile }                    from 'node:fs/promises'
-import { writeFile }                   from 'node:fs/promises'
-import { dirname }                     from 'node:path'
+import assert                           from 'node:assert/strict'
+import { Buffer }                       from 'node:buffer'
+import { createHash }                   from 'node:crypto'
+import { mkdir }                        from 'node:fs/promises'
+import { readFile }                     from 'node:fs/promises'
+import { writeFile }                    from 'node:fs/promises'
+import { dirname }                      from 'node:path'
 
-import { StreamReport }                from '@yarnpkg/core'
-import { npath }                       from '@yarnpkg/fslib'
-import { ppath }                       from '@yarnpkg/fslib'
-import { xfs }                         from '@yarnpkg/fslib'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { npath }                        from '@yarnpkg/fslib'
+import { ppath }                        from '@yarnpkg/fslib'
+import { xfs }                          from '@yarnpkg/fslib'
 
-import { Release }                     from '@atls/code-github'
-import { RaijinCommand }               from '@atls/raijin/commands'
+import { Release }                      from '@atls/code-github'
 
-import { parseGitHubUrl }              from './utils/parse-git-url.js'
+import { parseGitHubUrl }               from './utils/parse-git-url.js'
 
 const RELEASE_ALREADY_EXISTS_STATUS = 422
 const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
@@ -452,14 +452,17 @@ export const getGitHubReleaseTargetCommitish = async (
   return result.stdout.trim()
 }
 
-export class ReleaseCreateCommand extends RaijinCommand {
+export class ReleaseCreateCommand extends BaseCommand {
   static override paths = [['release', 'create']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'create and publish a project release',
   })
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { child, workspace, yarn } = invocation
     const { configuration, project } = yarn
 

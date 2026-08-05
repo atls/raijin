@@ -1,5 +1,5 @@
-import type { CommandInvocationScope }       from '../definition.interfaces.js'
 import type { CommandInvocationDefinitions } from './definition.interfaces.js'
+import type { CommandInvocationScope }       from './definition.interfaces.js'
 import type { RegisteredCommandClass }       from './definition.interfaces.js'
 
 const COMMAND_INVOCATION_SCOPE = Symbol.for('@atls/raijin.command-invocation.scope')

@@ -1,6 +1,4 @@
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
-
-import { AbstractTestCommand }      from './abstract-test.command.jsx'
+import { AbstractTestCommand } from './abstract-test.command.jsx'
 
 export class TestIntegrationCommand extends AbstractTestCommand {
   static override paths = [['test', 'integration']]
@@ -9,7 +7,7 @@ export class TestIntegrationCommand extends AbstractTestCommand {
     description: 'run integration tests',
   })
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
-    return this.executeRegular('integration', invocation)
+  override async execute(): Promise<number> {
+    return this.executeRegular('integration', this.context.invocation)
   }
 }

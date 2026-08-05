@@ -1,21 +1,21 @@
-import type { CommandInput }        from '@atls/raijin/commands'
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
-import type { PortablePath }        from '@yarnpkg/fslib'
+import type { CommandInput }            from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
+import type { PortablePath }            from '@yarnpkg/fslib'
 
-import { ppath }                    from '@yarnpkg/fslib'
-import { Option }                   from 'clipanion'
-import { render }                   from 'ink'
-import React                        from 'react'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { ppath }                        from '@yarnpkg/fslib'
+import { Option }                       from 'clipanion'
+import { render }                       from 'ink'
+import React                            from 'react'
 
-import { ErrorInfo }                from '@atls/cli-ui-error-info-component'
-import { IconsProgress }            from '@atls/cli-ui-icons-progress-component'
-import { Icons }                    from '@atls/code-icons'
-import { RaijinCommand }            from '@atls/raijin/commands'
-import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }       from '@atls/raijin/commands'
-import { toNativeCwd }              from '@atls/raijin/commands'
-import { toCommandArguments }       from '@atls/raijin/commands'
-import { discoverFiles }            from '@atls/raijin/filesystem'
+import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { IconsProgress }                from '@atls/cli-ui-icons-progress-component'
+import { Icons }                        from '@atls/code-icons'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
+import { toCommandArguments }           from '@atls/raijin/commands'
+import { discoverFiles }                from '@atls/raijin/filesystem'
 
 export const createGeneratedIconInput = (
   workspaceCwd: PortablePath,
@@ -37,16 +37,19 @@ export const discoverGeneratedIconFiles = async (
     })
   ).map((file) => ppath.basename(file))
 
-export class UiIconsGenerateCommand extends RaijinCommand {
+export class UiIconsGenerateCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'generate icon components from source assets',
   })
 
   native: boolean = Option.Boolean('-n, --native', false)
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { executionCwd, yarn } = invocation
     const cwd = toNativeCwd(executionCwd)
 

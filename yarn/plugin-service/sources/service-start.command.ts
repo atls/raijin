@@ -1,18 +1,22 @@
-import type { WorkspaceInvocation }        from '@atls/raijin/commands'
+import type { WorkspaceCommandContext }    from '@atls/raijin/commands'
 
-import { RaijinCommand }                   from '@atls/raijin/commands'
+import { BaseCommand }                     from '@yarnpkg/cli'
+
 import { createServiceRuntimeEnvironment } from '@atls/code-service'
 import { createServiceRuntimeExecArgv }    from '@atls/code-service'
 import { toNativeCwd }                     from '@atls/raijin/commands'
 
-export class ServiceStartCommand extends RaijinCommand {
+export class ServiceStartCommand extends BaseCommand {
   static override paths = [['service', 'start']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'start a built service artifact',
   })
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const serviceCwd = toNativeCwd(invocation.executionCwd)
 
     const result = await invocation.child.execute(

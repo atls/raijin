@@ -1,10 +1,10 @@
-import type { EntryInvocation } from '@atls/raijin/commands'
+import type { EntryCommandContext } from '@atls/raijin/commands'
+import type { EntryInvocation }     from '@atls/raijin/commands'
 
-import { npath }                from '@yarnpkg/fslib'
-import { Option }               from 'clipanion'
-import lintStaged               from 'lint-staged'
-
-import { RaijinCommand }        from '@atls/raijin/commands'
+import { BaseCommand }              from '@yarnpkg/cli'
+import { npath }                    from '@yarnpkg/fslib'
+import { Option }                   from 'clipanion'
+import lintStaged                   from 'lint-staged'
 
 const WINDOWS_SAFE_MAX_ARG_LENGTH = 8190
 
@@ -60,16 +60,20 @@ export const createConfig = (yarnCommandPath = resolveYarnCommandPath()): lintSt
   }
 }
 
-export class CommitStagedCommand extends RaijinCommand {
+export class CommitStagedCommand extends BaseCommand {
   static override paths = [['commit', 'staged']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'run project checks for staged files',
   })
 
   args: Array<string> = Option.Rest({ required: 0 })
 
-  async executeEntry(invocation: EntryInvocation): Promise<number> {
+  declare context: EntryCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+
     try {
       // @ts-expect-error: Fix import
       const passed = await lintStaged({

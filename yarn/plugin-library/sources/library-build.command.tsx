@@ -1,30 +1,33 @@
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { rm }                       from 'node:fs/promises'
-import { join }                     from 'node:path'
+import { rm }                           from 'node:fs/promises'
+import { join }                         from 'node:path'
 
-import { Option }                   from 'clipanion'
-import { render }                   from 'ink'
-import React                        from 'react'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Option }                       from 'clipanion'
+import { render }                       from 'ink'
+import React                            from 'react'
 
-import { ErrorInfo }                from '@atls/cli-ui-error-info-component'
-import { TypeScriptDiagnostic }     from '@atls/cli-ui-typescript-diagnostic-component'
-import { TypeScriptProgress }       from '@atls/cli-ui-typescript-progress-component'
-import { TypeScript }               from '@atls/code-typescript'
-import { RaijinCommand }            from '@atls/raijin/commands'
-import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
-import { toNativeCwd }              from '@atls/raijin/commands'
+import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
+import { TypeScriptProgress }           from '@atls/cli-ui-typescript-progress-component'
+import { TypeScript }                   from '@atls/code-typescript'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { toNativeCwd }                  from '@atls/raijin/commands'
 
-export class LibraryBuildCommand extends RaijinCommand {
+export class LibraryBuildCommand extends BaseCommand {
   static override paths = [['library', 'build']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'build a library workspace',
   })
 
   target = Option.String('-t,--target', './dist')
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { executionCwd } = invocation
     const cwd = toNativeCwd(executionCwd)
 

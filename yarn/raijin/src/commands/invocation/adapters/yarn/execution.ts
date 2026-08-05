@@ -22,7 +22,6 @@ const OWNED_ENVIRONMENT_NAMES = new Set([
   'NODE_OPTIONS',
   'PROJECT_CWD',
   'RAIJIN_NODE_LOADER',
-  'RAIJIN_PROJECT_RUNTIME',
   'YARN_IGNORE_PATH',
   'npm_config_user_agent',
   'npm_execpath',

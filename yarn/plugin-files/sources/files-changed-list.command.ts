@@ -1,22 +1,24 @@
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { StreamReport }             from '@yarnpkg/core'
-import { Option }                   from 'clipanion'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { Option }                       from 'clipanion'
 
-import { RaijinCommand }            from '@atls/raijin/commands'
+import { getChangedFiles }              from './changed-files.util.js'
 
-import { getChangedFiles }          from './changed-files.util.js'
-
-class FilesChangedListCommand extends RaijinCommand {
+class FilesChangedListCommand extends BaseCommand {
   static override paths = [['files', 'changed', 'list']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'list files changed since the comparison base',
   })
 
   json = Option.Boolean('--json', false)
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { yarn } = invocation
     const { configuration } = yarn
 

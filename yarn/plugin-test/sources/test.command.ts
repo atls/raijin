@@ -1,9 +1,7 @@
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
+import { Tester }              from '@atls/code-test'
+import { toNativeCwd }         from '@atls/raijin/commands'
 
-import { Tester }                   from '@atls/code-test'
-import { toNativeCwd }              from '@atls/raijin/commands'
-
-import { AbstractTestCommand }      from './abstract-test.command.jsx'
+import { AbstractTestCommand } from './abstract-test.command.jsx'
 
 export class TestCommand extends AbstractTestCommand {
   static override paths = [['test']]
@@ -12,7 +10,8 @@ export class TestCommand extends AbstractTestCommand {
     description: 'run all workspace tests',
   })
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { executionCwd, invocationCwd, project } = invocation
 
     const tester = await Tester.initialize(toNativeCwd(executionCwd), {

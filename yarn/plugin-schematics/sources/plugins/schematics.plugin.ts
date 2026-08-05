@@ -1,7 +1,9 @@
-import type { Plugin }            from '@yarnpkg/core'
+import type { Plugin }              from '@yarnpkg/core'
 
-import { GenerateProjectCommand } from '../commands/index.js'
+import { defineCommandInvocations } from '@atls/raijin/commands'
+
+import { GenerateProjectCommand }   from '../commands/index.js'
 
 export const schematicsPlugin: Plugin = {
-  commands: [GenerateProjectCommand],
+  commands: defineCommandInvocations({ project: [GenerateProjectCommand] }),
 }

@@ -1,16 +1,17 @@
 import type { CommandInput }            from '@atls/raijin/commands'
 import type { ChildProcessInvocation }  from '@atls/raijin/commands'
+import type { ProjectCommandContext }   from '@atls/raijin/commands'
 import type { ProjectInvocation }       from '@atls/raijin/commands'
 import type { Project }                 from '@yarnpkg/core'
 
 import type { TypeScriptConfigRuntime } from './checks-typecheck.interfaces.js'
 
+import { BaseCommand }                  from '@yarnpkg/cli'
 import { StreamReport }                 from '@yarnpkg/core'
 import { MessageName }                  from '@yarnpkg/core'
 import { xfs }                          from '@yarnpkg/fslib'
 import { Option }                       from 'clipanion'
 
-import { RaijinCommand }                from '@atls/raijin/commands'
 import { createCommandInput }           from '@atls/raijin/commands'
 import { toCommandArguments }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
@@ -27,16 +28,19 @@ const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptCon
     resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_CONFIG_SPECIFIER)
   )) as TypeScriptConfigRuntime
 
-class ChecksTypeCheckCommand extends RaijinCommand {
+class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'report TypeScript diagnostics to GitHub Checks',
   })
 
   changed = Option.Boolean('--changed', false)
 
-  async executeProject(invocation: ProjectInvocation): Promise<number> {
+  declare context: ProjectCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { project, yarn } = invocation
     const { configuration } = yarn
 

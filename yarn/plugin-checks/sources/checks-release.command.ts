@@ -1,13 +1,13 @@
-import type { ProjectInvocation }     from '@atls/raijin/commands'
+import type { ProjectCommandContext } from '@atls/raijin/commands'
 
 import type { Annotation }            from './github.checks.js'
 
+import { BaseCommand }                from '@yarnpkg/cli'
 import { ppath }                      from '@yarnpkg/fslib'
 import { Command }                    from 'clipanion'
 import { Option }                     from 'clipanion'
 import stripAnsi                      from 'strip-ansi'
 
-import { RaijinCommand }              from '@atls/raijin/commands'
 import { getChangedFiles }            from '@atls/yarn-plugin-files'
 import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
 
@@ -22,7 +22,7 @@ export const createChecksReleaseArgs = (noPrivate: boolean): Array<string> => [
   ...(noPrivate ? ['--no-private'] : []),
 ]
 
-class ChecksReleaseCommand extends RaijinCommand {
+class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]
 
   static override usage = Command.Usage({
@@ -37,7 +37,10 @@ class ChecksReleaseCommand extends RaijinCommand {
 
   noPrivate = Option.Boolean('--no-private', false)
 
-  async executeProject(invocation: ProjectInvocation): Promise<number> {
+  declare context: ProjectCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { yarn } = invocation
     const { project } = yarn
 

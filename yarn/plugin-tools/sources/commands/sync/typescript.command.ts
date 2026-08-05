@@ -1,12 +1,12 @@
-import type { WorkspaceInvocation }  from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { StreamReport }              from '@yarnpkg/core'
+import { StreamReport }                 from '@yarnpkg/core'
 
-import { getRaijinTypeScriptRange }  from '@atls/raijin/config/sync'
-import { syncTypeScriptManifest }    from '@atls/raijin/config/sync'
+import { getRaijinTypeScriptRange }     from '@atls/raijin/config/sync'
+import { syncTypeScriptManifest }       from '@atls/raijin/config/sync'
 
-import { AbstractRaijinSyncCommand } from './base.js'
-import { createRaijinSyncTarget }    from './target.js'
+import { AbstractRaijinSyncCommand }    from './base.js'
+import { createRaijinSyncTarget }       from './target.js'
 
 export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'typescript']]
@@ -15,7 +15,10 @@ export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
     description: 'synchronize the Raijin TypeScript dependency',
   })
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { yarn } = invocation
     const { configuration, project } = yarn
 

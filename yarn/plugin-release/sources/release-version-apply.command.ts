@@ -1,14 +1,13 @@
-import type { WorkspaceInvocation }    from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { appendFile }                  from 'node:fs/promises'
+import { appendFile }                   from 'node:fs/promises'
 
-import { StreamReport }                from '@yarnpkg/core'
-import { Option }                      from 'clipanion'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { Option }                       from 'clipanion'
 
-import { RaijinCommand }               from '@atls/raijin/commands'
-
-import { getDeferredReleaseDecisions } from './release-version.utils.js'
-import { isDeferredReleaseRequired }   from './release-version.utils.js'
+import { getDeferredReleaseDecisions }  from './release-version.utils.js'
+import { isDeferredReleaseRequired }    from './release-version.utils.js'
 
 const GITHUB_OUTPUT_PATH = 'GITHUB_OUTPUT'
 const DEFAULT_WORKSPACE_IDENT = '@atls/raijin'
@@ -23,10 +22,10 @@ const writeGitHubOutput = async (name: string, value: string): Promise<void> => 
   await appendFile(outputPath, `${name}=${value}\n`)
 }
 
-export class ReleaseVersionApplyCommand extends RaijinCommand {
+export class ReleaseVersionApplyCommand extends BaseCommand {
   static override paths = [['release', 'version', 'apply']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'apply deferred workspace versions',
   })
 
@@ -38,7 +37,10 @@ export class ReleaseVersionApplyCommand extends RaijinCommand {
 
   since = Option.String('--since')
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { yarn } = invocation
     const { configuration } = yarn
 

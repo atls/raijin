@@ -43,3 +43,12 @@ export const resolveProjectCommandInvocation = async (
     }),
   }
 }
+
+export const executeProjectYarnCommand = async (
+  context: InvocationContext,
+  args: Array<string>
+): Promise<number> => {
+  const invocation = await resolveProjectCommandInvocation(context)
+
+  return invocation.yarn.execute(args)
+}

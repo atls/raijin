@@ -1,8 +1,6 @@
 import type { CommandContext }               from '@yarnpkg/core'
 
-import type { ProjectInvocation }            from './resolve.interfaces.js'
-import type { EntryInvocation }              from './resolve.interfaces.js'
-import type { CommandInvocationResolution }  from './resolve.interfaces.js'
+import type { EntryInvocation }              from '../../resolve.interfaces.js'
 
 import assert                                from 'node:assert/strict'
 import { dirname }                           from 'node:path'
@@ -17,9 +15,9 @@ import { getPluginConfiguration }            from '@yarnpkg/cli'
 import { npath }                             from '@yarnpkg/fslib'
 import { ppath }                             from '@yarnpkg/fslib'
 
-import { resolveProjectCommandInvocation }   from './resolve.js'
-import { resolveEntryCommandInvocation }     from './resolve.js'
-import { resolveWorkspaceCommandInvocation } from './resolve.js'
+import { resolveEntryCommandInvocation }     from '../entry.js'
+import { resolveProjectCommandInvocation }   from '../project.js'
+import { resolveWorkspaceCommandInvocation } from '../workspace.js'
 
 const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
 
@@ -53,7 +51,6 @@ const createContext = (
     env: {
       ...process.env,
       ...environment,
-      RAIJIN_PROJECT_RUNTIME: npath.fromPortablePath(repoRoot),
     },
     plugins: getPluginConfiguration(),
     quiet: false,
@@ -61,14 +58,6 @@ const createContext = (
     stdin: streams.stdin ?? new PassThrough(),
     stdout,
   }
-}
-
-const expectInvocation = <Invocation extends ProjectInvocation>(
-  resolution: CommandInvocationResolution<Invocation>
-): Invocation => {
-  assert.equal('exitCode' in resolution, false)
-
-  return resolution as Invocation
 }
 
 test('should bind entry command execution to the invocation cwd', async () => {
@@ -96,9 +85,7 @@ test('should reject project-scoped child execution for entry commands', async ()
 })
 
 test('should resolve project command invocation from a nested cwd', async () => {
-  const invocation = expectInvocation(
-    await resolveProjectCommandInvocation(createContext(rendererNestedCwd))
-  )
+  const invocation = await resolveProjectCommandInvocation(createContext(rendererNestedCwd))
 
   assert.equal(invocation.invocationCwd, rendererNestedCwd)
   assert.equal(invocation.executionCwd, repoRoot)
@@ -107,9 +94,7 @@ test('should resolve project command invocation from a nested cwd', async () => 
 })
 
 test('should resolve workspace execution cwd without a duplicate workspace cwd field', async () => {
-  const invocation = expectInvocation(
-    await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
-  )
+  const invocation = await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
 
   assert.equal(invocation.invocationCwd, rendererNestedCwd)
   assert.equal(invocation.executionCwd, rendererWorkspaceCwd)
@@ -118,10 +103,8 @@ test('should resolve workspace execution cwd without a duplicate workspace cwd f
 })
 
 test('should use a nested Yarn init cwd within the command cwd', async () => {
-  const invocation = expectInvocation(
-    await resolveWorkspaceCommandInvocation(
-      createContext(repoRoot, { INIT_CWD: npath.fromPortablePath(rendererNestedCwd) })
-    )
+  const invocation = await resolveWorkspaceCommandInvocation(
+    createContext(repoRoot, { INIT_CWD: npath.fromPortablePath(rendererNestedCwd) })
   )
 
   assert.equal(invocation.invocationCwd, rendererNestedCwd)
@@ -129,12 +112,10 @@ test('should use a nested Yarn init cwd within the command cwd', async () => {
 })
 
 test('should ignore a nested Yarn init cwd outside the command cwd', async () => {
-  const invocation = expectInvocation(
-    await resolveWorkspaceCommandInvocation(
-      createContext(rendererWorkspaceCwd, {
-        INIT_CWD: npath.fromPortablePath(repoRoot),
-      })
-    )
+  const invocation = await resolveWorkspaceCommandInvocation(
+    createContext(rendererWorkspaceCwd, {
+      INIT_CWD: npath.fromPortablePath(repoRoot),
+    })
   )
 
   assert.equal(invocation.invocationCwd, rendererWorkspaceCwd)
@@ -147,10 +128,8 @@ test('should bind command environment and output to child execution', async () =
 
   stdout.on('data', (data: Buffer) => output.push(data))
 
-  const invocation = expectInvocation(
-    await resolveProjectCommandInvocation(
-      createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'bound' }, { stdout })
-    )
+  const invocation = await resolveProjectCommandInvocation(
+    createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'bound' }, { stdout })
   )
   const result = await invocation.child.execute(process.execPath, [
     '-e',
@@ -162,10 +141,8 @@ test('should bind command environment and output to child execution', async () =
 })
 
 test('should bind command environment to nested Yarn execution', async () => {
-  const invocation = expectInvocation(
-    await resolveProjectCommandInvocation(
-      createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'nested' })
-    )
+  const invocation = await resolveProjectCommandInvocation(
+    createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'nested' })
   )
   const result = await invocation.yarn.capture([
     'exec',
@@ -182,10 +159,8 @@ test(
   'should execute nested Yarn through the Windows command shim',
   { skip: process.platform !== 'win32' },
   async () => {
-    const invocation = expectInvocation(
-      await resolveProjectCommandInvocation(
-        createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'windows' })
-      )
+    const invocation = await resolveProjectCommandInvocation(
+      createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'windows' })
     )
     const exitCode = await invocation.yarn.execute([
       'exec',
@@ -199,9 +174,7 @@ test(
 )
 
 test('should root nested Yarn execution at the resolved project cwd', async () => {
-  const invocation = expectInvocation(
-    await resolveProjectCommandInvocation(createContext(rendererNestedCwd))
-  )
+  const invocation = await resolveProjectCommandInvocation(createContext(rendererNestedCwd))
   const result = await invocation.yarn.capture([
     'exec',
     'node',
@@ -216,9 +189,7 @@ test('should root nested Yarn execution at the resolved project cwd', async () =
 })
 
 test('should root nested Yarn execution at the resolved workspace cwd', async () => {
-  const invocation = expectInvocation(
-    await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
-  )
+  const invocation = await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
   const result = await invocation.yarn.capture([
     'exec',
     'node',
@@ -233,9 +204,7 @@ test('should root nested Yarn execution at the resolved workspace cwd', async ()
 })
 
 test('should bind project-scoped child execution to the project cwd', async () => {
-  const invocation = expectInvocation(
-    await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
-  )
+  const invocation = await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
   const result = await invocation.child.execute(
     process.execPath,
     ['-e', 'process.stdout.write(process.cwd())'],

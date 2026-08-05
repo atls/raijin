@@ -1,29 +1,30 @@
 /* eslint-disable n/no-sync */
 
-import type { CommandInput }        from '@atls/raijin/commands'
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
-import type { PortablePath }        from '@yarnpkg/fslib'
-import type { EventData }           from 'node:test'
+import type { CommandInput }            from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
+import type { WorkspaceInvocation }     from '@atls/raijin/commands'
+import type { PortablePath }            from '@yarnpkg/fslib'
+import type { EventData }               from 'node:test'
 
-import { readFileSync }             from 'node:fs'
-import { relative }                 from 'node:path'
+import { readFileSync }                 from 'node:fs'
+import { relative }                     from 'node:path'
 
-import { Option }                   from 'clipanion'
-import { Command }                  from 'clipanion'
-import { render }                   from 'ink'
-import { isEnum }                   from 'typanion'
-import React                        from 'react'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Option }                       from 'clipanion'
+import { Command }                      from 'clipanion'
+import { render }                       from 'ink'
+import { isEnum }                       from 'typanion'
+import React                            from 'react'
 
-import { ErrorInfo }                from '@atls/cli-ui-error-info-component'
-import { LogRecord }                from '@atls/cli-ui-log-record-component'
-import { RawOutput }                from '@atls/cli-ui-raw-output-component'
-import { TestFailure }              from '@atls/cli-ui-test-failure-component'
-import { TestProgress }             from '@atls/cli-ui-test-progress-component'
-import { Tester }                   from '@atls/code-test'
-import { RaijinCommand }            from '@atls/raijin/commands'
-import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }       from '@atls/raijin/commands'
-import { toNativeCwd }              from '@atls/raijin/commands'
+import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { LogRecord }                    from '@atls/cli-ui-log-record-component'
+import { RawOutput }                    from '@atls/cli-ui-raw-output-component'
+import { TestFailure }                  from '@atls/cli-ui-test-failure-component'
+import { TestProgress }                 from '@atls/cli-ui-test-progress-component'
+import { Tester }                       from '@atls/code-test'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
 
 type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
@@ -89,7 +90,7 @@ export const createTestArgs = ({
   return args
 }
 
-export abstract class AbstractTestCommand extends RaijinCommand {
+export abstract class AbstractTestCommand extends BaseCommand {
   static override usage = Command.Usage({
     description: 'Run tests',
     details: `
@@ -121,6 +122,8 @@ export abstract class AbstractTestCommand extends RaijinCommand {
   })
 
   testNamePattern = Option.String('--test-name-pattern')
+
+  declare context: WorkspaceCommandContext
 
   private std = new Map<string | undefined, Array<string>>()
 

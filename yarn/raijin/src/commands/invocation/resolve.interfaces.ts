@@ -118,11 +118,3 @@ export interface ProjectInvocation extends EntryInvocation {
 export interface WorkspaceInvocation extends ProjectInvocation {
   readonly workspace: Workspace
 }
-
-export interface CommandInvocationExit {
-  readonly exitCode: number
-}
-
-export type CommandInvocationResolution<Invocation extends ProjectInvocation> =
-  | CommandInvocationExit
-  | Invocation

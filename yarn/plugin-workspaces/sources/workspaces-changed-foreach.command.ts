@@ -1,19 +1,19 @@
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { StreamReport }             from '@yarnpkg/core'
-import { structUtils }              from '@yarnpkg/core'
-import { Option }                   from 'clipanion'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { structUtils }                  from '@yarnpkg/core'
+import { Option }                       from 'clipanion'
 
-import { RaijinCommand }            from '@atls/raijin/commands'
-import { getChangedFiles }          from '@atls/yarn-plugin-files'
+import { getChangedFiles }              from '@atls/yarn-plugin-files'
 
-import { getChangedWorkspaces }     from './get-changed-workspaces.util.js'
-import { createForeachInput }       from './workspaces-changed-foreach.input.js'
+import { getChangedWorkspaces }         from './get-changed-workspaces.util.js'
+import { createForeachInput }           from './workspaces-changed-foreach.input.js'
 
-class WorkspacesChangedForeachCommand extends RaijinCommand {
+class WorkspacesChangedForeachCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'foreach']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'run a command in changed workspaces',
   })
 
@@ -45,7 +45,10 @@ class WorkspacesChangedForeachCommand extends RaijinCommand {
 
   args = Option.Proxy()
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { yarn } = invocation
     const { configuration, project } = yarn
 

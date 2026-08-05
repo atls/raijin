@@ -1,9 +1,8 @@
-import type { WorkspaceInvocation }               from '@atls/raijin/commands'
+import type { WorkspaceCommandContext }           from '@atls/raijin/commands'
 
+import { BaseCommand }                            from '@yarnpkg/cli'
 import { StreamReport }                           from '@yarnpkg/core'
 import { Option }                                 from 'clipanion'
-
-import { RaijinCommand }                          from '@atls/raijin/commands'
 
 import { resolveReleaseVersionDeferredStrategy }  from './release-version-policy.utils.js'
 import { getDeferredReleaseDecisions }            from './release-version.utils.js'
@@ -16,10 +15,10 @@ export { parseDeferredReleaseDecisions } from './release-version.utils.js'
 export { selectLocalCommitDiffParent }   from './release-version.utils.js'
 export { toGitHubChange }                from './release-version.utils.js'
 
-export class ReleaseVersionDeferCommand extends RaijinCommand {
+export class ReleaseVersionDeferCommand extends BaseCommand {
   static override paths = [['release', 'version', 'defer']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'defer version bumps for changed workspaces',
   })
 
@@ -27,7 +26,10 @@ export class ReleaseVersionDeferCommand extends RaijinCommand {
 
   dryRun = Option.Boolean('--dry-run', false)
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { yarn } = invocation
     const { configuration, project } = yarn
 

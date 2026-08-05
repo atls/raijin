@@ -1,15 +1,18 @@
-import type { EventData }    from 'node:test'
-import type { TestEvent }    from 'node:test/reporters'
+import type { ProjectCommandContext } from '@atls/raijin/commands'
+import type { EventData }             from 'node:test'
+import type { TestEvent }             from 'node:test/reporters'
 
-import type { Annotation }   from './github.checks.js'
+import type { Annotation }            from './github.checks.js'
 
-import { RaijinCommand }     from '@atls/raijin/commands'
+import { BaseCommand }                from '@yarnpkg/cli'
 
-import { formatTestResults } from './test-results.formatter.js'
+import { formatTestResults }          from './test-results.formatter.js'
 
 type TestFail = EventData.TestFail
 
-export abstract class AbstractChecksTestCommand extends RaijinCommand {
+export abstract class AbstractChecksTestCommand extends BaseCommand {
+  declare context: ProjectCommandContext
+
   formatResults(
     results: Array<TestFail>,
     cwd: string,

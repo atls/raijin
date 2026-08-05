@@ -1,5 +1,5 @@
 import type { TagPolicy }                    from '@atls/code-pack'
-import type { WorkspaceInvocation }          from '@atls/raijin/commands'
+import type { WorkspaceCommandContext }      from '@atls/raijin/commands'
 import type { Workspace }                    from '@yarnpkg/core'
 
 import type { ImagePackConfiguration }       from './image-pack.utils.js'
@@ -7,12 +7,12 @@ import type { ImagePackConfiguration }       from './image-pack.utils.js'
 import { readFileSync }                      from 'node:fs'
 import { join }                              from 'node:path'
 
+import { BaseCommand }                       from '@yarnpkg/cli'
 import { StreamReport }                      from '@yarnpkg/core'
 import { structUtils }                       from '@yarnpkg/core'
 import { xfs }                               from '@yarnpkg/fslib'
 import { Option }                            from 'clipanion'
 
-import { RaijinCommand }                     from '@atls/raijin/commands'
 import { pack }                              from '@atls/code-pack'
 import { toNativeCwd }                       from '@atls/raijin/commands'
 import { packUtils }                         from '@atls/yarn-pack-utils'
@@ -21,10 +21,10 @@ import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
 import { resolveBuildpackReference }         from './image-pack.utils.js'
 import { resolveBuilderReference }           from './image-pack.utils.js'
 
-class ImagePackCommand extends RaijinCommand {
+class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'build and optionally publish a container image',
   })
 
@@ -36,7 +36,10 @@ class ImagePackCommand extends RaijinCommand {
 
   platform?: string = Option.String('--platform')
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { executionCwd, workspace, yarn } = invocation
     const { configuration, project } = yarn
 

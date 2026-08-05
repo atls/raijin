@@ -1,28 +1,31 @@
-import type { ProjectInvocation }  from '@atls/raijin/commands'
+import type { ProjectCommandContext } from '@atls/raijin/commands'
 
-import { StreamReport }            from '@yarnpkg/core'
-import { Option }                  from 'clipanion'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { StreamReport }               from '@yarnpkg/core'
+import { Option }                     from 'clipanion'
 
-import { RaijinCommand }           from '@atls/raijin/commands'
-import { getStreamReportCallback } from '@atls/code-schematics'
-import { getStreamReportOptions }  from '@atls/code-schematics'
-import { toNativeCwd }             from '@atls/raijin/commands'
+import { getStreamReportCallback }    from '@atls/code-schematics'
+import { getStreamReportOptions }     from '@atls/code-schematics'
+import { toNativeCwd }                from '@atls/raijin/commands'
 
 export const createGenerateProjectOptions = (type: string, invocationCwd: string) => ({
   type,
   cwd: invocationCwd,
 })
 
-export class GenerateProjectCommand extends RaijinCommand {
+export class GenerateProjectCommand extends BaseCommand {
   static override paths = [['generate', 'project']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'generate a Raijin project scaffold',
   })
 
   type = Option.String('-t,--type', 'project')
 
-  async executeProject(invocation: ProjectInvocation): Promise<number> {
+  declare context: ProjectCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { invocationCwd, yarn } = invocation
     const { configuration } = yarn
 

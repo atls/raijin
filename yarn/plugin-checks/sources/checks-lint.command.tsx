@@ -2,7 +2,7 @@
 
 import type { CommandInput }           from '@atls/raijin/commands'
 import type { ChildProcessInvocation } from '@atls/raijin/commands'
-import type { ProjectInvocation }      from '@atls/raijin/commands'
+import type { ProjectCommandContext }  from '@atls/raijin/commands'
 import type { LintMessage }            from '@atls/raijin/eslint'
 import type { LintResult as Result }   from '@atls/raijin/eslint'
 import type { Project }                from '@yarnpkg/core'
@@ -11,6 +11,7 @@ import type { Annotation }             from './github.checks.js'
 
 import { readFileSync }                from 'node:fs'
 
+import { BaseCommand }                 from '@yarnpkg/cli'
 import { StreamReport }                from '@yarnpkg/core'
 import { MessageName }                 from '@yarnpkg/core'
 import { codeFrameColumns }            from '@babel/code-frame'
@@ -20,7 +21,6 @@ import React                           from 'react'
 
 import { LintResult }                  from '@atls/cli-ui-lint-result-component'
 import { Linter }                      from '@atls/code-lint'
-import { RaijinCommand }               from '@atls/raijin/commands'
 import { renderStatic }                from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }          from '@atls/raijin/commands'
 import { toNativeCwd }                 from '@atls/raijin/commands'
@@ -29,16 +29,19 @@ import { getChangedFiles }             from '@atls/yarn-plugin-files'
 import { GitHubChecks }                from './github.checks.js'
 import { AnnotationLevel }             from './github.checks.js'
 
-class ChecksLintCommand extends RaijinCommand {
+class ChecksLintCommand extends BaseCommand {
   static override paths = [['checks', 'lint']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'report lint results to GitHub Checks',
   })
 
   changed = Option.Boolean('--changed', false)
 
-  async executeProject(invocation: ProjectInvocation): Promise<number> {
+  declare context: ProjectCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { project: projectModel, yarn } = invocation
     const { configuration, project } = yarn
 

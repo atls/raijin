@@ -1,15 +1,15 @@
 import type { CommandContext }               from '@yarnpkg/core'
 import type { PluginConfiguration }          from '@yarnpkg/core'
 
-import type { CommandInvocationScope }       from '../definition.interfaces.js'
 import type { EntryInvocation }              from '../resolve.interfaces.js'
 import type { ProjectInvocation }            from '../resolve.interfaces.js'
 import type { WorkspaceInvocation }          from '../resolve.interfaces.js'
+import type { CommandInvocationScope }       from './definition.interfaces.js'
 import type { RegisteredCommandClass }       from './definition.interfaces.js'
 
-import { resolveEntryCommandInvocation }     from '../resolve.js'
-import { resolveProjectCommandInvocation }   from '../resolve.js'
-import { resolveWorkspaceCommandInvocation } from '../resolve.js'
+import { resolveEntryCommandInvocation }     from '../scope/entry.js'
+import { resolveProjectCommandInvocation }   from '../scope/project.js'
+import { resolveWorkspaceCommandInvocation } from '../scope/workspace.js'
 import { getCommandInvocationScope }         from './definition.js'
 
 const COMPOSED_COMMAND = Symbol.for('@atls/raijin.command-invocation.composed')

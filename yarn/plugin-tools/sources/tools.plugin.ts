@@ -1,5 +1,7 @@
 import type { Plugin }                 from '@yarnpkg/core'
 
+import { defineCommandInvocations }    from '@atls/raijin/commands'
+
 import { RaijinSyncCommand }           from './commands/index.js'
 import { RaijinSyncTSConfigCommand }   from './commands/index.js'
 import { RaijinSyncTypeScriptCommand } from './commands/index.js'
@@ -13,5 +15,8 @@ export const plugin: Plugin = {
     afterYarnVersionSet,
     setupScriptEnvironment,
   },
-  commands: [RaijinSyncCommand, RaijinSyncTypeScriptCommand, RaijinSyncTSConfigCommand],
+  commands: defineCommandInvocations({
+    project: [RaijinSyncCommand],
+    workspace: [RaijinSyncTypeScriptCommand, RaijinSyncTSConfigCommand],
+  }),
 }
