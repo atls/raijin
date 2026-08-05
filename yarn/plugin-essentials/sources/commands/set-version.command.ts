@@ -27,7 +27,7 @@ export class SetVersionCommand extends BaseCommand {
   declare context: EntryCommandContext
 
   override async execute(): Promise<number> {
-    const cwd = await findPackageCwd(this.context.cwd)
+    const cwd = await findPackageCwd(this.context.invocation.invocationCwd)
     const previousCwd = process.cwd()
 
     await preparePackageProjectBoundary(cwd)

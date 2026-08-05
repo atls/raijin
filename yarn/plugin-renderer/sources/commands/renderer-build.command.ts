@@ -39,7 +39,7 @@ export class RendererBuildCommand extends BaseCommand {
 
   override async execute(): Promise<number> {
     const { invocation } = this.context
-    await cleanupDiscoveryArtifacts(this.context.cwd)
+    await cleanupDiscoveryArtifacts(invocation.invocationCwd)
 
     const { executionCwd, workspace, yarn } = invocation
     const { configuration, project } = yarn
