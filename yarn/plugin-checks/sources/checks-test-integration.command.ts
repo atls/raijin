@@ -2,6 +2,7 @@ import { StreamReport }              from '@yarnpkg/core'
 
 import { Tester }                    from '@atls/code-test'
 import { createCommandInput }        from '@atls/raijin/commands'
+import { toNativeCwd }               from '@atls/raijin/commands'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
@@ -22,6 +23,7 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
 
     const { executionCwd, yarn } = invocation
     const { configuration } = yarn
+    const nativeExecutionCwd = toNativeCwd(executionCwd)
 
     const commandReport = await StreamReport.start(
       {
@@ -34,7 +36,7 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
         const { id: checkId } = await checks.start()
 
         try {
-          const tester = await Tester.initialize(executionCwd)
+          const tester = await Tester.initialize(nativeExecutionCwd)
 
           const results = await tester.integration(
             createCommandInput({ cwd: executionCwd, source: 'generated', targets: [] })
@@ -42,7 +44,7 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
 
           const annotations = this.formatResults(
             results.filter((result) => result.type === 'test:fail').map((result) => result.data),
-            executionCwd,
+            nativeExecutionCwd,
             results
           )
 
