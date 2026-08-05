@@ -45,12 +45,17 @@ test('should default targetless checks to the invocation cwd', async () => {
 })
 
 test('should run nested targetless checks from the invoking workspace', async () => {
-  const { commands } = await runCheckCommand([], undefined, '/repo/packages/app')
+  const { commands } = await runCheckCommand(
+    [],
+    undefined,
+    '/repo/packages/app/src',
+    '/repo/packages/app'
+  )
 
   assert.deepEqual(commands, [
-    ['format', '.'],
-    ['typecheck', '.'],
-    ['lint', '.'],
+    ['format', 'src'],
+    ['typecheck', 'src'],
+    ['lint', 'src'],
   ])
 })
 
@@ -66,7 +71,12 @@ test('should forward explicit targets to every check command', async () => {
 })
 
 test('should serialize nested workspace targets from the workspace execution cwd', async () => {
-  const { commands } = await runCheckCommand(['src/index.ts'], undefined, '/repo/packages/app')
+  const { commands } = await runCheckCommand(
+    ['index.ts'],
+    undefined,
+    '/repo/packages/app/src',
+    '/repo/packages/app'
+  )
 
   assert.deepEqual(commands, [
     ['format', 'src/index.ts'],
