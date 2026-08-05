@@ -1,33 +1,27 @@
-import assert          from 'node:assert/strict'
-import test            from 'node:test'
+import type { ProcessInvocation } from '@atls/raijin/commands'
 
-import { npath }       from '@yarnpkg/fslib'
+import assert                     from 'node:assert/strict'
+import test                       from 'node:test'
 
-import { execOrThrow } from '../src/pack.utils.js'
-
-const cwd = npath.toPortablePath(process.cwd())
+import { execOrThrow }            from '../src/pack.utils.js'
 
 test('should resolve when command exits with zero code', async () => {
+  const processInvocation: ProcessInvocation = {
+    execute: async () => ({ exitCode: 0, stderr: '', stdout: '' }),
+  }
+
   await assert.doesNotReject(
-    execOrThrow(process.execPath, ['-e', 'process.exit(0)'], {
-      cwd,
-      env: process.env,
-      stdin: process.stdin,
-      stdout: process.stdout,
-      stderr: process.stderr,
-    })
+    execOrThrow(processInvocation, process.execPath, ['-e', 'process.exit(0)'])
   )
 })
 
 test('should reject when command exits with non-zero code', async () => {
+  const processInvocation: ProcessInvocation = {
+    execute: async () => ({ exitCode: 17, stderr: '', stdout: '' }),
+  }
+
   await assert.rejects(
-    execOrThrow(process.execPath, ['-e', 'process.exit(17)'], {
-      cwd,
-      env: process.env,
-      stdin: process.stdin,
-      stdout: process.stdout,
-      stderr: process.stderr,
-    }),
+    execOrThrow(processInvocation, process.execPath, ['-e', 'process.exit(17)']),
     /failed with exit code 17/
   )
 })
