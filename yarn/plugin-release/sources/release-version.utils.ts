@@ -21,7 +21,6 @@ import { getChangedCommmits }                       from '@atls/yarn-plugin-file
 import { isReleaseVersionStrategy }                 from './release-version-policy.utils.js'
 import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
-import { captureGit }                               from './utils/git.js'
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
 type GitHubCommitFile = NonNullable<GitHubCommit['data']['files']>[number]
@@ -139,19 +138,53 @@ const getGitHubChanges = async (): Promise<Array<ReleaseVersionChange>> =>
 const getLocalCommitShas = async (
   child: ChildProcessInvocation,
   gitRange: string
-): Promise<Array<string>> =>
-  (await captureGit(child, ['rev-list', '--reverse', gitRange])).split(/\r?\n/).filter(Boolean)
+): Promise<Array<string>> => {
+  const result = await child.execute('git', ['rev-list', '--reverse', gitRange], {
+    output: { mode: 'capture' },
+    scope: 'project',
+  })
 
-const getLocalCommitMessage = async (child: ChildProcessInvocation, sha: string): Promise<string> =>
-  captureGit(child, ['show', '--format=%B', '--no-patch', '--max-count=1', sha])
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git rev-list exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout.split(/\r?\n/).filter(Boolean)
+}
+
+const getLocalCommitMessage = async (
+  child: ChildProcessInvocation,
+  sha: string
+): Promise<string> => {
+  const result = await child.execute(
+    'git',
+    ['show', '--format=%B', '--no-patch', '--max-count=1', sha],
+    {
+      output: { mode: 'capture' },
+      scope: 'project',
+    }
+  )
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git show exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout
+}
 
 const getLocalCommitParentShas = async (
   child: ChildProcessInvocation,
   sha: string
 ): Promise<Array<string>> => {
-  const stdout = await captureGit(child, ['rev-list', '--parents', '-n', '1', sha])
+  const result = await child.execute('git', ['rev-list', '--parents', '-n', '1', sha], {
+    output: { mode: 'capture' },
+    scope: 'project',
+  })
 
-  const [, ...parents] = stdout.trim().split(' ').filter(Boolean)
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git rev-list exited with code ${result.exitCode}`)
+  }
+
+  const [, ...parents] = result.stdout.trim().split(' ').filter(Boolean)
 
   return parents
 }
@@ -165,18 +198,20 @@ const getLocalRootCommitFiles = async (
   child: ChildProcessInvocation,
   sha: string
 ): Promise<Array<string>> => {
-  const stdout = await captureGit(child, [
-    'diff-tree',
-    '--no-commit-id',
-    '--name-only',
-    '-r',
-    '--root',
-    '--no-renames',
-    '-z',
-    sha,
-  ])
+  const result = await child.execute(
+    'git',
+    ['diff-tree', '--no-commit-id', '--name-only', '-r', '--root', '--no-renames', '-z', sha],
+    {
+      output: { mode: 'capture' },
+      scope: 'project',
+    }
+  )
 
-  return stdout
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git diff-tree exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout
     .split('\0')
     .map((file) => file.trim())
     .filter(Boolean)
@@ -196,18 +231,22 @@ const getLocalCommitFiles = async (
     return getLocalRootCommitFiles(child, sha)
   }
 
-  const stdout = await captureGit(child, [
-    'diff',
-    '--name-only',
-    '--no-renames',
-    '-z',
-    diffParent,
-    sha,
-  ])
+  const result = await child.execute(
+    'git',
+    ['diff', '--name-only', '--no-renames', '-z', diffParent, sha],
+    {
+      output: { mode: 'capture' },
+      scope: 'project',
+    }
+  )
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git diff exited with code ${result.exitCode}`)
+  }
 
   return [
     ...new Set(
-      stdout
+      result.stdout
         .split('\0')
         .map((file) => file.trim())
         .filter(Boolean)
@@ -291,20 +330,18 @@ export const getDeferredReleaseDecisions = async (
     throw error
   }
 
-  for (const entry of entries) {
-    if (!entry.endsWith('.yml')) {
-      continue
-    }
+  await entries
+    .filter((entry) => entry.endsWith('.yml'))
+    .reduce<Promise<void>>(async (previous, entry) => {
+      await previous
+      const versionPath = ppath.join(deferredVersionFolder, entry)
+      const versionContent = await xfs.readFilePromise(versionPath, 'utf8')
+      const versionDecisions = parseDeferredReleaseDecisions(versionContent)
 
-    const versionPath = ppath.join(deferredVersionFolder, entry)
-    // eslint-disable-next-line no-await-in-loop
-    const versionContent = await xfs.readFilePromise(versionPath, 'utf8')
-    const versionDecisions = parseDeferredReleaseDecisions(versionContent)
-
-    for (const [ident, decision] of versionDecisions) {
-      decisions.set(ident, mergeReleaseVersionDeferredDecision(decisions.get(ident), decision))
-    }
-  }
+      for (const [ident, decision] of versionDecisions) {
+        decisions.set(ident, mergeReleaseVersionDeferredDecision(decisions.get(ident), decision))
+      }
+    }, Promise.resolve())
 
   return decisions
 }

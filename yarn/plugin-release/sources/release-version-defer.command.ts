@@ -49,7 +49,12 @@ export class ReleaseVersionDeferCommand extends RaijinCommand {
 
         const deferredDecisions = await getDeferredReleaseDecisions(configuration)
 
-        for (const { workspace: changedWorkspace, strategy } of strategies) {
+        await strategies.reduce<Promise<void>>(async (
+          previous,
+          { workspace: changedWorkspace, strategy }
+        ) => {
+          await previous
+
           const effectiveStrategy = resolveReleaseVersionDeferredStrategy(
             deferredDecisions.get(changedWorkspace.ident),
             strategy
@@ -58,11 +63,9 @@ export class ReleaseVersionDeferCommand extends RaijinCommand {
           report.reportInfo(null, `Deferring ${changedWorkspace.ident} as ${effectiveStrategy}`)
 
           if (this.dryRun) {
-            continue
+            return
           }
 
-          // Deferred version records share the same `.yarn/versions` state.
-          // eslint-disable-next-line no-await-in-loop
           const code = await invocation.yarn.execute([
             'workspace',
             changedWorkspace.ident,
@@ -74,21 +77,24 @@ export class ReleaseVersionDeferCommand extends RaijinCommand {
           if (code > 0) {
             throw new Error(`Failed to defer ${changedWorkspace.ident} as ${effectiveStrategy}`)
           }
-        }
+        }, Promise.resolve())
 
-        for (const { workspace: changedWorkspace } of declineStrategies) {
+        await declineStrategies.reduce<Promise<void>>(async (
+          previous,
+          { workspace: changedWorkspace }
+        ) => {
+          await previous
+
           if (deferredDecisions.has(changedWorkspace.ident)) {
-            continue
+            return
           }
 
           report.reportInfo(null, `Declining ${changedWorkspace.ident}`)
 
           if (this.dryRun) {
-            continue
+            return
           }
 
-          // Deferred version records share the same `.yarn/versions` state.
-          // eslint-disable-next-line no-await-in-loop
           const code = await invocation.yarn.execute([
             'workspace',
             changedWorkspace.ident,
@@ -100,7 +106,7 @@ export class ReleaseVersionDeferCommand extends RaijinCommand {
           if (code > 0) {
             throw new Error(`Failed to decline ${changedWorkspace.ident}`)
           }
-        }
+        }, Promise.resolve())
       }
     )
 

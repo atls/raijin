@@ -6,7 +6,11 @@ import lintStaged               from 'lint-staged'
 
 import { RaijinCommand }        from '@atls/raijin/commands'
 
+const WINDOWS_SAFE_MAX_ARG_LENGTH = 8190
+
 const resolveRootDir = async (invocation: EntryInvocation): Promise<string> => {
+  const fallbackRootDir = npath.fromPortablePath(invocation.invocationCwd)
+
   try {
     const result = await invocation.child.execute('git', ['rev-parse', '--show-toplevel'], {
       output: { mode: 'capture' },
@@ -16,10 +20,10 @@ const resolveRootDir = async (invocation: EntryInvocation): Promise<string> => {
       return result.stdout.trim()
     }
   } catch {
-    // Fall back to the invocation directory when Git is unavailable.
+    return fallbackRootDir
   }
 
-  return npath.fromPortablePath(invocation.invocationCwd)
+  return fallbackRootDir
 }
 
 const resolveSafeMaxArgLength = async (invocation: EntryInvocation): Promise<number> => {
@@ -33,10 +37,10 @@ const resolveSafeMaxArgLength = async (invocation: EntryInvocation): Promise<num
       return Math.floor(maxArgLength * 0.5)
     }
   } catch {
-    // Use the Windows-compatible fallback when getconf is unavailable.
+    return WINDOWS_SAFE_MAX_ARG_LENGTH
   }
 
-  return 8190
+  return WINDOWS_SAFE_MAX_ARG_LENGTH
 }
 
 const quoteShellArgument = (value: string): string => JSON.stringify(value)

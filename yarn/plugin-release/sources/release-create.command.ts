@@ -19,7 +19,6 @@ import { xfs }                         from '@yarnpkg/fslib'
 import { Release }                     from '@atls/code-github'
 import { RaijinCommand }               from '@atls/raijin/commands'
 
-import { captureGit }                  from './utils/git.js'
 import { parseGitHubUrl }              from './utils/parse-git-url.js'
 
 const RELEASE_ALREADY_EXISTS_STATUS = 422
@@ -423,9 +422,16 @@ export const getGitHubReleaseTagNames = async (
   child: ChildProcessInvocation,
   packageName: string
 ): Promise<Array<string>> => {
-  const stdout = await captureGit(child, ['tag', '--list', `${packageName}@*`])
+  const result = await child.execute('git', ['tag', '--list', `${packageName}@*`], {
+    output: { mode: 'capture' },
+    scope: 'project',
+  })
 
-  return stdout
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git tag exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout
     .split('\n')
     .map((tagName) => tagName.trim())
     .filter(Boolean)
@@ -433,7 +439,18 @@ export const getGitHubReleaseTagNames = async (
 
 export const getGitHubReleaseTargetCommitish = async (
   child: ChildProcessInvocation
-): Promise<string> => (await captureGit(child, ['rev-parse', 'HEAD'])).trim()
+): Promise<string> => {
+  const result = await child.execute('git', ['rev-parse', 'HEAD'], {
+    output: { mode: 'capture' },
+    scope: 'project',
+  })
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git rev-parse exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout.trim()
+}
 
 export class ReleaseCreateCommand extends RaijinCommand {
   static override paths = [['release', 'create']]
@@ -477,9 +494,16 @@ export class ReleaseCreateCommand extends RaijinCommand {
           let owner: string
           let repo: string
           try {
-            ;({ repository: repo, organization: owner } = parseGitHubUrl(
-              await captureGit(child, ['remote', 'get-url', 'origin'])
-            ))
+            const result = await child.execute('git', ['remote', 'get-url', 'origin'], {
+              output: { mode: 'capture' },
+              scope: 'project',
+            })
+
+            if (result.exitCode !== 0) {
+              throw new Error(result.stderr || `git remote exited with code ${result.exitCode}`)
+            }
+
+            ;({ repository: repo, organization: owner } = parseGitHubUrl(result.stdout))
           } catch {
             ;[owner, repo] = process.env.GITHUB_REPOSITORY?.split('/') ?? ['', '']
           }
