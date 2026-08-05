@@ -1495,6 +1495,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@actions/github", "npm:6.0.0"],\
           ["@atls/code-pack", "workspace:code/code-pack"],\
+          ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@iarna/toml", "npm:2.2.5"],\
           ["@types/node", "npm:24.12.2"],\
           ["@yarnpkg/core", "npm:4.7.0"],\

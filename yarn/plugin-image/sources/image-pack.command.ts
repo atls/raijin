@@ -95,7 +95,7 @@ class ImagePackCommand extends BaseCommand {
             require,
             cwd: destination,
           },
-          this.context
+          invocation
         )
       }
     )
