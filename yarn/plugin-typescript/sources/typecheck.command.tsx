@@ -1,10 +1,11 @@
 import type { CommandInput }            from '@atls/raijin/commands'
-import type { WorkspaceInvocation }     from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 import type { Project }                 from '@yarnpkg/core'
 import type { PortablePath }            from '@yarnpkg/fslib'
 
 import type { TypeScriptConfigRuntime } from './typecheck.interfaces.js'
 
+import { BaseCommand }                  from '@yarnpkg/cli'
 import { ppath }                        from '@yarnpkg/fslib'
 import { Option }                       from 'clipanion'
 import { render }                       from 'ink'
@@ -14,7 +15,6 @@ import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
 import { TypeScriptDiagnostic }         from '@atls/cli-ui-typescript-diagnostic-component'
 import { TypeScriptProgress }           from '@atls/cli-ui-typescript-progress-component'
 import { TypeScript }                   from '@atls/code-typescript'
-import { RaijinCommand }                from '@atls/raijin/commands'
 import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
@@ -27,16 +27,19 @@ const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptCon
     resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_CONFIG_SPECIFIER)
   )) as TypeScriptConfigRuntime
 
-export class TypeCheckCommand extends RaijinCommand {
+export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'type-check project sources',
   })
 
+  declare context: WorkspaceCommandContext
+
   args: Array<string> = Option.Rest({ required: 0 })
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { executionCwd, invocationCwd, project, yarn } = invocation
     const typecheckCwd = await this.resolveTypecheckCwd(executionCwd, project.cwd)
     const nativeTypecheckCwd = toNativeCwd(typecheckCwd)

@@ -1,21 +1,24 @@
-import type { ProjectInvocation } from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { Option }                 from 'clipanion'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Option }                       from 'clipanion'
 
-import { RaijinCommand }          from '@atls/raijin/commands'
-import { createCommandInput }     from '@atls/raijin/commands'
-import { toCommandArguments }     from '@atls/raijin/commands'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { toCommandArguments }           from '@atls/raijin/commands'
 
-export class CheckCommand extends RaijinCommand {
+export class CheckCommand extends BaseCommand {
   static override paths = [['check']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'run formatting, type checking, and linting',
   })
 
+  declare context: WorkspaceCommandContext
+
   targets: Array<string> = Option.Rest({ required: 0 })
 
-  async executeProject(invocation: ProjectInvocation): Promise<number> {
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     let exitCode = 0
     const requestedTargets = this.targets.length > 0 ? this.targets : [invocation.invocationCwd]
     const input = createCommandInput({

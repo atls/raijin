@@ -6,7 +6,6 @@ import type { EntryInvokedCommand }          from './definition.interfaces.js'
 import type { InvokedCommand }               from './definition.interfaces.js'
 import type { ProjectInvokedCommand }        from './definition.interfaces.js'
 import type { WorkspaceInvokedCommand }      from './definition.interfaces.js'
-import type { CommandInvocationExit }        from './resolve.interfaces.js'
 
 import { BaseCommand }                       from '@yarnpkg/cli'
 
@@ -28,23 +27,16 @@ interface CommandHandlers {
   executeWorkspace?: WorkspaceInvokedCommand['executeWorkspace']
 }
 
-const isCommandInvocationExit = (value: unknown): value is CommandInvocationExit =>
-  typeof value === 'object' && value !== null && 'exitCode' in value
-
 const resolveInvocation = async <Scope extends CommandInvocationScope>(
   scope: Scope,
   context: CommandContext
-): Promise<CommandInvocationExit | CommandInvocationForScope<Scope>> => {
+): Promise<CommandInvocationForScope<Scope>> => {
   if (scope === 'workspace') {
-    return resolveWorkspaceCommandInvocation(context) as Promise<
-      CommandInvocationExit | CommandInvocationForScope<Scope>
-    >
+    return resolveWorkspaceCommandInvocation(context) as Promise<CommandInvocationForScope<Scope>>
   }
 
   if (scope === 'project') {
-    return resolveProjectCommandInvocation(context) as Promise<
-      CommandInvocationExit | CommandInvocationForScope<Scope>
-    >
+    return resolveProjectCommandInvocation(context) as Promise<CommandInvocationForScope<Scope>>
   }
 
   return resolveEntryCommandInvocation(context) as CommandInvocationForScope<Scope>
@@ -69,10 +61,6 @@ export abstract class RaijinCommand extends BaseCommand {
   override async execute(): Promise<number | undefined> {
     const handler = resolveCommandHandler(this)
     const invocation = await resolveInvocation(handler.scope, this.context)
-
-    if (isCommandInvocationExit(invocation)) {
-      return invocation.exitCode
-    }
 
     return handler.execute.call(this as unknown as InvokedCommand, invocation)
   }

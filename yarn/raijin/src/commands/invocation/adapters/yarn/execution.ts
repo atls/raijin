@@ -78,15 +78,16 @@ export const createYarnExecutable = async ({
 export const executeYarnCommand = async ({
   args,
   context,
-  invocation,
+  executionCwd,
   options = {},
+  project,
 }: YarnCommandOptions): Promise<CommandExecutionResult> => {
   const binFolder = await xfs.mktempPromise()
   let executable = await createYarnExecutable({
     baseEnvironment: context.environment,
     binFolder,
     locator: options.locator,
-    project: invocation.yarn.project,
+    project,
   })
   const preparation = await options.prepare?.({
     binFolder,
@@ -101,18 +102,18 @@ export const executeYarnCommand = async ({
       locator: options.locator,
       nodeLoader: preparation.nodeLoader,
       nodeOptions: preparation.nodeOptions,
-      project: invocation.yarn.project,
+      project,
     })
   }
 
   const environment = executable.env
 
-  environment.INIT_CWD = toNativeCwd(invocation.executionCwd)
-  environment.PROJECT_CWD = toNativeCwd(invocation.project.cwd)
+  environment.INIT_CWD = toNativeCwd(executionCwd)
+  environment.PROJECT_CWD = toNativeCwd(project.cwd)
 
   return executeChildProcess(executable.executable, args, {
     context,
-    cwd: toNativeCwd(invocation.executionCwd),
+    cwd: toNativeCwd(executionCwd),
     env: environment,
     input: options.input,
     output: options.output,

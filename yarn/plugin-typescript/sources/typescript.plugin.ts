@@ -1,7 +1,9 @@
-import type { Plugin }      from '@yarnpkg/core'
+import type { Plugin }              from '@yarnpkg/core'
 
-import { TypeCheckCommand } from './typecheck.command.jsx'
+import { defineCommandInvocations } from '@atls/raijin/commands'
+
+import { TypeCheckCommand }         from './typecheck.command.jsx'
 
 export const plugin: Plugin = {
-  commands: [TypeCheckCommand],
+  commands: defineCommandInvocations({ workspace: [TypeCheckCommand] }),
 }

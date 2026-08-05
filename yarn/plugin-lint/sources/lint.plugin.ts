@@ -1,7 +1,9 @@
-import type { Plugin } from '@yarnpkg/core'
+import type { Plugin }              from '@yarnpkg/core'
 
-import { LintCommand } from './lint.command.jsx'
+import { defineCommandInvocations } from '@atls/raijin/commands'
+
+import { LintCommand }              from './lint.command.jsx'
 
 export const plugin: Plugin = {
-  commands: [LintCommand],
+  commands: defineCommandInvocations({ workspace: [LintCommand] }),
 }

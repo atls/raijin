@@ -1,17 +1,17 @@
-import type { WorkspaceInvocation } from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { Option }                   from 'clipanion'
-import { render }                   from 'ink'
-import React                        from 'react'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Option }                       from 'clipanion'
+import { render }                       from 'ink'
+import React                            from 'react'
 
-import { ErrorInfo }                from '@atls/cli-ui-error-info-component'
-import { LintProgress }             from '@atls/cli-ui-lint-progress-component'
-import { LintResult }               from '@atls/cli-ui-lint-result-component'
-import { Linter }                   from '@atls/code-lint'
-import { RaijinCommand }            from '@atls/raijin/commands'
-import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }       from '@atls/raijin/commands'
-import { toNativeCwd }              from '@atls/raijin/commands'
+import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { LintProgress }                 from '@atls/cli-ui-lint-progress-component'
+import { LintResult }                   from '@atls/cli-ui-lint-result-component'
+import { Linter }                       from '@atls/code-lint'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
 
 interface LintCommandResult {
   messages: Array<unknown>
@@ -19,12 +19,14 @@ interface LintCommandResult {
 
 export const hasLintMessages = (result: LintCommandResult): boolean => result.messages.length > 0
 
-export class LintCommand extends RaijinCommand {
+export class LintCommand extends BaseCommand {
   static override paths = [['lint']]
 
-  static override usage = RaijinCommand.Usage({
+  static override usage = BaseCommand.Usage({
     description: 'lint project files',
   })
+
+  declare context: WorkspaceCommandContext
 
   fix = Option.Boolean('--fix')
 
@@ -32,7 +34,8 @@ export class LintCommand extends RaijinCommand {
 
   cache: boolean = Option.Boolean('--cache', false)
 
-  async executeWorkspace(invocation: WorkspaceInvocation): Promise<number> {
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { executionCwd, invocationCwd, project } = invocation
     const projectCwd = toNativeCwd(project.cwd)
 
