@@ -80,8 +80,6 @@ export abstract class AbstractTestCommand extends BaseCommand {
     validator: isEnum(['tap']),
   })
 
-  testNamePattern = Option.String('--test-name-pattern')
-
   declare context: WorkspaceCommandContext
 
   private std = new Map<string | undefined, Array<string>>()
@@ -185,7 +183,6 @@ export abstract class AbstractTestCommand extends BaseCommand {
     return {
       watch: this.watch,
       testReporter: this.testReporter,
-      testNamePattern: this.testNamePattern,
     }
   }
 

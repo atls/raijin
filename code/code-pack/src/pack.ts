@@ -1,4 +1,4 @@
-import type { EntryInvocation }    from '@atls/raijin/commands'
+import type { execUtils }          from '@yarnpkg/core'
 
 import type { PackOptions }        from './pack.interfaces.js'
 import type { PackOutputs }        from './pack.interfaces.js'
@@ -26,13 +26,13 @@ export const pack = async (
     require,
     cwd,
   }: PackOptions,
-  invocation: Pick<EntryInvocation, 'executionCwd' | 'process'>
+  context: execUtils.PipevpOptions
 ): Promise<PackOutputs> => {
-  const packCwd = cwd ?? invocation.executionCwd
+  const packCwd = cwd ?? context.cwd
   const repo = workspace.replace('@', '').replace(/\//g, '-')
   const image = `${registry}${repo}`
 
-  const tag = await getTag(tagPolicy, invocation.process)
+  const tag = await getTag(tagPolicy)
 
   const envs = [
     {
@@ -73,8 +73,6 @@ export const pack = async (
     `${image}:${tag}`,
     '--descriptor',
     descriptorPath,
-    '--path',
-    packCwd,
     '--buildpack',
     buildpack,
     '--tag',
@@ -96,11 +94,23 @@ export const pack = async (
   // eslint-disable-next-line no-console
   console.debug(`Packing with args:`, args)
 
-  await installPack({ cwd: packCwd, processInvocation: invocation.process })
+  await installPack({ cwd, context })
 
-  await execOrThrow(invocation.process, 'pack', ['config', 'experimental', 'true'])
+  await execOrThrow('pack', ['config', 'experimental', 'true'], {
+    cwd: packCwd,
+    env: process.env,
+    stdin: context.stdin,
+    stdout: context.stdout,
+    stderr: context.stderr,
+  })
 
-  await execOrThrow(invocation.process, 'pack', args)
+  await execOrThrow('pack', args, {
+    cwd: packCwd,
+    env: process.env,
+    stdin: context.stdin,
+    stdout: context.stdout,
+    stderr: context.stderr,
+  })
 
   return {
     images: [`${image}:${tag}`, `${image}:latest`],

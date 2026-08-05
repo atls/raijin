@@ -1,11 +1,12 @@
-import type { ProcessInvocation }  from '@atls/raijin/commands'
-import type { ProcessOutputEvent } from '@atls/raijin/commands'
-import type { Writable }           from 'node:stream'
-import type webpack                from 'webpack'
+import type { ChildProcess } from 'node:child_process'
+import type { ForkOptions }  from 'node:child_process'
+import type { Writable }     from 'node:stream'
+import type webpack          from 'webpack'
 
-import { join }                    from 'node:path'
+import { fork }              from 'node:child_process'
+import { join }              from 'node:path'
 
-import { StartServerLogger }       from './start-server.logger.js'
+import { StartServerLogger } from './start-server.logger.js'
 
 export interface StartServerPluginOptions {
   stdout?: Writable
@@ -13,27 +14,26 @@ export interface StartServerPluginOptions {
   execArgv?: Array<string>
 }
 
-export const createStartServerArguments = (
-  entryFile: string,
+export const createStartServerForkOptions = (
   { execArgv }: StartServerPluginOptions,
   parentExecArgv = process.execArgv
-): Array<string> => [...parentExecArgv, ...(execArgv ?? []), entryFile]
+): ForkOptions => ({
+  silent: true,
+  ...(execArgv ? { execArgv: [...parentExecArgv, ...execArgv] } : {}),
+})
 
 export class StartServerPlugin {
   options: StartServerPluginOptions
 
   entryFile: string | null = null
 
-  processController: AbortController | undefined
+  worker: ChildProcess | null = null
 
   initialized: boolean = false
 
   logger: StartServerLogger
 
-  constructor(
-    private readonly processInvocation: ProcessInvocation,
-    options: Partial<StartServerPluginOptions> = {}
-  ) {
+  constructor(options: Partial<StartServerPluginOptions> = {}) {
     this.logger = new StartServerLogger(options)
     this.options = options
   }
@@ -48,7 +48,9 @@ export class StartServerPlugin {
 
       callback()
     } else {
-      this.processController?.abort()
+      if (this.worker?.connected && this.worker.pid) {
+        process.kill(this.worker.pid)
+      }
 
       this.startServer(compilation, callback)
     }
@@ -61,37 +63,27 @@ export class StartServerPlugin {
     if (path) {
       this.entryFile = join(path, 'index.js')
 
-      this.startProcess(this.entryFile)
+      this.runWorker(this.entryFile, (worker) => {
+        this.worker = worker
 
-      setTimeout(callback, 0)
+        callback()
+      })
     }
   }
 
-  private handleOutput = ({ data, source }: ProcessOutputEvent): void => {
-    this.options[source]?.write(data)
-  }
+  private runWorker(entryFile: string, callback: (arg0: ChildProcess) => void): void {
+    const worker = fork(entryFile, [], createStartServerForkOptions(this.options))
 
-  private startProcess(entryFile: string): void {
-    const processController = new AbortController()
+    if (this.options.stdout) {
+      worker.stdout?.pipe(this.options.stdout, { end: false })
+    }
 
-    this.processController = processController
+    if (this.options.stderr) {
+      worker.stderr?.pipe(this.options.stderr, { end: false })
+    }
 
-    this.processInvocation
-      .execute(process.execPath, createStartServerArguments(entryFile, this.options), {
-        output: { mode: 'handle', handler: this.handleOutput },
-        signal: processController.signal,
-      })
-      .then(
-        ({ exitCode }) => {
-          if (!processController.signal.aborted && exitCode !== 0) {
-            this.logger.error(new Error(`Server process exited with code ${exitCode}`))
-          }
-        },
-        (error: unknown) => {
-          if (!processController.signal.aborted) {
-            this.logger.error(error instanceof Error ? error : new Error(String(error)))
-          }
-        }
-      )
+    setTimeout(() => {
+      callback(worker)
+    }, 0)
   }
 }

@@ -9,7 +9,7 @@ jobs:
   checks:
     name: Shared checks / Checks
     env:
-      NODE_VERSION: '26'
+      NODE_VERSION: '25'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: write-all
@@ -37,7 +37,7 @@ jobs:
   raijin:
     name: Raijin checks
     env:
-      NODE_VERSION: '26'
+      NODE_VERSION: '25'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: read-all
@@ -65,7 +65,7 @@ jobs:
   windows-invocation:
     name: Windows invocation
     env:
-      NODE_VERSION: '26'
+      NODE_VERSION: '25'
     runs-on: windows-latest
     timeout-minutes: 10
     permissions: read-all
@@ -87,4 +87,4 @@ jobs:
       - name: Test Windows invocation
         shell: bash
         run: |
-          yarn test unit --test-name-pattern="should execute (nested Yarn through the Windows command shim|Windows command wrappers without a shell option)" yarn/raijin/src/commands/invocation/scope/tests/resolution.test.ts yarn/raijin/src/commands/invocation/adapters/execa/execute.test.ts
+          yarn test unit yarn/raijin/src/commands/invocation/scope/tests/resolution.test.ts yarn/raijin/src/commands/invocation/adapters/execa/execute.test.ts

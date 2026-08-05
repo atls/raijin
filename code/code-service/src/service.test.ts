@@ -1,23 +1,18 @@
-import type { ProcessInvocation } from '@atls/raijin/commands'
+import assert        from 'node:assert/strict'
+import { mkdir }     from 'node:fs/promises'
+import { mkdtemp }   from 'node:fs/promises'
+import { rm }        from 'node:fs/promises'
+import { writeFile } from 'node:fs/promises'
+import { tmpdir }    from 'node:os'
+import { join }      from 'node:path'
+import test          from 'node:test'
 
-import assert                     from 'node:assert/strict'
-import { mkdir }                  from 'node:fs/promises'
-import { mkdtemp }                from 'node:fs/promises'
-import { rm }                     from 'node:fs/promises'
-import { writeFile }              from 'node:fs/promises'
-import { tmpdir }                 from 'node:os'
-import { join }                   from 'node:path'
-import test                       from 'node:test'
-
-import { Service }                from './service.js'
+import { Service }   from './service.js'
 
 test('should import service webpack runtime through ancestor package boundary', async () => {
   const root = await mkdtemp(join(tmpdir(), 'service-runtime-workspace-'))
   const workspace = join(root, 'server', 'api')
   const runtime = join(root, 'node_modules/@atls/raijin')
-  const processInvocation: ProcessInvocation = {
-    execute: async () => ({ exitCode: 0, stderr: '', stdout: '' }),
-  }
 
   await mkdir(runtime, { recursive: true })
   await mkdir(workspace, { recursive: true })
@@ -56,7 +51,7 @@ test('should import service webpack runtime through ancestor package boundary', 
   )
 
   try {
-    assert.ok(await Service.initialize(workspace, processInvocation))
+    assert.ok(await Service.initialize(workspace))
   } finally {
     await rm(root, { recursive: true, force: true })
   }

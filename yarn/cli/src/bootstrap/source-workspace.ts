@@ -12,7 +12,6 @@ import { miscUtils }                from '@yarnpkg/core'
 import { structUtils }              from '@yarnpkg/core'
 import { npath }                    from '@yarnpkg/fslib'
 import { ppath }                    from '@yarnpkg/fslib'
-import { xfs }                      from '@yarnpkg/fslib'
 import { getPnpPath }               from '@yarnpkg/plugin-pnp'
 
 import { MANAGED_NODE_LOADER_ENV }  from '@atls/raijin/runtime/node/bootstrap'
@@ -53,12 +52,13 @@ export const registerRaijinSourceWorkspaceRuntime = async (
 
   const { project } = await Project.find(configuration, cwd)
   const workspace = project.tryWorkspaceByIdent(RAIJIN_PACKAGE_IDENT)
-  const pnpPath = getPnpPath(project)
 
-  if (!(await xfs.existsPromise(pnpPath.cjs))) {
+  if (!workspace) {
     return
   }
 
+  const packagePath = npath.fromPortablePath(ppath.join(workspace.cwd, PACKAGE_MANIFEST))
+  const pnpPath = getPnpPath(project)
   const pnpApiPath = npath.fromPortablePath(pnpPath.cjs)
   const pnpLoaderPath = npath.fromPortablePath(pnpPath.esmLoader)
   const pnpLoader = pathToFileURL(pnpLoaderPath).href
@@ -67,14 +67,6 @@ export const registerRaijinSourceWorkspaceRuntime = async (
   const pnpApi = miscUtils.dynamicRequire(pnpApiPath) as PnpRuntimeApi
 
   pnpApi.setup()
-
-  if (!workspace) {
-    await registerNodeLoaders([pnpLoader])
-
-    return
-  }
-
-  const packagePath = npath.fromPortablePath(ppath.join(workspace.cwd, PACKAGE_MANIFEST))
 
   if (inheritedTypeScriptLoader) {
     await registerNodeLoaders([pnpLoader, inheritedTypeScriptLoader])

@@ -46,7 +46,6 @@ type TargetPathResult = ExistingTargetPath | MissingTargetPath
 type TestOptions = {
   watch?: boolean
   testReporter?: string
-  testNamePattern?: string
 }
 
 type TestType = 'integration' | 'unit' | undefined
@@ -91,7 +90,7 @@ export class Tester extends EventEmitter {
     files: Array<string>,
     timeout: number,
     concurrency: boolean,
-    { watch = false, testReporter, testNamePattern }: TestOptions = {}
+    { watch = false, testReporter }: TestOptions = {}
   ): Promise<Array<TestEvent>> {
     const explicitExecArgv = parseTestExecArgv()
     const execArgv =
@@ -102,7 +101,6 @@ export class Tester extends EventEmitter {
       concurrency,
       watch,
       ...(execArgv.length > 0 ? { execArgv } : {}),
-      ...(testNamePattern ? { testNamePatterns: testNamePattern } : {}),
     }
 
     if (testReporter === 'tap') {

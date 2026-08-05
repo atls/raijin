@@ -1,4 +1,3 @@
-import type { ProcessInvocation }       from '@atls/raijin/commands'
 import type { webpack as wp }           from '@atls/raijin/webpack'
 
 import type { ServiceLogRecord }        from './service.interfaces.js'
@@ -33,15 +32,13 @@ export class Service extends EventEmitter {
   protected constructor(
     private readonly webpack: typeof wp,
     private readonly config: WebpackConfig,
-    private readonly execArgv: Array<string>,
-    private readonly processInvocation: ProcessInvocation
+    private readonly execArgv: Array<string>
   ) {
     super()
   }
 
   static async initialize(
     cwd: string,
-    processInvocation: ProcessInvocation,
     workspaceDependencies: Iterable<string> = []
   ): Promise<Service> {
     const { webpack, tsLoaderPath, nodeLoaderPath, protoLoaderPath } =
@@ -58,7 +55,7 @@ export class Service extends EventEmitter {
       workspaceDependencies
     )
 
-    return new Service(webpack, config, await createServiceRuntimeExecArgv(cwd), processInvocation)
+    return new Service(webpack, config, await createServiceRuntimeExecArgv(cwd))
   }
 
   async build(): Promise<Array<ServiceLogRecord>> {
@@ -113,11 +110,7 @@ export class Service extends EventEmitter {
 
     return this.webpack(
       await this.config.build('development', [
-        new StartServerPlugin(this.processInvocation, {
-          stdout: pass,
-          stderr: pass,
-          execArgv: this.execArgv,
-        }),
+        new StartServerPlugin({ stdout: pass, stderr: pass, execArgv: this.execArgv }),
         new this.webpack.ProgressPlugin((percent: number, message: string): void => {
           this.emit('build:progress', { percent: percent * 100, message })
         }),
