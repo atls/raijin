@@ -2,6 +2,8 @@ import type { PluginConfiguration }  from '@yarnpkg/core'
 import type { PortablePath }         from '@yarnpkg/fslib'
 import type { PnpApi }               from '@yarnpkg/pnp'
 
+import type { PnpRuntimeApi }        from './source-workspace.interfaces.js'
+
 import { pathToFileURL }             from 'node:url'
 
 import { Configuration }             from '@yarnpkg/core'
@@ -67,7 +69,9 @@ export const registerRaijinSourceWorkspaceRuntime = async (
     return
   }
 
-  const pnpApi = miscUtils.dynamicRequire(pnpApiPath) as PnpApi
+  const pnpApi = miscUtils.dynamicRequire(pnpApiPath) as PnpRuntimeApi
+
+  pnpApi.setup()
 
   if (inheritedTypeScriptLoader) {
     await registerNodeLoaders([pnpLoader, inheritedTypeScriptLoader])
