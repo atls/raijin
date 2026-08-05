@@ -16,12 +16,6 @@ import { AnnotationLevel }            from './github.checks.js'
 import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
-export const createChecksReleaseArgs = (noPrivate: boolean): Array<string> => [
-  'checks',
-  'release',
-  ...(noPrivate ? ['--no-private'] : []),
-]
-
 class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]
 

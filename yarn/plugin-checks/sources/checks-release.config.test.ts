@@ -4,7 +4,6 @@ import type { Workspace }             from '@yarnpkg/core'
 import assert                         from 'node:assert/strict'
 import { test }                       from 'node:test'
 
-import { createChecksReleaseArgs }    from './checks-release.command.js'
 import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
@@ -89,9 +88,4 @@ test('should filter private release workspaces only when configured', () => {
     }),
     true
   )
-})
-
-test('should preserve private workspace filter in release command arguments', () => {
-  assert.deepEqual(createChecksReleaseArgs(false), ['checks', 'release'])
-  assert.deepEqual(createChecksReleaseArgs(true), ['checks', 'release', '--no-private'])
 })
