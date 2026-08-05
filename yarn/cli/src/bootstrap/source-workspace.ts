@@ -12,6 +12,7 @@ import { miscUtils }                from '@yarnpkg/core'
 import { structUtils }              from '@yarnpkg/core'
 import { npath }                    from '@yarnpkg/fslib'
 import { ppath }                    from '@yarnpkg/fslib'
+import { xfs }                      from '@yarnpkg/fslib'
 import { getPnpPath }               from '@yarnpkg/plugin-pnp'
 
 import { MANAGED_NODE_LOADER_ENV }  from '@atls/raijin/runtime/node/bootstrap'
@@ -53,6 +54,11 @@ export const registerRaijinSourceWorkspaceRuntime = async (
   const { project } = await Project.find(configuration, cwd)
   const workspace = project.tryWorkspaceByIdent(RAIJIN_PACKAGE_IDENT)
   const pnpPath = getPnpPath(project)
+
+  if (!(await xfs.existsPromise(pnpPath.cjs))) {
+    return
+  }
+
   const pnpApiPath = npath.fromPortablePath(pnpPath.cjs)
   const pnpLoaderPath = npath.fromPortablePath(pnpPath.esmLoader)
   const pnpLoader = pathToFileURL(pnpLoaderPath).href
