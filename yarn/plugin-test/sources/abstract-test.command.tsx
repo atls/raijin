@@ -6,6 +6,8 @@ import type { WorkspaceInvocation }     from '@atls/raijin/commands'
 import type { PortablePath }            from '@yarnpkg/fslib'
 import type { EventData }               from 'node:test'
 
+import type { TestInputOptions }        from './abstract-test.interfaces.js'
+
 import { readFileSync }                 from 'node:fs'
 import { relative }                     from 'node:path'
 
@@ -29,12 +31,6 @@ import { toNativeCwd }                  from '@atls/raijin/commands'
 type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
 type TestStdout = EventData.TestStdout
-
-interface TestInputOptions {
-  files: Array<string>
-  invocationCwd: PortablePath
-  target?: string
-}
 
 export const createTestInput = ({
   files,

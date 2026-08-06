@@ -19,6 +19,10 @@ export type WorkspaceCommandContext = CommandContext & {
   invocation: WorkspaceInvocation
 }
 
+export interface InvocationPluginConfiguration {
+  modules: Map<string, unknown>
+}
+
 type YarnCommandClass = NonNullable<Plugin['commands']>[number]
 type CommandExecution = InstanceType<YarnCommandClass>['execute']
 

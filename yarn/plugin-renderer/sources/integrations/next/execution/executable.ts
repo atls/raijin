@@ -1,7 +1,7 @@
-import type { Locator }                        from '@yarnpkg/core'
-import type { Project }                        from '@yarnpkg/core'
 import type { Filename }                       from '@yarnpkg/fslib'
-import type { PortablePath }                   from '@yarnpkg/fslib'
+
+import type { NextExecutable }                 from './executable.interfaces.js'
+import type { NextExecutableOptions }          from './executable.interfaces.js'
 
 import { scriptUtils }                         from '@yarnpkg/core'
 import { npath }                               from '@yarnpkg/fslib'
@@ -18,15 +18,6 @@ import { materializeNextLoader }               from './loader.js'
 
 const YARN_EXECUTABLE_NAME = (process.platform === 'win32' ? 'yarn.cmd' : 'yarn') as Filename
 
-interface NextExecutableOptions {
-  baseEnvironment: NodeJS.ProcessEnv
-  binFolder: PortablePath
-  locator: Locator
-  output?: 'standalone'
-  project: Project
-  rendererCwd: PortablePath
-}
-
 export const createNextExecutable = async ({
   baseEnvironment,
   binFolder,
@@ -34,7 +25,7 @@ export const createNextExecutable = async ({
   output,
   project,
   rendererCwd,
-}: NextExecutableOptions): Promise<{ env: NodeJS.ProcessEnv; executable: Filename }> => {
+}: NextExecutableOptions): Promise<NextExecutable> => {
   const initialEnvironment = await scriptUtils.makeScriptEnv({
     baseEnv: createLauncherBaseEnvironment({
       ...project.configuration.env,

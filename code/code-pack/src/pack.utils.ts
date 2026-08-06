@@ -1,18 +1,10 @@
-import type { PortablePath }            from '@yarnpkg/fslib'
-
 import type { CommandExecutionOptions } from './command.interfaces.js'
 import type { CommandExecutionResult }  from './command.interfaces.js'
 import type { CommandExecutor }         from './command.interfaces.js'
+import type { InstallPackOptions }      from './pack.interfaces.js'
 
 import { platform }                     from 'node:os'
 import { arch }                         from 'node:os'
-
-interface InstallPackOptions {
-  commandExecutor: CommandExecutor
-  cwd: PortablePath
-}
-
-type InstallPack = (options: InstallPackOptions) => Promise<void>
 
 const PACK_VERSION = '0.40.4'
 
@@ -36,7 +28,7 @@ export const execOrThrow = async (
 /**
  * Installs pack if not present
  */
-export const installPack: InstallPack = async ({ commandExecutor, cwd }) => {
+export const installPack = async ({ commandExecutor, cwd }: InstallPackOptions): Promise<void> => {
   let isPackInstalled: boolean
 
   try {

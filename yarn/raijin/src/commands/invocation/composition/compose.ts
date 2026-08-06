@@ -1,16 +1,17 @@
-import type { CommandContext }               from '@yarnpkg/core'
-import type { PluginConfiguration }          from '@yarnpkg/core'
+import type { CommandContext }                from '@yarnpkg/core'
+import type { PluginConfiguration }           from '@yarnpkg/core'
 
-import type { EntryInvocation }              from '../scope/invocation.interfaces.js'
-import type { ProjectInvocation }            from '../scope/invocation.interfaces.js'
-import type { WorkspaceInvocation }          from '../scope/invocation.interfaces.js'
-import type { CommandInvocationScope }       from './definition.interfaces.js'
-import type { RegisteredCommandClass }       from './definition.interfaces.js'
+import type { EntryInvocation }               from '../scope/invocation.interfaces.js'
+import type { ProjectInvocation }             from '../scope/invocation.interfaces.js'
+import type { WorkspaceInvocation }           from '../scope/invocation.interfaces.js'
+import type { CommandInvocationScope }        from './definition.interfaces.js'
+import type { InvocationPluginConfiguration } from './definition.interfaces.js'
+import type { RegisteredCommandClass }        from './definition.interfaces.js'
 
-import { resolveEntryCommandInvocation }     from '../scope/entry.js'
-import { resolveProjectCommandInvocation }   from '../scope/project.js'
-import { resolveWorkspaceCommandInvocation } from '../scope/workspace.js'
-import { getCommandInvocationScope }         from './definition.js'
+import { resolveEntryCommandInvocation }      from '../scope/entry.js'
+import { resolveProjectCommandInvocation }    from '../scope/project.js'
+import { resolveWorkspaceCommandInvocation }  from '../scope/workspace.js'
+import { getCommandInvocationScope }          from './definition.js'
 
 const COMPOSED_COMMAND = Symbol.for('@atls/raijin.command-invocation.composed')
 
@@ -74,7 +75,7 @@ const composeCommand = (command: RegisteredCommandClass): RegisteredCommandClass
 export const composeCommandInvocations = (
   pluginConfiguration: PluginConfiguration
 ): PluginConfiguration => {
-  const { modules }: { modules: Map<string, unknown> } = pluginConfiguration
+  const { modules }: InvocationPluginConfiguration = pluginConfiguration
 
   for (const pluginModule of modules.values()) {
     const plugin = resolvePlugin(pluginModule)
