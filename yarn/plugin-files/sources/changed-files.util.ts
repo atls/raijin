@@ -1,8 +1,10 @@
-import type { ProcessInvocation } from '@atls/raijin/commands'
-import type { Endpoints }         from '@octokit/types'
+import type { ProjectProcessInvocation } from '@atls/raijin/commands'
+import type { Endpoints }                from '@octokit/types'
 
-import { context }                from '@actions/github'
-import { getOctokit }             from '@actions/github'
+import { context }                       from '@actions/github'
+import { getOctokit }                    from '@actions/github'
+
+import { assertProcessCompleted }        from '@atls/raijin/commands'
 
 type GetCommitResponseData = Endpoints['GET /repos/{owner}/{repo}/commits/{ref}']['response']
 type GetCommitFileData = NonNullable<GetCommitResponseData['data']['files']>[number]
@@ -100,14 +102,16 @@ export const getGithubChangedFiles = async (): Promise<Array<string>> => {
 }
 
 export const getChangedFiles = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   gitRange?: string
 ): Promise<Array<string>> => {
-  const result = await processInvocation.execute(
+  const result = await processInvocation.project.execute(
     'git',
     ['diff', '--name-only', ...(gitRange ? [gitRange] : [])],
-    { output: { mode: 'capture' }, scope: 'project' }
+    { output: { mode: 'capture' } }
   )
+
+  assertProcessCompleted(result)
 
   if (result.exitCode !== 0) {
     throw new Error(result.stderr || `git diff exited with code ${result.exitCode}`)

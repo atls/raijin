@@ -75,13 +75,10 @@ test('should bind entry command execution to the invocation cwd', async () => {
   assert.equal(result.stdout, npath.fromPortablePath(rendererNestedCwd))
 })
 
-test('should reject project-scoped process execution for entry commands', async () => {
+test('should expose only entry-scoped process execution for entry commands', () => {
   const invocation = resolveEntryCommandInvocation(createContext(rendererNestedCwd))
 
-  await assert.rejects(
-    invocation.process.execute(process.execPath, [], { scope: 'project' }),
-    /does not have project execution scope/
-  )
+  assert.equal('project' in invocation.process, false)
 })
 
 test('should resolve project command invocation from a nested cwd', async () => {
@@ -137,7 +134,9 @@ test('should bind command environment and output to process execution', async ()
     { input: 'ignore', output: { mode: 'capture', forward: true } }
   )
 
+  assert.equal(result.reason, 'completed')
   assert.equal(result.exitCode, 0)
+
   assert.equal(Buffer.concat(output).toString(), 'bound')
 })
 
@@ -155,7 +154,9 @@ test('should bind command environment to nested Yarn execution', async () => {
     { input: 'ignore' }
   )
 
+  assert.equal(result.reason, 'completed')
   assert.equal(result.exitCode, 0)
+
   assert.equal(result.stdout, 'nested')
 })
 
@@ -218,10 +219,10 @@ test('should root nested Yarn execution at the resolved workspace cwd', async ()
 
 test('should bind project-scoped process execution to the project cwd', async () => {
   const invocation = await resolveWorkspaceCommandInvocation(createContext(rendererNestedCwd))
-  const result = await invocation.process.execute(
+  const result = await invocation.process.project.execute(
     process.execPath,
     ['-e', 'process.stdout.write(process.cwd())'],
-    { input: 'ignore', output: { mode: 'capture' }, scope: 'project' }
+    { input: 'ignore', output: { mode: 'capture' } }
   )
 
   assert.equal(result.stdout, npath.fromPortablePath(repoRoot))

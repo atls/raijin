@@ -16,7 +16,7 @@ const resolveRootDir = async (invocation: EntryInvocation): Promise<string> => {
       output: { mode: 'capture' },
     })
 
-    if (result.exitCode === 0) {
+    if (result.reason === 'completed' && result.exitCode === 0) {
       return result.stdout.trim()
     }
   } catch {
@@ -33,7 +33,7 @@ const resolveSafeMaxArgLength = async (invocation: EntryInvocation): Promise<num
     })
     const maxArgLength = Number.parseInt(result.stdout, 10)
 
-    if (result.exitCode === 0 && Number.isFinite(maxArgLength)) {
+    if (result.reason === 'completed' && result.exitCode === 0 && Number.isFinite(maxArgLength)) {
       return Math.floor(maxArgLength * 0.5)
     }
   } catch {

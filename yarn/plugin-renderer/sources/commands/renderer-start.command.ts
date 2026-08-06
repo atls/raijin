@@ -1,6 +1,9 @@
 import type { WorkspaceCommandContext }          from '@atls/raijin/commands'
 import type { createRuntimeEnvironment as createRuntimeEnvironmentFn } from '@atls/raijin/runtime-exec-argv'
 
+import { spawn }                                 from 'node:child_process'
+import { once }                                  from 'node:events'
+
 import { BaseCommand }                           from '@yarnpkg/cli'
 
 import { toNativeCwd }                           from '@atls/raijin/commands'
@@ -42,16 +45,13 @@ export class RendererStartCommand extends BaseCommand {
     const { invocation } = this.context
     const rendererCwd = toNativeCwd(invocation.executionCwd)
 
-    const result = await invocation.process.execute(
-      process.execPath,
-      [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`],
-      {
-        nodeOptions: async (nodeOptions) =>
-          (await createRendererRuntimeEnvironment(rendererCwd, { NODE_OPTIONS: nodeOptions }))
-            .NODE_OPTIONS,
-      }
-    )
+    const child = spawn(process.execPath, [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`], {
+      cwd: rendererCwd,
+      env: await createRendererRuntimeEnvironment(rendererCwd, this.context.env),
+      stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
+    })
+    const [exitCode] = await once(child, 'close')
 
-    return result.exitCode
+    return typeof exitCode === 'number' ? exitCode : 1
   }
 }

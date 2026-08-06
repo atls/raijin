@@ -1,11 +1,13 @@
 import type { WorkspaceCommandContext }        from '@atls/raijin/commands'
 
+import { PassThrough }                         from 'node:stream'
+
 import { BaseCommand }                         from '@yarnpkg/cli'
 import { StreamReport }                        from '@yarnpkg/core'
 import { MessageName }                         from '@yarnpkg/core'
+import { execUtils }                           from '@yarnpkg/core'
 import { scriptUtils }                         from '@yarnpkg/core'
-
-import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
+import { xfs }                                 from '@yarnpkg/fslib'
 
 import { cleanupDiscoveryArtifacts }           from '../artifact/cleanup.js'
 import { cleanupSourceArtifacts }              from '../artifact/cleanup.js'
@@ -20,10 +22,7 @@ import { copyStandalone }                      from '../artifact/materialization
 import { copyStaticAssets }                    from '../artifact/materialization.js'
 import { assertNextBuildExitCode }             from '../integrations/next/execution/arguments.js'
 import { createNextBuildArguments }            from '../integrations/next/execution/arguments.js'
-import { createNextExecutionEnvironmentPatch } from '../integrations/next/execution/environment.js'
-import { extractPnpLoaderOption }              from '../integrations/next/execution/environment.js'
-import { resolvePnpLoader }                    from '../integrations/next/execution/environment.js'
-import { materializeNextLoader }               from '../integrations/next/execution/loader.js'
+import { createNextExecutable }                from '../integrations/next/execution/executable.js'
 import { resolveNextPackageVersion }           from '../integrations/next/execution/version.js'
 import { resolveNextStandaloneArtifactSource } from '../integrations/next/standalone/discovery.js'
 import { snapshotNextStandaloneManifests }     from '../integrations/next/standalone/discovery.js'
@@ -68,37 +67,45 @@ export class RendererBuildCommand extends BaseCommand {
 
           const [nextPackage, nextBin] = nextBinary
           const nextVersion = resolveNextPackageVersion(nextPackage)
-          const code = await yarn.execute(createNextBuildArguments(nextVersion, nextBin), {
-            locator: workspace.anchoredLocator,
-            output: {
-              mode: 'handle',
-              handler: ({ data }) => {
+
+          await xfs.mktempPromise(async (binFolder) => {
+            const createOutput = (): PassThrough => {
+              const stream = new PassThrough()
+
+              stream.on('data', (data: Buffer) => {
                 data
+                  .toString()
                   .split('\n')
                   .filter(Boolean)
                   .forEach((line) => {
                     report.reportInfo(MessageName.UNNAMED, line)
                   })
-              },
-            },
-            prepare: async ({ binFolder, nodeOptions: yarnNodeOptions }) => {
-              const { nodeOptions } = extractPnpLoaderOption(yarnNodeOptions)
-              const loader = await resolvePnpLoader(project.cwd, yarnNodeOptions)
-              const nextLoader = await materializeNextLoader(binFolder, loader)
-              const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
+              })
 
-              return {
-                environmentPatch: createNextExecutionEnvironmentPatch(rendererCwd, {
-                  nextConfigAdapterPath,
-                  output: 'standalone',
-                }),
-                nodeLoader: nextLoader,
-                nodeOptions: nodeOptions ?? null,
+              return stream
+            }
+            const { executable, env } = await createNextExecutable({
+              baseEnvironment: this.context.env,
+              binFolder,
+              locator: workspace.anchoredLocator,
+              output: 'standalone',
+              project,
+              rendererCwd,
+            })
+            const { code } = await execUtils.pipevp(
+              executable,
+              createNextBuildArguments(nextVersion, nextBin),
+              {
+                cwd: rendererCwd,
+                env,
+                stderr: createOutput(),
+                stdin: this.context.stdin,
+                stdout: createOutput(),
               }
-            },
-          })
+            )
 
-          assertNextBuildExitCode(code)
+            assertNextBuildExitCode(code)
+          })
         })
 
         const artifactSource = await resolveNextStandaloneArtifactSource(

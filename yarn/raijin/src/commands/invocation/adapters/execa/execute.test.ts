@@ -37,7 +37,7 @@ test('should execute with attached terminal descriptors', async () => {
     env: process.env,
   })
 
-  assert.deepEqual(result, { exitCode: 0, stderr: '', stdout: '' })
+  assert.deepEqual(result, { reason: 'completed', exitCode: 0, stderr: '', stdout: '' })
 })
 
 test('should ignore process input when requested', async () => {
@@ -49,6 +49,7 @@ test('should ignore process input when requested', async () => {
     output: { mode: 'capture' },
   })
 
+  assert.equal(result.reason, 'completed')
   assert.equal(result.exitCode, 0)
 })
 
@@ -66,7 +67,9 @@ test('should capture and forward process output before returning its code', asyn
     output: { mode: 'capture', forward: true },
   })
 
+  assert.equal(result.reason, 'completed')
   assert.equal(result.exitCode, 0)
+
   assert.equal(result.stdout, 'ready')
   assert.equal(Buffer.concat(forwarded).toString(), 'ready')
 })
@@ -96,17 +99,17 @@ test('should handle process output without exposing provider streams', async () 
   )
 })
 
-test('should reject process errors', async () => {
-  await assert.rejects(
-    executeProcess('raijin-missing-executable', [], {
-      context: createContext(),
-      cwd: process.cwd(),
-      env: process.env,
-      input: 'ignore',
-      output: { mode: 'capture' },
-    }),
-    /Unable to execute process: raijin-missing-executable/
-  )
+test('should preserve process start failures as a typed result', async () => {
+  const result = await executeProcess('raijin-missing-executable', [], {
+    context: createContext(),
+    cwd: process.cwd(),
+    env: process.env,
+    input: 'ignore',
+    output: { mode: 'capture' },
+  })
+
+  assert.equal(result.reason, 'start-failed')
+  assert.ok(result.cause)
 })
 
 test('should stop a process after the configured timeout', async () => {
@@ -116,10 +119,11 @@ test('should stop a process after the configured timeout', async () => {
     env: process.env,
     input: 'ignore',
     output: { mode: 'capture' },
-    timeout: 20,
+    timeoutMs: 20,
   })
 
-  assert.equal(result.exitCode, 124)
+  assert.equal(result.reason, 'timed-out')
+  assert.ok(result.cause)
 })
 
 test('should translate cancellation to the process exit contract', async () => {
@@ -129,10 +133,11 @@ test('should translate cancellation to the process exit contract', async () => {
     env: process.env,
     input: 'ignore',
     output: { mode: 'capture' },
-    signal: AbortSignal.timeout(20),
+    cancelSignal: AbortSignal.timeout(20),
   })
 
-  assert.equal(result.exitCode, 1)
+  assert.equal(result.reason, 'cancelled')
+  assert.ok(result.cause)
 })
 
 test(
@@ -151,7 +156,9 @@ test(
       }
     )
 
-    assert.deepEqual(result, { exitCode: 1, stderr: '', stdout: '' })
+    assert.equal(result.reason, 'signalled')
+    assert.equal(result.signal, 'SIGTERM')
+    assert.ok(result.cause)
   }
 )
 
@@ -172,7 +179,9 @@ test(
       output: { mode: 'capture' },
     })
 
+    assert.equal(result.reason, 'completed')
     assert.equal(result.exitCode, 0)
+
     assert.equal(result.stdout.trim(), 'ready')
   }
 )

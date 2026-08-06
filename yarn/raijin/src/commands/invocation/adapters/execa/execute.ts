@@ -8,11 +8,6 @@ import type { ExecaExecutionOptions }  from './execute.interfaces.js'
 
 import { execa }                       from 'execa'
 
-import { ProcessExecutionError }       from '../../exceptions/process-execution.js'
-
-const TIMEOUT_EXIT_CODE = 124
-const TERMINATED_EXIT_CODE = 1
-
 const createOutputHandler = (
   handler: (event: ProcessOutputEvent) => void,
   source: ProcessOutputEvent['source']
@@ -46,11 +41,11 @@ const createExecaOptions = ({
   env,
   input,
   output,
-  signal,
-  timeout,
+  cancelSignal,
+  timeoutMs,
 }: ExecaExecutionOptions): Options => ({
   buffer: output?.mode === 'capture',
-  cancelSignal: signal,
+  cancelSignal,
   cwd,
   encoding: 'utf8',
   env,
@@ -60,7 +55,7 @@ const createExecaOptions = ({
   stdin: input === 'ignore' ? 'ignore' : context.stdin,
   stdout: resolveOutput(context.stdout, output, 'stdout'),
   stripFinalNewline: false,
-  timeout,
+  timeout: timeoutMs,
 })
 
 const resolveExecutionOutput = (
@@ -75,20 +70,31 @@ export const executeProcess = async (
   args: Array<string>,
   options: ExecaExecutionOptions
 ): Promise<ProcessExecutionResult> => {
-  const result = await execa(command, args, createExecaOptions(options))
+  let result: Result
+
+  try {
+    result = await execa(command, args, createExecaOptions(options))
+  } catch (cause) {
+    return { reason: 'start-failed', cause, stderr: '', stdout: '' }
+  }
+
   const output = resolveExecutionOutput(result)
 
   if (result.timedOut) {
-    return { ...output, exitCode: TIMEOUT_EXIT_CODE }
+    return { ...output, reason: 'timed-out', cause: result }
+  }
+
+  if (result.isCanceled) {
+    return { ...output, reason: 'cancelled', cause: result }
+  }
+
+  if (result.signal || result.isTerminated) {
+    return { ...output, reason: 'signalled', cause: result, signal: result.signal }
   }
 
   if (result.exitCode !== undefined) {
-    return { ...output, exitCode: result.exitCode }
+    return { ...output, reason: 'completed', exitCode: result.exitCode }
   }
 
-  if (result.signal || result.isCanceled) {
-    return { ...output, exitCode: TERMINATED_EXIT_CODE }
-  }
-
-  throw new ProcessExecutionError(command)
+  return { ...output, reason: 'start-failed', cause: result }
 }

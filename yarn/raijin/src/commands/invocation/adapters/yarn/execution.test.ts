@@ -1,10 +1,8 @@
 import type { Filename }          from '@yarnpkg/fslib'
-import type { PortablePath }      from '@yarnpkg/fslib'
 
 import assert                     from 'node:assert/strict'
 import { execFile }               from 'node:child_process'
 import { dirname }                from 'node:path'
-import { PassThrough }            from 'node:stream'
 import test                       from 'node:test'
 import { fileURLToPath }          from 'node:url'
 import { pathToFileURL }          from 'node:url'
@@ -17,7 +15,6 @@ import { ppath }                  from '@yarnpkg/fslib'
 import { xfs }                    from '@yarnpkg/fslib'
 
 import { createYarnExecutable }   from './execution.js'
-import { executeYarnCommand }     from './execution.js'
 
 const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
 
@@ -55,35 +52,6 @@ test('should create script env for the selected workspace locator', async () => 
 
   assert.equal(env.npm_package_name, '@atls/yarn-plugin-renderer')
   assert.match(env.npm_package_json ?? '', /yarn[\\/]plugin-renderer[\\/]package\.json/)
-})
-
-test('should clean the nested Yarn environment after command completion', async () => {
-  const { project } = await resolveTestProject()
-  let binFolder: PortablePath | undefined
-  const result = await executeYarnCommand({
-    args: ['--version'],
-    context: {
-      environment: process.env,
-      stderr: new PassThrough(),
-      stdin: new PassThrough(),
-      stdout: new PassThrough(),
-    },
-    executionCwd: project.cwd,
-    options: {
-      input: 'ignore',
-      output: { mode: 'capture' },
-      prepare: (context) => {
-        binFolder = context.binFolder
-
-        return {}
-      },
-    },
-    project,
-  })
-
-  assert.equal(result.exitCode, 0)
-  assert.ok(binFolder)
-  assert.equal(await xfs.existsPromise(binFolder), false)
 })
 
 test('should preserve Yarn PnP options when adding command node options', async () => {

@@ -1,25 +1,26 @@
-import type { ProcessInvocation }       from '@atls/raijin/commands'
-import type { WorkspaceCommandContext } from '@atls/raijin/commands'
-import type { Project }                 from '@yarnpkg/core'
-import type { PortablePath }            from '@yarnpkg/fslib'
+import type { ProjectProcessInvocation } from '@atls/raijin/commands'
+import type { WorkspaceCommandContext }  from '@atls/raijin/commands'
+import type { Project }                  from '@yarnpkg/core'
+import type { PortablePath }             from '@yarnpkg/fslib'
 
-import assert                           from 'node:assert/strict'
-import { Buffer }                       from 'node:buffer'
-import { createHash }                   from 'node:crypto'
-import { mkdir }                        from 'node:fs/promises'
-import { readFile }                     from 'node:fs/promises'
-import { writeFile }                    from 'node:fs/promises'
-import { dirname }                      from 'node:path'
+import assert                            from 'node:assert/strict'
+import { Buffer }                        from 'node:buffer'
+import { createHash }                    from 'node:crypto'
+import { mkdir }                         from 'node:fs/promises'
+import { readFile }                      from 'node:fs/promises'
+import { writeFile }                     from 'node:fs/promises'
+import { dirname }                       from 'node:path'
 
-import { BaseCommand }                  from '@yarnpkg/cli'
-import { StreamReport }                 from '@yarnpkg/core'
-import { npath }                        from '@yarnpkg/fslib'
-import { ppath }                        from '@yarnpkg/fslib'
-import { xfs }                          from '@yarnpkg/fslib'
+import { BaseCommand }                   from '@yarnpkg/cli'
+import { StreamReport }                  from '@yarnpkg/core'
+import { npath }                         from '@yarnpkg/fslib'
+import { ppath }                         from '@yarnpkg/fslib'
+import { xfs }                           from '@yarnpkg/fslib'
 
-import { Release }                      from '@atls/code-github'
+import { Release }                       from '@atls/code-github'
+import { assertProcessCompleted }        from '@atls/raijin/commands'
 
-import { parseGitHubUrl }               from './utils/parse-git-url.js'
+import { parseGitHubUrl }                from './utils/parse-git-url.js'
 
 const RELEASE_ALREADY_EXISTS_STATUS = 422
 const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
@@ -419,13 +420,16 @@ export const selectPreviousGitHubReleaseTagName = (
     .sort((leftTag, rightTag) => compareSemver(rightTag.version, leftTag.version))[0]?.tagName
 
 export const getGitHubReleaseTagNames = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   packageName: string
 ): Promise<Array<string>> => {
-  const result = await processInvocation.execute('git', ['tag', '--list', `${packageName}@*`], {
-    output: { mode: 'capture' },
-    scope: 'project',
-  })
+  const result = await processInvocation.project.execute(
+    'git',
+    ['tag', '--list', `${packageName}@*`],
+    { output: { mode: 'capture' } }
+  )
+
+  assertProcessCompleted(result)
 
   if (result.exitCode !== 0) {
     throw new Error(result.stderr || `git tag exited with code ${result.exitCode}`)
@@ -438,12 +442,13 @@ export const getGitHubReleaseTagNames = async (
 }
 
 export const getGitHubReleaseTargetCommitish = async (
-  processInvocation: ProcessInvocation
+  processInvocation: ProjectProcessInvocation
 ): Promise<string> => {
-  const result = await processInvocation.execute('git', ['rev-parse', 'HEAD'], {
+  const result = await processInvocation.project.execute('git', ['rev-parse', 'HEAD'], {
     output: { mode: 'capture' },
-    scope: 'project',
   })
+
+  assertProcessCompleted(result)
 
   if (result.exitCode !== 0) {
     throw new Error(result.stderr || `git rev-parse exited with code ${result.exitCode}`)
@@ -497,10 +502,13 @@ export class ReleaseCreateCommand extends BaseCommand {
           let owner: string
           let repo: string
           try {
-            const result = await processInvocation.execute('git', ['remote', 'get-url', 'origin'], {
-              output: { mode: 'capture' },
-              scope: 'project',
-            })
+            const result = await processInvocation.project.execute(
+              'git',
+              ['remote', 'get-url', 'origin'],
+              { output: { mode: 'capture' } }
+            )
+
+            assertProcessCompleted(result)
 
             if (result.exitCode !== 0) {
               throw new Error(result.stderr || `git remote exited with code ${result.exitCode}`)

@@ -1,5 +1,8 @@
 import type { WorkspaceCommandContext }    from '@atls/raijin/commands'
 
+import { spawn }                           from 'node:child_process'
+import { once }                            from 'node:events'
+
 import { BaseCommand }                     from '@yarnpkg/cli'
 
 import { createServiceRuntimeEnvironment } from '@atls/code-service'
@@ -19,16 +22,17 @@ export class ServiceStartCommand extends BaseCommand {
     const { invocation } = this.context
     const serviceCwd = toNativeCwd(invocation.executionCwd)
 
-    const result = await invocation.process.execute(
+    const child = spawn(
       process.execPath,
       [...(await createServiceRuntimeExecArgv(serviceCwd)), 'dist/index.js'],
       {
-        nodeOptions: async (nodeOptions) =>
-          (await createServiceRuntimeEnvironment(serviceCwd, { NODE_OPTIONS: nodeOptions }))
-            .NODE_OPTIONS,
+        cwd: serviceCwd,
+        env: await createServiceRuntimeEnvironment(serviceCwd, this.context.env),
+        stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
       }
     )
+    const [exitCode] = await once(child, 'close')
 
-    return result.exitCode
+    return typeof exitCode === 'number' ? exitCode : 1
   }
 }

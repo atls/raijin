@@ -7,6 +7,6 @@ export interface ExecaExecutionOptions {
   env: NodeJS.ProcessEnv
   input?: 'ignore'
   output?: ProcessOutputPolicy
-  signal?: AbortSignal
-  timeout?: number
+  cancelSignal?: AbortSignal
+  timeoutMs?: number
 }

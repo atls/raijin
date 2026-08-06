@@ -63,13 +63,16 @@ class ChecksReleaseCommand extends BaseCommand {
             { forwardOutput: true }
           )
 
-          if (result.exitCode > 0) {
+          if (result.reason !== 'completed' || result.exitCode > 0) {
             annotations.push({
               annotation_level: AnnotationLevel.Failure,
               title: `Error release workspace ${
                 workspace.manifest.raw.name ?? workspace.relativeCwd
               }`,
-              message: `Exit code ${result.exitCode}`,
+              message:
+                result.reason === 'completed'
+                  ? `Exit code ${result.exitCode}`
+                  : `Process ${result.reason}`,
               raw_details: stripAnsi([result.stdout, result.stderr].filter(Boolean).join('\n')),
               path: ppath.join(workspace.relativeCwd, 'package.json'),
               start_line: 1,

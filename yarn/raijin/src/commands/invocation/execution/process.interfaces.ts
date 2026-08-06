@@ -9,23 +9,26 @@ export type ProcessOutputPolicy =
 
 export type ProcessEnvironmentPatch = Readonly<Record<string, string>>
 
-export type ProcessNodeOptionsTransformer = (
-  nodeOptions: string | undefined
-) => Promise<string | undefined> | string | undefined
-
-export interface ProcessExecutionResult {
-  exitCode: number
+export interface ProcessExecutionOutput {
   stderr: string
   stdout: string
 }
 
+export type ProcessExecutionCompletion =
+  | { reason: 'cancelled'; cause: unknown }
+  | { reason: 'completed'; exitCode: number }
+  | { reason: 'signalled'; cause: unknown; signal?: string }
+  | { reason: 'start-failed'; cause: unknown }
+  | { reason: 'timed-out'; cause: unknown }
+
+export type ProcessExecutionResult = ProcessExecutionCompletion & ProcessExecutionOutput
+
+export type CompletedProcessExecution = Extract<ProcessExecutionResult, { reason: 'completed' }>
+
 export interface ProcessExecutionOptions {
   input?: 'ignore'
-  nodeOptions?: ProcessNodeOptionsTransformer
   output?: ProcessOutputPolicy
-  scope?: 'project'
-  signal?: AbortSignal
-  timeout?: number
+  timeoutMs?: number
 }
 
 export interface ProcessInvocation {
@@ -34,4 +37,8 @@ export interface ProcessInvocation {
     args: Array<string>,
     options?: ProcessExecutionOptions
   ) => Promise<ProcessExecutionResult>
+}
+
+export interface ProjectProcessInvocation extends ProcessInvocation {
+  readonly project: ProcessInvocation
 }

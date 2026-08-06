@@ -1,4 +1,4 @@
-import type { ProcessInvocation }                   from '@atls/raijin/commands'
+import type { ProjectProcessInvocation }            from '@atls/raijin/commands'
 import type { Workspace }                           from '@yarnpkg/core'
 import type { Configuration }                       from '@yarnpkg/core'
 import type { Project }                             from '@yarnpkg/core'
@@ -16,6 +16,7 @@ import { ppath }                                    from '@yarnpkg/fslib'
 import { xfs }                                      from '@yarnpkg/fslib'
 import { parseSyml }                                from '@yarnpkg/parsers'
 
+import { assertProcessCompleted }                   from '@atls/raijin/commands'
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
 import { isReleaseVersionStrategy }                 from './release-version-policy.utils.js'
@@ -136,13 +137,18 @@ const getGitHubChanges = async (): Promise<Array<ReleaseVersionChange>> =>
   (await getChangedCommmits()).map(toGitHubChange)
 
 const getLocalCommitShas = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   gitRange: string
 ): Promise<Array<string>> => {
-  const result = await processInvocation.execute('git', ['rev-list', '--reverse', gitRange], {
-    output: { mode: 'capture' },
-    scope: 'project',
-  })
+  const result = await processInvocation.project.execute(
+    'git',
+    ['rev-list', '--reverse', gitRange],
+    {
+      output: { mode: 'capture' },
+    }
+  )
+
+  assertProcessCompleted(result)
 
   if (result.exitCode !== 0) {
     throw new Error(result.stderr || `git rev-list exited with code ${result.exitCode}`)
@@ -152,17 +158,18 @@ const getLocalCommitShas = async (
 }
 
 const getLocalCommitMessage = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   sha: string
 ): Promise<string> => {
-  const result = await processInvocation.execute(
+  const result = await processInvocation.project.execute(
     'git',
     ['show', '--format=%B', '--no-patch', '--max-count=1', sha],
     {
       output: { mode: 'capture' },
-      scope: 'project',
     }
   )
+
+  assertProcessCompleted(result)
 
   if (result.exitCode !== 0) {
     throw new Error(result.stderr || `git show exited with code ${result.exitCode}`)
@@ -172,13 +179,16 @@ const getLocalCommitMessage = async (
 }
 
 const getLocalCommitParentShas = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   sha: string
 ): Promise<Array<string>> => {
-  const result = await processInvocation.execute('git', ['rev-list', '--parents', '-n', '1', sha], {
-    output: { mode: 'capture' },
-    scope: 'project',
-  })
+  const result = await processInvocation.project.execute(
+    'git',
+    ['rev-list', '--parents', '-n', '1', sha],
+    { output: { mode: 'capture' } }
+  )
+
+  assertProcessCompleted(result)
 
   if (result.exitCode !== 0) {
     throw new Error(result.stderr || `git rev-list exited with code ${result.exitCode}`)
@@ -195,17 +205,18 @@ export const selectLocalCommitDiffParent = (
 ): string | undefined => parents.find((parent) => !rangeShas.has(parent)) ?? parents[0]
 
 const getLocalRootCommitFiles = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   sha: string
 ): Promise<Array<string>> => {
-  const result = await processInvocation.execute(
+  const result = await processInvocation.project.execute(
     'git',
     ['diff-tree', '--no-commit-id', '--name-only', '-r', '--root', '--no-renames', '-z', sha],
     {
       output: { mode: 'capture' },
-      scope: 'project',
     }
   )
+
+  assertProcessCompleted(result)
 
   if (result.exitCode !== 0) {
     throw new Error(result.stderr || `git diff-tree exited with code ${result.exitCode}`)
@@ -218,7 +229,7 @@ const getLocalRootCommitFiles = async (
 }
 
 const getLocalCommitFiles = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   sha: string,
   rangeShas: ReadonlySet<string>
 ): Promise<Array<string>> => {
@@ -231,14 +242,15 @@ const getLocalCommitFiles = async (
     return getLocalRootCommitFiles(processInvocation, sha)
   }
 
-  const result = await processInvocation.execute(
+  const result = await processInvocation.project.execute(
     'git',
     ['diff', '--name-only', '--no-renames', '-z', diffParent, sha],
     {
       output: { mode: 'capture' },
-      scope: 'project',
     }
   )
+
+  assertProcessCompleted(result)
 
   if (result.exitCode !== 0) {
     throw new Error(result.stderr || `git diff exited with code ${result.exitCode}`)
@@ -255,7 +267,7 @@ const getLocalCommitFiles = async (
 }
 
 const getLocalCommitChange = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   sha: string,
   rangeShas: ReadonlySet<string>
 ): Promise<ReleaseVersionChange> => ({
@@ -264,7 +276,7 @@ const getLocalCommitChange = async (
 })
 
 const getLocalChanges = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   gitRange: string
 ): Promise<Array<ReleaseVersionChange>> => {
   const shas = await getLocalCommitShas(processInvocation, gitRange)
@@ -276,7 +288,7 @@ const getLocalChanges = async (
 }
 
 export const getReleaseVersionChanges = async (
-  processInvocation: ProcessInvocation,
+  processInvocation: ProjectProcessInvocation,
   gitRange?: string
 ): Promise<Array<ReleaseVersionChange>> => {
   if (gitRange === undefined && process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {

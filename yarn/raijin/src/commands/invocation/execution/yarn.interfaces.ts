@@ -1,32 +1,15 @@
-import type { Configuration }           from '@yarnpkg/core'
-import type { Locator }                 from '@yarnpkg/core'
-import type { Project }                 from '@yarnpkg/core'
-import type { PortablePath }            from '@yarnpkg/fslib'
+import type { Configuration }          from '@yarnpkg/core'
+import type { Locator }                from '@yarnpkg/core'
+import type { Project }                from '@yarnpkg/core'
 
-import type { ProcessEnvironmentPatch } from './process.interfaces.js'
-import type { ProcessExecutionResult }  from './process.interfaces.js'
-import type { ProcessOutputPolicy }     from './process.interfaces.js'
-
-export interface YarnCommandPreparationContext {
-  binFolder: PortablePath
-  nodeOptions: string | undefined
-}
-
-export interface YarnCommandPreparation {
-  environmentPatch?: ProcessEnvironmentPatch
-  nodeLoader?: string
-  nodeOptions?: string | null
-}
+import type { ProcessExecutionResult } from './process.interfaces.js'
+import type { ProcessOutputPolicy }    from './process.interfaces.js'
 
 export interface YarnCommandRunOptions {
   input?: 'ignore'
   locator?: Locator
   output?: ProcessOutputPolicy
-  prepare?: (
-    context: YarnCommandPreparationContext
-  ) => Promise<YarnCommandPreparation> | YarnCommandPreparation
-  signal?: AbortSignal
-  timeout?: number
+  timeoutMs?: number
 }
 
 export interface YarnCommandCaptureOptions extends Omit<YarnCommandRunOptions, 'output'> {
@@ -41,4 +24,5 @@ export interface YarnRuntimeInvocation {
     options?: YarnCommandCaptureOptions
   ) => Promise<ProcessExecutionResult>
   execute: (args: Array<string>, options?: YarnCommandRunOptions) => Promise<number>
+  run: (args: Array<string>, options?: YarnCommandRunOptions) => Promise<ProcessExecutionResult>
 }

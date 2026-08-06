@@ -1,21 +1,17 @@
-import type { WorkspaceCommandContext }        from '@atls/raijin/commands'
-import type { Tunnel }                         from 'localtunnel'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
+import type { Tunnel }                  from 'localtunnel'
 
-import { BaseCommand }                         from '@yarnpkg/cli'
-import { scriptUtils }                         from '@yarnpkg/core'
-import { xfs }                                 from '@yarnpkg/fslib'
-import { ppath }                               from '@yarnpkg/fslib'
-import { Option }                              from 'clipanion'
-import localtunnel                             from 'localtunnel'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { execUtils }                    from '@yarnpkg/core'
+import { scriptUtils }                  from '@yarnpkg/core'
+import { xfs }                          from '@yarnpkg/fslib'
+import { ppath }                        from '@yarnpkg/fslib'
+import { Option }                       from 'clipanion'
+import localtunnel                      from 'localtunnel'
 
-import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
-
-import { createNextDevArguments }              from '../integrations/next/execution/arguments.js'
-import { createNextExecutionEnvironmentPatch } from '../integrations/next/execution/environment.js'
-import { extractPnpLoaderOption }              from '../integrations/next/execution/environment.js'
-import { resolvePnpLoader }                    from '../integrations/next/execution/environment.js'
-import { materializeNextLoader }               from '../integrations/next/execution/loader.js'
-import { resolveNextPackageVersion }           from '../integrations/next/execution/version.js'
+import { createNextDevArguments }       from '../integrations/next/execution/arguments.js'
+import { createNextExecutable }         from '../integrations/next/execution/executable.js'
+import { resolveNextPackageVersion }    from '../integrations/next/execution/version.js'
 
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
@@ -96,22 +92,23 @@ export class RendererDevCommand extends BaseCommand {
       this.startTunnel(config.host, config.port)
     }
 
-    return yarn.execute(args, {
-      locator: workspace.anchoredLocator,
-      prepare: async ({ binFolder, nodeOptions: yarnNodeOptions }) => {
-        const { nodeOptions } = extractPnpLoaderOption(yarnNodeOptions)
-        const loader = await resolvePnpLoader(project.cwd, yarnNodeOptions)
-        const nextLoader = await materializeNextLoader(binFolder, loader)
-        const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
+    return xfs.mktempPromise(async (binFolder) => {
+      const { executable, env } = await createNextExecutable({
+        baseEnvironment: this.context.env,
+        binFolder,
+        locator: workspace.anchoredLocator,
+        project,
+        rendererCwd: executionCwd,
+      })
+      const { code } = await execUtils.pipevp(executable, args, {
+        cwd: executionCwd,
+        env,
+        stderr: this.context.stderr,
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+      })
 
-        return {
-          environmentPatch: createNextExecutionEnvironmentPatch(executionCwd, {
-            nextConfigAdapterPath,
-          }),
-          nodeLoader: nextLoader,
-          nodeOptions: nodeOptions ?? null,
-        }
-      },
+      return code
     })
   }
 }

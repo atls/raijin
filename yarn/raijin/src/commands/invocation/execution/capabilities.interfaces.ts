@@ -7,7 +7,6 @@ import type { InvocationExecutionContext } from './context.interfaces.js'
 export interface ProcessInvocationOptions {
   context: InvocationExecutionContext
   executionCwd: PortablePath
-  projectCwd?: PortablePath
 }
 
 export interface InvocationCapabilitiesOptions {
