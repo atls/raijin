@@ -1497,7 +1497,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/code-pack", "workspace:code/code-pack"],\
           ["@iarna/toml", "npm:2.2.5"],\
           ["@types/node", "npm:24.12.2"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"]\
         ],\
         "linkType": "SOFT"\
