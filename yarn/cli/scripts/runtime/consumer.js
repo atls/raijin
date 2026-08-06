@@ -12,13 +12,14 @@ import { promisify } from 'node:util'
 
 const execFileAsync = promisify(execFile)
 
-const [runtimeArgument, packageManager] = process.argv.slice(2)
+const [runtimeArgument, packageManager, pnpEsmLoaderArgument] = process.argv.slice(2)
 
-if (!runtimeArgument || !packageManager) {
-  throw new Error('Usage: consumer.js <runtime-path> <package-manager>')
+if (!runtimeArgument || !packageManager || !['false', 'true'].includes(pnpEsmLoaderArgument)) {
+  throw new Error('Usage: consumer.js <runtime-path> <package-manager> <pnp-enable-esm-loader>')
 }
 
 const runtimePath = resolve(process.cwd(), runtimeArgument)
+const pnpEnableEsmLoader = pnpEsmLoaderArgument === 'true'
 const raijinManifest = JSON.parse(
   await readFile(new URL('../../../raijin/package.json', import.meta.url), 'utf8')
 )
@@ -77,18 +78,21 @@ try {
   )
   await writeFile(
     join(fixtureCwd, '.yarnrc.yml'),
-    ['nodeLinker: pnp', 'pnpEnableEsmLoader: true', 'yarnPath: .yarn/releases/yarn.mjs', ''].join(
-      '\n'
-    )
+    [
+      'nodeLinker: pnp',
+      `pnpEnableEsmLoader: ${pnpEnableEsmLoader}`,
+      'yarnPath: .yarn/releases/yarn.mjs',
+      '',
+    ].join('\n')
   )
   await mkdir(join(fixtureCwd, 'prettier-config'))
   await writeFile(
     join(fixtureCwd, 'prettier-config/package.json'),
     `${JSON.stringify(
       {
-        exports: './index.mjs',
+        exports: pnpEnableEsmLoader ? './index.mjs' : './index.cjs',
         name: 'fixture-prettier-config',
-        type: 'module',
+        type: pnpEnableEsmLoader ? 'module' : 'commonjs',
         version: '1.0.0',
       },
       null,
@@ -96,12 +100,16 @@ try {
     )}\n`
   )
   await writeFile(
-    join(fixtureCwd, 'prettier-config/index.mjs'),
-    'export default { semi: true, singleQuote: false }\n'
+    join(fixtureCwd, `prettier-config/index.${pnpEnableEsmLoader ? 'mjs' : 'cjs'}`),
+    pnpEnableEsmLoader
+      ? 'export default { semi: true, singleQuote: false }\n'
+      : 'module.exports = { semi: true, singleQuote: false }\n'
   )
   await writeFile(
-    join(fixtureCwd, '.prettierrc.mjs'),
-    "import config from 'fixture-prettier-config'\n\nexport default config\n"
+    join(fixtureCwd, `.prettierrc.${pnpEnableEsmLoader ? 'mjs' : 'cjs'}`),
+    pnpEnableEsmLoader
+      ? "import config from 'fixture-prettier-config'\n\nexport default config\n"
+      : "module.exports = require('fixture-prettier-config')\n"
   )
   await writeFile(join(fixtureCwd, 'source.ts'), "export const value='test'\n")
   await mkdir(join(fixtureCwd, 'packages/target/src/integration'), { recursive: true })
@@ -194,7 +202,10 @@ try {
     })
   )
 
-  console.log(`Disposable yarnPath consumer passed (${version})`) // eslint-disable-line no-console
+  // eslint-disable-next-line no-console
+  console.log(
+    `Disposable yarnPath consumer passed (${version}, pnpEnableEsmLoader: ${pnpEnableEsmLoader})`
+  )
 } finally {
   await rm(fixtureCwd, { recursive: true, force: true })
 }

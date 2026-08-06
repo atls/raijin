@@ -12,6 +12,7 @@ import { miscUtils }                from '@yarnpkg/core'
 import { structUtils }              from '@yarnpkg/core'
 import { npath }                    from '@yarnpkg/fslib'
 import { ppath }                    from '@yarnpkg/fslib'
+import { xfs }                      from '@yarnpkg/fslib'
 import { getPnpPath }               from '@yarnpkg/plugin-pnp'
 
 import { MANAGED_NODE_LOADER_ENV }  from '@atls/raijin/runtime/node/bootstrap'
@@ -52,29 +53,42 @@ export const registerRaijinSourceWorkspaceRuntime = async (
 
   const { project } = await Project.find(configuration, cwd)
   const workspace = project.tryWorkspaceByIdent(RAIJIN_PACKAGE_IDENT)
+  const pnpPath = getPnpPath(project)
 
-  if (!workspace) {
+  if (!(await xfs.existsPromise(pnpPath.cjs))) {
     return
   }
 
-  const packagePath = npath.fromPortablePath(ppath.join(workspace.cwd, PACKAGE_MANIFEST))
-  const pnpPath = getPnpPath(project)
   const pnpApiPath = npath.fromPortablePath(pnpPath.cjs)
-  const pnpLoaderPath = npath.fromPortablePath(pnpPath.esmLoader)
-  const pnpLoader = pathToFileURL(pnpLoaderPath).href
+  const pnpLoader = (await xfs.existsPromise(pnpPath.esmLoader))
+    ? pathToFileURL(npath.fromPortablePath(pnpPath.esmLoader)).href
+    : undefined
+  const pnpLoaders = pnpLoader ? [pnpLoader] : []
   const inheritedTypeScriptLoader = process.env[MANAGED_NODE_LOADER_ENV]
 
   const pnpApi = miscUtils.dynamicRequire(pnpApiPath) as PnpRuntimeApi
 
   pnpApi.setup()
 
-  if (inheritedTypeScriptLoader) {
-    await registerNodeLoaders([pnpLoader, inheritedTypeScriptLoader])
+  if (!workspace) {
+    if (pnpLoaders.length > 0) {
+      await registerNodeLoaders(pnpLoaders)
+    }
 
     return
   }
 
-  await registerNodeLoaders([pnpLoader])
+  const packagePath = npath.fromPortablePath(ppath.join(workspace.cwd, PACKAGE_MANIFEST))
+
+  if (inheritedTypeScriptLoader) {
+    await registerNodeLoaders([...pnpLoaders, inheritedTypeScriptLoader])
+
+    return
+  }
+
+  if (pnpLoaders.length > 0) {
+    await registerNodeLoaders(pnpLoaders)
+  }
 
   if (!isTypeScriptRuntimeAvailable(pnpApi, packagePath)) {
     return
