@@ -62,11 +62,17 @@ jobs:
         run: |
           yarn raijin:check
 
-  windows-invocation:
-    name: Windows invocation
+  unit:
+    name: Unit / ${{ matrix.os }}
     env:
       NODE_VERSION: '25'
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     permissions: read-all
 
@@ -84,7 +90,7 @@ jobs:
       - name: Install
         uses: ./.github/actions/install
 
-      - name: Test Windows invocation
+      - name: Test unit
         shell: bash
         run: |
-          yarn test unit yarn/raijin/src/commands/invocation/scope/tests/resolution.test.ts yarn/raijin/src/commands/invocation/adapters/execa/execute.test.ts
+          yarn test unit
