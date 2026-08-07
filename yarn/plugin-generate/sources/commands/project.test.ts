@@ -7,7 +7,15 @@ import { createProjectScaffolderOptions } from './project.js'
 
 test('should preserve the nested invocation cwd as the generation target', () => {
   const configuration = { source: 'configuration' }
-  const project = { source: 'project' }
+  const workspace = { source: 'workspace' }
+  const project = {
+    getWorkspaceByFilePath: (cwd: string) => {
+      assert.equal(cwd, '/repo/packages/client/app')
+
+      return workspace
+    },
+    source: 'project',
+  }
   const invocation = {
     invocationCwd: '/repo/packages/client/app',
     yarn: { configuration, project },
@@ -17,5 +25,6 @@ test('should preserve the nested invocation cwd as the generation target', () =>
     configuration,
     project,
     targetCwd: '/repo/packages/client/app',
+    workspace,
   })
 })

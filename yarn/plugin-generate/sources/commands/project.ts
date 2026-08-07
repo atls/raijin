@@ -13,6 +13,7 @@ export const createProjectScaffolderOptions = ({ invocationCwd, yarn }: ProjectI
   configuration: yarn.configuration,
   project: yarn.project,
   targetCwd: invocationCwd,
+  workspace: yarn.project.getWorkspaceByFilePath(invocationCwd),
 })
 
 export class GenerateProjectCommand extends BaseCommand {

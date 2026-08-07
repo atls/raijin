@@ -1,4 +1,6 @@
 import type { FetchResult }  from '@yarnpkg/core'
+import type { Project }      from '@yarnpkg/core'
+import type { Workspace }    from '@yarnpkg/core'
 import type { PortablePath } from '@yarnpkg/fslib'
 
 import assert                from 'node:assert/strict'
@@ -6,11 +8,13 @@ import { test }              from 'node:test'
 
 import { CwdFS }             from '@yarnpkg/fslib'
 import { NodeFS }            from '@yarnpkg/fslib'
+import { structUtils }       from '@yarnpkg/core'
 import { ppath }             from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
 
 import { materialize }       from '../package.js'
 import { readSource }        from '../package.js'
+import { resolvePackage }    from '../package.js'
 
 const createInstalledPackage = async (
   root: PortablePath,
@@ -105,4 +109,25 @@ test('should reject missing, absolute, and escaping collection metadata', async 
       /escapes the package/
     )
   })
+})
+
+test('should resolve Raijin through the invoking workspace dependency', () => {
+  const ident = structUtils.parseIdent('@atls/raijin')
+  const descriptor = structUtils.makeDescriptor(ident, 'npm:^0.6.4')
+  const selected = structUtils.makeLocator(ident, 'npm:0.6.4')
+  const unrelated = structUtils.makeLocator(ident, 'npm:0.5.0')
+  const workspace = {
+    anchoredPackage: {
+      dependencies: new Map([[ident.identHash, descriptor]]),
+    },
+  } as Workspace
+  const project = {
+    storedPackages: new Map([
+      [unrelated.locatorHash, unrelated],
+      [selected.locatorHash, selected],
+    ]),
+    storedResolutions: new Map([[descriptor.descriptorHash, selected.locatorHash]]),
+  } as Project
+
+  assert.equal(resolvePackage({ project, workspace }), selected)
 })

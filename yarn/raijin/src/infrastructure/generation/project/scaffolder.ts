@@ -1,5 +1,6 @@
 import type { Configuration }         from '@yarnpkg/core'
 import type { Project }               from '@yarnpkg/core'
+import type { Workspace }             from '@yarnpkg/core'
 import type { PortablePath }          from '@yarnpkg/fslib'
 
 import type { ProjectScaffolder }     from '../../../application/generation/project/index.js'
@@ -17,14 +18,16 @@ export const createInstalledProjectScaffolder = ({
   configuration,
   project,
   targetCwd,
+  workspace,
 }: {
   configuration: Configuration
   project: Project
   targetCwd: PortablePath
+  workspace: Workspace
 }): ProjectScaffolder => ({
   scaffold: async (scaffoldType) => {
     try {
-      return await withCollection({ configuration, project }, async ({
+      return await withCollection({ configuration, project, workspace }, async ({
         collectionPath,
         manifest,
       }) =>
