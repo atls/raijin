@@ -11,6 +11,16 @@ export const prepareSurface = async (fixtureCwd) => {
   await Promise.all([
     rename(join(fixtureCwd, 'prettierrc.mjs.fixture'), join(fixtureCwd, '.prettierrc.mjs')),
     rename(join(fixtureCwd, 'source.ts.fixture'), join(fixtureCwd, 'source.ts')),
+    rename(
+      join(fixtureCwd, 'prettier-config/package.json.fixture'),
+      join(fixtureCwd, 'prettier-config/package.json')
+    ),
+    ...['sibling', 'target'].map(async (workspace) =>
+      rename(
+        join(fixtureCwd, 'packages', workspace, 'package.json.fixture'),
+        join(fixtureCwd, 'packages', workspace, 'package.json')
+      )
+    ),
   ])
 
   return {
