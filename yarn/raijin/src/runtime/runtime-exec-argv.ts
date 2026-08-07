@@ -167,8 +167,6 @@ const findPnpApi = async (cwd: string): Promise<string | undefined> => {
   return pnpApiPaths.find(Boolean)
 }
 
-const resolveRaijinPackagePath = (): string => require.resolve(RAIJIN_PACKAGE_JSON)
-
 export const resolveSourceTypeScriptLoader = async (raijinPackagePath: string): Promise<string> => {
   const typeScriptLoaderSourcePath = join(dirname(raijinPackagePath), TYPESCRIPT_LOADER_SOURCE_PATH)
 
@@ -179,9 +177,11 @@ export const resolveSourceTypeScriptLoader = async (raijinPackagePath: string): 
   return pathToFileURL(typeScriptLoaderSourcePath).href
 }
 
-export const resolveTypeScriptLoader = async (
-  raijinPackagePath = resolveRaijinPackagePath()
-): Promise<string> => {
+export const resolveTypeScriptLoader = async (raijinPackagePath?: string): Promise<string> => {
+  if (!raijinPackagePath) {
+    return pathToFileURL(require.resolve(TYPESCRIPT_LOADER_SPECIFIER)).href
+  }
+
   const raijinPath = dirname(raijinPackagePath)
   const typeScriptLoaderPath = join(raijinPath, TYPESCRIPT_LOADER_DIST_PATH)
 
