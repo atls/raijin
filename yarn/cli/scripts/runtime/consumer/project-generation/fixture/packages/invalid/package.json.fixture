@@ -1,8 +1,4 @@
 {
   "name": "fixture-invalid",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "start": "yarn node dist/index.js"
-  }
+  "private": true
 }
