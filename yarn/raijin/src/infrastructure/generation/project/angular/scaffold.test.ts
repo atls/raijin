@@ -115,6 +115,15 @@ test('should generate the project variant and preserve unrelated existing projec
   assert.match(release, /docker login ghcr\.io/)
   assert.doesNotMatch(`${preview}\n${release}`, /18\.19|eu\.gcr\.io|GCR_KEYFILE|GCR_PROJECT_ID/)
   await assertMissing(join(target, '.github/workflows/publish.yaml'))
+
+  const repeatedResult = await scaffoldProjectWithAngular({
+    collectionPath,
+    policy: generatedWorkflowPolicy,
+    scaffoldType: 'project',
+    targetPath: target,
+  })
+
+  assert.deepEqual(repeatedResult, { status: 'generated', changes: [] })
 })
 
 test('should generate the library variant and the current npm token contract', async () => {
