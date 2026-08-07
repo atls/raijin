@@ -21,6 +21,18 @@ export const prepareSurface = async (fixtureCwd) => {
         join(fixtureCwd, 'packages', workspace, 'package.json')
       )
     ),
+    rename(
+      join(fixtureCwd, 'packages/sibling/src/sibling.test.js.fixture'),
+      join(fixtureCwd, 'packages/sibling/src/sibling.test.js')
+    ),
+    rename(
+      join(fixtureCwd, 'packages/target/src/target.test.js.fixture'),
+      join(fixtureCwd, 'packages/target/src/target.test.js')
+    ),
+    rename(
+      join(fixtureCwd, 'packages/target/src/integration/target.test.js.fixture'),
+      join(fixtureCwd, 'packages/target/src/integration/target.test.js')
+    ),
   ])
 
   return {
