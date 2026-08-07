@@ -3,10 +3,10 @@ import { mkdir }                           from 'node:fs/promises'
 import { mkdtemp }                         from 'node:fs/promises'
 import { rm }                              from 'node:fs/promises'
 import { writeFile }                       from 'node:fs/promises'
+import { createRequire }                   from 'node:module'
 import { tmpdir }                          from 'node:os'
 import { join }                            from 'node:path'
 import test                                from 'node:test'
-import { fileURLToPath }                   from 'node:url'
 import { pathToFileURL }                   from 'node:url'
 
 import { createRuntimeExecArgv }           from './runtime-exec-argv.js'
@@ -14,6 +14,8 @@ import { createRuntimeEnvironment }        from './runtime-exec-argv.js'
 import { createTypeScriptRuntimeExecArgv } from './runtime-exec-argv.js'
 import { resolveSourceTypeScriptLoader }   from './runtime-exec-argv.js'
 import { resolveTypeScriptLoader }         from './runtime-exec-argv.js'
+
+const require = createRequire(import.meta.url)
 
 test('should create TypeScript runtime exec argv without PnP loader', () => {
   assert.deepEqual(createTypeScriptRuntimeExecArgv(undefined), [
@@ -67,14 +69,13 @@ test('should keep PnP loader for plain runtime child environment', () => {
   )
 })
 
-test('should resolve TypeScript loader to its package runtime', async () => {
+test('should resolve TypeScript loader through its package export', async () => {
   const typeScriptLoader = await resolveTypeScriptLoader()
-  const typeScriptLoaderPath = fileURLToPath(typeScriptLoader)
   const typeScriptLoaderModule = await import(`${typeScriptLoader}?runtime-exec-argv`)
 
-  assert.ok(
-    typeScriptLoaderPath.endsWith(join('dist', 'runtime', 'typescript-loader.js')) ||
-      typeScriptLoaderPath.endsWith(join('src', 'runtime', 'typescript-loader.ts'))
+  assert.equal(
+    typeScriptLoader,
+    pathToFileURL(require.resolve('@atls/raijin/typescript-loader')).href
   )
   assert.equal(typeof typeScriptLoaderModule.load, 'function')
 })
