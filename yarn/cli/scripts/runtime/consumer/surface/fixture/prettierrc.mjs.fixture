@@ -1,0 +1,3 @@
+import config from 'fixture-prettier-config'
+
+export default config
