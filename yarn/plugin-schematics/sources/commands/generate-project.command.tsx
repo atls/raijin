@@ -1,11 +1,12 @@
-import { BaseCommand }              from '@yarnpkg/cli'
-import { StreamReport }             from '@yarnpkg/core'
-import { Option }                   from 'clipanion'
+import type { ProjectCommandContext } from '@atls/raijin/commands'
 
-import { getStreamReportCallback }  from '@atls/code-schematics'
-import { getStreamReportOptions }   from '@atls/code-schematics'
-import { resolveProjectInvocation } from '@atls/raijin/commands'
-import { toNativeCwd }              from '@atls/raijin/commands'
+import { BaseCommand }                from '@yarnpkg/cli'
+import { StreamReport }               from '@yarnpkg/core'
+import { Option }                     from 'clipanion'
+
+import { getStreamReportCallback }    from '@atls/code-schematics'
+import { getStreamReportOptions }     from '@atls/code-schematics'
+import { toNativeCwd }                from '@atls/raijin/commands'
 
 export const createGenerateProjectOptions = (type: string, invocationCwd: string) => ({
   type,
@@ -21,11 +22,11 @@ export class GenerateProjectCommand extends BaseCommand {
 
   type = Option.String('-t,--type', 'project')
 
-  async execute() {
-    const { invocationCwd, yarn } = await resolveProjectInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  declare context: ProjectCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+    const { invocationCwd, yarn } = invocation
     const { configuration } = yarn
 
     const allowedTypes = ['library', 'project']

@@ -1,70 +1,48 @@
 /* eslint-disable n/no-sync */
 
-import type { CommandInput }          from '@atls/raijin/commands'
-import type { PortablePath }          from '@yarnpkg/fslib'
-import type { EventData }             from 'node:test'
+import type { CommandInput }            from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
+import type { WorkspaceInvocation }     from '@atls/raijin/commands'
+import type { PortablePath }            from '@yarnpkg/fslib'
+import type { EventData }               from 'node:test'
 
-import { readFileSync }               from 'node:fs'
-import { relative }                   from 'node:path'
+import type { TestInputOptions }        from './abstract-test.interfaces.js'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { Option }                     from 'clipanion'
-import { Command }                    from 'clipanion'
-import { render }                     from 'ink'
-import { isEnum }                     from 'typanion'
-import React                          from 'react'
+import { readFileSync }                 from 'node:fs'
+import { relative }                     from 'node:path'
 
-import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
-import { LogRecord }                  from '@atls/cli-ui-log-record-component'
-import { RawOutput }                  from '@atls/cli-ui-raw-output-component'
-import { TestFailure }                from '@atls/cli-ui-test-failure-component'
-import { TestProgress }               from '@atls/cli-ui-test-progress-component'
-import { Tester }                     from '@atls/code-test'
-import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }         from '@atls/raijin/commands'
-import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
-import { resolveProjectInvocation }   from '@atls/raijin/commands'
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { toNativeCwd }                from '@atls/raijin/commands'
-import { toCommandArguments }         from '@atls/raijin/commands'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Option }                       from 'clipanion'
+import { Command }                      from 'clipanion'
+import { render }                       from 'ink'
+import { isEnum }                       from 'typanion'
+import React                            from 'react'
+
+import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { LogRecord }                    from '@atls/cli-ui-log-record-component'
+import { RawOutput }                    from '@atls/cli-ui-raw-output-component'
+import { TestFailure }                  from '@atls/cli-ui-test-failure-component'
+import { TestProgress }                 from '@atls/cli-ui-test-progress-component'
+import { Tester }                       from '@atls/code-test'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
 
 type TestFail = EventData.TestFail
 type TestStderr = EventData.TestStderr
 type TestStdout = EventData.TestStdout
 
-interface ProxyTestArgsOptions {
-  files: Array<string>
-  target?: string
-  testReporter?: string
-  watch: boolean
-}
-
-export const createProxyTestArgs = ({
+export const createTestInput = ({
   files,
+  invocationCwd,
   target,
-  testReporter,
-  watch,
-}: ProxyTestArgsOptions): Array<string> => {
-  const args: Array<string> = []
+}: TestInputOptions): CommandInput => {
+  const targetInput = target
+    ? createCommandInput({ cwd: invocationCwd, source: 'explicit', targets: [target] })
+    : undefined
+  const cwd = targetInput?.targets.at(0)?.path ?? invocationCwd
 
-  if (files.length) {
-    args.push(...files)
-  }
-
-  if (watch) {
-    args.push('-w')
-  }
-
-  if (target) {
-    args.push('-t')
-    args.push(target)
-  }
-
-  if (testReporter) {
-    args.push(`--test-reporter=${testReporter}`)
-  }
-
-  return args
+  return createCommandInput({ cwd, source: 'explicit', targets: files })
 }
 
 export abstract class AbstractTestCommand extends BaseCommand {
@@ -98,44 +76,17 @@ export abstract class AbstractTestCommand extends BaseCommand {
     validator: isEnum(['tap']),
   })
 
+  declare context: WorkspaceCommandContext
+
   private std = new Map<string | undefined, Array<string>>()
 
   private bufferedStdTimeout: NodeJS.Timeout | undefined
 
-  async executeProxy(type?: 'integration' | 'unit'): Promise<number> {
-    const { invocationCwd } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
-    const input = createCommandInput({
-      cwd: invocationCwd,
-      source: 'explicit',
-      targets: this.files,
-    })
-    const args = createProxyTestArgs({
-      files: toCommandArguments(input),
-      watch: this.watch,
-      target: toNativeCwd(invocationCwd),
-      testReporter: this.testReporter,
-    })
-
-    const nodeOptions = process.env.NODE_OPTIONS?.includes('--no-warnings')
-      ? process.env.NODE_OPTIONS
-      : `${process.env.NODE_OPTIONS ?? ''} --no-warnings=DeprecationWarning`
-
-    return proxyWorkspaceCommand({
-      args: ['test', type ?? '', ...args],
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      env: { NODE_OPTIONS: nodeOptions },
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(type: 'integration' | 'unit'): Promise<number> {
-    const { executionCwd, invocationCwd, project } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  async executeRegular(
+    type: 'integration' | 'unit',
+    invocation: WorkspaceInvocation
+  ): Promise<number> {
+    const { executionCwd, invocationCwd, project } = invocation
     const projectCwd = toNativeCwd(project.cwd)
 
     const onStdout = (data: TestStdout): void => {
@@ -171,19 +122,13 @@ export abstract class AbstractTestCommand extends BaseCommand {
     const tester = await Tester.initialize(toNativeCwd(executionCwd), {
       projectCwd,
     })
-    const input = this.createInput(invocationCwd, project.cwd)
+    const input = this.createInput(invocationCwd)
+    const options = this.createTestOptions()
+    const executeTests = async (): ReturnType<Tester['unit']> =>
+      type === 'integration' ? tester.integration(input, options) : tester.unit(input, options)
 
     if (this.testReporter === 'tap') {
-      const results =
-        type === 'integration'
-          ? await tester.integration(input, {
-              watch: this.watch,
-              testReporter: this.testReporter,
-            })
-          : await tester.unit(input, {
-              watch: this.watch,
-              testReporter: this.testReporter,
-            })
+      const results = await executeTests()
 
       return results.find((result) => result.type === 'test:fail') ? 1 : 0
     }
@@ -195,16 +140,7 @@ export abstract class AbstractTestCommand extends BaseCommand {
     const { clear, unmount } = render(<TestProgress cwd={projectCwd} tester={tester} />)
 
     try {
-      const results =
-        type === 'integration'
-          ? await tester.integration(input, {
-              watch: this.watch,
-              testReporter: this.testReporter,
-            })
-          : await tester.unit(input, {
-              watch: this.watch,
-              testReporter: this.testReporter,
-            })
+      const results = await executeTests()
 
       return results.find((result) => result.type === 'test:fail') ? 1 : 0
     } catch (error) {
@@ -231,14 +167,19 @@ export abstract class AbstractTestCommand extends BaseCommand {
     }
   }
 
-  protected createInput(invocationCwd: PortablePath, projectCwd: PortablePath): CommandInput {
-    const targetInput = this.target
-      ? createCommandInput({ cwd: invocationCwd, source: 'explicit', targets: [this.target] })
-      : undefined
-    const target = targetInput?.targets.at(0)
-    const cwd = target?.path ?? (this.files.length > 0 ? invocationCwd : projectCwd)
+  protected createInput(invocationCwd: PortablePath): CommandInput {
+    return createTestInput({
+      files: this.files,
+      invocationCwd,
+      target: this.target,
+    })
+  }
 
-    return createCommandInput({ cwd, source: 'explicit', targets: this.files })
+  protected createTestOptions(): NonNullable<Parameters<Tester['unit']>[1]> {
+    return {
+      watch: this.watch,
+      testReporter: this.testReporter,
+    }
   }
 
   private bufferedStd(

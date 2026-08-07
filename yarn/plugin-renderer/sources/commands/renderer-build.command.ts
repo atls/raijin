@@ -1,3 +1,5 @@
+import type { WorkspaceCommandContext }        from '@atls/raijin/commands'
+
 import { PassThrough }                         from 'node:stream'
 
 import { BaseCommand }                         from '@yarnpkg/cli'
@@ -6,10 +8,6 @@ import { MessageName }                         from '@yarnpkg/core'
 import { execUtils }                           from '@yarnpkg/core'
 import { scriptUtils }                         from '@yarnpkg/core'
 import { xfs }                                 from '@yarnpkg/fslib'
-
-import { resolveWorkspaceInvocation }          from '@atls/raijin/commands'
-import { createYarnExecutable }                from '@atls/raijin/commands'
-import { materializeNextConfigAdapter }        from '@atls/raijin/config/next'
 
 import { cleanupDiscoveryArtifacts }           from '../artifact/cleanup.js'
 import { cleanupSourceArtifacts }              from '../artifact/cleanup.js'
@@ -22,13 +20,10 @@ import { copyEdgeChunks }                      from '../artifact/materialization
 import { copyPublicAssets }                    from '../artifact/materialization.js'
 import { copyStandalone }                      from '../artifact/materialization.js'
 import { copyStaticAssets }                    from '../artifact/materialization.js'
-import { assertNextBuildExitCode }             from '../integrations/next/execution/arguments.js'
-import { createNextBuildArguments }            from '../integrations/next/execution/arguments.js'
-import { createNextExecutionEnvironment }      from '../integrations/next/execution/environment.js'
-import { extractPnpLoaderOption }              from '../integrations/next/execution/environment.js'
-import { resolvePnpLoader }                    from '../integrations/next/execution/environment.js'
-import { materializeNextLoader }               from '../integrations/next/execution/loader.js'
-import { resolveNextPackageVersion }           from '../integrations/next/execution/version.js'
+import { assertNextBuildExitCode }             from '../integrations/next/launcher/arguments.js'
+import { createNextBuildArguments }            from '../integrations/next/launcher/arguments.js'
+import { createNextExecutable }                from '../integrations/next/launcher/executable.js'
+import { resolveNextPackageVersion }           from '../integrations/next/launcher/version.js'
 import { resolveNextStandaloneArtifactSource } from '../integrations/next/standalone/discovery.js'
 import { snapshotNextStandaloneManifests }     from '../integrations/next/standalone/discovery.js'
 
@@ -39,13 +34,13 @@ export class RendererBuildCommand extends BaseCommand {
     description: 'build a renderer production artifact',
   })
 
-  async execute(): Promise<number> {
-    await cleanupDiscoveryArtifacts(this.context.cwd)
+  declare context: WorkspaceCommandContext
 
-    const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+    await cleanupDiscoveryArtifacts(invocation.invocationCwd)
+
+    const { executionCwd, workspace, yarn } = invocation
     const { configuration, project } = yarn
     const rendererCwd = executionCwd
     const artifactTarget = createArtifactTarget(rendererCwd)
@@ -54,7 +49,6 @@ export class RendererBuildCommand extends BaseCommand {
 
     await project.restoreInstallState()
 
-    const binFolder = await xfs.mktempPromise()
     const manifestSnapshot = await snapshotNextStandaloneManifests(artifactTarget.appCwd)
 
     const commandReport = await StreamReport.start(
@@ -64,37 +58,6 @@ export class RendererBuildCommand extends BaseCommand {
       },
       async (report) => {
         await report.startTimerPromise('Renderer build', async () => {
-          const stdout = new PassThrough()
-          const stderr = new PassThrough()
-
-          stdout.on('data', (data: Buffer) => {
-            data
-              .toString()
-              .split('\n')
-              .filter(Boolean)
-              .forEach((line) => {
-                report.reportInfo(MessageName.UNNAMED, line)
-              })
-          })
-
-          stderr.on('data', (data: Buffer) => {
-            data
-              .toString()
-              .split('\n')
-              .filter(Boolean)
-              .forEach((line) => {
-                report.reportInfo(MessageName.UNNAMED, line)
-              })
-          })
-
-          const executableContext = {
-            binFolder,
-            locator: workspace.anchoredLocator,
-            project,
-          }
-          const scriptEnvironment = await createYarnExecutable(executableContext)
-          const { nodeOptions } = extractPnpLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
-          const loader = await resolvePnpLoader(project.cwd, scriptEnvironment.env.NODE_OPTIONS)
           const binaries = await scriptUtils.getWorkspaceAccessibleBinaries(workspace)
           const nextBinary = binaries.get('next')
 
@@ -104,33 +67,45 @@ export class RendererBuildCommand extends BaseCommand {
 
           const [nextPackage, nextBin] = nextBinary
           const nextVersion = resolveNextPackageVersion(nextPackage)
-          const nextLoader = await materializeNextLoader(binFolder, loader)
-          const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
-          const { executable, env } = await createYarnExecutable({
-            ...executableContext,
-            env: {
-              NODE_OPTIONS: nodeOptions,
-            },
-            nodeLoader: nextLoader,
-          })
 
-          const { code } = await execUtils.pipevp(
-            executable,
-            createNextBuildArguments(nextVersion, nextBin),
-            {
-              end: execUtils.EndStrategy.ErrorCode,
-              cwd: rendererCwd,
-              stdin: this.context.stdin,
-              stdout,
-              stderr,
-              env: createNextExecutionEnvironment(env, nextLoader, rendererCwd, {
-                nextConfigAdapterPath,
-                output: 'standalone',
-              }),
+          await xfs.mktempPromise(async (binFolder) => {
+            const createOutput = (): PassThrough => {
+              const stream = new PassThrough()
+
+              stream.on('data', (data: Buffer) => {
+                data
+                  .toString()
+                  .split('\n')
+                  .filter(Boolean)
+                  .forEach((line) => {
+                    report.reportInfo(MessageName.UNNAMED, line)
+                  })
+              })
+
+              return stream
             }
-          )
+            const { executable, env } = await createNextExecutable({
+              baseEnvironment: this.context.env,
+              binFolder,
+              locator: workspace.anchoredLocator,
+              output: 'standalone',
+              project,
+              rendererCwd,
+            })
+            const { code } = await execUtils.pipevp(
+              executable,
+              createNextBuildArguments(nextVersion, nextBin),
+              {
+                cwd: rendererCwd,
+                env,
+                stderr: createOutput(),
+                stdin: this.context.stdin,
+                stdout: createOutput(),
+              }
+            )
 
-          assertNextBuildExitCode(code)
+            assertNextBuildExitCode(code)
+          })
         })
 
         const artifactSource = await resolveNextStandaloneArtifactSource(

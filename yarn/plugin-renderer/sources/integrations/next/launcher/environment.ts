@@ -16,21 +16,15 @@ import { RAIJIN_RENDERER_WORKSPACE_CWD_ENV }    from '@atls/raijin/config/next'
 
 const NODE_LOADER_OPTIONS = new Set(['--experimental-loader', '--loader'])
 const PNP_ESM_LOADER = '.pnp.loader.mjs' as Filename
-const RAIJIN_NODE_LOADER = 'RAIJIN_NODE_LOADER'
-
 const isPnpNodeLoader = (value: string | undefined): boolean =>
   value?.includes(PNP_ESM_LOADER) ?? false
 
-export const createNextExecutionEnvironment = (
-  env: NodeJS.ProcessEnv,
-  loader: string,
+export const createNextExecutionEnvironmentPatch = (
   rendererCwd: PortablePath,
   options: NextExecutionEnvironmentOptions = {}
-): NodeJS.ProcessEnv => ({
-  ...env,
+): Readonly<Record<string, string>> => ({
   NEXT_TELEMETRY_DISABLED: '1',
   [RAIJIN_RENDERER_WORKSPACE_CWD_ENV]: npath.fromPortablePath(rendererCwd),
-  [RAIJIN_NODE_LOADER]: loader,
   ...(options.nextConfigAdapterPath
     ? {
         [NEXT_CONFIG_ADAPTER_PATH_ENV]: npath.fromPortablePath(options.nextConfigAdapterPath),

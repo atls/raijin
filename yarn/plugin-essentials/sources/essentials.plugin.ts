@@ -1,5 +1,9 @@
-import type { Plugin }       from '@yarnpkg/core'
+import type { Plugin }              from '@yarnpkg/core'
 
-import { SetVersionCommand } from './commands/index.js'
+import { defineCommandInvocations } from '@atls/raijin/commands'
 
-export const plugin: Plugin = { commands: [SetVersionCommand] }
+import { SetVersionCommand }        from './commands/index.js'
+
+export const plugin: Plugin = {
+  commands: defineCommandInvocations({ entry: [SetVersionCommand] }),
+}

@@ -1,8 +1,9 @@
-import { BaseCommand }              from '@yarnpkg/cli'
+import type { ProjectCommandContext } from '@atls/raijin/commands'
 
-import { CommitLinter }             from '@atls/code-commit'
-import { read }                     from '@atls/code-commit'
-import { resolveProjectInvocation } from '@atls/raijin/commands'
+import { BaseCommand }                from '@yarnpkg/cli'
+
+import { CommitLinter }               from '@atls/code-commit'
+import { read }                       from '@atls/code-commit'
 
 class CommitMessageLintCommand extends BaseCommand {
   static override paths = [['commit', 'message', 'lint']]
@@ -11,10 +12,13 @@ class CommitMessageLintCommand extends BaseCommand {
     description: 'validate commit messages against project scopes',
   })
 
-  async execute(): Promise<number> {
+  declare context: ProjectCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const {
       project: { workspaces },
-    } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    } = invocation
 
     const workspaceNames = new Set(workspaces.map(({ manifest }) => manifest.name?.name ?? ''))
     const scopes = new Set(workspaces.map(({ manifest }) => manifest.name?.scope ?? ''))

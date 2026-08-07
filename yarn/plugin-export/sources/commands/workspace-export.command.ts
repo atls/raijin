@@ -1,12 +1,12 @@
-import type { PortablePath }          from '@yarnpkg/fslib'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
+import type { PortablePath }            from '@yarnpkg/fslib'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
-import { structUtils }                from '@yarnpkg/core'
-import { Option }                     from 'clipanion'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { structUtils }                  from '@yarnpkg/core'
+import { Option }                       from 'clipanion'
 
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { packUtils }                  from '@atls/yarn-pack-utils'
+import { packUtils }                    from '@atls/yarn-pack-utils'
 
 export class WorkspaceExportCommand extends BaseCommand {
   static override paths = [['export']]
@@ -17,11 +17,11 @@ export class WorkspaceExportCommand extends BaseCommand {
 
   destination: string = Option.String('-d,--destination', { required: true })
 
-  async execute(): Promise<number> {
-    const { workspace, yarn } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+    const { workspace, yarn } = invocation
     const { configuration, project } = yarn
 
     const report = await StreamReport.start(

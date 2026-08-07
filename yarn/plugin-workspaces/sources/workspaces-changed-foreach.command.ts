@@ -1,13 +1,14 @@
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
-import { structUtils }                from '@yarnpkg/core'
-import { Option }                     from 'clipanion'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { getChangedFiles }            from '@atls/yarn-plugin-files'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { structUtils }                  from '@yarnpkg/core'
+import { Option }                       from 'clipanion'
 
-import { getChangedWorkspaces }       from './get-changed-workspaces.util.js'
-import { createForeachInput }         from './workspaces-changed-foreach.input.js'
+import { getChangedFiles }              from '@atls/yarn-plugin-files'
+
+import { getChangedWorkspaces }         from './get-changed-workspaces.util.js'
+import { createForeachInput }           from './workspaces-changed-foreach.input.js'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'foreach']]
@@ -44,11 +45,14 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
 
   args = Option.Proxy()
 
-  async execute(): Promise<number> {
-    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+    const { yarn } = invocation
     const { configuration, project } = yarn
 
-    const files = await getChangedFiles(project, this.since)
+    const files = await getChangedFiles(invocation.process, this.since)
     const workspaces = getChangedWorkspaces(project, files)
 
     if (!workspaces.length) {
@@ -79,9 +83,7 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
       }
     )
 
-    return this.cli.run([...input, this.commandName, ...this.args], {
-      cwd: project.cwd,
-    })
+    return invocation.yarn.execute([...input, this.commandName, ...this.args])
   }
 }
 

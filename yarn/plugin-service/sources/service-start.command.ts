@@ -1,14 +1,12 @@
+import type { WorkspaceCommandContext }    from '@atls/raijin/commands'
+
 import { spawn }                           from 'node:child_process'
+import { once }                            from 'node:events'
 
 import { BaseCommand }                     from '@yarnpkg/cli'
 
 import { createServiceRuntimeEnvironment } from '@atls/code-service'
 import { createServiceRuntimeExecArgv }    from '@atls/code-service'
-import { createChildProcessOptions }       from '@atls/raijin/commands'
-import { proxyWorkspaceCommand }           from '@atls/raijin/commands'
-import { resolveWorkspaceInvocation }      from '@atls/raijin/commands'
-import { shouldProxyCommand }              from '@atls/raijin/commands'
-import { waitForChildProcess }             from '@atls/raijin/commands'
 import { toNativeCwd }                     from '@atls/raijin/commands'
 
 export class ServiceStartCommand extends BaseCommand {
@@ -18,39 +16,23 @@ export class ServiceStartCommand extends BaseCommand {
     description: 'start a built service artifact',
   })
 
+  declare context: WorkspaceCommandContext
+
   override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
-    }
-
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    return proxyWorkspaceCommand({
-      args: ['service', 'start'],
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    const invocation = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+    const { invocation } = this.context
     const serviceCwd = toNativeCwd(invocation.executionCwd)
 
     const child = spawn(
       process.execPath,
       [...(await createServiceRuntimeExecArgv(serviceCwd)), 'dist/index.js'],
-      createChildProcessOptions({
-        invocation,
-        env: await createServiceRuntimeEnvironment(serviceCwd, process.env),
+      {
+        cwd: serviceCwd,
+        env: await createServiceRuntimeEnvironment(serviceCwd, this.context.env),
         stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
-      })
+      }
     )
+    const [exitCode] = await once(child, 'close')
 
-    return waitForChildProcess(child)
+    return typeof exitCode === 'number' ? exitCode : 1
   }
 }

@@ -1,4 +1,5 @@
 import type { CommitProperties }        from '@atls/cli-ui-git-commit-component'
+import type { EntryCommandContext }     from '@atls/raijin/commands'
 import type { PortablePath }            from '@yarnpkg/fslib'
 import type { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
 import type { ReactElement }            from 'react'
@@ -55,7 +56,9 @@ export class CommitMessageCommand extends BaseCommand {
 
   args: Array<string> = Option.Rest({ required: 0 })
 
-  async execute(): Promise<number> {
+  declare context: EntryCommandContext
+
+  override async execute(): Promise<number> {
     const [commitMessageFile, source] = this.args
 
     if (source) {

@@ -2,6 +2,8 @@ import type { PluginConfiguration } from '@yarnpkg/core'
 import type { PortablePath }        from '@yarnpkg/fslib'
 import type { PnpApi }              from '@yarnpkg/pnp'
 
+import type { PnpRuntimeApi }       from './source-workspace.interfaces.js'
+
 import { pathToFileURL }            from 'node:url'
 
 import { Configuration }            from '@yarnpkg/core'
@@ -10,6 +12,7 @@ import { miscUtils }                from '@yarnpkg/core'
 import { structUtils }              from '@yarnpkg/core'
 import { npath }                    from '@yarnpkg/fslib'
 import { ppath }                    from '@yarnpkg/fslib'
+import { xfs }                      from '@yarnpkg/fslib'
 import { getPnpPath }               from '@yarnpkg/plugin-pnp'
 
 import { MANAGED_NODE_LOADER_ENV }  from '@atls/raijin/runtime/node/bootstrap'
@@ -22,9 +25,7 @@ const TYPESCRIPT_SPECIFIER = 'typescript'
 const isModuleNotFoundError = (error: unknown): boolean =>
   error instanceof Error && 'code' in error && error.code === 'MODULE_NOT_FOUND'
 
-const isTypeScriptRuntimeAvailable = (pnpApiPath: string, packagePath: string): boolean => {
-  const pnpApi = miscUtils.dynamicRequire(pnpApiPath) as PnpApi
-
+const isTypeScriptRuntimeAvailable = (pnpApi: PnpApi, packagePath: string): boolean => {
   try {
     pnpApi.resolveRequest(TYPESCRIPT_SPECIFIER, packagePath)
 
@@ -52,27 +53,44 @@ export const registerRaijinSourceWorkspaceRuntime = async (
 
   const { project } = await Project.find(configuration, cwd)
   const workspace = project.tryWorkspaceByIdent(RAIJIN_PACKAGE_IDENT)
+  const pnpPath = getPnpPath(project)
+
+  if (!(await xfs.existsPromise(pnpPath.cjs))) {
+    return
+  }
+
+  const pnpApiPath = npath.fromPortablePath(pnpPath.cjs)
+  const pnpLoader = (await xfs.existsPromise(pnpPath.esmLoader))
+    ? pathToFileURL(npath.fromPortablePath(pnpPath.esmLoader)).href
+    : undefined
+  const pnpLoaders = pnpLoader ? [pnpLoader] : []
+  const inheritedTypeScriptLoader = process.env[MANAGED_NODE_LOADER_ENV]
+
+  const pnpApi = miscUtils.dynamicRequire(pnpApiPath) as PnpRuntimeApi
+
+  pnpApi.setup()
 
   if (!workspace) {
+    if (pnpLoaders.length > 0) {
+      await registerNodeLoaders(pnpLoaders)
+    }
+
     return
   }
 
   const packagePath = npath.fromPortablePath(ppath.join(workspace.cwd, PACKAGE_MANIFEST))
-  const pnpPath = getPnpPath(project)
-  const pnpApiPath = npath.fromPortablePath(pnpPath.cjs)
-  const pnpLoaderPath = npath.fromPortablePath(pnpPath.esmLoader)
-  const pnpLoader = pathToFileURL(pnpLoaderPath).href
-  const inheritedTypeScriptLoader = process.env[MANAGED_NODE_LOADER_ENV]
 
   if (inheritedTypeScriptLoader) {
-    await registerNodeLoaders([pnpLoader, inheritedTypeScriptLoader])
+    await registerNodeLoaders([...pnpLoaders, inheritedTypeScriptLoader])
 
     return
   }
 
-  await registerNodeLoaders([pnpLoader])
+  if (pnpLoaders.length > 0) {
+    await registerNodeLoaders(pnpLoaders)
+  }
 
-  if (!isTypeScriptRuntimeAvailable(pnpApiPath, packagePath)) {
+  if (!isTypeScriptRuntimeAvailable(pnpApi, packagePath)) {
     return
   }
 

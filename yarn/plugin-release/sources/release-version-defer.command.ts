@@ -1,8 +1,8 @@
+import type { WorkspaceCommandContext }           from '@atls/raijin/commands'
+
 import { BaseCommand }                            from '@yarnpkg/cli'
 import { StreamReport }                           from '@yarnpkg/core'
 import { Option }                                 from 'clipanion'
-
-import { resolveWorkspaceInvocation }             from '@atls/raijin/commands'
 
 import { resolveReleaseVersionDeferredStrategy }  from './release-version-policy.utils.js'
 import { getDeferredReleaseDecisions }            from './release-version.utils.js'
@@ -26,8 +26,11 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
 
   dryRun = Option.Boolean('--dry-run', false)
 
+  declare context: WorkspaceCommandContext
+
   override async execute(): Promise<number> {
-    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+    const { invocation } = this.context
+    const { yarn } = invocation
     const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
@@ -36,7 +39,7 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
         configuration,
       },
       async (report) => {
-        const changes = await getReleaseVersionChanges(project, this.since)
+        const changes = await getReleaseVersionChanges(invocation.process, this.since)
         const strategies = resolveReleaseVersionStrategies(project, changes)
         const declineStrategies = resolveReleaseVersionDeclineStrategies(project, changes)
 
@@ -48,7 +51,12 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
 
         const deferredDecisions = await getDeferredReleaseDecisions(configuration)
 
-        for (const { workspace: changedWorkspace, strategy } of strategies) {
+        await strategies.reduce<Promise<void>>(async (
+          previous,
+          { workspace: changedWorkspace, strategy }
+        ) => {
+          await previous
+
           const effectiveStrategy = resolveReleaseVersionDeferredStrategy(
             deferredDecisions.get(changedWorkspace.ident),
             strategy
@@ -57,47 +65,50 @@ export class ReleaseVersionDeferCommand extends BaseCommand {
           report.reportInfo(null, `Deferring ${changedWorkspace.ident} as ${effectiveStrategy}`)
 
           if (this.dryRun) {
-            continue
+            return
           }
 
-          // Deferred version records share the same `.yarn/versions` state.
-          // eslint-disable-next-line no-await-in-loop
-          const code = await this.cli.run(
-            ['workspace', changedWorkspace.ident, 'version', effectiveStrategy, '--deferred'],
-            {
-              cwd: project.cwd,
-            }
-          )
+          const code = await invocation.yarn.execute([
+            'workspace',
+            changedWorkspace.ident,
+            'version',
+            effectiveStrategy,
+            '--deferred',
+          ])
 
           if (code > 0) {
             throw new Error(`Failed to defer ${changedWorkspace.ident} as ${effectiveStrategy}`)
           }
-        }
+        }, Promise.resolve())
 
-        for (const { workspace: changedWorkspace } of declineStrategies) {
+        await declineStrategies.reduce<Promise<void>>(async (
+          previous,
+          { workspace: changedWorkspace }
+        ) => {
+          await previous
+
           if (deferredDecisions.has(changedWorkspace.ident)) {
-            continue
+            return
           }
 
           report.reportInfo(null, `Declining ${changedWorkspace.ident}`)
 
           if (this.dryRun) {
-            continue
+            return
           }
 
-          // Deferred version records share the same `.yarn/versions` state.
-          // eslint-disable-next-line no-await-in-loop
-          const code = await this.cli.run(
-            ['workspace', changedWorkspace.ident, 'version', 'decline', '--deferred'],
-            {
-              cwd: project.cwd,
-            }
-          )
+          const code = await invocation.yarn.execute([
+            'workspace',
+            changedWorkspace.ident,
+            'version',
+            'decline',
+            '--deferred',
+          ])
 
           if (code > 0) {
             throw new Error(`Failed to decline ${changedWorkspace.ident}`)
           }
-        }
+        }, Promise.resolve())
       }
     )
 

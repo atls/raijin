@@ -1,13 +1,13 @@
-import { appendFile }                  from 'node:fs/promises'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { BaseCommand }                 from '@yarnpkg/cli'
-import { StreamReport }                from '@yarnpkg/core'
-import { Option }                      from 'clipanion'
+import { appendFile }                   from 'node:fs/promises'
 
-import { resolveWorkspaceInvocation }  from '@atls/raijin/commands'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { Option }                       from 'clipanion'
 
-import { getDeferredReleaseDecisions } from './release-version.utils.js'
-import { isDeferredReleaseRequired }   from './release-version.utils.js'
+import { getDeferredReleaseDecisions }  from './release-version.utils.js'
+import { isDeferredReleaseRequired }    from './release-version.utils.js'
 
 const GITHUB_OUTPUT_PATH = 'GITHUB_OUTPUT'
 const DEFAULT_WORKSPACE_IDENT = '@atls/raijin'
@@ -37,9 +37,12 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
 
   since = Option.String('--since')
 
+  declare context: WorkspaceCommandContext
+
   override async execute(): Promise<number> {
-    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
-    const { configuration, project } = yarn
+    const { invocation } = this.context
+    const { yarn } = invocation
+    const { configuration } = yarn
 
     const deferArgs = ['release', 'version', 'defer']
 
@@ -47,9 +50,7 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
       deferArgs.push('--since', this.since)
     }
 
-    const deferCode = await this.cli.run(deferArgs, {
-      cwd: project.cwd,
-    })
+    const deferCode = await invocation.yarn.execute(deferArgs)
 
     if (deferCode > 0) {
       return deferCode
@@ -77,8 +78,6 @@ export class ReleaseVersionApplyCommand extends BaseCommand {
       return commandReport.exitCode()
     }
 
-    return this.cli.run(['version', 'apply', '--all'], {
-      cwd: project.cwd,
-    })
+    return invocation.yarn.execute(['version', 'apply', '--all'])
   }
 }

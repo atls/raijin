@@ -1,23 +1,21 @@
-import type { CommandInput }          from '@atls/raijin/commands'
-import type { PortablePath }          from '@yarnpkg/fslib'
+import type { CommandInput }            from '@atls/raijin/commands'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
+import type { PortablePath }            from '@yarnpkg/fslib'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { ppath }                      from '@yarnpkg/fslib'
-import { Option }                     from 'clipanion'
-import { render }                     from 'ink'
-import React                          from 'react'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { ppath }                        from '@yarnpkg/fslib'
+import { Option }                       from 'clipanion'
+import { render }                       from 'ink'
+import React                            from 'react'
 
-import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
-import { IconsProgress }              from '@atls/cli-ui-icons-progress-component'
-import { Icons }                      from '@atls/code-icons'
-import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }         from '@atls/raijin/commands'
-import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { shouldProxyCommand }         from '@atls/raijin/commands'
-import { toNativeCwd }                from '@atls/raijin/commands'
-import { toCommandArguments }         from '@atls/raijin/commands'
-import { discoverFiles }              from '@atls/raijin/filesystem'
+import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { IconsProgress }                from '@atls/cli-ui-icons-progress-component'
+import { Icons }                        from '@atls/code-icons'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
+import { toCommandArguments }           from '@atls/raijin/commands'
+import { discoverFiles }                from '@atls/raijin/filesystem'
 
 export const createGeneratedIconInput = (
   workspaceCwd: PortablePath,
@@ -48,36 +46,11 @@ export class UiIconsGenerateCommand extends BaseCommand {
 
   native: boolean = Option.Boolean('-n, --native', false)
 
+  declare context: WorkspaceCommandContext
+
   override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
-    }
-
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    const args: Array<string> = []
-
-    if (this.native) {
-      args.push('--native')
-    }
-
-    return proxyWorkspaceCommand({
-      args: ['ui', 'icons', 'generate', ...args],
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    const { executionCwd, project } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { invocation } = this.context
+    const { executionCwd, yarn } = invocation
     const cwd = toNativeCwd(executionCwd)
 
     const icons = await Icons.initialize(cwd)
@@ -90,14 +63,10 @@ export class UiIconsGenerateCommand extends BaseCommand {
       const files = await discoverGeneratedIconFiles(executionCwd)
 
       const input = createGeneratedIconInput(executionCwd, files)
-      const generatedFiles = toCommandArguments(input, project.cwd)
+      const generatedFiles = toCommandArguments(input, executionCwd)
 
-      await this.cli.run(['format', ...generatedFiles], {
-        cwd: project.cwd,
-      })
-      await this.cli.run(['lint', '--fix', ...generatedFiles], {
-        cwd: project.cwd,
-      })
+      await yarn.execute(['format', ...generatedFiles])
+      await yarn.execute(['lint', '--fix', ...generatedFiles])
 
       return 0
     } catch (error) {

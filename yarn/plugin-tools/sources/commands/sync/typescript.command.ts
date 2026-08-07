@@ -1,31 +1,25 @@
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { shouldProxyCommand }         from '@atls/raijin/commands'
-import { getRaijinTypeScriptRange }   from '@atls/raijin/config/sync'
-import { syncTypeScriptManifest }     from '@atls/raijin/config/sync'
+import { StreamReport }                 from '@yarnpkg/core'
 
-import { AbstractRaijinSyncCommand }  from './base.js'
-import { createRaijinSyncTarget }     from './target.js'
+import { getRaijinTypeScriptRange }     from '@atls/raijin/config/sync'
+import { syncTypeScriptManifest }       from '@atls/raijin/config/sync'
+
+import { AbstractRaijinSyncCommand }    from './base.js'
+import { createRaijinSyncTarget }       from './target.js'
 
 export class RaijinSyncTypeScriptCommand extends AbstractRaijinSyncCommand {
   static override paths = [['raijin', 'sync', 'typescript']]
 
-  static override usage = BaseCommand.Usage({
+  static override usage = AbstractRaijinSyncCommand.Usage({
     description: 'synchronize the Raijin TypeScript dependency',
   })
 
+  declare context: WorkspaceCommandContext
+
   override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy(['raijin', 'sync', 'typescript'])
-    }
-
-    return this.executeRegular()
-  }
-
-  override async executeRegular(): Promise<number> {
-    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+    const { invocation } = this.context
+    const { yarn } = invocation
     const { configuration, project } = yarn
 
     await project.restoreInstallState()

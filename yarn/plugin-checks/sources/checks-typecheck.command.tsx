@@ -1,31 +1,52 @@
-import type { CommandInput }            from '@atls/raijin/commands'
-import type { Project }                 from '@yarnpkg/core'
+import type { CommandInput }             from '@atls/raijin/commands'
+import type { ProcessExecutionResult }   from '@atls/raijin/commands'
+import type { ProjectCommandContext }    from '@atls/raijin/commands'
+import type { ProjectInvocation }        from '@atls/raijin/commands'
+import type { ProjectProcessInvocation } from '@atls/raijin/commands'
+import type { Project }                  from '@yarnpkg/core'
 
-import type { TypeScriptConfigRuntime } from './checks-typecheck.interfaces.js'
+import type { TypeScriptConfigRuntime }  from './checks-typecheck.interfaces.js'
 
-import { spawn }                        from 'node:child_process'
+import { BaseCommand }                   from '@yarnpkg/cli'
+import { StreamReport }                  from '@yarnpkg/core'
+import { MessageName }                   from '@yarnpkg/core'
+import { xfs }                           from '@yarnpkg/fslib'
+import { Option }                        from 'clipanion'
 
-import { BaseCommand }                  from '@yarnpkg/cli'
-import { StreamReport }                 from '@yarnpkg/core'
-import { MessageName }                  from '@yarnpkg/core'
-import { xfs }                          from '@yarnpkg/fslib'
-import { Option }                       from 'clipanion'
+import { createCommandInput }            from '@atls/raijin/commands'
+import { toCommandArguments }            from '@atls/raijin/commands'
+import { toNativeCwd }                   from '@atls/raijin/commands'
+import { resolveRaijinRuntimeUrl }       from '@atls/raijin/runtime-resolver'
+import { getChangedFiles }               from '@atls/yarn-plugin-files'
 
-import { createChildProcessOptions }    from '@atls/raijin/commands'
-import { createCommandInput }           from '@atls/raijin/commands'
-import { createYarnExecutable }         from '@atls/raijin/commands'
-import { proxyProjectCommand }          from '@atls/raijin/commands'
-import { resolveProjectInvocation }     from '@atls/raijin/commands'
-import { shouldProxyCommand }           from '@atls/raijin/commands'
-import { toCommandArguments }           from '@atls/raijin/commands'
-import { toNativeCwd }                  from '@atls/raijin/commands'
-import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
-import { getChangedFiles }              from '@atls/yarn-plugin-files'
-
-import { GitHubChecks }                 from './github.checks.js'
+import { GitHubChecks }                  from './github.checks.js'
 
 const TYPECHECK_TIMEOUT_MS = 5 * 60 * 1000
 const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
+
+const formatTypecheckFailure = (result: ProcessExecutionResult): string => {
+  switch (result.reason) {
+    case 'completed':
+      return `TypeCheck failed with exit code ${result.exitCode}`
+    case 'timed-out':
+      return `TypeCheck timed out after ${TYPECHECK_TIMEOUT_MS / 1000}s`
+    case 'cancelled':
+      return 'TypeCheck was cancelled'
+    case 'signalled':
+      return result.signal
+        ? `TypeCheck was terminated by ${result.signal}`
+        : 'TypeCheck was terminated by a signal'
+    case 'start-failed':
+      return result.cause instanceof Error
+        ? `TypeCheck failed to start: ${result.cause.message}`
+        : 'TypeCheck failed to start'
+    default: {
+      const exhaustiveResult: never = result
+
+      return exhaustiveResult
+    }
+  }
+}
 
 const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptConfigRuntime> =>
   (await import(
@@ -41,29 +62,10 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
   changed = Option.Boolean('--changed', false)
 
+  declare context: ProjectCommandContext
+
   override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
-    }
-
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    const args = ['checks', 'typecheck', ...(this.changed ? ['--changed'] : [])]
-
-    return proxyProjectCommand({
-      args,
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    const invocation = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const { invocation } = this.context
     const { project, yarn } = invocation
     const { configuration } = yarn
 
@@ -80,7 +82,11 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
           await report.startTimerPromise('TypeCheck', async () => {
             try {
-              const input = await this.getInput(yarn.project, project.workspacePatterns)
+              const input = await this.getInput(
+                yarn.project,
+                project.workspacePatterns,
+                invocation.process
+              )
 
               if (this.changed && input?.targets.length === 0) {
                 report.reportInfo(MessageName.UNNAMED, 'No TypeScript files changed')
@@ -101,32 +107,26 @@ class ChecksTypeCheckCommand extends BaseCommand {
                   : 'TypeCheck targets: project tsconfig'
               )
 
-              const code = await this.runTypecheck(invocation, input)
+              const result = await this.runTypecheck(invocation, input)
 
-              if (code === 0) {
+              if (result.reason === 'completed' && result.exitCode === 0) {
                 await checks.complete(checkId, {
                   title: 'Successful',
                   summary: 'All checks passed',
                   annotations: [],
                 })
               } else {
+                const summary = formatTypecheckFailure(result)
+
                 await checks.failure(
                   {
                     title: 'TypeCheck run failed',
-                    summary:
-                      code === 124
-                        ? `TypeCheck timed out after ${TYPECHECK_TIMEOUT_MS / 1000}s`
-                        : `TypeCheck failed with exit code ${code}`,
+                    summary,
                   },
                   checkId
                 )
 
-                report.reportError(
-                  MessageName.UNNAMED,
-                  code === 124
-                    ? `TypeCheck timed out after ${TYPECHECK_TIMEOUT_MS / 1000}s`
-                    : `TypeCheck failed with exit code ${code}`
-                )
+                report.reportError(MessageName.UNNAMED, summary)
               }
             } catch (error) {
               await checks.failure(
@@ -152,13 +152,18 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
   protected async getInput(
     project: Project,
-    workspacePatterns: Array<string>
+    workspacePatterns: Array<string>,
+    processInvocation?: ProjectProcessInvocation
   ): Promise<CommandInput | undefined> {
     if (this.changed) {
+      if (!processInvocation) {
+        throw new Error('Changed TypeScript targets require command invocation')
+      }
+
       const input = createCommandInput({
         cwd: project.cwd,
         source: 'changed',
-        targets: (await getChangedFiles(project)).filter((file) =>
+        targets: (await getChangedFiles(processInvocation)).filter((file) =>
           /\.(cts|mts|ts|tsx)$/.test(file)),
       })
 
@@ -187,52 +192,16 @@ class ChecksTypeCheckCommand extends BaseCommand {
   }
 
   private async runTypecheck(
-    invocation: Awaited<ReturnType<typeof resolveProjectInvocation>>,
+    invocation: ProjectInvocation,
     input: CommandInput | undefined
-  ): Promise<number> {
-    const { project } = invocation.yarn
-    const binFolder = await xfs.mktempPromise()
-    const { executable, env } = await createYarnExecutable({
-      binFolder,
-      project,
-    })
-    let timeout: NodeJS.Timeout | undefined
-
-    return new Promise((resolvePromise, rejectPromise) => {
-      let timedOut = false
-      const child = spawn(
-        executable,
-        ['typecheck', ...(input ? toCommandArguments(input, invocation.project.cwd) : [])],
-        createChildProcessOptions({
-          invocation,
-          env,
-          stdio: ['ignore', 'pipe', 'pipe'],
-        })
-      )
-
-      child.stdout?.pipe(this.context.stdout, { end: false })
-      child.stderr?.pipe(this.context.stderr, { end: false })
-
-      timeout = setTimeout(() => {
-        timedOut = true
-        child.kill('SIGTERM')
-
-        setTimeout(() => {
-          if (!child.killed) {
-            child.kill('SIGKILL')
-          }
-        }, 5000).unref()
-      }, TYPECHECK_TIMEOUT_MS)
-
-      child.on('error', rejectPromise)
-      child.on('close', (code) => {
-        if (timeout) {
-          clearTimeout(timeout)
-        }
-
-        resolvePromise(timedOut ? 124 : (code ?? 1))
-      })
-    })
+  ): Promise<ProcessExecutionResult> {
+    return invocation.yarn.run(
+      ['typecheck', ...(input ? toCommandArguments(input, invocation.project.cwd) : [])],
+      {
+        input: 'ignore',
+        timeoutMs: TYPECHECK_TIMEOUT_MS,
+      }
+    )
   }
 }
 

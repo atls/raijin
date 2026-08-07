@@ -1,9 +1,9 @@
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { CommandExecutor } from './command.interfaces.js'
+import type { TagPolicy }       from './pack.interfaces.js'
 
-import type { TagPolicy }    from './pack.interfaces.js'
+import { context }              from '@actions/github'
 
-import { context }           from '@actions/github'
-import { execUtils }         from '@yarnpkg/core'
+import { execOrThrow }          from './pack.utils.js'
 
 export const getPullRequestSha = (): string => {
   const event = context.payload
@@ -29,14 +29,13 @@ export const getPullRequestNumber = (): string => {
   return String(event.pull_request?.number)
 }
 
-export const getRevision = async (): Promise<string> => {
+export const getRevision = async (commandExecutor: CommandExecutor): Promise<string> => {
   if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
     return getPullRequestSha()
   }
 
-  const { stdout } = await execUtils.execvp('git', ['log', '-1', '--format="%H"'], {
-    cwd: process.cwd() as PortablePath,
-    strict: true,
+  const { stdout } = await execOrThrow(commandExecutor, 'git', ['log', '-1', '--format="%H"'], {
+    capture: true,
   })
 
   const [revision] = stdout.split('\n')
@@ -52,8 +51,11 @@ export const getContext = async (): Promise<string> => {
   return 'local'
 }
 
-export const getTag = async (tagPolicy: TagPolicy): Promise<string> => {
-  const revision = await getRevision()
+export const getTag = async (
+  tagPolicy: TagPolicy,
+  commandExecutor: CommandExecutor
+): Promise<string> => {
+  const revision = await getRevision(commandExecutor)
   // eslint-disable-next-line @typescript-eslint/no-deprecated
   const hash = revision.substr(0, 7)
 

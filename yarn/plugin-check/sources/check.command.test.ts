@@ -1,23 +1,31 @@
-import assert           from 'node:assert/strict'
-import test             from 'node:test'
+import type { WorkspaceInvocation } from '@atls/raijin/commands'
 
-import { CheckCommand } from './check.command.js'
+import assert                       from 'node:assert/strict'
+import test                         from 'node:test'
+
+import { CheckCommand }             from './check.command.js'
 
 const runCheckCommand = async (
   targets: Array<string>,
-  exitCodes: Array<number> = [0, 0, 0]
+  exitCodes: Array<number> = [0, 0, 0],
+  invocationCwd = '/repo',
+  executionCwd = invocationCwd
 ): Promise<{ exitCode: number; commands: Array<Array<string>> }> => {
   const commands: Array<Array<string>> = []
-  const command = Object.assign(Object.create(CheckCommand.prototype), {
-    targets,
-    context: { cwd: '/repo' },
-    cli: {
-      run: async (args: Array<string>) => {
+  const invocation = {
+    executionCwd,
+    invocationCwd,
+    yarn: {
+      execute: async (args: Array<string>) => {
         commands.push(args)
 
         return exitCodes[commands.length - 1] ?? 0
       },
     },
+  } as unknown as WorkspaceInvocation
+  const command = Object.assign(Object.create(CheckCommand.prototype), {
+    targets,
+    context: { invocation },
   }) as CheckCommand
 
   const exitCode = await command.execute()
@@ -25,11 +33,30 @@ const runCheckCommand = async (
   return { exitCode, commands }
 }
 
-test('should run full check sequence without explicit targets', async () => {
+test('should default targetless checks to the invocation cwd', async () => {
   const { exitCode, commands } = await runCheckCommand([])
 
   assert.equal(exitCode, 0)
-  assert.deepEqual(commands, [['format'], ['typecheck'], ['lint']])
+  assert.deepEqual(commands, [
+    ['format', '.'],
+    ['typecheck', '.'],
+    ['lint', '.'],
+  ])
+})
+
+test('should run nested targetless checks from the invoking workspace', async () => {
+  const { commands } = await runCheckCommand(
+    [],
+    undefined,
+    '/repo/packages/app/src',
+    '/repo/packages/app'
+  )
+
+  assert.deepEqual(commands, [
+    ['format', 'src'],
+    ['typecheck', 'src'],
+    ['lint', 'src'],
+  ])
 })
 
 test('should forward explicit targets to every check command', async () => {
@@ -43,13 +70,18 @@ test('should forward explicit targets to every check command', async () => {
   ])
 })
 
-test('should serialize normalized targets from the invocation cwd', async () => {
-  const { commands } = await runCheckCommand(['/repo/yarn/plugin-check/sources'])
+test('should serialize nested workspace targets from the workspace execution cwd', async () => {
+  const { commands } = await runCheckCommand(
+    ['index.ts'],
+    undefined,
+    '/repo/packages/app/src',
+    '/repo/packages/app'
+  )
 
   assert.deepEqual(commands, [
-    ['format', 'yarn/plugin-check/sources'],
-    ['typecheck', 'yarn/plugin-check/sources'],
-    ['lint', 'yarn/plugin-check/sources'],
+    ['format', 'src/index.ts'],
+    ['typecheck', 'src/index.ts'],
+    ['lint', 'src/index.ts'],
   ])
 })
 

@@ -1,7 +1,9 @@
-import type { Plugin }             from '@yarnpkg/core'
+import type { Plugin }              from '@yarnpkg/core'
 
-import { FilesChangedListCommand } from './files-changed-list.command.js'
+import { defineCommandInvocations } from '@atls/raijin/commands'
+
+import { FilesChangedListCommand }  from './files-changed-list.command.js'
 
 export const plugin: Plugin = {
-  commands: [FilesChangedListCommand],
+  commands: defineCommandInvocations({ workspace: [FilesChangedListCommand] }),
 }

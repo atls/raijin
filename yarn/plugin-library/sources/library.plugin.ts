@@ -1,11 +1,13 @@
-import type { Plugin }            from '@yarnpkg/core'
+import type { Plugin }              from '@yarnpkg/core'
 
-import { LibraryBuildCommand }    from './library-build.command.jsx'
-import { beforeWorkspacePacking } from './before-workspace-packing.hook.js'
+import { defineCommandInvocations } from '@atls/raijin/commands'
+
+import { LibraryBuildCommand }      from './library-build.command.jsx'
+import { beforeWorkspacePacking }   from './before-workspace-packing.hook.js'
 
 export const plugin: Plugin = {
   hooks: {
     beforeWorkspacePacking,
   },
-  commands: [LibraryBuildCommand],
+  commands: defineCommandInvocations({ workspace: [LibraryBuildCommand] }),
 }

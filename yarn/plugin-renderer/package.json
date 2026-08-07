@@ -21,11 +21,9 @@
     "@atls/raijin": "workspace:*",
     "@atls/yarn-plugin-tools": "workspace:*",
     "clipanion": "4.0.0-rc.2",
-    "cross-spawn": "7.0.3",
     "localtunnel": "2.0.2"
   },
   "devDependencies": {
-    "@types/cross-spawn": "6.0.6",
     "@types/localtunnel": "2.0.4",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",

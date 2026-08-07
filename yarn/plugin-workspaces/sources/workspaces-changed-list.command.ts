@@ -1,12 +1,13 @@
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
-import { structUtils }                from '@yarnpkg/core'
-import { Option }                     from 'clipanion'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { getChangedFiles }            from '@atls/yarn-plugin-files'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { structUtils }                  from '@yarnpkg/core'
+import { Option }                       from 'clipanion'
 
-import { getChangedWorkspaces }       from './get-changed-workspaces.util.js'
+import { getChangedFiles }              from '@atls/yarn-plugin-files'
+
+import { getChangedWorkspaces }         from './get-changed-workspaces.util.js'
 
 class WorkspacesChangedListCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'list']]
@@ -17,8 +18,11 @@ class WorkspacesChangedListCommand extends BaseCommand {
 
   json = Option.Boolean('--json', false)
 
-  async execute(): Promise<number> {
-    const { yarn } = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+    const { yarn } = invocation
     const { configuration, project } = yarn
 
     const report = await StreamReport.start(
@@ -29,7 +33,7 @@ class WorkspacesChangedListCommand extends BaseCommand {
       },
 
       async (streamReport) => {
-        const files = await getChangedFiles(project)
+        const files = await getChangedFiles(invocation.process)
         const workspaces = getChangedWorkspaces(project, files)
 
         for (const ws of workspaces) {

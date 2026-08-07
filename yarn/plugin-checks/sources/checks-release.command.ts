@@ -1,3 +1,5 @@
+import type { ProjectCommandContext } from '@atls/raijin/commands'
+
 import type { Annotation }            from './github.checks.js'
 
 import { BaseCommand }                from '@yarnpkg/cli'
@@ -6,23 +8,13 @@ import { Command }                    from 'clipanion'
 import { Option }                     from 'clipanion'
 import stripAnsi                      from 'strip-ansi'
 
-import { proxyProjectCommand }        from '@atls/raijin/commands'
-import { resolveProjectInvocation }   from '@atls/raijin/commands'
-import { shouldProxyCommand }         from '@atls/raijin/commands'
 import { getChangedFiles }            from '@atls/yarn-plugin-files'
 import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
 
 import { GitHubChecks }               from './github.checks.js'
 import { AnnotationLevel }            from './github.checks.js'
-import { PassThroughRunContext }      from './pass-through-run.context.js'
 import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
-
-export const createChecksReleaseProxyArgs = (noPrivate: boolean): Array<string> => [
-  'checks',
-  'release',
-  ...(noPrivate ? ['--no-private'] : []),
-]
 
 class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]
@@ -39,27 +31,11 @@ class ChecksReleaseCommand extends BaseCommand {
 
   noPrivate = Option.Boolean('--no-private', false)
 
+  declare context: ProjectCommandContext
+
   override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
-    }
-
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    return proxyProjectCommand({
-      args: createChecksReleaseProxyArgs(this.noPrivate),
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    const { yarn } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+    const { invocation } = this.context
+    const { yarn } = invocation
     const { project } = yarn
 
     const releaseConfig = resolveChecksReleaseConfig(project)
@@ -68,8 +44,9 @@ class ChecksReleaseCommand extends BaseCommand {
       privateWorkspaces: this.noPrivate ? false : releaseConfig.privateWorkspaces,
     }
     const workspaces = releaseConfig.enabled
-      ? getChangedWorkspaces(project, await getChangedFiles(project)).filter((workspace) =>
-          isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
+      ? getChangedWorkspaces(project, await getChangedFiles(invocation.process)).filter((
+          workspace
+        ) => isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
       : []
 
     const checks = new GitHubChecks('Release')
@@ -81,35 +58,27 @@ class ChecksReleaseCommand extends BaseCommand {
 
       for await (const workspace of workspaces) {
         if (workspace.manifest.scripts.get('build')) {
-          const context = new PassThroughRunContext()
-
-          const outputWriter = (data: Buffer): ReturnType<typeof this.context.stdout.write> =>
-            this.context.stdout.write(data)
-
-          context.stdout.on('data', outputWriter)
-          context.stderr.on('data', outputWriter)
-
-          const code = await this.cli.run(
+          const result = await yarn.capture(
             ['workspace', workspace.manifest.raw.name as string, 'build'],
-            context
+            { forwardOutput: true }
           )
 
-          if (code > 0) {
+          if (result.reason !== 'completed' || result.exitCode > 0) {
             annotations.push({
               annotation_level: AnnotationLevel.Failure,
               title: `Error release workspace ${
                 workspace.manifest.raw.name ?? workspace.relativeCwd
               }`,
-              message: `Exit code ${code}`,
-              raw_details: stripAnsi(context.output),
+              message:
+                result.reason === 'completed'
+                  ? `Exit code ${result.exitCode}`
+                  : `Process ${result.reason}`,
+              raw_details: stripAnsi([result.stdout, result.stderr].filter(Boolean).join('\n')),
               path: ppath.join(workspace.relativeCwd, 'package.json'),
               start_line: 1,
               end_line: 1,
             })
           }
-
-          context.stdout.off('data', outputWriter)
-          context.stderr.off('data', outputWriter)
         }
       }
 

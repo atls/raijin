@@ -1,26 +1,26 @@
-import type { Project }               from '@yarnpkg/core'
-import type { PortablePath }          from '@yarnpkg/fslib'
+import type { ProjectProcessInvocation } from '@atls/raijin/commands'
+import type { WorkspaceCommandContext }  from '@atls/raijin/commands'
+import type { Project }                  from '@yarnpkg/core'
+import type { PortablePath }             from '@yarnpkg/fslib'
 
-import assert                         from 'node:assert/strict'
-import { Buffer }                     from 'node:buffer'
-import { execSync }                   from 'node:child_process'
-import { createHash }                 from 'node:crypto'
-import { mkdir }                      from 'node:fs/promises'
-import { readFile }                   from 'node:fs/promises'
-import { writeFile }                  from 'node:fs/promises'
-import { dirname }                    from 'node:path'
+import assert                            from 'node:assert/strict'
+import { Buffer }                        from 'node:buffer'
+import { createHash }                    from 'node:crypto'
+import { mkdir }                         from 'node:fs/promises'
+import { readFile }                      from 'node:fs/promises'
+import { writeFile }                     from 'node:fs/promises'
+import { dirname }                       from 'node:path'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
-import { execUtils }                  from '@yarnpkg/core'
-import { npath }                      from '@yarnpkg/fslib'
-import { ppath }                      from '@yarnpkg/fslib'
-import { xfs }                        from '@yarnpkg/fslib'
+import { BaseCommand }                   from '@yarnpkg/cli'
+import { StreamReport }                  from '@yarnpkg/core'
+import { npath }                         from '@yarnpkg/fslib'
+import { ppath }                         from '@yarnpkg/fslib'
+import { xfs }                           from '@yarnpkg/fslib'
 
-import { Release }                    from '@atls/code-github'
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
+import { Release }                       from '@atls/code-github'
+import { assertProcessCompleted }        from '@atls/raijin/commands'
 
-import { parseGitHubUrl }             from './utils/parse-git-url.js'
+import { parseGitHubUrl }                from './utils/parse-git-url.js'
 
 const RELEASE_ALREADY_EXISTS_STATUS = 422
 const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
@@ -420,27 +420,41 @@ export const selectPreviousGitHubReleaseTagName = (
     .sort((leftTag, rightTag) => compareSemver(rightTag.version, leftTag.version))[0]?.tagName
 
 export const getGitHubReleaseTagNames = async (
-  project: Project,
+  processInvocation: ProjectProcessInvocation,
   packageName: string
 ): Promise<Array<string>> => {
-  const { stdout } = await execUtils.execvp('git', ['tag', '--list', `${packageName}@*`], {
-    cwd: project.cwd,
-    strict: true,
-  })
+  const result = await processInvocation.project.execute(
+    'git',
+    ['tag', '--list', `${packageName}@*`],
+    { output: { mode: 'capture' } }
+  )
 
-  return stdout
+  assertProcessCompleted(result)
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git tag exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout
     .split('\n')
     .map((tagName) => tagName.trim())
     .filter(Boolean)
 }
 
-export const getGitHubReleaseTargetCommitish = async (project: Project): Promise<string> => {
-  const { stdout } = await execUtils.execvp('git', ['rev-parse', 'HEAD'], {
-    cwd: project.cwd,
-    strict: true,
+export const getGitHubReleaseTargetCommitish = async (
+  processInvocation: ProjectProcessInvocation
+): Promise<string> => {
+  const result = await processInvocation.project.execute('git', ['rev-parse', 'HEAD'], {
+    output: { mode: 'capture' },
   })
 
-  return stdout.trim()
+  assertProcessCompleted(result)
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git rev-parse exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout.trim()
 }
 
 export class ReleaseCreateCommand extends BaseCommand {
@@ -450,11 +464,11 @@ export class ReleaseCreateCommand extends BaseCommand {
     description: 'create and publish a project release',
   })
 
+  declare context: WorkspaceCommandContext
+
   override async execute(): Promise<number> {
-    const { workspace, yarn } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { invocation } = this.context
+    const { process: processInvocation, workspace, yarn } = invocation
     const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
@@ -488,10 +502,19 @@ export class ReleaseCreateCommand extends BaseCommand {
           let owner: string
           let repo: string
           try {
-            ;({ repository: repo, organization: owner } = parseGitHubUrl(
-              // eslint-disable-next-line n/no-sync
-              execSync('git remote get-url origin', { encoding: 'utf-8' })
-            ))
+            const result = await processInvocation.project.execute(
+              'git',
+              ['remote', 'get-url', 'origin'],
+              { output: { mode: 'capture' } }
+            )
+
+            assertProcessCompleted(result)
+
+            if (result.exitCode !== 0) {
+              throw new Error(result.stderr || `git remote exited with code ${result.exitCode}`)
+            }
+
+            ;({ repository: repo, organization: owner } = parseGitHubUrl(result.stdout))
           } catch {
             ;[owner, repo] = process.env.GITHUB_REPOSITORY?.split('/') ?? ['', '']
           }
@@ -500,8 +523,8 @@ export class ReleaseCreateCommand extends BaseCommand {
           assert.ok(repo, 'Could not get url of the repo')
 
           try {
-            const tagNames = await getGitHubReleaseTagNames(project, packageName)
-            const targetCommitish = await getGitHubReleaseTargetCommitish(project)
+            const tagNames = await getGitHubReleaseTagNames(processInvocation, packageName)
+            const targetCommitish = await getGitHubReleaseTargetCommitish(processInvocation)
             const previousTagName = selectPreviousGitHubReleaseTagName(
               packageName,
               version,

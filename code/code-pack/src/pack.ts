@@ -1,5 +1,4 @@
-import type { execUtils }          from '@yarnpkg/core'
-
+import type { CommandExecutor }    from './command.interfaces.js'
 import type { PackOptions }        from './pack.interfaces.js'
 import type { PackOutputs }        from './pack.interfaces.js'
 
@@ -26,13 +25,13 @@ export const pack = async (
     require,
     cwd,
   }: PackOptions,
-  context: execUtils.PipevpOptions
+  commandExecutor: CommandExecutor
 ): Promise<PackOutputs> => {
-  const packCwd = cwd ?? context.cwd
+  const packCwd = cwd ?? commandExecutor.cwd
   const repo = workspace.replace('@', '').replace(/\//g, '-')
   const image = `${registry}${repo}`
 
-  const tag = await getTag(tagPolicy)
+  const tag = await getTag(tagPolicy, commandExecutor)
 
   const envs = [
     {
@@ -73,6 +72,8 @@ export const pack = async (
     `${image}:${tag}`,
     '--descriptor',
     descriptorPath,
+    '--path',
+    packCwd,
     '--buildpack',
     buildpack,
     '--tag',
@@ -94,23 +95,11 @@ export const pack = async (
   // eslint-disable-next-line no-console
   console.debug(`Packing with args:`, args)
 
-  await installPack({ cwd, context })
+  await installPack({ commandExecutor, cwd: packCwd })
 
-  await execOrThrow('pack', ['config', 'experimental', 'true'], {
-    cwd: packCwd,
-    env: process.env,
-    stdin: context.stdin,
-    stdout: context.stdout,
-    stderr: context.stderr,
-  })
+  await execOrThrow(commandExecutor, 'pack', ['config', 'experimental', 'true'])
 
-  await execOrThrow('pack', args, {
-    cwd: packCwd,
-    env: process.env,
-    stdin: context.stdin,
-    stdout: context.stdout,
-    stderr: context.stderr,
-  })
+  await execOrThrow(commandExecutor, 'pack', args)
 
   return {
     images: [`${image}:${tag}`, `${image}:latest`],

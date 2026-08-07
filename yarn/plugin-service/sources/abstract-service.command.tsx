@@ -1,15 +1,18 @@
-import type { ServiceLogRecord } from '@atls/code-service'
+import type { ServiceLogRecord }        from '@atls/code-service'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { SeverityNumber }        from '@monstrs/logger'
-import { BaseCommand }           from '@yarnpkg/cli'
-import { Option }                from 'clipanion'
-import React                     from 'react'
+import { SeverityNumber }               from '@monstrs/logger'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Option }                       from 'clipanion'
+import React                            from 'react'
 
-import { ErrorInfo }             from '@atls/cli-ui-error-info-component'
-import { LogRecord }             from '@atls/cli-ui-log-record-component'
-import { renderStatic }          from '@atls/cli-ui-renderer-static-component'
+import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { LogRecord }                    from '@atls/cli-ui-log-record-component'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
 
 export abstract class AbstractServiceCommand extends BaseCommand {
+  declare context: WorkspaceCommandContext
+
   showWarnings = Option.Boolean('-w,--show-warnings', false)
 
   renderLogRecord(logRecord: ServiceLogRecord): void {

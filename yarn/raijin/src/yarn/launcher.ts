@@ -1,4 +1,6 @@
-import { delimiter } from 'node:path'
+import { delimiter }                 from 'node:path'
+
+import { REGISTERED_PNP_LOADER_ENV } from '../runtime/node/bootstrap/loader.js'
 
 const PATH_ENVIRONMENT_NAME = /^path$/i
 const TEMPORARY_YARN_BIN_PATH = /[\\/]xfs-[^\\/]*(?:[\\/]|$)/
@@ -124,6 +126,7 @@ export const createLauncherBaseEnvironment = (
   delete yarnEnvironment.BERRY_BIN_FOLDER
   delete yarnEnvironment.npm_config_user_agent
   delete yarnEnvironment.npm_execpath
+  Reflect.deleteProperty(yarnEnvironment, REGISTERED_PNP_LOADER_ENV)
   delete yarnEnvironment.YARN_IGNORE_PATH
 
   if (nodeOptions) {

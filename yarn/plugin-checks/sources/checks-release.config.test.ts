@@ -1,12 +1,11 @@
-import type { Project }                 from '@yarnpkg/core'
-import type { Workspace }               from '@yarnpkg/core'
+import type { Project }               from '@yarnpkg/core'
+import type { Workspace }             from '@yarnpkg/core'
 
-import assert                           from 'node:assert/strict'
-import { test }                         from 'node:test'
+import assert                         from 'node:assert/strict'
+import { test }                       from 'node:test'
 
-import { createChecksReleaseProxyArgs } from './checks-release.command.js'
-import { isReleaseWorkspaceAllowed }    from './checks-release.config.js'
-import { resolveChecksReleaseConfig }   from './checks-release.config.js'
+import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
+import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
 const createProject = (tools?: Record<string, unknown>): Project =>
   ({
@@ -89,9 +88,4 @@ test('should filter private release workspaces only when configured', () => {
     }),
     true
   )
-})
-
-test('should preserve private workspace filter across proxy execution', () => {
-  assert.deepEqual(createChecksReleaseProxyArgs(false), ['checks', 'release'])
-  assert.deepEqual(createChecksReleaseProxyArgs(true), ['checks', 'release', '--no-private'])
 })

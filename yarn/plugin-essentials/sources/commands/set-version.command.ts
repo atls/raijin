@@ -1,3 +1,5 @@
+import type { EntryCommandContext }      from '@atls/raijin/commands'
+
 import { BaseCommand }                   from '@yarnpkg/cli'
 import { Configuration }                 from '@yarnpkg/core'
 import { Command }                       from 'clipanion'
@@ -22,8 +24,10 @@ export class SetVersionCommand extends BaseCommand {
     `,
   })
 
-  async execute(): Promise<number> {
-    const cwd = await findPackageCwd(this.context.cwd)
+  declare context: EntryCommandContext
+
+  override async execute(): Promise<number> {
+    const cwd = await findPackageCwd(this.context.invocation.invocationCwd)
     const previousCwd = process.cwd()
 
     await preparePackageProjectBoundary(cwd)

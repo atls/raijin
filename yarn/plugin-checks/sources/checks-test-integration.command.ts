@@ -1,11 +1,8 @@
-import { BaseCommand }               from '@yarnpkg/cli'
 import { StreamReport }              from '@yarnpkg/core'
 
 import { Tester }                    from '@atls/code-test'
 import { createCommandInput }        from '@atls/raijin/commands'
-import { proxyProjectCommand }       from '@atls/raijin/commands'
-import { resolveProjectInvocation }  from '@atls/raijin/commands'
-import { shouldProxyCommand }        from '@atls/raijin/commands'
+import { toNativeCwd }               from '@atls/raijin/commands'
 
 import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
 import { GitHubChecks }              from './github.checks.js'
@@ -13,36 +10,20 @@ import { GitHubChecks }              from './github.checks.js'
 class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
   static override paths = [['checks', 'test', 'integration']]
 
-  static override usage = BaseCommand.Usage({
+  static override usage = AbstractChecksTestCommand.Usage({
     description: 'report integration test results to GitHub Checks',
   })
 
   override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
-    }
+    const { invocation } = this.context
 
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    return proxyProjectCommand({
-      args: ['checks', 'test', 'integration'],
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
     if (!process.env.GITHUB_TOKEN) {
-      return this.cli.run(['test', 'integration'])
+      return invocation.yarn.execute(['test', 'integration'])
     }
 
-    const { yarn } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
-    const { configuration, project } = yarn
+    const { executionCwd, yarn } = invocation
+    const { configuration } = yarn
+    const nativeExecutionCwd = toNativeCwd(executionCwd)
 
     const commandReport = await StreamReport.start(
       {
@@ -55,15 +36,15 @@ class ChecksTestIntegrationCommand extends AbstractChecksTestCommand {
         const { id: checkId } = await checks.start()
 
         try {
-          const tester = await Tester.initialize(this.context.cwd)
+          const tester = await Tester.initialize(nativeExecutionCwd)
 
           const results = await tester.integration(
-            createCommandInput({ cwd: project.cwd, source: 'generated', targets: [] })
+            createCommandInput({ cwd: executionCwd, source: 'generated', targets: [] })
           )
 
           const annotations = this.formatResults(
             results.filter((result) => result.type === 'test:fail').map((result) => result.data),
-            project.cwd,
+            nativeExecutionCwd,
             results
           )
 

@@ -1,16 +1,46 @@
-import { execSync }    from 'node:child_process'
+import type { EntryCommandContext } from '@atls/raijin/commands'
+import type { EntryInvocation }     from '@atls/raijin/commands'
 
-import { BaseCommand } from '@yarnpkg/cli'
-import { Option }      from 'clipanion'
-import lintStaged      from 'lint-staged'
+import { BaseCommand }              from '@yarnpkg/cli'
+import { npath }                    from '@yarnpkg/fslib'
+import { Option }                   from 'clipanion'
+import lintStaged                   from 'lint-staged'
 
-const resolveRootDir = (): string => {
+const WINDOWS_SAFE_MAX_ARG_LENGTH = 8190
+
+const resolveRootDir = async (invocation: EntryInvocation): Promise<string> => {
+  const fallbackRootDir = npath.fromPortablePath(invocation.invocationCwd)
+
   try {
-    // eslint-disable-next-line n/no-sync
-    return execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim()
+    const result = await invocation.process.execute('git', ['rev-parse', '--show-toplevel'], {
+      output: { mode: 'capture' },
+    })
+
+    if (result.reason === 'completed' && result.exitCode === 0) {
+      return result.stdout.trim()
+    }
   } catch {
-    return process.cwd()
+    return fallbackRootDir
   }
+
+  return fallbackRootDir
+}
+
+const resolveSafeMaxArgLength = async (invocation: EntryInvocation): Promise<number> => {
+  try {
+    const result = await invocation.process.execute('getconf', ['ARG_MAX'], {
+      output: { mode: 'capture' },
+    })
+    const maxArgLength = Number.parseInt(result.stdout, 10)
+
+    if (result.reason === 'completed' && result.exitCode === 0 && Number.isFinite(maxArgLength)) {
+      return Math.floor(maxArgLength * 0.5)
+    }
+  } catch {
+    return WINDOWS_SAFE_MAX_ARG_LENGTH
+  }
+
+  return WINDOWS_SAFE_MAX_ARG_LENGTH
 }
 
 const quoteShellArgument = (value: string): string => JSON.stringify(value)
@@ -39,23 +69,17 @@ export class CommitStagedCommand extends BaseCommand {
 
   args: Array<string> = Option.Rest({ required: 0 })
 
-  async execute(): Promise<number> {
+  declare context: EntryCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+
     try {
-      let safeMaxArgLength = 8190
-
-      try {
-        // eslint-disable-next-line n/no-sync
-        const ARG_MAX = parseInt(execSync('getconf ARG_MAX', { encoding: 'utf-8' }), 10)
-
-        safeMaxArgLength = Math.floor(ARG_MAX * 0.5)
-        // eslint-disable-next-line no-empty
-      } catch {}
-
       // @ts-expect-error: Fix import
       const passed = await lintStaged({
         config: createConfig(),
-        cwd: resolveRootDir(),
-        maxArgLength: safeMaxArgLength,
+        cwd: await resolveRootDir(invocation),
+        maxArgLength: await resolveSafeMaxArgLength(invocation),
       })
 
       return passed ? 0 : 1

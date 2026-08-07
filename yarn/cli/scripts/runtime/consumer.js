@@ -15,11 +15,12 @@ const execFileAsync = promisify(execFile)
 const [runtimeArgument, packageManager] = process.argv.slice(2)
 
 if (!runtimeArgument || !packageManager) {
-  throw new Error('Usage: consumer.mjs <runtime-path> <package-manager>')
+  throw new Error('Usage: consumer.js <runtime-path> <package-manager>')
 }
 
 const runtimePath = resolve(process.cwd(), runtimeArgument)
 const fixtureCwd = await mkdtemp(join(tmpdir(), 'raijin-cli-surface-consumer-'))
+const fixtureRaijinArchivePath = join(fixtureCwd, 'atls-raijin.tgz')
 const fixtureRuntimePath = join(fixtureCwd, '.yarn/releases/yarn.mjs')
 const environment = { ...process.env }
 
@@ -42,9 +43,9 @@ const { stdout: expectedVersionOutput } = await execFileAsync(
 const expectedVersion = expectedVersionOutput.trim()
 
 /** @param {Array<string>} args */
-const runYarn = async (args) => {
+const runYarn = async (args, cwd = fixtureCwd) => {
   const { stdout } = await execFileAsync('yarn', args, {
-    cwd: fixtureCwd,
+    cwd,
     encoding: 'utf8',
     env: environment,
   })
@@ -53,6 +54,10 @@ const runYarn = async (args) => {
 }
 
 try {
+  await runYarn(
+    ['workspace', '@atls/raijin', 'pack', '--out', fixtureRaijinArchivePath],
+    process.cwd()
+  )
   await mkdir(join(fixtureCwd, '.yarn/releases'), { recursive: true })
   await cp(runtimePath, fixtureRuntimePath)
   await writeFile(
@@ -60,11 +65,13 @@ try {
     `${JSON.stringify(
       {
         dependencies: {
+          '@atls/raijin': 'file:./atls-raijin.tgz',
           'fixture-prettier-config': 'portal:./prettier-config',
         },
         name: 'raijin-cli-surface-consumer',
         packageManager,
         private: true,
+        workspaces: ['packages/*'],
       },
       null,
       2
@@ -99,6 +106,32 @@ try {
     "import config from 'fixture-prettier-config'\n\nexport default config\n"
   )
   await writeFile(join(fixtureCwd, 'source.ts'), "export const value='test'\n")
+  await mkdir(join(fixtureCwd, 'packages/target/src/integration'), { recursive: true })
+  await mkdir(join(fixtureCwd, 'packages/sibling/src'), { recursive: true })
+  await writeFile(
+    join(fixtureCwd, 'packages/target/package.json'),
+    `${JSON.stringify({ name: 'fixture-target', private: true, type: 'module' }, null, 2)}\n`
+  )
+  await writeFile(
+    join(fixtureCwd, 'packages/sibling/package.json'),
+    `${JSON.stringify({ name: 'fixture-sibling', private: true, type: 'module' }, null, 2)}\n`
+  )
+  await writeFile(
+    join(fixtureCwd, 'packages/target/src/target.test.js'),
+    ["import test from 'node:test'", "test('fixture-target-unit', () => {})", ''].join('\n')
+  )
+  await writeFile(
+    join(fixtureCwd, 'packages/target/src/integration/target.test.js'),
+    ["import test from 'node:test'", "test('fixture-target-integration', () => {})", ''].join('\n')
+  )
+  await writeFile(
+    join(fixtureCwd, 'packages/sibling/src/sibling.test.js'),
+    [
+      "import test from 'node:test'",
+      "test('fixture-sibling-must-not-run', () => { throw new Error('sibling test executed') })",
+      '',
+    ].join('\n')
+  )
 
   await runYarn(['install', '--no-immutable'])
 
@@ -133,6 +166,35 @@ try {
   if (formattedSource !== 'export const value = "test";\n') {
     throw new Error(`Disposable consumer ignored its PnP Prettier config: ${formattedSource}`)
   }
+
+  const targetWorkspaceCwd = join(fixtureCwd, 'packages/target')
+  const testScenarios = [
+    {
+      args: ['test', '--test-reporter=tap'],
+      expected: ['fixture-target-unit', 'fixture-target-integration'],
+    },
+    { args: ['test', 'unit', '--test-reporter=tap'], expected: ['fixture-target-unit'] },
+    {
+      args: ['test', 'integration', '--test-reporter=tap'],
+      expected: ['fixture-target-integration'],
+    },
+  ]
+
+  await Promise.all(
+    testScenarios.map(async (scenario) => {
+      const output = await runYarn(scenario.args, targetWorkspaceCwd)
+
+      for (const expected of scenario.expected) {
+        if (!output.includes(expected)) {
+          throw new Error(`Disposable consumer did not run ${expected}: ${output}`)
+        }
+      }
+
+      if (output.includes('fixture-sibling-must-not-run')) {
+        throw new Error(`Disposable consumer escaped the invocation workspace: ${output}`)
+      }
+    })
+  )
 
   console.log(`Disposable yarnPath consumer passed (${version})`) // eslint-disable-line no-console
 } finally {

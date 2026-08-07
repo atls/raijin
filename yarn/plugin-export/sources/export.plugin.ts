@@ -1,7 +1,9 @@
-import type { Plugin }            from '@yarnpkg/core'
+import type { Plugin }              from '@yarnpkg/core'
 
-import { WorkspaceExportCommand } from './commands/index.js'
+import { defineCommandInvocations } from '@atls/raijin/commands'
+
+import { WorkspaceExportCommand }   from './commands/index.js'
 
 export const plugin: Plugin = {
-  commands: [WorkspaceExportCommand],
+  commands: defineCommandInvocations({ workspace: [WorkspaceExportCommand] }),
 }

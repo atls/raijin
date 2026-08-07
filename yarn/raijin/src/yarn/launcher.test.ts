@@ -35,6 +35,18 @@ test('should remove node options when they only contain launcher PnP state', () 
   )
 })
 
+test('should remove process-local loader registration state', () => {
+  assert.deepEqual(
+    createLauncherBaseEnvironment({
+      RAIJIN_NODE_LOADER: 'file:///tmp/typescript-loader.mjs',
+      RAIJIN_REGISTERED_PNP_LOADER: 'file:///repo/.pnp.loader.mjs',
+    }),
+    {
+      RAIJIN_NODE_LOADER: 'file:///tmp/typescript-loader.mjs',
+    }
+  )
+})
+
 test('should preserve quoted node options unrelated to the launcher PnP state', () => {
   assert.deepEqual(
     createLauncherBaseEnvironment({

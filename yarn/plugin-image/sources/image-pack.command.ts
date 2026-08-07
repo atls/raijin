@@ -1,4 +1,6 @@
+import type { CommandExecutor }              from '@atls/code-pack'
 import type { TagPolicy }                    from '@atls/code-pack'
+import type { WorkspaceCommandContext }      from '@atls/raijin/commands'
 import type { Workspace }                    from '@yarnpkg/core'
 
 import type { ImagePackConfiguration }       from './image-pack.utils.js'
@@ -13,7 +15,7 @@ import { xfs }                               from '@yarnpkg/fslib'
 import { Option }                            from 'clipanion'
 
 import { pack }                              from '@atls/code-pack'
-import { resolveWorkspaceInvocation }        from '@atls/raijin/commands'
+import { assertProcessCompleted }            from '@atls/raijin/commands'
 import { toNativeCwd }                       from '@atls/raijin/commands'
 import { packUtils }                         from '@atls/yarn-pack-utils'
 
@@ -36,12 +38,35 @@ class ImagePackCommand extends BaseCommand {
 
   platform?: string = Option.String('--platform')
 
-  async execute(): Promise<number> {
-    const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  declare context: WorkspaceCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+    const { executionCwd, process: processInvocation, workspace, yarn } = invocation
     const { configuration, project } = yarn
+    const commandExecutor: CommandExecutor = {
+      cwd: executionCwd,
+      execute: async (command, args, options = {}) => {
+        const result = await processInvocation.execute(
+          command,
+          args,
+          options.capture
+            ? {
+                input: 'ignore',
+                output: { mode: 'capture' },
+              }
+            : undefined
+        )
+
+        assertProcessCompleted(result)
+
+        return {
+          exitCode: result.exitCode,
+          stderr: result.stderr,
+          stdout: result.stdout,
+        }
+      },
+    }
 
     const commandReport = await StreamReport.start(
       {
@@ -95,7 +120,7 @@ class ImagePackCommand extends BaseCommand {
             require,
             cwd: destination,
           },
-          this.context
+          commandExecutor
         )
       }
     )

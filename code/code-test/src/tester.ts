@@ -90,8 +90,7 @@ export class Tester extends EventEmitter {
     files: Array<string>,
     timeout: number,
     concurrency: boolean,
-    watch = false,
-    testReporter?: string
+    { watch = false, testReporter }: TestOptions = {}
   ): Promise<Array<TestEvent>> {
     const explicitExecArgv = parseTestExecArgv()
     const execArgv =
@@ -258,7 +257,7 @@ export class Tester extends EventEmitter {
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
     )
 
-    return this.run(finalFiles, 240_000, true, options?.watch, options?.testReporter)
+    return this.run(finalFiles, 240_000, true, options)
   }
 
   async integration(input: CommandInput, options?: TestOptions): Promise<Array<TestEvent>> {
@@ -268,7 +267,7 @@ export class Tester extends EventEmitter {
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
     )
 
-    return this.run(finalFiles, 420_000, false, options?.watch, options?.testReporter)
+    return this.run(finalFiles, 420_000, false, options)
   }
 
   async general(input: CommandInput, options?: TestOptions): Promise<Array<TestEvent>> {
@@ -278,7 +277,7 @@ export class Tester extends EventEmitter {
       (file) => this.ignore.filter([relative(this.cwd, file)]).length !== 0
     )
 
-    return this.run(finalFiles, 420_000, true, options?.watch, options?.testReporter)
+    return this.run(finalFiles, 420_000, true, options)
   }
 
   private async collectTestFiles(input: CommandInput, type: TestType): Promise<Array<string>> {

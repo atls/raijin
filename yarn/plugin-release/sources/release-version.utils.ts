@@ -1,3 +1,4 @@
+import type { ProjectProcessInvocation }            from '@atls/raijin/commands'
 import type { Workspace }                           from '@yarnpkg/core'
 import type { Configuration }                       from '@yarnpkg/core'
 import type { Project }                             from '@yarnpkg/core'
@@ -10,12 +11,12 @@ import type { ReleaseVersionWorkspaceOwner }        from './release-version-poli
 import type { ReleaseVersionStrategy }              from './release-version-policy.utils.js'
 import type { ReleaseVersionWorkspaceStrategy }     from './release-version-policy.utils.js'
 
-import { execUtils }                                from '@yarnpkg/core'
 import { structUtils }                              from '@yarnpkg/core'
 import { ppath }                                    from '@yarnpkg/fslib'
 import { xfs }                                      from '@yarnpkg/fslib'
 import { parseSyml }                                from '@yarnpkg/parsers'
 
+import { assertProcessCompleted }                   from '@atls/raijin/commands'
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
 import { isReleaseVersionStrategy }                 from './release-version-policy.utils.js'
@@ -135,35 +136,65 @@ export const toGitHubChange = (commit: GitHubCommit): ReleaseVersionChange => ({
 const getGitHubChanges = async (): Promise<Array<ReleaseVersionChange>> =>
   (await getChangedCommmits()).map(toGitHubChange)
 
-const getLocalCommitShas = async (project: Project, gitRange: string): Promise<Array<string>> => {
-  const { stdout } = await execUtils.execvp('git', ['rev-list', '--reverse', gitRange], {
-    cwd: project.cwd,
-    strict: true,
-  })
-
-  return stdout.split(/\r?\n/).filter(Boolean)
-}
-
-const getLocalCommitMessage = async (project: Project, sha: string): Promise<string> => {
-  const { stdout } = await execUtils.execvp(
+const getLocalCommitShas = async (
+  processInvocation: ProjectProcessInvocation,
+  gitRange: string
+): Promise<Array<string>> => {
+  const result = await processInvocation.project.execute(
     'git',
-    ['show', '--format=%B', '--no-patch', '--max-count=1', sha],
+    ['rev-list', '--reverse', gitRange],
     {
-      cwd: project.cwd,
-      strict: true,
+      output: { mode: 'capture' },
     }
   )
 
-  return stdout
+  assertProcessCompleted(result)
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git rev-list exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout.split(/\r?\n/).filter(Boolean)
 }
 
-const getLocalCommitParentShas = async (project: Project, sha: string): Promise<Array<string>> => {
-  const { stdout } = await execUtils.execvp('git', ['rev-list', '--parents', '-n', '1', sha], {
-    cwd: project.cwd,
-    strict: true,
-  })
+const getLocalCommitMessage = async (
+  processInvocation: ProjectProcessInvocation,
+  sha: string
+): Promise<string> => {
+  const result = await processInvocation.project.execute(
+    'git',
+    ['show', '--format=%B', '--no-patch', '--max-count=1', sha],
+    {
+      output: { mode: 'capture' },
+    }
+  )
 
-  const [, ...parents] = stdout.trim().split(' ').filter(Boolean)
+  assertProcessCompleted(result)
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git show exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout
+}
+
+const getLocalCommitParentShas = async (
+  processInvocation: ProjectProcessInvocation,
+  sha: string
+): Promise<Array<string>> => {
+  const result = await processInvocation.project.execute(
+    'git',
+    ['rev-list', '--parents', '-n', '1', sha],
+    { output: { mode: 'capture' } }
+  )
+
+  assertProcessCompleted(result)
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git rev-list exited with code ${result.exitCode}`)
+  }
+
+  const [, ...parents] = result.stdout.trim().split(' ').filter(Boolean)
 
   return parents
 }
@@ -173,48 +204,61 @@ export const selectLocalCommitDiffParent = (
   rangeShas: ReadonlySet<string>
 ): string | undefined => parents.find((parent) => !rangeShas.has(parent)) ?? parents[0]
 
-const getLocalRootCommitFiles = async (project: Project, sha: string): Promise<Array<string>> => {
-  const { stdout } = await execUtils.execvp(
+const getLocalRootCommitFiles = async (
+  processInvocation: ProjectProcessInvocation,
+  sha: string
+): Promise<Array<string>> => {
+  const result = await processInvocation.project.execute(
     'git',
     ['diff-tree', '--no-commit-id', '--name-only', '-r', '--root', '--no-renames', '-z', sha],
     {
-      cwd: project.cwd,
-      strict: true,
+      output: { mode: 'capture' },
     }
   )
 
-  return stdout
+  assertProcessCompleted(result)
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git diff-tree exited with code ${result.exitCode}`)
+  }
+
+  return result.stdout
     .split('\0')
     .map((file) => file.trim())
     .filter(Boolean)
 }
 
 const getLocalCommitFiles = async (
-  project: Project,
+  processInvocation: ProjectProcessInvocation,
   sha: string,
   rangeShas: ReadonlySet<string>
 ): Promise<Array<string>> => {
   const diffParent = selectLocalCommitDiffParent(
-    await getLocalCommitParentShas(project, sha),
+    await getLocalCommitParentShas(processInvocation, sha),
     rangeShas
   )
 
   if (!diffParent) {
-    return getLocalRootCommitFiles(project, sha)
+    return getLocalRootCommitFiles(processInvocation, sha)
   }
 
-  const { stdout } = await execUtils.execvp(
+  const result = await processInvocation.project.execute(
     'git',
     ['diff', '--name-only', '--no-renames', '-z', diffParent, sha],
     {
-      cwd: project.cwd,
-      strict: true,
+      output: { mode: 'capture' },
     }
   )
 
+  assertProcessCompleted(result)
+
+  if (result.exitCode !== 0) {
+    throw new Error(result.stderr || `git diff exited with code ${result.exitCode}`)
+  }
+
   return [
     ...new Set(
-      stdout
+      result.stdout
         .split('\0')
         .map((file) => file.trim())
         .filter(Boolean)
@@ -223,33 +267,35 @@ const getLocalCommitFiles = async (
 }
 
 const getLocalCommitChange = async (
-  project: Project,
+  processInvocation: ProjectProcessInvocation,
   sha: string,
   rangeShas: ReadonlySet<string>
 ): Promise<ReleaseVersionChange> => ({
-  message: await getLocalCommitMessage(project, sha),
-  files: await getLocalCommitFiles(project, sha, rangeShas),
+  message: await getLocalCommitMessage(processInvocation, sha),
+  files: await getLocalCommitFiles(processInvocation, sha, rangeShas),
 })
 
 const getLocalChanges = async (
-  project: Project,
+  processInvocation: ProjectProcessInvocation,
   gitRange: string
 ): Promise<Array<ReleaseVersionChange>> => {
-  const shas = await getLocalCommitShas(project, gitRange)
+  const shas = await getLocalCommitShas(processInvocation, gitRange)
   const rangeShas = new Set(shas)
 
-  return Promise.all(shas.map(async (sha) => getLocalCommitChange(project, sha, rangeShas)))
+  return Promise.all(
+    shas.map(async (sha) => getLocalCommitChange(processInvocation, sha, rangeShas))
+  )
 }
 
 export const getReleaseVersionChanges = async (
-  project: Project,
+  processInvocation: ProjectProcessInvocation,
   gitRange?: string
 ): Promise<Array<ReleaseVersionChange>> => {
   if (gitRange === undefined && process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
     return getGitHubChanges()
   }
 
-  return getLocalChanges(project, gitRange ?? DEFAULT_GIT_RANGE)
+  return getLocalChanges(processInvocation, gitRange ?? DEFAULT_GIT_RANGE)
 }
 
 export const parseDeferredReleaseDecisions = (versionContent: string): Map<string, string> => {
@@ -298,20 +344,18 @@ export const getDeferredReleaseDecisions = async (
     throw error
   }
 
-  for (const entry of entries) {
-    if (!entry.endsWith('.yml')) {
-      continue
-    }
+  await entries
+    .filter((entry) => entry.endsWith('.yml'))
+    .reduce<Promise<void>>(async (previous, entry) => {
+      await previous
+      const versionPath = ppath.join(deferredVersionFolder, entry)
+      const versionContent = await xfs.readFilePromise(versionPath, 'utf8')
+      const versionDecisions = parseDeferredReleaseDecisions(versionContent)
 
-    const versionPath = ppath.join(deferredVersionFolder, entry)
-    // eslint-disable-next-line no-await-in-loop
-    const versionContent = await xfs.readFilePromise(versionPath, 'utf8')
-    const versionDecisions = parseDeferredReleaseDecisions(versionContent)
-
-    for (const [ident, decision] of versionDecisions) {
-      decisions.set(ident, mergeReleaseVersionDeferredDecision(decisions.get(ident), decision))
-    }
-  }
+      for (const [ident, decision] of versionDecisions) {
+        decisions.set(ident, mergeReleaseVersionDeferredDecision(decisions.get(ident), decision))
+      }
+    }, Promise.resolve())
 
   return decisions
 }

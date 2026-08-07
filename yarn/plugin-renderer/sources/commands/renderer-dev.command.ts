@@ -1,23 +1,17 @@
-import type { Tunnel }                    from 'localtunnel'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
+import type { Tunnel }                  from 'localtunnel'
 
-import { BaseCommand }                    from '@yarnpkg/cli'
-import { execUtils }                      from '@yarnpkg/core'
-import { scriptUtils }                    from '@yarnpkg/core'
-import { xfs }                            from '@yarnpkg/fslib'
-import { ppath }                          from '@yarnpkg/fslib'
-import { Option }                         from 'clipanion'
-import localtunnel                        from 'localtunnel'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { execUtils }                    from '@yarnpkg/core'
+import { scriptUtils }                  from '@yarnpkg/core'
+import { xfs }                          from '@yarnpkg/fslib'
+import { ppath }                        from '@yarnpkg/fslib'
+import { Option }                       from 'clipanion'
+import localtunnel                      from 'localtunnel'
 
-import { resolveWorkspaceInvocation }     from '@atls/raijin/commands'
-import { createYarnExecutable }           from '@atls/raijin/commands'
-import { materializeNextConfigAdapter }   from '@atls/raijin/config/next'
-
-import { createNextDevArguments }         from '../integrations/next/execution/arguments.js'
-import { createNextExecutionEnvironment } from '../integrations/next/execution/environment.js'
-import { extractPnpLoaderOption }         from '../integrations/next/execution/environment.js'
-import { resolvePnpLoader }               from '../integrations/next/execution/environment.js'
-import { materializeNextLoader }          from '../integrations/next/execution/loader.js'
-import { resolveNextPackageVersion }      from '../integrations/next/execution/version.js'
+import { createNextDevArguments }       from '../integrations/next/launcher/arguments.js'
+import { createNextExecutable }         from '../integrations/next/launcher/executable.js'
+import { resolveNextPackageVersion }    from '../integrations/next/launcher/version.js'
 
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]
@@ -29,6 +23,8 @@ export class RendererDevCommand extends BaseCommand {
   tunnel = Option.Boolean('--tunnel')
 
   https = Option.Boolean('--https')
+
+  declare context: WorkspaceCommandContext
 
   #tunnel?: Tunnel
 
@@ -46,18 +42,16 @@ export class RendererDevCommand extends BaseCommand {
   startTunnel(host: string, port: number = 3000): void {
     this.runTunnel(host, port)
 
-    process.stdin.on('data', (data) => {
-      if (data.toString().trim() === 'rs') {
+    this.context.stdin.on('data', (data) => {
+      if (String(data).trim() === 'rs') {
         this.runTunnel(host, port)
       }
     })
   }
 
-  async execute(): Promise<number> {
-    const { executionCwd, workspace, yarn } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+    const { executionCwd, workspace, yarn } = invocation
     const { project } = yarn
 
     await project.restoreInstallState()
@@ -87,26 +81,6 @@ export class RendererDevCommand extends BaseCommand {
       args.push('--experimental-https-cert', ppath.join(project.cwd, '.config/certs/local/dev.crt'))
     }
 
-    const binFolder = await xfs.mktempPromise()
-    const scriptEnvironment = await createYarnExecutable({
-      binFolder,
-      locator: workspace.anchoredLocator,
-      project,
-    })
-    const { nodeOptions } = extractPnpLoaderOption(scriptEnvironment.env.NODE_OPTIONS)
-    const loader = await resolvePnpLoader(project.cwd, scriptEnvironment.env.NODE_OPTIONS)
-    const nextLoader = await materializeNextLoader(binFolder, loader)
-    const nextConfigAdapterPath = await materializeNextConfigAdapter({ cwd: binFolder })
-    const { executable, env } = await createYarnExecutable({
-      binFolder,
-      locator: workspace.anchoredLocator,
-      project,
-      env: {
-        NODE_OPTIONS: nodeOptions,
-      },
-      nodeLoader: nextLoader,
-    })
-
     if (this.tunnel) {
       const { tunnel: config }: { tunnel?: { host?: string; port?: number } } =
         workspace.manifest.raw.tools || {}
@@ -118,16 +92,23 @@ export class RendererDevCommand extends BaseCommand {
       this.startTunnel(config.host, config.port)
     }
 
-    const { code } = await execUtils.pipevp(executable, args, {
-      cwd: executionCwd,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-      env: createNextExecutionEnvironment(env, nextLoader, executionCwd, {
-        nextConfigAdapterPath,
-      }),
-    })
+    return xfs.mktempPromise(async (binFolder) => {
+      const { executable, env } = await createNextExecutable({
+        baseEnvironment: this.context.env,
+        binFolder,
+        locator: workspace.anchoredLocator,
+        project,
+        rendererCwd: executionCwd,
+      })
+      const { code } = await execUtils.pipevp(executable, args, {
+        cwd: executionCwd,
+        env,
+        stderr: this.context.stderr,
+        stdin: this.context.stdin,
+        stdout: this.context.stdout,
+      })
 
-    return code
+      return code
+    })
   }
 }

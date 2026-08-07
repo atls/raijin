@@ -1,14 +1,11 @@
+import type { WorkspaceCommandContext }          from '@atls/raijin/commands'
 import type { createRuntimeEnvironment as createRuntimeEnvironmentFn } from '@atls/raijin/runtime-exec-argv'
 
 import { spawn }                                 from 'node:child_process'
+import { once }                                  from 'node:events'
 
 import { BaseCommand }                           from '@yarnpkg/cli'
 
-import { createChildProcessOptions }             from '@atls/raijin/commands'
-import { proxyWorkspaceCommand }                 from '@atls/raijin/commands'
-import { resolveWorkspaceInvocation }            from '@atls/raijin/commands'
-import { shouldProxyCommand }                    from '@atls/raijin/commands'
-import { waitForChildProcess }                   from '@atls/raijin/commands'
 import { toNativeCwd }                           from '@atls/raijin/commands'
 import { resolveRaijinRuntimeUrl }               from '@atls/raijin/runtime-resolver'
 
@@ -42,39 +39,19 @@ export class RendererStartCommand extends BaseCommand {
     description: 'start a built renderer artifact',
   })
 
+  declare context: WorkspaceCommandContext
+
   override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
-    }
-
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    return proxyWorkspaceCommand({
-      args: ['renderer', 'start'],
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    const invocation = await resolveWorkspaceInvocation(this.context.cwd, this.context.plugins)
+    const { invocation } = this.context
     const rendererCwd = toNativeCwd(invocation.executionCwd)
 
-    const child = spawn(
-      process.execPath,
-      [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`],
-      createChildProcessOptions({
-        invocation,
-        env: await createRendererRuntimeEnvironment(rendererCwd, process.env),
-        stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
-      })
-    )
+    const child = spawn(process.execPath, [`dist/${RENDERER_STANDALONE_SERVER_ENTRYPOINT}`], {
+      cwd: rendererCwd,
+      env: await createRendererRuntimeEnvironment(rendererCwd, this.context.env),
+      stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
+    })
+    const [exitCode] = await once(child, 'close')
 
-    return waitForChildProcess(child)
+    return typeof exitCode === 'number' ? exitCode : 1
   }
 }

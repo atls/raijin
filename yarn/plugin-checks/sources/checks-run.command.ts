@@ -1,11 +1,11 @@
+import type { ProjectCommandContext } from '@atls/raijin/commands'
+import type { ProjectInvocation }     from '@atls/raijin/commands'
+
 import { BaseCommand }                from '@yarnpkg/cli'
 import { StreamReport }               from '@yarnpkg/core'
 import { MessageName }                from '@yarnpkg/core'
 import { Command }                    from 'clipanion'
 import { Option }                     from 'clipanion'
-
-import { executeYarnCommand }         from '@atls/raijin/commands'
-import { resolveProjectInvocation }   from '@atls/raijin/commands'
 
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
 
@@ -25,8 +25,10 @@ class ChecksRunCommand extends BaseCommand {
 
   noRelease = Option.Boolean('--no-release', false)
 
-  async execute(): Promise<number> {
-    const invocation = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
+  declare context: ProjectCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
     const { configuration, project } = invocation.yarn
     const releaseConfig = resolveChecksReleaseConfig(project)
 
@@ -63,7 +65,7 @@ class ChecksRunCommand extends BaseCommand {
   }
 
   private async runCheck(
-    invocation: Awaited<ReturnType<typeof resolveProjectInvocation>>,
+    invocation: ProjectInvocation,
     args: Array<string>,
     report: StreamReport
   ): Promise<number> {
@@ -73,13 +75,7 @@ class ChecksRunCommand extends BaseCommand {
         (args[0] === 'lint' || args[0] === 'typecheck') &&
         !args.includes('--changed')
       const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
-      const code = await executeYarnCommand({
-        args: ['checks', ...checkArgs],
-        invocation,
-        stdin: this.context.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      })
+      const code = await invocation.yarn.execute(['checks', ...checkArgs])
 
       if (code !== 0) {
         report.reportError(MessageName.UNNAMED, `Run check ${args.join(' ')} failed: ${code}`)

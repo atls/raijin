@@ -1,20 +1,17 @@
-import { BaseCommand }                from '@yarnpkg/cli'
-import { Option }                     from 'clipanion'
-import { render }                     from 'ink'
-import React                          from 'react'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { ErrorInfo }                  from '@atls/cli-ui-error-info-component'
-import { LintProgress }               from '@atls/cli-ui-lint-progress-component'
-import { LintResult }                 from '@atls/cli-ui-lint-result-component'
-import { Linter }                     from '@atls/code-lint'
-import { renderStatic }               from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }         from '@atls/raijin/commands'
-import { resolveWorkspaceInvocation } from '@atls/raijin/commands'
-import { proxyWorkspaceCommand }      from '@atls/raijin/commands'
-import { resolveProjectInvocation }   from '@atls/raijin/commands'
-import { shouldProxyCommand }         from '@atls/raijin/commands'
-import { toCommandArguments }         from '@atls/raijin/commands'
-import { toNativeCwd }                from '@atls/raijin/commands'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Option }                       from 'clipanion'
+import { render }                       from 'ink'
+import React                            from 'react'
+
+import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { LintProgress }                 from '@atls/cli-ui-lint-progress-component'
+import { LintResult }                   from '@atls/cli-ui-lint-result-component'
+import { Linter }                       from '@atls/code-lint'
+import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
 
 interface LintCommandResult {
   messages: Array<unknown>
@@ -29,6 +26,8 @@ export class LintCommand extends BaseCommand {
     description: 'lint project files',
   })
 
+  declare context: WorkspaceCommandContext
+
   fix = Option.Boolean('--fix')
 
   files: Array<string> = Option.Rest({ required: 0 })
@@ -36,45 +35,8 @@ export class LintCommand extends BaseCommand {
   cache: boolean = Option.Boolean('--cache', false)
 
   override async execute(): Promise<number> {
-    if (shouldProxyCommand()) {
-      return this.executeProxy()
-    }
-
-    return this.executeRegular()
-  }
-
-  async executeProxy(): Promise<number> {
-    const args: Array<string> = []
-    const { invocationCwd } = await resolveProjectInvocation(this.context.cwd, this.context.plugins)
-    const input = createCommandInput({
-      cwd: invocationCwd,
-      source: 'explicit',
-      targets: this.files,
-    })
-
-    if (this.fix) {
-      args.push('--fix')
-    }
-
-    if (this.cache) {
-      args.push('--cache')
-    }
-
-    return proxyWorkspaceCommand({
-      args: ['lint', ...args, ...toCommandArguments(input)],
-      cwd: this.context.cwd,
-      plugins: this.context.plugins,
-      stdin: this.context.stdin,
-      stdout: this.context.stdout,
-      stderr: this.context.stderr,
-    })
-  }
-
-  async executeRegular(): Promise<number> {
-    const { executionCwd, invocationCwd, project } = await resolveWorkspaceInvocation(
-      this.context.cwd,
-      this.context.plugins
-    )
+    const { invocation } = this.context
+    const { executionCwd, invocationCwd, project } = invocation
     const projectCwd = toNativeCwd(project.cwd)
 
     const linter = await Linter.initialize(projectCwd, toNativeCwd(executionCwd))
