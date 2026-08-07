@@ -2,7 +2,7 @@ import type { YarnCommandRunner }        from './runner.js'
 
 import { RaijinYarnCommandException }    from './exceptions/command.js'
 import { executeProcess }                from '../commands/invocation/adapters/execa/execute.js'
-import { assertProcessCompleted } from '../commands/invocation/capabilities/process-result.js'
+import { assertProcessCompleted } from '../commands/invocation/capabilities/assert-process-completed.js'
 import { createLauncherBaseEnvironment } from './launcher.js'
 
 export const createYarnCommandEnvironment = (
