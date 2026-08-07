@@ -79,7 +79,7 @@ yarn files changed list
 ## 6. Локальная проверка генерации проекта
 
 ```bash
-yarn generation:test
+yarn raijin:smoke:cli project-generation
 ```
 
 Ожидаемый результат:

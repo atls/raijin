@@ -79,7 +79,7 @@ Expected result:
 ## 6. Local project generation check
 
 ```bash
-yarn generation:test
+yarn raijin:smoke:cli project-generation
 ```
 
 Expected result:

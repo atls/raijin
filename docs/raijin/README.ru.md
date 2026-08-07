@@ -31,7 +31,6 @@
 
 - `yarn raijin:generate`
 - `yarn raijin:check`
-- `yarn generation:test`
 
 <!-- sync:router-coverage -->
 

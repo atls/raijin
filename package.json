@@ -12,7 +12,6 @@
   ],
   "scripts": {
     "cli:build": "yarn workspace @atls/yarn-cli build",
-    "generation:test": "yarn node --test yarn/raijin/src/application/generation/project/use-cases/generate.test.ts yarn/raijin/src/infrastructure/generation/project/github/generated-workflow-policy.test.ts yarn/raijin/src/infrastructure/generation/project/yarn/collection.test.ts yarn/raijin/src/infrastructure/generation/project/angular/scaffold.test.ts yarn/plugin-generate/sources/commands/project.test.ts yarn/plugin-generate/sources/presenters/project.test.ts",
     "raijin:check": "yarn raijin:check:drift && yarn raijin:check:runtime && yarn raijin:check:localization && yarn raijin:smoke:deterministic && yarn raijin:smoke:cli",
     "raijin:check:drift": "node scripts/raijin/generate-artifacts.mjs && git diff --exit-code -- README.md README_EN.md docs/README.md docs/README.ru.md docs/raijin && test -z \"$(git ls-files --others --exclude-standard -- README.md README_EN.md docs/README.md docs/README.ru.md docs/raijin)\"",
     "raijin:check:localization": "node scripts/raijin/check-localization-sync.mjs",
