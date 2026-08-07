@@ -25,10 +25,12 @@ export const resolvePackage = ({
   project,
   workspace,
 }: Pick<Context, 'project' | 'workspace'>): Locator => {
-  const descriptor = workspace.anchoredPackage.dependencies.get(RAIJIN_IDENT.identHash)
+  const descriptor =
+    workspace.anchoredPackage.dependencies.get(RAIJIN_IDENT.identHash) ??
+    project.topLevelWorkspace.anchoredPackage.dependencies.get(RAIJIN_IDENT.identHash)
 
   if (!descriptor) {
-    throw projectCollectionUnavailable('invoking workspace does not declare the package')
+    throw projectCollectionUnavailable('project does not declare the package')
   }
 
   const locatorHash = project.storedResolutions.get(descriptor.descriptorHash)

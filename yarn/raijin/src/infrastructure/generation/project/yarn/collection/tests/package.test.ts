@@ -113,19 +113,52 @@ test('should reject missing, absolute, and escaping collection metadata', async 
 
 test('should resolve Raijin through the invoking workspace dependency', () => {
   const ident = structUtils.parseIdent('@atls/raijin')
+  const rootDescriptor = structUtils.makeDescriptor(ident, 'npm:^0.5.0')
+  const workspaceDescriptor = structUtils.makeDescriptor(ident, 'npm:^0.6.4')
+  const selected = structUtils.makeLocator(ident, 'npm:0.6.4')
+  const root = structUtils.makeLocator(ident, 'npm:0.5.0')
+  const rootWorkspace = {
+    anchoredPackage: {
+      dependencies: new Map([[ident.identHash, rootDescriptor]]),
+    },
+  } as Workspace
+  const workspace = {
+    anchoredPackage: {
+      dependencies: new Map([[ident.identHash, workspaceDescriptor]]),
+    },
+  } as Workspace
+  const project = {
+    topLevelWorkspace: rootWorkspace,
+    storedPackages: new Map([
+      [root.locatorHash, root],
+      [selected.locatorHash, selected],
+    ]),
+    storedResolutions: new Map([
+      [rootDescriptor.descriptorHash, root.locatorHash],
+      [workspaceDescriptor.descriptorHash, selected.locatorHash],
+    ]),
+  } as Project
+
+  assert.equal(resolvePackage({ project, workspace }), selected)
+})
+
+test('should fall back to the top-level Raijin dependency', () => {
+  const ident = structUtils.parseIdent('@atls/raijin')
   const descriptor = structUtils.makeDescriptor(ident, 'npm:^0.6.4')
   const selected = structUtils.makeLocator(ident, 'npm:0.6.4')
-  const unrelated = structUtils.makeLocator(ident, 'npm:0.5.0')
-  const workspace = {
+  const topLevelWorkspace = {
     anchoredPackage: {
       dependencies: new Map([[ident.identHash, descriptor]]),
     },
   } as Workspace
+  const workspace = {
+    anchoredPackage: {
+      dependencies: new Map(),
+    },
+  } as Workspace
   const project = {
-    storedPackages: new Map([
-      [unrelated.locatorHash, unrelated],
-      [selected.locatorHash, selected],
-    ]),
+    topLevelWorkspace,
+    storedPackages: new Map([[selected.locatorHash, selected]]),
     storedResolutions: new Map([[descriptor.descriptorHash, selected.locatorHash]]),
   } as Project
 
