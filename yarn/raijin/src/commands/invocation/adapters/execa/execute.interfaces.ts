@@ -1,8 +1,8 @@
-import type { InvocationExecutionContext } from '../../execution/context.interfaces.js'
-import type { ProcessOutputPolicy }        from '../../execution/process.interfaces.js'
+import type { ProcessOutputPolicy }      from '../../capabilities/process.interfaces.js'
+import type { InvocationAdapterContext } from '../context.interfaces.js'
 
 export interface ExecaExecutionOptions {
-  context: InvocationExecutionContext
+  context: InvocationAdapterContext
   cwd: string
   env: NodeJS.ProcessEnv
   input?: 'ignore'

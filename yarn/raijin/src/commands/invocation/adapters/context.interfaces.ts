@@ -1,6 +1,6 @@
 import type { CommandContext } from '@yarnpkg/core'
 
-export interface InvocationExecutionContext {
+export interface InvocationAdapterContext {
   environment: CommandContext['env']
   stderr: CommandContext['stderr']
   stdin: CommandContext['stdin']

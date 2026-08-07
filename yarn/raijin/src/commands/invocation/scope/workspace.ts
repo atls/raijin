@@ -3,13 +3,13 @@ import type { WorkspaceInvocation }     from './invocation.interfaces.js'
 
 import { createProjectModel }           from '@atls/raijin/project'
 
-import { createInvocationCapabilities } from '../execution/capabilities.js'
+import { createInvocationCapabilities } from '../capabilities/create.js'
 import { resolveProjectScope }          from './project.js'
 
 export const resolveWorkspaceCommandInvocation = async (
   context: InvocationContext
 ): Promise<WorkspaceInvocation> => {
-  const { configuration, executionContext, invocationCwd, project, workspace } =
+  const { adapterContext, configuration, invocationCwd, project, workspace } =
     await resolveProjectScope(context)
   const resolvedWorkspace = workspace ?? project.getWorkspaceByFilePath(invocationCwd)
 
@@ -20,7 +20,7 @@ export const resolveWorkspaceCommandInvocation = async (
     workspace: resolvedWorkspace,
     ...createInvocationCapabilities({
       configuration,
-      context: executionContext,
+      context: adapterContext,
       executionCwd: resolvedWorkspace.cwd,
       project,
     }),

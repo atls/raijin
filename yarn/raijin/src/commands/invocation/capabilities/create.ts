@@ -1,6 +1,6 @@
 import type { ProjectInvocation }             from '../scope/invocation.interfaces.js'
-import type { InvocationCapabilitiesOptions } from './capabilities.interfaces.js'
-import type { ProcessInvocationOptions }      from './capabilities.interfaces.js'
+import type { InvocationCapabilitiesOptions } from './create.interfaces.js'
+import type { ProcessInvocationOptions }      from './create.interfaces.js'
 import type { ProcessInvocation }             from './process.interfaces.js'
 import type { ProjectProcessInvocation }      from './process.interfaces.js'
 

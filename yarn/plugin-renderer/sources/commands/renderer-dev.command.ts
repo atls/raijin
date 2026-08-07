@@ -9,9 +9,9 @@ import { ppath }                        from '@yarnpkg/fslib'
 import { Option }                       from 'clipanion'
 import localtunnel                      from 'localtunnel'
 
-import { createNextDevArguments }       from '../integrations/next/execution/arguments.js'
-import { createNextExecutable }         from '../integrations/next/execution/executable.js'
-import { resolveNextPackageVersion }    from '../integrations/next/execution/version.js'
+import { createNextDevArguments }       from '../integrations/next/launcher/arguments.js'
+import { createNextExecutable }         from '../integrations/next/launcher/executable.js'
+import { resolveNextPackageVersion }    from '../integrations/next/launcher/version.js'
 
 export class RendererDevCommand extends BaseCommand {
   static override paths = [['renderer', 'dev']]

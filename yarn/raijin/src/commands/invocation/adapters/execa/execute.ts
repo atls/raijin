@@ -2,8 +2,8 @@ import type { Options }                from 'execa'
 import type { Result }                 from 'execa'
 import type { StdoutStderrOption }     from 'execa'
 
-import type { ProcessExecutionResult } from '../../execution/process.interfaces.js'
-import type { ProcessOutputEvent }     from '../../execution/process.interfaces.js'
+import type { ProcessExecutionResult } from '../../capabilities/process.interfaces.js'
+import type { ProcessOutputEvent }     from '../../capabilities/process.interfaces.js'
 import type { ExecaExecutionOptions }  from './execute.interfaces.js'
 
 import { execa }                       from 'execa'

@@ -1,6 +1,6 @@
 import type { Filename }                 from '@yarnpkg/fslib'
 
-import type { ProcessExecutionResult }   from '../../execution/process.interfaces.js'
+import type { ProcessExecutionResult }   from '../../capabilities/process.interfaces.js'
 import type { YarnCommandOptions }       from './execution.interfaces.js'
 import type { YarnExecutable }           from './execution.interfaces.js'
 import type { YarnExecutableOptions }    from './execution.interfaces.js'

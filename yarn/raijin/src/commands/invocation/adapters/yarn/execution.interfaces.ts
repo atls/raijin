@@ -1,10 +1,10 @@
-import type { Locator }                    from '@yarnpkg/core'
-import type { Project }                    from '@yarnpkg/core'
-import type { PortablePath }               from '@yarnpkg/fslib'
+import type { Locator }                  from '@yarnpkg/core'
+import type { Project }                  from '@yarnpkg/core'
+import type { PortablePath }             from '@yarnpkg/fslib'
 
-import type { InvocationExecutionContext } from '../../execution/context.interfaces.js'
-import type { ProcessEnvironmentPatch }    from '../../execution/process.interfaces.js'
-import type { YarnCommandRunOptions }      from '../../execution/yarn.interfaces.js'
+import type { ProcessEnvironmentPatch }  from '../../capabilities/process.interfaces.js'
+import type { YarnCommandRunOptions }    from '../../capabilities/yarn.interfaces.js'
+import type { InvocationAdapterContext } from '../context.interfaces.js'
 
 export interface YarnExecutableOptions {
   baseEnvironment?: NodeJS.ProcessEnv
@@ -23,7 +23,7 @@ export interface YarnExecutable {
 
 export interface YarnCommandOptions {
   args: Array<string>
-  context: InvocationExecutionContext
+  context: InvocationAdapterContext
   executionCwd: PortablePath
   options?: YarnCommandRunOptions
   project: Project

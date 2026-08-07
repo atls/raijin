@@ -2,9 +2,9 @@ import type { RaijinProjectModel }       from '@atls/raijin/project'
 import type { Workspace }                from '@yarnpkg/core'
 import type { PortablePath }             from '@yarnpkg/fslib'
 
-import type { ProcessInvocation }        from '../execution/process.interfaces.js'
-import type { ProjectProcessInvocation } from '../execution/process.interfaces.js'
-import type { YarnRuntimeInvocation }    from '../execution/yarn.interfaces.js'
+import type { ProcessInvocation }        from '../capabilities/process.interfaces.js'
+import type { ProjectProcessInvocation } from '../capabilities/process.interfaces.js'
+import type { YarnRuntimeInvocation }    from '../capabilities/yarn.interfaces.js'
 
 export interface EntryInvocation {
   readonly executionCwd: PortablePath
