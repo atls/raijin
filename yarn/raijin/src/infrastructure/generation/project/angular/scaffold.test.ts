@@ -110,6 +110,8 @@ test('should generate the project variant and preserve unrelated existing projec
   assert.match(preview, /actions\/checkout@v6/)
   assert.match(preview, /actions\/setup-node@v6/)
   assert.match(preview, /node-version: '24'/)
+  assert.match(preview, /permissions:\n {2}contents: read\n {2}packages: write/)
+  assert.match(release, /permissions:\n {2}contents: read\n {2}packages: write/)
   assert.match(preview, /docker login ghcr\.io/)
   assert.match(preview, /--registry "ghcr\.io\/\$\{repository\}-"/)
   assert.match(release, /docker login ghcr\.io/)
