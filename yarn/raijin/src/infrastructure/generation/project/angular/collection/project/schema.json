@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "RaijinProjectGeneration",
+  "title": "Generate a Raijin project scaffold",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "scaffoldType": {
+      "description": "The project scaffold type.",
+      "type": "string",
+      "enum": ["project", "library"]
+    },
+    "checkoutAction": { "type": "string" },
+    "containerRegistry": { "type": "string" },
+    "containerRepositoryExpression": { "type": "string" },
+    "nodeVersion": { "type": "string" },
+    "npmTokenSecret": { "type": "string" },
+    "setupNodeAction": { "type": "string" },
+    "typescriptCompilerOptions": { "type": "object" }
+  },
+  "required": [
+    "scaffoldType",
+    "checkoutAction",
+    "containerRegistry",
+    "containerRepositoryExpression",
+    "nodeVersion",
+    "npmTokenSecret",
+    "setupNodeAction",
+    "typescriptCompilerOptions"
+  ]
+}

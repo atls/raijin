@@ -1,0 +1,11 @@
+{
+  "name": "@atls/raijin-project-generation",
+  "version": "1.0",
+  "schematics": {
+    "project": {
+      "factory": "./project/project.factory.cjs#main",
+      "schema": "./project/schema.json",
+      "description": "Generate a Raijin project scaffold"
+    }
+  }
+}

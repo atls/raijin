@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process'
+import { access } from 'node:fs/promises'
 import { cp } from 'node:fs/promises'
 import { mkdir } from 'node:fs/promises'
 import { mkdtemp } from 'node:fs/promises'
@@ -11,15 +12,35 @@ import { resolve } from 'node:path'
 import { promisify } from 'node:util'
 
 const execFileAsync = promisify(execFile)
+const supportedNodeLinkers = ['node-modules', 'pnp']
+const supportedScenarios = ['project-generation', 'surface']
+const [
+  runtimeArgument,
+  packageManager,
+  scenarioArgument = 'surface',
+  nodeLinkerArgument = 'pnp',
+  archiveArgument,
+] = process.argv.slice(2)
 
-const [runtimeArgument, packageManager] = process.argv.slice(2)
+if (
+  !runtimeArgument ||
+  !packageManager ||
+  !supportedScenarios.includes(scenarioArgument) ||
+  !supportedNodeLinkers.includes(nodeLinkerArgument)
+) {
+  throw new Error(
+    'Usage: consumer.js <runtime-path> <package-manager> [surface|project-generation] [pnp|node-modules] [raijin-archive]'
+  )
+}
 
-if (!runtimeArgument || !packageManager) {
-  throw new Error('Usage: consumer.js <runtime-path> <package-manager>')
+if (scenarioArgument === 'surface' && nodeLinkerArgument !== 'pnp') {
+  throw new Error('The full surface consumer is supported only with Yarn PnP')
 }
 
 const runtimePath = resolve(process.cwd(), runtimeArgument)
-const fixtureCwd = await mkdtemp(join(tmpdir(), 'raijin-cli-surface-consumer-'))
+const fixtureCwd = await mkdtemp(
+  join(tmpdir(), `raijin-${scenarioArgument}-${nodeLinkerArgument}-consumer-`)
+)
 const fixtureRaijinArchivePath = join(fixtureCwd, 'atls-raijin.tgz')
 const fixtureRuntimePath = join(fixtureCwd, '.yarn/releases/yarn.mjs')
 const environment = { ...process.env }
@@ -53,36 +74,7 @@ const runYarn = async (args, cwd = fixtureCwd) => {
   return stdout
 }
 
-try {
-  await runYarn(
-    ['workspace', '@atls/raijin', 'pack', '--out', fixtureRaijinArchivePath],
-    process.cwd()
-  )
-  await mkdir(join(fixtureCwd, '.yarn/releases'), { recursive: true })
-  await cp(runtimePath, fixtureRuntimePath)
-  await writeFile(
-    join(fixtureCwd, 'package.json'),
-    `${JSON.stringify(
-      {
-        dependencies: {
-          '@atls/raijin': 'file:./atls-raijin.tgz',
-          'fixture-prettier-config': 'portal:./prettier-config',
-        },
-        name: 'raijin-cli-surface-consumer',
-        packageManager,
-        private: true,
-        workspaces: ['packages/*'],
-      },
-      null,
-      2
-    )}\n`
-  )
-  await writeFile(
-    join(fixtureCwd, '.yarnrc.yml'),
-    ['nodeLinker: pnp', 'pnpEnableEsmLoader: true', 'yarnPath: .yarn/releases/yarn.mjs', ''].join(
-      '\n'
-    )
-  )
+const writeSurfaceFixture = async () => {
   await mkdir(join(fixtureCwd, 'prettier-config'))
   await writeFile(
     join(fixtureCwd, 'prettier-config/package.json'),
@@ -132,17 +124,142 @@ try {
       '',
     ].join('\n')
   )
+}
 
-  await runYarn(['install', '--no-immutable'])
+const writeProjectGenerationFixture = async () => {
+  const generatedTarget = join(fixtureCwd, 'packages/generated')
+  const invalidTarget = join(fixtureCwd, 'packages/invalid')
 
-  const version = (await runYarn(['--version'])).trim()
+  await Promise.all(
+    [
+      [generatedTarget, 'fixture-generated'],
+      [invalidTarget, 'fixture-invalid'],
+    ].map(async ([target, name]) => {
+      await mkdir(target, { recursive: true })
+      await Promise.all([
+        writeFile(
+          join(target, 'package.json'),
+          `${JSON.stringify(
+            {
+              name,
+              private: true,
+              scripts: { start: 'yarn node dist/index.js' },
+              type: 'module',
+            },
+            null,
+            2
+          )}\n`
+        ),
+        writeFile(
+          join(target, 'tsconfig.json'),
+          `${JSON.stringify({ compilerOptions: { baseUrl: '.' }, include: ['src'] }, null, 2)}\n`
+        ),
+        writeFile(join(target, '.gitignore'), 'node_modules\n.consumer-private\n'),
+      ])
+    })
+  )
 
-  if (version !== expectedVersion) {
-    throw new Error(
-      `Disposable consumer loaded Yarn ${version} instead of checked runtime ${expectedVersion}`
+  await writeFile(
+    join(fixtureCwd, 'run-project-generation.mjs'),
+    [
+      "import { resolve } from 'node:path'",
+      "import { createInstalledProjectScaffolder } from '@atls/raijin/infrastructure/generation/project'",
+      "import { generateProject } from '@atls/raijin/application/generation/project'",
+      "import { getPluginConfiguration } from '@yarnpkg/cli'",
+      "import { Configuration, Project } from '@yarnpkg/core'",
+      "import { npath } from '@yarnpkg/fslib'",
+      '',
+      'const targetCwd = npath.toPortablePath(resolve(process.argv[2]))',
+      'const configuration = await Configuration.find(targetCwd, getPluginConfiguration())',
+      'const { project } = await Project.find(configuration, targetCwd)',
+      'const scaffolder = createInstalledProjectScaffolder({ configuration, project, targetCwd })',
+      "const result = await generateProject({ scaffoldType: 'project' }, { scaffolder })",
+      '',
+      "if (result.status !== 'generated') throw new Error(result.failure.message)",
+      "console.log('Packed project generation adapter passed')",
+      '',
+    ].join('\n')
+  )
+
+  return { generatedTarget, invalidTarget }
+}
+
+const verifyGeneratedProject = async (target) => {
+  const requiredFiles = [
+    '.config/husky/pre-commit',
+    '.github/workflows/checks.yaml',
+    '.github/workflows/preview.yaml',
+    '.github/workflows/release.yaml',
+    '.prettierrc.mjs',
+    'eslint.config.mjs',
+  ]
+
+  await Promise.all(requiredFiles.map(async (path) => access(join(target, path))))
+
+  const gitIgnore = await readFile(join(target, '.gitignore'), 'utf8')
+  const manifest = JSON.parse(await readFile(join(target, 'package.json'), 'utf8'))
+  const typeScript = JSON.parse(await readFile(join(target, 'tsconfig.json'), 'utf8'))
+  const workflows = await Promise.all(
+    ['checks.yaml', 'preview.yaml', 'release.yaml'].map(async (name) =>
+      readFile(join(target, '.github/workflows', name), 'utf8')
     )
+  )
+  const workflowContent = workflows.join('\n')
+
+  if (gitIgnore !== 'node_modules\n.consumer-private\n') {
+    throw new Error(`Project generation changed the existing .gitignore: ${gitIgnore}`)
   }
 
+  if (manifest.scripts?.start !== 'yarn node dist/index.js') {
+    throw new Error('Project generation changed existing package scripts')
+  }
+
+  if (typeScript.compilerOptions?.module !== 'NodeNext') {
+    throw new Error('Project generation did not apply the TypeScript baseline')
+  }
+
+  for (const expected of [
+    'actions/checkout@v6',
+    'actions/setup-node@v6',
+    "node-version: '24'",
+    'ghcr.io',
+  ]) {
+    if (!workflowContent.includes(expected)) {
+      throw new Error(`Generated workflows are missing ${expected}`)
+    }
+  }
+
+  if (/18\.19|eu\.gcr\.io|GCR_KEYFILE|GCR_PROJECT_ID/.test(workflowContent)) {
+    throw new Error('Generated workflows retain the retired Node or GCR policy')
+  }
+}
+
+const runProjectGenerationScenario = async ({ generatedTarget, invalidTarget }) => {
+  if (nodeLinkerArgument === 'pnp') {
+    const output = await runYarn(['generate', 'project', '--type', 'project'], generatedTarget)
+
+    if (!output.includes('CREATE /eslint.config.mjs')) {
+      throw new Error(`Project generation did not report generated changes: ${output}`)
+    }
+
+    try {
+      await runYarn(['generate', 'project', '--type', 'service'], invalidTarget)
+      throw new Error('Invalid project scaffold type unexpectedly succeeded')
+    } catch (error) {
+      const errorOutput = `${error?.stdout ?? ''}${error?.stderr ?? ''}`
+
+      if (!errorOutput.includes('Unsupported project scaffold type "service"')) {
+        throw error
+      }
+    }
+  } else {
+    await runYarn(['node', './run-project-generation.mjs', generatedTarget])
+  }
+
+  await verifyGeneratedProject(generatedTarget)
+}
+
+const runSurfaceScenario = async () => {
   const commands = [
     ['check', '--help'],
     ['generate', 'project', '--help'],
@@ -195,8 +312,84 @@ try {
       }
     })
   )
+}
 
-  console.log(`Disposable yarnPath consumer passed (${version})`) // eslint-disable-line no-console
+try {
+  if (archiveArgument) {
+    await cp(resolve(process.cwd(), archiveArgument), fixtureRaijinArchivePath)
+  } else {
+    await runYarn(
+      ['workspace', '@atls/raijin', 'pack', '--out', fixtureRaijinArchivePath],
+      process.cwd()
+    )
+  }
+
+  await mkdir(join(fixtureCwd, '.yarn/releases'), { recursive: true })
+  await cp(runtimePath, fixtureRuntimePath)
+
+  const scenarioDependencies =
+    scenarioArgument === 'project-generation'
+      ? {
+          '@yarnpkg/cli': '4.14.1',
+          '@yarnpkg/core': '4.7.0',
+          '@yarnpkg/fslib': '3.1.5',
+        }
+      : { 'fixture-prettier-config': 'portal:./prettier-config' }
+
+  await writeFile(
+    join(fixtureCwd, 'package.json'),
+    `${JSON.stringify(
+      {
+        dependencies: {
+          '@atls/raijin': 'file:./atls-raijin.tgz',
+          ...scenarioDependencies,
+        },
+        name: `raijin-${scenarioArgument}-consumer`,
+        packageManager,
+        private: true,
+        type: 'module',
+        workspaces: ['packages/*'],
+      },
+      null,
+      2
+    )}\n`
+  )
+  await writeFile(
+    join(fixtureCwd, '.yarnrc.yml'),
+    [
+      `nodeLinker: ${nodeLinkerArgument}`,
+      ...(nodeLinkerArgument === 'pnp' ? ['pnpEnableEsmLoader: true'] : []),
+      'yarnPath: .yarn/releases/yarn.mjs',
+      '',
+    ].join('\n')
+  )
+
+  const projectGenerationFixture =
+    scenarioArgument === 'project-generation' ? await writeProjectGenerationFixture() : undefined
+
+  if (scenarioArgument === 'surface') {
+    await writeSurfaceFixture()
+  }
+
+  await runYarn(['install', '--no-immutable'])
+
+  const version = (await runYarn(['--version'])).trim()
+
+  if (version !== expectedVersion) {
+    throw new Error(
+      `Disposable consumer loaded Yarn ${version} instead of checked runtime ${expectedVersion}`
+    )
+  }
+
+  if (projectGenerationFixture) {
+    await runProjectGenerationScenario(projectGenerationFixture)
+  } else {
+    await runSurfaceScenario()
+  }
+
+  process.stdout.write(
+    `Disposable ${scenarioArgument} consumer passed with ${nodeLinkerArgument} (${version})\n`
+  )
 } finally {
   await rm(fixtureCwd, { recursive: true, force: true })
 }

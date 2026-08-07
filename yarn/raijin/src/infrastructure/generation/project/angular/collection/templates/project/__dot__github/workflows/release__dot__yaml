@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  run:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: <%= checkoutAction %>
+        with:
+          ref: master
+
+      - name: Setup Node
+        uses: <%= setupNodeAction %>
+        with:
+          node-version: '<%= nodeVersion %>'
+
+      - name: Install
+        run: yarn install
+
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login <%= containerRegistry %> -u "${{ github.actor }}" --password-stdin
+
+      - name: Install Buildpack Cli
+        run: |
+          (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.40.4/pack-v0.40.4-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
+      - name: Release
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        run: |
+          repository="$(printf '%s' '${{ <%= containerRepositoryExpression %> }}' | tr '[:upper:]' '[:lower:]')"
+          yarn workspaces changed foreach run app pack \
+            --registry "<%= containerRegistry %>/${repository}-" \
+            --tag-policy hash-timestamp \
+            --publish
