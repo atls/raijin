@@ -13,7 +13,11 @@ const createOutputHandler = (
   source: ProcessOutputEvent['source']
 ): StdoutStderrOption => ({
   preserveNewlines: true,
-  *transform(data: string) {
+  *transform(data: unknown) {
+    if (typeof data !== 'string') {
+      throw new TypeError('Expected process output transform to receive string data')
+    }
+
     handler({ data, source })
     yield* []
   },

@@ -74,7 +74,7 @@
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-security": "3.0.1",
-    "execa": "10.0.1",
+    "execa": "9.6.0",
     "fast-glob": "3.3.2",
     "import-sort": "6.0.0",
     "import-sort-parser": "6.0.0",

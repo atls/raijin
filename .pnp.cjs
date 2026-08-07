@@ -1617,7 +1617,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react-compiler", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:19.1.0-rc.2"],\
           ["eslint-plugin-react-hooks", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:7.0.1"],\
           ["eslint-plugin-security", "npm:3.0.1"],\
-          ["execa", "npm:10.0.1"],\
+          ["execa", "npm:9.6.0"],\
           ["fast-glob", "npm:3.3.2"],\
           ["import-sort", "npm:6.0.0"],\
           ["import-sort-parser", "npm:6.0.0"],\
@@ -9509,6 +9509,16 @@ const RAW_RUNTIME_STATE =
           ["which", "npm:2.0.2"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:7.0.6", {\
+        "packageLocation": "../.yarn/berry/cache/cross-spawn-npm-7.0.6-264bddf921-10.zip/node_modules/cross-spawn/",\
+        "packageDependencies": [\
+          ["cross-spawn", "npm:7.0.6"],\
+          ["path-key", "npm:3.1.1"],\
+          ["shebang-command", "npm:2.0.0"],\
+          ["which", "npm:2.0.2"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["css-select", [\
@@ -10758,25 +10768,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["execa", [\
-      ["npm:10.0.1", {\
-        "packageLocation": "../.yarn/berry/cache/execa-npm-10.0.1-81879e23c3-10.zip/node_modules/execa/",\
-        "packageDependencies": [\
-          ["@sindresorhus/merge-streams", "npm:4.0.0"],\
-          ["execa", "npm:10.0.1"],\
-          ["figures", "npm:6.1.0"],\
-          ["get-stream", "npm:9.0.1"],\
-          ["human-signals", "npm:8.0.1"],\
-          ["is-plain-obj", "npm:4.1.0"],\
-          ["is-stream", "npm:4.0.1"],\
-          ["npm-run-path", "npm:6.0.0"],\
-          ["pretty-ms", "npm:9.3.0"],\
-          ["signal-exit", "npm:4.1.0"],\
-          ["strip-final-newline", "npm:4.0.0"],\
-          ["which-command", "npm:0.1.0"],\
-          ["yoctocolors", "npm:2.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:8.0.1", {\
         "packageLocation": "../.yarn/berry/cache/execa-npm-8.0.1-0211bd404c-10.zip/node_modules/execa/",\
         "packageDependencies": [\
@@ -10790,6 +10781,25 @@ const RAW_RUNTIME_STATE =
           ["onetime", "npm:6.0.0"],\
           ["signal-exit", "npm:4.1.0"],\
           ["strip-final-newline", "npm:3.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:9.6.0", {\
+        "packageLocation": "../.yarn/berry/cache/execa-npm-9.6.0-c1ae1efe39-10.zip/node_modules/execa/",\
+        "packageDependencies": [\
+          ["@sindresorhus/merge-streams", "npm:4.0.0"],\
+          ["cross-spawn", "npm:7.0.6"],\
+          ["execa", "npm:9.6.0"],\
+          ["figures", "npm:6.1.0"],\
+          ["get-stream", "npm:9.0.1"],\
+          ["human-signals", "npm:8.0.1"],\
+          ["is-plain-obj", "npm:4.1.0"],\
+          ["is-stream", "npm:4.0.1"],\
+          ["npm-run-path", "npm:6.0.0"],\
+          ["pretty-ms", "npm:9.3.0"],\
+          ["signal-exit", "npm:4.1.0"],\
+          ["strip-final-newline", "npm:4.0.0"],\
+          ["yoctocolors", "npm:2.2.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -16078,15 +16088,6 @@ const RAW_RUNTIME_STATE =
           ["is-weakmap", "npm:2.0.2"],\
           ["is-weakset", "npm:2.0.3"],\
           ["which-collection", "npm:1.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["which-command", [\
-      ["npm:0.1.0", {\
-        "packageLocation": "../.yarn/berry/cache/which-command-npm-0.1.0-464a06fdde-10.zip/node_modules/which-command/",\
-        "packageDependencies": [\
-          ["which-command", "npm:0.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
