@@ -1,3 +1,5 @@
+import type { Policy }                from '../github/workflows/policy.interfaces.js'
+
 import assert                         from 'node:assert/strict'
 import { access }                     from 'node:fs/promises'
 import { mkdir }                      from 'node:fs/promises'
@@ -16,7 +18,7 @@ import { xfs }                        from '@yarnpkg/fslib'
 import { buildProjectCollection }     from '../../../../../scripts/generation/project/build.js'
 import { scaffoldProjectWithAngular } from './scaffold.js'
 
-const generatedWorkflowPolicy = {
+const policy: Policy = {
   checkoutAction: 'actions/checkout@v6',
   containerRegistry: 'ghcr.io',
   containerRepositoryExpression: 'github.repository',
@@ -84,7 +86,7 @@ test('should generate the project variant and preserve unrelated existing projec
   const originalManifest = await readFile(join(target, 'package.json'), 'utf8')
   const result = await scaffoldProjectWithAngular({
     collectionPath,
-    policy: generatedWorkflowPolicy,
+    policy,
     scaffoldType: 'project',
     targetPath: target,
   })
@@ -120,7 +122,7 @@ test('should generate the project variant and preserve unrelated existing projec
 
   const repeatedResult = await scaffoldProjectWithAngular({
     collectionPath,
-    policy: generatedWorkflowPolicy,
+    policy,
     scaffoldType: 'project',
     targetPath: target,
   })
@@ -132,7 +134,7 @@ test('should generate the library variant and the current npm token contract', a
   const target = await createTarget('library', { gitIgnore: '' })
   const result = await scaffoldProjectWithAngular({
     collectionPath,
-    policy: generatedWorkflowPolicy,
+    policy,
     scaffoldType: 'library',
     targetPath: target,
   })
@@ -155,7 +157,7 @@ test('should leave the target untouched when an Angular rule fails', async () =>
   const originalTypeScript = await readFile(join(target, 'tsconfig.json'), 'utf8')
   const result = await scaffoldProjectWithAngular({
     collectionPath,
-    policy: generatedWorkflowPolicy,
+    policy,
     scaffoldType: 'project',
     targetPath: target,
   })
@@ -171,7 +173,7 @@ test('should return the actual collection provider failure', async () => {
   const target = await createTarget('missing-collection')
   const result = await scaffoldProjectWithAngular({
     collectionPath: join(fixtureRoot, 'missing/collection.json'),
-    policy: generatedWorkflowPolicy,
+    policy,
     scaffoldType: 'project',
     targetPath: target,
   })

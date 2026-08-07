@@ -1,24 +1,12 @@
-import { minVersion } from 'semver'
+import type { Manifest } from './policy.interfaces.js'
+import type { Policy }   from './policy.interfaces.js'
 
-export interface GeneratedWorkflowPolicy {
-  checkoutAction: string
-  containerRegistry: string
-  containerRepositoryExpression: string
-  nodeVersion: string
-  npmTokenSecret: string
-  setupNodeAction: string
-}
-
-export interface RaijinGenerationManifest {
-  dependencies?: Record<string, string>
-  devDependencies?: Record<string, string>
-}
+import { minVersion }    from 'semver'
 
 const resolveNodeTypesVersion = ({
   dependencies = {},
   devDependencies = {},
-}: RaijinGenerationManifest): string | undefined =>
-  devDependencies['@types/node'] ?? dependencies['@types/node']
+}: Manifest): string | undefined => devDependencies['@types/node'] ?? dependencies['@types/node']
 
 const resolveNodeMajor = (version: string | undefined): number | undefined => {
   if (!version) {
@@ -32,9 +20,7 @@ const resolveNodeMajor = (version: string | undefined): number | undefined => {
   }
 }
 
-export const createGeneratedWorkflowPolicy = (
-  manifest: RaijinGenerationManifest
-): GeneratedWorkflowPolicy => {
+export const createPolicy = (manifest: Manifest): Policy => {
   const nodeTypesVersion = resolveNodeTypesVersion(manifest)
   const nodeVersion = resolveNodeMajor(nodeTypesVersion)
 

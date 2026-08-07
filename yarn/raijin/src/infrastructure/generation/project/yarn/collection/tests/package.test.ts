@@ -1,16 +1,16 @@
-import type { FetchResult }             from '@yarnpkg/core'
-import type { PortablePath }            from '@yarnpkg/fslib'
+import type { FetchResult }  from '@yarnpkg/core'
+import type { PortablePath } from '@yarnpkg/fslib'
 
-import assert                           from 'node:assert/strict'
-import { test }                         from 'node:test'
+import assert                from 'node:assert/strict'
+import { test }              from 'node:test'
 
-import { CwdFS }                        from '@yarnpkg/fslib'
-import { NodeFS }                       from '@yarnpkg/fslib'
-import { ppath }                        from '@yarnpkg/fslib'
-import { xfs }                          from '@yarnpkg/fslib'
+import { CwdFS }             from '@yarnpkg/fslib'
+import { NodeFS }            from '@yarnpkg/fslib'
+import { ppath }             from '@yarnpkg/fslib'
+import { xfs }               from '@yarnpkg/fslib'
 
-import { materializeProjectCollection } from './collection.js'
-import { readProjectCollectionSource }  from './collection.js'
+import { materialize }       from '../package.js'
+import { readSource }        from '../package.js'
 
 const createInstalledPackage = async (
   root: PortablePath,
@@ -40,7 +40,7 @@ test('should resolve the collection and metadata through packageFs and prefixPat
       devDependencies: { '@types/node': '24.12.2' },
       schematics: './dist/generation/project/collection/collection.json',
     })
-    const source = await readProjectCollectionSource(fetchResult)
+    const source = await readSource(fetchResult)
 
     assert.equal(
       source.collectionRoot,
@@ -57,7 +57,7 @@ test('should resolve a collection from a relative package prefix', async () => {
     const fetchResult = await createInstalledPackage(packageRoot, {
       schematics: './dist/generation/project/collection/collection.json',
     })
-    const source = await readProjectCollectionSource({
+    const source = await readSource({
       ...fetchResult,
       packageFs: new CwdFS(filesystemRoot),
       prefixPath,
@@ -72,14 +72,14 @@ test('should resolve a collection from a relative package prefix', async () => {
 
 test('should materialize a virtual collection only for the callback lifetime', async () => {
   await xfs.mktempPromise(async (packageRoot) => {
-    const source = await readProjectCollectionSource(
+    const source = await readSource(
       await createInstalledPackage(packageRoot, {
         schematics: './dist/generation/project/collection/collection.json',
       })
     )
     let materializedCollection = ''
 
-    await materializeProjectCollection(source, async ({ collectionPath }) => {
+    await materialize(source, async ({ collectionPath }) => {
       materializedCollection = collectionPath
       assert.equal(await xfs.existsPromise(collectionPath as PortablePath), true)
     })
@@ -91,21 +91,17 @@ test('should materialize a virtual collection only for the callback lifetime', a
 test('should reject missing, absolute, and escaping collection metadata', async () => {
   await xfs.mktempPromise(async (packageRoot) => {
     await assert.rejects(
-      readProjectCollectionSource(await createInstalledPackage(packageRoot, {})),
+      readSource(await createInstalledPackage(packageRoot, {})),
       /does not declare schematics/
     )
 
     await assert.rejects(
-      readProjectCollectionSource(
-        await createInstalledPackage(packageRoot, { schematics: '/tmp/collection.json' })
-      ),
+      readSource(await createInstalledPackage(packageRoot, { schematics: '/tmp/collection.json' })),
       /must be package-relative/
     )
 
     await assert.rejects(
-      readProjectCollectionSource(
-        await createInstalledPackage(packageRoot, { schematics: '../collection.json' })
-      ),
+      readSource(await createInstalledPackage(packageRoot, { schematics: '../collection.json' })),
       /escapes the package/
     )
   })

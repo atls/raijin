@@ -1,66 +1,47 @@
-import type { Configuration }            from '@yarnpkg/core'
-import type { FetchResult }              from '@yarnpkg/core'
-import type { Locator }                  from '@yarnpkg/core'
-import type { LocatorHash }              from '@yarnpkg/core'
-import type { Project }                  from '@yarnpkg/core'
-import type { FakeFS }                   from '@yarnpkg/fslib'
-import type { PortablePath }             from '@yarnpkg/fslib'
+import type { FetchResult }  from '@yarnpkg/core'
+import type { Locator }      from '@yarnpkg/core'
+import type { LocatorHash }  from '@yarnpkg/core'
+import type { Project }      from '@yarnpkg/core'
+import type { PortablePath } from '@yarnpkg/fslib'
 
-import type { RaijinGenerationManifest } from '../github/generated-workflow-policy.js'
+import type { Context }      from './package.interfaces.js'
+import type { Materialized } from './package.interfaces.js'
+import type { Manifest }     from './package.interfaces.js'
+import type { Source }       from './package.interfaces.js'
 
-import { Cache }                         from '@yarnpkg/core'
-import { ThrowReport }                   from '@yarnpkg/core'
-import { Filename }                      from '@yarnpkg/fslib'
-import { structUtils }                   from '@yarnpkg/core'
-import { npath }                         from '@yarnpkg/fslib'
-import { ppath }                         from '@yarnpkg/fslib'
-import { xfs }                           from '@yarnpkg/fslib'
-
-type InstalledRaijinManifest = RaijinGenerationManifest & {
-  schematics?: unknown
-}
-
-type ProjectCollectionSource = {
-  collectionRoot: PortablePath
-  manifest: InstalledRaijinManifest
-  packageFs: FakeFS<PortablePath>
-}
-
-type MaterializedProjectCollection = {
-  collectionPath: string
-  manifest: InstalledRaijinManifest
-}
+import { Cache }             from '@yarnpkg/core'
+import { ThrowReport }       from '@yarnpkg/core'
+import { Filename }          from '@yarnpkg/fslib'
+import { structUtils }       from '@yarnpkg/core'
+import { npath }             from '@yarnpkg/fslib'
+import { ppath }             from '@yarnpkg/fslib'
+import { xfs }               from '@yarnpkg/fslib'
 
 const RAIJIN_IDENT = structUtils.parseIdent('@atls/raijin')
 
 const projectCollectionUnavailable = (reason: string, cause?: unknown): Error =>
   new Error(`Installed @atls/raijin project collection is unavailable: ${reason}`, { cause })
 
-const resolveRaijinLocator = (project: Project): Locator => {
-  const locator = Array.from(project.storedPackages.values()).find(
+export const resolvePackage = (project: Project): Locator => {
+  const pkg = Array.from(project.storedPackages.values()).find(
     (candidate) =>
       !structUtils.isVirtualLocator(candidate) &&
       structUtils.areIdentsEqual(candidate, RAIJIN_IDENT)
   )
 
-  if (!locator) {
+  if (!pkg) {
     throw projectCollectionUnavailable('package resolution is missing')
   }
 
-  return locator
+  return pkg
 }
 
-export const readProjectCollectionSource = async ({
-  packageFs,
-  prefixPath,
-}: FetchResult): Promise<ProjectCollectionSource> => {
+export const readSource = async ({ packageFs, prefixPath }: FetchResult): Promise<Source> => {
   const manifestPath = ppath.join(prefixPath, Filename.manifest)
-  let manifest: InstalledRaijinManifest
+  let manifest: Manifest
 
   try {
-    manifest = JSON.parse(
-      await packageFs.readFilePromise(manifestPath, 'utf8')
-    ) as InstalledRaijinManifest
+    manifest = JSON.parse(await packageFs.readFilePromise(manifestPath, 'utf8')) as Manifest
   } catch (error) {
     throw projectCollectionUnavailable('package metadata cannot be read', error)
   }
@@ -92,9 +73,9 @@ export const readProjectCollectionSource = async ({
   }
 }
 
-export const materializeProjectCollection = async <T>(
-  source: ProjectCollectionSource,
-  callback: (collection: MaterializedProjectCollection) => Promise<T>
+export const materialize = async <T>(
+  source: Source,
+  callback: (collection: Materialized) => Promise<T>
 ): Promise<T> =>
   xfs.mktempPromise(async (temporaryRoot) => {
     const materializedRoot = ppath.join(temporaryRoot, 'project-collection' as PortablePath)
@@ -109,13 +90,13 @@ export const materializeProjectCollection = async <T>(
     })
   })
 
-export const withInstalledProjectCollection = async <T>(
-  { configuration, project }: { configuration: Configuration; project: Project },
-  callback: (collection: MaterializedProjectCollection) => Promise<T>
+export const withCollection = async <T>(
+  { configuration, project }: Context,
+  callback: (collection: Materialized) => Promise<T>
 ): Promise<T> => {
   await project.restoreInstallState()
 
-  const locator = resolveRaijinLocator(project)
+  const locator = resolvePackage(project)
   const fetcher = configuration.makeFetcher()
   const cache = await Cache.find(configuration)
   const checksums = new Map<LocatorHash, string | null>(project.storedChecksums)
@@ -128,9 +109,9 @@ export const withInstalledProjectCollection = async <T>(
   })
 
   try {
-    const source = await readProjectCollectionSource(fetchResult)
+    const source = await readSource(fetchResult)
 
-    return await materializeProjectCollection(source, callback)
+    return await materialize(source, callback)
   } finally {
     fetchResult.releaseFs?.()
   }

@@ -3,7 +3,7 @@ import type { DryRunEvent }              from '@angular-devkit/schematics'
 import type { ProjectScaffoldType }      from '../../../../application/generation/project/index.js'
 import type { ProjectScaffoldingResult } from '../../../../application/generation/project/index.js'
 import type { GeneratedProjectChange }   from '../../../../application/generation/project/index.js'
-import type { GeneratedWorkflowPolicy }  from '../github/generated-workflow-policy.js'
+import type { Policy }                   from '../github/workflows/policy.interfaces.js'
 
 import { readFile }                      from 'node:fs/promises'
 import { join }                          from 'node:path'
@@ -107,7 +107,7 @@ const executeProjectWorkflow = async ({
   collectionPath: string
   dryRun: boolean
   onEvent?: (event: DryRunEvent) => void
-  policy: GeneratedWorkflowPolicy
+  policy: Policy
   scaffoldType: ProjectScaffoldType
   targetPath: string
 }): Promise<void> => {
@@ -147,7 +147,7 @@ export const scaffoldProjectWithAngular = async ({
   targetPath,
 }: {
   collectionPath: string
-  policy: GeneratedWorkflowPolicy
+  policy: Policy
   scaffoldType: ProjectScaffoldType
   targetPath: string
 }): Promise<ProjectScaffoldingResult> => {

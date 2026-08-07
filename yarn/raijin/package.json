@@ -56,7 +56,7 @@
   "scripts": {
     "build": "yarn run build:library && yarn run build:project-generation",
     "build:library": "yarn library build",
-    "build:project-generation": "yarn node ./scripts/generation/project/build.ts",
+    "build:project-generation": "node ./scripts/generation/project/build.ts",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },

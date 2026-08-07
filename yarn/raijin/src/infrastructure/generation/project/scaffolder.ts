@@ -1,14 +1,14 @@
-import type { Configuration }             from '@yarnpkg/core'
-import type { Project }                   from '@yarnpkg/core'
-import type { PortablePath }              from '@yarnpkg/fslib'
+import type { Configuration }         from '@yarnpkg/core'
+import type { Project }               from '@yarnpkg/core'
+import type { PortablePath }          from '@yarnpkg/fslib'
 
-import type { ProjectScaffolder }         from '../../../application/generation/project/index.js'
+import type { ProjectScaffolder }     from '../../../application/generation/project/index.js'
 
-import { npath }                          from '@yarnpkg/fslib'
+import { npath }                      from '@yarnpkg/fslib'
 
-import { scaffoldProjectWithAngular }     from './angular/scaffold.js'
-import { createGeneratedWorkflowPolicy }  from './github/generated-workflow-policy.js'
-import { withInstalledProjectCollection } from './yarn/collection.js'
+import { scaffoldProjectWithAngular } from './angular/scaffold.js'
+import { createPolicy }               from './github/workflows/policy.js'
+import { withCollection }             from './yarn/collection/package.js'
 
 const failureMessage = (error: unknown): string =>
   error instanceof Error ? error.message : String(error)
@@ -24,13 +24,13 @@ export const createInstalledProjectScaffolder = ({
 }): ProjectScaffolder => ({
   scaffold: async (scaffoldType) => {
     try {
-      return await withInstalledProjectCollection({ configuration, project }, async ({
+      return await withCollection({ configuration, project }, async ({
         collectionPath,
         manifest,
       }) =>
         scaffoldProjectWithAngular({
           collectionPath,
-          policy: createGeneratedWorkflowPolicy(manifest),
+          policy: createPolicy(manifest),
           scaffoldType,
           targetPath: npath.fromPortablePath(targetCwd),
         }))

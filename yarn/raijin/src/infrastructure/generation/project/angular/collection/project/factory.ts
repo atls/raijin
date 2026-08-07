@@ -1,33 +1,25 @@
-import type { Rule }     from '@angular-devkit/schematics'
-import type { Tree }     from '@angular-devkit/schematics'
+import type { Rule }           from '@angular-devkit/schematics'
+import type { Tree }           from '@angular-devkit/schematics'
 
-import { MergeStrategy } from '@angular-devkit/schematics'
-import { strings }       from '@angular-devkit/core'
-import { apply }         from '@angular-devkit/schematics'
-import { chain }         from '@angular-devkit/schematics'
-import { mergeWith }     from '@angular-devkit/schematics'
-import { move }          from '@angular-devkit/schematics'
-import { template }      from '@angular-devkit/schematics'
-import { url }           from '@angular-devkit/schematics'
-import stripJsonComments from 'strip-json-comments'
+import type { GitIgnoreState } from './factory.interfaces.js'
+import type { Options }        from './factory.interfaces.js'
 
-type ProjectSchematicOptions = {
-  checkoutAction: string
-  containerRegistry: string
-  containerRepositoryExpression: string
-  nodeVersion: string
-  npmTokenSecret: string
-  scaffoldType: 'library' | 'project'
-  setupNodeAction: string
-  typescriptCompilerOptions: Record<string, unknown>
-}
+import { MergeStrategy }       from '@angular-devkit/schematics'
+import { strings }             from '@angular-devkit/core'
+import { apply }               from '@angular-devkit/schematics'
+import { chain }               from '@angular-devkit/schematics'
+import { mergeWith }           from '@angular-devkit/schematics'
+import { move }                from '@angular-devkit/schematics'
+import { template }            from '@angular-devkit/schematics'
+import { url }                 from '@angular-devkit/schematics'
+import stripJsonComments       from 'strip-json-comments'
 
 const GITIGNORE_PATH = '.gitignore'
 const TSCONFIG_PATH = 'tsconfig.json'
 
 const serializeJson = (value: unknown): string => `${JSON.stringify(value, null, 2)}\n`
 
-const updateTypeScriptConfig = (options: ProjectSchematicOptions): Rule =>
+const updateTypeScriptConfig = (options: Options): Rule =>
   (tree: Tree): Tree => {
     const content = tree.read(TSCONFIG_PATH)?.toString('utf8') ?? '{}'
     const config = JSON.parse(stripJsonComments(content)) as Record<string, unknown>
@@ -52,7 +44,7 @@ const updateTypeScriptConfig = (options: ProjectSchematicOptions): Rule =>
     return tree
   }
 
-const captureExistingGitIgnore = (state: { content?: Buffer }): Rule =>
+const captureExistingGitIgnore = (state: GitIgnoreState): Rule =>
   (tree: Tree): Tree => {
     const content = tree.read(GITIGNORE_PATH)
 
@@ -63,7 +55,7 @@ const captureExistingGitIgnore = (state: { content?: Buffer }): Rule =>
     return tree
   }
 
-const restoreExistingGitIgnore = (state: { content?: Buffer }): Rule =>
+const restoreExistingGitIgnore = (state: GitIgnoreState): Rule =>
   (tree: Tree): Tree => {
     if (!state.content) {
       return tree
@@ -78,7 +70,7 @@ const restoreExistingGitIgnore = (state: { content?: Buffer }): Rule =>
     return tree
   }
 
-const projectSource = (path: string, options: ProjectSchematicOptions) =>
+const projectSource = (path: string, options: Options) =>
   apply(url(path), [
     template({
       ...strings,
@@ -88,8 +80,8 @@ const projectSource = (path: string, options: ProjectSchematicOptions) =>
     move('/'),
   ])
 
-export const main = (options: ProjectSchematicOptions): Rule => {
-  const gitIgnoreState: { content?: Buffer } = {}
+export const main = (options: Options): Rule => {
+  const gitIgnoreState: GitIgnoreState = {}
   const variantPath =
     options.scaffoldType === 'library' ? '../templates/libraries' : '../templates/project'
 
