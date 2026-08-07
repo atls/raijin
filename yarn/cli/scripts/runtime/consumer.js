@@ -19,10 +19,8 @@ if (!runtimeArgument || !packageManager) {
 }
 
 const runtimePath = resolve(process.cwd(), runtimeArgument)
-const raijinManifest = JSON.parse(
-  await readFile(new URL('../../../raijin/package.json', import.meta.url), 'utf8')
-)
 const fixtureCwd = await mkdtemp(join(tmpdir(), 'raijin-cli-surface-consumer-'))
+const fixtureRaijinArchivePath = join(fixtureCwd, 'atls-raijin.tgz')
 const fixtureRuntimePath = join(fixtureCwd, '.yarn/releases/yarn.mjs')
 const environment = { ...process.env }
 
@@ -56,6 +54,10 @@ const runYarn = async (args, cwd = fixtureCwd) => {
 }
 
 try {
+  await runYarn(
+    ['workspace', '@atls/raijin', 'pack', '--out', fixtureRaijinArchivePath],
+    process.cwd()
+  )
   await mkdir(join(fixtureCwd, '.yarn/releases'), { recursive: true })
   await cp(runtimePath, fixtureRuntimePath)
   await writeFile(
@@ -63,7 +65,7 @@ try {
     `${JSON.stringify(
       {
         dependencies: {
-          '@atls/raijin': raijinManifest.version,
+          '@atls/raijin': 'file:./atls-raijin.tgz',
           'fixture-prettier-config': 'portal:./prettier-config',
         },
         name: 'raijin-cli-surface-consumer',
