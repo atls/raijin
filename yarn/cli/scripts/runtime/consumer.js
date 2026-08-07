@@ -184,6 +184,7 @@ const writeProjectGenerationFixture = async () => {
   return { generatedTarget, invalidTarget }
 }
 
+/** @param {string} target */
 const verifyGeneratedProject = async (target) => {
   const requiredFiles = [
     '.config/husky/pre-commit',
@@ -234,6 +235,7 @@ const verifyGeneratedProject = async (target) => {
   }
 }
 
+/** @param {{ generatedTarget: string, invalidTarget: string }} targets */
 const runProjectGenerationScenario = async ({ generatedTarget, invalidTarget }) => {
   if (nodeLinkerArgument === 'pnp') {
     const output = await runYarn(['generate', 'project', '--type', 'project'], generatedTarget)
@@ -246,7 +248,10 @@ const runProjectGenerationScenario = async ({ generatedTarget, invalidTarget }) 
       await runYarn(['generate', 'project', '--type', 'service'], invalidTarget)
       throw new Error('Invalid project scaffold type unexpectedly succeeded')
     } catch (error) {
-      const errorOutput = `${error?.stdout ?? ''}${error?.stderr ?? ''}`
+      const commandError = typeof error === 'object' && error !== null ? error : {}
+      const errorOutput = `${
+        'stdout' in commandError ? String(commandError.stdout ?? '') : ''
+      }${'stderr' in commandError ? String(commandError.stderr ?? '') : ''}`
 
       if (!errorOutput.includes('Unsupported project scaffold type "service"')) {
         throw error
