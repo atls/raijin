@@ -1,34 +1,31 @@
 # Verification Ownership
 
-Repository verification exposes stable aggregate capabilities while each check, test, fixture, and consumer scenario remains with the responsibility it verifies.
+Repository verification exposes stable aggregate capabilities while each check, test, fixture, and consumer scenario remains with its implementation owner.
 
-## Owner Map
+## Durable Rules
 
-| Surface                                                | Owner                                           | Contract                                                                                                                                                         | Consumers                                          |
-| ------------------------------------------------------ | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `yarn raijin:check`                                    | Repository aggregate                            | Sequences Raijin-owned drift, runtime, localization, deterministic routing, and disposable consumer capabilities without selecting individual tests or scenarios | Raijin CI and contributors                         |
-| `yarn raijin:check:runtime`                            | Global CLI surface from #845                    | Proves the built and checked runtimes, registered routes, general help, command metadata, and plugin graph agree                                                 | Repository aggregate                               |
-| `yarn raijin:smoke:deterministic`                      | Generated command documentation                 | Proves the checked prompt fixtures resolve against the generated command index                                                                                   | Repository aggregate                               |
-| `yarn raijin:smoke:cli`                                | `@atls/yarn-cli` disposable consumer capability | Runs the package-owned consumer registry against the checked runtime and a matching package archive                                                              | Repository aggregate and focused capability proofs |
-| `yarn test`, `yarn test unit`, `yarn test integration` | Project test execution in #839                  | Discovers and executes project tests with the supported Node.js test contract                                                                                    | Packages, checks, and contributors                 |
-| `yarn checks run`                                      | Check orchestration in #804                     | Composes format, typecheck, lint, test, and release checks without becoming their implementation owner                                                           | Shared GitHub checks workflow                      |
-| Complete command consumer matrix                       | Consumer smoke in #806                          | Reconciles and proves the final registered command surface across disposable and real consumers                                                                  | Architecture epic completion                       |
-
-## Test Placement
-
+- The repository aggregate invokes stable capabilities and does not select test files or consumer scenarios
+- Test discovery and selection stay with the package or capability that implements the test contract
 - Unit and contract tests stay with the production responsibility they verify
-- Package-level test roots are reserved for import, bootstrap, cross-module contract, and package smoke coverage
-- Repository aggregate scripts do not enumerate test files; project test discovery remains owned by #839
-- A focused capability proof selects its package or consumer scenario through the owning entrypoint rather than adding another root script
+- Disposable consumer assets stay outside runtime source and keep fixtures local to their scenario
+- Shared runner code represents semantics required by multiple scenarios, never a generic `test-utils`, `fixtures`, or `helpers` collection
+- The generated command inventory remains in `commands.md` and `index.v1.json`; this document does not duplicate it
 
-## Disposable Consumers
+## Ownership Transitions
 
-- Consumer assets live under `yarn/cli/scripts/runtime/consumer`, outside runtime source
-- The shared runner owns temporary project creation, checked runtime installation, matching archive installation, environment isolation, and cleanup
-- Each scenario owns only its fixture, preparation, commands, and assertions
-- Fixture files remain scenario-local and use non-discoverable source names when their contents would otherwise be collected as repository tests or workspaces
-- Shared consumer code is introduced only for semantics required by more than one scenario; generic `test-utils`, `fixtures`, and `helpers` collections are not owners
+This table records current implementation ownership. A tracking issue names a migration, not the current owner.
 
-## Migration Boundary
+| Responsibility                    | Current owner                                     | State     | Transition condition                                                                                                            |
+| --------------------------------- | ------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Repository verification aggregate | Root `raijin:check` capability                    | Current   | It remains an aggregate and delegates only to stable owner capabilities                                                         |
+| CLI surface and checked runtime   | `scripts/raijin/cli-surface` and `@atls/yarn-cli` | Current   | #845 established this boundary; later changes remain with the same capability                                                   |
+| Disposable consumer scenarios     | `@atls/yarn-cli` runtime consumer scripts         | Current   | #806 may extend their coverage only after the final command inventory is available                                              |
+| Project test execution            | `yarn/plugin-test` and `@atls/code-test`          | Migrating | #839 replaces them only after general, unit, integration, and checks consumers use the new Raijin-owned scenarios               |
+| Check orchestration               | `yarn/plugin-checks`                              | Migrating | #804 replaces it only after local orchestration and GitHub reporting are separated and recursive command composition is removed |
+| Complete command consumer matrix  | Not implemented                                   | Planned   | #806 becomes current only after the final registered inventory has a package-owned entrypoint and consumer proof                |
 
-Every verification change migrates one owner at a time and retains a focused proof for that contour. Project test semantics remain in #839, check orchestration remains in #804, and the complete command-wide consumer matrix remains in #806.
+## Update Contract
+
+- A pull request that changes implementation ownership updates the corresponding row in the same delivery unit
+- A planned or migrating responsibility becomes current only after its transition condition and focused proof are complete
+- Every migration changes one owner at a time; adjacent test semantics, check orchestration, or consumer coverage remain with their tracking issue
