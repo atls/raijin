@@ -39,15 +39,28 @@ before(async () => {
 
   await writeFile(
     program,
-    `import { Configuration } from '@yarnpkg/core'
-
-const mode = process.argv[2]
+    `const mode = process.argv[2]
 
 switch (mode) {
+  case 'binary': {
+    const { spawnSync } = await import('node:child_process')
+    const result = spawnSync('tsc', ['--version'], { encoding: 'utf8' })
+
+    if (result.error) {
+      throw result.error
+    }
+
+    process.stdout.write(result.stdout ?? '')
+    process.stderr.write(result.stderr ?? '')
+    process.exitCode = result.status ?? 1
+    break
+  }
   case 'fail':
     process.exitCode = 7
     break
-  case 'report':
+  case 'report': {
+    const { Configuration } = await import('@yarnpkg/core')
+
     process.stdout.write(JSON.stringify({
       argument: process.argv[3],
       callerTitle: process.title,
@@ -56,6 +69,7 @@ switch (mode) {
       removed: process.env.RAIJIN_REMOVE_ME,
     }))
     break
+  }
   case 'signal':
     process.kill(process.pid, 'SIGTERM')
     break
@@ -132,7 +146,13 @@ test('should execute TypeScript through the project PnP environment', async () =
   })
 
   assert.ok(Number(process.versions.node.split('.')[0]) >= 24)
-  assert.equal(result.reason, 'completed')
+  assert.equal(
+    result.reason,
+    'completed',
+    result.reason === 'start-failed' && result.cause instanceof Error
+      ? result.cause.stack
+      : undefined
+  )
   assert.equal(result.exitCode, 0)
   assert.deepEqual(JSON.parse(result.stdout), {
     argument: 'argument-value',
@@ -140,6 +160,40 @@ test('should execute TypeScript through the project PnP environment', async () =
     dependencyLoaded: true,
     preserved: 'preserved-value',
   })
+  assert.equal(temporaryDirectories.removed.length, 1)
+})
+
+test('should expose locator-accessible binaries through the managed environment', async () => {
+  const { project, workspace } = await testProject
+  assert.ok(workspace)
+
+  const baseEnvironment = Object.fromEntries(
+    Object.entries(process.env).filter(([name]) => name.toUpperCase() !== 'PATH')
+  )
+  const temporaryDirectories = createTemporaryDirectoryProvider()
+  const executor = createYarnManagedNodeExecutor({
+    baseEnvironment: { ...baseEnvironment, PATH: '' },
+    locator: workspace.anchoredLocator,
+    project,
+    temporaryDirectories: temporaryDirectories.provider,
+  })
+  const result = await executor.execute({
+    arguments: ['binary'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program,
+  })
+
+  assert.equal(
+    result.reason,
+    'completed',
+    result.reason === 'start-failed' && result.cause instanceof Error
+      ? result.cause.stack
+      : undefined
+  )
+  assert.equal(result.exitCode, 0, result.stderr)
+  assert.match(result.stdout, /^Version \d+\.\d+\.\d+/u)
   assert.equal(temporaryDirectories.removed.length, 1)
 })
 

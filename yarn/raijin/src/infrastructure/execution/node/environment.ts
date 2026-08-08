@@ -4,6 +4,7 @@ import { scriptUtils }                     from '@yarnpkg/core'
 import { npath }                           from '@yarnpkg/fslib'
 
 import { createYarnBaseEnvironment }       from '../../../yarn/launcher.js'
+import { installPackageBinaries }          from './package-binaries.js'
 
 const MANAGED_NODE_LOADER_ENV = 'RAIJIN_NODE_LOADER'
 const OWNED_ENVIRONMENT_NAMES = new Set(
@@ -65,6 +66,10 @@ export const createYarnNodeEnvironment = async ({
     project,
     ignoreCorepack: true,
   })
+
+  if (locator) {
+    await installPackageBinaries({ binFolder, locator, project })
+  }
 
   environment.INIT_CWD = cwd
   environment.PROJECT_CWD = npath.fromPortablePath(project.cwd)
