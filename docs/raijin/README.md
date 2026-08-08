@@ -9,6 +9,7 @@ Navigation for custom `atls` Yarn bundle docs
 - Install or upgrade the bundle: [quickstart.md](./quickstart.md)
 - Pick and understand a command: [commands.md](./commands.md)
 - Understand workspace packages: [packages.md](./packages.md)
+- Understand repository verification ownership: [verification.md](./verification.md)
 
 <!-- sync:router-read-order -->
 
@@ -17,6 +18,7 @@ Navigation for custom `atls` Yarn bundle docs
 1. [quickstart.md](./quickstart.md)
 2. [commands.md](./commands.md)
 3. [packages.md](./packages.md)
+4. [verification.md](./verification.md)
 
 <!-- sync:router-quick-rules -->
 
@@ -38,4 +40,4 @@ Navigation for custom `atls` Yarn bundle docs
 
 - Commands: 38 (active: 38, inactive: 0)
 - Workspace packages: 57
-- Last generated: 2026-08-07T15:01:19.644Z
+- Last generated: 2026-08-08T14:00:16.544Z
