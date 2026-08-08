@@ -127,10 +127,11 @@ test('should execute TypeScript through the project PnP environment', async () =
   assert.ok(workspace)
 
   const temporaryDirectories = createTemporaryDirectoryProvider()
+  const nodeOptionsName = process.platform === 'win32' ? 'Node_Options' : 'NODE_OPTIONS'
   const executor = createYarnManagedNodeExecutor({
     baseEnvironment: {
       ...process.env,
-      NODE_OPTIONS: '--title=raijin-caller --trace-warnings',
+      [nodeOptionsName]: '--title=raijin-caller --trace-warnings',
       RAIJIN_REMOVE_ME: 'remove-me',
     },
     locator: workspace.anchoredLocator,

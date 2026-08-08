@@ -23,10 +23,22 @@ const OWNED_ENVIRONMENT_NAMES = [
   'YARN_IGNORE_PATH',
   'npm_config_user_agent',
   'npm_execpath',
+  'npm_node_execpath',
 ]
 const OWNED_ENVIRONMENT_NAME_SET = new Set(
   OWNED_ENVIRONMENT_NAMES.map((name) => name.toUpperCase())
 )
+const CANONICAL_WINDOWS_ENVIRONMENT_NAMES = new Map(
+  ['NODE_OPTIONS', 'PATH', ...OWNED_ENVIRONMENT_NAMES].map((name) => [name.toUpperCase(), name])
+)
+
+const getEnvironmentVariableName = (
+  name: string,
+  platform: NodeJS.Platform = process.platform
+): string =>
+  platform === 'win32'
+    ? (CANONICAL_WINDOWS_ENVIRONMENT_NAMES.get(name.toUpperCase()) ?? name)
+    : name
 
 const deleteEnvironmentVariable = (
   environment: NodeJS.ProcessEnv,
@@ -48,14 +60,29 @@ const deleteEnvironmentVariable = (
 const setEnvironmentVariable = (
   environment: NodeJS.ProcessEnv,
   name: string,
-  value: string,
+  value: string | undefined,
   platform: NodeJS.Platform = process.platform
 ): void => {
   if (platform === 'win32') {
     deleteEnvironmentVariable(environment, name, platform)
   }
 
-  environment[name] = value
+  environment[getEnvironmentVariableName(name, platform)] = value
+}
+
+export const mergeEnvironmentVariables = (
+  environments: ReadonlyArray<NodeJS.ProcessEnv>,
+  platform: NodeJS.Platform = process.platform
+): NodeJS.ProcessEnv => {
+  const environment: NodeJS.ProcessEnv = {}
+
+  for (const source of environments) {
+    for (const [name, value] of Object.entries(source)) {
+      setEnvironmentVariable(environment, name, value, platform)
+    }
+  }
+
+  return environment
 }
 
 export const applyEnvironmentPatch = (
@@ -74,6 +101,25 @@ export const applyEnvironmentPatch = (
       setEnvironmentVariable(environment, name, value, platform)
     }
   }
+}
+
+export const createYarnNodeBaseEnvironment = (
+  projectEnvironment: NodeJS.ProcessEnv,
+  baseEnvironment: NodeJS.ProcessEnv,
+  environmentPatch: YarnNodeEnvironmentOptions['environmentPatch'],
+  platform: NodeJS.Platform = process.platform
+): NodeJS.ProcessEnv => {
+  const environment = createYarnBaseEnvironment(
+    mergeEnvironmentVariables([projectEnvironment, baseEnvironment], platform)
+  )
+
+  for (const name of OWNED_ENVIRONMENT_NAMES) {
+    deleteEnvironmentVariable(environment, name, platform)
+  }
+
+  applyEnvironmentPatch(environment, environmentPatch, platform)
+
+  return environment
 }
 
 const applyPackageEnvironment = (
@@ -137,16 +183,11 @@ export const createYarnNodeEnvironment = async ({
   locator,
   project,
 }: YarnNodeEnvironmentOptions): Promise<NodeJS.ProcessEnv> => {
-  const baseEnv = createYarnBaseEnvironment({
-    ...project.configuration.env,
-    ...baseEnvironment,
-  })
-
-  for (const name of OWNED_ENVIRONMENT_NAMES) {
-    deleteEnvironmentVariable(baseEnv, name)
-  }
-
-  applyEnvironmentPatch(baseEnv, environmentPatch)
+  const baseEnv = createYarnNodeBaseEnvironment(
+    project.configuration.env,
+    baseEnvironment,
+    environmentPatch
+  )
 
   let pnpApi: PnpRuntimeApi | undefined
 
@@ -155,12 +196,14 @@ export const createYarnNodeEnvironment = async ({
     pnpApi = loadProjectPnpApi(project)
   }
 
-  const environment = await scriptUtils.makeScriptEnv({
-    baseEnv,
-    binFolder,
-    project,
-    ignoreCorepack: true,
-  })
+  const environment = mergeEnvironmentVariables([
+    await scriptUtils.makeScriptEnv({
+      baseEnv,
+      binFolder,
+      project,
+      ignoreCorepack: true,
+    }),
+  ])
 
   if (locator && pnpApi) {
     applyPackageEnvironment(environment, locator, project, pnpApi)
