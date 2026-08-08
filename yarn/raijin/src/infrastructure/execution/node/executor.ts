@@ -23,6 +23,7 @@ const createNodeArguments = (
 ): Array<string> => [
   '--enable-source-maps',
   ...(loaders.length > 0 ? ['--import', createNodeLoaderRegistrationImport(loaders)] : []),
+  '--',
   input.program,
   ...(input.arguments ?? []),
 ]

@@ -42,6 +42,11 @@ before(async () => {
   program = join(programDirectory, 'program.ts')
 
   await writeFile(
+    join(programDirectory, '-fixture.ts'),
+    `process.stdout.write(process.argv[2] ?? '')
+`
+  )
+  await writeFile(
     program,
     `const mode = process.argv[2]
 
@@ -199,6 +204,33 @@ test('should expose locator-accessible binaries through the managed environment'
   )
   assert.equal(result.exitCode, 0, result.stderr)
   assert.match(result.stdout, /^Version \d+\.\d+\.\d+/u)
+  assert.equal(temporaryDirectories.removed.length, 1)
+})
+
+test('should execute a relative program whose name starts with an option prefix', async () => {
+  const { project } = await testProject
+  const temporaryDirectories = createTemporaryDirectoryProvider()
+  const executor = createYarnManagedNodeExecutor({
+    project,
+    temporaryDirectories: temporaryDirectories.provider,
+  })
+  const result = await executor.execute({
+    arguments: ['argument-value'],
+    cwd: npath.toPortablePath(programDirectory),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program: '-fixture.ts',
+  })
+
+  assert.equal(
+    result.reason,
+    'completed',
+    result.reason === 'start-failed' && result.cause instanceof Error
+      ? result.cause.stack
+      : undefined
+  )
+  assert.equal(result.exitCode, 0, result.stderr)
+  assert.equal(result.stdout, 'argument-value')
   assert.equal(temporaryDirectories.removed.length, 1)
 })
 
