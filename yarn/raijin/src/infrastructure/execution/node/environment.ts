@@ -28,9 +28,10 @@ const OWNED_ENVIRONMENT_NAMES = new Set(
   ].map((name) => name.toUpperCase())
 )
 
-const applyEnvironmentPatch = (
+export const applyEnvironmentPatch = (
   environment: NodeJS.ProcessEnv,
-  patch: YarnNodeEnvironmentOptions['environmentPatch']
+  patch: YarnNodeEnvironmentOptions['environmentPatch'],
+  platform: NodeJS.Platform = process.platform
 ): void => {
   for (const [name, value] of Object.entries(patch)) {
     if (OWNED_ENVIRONMENT_NAMES.has(name.toUpperCase())) {
@@ -38,7 +39,16 @@ const applyEnvironmentPatch = (
     }
 
     if (value === undefined) {
-      Reflect.deleteProperty(environment, name)
+      const names =
+        platform === 'win32'
+          ? Object.keys(environment).filter(
+              (environmentName) => environmentName.toUpperCase() === name.toUpperCase()
+            )
+          : [name]
+
+      for (const environmentName of names) {
+        Reflect.deleteProperty(environment, environmentName)
+      }
     } else {
       environment[name] = value
     }
