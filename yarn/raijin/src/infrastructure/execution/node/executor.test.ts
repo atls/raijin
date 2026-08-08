@@ -33,8 +33,9 @@ let program = ''
 let programDirectory = ''
 
 before(async () => {
-  const { project } = await testProject
-  const fixtureRoot = join(npath.fromPortablePath(project.cwd), '.yarn/raijin')
+  const { workspace } = await testProject
+  assert.ok(workspace)
+  const fixtureRoot = join(npath.fromPortablePath(workspace.cwd), '.yarn/raijin')
 
   await mkdir(fixtureRoot, { recursive: true })
   programDirectory = await mkdtemp(join(fixtureRoot, 'node-executor-program-'))
@@ -156,7 +157,7 @@ test('should execute TypeScript through the project PnP environment', async () =
       ? result.cause.stack
       : undefined
   )
-  assert.equal(result.exitCode, 0)
+  assert.equal(result.exitCode, 0, result.stderr)
   assert.deepEqual(JSON.parse(result.stdout), {
     argument: 'argument-value',
     callerTitle: 'raijin-caller',
@@ -284,7 +285,12 @@ test('should expose output through the application handler contract', async () =
 
   assert.equal(result.reason, 'completed')
   assert.equal(result.stdout, '')
-  const report = JSON.parse(events.map(({ data }) => data).join('')) as Record<string, unknown>
+  const report = JSON.parse(
+    events
+      .filter(({ source }) => source === 'stdout')
+      .map(({ data }) => data)
+      .join('')
+  ) as Record<string, unknown>
 
   assert.equal(report.argument, 'handled-value')
   assert.equal(report.dependencyLoaded, true)
