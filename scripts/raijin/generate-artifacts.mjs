@@ -365,6 +365,7 @@ const renderDocsRootReadme = (language) => {
   const quickstartPath = linkByLanguage('raijin/quickstart', language)
   const commandsPath = linkByLanguage('raijin/commands', language)
   const packagesPath = linkByLanguage('raijin/packages', language)
+  const verificationPath = 'raijin/verification.md'
 
   return [
     '# Atlantis Raijin Docs',
@@ -396,6 +397,9 @@ const renderDocsRootReadme = (language) => {
       ? `- Нужно понять назначение workspace-пакета: [${packagesPath}](./${packagesPath})`
       : `- Need workspace package purpose and ownership: [${packagesPath}](./${packagesPath})`,
     isRu
+      ? `- Нужно понять владельцев проверок: [${verificationPath}](./${verificationPath})`
+      : `- Need repository verification ownership: [${verificationPath}](./${verificationPath})`,
+    isRu
       ? `- Нужен обзор структуры раздела Raijin: [${raijinRouterPath}](./${raijinRouterPath})`
       : `- Need a compact Raijin docs overview: [${raijinRouterPath}](./${raijinRouterPath})`,
     '',
@@ -407,6 +411,7 @@ const renderDocsRootReadme = (language) => {
     `2. [${quickstartPath}](./${quickstartPath})`,
     `3. [${commandsPath}](./${commandsPath})`,
     `4. [${packagesPath}](./${packagesPath})`,
+    `5. [${verificationPath}](./${verificationPath})`,
     '',
   ].join('\n')
 }
@@ -416,6 +421,7 @@ const renderRaijinReadme = (index, language) => {
   const quickstartPath = linkByLanguage('quickstart', language)
   const commandsPath = linkByLanguage('commands', language)
   const packagesPath = linkByLanguage('packages', language)
+  const verificationPath = 'verification.md'
 
   return [
     '# Raijin Docs',
@@ -437,6 +443,9 @@ const renderRaijinReadme = (index, language) => {
     isRu
       ? `- Разобраться с workspace-пакетами: [${packagesPath}](./${packagesPath})`
       : `- Understand workspace packages: [${packagesPath}](./${packagesPath})`,
+    isRu
+      ? `- Разобраться с владельцами проверок: [${verificationPath}](./${verificationPath})`
+      : `- Understand repository verification ownership: [${verificationPath}](./${verificationPath})`,
     '',
     '<!-- sync:router-read-order -->',
     '',
@@ -445,6 +454,7 @@ const renderRaijinReadme = (index, language) => {
     `1. [${quickstartPath}](./${quickstartPath})`,
     `2. [${commandsPath}](./${commandsPath})`,
     `3. [${packagesPath}](./${packagesPath})`,
+    `4. [${verificationPath}](./${verificationPath})`,
     '',
     '<!-- sync:router-quick-rules -->',
     '',

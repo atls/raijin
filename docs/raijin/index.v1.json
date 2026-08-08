@@ -839,7 +839,8 @@
         "build:version",
         "fix",
         "postpack",
-        "prepack"
+        "prepack",
+        "verify:consumers"
       ]
     },
     {
@@ -1094,5 +1095,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-07T15:01:19.644Z"
+  "lastGenerated": "2026-08-08T14:00:16.544Z"
 }

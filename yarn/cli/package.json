@@ -22,7 +22,8 @@
     "build:version": "yarn node patches/version-postfix-toggle.mjs",
     "fix": "yarn run build:fix",
     "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "postpack": "rm -rf dist",
+    "verify:consumers": "node ./scripts/runtime/consumer.js"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",

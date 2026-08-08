@@ -9,6 +9,7 @@
 - Подключить или обновить бандл: [quickstart.ru.md](./quickstart.ru.md)
 - Выбрать и понять команду: [commands.ru.md](./commands.ru.md)
 - Разобраться с workspace-пакетами: [packages.ru.md](./packages.ru.md)
+- Разобраться с владельцами проверок: [verification.md](./verification.md)
 
 <!-- sync:router-read-order -->
 
@@ -17,6 +18,7 @@
 1. [quickstart.ru.md](./quickstart.ru.md)
 2. [commands.ru.md](./commands.ru.md)
 3. [packages.ru.md](./packages.ru.md)
+4. [verification.md](./verification.md)
 
 <!-- sync:router-quick-rules -->
 
@@ -38,4 +40,4 @@
 
 - Команд: 38 (active: 38, inactive: 0)
 - Workspace-пакетов: 57
-- Последняя генерация: 2026-08-07T15:01:19.644Z
+- Последняя генерация: 2026-08-08T14:00:16.544Z
