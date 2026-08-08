@@ -1,14 +1,14 @@
-import type { Filename }  from '@yarnpkg/fslib'
+import type { Filename }           from '@yarnpkg/fslib'
 
-import assert             from 'node:assert/strict'
-import { PassThrough }    from 'node:stream'
-import test               from 'node:test'
+import assert                      from 'node:assert/strict'
+import { PassThrough }             from 'node:stream'
+import test                        from 'node:test'
 
-import { npath }          from '@yarnpkg/fslib'
-import { ppath }          from '@yarnpkg/fslib'
-import { xfs }            from '@yarnpkg/fslib'
+import { npath }                   from '@yarnpkg/fslib'
+import { ppath }                   from '@yarnpkg/fslib'
+import { xfs }                     from '@yarnpkg/fslib'
 
-import { executeProcess } from './execute.js'
+import { executeProcessWithExeca } from '../execute.js'
 
 const createContext = () => {
   const stderr = new PassThrough()
@@ -26,9 +26,8 @@ const createContext = () => {
 }
 
 test('should execute with attached terminal descriptors', async () => {
-  const result = await executeProcess(process.execPath, ['-e', 'process.exit(0)'], {
+  const result = await executeProcessWithExeca(process.execPath, ['-e', 'process.exit(0)'], {
     context: {
-      environment: process.env,
       stderr: process.stderr,
       stdin: process.stdin,
       stdout: process.stdout,
@@ -41,7 +40,7 @@ test('should execute with attached terminal descriptors', async () => {
 })
 
 test('should ignore process input when requested', async () => {
-  const result = await executeProcess(process.execPath, ['-e', 'process.stdin.resume()'], {
+  const result = await executeProcessWithExeca(process.execPath, ['-e', 'process.stdin.resume()'], {
     context: createContext(),
     cwd: process.cwd(),
     env: process.env,
@@ -59,13 +58,17 @@ test('should capture and forward process output before returning its code', asyn
 
   context.stdout.on('data', (data: Buffer) => forwarded.push(data))
 
-  const result = await executeProcess(process.execPath, ['-e', "process.stdout.write('ready')"], {
-    context,
-    cwd: process.cwd(),
-    env: process.env,
-    input: 'ignore',
-    output: { mode: 'capture', forward: true },
-  })
+  const result = await executeProcessWithExeca(
+    process.execPath,
+    ['-e', "process.stdout.write('ready')"],
+    {
+      context,
+      cwd: process.cwd(),
+      env: process.env,
+      input: 'ignore',
+      output: { mode: 'capture', forward: true },
+    }
+  )
 
   assert.equal(result.reason, 'completed')
   assert.equal(result.exitCode, 0)
@@ -76,7 +79,7 @@ test('should capture and forward process output before returning its code', asyn
 
 test('should handle process output without exposing provider streams', async () => {
   const events: Array<{ data: string; source: 'stderr' | 'stdout' }> = []
-  const result = await executeProcess(
+  const result = await executeProcessWithExeca(
     process.execPath,
     ['-e', "process.stdout.write('ready'); process.stderr.write('warning')"],
     {
@@ -100,7 +103,7 @@ test('should handle process output without exposing provider streams', async () 
 })
 
 test('should preserve process start failures as a typed result', async () => {
-  const result = await executeProcess('raijin-missing-executable', [], {
+  const result = await executeProcessWithExeca('raijin-missing-executable', [], {
     context: createContext(),
     cwd: process.cwd(),
     env: process.env,
@@ -113,28 +116,36 @@ test('should preserve process start failures as a typed result', async () => {
 })
 
 test('should stop a process after the configured timeout', async () => {
-  const result = await executeProcess(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
-    context: createContext(),
-    cwd: process.cwd(),
-    env: process.env,
-    input: 'ignore',
-    output: { mode: 'capture' },
-    timeoutMs: 20,
-  })
+  const result = await executeProcessWithExeca(
+    process.execPath,
+    ['-e', 'setInterval(() => {}, 1000)'],
+    {
+      context: createContext(),
+      cwd: process.cwd(),
+      env: process.env,
+      input: 'ignore',
+      output: { mode: 'capture' },
+      timeoutMs: 20,
+    }
+  )
 
   assert.equal(result.reason, 'timed-out')
   assert.ok(result.cause)
 })
 
 test('should translate cancellation to the process exit contract', async () => {
-  const result = await executeProcess(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
-    context: createContext(),
-    cwd: process.cwd(),
-    env: process.env,
-    input: 'ignore',
-    output: { mode: 'capture' },
-    cancelSignal: AbortSignal.timeout(20),
-  })
+  const result = await executeProcessWithExeca(
+    process.execPath,
+    ['-e', 'setInterval(() => {}, 1000)'],
+    {
+      context: createContext(),
+      cwd: process.cwd(),
+      env: process.env,
+      input: 'ignore',
+      output: { mode: 'capture' },
+      cancelSignal: AbortSignal.timeout(20),
+    }
+  )
 
   assert.equal(result.reason, 'cancelled')
   assert.ok(result.cause)
@@ -144,7 +155,7 @@ test(
   'should translate signal termination to the process exit contract',
   { skip: process.platform === 'win32' },
   async () => {
-    const result = await executeProcess(
+    const result = await executeProcessWithExeca(
       process.execPath,
       ['-e', "process.kill(process.pid, 'SIGTERM')"],
       {
@@ -171,7 +182,7 @@ test(
 
     await xfs.writeFilePromise(command, '@echo off\r\necho ready\r\n')
 
-    const result = await executeProcess(npath.fromPortablePath(command), [], {
+    const result = await executeProcessWithExeca(npath.fromPortablePath(command), [], {
       context: createContext(),
       cwd: npath.fromPortablePath(cwd),
       env: process.env,

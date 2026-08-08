@@ -2,7 +2,7 @@ export { toNativeCwd }                     from './adapters/path/index.js'
 export { toPortableCwd }                   from './adapters/path/index.js'
 export { composeCommandInvocations }       from './composition/compose.js'
 export { defineCommandInvocations }        from './composition/definition.js'
-export { executeProjectYarnCommand }       from './scope/project.js'
+export { executeProjectYarnCommand }       from './composition/project.js'
 export { assertProcessCompleted }          from './capabilities/assert-process-completed.js'
 
 export type { CompletedProcessExecution }  from './capabilities/process.interfaces.js'

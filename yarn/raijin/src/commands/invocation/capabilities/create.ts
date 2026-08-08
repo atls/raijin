@@ -4,19 +4,18 @@ import type { ProcessInvocationOptions }      from './create.interfaces.js'
 import type { ProcessInvocation }             from './process.interfaces.js'
 import type { ProjectProcessInvocation }      from './process.interfaces.js'
 
-import { executeProcess }                     from '../adapters/execa/execute.js'
 import { toNativeCwd }                        from '../adapters/path/index.js'
 import { executeYarnCommand }                 from '../adapters/yarn/execution.js'
 
 export const createProcessInvocation = ({
-  context,
+  environment,
   executionCwd,
+  executor,
 }: ProcessInvocationOptions): ProcessInvocation => ({
   execute: async (command, args, options = {}) =>
-    executeProcess(command, args, {
-      context,
+    executor.execute(command, args, {
       cwd: toNativeCwd(executionCwd),
-      env: { ...context.environment },
+      environment: { ...environment },
       input: options.input,
       output: options.output,
       timeoutMs: options.timeoutMs,
@@ -24,25 +23,28 @@ export const createProcessInvocation = ({
 })
 
 const createProjectProcessInvocation = ({
-  context,
+  environment,
   executionCwd,
+  executor,
   projectCwd,
 }: ProcessInvocationOptions & {
   projectCwd: InvocationCapabilitiesOptions['project']['cwd']
 }): ProjectProcessInvocation => ({
-  ...createProcessInvocation({ context, executionCwd }),
-  project: createProcessInvocation({ context, executionCwd: projectCwd }),
+  ...createProcessInvocation({ environment, executionCwd, executor }),
+  project: createProcessInvocation({ environment, executionCwd: projectCwd, executor }),
 })
 
 export const createInvocationCapabilities = ({
   configuration,
-  context,
+  environment,
   executionCwd,
+  executor,
   project,
 }: InvocationCapabilitiesOptions): Pick<ProjectInvocation, 'process' | 'yarn'> => ({
   process: createProjectProcessInvocation({
-    context,
+    environment,
     executionCwd,
+    executor,
     projectCwd: project.cwd,
   }),
   yarn: {
@@ -51,8 +53,9 @@ export const createInvocationCapabilities = ({
     run: async (args, options) =>
       executeYarnCommand({
         args,
-        context,
+        environment,
         executionCwd,
+        executor,
         options,
         project,
       }),
@@ -61,8 +64,9 @@ export const createInvocationCapabilities = ({
 
       return executeYarnCommand({
         args,
-        context,
+        environment,
         executionCwd,
+        executor,
         options: {
           ...runOptions,
           output: { mode: 'capture', forward: forwardOutput },
@@ -73,8 +77,9 @@ export const createInvocationCapabilities = ({
     execute: async (args, options) => {
       const result = await executeYarnCommand({
         args,
-        context,
+        environment,
         executionCwd,
+        executor,
         options,
         project,
       })

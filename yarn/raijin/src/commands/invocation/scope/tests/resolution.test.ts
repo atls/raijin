@@ -1,23 +1,24 @@
-import type { CommandContext }               from '@yarnpkg/core'
+import type { CommandContext }                                             from '@yarnpkg/core'
 
-import type { EntryInvocation }              from '../invocation.interfaces.js'
+import type { EntryInvocation } from '../invocation.interfaces.js'
 
-import assert                                from 'node:assert/strict'
-import { dirname }                           from 'node:path'
-import { PassThrough }                       from 'node:stream'
-import { before }                            from 'node:test'
-import test                                  from 'node:test'
-import { fileURLToPath }                     from 'node:url'
+import assert                                                              from 'node:assert/strict'
+import { dirname }                                                         from 'node:path'
+import { PassThrough }                                                     from 'node:stream'
+import { before }                                                          from 'node:test'
+import test                                                                from 'node:test'
+import { fileURLToPath }                                                   from 'node:url'
 
-import { Configuration }                     from '@yarnpkg/core'
-import { Project }                           from '@yarnpkg/core'
-import { getPluginConfiguration }            from '@yarnpkg/cli'
-import { npath }                             from '@yarnpkg/fslib'
-import { ppath }                             from '@yarnpkg/fslib'
+import { Configuration }                                                   from '@yarnpkg/core'
+import { Project }                                                         from '@yarnpkg/core'
+import { getPluginConfiguration }                                          from '@yarnpkg/cli'
+import { npath }                                                           from '@yarnpkg/fslib'
+import { ppath }                                                           from '@yarnpkg/fslib'
 
-import { resolveEntryCommandInvocation }     from '../entry.js'
-import { resolveProjectCommandInvocation }   from '../project.js'
-import { resolveWorkspaceCommandInvocation } from '../workspace.js'
+import { createExecaProcessExecutor } from '../../../../infrastructure/process/execa/executor.js'
+import { resolveEntryCommandInvocation as resolveEntryInvocation }         from '../entry.js'
+import { resolveProjectCommandInvocation as resolveProjectInvocation }     from '../project.js'
+import { resolveWorkspaceCommandInvocation as resolveWorkspaceInvocation } from '../workspace.js'
 
 const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
 
@@ -59,6 +60,15 @@ const createContext = (
     stdout,
   }
 }
+
+const resolveEntryCommandInvocation = (context: CommandContext) =>
+  resolveEntryInvocation(context, createExecaProcessExecutor(context))
+
+const resolveProjectCommandInvocation = async (context: CommandContext) =>
+  resolveProjectInvocation(context, createExecaProcessExecutor(context))
+
+const resolveWorkspaceCommandInvocation = async (context: CommandContext) =>
+  resolveWorkspaceInvocation(context, createExecaProcessExecutor(context))
 
 test('should bind entry command execution to the invocation cwd', async () => {
   const invocation: EntryInvocation = resolveEntryCommandInvocation(

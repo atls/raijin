@@ -1,3 +1,4 @@
+import type { ProcessExecutor }         from '../capabilities/process.interfaces.js'
 import type { InvocationContext }       from './context.interfaces.js'
 import type { WorkspaceInvocation }     from './invocation.interfaces.js'
 
@@ -7,10 +8,10 @@ import { createInvocationCapabilities } from '../capabilities/create.js'
 import { resolveProjectScope }          from './project.js'
 
 export const resolveWorkspaceCommandInvocation = async (
-  context: InvocationContext
+  context: InvocationContext,
+  executor: ProcessExecutor
 ): Promise<WorkspaceInvocation> => {
-  const { adapterContext, configuration, invocationCwd, project, workspace } =
-    await resolveProjectScope(context)
+  const { configuration, invocationCwd, project, workspace } = await resolveProjectScope(context)
   const resolvedWorkspace = workspace ?? project.getWorkspaceByFilePath(invocationCwd)
 
   return {
@@ -20,8 +21,9 @@ export const resolveWorkspaceCommandInvocation = async (
     workspace: resolvedWorkspace,
     ...createInvocationCapabilities({
       configuration,
-      context: adapterContext,
+      environment: context.env,
       executionCwd: resolvedWorkspace.cwd,
+      executor,
       project,
     }),
   }

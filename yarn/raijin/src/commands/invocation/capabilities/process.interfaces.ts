@@ -31,6 +31,19 @@ export interface ProcessExecutionOptions {
   timeoutMs?: number
 }
 
+export interface ProcessExecutorOptions extends ProcessExecutionOptions {
+  cwd: string
+  environment: NodeJS.ProcessEnv
+}
+
+export interface ProcessExecutor {
+  execute: (
+    command: string,
+    args: ReadonlyArray<string>,
+    options: ProcessExecutorOptions
+  ) => Promise<ProcessExecutionResult>
+}
+
 export interface ProcessInvocation {
   execute: (
     command: string,

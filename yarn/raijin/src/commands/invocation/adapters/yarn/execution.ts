@@ -12,7 +12,6 @@ import { MANAGED_NODE_LOADER_ENV }       from '@atls/raijin/runtime/node/bootstr
 import { applyManagedNodeLoader }        from '@atls/raijin/runtime/node/bootstrap'
 import { createLauncherBaseEnvironment } from '@atls/raijin/yarn'
 
-import { executeProcess }                from '../execa/execute.js'
 import { toNativeCwd }                   from '../path/index.js'
 
 const YARN_EXECUTABLE_NAME = (process.platform === 'win32' ? 'yarn.cmd' : 'yarn') as Filename
@@ -76,14 +75,15 @@ export const createYarnExecutable = async ({
 
 export const executeYarnCommand = async ({
   args,
-  context,
+  environment: baseEnvironment,
   executionCwd,
+  executor,
   options = {},
   project,
 }: YarnCommandOptions): Promise<ProcessExecutionResult> =>
   xfs.mktempPromise(async (binFolder) => {
     const executable = await createYarnExecutable({
-      baseEnvironment: context.environment,
+      baseEnvironment,
       binFolder,
       locator: options.locator,
       project,
@@ -93,10 +93,9 @@ export const executeYarnCommand = async ({
     environment.INIT_CWD = toNativeCwd(executionCwd)
     environment.PROJECT_CWD = toNativeCwd(project.cwd)
 
-    return executeProcess(executable.executable, args, {
-      context,
+    return executor.execute(executable.executable, args, {
       cwd: toNativeCwd(executionCwd),
-      env: environment,
+      environment,
       input: options.input,
       output: options.output,
       timeoutMs: options.timeoutMs,

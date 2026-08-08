@@ -1,8 +1,8 @@
 import type { YarnCommandRunner }        from './runner.js'
 
 import { RaijinYarnCommandException }    from './exceptions/command.js'
-import { executeProcess }                from '../commands/invocation/adapters/execa/execute.js'
 import { assertProcessCompleted } from '../commands/invocation/capabilities/assert-process-completed.js'
+import { createExecaProcessExecutor }    from '../infrastructure/process/execa/executor.js'
 import { createLauncherBaseEnvironment } from './launcher.js'
 
 export const createYarnCommandEnvironment = (
@@ -22,15 +22,14 @@ export const runYarnCommand: YarnCommandRunner = async (
   cwd: string
 ): Promise<void> => {
   const environment = createYarnCommandEnvironment(cwd)
-  const result = await executeProcess('yarn', args, {
-    context: {
-      environment,
-      stderr: process.stderr,
-      stdin: process.stdin,
-      stdout: process.stdout,
-    },
+  const executor = createExecaProcessExecutor({
+    stderr: process.stderr,
+    stdin: process.stdin,
+    stdout: process.stdout,
+  })
+  const result = await executor.execute('yarn', args, {
     cwd,
-    env: environment,
+    environment,
   })
 
   assertProcessCompleted(result)
