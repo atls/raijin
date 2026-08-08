@@ -25,3 +25,25 @@ test('should preserve case-sensitive environment variables on POSIX', () => {
 
   assert.deepEqual(environment, { NODE_OPTIONS: '--trace-warnings' })
 })
+
+test('should replace environment variables case-insensitively on Windows', () => {
+  const environment = {
+    FOO: 'first',
+    Foo: 'second',
+    OTHER_VALUE: 'preserved',
+  }
+
+  applyEnvironmentPatch(environment, { foo: 'replacement' }, 'win32')
+
+  assert.deepEqual(environment, { foo: 'replacement', OTHER_VALUE: 'preserved' })
+})
+
+test('should preserve case-sensitive environment assignments on POSIX', () => {
+  const environment = {
+    FOO: 'preserved',
+  }
+
+  applyEnvironmentPatch(environment, { foo: 'replacement' }, 'linux')
+
+  assert.deepEqual(environment, { FOO: 'preserved', foo: 'replacement' })
+})

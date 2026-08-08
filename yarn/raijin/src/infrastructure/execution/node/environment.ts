@@ -14,19 +14,49 @@ import { createYarnBaseEnvironment }       from '../../../yarn/launcher.js'
 import { installPackageBinaries }          from './package-binaries.js'
 import { loadProjectPnpApi }               from './pnp-api.js'
 
-const MANAGED_NODE_LOADER_ENV = 'RAIJIN_NODE_LOADER'
-const OWNED_ENVIRONMENT_NAMES = new Set(
-  [
-    'BERRY_BIN_FOLDER',
-    'INIT_CWD',
-    'PROJECT_CWD',
-    'RAIJIN_NODE_LOADER',
-    'RAIJIN_REGISTERED_PNP_LOADER',
-    'YARN_IGNORE_PATH',
-    'npm_config_user_agent',
-    'npm_execpath',
-  ].map((name) => name.toUpperCase())
+const OWNED_ENVIRONMENT_NAMES = [
+  'BERRY_BIN_FOLDER',
+  'INIT_CWD',
+  'PROJECT_CWD',
+  'RAIJIN_NODE_LOADER',
+  'RAIJIN_REGISTERED_PNP_LOADER',
+  'YARN_IGNORE_PATH',
+  'npm_config_user_agent',
+  'npm_execpath',
+]
+const OWNED_ENVIRONMENT_NAME_SET = new Set(
+  OWNED_ENVIRONMENT_NAMES.map((name) => name.toUpperCase())
 )
+
+const deleteEnvironmentVariable = (
+  environment: NodeJS.ProcessEnv,
+  name: string,
+  platform: NodeJS.Platform = process.platform
+): void => {
+  const names =
+    platform === 'win32'
+      ? Object.keys(environment).filter(
+          (environmentName) => environmentName.toUpperCase() === name.toUpperCase()
+        )
+      : [name]
+
+  for (const environmentName of names) {
+    Reflect.deleteProperty(environment, environmentName)
+  }
+}
+
+const setEnvironmentVariable = (
+  environment: NodeJS.ProcessEnv,
+  name: string,
+  value: string,
+  platform: NodeJS.Platform = process.platform
+): void => {
+  if (platform === 'win32') {
+    deleteEnvironmentVariable(environment, name, platform)
+  }
+
+  environment[name] = value
+}
 
 export const applyEnvironmentPatch = (
   environment: NodeJS.ProcessEnv,
@@ -34,23 +64,14 @@ export const applyEnvironmentPatch = (
   platform: NodeJS.Platform = process.platform
 ): void => {
   for (const [name, value] of Object.entries(patch)) {
-    if (OWNED_ENVIRONMENT_NAMES.has(name.toUpperCase())) {
+    if (OWNED_ENVIRONMENT_NAME_SET.has(name.toUpperCase())) {
       throw new Error(`Managed Node execution cannot override ${name}`)
     }
 
     if (value === undefined) {
-      const names =
-        platform === 'win32'
-          ? Object.keys(environment).filter(
-              (environmentName) => environmentName.toUpperCase() === name.toUpperCase()
-            )
-          : [name]
-
-      for (const environmentName of names) {
-        Reflect.deleteProperty(environment, environmentName)
-      }
+      deleteEnvironmentVariable(environment, name, platform)
     } else {
-      environment[name] = value
+      setEnvironmentVariable(environment, name, value, platform)
     }
   }
 }
@@ -59,7 +80,8 @@ const applyPackageEnvironment = (
   environment: NodeJS.ProcessEnv,
   locator: Locator,
   project: Project,
-  pnpApi: PnpRuntimeApi
+  pnpApi: PnpRuntimeApi,
+  platform: NodeJS.Platform = process.platform
 ): void => {
   const pkg = project.storedPackages.get(locator.locatorHash)
 
@@ -87,11 +109,24 @@ const applyPackageEnvironment = (
     packageLocation = npath.toPortablePath(packageInformation.packageLocation)
   }
 
-  environment.npm_package_json = npath.fromPortablePath(
-    ppath.join(packageLocation, Filename.manifest)
+  setEnvironmentVariable(
+    environment,
+    'npm_package_json',
+    npath.fromPortablePath(ppath.join(packageLocation, Filename.manifest)),
+    platform
   )
-  environment.npm_package_name = structUtils.stringifyIdent(locator)
-  environment.npm_package_version = workspace?.manifest.version ?? pkg.version ?? ''
+  setEnvironmentVariable(
+    environment,
+    'npm_package_name',
+    structUtils.stringifyIdent(locator),
+    platform
+  )
+  setEnvironmentVariable(
+    environment,
+    'npm_package_version',
+    workspace?.manifest.version ?? pkg.version ?? '',
+    platform
+  )
 }
 
 export const createYarnNodeEnvironment = async ({
@@ -106,12 +141,9 @@ export const createYarnNodeEnvironment = async ({
     ...project.configuration.env,
     ...baseEnvironment,
   })
-  const managedNodeLoaderName = Object.keys(baseEnv).find(
-    (name) => name.toUpperCase() === MANAGED_NODE_LOADER_ENV
-  )
 
-  if (managedNodeLoaderName) {
-    Reflect.deleteProperty(baseEnv, managedNodeLoaderName)
+  for (const name of OWNED_ENVIRONMENT_NAMES) {
+    deleteEnvironmentVariable(baseEnv, name)
   }
 
   applyEnvironmentPatch(baseEnv, environmentPatch)
@@ -135,8 +167,8 @@ export const createYarnNodeEnvironment = async ({
     await installPackageBinaries({ binFolder, locator, pnpApi, project })
   }
 
-  environment.INIT_CWD = cwd
-  environment.PROJECT_CWD = npath.fromPortablePath(project.cwd)
+  setEnvironmentVariable(environment, 'INIT_CWD', cwd)
+  setEnvironmentVariable(environment, 'PROJECT_CWD', npath.fromPortablePath(project.cwd))
 
   return environment
 }
