@@ -2,10 +2,7 @@ import type { Filename }                      from '@yarnpkg/fslib'
 
 import type { InstallPackageBinariesOptions } from './package-binaries.interfaces.js'
 import type { PackageBinaryWrapper }          from './package-binaries.interfaces.js'
-import type { PnpRuntimeApi }                 from './package-binaries.interfaces.js'
 
-import { Filename as YarnFilename }           from '@yarnpkg/fslib'
-import { miscUtils }                          from '@yarnpkg/core'
 import { scriptUtils }                        from '@yarnpkg/core'
 import { structUtils }                        from '@yarnpkg/core'
 import { npath }                              from '@yarnpkg/fslib'
@@ -41,10 +38,9 @@ const writeBinaryWrapper = async (
 export const installPackageBinaries = async ({
   binFolder,
   locator,
+  pnpApi,
   project,
 }: InstallPackageBinariesOptions): Promise<void> => {
-  await project.restoreInstallState()
-
   const pkg = project.storedPackages.get(locator.locatorHash)
 
   if (!pkg) {
@@ -53,9 +49,6 @@ export const installPackageBinaries = async ({
     )
   }
 
-  const pnpApi = miscUtils.dynamicRequire(
-    ppath.join(project.cwd, YarnFilename.pnpCjs)
-  ) as PnpRuntimeApi
   const visibleLocators = [
     locator.locatorHash,
     ...Array.from(pkg.dependencies.values(), (descriptor) => {

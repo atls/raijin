@@ -1,10 +1,18 @@
-import type { YarnNodeEnvironmentOptions } from './executor.interfaces.js'
+import type { Locator }                    from '@yarnpkg/core'
+import type { Project }                    from '@yarnpkg/core'
 
+import type { YarnNodeEnvironmentOptions } from './executor.interfaces.js'
+import type { PnpRuntimeApi }              from './pnp-api.interfaces.js'
+
+import { Filename }                        from '@yarnpkg/fslib'
 import { scriptUtils }                     from '@yarnpkg/core'
+import { structUtils }                     from '@yarnpkg/core'
 import { npath }                           from '@yarnpkg/fslib'
+import { ppath }                           from '@yarnpkg/fslib'
 
 import { createYarnBaseEnvironment }       from '../../../yarn/launcher.js'
 import { installPackageBinaries }          from './package-binaries.js'
+import { loadProjectPnpApi }               from './pnp-api.js'
 
 const MANAGED_NODE_LOADER_ENV = 'RAIJIN_NODE_LOADER'
 const OWNED_ENVIRONMENT_NAMES = new Set(
@@ -37,6 +45,45 @@ const applyEnvironmentPatch = (
   }
 }
 
+const applyPackageEnvironment = (
+  environment: NodeJS.ProcessEnv,
+  locator: Locator,
+  project: Project,
+  pnpApi: PnpRuntimeApi
+): void => {
+  const pkg = project.storedPackages.get(locator.locatorHash)
+
+  if (!pkg) {
+    throw new Error(
+      `Package ${structUtils.stringifyLocator(locator)} is missing from project state`
+    )
+  }
+
+  const workspace = project.tryWorkspaceByLocator(locator)
+  let packageLocation = workspace?.cwd
+
+  if (!packageLocation) {
+    const packageInformation = pnpApi.getPackageInformation({
+      name: structUtils.stringifyIdent(pkg),
+      reference: pkg.reference,
+    })
+
+    if (!packageInformation) {
+      throw new Error(
+        `Package ${structUtils.stringifyLocator(locator)} is missing from the PnP map`
+      )
+    }
+
+    packageLocation = npath.toPortablePath(packageInformation.packageLocation)
+  }
+
+  environment.npm_package_json = npath.fromPortablePath(
+    ppath.join(packageLocation, Filename.manifest)
+  )
+  environment.npm_package_name = structUtils.stringifyIdent(locator)
+  environment.npm_package_version = workspace?.manifest.version ?? pkg.version ?? ''
+}
+
 export const createYarnNodeEnvironment = async ({
   baseEnvironment,
   binFolder,
@@ -59,16 +106,23 @@ export const createYarnNodeEnvironment = async ({
 
   applyEnvironmentPatch(baseEnv, environmentPatch)
 
+  let pnpApi: PnpRuntimeApi | undefined
+
+  if (locator) {
+    await project.restoreInstallState()
+    pnpApi = loadProjectPnpApi(project)
+  }
+
   const environment = await scriptUtils.makeScriptEnv({
     baseEnv,
     binFolder,
-    locator,
     project,
     ignoreCorepack: true,
   })
 
-  if (locator) {
-    await installPackageBinaries({ binFolder, locator, project })
+  if (locator && pnpApi) {
+    applyPackageEnvironment(environment, locator, project, pnpApi)
+    await installPackageBinaries({ binFolder, locator, pnpApi, project })
   }
 
   environment.INIT_CWD = cwd

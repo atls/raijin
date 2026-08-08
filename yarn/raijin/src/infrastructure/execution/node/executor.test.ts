@@ -16,16 +16,19 @@ import { fileURLToPath }                   from 'node:url'
 import { Configuration }                   from '@yarnpkg/core'
 import { Project }                         from '@yarnpkg/core'
 import { getPluginConfiguration }          from '@yarnpkg/cli'
+import { structUtils }                     from '@yarnpkg/core'
 import { npath }                           from '@yarnpkg/fslib'
 
 import { createYarnManagedNodeExecutor }   from './executor.js'
+import { loadProjectPnpApi }               from './pnp-api.js'
 
 const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
-const testProject = (async () => {
+const findTestProject = async (): ReturnType<typeof Project.find> => {
   const configuration = await Configuration.find(testCwd, getPluginConfiguration())
 
   return Project.find(configuration, testCwd)
-})()
+}
+const testProject = findTestProject()
 let program = ''
 let programDirectory = ''
 
@@ -180,6 +183,55 @@ test('should expose locator-accessible binaries through the managed environment'
   const result = await executor.execute({
     arguments: ['binary'],
     cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program,
+  })
+
+  assert.equal(
+    result.reason,
+    'completed',
+    result.reason === 'start-failed' && result.cause instanceof Error
+      ? result.cause.stack
+      : undefined
+  )
+  assert.equal(result.exitCode, 0, result.stderr)
+  assert.match(result.stdout, /^Version \d+\.\d+\.\d+/u)
+  assert.equal(temporaryDirectories.removed.length, 1)
+})
+
+test('should restore install state before preparing a dependency locator environment', async () => {
+  const source = await findTestProject()
+  assert.ok(source.workspace)
+  await source.project.restoreInstallState()
+
+  const pnpApi = loadProjectPnpApi(source.project)
+  const locator = Array.from(source.project.storedPackages.values()).find(
+    (pkg) =>
+      pkg.bin.has('tsc') &&
+      pnpApi.getPackageInformation({
+        name: structUtils.stringifyIdent(pkg),
+        reference: pkg.reference,
+      }) !== null
+  )
+  assert.ok(locator)
+
+  const fresh = await findTestProject()
+  assert.equal(fresh.project.storedPackages.has(locator.locatorHash), false)
+
+  const baseEnvironment = Object.fromEntries(
+    Object.entries(process.env).filter(([name]) => name.toUpperCase() !== 'PATH')
+  )
+  const temporaryDirectories = createTemporaryDirectoryProvider()
+  const executor = createYarnManagedNodeExecutor({
+    baseEnvironment: { ...baseEnvironment, PATH: '' },
+    locator,
+    project: fresh.project,
+    temporaryDirectories: temporaryDirectories.provider,
+  })
+  const result = await executor.execute({
+    arguments: ['binary'],
+    cwd: npath.fromPortablePath(fresh.project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
     program,
