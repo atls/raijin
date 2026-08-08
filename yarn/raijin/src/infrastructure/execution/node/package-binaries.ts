@@ -78,9 +78,7 @@ export const installPackageBinaries = async ({
     })
 
     if (!packageInformation) {
-      throw new Error(
-        `Package ${structUtils.stringifyLocator(dependency)} is missing from the PnP map`
-      )
+      continue
     }
 
     const packageLocation = npath.toPortablePath(packageInformation.packageLocation)
