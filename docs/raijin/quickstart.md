@@ -31,7 +31,7 @@ Expected result:
 - `package.json` is created when it does not exist yet, and `packageManager` is normalized to the installed runtime manifest value
 - Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.mjs`
 - `.yarnrc.yml` gets `nodeLinker: pnp` and the final `yarnPath` directly without a temporary file
-- Project scaffold is created through the existing Raijin schematics
+- Project scaffold is created through the embedded Raijin collection
 - Bundle commands (`check`, `files changed list`, etc.) become available
 
 <!-- sync:existing-project -->
@@ -46,7 +46,7 @@ Use `--type library` for the library scaffold
 
 Expected result:
 
-- Existing project gets the public `@atls/raijin` package, Raijin runtime, project schematics, the first sync, and `packageManager` from the installed runtime manifest
+- Existing project gets the public `@atls/raijin` package, Raijin runtime, project scaffold, first sync, and `packageManager` from the installed runtime manifest
 
 <!-- sync:bundle-upgrade -->
 
@@ -74,17 +74,17 @@ Expected result:
 - `yarn check` runs a complete validation pass without routing errors
 - `yarn files changed list` returns file list (or empty list if no changes)
 
-<!-- sync:schematic-smoke -->
+<!-- sync:project-generation-check -->
 
-## 6. Local schematics smoke check
+## 6. Local project generation check
 
 ```bash
-yarn schematic:test
+yarn raijin:smoke:cli project-generation
 ```
 
 Expected result:
 
-- Temporary fixture is created through public `@atls/code-schematics` exports
+- Temporary fixture is created through the collection embedded in public `@atls/raijin`
 - Check fails if helper or Markdown docs invoke an inactive command
 
 <!-- sync:consumer-howto -->

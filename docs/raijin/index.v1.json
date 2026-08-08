@@ -20,12 +20,12 @@
       "@atls/yarn-plugin-export",
       "@atls/yarn-plugin-files",
       "@atls/yarn-plugin-format",
+      "@atls/yarn-plugin-generate",
       "@atls/yarn-plugin-image",
       "@atls/yarn-plugin-library",
       "@atls/yarn-plugin-lint",
       "@atls/yarn-plugin-release",
       "@atls/yarn-plugin-renderer",
-      "@atls/yarn-plugin-schematics",
       "@atls/yarn-plugin-service",
       "@atls/yarn-plugin-test",
       "@atls/yarn-plugin-tools",
@@ -259,6 +259,19 @@
       "status": "active"
     },
     {
+      "command": "generate project",
+      "description": "generate a Raijin project scaffold",
+      "examples": [],
+      "options": [],
+      "pathTokens": ["generate", "project"],
+      "plugin": "@atls/yarn-plugin-generate",
+      "usage": "yarn generate project [-t,--type #0]",
+      "availabilityReason": "registered by the assembled @atls/yarn-cli runtime",
+      "domain": "generate",
+      "pluginDir": "plugin-generate",
+      "status": "active"
+    },
+    {
       "command": "image pack",
       "description": "build and optionally publish a container image",
       "examples": [],
@@ -412,19 +425,6 @@
       "availabilityReason": "registered by the assembled @atls/yarn-cli runtime",
       "domain": "renderer",
       "pluginDir": "plugin-renderer",
-      "status": "active"
-    },
-    {
-      "command": "generate project",
-      "description": "generate a Raijin project scaffold",
-      "examples": [],
-      "options": [],
-      "pathTokens": ["generate", "project"],
-      "plugin": "@atls/yarn-plugin-schematics",
-      "usage": "yarn generate project [-t,--type #0]",
-      "availabilityReason": "registered by the assembled @atls/yarn-cli runtime",
-      "domain": "schematics",
-      "pluginDir": "plugin-schematics",
       "status": "active"
     },
     {
@@ -784,21 +784,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-schematics",
-      "location": "code/code-schematics",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": [
-        "build",
-        "build:library",
-        "build:schematic-factory",
-        "postpack",
-        "prepack",
-        "smoke:schematic"
-      ]
-    },
-    {
       "name": "@atls/code-service",
       "location": "code/code-service",
       "group": "code",
@@ -836,7 +821,7 @@
       "group": "yarn",
       "private": false,
       "description": "Public Raijin initializer and runtime package",
-      "scripts": ["build", "build:library", "build:schematic", "postpack", "prepack"]
+      "scripts": ["build", "build:library", "build:project-generation", "postpack", "prepack"]
     },
     {
       "name": "@atls/yarn-cli",
@@ -850,7 +835,6 @@
         "build:clean",
         "build:dist",
         "build:fix",
-        "build:schemaic",
         "build:verify",
         "build:version",
         "fix",
@@ -947,6 +931,14 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/yarn-plugin-generate",
+      "location": "yarn/plugin-generate",
+      "group": "yarn",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/yarn-plugin-image",
       "location": "yarn/plugin-image",
       "group": "yarn",
@@ -981,14 +973,6 @@
     {
       "name": "@atls/yarn-plugin-renderer",
       "location": "yarn/plugin-renderer",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-schematics",
-      "location": "yarn/plugin-schematics",
       "group": "yarn",
       "private": true,
       "description": "",
@@ -1060,6 +1044,7 @@
       "export",
       "files changed list",
       "format",
+      "generate project",
       "image pack",
       "library build",
       "lint",
@@ -1072,7 +1057,6 @@
       "renderer build",
       "renderer dev",
       "renderer start",
-      "generate project",
       "service build",
       "service dev",
       "service start",
@@ -1095,12 +1079,12 @@
       "@atls/yarn-plugin-export",
       "@atls/yarn-plugin-files",
       "@atls/yarn-plugin-format",
+      "@atls/yarn-plugin-generate",
       "@atls/yarn-plugin-image",
       "@atls/yarn-plugin-library",
       "@atls/yarn-plugin-lint",
       "@atls/yarn-plugin-release",
       "@atls/yarn-plugin-renderer",
-      "@atls/yarn-plugin-schematics",
       "@atls/yarn-plugin-service",
       "@atls/yarn-plugin-test",
       "@atls/yarn-plugin-tools",
@@ -1110,5 +1094,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-04T23:01:00.444Z"
+  "lastGenerated": "2026-08-07T15:01:19.644Z"
 }

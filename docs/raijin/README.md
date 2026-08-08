@@ -31,12 +31,11 @@ Navigation for custom `atls` Yarn bundle docs
 
 - `yarn raijin:generate`
 - `yarn raijin:check`
-- `yarn schematic:test`
 
 <!-- sync:router-coverage -->
 
 ## Coverage snapshot
 
 - Commands: 38 (active: 38, inactive: 0)
-- Workspace packages: 58
-- Last generated: 2026-08-04T23:01:00.444Z
+- Workspace packages: 57
+- Last generated: 2026-08-07T15:01:19.644Z
