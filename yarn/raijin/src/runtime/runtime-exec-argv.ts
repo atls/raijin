@@ -1,22 +1,22 @@
-import { access }        from 'node:fs/promises'
-import { createRequire } from 'node:module'
-import { dirname }       from 'node:path'
-import { join }          from 'node:path'
-import { resolve }       from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { access }                  from 'node:fs/promises'
+import { dirname }                 from 'node:path'
+import { join }                    from 'node:path'
+import { resolve }                 from 'node:path'
+import { pathToFileURL }           from 'node:url'
+
+import { resolveSourceTypeScriptLoader } from '../infrastructure/execution/node/typescript-loader.js'
+import { resolveTypeScriptLoader } from '../infrastructure/execution/node/typescript-loader.js'
+
+export { resolveSourceTypeScriptLoader }
+export { resolveTypeScriptLoader }
 
 const PNP_API_FILENAME = '.pnp.cjs'
 const PNP_ESM_LOADER_FILENAME = '.pnp.loader.mjs'
-const RAIJIN_PACKAGE_JSON = '@atls/raijin/package.json'
-const TYPESCRIPT_LOADER_DIST_PATH = 'dist/runtime/typescript-loader.js'
-const TYPESCRIPT_LOADER_SOURCE_PATH = 'src/runtime/typescript-loader.ts'
 const TYPESCRIPT_LOADER_SPECIFIER = '@atls/raijin/typescript-loader'
 const PNP_ESM_NODE_OPTION = /(?:^|[\\/])\.pnp\.loader\.mjs$/
 const TYPESCRIPT_LOADER_NODE_OPTION =
   /(?:^@atls\/raijin\/typescript-loader$|[\\/]typescript-loader\.(?:js|mjs)$)/
 const NODE_OPTIONS_WITH_VALUE = new Set(['--experimental-loader', '--loader'])
-
-const require = createRequire(import.meta.url)
 
 type NodeOptionToken = {
   raw: string
@@ -165,37 +165,6 @@ const findPnpApi = async (cwd: string): Promise<string | undefined> => {
   )
 
   return pnpApiPaths.find(Boolean)
-}
-
-export const resolveSourceTypeScriptLoader = async (raijinPackagePath: string): Promise<string> => {
-  const typeScriptLoaderSourcePath = join(dirname(raijinPackagePath), TYPESCRIPT_LOADER_SOURCE_PATH)
-
-  if (!(await fileExists(typeScriptLoaderSourcePath))) {
-    throw new Error(`Unable to resolve source TypeScript loader for ${RAIJIN_PACKAGE_JSON}`)
-  }
-
-  return pathToFileURL(typeScriptLoaderSourcePath).href
-}
-
-export const resolveTypeScriptLoader = async (raijinPackagePath?: string): Promise<string> => {
-  if (!raijinPackagePath) {
-    return pathToFileURL(require.resolve(TYPESCRIPT_LOADER_SPECIFIER)).href
-  }
-
-  const raijinPath = dirname(raijinPackagePath)
-  const typeScriptLoaderPath = join(raijinPath, TYPESCRIPT_LOADER_DIST_PATH)
-
-  if (await fileExists(typeScriptLoaderPath)) {
-    return pathToFileURL(typeScriptLoaderPath).href
-  }
-
-  const typeScriptLoaderSourcePath = join(raijinPath, TYPESCRIPT_LOADER_SOURCE_PATH)
-
-  if (await fileExists(typeScriptLoaderSourcePath)) {
-    return pathToFileURL(typeScriptLoaderSourcePath).href
-  }
-
-  throw new Error(`Unable to resolve loadable TypeScript loader for ${RAIJIN_PACKAGE_JSON}`)
 }
 
 export const createTypeScriptRuntimeExecArgv = (

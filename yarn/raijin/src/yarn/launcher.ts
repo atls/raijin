@@ -117,17 +117,27 @@ const setPathEnvironment = (environment: NodeJS.ProcessEnv): void => {
   }
 }
 
-export const createLauncherBaseEnvironment = (
+export const createYarnBaseEnvironment = (
   environment: NodeJS.ProcessEnv = process.env
 ): NodeJS.ProcessEnv => {
   const yarnEnvironment = { ...environment }
-  const nodeOptions = yarnEnvironment.NODE_OPTIONS
 
   delete yarnEnvironment.BERRY_BIN_FOLDER
   delete yarnEnvironment.npm_config_user_agent
   delete yarnEnvironment.npm_execpath
   Reflect.deleteProperty(yarnEnvironment, REGISTERED_PNP_LOADER_ENV)
   delete yarnEnvironment.YARN_IGNORE_PATH
+
+  setPathEnvironment(yarnEnvironment)
+
+  return yarnEnvironment
+}
+
+export const createLauncherBaseEnvironment = (
+  environment: NodeJS.ProcessEnv = process.env
+): NodeJS.ProcessEnv => {
+  const yarnEnvironment = createYarnBaseEnvironment(environment)
+  const nodeOptions = yarnEnvironment.NODE_OPTIONS
 
   if (nodeOptions) {
     const sanitizedNodeOptions = removePnPNodeOptions(nodeOptions)
@@ -138,8 +148,6 @@ export const createLauncherBaseEnvironment = (
       delete yarnEnvironment.NODE_OPTIONS
     }
   }
-
-  setPathEnvironment(yarnEnvironment)
 
   return yarnEnvironment
 }

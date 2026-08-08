@@ -1,17 +1,10 @@
+import { createNodeLoaderRegistrationImport } from '../../../infrastructure/execution/node/loader-registration.js'
+
 export const MANAGED_NODE_LOADER_ENV = 'RAIJIN_NODE_LOADER'
 export const REGISTERED_PNP_LOADER_ENV = 'RAIJIN_REGISTERED_PNP_LOADER'
 const NODE_LOADER_IMPORT_OPTION = '--import'
 const NODE_LOADER_REGISTER_IMPORT_PREFIX =
   'data:text/javascript,import%20%7B%20register%20%7D%20from%20%22node%3Amodule%22%3B'
-
-const createNodeLoaderRegisterImport = (loaders: Array<string>): string =>
-  `data:text/javascript,${encodeURIComponent(
-    [
-      'import { register } from "node:module";',
-      'import { pathToFileURL } from "node:url";',
-      ...loaders.map((loader) => `register(${JSON.stringify(loader)}, pathToFileURL("./"));`),
-    ].join(' ')
-  )}`
 
 export const appendNodeOption = (
   nodeOptions: string | undefined,
@@ -55,7 +48,7 @@ export const removeManagedNodeLoaderImports = (
 }
 
 export const registerNodeLoaders = async (loaders: Array<string>): Promise<void> => {
-  await import(createNodeLoaderRegisterImport(loaders))
+  await import(createNodeLoaderRegistrationImport(loaders))
 }
 
 export const applyManagedNodeLoader = (env: NodeJS.ProcessEnv): void => {
@@ -70,6 +63,6 @@ export const applyManagedNodeLoader = (env: NodeJS.ProcessEnv): void => {
   env.NODE_OPTIONS = appendNodeOption(
     nodeOptions,
     NODE_LOADER_IMPORT_OPTION,
-    createNodeLoaderRegisterImport([managedNodeLoader])
+    createNodeLoaderRegistrationImport([managedNodeLoader])
   )
 }

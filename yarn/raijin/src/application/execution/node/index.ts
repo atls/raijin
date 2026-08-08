@@ -1,0 +1,12 @@
+export type { ManagedNodeEnvironmentPatch }    from './inputs/execute.interfaces.js'
+export type { ManagedNodeExecutionInput }      from './inputs/execute.interfaces.js'
+export type { ManagedNodeOutputEvent }         from './inputs/execute.interfaces.js'
+export type { ManagedNodeOutputPolicy }        from './inputs/execute.interfaces.js'
+export type { ManagedNodeExecutor }            from './ports/executor.interfaces.js'
+export type { ManagedNodeCleanupFailedResult } from './results/execute.interfaces.js'
+export type { ManagedNodeExecutionOutput }     from './results/execute.interfaces.js'
+export type { ManagedNodeExecutionResult }     from './results/execute.interfaces.js'
+export type { ManagedNodeProcessCompletion }   from './results/execute.interfaces.js'
+export type { ManagedNodeProcessResult }       from './results/execute.interfaces.js'
+
+export { executeManagedNode }                  from './use-cases/execute.js'

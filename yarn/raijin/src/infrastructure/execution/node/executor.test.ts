@@ -1,0 +1,309 @@
+import type { TemporaryDirectoryProvider } from './executor.interfaces.js'
+
+import assert                              from 'node:assert/strict'
+import { mkdir }                           from 'node:fs/promises'
+import { mkdtemp }                         from 'node:fs/promises'
+import { rm }                              from 'node:fs/promises'
+import { writeFile }                       from 'node:fs/promises'
+import { tmpdir }                          from 'node:os'
+import { dirname }                         from 'node:path'
+import { join }                            from 'node:path'
+import { after }                           from 'node:test'
+import { before }                          from 'node:test'
+import { test }                            from 'node:test'
+import { fileURLToPath }                   from 'node:url'
+
+import { Configuration }                   from '@yarnpkg/core'
+import { Project }                         from '@yarnpkg/core'
+import { getPluginConfiguration }          from '@yarnpkg/cli'
+import { npath }                           from '@yarnpkg/fslib'
+
+import { createYarnManagedNodeExecutor }   from './executor.js'
+
+const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
+const testProject = (async () => {
+  const configuration = await Configuration.find(testCwd, getPluginConfiguration())
+
+  return Project.find(configuration, testCwd)
+})()
+let program = ''
+let programDirectory = ''
+
+before(async () => {
+  const { project } = await testProject
+  const fixtureRoot = join(npath.fromPortablePath(project.cwd), '.yarn/raijin')
+
+  await mkdir(fixtureRoot, { recursive: true })
+  programDirectory = await mkdtemp(join(fixtureRoot, 'node-executor-program-'))
+  program = join(programDirectory, 'program.ts')
+
+  await writeFile(
+    program,
+    `import { Configuration } from '@yarnpkg/core'
+
+const mode = process.argv[2]
+
+switch (mode) {
+  case 'fail':
+    process.exitCode = 7
+    break
+  case 'report':
+    process.stdout.write(JSON.stringify({
+      argument: process.argv[3],
+      callerTitle: process.title,
+      dependencyLoaded: typeof Configuration === 'function',
+      preserved: process.env.RAIJIN_TEST_VALUE,
+      removed: process.env.RAIJIN_REMOVE_ME,
+    }))
+    break
+  case 'signal':
+    process.kill(process.pid, 'SIGTERM')
+    break
+  case 'stream':
+    process.stdout.write('x'.repeat(256 * 1024))
+    break
+  case 'wait':
+    setInterval(() => undefined, 1000)
+    break
+  default:
+    throw new Error(\`Unsupported managed Node fixture mode: \${mode}\`)
+}
+`
+  )
+})
+
+after(async () => {
+  await rm(programDirectory, { force: true, recursive: true })
+})
+
+const createTemporaryDirectoryProvider = (
+  cleanupFailure?: Error
+): { provider: TemporaryDirectoryProvider; removed: Array<string> } => {
+  const removed: Array<string> = []
+
+  return {
+    removed,
+    provider: {
+      create: async () => {
+        const path = await mkdtemp(join(tmpdir(), 'raijin-node-executor-test-'))
+
+        return {
+          path,
+          remove: async () => {
+            removed.push(path)
+
+            if (cleanupFailure) {
+              throw cleanupFailure
+            }
+
+            await rm(path, { force: true, recursive: true })
+          },
+        }
+      },
+    },
+  }
+}
+
+test('should execute TypeScript through the project PnP environment', async () => {
+  const { project, workspace } = await testProject
+  assert.ok(workspace)
+
+  const temporaryDirectories = createTemporaryDirectoryProvider()
+  const executor = createYarnManagedNodeExecutor({
+    baseEnvironment: {
+      ...process.env,
+      NODE_OPTIONS: '--title=raijin-caller --trace-warnings',
+      RAIJIN_REMOVE_ME: 'remove-me',
+    },
+    locator: workspace.anchoredLocator,
+    project,
+    temporaryDirectories: temporaryDirectories.provider,
+  })
+  const result = await executor.execute({
+    arguments: ['report', 'argument-value'],
+    cwd: npath.fromPortablePath(project.cwd),
+    environment: {
+      RAIJIN_REMOVE_ME: undefined,
+      RAIJIN_TEST_VALUE: 'preserved-value',
+    },
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program,
+  })
+
+  assert.ok(Number(process.versions.node.split('.')[0]) >= 24)
+  assert.equal(result.reason, 'completed')
+  assert.equal(result.exitCode, 0)
+  assert.deepEqual(JSON.parse(result.stdout), {
+    argument: 'argument-value',
+    callerTitle: 'raijin-caller',
+    dependencyLoaded: true,
+    preserved: 'preserved-value',
+  })
+  assert.equal(temporaryDirectories.removed.length, 1)
+})
+
+test('should preserve a non-zero exit as a completed execution', async () => {
+  const { project } = await testProject
+  const temporaryDirectories = createTemporaryDirectoryProvider()
+  const executor = createYarnManagedNodeExecutor({
+    project,
+    temporaryDirectories: temporaryDirectories.provider,
+  })
+  const result = await executor.execute({
+    arguments: ['fail'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program,
+  })
+
+  assert.equal(result.reason, 'completed')
+  assert.equal(result.exitCode, 7)
+  assert.equal(temporaryDirectories.removed.length, 1)
+})
+
+test('should expose output through the application handler contract', async () => {
+  const { project } = await testProject
+  const events: Array<{ data: string; source: 'stderr' | 'stdout' }> = []
+  const executor = createYarnManagedNodeExecutor({ project })
+  const result = await executor.execute({
+    arguments: ['report', 'handled-value'],
+    cwd: npath.fromPortablePath(project.cwd),
+    environment: { RAIJIN_TEST_VALUE: 'handled-environment' },
+    input: 'ignore',
+    output: { mode: 'handle', handler: (event) => events.push(event) },
+    program,
+  })
+
+  assert.equal(result.reason, 'completed')
+  assert.equal(result.stdout, '')
+  const report = JSON.parse(events.map(({ data }) => data).join('')) as Record<string, unknown>
+
+  assert.equal(report.argument, 'handled-value')
+  assert.equal(report.dependencyLoaded, true)
+  assert.equal(report.preserved, 'handled-environment')
+})
+
+test('should type environment preparation failures and remove temporary resources', async () => {
+  const { project } = await testProject
+  const temporaryDirectories = createTemporaryDirectoryProvider()
+  const executor = createYarnManagedNodeExecutor({
+    project,
+    temporaryDirectories: temporaryDirectories.provider,
+  })
+  const result = await executor.execute({
+    arguments: ['report', 'unused'],
+    cwd: npath.fromPortablePath(project.cwd),
+    environment: { PROJECT_CWD: '/unsupported' },
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program,
+  })
+
+  assert.equal(result.reason, 'start-failed')
+  assert.equal(temporaryDirectories.removed.length, 1)
+})
+
+test('should cancel execution and remove its temporary directory', async () => {
+  const { project } = await testProject
+  const temporaryDirectories = createTemporaryDirectoryProvider()
+  const executor = createYarnManagedNodeExecutor({
+    project,
+    temporaryDirectories: temporaryDirectories.provider,
+  })
+  const result = await executor.execute({
+    arguments: ['wait'],
+    cancelSignal: AbortSignal.timeout(50),
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program,
+  })
+
+  assert.equal(result.reason, 'cancelled')
+  assert.equal(temporaryDirectories.removed.length, 1)
+})
+
+test('should time out execution and remove its temporary directory', async () => {
+  const { project } = await testProject
+  const temporaryDirectories = createTemporaryDirectoryProvider()
+  const executor = createYarnManagedNodeExecutor({
+    project,
+    temporaryDirectories: temporaryDirectories.provider,
+  })
+  const result = await executor.execute({
+    arguments: ['wait'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program,
+    timeoutMs: 50,
+  })
+
+  assert.equal(result.reason, 'timed-out')
+  assert.equal(temporaryDirectories.removed.length, 1)
+})
+
+test(
+  'should preserve signal termination and remove its temporary directory',
+  { skip: process.platform === 'win32' },
+  async () => {
+    const { project } = await testProject
+    const temporaryDirectories = createTemporaryDirectoryProvider()
+    const executor = createYarnManagedNodeExecutor({
+      project,
+      temporaryDirectories: temporaryDirectories.provider,
+    })
+    const result = await executor.execute({
+      arguments: ['signal'],
+      cwd: npath.fromPortablePath(project.cwd),
+      input: 'ignore',
+      output: { mode: 'capture' },
+      program,
+    })
+
+    assert.equal(result.reason, 'signalled')
+    assert.equal(result.signal, 'SIGTERM')
+    assert.equal(temporaryDirectories.removed.length, 1)
+  }
+)
+
+test('should wait for captured output before completing', async () => {
+  const { project } = await testProject
+  const executor = createYarnManagedNodeExecutor({ project })
+  const result = await executor.execute({
+    arguments: ['stream'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program,
+  })
+
+  assert.equal(result.reason, 'completed')
+  assert.equal(result.stdout.length, 256 * 1024)
+})
+
+test('should report cleanup failure without discarding the process result', async () => {
+  const { project } = await testProject
+  const cleanupFailure = new Error('cleanup failed')
+  const temporaryDirectories = createTemporaryDirectoryProvider(cleanupFailure)
+  const executor = createYarnManagedNodeExecutor({
+    project,
+    temporaryDirectories: temporaryDirectories.provider,
+  })
+  const result = await executor.execute({
+    arguments: ['fail'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    program,
+  })
+
+  assert.equal(result.reason, 'cleanup-failed')
+  assert.equal(result.cause, cleanupFailure)
+  assert.equal(result.execution.reason, 'completed')
+  assert.equal(result.execution.exitCode, 7)
+  assert.equal(temporaryDirectories.removed.length, 1)
+  await rm(temporaryDirectories.removed[0], { force: true, recursive: true })
+})
