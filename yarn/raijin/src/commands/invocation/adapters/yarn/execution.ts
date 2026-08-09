@@ -11,25 +11,29 @@ import { xfs }                           from '@yarnpkg/fslib'
 import { MANAGED_NODE_LOADER_ENV }       from '@atls/raijin/runtime/node/bootstrap'
 import { applyManagedNodeLoader }        from '@atls/raijin/runtime/node/bootstrap'
 import { createLauncherBaseEnvironment } from '@atls/raijin/yarn'
+import { isLauncherEnvironmentName }     from '@atls/raijin/yarn'
 
+import { EnvironmentOverrideError }      from '../../exceptions/environment-override.js'
 import { toNativeCwd }                   from '../path/index.js'
 
 const YARN_EXECUTABLE_NAME = (process.platform === 'win32' ? 'yarn.cmd' : 'yarn') as Filename
-const OWNED_ENVIRONMENT_NAMES = new Set([
-  'BERRY_BIN_FOLDER',
-  'INIT_CWD',
-  'NODE_OPTIONS',
-  'PROJECT_CWD',
-  'RAIJIN_NODE_LOADER',
-  'YARN_IGNORE_PATH',
-  'npm_config_user_agent',
-  'npm_execpath',
-])
+const OWNED_ENVIRONMENT_NAMES = new Set(['INIT_CWD', 'PROJECT_CWD'])
+const OWNED_WINDOWS_ENVIRONMENT_NAMES = new Set(
+  Array.from(OWNED_ENVIRONMENT_NAMES, (name) => name.toUpperCase())
+)
 
-const validateEnvironmentPatch = (environmentPatch: Readonly<Record<string, string>>): void => {
+export const validateEnvironmentPatch = (
+  environmentPatch: Readonly<Record<string, string>>,
+  platform: NodeJS.Platform = process.platform
+): void => {
   for (const name of Object.keys(environmentPatch)) {
-    if (OWNED_ENVIRONMENT_NAMES.has(name) || name.toUpperCase() === 'PATH') {
-      throw new Error(`Yarn command preparation cannot override ${name}`)
+    const owned =
+      platform === 'win32'
+        ? OWNED_WINDOWS_ENVIRONMENT_NAMES.has(name.toUpperCase())
+        : OWNED_ENVIRONMENT_NAMES.has(name)
+
+    if (owned || isLauncherEnvironmentName(name, platform)) {
+      throw new EnvironmentOverrideError(name)
     }
   }
 }

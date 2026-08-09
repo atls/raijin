@@ -1,20 +1,22 @@
-import type { Filename }          from '@yarnpkg/fslib'
+import type { Filename }            from '@yarnpkg/fslib'
 
-import assert                     from 'node:assert/strict'
-import { execFile }               from 'node:child_process'
-import { dirname }                from 'node:path'
-import test                       from 'node:test'
-import { fileURLToPath }          from 'node:url'
-import { pathToFileURL }          from 'node:url'
+import assert                       from 'node:assert/strict'
+import { execFile }                 from 'node:child_process'
+import { dirname }                  from 'node:path'
+import test                         from 'node:test'
+import { fileURLToPath }            from 'node:url'
+import { pathToFileURL }            from 'node:url'
 
-import { Configuration }          from '@yarnpkg/core'
-import { Project }                from '@yarnpkg/core'
-import { getPluginConfiguration } from '@yarnpkg/cli'
-import { npath }                  from '@yarnpkg/fslib'
-import { ppath }                  from '@yarnpkg/fslib'
-import { xfs }                    from '@yarnpkg/fslib'
+import { Configuration }            from '@yarnpkg/core'
+import { Project }                  from '@yarnpkg/core'
+import { getPluginConfiguration }   from '@yarnpkg/cli'
+import { npath }                    from '@yarnpkg/fslib'
+import { ppath }                    from '@yarnpkg/fslib'
+import { xfs }                      from '@yarnpkg/fslib'
 
-import { createYarnExecutable }   from './execution.js'
+import { EnvironmentOverrideError } from '../../exceptions/environment-override.js'
+import { createYarnExecutable }     from './execution.js'
+import { validateEnvironmentPatch } from './execution.js'
 
 const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
 
@@ -139,6 +141,24 @@ test('should keep managed node loader options idempotent', async () => {
   assert.equal(secondEnv.NODE_OPTIONS?.match(/--import data:text\/javascript,/g)?.length, 1)
 })
 
+test('should preserve foreign loader registration as opaque node options', async () => {
+  const { project } = await resolveTestProject()
+  const binFolder = await xfs.mktempPromise()
+  const foreignRegistration =
+    'data:text/javascript,import%20%7B%20register%20%7D%20from%20%22node%3Amodule%22%3Bregister(%22file%3A%2F%2F%2Ftmp%2Fforeign-loader.mjs%22%2Cimport.meta.url)%3B'
+  const callerNodeOptions = `--import ${foreignRegistration} --trace-warnings`
+  const { env } = await createYarnExecutable({
+    baseEnvironment: { NODE_OPTIONS: callerNodeOptions },
+    binFolder,
+    nodeLoader: 'file:///tmp/managed-loader.mjs',
+    project,
+  })
+
+  assert.ok(env.NODE_OPTIONS?.includes(callerNodeOptions))
+  assert.equal((env.NODE_OPTIONS?.split(foreignRegistration).length ?? 1) - 1, 1)
+  assert.match(decodeURIComponent(env.NODE_OPTIONS ?? ''), /managed-loader\.mjs/)
+})
+
 test('should reject command patches for invocation-owned environment variables', async () => {
   const { project } = await resolveTestProject()
 
@@ -150,6 +170,37 @@ test('should reject command patches for invocation-owned environment variables',
     }),
     /cannot override NODE_OPTIONS/
   )
+})
+
+test('should reject invocation-owned environment casing variants on Windows', () => {
+  for (const name of [
+    'Berry_Bin_Folder',
+    'Init_Cwd',
+    'Node_Options',
+    'Path',
+    'Project_Cwd',
+    'Yarn_Ignore_Path',
+    'Npm_Config_User_Agent',
+    'Npm_ExecPath',
+    'Npm_Node_ExecPath',
+    'Raijin_Node_Loader',
+    'Raijin_Node_Loader_Registration',
+    'Raijin_Registered_Pnp_Loader',
+  ]) {
+    assert.throws(
+      () => {
+        validateEnvironmentPatch({ [name]: 'unsupported' }, 'win32')
+      },
+      (error: EnvironmentOverrideError) =>
+        error instanceof EnvironmentOverrideError && error.variable === name
+    )
+  }
+})
+
+test('should preserve case-sensitive invocation environment names on POSIX', () => {
+  assert.doesNotThrow(() => {
+    validateEnvironmentPatch({ Node_Options: '--trace-warnings' }, 'linux')
+  })
 })
 
 test('should forward node flags from managed node wrapper', async () => {

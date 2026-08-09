@@ -1,4 +1,4 @@
-import type { ProcessExecutor }         from '../capabilities/process.interfaces.js'
+import type { Executor }                from '../executor.js'
 import type { InvocationContext }       from './context.interfaces.js'
 import type { ProjectInvocation }       from './invocation.interfaces.js'
 import type { ResolvedProjectScope }    from './project.interfaces.js'
@@ -26,7 +26,7 @@ export const resolveProjectScope = async (
 
 export const resolveProjectCommandInvocation = async (
   context: InvocationContext,
-  executor: ProcessExecutor
+  executor: Executor
 ): Promise<ProjectInvocation> => {
   const { configuration, invocationCwd, project } = await resolveProjectScope(context)
 

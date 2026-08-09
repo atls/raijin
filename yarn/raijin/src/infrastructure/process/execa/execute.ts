@@ -1,16 +1,16 @@
-import type { Options }                      from 'execa'
-import type { Result }                       from 'execa'
-import type { StdoutStderrOption }           from 'execa'
+import type { Options }            from 'execa'
+import type { Result }             from 'execa'
+import type { StdoutStderrOption } from 'execa'
 
-import type { ExecaProcessExecutionOptions } from './execute.interfaces.js'
-import type { ExecaProcessExecutionResult }  from './execute.interfaces.js'
-import type { ExecaProcessOutputEvent }      from './execute.interfaces.js'
+import type { ExecuteOptions }     from './options.js'
+import type { OutputEvent }        from './output.js'
+import type { ExecuteResult }      from './result.js'
 
-import { execa }                             from 'execa'
+import { execa }                   from 'execa'
 
 const createOutputHandler = (
-  handler: (event: ExecaProcessOutputEvent) => void,
-  source: ExecaProcessOutputEvent['source']
+  handler: (event: OutputEvent) => void,
+  source: OutputEvent['source']
 ): StdoutStderrOption => ({
   preserveNewlines: true,
   *transform(data: string) {
@@ -20,9 +20,9 @@ const createOutputHandler = (
 })
 
 const resolveOutput = (
-  stream: ExecaProcessExecutionOptions['context']['stdout'],
-  output: ExecaProcessExecutionOptions['output'],
-  source: ExecaProcessOutputEvent['source']
+  stream: ExecuteOptions['streams']['stdout'],
+  output: ExecuteOptions['output'],
+  source: OutputEvent['source']
 ): StdoutStderrOption => {
   if (!output) {
     return stream
@@ -37,13 +37,13 @@ const resolveOutput = (
 
 const createExecaOptions = ({
   cancelSignal,
-  context,
   cwd,
   env,
   input,
   output,
+  streams,
   timeoutMs,
-}: ExecaProcessExecutionOptions): Options => ({
+}: ExecuteOptions): Options => ({
   buffer: output?.mode === 'capture',
   cancelSignal,
   cleanup: true,
@@ -52,25 +52,23 @@ const createExecaOptions = ({
   env,
   extendEnv: false,
   reject: false,
-  stderr: resolveOutput(context.stderr, output, 'stderr'),
-  stdin: input === 'ignore' ? 'ignore' : context.stdin,
-  stdout: resolveOutput(context.stdout, output, 'stdout'),
+  stderr: resolveOutput(streams.stderr, output, 'stderr'),
+  stdin: input === 'ignore' ? 'ignore' : streams.stdin,
+  stdout: resolveOutput(streams.stdout, output, 'stdout'),
   stripFinalNewline: false,
   timeout: timeoutMs,
 })
 
-const resolveExecutionOutput = (
-  result: Result
-): Pick<ExecaProcessExecutionResult, 'stderr' | 'stdout'> => ({
+const resolveExecutionOutput = (result: Result): Pick<ExecuteResult, 'stderr' | 'stdout'> => ({
   stderr: typeof result.stderr === 'string' ? result.stderr : '',
   stdout: typeof result.stdout === 'string' ? result.stdout : '',
 })
 
-export const executeProcessWithExeca = async (
+export const execute = async (
   command: string,
   args: ReadonlyArray<string>,
-  options: ExecaProcessExecutionOptions
-): Promise<ExecaProcessExecutionResult> => {
+  options: ExecuteOptions
+): Promise<ExecuteResult> => {
   let result: Result
 
   try {
@@ -94,6 +92,15 @@ export const executeProcessWithExeca = async (
   }
 
   if (result.exitCode !== undefined) {
+    if (result.cause !== undefined) {
+      return {
+        ...output,
+        reason: 'output-failed',
+        cause: result.cause,
+        exitCode: result.exitCode,
+      }
+    }
+
     return { ...output, reason: 'completed', exitCode: result.exitCode }
   }
 

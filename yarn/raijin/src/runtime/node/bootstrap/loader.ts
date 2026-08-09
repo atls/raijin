@@ -1,7 +1,20 @@
-import { createNodeLoaderRegistrationImport } from '../../../infrastructure/execution/node/loader-registration.js'
+import { LOADER }               from '../../../infrastructure/execution/node/loaders/environment.js'
+import { REGISTRATION }         from '../../../infrastructure/execution/node/loaders/environment.js'
+import { REGISTERED_PNP_LOADER } from '../../../infrastructure/execution/node/loaders/environment.js'
+import { create as createRegistrationImport } from '../../../infrastructure/execution/node/loaders/registration.js'
+import { createCanonicalNames } from '../../../infrastructure/yarn/environment/variables.js'
+import { get as getEnvironmentVariable } from '../../../infrastructure/yarn/environment/variables.js'
+import { remove as removeEnvironmentVariable } from '../../../infrastructure/yarn/environment/variables.js'
+import { set as setEnvironmentVariable } from '../../../infrastructure/yarn/environment/variables.js'
 
-export const MANAGED_NODE_LOADER_ENV = 'RAIJIN_NODE_LOADER'
-export const REGISTERED_PNP_LOADER_ENV = 'RAIJIN_REGISTERED_PNP_LOADER'
+export const REGISTERED_PNP_LOADER_ENV = REGISTERED_PNP_LOADER
+
+const MANAGED_ENVIRONMENT_NAMES = new Set([LOADER, REGISTRATION, REGISTERED_PNP_LOADER_ENV])
+const MANAGED_WINDOWS_ENVIRONMENT_NAMES = new Set(
+  Array.from(MANAGED_ENVIRONMENT_NAMES, (name) => name.toUpperCase())
+)
+const CANONICAL_ENVIRONMENT_NAMES = createCanonicalNames(Array.from(MANAGED_ENVIRONMENT_NAMES))
+
 const NODE_LOADER_IMPORT_OPTION = '--import'
 const NODE_LOADER_REGISTER_IMPORT_PREFIX =
   'data:text/javascript,import%20%7B%20register%20%7D%20from%20%22node%3Amodule%22%3B'
@@ -15,8 +28,9 @@ export const appendNodeOption = (
 const isManagedNodeLoaderImport = (value: string | undefined): boolean =>
   value?.startsWith(NODE_LOADER_REGISTER_IMPORT_PREFIX) ?? false
 
-export const removeManagedNodeLoaderImports = (
-  nodeOptions: string | undefined
+const removeNodeLoaderImports = (
+  nodeOptions: string | undefined,
+  predicate: (value: string | undefined) => boolean
 ): string | undefined => {
   if (!nodeOptions) {
     return undefined
@@ -32,7 +46,7 @@ export const removeManagedNodeLoaderImports = (
     if (option === NODE_LOADER_IMPORT_OPTION) {
       const value = token.includes('=') ? token.split('=', 2)[1] : tokens[index + 1]
 
-      if (isManagedNodeLoaderImport(value)) {
+      if (predicate(value)) {
         if (!token.includes('=')) {
           index += 1
         }
@@ -47,22 +61,57 @@ export const removeManagedNodeLoaderImports = (
   return nextTokens.length > 0 ? nextTokens.join(' ') : undefined
 }
 
+export const isManagedNodeEnvironmentName = (
+  name: string,
+  platform: NodeJS.Platform = process.platform
+): boolean =>
+  platform === 'win32'
+    ? MANAGED_WINDOWS_ENVIRONMENT_NAMES.has(name.toUpperCase())
+    : MANAGED_ENVIRONMENT_NAMES.has(name)
+
+export const removeManagedNodeLoaderImports = (
+  nodeOptions: string | undefined
+): string | undefined => removeNodeLoaderImports(nodeOptions, isManagedNodeLoaderImport)
+
 export const registerNodeLoaders = async (loaders: Array<string>): Promise<void> => {
-  await import(createNodeLoaderRegistrationImport(loaders))
+  await import(createRegistrationImport(loaders))
 }
 
-export const applyManagedNodeLoader = (env: NodeJS.ProcessEnv): void => {
-  const managedNodeLoader = env[MANAGED_NODE_LOADER_ENV]
+export const applyManagedNodeLoader = (
+  env: NodeJS.ProcessEnv,
+  platform: NodeJS.Platform = process.platform
+): void => {
+  const managedNodeLoader = getEnvironmentVariable(env, LOADER, platform)
+  const registeredNodeLoader = getEnvironmentVariable(env, REGISTRATION, platform)
+  let nodeOptions = getEnvironmentVariable(env, 'NODE_OPTIONS', platform)
 
-  if (!managedNodeLoader) {
-    return
+  if (registeredNodeLoader) {
+    const registration = createRegistrationImport([registeredNodeLoader])
+
+    nodeOptions = removeNodeLoaderImports(nodeOptions, (value) => value === registration)
   }
 
-  const nodeOptions = removeManagedNodeLoaderImports(env.NODE_OPTIONS)
+  if (managedNodeLoader) {
+    const registration = createRegistrationImport([managedNodeLoader])
 
-  env.NODE_OPTIONS = appendNodeOption(
-    nodeOptions,
-    NODE_LOADER_IMPORT_OPTION,
-    createNodeLoaderRegistrationImport([managedNodeLoader])
-  )
+    nodeOptions = removeNodeLoaderImports(nodeOptions, (value) => value === registration)
+    nodeOptions = appendNodeOption(nodeOptions, NODE_LOADER_IMPORT_OPTION, registration)
+    setEnvironmentVariable(env, LOADER, managedNodeLoader, platform, CANONICAL_ENVIRONMENT_NAMES)
+    setEnvironmentVariable(
+      env,
+      REGISTRATION,
+      managedNodeLoader,
+      platform,
+      CANONICAL_ENVIRONMENT_NAMES
+    )
+  } else {
+    removeEnvironmentVariable(env, LOADER, platform)
+    removeEnvironmentVariable(env, REGISTRATION, platform)
+  }
+
+  if (nodeOptions) {
+    setEnvironmentVariable(env, 'NODE_OPTIONS', nodeOptions, platform, CANONICAL_ENVIRONMENT_NAMES)
+  } else {
+    removeEnvironmentVariable(env, 'NODE_OPTIONS', platform)
+  }
 }

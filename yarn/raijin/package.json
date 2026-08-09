@@ -60,7 +60,8 @@
     "build:library": "yarn library build",
     "build:project-generation": "node ./scripts/generation/project/build.ts",
     "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "postpack": "rm -rf dist",
+    "verify:managed-node": "node ../../.yarn/releases/yarn.mjs test unit --target . src/infrastructure/execution/node/yarn/environment/tests/variables.test.ts src/infrastructure/execution/node/yarn/tests/environment.test.ts src/infrastructure/execution/node/yarn/tests/execution.test.ts src/infrastructure/execution/node/yarn/tests/lifecycle.test.ts src/runtime/node/bootstrap/loader.test.ts --test-reporter tap"
   },
   "dependencies": {
     "@angular-devkit/core": "19.1.5",
@@ -276,5 +277,11 @@
     "types": "dist/index.d.ts"
   },
   "schematics": "./dist/generation/project/collection/collection.json",
+  "typecheckIgnorePatterns": [
+    "src/infrastructure/execution/node/yarn/tests/completion.ts",
+    "src/infrastructure/execution/node/yarn/tests/fixtures/**/*",
+    "src/infrastructure/execution/node/yarn/tests/project.ts",
+    "src/infrastructure/execution/node/yarn/tests/temporary.ts"
+  ],
   "typecheckSkipLibCheck": true
 }

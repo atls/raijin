@@ -55,7 +55,7 @@ Compact list:
 - Group: `yarn`
 - Visibility: `public`
 - Description: Public Raijin initializer and runtime package
-- Scripts: `build`, `build:library`, `build:project-generation`, `postpack`, `prepack`
+- Scripts: `build`, `build:library`, `build:project-generation`, `postpack`, `prepack`, `verify:managed-node`
 
 <!-- sync:package-card:atls-yarn-cli -->
 

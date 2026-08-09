@@ -1,11 +1,15 @@
-import { delimiter }                 from 'node:path'
+import { REGISTERED_PNP_LOADER_ENV }    from '../runtime/node/bootstrap/loader.js'
+import { create as createEnvironment }  from '../infrastructure/yarn/environment/create.js'
+import { isDiscarded as isDiscardedEnvironmentName } from '../infrastructure/yarn/environment/variables.js'
+import { remove as removeEnvironmentVariable } from '../infrastructure/yarn/environment/variables.js'
+import { isManagedNodeEnvironmentName } from '../runtime/node/bootstrap/loader.js'
 
-import { REGISTERED_PNP_LOADER_ENV } from '../runtime/node/bootstrap/loader.js'
-
-const PATH_ENVIRONMENT_NAME = /^path$/i
-const TEMPORARY_YARN_BIN_PATH = /[\\/]xfs-[^\\/]*(?:[\\/]|$)/
 const PNP_NODE_OPTION = /(?:^|[\\/])\.pnp\.(?:cjs|loader\.mjs)$/
 const NODE_OPTIONS_WITH_VALUE = new Set(['--experimental-loader', '--loader', '--require', '-r'])
+const SANITIZED_ENVIRONMENT_NAMES = new Set(['NODE_OPTIONS', 'PATH'])
+const SANITIZED_WINDOWS_ENVIRONMENT_NAMES = new Set(
+  Array.from(SANITIZED_ENVIRONMENT_NAMES, (name) => name.toUpperCase())
+)
 
 type NodeOptionToken = {
   raw: string
@@ -94,50 +98,29 @@ const removePnPNodeOptions = (nodeOptions: string): string => {
   return filtered.join(' ')
 }
 
-const sanitizePathEnvironment = (value: string): string =>
-  value
-    .split(delimiter)
-    .filter((item) => item && !TEMPORARY_YARN_BIN_PATH.test(item))
-    .join(delimiter)
+export const isLauncherEnvironmentName = (
+  name: string,
+  platform: NodeJS.Platform = process.platform
+): boolean => {
+  const sanitized =
+    platform === 'win32'
+      ? SANITIZED_WINDOWS_ENVIRONMENT_NAMES.has(name.toUpperCase())
+      : SANITIZED_ENVIRONMENT_NAMES.has(name)
 
-const setPathEnvironment = (environment: NodeJS.ProcessEnv): void => {
-  const pathName = Object.keys(environment).find((name) => PATH_ENVIRONMENT_NAME.test(name))
-  const pathValue = pathName ? environment[pathName] : undefined
-
-  if (!pathName || !pathValue) {
-    return
-  }
-
-  const sanitizedPathValue = sanitizePathEnvironment(pathValue)
-
-  if (sanitizedPathValue) {
-    environment[pathName] = sanitizedPathValue
-  } else {
-    Reflect.deleteProperty(environment, pathName)
-  }
-}
-
-export const createYarnBaseEnvironment = (
-  environment: NodeJS.ProcessEnv = process.env
-): NodeJS.ProcessEnv => {
-  const yarnEnvironment = { ...environment }
-
-  delete yarnEnvironment.BERRY_BIN_FOLDER
-  delete yarnEnvironment.npm_config_user_agent
-  delete yarnEnvironment.npm_execpath
-  Reflect.deleteProperty(yarnEnvironment, REGISTERED_PNP_LOADER_ENV)
-  delete yarnEnvironment.YARN_IGNORE_PATH
-
-  setPathEnvironment(yarnEnvironment)
-
-  return yarnEnvironment
+  return (
+    sanitized ||
+    isDiscardedEnvironmentName(name, platform) ||
+    isManagedNodeEnvironmentName(name, platform)
+  )
 }
 
 export const createLauncherBaseEnvironment = (
   environment: NodeJS.ProcessEnv = process.env
 ): NodeJS.ProcessEnv => {
-  const yarnEnvironment = createYarnBaseEnvironment(environment)
+  const yarnEnvironment = createEnvironment(environment)
   const nodeOptions = yarnEnvironment.NODE_OPTIONS
+
+  removeEnvironmentVariable(yarnEnvironment, REGISTERED_PNP_LOADER_ENV)
 
   if (nodeOptions) {
     const sanitizedNodeOptions = removePnPNodeOptions(nodeOptions)

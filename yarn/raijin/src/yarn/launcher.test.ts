@@ -58,3 +58,22 @@ test('should preserve quoted node options unrelated to the launcher PnP state', 
     }
   )
 })
+
+test(
+  'should canonicalize mixed-case launcher environment on Windows',
+  { skip: process.platform !== 'win32' },
+  () => {
+    assert.deepEqual(
+      createLauncherBaseEnvironment({
+        Berry_Bin_Folder: 'C:\\xfs-launcher',
+        Node_Options: '--trace-warnings',
+        Path: ['C:\\xfs-launcher', 'C:\\Windows'].join(delimiter),
+        Yarn_Ignore_Path: '1',
+      }),
+      {
+        NODE_OPTIONS: '--trace-warnings',
+        PATH: 'C:\\Windows',
+      }
+    )
+  }
+)

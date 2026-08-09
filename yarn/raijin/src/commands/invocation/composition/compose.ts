@@ -8,7 +8,7 @@ import type { CommandInvocationScope }        from './definition.interfaces.js'
 import type { InvocationPluginConfiguration } from './definition.interfaces.js'
 import type { RegisteredCommandClass }        from './definition.interfaces.js'
 
-import { createExecaProcessExecutor } from '../../../infrastructure/process/execa/executor.js'
+import { create as createProcessExecutor } from '../../../infrastructure/process/execa/executor.js'
 import { resolveEntryCommandInvocation }      from '../scope/entry.js'
 import { resolveProjectCommandInvocation }    from '../scope/project.js'
 import { resolveWorkspaceCommandInvocation }  from '../scope/workspace.js'
@@ -36,7 +36,7 @@ const resolveInvocation = (
   scope: CommandInvocationScope,
   context: CommandContext
 ): EntryInvocation | Promise<ProjectInvocation | WorkspaceInvocation> => {
-  const executor = createExecaProcessExecutor(context)
+  const executor = createProcessExecutor(context)
 
   if (scope === 'workspace') {
     return resolveWorkspaceCommandInvocation(context, executor)

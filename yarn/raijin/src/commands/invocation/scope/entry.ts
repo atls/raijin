@@ -1,4 +1,4 @@
-import type { ProcessExecutor }    from '../capabilities/process.interfaces.js'
+import type { Executor }           from '../executor.js'
 import type { InvocationContext }  from './context.interfaces.js'
 import type { EntryInvocation }    from './invocation.interfaces.js'
 
@@ -7,7 +7,7 @@ import { resolveInvocationCwd }    from './context.js'
 
 export const resolveEntryCommandInvocation = (
   context: InvocationContext,
-  executor: ProcessExecutor
+  executor: Executor
 ): EntryInvocation => {
   const invocationCwd = resolveInvocationCwd(context)
 

@@ -3,8 +3,8 @@ import type { Project }                 from '@yarnpkg/core'
 import type { PortablePath }            from '@yarnpkg/fslib'
 
 import type { ProcessEnvironmentPatch } from '../../capabilities/process.interfaces.js'
-import type { ProcessExecutor }         from '../../capabilities/process.interfaces.js'
 import type { YarnCommandRunOptions }   from '../../capabilities/yarn.interfaces.js'
+import type { Executor }                from '../../executor.js'
 
 export interface YarnExecutableOptions {
   baseEnvironment?: NodeJS.ProcessEnv
@@ -25,7 +25,7 @@ export interface YarnCommandOptions {
   args: Array<string>
   environment: NodeJS.ProcessEnv
   executionCwd: PortablePath
-  executor: ProcessExecutor
+  executor: Executor
   options?: YarnCommandRunOptions
   project: Project
 }

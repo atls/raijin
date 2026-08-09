@@ -1,17 +1,19 @@
-import type { ProcessExecutor } from '../../../commands/invocation/capabilities/process.interfaces.js'
 import type { ProcessExecutionResult } from '../../../commands/invocation/capabilities/process.interfaces.js'
-import type { ExecaProcessContext }         from './execute.interfaces.js'
-import type { ExecaProcessExecutionResult } from './execute.interfaces.js'
+import type { Executor }      from '../../../commands/invocation/executor.js'
+import type { ExecuteResult } from './result.js'
+import type { Streams }       from './streams.js'
 
-import { executeProcessWithExeca }          from './execute.js'
+import { execute }            from './execute.js'
 
-const toProcessExecutionResult = (result: ExecaProcessExecutionResult): ProcessExecutionResult => {
+const toProcessExecutionResult = (result: ExecuteResult): ProcessExecutionResult => {
   const output = { stderr: result.stderr, stdout: result.stdout }
 
   switch (result.reason) {
     case 'cancelled':
       return { ...output, reason: 'cancelled', cause: result.cause }
     case 'completed':
+      return { ...output, reason: 'completed', exitCode: result.exitCode }
+    case 'output-failed':
       return { ...output, reason: 'completed', exitCode: result.exitCode }
     case 'signalled':
       return {
@@ -25,21 +27,21 @@ const toProcessExecutionResult = (result: ExecaProcessExecutionResult): ProcessE
     case 'timed-out':
       return { ...output, reason: 'timed-out', cause: result.cause }
     default: {
-      const unsupported: never = result
+      const exhaustive: never = result
 
-      throw new Error(`Unsupported Execa execution result: ${String(unsupported)}`)
+      return exhaustive
     }
   }
 }
 
-export const createExecaProcessExecutor = (context: ExecaProcessContext): ProcessExecutor => ({
+export const create = (streams: Streams): Executor => ({
   execute: async (command, args, options) => {
-    const result = await executeProcessWithExeca(command, args, {
-      context,
+    const result = await execute(command, args, {
       cwd: options.cwd,
       env: options.environment,
       input: options.input,
       output: options.output,
+      streams,
       timeoutMs: options.timeoutMs,
     })
 
