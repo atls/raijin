@@ -44,7 +44,7 @@ test('should keep one self-owned registration when the managed loader is applied
   applyManagedNodeLoader(environment)
 
   assert.equal(environment.NODE_OPTIONS, `--trace-warnings --import ${registration(loader)}`)
-  assert.equal(environment[REGISTRATION], loader)
+  assert.equal(environment[REGISTRATION], `--import ${registration(loader)}`)
 })
 
 test('should replace the previous self-owned registration and preserve foreign registrations', () => {
@@ -64,8 +64,44 @@ test('should replace the previous self-owned registration and preserve foreign r
     environment.NODE_OPTIONS,
     `--import ${registration(foreignLoader)} --import ${registration(newLoader)}`
   )
-  assert.equal(environment[REGISTRATION], newLoader)
+  assert.equal(environment[REGISTRATION], `--import ${registration(newLoader)}`)
   assert.ok(!environment.NODE_OPTIONS.includes(encodeURIComponent(oldLoader)))
+})
+
+test('should preserve caller node options byte-for-byte while rotating its owned registration', () => {
+  const oldLoader = 'file:///tmp/old-loader.mjs'
+  const newLoader = 'file:///tmp/new-loader.mjs'
+  const foreignLoader = 'file:///tmp/foreign-loader.mjs'
+  const callerNodeOptions = `--title="caller  value"   --trace-warnings='kept value'  --import=${registration(foreignLoader)}`
+  const environment: NodeJS.ProcessEnv = {
+    [LOADER]: oldLoader,
+    NODE_OPTIONS: callerNodeOptions,
+  }
+
+  applyManagedNodeLoader(environment)
+  environment.NODE_OPTIONS = `${environment.NODE_OPTIONS}  --conditions=yarn`
+  environment[LOADER] = newLoader
+  applyManagedNodeLoader(environment)
+
+  assert.equal(
+    environment.NODE_OPTIONS,
+    `${callerNodeOptions}  --conditions=yarn --import ${registration(newLoader)}`
+  )
+})
+
+test('should preserve an identical caller-owned registration', () => {
+  const loader = 'file:///tmp/shared-loader.mjs'
+  const callerNodeOptions = `--import ${registration(loader)}`
+  const environment: NodeJS.ProcessEnv = {
+    [LOADER]: loader,
+    NODE_OPTIONS: callerNodeOptions,
+  }
+
+  applyManagedNodeLoader(environment)
+  Reflect.deleteProperty(environment, LOADER)
+  applyManagedNodeLoader(environment)
+
+  assert.deepEqual(environment, { NODE_OPTIONS: callerNodeOptions })
 })
 
 test('should remove a previous self-owned registration when the managed loader is cleared', () => {
@@ -88,7 +124,7 @@ test('should canonicalize and replace mixed-case Windows managed loader state', 
   const environment = {
     RAIJIN_NODE_LOADER: oldLoader,
     Raijin_Node_Loader: newLoader,
-    Raijin_Node_Loader_Registration: oldLoader,
+    Raijin_Node_Loader_Registration: `--import ${registration(oldLoader)}`,
     Node_Options: `--trace-warnings --import ${registration(oldLoader)}`,
   }
 
@@ -97,7 +133,7 @@ test('should canonicalize and replace mixed-case Windows managed loader state', 
   assert.deepEqual(environment, {
     NODE_OPTIONS: `--trace-warnings --import ${registration(newLoader)}`,
     RAIJIN_NODE_LOADER: newLoader,
-    RAIJIN_NODE_LOADER_REGISTRATION: newLoader,
+    RAIJIN_NODE_LOADER_REGISTRATION: `--import ${registration(newLoader)}`,
   })
 })
 
