@@ -62,33 +62,6 @@ jobs:
         run: |
           yarn raijin:check
 
-  managed-node:
-    name: Managed Node / Node 24
-    env:
-      NODE_VERSION: '24'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions: read-all
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install
-        uses: ./.github/actions/install
-
-      - name: Verify managed Node execution
-        shell: bash
-        run: |
-          yarn workspace @atls/raijin verify:managed-node
-
   unit:
     name: Unit / ${{ matrix.os }}
     env:
