@@ -1,7 +1,7 @@
 import type { ProcessExecutionResult } from '../../../commands/invocation/capabilities/process.interfaces.js'
 import type { Executor }      from '../../../commands/invocation/executor.js'
-import type { ExecuteResult } from './result.js'
-import type { Streams }       from './streams.js'
+import type { ExecuteResult } from './execute.interfaces.js'
+import type { Streams }       from './execute.interfaces.js'
 
 import { execute }            from './execute.js'
 

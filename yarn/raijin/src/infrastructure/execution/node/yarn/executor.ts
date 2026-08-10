@@ -1,20 +1,20 @@
-import type { Input as ExecuteInput } from '../../../../application/execution/node/index.js'
-import type { Port as Executor } from '../../../../application/execution/node/index.js'
-import type { Process as ProcessResult } from '../../../../application/execution/node/index.js'
-import type { Result as ExecuteResult } from '../../../../application/execution/node/index.js'
-import type { ExecuteResult as ProcessExecuteResult } from '../../../process/execa/result.js'
-import type { Options }                               from './options.js'
+import type { Input as ExecuteInput }         from '../../../../application/execution/node/index.js'
+import type { Port as Executor }              from '../../../../application/execution/node/index.js'
+import type { Process as ProcessResult }      from '../../../../application/execution/node/index.js'
+import type { Result as ExecuteResult }       from '../../../../application/execution/node/index.js'
+import type { ExecuteResult as ProcessExecuteResult } from '../../../process/execa/execute.interfaces.js'
+import type { Options }                       from './options.js'
 
-import { npath }                                      from '@yarnpkg/fslib'
+import { npath }                              from '@yarnpkg/fslib'
 
 import { create as createCleanupFailure } from '../../../../application/execution/node/failures/cleanup.js'
 import { create as createOutputFailure } from '../../../../application/execution/node/failures/output.js'
 import { create as createStartFailure } from '../../../../application/execution/node/failures/start.js'
-import { execute as executeProcess }                  from '../../../process/execa/execute.js'
-import { create as createRegistrationImport }         from '../loaders/registration.js'
-import { resolve as resolveLoader }                   from '../loaders/typescript/resolve.js'
-import { directory }                                  from './directory.js'
-import { create as createEnvironment }                from './environment/create.js'
+import { execute as executeProcess }          from '../../../process/execa/execute.js'
+import { create as createRegistrationImport } from '../loaders/registration.js'
+import { resolve as resolveLoader }           from '../loaders/typescript/resolve.js'
+import { directory }                          from './directory.js'
+import { create as createEnvironment }        from './environment/create.js'
 
 const toProcessResult = (result: ProcessExecuteResult): ProcessResult => {
   const output = { stderr: result.stderr, stdout: result.stdout }

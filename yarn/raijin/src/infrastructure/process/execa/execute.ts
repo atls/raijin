@@ -2,9 +2,9 @@ import type { Options }            from 'execa'
 import type { Result }             from 'execa'
 import type { StdoutStderrOption } from 'execa'
 
-import type { ExecuteOptions }     from './options.js'
-import type { OutputEvent }        from './output.js'
-import type { ExecuteResult }      from './result.js'
+import type { ExecuteOptions }     from './execute.interfaces.js'
+import type { OutputEvent }        from './execute.interfaces.js'
+import type { ExecuteResult }      from './execute.interfaces.js'
 
 import { execa }                   from 'execa'
 
