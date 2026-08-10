@@ -5,13 +5,8 @@ import { join }    from 'node:path'
 
 const PREFIX = 'raijin-node-execution-'
 
-interface Directory {
-  path: string
-  remove: () => Promise<void>
-}
-
 export const directory = {
-  create: async (): Promise<Directory> => {
+  create: async () => {
     const path = await mkdtemp(join(tmpdir(), PREFIX))
 
     return {

@@ -1,11 +1,11 @@
 import { delimiter }   from 'node:path'
 import { win32 }       from 'node:path'
 
-import { createNames } from '../../process/environment/map.js'
-import { get }         from '../../process/environment/map.js'
-import { merge }       from '../../process/environment/map.js'
-import { remove }      from '../../process/environment/map.js'
-import { set }         from '../../process/environment/map.js'
+import { createNames } from '../../../process/environment/map.js'
+import { get }         from '../../../process/environment/map.js'
+import { merge }       from '../../../process/environment/map.js'
+import { remove }      from '../../../process/environment/map.js'
+import { set }         from '../../../process/environment/map.js'
 
 const OWNED_NAMES = [
   'BERRY_BIN_FOLDER',

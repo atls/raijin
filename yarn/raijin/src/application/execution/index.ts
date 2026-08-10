@@ -1,0 +1,6 @@
+export type { EnvironmentPatch } from './inputs/execute.js'
+export type { Input }            from './inputs/execute.js'
+export type { OutputEvent }      from './inputs/execute.js'
+export type { OutputPolicy }     from './inputs/execute.js'
+export type { Port }             from './ports/executor.js'
+export type { Result }           from './results/execute.js'

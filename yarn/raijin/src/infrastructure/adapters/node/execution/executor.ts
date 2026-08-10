@@ -1,16 +1,13 @@
-import type { Input as ExecuteInput }         from '../../../../application/execution/node/index.js'
-import type { Port as Executor }              from '../../../../application/execution/node/index.js'
-import type { Result as ExecuteResult }       from '../../../../application/execution/node/index.js'
+import type { Input as ExecuteInput }         from '../../../../application/execution/index.js'
+import type { Port as Executor }              from '../../../../application/execution/index.js'
+import type { Result as ExecuteResult }       from '../../../../application/execution/index.js'
 import type { ExecuteResult as ProcessExecuteResult } from '../../../process/execa/execute.interfaces.js'
 import type { ExecutorOptions }               from './executor.interfaces.js'
-
-import { npath }                              from '@yarnpkg/fslib'
 
 import { execute as executeProcess }          from '../../../process/execa/execute.js'
 import { create as createRegistrationImport } from '../loaders/registration.js'
 import { resolve as resolveLoader }           from '../loaders/typescript/resolve.js'
 import { directory }                          from './directory.js'
-import { create as createEnvironment }        from './environment/create.js'
 
 type ProcessResult = Exclude<ExecuteResult, { reason: 'cleanup-failed' }>
 
@@ -47,7 +44,7 @@ const createArguments = (input: ExecuteInput, loader: string): Array<string> => 
   '--import',
   createRegistrationImport([loader]),
   '--',
-  input.program,
+  input.entry,
   ...(input.arguments ?? []),
 ]
 
@@ -58,13 +55,10 @@ const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<E
   try {
     temporaryDirectory = await directory.create()
 
-    const environment = await createEnvironment({
-      baseEnvironment: options.baseEnvironment ?? process.env,
-      binFolder: npath.toPortablePath(temporaryDirectory.path),
+    const environment = await options.environment.prepare({
+      binDirectory: temporaryDirectory.path,
       cwd: input.cwd,
-      environmentPatch: input.environment ?? {},
-      locator: options.locator,
-      project: options.project,
+      patch: input.environment ?? {},
     })
     const output = input.output?.mode === 'inherit' ? undefined : input.output
     const result = await executeProcess(

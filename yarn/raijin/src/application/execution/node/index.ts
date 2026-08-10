@@ -1,6 +1,0 @@
-export type { EnvironmentPatch }          from './input.js'
-export type { Input }                     from './input.js'
-export type { OutputEvent }               from './input.js'
-export type { OutputPolicy }              from './input.js'
-export type { Port }                      from './port.js'
-export type { Result }                    from './result.js'

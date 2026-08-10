@@ -4,27 +4,14 @@ import { join }          from 'node:path'
 import { resolve }       from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-import { Resolution }    from '../infrastructure/execution/node/loaders/typescript/resolution.js'
-import { resolve as resolveLoader } from '../infrastructure/execution/node/loaders/typescript/resolve.js'
-import { resolveSource } from '../infrastructure/execution/node/loaders/typescript/resolve.js'
-
-const preserveError = async (resolution: Promise<string>): Promise<string> => {
-  try {
-    return await resolution
-  } catch (error) {
-    if (error instanceof Resolution) {
-      throw new Error(error.message)
-    }
-
-    throw error
-  }
-}
+import { resolve as resolveLoader } from '../infrastructure/adapters/node/loaders/typescript/resolve.js'
+import { resolveSource } from '../infrastructure/adapters/node/loaders/typescript/resolve.js'
 
 export const resolveSourceTypeScriptLoader = async (packagePath: string): Promise<string> =>
-  preserveError(resolveSource(packagePath))
+  resolveSource(packagePath)
 
 export const resolveTypeScriptLoader = async (packagePath?: string): Promise<string> =>
-  preserveError(resolveLoader(packagePath))
+  resolveLoader(packagePath)
 
 const PNP_API_FILENAME = '.pnp.cjs'
 const PNP_ESM_LOADER_FILENAME = '.pnp.loader.mjs'

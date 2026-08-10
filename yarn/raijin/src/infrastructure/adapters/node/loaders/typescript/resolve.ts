@@ -4,8 +4,6 @@ import { dirname }       from 'node:path'
 import { join }          from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-import { Resolution }    from './resolution.js'
-
 const PACKAGE_NAME = '@atls/raijin/package.json'
 const DIST_PATH = 'dist/runtime/typescript-loader.js'
 const SOURCE_PATH = 'src/runtime/typescript-loader.ts'
@@ -27,7 +25,7 @@ export const resolveSource = async (packagePath: string): Promise<string> => {
   const sourcePath = join(dirname(packagePath), SOURCE_PATH)
 
   if (!(await exists(sourcePath))) {
-    throw Resolution.sourceUnavailable(PACKAGE_NAME)
+    throw new Error(`Unable to resolve source TypeScript loader for ${PACKAGE_NAME}`)
   }
 
   return pathToFileURL(sourcePath).href
@@ -51,5 +49,5 @@ export const resolve = async (packagePath?: string): Promise<string> => {
     return pathToFileURL(sourcePath).href
   }
 
-  throw Resolution.unavailable(PACKAGE_NAME)
+  throw new Error(`Unable to resolve loadable TypeScript loader for ${PACKAGE_NAME}`)
 }

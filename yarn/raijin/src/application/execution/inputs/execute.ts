@@ -14,9 +14,9 @@ export interface Input {
   arguments?: ReadonlyArray<string>
   cancelSignal?: AbortSignal
   cwd: string
+  entry: string
   environment?: EnvironmentPatch
   input?: 'ignore' | 'inherit'
   output?: OutputPolicy
-  program: string
   timeoutMs?: number
 }

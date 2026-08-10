@@ -1,9 +1,9 @@
 import { REGISTERED_PNP_LOADER_ENV }           from '../runtime/node/bootstrap/loader.js'
+import { isOwned as isYarnEnvironmentName } from '../infrastructure/adapters/yarn/environment/sanitize.js'
+import { sanitize as sanitizeEnvironment } from '../infrastructure/adapters/yarn/environment/sanitize.js'
 import { get as getEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
 import { remove as removeEnvironmentVariable } from '../infrastructure/process/environment/map.js'
 import { set as setEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
-import { isOwned as isYarnEnvironmentName }    from '../infrastructure/yarn/environment/sanitize.js'
-import { sanitize as sanitizeEnvironment }     from '../infrastructure/yarn/environment/sanitize.js'
 import { isManagedNodeEnvironmentName }        from '../runtime/node/bootstrap/loader.js'
 
 const PNP_NODE_OPTION = /(?:^|[\\/])\.pnp\.(?:cjs|loader\.mjs)$/
