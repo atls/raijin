@@ -1,26 +1,26 @@
-import assert                                 from 'node:assert/strict'
-import { join }                               from 'node:path'
-import { test }                               from 'node:test'
+import assert                        from 'node:assert/strict'
+import { test }                      from 'node:test'
 
-import { npath }                              from '@yarnpkg/fslib'
+import { npath }                     from '@yarnpkg/fslib'
 
-import { create as createExecutor }           from '../executor.js'
-import { assert as assertCompleted }          from './completion.js'
-import { directory as fixturesDirectory }     from './fixtures/paths.js'
-import { program }                            from './fixtures/paths.js'
-import { get as getProject }                  from './project.js'
-import { track as trackTemporaryDirectories } from './temporary.js'
+import { create as createExecutor } from '../../../../../src/infrastructure/execution/node/yarn/executor.js'
+import { assertCompleted }           from './assert-completed.js'
+import { createProjectContext }      from './create-project-context.js'
+import { resolveFixturePath }        from './resolve-fixture-path.js'
+import { trackTemporaryDirectories } from './track-temporary-directories.js'
+
+const program = resolveFixturePath('managed-node-program.ts')
 
 test('should execute a relative program whose name starts with an option prefix', async (context) => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
   const executor = createExecutor({ project })
   const result = await executor.execute({
     arguments: ['argument-value'],
-    cwd: fixturesDirectory,
+    cwd: resolveFixturePath(),
     input: 'ignore',
     output: { mode: 'capture' },
-    program: '-program.ts',
+    program: '-managed-node-program.ts',
   })
 
   assertCompleted(result)
@@ -30,7 +30,7 @@ test('should execute a relative program whose name starts with an option prefix'
 })
 
 test('should preserve a non-zero exit as a completed execution', async (context) => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
   const executor = createExecutor({ project })
   const result = await executor.execute({
@@ -47,7 +47,7 @@ test('should preserve a non-zero exit as a completed execution', async (context)
 })
 
 test('should expose output through the application handler contract', async () => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const events: Array<{ data: string; source: 'stderr' | 'stdout' }> = []
   const executor = createExecutor({ project })
   const result = await executor.execute({
@@ -74,13 +74,13 @@ test('should expose output through the application handler contract', async () =
 })
 
 test('should preserve a Node-reported missing program as a completed non-zero exit', async () => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const executor = createExecutor({ project })
   const result = await executor.execute({
     cwd: npath.fromPortablePath(project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
-    program: join(fixturesDirectory, 'missing.ts'),
+    program: resolveFixturePath('missing.ts'),
   })
 
   assert.equal(result.reason, 'completed')

@@ -5,9 +5,12 @@ import { rm }               from 'node:fs/promises'
 import { tmpdir }           from 'node:os'
 import { join }             from 'node:path'
 
-import { directory }        from '../directory.js'
+import { directory } from '../../../../../src/infrastructure/execution/node/yarn/directory.js'
 
-export const track = (context: TestContext, cleanupFailure?: Error): Array<string> => {
+export const trackTemporaryDirectories = (
+  context: TestContext,
+  cleanupFailure?: Error
+): Array<string> => {
   const removed: Array<string> = []
 
   context.mock.method(directory, 'create', async () => {

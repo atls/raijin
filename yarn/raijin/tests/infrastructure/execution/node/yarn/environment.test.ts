@@ -1,18 +1,19 @@
-import assert                                 from 'node:assert/strict'
-import { test }                               from 'node:test'
+import assert                        from 'node:assert/strict'
+import { test }                      from 'node:test'
 
-import { npath }                              from '@yarnpkg/fslib'
+import { npath }                     from '@yarnpkg/fslib'
 
-import { create as createExecutor }           from '../executor.js'
-import { scriptUtils }                        from '../scripts.js'
-import { assert as assertCompleted }          from './completion.js'
-import { program }                            from './fixtures/paths.js'
-import { find as findProject }                from './project.js'
-import { get as getProject }                  from './project.js'
-import { track as trackTemporaryDirectories } from './temporary.js'
+import { create as createExecutor } from '../../../../../src/infrastructure/execution/node/yarn/executor.js'
+import { scriptUtils } from '../../../../../src/infrastructure/execution/node/yarn/scripts.js'
+import { assertCompleted }           from './assert-completed.js'
+import { createProjectContext }      from './create-project-context.js'
+import { resolveFixturePath }        from './resolve-fixture-path.js'
+import { trackTemporaryDirectories } from './track-temporary-directories.js'
+
+const program = resolveFixturePath('managed-node-program.ts')
 
 test('should execute TypeScript through the project PnP environment', async (context) => {
-  const { project, workspace } = await getProject()
+  const { project, workspace } = await createProjectContext()
   const callerNodeOptions = '--title=raijin-caller --trace-warnings'
   const removed = trackTemporaryDirectories(context)
   const nodeOptionsName = process.platform === 'win32' ? 'Node_Options' : 'NODE_OPTIONS'
@@ -56,7 +57,7 @@ test('should execute TypeScript through the project PnP environment', async (con
 })
 
 test('should expose locator-accessible binaries through Yarn hooks', async (context) => {
-  const { project, workspace } = await getProject()
+  const { project, workspace } = await createProjectContext()
   const baseEnvironment = Object.fromEntries(
     Object.entries(process.env).filter(([name]) => name.toUpperCase() !== 'PATH')
   )
@@ -81,8 +82,7 @@ test('should expose locator-accessible binaries through Yarn hooks', async (cont
 })
 
 test('should restore install state before preparing a dependency locator environment', async (context) => {
-  const source = await findProject()
-  assert.ok(source.workspace)
+  const source = await createProjectContext()
   await source.project.restoreInstallState()
 
   const binaries = await scriptUtils.getPackageAccessibleBinaries(
@@ -93,7 +93,7 @@ test('should restore install state before preparing a dependency locator environ
   assert.ok(binary)
   const [locator] = binary
 
-  const fresh = await findProject()
+  const fresh = await createProjectContext()
   assert.equal(fresh.project.storedPackages.has(locator.locatorHash), false)
 
   const baseEnvironment = Object.fromEntries(
@@ -120,7 +120,7 @@ test('should restore install state before preparing a dependency locator environ
 })
 
 test('should return a stable failure when a managed environment name is overridden', async (context) => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
   const executor = createExecutor({ project })
   const result = await executor.execute({

@@ -8,10 +8,10 @@ import { test }                 from 'node:test'
 
 import { npath }                from '@yarnpkg/fslib'
 
-import { get as getProject }    from '../tests/project.js'
-import { createCommandWrapper } from './binaries.js'
-import { createShellWrapper }   from './binaries.js'
-import { install }              from './binaries.js'
+import { createCommandWrapper } from '../../../../../src/infrastructure/execution/node/yarn/environment/binaries.js'
+import { createShellWrapper } from '../../../../../src/infrastructure/execution/node/yarn/environment/binaries.js'
+import { install } from '../../../../../src/infrastructure/execution/node/yarn/environment/binaries.js'
+import { createProjectContext } from './create-project-context.js'
 
 test('should create a Windows command wrapper with escaped arguments', () => {
   assert.equal(
@@ -28,7 +28,7 @@ test('should create a POSIX shell wrapper with escaped arguments', () => {
 })
 
 test('should install binaries reported by Yarn', async () => {
-  const { project, workspace } = await getProject()
+  const { project, workspace } = await createProjectContext()
   await project.restoreInstallState()
 
   const folder = npath.toPortablePath(await mkdtemp(join(tmpdir(), 'raijin-binaries-')))

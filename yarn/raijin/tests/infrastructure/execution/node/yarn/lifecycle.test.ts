@@ -1,17 +1,19 @@
-import assert                                 from 'node:assert/strict'
-import { rm }                                 from 'node:fs/promises'
-import { test }                               from 'node:test'
+import assert                        from 'node:assert/strict'
+import { rm }                        from 'node:fs/promises'
+import { test }                      from 'node:test'
 
-import { npath }                              from '@yarnpkg/fslib'
+import { npath }                     from '@yarnpkg/fslib'
 
-import { create as createExecutor }           from '../executor.js'
-import { assert as assertCompleted }          from './completion.js'
-import { program }                            from './fixtures/paths.js'
-import { get as getProject }                  from './project.js'
-import { track as trackTemporaryDirectories } from './temporary.js'
+import { create as createExecutor } from '../../../../../src/infrastructure/execution/node/yarn/executor.js'
+import { assertCompleted }           from './assert-completed.js'
+import { createProjectContext }      from './create-project-context.js'
+import { resolveFixturePath }        from './resolve-fixture-path.js'
+import { trackTemporaryDirectories } from './track-temporary-directories.js'
+
+const program = resolveFixturePath('managed-node-program.ts')
 
 test('should cancel execution and remove its temporary directory', async (context) => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
   const executor = createExecutor({ project })
   const result = await executor.execute({
@@ -28,7 +30,7 @@ test('should cancel execution and remove its temporary directory', async (contex
 })
 
 test('should time out execution and remove its temporary directory', async (context) => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
   const executor = createExecutor({ project })
   const result = await executor.execute({
@@ -48,7 +50,7 @@ test(
   'should preserve signal termination and remove its temporary directory',
   { skip: process.platform === 'win32' },
   async (context) => {
-    const { project } = await getProject()
+    const { project } = await createProjectContext()
     const removed = trackTemporaryDirectories(context)
     const executor = createExecutor({ project })
     const result = await executor.execute({
@@ -66,7 +68,7 @@ test(
 )
 
 test('should wait for captured output before completing', async () => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const executor = createExecutor({ project })
   const result = await executor.execute({
     arguments: ['stream'],
@@ -81,7 +83,7 @@ test('should wait for captured output before completing', async () => {
 })
 
 test('should return an output failure when the application handler throws', async (context) => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
   const executor = createExecutor({ project })
   const result = await executor.execute({
@@ -111,7 +113,7 @@ test('should return an output failure when the application handler throws', asyn
 })
 
 test('should preserve a non-zero exit when the application handler throws', async (context) => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
   const executor = createExecutor({ project })
   const result = await executor.execute({
@@ -141,7 +143,7 @@ test('should preserve a non-zero exit when the application handler throws', asyn
 })
 
 test('should report cleanup failure without discarding the process result', async (context) => {
-  const { project } = await getProject()
+  const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context, new Error('cleanup failed'))
   const executor = createExecutor({ project })
   const result = await executor.execute({
