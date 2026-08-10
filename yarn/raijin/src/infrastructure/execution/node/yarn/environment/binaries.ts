@@ -3,10 +3,9 @@ import type { Project }      from '@yarnpkg/core'
 import type { Filename }     from '@yarnpkg/fslib'
 import type { PortablePath } from '@yarnpkg/fslib'
 
+import { scriptUtils }       from '@yarnpkg/core'
 import { ppath }             from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
-
-import { scriptUtils }       from '../script-utils.js'
 
 interface InstallOptions {
   folder: PortablePath

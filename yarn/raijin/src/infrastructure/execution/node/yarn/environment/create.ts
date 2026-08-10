@@ -1,10 +1,10 @@
 import type { CreateOptions } from './create.interfaces.js'
 
+import { scriptUtils }        from '@yarnpkg/core'
 import { npath }              from '@yarnpkg/fslib'
 
 import { merge }              from '../../../../process/environment/map.js'
 import { set }                from '../../../../process/environment/map.js'
-import { scriptUtils }        from '../script-utils.js'
 import { install }            from './binaries.js'
 import { prepare }            from './prepare.js'
 

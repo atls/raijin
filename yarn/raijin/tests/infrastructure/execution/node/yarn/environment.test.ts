@@ -1,10 +1,10 @@
 import assert                        from 'node:assert/strict'
 import { test }                      from 'node:test'
 
+import { scriptUtils }               from '@yarnpkg/core'
 import { npath }                     from '@yarnpkg/fslib'
 
 import { create as createExecutor } from '../../../../../src/infrastructure/execution/node/yarn/executor.js'
-import { scriptUtils } from '../../../../../src/infrastructure/execution/node/yarn/script-utils.js'
 import { assertCompleted }           from './assert-completed.js'
 import { createProjectContext }      from './create-project-context.js'
 import { resolveFixturePath }        from './resolve-fixture-path.js'
