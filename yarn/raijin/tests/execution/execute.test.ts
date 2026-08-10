@@ -3,15 +3,15 @@ import { test }                      from 'node:test'
 
 import { npath }                     from '@yarnpkg/fslib'
 
-import { create as createExecutor } from '../../../../../src/infrastructure/execution/node/yarn/executor.js'
 import { assertCompleted }           from './assert-completed.js'
+import { createExecutor }            from './create-executor.js'
 import { createProjectContext }      from './create-project-context.js'
 import { resolveFixturePath }        from './resolve-fixture-path.js'
 import { trackTemporaryDirectories } from './track-temporary-directories.js'
 
-const program = resolveFixturePath('managed-node-program.ts')
+const entry = resolveFixturePath('entry.ts')
 
-test('should execute a relative program whose name starts with an option prefix', async (context) => {
+test('should execute a relative entry whose name starts with an option prefix', async (context) => {
   const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
   const executor = createExecutor({ project })
@@ -20,7 +20,7 @@ test('should execute a relative program whose name starts with an option prefix'
     cwd: resolveFixturePath(),
     input: 'ignore',
     output: { mode: 'capture' },
-    program: '-managed-node-program.ts',
+    entry: '-entry.ts',
   })
 
   assertCompleted(result)
@@ -38,7 +38,7 @@ test('should preserve a non-zero exit as a completed execution', async (context)
     cwd: npath.fromPortablePath(project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
-    program,
+    entry,
   })
 
   assertCompleted(result)
@@ -56,7 +56,7 @@ test('should expose output through the application handler contract', async () =
     environment: { RAIJIN_TEST_VALUE: 'handled-environment' },
     input: 'ignore',
     output: { mode: 'handle', handler: (event) => events.push(event) },
-    program,
+    entry,
   })
 
   assertCompleted(result)
@@ -73,14 +73,14 @@ test('should expose output through the application handler contract', async () =
   assert.equal(report.preserved, 'handled-environment')
 })
 
-test('should preserve a Node-reported missing program as a completed non-zero exit', async () => {
+test('should preserve a Node-reported missing entry as a completed non-zero exit', async () => {
   const { project } = await createProjectContext()
   const executor = createExecutor({ project })
   const result = await executor.execute({
     cwd: npath.fromPortablePath(project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
-    program: resolveFixturePath('missing.ts'),
+    entry: resolveFixturePath('missing.ts'),
   })
 
   assert.equal(result.reason, 'completed')

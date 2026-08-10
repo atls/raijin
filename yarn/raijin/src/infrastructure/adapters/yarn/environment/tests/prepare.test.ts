@@ -1,7 +1,7 @@
 import assert      from 'node:assert/strict'
 import { test }    from 'node:test'
 
-import { prepare } from './prepare.js'
+import { prepare } from '../prepare.js'
 
 const assertUniqueWindowsNames = (environment: NodeJS.ProcessEnv): void => {
   const names = Object.keys(environment).map((name) => name.toUpperCase())

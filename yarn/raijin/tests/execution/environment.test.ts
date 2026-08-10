@@ -4,13 +4,13 @@ import { test }                      from 'node:test'
 import { scriptUtils }               from '@yarnpkg/core'
 import { npath }                     from '@yarnpkg/fslib'
 
-import { create as createExecutor } from '../../../../../src/infrastructure/execution/node/yarn/executor.js'
 import { assertCompleted }           from './assert-completed.js'
+import { createExecutor }            from './create-executor.js'
 import { createProjectContext }      from './create-project-context.js'
 import { resolveFixturePath }        from './resolve-fixture-path.js'
 import { trackTemporaryDirectories } from './track-temporary-directories.js'
 
-const program = resolveFixturePath('managed-node-program.ts')
+const entry = resolveFixturePath('entry.ts')
 
 test('should execute TypeScript through the project PnP environment', async (context) => {
   const { project, workspace } = await createProjectContext()
@@ -35,7 +35,7 @@ test('should execute TypeScript through the project PnP environment', async (con
     },
     input: 'ignore',
     output: { mode: 'capture' },
-    program,
+    entry,
   })
 
   assert.ok(Number(process.versions.node.split('.')[0]) >= 24)
@@ -72,7 +72,7 @@ test('should expose locator-accessible binaries through Yarn hooks', async (cont
     cwd: npath.fromPortablePath(project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
-    program,
+    entry,
   })
 
   assertCompleted(result)
@@ -110,7 +110,7 @@ test('should restore install state before preparing a dependency locator environ
     cwd: npath.fromPortablePath(fresh.project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
-    program,
+    entry,
   })
 
   assertCompleted(result)
@@ -129,7 +129,7 @@ test('should return a stable failure when a managed environment name is overridd
     environment: { PROJECT_CWD: '/unsupported' },
     input: 'ignore',
     output: { mode: 'capture' },
-    program,
+    entry,
   })
 
   assert.deepEqual(result, {

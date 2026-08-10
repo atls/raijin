@@ -4,13 +4,13 @@ import { test }                      from 'node:test'
 
 import { npath }                     from '@yarnpkg/fslib'
 
-import { create as createExecutor } from '../../../../../src/infrastructure/execution/node/yarn/executor.js'
 import { assertCompleted }           from './assert-completed.js'
+import { createExecutor }            from './create-executor.js'
 import { createProjectContext }      from './create-project-context.js'
 import { resolveFixturePath }        from './resolve-fixture-path.js'
 import { trackTemporaryDirectories } from './track-temporary-directories.js'
 
-const program = resolveFixturePath('managed-node-program.ts')
+const entry = resolveFixturePath('entry.ts')
 
 test('should cancel execution and remove its temporary directory', async (context) => {
   const { project } = await createProjectContext()
@@ -22,7 +22,7 @@ test('should cancel execution and remove its temporary directory', async (contex
     cwd: npath.fromPortablePath(project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
-    program,
+    entry,
   })
 
   assert.equal(result.reason, 'cancelled')
@@ -38,7 +38,7 @@ test('should time out execution and remove its temporary directory', async (cont
     cwd: npath.fromPortablePath(project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
-    program,
+    entry,
     timeoutMs: 50,
   })
 
@@ -58,7 +58,7 @@ test(
       cwd: npath.fromPortablePath(project.cwd),
       input: 'ignore',
       output: { mode: 'capture' },
-      program,
+      entry,
     })
 
     assert.equal(result.reason, 'signalled')
@@ -75,7 +75,7 @@ test('should wait for captured output before completing', async () => {
     cwd: npath.fromPortablePath(project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
-    program,
+    entry,
   })
 
   assertCompleted(result)
@@ -96,7 +96,7 @@ test('should return an output failure when the application handler throws', asyn
         throw new Error('handler failed')
       },
     },
-    program,
+    entry,
   })
 
   assert.deepEqual(result, {
@@ -122,7 +122,7 @@ test('should preserve a non-zero exit when the application handler throws', asyn
         throw new Error('handler failed')
       },
     },
-    program,
+    entry,
   })
 
   assert.deepEqual(result, {
@@ -143,7 +143,7 @@ test('should report cleanup failure without discarding the process result', asyn
     cwd: npath.fromPortablePath(project.cwd),
     input: 'ignore',
     output: { mode: 'capture' },
-    program,
+    entry,
   })
 
   assert.deepEqual(result, {

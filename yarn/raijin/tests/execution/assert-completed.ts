@@ -1,6 +1,6 @@
-import type { Result as ExecuteResult } from '../../../../../src/application/execution/node/index.js'
+import type { Result as ExecuteResult } from '../../src/application/execution/index.js'
 
-import nodeAssert from 'node:assert/strict'
+import nodeAssert                       from 'node:assert/strict'
 
 type CompletedResult = Extract<ExecuteResult, { reason: 'completed' }>
 

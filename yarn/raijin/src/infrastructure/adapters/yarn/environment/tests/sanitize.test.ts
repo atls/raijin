@@ -3,7 +3,7 @@ import { delimiter } from 'node:path'
 import { win32 }     from 'node:path'
 import { test }      from 'node:test'
 
-import { sanitize }  from './sanitize.js'
+import { sanitize }  from '../sanitize.js'
 
 test('should canonicalize Windows environment and remove the inherited Yarn bin folder', () => {
   const environment = sanitize(
