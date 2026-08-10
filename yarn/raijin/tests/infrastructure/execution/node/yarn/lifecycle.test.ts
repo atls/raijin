@@ -102,10 +102,6 @@ test('should return an output failure when the application handler throws', asyn
   assert.deepEqual(result, {
     reason: 'output-failed',
     exitCode: 0,
-    failure: {
-      code: 'output-failed',
-      message: 'Managed Node output handling failed',
-    },
     stderr: '',
     stdout: '',
   })
@@ -132,10 +128,6 @@ test('should preserve a non-zero exit when the application handler throws', asyn
   assert.deepEqual(result, {
     reason: 'output-failed',
     exitCode: 7,
-    failure: {
-      code: 'output-failed',
-      message: 'Managed Node output handling failed',
-    },
     stderr: '',
     stdout: '',
   })
@@ -156,10 +148,6 @@ test('should report cleanup failure without discarding the process result', asyn
 
   assert.deepEqual(result, {
     reason: 'cleanup-failed',
-    failure: {
-      code: 'cleanup-failed',
-      message: 'Managed Node temporary resource cleanup failed',
-    },
     execution: {
       reason: 'completed',
       exitCode: 7,

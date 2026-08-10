@@ -134,10 +134,6 @@ test('should return a stable failure when a managed environment name is overridd
 
   assert.deepEqual(result, {
     reason: 'start-failed',
-    failure: {
-      code: 'start-failed',
-      message: 'Managed Node execution failed to start',
-    },
     stderr: '',
     stdout: '',
   })

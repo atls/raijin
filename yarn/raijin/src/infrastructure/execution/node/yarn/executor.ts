@@ -1,20 +1,18 @@
 import type { Input as ExecuteInput }         from '../../../../application/execution/node/index.js'
 import type { Port as Executor }              from '../../../../application/execution/node/index.js'
-import type { Process as ProcessResult }      from '../../../../application/execution/node/index.js'
 import type { Result as ExecuteResult }       from '../../../../application/execution/node/index.js'
 import type { ExecuteResult as ProcessExecuteResult } from '../../../process/execa/execute.interfaces.js'
 import type { ExecutorOptions }               from './executor.interfaces.js'
 
 import { npath }                              from '@yarnpkg/fslib'
 
-import { create as createCleanupFailure } from '../../../../application/execution/node/failures/cleanup.js'
-import { create as createOutputFailure } from '../../../../application/execution/node/failures/output.js'
-import { create as createStartFailure } from '../../../../application/execution/node/failures/start.js'
 import { execute as executeProcess }          from '../../../process/execa/execute.js'
 import { create as createRegistrationImport } from '../loaders/registration.js'
 import { resolve as resolveLoader }           from '../loaders/typescript/resolve.js'
 import { directory }                          from './directory.js'
 import { create as createEnvironment }        from './environment/create.js'
+
+type ProcessResult = Exclude<ExecuteResult, { reason: 'cleanup-failed' }>
 
 const toProcessResult = (result: ProcessExecuteResult): ProcessResult => {
   const output = { stderr: result.stderr, stdout: result.stdout }
@@ -29,12 +27,11 @@ const toProcessResult = (result: ProcessExecuteResult): ProcessResult => {
         ...output,
         reason: 'output-failed',
         exitCode: result.exitCode,
-        failure: createOutputFailure(),
       }
     case 'signalled':
       return { ...output, reason: 'signalled', signal: result.signal }
     case 'start-failed':
-      return { ...output, reason: 'start-failed', failure: createStartFailure() }
+      return { ...output, reason: 'start-failed' }
     case 'timed-out':
       return { ...output, reason: 'timed-out' }
     default: {
@@ -90,14 +87,14 @@ const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<E
 
     execution = toProcessResult(result)
   } catch {
-    execution = { reason: 'start-failed', failure: createStartFailure(), stderr: '', stdout: '' }
+    execution = { reason: 'start-failed', stderr: '', stdout: '' }
   }
 
   if (temporaryDirectory) {
     try {
       await temporaryDirectory.remove()
     } catch {
-      return { reason: 'cleanup-failed', failure: createCleanupFailure(), execution }
+      return { reason: 'cleanup-failed', execution }
     }
   }
 
