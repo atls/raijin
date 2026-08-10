@@ -1,11 +1,11 @@
-import { LOADER }               from '../../../infrastructure/execution/node/loaders/environment.js'
-import { REGISTRATION }         from '../../../infrastructure/execution/node/loaders/environment.js'
+import { LOADER } from '../../../infrastructure/execution/node/loaders/environment.js'
+import { REGISTRATION } from '../../../infrastructure/execution/node/loaders/environment.js'
 import { REGISTERED_PNP_LOADER } from '../../../infrastructure/execution/node/loaders/environment.js'
 import { create as createRegistrationImport } from '../../../infrastructure/execution/node/loaders/registration.js'
-import { createCanonicalNames } from '../../../infrastructure/yarn/environment/variables.js'
-import { get as getEnvironmentVariable } from '../../../infrastructure/yarn/environment/variables.js'
-import { remove as removeEnvironmentVariable } from '../../../infrastructure/yarn/environment/variables.js'
-import { set as setEnvironmentVariable } from '../../../infrastructure/yarn/environment/variables.js'
+import { createNames as createCanonicalNames } from '../../../infrastructure/process/environment/map.js'
+import { get as getEnvironmentVariable } from '../../../infrastructure/process/environment/map.js'
+import { remove as removeEnvironmentVariable } from '../../../infrastructure/process/environment/map.js'
+import { set as setEnvironmentVariable } from '../../../infrastructure/process/environment/map.js'
 
 export const REGISTERED_PNP_LOADER_ENV = REGISTERED_PNP_LOADER
 

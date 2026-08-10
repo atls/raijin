@@ -1,18 +1,11 @@
-const DISCARDED_NAMES = new Set([
-  'BERRY_BIN_FOLDER',
-  'npm_config_user_agent',
-  'npm_execpath',
-  'npm_node_execpath',
-  'YARN_IGNORE_PATH',
-])
-const DISCARDED_WINDOWS_NAMES = new Set(Array.from(DISCARDED_NAMES, (name) => name.toUpperCase()))
-const CANONICAL_NAMES = ['INIT_CWD', 'NODE_OPTIONS', 'PATH', 'PROJECT_CWD', ...DISCARDED_NAMES]
-const CANONICAL_WINDOWS_NAMES = new Map(CANONICAL_NAMES.map((name) => [name.toUpperCase(), name]))
+const PROCESS_NAMES = ['INIT_CWD', 'NODE_OPTIONS', 'PATH', 'PROJECT_CWD']
 
-export const createCanonicalNames = (
+export const createNames = (
   additionalNames: ReadonlyArray<string> = []
 ): ReadonlyMap<string, string> =>
-  new Map([...CANONICAL_NAMES, ...additionalNames].map((name) => [name.toUpperCase(), name]))
+  new Map([...PROCESS_NAMES, ...additionalNames].map((name) => [name.toUpperCase(), name]))
+
+const CANONICAL_NAMES = createNames()
 
 export const remove = (
   environment: NodeJS.ProcessEnv,
@@ -51,24 +44,12 @@ export const get = (
   return value
 }
 
-export const isDiscarded = (name: string, platform: NodeJS.Platform = process.platform): boolean =>
-  platform === 'win32' ? DISCARDED_WINDOWS_NAMES.has(name.toUpperCase()) : DISCARDED_NAMES.has(name)
-
-export const discard = (
-  environment: NodeJS.ProcessEnv,
-  platform: NodeJS.Platform = process.platform
-): void => {
-  for (const name of DISCARDED_NAMES) {
-    remove(environment, name, platform)
-  }
-}
-
 export const set = (
   environment: NodeJS.ProcessEnv,
   name: string,
   value: string | undefined,
   platform: NodeJS.Platform = process.platform,
-  canonicalNames: ReadonlyMap<string, string> = CANONICAL_WINDOWS_NAMES
+  canonicalNames: ReadonlyMap<string, string> = CANONICAL_NAMES
 ): void => {
   if (platform === 'win32') {
     remove(environment, name, platform)
@@ -81,7 +62,7 @@ export const set = (
 export const merge = (
   environments: ReadonlyArray<NodeJS.ProcessEnv>,
   platform: NodeJS.Platform = process.platform,
-  canonicalNames: ReadonlyMap<string, string> = CANONICAL_WINDOWS_NAMES
+  canonicalNames: ReadonlyMap<string, string> = CANONICAL_NAMES
 ): NodeJS.ProcessEnv => {
   const result: NodeJS.ProcessEnv = {}
 

@@ -1,12 +1,14 @@
-import assert     from 'node:assert/strict'
-import { win32 }  from 'node:path'
-import { test }   from 'node:test'
+import assert        from 'node:assert/strict'
+import { delimiter } from 'node:path'
+import { win32 }     from 'node:path'
+import { test }      from 'node:test'
 
-import { create } from './create.js'
+import { sanitize }  from './sanitize.js'
 
-test('should canonicalize and deduplicate Windows environment names', () => {
-  const environment = create(
+test('should canonicalize Windows environment and remove the inherited Yarn bin folder', () => {
+  const environment = sanitize(
     {
+      Berry_Bin_Folder: 'C:\\xfs-launcher',
       INIT_CWD: 'first-init',
       Init_Cwd: 'last-init',
       NODE_OPTIONS: '--title=first',
@@ -27,8 +29,8 @@ test('should canonicalize and deduplicate Windows environment names', () => {
   })
 })
 
-test('should remove stale Yarn variables without consuming bootstrap markers', () => {
-  const environment = create(
+test('should remove Yarn-owned variables without consuming bootstrap markers', () => {
+  const environment = sanitize(
     {
       Berry_Bin_Folder: 'C:\\xfs-launcher',
       NPM_CONFIG_USER_AGENT: 'yarn/4',
@@ -45,21 +47,35 @@ test('should remove stale Yarn variables without consuming bootstrap markers', (
   })
 })
 
+test('should preserve unrelated temporary paths', () => {
+  assert.deepEqual(
+    sanitize(
+      {
+        BERRY_BIN_FOLDER: '/tmp/xfs-owned',
+        PATH: ['/tmp/xfs-other', '/tmp/xfs-owned', '/usr/bin'].join(delimiter),
+      },
+      'linux'
+    ),
+    { PATH: ['/tmp/xfs-other', '/usr/bin'].join(delimiter) }
+  )
+})
+
 test('should preserve case-sensitive environment names on POSIX', () => {
-  const environment = create(
+  assert.deepEqual(
+    sanitize(
+      {
+        Node_Options: '--title=lower',
+        NODE_OPTIONS: '--title=upper',
+        Path: 'custom-path',
+        PATH: '/usr/bin',
+      },
+      'linux'
+    ),
     {
       Node_Options: '--title=lower',
       NODE_OPTIONS: '--title=upper',
       Path: 'custom-path',
       PATH: '/usr/bin',
-    },
-    'linux'
+    }
   )
-
-  assert.deepEqual(environment, {
-    Node_Options: '--title=lower',
-    NODE_OPTIONS: '--title=upper',
-    Path: 'custom-path',
-    PATH: '/usr/bin',
-  })
 })

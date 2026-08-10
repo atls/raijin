@@ -1,11 +1,22 @@
-import assert                             from 'node:assert/strict'
+import type * as YarnCli                  from '@yarnpkg/cli'
+import type * as YarnCore                 from '@yarnpkg/core'
 
-import { Configuration }                  from '@yarnpkg/core'
-import { Project }                        from '@yarnpkg/core'
-import { getPluginConfiguration }         from '@yarnpkg/cli'
+import assert                             from 'node:assert/strict'
+import { createRequire }                  from 'node:module'
+
 import { npath }                          from '@yarnpkg/fslib'
 
 import { directory as fixturesDirectory } from './fixtures/paths.js'
+
+const require = createRequire(import.meta.url)
+const { Configuration, Project } = require('@yarnpkg/core') as Pick<
+  typeof YarnCore,
+  'Configuration' | 'Project'
+>
+const { getPluginConfiguration } = require('@yarnpkg/cli') as Pick<
+  typeof YarnCli,
+  'getPluginConfiguration'
+>
 
 const cwd = npath.toPortablePath(fixturesDirectory)
 

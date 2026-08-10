@@ -8,10 +8,10 @@ import { test }                 from 'node:test'
 
 import { npath }                from '@yarnpkg/fslib'
 
-import { get as getProject }    from '../../tests/project.js'
-import { createCommandWrapper } from '../binaries.js'
-import { createShellWrapper }   from '../binaries.js'
-import { install }              from '../binaries.js'
+import { get as getProject }    from '../tests/project.js'
+import { createCommandWrapper } from './binaries.js'
+import { createShellWrapper }   from './binaries.js'
+import { install }              from './binaries.js'
 
 test('should create a Windows command wrapper with escaped arguments', () => {
   assert.equal(

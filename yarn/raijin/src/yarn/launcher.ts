@@ -1,8 +1,10 @@
-import { REGISTERED_PNP_LOADER_ENV }    from '../runtime/node/bootstrap/loader.js'
-import { create as createEnvironment }  from '../infrastructure/yarn/environment/create.js'
-import { isDiscarded as isDiscardedEnvironmentName } from '../infrastructure/yarn/environment/variables.js'
-import { remove as removeEnvironmentVariable } from '../infrastructure/yarn/environment/variables.js'
-import { isManagedNodeEnvironmentName } from '../runtime/node/bootstrap/loader.js'
+import { REGISTERED_PNP_LOADER_ENV }           from '../runtime/node/bootstrap/loader.js'
+import { get as getEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
+import { remove as removeEnvironmentVariable } from '../infrastructure/process/environment/map.js'
+import { set as setEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
+import { isOwned as isYarnEnvironmentName }    from '../infrastructure/yarn/environment/sanitize.js'
+import { sanitize as sanitizeEnvironment }     from '../infrastructure/yarn/environment/sanitize.js'
+import { isManagedNodeEnvironmentName }        from '../runtime/node/bootstrap/loader.js'
 
 const PNP_NODE_OPTION = /(?:^|[\\/])\.pnp\.(?:cjs|loader\.mjs)$/
 const NODE_OPTIONS_WITH_VALUE = new Set(['--experimental-loader', '--loader', '--require', '-r'])
@@ -109,7 +111,7 @@ export const isLauncherEnvironmentName = (
 
   return (
     sanitized ||
-    isDiscardedEnvironmentName(name, platform) ||
+    isYarnEnvironmentName(name, platform) ||
     isManagedNodeEnvironmentName(name, platform)
   )
 }
@@ -117,8 +119,8 @@ export const isLauncherEnvironmentName = (
 export const createLauncherBaseEnvironment = (
   environment: NodeJS.ProcessEnv = process.env
 ): NodeJS.ProcessEnv => {
-  const yarnEnvironment = createEnvironment(environment)
-  const nodeOptions = yarnEnvironment.NODE_OPTIONS
+  const yarnEnvironment = sanitizeEnvironment(environment)
+  const nodeOptions = getEnvironmentVariable(yarnEnvironment, 'NODE_OPTIONS')
 
   removeEnvironmentVariable(yarnEnvironment, REGISTERED_PNP_LOADER_ENV)
 
@@ -126,9 +128,9 @@ export const createLauncherBaseEnvironment = (
     const sanitizedNodeOptions = removePnPNodeOptions(nodeOptions)
 
     if (sanitizedNodeOptions) {
-      yarnEnvironment.NODE_OPTIONS = sanitizedNodeOptions
+      setEnvironmentVariable(yarnEnvironment, 'NODE_OPTIONS', sanitizedNodeOptions)
     } else {
-      delete yarnEnvironment.NODE_OPTIONS
+      removeEnvironmentVariable(yarnEnvironment, 'NODE_OPTIONS')
     }
   }
 

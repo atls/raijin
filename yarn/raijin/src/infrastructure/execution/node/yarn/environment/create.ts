@@ -1,12 +1,12 @@
-import type { Options }         from './options.js'
+import type { Options } from './options.js'
 
-import { npath }                from '@yarnpkg/fslib'
+import { npath }        from '@yarnpkg/fslib'
 
-import { scriptUtils }          from '../scripts.js'
-import { create as createBase } from './base.js'
-import { install }              from './binaries.js'
-import { merge }                from './variables.js'
-import { set }                  from './variables.js'
+import { merge }        from '../../../../process/environment/map.js'
+import { set }          from '../../../../process/environment/map.js'
+import { scriptUtils }  from '../scripts.js'
+import { install }      from './binaries.js'
+import { prepare }      from './prepare.js'
 
 export const create = async ({
   baseEnvironment,
@@ -20,7 +20,7 @@ export const create = async ({
     await project.restoreInstallState()
   }
 
-  const baseEnv = createBase(project.configuration.env, baseEnvironment, environmentPatch)
+  const baseEnv = prepare(project.configuration.env, baseEnvironment, environmentPatch)
   const environment = merge([
     await scriptUtils.makeScriptEnv({
       baseEnv,
