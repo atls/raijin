@@ -4,7 +4,7 @@ import type { PortablePath }     from '@yarnpkg/fslib'
 
 import type { EnvironmentPatch } from '../../../../../application/execution/node/index.js'
 
-export interface Options {
+export interface CreateOptions {
   baseEnvironment: NodeJS.ProcessEnv
   binFolder: PortablePath
   cwd: string

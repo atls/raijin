@@ -1,12 +1,12 @@
-import type { Options } from './options.js'
+import type { CreateOptions } from './create.interfaces.js'
 
-import { npath }        from '@yarnpkg/fslib'
+import { npath }              from '@yarnpkg/fslib'
 
-import { merge }        from '../../../../process/environment/map.js'
-import { set }          from '../../../../process/environment/map.js'
-import { scriptUtils }  from '../scripts.js'
-import { install }      from './binaries.js'
-import { prepare }      from './prepare.js'
+import { merge }              from '../../../../process/environment/map.js'
+import { set }                from '../../../../process/environment/map.js'
+import { scriptUtils }        from '../script-utils.js'
+import { install }            from './binaries.js'
+import { prepare }            from './prepare.js'
 
 export const create = async ({
   baseEnvironment,
@@ -15,7 +15,7 @@ export const create = async ({
   environmentPatch,
   locator,
   project,
-}: Options): Promise<NodeJS.ProcessEnv> => {
+}: CreateOptions): Promise<NodeJS.ProcessEnv> => {
   if (locator) {
     await project.restoreInstallState()
   }

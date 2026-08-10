@@ -1,4 +1,4 @@
-import type { Options }                 from './options.js'
+import type { CreateOptions }           from './create.interfaces.js'
 
 import { LOADER }                       from '../../loaders/environment.js'
 import { REGISTRATION }                 from '../../loaders/environment.js'
@@ -21,7 +21,7 @@ const isOwned = (name: string, platform: NodeJS.Platform): boolean =>
 
 const applyPatch = (
   environment: NodeJS.ProcessEnv,
-  patch: Options['environmentPatch'],
+  patch: CreateOptions['environmentPatch'],
   platform: NodeJS.Platform
 ): void => {
   for (const [name, value] of Object.entries(patch)) {
@@ -40,7 +40,7 @@ const applyPatch = (
 export const prepare = (
   projectEnvironment: NodeJS.ProcessEnv,
   baseEnvironment: NodeJS.ProcessEnv,
-  patch: Options['environmentPatch'],
+  patch: CreateOptions['environmentPatch'],
   platform: NodeJS.Platform = process.platform
 ): NodeJS.ProcessEnv => {
   const environment = sanitize(

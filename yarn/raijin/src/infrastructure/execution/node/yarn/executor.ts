@@ -3,7 +3,7 @@ import type { Port as Executor }              from '../../../../application/exec
 import type { Process as ProcessResult }      from '../../../../application/execution/node/index.js'
 import type { Result as ExecuteResult }       from '../../../../application/execution/node/index.js'
 import type { ExecuteResult as ProcessExecuteResult } from '../../../process/execa/execute.interfaces.js'
-import type { Options }                       from './options.js'
+import type { ExecutorOptions }               from './executor.interfaces.js'
 
 import { npath }                              from '@yarnpkg/fslib'
 
@@ -54,7 +54,7 @@ const createArguments = (input: ExecuteInput, loader: string): Array<string> => 
   ...(input.arguments ?? []),
 ]
 
-const execute = async (input: ExecuteInput, options: Options): Promise<ExecuteResult> => {
+const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<ExecuteResult> => {
   let temporaryDirectory: Awaited<ReturnType<typeof directory.create>> | undefined
   let execution: ProcessResult
 
@@ -104,6 +104,6 @@ const execute = async (input: ExecuteInput, options: Options): Promise<ExecuteRe
   return execution
 }
 
-export const create = (options: Options): Executor => ({
+export const create = (options: ExecutorOptions): Executor => ({
   execute: async (input) => execute(input, options),
 })

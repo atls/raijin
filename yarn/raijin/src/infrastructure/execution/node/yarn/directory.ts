@@ -5,7 +5,7 @@ import { join }    from 'node:path'
 
 const PREFIX = 'raijin-node-execution-'
 
-export interface Directory {
+interface Directory {
   path: string
   remove: () => Promise<void>
 }
