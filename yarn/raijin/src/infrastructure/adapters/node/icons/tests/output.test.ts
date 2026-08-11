@@ -140,3 +140,47 @@ test('should preserve a generated module renamed only by case', async () => {
     await rm(cwd, { force: true, recursive: true })
   }
 })
+
+test('should restore exact casing after a later copy fails', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const source = join(cwd, 'src')
+
+  const resolveCaseInsensitive = async (path: string): Promise<string> => {
+    const directory = dirname(path)
+    const name = basename(path).toLowerCase()
+    const match = (await readdir(directory)).find((entry) => entry.toLowerCase() === name)
+
+    return match ? join(directory, match) : path
+  }
+
+  const copy = async (from: string, to: string): Promise<void> => {
+    if (basename(to) === 'index.ts') {
+      throw new Error('Injected index copy failure')
+    }
+
+    await copyFile(from, await resolveCaseInsensitive(to))
+  }
+  const remove = async (path: string): Promise<void> =>
+    rm(await resolveCaseInsensitive(path), { force: true })
+
+  try {
+    await mkdir(source)
+    await Promise.all([
+      writeFile(join(source, 'alert.icon.tsx'), 'previous alert output'),
+      writeFile(join(source, 'index.ts'), 'previous index'),
+    ])
+
+    await assert.rejects(
+      create(copy, remove).replace(cwd, [
+        { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
+      ]),
+      { message: 'Injected index copy failure' }
+    )
+
+    assert.deepEqual((await readdir(source)).sort(), ['alert.icon.tsx', 'index.ts'])
+    assert.equal(await readFile(join(source, 'alert.icon.tsx'), 'utf8'), 'previous alert output')
+    assert.equal(await readFile(join(source, 'index.ts'), 'utf8'), 'previous index')
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})

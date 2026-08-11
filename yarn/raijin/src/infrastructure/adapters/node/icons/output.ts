@@ -15,46 +15,13 @@ import { join }                    from 'node:path'
 const GENERATED_MODULE_SUFFIX = '.icon.tsx'
 const INDEX_FILE = 'index.ts'
 
-type Snapshot = Map<string, Buffer | undefined>
-
-const isNotFound = (error: unknown): boolean =>
-  error instanceof Error && 'code' in error && error.code === 'ENOENT'
-
-const readOptional = async (path: string): Promise<Buffer | undefined> => {
-  try {
-    return await readFile(path)
-  } catch (error) {
-    if (isNotFound(error)) {
-      return undefined
-    }
-
-    throw error
-  }
-}
+type Snapshot = ReadonlyArray<Readonly<{ content: Buffer; name: string }>>
 
 const createIndex = (modules: ReadonlyArray<IconModule>): string =>
   modules.map((module) => `export * from './${module.name}.icon.jsx'`).join('\n')
 
 const snapshot = async (directory: string, files: ReadonlyArray<string>): Promise<Snapshot> =>
-  new Map(
-    await Promise.all(
-      files.map(async (file) => [file, await readOptional(join(directory, file))] as const)
-    )
-  )
-
-const restore = async (directory: string, state: Snapshot): Promise<void> => {
-  await Promise.all(
-    Array.from(state, async ([file, content]) => {
-      const path = join(directory, file)
-
-      if (content === undefined) {
-        await rm(path, { force: true })
-      } else {
-        await writeFile(path, content)
-      }
-    })
-  )
-}
+  Promise.all(files.map(async (name) => ({ content: await readFile(join(directory, name)), name })))
 
 const settle = async (operations: ReadonlyArray<Promise<void>>): Promise<void> => {
   const results = await Promise.allSettled(operations)
@@ -65,6 +32,18 @@ const settle = async (operations: ReadonlyArray<Promise<void>>): Promise<void> =
   if (failure) {
     throw failure.reason
   }
+}
+
+const restore = async (
+  directory: string,
+  affectedFiles: ReadonlyArray<string>,
+  state: Snapshot,
+  remove: RemoveFile
+): Promise<void> => {
+  await settle(affectedFiles.map(async (file) => remove(join(directory, file))))
+  await Promise.all(
+    state.map(async (entry) => writeFile(join(directory, entry.name), entry.content))
+  )
 }
 
 const replace = async (
@@ -87,11 +66,14 @@ const replace = async (
     )
     await writeFile(join(staging, INDEX_FILE), createIndex(modules))
 
-    const previousModules = (await readdir(target)).filter((file) =>
-      file.endsWith(GENERATED_MODULE_SUFFIX))
+    const previousFiles = await readdir(target)
+    const previousModules = previousFiles.filter((file) => file.endsWith(GENERATED_MODULE_SUFFIX))
     const staleModules = previousModules.filter((file) => !moduleFiles.includes(file))
-    const affectedFiles = Array.from(new Set([...generatedFiles, ...staleModules]))
-    const previousState = await snapshot(target, affectedFiles)
+    const snapshotFiles = previousFiles.filter(
+      (file) => file === INDEX_FILE || file.endsWith(GENERATED_MODULE_SUFFIX)
+    )
+    const affectedFiles = Array.from(new Set([...snapshotFiles, ...generatedFiles]))
+    const previousState = await snapshot(target, snapshotFiles)
 
     try {
       await settle(staleModules.map(async (file) => remove(join(target, file))))
@@ -101,7 +83,7 @@ const replace = async (
       )
     } catch (error) {
       try {
-        await restore(target, previousState)
+        await restore(target, affectedFiles, previousState, remove)
       } catch (rollbackError) {
         throw new AggregateError([error, rollbackError], 'Icon output replacement rollback failed')
       }
@@ -117,7 +99,7 @@ const replace = async (
 
 export const create = (
   copy: CopyFile = copyFile,
-  remove: RemoveFile = async (path) => rm(path)
+  remove: RemoveFile = async (path) => rm(path, { force: true })
 ): IconOutputReplacer => ({
   replace: async (cwd, modules) => replace(cwd, modules, copy, remove),
 })
