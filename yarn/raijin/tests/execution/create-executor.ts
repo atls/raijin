@@ -1,7 +1,13 @@
-import { createNodeExecutor }    from '../../src/infrastructure/adapters/node/execution/index.js'
-import { createYarnEnvironment } from '../../src/infrastructure/adapters/yarn/environment/index.js'
+import type { Input as YarnEnvironmentInput } from '../../src/infrastructure/providers/yarn/environment/create.interfaces.js'
 
-export const createExecutor = (
-  options: Parameters<typeof createYarnEnvironment>[0]
-): ReturnType<typeof createNodeExecutor> =>
-  createNodeExecutor({ environment: createYarnEnvironment(options) })
+import { create as createNodeExecutor } from '../../src/infrastructure/adapters/node/execution/executor.js'
+import { create as createYarnEnvironment } from '../../src/infrastructure/providers/yarn/environment/create.js'
+
+type Options = Omit<YarnEnvironmentInput, 'binDirectory' | 'cwd' | 'patch'>
+
+export const createExecutor = (options: Options): ReturnType<typeof createNodeExecutor> =>
+  createNodeExecutor({
+    environment: {
+      prepare: async (input) => createYarnEnvironment({ ...options, ...input }),
+    },
+  })

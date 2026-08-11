@@ -26,8 +26,6 @@
     "./config/sync": "./src/config/sync/index.ts",
     "./config/typescript": "./src/config/typescript/index.ts",
     "./filesystem": "./src/filesystem/index.ts",
-    "./infrastructure/adapters/node/execution": "./src/infrastructure/adapters/node/execution/index.ts",
-    "./infrastructure/adapters/yarn/environment": "./src/infrastructure/adapters/yarn/environment/index.ts",
     "./infrastructure/generation/project": "./src/infrastructure/generation/project/index.ts",
     "./project": "./src/project/index.ts",
     "./yarn": "./src/yarn/index.ts",
@@ -166,16 +164,6 @@
         "import": "./dist/filesystem/index.js",
         "types": "./dist/filesystem/index.d.ts",
         "default": "./dist/filesystem/index.js"
-      },
-      "./infrastructure/adapters/node/execution": {
-        "import": "./dist/infrastructure/adapters/node/execution/index.js",
-        "types": "./dist/infrastructure/adapters/node/execution/index.d.ts",
-        "default": "./dist/infrastructure/adapters/node/execution/index.js"
-      },
-      "./infrastructure/adapters/yarn/environment": {
-        "import": "./dist/infrastructure/adapters/yarn/environment/index.js",
-        "types": "./dist/infrastructure/adapters/yarn/environment/index.d.ts",
-        "default": "./dist/infrastructure/adapters/yarn/environment/index.js"
       },
       "./infrastructure/generation/project": {
         "import": "./dist/infrastructure/generation/project/index.js",
