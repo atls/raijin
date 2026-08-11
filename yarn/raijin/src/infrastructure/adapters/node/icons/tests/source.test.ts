@@ -2,6 +2,7 @@ import assert        from 'node:assert/strict'
 import { mkdir }     from 'node:fs/promises'
 import { mkdtemp }   from 'node:fs/promises'
 import { rm }        from 'node:fs/promises'
+import { symlink }   from 'node:fs/promises'
 import { writeFile } from 'node:fs/promises'
 import { tmpdir }    from 'node:os'
 import { join }      from 'node:path'
@@ -18,15 +19,18 @@ test('should read only direct lowercase svg files in deterministic basename orde
     await Promise.all([
       writeFile(join(icons, 'zebra.svg'), '<svg id="zebra" />'),
       writeFile(join(icons, 'apple.icon.svg'), '<svg id="apple" />'),
+      writeFile(join(cwd, 'shared.svg'), '<svg id="shared" />'),
       writeFile(join(icons, 'uppercase.SVG'), '<svg id="uppercase" />'),
       writeFile(join(icons, 'readme.txt'), 'not an icon'),
       writeFile(join(icons, 'nested', 'child.svg'), '<svg id="child" />'),
     ])
+    await symlink('../shared.svg', join(icons, 'shared.svg'))
 
     const sources = await create().read(cwd)
 
     assert.deepEqual(sources, [
       { content: '<svg id="apple" />', name: 'apple.icon' },
+      { content: '<svg id="shared" />', name: 'shared' },
       { content: '<svg id="zebra" />', name: 'zebra' },
     ])
   } finally {

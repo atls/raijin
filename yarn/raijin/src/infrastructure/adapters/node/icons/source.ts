@@ -17,10 +17,8 @@ const compareNames = (left: string, right: string): number => {
 export const create = (): IconSourceReader => ({
   async read(cwd) {
     const directory = join(cwd, 'icons')
-    const entries = await readdir(directory, { withFileTypes: true })
-    const files = entries
-      .filter((entry) => entry.isFile() && entry.name.endsWith('.svg'))
-      .map((entry) => entry.name)
+    const files = (await readdir(directory))
+      .filter((file) => file.endsWith('.svg'))
       .sort(compareNames)
 
     return Promise.all(
