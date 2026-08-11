@@ -37,21 +37,39 @@ const removeOwnedNodeLoaderOption = (
 
   while (start >= 0) {
     const end = start + option.length
-    const startsAtBoundary = start === 0 || nodeOptions[start - 1] === ' '
-    const endsAtBoundary = end === nodeOptions.length || nodeOptions[end] === ' '
+    const startsAtBoundary = start === 0 || /\s/.test(nodeOptions[start - 1])
+    const endsAtBoundary = end === nodeOptions.length || /\s/.test(nodeOptions[end])
 
     if (startsAtBoundary && endsAtBoundary) {
       if (start > 0) {
         return nodeOptions.slice(0, start - 1) + nodeOptions.slice(end)
       }
 
-      return nodeOptions[end] === ' ' ? nodeOptions.slice(end + 1) : nodeOptions.slice(end)
+      return /\s/.test(nodeOptions[end] ?? '') ? nodeOptions.slice(end + 1) : nodeOptions.slice(end)
     }
 
     start = nodeOptions.lastIndexOf(option, start - 1)
   }
 
   return nodeOptions
+}
+
+const updateNodeOptions = (
+  environment: NodeJS.ProcessEnv,
+  nodeOptions: string | undefined,
+  platform: NodeJS.Platform
+): void => {
+  if (nodeOptions) {
+    setEnvironmentVariable(
+      environment,
+      'NODE_OPTIONS',
+      nodeOptions,
+      platform,
+      CANONICAL_ENVIRONMENT_NAMES
+    )
+  } else {
+    removeEnvironmentVariable(environment, 'NODE_OPTIONS', platform)
+  }
 }
 
 const isManagedNodeLoaderImport = (value: string | undefined): boolean =>
@@ -104,6 +122,27 @@ export const removeEnvironmentMarkers = (
   }
 }
 
+export const removeAppliedLoaderRegistration = (
+  environment: NodeJS.ProcessEnv,
+  platform: NodeJS.Platform = process.platform
+): void => {
+  const registration = getEnvironmentVariable(environment, REGISTRATION, platform)
+
+  if (registration) {
+    updateNodeOptions(
+      environment,
+      removeOwnedNodeLoaderOption(
+        getEnvironmentVariable(environment, 'NODE_OPTIONS', platform),
+        registration
+      ),
+      platform
+    )
+  }
+
+  removeEnvironmentVariable(environment, REGISTRATION, platform)
+  removeEnvironmentVariable(environment, REGISTERED_PNP_LOADER, platform)
+}
+
 export const removeManagedNodeLoaderImports = (
   nodeOptions: string | undefined
 ): string | undefined => removeNodeLoaderImports(nodeOptions, isManagedNodeLoaderImport)
@@ -139,9 +178,5 @@ export const applyManagedNodeLoader = (
     removeEnvironmentVariable(env, REGISTRATION, platform)
   }
 
-  if (nodeOptions) {
-    setEnvironmentVariable(env, 'NODE_OPTIONS', nodeOptions, platform, CANONICAL_ENVIRONMENT_NAMES)
-  } else {
-    removeEnvironmentVariable(env, 'NODE_OPTIONS', platform)
-  }
+  updateNodeOptions(env, nodeOptions, platform)
 }

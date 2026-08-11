@@ -7,6 +7,7 @@ import type { ExecutorOptions }               from './executor.interfaces.js'
 import { execute as executeProcess }          from '../../../process/execa/execute.js'
 import { isManagedNodeEnvironmentName }       from '../loaders/environment.js'
 import { removeEnvironmentMarkers }           from '../loaders/environment.js'
+import { removeAppliedLoaderRegistration }    from '../loaders/environment.js'
 import { create as createRegistrationImport } from '../loaders/registration.js'
 import { resolve as resolveLoader }           from '../loaders/typescript/resolve.js'
 import { directory }                          from './directory.js'
@@ -73,6 +74,7 @@ const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<E
       patch: input.environment ?? {},
     })
 
+    removeAppliedLoaderRegistration(environment)
     removeEnvironmentMarkers(environment)
 
     const output = input.output?.mode === 'inherit' ? undefined : input.output

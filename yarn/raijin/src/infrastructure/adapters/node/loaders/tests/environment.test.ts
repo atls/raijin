@@ -15,6 +15,7 @@ import { REGISTERED_PNP_LOADER }              from '../environment.js'
 import { applyManagedNodeLoader }             from '../environment.js'
 import { isManagedNodeEnvironmentName }       from '../environment.js'
 import { removeEnvironmentMarkers }           from '../environment.js'
+import { removeAppliedLoaderRegistration }    from '../environment.js'
 import { create as createRegistrationImport } from '../registration.js'
 
 const execFileAsync = promisify(execFile)
@@ -161,6 +162,33 @@ test('should remove only managed loader environment markers', () => {
     NODE_OPTIONS: '--trace-warnings',
     OTHER_VALUE: 'preserved',
   })
+})
+
+test('should remove only exact applied loader registration state', () => {
+  const appliedRegistration = '--import file:///tmp/raijin-registration.mjs'
+  const foreignRegistration = '--import file:///tmp/foreign-registration.mjs'
+  const environment = {
+    [LOADER]: 'file:///tmp/loader.mjs',
+    [REGISTRATION]: appliedRegistration,
+    [REGISTERED_PNP_LOADER]: 'file:///tmp/.pnp.loader.mjs',
+    NODE_OPTIONS: `${appliedRegistration}\t--trace-warnings ${foreignRegistration}`,
+  }
+
+  removeAppliedLoaderRegistration(environment)
+
+  assert.deepEqual(environment, {
+    [LOADER]: 'file:///tmp/loader.mjs',
+    NODE_OPTIONS: `--trace-warnings ${foreignRegistration}`,
+  })
+})
+
+test('should preserve an unrecorded registration', () => {
+  const nodeOptions = '--import file:///tmp/foreign-registration.mjs'
+  const environment = { NODE_OPTIONS: nodeOptions }
+
+  removeAppliedLoaderRegistration(environment)
+
+  assert.deepEqual(environment, { NODE_OPTIONS: nodeOptions })
 })
 
 test('should start Node after rotating away from a removed loader file', async () => {

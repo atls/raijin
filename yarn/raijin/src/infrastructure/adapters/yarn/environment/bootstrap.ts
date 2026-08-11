@@ -13,8 +13,6 @@ import { includesName }          from '../../../process/environment/map.js'
 import { merge }                 from '../../../process/environment/map.js'
 import { remove }                from '../../../process/environment/map.js'
 import { set }                   from '../../../process/environment/map.js'
-import { isOwned }               from './sanitize.js'
-import { sanitize }              from './sanitize.js'
 
 const require = createRequire(import.meta.url)
 const { scriptUtils } = require('@yarnpkg/core') as Pick<typeof YarnCore, 'scriptUtils'>
@@ -23,7 +21,7 @@ const BOOTSTRAP_ENVIRONMENT_NAMES = ['INIT_CWD', 'PROJECT_CWD']
 
 const assertEnvironmentPatch = (patch: EnvironmentInput['patch']): void => {
   for (const name of Object.keys(patch)) {
-    if (includesName(BOOTSTRAP_ENVIRONMENT_NAMES, name) || isOwned(name)) {
+    if (includesName(BOOTSTRAP_ENVIRONMENT_NAMES, name)) {
       throw new Error(`Managed Node execution cannot override ${name}`)
     }
   }
@@ -41,7 +39,7 @@ const prepare = async (
 
   assertEnvironmentPatch(input.patch)
 
-  const baseEnv = sanitize(merge([project.configuration.env, baseEnvironment]))
+  const baseEnv = merge([project.configuration.env, baseEnvironment])
 
   for (const name of BOOTSTRAP_ENVIRONMENT_NAMES) {
     remove(baseEnv, name)
