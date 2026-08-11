@@ -51,10 +51,23 @@ const restore = async (
   state: Snapshot,
   remove: RemoveFile
 ): Promise<void> => {
-  await settle(affectedFiles.map(async (file) => remove(join(directory, file))))
-  await Promise.all(
+  const removalResults = await Promise.allSettled(
+    affectedFiles.map(async (file) => remove(join(directory, file)))
+  )
+  const restorationResults = await Promise.allSettled(
     state.map(async (entry) => writeFile(join(directory, entry.name), entry.content))
   )
+  const failures: Array<unknown> = []
+
+  for (const result of [...removalResults, ...restorationResults]) {
+    if (result.status === 'rejected') {
+      failures.push(result.reason as unknown)
+    }
+  }
+
+  if (failures.length > 0) {
+    throw new AggregateError(failures, 'Icon output restoration failed')
+  }
 }
 
 const replace = async (

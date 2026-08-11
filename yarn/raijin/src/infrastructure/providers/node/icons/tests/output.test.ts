@@ -104,6 +104,55 @@ test('should settle pending file mutations before restoring previous output', as
   }
 })
 
+test('should restore snapshots after an output removal fails', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const source = join(cwd, 'src')
+  const previous = {
+    bell: 'previous bell output',
+    index: 'previous index',
+    user: 'previous user output',
+  }
+  const failedRemoval = join(source, 'Bell.icon.tsx')
+
+  try {
+    await mkdir(source)
+    await Promise.all([
+      writeFile(join(source, 'Bell.icon.tsx'), previous.bell),
+      writeFile(join(source, 'User.icon.tsx'), previous.user),
+      writeFile(join(source, 'index.ts'), previous.index),
+    ])
+
+    const copy = async (from: string, to: string): Promise<void> => {
+      if (to === join(source, 'User.icon.tsx')) {
+        throw new Error('Injected icon copy failure')
+      }
+
+      await copyFile(from, to)
+    }
+    const remove = async (path: string): Promise<void> => {
+      if (path === failedRemoval) {
+        throw new Error('Injected icon removal failure')
+      }
+
+      await rm(path, { force: true })
+    }
+
+    await assert.rejects(
+      create(copy, remove).replace(cwd, [
+        { component: 'BellIcon', content: 'new bell output', name: 'Bell' },
+        { component: 'UserIcon', content: 'new user output', name: 'User' },
+      ]),
+      { message: 'Icon output replacement rollback failed' }
+    )
+
+    assert.equal(await readFile(join(source, 'Bell.icon.tsx'), 'utf8'), previous.bell)
+    assert.equal(await readFile(join(source, 'User.icon.tsx'), 'utf8'), previous.user)
+    assert.equal(await readFile(join(source, 'index.ts'), 'utf8'), previous.index)
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})
+
 test('should preserve a generated module renamed only by case', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
   const source = join(cwd, 'src')
