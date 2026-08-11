@@ -1,5 +1,6 @@
 import { createNames as createCanonicalNames } from '../../../process/environment/map.js'
 import { get as getEnvironmentVariable }       from '../../../process/environment/map.js'
+import { includesName }                        from '../../../process/environment/map.js'
 import { remove as removeEnvironmentVariable } from '../../../process/environment/map.js'
 import { set as setEnvironmentVariable }       from '../../../process/environment/map.js'
 import { create as createRegistrationImport }  from './registration.js'
@@ -8,11 +9,8 @@ export const LOADER = 'RAIJIN_NODE_LOADER'
 export const REGISTRATION = 'RAIJIN_NODE_LOADER_REGISTRATION'
 export const REGISTERED_PNP_LOADER = 'RAIJIN_REGISTERED_PNP_LOADER'
 
-const MANAGED_ENVIRONMENT_NAMES = new Set([LOADER, REGISTRATION, REGISTERED_PNP_LOADER])
-const MANAGED_WINDOWS_ENVIRONMENT_NAMES = new Set(
-  Array.from(MANAGED_ENVIRONMENT_NAMES, (name) => name.toUpperCase())
-)
-const CANONICAL_ENVIRONMENT_NAMES = createCanonicalNames(Array.from(MANAGED_ENVIRONMENT_NAMES))
+const MANAGED_ENVIRONMENT_NAMES = [LOADER, REGISTRATION, REGISTERED_PNP_LOADER]
+const CANONICAL_ENVIRONMENT_NAMES = createCanonicalNames(MANAGED_ENVIRONMENT_NAMES)
 
 const NODE_LOADER_IMPORT_OPTION = '--import'
 const NODE_LOADER_REGISTER_IMPORT_PREFIX =
@@ -95,10 +93,16 @@ const removeNodeLoaderImports = (
 export const isManagedNodeEnvironmentName = (
   name: string,
   platform: NodeJS.Platform = process.platform
-): boolean =>
-  platform === 'win32'
-    ? MANAGED_WINDOWS_ENVIRONMENT_NAMES.has(name.toUpperCase())
-    : MANAGED_ENVIRONMENT_NAMES.has(name)
+): boolean => includesName(MANAGED_ENVIRONMENT_NAMES, name, platform)
+
+export const removeEnvironmentMarkers = (
+  environment: NodeJS.ProcessEnv,
+  platform: NodeJS.Platform = process.platform
+): void => {
+  for (const name of MANAGED_ENVIRONMENT_NAMES) {
+    removeEnvironmentVariable(environment, name, platform)
+  }
+}
 
 export const removeManagedNodeLoaderImports = (
   nodeOptions: string | undefined

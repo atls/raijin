@@ -7,6 +7,14 @@ export const createNames = (
 
 const CANONICAL_NAMES = createNames()
 
+export const includesName = (
+  names: ReadonlyArray<string>,
+  name: string,
+  platform: NodeJS.Platform = process.platform
+): boolean =>
+  names.some((candidate) =>
+    platform === 'win32' ? candidate.toUpperCase() === name.toUpperCase() : candidate === name)
+
 export const remove = (
   environment: NodeJS.ProcessEnv,
   name: string,
@@ -57,6 +65,21 @@ export const set = (
 
   environment[platform === 'win32' ? (canonicalNames.get(name.toUpperCase()) ?? name) : name] =
     value
+}
+
+export const applyPatch = (
+  environment: NodeJS.ProcessEnv,
+  patch: Readonly<NodeJS.ProcessEnv>,
+  platform: NodeJS.Platform = process.platform,
+  canonicalNames: ReadonlyMap<string, string> = CANONICAL_NAMES
+): void => {
+  for (const [name, value] of Object.entries(patch)) {
+    if (value === undefined) {
+      remove(environment, name, platform)
+    } else {
+      set(environment, name, value, platform, canonicalNames)
+    }
+  }
 }
 
 export const merge = (

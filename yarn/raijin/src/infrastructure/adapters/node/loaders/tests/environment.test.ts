@@ -11,7 +11,10 @@ import { promisify }                          from 'node:util'
 
 import { LOADER }                             from '../environment.js'
 import { REGISTRATION }                       from '../environment.js'
+import { REGISTERED_PNP_LOADER }              from '../environment.js'
 import { applyManagedNodeLoader }             from '../environment.js'
+import { isManagedNodeEnvironmentName }       from '../environment.js'
+import { removeEnvironmentMarkers }           from '../environment.js'
 import { create as createRegistrationImport } from '../registration.js'
 
 const execFileAsync = promisify(execFile)
@@ -134,6 +137,29 @@ test('should canonicalize and replace mixed-case Windows managed loader state', 
     NODE_OPTIONS: `--trace-warnings --import ${registration(newLoader)}`,
     RAIJIN_NODE_LOADER: newLoader,
     RAIJIN_NODE_LOADER_REGISTRATION: `--import ${registration(newLoader)}`,
+  })
+})
+
+test('should match managed environment names using platform semantics', () => {
+  assert.equal(isManagedNodeEnvironmentName('Raijin_Node_Loader', 'win32'), true)
+  assert.equal(isManagedNodeEnvironmentName('Raijin_Node_Loader', 'linux'), false)
+  assert.equal(isManagedNodeEnvironmentName(LOADER, 'linux'), true)
+})
+
+test('should remove only managed loader environment markers', () => {
+  const environment = {
+    [LOADER]: 'file:///tmp/loader.mjs',
+    [REGISTRATION]: '--import registration',
+    [REGISTERED_PNP_LOADER]: 'file:///tmp/.pnp.loader.mjs',
+    NODE_OPTIONS: '--trace-warnings',
+    OTHER_VALUE: 'preserved',
+  }
+
+  removeEnvironmentMarkers(environment)
+
+  assert.deepEqual(environment, {
+    NODE_OPTIONS: '--trace-warnings',
+    OTHER_VALUE: 'preserved',
   })
 })
 

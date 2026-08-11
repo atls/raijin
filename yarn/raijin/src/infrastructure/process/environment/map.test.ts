@@ -1,9 +1,11 @@
-import assert     from 'node:assert/strict'
-import { test }   from 'node:test'
+import assert           from 'node:assert/strict'
+import { test }         from 'node:test'
 
-import { merge }  from './map.js'
-import { remove } from './map.js'
-import { set }    from './map.js'
+import { applyPatch }   from './map.js'
+import { includesName } from './map.js'
+import { merge }        from './map.js'
+import { remove }       from './map.js'
+import { set }          from './map.js'
 
 const assertUniqueWindowsNames = (environment: NodeJS.ProcessEnv): void => {
   const names = Object.keys(environment).map((name) => name.toUpperCase())
@@ -65,4 +67,38 @@ test('should preserve case-sensitive assignments on POSIX', () => {
   remove(environment, 'foo', 'linux')
 
   assert.deepEqual(environment, { FOO: 'preserved' })
+})
+
+test('should apply Windows patches case-insensitively', () => {
+  const environment = {
+    FOO: 'first',
+    Foo: 'second',
+    NODE_OPTIONS: '--trace-warnings',
+    OTHER_VALUE: 'preserved',
+  }
+
+  applyPatch(environment, { foo: 'replacement', node_options: undefined }, 'win32')
+
+  assert.deepEqual(environment, { foo: 'replacement', OTHER_VALUE: 'preserved' })
+  assertUniqueWindowsNames(environment)
+})
+
+test('should apply POSIX patches case-sensitively', () => {
+  const environment = { FOO: 'preserved', NODE_OPTIONS: '--trace-warnings' }
+
+  applyPatch(environment, { foo: 'replacement' }, 'linux')
+
+  assert.deepEqual(environment, {
+    FOO: 'preserved',
+    NODE_OPTIONS: '--trace-warnings',
+    foo: 'replacement',
+  })
+})
+
+test('should match environment names using platform semantics', () => {
+  const names = ['PROJECT_CWD']
+
+  assert.equal(includesName(names, 'Project_Cwd', 'win32'), true)
+  assert.equal(includesName(names, 'Project_Cwd', 'linux'), false)
+  assert.equal(includesName(names, 'PROJECT_CWD', 'linux'), true)
 })

@@ -55,23 +55,25 @@ test('should execute TypeScript through the project PnP environment', async (con
   assert.equal(removed.length, 1)
 })
 
-test('should return a stable failure when a managed environment name is overridden', async (context) => {
-  const { project } = await createProjectContext()
-  const removed = trackTemporaryDirectories(context)
-  const executor = createExecutor({ project })
-  const result = await executor.execute({
-    arguments: ['report', 'unused'],
-    cwd: npath.fromPortablePath(project.cwd),
-    environment: { PROJECT_CWD: '/unsupported' },
-    input: 'ignore',
-    output: { mode: 'capture' },
-    entry,
-  })
+for (const name of ['PROJECT_CWD', 'RAIJIN_NODE_LOADER']) {
+  test(`should return a stable failure when ${name} is overridden`, async (context) => {
+    const { project } = await createProjectContext()
+    const removed = trackTemporaryDirectories(context)
+    const executor = createExecutor({ project })
+    const result = await executor.execute({
+      arguments: ['report', 'unused'],
+      cwd: npath.fromPortablePath(project.cwd),
+      environment: { [name]: '/unsupported' },
+      input: 'ignore',
+      output: { mode: 'capture' },
+      entry,
+    })
 
-  assert.deepEqual(result, {
-    reason: 'start-failed',
-    stderr: '',
-    stdout: '',
+    assert.deepEqual(result, {
+      reason: 'start-failed',
+      stderr: '',
+      stdout: '',
+    })
+    assert.equal(removed.length, 1)
   })
-  assert.equal(removed.length, 1)
-})
+}

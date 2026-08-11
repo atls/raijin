@@ -1,19 +1,33 @@
-import type * as YarnCore         from '@yarnpkg/core'
+import type * as YarnCore        from '@yarnpkg/core'
 
-import type { Environment }       from '../../node/execution/environment.interfaces.js'
-import type { EnvironmentInput }  from '../../node/execution/environment.interfaces.js'
-import type { BootstrapOptions }  from './bootstrap.interfaces.js'
+import type { Environment }      from '../../node/execution/environment.interfaces.js'
+import type { EnvironmentInput } from '../../node/execution/environment.interfaces.js'
+import type { BootstrapOptions } from './bootstrap.interfaces.js'
 
-import { createRequire }          from 'node:module'
+import { createRequire }         from 'node:module'
 
-import { npath }                  from '@yarnpkg/fslib'
+import { npath }                 from '@yarnpkg/fslib'
 
-import { merge }                  from '../../../process/environment/map.js'
-import { set }                    from '../../../process/environment/map.js'
-import { prepare as prepareBase } from './prepare.js'
+import { applyPatch }            from '../../../process/environment/map.js'
+import { includesName }          from '../../../process/environment/map.js'
+import { merge }                 from '../../../process/environment/map.js'
+import { remove }                from '../../../process/environment/map.js'
+import { set }                   from '../../../process/environment/map.js'
+import { isOwned }               from './sanitize.js'
+import { sanitize }              from './sanitize.js'
 
 const require = createRequire(import.meta.url)
 const { scriptUtils } = require('@yarnpkg/core') as Pick<typeof YarnCore, 'scriptUtils'>
+
+const BOOTSTRAP_ENVIRONMENT_NAMES = ['INIT_CWD', 'PROJECT_CWD']
+
+const assertEnvironmentPatch = (patch: EnvironmentInput['patch']): void => {
+  for (const name of Object.keys(patch)) {
+    if (includesName(BOOTSTRAP_ENVIRONMENT_NAMES, name) || isOwned(name)) {
+      throw new Error(`Managed Node execution cannot override ${name}`)
+    }
+  }
+}
 
 const prepare = async (
   input: EnvironmentInput,
@@ -25,7 +39,16 @@ const prepare = async (
     await project.restoreInstallState()
   }
 
-  const baseEnv = prepareBase(project.configuration.env, baseEnvironment, input.patch)
+  assertEnvironmentPatch(input.patch)
+
+  const baseEnv = sanitize(merge([project.configuration.env, baseEnvironment]))
+
+  for (const name of BOOTSTRAP_ENVIRONMENT_NAMES) {
+    remove(baseEnv, name)
+  }
+
+  applyPatch(baseEnv, input.patch)
+
   const environment = merge([
     await scriptUtils.makeScriptEnv({
       baseEnv,

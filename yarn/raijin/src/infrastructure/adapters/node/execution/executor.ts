@@ -5,6 +5,8 @@ import type { ExecuteResult as ProcessExecuteResult } from '../../../process/exe
 import type { ExecutorOptions }               from './executor.interfaces.js'
 
 import { execute as executeProcess }          from '../../../process/execa/execute.js'
+import { isManagedNodeEnvironmentName }       from '../loaders/environment.js'
+import { removeEnvironmentMarkers }           from '../loaders/environment.js'
 import { create as createRegistrationImport } from '../loaders/registration.js'
 import { resolve as resolveLoader }           from '../loaders/typescript/resolve.js'
 import { directory }                          from './directory.js'
@@ -48,6 +50,14 @@ const createArguments = (input: ExecuteInput, loader: string): Array<string> => 
   ...(input.arguments ?? []),
 ]
 
+const assertEnvironmentPatch = (environment: ExecuteInput['environment']): void => {
+  for (const name of Object.keys(environment ?? {})) {
+    if (isManagedNodeEnvironmentName(name)) {
+      throw new Error(`Managed Node execution cannot override ${name}`)
+    }
+  }
+}
+
 const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<ExecuteResult> => {
   let temporaryDirectory: Awaited<ReturnType<typeof directory.create>> | undefined
   let execution: ProcessResult
@@ -55,11 +65,16 @@ const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<E
   try {
     temporaryDirectory = await directory.create()
 
+    assertEnvironmentPatch(input.environment)
+
     const environment = await options.environment.prepare({
       binDirectory: temporaryDirectory.path,
       cwd: input.cwd,
       patch: input.environment ?? {},
     })
+
+    removeEnvironmentMarkers(environment)
+
     const output = input.output?.mode === 'inherit' ? undefined : input.output
     const result = await executeProcess(
       process.execPath,
