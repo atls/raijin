@@ -75,8 +75,8 @@ const loadConfiguration = async (
   importer: ModuleImporter
 ): Promise<IconConfiguration> => {
   const [replacements, template] = await Promise.all([
-    importer(pathToFileURL(join(cwd, 'replacements.ts')).href),
-    importer(pathToFileURL(join(cwd, 'template.ts')).href),
+    importer(pathToFileURL(join(cwd, 'replacements.js')).href),
+    importer(pathToFileURL(join(cwd, 'template.js')).href),
   ])
 
   return {

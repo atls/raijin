@@ -34,7 +34,7 @@ test('should load project modules by exact URL and pass full component replaceme
   const importer: ModuleImporter = async (specifier) => {
     requested.push(specifier)
 
-    return specifier.endsWith('/replacements.ts')
+    return specifier.endsWith('/replacements.js')
       ? { default: { AlertIcon: { '#000': 'currentColor' } } }
       : { default: template }
   }
@@ -63,8 +63,8 @@ test('should load project modules by exact URL and pass full component replaceme
 
   assert.equal(result, 'generated component')
   assert.deepEqual(requested, [
-    pathToFileURL(join(cwd, 'replacements.ts')).href,
-    pathToFileURL(join(cwd, 'template.ts')).href,
+    pathToFileURL(join(cwd, 'replacements.js')).href,
+    pathToFileURL(join(cwd, 'template.js')).href,
   ])
   assert.deepEqual(calls, [
     {
@@ -93,8 +93,8 @@ test('should load project modules by exact URL and pass full component replaceme
   })
 
   assert.deepEqual(requested, [
-    pathToFileURL(join(cwd, 'replacements.ts')).href,
-    pathToFileURL(join(cwd, 'template.ts')).href,
+    pathToFileURL(join(cwd, 'replacements.js')).href,
+    pathToFileURL(join(cwd, 'template.js')).href,
   ])
 })
 
@@ -145,7 +145,7 @@ test('should reject invalid replacement and template default exports at the prov
       })
       const transformer = create('/workspace/icons', {
         importModule: async (specifier) =>
-          specifier.endsWith('/replacements.ts') ? replacements : iconTemplate,
+          specifier.endsWith('/replacements.js') ? replacements : iconTemplate,
         jsx,
         transform,
       })
