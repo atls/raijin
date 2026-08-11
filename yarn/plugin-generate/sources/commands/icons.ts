@@ -32,7 +32,7 @@ export class GenerateIconsCommand extends BaseCommand {
     description: 'generate icon components from source assets',
   })
 
-  native: boolean = Option.Boolean('-n, --native', false)
+  native: boolean = Option.Boolean('-n,--native', false)
 
   declare context: WorkspaceCommandContext
 
