@@ -3,7 +3,7 @@ import { get as getEnvironmentVariable }       from '../../../process/environmen
 import { includesName }                        from '../../../process/environment/map.js'
 import { remove as removeEnvironmentVariable } from '../../../process/environment/map.js'
 import { set as setEnvironmentVariable }       from '../../../process/environment/map.js'
-import { create as createRegistrationImport }  from './bootstrap.js'
+import { create as createRegistrationImport }  from './registration.js'
 
 export const LOADER = 'RAIJIN_NODE_LOADER'
 export const REGISTRATION = 'RAIJIN_NODE_LOADER_REGISTRATION'

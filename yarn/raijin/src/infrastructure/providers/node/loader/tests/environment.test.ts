@@ -12,11 +12,11 @@ import { promisify }                          from 'node:util'
 import { LOADER }                             from '../environment.js'
 import { REGISTRATION }                       from '../environment.js'
 import { REGISTERED_PNP_LOADER }              from '../environment.js'
-import { create as createRegistrationImport } from '../bootstrap.js'
 import { applyManagedNodeLoader }             from '../environment.js'
 import { isManagedNodeEnvironmentName }       from '../environment.js'
 import { removeEnvironmentMarkers }           from '../environment.js'
 import { removeAppliedLoaderRegistration }    from '../environment.js'
+import { create as createRegistrationImport } from '../registration.js'
 
 const execFileAsync = promisify(execFile)
 

@@ -7,8 +7,8 @@ import { includesName }                        from '../infrastructure/process/e
 import { merge as mergeEnvironments }          from '../infrastructure/process/environment/map.js'
 import { remove as removeEnvironmentVariable } from '../infrastructure/process/environment/map.js'
 import { set as setEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
-import { isManagedNodeEnvironmentName } from '../infrastructure/providers/node/loader-registration/environment.js'
-import { removeAppliedLoaderRegistration } from '../infrastructure/providers/node/loader-registration/environment.js'
+import { isManagedNodeEnvironmentName } from '../infrastructure/providers/node/loader/environment.js'
+import { removeAppliedLoaderRegistration } from '../infrastructure/providers/node/loader/environment.js'
 
 const TRANSIENT_ENVIRONMENT_NAMES = [
   'BERRY_BIN_FOLDER',
