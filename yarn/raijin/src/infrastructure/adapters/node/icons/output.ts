@@ -1,6 +1,7 @@
 import type { IconModule }         from '../../../../application/generation/icons/index.js'
 import type { IconOutputReplacer } from '../../../../application/generation/icons/index.js'
 import type { CopyFile }           from './output.interfaces.js'
+import type { RemoveFile }         from './output.interfaces.js'
 
 import { copyFile }                from 'node:fs/promises'
 import { mkdir }                   from 'node:fs/promises'
@@ -69,7 +70,8 @@ const settle = async (operations: ReadonlyArray<Promise<void>>): Promise<void> =
 const replace = async (
   cwd: string,
   modules: ReadonlyArray<IconModule>,
-  copy: CopyFile
+  copy: CopyFile,
+  remove: RemoveFile
 ): Promise<Array<string>> => {
   const target = join(cwd, 'src')
   const staging = await mkdtemp(join(cwd, '.raijin-icons-'))
@@ -92,11 +94,11 @@ const replace = async (
     const previousState = await snapshot(target, affectedFiles)
 
     try {
+      await settle(staleModules.map(async (file) => remove(join(target, file))))
+
       await settle(
         generatedFiles.map(async (file) => copy(join(staging, file), join(target, file)))
       )
-
-      await settle(staleModules.map(async (file) => rm(join(target, file))))
     } catch (error) {
       try {
         await restore(target, previousState)
@@ -113,6 +115,9 @@ const replace = async (
   }
 }
 
-export const create = (copy: CopyFile = copyFile): IconOutputReplacer => ({
-  replace: async (cwd, modules) => replace(cwd, modules, copy),
+export const create = (
+  copy: CopyFile = copyFile,
+  remove: RemoveFile = async (path) => rm(path)
+): IconOutputReplacer => ({
+  replace: async (cwd, modules) => replace(cwd, modules, copy, remove),
 })

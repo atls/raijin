@@ -3,9 +3,12 @@ import { copyFile }   from 'node:fs/promises'
 import { mkdir }      from 'node:fs/promises'
 import { mkdtemp }    from 'node:fs/promises'
 import { readFile }   from 'node:fs/promises'
+import { readdir }    from 'node:fs/promises'
 import { rm }         from 'node:fs/promises'
 import { writeFile }  from 'node:fs/promises'
 import { tmpdir }     from 'node:os'
+import { basename }   from 'node:path'
+import { dirname }    from 'node:path'
 import { join }       from 'node:path'
 import { test }       from 'node:test'
 import { setTimeout } from 'node:timers/promises'
@@ -94,6 +97,45 @@ test('should settle pending file mutations before restoring previous output', as
     assert.equal(await readFile(join(source, 'Bell.icon.tsx'), 'utf8'), previous.bell)
     assert.equal(await readFile(join(source, 'User.icon.tsx'), 'utf8'), previous.user)
     assert.equal(await readFile(join(source, 'index.ts'), 'utf8'), previous.index)
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})
+
+test('should preserve a generated module renamed only by case', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const source = join(cwd, 'src')
+
+  const resolveCaseInsensitive = async (path: string): Promise<string> => {
+    const directory = dirname(path)
+    const name = basename(path).toLowerCase()
+    const match = (await readdir(directory)).find((entry) => entry.toLowerCase() === name)
+
+    return match ? join(directory, match) : path
+  }
+
+  const copy = async (from: string, to: string): Promise<void> =>
+    copyFile(from, await resolveCaseInsensitive(to))
+  const remove = async (path: string): Promise<void> => rm(await resolveCaseInsensitive(path))
+
+  try {
+    await mkdir(source)
+    await writeFile(join(source, 'alert.icon.tsx'), 'previous alert output')
+
+    const files = await create(copy, remove).replace(cwd, [
+      { component: 'AlertIcon', content: 'export const AlertIcon = null\n', name: 'Alert' },
+    ])
+
+    assert.deepEqual(files, ['src/Alert.icon.tsx', 'src/index.ts'])
+    assert.deepEqual((await readdir(source)).sort(), ['Alert.icon.tsx', 'index.ts'])
+    assert.equal(
+      await readFile(join(source, 'Alert.icon.tsx'), 'utf8'),
+      'export const AlertIcon = null\n'
+    )
+    assert.equal(
+      await readFile(join(source, 'index.ts'), 'utf8'),
+      "export * from './Alert.icon.jsx'"
+    )
   } finally {
     await rm(cwd, { force: true, recursive: true })
   }
