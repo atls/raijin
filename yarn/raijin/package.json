@@ -27,7 +27,8 @@
     "./config/sync": "./src/config/sync/index.ts",
     "./config/typescript": "./src/config/typescript/index.ts",
     "./filesystem": "./src/filesystem/index.ts",
-    "./infrastructure/generation/icons": "./src/infrastructure/generation/icons/index.ts",
+    "./infrastructure/providers/icons/node": "./src/infrastructure/providers/icons/node/index.ts",
+    "./infrastructure/providers/icons/svgr": "./src/infrastructure/providers/icons/svgr/index.ts",
     "./infrastructure/generation/project": "./src/infrastructure/generation/project/index.ts",
     "./project": "./src/project/index.ts",
     "./yarn": "./src/yarn/index.ts",
@@ -173,10 +174,15 @@
         "types": "./dist/filesystem/index.d.ts",
         "default": "./dist/filesystem/index.js"
       },
-      "./infrastructure/generation/icons": {
-        "import": "./dist/infrastructure/generation/icons/index.js",
-        "types": "./dist/infrastructure/generation/icons/index.d.ts",
-        "default": "./dist/infrastructure/generation/icons/index.js"
+      "./infrastructure/providers/icons/node": {
+        "import": "./dist/infrastructure/providers/icons/node/index.js",
+        "types": "./dist/infrastructure/providers/icons/node/index.d.ts",
+        "default": "./dist/infrastructure/providers/icons/node/index.js"
+      },
+      "./infrastructure/providers/icons/svgr": {
+        "import": "./dist/infrastructure/providers/icons/svgr/index.js",
+        "types": "./dist/infrastructure/providers/icons/svgr/index.d.ts",
+        "default": "./dist/infrastructure/providers/icons/svgr/index.js"
       },
       "./infrastructure/generation/project": {
         "import": "./dist/infrastructure/generation/project/index.js",

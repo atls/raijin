@@ -8,9 +8,9 @@ import { generateIcons }                from '@atls/raijin/application/icons/gen
 import { createCommandInput }           from '@atls/raijin/commands'
 import { toCommandArguments }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
-import { createIconOutputReplacer }     from '@atls/raijin/infrastructure/generation/icons'
-import { createIconSourceReader }       from '@atls/raijin/infrastructure/generation/icons'
-import { createIconTransformer }        from '@atls/raijin/infrastructure/generation/icons'
+import { createIconOutputReplacer }     from '@atls/raijin/infrastructure/providers/icons/node'
+import { createIconSourceReader }       from '@atls/raijin/infrastructure/providers/icons/node'
+import { createIconTransformer }        from '@atls/raijin/infrastructure/providers/icons/svgr'
 
 import { presentIconGeneration }        from '../presenters/icons.js'
 import { presentIconGenerationError }   from '../presenters/icons.js'
