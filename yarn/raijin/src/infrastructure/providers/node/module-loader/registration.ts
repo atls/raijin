@@ -6,3 +6,7 @@ export const create = (loaders: ReadonlyArray<string>): string =>
       ...loaders.map((loader) => `register(${JSON.stringify(loader)}, pathToFileURL("./"));`),
     ].join(' ')
   )}`
+
+export const registerNodeLoaders = async (loaders: Array<string>): Promise<void> => {
+  await import(create(loaders))
+}

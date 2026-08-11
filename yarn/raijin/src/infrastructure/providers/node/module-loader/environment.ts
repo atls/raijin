@@ -150,10 +150,6 @@ export const removeManagedNodeLoaderImports = (
   nodeOptions: string | undefined
 ): string | undefined => removeNodeLoaderImports(nodeOptions, isManagedNodeLoaderImport)
 
-export const registerNodeLoaders = async (loaders: Array<string>): Promise<void> => {
-  await import(createRegistrationImport(loaders))
-}
-
 export const applyManagedNodeLoader = (
   env: NodeJS.ProcessEnv,
   platform: NodeJS.Platform = process.platform
