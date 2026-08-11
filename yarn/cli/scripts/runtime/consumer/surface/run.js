@@ -4,11 +4,11 @@ import { join } from 'node:path'
 /**
  * @param {{
  *   fixtureCwd: string,
- *   targetWorkspaceCwd: string,
  *   runYarn: (args: Array<string>, cwd?: string) => Promise<string>
  * }} options
  */
-export const runSurface = async ({ fixtureCwd, targetWorkspaceCwd, runYarn }) => {
+export const runSurface = async ({ fixtureCwd, runYarn }) => {
+  const targetWorkspaceCwd = join(fixtureCwd, 'packages/target')
   const commands = [
     ['check', '--help'],
     ['generate', 'project', '--help'],

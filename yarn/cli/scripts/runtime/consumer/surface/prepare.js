@@ -34,9 +34,4 @@ export const prepareSurface = async (fixtureCwd) => {
       join(fixtureCwd, 'packages/target/src/integration/target.test.js')
     ),
   ])
-
-  return {
-    fixtureCwd,
-    targetWorkspaceCwd: join(fixtureCwd, 'packages/target'),
-  }
 }
