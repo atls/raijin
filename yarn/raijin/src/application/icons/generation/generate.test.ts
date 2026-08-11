@@ -1,5 +1,5 @@
-import type { IconModule } from '../ports/output.interfaces.js'
-import type { IconSource } from '../ports/source.interfaces.js'
+import type { IconModule } from './ports/output.interfaces.js'
+import type { IconSource } from './ports/source.interfaces.js'
 
 import assert              from 'node:assert/strict'
 import { test }            from 'node:test'

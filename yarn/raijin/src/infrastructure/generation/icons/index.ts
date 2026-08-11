@@ -1,4 +1,4 @@
-import type { IconTransformer } from '../../../application/generation/icons/index.js'
+import type { IconTransformer } from '../../../application/icons/generation/index.js'
 
 import { create as createNodeIconOutputReplacer } from '../../adapters/node/icons/output.js'
 import { create as createSvgrIconTransformer }    from '../../adapters/svgr/icons/transform.js'

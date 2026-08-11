@@ -1,4 +1,4 @@
-import type { IconSourceReader } from '../../../../application/generation/icons/index.js'
+import type { IconSourceReader } from '../../../../application/icons/generation/index.js'
 
 import { readFile }              from 'node:fs/promises'
 import { readdir }               from 'node:fs/promises'

@@ -1,5 +1,5 @@
-import type { IconModule }         from '../../../../application/generation/icons/index.js'
-import type { IconOutputReplacer } from '../../../../application/generation/icons/index.js'
+import type { IconModule }         from '../../../../application/icons/generation/index.js'
+import type { IconOutputReplacer } from '../../../../application/icons/generation/index.js'
 import type { CopyFile }           from './output.interfaces.js'
 import type { RemoveFile }         from './output.interfaces.js'
 

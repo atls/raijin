@@ -1,6 +1,6 @@
 import type { Plugin }                from '@svgr/core'
 
-import type { IconTransformer }       from '../../../../application/generation/icons/index.js'
+import type { IconTransformer }       from '../../../../application/icons/generation/index.js'
 import type { IconConfiguration }     from './transform.interfaces.js'
 import type { ModuleImporter }        from './transform.interfaces.js'
 import type { TransformOptions }      from './transform.interfaces.js'

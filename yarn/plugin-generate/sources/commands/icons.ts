@@ -4,7 +4,7 @@ import type { PortablePath }            from '@yarnpkg/fslib'
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { Option }                       from 'clipanion'
 
-import { generateIcons }                from '@atls/raijin/application/generation/icons'
+import { generateIcons }                from '@atls/raijin/application/icons/generation'
 import { createCommandInput }           from '@atls/raijin/commands'
 import { toCommandArguments }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
