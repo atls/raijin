@@ -1,6 +1,6 @@
-import type { Input as ExecuteInput }         from '../../../../application/execution/index.js'
-import type { Port as Executor }              from '../../../../application/execution/index.js'
-import type { Result as ExecuteResult }       from '../../../../application/execution/index.js'
+import type { ExecuteInput }                  from '../../../../application/execution/index.js'
+import type { ExecuteResult }                 from '../../../../application/execution/index.js'
+import type { Executor }                      from '../../../../application/execution/index.js'
 import type { ExecuteResult as ProcessExecuteResult } from '../../../process/execa/execute.interfaces.js'
 import type { ExecutorOptions }               from './executor.interfaces.js'
 
