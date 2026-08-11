@@ -9,19 +9,54 @@ const repoRoot = process.cwd()
 
 const DOCS_DIR = 'docs/raijin'
 
+/**
+ * @typedef {'en' | 'ru'} Language
+ * @typedef {Awaited<ReturnType<typeof loadRuntimeCliSurface>>['commands'][number]} RuntimeCommand
+ * @typedef {RuntimeCommand & {
+ *   availabilityReason: string,
+ *   domain: string,
+ *   pluginDir: string,
+ *   status: 'active' | 'inactive',
+ * }} Command
+ * @typedef {{
+ *   description: string,
+ *   group: string,
+ *   location: string,
+ *   name: string,
+ *   private: boolean,
+ *   scripts: Array<string>,
+ * }} Workspace
+ * @typedef {{
+ *   availability: { activeCommands: Array<string>, inactiveCommands: Array<string> },
+ *   commands: Array<Command>,
+ *   lastGenerated: string,
+ *   workspaces: Array<Workspace>,
+ * }} DocumentationIndex
+ */
+
+/** @param {string} relativePath */
 const readJson = (relativePath) =>
   JSON.parse(fs.readFileSync(path.join(repoRoot, relativePath), 'utf8'))
 
+/**
+ * @param {string} relativePath
+ * @param {string} content
+ */
 const writeText = (relativePath, content) => {
   const absolutePath = path.join(repoRoot, relativePath)
   fs.mkdirSync(path.dirname(absolutePath), { recursive: true })
   fs.writeFileSync(absolutePath, content)
 }
 
+/**
+ * @param {string} relativePath
+ * @param {unknown} value
+ */
 const writeJson = (relativePath, value) => {
   writeText(relativePath, `${JSON.stringify(value, null, 2)}\n`)
 }
 
+/** @param {Array<string>} paths */
 const formatGeneratedFiles = (paths) => {
   try {
     execFileSync('yarn', ['format', ...paths], {
@@ -29,17 +64,19 @@ const formatGeneratedFiles = (paths) => {
       stdio: 'pipe',
     })
   } catch (error) {
+    /** @type {{ stderr?: unknown, stdout?: unknown }} */
+    const processError = error && typeof error === 'object' ? error : {}
     const stderr =
-      typeof error?.stderr === 'string'
-        ? error.stderr
-        : Buffer.isBuffer(error?.stderr)
-          ? error.stderr.toString()
+      typeof processError.stderr === 'string'
+        ? processError.stderr
+        : Buffer.isBuffer(processError.stderr)
+          ? processError.stderr.toString()
           : ''
     const stdout =
-      typeof error?.stdout === 'string'
-        ? error.stdout
-        : Buffer.isBuffer(error?.stdout)
-          ? error.stdout.toString()
+      typeof processError.stdout === 'string'
+        ? processError.stdout
+        : Buffer.isBuffer(processError.stdout)
+          ? processError.stdout.toString()
           : ''
 
     throw new Error(
@@ -48,8 +85,10 @@ const formatGeneratedFiles = (paths) => {
   }
 }
 
+/** @param {string} value */
 const toPosix = (value) => value.split(path.sep).join('/')
 
+/** @param {string} value */
 const slugify = (value) =>
   value
     .toLowerCase()
@@ -73,10 +112,12 @@ const DETAILED_GROUPS = new Set(WORKSPACE_GROUP_ORDER.filter((group) => group !=
 const COVER_IMAGE_URL =
   'https://github.com/user-attachments/assets/ac98b900-ee3c-4ea8-a081-e83a1f5f3282'
 
+/** @type {Record<string, Array<string>>} */
 const COMMAND_EXAMPLES = {
   check: ['yarn check', 'yarn check yarn/plugin-check/sources'],
 }
 
+/** @type {Record<string, { en: Array<string>, ru: Array<string> }>} */
 const COMMAND_NOTES = {
   'image pack': {
     en: [
@@ -94,6 +135,11 @@ const COMMAND_NOTES = {
   },
 }
 
+/**
+ * @param {string} dirPath
+ * @param {(filePath: string) => boolean} predicate
+ * @param {Array<string>} output
+ */
 const walkFiles = (dirPath, predicate, output = []) => {
   if (!fs.existsSync(dirPath)) return output
 
@@ -124,6 +170,7 @@ const walkFiles = (dirPath, predicate, output = []) => {
   return output
 }
 
+/** @param {string} plugin */
 const commandDomainFromPlugin = (plugin) => {
   if (plugin === '@atls/yarn-plugin-tools') {
     return 'raijin'
@@ -140,14 +187,21 @@ const commandDomainFromPlugin = (plugin) => {
   return plugin.replace(/^@/, '').replace(/[/.]/g, '-')
 }
 
+/**
+ * @param {string} domain
+ * @param {Language} language
+ */
 const domainLabel = (domain, language) => {
   if (language === 'ru') return `Домен \`${domain}\``
   return `Domain \`${domain}\``
 }
 
+/** @param {string} left @param {string} right */
 const sortByLocale = (left, right) => left.localeCompare(right)
 
+/** @returns {Array<Workspace>} */
 const loadWorkspacePackages = () => {
+  /** @type {{ workspaces?: Array<string> }} */
   const rootPackage = readJson('package.json')
 
   const workspaceRoots = [
@@ -186,8 +240,13 @@ const loadWorkspacePackages = () => {
   })
 }
 
+/**
+ * @param {string} basePath
+ * @param {Language} language
+ */
 const linkByLanguage = (basePath, language) => `${basePath}${language === 'ru' ? '.ru' : ''}.md`
 
+/** @param {Language} language */
 const renderRootReadme = (language) => {
   const isRu = language === 'ru'
   const rootReadmeRu = 'README.md'
@@ -359,6 +418,7 @@ const renderRootReadme = (language) => {
   ].join('\n')
 }
 
+/** @param {Language} language */
 const renderDocsRootReadme = (language) => {
   const isRu = language === 'ru'
   const raijinRouterPath = linkByLanguage('raijin/README', language)
@@ -416,6 +476,10 @@ const renderDocsRootReadme = (language) => {
   ].join('\n')
 }
 
+/**
+ * @param {DocumentationIndex} index
+ * @param {Language} language
+ */
 const renderRaijinReadme = (index, language) => {
   const isRu = language === 'ru'
   const quickstartPath = linkByLanguage('quickstart', language)
@@ -491,6 +555,7 @@ const renderRaijinReadme = (index, language) => {
   ].join('\n')
 }
 
+/** @param {Language} language */
 const renderQuickstart = (language) => {
   const isRu = language === 'ru'
 
@@ -623,12 +688,15 @@ const renderQuickstart = (language) => {
   ].join('\n')
 }
 
+/** @param {Array<Command>} commands */
 const groupCommandsByDomain = (commands) => {
+  /** @type {Map<string, Array<Command>>} */
   const groups = new Map()
 
   for (const command of commands) {
-    if (!groups.has(command.domain)) groups.set(command.domain, [])
-    groups.get(command.domain).push(command)
+    const domainCommands = groups.get(command.domain) ?? []
+    domainCommands.push(command)
+    groups.set(command.domain, domainCommands)
   }
 
   for (const [domain, domainCommands] of groups.entries()) {
@@ -639,6 +707,10 @@ const groupCommandsByDomain = (commands) => {
   return [...groups.entries()].sort(([left], [right]) => left.localeCompare(right))
 }
 
+/**
+ * @param {Command} command
+ * @param {Language} language
+ */
 const renderCommandCard = (command, language) => {
   const isRu = language === 'ru'
 
@@ -673,6 +745,10 @@ const renderCommandCard = (command, language) => {
   return lines
 }
 
+/**
+ * @param {Array<Command>} commands
+ * @param {Language} language
+ */
 const renderCommandsDoc = (commands, language) => {
   const isRu = language === 'ru'
   const active = commands.filter((command) => command.status === 'active')
@@ -774,6 +850,7 @@ const renderCommandsDoc = (commands, language) => {
   return `${lines.join('\n')}\n`
 }
 
+/** @param {Array<Workspace>} workspaces */
 const orderedWorkspaceGroups = (workspaces) => {
   const known = [...WORKSPACE_GROUP_ORDER]
   const extra = [...new Set(workspaces.map((workspace) => workspace.group))]
@@ -783,7 +860,12 @@ const orderedWorkspaceGroups = (workspaces) => {
   return [...known, ...extra]
 }
 
+/**
+ * @param {string} group
+ * @param {Language} language
+ */
 const workspaceGroupIntro = (group, language) => {
+  /** @type {Record<string, string>} */
   const ru = {
     yarn: 'Пакеты кастомного Yarn CLI, плагинов и bundle-инфраструктуры',
     code: 'Базовые code-библиотеки для сборки, тестов и утилит',
@@ -795,6 +877,7 @@ const workspaceGroupIntro = (group, language) => {
     schematics: 'Схемы, генераторы и связанные шаблоны',
   }
 
+  /** @type {Record<string, string>} */
   const en = {
     yarn: 'Custom Yarn CLI, plugin, and bundle infrastructure packages',
     code: 'Core code libraries for build, checks, and utilities',
@@ -813,6 +896,11 @@ const workspaceGroupIntro = (group, language) => {
   )
 }
 
+/**
+ * @param {Workspace} workspace
+ * @param {Language} language
+ * @param {boolean} compact
+ */
 const renderWorkspaceCard = (workspace, language, compact) => {
   const isRu = language === 'ru'
   const lines = [
@@ -856,14 +944,20 @@ const renderWorkspaceCard = (workspace, language, compact) => {
   return lines
 }
 
+/**
+ * @param {Array<Workspace>} workspaces
+ * @param {Language} language
+ */
 const renderPackagesDoc = (workspaces, language) => {
   const isRu = language === 'ru'
+  /** @type {Map<string, Array<Workspace>>} */
   const groups = new Map()
   const publicWorkspaces = workspaces.filter((workspace) => !workspace.private)
 
   for (const workspace of workspaces) {
-    if (!groups.has(workspace.group)) groups.set(workspace.group, [])
-    groups.get(workspace.group).push(workspace)
+    const groupWorkspaces = groups.get(workspace.group) ?? []
+    groupWorkspaces.push(workspace)
+    groups.set(workspace.group, groupWorkspaces)
   }
 
   const lines = [
@@ -982,11 +1076,24 @@ const smokeFixture = {
   ],
 }
 
+/** @param {Record<string, unknown>} value */
 const stripLastGenerated = (value) => {
   const clone = JSON.parse(JSON.stringify(value))
   delete clone.lastGenerated
   return clone
 }
+
+/**
+ * @param {RuntimeCommand} command
+ * @returns {Command}
+ */
+const describeCommand = (command) => ({
+  ...command,
+  availabilityReason: 'registered by the assembled @atls/yarn-cli runtime',
+  domain: commandDomainFromPlugin(command.plugin),
+  pluginDir: command.plugin.replace('@atls/yarn-plugin-', 'plugin-'),
+  status: 'active',
+})
 
 const rootPackage = readJson('package.json')
 const yarnCliPackage = readJson('yarn/cli/package.json')
@@ -994,24 +1101,19 @@ const yarnRc = fs.readFileSync(path.join(repoRoot, '.yarnrc.yml'), 'utf8')
 const runtimePath = path.join(repoRoot, '.yarn/releases/yarn.mjs')
 const runtimeCliSurface = await loadRuntimeCliSurface({ cwd: repoRoot, runtimePath })
 const bundlePlugins = runtimeCliSurface.plugins
-const commands = runtimeCliSurface.commands
-  .map((command) => ({
-    ...command,
-    availabilityReason: 'registered by the assembled @atls/yarn-cli runtime',
-    domain: commandDomainFromPlugin(command.plugin),
-    pluginDir: command.plugin.replace('@atls/yarn-plugin-', 'plugin-'),
-    status: 'active',
-  }))
-  .sort((left, right) => {
-    if (left.domain !== right.domain) return left.domain.localeCompare(right.domain)
-    if (left.command !== right.command) return left.command.localeCompare(right.command)
-    return left.plugin.localeCompare(right.plugin)
-  })
+/** @type {Array<Command>} */
+const commands = runtimeCliSurface.commands.map(describeCommand).sort((left, right) => {
+  if (left.domain !== right.domain) return left.domain.localeCompare(right.domain)
+  if (left.command !== right.command) return left.command.localeCompare(right.command)
+  return left.plugin.localeCompare(right.plugin)
+})
 const workspaces = loadWorkspacePackages()
 
 const activeCommands = commands.map((command) => command.command)
+/** @type {Array<string>} */
 const inactiveCommands = []
 const activePlugins = bundlePlugins.filter((plugin) => plugin.startsWith('@atls/'))
+/** @type {Array<string>} */
 const inactivePlugins = []
 
 const yarnPathMatch = yarnRc.match(/^\s*yarnPath:\s*(.+)\s*$/m)
