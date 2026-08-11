@@ -1,13 +1,13 @@
-import type { GenerateIconsInput }     from './input.interfaces.js'
-import type { GeneratedIconFormatter } from './ports/format.interfaces.js'
-import type { GeneratedIconLinter }    from './ports/lint.interfaces.js'
-import type { IconModule }             from './ports/output.interfaces.js'
-import type { IconOutputReplacer }     from './ports/output.interfaces.js'
-import type { IconSourceReader }       from './ports/source.interfaces.js'
-import type { IconTransformer }        from './ports/transform.interfaces.js'
-import type { GenerateIconsResult }    from './result.interfaces.js'
+import type { Input }          from './input.interfaces.js'
+import type { Formatter }      from './ports/format.interfaces.js'
+import type { Linter }         from './ports/lint.interfaces.js'
+import type { Module }         from './ports/output.interfaces.js'
+import type { OutputReplacer } from './ports/output.interfaces.js'
+import type { SourceReader }   from './ports/source.interfaces.js'
+import type { Transformer }    from './ports/transform.interfaces.js'
+import type { Result }         from './result.interfaces.js'
 
-import camelcase                       from 'camelcase'
+import camelcase               from 'camelcase'
 
 const createComponentName = (name: string): string => `${camelcase(name, { pascalCase: true })}Icon`
 
@@ -23,7 +23,7 @@ const compareNames = (
 }
 
 const findDuplicateComponents = (
-  modules: ReadonlyArray<Pick<IconModule, 'component'>>
+  modules: ReadonlyArray<Pick<Module, 'component'>>
 ): Array<string> => {
   const occurrences = new Map<string, number>()
 
@@ -37,16 +37,16 @@ const findDuplicateComponents = (
     .sort()
 }
 
-export const generateIcons = async (
-  input: GenerateIconsInput,
+export const generate = async (
+  input: Input,
   dependencies: {
-    formatter: GeneratedIconFormatter
-    linter: GeneratedIconLinter
-    output: IconOutputReplacer
-    sources: IconSourceReader
-    transformer: IconTransformer
+    formatter: Formatter
+    linter: Linter
+    output: OutputReplacer
+    sources: SourceReader
+    transformer: Transformer
   }
-): Promise<GenerateIconsResult> => {
+): Promise<Result> => {
   const sources = (await dependencies.sources.read(input.cwd)).sort(compareNames)
   const candidates = sources.map((source) => ({
     component: createComponentName(source.name),
@@ -65,7 +65,7 @@ export const generateIcons = async (
 
   const modules = await Promise.all(
     candidates.map(
-      async (candidate): Promise<IconModule> => ({
+      async (candidate): Promise<Module> => ({
         component: candidate.component,
         content: await dependencies.transformer.transform({
           component: candidate.component,

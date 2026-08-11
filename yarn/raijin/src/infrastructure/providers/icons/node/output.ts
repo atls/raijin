@@ -1,24 +1,24 @@
-import type { IconModule }         from '../../../../application/icons/generation/index.js'
-import type { IconOutputReplacer } from '../../../../application/icons/generation/index.js'
-import type { CopyFile }           from './output.interfaces.js'
-import type { RemoveFile }         from './output.interfaces.js'
+import type { Module }         from '../../../../application/icons/generation/index.js'
+import type { OutputReplacer } from '../../../../application/icons/generation/index.js'
+import type { CopyFile }       from './output.interfaces.js'
+import type { RemoveFile }     from './output.interfaces.js'
 
-import { copyFile }                from 'node:fs/promises'
-import { lstat }                   from 'node:fs/promises'
-import { mkdir }                   from 'node:fs/promises'
-import { mkdtemp }                 from 'node:fs/promises'
-import { readFile }                from 'node:fs/promises'
-import { readdir }                 from 'node:fs/promises'
-import { rm }                      from 'node:fs/promises'
-import { writeFile }               from 'node:fs/promises'
-import { join }                    from 'node:path'
+import { copyFile }            from 'node:fs/promises'
+import { lstat }               from 'node:fs/promises'
+import { mkdir }               from 'node:fs/promises'
+import { mkdtemp }             from 'node:fs/promises'
+import { readFile }            from 'node:fs/promises'
+import { readdir }             from 'node:fs/promises'
+import { rm }                  from 'node:fs/promises'
+import { writeFile }           from 'node:fs/promises'
+import { join }                from 'node:path'
 
 const GENERATED_MODULE_SUFFIX = '.icon.tsx'
 const INDEX_FILE = 'index.ts'
 
 type Snapshot = ReadonlyArray<Readonly<{ content: Buffer; name: string }>>
 
-const createIndex = (modules: ReadonlyArray<IconModule>): string =>
+const createIndex = (modules: ReadonlyArray<Module>): string =>
   modules.map((module) => `export * from './${module.name}.icon.jsx'`).join('\n')
 
 const snapshot = async (directory: string, files: ReadonlyArray<string>): Promise<Snapshot> =>
@@ -59,7 +59,7 @@ const restore = async (
 
 const replace = async (
   cwd: string,
-  modules: ReadonlyArray<IconModule>,
+  modules: ReadonlyArray<Module>,
   copy: CopyFile,
   remove: RemoveFile
 ): Promise<Array<string>> => {
@@ -111,6 +111,6 @@ const replace = async (
 export const create = (
   copy: CopyFile = copyFile,
   remove: RemoveFile = async (path) => rm(path, { force: true })
-): IconOutputReplacer => ({
+): OutputReplacer => ({
   replace: async (cwd, modules) => replace(cwd, modules, copy, remove),
 })

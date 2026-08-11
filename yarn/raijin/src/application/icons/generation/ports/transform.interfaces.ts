@@ -1,11 +1,11 @@
-import type { IconSource } from './source.interfaces.js'
+import type { Source } from './source.interfaces.js'
 
-export interface TransformIconInput {
+export interface TransformInput {
   component: string
   native: boolean
-  source: IconSource
+  source: Source
 }
 
-export interface IconTransformer {
-  transform: (input: TransformIconInput) => Promise<string>
+export interface Transformer {
+  transform: (input: TransformInput) => Promise<string>
 }

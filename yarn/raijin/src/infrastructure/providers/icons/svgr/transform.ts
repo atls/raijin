@@ -1,6 +1,6 @@
 import type { Plugin }                from '@svgr/core'
 
-import type { IconTransformer }       from '../../../../application/icons/generation/index.js'
+import type { Transformer }           from '../../../../application/icons/generation/index.js'
 import type { IconConfiguration }     from './transform.interfaces.js'
 import type { ModuleImporter }        from './transform.interfaces.js'
 import type { TransformOptions }      from './transform.interfaces.js'
@@ -85,7 +85,7 @@ const loadConfiguration = async (
   }
 }
 
-export const create = (cwd: string, options: TransformOptions = {}): IconTransformer => {
+export const create = (cwd: string, options: TransformOptions = {}): Transformer => {
   const importer = options.importModule ?? importModule
   const transform = options.transform ?? transformSvgr
   const jsxPlugin = options.jsx ?? readPlugin(jsxModule)

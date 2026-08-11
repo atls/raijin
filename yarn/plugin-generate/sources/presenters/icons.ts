@@ -1,4 +1,4 @@
-import type { GenerateIconsResult }         from '@atls/raijin/application/icons/generation'
+import type { Result }                      from '@atls/raijin/application/icons/generation'
 import type { CommandContext }              from '@yarnpkg/core'
 import type { Configuration }               from '@yarnpkg/core'
 import type { StreamReport }                from '@yarnpkg/core'
@@ -12,10 +12,7 @@ const unreachableIconGeneration = (result: never): never => {
   throw new TypeError(`Unsupported icon generation result: ${JSON.stringify(result)}`)
 }
 
-export const reportIconGeneration = (
-  report: IconGenerationReport,
-  result: GenerateIconsResult
-): void => {
+export const reportIconGeneration = (report: IconGenerationReport, result: Result): void => {
   switch (result.status) {
     case 'generated':
       report.reportInfo(
@@ -60,7 +57,7 @@ const present = async (
 export const presentIconGeneration = async (
   context: Pick<CommandContext, 'stdout'>,
   configuration: Configuration,
-  result: GenerateIconsResult
+  result: Result
 ): Promise<number> => {
   const exitCode = await present(context, configuration, (report) => {
     reportIconGeneration(report, result)

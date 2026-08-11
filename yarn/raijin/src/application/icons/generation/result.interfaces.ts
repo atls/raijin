@@ -1,4 +1,4 @@
-export type GenerateIconsResult =
+export type Result =
   | {
       components: Array<string>
       reason: 'duplicate-components'

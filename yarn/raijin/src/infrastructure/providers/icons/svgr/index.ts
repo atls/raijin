@@ -1,1 +1,1 @@
-export { create as createIconTransformer } from './transform.js'
+export { create as createTransformer } from './transform.js'

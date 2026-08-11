@@ -1,13 +1,13 @@
-import type { IconModule } from './ports/output.interfaces.js'
-import type { IconSource } from './ports/source.interfaces.js'
+import type { Module } from './ports/output.interfaces.js'
+import type { Source } from './ports/source.interfaces.js'
 
-import assert              from 'node:assert/strict'
-import { test }            from 'node:test'
+import assert          from 'node:assert/strict'
+import { test }        from 'node:test'
 
-import { generateIcons }   from './generate.js'
+import { generate }    from './generate.js'
 
 const createDependencies = (
-  sources: Array<IconSource>,
+  sources: Array<Source>,
   options: {
     formatExitCode?: number
     lintExitCode?: number
@@ -15,7 +15,7 @@ const createDependencies = (
 ) => {
   const formatted: Array<ReadonlyArray<string>> = []
   const linted: Array<ReadonlyArray<string>> = []
-  const modules: Array<IconModule> = []
+  const modules: Array<Module> = []
   const transformed: Array<string> = []
 
   const dependencies = {
@@ -50,7 +50,7 @@ const createDependencies = (
         return `export const ${component} = ${JSON.stringify(source.content)}`
       },
     },
-  } satisfies Parameters<typeof generateIcons>[1]
+  } satisfies Parameters<typeof generate>[1]
 
   return { dependencies, formatted, linted, modules, transformed }
 }
@@ -62,7 +62,7 @@ test('should transform and write sources in deterministic name order', async () 
   ]
   const { dependencies, formatted, linted, modules, transformed } = createDependencies(sources)
 
-  const result = await generateIcons({ cwd: '/workspace', native: true }, dependencies)
+  const result = await generate({ cwd: '/workspace', native: true }, dependencies)
 
   const files = ['src/apple.icon.tsx', 'src/zebra.icon.tsx', 'src/index.ts']
 
@@ -90,7 +90,7 @@ test('should reject colliding component names before transforming or writing out
     { content: '<svg />', name: 'alert_circle' },
   ])
 
-  const result = await generateIcons({ cwd: '/workspace', native: false }, dependencies)
+  const result = await generate({ cwd: '/workspace', native: false }, dependencies)
 
   assert.deepEqual(result, {
     components: ['AlertCircleIcon'],
@@ -109,7 +109,7 @@ test('should preserve a format failure exit code and skip linting', async () => 
     { formatExitCode: 23 }
   )
 
-  const result = await generateIcons({ cwd: '/workspace', native: false }, dependencies)
+  const result = await generate({ cwd: '/workspace', native: false }, dependencies)
 
   assert.deepEqual(result, {
     exitCode: 23,
@@ -127,7 +127,7 @@ test('should preserve a lint failure exit code after formatting', async () => {
     { lintExitCode: 31 }
   )
 
-  const result = await generateIcons({ cwd: '/workspace', native: false }, dependencies)
+  const result = await generate({ cwd: '/workspace', native: false }, dependencies)
 
   assert.deepEqual(result, {
     exitCode: 31,

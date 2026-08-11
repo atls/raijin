@@ -1,8 +1,8 @@
-export interface IconSource {
+export interface Source {
   content: string
   name: string
 }
 
-export interface IconSourceReader {
-  read: (cwd: string) => Promise<Array<IconSource>>
+export interface SourceReader {
+  read: (cwd: string) => Promise<Array<Source>>
 }

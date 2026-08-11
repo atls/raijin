@@ -1,4 +1,4 @@
-export interface GenerateIconsInput {
+export interface Input {
   cwd: string
   native: boolean
 }

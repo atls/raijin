@@ -1,3 +1,3 @@
-export interface GeneratedIconLinter {
+export interface Linter {
   lint: (files: ReadonlyArray<string>) => Promise<number>
 }

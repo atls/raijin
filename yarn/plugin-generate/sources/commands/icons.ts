@@ -4,13 +4,13 @@ import type { PortablePath }            from '@yarnpkg/fslib'
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { Option }                       from 'clipanion'
 
-import { generateIcons }                from '@atls/raijin/application/icons/generation'
+import { generate }                     from '@atls/raijin/application/icons/generation'
 import { createCommandInput }           from '@atls/raijin/commands'
 import { toCommandArguments }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
-import { createIconOutputReplacer }     from '@atls/raijin/infrastructure/providers/icons/node'
-import { createIconSourceReader }       from '@atls/raijin/infrastructure/providers/icons/node'
-import { createIconTransformer }        from '@atls/raijin/infrastructure/providers/icons/svgr'
+import { createOutputReplacer }         from '@atls/raijin/infrastructure/providers/icons/node'
+import { createSourceReader }           from '@atls/raijin/infrastructure/providers/icons/node'
+import { createTransformer }            from '@atls/raijin/infrastructure/providers/icons/svgr'
 
 import { presentIconGeneration }        from '../presenters/icons.js'
 import { presentIconGenerationError }   from '../presenters/icons.js'
@@ -43,7 +43,7 @@ export class GenerateIconsCommand extends BaseCommand {
       createGeneratedArguments(executionCwd, files)
 
     try {
-      const result = await generateIcons(
+      const result = await generate(
         { cwd, native: this.native },
         {
           formatter: {
@@ -52,9 +52,9 @@ export class GenerateIconsCommand extends BaseCommand {
           linter: {
             lint: async (files) => yarn.execute(['lint', '--fix', ...createArguments(files)]),
           },
-          output: createIconOutputReplacer(),
-          sources: createIconSourceReader(),
-          transformer: createIconTransformer(cwd),
+          output: createOutputReplacer(),
+          sources: createSourceReader(),
+          transformer: createTransformer(cwd),
         }
       )
 
