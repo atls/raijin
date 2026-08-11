@@ -1,5 +1,8 @@
-import type { Config }            from '@svgr/core'
-import type { Plugin }            from '@svgr/core'
+import type { Config }           from '@svgr/core'
+import type { Plugin }           from '@svgr/core'
+
+import type { ModuleImporter }   from '../transform.interfaces.js'
+import type { TransformOptions } from '../transform.interfaces.js'
 
 import assert                    from 'node:assert/strict'
 import { join }                  from 'node:path'
@@ -7,8 +10,6 @@ import { test }                  from 'node:test'
 import { pathToFileURL }         from 'node:url'
 
 import { create }                from '../transform.js'
-import type { ModuleImporter }   from '../transform.interfaces.js'
-import type { TransformOptions } from '../transform.interfaces.js'
 
 type SvgrTransform = NonNullable<TransformOptions['transform']>
 type SvgrTransformParameters = Parameters<SvgrTransform>
@@ -37,15 +38,18 @@ test('should load project modules by exact URL and pass full component replaceme
       ? { default: { AlertIcon: { '#000': 'currentColor' } } }
       : { default: template }
   }
-  const transform: SvgrTransform = async (_source, configuration, state) => {
-    if (configuration === undefined || state === undefined) {
-      throw new Error('Expected SVGR transform configuration and state')
-    }
+  const transform = Object.assign(
+    async (...[_source, configuration, state]: SvgrTransformParameters): Promise<string> => {
+      if (configuration === undefined || state === undefined) {
+        throw new Error('Expected SVGR transform configuration and state')
+      }
 
-    calls.push({ configuration, state })
+      calls.push({ configuration, state })
 
-    return 'generated component'
-  }
+      return 'generated component'
+    },
+    { sync: (): string => 'generated component' }
+  )
 
   const transformer = create(cwd, { importModule: importer, jsx, transform })
   const result = await transformer.transform({
@@ -92,21 +96,26 @@ test('should reject invalid replacement and template default exports at the prov
     },
   ]
 
-  for (const { message, modules } of invalidConfigurations) {
-    let index = 0
-    const transformer = create('/workspace/icons', {
-      importModule: async () => modules[index++],
-      jsx,
-      transform: async () => 'unreachable',
-    })
+  await Promise.all(
+    invalidConfigurations.map(async ({ message, modules: [replacements, iconTemplate] }) => {
+      const transform = Object.assign(async (): Promise<string> => 'unreachable', {
+        sync: (): string => 'unreachable',
+      })
+      const transformer = create('/workspace/icons', {
+        importModule: async (specifier) =>
+          specifier.endsWith('/replacements.ts') ? replacements : iconTemplate,
+        jsx,
+        transform,
+      })
 
-    await assert.rejects(
-      transformer.transform({
-        component: 'AlertIcon',
-        native: false,
-        source: { content: '<svg />', name: 'alert' },
-      }),
-      { message }
-    )
-  }
+      await assert.rejects(
+        transformer.transform({
+          component: 'AlertIcon',
+          native: false,
+          source: { content: '<svg />', name: 'alert' },
+        }),
+        { message }
+      )
+    })
+  )
 })
