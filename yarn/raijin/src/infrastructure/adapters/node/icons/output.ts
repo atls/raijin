@@ -4,6 +4,7 @@ import type { CopyFile }           from './output.interfaces.js'
 import type { RemoveFile }         from './output.interfaces.js'
 
 import { copyFile }                from 'node:fs/promises'
+import { lstat }                   from 'node:fs/promises'
 import { mkdir }                   from 'node:fs/promises'
 import { mkdtemp }                 from 'node:fs/promises'
 import { readFile }                from 'node:fs/promises'
@@ -21,7 +22,17 @@ const createIndex = (modules: ReadonlyArray<IconModule>): string =>
   modules.map((module) => `export * from './${module.name}.icon.jsx'`).join('\n')
 
 const snapshot = async (directory: string, files: ReadonlyArray<string>): Promise<Snapshot> =>
-  Promise.all(files.map(async (name) => ({ content: await readFile(join(directory, name)), name })))
+  Promise.all(
+    files.map(async (name) => {
+      const path = join(directory, name)
+
+      if ((await lstat(path)).isSymbolicLink()) {
+        throw new TypeError(`Managed icon output path must be a regular file: ${name}`)
+      }
+
+      return { content: await readFile(path), name }
+    })
+  )
 
 const settle = async (operations: ReadonlyArray<Promise<void>>): Promise<void> => {
   const results = await Promise.allSettled(operations)

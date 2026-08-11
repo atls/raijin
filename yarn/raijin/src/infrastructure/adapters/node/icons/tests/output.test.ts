@@ -1,10 +1,12 @@
 import assert         from 'node:assert/strict'
 import { copyFile }   from 'node:fs/promises'
+import { lstat }      from 'node:fs/promises'
 import { mkdir }      from 'node:fs/promises'
 import { mkdtemp }    from 'node:fs/promises'
 import { readFile }   from 'node:fs/promises'
 import { readdir }    from 'node:fs/promises'
 import { rm }         from 'node:fs/promises'
+import { symlink }    from 'node:fs/promises'
 import { writeFile }  from 'node:fs/promises'
 import { tmpdir }     from 'node:os'
 import { basename }   from 'node:path'
@@ -180,6 +182,38 @@ test('should restore exact casing after a later copy fails', async () => {
     assert.deepEqual((await readdir(source)).sort(), ['alert.icon.tsx', 'index.ts'])
     assert.equal(await readFile(join(source, 'alert.icon.tsx'), 'utf8'), 'previous alert output')
     assert.equal(await readFile(join(source, 'index.ts'), 'utf8'), 'previous index')
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})
+
+test('should reject a linked generated output before mutation', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const source = join(cwd, 'src')
+  const external = join(cwd, 'shared-alert.tsx')
+  const linked = join(source, 'Alert.icon.tsx')
+
+  try {
+    await mkdir(source)
+    await Promise.all([
+      writeFile(external, 'external alert output'),
+      writeFile(join(source, 'Stale.icon.tsx'), 'stale output'),
+      writeFile(join(source, 'manual.ts'), 'manual source'),
+    ])
+    await symlink(external, linked)
+
+    await assert.rejects(
+      create().replace(cwd, [
+        { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
+      ]),
+      { message: 'Managed icon output path must be a regular file: Alert.icon.tsx' }
+    )
+
+    assert.equal((await lstat(linked)).isSymbolicLink(), true)
+    assert.equal(await readFile(external, 'utf8'), 'external alert output')
+    assert.equal(await readFile(join(source, 'Stale.icon.tsx'), 'utf8'), 'stale output')
+    assert.equal(await readFile(join(source, 'manual.ts'), 'utf8'), 'manual source')
+    await assert.rejects(readFile(join(source, 'index.ts')), { code: 'ENOENT' })
   } finally {
     await rm(cwd, { force: true, recursive: true })
   }
