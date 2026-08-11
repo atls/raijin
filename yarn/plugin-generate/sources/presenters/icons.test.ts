@@ -1,15 +1,15 @@
 import type { MessageName }           from '@yarnpkg/core'
 
 import assert                         from 'node:assert/strict'
-import { test }                       from 'node:test'
 import { PassThrough }                from 'node:stream'
+import { test }                       from 'node:test'
 
 import { Configuration }              from '@yarnpkg/core'
 import { npath }                      from '@yarnpkg/fslib'
 
-import { presentIconGeneration }      from '../icons.js'
-import { presentIconGenerationError } from '../icons.js'
-import { reportIconGeneration }      from '../icons.js'
+import { presentIconGeneration }      from './icons.js'
+import { presentIconGenerationError } from './icons.js'
+import { reportIconGeneration }       from './icons.js'
 
 const createReport = () => {
   const errors: Array<string> = []
@@ -25,8 +25,7 @@ const createReport = () => {
   }
 }
 
-const createConfiguration = async () =>
-  Configuration.create(npath.toPortablePath(process.cwd()))
+const createConfiguration = async () => Configuration.create(npath.toPortablePath(process.cwd()))
 
 test('should report generated icon artifacts without an error', () => {
   const { errors, infos, report } = createReport()

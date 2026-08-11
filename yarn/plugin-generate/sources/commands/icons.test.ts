@@ -1,9 +1,9 @@
-import assert                     from 'node:assert/strict'
-import { test }                   from 'node:test'
+import assert                   from 'node:assert/strict'
+import { test }                 from 'node:test'
 
-import { Cli }                    from 'clipanion'
+import { Cli }                  from 'clipanion'
 
-import { GenerateIconsCommand }  from '../icons.js'
+import { GenerateIconsCommand } from './icons.js'
 
 const createCli = (): Cli => {
   const cli = new Cli({
