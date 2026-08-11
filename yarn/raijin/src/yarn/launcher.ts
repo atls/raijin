@@ -3,6 +3,7 @@ import { win32 }                               from 'node:path'
 
 import { isManagedNodeEnvironmentName } from '../infrastructure/adapters/node/loaders/environment.js'
 import { removeAppliedLoaderRegistration } from '../infrastructure/adapters/node/loaders/environment.js'
+import { createNames }                         from '../infrastructure/process/environment/map.js'
 import { get as getEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
 import { includesName }                        from '../infrastructure/process/environment/map.js'
 import { merge as mergeEnvironments }          from '../infrastructure/process/environment/map.js'
@@ -17,6 +18,7 @@ const TRANSIENT_ENVIRONMENT_NAMES = [
   'YARN_IGNORE_PATH',
 ]
 const MANAGED_ENVIRONMENT_NAMES = ['NODE_OPTIONS', 'PATH', ...TRANSIENT_ENVIRONMENT_NAMES]
+const CANONICAL_ENVIRONMENT_NAMES = createNames(MANAGED_ENVIRONMENT_NAMES)
 
 const removeBinFolder = (
   environment: NodeJS.ProcessEnv,
@@ -40,7 +42,7 @@ const removeBinFolder = (
     .join(separator)
 
   if (nextPath) {
-    setEnvironmentVariable(environment, 'PATH', nextPath, platform)
+    setEnvironmentVariable(environment, 'PATH', nextPath, platform, CANONICAL_ENVIRONMENT_NAMES)
   } else {
     removeEnvironmentVariable(environment, 'PATH', platform)
   }
@@ -56,7 +58,11 @@ export const isLauncherEnvironmentName = (
 export const createLauncherBaseEnvironment = (
   environment: NodeJS.ProcessEnv = process.env
 ): NodeJS.ProcessEnv => {
-  const launcherEnvironment = mergeEnvironments([environment])
+  const launcherEnvironment = mergeEnvironments(
+    [environment],
+    process.platform,
+    CANONICAL_ENVIRONMENT_NAMES
+  )
 
   removeBinFolder(launcherEnvironment)
 

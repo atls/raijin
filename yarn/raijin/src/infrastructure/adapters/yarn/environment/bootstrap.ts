@@ -9,6 +9,7 @@ import { createRequire }         from 'node:module'
 import { npath }                 from '@yarnpkg/fslib'
 
 import { applyPatch }            from '../../../process/environment/map.js'
+import { createNames }           from '../../../process/environment/map.js'
 import { includesName }          from '../../../process/environment/map.js'
 import { merge }                 from '../../../process/environment/map.js'
 import { remove }                from '../../../process/environment/map.js'
@@ -18,6 +19,7 @@ const require = createRequire(import.meta.url)
 const { scriptUtils } = require('@yarnpkg/core') as Pick<typeof YarnCore, 'scriptUtils'>
 
 const BOOTSTRAP_ENVIRONMENT_NAMES = ['INIT_CWD', 'PROJECT_CWD']
+const CANONICAL_ENVIRONMENT_NAMES = createNames(BOOTSTRAP_ENVIRONMENT_NAMES)
 
 const assertEnvironmentPatch = (patch: EnvironmentInput['patch']): void => {
   for (const name of Object.keys(patch)) {
@@ -57,8 +59,14 @@ const prepare = async (
     }),
   ])
 
-  set(environment, 'INIT_CWD', input.cwd)
-  set(environment, 'PROJECT_CWD', npath.fromPortablePath(project.cwd))
+  set(environment, 'INIT_CWD', input.cwd, process.platform, CANONICAL_ENVIRONMENT_NAMES)
+  set(
+    environment,
+    'PROJECT_CWD',
+    npath.fromPortablePath(project.cwd),
+    process.platform,
+    CANONICAL_ENVIRONMENT_NAMES
+  )
 
   return environment
 }

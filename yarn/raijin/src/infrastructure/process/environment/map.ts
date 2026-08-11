@@ -1,11 +1,5 @@
-const PROCESS_NAMES = ['INIT_CWD', 'NODE_OPTIONS', 'PATH', 'PROJECT_CWD']
-
-export const createNames = (
-  additionalNames: ReadonlyArray<string> = []
-): ReadonlyMap<string, string> =>
-  new Map([...PROCESS_NAMES, ...additionalNames].map((name) => [name.toUpperCase(), name]))
-
-const CANONICAL_NAMES = createNames()
+export const createNames = (names: ReadonlyArray<string>): ReadonlyMap<string, string> =>
+  new Map(names.map((name) => [name.toUpperCase(), name]))
 
 export const includesName = (
   names: ReadonlyArray<string>,
@@ -57,13 +51,13 @@ export const set = (
   name: string,
   value: string | undefined,
   platform: NodeJS.Platform = process.platform,
-  canonicalNames: ReadonlyMap<string, string> = CANONICAL_NAMES
+  canonicalNames?: ReadonlyMap<string, string>
 ): void => {
   if (platform === 'win32') {
     remove(environment, name, platform)
   }
 
-  environment[platform === 'win32' ? (canonicalNames.get(name.toUpperCase()) ?? name) : name] =
+  environment[platform === 'win32' ? (canonicalNames?.get(name.toUpperCase()) ?? name) : name] =
     value
 }
 
@@ -71,7 +65,7 @@ export const applyPatch = (
   environment: NodeJS.ProcessEnv,
   patch: Readonly<NodeJS.ProcessEnv>,
   platform: NodeJS.Platform = process.platform,
-  canonicalNames: ReadonlyMap<string, string> = CANONICAL_NAMES
+  canonicalNames?: ReadonlyMap<string, string>
 ): void => {
   for (const [name, value] of Object.entries(patch)) {
     if (value === undefined) {
@@ -85,7 +79,7 @@ export const applyPatch = (
 export const merge = (
   environments: ReadonlyArray<NodeJS.ProcessEnv>,
   platform: NodeJS.Platform = process.platform,
-  canonicalNames: ReadonlyMap<string, string> = CANONICAL_NAMES
+  canonicalNames?: ReadonlyMap<string, string>
 ): NodeJS.ProcessEnv => {
   const result: NodeJS.ProcessEnv = {}
 
