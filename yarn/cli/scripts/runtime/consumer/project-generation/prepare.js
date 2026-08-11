@@ -17,9 +17,4 @@ export const prepareProjectGeneration = async (fixtureCwd) => {
       )
     )
   )
-
-  return {
-    generatedTarget: join(fixtureCwd, 'packages/generated'),
-    invalidTarget: join(fixtureCwd, 'packages/invalid'),
-  }
 }

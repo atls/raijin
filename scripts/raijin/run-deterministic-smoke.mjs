@@ -3,9 +3,24 @@ import path from 'node:path'
 
 const repoRoot = process.cwd()
 
+/**
+ * @typedef {{ command: string, pathTokens: Array<string>, status: string }} Command
+ * @typedef {{ command: Command, score: number }} Match
+ * @typedef {{
+ *   cases: Array<{
+ *     expectedCommand: string,
+ *     expectedStatus: string,
+ *     id: string,
+ *     prompt: string,
+ *   }>
+ * }} SmokeFixture
+ */
+
+/** @param {string} relativePath */
 const readJson = (relativePath) =>
   JSON.parse(fs.readFileSync(path.join(repoRoot, relativePath), 'utf8'))
 
+/** @param {string} value */
 const normalize = (value) =>
   value
     .toLowerCase()
@@ -13,8 +28,13 @@ const normalize = (value) =>
     .replace(/\s+/g, ' ')
     .trim()
 
+/** @param {string} value */
 const tokenize = (value) => normalize(value).split(' ').filter(Boolean)
 
+/**
+ * @param {Array<string>} tokens
+ * @param {Array<string>} phraseTokens
+ */
 const hasContiguousPhrase = (tokens, phraseTokens) => {
   if (phraseTokens.length === 0 || phraseTokens.length > tokens.length) return false
 
@@ -34,6 +54,11 @@ const hasContiguousPhrase = (tokens, phraseTokens) => {
   return false
 }
 
+/**
+ * @param {Array<string>} promptTokens
+ * @param {Array<string>} commandTokens
+ * @param {string} commandName
+ */
 const scoreRoute = (promptTokens, commandTokens, commandName) => {
   let score = 0
 
@@ -64,6 +89,10 @@ const scoreRoute = (promptTokens, commandTokens, commandName) => {
   return score
 }
 
+/**
+ * @param {Match} candidate
+ * @param {Match | null} best
+ */
 const isBetterMatch = (candidate, best) => {
   if (!best) return true
 
@@ -78,9 +107,14 @@ const isBetterMatch = (candidate, best) => {
   return candidate.command.command.localeCompare(best.command.command) < 0
 }
 
+/**
+ * @param {string} prompt
+ * @param {Array<Command>} commands
+ */
 const routePrompt = (prompt, commands) => {
   const promptTokens = tokenize(prompt)
 
+  /** @type {Match | null} */
   let best = null
 
   for (const command of commands) {
@@ -109,6 +143,7 @@ const routePrompt = (prompt, commands) => {
 }
 
 const index = readJson('docs/raijin/index.v1.json')
+/** @type {SmokeFixture} */
 const fixture = readJson('docs/raijin/smoke-prompts.json')
 const failures = []
 

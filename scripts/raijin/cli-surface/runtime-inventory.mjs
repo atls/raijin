@@ -3,7 +3,27 @@ import { promisify } from 'node:util'
 
 const execFileAsync = promisify(execFile)
 
+/**
+ * @typedef {{
+ *   command: string,
+ *   description: string,
+ *   details?: string,
+ *   examples: Array<{ command: string }>,
+ *   options: Array<unknown>,
+ *   pathTokens: Array<string>,
+ *   plugin: string,
+ *   usage: string,
+ * }} RuntimeCommand
+ * @typedef {{
+ *   commands: Array<RuntimeCommand>,
+ *   plugins: Array<string>,
+ *   schemaVersion: number,
+ * }} RuntimeCliSurface
+ */
+
+/** @param {NodeJS.ProcessEnv} environment */
 const createRuntimeEnvironment = (environment = process.env) => {
+  /** @type {NodeJS.ProcessEnv} */
   const env = {
     ...environment,
     FORCE_COLOR: '0',
@@ -16,6 +36,14 @@ const createRuntimeEnvironment = (environment = process.env) => {
   return env
 }
 
+/**
+ * @param {{
+ *   args: Array<string>,
+ *   cwd: string,
+ *   environment?: NodeJS.ProcessEnv,
+ *   runtimePath: string,
+ * }} input
+ */
 export const executeRuntime = async ({ args, cwd, environment, runtimePath }) => {
   const { stdout } = await execFileAsync(process.execPath, [runtimePath, ...args], {
     cwd,
@@ -26,6 +54,10 @@ export const executeRuntime = async ({ args, cwd, environment, runtimePath }) =>
   return stdout
 }
 
+/**
+ * @param {{ cwd: string, runtimePath: string }} input
+ * @returns {Promise<RuntimeCliSurface>}
+ */
 export const loadRuntimeCliSurface = async ({ cwd, runtimePath }) => {
   const environment = {
     RAIJIN_CLI_INVENTORY: '1',
@@ -36,6 +68,7 @@ export const loadRuntimeCliSurface = async ({ cwd, runtimePath }) => {
     environment: { ...process.env, ...environment },
     runtimePath,
   })
+  /** @type {RuntimeCliSurface} */
   const inventory = JSON.parse(output)
 
   if (inventory.schemaVersion !== 1) {

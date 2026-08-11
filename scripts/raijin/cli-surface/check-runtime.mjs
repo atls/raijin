@@ -24,6 +24,12 @@ assert.ok(
 )
 
 const inventory = await loadRuntimeCliSurface({ cwd, runtimePath: checkedRuntimePath })
+/**
+ * @type {{
+ *   bundle: { plugins: Array<string> },
+ *   commands: Awaited<ReturnType<typeof loadRuntimeCliSurface>>['commands'],
+ * }}
+ */
 const docsIndex = JSON.parse(await fs.readFile(docsIndexPath, 'utf8'))
 const inventoryCommands = inventory.commands.map(
   ({ command, description, details, examples, options, pathTokens, plugin, usage }) => ({

@@ -46,12 +46,7 @@ const execute = async (command, args, cwd, environment) => {
  *   expectedVersion: string,
  *   packageManager: string,
  *   runtimePath: string,
- *   scenario: {
- *     dependencies: Record<string, string>,
- *     name: string,
- *     prepare: (fixtureCwd: string) => Promise<Record<string, unknown>>,
- *     run: (options: Record<string, unknown>) => Promise<void>
- *   }
+ *   scenario: ReturnType<typeof selectScenarios>[number]
  * }} options
  */
 const runScenario = async ({
@@ -97,7 +92,7 @@ const runScenario = async ({
       )
     )
 
-    const prepared = await scenario.prepare(fixtureCwd)
+    await scenario.prepare(fixtureCwd)
 
     await runYarn(['install', '--no-immutable'])
 
@@ -109,7 +104,7 @@ const runScenario = async ({
       )
     }
 
-    await scenario.run({ ...prepared, runYarn })
+    await scenario.run({ fixtureCwd, runYarn })
     process.stdout.write(`Disposable ${scenario.name} PnP consumer passed (${version})\n`)
   } finally {
     await rm(fixtureCwd, { recursive: true, force: true })
@@ -126,8 +121,13 @@ const runScenario = async ({
  */
 export const runConsumers = async ({ archivePath, packageManager, runtimePath, scenarioName }) => {
   const environment = createEnvironment()
-  const archiveRoot = archivePath ? undefined : await mkdtemp(join(tmpdir(), 'raijin-consumer-'))
-  const resolvedArchivePath = archivePath ?? join(archiveRoot, 'atls-raijin.tgz')
+  let archiveRoot
+  let resolvedArchivePath = archivePath
+
+  if (!resolvedArchivePath) {
+    archiveRoot = await mkdtemp(join(tmpdir(), 'raijin-consumer-'))
+    resolvedArchivePath = join(archiveRoot, 'atls-raijin.tgz')
+  }
   const expectedVersion = (
     await execute(process.execPath, [runtimePath, '--version'], process.cwd(), {
       ...environment,

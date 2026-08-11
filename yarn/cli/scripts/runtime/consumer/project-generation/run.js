@@ -1,13 +1,16 @@
+import { join } from 'node:path'
+
 import { verifyProjectGeneration } from './verify.js'
 
 /**
  * @param {{
- *   generatedTarget: string,
- *   invalidTarget: string,
+ *   fixtureCwd: string,
  *   runYarn: (args: Array<string>, cwd?: string) => Promise<string>
  * }} options
  */
-export const runProjectGeneration = async ({ generatedTarget, invalidTarget, runYarn }) => {
+export const runProjectGeneration = async ({ fixtureCwd, runYarn }) => {
+  const generatedTarget = join(fixtureCwd, 'packages/generated')
+  const invalidTarget = join(fixtureCwd, 'packages/invalid')
   const output = await runYarn(['generate', 'project', '--type', 'project'], generatedTarget)
 
   if (!output.includes('CREATE /eslint.config.mjs')) {
