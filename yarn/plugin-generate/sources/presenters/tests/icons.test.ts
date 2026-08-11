@@ -7,9 +7,9 @@ import { test }                       from 'node:test'
 import { Configuration }              from '@yarnpkg/core'
 import { npath }                      from '@yarnpkg/fslib'
 
-import { presentIconGeneration }      from './icons.js'
-import { presentIconGenerationError } from './icons.js'
-import { reportIconGeneration }       from './icons.js'
+import { presentIconGeneration }      from '../icons.js'
+import { presentIconGenerationError } from '../icons.js'
+import { reportIconGeneration }       from '../icons.js'
 
 const createReport = () => {
   const errors: Array<string> = []

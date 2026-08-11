@@ -1,15 +1,15 @@
 import type { Config }           from '@svgr/core'
 import type { Plugin }           from '@svgr/core'
 
-import type { ModuleImporter }   from './transform.interfaces.js'
-import type { TransformOptions } from './transform.interfaces.js'
+import type { ModuleImporter }   from '../transform.interfaces.js'
+import type { TransformOptions } from '../transform.interfaces.js'
 
 import assert                    from 'node:assert/strict'
 import { join }                  from 'node:path'
 import { test }                  from 'node:test'
 import { pathToFileURL }         from 'node:url'
 
-import { create }                from './transform.js'
+import { create }                from '../transform.js'
 
 type SvgrTransform = NonNullable<TransformOptions['transform']>
 type SvgrTransformParameters = Parameters<SvgrTransform>

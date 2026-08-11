@@ -3,7 +3,7 @@ import { test }                 from 'node:test'
 
 import { Cli }                  from 'clipanion'
 
-import { GenerateIconsCommand } from './icons.js'
+import { GenerateIconsCommand } from '../icons.js'
 
 const createCli = (): Cli => {
   const cli = new Cli({

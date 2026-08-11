@@ -1,10 +1,10 @@
-import type { Module } from './ports/output.interfaces.js'
-import type { Source } from './ports/source.interfaces.js'
+import type { Module } from '../ports/output.interfaces.js'
+import type { Source } from '../ports/source.interfaces.js'
 
 import assert          from 'node:assert/strict'
 import { test }        from 'node:test'
 
-import { generate }    from './generate.js'
+import { generate }    from '../generate.js'
 
 const createDependencies = (
   sources: Array<Source>,
