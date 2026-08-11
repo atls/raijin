@@ -52,6 +52,9 @@ test('should load project modules by exact URL and pass full component replaceme
   )
 
   const transformer = create(cwd, { importModule: importer, jsx, transform })
+
+  assert.deepEqual(requested, [])
+
   const result = await transformer.transform({
     component: 'AlertIcon',
     native: true,
@@ -82,6 +85,45 @@ test('should load project modules by exact URL and pass full component replaceme
       },
     },
   ])
+
+  await transformer.transform({
+    component: 'AlertIcon',
+    native: false,
+    source: { content: '<svg />', name: 'alert' },
+  })
+
+  assert.deepEqual(requested, [
+    pathToFileURL(join(cwd, 'replacements.ts')).href,
+    pathToFileURL(join(cwd, 'template.ts')).href,
+  ])
+})
+
+test('should defer rejecting project module imports until transformation', async () => {
+  const failure = new Error('Project icon configuration failed')
+  let imports = 0
+  const transform = Object.assign(async (): Promise<string> => 'unreachable', {
+    sync: (): string => 'unreachable',
+  })
+  const transformer = create('/workspace/icons', {
+    importModule: async () => {
+      imports += 1
+
+      throw failure
+    },
+    jsx,
+    transform,
+  })
+
+  assert.equal(imports, 0)
+  await assert.rejects(
+    transformer.transform({
+      component: 'AlertIcon',
+      native: false,
+      source: { content: '<svg />', name: 'alert' },
+    }),
+    failure
+  )
+  assert.equal(imports, 2)
 })
 
 test('should reject invalid replacement and template default exports at the provider boundary', async () => {

@@ -89,11 +89,17 @@ export const create = (cwd: string, options: TransformOptions = {}): IconTransfo
   const importer = options.importModule ?? importModule
   const transform = options.transform ?? transformSvgr
   const jsxPlugin = options.jsx ?? readPlugin(jsxModule)
-  const configuration = loadConfiguration(cwd, importer)
+  let configuration: Promise<IconConfiguration> | undefined
+
+  const getConfiguration = async (): Promise<IconConfiguration> => {
+    configuration ??= loadConfiguration(cwd, importer)
+
+    return configuration
+  }
 
   return {
     async transform({ component, native, source }) {
-      const { replacements, template } = await configuration
+      const { replacements, template } = await getConfiguration()
 
       return transform(
         source.content,
