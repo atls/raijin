@@ -111,10 +111,14 @@ test('should reject Raijin package without loadable TypeScript loader', async ()
   try {
     await writeFile(packageJsonPath, JSON.stringify({ type: 'module' }), 'utf8')
 
-    await assert.rejects(
-      resolveTypeScriptLoader(packageJsonPath),
-      /Unable to resolve loadable TypeScript loader/
-    )
+    await assert.rejects(resolveTypeScriptLoader(packageJsonPath), (error: unknown) => {
+      assert.ok(error instanceof Error)
+      assert.equal(error.constructor, Error)
+      assert.equal(error.name, 'Error')
+      assert.match(error.message, /Unable to resolve loadable TypeScript loader/)
+
+      return true
+    })
   } finally {
     await rm(workspace, { recursive: true, force: true })
   }

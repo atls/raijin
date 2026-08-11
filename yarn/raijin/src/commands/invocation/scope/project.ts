@@ -1,19 +1,18 @@
-import type { InvocationContext }         from './context.interfaces.js'
-import type { ProjectInvocation }         from './invocation.interfaces.js'
-import type { ResolvedProjectScope }      from './project.interfaces.js'
+import type { Executor }                from '../executor.js'
+import type { InvocationContext }       from './context.interfaces.js'
+import type { ProjectInvocation }       from './invocation.interfaces.js'
+import type { ResolvedProjectScope }    from './project.interfaces.js'
 
-import { createProjectModel }             from '@atls/raijin/project'
+import { createProjectModel }           from '@atls/raijin/project'
 
-import { UnsupportedNodeLinkerError }     from '../exceptions/unsupported-node-linker.js'
-import { createInvocationAdapterContext } from '../adapters/context.js'
-import { resolveProject }                 from '../adapters/yarn/project.js'
-import { createInvocationCapabilities }   from '../capabilities/create.js'
-import { resolveInvocationCwd }           from './context.js'
+import { UnsupportedNodeLinkerError }   from '../exceptions/unsupported-node-linker.js'
+import { resolveProject }               from '../adapters/yarn/project.js'
+import { createInvocationCapabilities } from '../capabilities/create.js'
+import { resolveInvocationCwd }         from './context.js'
 
 export const resolveProjectScope = async (
   context: InvocationContext
 ): Promise<ResolvedProjectScope> => {
-  const adapterContext = createInvocationAdapterContext(context)
   const invocationCwd = resolveInvocationCwd(context)
   const { configuration, project, workspace } = await resolveProject(invocationCwd, context.plugins)
   const nodeLinker = project.configuration.get('nodeLinker')
@@ -22,14 +21,14 @@ export const resolveProjectScope = async (
     throw new UnsupportedNodeLinkerError(nodeLinker)
   }
 
-  return { adapterContext, configuration, invocationCwd, project, workspace }
+  return { configuration, invocationCwd, project, workspace }
 }
 
 export const resolveProjectCommandInvocation = async (
-  context: InvocationContext
+  context: InvocationContext,
+  executor: Executor
 ): Promise<ProjectInvocation> => {
-  const { adapterContext, configuration, invocationCwd, project } =
-    await resolveProjectScope(context)
+  const { configuration, invocationCwd, project } = await resolveProjectScope(context)
 
   return {
     executionCwd: project.cwd,
@@ -37,18 +36,10 @@ export const resolveProjectCommandInvocation = async (
     project: createProjectModel(project),
     ...createInvocationCapabilities({
       configuration,
-      context: adapterContext,
+      environment: context.env,
       executionCwd: project.cwd,
+      executor,
       project,
     }),
   }
-}
-
-export const executeProjectYarnCommand = async (
-  context: InvocationContext,
-  args: Array<string>
-): Promise<number> => {
-  const invocation = await resolveProjectCommandInvocation(context)
-
-  return invocation.yarn.execute(args)
 }

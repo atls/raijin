@@ -1,145 +1,76 @@
-import { delimiter }                 from 'node:path'
+import { delimiter }                           from 'node:path'
+import { win32 }                               from 'node:path'
 
-import { REGISTERED_PNP_LOADER_ENV } from '../runtime/node/bootstrap/loader.js'
+import { createNames }                         from '../infrastructure/process/environment/map.js'
+import { get as getEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
+import { includesName }                        from '../infrastructure/process/environment/map.js'
+import { merge as mergeEnvironments }          from '../infrastructure/process/environment/map.js'
+import { remove as removeEnvironmentVariable } from '../infrastructure/process/environment/map.js'
+import { set as setEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
+import { isManagedNodeEnvironmentName } from '../infrastructure/providers/node/loader/environment.js'
+import { removeAppliedLoaderRegistration } from '../infrastructure/providers/node/loader/environment.js'
 
-const PATH_ENVIRONMENT_NAME = /^path$/i
-const TEMPORARY_YARN_BIN_PATH = /[\\/]xfs-[^\\/]*(?:[\\/]|$)/
-const PNP_NODE_OPTION = /(?:^|[\\/])\.pnp\.(?:cjs|loader\.mjs)$/
-const NODE_OPTIONS_WITH_VALUE = new Set(['--experimental-loader', '--loader', '--require', '-r'])
+const TRANSIENT_ENVIRONMENT_NAMES = [
+  'BERRY_BIN_FOLDER',
+  'npm_config_user_agent',
+  'npm_execpath',
+  'npm_node_execpath',
+  'YARN_IGNORE_PATH',
+]
+const MANAGED_ENVIRONMENT_NAMES = ['NODE_OPTIONS', 'PATH', ...TRANSIENT_ENVIRONMENT_NAMES]
+const CANONICAL_ENVIRONMENT_NAMES = createNames(MANAGED_ENVIRONMENT_NAMES)
 
-type NodeOptionToken = {
-  raw: string
-  value: string
-}
+const removeBinFolder = (
+  environment: NodeJS.ProcessEnv,
+  platform: NodeJS.Platform = process.platform
+): void => {
+  const binFolder = getEnvironmentVariable(environment, 'BERRY_BIN_FOLDER', platform)
+  const path = getEnvironmentVariable(environment, 'PATH', platform)
 
-const splitNodeOptions = (nodeOptions: string): Array<NodeOptionToken> => {
-  const tokens: Array<NodeOptionToken> = []
-  let raw = ''
-  let value = ''
-  let quote: string | undefined
-
-  for (let index = 0; index < nodeOptions.length; index += 1) {
-    const char = nodeOptions[index]
-
-    if (quote) {
-      raw += char
-
-      if (char === '\\' && nodeOptions[index + 1] === quote) {
-        index += 1
-        raw += nodeOptions[index]
-        value += nodeOptions[index]
-        continue
-      }
-
-      if (char === quote) {
-        quote = undefined
-        continue
-      }
-
-      value += char
-      continue
-    }
-
-    if (char === '"' || char === "'") {
-      raw += char
-      quote = char
-      continue
-    }
-
-    if (/\s/.test(char)) {
-      if (raw) {
-        tokens.push({ raw, value })
-        raw = ''
-        value = ''
-      }
-
-      continue
-    }
-
-    raw += char
-    value += char
-  }
-
-  if (raw) {
-    tokens.push({ raw, value })
-  }
-
-  return tokens
-}
-
-const removePnPNodeOptions = (nodeOptions: string): string => {
-  const options = splitNodeOptions(nodeOptions)
-  const filtered: Array<string> = []
-
-  for (let index = 0; index < options.length; index += 1) {
-    const option = options[index]
-    const [name, value] = option.value.split('=', 2)
-
-    if (value && NODE_OPTIONS_WITH_VALUE.has(name) && PNP_NODE_OPTION.test(value)) {
-      continue
-    }
-
-    if (NODE_OPTIONS_WITH_VALUE.has(option.value)) {
-      const next = options.at(index + 1)
-
-      if (next && PNP_NODE_OPTION.test(next.value)) {
-        index += 1
-        continue
-      }
-    }
-
-    filtered.push(option.raw)
-  }
-
-  return filtered.join(' ')
-}
-
-const sanitizePathEnvironment = (value: string): string =>
-  value
-    .split(delimiter)
-    .filter((item) => item && !TEMPORARY_YARN_BIN_PATH.test(item))
-    .join(delimiter)
-
-const setPathEnvironment = (environment: NodeJS.ProcessEnv): void => {
-  const pathName = Object.keys(environment).find((name) => PATH_ENVIRONMENT_NAME.test(name))
-  const pathValue = pathName ? environment[pathName] : undefined
-
-  if (!pathName || !pathValue) {
+  if (!binFolder || !path) {
     return
   }
 
-  const sanitizedPathValue = sanitizePathEnvironment(pathValue)
+  const separator = platform === 'win32' ? win32.delimiter : delimiter
+  const nextPath = path
+    .split(separator)
+    .filter(
+      (item) =>
+        item &&
+        (platform === 'win32' ? item.toUpperCase() !== binFolder.toUpperCase() : item !== binFolder)
+    )
+    .join(separator)
 
-  if (sanitizedPathValue) {
-    environment[pathName] = sanitizedPathValue
+  if (nextPath) {
+    setEnvironmentVariable(environment, 'PATH', nextPath, platform, CANONICAL_ENVIRONMENT_NAMES)
   } else {
-    Reflect.deleteProperty(environment, pathName)
+    removeEnvironmentVariable(environment, 'PATH', platform)
   }
 }
+
+export const isLauncherEnvironmentName = (
+  name: string,
+  platform: NodeJS.Platform = process.platform
+): boolean =>
+  includesName(MANAGED_ENVIRONMENT_NAMES, name, platform) ||
+  isManagedNodeEnvironmentName(name, platform)
 
 export const createLauncherBaseEnvironment = (
   environment: NodeJS.ProcessEnv = process.env
 ): NodeJS.ProcessEnv => {
-  const yarnEnvironment = { ...environment }
-  const nodeOptions = yarnEnvironment.NODE_OPTIONS
+  const launcherEnvironment = mergeEnvironments(
+    [environment],
+    process.platform,
+    CANONICAL_ENVIRONMENT_NAMES
+  )
 
-  delete yarnEnvironment.BERRY_BIN_FOLDER
-  delete yarnEnvironment.npm_config_user_agent
-  delete yarnEnvironment.npm_execpath
-  Reflect.deleteProperty(yarnEnvironment, REGISTERED_PNP_LOADER_ENV)
-  delete yarnEnvironment.YARN_IGNORE_PATH
+  removeBinFolder(launcherEnvironment)
 
-  if (nodeOptions) {
-    const sanitizedNodeOptions = removePnPNodeOptions(nodeOptions)
-
-    if (sanitizedNodeOptions) {
-      yarnEnvironment.NODE_OPTIONS = sanitizedNodeOptions
-    } else {
-      delete yarnEnvironment.NODE_OPTIONS
-    }
+  for (const name of TRANSIENT_ENVIRONMENT_NAMES) {
+    removeEnvironmentVariable(launcherEnvironment, name)
   }
 
-  setPathEnvironment(yarnEnvironment)
+  removeAppliedLoaderRegistration(launcherEnvironment)
 
-  return yarnEnvironment
+  return launcherEnvironment
 }

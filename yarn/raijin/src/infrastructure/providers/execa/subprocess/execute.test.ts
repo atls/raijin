@@ -1,16 +1,16 @@
-import type { Filename }  from '@yarnpkg/fslib'
+import type { Filename } from '@yarnpkg/fslib'
 
-import assert             from 'node:assert/strict'
-import { PassThrough }    from 'node:stream'
-import test               from 'node:test'
+import assert            from 'node:assert/strict'
+import { PassThrough }   from 'node:stream'
+import test              from 'node:test'
 
-import { npath }          from '@yarnpkg/fslib'
-import { ppath }          from '@yarnpkg/fslib'
-import { xfs }            from '@yarnpkg/fslib'
+import { npath }         from '@yarnpkg/fslib'
+import { ppath }         from '@yarnpkg/fslib'
+import { xfs }           from '@yarnpkg/fslib'
 
-import { executeProcess } from './execute.js'
+import { execute }       from './execute.js'
 
-const createContext = () => {
+const createStreams = () => {
   const stderr = new PassThrough()
   const stdout = new PassThrough()
 
@@ -26,9 +26,8 @@ const createContext = () => {
 }
 
 test('should execute with attached terminal descriptors', async () => {
-  const result = await executeProcess(process.execPath, ['-e', 'process.exit(0)'], {
-    context: {
-      environment: process.env,
+  const result = await execute(process.execPath, ['-e', 'process.exit(0)'], {
+    streams: {
       stderr: process.stderr,
       stdin: process.stdin,
       stdout: process.stdout,
@@ -41,8 +40,8 @@ test('should execute with attached terminal descriptors', async () => {
 })
 
 test('should ignore process input when requested', async () => {
-  const result = await executeProcess(process.execPath, ['-e', 'process.stdin.resume()'], {
-    context: createContext(),
+  const result = await execute(process.execPath, ['-e', 'process.stdin.resume()'], {
+    streams: createStreams(),
     cwd: process.cwd(),
     env: process.env,
     input: 'ignore',
@@ -54,13 +53,13 @@ test('should ignore process input when requested', async () => {
 })
 
 test('should capture and forward process output before returning its code', async () => {
-  const context = createContext()
+  const streams = createStreams()
   const forwarded: Array<Buffer> = []
 
-  context.stdout.on('data', (data: Buffer) => forwarded.push(data))
+  streams.stdout.on('data', (data: Buffer) => forwarded.push(data))
 
-  const result = await executeProcess(process.execPath, ['-e', "process.stdout.write('ready')"], {
-    context,
+  const result = await execute(process.execPath, ['-e', "process.stdout.write('ready')"], {
+    streams,
     cwd: process.cwd(),
     env: process.env,
     input: 'ignore',
@@ -76,11 +75,11 @@ test('should capture and forward process output before returning its code', asyn
 
 test('should handle process output without exposing provider streams', async () => {
   const events: Array<{ data: string; source: 'stderr' | 'stdout' }> = []
-  const result = await executeProcess(
+  const result = await execute(
     process.execPath,
     ['-e', "process.stdout.write('ready'); process.stderr.write('warning')"],
     {
-      context: createContext(),
+      streams: createStreams(),
       cwd: process.cwd(),
       env: process.env,
       input: 'ignore',
@@ -99,9 +98,29 @@ test('should handle process output without exposing provider streams', async () 
   )
 })
 
+test('should classify an output handler failure independently from process completion', async () => {
+  const failure = new Error('handler failed')
+  const result = await execute(process.execPath, ['-e', "process.stdout.write('ready')"], {
+    streams: createStreams(),
+    cwd: process.cwd(),
+    env: process.env,
+    input: 'ignore',
+    output: {
+      mode: 'handle',
+      handler: () => {
+        throw failure
+      },
+    },
+  })
+
+  assert.equal(result.reason, 'output-failed')
+  assert.equal(result.cause, failure)
+  assert.equal(result.exitCode, 0)
+})
+
 test('should preserve process start failures as a typed result', async () => {
-  const result = await executeProcess('raijin-missing-executable', [], {
-    context: createContext(),
+  const result = await execute('raijin-missing-executable', [], {
+    streams: createStreams(),
     cwd: process.cwd(),
     env: process.env,
     input: 'ignore',
@@ -113,8 +132,8 @@ test('should preserve process start failures as a typed result', async () => {
 })
 
 test('should stop a process after the configured timeout', async () => {
-  const result = await executeProcess(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
-    context: createContext(),
+  const result = await execute(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
+    streams: createStreams(),
     cwd: process.cwd(),
     env: process.env,
     input: 'ignore',
@@ -127,8 +146,8 @@ test('should stop a process after the configured timeout', async () => {
 })
 
 test('should translate cancellation to the process exit contract', async () => {
-  const result = await executeProcess(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
-    context: createContext(),
+  const result = await execute(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
+    streams: createStreams(),
     cwd: process.cwd(),
     env: process.env,
     input: 'ignore',
@@ -144,17 +163,13 @@ test(
   'should translate signal termination to the process exit contract',
   { skip: process.platform === 'win32' },
   async () => {
-    const result = await executeProcess(
-      process.execPath,
-      ['-e', "process.kill(process.pid, 'SIGTERM')"],
-      {
-        context: createContext(),
-        cwd: process.cwd(),
-        env: process.env,
-        input: 'ignore',
-        output: { mode: 'capture' },
-      }
-    )
+    const result = await execute(process.execPath, ['-e', "process.kill(process.pid, 'SIGTERM')"], {
+      streams: createStreams(),
+      cwd: process.cwd(),
+      env: process.env,
+      input: 'ignore',
+      output: { mode: 'capture' },
+    })
 
     assert.equal(result.reason, 'signalled')
     assert.equal(result.signal, 'SIGTERM')
@@ -171,8 +186,8 @@ test(
 
     await xfs.writeFilePromise(command, '@echo off\r\necho ready\r\n')
 
-    const result = await executeProcess(npath.fromPortablePath(command), [], {
-      context: createContext(),
+    const result = await execute(npath.fromPortablePath(command), [], {
+      streams: createStreams(),
       cwd: npath.fromPortablePath(cwd),
       env: process.env,
       input: 'ignore',

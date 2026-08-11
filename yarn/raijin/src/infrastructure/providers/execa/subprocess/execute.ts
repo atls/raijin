@@ -1,16 +1,16 @@
-import type { Options }                from 'execa'
-import type { Result }                 from 'execa'
-import type { StdoutStderrOption }     from 'execa'
+import type { Options }            from 'execa'
+import type { Result }             from 'execa'
+import type { StdoutStderrOption } from 'execa'
 
-import type { ProcessExecutionResult } from '../../capabilities/process.interfaces.js'
-import type { ProcessOutputEvent }     from '../../capabilities/process.interfaces.js'
-import type { ExecaExecutionOptions }  from './execute.interfaces.js'
+import type { ExecuteOptions }     from './execute.interfaces.js'
+import type { OutputEvent }        from './execute.interfaces.js'
+import type { ExecuteResult }      from './execute.interfaces.js'
 
-import { execa }                       from 'execa'
+import { execa }                   from 'execa'
 
 const createOutputHandler = (
-  handler: (event: ProcessOutputEvent) => void,
-  source: ProcessOutputEvent['source']
+  handler: (event: OutputEvent) => void,
+  source: OutputEvent['source']
 ): StdoutStderrOption => ({
   preserveNewlines: true,
   *transform(data: string) {
@@ -20,9 +20,9 @@ const createOutputHandler = (
 })
 
 const resolveOutput = (
-  stream: ExecaExecutionOptions['context']['stdout'],
-  output: ExecaExecutionOptions['output'],
-  source: ProcessOutputEvent['source']
+  stream: ExecuteOptions['streams']['stdout'],
+  output: ExecuteOptions['output'],
+  source: OutputEvent['source']
 ): StdoutStderrOption => {
   if (!output) {
     return stream
@@ -36,40 +36,39 @@ const resolveOutput = (
 }
 
 const createExecaOptions = ({
-  context,
+  cancelSignal,
   cwd,
   env,
   input,
   output,
-  cancelSignal,
+  streams,
   timeoutMs,
-}: ExecaExecutionOptions): Options => ({
+}: ExecuteOptions): Options => ({
   buffer: output?.mode === 'capture',
   cancelSignal,
+  cleanup: true,
   cwd,
   encoding: 'utf8',
   env,
   extendEnv: false,
   reject: false,
-  stderr: resolveOutput(context.stderr, output, 'stderr'),
-  stdin: input === 'ignore' ? 'ignore' : context.stdin,
-  stdout: resolveOutput(context.stdout, output, 'stdout'),
+  stderr: resolveOutput(streams.stderr, output, 'stderr'),
+  stdin: input === 'ignore' ? 'ignore' : streams.stdin,
+  stdout: resolveOutput(streams.stdout, output, 'stdout'),
   stripFinalNewline: false,
   timeout: timeoutMs,
 })
 
-const resolveExecutionOutput = (
-  result: Result
-): Pick<ProcessExecutionResult, 'stderr' | 'stdout'> => ({
+const resolveExecutionOutput = (result: Result): Pick<ExecuteResult, 'stderr' | 'stdout'> => ({
   stderr: typeof result.stderr === 'string' ? result.stderr : '',
   stdout: typeof result.stdout === 'string' ? result.stdout : '',
 })
 
-export const executeProcess = async (
+export const execute = async (
   command: string,
-  args: Array<string>,
-  options: ExecaExecutionOptions
-): Promise<ProcessExecutionResult> => {
+  args: ReadonlyArray<string>,
+  options: ExecuteOptions
+): Promise<ExecuteResult> => {
   let result: Result
 
   try {
@@ -93,6 +92,15 @@ export const executeProcess = async (
   }
 
   if (result.exitCode !== undefined) {
+    if (result.cause !== undefined) {
+      return {
+        ...output,
+        reason: 'output-failed',
+        cause: result.cause,
+        exitCode: result.exitCode,
+      }
+    }
+
     return { ...output, reason: 'completed', exitCode: result.exitCode }
   }
 

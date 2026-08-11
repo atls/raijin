@@ -1,17 +1,19 @@
-import type { Configuration }            from '@yarnpkg/core'
-import type { Project }                  from '@yarnpkg/core'
-import type { PortablePath }             from '@yarnpkg/fslib'
+import type { Configuration } from '@yarnpkg/core'
+import type { Project }       from '@yarnpkg/core'
+import type { PortablePath }  from '@yarnpkg/fslib'
 
-import type { InvocationAdapterContext } from '../adapters/context.interfaces.js'
+import type { Executor }      from '../executor.js'
 
 export interface ProcessInvocationOptions {
-  context: InvocationAdapterContext
+  environment: NodeJS.ProcessEnv
   executionCwd: PortablePath
+  executor: Executor
 }
 
 export interface InvocationCapabilitiesOptions {
   configuration: Configuration
-  context: InvocationAdapterContext
+  environment: NodeJS.ProcessEnv
   executionCwd: PortablePath
+  executor: Executor
   project: Project
 }

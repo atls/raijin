@@ -13,3 +13,20 @@ test('should allow nested yarn commands to follow configured yarnPath', () => {
     }
   )
 })
+
+test(
+  'should replace mixed-case command directories on Windows',
+  { skip: process.platform !== 'win32' },
+  () => {
+    assert.deepEqual(
+      createYarnCommandEnvironment('C:\\repo\\package', {
+        Init_Cwd: 'C:\\stale-init',
+        Project_Cwd: 'C:\\stale-project',
+      }),
+      {
+        INIT_CWD: 'C:\\repo\\package',
+        PROJECT_CWD: 'C:\\repo\\package',
+      }
+    )
+  }
+)
