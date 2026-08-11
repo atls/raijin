@@ -1,16 +1,16 @@
-import type { ExecuteInput }            from '../../../../application/execution/index.js'
-import type { ExecuteResult }           from '../../../../application/execution/index.js'
-import type { Executor }                from '../../../../application/execution/index.js'
+import type { ExecuteInput }         from '../../../../application/execution/index.js'
+import type { ExecuteResult }        from '../../../../application/execution/index.js'
+import type { Executor }             from '../../../../application/execution/index.js'
 import type { ExecuteResult as ProcessExecuteResult } from '../../../providers/execa/subprocess/execute.interfaces.js'
-import type { ExecutorOptions }         from './executor.interfaces.js'
+import type { ExecutorOptions }      from './executor.interfaces.js'
 
-import { execute as executeProcess }    from '../../../providers/execa/subprocess/execute.js'
-import { isManagedNodeEnvironmentName } from '../../../providers/node/module-loader/environment.js'
-import { removeEnvironmentMarkers }     from '../../../providers/node/module-loader/environment.js'
-import { removeAppliedLoaderRegistration } from '../../../providers/node/module-loader/environment.js'
-import { create as createRegistrationImport } from '../../../providers/node/module-loader/registration.js'
-import { resolve as resolveLoader }     from '../loaders/typescript/resolve.js'
-import { directory }                    from './directory.js'
+import { execute as executeProcess } from '../../../providers/execa/subprocess/execute.js'
+import { create as createRegistrationImport } from '../../../providers/node/loader-registration/bootstrap.js'
+import { isManagedNodeEnvironmentName } from '../../../providers/node/loader-registration/environment.js'
+import { removeEnvironmentMarkers } from '../../../providers/node/loader-registration/environment.js'
+import { removeAppliedLoaderRegistration } from '../../../providers/node/loader-registration/environment.js'
+import { resolve as resolveLoader }  from '../loaders/typescript/resolve.js'
+import { directory }                 from './directory.js'
 
 type ProcessResult = Exclude<ExecuteResult, { reason: 'cleanup-failed' }>
 
