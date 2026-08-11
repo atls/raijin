@@ -15,18 +15,14 @@ import { createIconTransformer }        from '@atls/raijin/infrastructure/genera
 import { presentIconGeneration }        from '../presenters/icons.js'
 import { presentIconGenerationError }   from '../presenters/icons.js'
 
-const createGeneratedArguments = (
-  cwd: PortablePath,
-  projectCwd: PortablePath,
-  files: ReadonlyArray<string>
-): Array<string> =>
+const createGeneratedArguments = (cwd: PortablePath, files: ReadonlyArray<string>): Array<string> =>
   toCommandArguments(
     createCommandInput({
       cwd,
       source: 'generated',
       targets: Array.from(files),
     }),
-    projectCwd
+    cwd
   )
 
 export class GenerateIconsCommand extends BaseCommand {
@@ -44,7 +40,7 @@ export class GenerateIconsCommand extends BaseCommand {
     const { executionCwd, yarn } = this.context.invocation
     const cwd = toNativeCwd(executionCwd)
     const createArguments = (files: ReadonlyArray<string>) =>
-      createGeneratedArguments(executionCwd, yarn.project.cwd, files)
+      createGeneratedArguments(executionCwd, files)
 
     try {
       const result = await generateIcons(

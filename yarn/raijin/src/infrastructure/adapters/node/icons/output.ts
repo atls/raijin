@@ -1,11 +1,11 @@
 import type { IconModule }         from '../../../../application/generation/icons/index.js'
 import type { IconOutputReplacer } from '../../../../application/generation/icons/index.js'
 
+import { copyFile }                from 'node:fs/promises'
 import { mkdir }                   from 'node:fs/promises'
 import { mkdtemp }                 from 'node:fs/promises'
 import { readFile }                from 'node:fs/promises'
 import { readdir }                 from 'node:fs/promises'
-import { rename }                  from 'node:fs/promises'
 import { rm }                      from 'node:fs/promises'
 import { writeFile }               from 'node:fs/promises'
 import { join }                    from 'node:path'
@@ -77,7 +77,7 @@ const replace = async (cwd: string, modules: ReadonlyArray<IconModule>): Promise
 
     try {
       await Promise.all(
-        generatedFiles.map(async (file) => rename(join(staging, file), join(target, file)))
+        generatedFiles.map(async (file) => copyFile(join(staging, file), join(target, file)))
       )
 
       await Promise.all(staleModules.map(async (file) => rm(join(target, file))))

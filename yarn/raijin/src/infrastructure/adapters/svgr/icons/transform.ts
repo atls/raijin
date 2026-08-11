@@ -18,6 +18,12 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 const isPlugin = (value: unknown): value is Plugin => typeof value === 'function'
 
+const isStringRecord = (value: unknown): value is Record<string, string> =>
+  isRecord(value) && Object.values(value).every((item) => typeof item === 'string')
+
+const isTemplate = (value: unknown): value is IconConfiguration['template'] =>
+  typeof value === 'function'
+
 const readPlugin = (value: unknown): Plugin => {
   const candidate = isRecord(value) && 'default' in value ? value.default : value
 
@@ -43,26 +49,25 @@ const readReplacements = (value: unknown): IconConfiguration['replacements'] => 
     throw new TypeError('Icon replacements default export must be an object')
   }
 
-  for (const [component, attributes] of Object.entries(replacements)) {
-    if (
-      !isRecord(attributes) ||
-      Object.values(attributes).some((replacement) => typeof replacement !== 'string')
-    ) {
-      throw new TypeError(`Icon replacements for ${component} must contain string values`)
-    }
-  }
+  return Object.fromEntries(
+    Object.entries(replacements).map(([component, attributes]) => {
+      if (!isStringRecord(attributes)) {
+        throw new TypeError(`Icon replacements for ${component} must contain string values`)
+      }
 
-  return replacements as IconConfiguration['replacements']
+      return [component, attributes]
+    })
+  )
 }
 
 const readTemplate = (value: unknown): IconConfiguration['template'] => {
   const template = readDefaultExport(value, 'Icon template module')
 
-  if (typeof template !== 'function') {
+  if (!isTemplate(template)) {
     throw new TypeError('Icon template default export must be a function')
   }
 
-  return template as IconConfiguration['template']
+  return template
 }
 
 const loadConfiguration = async (
