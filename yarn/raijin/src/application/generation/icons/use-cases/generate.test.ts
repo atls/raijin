@@ -1,11 +1,12 @@
-import type { GenerateIconsDependencies } from '../generate.interfaces.js'
-import type { IconModule }                from '../module.interfaces.js'
-import type { IconSource }                from '../source.interfaces.js'
+import type { IconModule } from '../ports/output.js'
+import type { IconSource } from '../ports/source.js'
 
-import assert                             from 'node:assert/strict'
-import { test }                           from 'node:test'
+import assert              from 'node:assert/strict'
+import { test }            from 'node:test'
 
-import { generateIcons }                  from '../generate.js'
+import { generateIcons }   from './generate.js'
+
+type Dependencies = Parameters<typeof generateIcons>[1]
 
 const createDependencies = (
   sources: Array<IconSource>,
@@ -19,7 +20,7 @@ const createDependencies = (
   const modules: Array<IconModule> = []
   const transformed: Array<string> = []
 
-  const dependencies: GenerateIconsDependencies = {
+  const dependencies: Dependencies = {
     formatter: {
       format: async (files) => {
         formatted.push(files)

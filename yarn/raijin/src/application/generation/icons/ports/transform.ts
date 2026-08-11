@@ -1,4 +1,4 @@
-import type { IconSource } from './source.interfaces.js'
+import type { IconSource } from './source.js'
 
 export interface TransformIconInput {
   component: string

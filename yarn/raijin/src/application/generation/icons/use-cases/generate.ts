@@ -1,9 +1,15 @@
-import type { GenerateIconsDependencies } from './generate.interfaces.js'
-import type { GenerateIconsInput }        from './input.interfaces.js'
-import type { IconModule }                from './module.interfaces.js'
-import type { GenerateIconsResult }       from './result.js'
+import type { GenerateIconsInput }     from '../inputs/generate.js'
+import type { GeneratedIconFormatter } from '../ports/format.js'
+import type { GeneratedIconLinter }    from '../ports/lint.js'
+import type { IconModule }             from '../ports/output.js'
+import type { IconOutputReplacer }     from '../ports/output.js'
+import type { IconSourceReader }       from '../ports/source.js'
+import type { IconTransformer }        from '../ports/transform.js'
+import type { GenerateIconsResult }    from '../results/generate.js'
 
-import { createIconComponentName }        from './name.js'
+import camelcase                       from 'camelcase'
+
+const createComponentName = (name: string): string => `${camelcase(name, { pascalCase: true })}Icon`
 
 const compareNames = (
   { name: left }: { name: string },
@@ -33,11 +39,17 @@ const findDuplicateComponents = (
 
 export const generateIcons = async (
   input: GenerateIconsInput,
-  dependencies: GenerateIconsDependencies
+  dependencies: {
+    formatter: GeneratedIconFormatter
+    linter: GeneratedIconLinter
+    output: IconOutputReplacer
+    sources: IconSourceReader
+    transformer: IconTransformer
+  }
 ): Promise<GenerateIconsResult> => {
   const sources = (await dependencies.sources.read(input.cwd)).sort(compareNames)
   const candidates = sources.map((source) => ({
-    component: createIconComponentName(source.name),
+    component: createComponentName(source.name),
     name: source.name,
     source,
   }))
