@@ -4,7 +4,7 @@ import { test }                      from 'node:test'
 import { npath }                     from '@yarnpkg/fslib'
 
 import { assertCompleted }           from './assert-completed.js'
-import { createExecutor }            from './create-executor.js'
+import { compose }                   from './compose.js'
 import { createProjectContext }      from './create-project-context.js'
 import { resolveFixturePath }        from './resolve-fixture-path.js'
 import { trackTemporaryDirectories } from './track-temporary-directories.js'
@@ -14,7 +14,7 @@ const entry = resolveFixturePath('entry.ts')
 test('should execute a relative entry whose name starts with an option prefix', async (context) => {
   const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     arguments: ['argument-value'],
     cwd: resolveFixturePath(),
@@ -32,7 +32,7 @@ test('should execute a relative entry whose name starts with an option prefix', 
 test('should preserve a non-zero exit as a completed execution', async (context) => {
   const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     arguments: ['fail'],
     cwd: npath.fromPortablePath(project.cwd),
@@ -49,7 +49,7 @@ test('should preserve a non-zero exit as a completed execution', async (context)
 test('should expose output through the application handler contract', async () => {
   const { project } = await createProjectContext()
   const events: Array<{ data: string; source: 'stderr' | 'stdout' }> = []
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     arguments: ['report', 'handled-value'],
     cwd: npath.fromPortablePath(project.cwd),
@@ -75,7 +75,7 @@ test('should expose output through the application handler contract', async () =
 
 test('should preserve a Node-reported missing entry as a completed non-zero exit', async () => {
   const { project } = await createProjectContext()
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     cwd: npath.fromPortablePath(project.cwd),
     input: 'ignore',

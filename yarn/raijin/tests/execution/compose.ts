@@ -5,7 +5,7 @@ import { create as createYarnEnvironment } from '../../src/infrastructure/provid
 
 type Options = Omit<YarnEnvironmentInput, 'binDirectory' | 'cwd' | 'patch'>
 
-export const createExecutor = (options: Options): ReturnType<typeof createNodeExecutor> =>
+export const compose = (options: Options): ReturnType<typeof createNodeExecutor> =>
   createNodeExecutor({
     environment: {
       prepare: async (input) => createYarnEnvironment({ ...options, ...input }),

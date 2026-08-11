@@ -5,7 +5,7 @@ import { test }                      from 'node:test'
 import { npath }                     from '@yarnpkg/fslib'
 
 import { assertCompleted }           from './assert-completed.js'
-import { createExecutor }            from './create-executor.js'
+import { compose }                   from './compose.js'
 import { createProjectContext }      from './create-project-context.js'
 import { resolveFixturePath }        from './resolve-fixture-path.js'
 import { trackTemporaryDirectories } from './track-temporary-directories.js'
@@ -15,7 +15,7 @@ const entry = resolveFixturePath('entry.ts')
 test('should cancel execution and remove its temporary directory', async (context) => {
   const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     arguments: ['wait'],
     cancelSignal: AbortSignal.timeout(50),
@@ -32,7 +32,7 @@ test('should cancel execution and remove its temporary directory', async (contex
 test('should time out execution and remove its temporary directory', async (context) => {
   const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     arguments: ['wait'],
     cwd: npath.fromPortablePath(project.cwd),
@@ -52,7 +52,7 @@ test(
   async (context) => {
     const { project } = await createProjectContext()
     const removed = trackTemporaryDirectories(context)
-    const executor = createExecutor({ project })
+    const executor = compose({ project })
     const result = await executor.execute({
       arguments: ['signal'],
       cwd: npath.fromPortablePath(project.cwd),
@@ -69,7 +69,7 @@ test(
 
 test('should wait for captured output before completing', async () => {
   const { project } = await createProjectContext()
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     arguments: ['stream'],
     cwd: npath.fromPortablePath(project.cwd),
@@ -85,7 +85,7 @@ test('should wait for captured output before completing', async () => {
 test('should return an output failure when the application handler throws', async (context) => {
   const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     arguments: ['report', 'unused'],
     cwd: npath.fromPortablePath(project.cwd),
@@ -111,7 +111,7 @@ test('should return an output failure when the application handler throws', asyn
 test('should preserve a non-zero exit when the application handler throws', async (context) => {
   const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context)
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     arguments: ['write-and-fail'],
     cwd: npath.fromPortablePath(project.cwd),
@@ -137,7 +137,7 @@ test('should preserve a non-zero exit when the application handler throws', asyn
 test('should report cleanup failure without discarding the process result', async (context) => {
   const { project } = await createProjectContext()
   const removed = trackTemporaryDirectories(context, new Error('cleanup failed'))
-  const executor = createExecutor({ project })
+  const executor = compose({ project })
   const result = await executor.execute({
     arguments: ['fail'],
     cwd: npath.fromPortablePath(project.cwd),

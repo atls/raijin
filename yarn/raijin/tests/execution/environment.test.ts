@@ -4,7 +4,7 @@ import { test }                      from 'node:test'
 import { npath }                     from '@yarnpkg/fslib'
 
 import { assertCompleted }           from './assert-completed.js'
-import { createExecutor }            from './create-executor.js'
+import { compose }                   from './compose.js'
 import { createProjectContext }      from './create-project-context.js'
 import { resolveFixturePath }        from './resolve-fixture-path.js'
 import { trackTemporaryDirectories } from './track-temporary-directories.js'
@@ -16,7 +16,7 @@ test('should execute TypeScript through the project PnP environment', async (con
   const callerNodeOptions = '--title=raijin-caller --trace-warnings'
   const removed = trackTemporaryDirectories(context)
   const nodeOptionsName = process.platform === 'win32' ? 'Node_Options' : 'NODE_OPTIONS'
-  const executor = createExecutor({
+  const executor = compose({
     baseEnvironment: {
       ...process.env,
       [nodeOptionsName]: callerNodeOptions,
@@ -59,7 +59,7 @@ for (const name of ['PROJECT_CWD', 'RAIJIN_NODE_LOADER']) {
   test(`should return a stable failure when ${name} is overridden`, async (context) => {
     const { project } = await createProjectContext()
     const removed = trackTemporaryDirectories(context)
-    const executor = createExecutor({ project })
+    const executor = compose({ project })
     const result = await executor.execute({
       arguments: ['report', 'unused'],
       cwd: npath.fromPortablePath(project.cwd),
