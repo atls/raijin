@@ -1,5 +1,6 @@
 import type { IconModule }         from '../../../../application/generation/icons/index.js'
 import type { IconOutputReplacer } from '../../../../application/generation/icons/index.js'
+import type { CopyFile }           from './output.interfaces.js'
 
 import { copyFile }                from 'node:fs/promises'
 import { mkdir }                   from 'node:fs/promises'
@@ -54,7 +55,22 @@ const restore = async (directory: string, state: Snapshot): Promise<void> => {
   )
 }
 
-const replace = async (cwd: string, modules: ReadonlyArray<IconModule>): Promise<Array<string>> => {
+const settle = async (operations: ReadonlyArray<Promise<void>>): Promise<void> => {
+  const results = await Promise.allSettled(operations)
+  const failure = results.find(
+    (result): result is PromiseRejectedResult => result.status === 'rejected'
+  )
+
+  if (failure) {
+    throw failure.reason
+  }
+}
+
+const replace = async (
+  cwd: string,
+  modules: ReadonlyArray<IconModule>,
+  copy: CopyFile
+): Promise<Array<string>> => {
   const target = join(cwd, 'src')
   const staging = await mkdtemp(join(cwd, '.raijin-icons-'))
   const moduleFiles = modules.map((module) => `${module.name}${GENERATED_MODULE_SUFFIX}`)
@@ -76,11 +92,11 @@ const replace = async (cwd: string, modules: ReadonlyArray<IconModule>): Promise
     const previousState = await snapshot(target, affectedFiles)
 
     try {
-      await Promise.all(
-        generatedFiles.map(async (file) => copyFile(join(staging, file), join(target, file)))
+      await settle(
+        generatedFiles.map(async (file) => copy(join(staging, file), join(target, file)))
       )
 
-      await Promise.all(staleModules.map(async (file) => rm(join(target, file))))
+      await settle(staleModules.map(async (file) => rm(join(target, file))))
     } catch (error) {
       try {
         await restore(target, previousState)
@@ -97,4 +113,6 @@ const replace = async (cwd: string, modules: ReadonlyArray<IconModule>): Promise
   }
 }
 
-export const create = (): IconOutputReplacer => ({ replace })
+export const create = (copy: CopyFile = copyFile): IconOutputReplacer => ({
+  replace: async (cwd, modules) => replace(cwd, modules, copy),
+})
