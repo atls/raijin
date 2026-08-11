@@ -24,7 +24,6 @@
     "@atls/yarn-plugin-test": "workspace:*",
     "@atls/yarn-plugin-tools": "workspace:*",
     "@atls/yarn-plugin-typescript": "workspace:*",
-    "@atls/yarn-plugin-ui": "workspace:*",
     "@atls/yarn-plugin-workspaces": "workspace:*",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",

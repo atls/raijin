@@ -321,21 +321,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-icons-progress-component@workspace:*, @atls/cli-ui-icons-progress-component@workspace:cli/cli-ui-icons-progress":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-icons-progress-component@workspace:cli/cli-ui-icons-progress"
-  dependencies:
-    "@inkjs/ui": "npm:2.0.0"
-    "@types/react": "npm:18.3.18"
-    figures: "npm:6.1.0"
-    ink: "npm:3.2.0"
-    react: "npm:18.3.1"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
 "@atls/cli-ui-line-component@workspace:*, @atls/cli-ui-line-component@workspace:cli/cli-ui-line":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-line-component@workspace:cli/cli-ui-line"
@@ -641,23 +626,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-icons@workspace:*, @atls/code-icons@workspace:code/code-icons":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-icons@workspace:code/code-icons"
-  dependencies:
-    "@atls/raijin": "workspace:*"
-    "@monstrs/logger": "npm:0.0.20"
-    "@types/node": "npm:24.12.2"
-    "@types/webpack": "npm:5.28.5"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    "@yarnpkg/fslib": "npm:3.1.5"
-    camelcase: "npm:8.0.0"
-    typescript: "npm:5.9.3"
-    webpack-chain-5: "npm:8.0.2"
-  languageName: unknown
-  linkType: soft
-
 "@atls/code-lint@workspace:*, @atls/code-lint@workspace:code/code-lint":
   version: 0.0.0-use.local
   resolution: "@atls/code-lint@workspace:code/code-lint"
@@ -744,6 +712,7 @@ __metadata:
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/esbuild-plugin-pnp": "npm:3.0.0-rc.15"
     "@yarnpkg/fslib": "npm:3.1.5"
+    camelcase: "npm:8.0.0"
     esbuild: "npm:0.24.2"
     eslint: "npm:9.22.0"
     eslint-plugin-jsx-a11y: "npm:6.10.2"
@@ -808,7 +777,6 @@ __metadata:
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
     "@atls/yarn-plugin-typescript": "workspace:*"
-    "@atls/yarn-plugin-ui": "workspace:*"
     "@atls/yarn-plugin-workspaces": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -873,7 +841,6 @@ __metadata:
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
     "@atls/yarn-plugin-typescript": "workspace:*"
-    "@atls/yarn-plugin-ui": "workspace:*"
     "@atls/yarn-plugin-workspaces": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -1339,29 +1306,6 @@ __metadata:
     react: "npm:18.3.1"
     semver: "npm:7.6.3"
     typescript: "npm:5.9.3"
-  peerDependencies:
-    "@yarnpkg/cli": "*"
-    "@yarnpkg/core": "*"
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-plugin-ui@workspace:*, @atls/yarn-plugin-ui@workspace:yarn/plugin-ui":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-ui@workspace:yarn/plugin-ui"
-  dependencies:
-    "@atls/cli-ui-error-info-component": "workspace:*"
-    "@atls/cli-ui-icons-progress-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
-    "@atls/code-icons": "workspace:*"
-    "@atls/raijin": "workspace:*"
-    "@types/react": "npm:18.3.18"
-    "@yarnpkg/builder": "npm:4.2.0"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    "@yarnpkg/fslib": "npm:3.1.5"
-    clipanion: "npm:4.0.0-rc.2"
-    ink: "npm:3.2.0"
-    react: "npm:18.3.1"
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
@@ -6124,13 +6068,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge@npm:^1.5.2":
-  version: 1.5.2
-  resolution: "deepmerge@npm:1.5.2"
-  checksum: 10/86ca1d1288e86a8b6912360bb7e1f815e0e70ac9c90ea46636e6a75d542859e68fd9811a238c15a6f9de16610e5fb4d40c6892169768b22da75b18a7d9308933
-  languageName: node
-  linkType: hard
-
 "defaults@npm:^1.0.3":
   version: 1.0.4
   resolution: "defaults@npm:1.0.4"
@@ -8631,13 +8568,6 @@ __metadata:
     "@pkgjs/parseargs":
       optional: true
   checksum: 10/96f8786eaab98e4bf5b2a5d6d9588ea46c4d06bbc4f2eb861fdd7b6b182b16f71d8a70e79820f335d52653b16d4843b29dd9cdcf38ae80406756db9199497cf3
-  languageName: node
-  linkType: hard
-
-"javascript-stringify@npm:^2.0.1":
-  version: 2.1.0
-  resolution: "javascript-stringify@npm:2.1.0"
-  checksum: 10/721236ccec826c77167fec024b9ea1da7462690cf857bebfcc67a6fb346392d45cdce278e25e86b312ddeecdab1678a0f9fcc7f2c6e2883fbaaac3c735a237fd
   languageName: node
   linkType: hard
 
@@ -11583,16 +11513,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-chain-5@npm:8.0.2":
-  version: 8.0.2
-  resolution: "webpack-chain-5@npm:8.0.2"
-  dependencies:
-    deepmerge: "npm:^1.5.2"
-    javascript-stringify: "npm:^2.0.1"
-  checksum: 10/3f9c066a5b67bfd2f98d0399216be6083fa880d84ebf676917c25cf48bf8977a2858ed793e42eefa11e6984cb63a657ca892d53dd18600536d54904d2c31c708
-  languageName: node
-  linkType: hard
-
 "webpack-sources@npm:^3.2.3":
   version: 3.2.3
   resolution: "webpack-sources@npm:3.2.3"
@@ -11600,7 +11520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:*, webpack@npm:5.98.0, webpack@npm:^5":
+"webpack@npm:5.98.0, webpack@npm:^5":
   version: 5.98.0
   resolution: "webpack@npm:5.98.0"
   dependencies:

@@ -35,10 +35,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:cli/cli-ui-git-commit"\
     },\
     {\
-      "name": "@atls/cli-ui-icons-progress-component",\
-      "reference": "workspace:cli/cli-ui-icons-progress"\
-    },\
-    {\
       "name": "@atls/cli-ui-line-component",\
       "reference": "workspace:cli/cli-ui-line"\
     },\
@@ -113,10 +109,6 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@atls/code-github",\
       "reference": "workspace:code/code-github"\
-    },\
-    {\
-      "name": "@atls/code-icons",\
-      "reference": "workspace:code/code-icons"\
     },\
     {\
       "name": "@atls/code-lint",\
@@ -231,10 +223,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:yarn/plugin-typescript"\
     },\
     {\
-      "name": "@atls/yarn-plugin-ui",\
-      "reference": "workspace:yarn/plugin-ui"\
-    },\
-    {\
       "name": "@atls/yarn-plugin-workspaces",\
       "reference": "workspace:yarn/plugin-workspaces"\
     },\
@@ -252,7 +240,6 @@ const RAW_RUNTIME_STATE =
     ["@atls/cli-ui-file-path-component", ["virtual:4e413c2114720e69be90e4d860fcafb9d9c5f8ffaad6e7f30e596865adbdb0faf40c4731b59146c56dbd1fb1ac0c0bef40c4b81999f6f988a8faeee53893c095#workspace:cli/cli-ui-file-path", "workspace:cli/cli-ui-file-path"]],\
     ["@atls/cli-ui-format-progress-component", ["virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-format-progress", "workspace:cli/cli-ui-format-progress"]],\
     ["@atls/cli-ui-git-commit-component", ["virtual:9597abba0f2c00488200e51f2184036018f175f87dace2f0315a2110ab412d16088216811e7e43e1a42809aa9cbd3eb14c7647a705ae2c1232328da8134e8ca2#workspace:cli/cli-ui-git-commit", "workspace:cli/cli-ui-git-commit"]],\
-    ["@atls/cli-ui-icons-progress-component", ["virtual:f85b19048c6a2f8ddd1f84c7254cfa7c9dc83a21b1b7e81a752eb428b0cc967bfc340163d8d01cb1326380febee2474b381c81c9b58f5eb75a58893d0b899b9a#workspace:cli/cli-ui-icons-progress", "workspace:cli/cli-ui-icons-progress"]],\
     ["@atls/cli-ui-line-component", ["virtual:4e413c2114720e69be90e4d860fcafb9d9c5f8ffaad6e7f30e596865adbdb0faf40c4731b59146c56dbd1fb1ac0c0bef40c4b81999f6f988a8faeee53893c095#workspace:cli/cli-ui-line", "workspace:cli/cli-ui-line"]],\
     ["@atls/cli-ui-lint-progress-component", ["virtual:131b722f68dbd92ae6e62edac5331f331c8915d96c244d95818abb12763129c22cc8f61ce1b0291b597f8bd98f709bce7df38d91517c99a7812c123615061700#workspace:cli/cli-ui-lint-progress", "workspace:cli/cli-ui-lint-progress"]],\
     ["@atls/cli-ui-lint-result-component", ["virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:cli/cli-ui-lint-result", "virtual:131b722f68dbd92ae6e62edac5331f331c8915d96c244d95818abb12763129c22cc8f61ce1b0291b597f8bd98f709bce7df38d91517c99a7812c123615061700#workspace:cli/cli-ui-lint-result", "workspace:cli/cli-ui-lint-result"]],\
@@ -272,7 +259,6 @@ const RAW_RUNTIME_STATE =
     ["@atls/code-configuration", ["workspace:code/code-configuration"]],\
     ["@atls/code-format", ["workspace:code/code-format"]],\
     ["@atls/code-github", ["virtual:bbcc09757fc2c8fe1988d3f27a93dfa46b1ad5c7cff2c229f3479d029379bde7a751f5aa608d45793b48a3281bd52e78a80f3bd1410fde26592afacb695b2ad3#workspace:code/code-github", "workspace:code/code-github"]],\
-    ["@atls/code-icons", ["workspace:code/code-icons"]],\
     ["@atls/code-lint", ["virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:code/code-lint", "workspace:code/code-lint"]],\
     ["@atls/code-pack", ["workspace:code/code-pack"]],\
     ["@atls/code-service", ["workspace:code/code-service"]],\
@@ -302,7 +288,6 @@ const RAW_RUNTIME_STATE =
     ["@atls/yarn-plugin-test", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-test", "workspace:yarn/plugin-test"]],\
     ["@atls/yarn-plugin-tools", ["workspace:yarn/plugin-tools"]],\
     ["@atls/yarn-plugin-typescript", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-typescript", "workspace:yarn/plugin-typescript"]],\
-    ["@atls/yarn-plugin-ui", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui", "workspace:yarn/plugin-ui"]],\
     ["@atls/yarn-plugin-workspaces", ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-workspaces", "workspace:yarn/plugin-workspaces"]],\
     ["tools", ["workspace:."]]\
   ],\
@@ -761,38 +746,6 @@ const RAW_RUNTIME_STATE =
           ["ink-multi-select", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:2.0.0"],\
           ["ink-select-input", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:6.0.0"],\
           ["ink-text-input", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:6.0.0"],\
-          ["react", "npm:18.3.1"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/cli-ui-icons-progress-component", [\
-      ["virtual:f85b19048c6a2f8ddd1f84c7254cfa7c9dc83a21b1b7e81a752eb428b0cc967bfc340163d8d01cb1326380febee2474b381c81c9b58f5eb75a58893d0b899b9a#workspace:cli/cli-ui-icons-progress", {\
-        "packageLocation": "./.yarn/__virtual__/@atls-cli-ui-icons-progress-component-virtual-2e3167d479/1/cli/cli-ui-icons-progress/",\
-        "packageDependencies": [\
-          ["@atls/cli-ui-icons-progress-component", "virtual:f85b19048c6a2f8ddd1f84c7254cfa7c9dc83a21b1b7e81a752eb428b0cc967bfc340163d8d01cb1326380febee2474b381c81c9b58f5eb75a58893d0b899b9a#workspace:cli/cli-ui-icons-progress"],\
-          ["@inkjs/ui", "virtual:34adf75b8f607ae2585bd4f5233727093c304928d203ebf825bb8d3d47167263a22d6fc36dd5c907d1167849bb480324f8b91286fc1f7d7afd647cac6ec8f219#npm:2.0.0"],\
-          ["@types/ink", null],\
-          ["@types/react", "npm:18.3.18"],\
-          ["figures", "npm:6.1.0"],\
-          ["ink", "virtual:41e75c4e884651becc23cd9371ff80957cda61af29333e93f2626446035dbe0bc3aae6938e95657a19bd4e897a1338289ce6044a41933fe389051ed80db43003#npm:3.2.0"],\
-          ["react", "npm:18.3.1"]\
-        ],\
-        "packagePeers": [\
-          "@types/ink",\
-          "ink",\
-          "react"\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["workspace:cli/cli-ui-icons-progress", {\
-        "packageLocation": "./cli/cli-ui-icons-progress/",\
-        "packageDependencies": [\
-          ["@atls/cli-ui-icons-progress-component", "workspace:cli/cli-ui-icons-progress"],\
-          ["@inkjs/ui", "virtual:34adf75b8f607ae2585bd4f5233727093c304928d203ebf825bb8d3d47167263a22d6fc36dd5c907d1167849bb480324f8b91286fc1f7d7afd647cac6ec8f219#npm:2.0.0"],\
-          ["@types/react", "npm:18.3.18"],\
-          ["figures", "npm:6.1.0"],\
-          ["ink", "virtual:41e75c4e884651becc23cd9371ff80957cda61af29333e93f2626446035dbe0bc3aae6938e95657a19bd4e897a1338289ce6044a41933fe389051ed80db43003#npm:3.2.0"],\
           ["react", "npm:18.3.1"]\
         ],\
         "linkType": "SOFT"\
@@ -1409,25 +1362,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@atls/code-icons", [\
-      ["workspace:code/code-icons", {\
-        "packageLocation": "./code/code-icons/",\
-        "packageDependencies": [\
-          ["@atls/code-icons", "workspace:code/code-icons"],\
-          ["@atls/raijin", "workspace:yarn/raijin"],\
-          ["@monstrs/logger", "npm:0.0.20"],\
-          ["@types/node", "npm:24.12.2"],\
-          ["@types/webpack", "npm:5.28.5"],\
-          ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["camelcase", "npm:8.0.0"],\
-          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
-          ["webpack-chain-5", "npm:8.0.2"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
     ["@atls/code-lint", [\
       ["virtual:0bee91e20275b56da8822b92f0e07382082a4fb81d3ac954c05d4bb97d3e85b3a7bbfeaf8b8c9f0277fd5b2807a701685833b298edd77100361656dd4e9c2e63#workspace:code/code-lint", {\
         "packageLocation": "./.yarn/__virtual__/@atls-code-lint-virtual-9147d2a6f0/1/code/code-lint/",\
@@ -1537,6 +1471,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/esbuild-plugin-pnp", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:3.0.0-rc.15"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
+          ["camelcase", "npm:8.0.0"],\
           ["esbuild", "npm:0.24.2"],\
           ["eslint", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#patch:eslint@npm%3A9.14.0#./.yarn/patches/eslint-npm-9.14.0-6eb8e6f13b.patch::version=9.14.0&hash=c1a87e&locator=tools%40workspace%3A."],\
           ["eslint-plugin-jsx-a11y", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:6.10.2"],\
@@ -1605,7 +1540,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-test", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-test"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@atls/yarn-plugin-typescript", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-typescript"],\
-          ["@atls/yarn-plugin-ui", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui"],\
           ["@atls/yarn-plugin-workspaces", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-workspaces"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
@@ -1671,7 +1605,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-test", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-test"],\
           ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
           ["@atls/yarn-plugin-typescript", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-typescript"],\
-          ["@atls/yarn-plugin-ui", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui"],\
           ["@atls/yarn-plugin-workspaces", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-workspaces"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
@@ -2619,56 +2552,6 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.3.1"],\
           ["semver", "npm:7.6.3"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/yarn-plugin-ui", [\
-      ["virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui", {\
-        "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-ui-virtual-f85b19048c/1/yarn/plugin-ui/",\
-        "packageDependencies": [\
-          ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
-          ["@atls/cli-ui-icons-progress-component", "virtual:f85b19048c6a2f8ddd1f84c7254cfa7c9dc83a21b1b7e81a752eb428b0cc967bfc340163d8d01cb1326380febee2474b381c81c9b58f5eb75a58893d0b899b9a#workspace:cli/cli-ui-icons-progress"],\
-          ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
-          ["@atls/code-icons", "workspace:code/code-icons"],\
-          ["@atls/raijin", "workspace:yarn/raijin"],\
-          ["@atls/yarn-plugin-ui", "virtual:c7c9eb0e73da0d3b08e1c93a487175d4550637edc7803e366cfe4f5b03b5ee4396f9e6450b2b2bb67fc7215840222e691bb10d7e4ff124152da2c00403c18d78#workspace:yarn/plugin-ui"],\
-          ["@types/react", "npm:18.3.18"],\
-          ["@types/yarnpkg__cli", null],\
-          ["@types/yarnpkg__core", null],\
-          ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
-          ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
-          ["ink", "virtual:41e75c4e884651becc23cd9371ff80957cda61af29333e93f2626446035dbe0bc3aae6938e95657a19bd4e897a1338289ce6044a41933fe389051ed80db43003#npm:3.2.0"],\
-          ["react", "npm:18.3.1"]\
-        ],\
-        "packagePeers": [\
-          "@types/yarnpkg__cli",\
-          "@types/yarnpkg__core",\
-          "@yarnpkg/cli",\
-          "@yarnpkg/core"\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["workspace:yarn/plugin-ui", {\
-        "packageLocation": "./yarn/plugin-ui/",\
-        "packageDependencies": [\
-          ["@atls/cli-ui-error-info-component", "virtual:732e7242dd568b92d24f61f040a8ad76c30ae97a0453d05656f63a6df05b42741109765341ffa7c6858f20a858fe32ebace17aa95f5f0818d4b0086a1088ac2b#workspace:cli/cli-ui-error-info"],\
-          ["@atls/cli-ui-icons-progress-component", "virtual:f85b19048c6a2f8ddd1f84c7254cfa7c9dc83a21b1b7e81a752eb428b0cc967bfc340163d8d01cb1326380febee2474b381c81c9b58f5eb75a58893d0b899b9a#workspace:cli/cli-ui-icons-progress"],\
-          ["@atls/cli-ui-renderer-static-component", "workspace:cli/cli-ui-render-static"],\
-          ["@atls/code-icons", "workspace:code/code-icons"],\
-          ["@atls/raijin", "workspace:yarn/raijin"],\
-          ["@atls/yarn-plugin-ui", "workspace:yarn/plugin-ui"],\
-          ["@types/react", "npm:18.3.18"],\
-          ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
-          ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
-          ["ink", "virtual:41e75c4e884651becc23cd9371ff80957cda61af29333e93f2626446035dbe0bc3aae6938e95657a19bd4e897a1338289ce6044a41933fe389051ed80db43003#npm:3.2.0"],\
-          ["react", "npm:18.3.1"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -9650,13 +9533,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["deepmerge", [\
-      ["npm:1.5.2", {\
-        "packageLocation": "../.yarn/berry/cache/deepmerge-npm-1.5.2-e1865cb2ac-10.zip/node_modules/deepmerge/",\
-        "packageDependencies": [\
-          ["deepmerge", "npm:1.5.2"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:4.3.1", {\
         "packageLocation": "../.yarn/berry/cache/deepmerge-npm-4.3.1-4f751a0844-10.zip/node_modules/deepmerge/",\
         "packageDependencies": [\
@@ -12556,15 +12432,6 @@ const RAW_RUNTIME_STATE =
           ["@isaacs/cliui", "npm:8.0.2"],\
           ["@pkgjs/parseargs", "npm:0.11.0"],\
           ["jackspeak", "npm:3.4.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["javascript-stringify", [\
-      ["npm:2.1.0", {\
-        "packageLocation": "../.yarn/berry/cache/javascript-stringify-npm-2.1.0-3da58139d2-10.zip/node_modules/javascript-stringify/",\
-        "packageDependencies": [\
-          ["javascript-stringify", "npm:2.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15894,18 +15761,6 @@ const RAW_RUNTIME_STATE =
         "packagePeers": [\
           "@types/webpack-cli",\
           "webpack-cli"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["webpack-chain-5", [\
-      ["npm:8.0.2", {\
-        "packageLocation": "../.yarn/berry/cache/webpack-chain-5-npm-8.0.2-1531f60540-10.zip/node_modules/webpack-chain-5/",\
-        "packageDependencies": [\
-          ["deepmerge", "npm:1.5.2"],\
-          ["javascript-stringify", "npm:2.1.0"],\
-          ["webpack", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:5.98.0"],\
-          ["webpack-chain-5", "npm:8.0.2"]\
         ],\
         "linkType": "HARD"\
       }]\
