@@ -9,7 +9,7 @@
   "bundle": {
     "package": "@atls/yarn-cli",
     "bundleName": "standard",
-    "pluginCount": 46,
+    "pluginCount": 45,
     "plugins": [
       "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-check",
@@ -30,7 +30,6 @@
       "@atls/yarn-plugin-test",
       "@atls/yarn-plugin-tools",
       "@atls/yarn-plugin-typescript",
-      "@atls/yarn-plugin-ui",
       "@atls/yarn-plugin-workspaces",
       "@yarnpkg/plugin-catalog",
       "@yarnpkg/plugin-compat",
@@ -266,6 +265,19 @@
       "pathTokens": ["generate", "project"],
       "plugin": "@atls/yarn-plugin-generate",
       "usage": "yarn generate project [-t,--type #0]",
+      "availabilityReason": "registered by the assembled @atls/yarn-cli runtime",
+      "domain": "generate",
+      "pluginDir": "plugin-generate",
+      "status": "active"
+    },
+    {
+      "command": "ui icons generate",
+      "description": "generate icon components from source assets",
+      "examples": [],
+      "options": [],
+      "pathTokens": ["ui", "icons", "generate"],
+      "plugin": "@atls/yarn-plugin-generate",
+      "usage": "yarn ui icons generate [-n,--native]",
       "availabilityReason": "registered by the assembled @atls/yarn-cli runtime",
       "domain": "generate",
       "pluginDir": "plugin-generate",
@@ -519,19 +531,6 @@
       "status": "active"
     },
     {
-      "command": "ui icons generate",
-      "description": "generate icon components from source assets",
-      "examples": [],
-      "options": [],
-      "pathTokens": ["ui", "icons", "generate"],
-      "plugin": "@atls/yarn-plugin-ui",
-      "usage": "yarn ui icons generate [-n, --native]",
-      "availabilityReason": "registered by the assembled @atls/yarn-cli runtime",
-      "domain": "ui",
-      "pluginDir": "plugin-ui",
-      "status": "active"
-    },
-    {
       "command": "workspaces changed foreach",
       "description": "run a command in changed workspaces",
       "examples": [],
@@ -594,14 +593,6 @@
     {
       "name": "@atls/cli-ui-git-commit-component",
       "location": "cli/cli-ui-git-commit",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-icons-progress-component",
-      "location": "cli/cli-ui-icons-progress",
       "group": "cli",
       "private": true,
       "description": "",
@@ -754,14 +745,6 @@
     {
       "name": "@atls/code-github",
       "location": "code/code-github",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/code-icons",
-      "location": "code/code-icons",
       "group": "code",
       "private": true,
       "description": "",
@@ -1012,14 +995,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/yarn-plugin-ui",
-      "location": "yarn/plugin-ui",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/yarn-plugin-workspaces",
       "location": "yarn/plugin-workspaces",
       "group": "yarn",
@@ -1046,6 +1021,7 @@
       "files changed list",
       "format",
       "generate project",
+      "ui icons generate",
       "image pack",
       "library build",
       "lint",
@@ -1065,7 +1041,6 @@
       "test integration",
       "test unit",
       "typecheck",
-      "ui icons generate",
       "workspaces changed foreach",
       "workspaces changed list"
     ],
@@ -1090,10 +1065,9 @@
       "@atls/yarn-plugin-test",
       "@atls/yarn-plugin-tools",
       "@atls/yarn-plugin-typescript",
-      "@atls/yarn-plugin-ui",
       "@atls/yarn-plugin-workspaces"
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-10T00:31:33.179Z"
+  "lastGenerated": "2026-08-11T19:18:33.644Z"
 }
