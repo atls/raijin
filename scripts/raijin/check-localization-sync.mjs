@@ -3,19 +3,31 @@ import path from 'node:path'
 
 const repoRoot = process.cwd()
 
+/** @param {string} relativePath */
 const readText = (relativePath) => fs.readFileSync(path.join(repoRoot, relativePath), 'utf8')
 
+/** @param {Array<string>} values */
 const normalizeValues = (values) =>
   [...new Set(values)].sort((left, right) => left.localeCompare(right))
 
+/** @param {string} content */
 const extractSyncMarkers = (content) =>
   [...content.matchAll(/<!--\s*sync:([a-z0-9._:-]+)\s*-->/gi)].map((match) => match[1])
 
+/**
+ * @param {string} content
+ * @param {string} scope
+ */
 const extractScopedMarkers = (content, scope) =>
   [...content.matchAll(/<!--\s*sync:([a-z0-9._-]+):([a-z0-9._-]+)\s*-->/gi)]
     .filter((match) => match[1] === scope)
     .map((match) => match[2])
 
+/**
+ * @param {string} label
+ * @param {Array<string>} left
+ * @param {Array<string>} right
+ */
 const compareSets = (label, left, right) => {
   const onlyLeft = left.filter((item) => !right.includes(item))
   const onlyRight = right.filter((item) => !left.includes(item))
