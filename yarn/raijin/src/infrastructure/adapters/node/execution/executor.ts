@@ -1,10 +1,10 @@
 import type { ExecuteInput }                  from '../../../../application/execution/index.js'
 import type { ExecuteResult }                 from '../../../../application/execution/index.js'
 import type { Executor }                      from '../../../../application/execution/index.js'
-import type { ExecuteResult as ProcessExecuteResult } from '../../../process/execa/execute.interfaces.js'
+import type { ExecuteResult as ProcessExecuteResult } from '../../../providers/execa/subprocess/execute.interfaces.js'
 import type { ExecutorOptions }               from './executor.interfaces.js'
 
-import { execute as executeProcess }          from '../../../process/execa/execute.js'
+import { execute as executeProcess }          from '../../../providers/execa/subprocess/execute.js'
 import { isManagedNodeEnvironmentName }       from '../loaders/environment.js'
 import { removeEnvironmentMarkers }           from '../loaders/environment.js'
 import { removeAppliedLoaderRegistration }    from '../loaders/environment.js'

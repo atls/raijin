@@ -8,7 +8,7 @@ import { npath }         from '@yarnpkg/fslib'
 import { ppath }         from '@yarnpkg/fslib'
 import { xfs }           from '@yarnpkg/fslib'
 
-import { execute }       from '../execute.js'
+import { execute }       from './execute.js'
 
 const createStreams = () => {
   const stderr = new PassThrough()
