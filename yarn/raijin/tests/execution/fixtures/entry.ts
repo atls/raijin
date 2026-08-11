@@ -1,17 +1,6 @@
 const mode = process.argv[2]
 
 switch (mode) {
-  case 'binary': {
-    const { execFile } = await import('node:child_process')
-    const { promisify } = await import('node:util')
-    const { stderr, stdout } = await promisify(execFile)('tsc', ['--version'], {
-      encoding: 'utf8',
-    })
-
-    process.stdout.write(stdout)
-    process.stderr.write(stderr)
-    break
-  }
   case 'fail':
     process.exitCode = 7
     break

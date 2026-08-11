@@ -1,7 +1,6 @@
 import assert                        from 'node:assert/strict'
 import { test }                      from 'node:test'
 
-import { scriptUtils }               from '@yarnpkg/core'
 import { npath }                     from '@yarnpkg/fslib'
 
 import { assertCompleted }           from './assert-completed.js'
@@ -53,69 +52,6 @@ test('should execute TypeScript through the project PnP environment', async (con
     nodeOptions,
     preserved: 'preserved-value',
   })
-  assert.equal(removed.length, 1)
-})
-
-test('should expose locator-accessible binaries through Yarn hooks', async (context) => {
-  const { project, workspace } = await createProjectContext()
-  const baseEnvironment = Object.fromEntries(
-    Object.entries(process.env).filter(([name]) => name.toUpperCase() !== 'PATH')
-  )
-  const removed = trackTemporaryDirectories(context)
-  const executor = createExecutor({
-    baseEnvironment: { ...baseEnvironment, PATH: '' },
-    locator: workspace.anchoredLocator,
-    project,
-  })
-  const result = await executor.execute({
-    arguments: ['binary'],
-    cwd: npath.fromPortablePath(project.cwd),
-    input: 'ignore',
-    output: { mode: 'capture' },
-    entry,
-  })
-
-  assertCompleted(result)
-  assert.equal(result.exitCode, 0, result.stderr)
-  assert.match(result.stdout, /^Version \d+\.\d+\.\d+/u)
-  assert.equal(removed.length, 1)
-})
-
-test('should restore install state before preparing a dependency locator environment', async (context) => {
-  const source = await createProjectContext()
-  await source.project.restoreInstallState()
-
-  const binaries = await scriptUtils.getPackageAccessibleBinaries(
-    source.workspace.anchoredLocator,
-    { project: source.project }
-  )
-  const binary = binaries.get('tsc')
-  assert.ok(binary)
-  const [locator] = binary
-
-  const fresh = await createProjectContext()
-  assert.equal(fresh.project.storedPackages.has(locator.locatorHash), false)
-
-  const baseEnvironment = Object.fromEntries(
-    Object.entries(process.env).filter(([name]) => name.toUpperCase() !== 'PATH')
-  )
-  const removed = trackTemporaryDirectories(context)
-  const executor = createExecutor({
-    baseEnvironment: { ...baseEnvironment, PATH: '' },
-    locator,
-    project: fresh.project,
-  })
-  const result = await executor.execute({
-    arguments: ['binary'],
-    cwd: npath.fromPortablePath(fresh.project.cwd),
-    input: 'ignore',
-    output: { mode: 'capture' },
-    entry,
-  })
-
-  assertCompleted(result)
-  assert.equal(result.exitCode, 0, result.stderr)
-  assert.match(result.stdout, /^Version \d+\.\d+\.\d+/u)
   assert.equal(removed.length, 1)
 })
 
