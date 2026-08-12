@@ -41,7 +41,6 @@
 - `@atls/yarn-plugin-test` — `yarn/plugin-test`
 - `@atls/yarn-plugin-tools` — `yarn/plugin-tools`
 - `@atls/yarn-plugin-typescript` — `yarn/plugin-typescript`
-- `@atls/yarn-plugin-ui` — `yarn/plugin-ui`
 - `@atls/yarn-plugin-workspaces` — `yarn/plugin-workspaces`
 
 <details>
@@ -255,15 +254,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-ui -->
-
-#### `@atls/yarn-plugin-ui`
-
-- Локация: `yarn/plugin-ui`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-workspaces -->
 
 #### `@atls/yarn-plugin-workspaces`
@@ -285,7 +275,6 @@
 - `@atls/code-configuration` — `code/code-configuration`
 - `@atls/code-format` — `code/code-format`
 - `@atls/code-github` — `code/code-github`
-- `@atls/code-icons` — `code/code-icons`
 - `@atls/code-lint` — `code/code-lint`
 - `@atls/code-pack` — `code/code-pack`
 - `@atls/code-service` — `code/code-service`
@@ -327,15 +316,6 @@
 #### `@atls/code-github`
 
 - Локация: `code/code-github`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-icons -->
-
-#### `@atls/code-icons`
-
-- Локация: `code/code-icons`
 - Группа: `code`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
@@ -420,7 +400,6 @@ Webpack-интеграции и сборочные адаптеры
 - `@atls/cli-ui-file-path-component` — `cli/cli-ui-file-path`
 - `@atls/cli-ui-format-progress-component` — `cli/cli-ui-format-progress`
 - `@atls/cli-ui-git-commit-component` — `cli/cli-ui-git-commit`
-- `@atls/cli-ui-icons-progress-component` — `cli/cli-ui-icons-progress`
 - `@atls/cli-ui-line-component` — `cli/cli-ui-line`
 - `@atls/cli-ui-lint-progress-component` — `cli/cli-ui-lint-progress`
 - `@atls/cli-ui-lint-result-component` — `cli/cli-ui-lint-result`
@@ -476,13 +455,6 @@ _Компактные карточки для этой группы_
 
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-git-commit`
-
-<!-- sync:package-card:atls-cli-ui-icons-progress-component -->
-
-#### `@atls/cli-ui-icons-progress-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-icons-progress`
 
 <!-- sync:package-card:atls-cli-ui-line-component -->
 

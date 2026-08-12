@@ -17,6 +17,7 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts",
     "./application/execution": "./src/application/execution/index.ts",
+    "./application/icons/generation": "./src/application/icons/generation/index.ts",
     "./application/generation/project": "./src/application/generation/project/index.ts",
     "./commands": "./src/commands/index.ts",
     "./config": "./src/config/index.ts",
@@ -26,6 +27,9 @@
     "./config/sync": "./src/config/sync/index.ts",
     "./config/typescript": "./src/config/typescript/index.ts",
     "./filesystem": "./src/filesystem/index.ts",
+    "./infrastructure/providers/node/icons": "./src/infrastructure/providers/node/icons/index.ts",
+    "./infrastructure/providers/svgr/icons": "./src/infrastructure/providers/svgr/icons/index.ts",
+    "./infrastructure/providers/yarn/icons": "./src/infrastructure/providers/yarn/icons/index.ts",
     "./infrastructure/generation/project": "./src/infrastructure/generation/project/index.ts",
     "./project": "./src/project/index.ts",
     "./yarn": "./src/yarn/index.ts",
@@ -72,7 +76,8 @@
     "@typescript-eslint/parser": "8.48.1",
     "@yarnpkg/core": "4.7.0",
     "@yarnpkg/fslib": "3.1.5",
-    "eslint": "9.22.0",
+    "camelcase": "8.0.0",
+    "eslint": "9.39.5",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-n": "17.23.1",
     "eslint-plugin-react": "7.37.5",
@@ -120,6 +125,11 @@
         "types": "./dist/application/execution/index.d.ts",
         "default": "./dist/application/execution/index.js"
       },
+      "./application/icons/generation": {
+        "import": "./dist/application/icons/generation/index.js",
+        "types": "./dist/application/icons/generation/index.d.ts",
+        "default": "./dist/application/icons/generation/index.js"
+      },
       "./application/generation/project": {
         "import": "./dist/application/generation/project/index.js",
         "types": "./dist/application/generation/project/index.d.ts",
@@ -164,6 +174,21 @@
         "import": "./dist/filesystem/index.js",
         "types": "./dist/filesystem/index.d.ts",
         "default": "./dist/filesystem/index.js"
+      },
+      "./infrastructure/providers/node/icons": {
+        "import": "./dist/infrastructure/providers/node/icons/index.js",
+        "types": "./dist/infrastructure/providers/node/icons/index.d.ts",
+        "default": "./dist/infrastructure/providers/node/icons/index.js"
+      },
+      "./infrastructure/providers/svgr/icons": {
+        "import": "./dist/infrastructure/providers/svgr/icons/index.js",
+        "types": "./dist/infrastructure/providers/svgr/icons/index.d.ts",
+        "default": "./dist/infrastructure/providers/svgr/icons/index.js"
+      },
+      "./infrastructure/providers/yarn/icons": {
+        "import": "./dist/infrastructure/providers/yarn/icons/index.js",
+        "types": "./dist/infrastructure/providers/yarn/icons/index.d.ts",
+        "default": "./dist/infrastructure/providers/yarn/icons/index.js"
       },
       "./infrastructure/generation/project": {
         "import": "./dist/infrastructure/generation/project/index.js",

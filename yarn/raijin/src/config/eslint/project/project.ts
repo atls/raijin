@@ -9,20 +9,27 @@ import { join }                             from 'node:path'
 import { hasTypeScriptProject }             from '../../typescript/index.js'
 import defaults                             from '../defaults/index.js'
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
 const withTypeScriptRoot = (
   config: ReadonlyArray<Linter.Config>,
   tsconfigRootCwd: string
 ): Array<Linter.Config> =>
-  config.map((item) => ({
-    ...item,
-    languageOptions: {
-      ...item.languageOptions,
-      parserOptions: {
-        ...item.languageOptions?.parserOptions,
-        tsconfigRootDir: tsconfigRootCwd,
+  config.map((item) => {
+    const parserOptions = item.languageOptions?.parserOptions
+
+    return {
+      ...item,
+      languageOptions: {
+        ...item.languageOptions,
+        parserOptions: {
+          ...(isRecord(parserOptions) ? parserOptions : {}),
+          tsconfigRootDir: tsconfigRootCwd,
+        },
       },
-    },
-  }))
+    }
+  })
 
 export const resolveEslintProjectIgnorePatterns = async (cwd: string): Promise<Array<string>> => {
   const content = await readFile(join(cwd, 'package.json'), 'utf8')

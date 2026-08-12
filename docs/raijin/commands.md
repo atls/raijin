@@ -233,7 +233,7 @@ Command map assembled from the `@atls/yarn-cli` runtime
 
 ### Domain `generate`
 
-- Commands: `generate project`
+- Commands: `generate project`, `ui icons generate`
 
 <details>
 <summary>Domain details: `generate`</summary>
@@ -246,6 +246,16 @@ Command map assembled from the `@atls/yarn-cli` runtime
 - Description: generate a Raijin project scaffold
 - Usage: `yarn generate project [-t,--type #0]`
 - Example: `yarn generate project`
+- Plugin: `@atls/yarn-plugin-generate`
+
+<!-- sync:command-card:ui-icons-generate -->
+
+#### `ui icons generate`
+
+- Status: `active`
+- Description: generate icon components from source assets
+- Usage: `yarn ui icons generate [-n,--native]`
+- Example: `yarn ui icons generate`
 - Plugin: `@atls/yarn-plugin-generate`
 
 </details>
@@ -522,25 +532,6 @@ Command map assembled from the `@atls/yarn-cli` runtime
 - Usage: `yarn typecheck ...`
 - Example: `yarn typecheck`
 - Plugin: `@atls/yarn-plugin-typescript`
-
-</details>
-
-### Domain `ui`
-
-- Commands: `ui icons generate`
-
-<details>
-<summary>Domain details: `ui`</summary>
-
-<!-- sync:command-card:ui-icons-generate -->
-
-#### `ui icons generate`
-
-- Status: `active`
-- Description: generate icon components from source assets
-- Usage: `yarn ui icons generate [-n, --native]`
-- Example: `yarn ui icons generate`
-- Plugin: `@atls/yarn-plugin-ui`
 
 </details>
 
