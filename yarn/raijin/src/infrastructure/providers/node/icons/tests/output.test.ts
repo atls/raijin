@@ -236,6 +236,58 @@ test('should restore exact casing after a later copy fails', async () => {
   }
 })
 
+test('should restore managed output with noncanonical suffix and index casing', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const source = join(cwd, 'src')
+  const previous = {
+    alert: 'previous alert output',
+    index: 'previous index',
+    manual: 'manual source',
+  }
+
+  const resolveCaseInsensitive = async (path: string): Promise<string> => {
+    const directory = dirname(path)
+    const name = basename(path).toLowerCase()
+    const match = (await readdir(directory)).find((entry) => entry.toLowerCase() === name)
+
+    return match ? join(directory, match) : path
+  }
+
+  const copy = async (from: string, to: string): Promise<void> => {
+    if (basename(to) === 'User.icon.tsx') {
+      throw new Error('Injected user copy failure')
+    }
+
+    await copyFile(from, await resolveCaseInsensitive(to))
+  }
+  const remove = async (path: string): Promise<void> =>
+    rm(await resolveCaseInsensitive(path), { force: true })
+
+  try {
+    await mkdir(source)
+    await Promise.all([
+      writeFile(join(source, 'Alert.Icon.tsx'), previous.alert),
+      writeFile(join(source, 'Index.ts'), previous.index),
+      writeFile(join(source, 'manual.ts'), previous.manual),
+    ])
+
+    await assert.rejects(
+      create(copy, remove).replace(cwd, [
+        { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
+        { component: 'UserIcon', content: 'new user output', name: 'User' },
+      ]),
+      { message: 'Injected user copy failure' }
+    )
+
+    assert.deepEqual((await readdir(source)).sort(), ['Alert.Icon.tsx', 'Index.ts', 'manual.ts'])
+    assert.equal(await readFile(join(source, 'Alert.Icon.tsx'), 'utf8'), previous.alert)
+    assert.equal(await readFile(join(source, 'Index.ts'), 'utf8'), previous.index)
+    assert.equal(await readFile(join(source, 'manual.ts'), 'utf8'), previous.manual)
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})
+
 test('should reject a linked generated output before mutation', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
   const source = join(cwd, 'src')

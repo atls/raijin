@@ -18,6 +18,10 @@ const INDEX_FILE = 'index.ts'
 
 type Snapshot = ReadonlyArray<Readonly<{ content: Buffer; name: string }>>
 
+const isIndexFile = (name: string): boolean => name.toLowerCase() === INDEX_FILE
+
+const isModuleFile = (name: string): boolean => name.toLowerCase().endsWith(GENERATED_MODULE_SUFFIX)
+
 const createIndex = (modules: ReadonlyArray<Module>): string =>
   modules.map((module) => `export * from './${module.name}.icon.jsx'`).join('\n')
 
@@ -89,11 +93,9 @@ const replace = async (
   }
 
   const previousFiles = await readdir(target)
-  const previousModules = previousFiles.filter((file) => file.endsWith(GENERATED_MODULE_SUFFIX))
+  const previousModules = previousFiles.filter(isModuleFile)
   const staleModules = previousModules.filter((file) => !moduleFiles.includes(file))
-  const snapshotFiles = previousFiles.filter(
-    (file) => file === INDEX_FILE || file.endsWith(GENERATED_MODULE_SUFFIX)
-  )
+  const snapshotFiles = previousFiles.filter((file) => isIndexFile(file) || isModuleFile(file))
   const affectedFiles = Array.from(new Set([...snapshotFiles, ...generatedFiles]))
   const previousState = await snapshot(target, snapshotFiles)
   const staging = await mkdtemp(join(cwd, '.raijin-icons-'))
