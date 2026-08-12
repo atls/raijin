@@ -1,6 +1,7 @@
 import assert        from 'node:assert/strict'
 import { mkdir }     from 'node:fs/promises'
 import { mkdtemp }   from 'node:fs/promises'
+import { readFile }  from 'node:fs/promises'
 import { rm }        from 'node:fs/promises'
 import { symlink }   from 'node:fs/promises'
 import { writeFile } from 'node:fs/promises'
@@ -33,6 +34,42 @@ test('should read only direct lowercase svg files in deterministic basename orde
       { content: '<svg id="shared" />', name: 'shared' },
       { content: '<svg id="zebra" />', name: 'zebra' },
     ])
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})
+
+test('should reject a linked icon source boundary', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-source-'))
+  const external = await mkdtemp(join(tmpdir(), 'raijin-icon-source-external-'))
+  const icons = join(cwd, 'icons')
+
+  try {
+    await writeFile(join(external, 'alert.svg'), '<svg id="external" />')
+    await symlink(external, icons, 'junction')
+
+    await assert.rejects(create().read(cwd), {
+      message: 'Icon source boundary must be a directory: icons',
+    })
+    assert.equal(await readFile(join(external, 'alert.svg'), 'utf8'), '<svg id="external" />')
+  } finally {
+    await Promise.all([
+      rm(cwd, { force: true, recursive: true }),
+      rm(external, { force: true, recursive: true }),
+    ])
+  }
+})
+
+test('should reject a non-file svg source entry', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-source-'))
+  const icons = join(cwd, 'icons')
+
+  try {
+    await mkdir(join(icons, 'nested.svg'), { recursive: true })
+
+    await assert.rejects(create().read(cwd), {
+      message: 'Icon source path must be a regular file: nested.svg',
+    })
   } finally {
     await rm(cwd, { force: true, recursive: true })
   }
