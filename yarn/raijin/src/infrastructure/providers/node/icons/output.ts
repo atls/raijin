@@ -26,7 +26,7 @@ const snapshot = async (directory: string, files: ReadonlyArray<string>): Promis
     files.map(async (name) => {
       const path = join(directory, name)
 
-      if ((await lstat(path)).isSymbolicLink()) {
+      if (!(await lstat(path)).isFile()) {
         throw new TypeError(`Managed icon output path must be a regular file: ${name}`)
       }
 
@@ -77,27 +77,33 @@ const replace = async (
   remove: RemoveFile
 ): Promise<Array<string>> => {
   const target = join(cwd, 'src')
-  const staging = await mkdtemp(join(cwd, '.raijin-icons-'))
   const moduleFiles = modules.map((module) => `${module.name}${GENERATED_MODULE_SUFFIX}`)
   const generatedFiles = [...moduleFiles, INDEX_FILE]
 
-  try {
-    await mkdir(target, { recursive: true })
+  await mkdir(target, { recursive: true })
 
+  const targetEntry = await lstat(target)
+
+  if (!targetEntry.isDirectory()) {
+    throw new TypeError('Managed icon output boundary must be a directory: src')
+  }
+
+  const previousFiles = await readdir(target)
+  const previousModules = previousFiles.filter((file) => file.endsWith(GENERATED_MODULE_SUFFIX))
+  const staleModules = previousModules.filter((file) => !moduleFiles.includes(file))
+  const snapshotFiles = previousFiles.filter(
+    (file) => file === INDEX_FILE || file.endsWith(GENERATED_MODULE_SUFFIX)
+  )
+  const affectedFiles = Array.from(new Set([...snapshotFiles, ...generatedFiles]))
+  const previousState = await snapshot(target, snapshotFiles)
+  const staging = await mkdtemp(join(cwd, '.raijin-icons-'))
+
+  try {
     await Promise.all(
       modules.map(async (module) =>
         writeFile(join(staging, `${module.name}${GENERATED_MODULE_SUFFIX}`), module.content))
     )
     await writeFile(join(staging, INDEX_FILE), createIndex(modules))
-
-    const previousFiles = await readdir(target)
-    const previousModules = previousFiles.filter((file) => file.endsWith(GENERATED_MODULE_SUFFIX))
-    const staleModules = previousModules.filter((file) => !moduleFiles.includes(file))
-    const snapshotFiles = previousFiles.filter(
-      (file) => file === INDEX_FILE || file.endsWith(GENERATED_MODULE_SUFFIX)
-    )
-    const affectedFiles = Array.from(new Set([...snapshotFiles, ...generatedFiles]))
-    const previousState = await snapshot(target, snapshotFiles)
 
     try {
       await settle(staleModules.map(async (file) => remove(join(target, file))))

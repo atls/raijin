@@ -267,3 +267,81 @@ test('should reject a linked generated output before mutation', async () => {
     await rm(cwd, { force: true, recursive: true })
   }
 })
+
+test('should reject a linked output boundary before mutation', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const external = await mkdtemp(join(tmpdir(), 'raijin-icon-output-external-'))
+  const source = join(cwd, 'src')
+
+  try {
+    await Promise.all([
+      writeFile(join(external, 'Stale.icon.tsx'), 'external stale output'),
+      writeFile(join(external, 'manual.ts'), 'external manual source'),
+    ])
+    await symlink(external, source, 'junction')
+
+    await assert.rejects(
+      create().replace(cwd, [
+        { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
+      ]),
+      { message: 'Managed icon output boundary must be a directory: src' }
+    )
+
+    assert.equal((await lstat(source)).isSymbolicLink(), true)
+    assert.equal(await readFile(join(external, 'Stale.icon.tsx'), 'utf8'), 'external stale output')
+    assert.equal(await readFile(join(external, 'manual.ts'), 'utf8'), 'external manual source')
+    await assert.rejects(readFile(join(external, 'Alert.icon.tsx')), { code: 'ENOENT' })
+    await assert.rejects(readFile(join(external, 'index.ts')), { code: 'ENOENT' })
+  } finally {
+    await Promise.all([
+      rm(cwd, { force: true, recursive: true }),
+      rm(external, { force: true, recursive: true }),
+    ])
+  }
+})
+
+test('should reject a non-directory output boundary before mutation', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const source = join(cwd, 'src')
+
+  try {
+    await writeFile(source, 'existing source entry')
+
+    await assert.rejects(
+      create().replace(cwd, [
+        { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
+      ])
+    )
+
+    assert.equal(await readFile(source, 'utf8'), 'existing source entry')
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})
+
+test('should reject a non-regular managed output before mutation', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const source = join(cwd, 'src')
+
+  try {
+    await mkdir(join(source, 'Alert.icon.tsx'), { recursive: true })
+    await Promise.all([
+      writeFile(join(source, 'Stale.icon.tsx'), 'stale output'),
+      writeFile(join(source, 'manual.ts'), 'manual source'),
+    ])
+
+    await assert.rejects(
+      create().replace(cwd, [
+        { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
+      ]),
+      { message: 'Managed icon output path must be a regular file: Alert.icon.tsx' }
+    )
+
+    assert.equal((await lstat(join(source, 'Alert.icon.tsx'))).isDirectory(), true)
+    assert.equal(await readFile(join(source, 'Stale.icon.tsx'), 'utf8'), 'stale output')
+    assert.equal(await readFile(join(source, 'manual.ts'), 'utf8'), 'manual source')
+    await assert.rejects(readFile(join(source, 'index.ts')), { code: 'ENOENT' })
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})
