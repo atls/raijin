@@ -17,6 +17,20 @@ import { setTimeout } from 'node:timers/promises'
 
 import { create }     from '../output.js'
 
+const resolveCaseInsensitive = async (path: string): Promise<string> => {
+  const directory = dirname(path)
+  const name = basename(path).toLowerCase()
+  const match = (await readdir(directory)).find((entry) => entry.toLowerCase() === name)
+
+  return match ? join(directory, match) : path
+}
+
+const copyCaseInsensitive = async (from: string, to: string): Promise<void> =>
+  copyFile(from, await resolveCaseInsensitive(to))
+
+const removeCaseInsensitive = async (path: string): Promise<void> =>
+  rm(await resolveCaseInsensitive(path), { force: true })
+
 test('should replace generated modules and index while preserving unrelated source files', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
   const source = join(cwd, 'src')
@@ -157,23 +171,11 @@ test('should preserve a generated module renamed only by case', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
   const source = join(cwd, 'src')
 
-  const resolveCaseInsensitive = async (path: string): Promise<string> => {
-    const directory = dirname(path)
-    const name = basename(path).toLowerCase()
-    const match = (await readdir(directory)).find((entry) => entry.toLowerCase() === name)
-
-    return match ? join(directory, match) : path
-  }
-
-  const copy = async (from: string, to: string): Promise<void> =>
-    copyFile(from, await resolveCaseInsensitive(to))
-  const remove = async (path: string): Promise<void> => rm(await resolveCaseInsensitive(path))
-
   try {
     await mkdir(source)
     await writeFile(join(source, 'alert.icon.tsx'), 'previous alert output')
 
-    const files = await create(copy, remove).replace(cwd, [
+    const files = await create(copyCaseInsensitive, removeCaseInsensitive).replace(cwd, [
       { component: 'AlertIcon', content: 'export const AlertIcon = null\n', name: 'Alert' },
     ])
 
@@ -196,14 +198,6 @@ test('should restore exact casing after a later copy fails', async () => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
   const source = join(cwd, 'src')
 
-  const resolveCaseInsensitive = async (path: string): Promise<string> => {
-    const directory = dirname(path)
-    const name = basename(path).toLowerCase()
-    const match = (await readdir(directory)).find((entry) => entry.toLowerCase() === name)
-
-    return match ? join(directory, match) : path
-  }
-
   const copy = async (from: string, to: string): Promise<void> => {
     if (basename(to) === 'index.ts') {
       throw new Error('Injected index copy failure')
@@ -211,8 +205,6 @@ test('should restore exact casing after a later copy fails', async () => {
 
     await copyFile(from, await resolveCaseInsensitive(to))
   }
-  const remove = async (path: string): Promise<void> =>
-    rm(await resolveCaseInsensitive(path), { force: true })
 
   try {
     await mkdir(source)
@@ -222,7 +214,7 @@ test('should restore exact casing after a later copy fails', async () => {
     ])
 
     await assert.rejects(
-      create(copy, remove).replace(cwd, [
+      create(copy, removeCaseInsensitive).replace(cwd, [
         { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
       ]),
       { message: 'Injected index copy failure' }
@@ -245,14 +237,6 @@ test('should restore managed output with noncanonical suffix and index casing', 
     manual: 'manual source',
   }
 
-  const resolveCaseInsensitive = async (path: string): Promise<string> => {
-    const directory = dirname(path)
-    const name = basename(path).toLowerCase()
-    const match = (await readdir(directory)).find((entry) => entry.toLowerCase() === name)
-
-    return match ? join(directory, match) : path
-  }
-
   const copy = async (from: string, to: string): Promise<void> => {
     if (basename(to) === 'User.icon.tsx') {
       throw new Error('Injected user copy failure')
@@ -260,8 +244,6 @@ test('should restore managed output with noncanonical suffix and index casing', 
 
     await copyFile(from, await resolveCaseInsensitive(to))
   }
-  const remove = async (path: string): Promise<void> =>
-    rm(await resolveCaseInsensitive(path), { force: true })
 
   try {
     await mkdir(source)
@@ -272,7 +254,7 @@ test('should restore managed output with noncanonical suffix and index casing', 
     ])
 
     await assert.rejects(
-      create(copy, remove).replace(cwd, [
+      create(copy, removeCaseInsensitive).replace(cwd, [
         { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
         { component: 'UserIcon', content: 'new user output', name: 'User' },
       ]),
@@ -283,6 +265,61 @@ test('should restore managed output with noncanonical suffix and index casing', 
     assert.equal(await readFile(join(source, 'Alert.Icon.tsx'), 'utf8'), previous.alert)
     assert.equal(await readFile(join(source, 'Index.ts'), 'utf8'), previous.index)
     assert.equal(await readFile(join(source, 'manual.ts'), 'utf8'), previous.manual)
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})
+
+test('should canonicalize managed output suffix and index casing', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const source = join(cwd, 'src')
+
+  try {
+    await mkdir(source)
+    await Promise.all([
+      writeFile(join(source, 'Alert.Icon.tsx'), 'previous alert output'),
+      writeFile(join(source, 'Index.ts'), 'previous index'),
+      writeFile(join(source, 'manual.ts'), 'manual source'),
+    ])
+
+    const files = await create(copyCaseInsensitive, removeCaseInsensitive).replace(cwd, [
+      { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
+    ])
+
+    assert.deepEqual(files, ['src/Alert.icon.tsx', 'src/index.ts'])
+    assert.deepEqual((await readdir(source)).sort(), ['Alert.icon.tsx', 'index.ts', 'manual.ts'])
+    assert.equal(await readFile(join(source, 'Alert.icon.tsx'), 'utf8'), 'new alert output')
+    assert.equal(
+      await readFile(join(source, 'index.ts'), 'utf8'),
+      "export * from './Alert.icon.jsx'"
+    )
+    assert.equal(await readFile(join(source, 'manual.ts'), 'utf8'), 'manual source')
+  } finally {
+    await rm(cwd, { force: true, recursive: true })
+  }
+})
+
+test('should remove a newly created output boundary after replacement fails', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-icon-output-'))
+  const source = join(cwd, 'src')
+  const copy = async (from: string, to: string): Promise<void> => {
+    if (basename(to) === 'User.icon.tsx') {
+      throw new Error('Injected user copy failure')
+    }
+
+    await copyFile(from, to)
+  }
+
+  try {
+    await assert.rejects(
+      create(copy).replace(cwd, [
+        { component: 'AlertIcon', content: 'new alert output', name: 'Alert' },
+        { component: 'UserIcon', content: 'new user output', name: 'User' },
+      ]),
+      { message: 'Injected user copy failure' }
+    )
+
+    await assert.rejects(lstat(source), { code: 'ENOENT' })
   } finally {
     await rm(cwd, { force: true, recursive: true })
   }
