@@ -41,7 +41,7 @@ const createFetch = (
     packageManager,
     schemaVersion: 1,
     sha256: createSha256Digest(runtime),
-    tagName: `${packageName}@1.2.3`,
+    tagName: '@atls/raijin@1.2.3',
     version: '1.2.3',
   }
 

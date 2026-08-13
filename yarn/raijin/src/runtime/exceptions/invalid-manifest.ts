@@ -11,6 +11,9 @@ const createInvalidRuntimeManifestFieldMessage = (key: keyof RaijinRuntimeManife
 const createInvalidRuntimeManifestPackageMessage = (packageName: string): string =>
   `Invalid Raijin runtime manifest: expected ${packageName}`
 
+const createInvalidRuntimeManifestTagNameMessage = (tagName: string): string =>
+  `Invalid Raijin runtime manifest: expected tagName ${tagName}`
+
 const createInvalidRuntimeManifestAssetMessage = (assetName: string): string =>
   `Invalid Raijin runtime manifest: expected ${assetName}`
 
@@ -37,6 +40,12 @@ export class InvalidRaijinRuntimeManifestException extends Error {
   static unexpectedPackage(packageName: string): InvalidRaijinRuntimeManifestException {
     return new InvalidRaijinRuntimeManifestException(
       createInvalidRuntimeManifestPackageMessage(packageName)
+    )
+  }
+
+  static unexpectedTagName(tagName: string): InvalidRaijinRuntimeManifestException {
+    return new InvalidRaijinRuntimeManifestException(
+      createInvalidRuntimeManifestTagNameMessage(tagName)
     )
   }
 

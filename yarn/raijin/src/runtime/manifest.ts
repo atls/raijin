@@ -67,15 +67,25 @@ export const parseRaijinRuntimeManifest = (value: unknown): RaijinRuntimeManifes
     throw InvalidRaijinRuntimeManifestException.invalidSha256()
   }
 
+  const assetUrl = assertManifestString(value, 'assetUrl')
+  const packageManager = assertManifestString(value, 'packageManager')
+  const tagName = assertManifestString(value, 'tagName')
+  const version = assertManifestString(value, 'version')
+  const expectedTagName = `${RAIJIN_RUNTIME_PACKAGE_NAME}@${version}`
+
+  if (tagName !== expectedTagName) {
+    throw InvalidRaijinRuntimeManifestException.unexpectedTagName(expectedTagName)
+  }
+
   return {
     assetName,
-    assetUrl: assertManifestString(value, 'assetUrl'),
+    assetUrl,
     packageName,
-    packageManager: assertManifestString(value, 'packageManager'),
+    packageManager,
     schemaVersion: RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION,
     sha256,
-    tagName: assertManifestString(value, 'tagName'),
-    version: assertManifestString(value, 'version'),
+    tagName,
+    version,
   }
 }
 

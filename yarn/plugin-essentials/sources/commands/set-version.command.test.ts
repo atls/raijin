@@ -151,7 +151,7 @@ test('should fetch legacy Yarn CLI runtime manifest for updater', async (context
     packageName: '@atls/yarn-cli',
     packageManager: 'yarn@4.15.0',
     version: '1.2.3',
-    tagName: '@atls/yarn-cli@1.2.3',
+    tagName: '@atls/raijin@1.2.3',
     assetName: 'yarn.mjs',
     assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
     sha256: 'a'.repeat(64),
