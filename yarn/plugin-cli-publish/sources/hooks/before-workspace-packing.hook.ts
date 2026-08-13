@@ -6,7 +6,7 @@ export interface RawManifest {
 }
 
 export const beforeWorkspacePacking = (workspace: Workspace, rawManifest: RawManifest): void => {
-  if (rawManifest.name === '@atls/yarn-cli') {
+  if (rawManifest.name === '@atls/raijin-assembly') {
     rawManifest.dependencies = new Proxy({}, { set: (): boolean => true })
   }
 }

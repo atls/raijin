@@ -20,7 +20,7 @@ const checkedRuntime = await fs.readFile(checkedRuntimePath)
 
 assert.ok(
   builtRuntime.equals(checkedRuntime),
-  `${checkedRuntimeArgument} does not match the deterministic @atls/yarn-cli build`
+  `${checkedRuntimeArgument} does not match the deterministic @atls/raijin-assembly build`
 )
 
 const inventory = await loadRuntimeCliSurface({ cwd, runtimePath: checkedRuntimePath })

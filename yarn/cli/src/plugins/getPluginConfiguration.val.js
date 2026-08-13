@@ -3,7 +3,12 @@
 
 /* eslint-disable */
 
-module.exports = ({ modules, plugins }) => {
+import { createRequire } from 'node:module'
+
+const require = createRequire(import.meta.url)
+
+const getPluginConfigurationSource = ({ modules, plugins }) => {
+  const pluginRequests = new Set(plugins)
   const importSegment = modules
     .map((request, index) => {
       return `import * as _${index} from ${JSON.stringify(request)};\n`
@@ -12,7 +17,14 @@ module.exports = ({ modules, plugins }) => {
 
   const moduleSegment = `  modules: new Map([\n${modules
     .map((request, index) => {
-      return `    [${JSON.stringify(require(`${request}/package.json`).name)}, _${index}],\n`
+      const packageJson = require(`${request}/package.json`)
+      // ESM package scope adds an extra Node interop wrapper around CJS plugin modules.
+      const moduleReference =
+        pluginRequests.has(request) && packageJson.type !== 'module'
+          ? `_${index}.default`
+          : `_${index}`
+
+      return `    [${JSON.stringify(packageJson.name)}, ${moduleReference}],\n`
     })
     .join(``)}  ]),\n`
 
@@ -32,3 +44,5 @@ module.exports = ({ modules, plugins }) => {
     ].join(`\n`),
   }
 }
+
+export { getPluginConfigurationSource as 'module.exports' }

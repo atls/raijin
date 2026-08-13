@@ -19,8 +19,7 @@
 Короткий список:
 
 - `@atls/raijin` — `yarn/raijin`
-- `@atls/yarn-cli` — `yarn/cli`
-- `@atls/yarn-cli-tools` — `yarn/cli-tools`
+- `@atls/raijin-assembly` — `yarn/cli`
 - `@atls/yarn-pack-utils` — `yarn/pack-utils`
 - `@atls/yarn-plugin-badges` — `yarn/plugin-badges`
 - `@atls/yarn-plugin-check` — `yarn/plugin-check`
@@ -56,23 +55,14 @@
 - Описание: Public Raijin initializer and runtime package
 - Скрипты: `build`, `build:library`, `build:project-generation`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-cli -->
+<!-- sync:package-card:atls-raijin-assembly -->
 
-#### `@atls/yarn-cli`
+#### `@atls/raijin-assembly`
 
 - Локация: `yarn/cli`
 - Группа: `yarn`
 - Видимость: `private`
-- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:verify`, `build:version`, `fix`, `postpack`, `prepack`, `verify:consumers`
-
-<!-- sync:package-card:atls-yarn-cli-tools -->
-
-#### `@atls/yarn-cli-tools`
-
-- Локация: `yarn/cli-tools`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: отсутствуют
+- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:verify`, `fix`, `postpack`, `prepack`, `verify:consumers`
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
 

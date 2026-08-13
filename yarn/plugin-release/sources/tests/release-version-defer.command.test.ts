@@ -67,14 +67,14 @@ test('should parse deferred release decisions', () => {
     parseDeferredReleaseDecisions(`
 releases:
   "@atls/raijin": minor
-  "@atls/yarn-cli": 1.2.0
+  "@atls/raijin-assembly": 4.14.1
 declined:
   - "@atls/code-test"
 `),
     new Map([
       ['@atls/code-test', 'decline'],
       ['@atls/raijin', 'minor'],
-      ['@atls/yarn-cli', '1.2.0'],
+      ['@atls/raijin-assembly', '4.14.1'],
     ])
   )
 })
@@ -98,9 +98,9 @@ test('should exclude root workspace from release version policy', () => {
 test('should exclude unversioned workspaces from release version policy', () => {
   assert.equal(
     isReleaseVersionWorkspace({
-      relativeCwd: 'yarn/cli-tools',
+      relativeCwd: 'fixtures/unversioned',
       manifest: {
-        name: structUtils.makeIdent('atls', 'yarn-cli-tools'),
+        name: structUtils.makeIdent('atls', 'unversioned-fixture'),
         version: null,
         raw: {
           private: true,

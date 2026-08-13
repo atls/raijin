@@ -3,7 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
 const { getDynamicLibs } = require('@yarnpkg/cli')
 
-module.exports.getPluginConfiguration = async (
+export const getPluginConfiguration = async (
   bundles: Array<string> = []
 ): Promise<{ plugins: Set<string>; modules: Map<string, unknown> }> => {
   const plugins = new Set<string>()
