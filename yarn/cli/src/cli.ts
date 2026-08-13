@@ -1,5 +1,3 @@
-import type { PluginConfiguration }             from '@yarnpkg/core'
-
 import { runExit }                              from '@yarnpkg/cli'
 import { npath }                                from '@yarnpkg/fslib'
 import { ppath }                                from '@yarnpkg/fslib'
@@ -12,9 +10,9 @@ import { createCliSurfaceInventory }            from './surface/inventory.js'
 import packageJson from '../package.json' with { type: 'json' }
 
 const selfPath = npath.toPortablePath(npath.resolve(process.argv[1]))
-const pluginConfiguration = (await Promise.resolve(
+const pluginConfiguration = await Promise.resolve(
   getPluginConfiguration(packageJson['@yarnpkg/builder'].bundles.standard)
-)) as PluginConfiguration
+)
 
 await registerRaijinSourceWorkspaceRuntime(ppath.cwd(), pluginConfiguration)
 
