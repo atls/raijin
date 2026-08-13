@@ -9,6 +9,8 @@ import { tmpdir }                               from 'node:os'
 import { join }                                 from 'node:path'
 import { test }                                 from 'node:test'
 
+import { parseRaijinRuntimeManifest }           from '@atls/raijin/runtime'
+
 import { assertYarnRuntimeReleaseAssetMatches } from '../release-create.command.js'
 import { createGitHubReleaseNotesOptions }      from '../release-create.command.js'
 import { createGitHubReleaseOptions }           from '../release-create.command.js'
@@ -108,31 +110,30 @@ test('should reject root package manifest without package manager', async () => 
   )
 })
 
-test('should create legacy-compatible yarn runtime manifest from verified release asset', () => {
-  assert.deepEqual(
-    createYarnRuntimeManifest(
-      '@atls/raijin',
-      '1.2.3',
-      {
-        browser_download_url:
-          'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
-        name: 'yarn.mjs',
-      },
-      Buffer.from('runtime'),
-      'yarn@5.0.0'
-    ),
+test('should create canonical Raijin runtime manifest from verified release asset', () => {
+  const manifest = createYarnRuntimeManifest(
+    '1.2.3',
     {
-      assetName: 'yarn.mjs',
-      assetUrl:
+      browser_download_url:
         'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
-      packageName: '@atls/yarn-cli',
-      packageManager: 'yarn@5.0.0',
-      schemaVersion: 1,
-      sha256: 'd92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23',
-      tagName: '@atls/raijin@1.2.3',
-      version: '1.2.3',
-    }
+      name: 'yarn.mjs',
+    },
+    Buffer.from('runtime'),
+    'yarn@5.0.0'
   )
+  const expectedManifest = {
+    assetName: 'yarn.mjs',
+    assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
+    packageName: '@atls/raijin',
+    packageManager: 'yarn@5.0.0',
+    schemaVersion: 1,
+    sha256: 'd92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23',
+    tagName: '@atls/raijin@1.2.3',
+    version: '1.2.3',
+  }
+
+  assert.deepEqual(manifest, expectedManifest)
+  assert.deepEqual(parseRaijinRuntimeManifest(manifest), expectedManifest)
 })
 
 test('should accept existing yarn runtime release assets with matching content', async () => {

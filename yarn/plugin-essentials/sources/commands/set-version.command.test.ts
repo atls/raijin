@@ -1,3 +1,5 @@
+import type { Configuration }            from '@yarnpkg/core'
+
 import assert                            from 'node:assert/strict'
 import { access }                        from 'node:fs/promises'
 import { mkdtemp }                       from 'node:fs/promises'
@@ -9,11 +11,14 @@ import { tmpdir }                        from 'node:os'
 import { join }                          from 'node:path'
 import { test }                          from 'node:test'
 
+import { httpUtils }                     from '@yarnpkg/core'
+
 import { createSha256Digest }            from '@atls/raijin/runtime'
 import { getRaijinRuntimeYarnPath }      from '@atls/raijin/runtime'
 import { parseRaijinRuntimeManifest }    from '@atls/raijin/runtime'
 
 import { resolveYarnPath }               from './set-version.runtime.js'
+import { fetchRaijinRuntimeManifest }    from './set-version.runtime.js'
 import { writeRuntimeFileAtomically }    from './set-version.runtime.js'
 import { findPackageCwd }                from './set-version.utils.js'
 import { nativeToPortablePath }          from './set-version.utils.js'
@@ -123,31 +128,38 @@ test('should convert between windows native and portable paths', () => {
   )
 })
 
-test('should parse Raijin runtime manifest', () => {
-  assert.deepEqual(
-    parseRaijinRuntimeManifest({
-      schemaVersion: 1,
-      packageName: '@atls/raijin',
-      packageManager: 'yarn@4.15.0',
-      version: '1.2.3',
-      tagName: '@atls/raijin@1.2.3',
-      assetName: 'yarn.mjs',
-      assetUrl:
-        'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
-      sha256: 'a'.repeat(64),
-    }),
-    {
-      schemaVersion: 1,
-      packageName: '@atls/raijin',
-      packageManager: 'yarn@4.15.0',
-      version: '1.2.3',
-      tagName: '@atls/raijin@1.2.3',
-      assetName: 'yarn.mjs',
-      assetUrl:
-        'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
-      sha256: 'a'.repeat(64),
-    }
-  )
+test('should fetch canonical Raijin runtime manifest for updater', async (context) => {
+  const manifest = {
+    schemaVersion: 1,
+    packageName: '@atls/raijin',
+    packageManager: 'yarn@4.15.0',
+    version: '1.2.3',
+    tagName: '@atls/raijin@1.2.3',
+    assetName: 'yarn.mjs',
+    assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
+    sha256: 'a'.repeat(64),
+  }
+
+  context.mock.method(httpUtils, 'get', async () => manifest)
+
+  assert.deepEqual(await fetchRaijinRuntimeManifest({} as Configuration), manifest)
+})
+
+test('should fetch legacy Yarn CLI runtime manifest for updater', async (context) => {
+  const manifest = {
+    schemaVersion: 1,
+    packageName: '@atls/yarn-cli',
+    packageManager: 'yarn@4.15.0',
+    version: '1.2.3',
+    tagName: '@atls/yarn-cli@1.2.3',
+    assetName: 'yarn.mjs',
+    assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+    sha256: 'a'.repeat(64),
+  }
+
+  context.mock.method(httpUtils, 'get', async () => manifest)
+
+  assert.deepEqual(await fetchRaijinRuntimeManifest({} as Configuration), manifest)
 })
 
 test('should reject runtime manifest from another package', () => {
