@@ -3,8 +3,7 @@ import type { CreatePluginResult }      from './create.interfaces.js'
 
 import { npath }                        from '@yarnpkg/fslib'
 
-import { resolveWorkspacePackageNames } from '@atls/raijin/project'
-
+import { resolveWorkspacePackageNames } from '../../../project/workspaces/package-names.js'
 import { createParsers }                from './parsers.js'
 import { printers }                     from './printers/index.js'
 
