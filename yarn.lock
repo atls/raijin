@@ -701,7 +701,6 @@ __metadata:
     "@atls/yarn-plugin-badges": "workspace:*"
     "@atls/yarn-plugin-check": "workspace:*"
     "@atls/yarn-plugin-checks": "workspace:*"
-    "@atls/yarn-plugin-cli-publish": "workspace:*"
     "@atls/yarn-plugin-commit": "workspace:*"
     "@atls/yarn-plugin-essentials": "workspace:*"
     "@atls/yarn-plugin-export": "workspace:*"
@@ -893,22 +892,6 @@ __metadata:
     react: "npm:18.3.1"
     strip-ansi: "npm:7.1.0"
     typescript: "npm:5.9.3"
-  peerDependencies:
-    "@yarnpkg/cli": "*"
-    "@yarnpkg/core": "*"
-    "@yarnpkg/fslib": "*"
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-plugin-cli-publish@workspace:*, @atls/yarn-plugin-cli-publish@workspace:yarn/plugin-cli-publish":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-cli-publish@workspace:yarn/plugin-cli-publish"
-  dependencies:
-    "@types/node": "npm:24.12.2"
-    "@yarnpkg/builder": "npm:4.2.0"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    "@yarnpkg/fslib": "npm:3.1.5"
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"

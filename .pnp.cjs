@@ -155,10 +155,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:yarn/plugin-checks"\
     },\
     {\
-      "name": "@atls/yarn-plugin-cli-publish",\
-      "reference": "workspace:yarn/plugin-cli-publish"\
-    },\
-    {\
       "name": "@atls/yarn-plugin-commit",\
       "reference": "workspace:yarn/plugin-commit"\
     },\
@@ -267,7 +263,6 @@ const RAW_RUNTIME_STATE =
     ["@atls/yarn-plugin-badges", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-badges", "workspace:yarn/plugin-badges"]],\
     ["@atls/yarn-plugin-check", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-check", "workspace:yarn/plugin-check"]],\
     ["@atls/yarn-plugin-checks", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-checks", "workspace:yarn/plugin-checks"]],\
-    ["@atls/yarn-plugin-cli-publish", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-cli-publish", "workspace:yarn/plugin-cli-publish"]],\
     ["@atls/yarn-plugin-commit", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-commit", "workspace:yarn/plugin-commit"]],\
     ["@atls/yarn-plugin-essentials", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-essentials", "workspace:yarn/plugin-essentials"]],\
     ["@atls/yarn-plugin-export", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-export", "workspace:yarn/plugin-export"]],\
@@ -1507,7 +1502,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-badges", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-badges"],\
           ["@atls/yarn-plugin-check", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-check"],\
           ["@atls/yarn-plugin-checks", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-checks"],\
-          ["@atls/yarn-plugin-cli-publish", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-cli-publish"],\
           ["@atls/yarn-plugin-commit", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-commit"],\
           ["@atls/yarn-plugin-essentials", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-essentials"],\
           ["@atls/yarn-plugin-export", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-export"],\
@@ -1735,43 +1729,6 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.3.1"],\
           ["strip-ansi", "npm:7.1.0"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/yarn-plugin-cli-publish", [\
-      ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-cli-publish", {\
-        "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-cli-publish-virtual-bcb63a2f47/1/yarn/plugin-cli-publish/",\
-        "packageDependencies": [\
-          ["@atls/yarn-plugin-cli-publish", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-cli-publish"],\
-          ["@types/node", "npm:24.12.2"],\
-          ["@types/yarnpkg__cli", null],\
-          ["@types/yarnpkg__core", null],\
-          ["@types/yarnpkg__fslib", null],\
-          ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
-          ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"]\
-        ],\
-        "packagePeers": [\
-          "@types/yarnpkg__cli",\
-          "@types/yarnpkg__core",\
-          "@types/yarnpkg__fslib",\
-          "@yarnpkg/cli",\
-          "@yarnpkg/core",\
-          "@yarnpkg/fslib"\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["workspace:yarn/plugin-cli-publish", {\
-        "packageLocation": "./yarn/plugin-cli-publish/",\
-        "packageDependencies": [\
-          ["@atls/yarn-plugin-cli-publish", "workspace:yarn/plugin-cli-publish"],\
-          ["@types/node", "npm:24.12.2"],\
-          ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
-          ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"]\
         ],\
         "linkType": "SOFT"\
       }]\

@@ -42,7 +42,6 @@
     "CHANGELOG.md"
   ],
   "typecheckIgnorePatterns": [
-    "yarn/cli/src/cli.dev.mjs",
     "yarn/plugin-checks/sources/*.test.js"
   ],
   "typecheckSkipLibCheck": true

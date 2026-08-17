@@ -9,12 +9,11 @@
   "bundle": {
     "package": "@atls/raijin-assembly",
     "bundleName": "standard",
-    "pluginCount": 45,
+    "pluginCount": 44,
     "plugins": [
       "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-check",
       "@atls/yarn-plugin-checks",
-      "@atls/yarn-plugin-cli-publish",
       "@atls/yarn-plugin-commit",
       "@atls/yarn-plugin-essentials",
       "@atls/yarn-plugin-export",
@@ -817,11 +816,9 @@
         "build:bundle",
         "build:clean",
         "build:dist",
-        "build:fix",
-        "build:verify",
-        "fix",
-        "postpack",
-        "prepack",
+        "build:dynamic-require",
+        "build:materialize",
+        "build:nbind",
         "verify:consumers"
       ]
     },
@@ -852,14 +849,6 @@
     {
       "name": "@atls/yarn-plugin-checks",
       "location": "yarn/plugin-checks",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-cli-publish",
-      "location": "yarn/plugin-cli-publish",
       "group": "yarn",
       "private": true,
       "description": "",
@@ -1040,7 +1029,6 @@
       "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-check",
       "@atls/yarn-plugin-checks",
-      "@atls/yarn-plugin-cli-publish",
       "@atls/yarn-plugin-commit",
       "@atls/yarn-plugin-essentials",
       "@atls/yarn-plugin-export",
@@ -1060,5 +1048,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-13T15:58:20.262Z"
+  "lastGenerated": "2026-08-17T23:08:04.004Z"
 }

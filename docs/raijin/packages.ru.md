@@ -24,7 +24,6 @@
 - `@atls/yarn-plugin-badges` — `yarn/plugin-badges`
 - `@atls/yarn-plugin-check` — `yarn/plugin-check`
 - `@atls/yarn-plugin-checks` — `yarn/plugin-checks`
-- `@atls/yarn-plugin-cli-publish` — `yarn/plugin-cli-publish`
 - `@atls/yarn-plugin-commit` — `yarn/plugin-commit`
 - `@atls/yarn-plugin-essentials` — `yarn/plugin-essentials`
 - `@atls/yarn-plugin-export` — `yarn/plugin-export`
@@ -62,7 +61,7 @@
 - Локация: `yarn/cli`
 - Группа: `yarn`
 - Видимость: `private`
-- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:fix`, `build:verify`, `fix`, `postpack`, `prepack`, `verify:consumers`
+- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`, `build:nbind`, `verify:consumers`
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
 
@@ -96,15 +95,6 @@
 #### `@atls/yarn-plugin-checks`
 
 - Локация: `yarn/plugin-checks`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-cli-publish -->
-
-#### `@atls/yarn-plugin-cli-publish`
-
-- Локация: `yarn/plugin-cli-publish`
 - Группа: `yarn`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`

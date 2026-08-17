@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "generatedBy": "scripts/raijin/generate-artifacts.mjs",
-  "contentSha256": "16cdb3b21bdc641b7db6012b9d0dfabf92a15d3bf385aa8cdd6f41fb7e33e011",
+  "contentSha256": "0d1142f36242d215db7bc18800ca097d3016f8042f6303e7b0930f0d98d99a96",
   "packageManager": "yarn@4.14.1",
-  "workspaceCount": 53,
+  "workspaceCount": 52,
   "commandCount": 38,
   "activeCommandCount": 38,
   "inactiveCommandCount": 0,
-  "lastGenerated": "2026-08-13T15:58:20.262Z"
+  "lastGenerated": "2026-08-17T23:08:04.004Z"
 }

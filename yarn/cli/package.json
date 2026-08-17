@@ -4,24 +4,14 @@
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": "./src/index.ts"
-  },
-  "main": "src/index.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "yarn run build:clean && yarn run build:bundle && yarn run build:fix && yarn run build:dist && yarn run build:verify",
+    "build": "yarn run build:clean && yarn run build:bundle && yarn run build:dynamic-require && yarn run build:nbind && yarn run build:dist && yarn run build:materialize",
     "build:bundle": "builder build bundle --no-git-hash --format esm --target esnext --external-file ../builder/externals.json && mv bundles/yarn.js bundles/yarn.mjs",
     "build:clean": "rm -rf dist/runtime",
     "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs",
-    "build:fix": "yarn node patches/cli.patch.mjs",
-    "build:verify": "yarn node scripts/runtime/bootstrap.mjs",
-    "fix": "yarn run build:fix",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist",
+    "build:dynamic-require": "yarn node patches/dynamic-require.mjs",
+    "build:materialize": "yarn node scripts/runtime/materialize.mjs",
+    "build:nbind": "yarn node patches/nbind.mjs",
     "verify:consumers": "node ./scripts/runtime/consumer.js"
   },
   "dependencies": {
@@ -29,7 +19,6 @@
     "@atls/yarn-plugin-badges": "workspace:*",
     "@atls/yarn-plugin-check": "workspace:*",
     "@atls/yarn-plugin-checks": "workspace:*",
-    "@atls/yarn-plugin-cli-publish": "workspace:*",
     "@atls/yarn-plugin-commit": "workspace:*",
     "@atls/yarn-plugin-essentials": "workspace:*",
     "@atls/yarn-plugin-export": "workspace:*",
@@ -89,7 +78,6 @@
         "@atls/yarn-plugin-badges",
         "@atls/yarn-plugin-check",
         "@atls/yarn-plugin-checks",
-        "@atls/yarn-plugin-cli-publish",
         "@atls/yarn-plugin-commit",
         "@atls/yarn-plugin-essentials",
         "@atls/yarn-plugin-export",
@@ -132,20 +120,6 @@
         "@yarnpkg/plugin-pnpm",
         "@yarnpkg/plugin-stage"
       ]
-    }
-  },
-  "raijin": {
-    "pack": {
-      "exports": {
-        "./package.json": "./package.json",
-        ".": {
-          "import": "./dist/index.js",
-          "types": "./dist/index.d.ts",
-          "default": "./dist/index.js"
-        }
-      },
-      "main": "dist/index.js",
-      "types": "dist/index.d.ts"
     }
   }
 }
