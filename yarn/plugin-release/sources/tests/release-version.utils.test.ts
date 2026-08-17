@@ -31,7 +31,7 @@ const createWorkspace = (
   }) as unknown as Workspace
 
 const runtimeWorkspace = createWorkspace('@atls/raijin', 'yarn/raijin', '2.1.33')
-const cliWorkspace = createWorkspace('@atls/yarn-cli', 'yarn/cli', '1.1.96', true)
+const cliWorkspace = createWorkspace('@atls/raijin-assembly', 'yarn/cli', '4.14.1', true)
 const rootWorkspace = createWorkspace('tools', '.', '1.0.0', true)
 const projectCwd = '/repo' as PortablePath
 
@@ -78,7 +78,7 @@ test('should decline internal workspace changes when public Raijin release works
   assert.deepEqual(strategies, [
     {
       workspace: {
-        ident: '@atls/yarn-cli',
+        ident: '@atls/raijin-assembly',
         relativeCwd: 'yarn/cli',
       },
       strategy: 'patch',
@@ -198,7 +198,7 @@ test('should detect deferred release requirement only from release strategies', 
     false
   )
   assert.equal(
-    isDeferredReleaseRequired(new Map([['@atls/yarn-cli', 'patch']]), '@atls/raijin'),
+    isDeferredReleaseRequired(new Map([['@atls/raijin-assembly', 'patch']]), '@atls/raijin'),
     false
   )
 })

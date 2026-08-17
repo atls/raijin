@@ -1,23 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
-import type { PluginConfiguration }             from '@yarnpkg/core'
-
 import { runExit }                              from '@yarnpkg/cli'
 import { npath }                                from '@yarnpkg/fslib'
 import { ppath }                                from '@yarnpkg/fslib'
 
 import { composeCommandInvocations }            from '@atls/raijin/commands'
-// @ts-expect-error: Cjs export
-import { getPluginConfiguration }               from '@atls/yarn-cli-tools'
 
 import { registerRaijinSourceWorkspaceRuntime } from './bootstrap/source-workspace.js'
+import { getPluginConfiguration }               from './plugins/getPluginConfiguration.js'
 import { createCliSurfaceInventory }            from './surface/inventory.js'
 import packageJson from '../package.json' with { type: 'json' }
 
 const selfPath = npath.toPortablePath(npath.resolve(process.argv[1]))
-const pluginConfiguration = (await Promise.resolve(
+const pluginConfiguration = await Promise.resolve(
   getPluginConfiguration(packageJson['@yarnpkg/builder'].bundles.standard)
-)) as PluginConfiguration
+)
 
 await registerRaijinSourceWorkspaceRuntime(ppath.cwd(), pluginConfiguration)
 

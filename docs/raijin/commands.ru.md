@@ -1,6 +1,6 @@
 # Raijin Commands
 
-Карта команд, собранная из runtime `@atls/yarn-cli`
+Карта команд, собранная из runtime `@atls/raijin-assembly`
 
 <!-- sync:commands-active -->
 
