@@ -4,7 +4,7 @@ import test                   from 'node:test'
 import { createForeachInput } from './workspaces-changed-foreach.input.js'
 
 test('should run native foreach over selected workspaces without worktree refiltering', () => {
-  const input = createForeachInput(['@atls/yarn-cli', '@atls/yarn-plugin-release'], {
+  const input = createForeachInput(['@atls/raijin-assembly', '@atls/yarn-plugin-release'], {
     exclude: '.',
     verbose: true,
   })
@@ -13,7 +13,7 @@ test('should run native foreach over selected workspaces without worktree refilt
     'workspaces',
     'foreach',
     '--include',
-    '@atls/yarn-cli',
+    '@atls/raijin-assembly',
     '--include',
     '@atls/yarn-plugin-release',
     '--all',
@@ -24,8 +24,8 @@ test('should run native foreach over selected workspaces without worktree refilt
 })
 
 test('should keep private workspaces unless no private flag is explicit', () => {
-  const input = createForeachInput(['@atls/yarn-cli'], {})
-  const publicOnlyInput = createForeachInput(['@atls/yarn-cli'], { publicOnly: true })
+  const input = createForeachInput(['@atls/raijin-assembly'], {})
+  const publicOnlyInput = createForeachInput(['@atls/raijin-assembly'], { publicOnly: true })
 
   assert.equal(input.includes('--no-private'), false)
   assert.equal(publicOnlyInput.includes('--no-private'), true)

@@ -8,6 +8,5 @@ runs:
     - name: Bundle yarn
       shell: bash
       run: |
-        yarn workspace @atls/yarn-cli version patch
         yarn cli:build
         yarn format

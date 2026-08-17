@@ -1,6 +1,6 @@
 # Raijin Commands
 
-Command map assembled from the `@atls/yarn-cli` runtime
+Command map assembled from the `@atls/raijin-assembly` runtime
 
 <!-- sync:commands-active -->
 

@@ -760,8 +760,8 @@ const renderCommandsDoc = (commands, language) => {
     '# Raijin Commands',
     '',
     isRu
-      ? 'Карта команд, собранная из runtime `@atls/yarn-cli`'
-      : 'Command map assembled from the `@atls/yarn-cli` runtime',
+      ? 'Карта команд, собранная из runtime `@atls/raijin-assembly`'
+      : 'Command map assembled from the `@atls/raijin-assembly` runtime',
     '',
     '<!-- sync:commands-active -->',
     '',
@@ -1089,7 +1089,7 @@ const stripLastGenerated = (value) => {
  */
 const describeCommand = (command) => ({
   ...command,
-  availabilityReason: 'registered by the assembled @atls/yarn-cli runtime',
+  availabilityReason: 'registered by the assembled @atls/raijin-assembly runtime',
   domain: commandDomainFromPlugin(command.plugin),
   pluginDir: command.plugin.replace('@atls/yarn-plugin-', 'plugin-'),
   status: 'active',
