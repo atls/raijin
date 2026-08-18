@@ -4,12 +4,14 @@ import { BaseCommand }                  from '@yarnpkg/cli'
 import { Option }                       from 'clipanion'
 
 import { generate }                     from '@atls/raijin/application/icons/generation'
+import { createCommandInput }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
 import { createOutputReplacer }         from '@atls/raijin/infrastructure/providers/node/icons'
 import { createSourceReader }           from '@atls/raijin/infrastructure/providers/node/icons'
 import { createTransformer }            from '@atls/raijin/infrastructure/providers/svgr/icons'
-import { createFormatter }              from '@atls/raijin/infrastructure/providers/yarn/icons'
 import { createLinter }                 from '@atls/raijin/infrastructure/providers/yarn/icons'
+import { getWorkspacePackageNames }     from '@atls/raijin/project'
+import { formatProjectSources }         from '@atls/raijin/project/formatting'
 
 import { presentIconGeneration }        from '../presenters/icons.js'
 import { presentIconGenerationError }   from '../presenters/icons.js'
@@ -33,7 +35,25 @@ export class GenerateIconsCommand extends BaseCommand {
       const result = await generate(
         { cwd, native: this.native },
         {
-          formatter: createFormatter(executionCwd, yarn.execute),
+          formatter: {
+            format: async (files) => {
+              try {
+                await formatProjectSources({
+                  cwd,
+                  targets: createCommandInput({
+                    cwd: executionCwd,
+                    source: 'generated',
+                    targets: Array.from(files),
+                  }),
+                  workspacePackageNames: getWorkspacePackageNames(yarn.project),
+                })
+
+                return 0
+              } catch {
+                return 1
+              }
+            },
+          },
           linter: createLinter(executionCwd, yarn.execute),
           output: createOutputReplacer(),
           sources: createSourceReader(),

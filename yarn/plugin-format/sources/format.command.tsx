@@ -1,17 +1,36 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
+import type { FormatCommandOptions }    from './format.command.interfaces.js'
+import type { FormatCommandResult }     from './format.command.interfaces.js'
+
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { Option }                       from 'clipanion'
-import { render }                       from 'ink'
 import React                            from 'react'
 
 import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
-import { FormatProgress }               from '@atls/cli-ui-format-progress-component'
-import { Formatter }                    from '@atls/code-format'
 import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
 import { createCommandInput }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
 import { getWorkspacePackageNames }     from '@atls/raijin/project'
+import { formatProjectSources }         from '@atls/raijin/project/formatting'
+
+export const runFormatCommand = async (
+  options: FormatCommandOptions,
+  format: typeof formatProjectSources = formatProjectSources
+): Promise<FormatCommandResult> => {
+  try {
+    return {
+      result: await format({
+        cwd: options.cwd,
+        targets: options.targets.targets.length > 0 ? options.targets : undefined,
+        workspacePackageNames: options.workspacePackageNames,
+      }),
+      status: 'succeeded',
+    }
+  } catch (error) {
+    return { error, status: 'failed' }
+  }
+}
 
 export class FormatCommand extends BaseCommand {
   static override paths = [['format']]
@@ -26,39 +45,28 @@ export class FormatCommand extends BaseCommand {
 
   override async execute(): Promise<number> {
     const { invocation } = this.context
-    const { executionCwd, invocationCwd, project, yarn } = invocation
-
-    const formatter = await Formatter.initialize(toNativeCwd(executionCwd), {
-      workspacePackageNames: getWorkspacePackageNames(yarn.project),
-    })
-    const input = createCommandInput({
+    const { executionCwd, invocationCwd, yarn } = invocation
+    const targets = createCommandInput({
       cwd: invocationCwd,
       source: 'explicit',
       targets: this.files,
     })
+    const outcome = await runFormatCommand({
+      cwd: toNativeCwd(executionCwd),
+      targets,
+      workspacePackageNames: getWorkspacePackageNames(yarn.project),
+    })
 
-    const { clear } = render(
-      <FormatProgress cwd={toNativeCwd(project.cwd)} formatter={formatter} />
-    )
-
-    try {
-      await formatter.format(input.targets.length > 0 ? input : undefined)
-
+    if (outcome.status === 'succeeded') {
       return 0
-    } catch (error) {
-      if (error instanceof Error) {
-        renderStatic(<ErrorInfo error={error} />)
-          .split('\n')
-          .forEach((line) => {
-            console.log(line) // eslint-disable-line no-console
-          })
-      } else {
-        console.error(error) // eslint-disable-line no-console
-      }
-
-      return 1
-    } finally {
-      clear()
     }
+
+    if (outcome.error instanceof Error) {
+      this.context.stdout.write(`${renderStatic(<ErrorInfo error={outcome.error} />)}\n`)
+    } else {
+      this.context.stderr.write(`${String(outcome.error)}\n`)
+    }
+
+    return 1
   }
 }

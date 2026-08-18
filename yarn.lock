@@ -284,7 +284,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-format-progress-component@workspace:*, @atls/cli-ui-format-progress-component@workspace:cli/cli-ui-format-progress":
+"@atls/cli-ui-format-progress-component@workspace:cli/cli-ui-format-progress":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-format-progress-component@workspace:cli/cli-ui-format-progress"
   dependencies:
@@ -603,7 +603,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-format@workspace:*, @atls/code-format@workspace:code/code-format":
+"@atls/code-format@workspace:code/code-format":
   version: 0.0.0-use.local
   resolution: "@atls/code-format@workspace:code/code-format"
   dependencies:
@@ -786,6 +786,7 @@ __metadata:
     eslint-plugin-security: "npm:3.0.1"
     execa: "npm:10.0.1"
     fast-glob: "npm:3.3.2"
+    ignore: "npm:5.3.2"
     import-sort: "npm:6.0.0"
     import-sort-parser: "npm:6.0.0"
     import-sort-parser-typescript: "npm:6.0.0"
@@ -985,9 +986,7 @@ __metadata:
   resolution: "@atls/yarn-plugin-format@workspace:yarn/plugin-format"
   dependencies:
     "@atls/cli-ui-error-info-component": "workspace:*"
-    "@atls/cli-ui-format-progress-component": "workspace:*"
     "@atls/cli-ui-renderer-static-component": "workspace:*"
-    "@atls/code-format": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
@@ -995,7 +994,6 @@ __metadata:
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
     clipanion: "npm:4.0.0-rc.2"
-    ink: "npm:3.2.0"
     react: "npm:18.3.1"
   peerDependencies:
     "@yarnpkg/cli": "*"
