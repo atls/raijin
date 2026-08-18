@@ -27,7 +27,6 @@ const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
 const RELEASE_ALREADY_EXISTS_CODE = '"code":"already_exists"'
 const RELEASE_ALREADY_EXISTS_FIELD = '"field":"tag_name"'
 const RAIJIN_PUBLIC_PACKAGE_NAME = '@atls/raijin'
-const YARN_RUNTIME_MANIFEST_PACKAGE_NAME = '@atls/yarn-cli'
 const YARN_RUNTIME_ASSET_NAME = 'yarn.mjs'
 const YARN_RUNTIME_ASSET_CONTENT_TYPE = 'text/javascript'
 const YARN_RUNTIME_MANIFEST_PATH = '.yarn/releases/raijin-runtime.json'
@@ -193,7 +192,6 @@ export const readYarnRuntimePackageManager = async (projectCwd: PortablePath): P
 }
 
 export const createYarnRuntimeManifest = (
-  packageName: string,
   version: string,
   asset: GitHubReleaseAsset,
   data: Buffer,
@@ -201,11 +199,11 @@ export const createYarnRuntimeManifest = (
 ): YarnRuntimeManifest => ({
   assetName: asset.name,
   assetUrl: asset.browser_download_url,
-  packageName: YARN_RUNTIME_MANIFEST_PACKAGE_NAME,
+  packageName: RAIJIN_PUBLIC_PACKAGE_NAME,
   packageManager,
   schemaVersion: YARN_RUNTIME_MANIFEST_SCHEMA_VERSION,
   sha256: createYarnRuntimeReleaseAssetDigest(data),
-  tagName: createGitHubReleaseTagName(packageName, version),
+  tagName: createGitHubReleaseTagName(RAIJIN_PUBLIC_PACKAGE_NAME, version),
   version,
 })
 
@@ -295,7 +293,6 @@ const ensureYarnRuntimeReleaseAsset = async (
   await writeYarnRuntimeManifest(
     project,
     createYarnRuntimeManifest(
-      packageName,
       version,
       asset,
       data,

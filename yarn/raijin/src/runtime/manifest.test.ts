@@ -38,7 +38,7 @@ test('should parse legacy Yarn CLI runtime manifest during package migration', (
       packageManager: 'yarn@4.15.0',
       schemaVersion: 1,
       sha256: 'a'.repeat(64),
-      tagName: '@atls/yarn-cli@1.2.3',
+      tagName: '@atls/raijin@1.2.3',
       version: '1.2.3',
     }),
     {
@@ -48,9 +48,47 @@ test('should parse legacy Yarn CLI runtime manifest during package migration', (
       packageManager: 'yarn@4.15.0',
       schemaVersion: 1,
       sha256: 'a'.repeat(64),
-      tagName: '@atls/yarn-cli@1.2.3',
+      tagName: '@atls/raijin@1.2.3',
       version: '1.2.3',
     }
+  )
+})
+
+test('should reject legacy Yarn CLI release tag', () => {
+  assert.throws(
+    () =>
+      parseRaijinRuntimeManifest({
+        assetName: 'yarn.mjs',
+        assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+        packageName: '@atls/yarn-cli',
+        packageManager: 'yarn@4.15.0',
+        schemaVersion: 1,
+        sha256: 'a'.repeat(64),
+        tagName: '@atls/yarn-cli@1.2.3',
+        version: '1.2.3',
+      }),
+    (error) =>
+      error instanceof InvalidRaijinRuntimeManifestException &&
+      error.message === 'Invalid Raijin runtime manifest: expected tagName @atls/raijin@1.2.3'
+  )
+})
+
+test('should reject Raijin release tag with mismatched version', () => {
+  assert.throws(
+    () =>
+      parseRaijinRuntimeManifest({
+        assetName: 'yarn.mjs',
+        assetUrl: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+        packageName: '@atls/raijin',
+        packageManager: 'yarn@4.15.0',
+        schemaVersion: 1,
+        sha256: 'a'.repeat(64),
+        tagName: '@atls/raijin@1.2.4',
+        version: '1.2.3',
+      }),
+    (error) =>
+      error instanceof InvalidRaijinRuntimeManifestException &&
+      error.message === 'Invalid Raijin runtime manifest: expected tagName @atls/raijin@1.2.3'
   )
 })
 

@@ -29,11 +29,15 @@ const getRequestHref = (url: Request | URL | string): string => {
   return url.url
 }
 
-const createFetch = (runtime: Buffer, packageManager = TEST_PACKAGE_MANAGER): typeof fetch => {
+const createFetch = (
+  runtime: Buffer,
+  packageManager = TEST_PACKAGE_MANAGER,
+  packageName = '@atls/raijin'
+): typeof fetch => {
   const manifest = {
     assetName: 'yarn.mjs',
     assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
-    packageName: '@atls/raijin',
+    packageName,
     packageManager,
     schemaVersion: 1,
     sha256: createSha256Digest(runtime),
@@ -117,6 +121,23 @@ test('should install only public Raijin package directly', async () => {
   const commands = await collectInitializerCommands(runRaijinInitializer)
 
   assert.deepEqual(commands[0], ['add', '-D', '@atls/raijin@latest'])
+})
+
+test('should accept legacy Yarn CLI runtime manifest', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
+  const commands: Array<Array<string>> = []
+
+  await runRaijinInitializer({
+    argv: ['init', '--type', 'project'],
+    cwd,
+    fetchImpl: createFetch(Buffer.from('runtime'), TEST_PACKAGE_MANAGER, '@atls/yarn-cli'),
+    runYarnCommand: async (args) => {
+      commands.push(args)
+    },
+  })
+
+  assert.deepEqual(commands, EXPECTED_INITIALIZER_COMMANDS)
+  assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.mjs'), 'utf-8'), 'runtime')
 })
 
 test('should support initializer arguments without init command', async () => {
