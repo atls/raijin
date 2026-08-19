@@ -69,8 +69,17 @@ const resolveTarget = async (target: CommandInput['targets'][number]): Promise<A
   ).map(toNativePath)
 }
 
-const resolveExplicitTargets = async (input: CommandInput): Promise<Array<string>> =>
-  (await Promise.all(input.targets.map(resolveTarget))).flat()
+const resolveExplicitTargets = async (input: CommandInput): Promise<Array<string>> => {
+  const targets: Array<string> = []
+
+  await input.targets.reduce<Promise<void>>(async (previous, target) => {
+    await previous
+
+    targets.push(...(await resolveTarget(target)))
+  }, Promise.resolve())
+
+  return targets
+}
 
 const resolveProjectTargets = async (cwd: string): Promise<Array<string>> =>
   (
@@ -122,9 +131,13 @@ export const formatProjectSources = async ({
   workspacePackageNames,
 }: FormatSourcesOptions): Promise<FormatSourcesResult> => {
   const sources = await resolveSources(cwd, targets)
-  const files = await Promise.all(
-    sources.map(async (source) => formatSource(source, workspacePackageNames))
-  )
+  const files: Array<FormatSourcesResult['files'][number]> = []
+
+  await sources.reduce<Promise<void>>(async (previous, source) => {
+    await previous
+
+    files.push(await formatSource(source, workspacePackageNames))
+  }, Promise.resolve())
 
   return { files }
 }
