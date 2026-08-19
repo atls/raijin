@@ -1,5 +1,6 @@
 import type { CommandInput }        from '@atls/raijin/commands'
-import type { FormatSourcesResult } from '@atls/raijin/project/formatting'
+
+import type { FormatSourcesResult } from './format.interfaces.js'
 
 export interface FormatCommandOptions {
   readonly cwd: string

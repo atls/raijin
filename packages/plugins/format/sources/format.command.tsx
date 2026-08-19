@@ -12,7 +12,8 @@ import { renderStatic }                 from '@atls/cli-ui-renderer-static-compo
 import { createCommandInput }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
 import { getWorkspacePackageNames }     from '@atls/raijin/project'
-import { formatProjectSources }         from '@atls/raijin/project/formatting'
+
+import { formatProjectSources }         from './format.js'
 
 export const runFormatCommand = async (
   options: FormatCommandOptions,

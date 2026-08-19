@@ -28,7 +28,6 @@ Compact list:
 - `@atls/yarn-plugin-essentials` — `yarn/plugin-essentials`
 - `@atls/yarn-plugin-export` — `yarn/plugin-export`
 - `@atls/yarn-plugin-files` — `yarn/plugin-files`
-- `@atls/yarn-plugin-format` — `yarn/plugin-format`
 - `@atls/yarn-plugin-generate` — `yarn/plugin-generate`
 - `@atls/yarn-plugin-image` — `yarn/plugin-image`
 - `@atls/yarn-plugin-library` — `yarn/plugin-library`
@@ -131,15 +130,6 @@ Compact list:
 #### `@atls/yarn-plugin-files`
 
 - Location: `yarn/plugin-files`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-format -->
-
-#### `@atls/yarn-plugin-format`
-
-- Location: `yarn/plugin-format`
 - Group: `yarn`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
@@ -540,5 +530,27 @@ _Compact cards for this group_
 
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-types-check-progress`
+
+</details>
+
+## Group `packages`
+
+Other workspace packages
+
+Compact list:
+
+- `@atls/yarn-plugin-format` — `packages/plugins/format`
+
+<details>
+<summary>Group details: `packages`</summary>
+
+_Compact cards for this group_
+
+<!-- sync:package-card:atls-yarn-plugin-format -->
+
+#### `@atls/yarn-plugin-format`
+
+- Scripts: `build`, `postpack`, `prepack`
+- Location: `packages/plugins/format`
 
 </details>

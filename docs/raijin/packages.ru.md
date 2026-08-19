@@ -28,7 +28,6 @@
 - `@atls/yarn-plugin-essentials` — `yarn/plugin-essentials`
 - `@atls/yarn-plugin-export` — `yarn/plugin-export`
 - `@atls/yarn-plugin-files` — `yarn/plugin-files`
-- `@atls/yarn-plugin-format` — `yarn/plugin-format`
 - `@atls/yarn-plugin-generate` — `yarn/plugin-generate`
 - `@atls/yarn-plugin-image` — `yarn/plugin-image`
 - `@atls/yarn-plugin-library` — `yarn/plugin-library`
@@ -131,15 +130,6 @@
 #### `@atls/yarn-plugin-files`
 
 - Локация: `yarn/plugin-files`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-format -->
-
-#### `@atls/yarn-plugin-format`
-
-- Локация: `yarn/plugin-format`
 - Группа: `yarn`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
@@ -540,5 +530,27 @@ _Компактные карточки для этой группы_
 
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-types-check-progress`
+
+</details>
+
+## Group `packages`
+
+Прочая группа workspace-пакетов
+
+Короткий список:
+
+- `@atls/yarn-plugin-format` — `packages/plugins/format`
+
+<details>
+<summary>Подробности группы `packages`</summary>
+
+_Компактные карточки для этой группы_
+
+<!-- sync:package-card:atls-yarn-plugin-format -->
+
+#### `@atls/yarn-plugin-format`
+
+- Скрипты: `build`, `postpack`, `prepack`
+- Локация: `packages/plugins/format`
 
 </details>

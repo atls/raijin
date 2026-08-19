@@ -11,7 +11,7 @@ import { createSourceReader }           from '@atls/raijin/infrastructure/provid
 import { createTransformer }            from '@atls/raijin/infrastructure/providers/svgr/icons'
 import { createLinter }                 from '@atls/raijin/infrastructure/providers/yarn/icons'
 import { getWorkspacePackageNames }     from '@atls/raijin/project'
-import { formatProjectSources }         from '@atls/raijin/project/formatting'
+import { formatProjectSources }         from '@atls/yarn-plugin-format'
 
 import { presentIconGeneration }        from '../presenters/icons.js'
 import { presentIconGenerationError }   from '../presenters/icons.js'
