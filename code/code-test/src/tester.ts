@@ -247,7 +247,7 @@ export class Tester extends EventEmitter {
 
     return {
       ...data,
-      file: resolvePath(this.cwd, data.file),
+      file: resolvePath(this.projectCwd, data.file),
     }
   }
 

@@ -49,8 +49,12 @@ const createProject = async (): Promise<string> => {
 
 test('should resolve relative event files once for emitted and returned events', async () => {
   const projectCwd = await createProject()
-  const cwd = join(projectCwd, 'packages', 'tools')
-  const tester = await Tester.initialize(cwd, { projectCwd })
+  const executionCwd = join(projectCwd, 'packages', 'tools')
+
+  await mkdir(executionCwd, { recursive: true })
+  await writeFile(join(executionCwd, 'package.json'), `${JSON.stringify({ type: 'module' })}\n`)
+
+  const tester = await Tester.initialize(executionCwd, { projectCwd })
   const testsStream = new EventEmitter()
   const relativeFile = join('packages', 'tools', 'src', 'sample.test.ts')
   const emittedEvent = once(tester, 'test:fail')
@@ -74,8 +78,12 @@ test('should resolve relative event files once for emitted and returned events',
 
 test('should preserve absolute event files for emitted and returned events', async () => {
   const projectCwd = await createProject()
-  const cwd = join(projectCwd, 'packages', 'tools')
-  const tester = await Tester.initialize(cwd, { projectCwd })
+  const executionCwd = join(projectCwd, 'packages', 'tools')
+
+  await mkdir(executionCwd, { recursive: true })
+  await writeFile(join(executionCwd, 'package.json'), `${JSON.stringify({ type: 'module' })}\n`)
+
+  const tester = await Tester.initialize(executionCwd, { projectCwd })
   const testsStream = new EventEmitter()
   const absoluteFile = `${projectCwd}${sep}packages${sep}tools${sep}src${sep}..${sep}sample.test.ts`
   const emittedEvent = once(tester, 'test:fail')
