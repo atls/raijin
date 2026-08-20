@@ -1,53 +1,79 @@
-import assert                 from 'node:assert/strict'
-import { test }               from 'node:test'
+import type { WorkspaceInvocation } from '@atls/raijin/commands'
+import type { Workspace }           from '@yarnpkg/core'
+import type { Writable }            from 'node:stream'
 
-import { createCommandInput } from '@atls/raijin/commands'
-import { toPortableCwd }      from '@atls/raijin/commands'
+import assert                       from 'node:assert/strict'
+import { mkdtemp }                  from 'node:fs/promises'
+import { mkdir }                    from 'node:fs/promises'
+import { readFile }                 from 'node:fs/promises'
+import { writeFile }                from 'node:fs/promises'
+import { tmpdir }                   from 'node:os'
+import { join }                     from 'node:path'
+import { test }                     from 'node:test'
 
-import { runFormatCommand }   from '../command.jsx'
+import { toPortableCwd }            from '@atls/raijin/commands'
 
-test('should map explicit targets and successful results to command completion', async () => {
-  const cwd = '/repo'
-  const targets = createCommandInput({
-    cwd: toPortableCwd(cwd),
-    source: 'explicit',
-    targets: ['src/index.ts'],
+import { FormatCommand }            from '../command.jsx'
+
+const createOutput = (): { output: Writable; read: () => string } => {
+  let value = ''
+
+  return {
+    output: {
+      write: (chunk: unknown) => {
+        value += String(chunk)
+
+        return true
+      },
+    } as Writable,
+    read: () => value,
+  }
+}
+
+const runCommand = async (
+  cwd: string,
+  files: Array<string>
+): Promise<{ exitCode: number; stderr: string; stdout: string }> => {
+  const stderr = createOutput()
+  const stdout = createOutput()
+  const invocation = {
+    executionCwd: toPortableCwd(cwd),
+    invocationCwd: toPortableCwd(cwd),
+    yarn: { project: { workspaces: [] as Array<Workspace> } },
+  } as unknown as WorkspaceInvocation
+  const command = Object.assign(Object.create(FormatCommand.prototype), {
+    context: { invocation, stderr: stderr.output, stdout: stdout.output },
+    files,
+  }) as FormatCommand
+
+  return { exitCode: await command.execute(), stderr: stderr.read(), stdout: stdout.read() }
+}
+
+test('should format explicit targets and return success', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-format-command-'))
+  const sourceDirectory = join(cwd, 'src')
+  const sourceFile = join(sourceDirectory, 'index.ts')
+
+  await mkdir(sourceDirectory)
+  await writeFile(join(cwd, 'package.json'), '{"private":true}\n')
+  await writeFile(sourceFile, 'const value={foo:1}\n')
+
+  assert.deepEqual(await runCommand(cwd, ['src/index.ts']), {
+    exitCode: 0,
+    stderr: '',
+    stdout: '',
   })
-  let received
-
-  const outcome = await runFormatCommand(
-    { cwd, targets, workspacePackageNames: ['@scope/project'] },
-    async (options) => {
-      received = options
-
-      return { files: [{ file: 'src/index.ts', status: 'changed' }] }
-    }
-  )
-
-  assert.deepEqual(received, { cwd, targets, workspacePackageNames: ['@scope/project'] })
-  assert.deepEqual(outcome, {
-    result: { files: [{ file: 'src/index.ts', status: 'changed' }] },
-    status: 'succeeded',
-  })
+  assert.equal(await readFile(sourceFile, 'utf8'), 'const value = { foo: 1 }\n')
 })
 
-test('should map targetless input and operation failures', async () => {
-  const cwd = '/repo'
-  const targets = createCommandInput({
-    cwd: toPortableCwd(cwd),
-    source: 'explicit',
-    targets: [],
-  })
-  const failure = new Error('configuration failed')
-  let received
+test('should report missing targets and return failure', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-format-command-'))
 
-  const outcome = await runFormatCommand({ cwd, targets, workspacePackageNames: [] }, async (
-    options
-  ) => {
-    received = options
-    throw failure
-  })
+  await writeFile(join(cwd, 'package.json'), '{"private":true}\n')
 
-  assert.deepEqual(received, { cwd, targets: undefined, workspacePackageNames: [] })
-  assert.deepEqual(outcome, { error: failure, status: 'failed' })
+  const result = await runCommand(cwd, ['missing.ts'])
+
+  assert.equal(result.exitCode, 1)
+  assert.equal(result.stderr, '')
+  assert.match(result.stdout, /Formatter target does not exist: missing\.ts/)
 })

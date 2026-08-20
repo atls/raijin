@@ -1,12 +1,8 @@
-export interface FormattedSource {
+export type FormattedFileResult = {
   readonly file: string
   readonly status: 'changed' | 'unchanged'
 }
 
-export interface FormatSourcesResult {
-  readonly files: ReadonlyArray<FormattedSource>
+export type FormatProjectResult = {
+  readonly files: ReadonlyArray<FormattedFileResult>
 }
-
-export type FormatCommandResult =
-  | { readonly error: unknown; readonly status: 'failed' }
-  | { readonly result: FormatSourcesResult; readonly status: 'succeeded' }
