@@ -207,7 +207,6 @@ test('should forward node flags from managed node wrapper', async () => {
   const { project } = await resolveTestProject()
   const binFolder = await xfs.mktempPromise()
   const loaderPath = ppath.join(binFolder, 'managed-loader.mjs' as Filename)
-  const scriptPath = ppath.join(binFolder, 'print-exec-argv.mjs' as Filename)
 
   await xfs.writeFilePromise(
     loaderPath,
@@ -220,26 +219,21 @@ test('should forward node flags from managed node wrapper', async () => {
       '}',
     ].join('\n')
   )
-  await xfs.writeFilePromise(
-    scriptPath,
-    'process.stdout.write(JSON.stringify(process.execArgv))'
-  )
 
   const { env } = await createYarnExecutable({
     binFolder,
     nodeLoader: pathToFileURL(npath.fromPortablePath(loaderPath)).href,
     project,
   })
-  const nodeWrapper = npath.fromPortablePath(
-    ppath.join(binFolder, (process.platform === 'win32' ? 'node.cmd' : 'node') as Filename)
-  )
+  const nodeWrapper = npath.fromPortablePath(ppath.join(binFolder, 'node' as Filename))
   const { stdout } = await execFileAsync(
     nodeWrapper,
     [
       '--conditions=raijin-managed-wrapper-test',
-      npath.fromPortablePath(scriptPath),
+      '-e',
+      'process.stdout.write(JSON.stringify(process.execArgv))',
     ],
-    { env, shell: process.platform === 'win32' }
+    { env }
   )
   const execArgv = JSON.parse(stdout) as Array<string>
 
