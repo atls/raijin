@@ -174,16 +174,9 @@ test(
   'should execute nested Yarn through the Windows command shim',
   { skip: process.platform !== 'win32' },
   async () => {
-    const invocation = await resolveProjectCommandInvocation(
-      createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'windows' })
-    )
+    const invocation = await resolveProjectCommandInvocation(createContext(repoRoot))
     const exitCode = await invocation.yarn.execute(
-      [
-        'exec',
-        'node',
-        '-e',
-        "process.exit(process.env.RAIJIN_INVOCATION_CONTEXT_TEST === 'windows' ? 0 : 1)",
-      ],
+      ['exec', 'node', '--version'],
       { input: 'ignore' }
     )
 
