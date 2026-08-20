@@ -7,6 +7,7 @@ import EventEmitter                  from 'node:events'
 import { readFileSync }              from 'node:fs'
 import { stat }                      from 'node:fs/promises'
 /* eslint-disable @typescript-eslint/member-ordering */
+import { isAbsolute }                from 'node:path'
 import { relative }                  from 'node:path'
 import { resolve as resolvePath }    from 'node:path'
 import { join }                      from 'node:path'
@@ -119,36 +120,10 @@ export class Tester extends EventEmitter {
     const testsStream = run(runOptions)
     const drainReporter = testsStream.compose(tap)
 
-    const onPass = (data: TestPass): void => {
-      this.emit('test:pass', data)
-    }
-
-    const onFail = (data: TestFail): void => {
-      this.emit('test:fail', data)
-    }
-
-    const onStdout = (data: TestStdout): void => {
-      this.emit('test:stdout', data)
-    }
-
-    const onStderr = (data: TestStderr): void => {
-      this.emit('test:stderr', data)
-    }
-
-    testsStream.on('test:pass', onPass)
-    testsStream.on('test:fail', onFail)
-    testsStream.on('test:stdout', onStdout)
-    testsStream.on('test:stderr', onStderr)
-
     try {
-      return await this.collectTestsStream(testsStream, drainReporter, watch)
+      return await this.collectTestsStream(testsStream, drainReporter, watch, true)
     } finally {
       this.emit('end')
-
-      testsStream.off('test:pass', onPass)
-      testsStream.off('test:fail', onFail)
-      testsStream.off('test:stdout', onStdout)
-      testsStream.off('test:stderr', onStderr)
     }
   }
 
@@ -159,11 +134,26 @@ export class Tester extends EventEmitter {
   private async collectTestsStream(
     testsStream: TestsStream,
     reporter?: NodeJS.ReadableStream,
-    watch = false
+    watch = false,
+    emitEvents = false
   ): Promise<Array<TestEvent>> {
     const events: Array<TestEvent> = []
     let reporterOutput = ''
     const keepAlive = setInterval(() => undefined, TEST_STREAM_KEEP_ALIVE_INTERVAL)
+
+    const collectEvent = <T extends { file?: string }>(
+      type: string,
+      data: T,
+      emit = false
+    ): void => {
+      const event = createTestEvent(type, this.toCanonicalEventData(data))
+
+      events.push(event)
+
+      if (emitEvents && emit) {
+        this.emit(event.type, event.data)
+      }
+    }
 
     return new Promise((resolve, reject) => {
       let cleanup = (): void => undefined
@@ -175,23 +165,23 @@ export class Tester extends EventEmitter {
       }
 
       function onPass(data: TestPass): void {
-        events.push(createTestEvent('test:pass', data))
+        collectEvent('test:pass', data, true)
       }
 
       function onFail(data: TestFail): void {
-        events.push(createTestEvent('test:fail', data))
+        collectEvent('test:fail', data, true)
       }
 
       function onStdout(data: TestStdout): void {
-        events.push(createTestEvent('test:stdout', data))
+        collectEvent('test:stdout', data, true)
       }
 
       function onStderr(data: TestStderr): void {
-        events.push(createTestEvent('test:stderr', data))
+        collectEvent('test:stderr', data, true)
       }
 
       function onSummary(data: TestSummary): void {
-        events.push(createTestEvent('test:summary', data))
+        collectEvent('test:summary', data)
 
         if (!watch && isFinalSummary(data)) {
           resolveWithEvents()
@@ -204,7 +194,7 @@ export class Tester extends EventEmitter {
 
       function onReporterEnd(): void {
         if (hasReporterFailures(reporterOutput)) {
-          events.push(createTestEvent('test:fail', {} as TestFail))
+          collectEvent('test:fail', {} as TestFail)
         }
 
         resolveWithEvents()
@@ -248,6 +238,17 @@ export class Tester extends EventEmitter {
       reporter?.once('end', onReporterEnd)
       reporter?.once('error', onError)
     })
+  }
+
+  private toCanonicalEventData<T extends { file?: string }>(data: T): T {
+    if (!data.file || isAbsolute(data.file)) {
+      return data
+    }
+
+    return {
+      ...data,
+      file: resolvePath(this.cwd, data.file),
+    }
   }
 
   async unit(input: CommandInput, options?: TestOptions): Promise<Array<TestEvent>> {

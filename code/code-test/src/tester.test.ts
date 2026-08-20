@@ -1,11 +1,17 @@
 import type { CommandInput }  from '@atls/raijin/commands'
+import type { EventData }     from 'node:test'
+import type { TestEvent }     from 'node:test/reporters'
 
 import assert                 from 'node:assert/strict'
+import EventEmitter           from 'node:events'
+import { once }               from 'node:events'
 import { mkdir }              from 'node:fs/promises'
 import { mkdtemp }            from 'node:fs/promises'
 import { writeFile }          from 'node:fs/promises'
 import { tmpdir }             from 'node:os'
 import { join }               from 'node:path'
+import { resolve }            from 'node:path'
+import { sep }                from 'node:path'
 import { test }               from 'node:test'
 
 import { createCommandInput } from '@atls/raijin/commands'
@@ -21,6 +27,15 @@ type TestFileCollector = {
   ) => Promise<Array<string>>
 }
 
+type TestEventCollector = {
+  collectTestsStream: (
+    testsStream: EventEmitter,
+    reporter?: NodeJS.ReadableStream,
+    watch?: boolean,
+    emitEvents?: boolean
+  ) => Promise<Array<TestEvent>>
+}
+
 const createInput = (cwd: string, targets: Array<string> = []): CommandInput =>
   createCommandInput({ cwd: toPortableCwd(cwd), source: 'explicit', targets })
 
@@ -31,6 +46,56 @@ const createProject = async (): Promise<string> => {
 
   return cwd
 }
+
+test('should resolve relative event files once for emitted and returned events', async () => {
+  const projectCwd = await createProject()
+  const cwd = join(projectCwd, 'packages', 'tools')
+  const tester = await Tester.initialize(cwd, { projectCwd })
+  const testsStream = new EventEmitter()
+  const relativeFile = join('packages', 'tools', 'src', 'sample.test.ts')
+  const emittedEvent = once(tester, 'test:fail')
+  const resultsPromise = (tester as unknown as TestEventCollector).collectTestsStream(
+    testsStream,
+    undefined,
+    false,
+    true
+  )
+
+  testsStream.emit('test:fail', { file: relativeFile } as EventData.TestFail)
+  testsStream.emit('end')
+
+  const [emittedArguments, results] = await Promise.all([emittedEvent, resultsPromise])
+  const result = results.find((event) => event.type === 'test:fail')
+
+  assert.ok(result)
+  assert.equal(result.data.file, resolve(projectCwd, relativeFile))
+  assert.strictEqual(emittedArguments[0], result.data)
+})
+
+test('should preserve absolute event files for emitted and returned events', async () => {
+  const projectCwd = await createProject()
+  const cwd = join(projectCwd, 'packages', 'tools')
+  const tester = await Tester.initialize(cwd, { projectCwd })
+  const testsStream = new EventEmitter()
+  const absoluteFile = `${projectCwd}${sep}packages${sep}tools${sep}src${sep}..${sep}sample.test.ts`
+  const emittedEvent = once(tester, 'test:fail')
+  const resultsPromise = (tester as unknown as TestEventCollector).collectTestsStream(
+    testsStream,
+    undefined,
+    false,
+    true
+  )
+
+  testsStream.emit('test:fail', { file: absoluteFile } as EventData.TestFail)
+  testsStream.emit('end')
+
+  const [emittedArguments, results] = await Promise.all([emittedEvent, resultsPromise])
+  const result = results.find((event) => event.type === 'test:fail')
+
+  assert.ok(result)
+  assert.equal(result.data.file, absoluteFile)
+  assert.strictEqual(emittedArguments[0], result.data)
+})
 
 test('should expand explicit directory targets before collecting unit tests', async () => {
   const cwd = await createProject()
