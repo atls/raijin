@@ -63,15 +63,64 @@ jobs:
           yarn raijin:check
 
   unit:
-    name: Unit / ${{ matrix.os }}
+    name: Unit / ${{ matrix.os }} / ${{ matrix.id }}
     env:
       NODE_VERSION: '24'
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
+        include:
+          - id: full
+            os: ubuntu-latest
+            targets: ''
+          - id: code
+            os: windows-latest
+            targets: code
+          - id: misc
+            os: windows-latest
+            targets: cli packages webpack
+          - id: raijin-infrastructure
+            os: windows-latest
+            targets: yarn/raijin/src/infrastructure
+          - id: raijin-runtime
+            os: windows-latest
+            targets: yarn/raijin/src/runtime
+          - id: raijin-config
+            os: windows-latest
+            targets: yarn/raijin/src/config
+          - id: raijin-command-project
+            os: windows-latest
+            targets: yarn/raijin/src/commands yarn/raijin/src/project
+          - id: raijin-foundation
+            os: windows-latest
+            targets: >-
+              yarn/raijin/src/filesystem
+              yarn/raijin/src/yarn
+              yarn/raijin/src/application
+              yarn/raijin/src/initializer
+          - id: raijin-tests
+            os: windows-latest
+            targets: yarn/raijin/tests
+          - id: yarn-plugins
+            os: windows-latest
+            targets: >-
+              yarn/cli
+              yarn/pack-utils
+              yarn/plugin-check
+              yarn/plugin-checks
+              yarn/plugin-commit
+              yarn/plugin-essentials
+              yarn/plugin-files
+              yarn/plugin-generate
+              yarn/plugin-image
+              yarn/plugin-library
+              yarn/plugin-release
+              yarn/plugin-renderer
+              yarn/plugin-service
+              yarn/plugin-test
+              yarn/plugin-tools
+              yarn/plugin-typescript
+              yarn/plugin-workspaces
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     permissions: read-all
@@ -94,10 +143,7 @@ jobs:
         shell: bash
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            yarn test unit \
-              --test-reporter=tap \
-              yarn/raijin/tests/execution/lifecycle.test.ts \
-              yarn/raijin/src/infrastructure/providers/execa/subprocess/execute.test.ts
+            yarn test unit ${{ matrix.targets }} --test-reporter=tap
           else
             yarn test unit
           fi
