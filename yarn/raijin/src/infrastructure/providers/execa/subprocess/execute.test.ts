@@ -119,9 +119,11 @@ test('should classify an output handler failure independently from process compl
 })
 
 test('should preserve process start failures as a typed result', async () => {
-  const result = await execute('raijin-missing-executable', [], {
+  const cwd = await xfs.mktempPromise()
+  const missingCwd = ppath.join(cwd, 'missing' as Filename)
+  const result = await execute(process.execPath, [], {
     streams: createStreams(),
-    cwd: process.cwd(),
+    cwd: npath.fromPortablePath(missingCwd),
     env: process.env,
     input: 'ignore',
     output: { mode: 'capture' },
