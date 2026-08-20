@@ -174,7 +174,17 @@ test(
   'should execute nested Yarn through the Windows command shim',
   { skip: process.platform !== 'win32' },
   async () => {
-    const invocation = await resolveProjectCommandInvocation(createContext(repoRoot))
+    const invocation = await resolveProjectCommandInvocation(
+      createContext(
+        repoRoot,
+        {},
+        {
+          stderr: process.stderr,
+          stdin: process.stdin,
+          stdout: process.stdout,
+        }
+      )
+    )
     const exitCode = await invocation.yarn.execute(
       ['exec', 'node', '--version'],
       { input: 'ignore' }
