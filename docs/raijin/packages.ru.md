@@ -306,7 +306,7 @@
 - Локация: `code/code-test`
 - Группа: `code`
 - Видимость: `private`
-- Скрипты: `build`, `build:worker`, `postpack`, `prepack`
+- Скрипты: `build`, `build:worker`, `postpack`, `prepack`, `verify:event-paths`
 
 <!-- sync:package-card:atls-code-typescript -->
 
