@@ -1,5 +1,4 @@
 import type { CommandInput }  from '@atls/raijin/commands'
-import type { TestEvent }     from 'node:test/reporters'
 
 import assert                 from 'node:assert/strict'
 import { mkdir }              from 'node:fs/promises'
@@ -12,6 +11,7 @@ import { test }               from 'node:test'
 import { createCommandInput } from '@atls/raijin/commands'
 import { toPortableCwd }      from '@atls/raijin/commands'
 
+import { TEST_EXEC_ARGV_ENV } from './test-exec-argv.js'
 import { Tester }             from './tester.js'
 
 type TestFileCollector = {
@@ -19,16 +19,6 @@ type TestFileCollector = {
     input: CommandInput,
     type: 'integration' | 'unit' | undefined
   ) => Promise<Array<string>>
-}
-
-class RecordingTester extends Tester {
-  readonly files: Array<string> = []
-
-  protected override async run(files: Array<string>): Promise<Array<TestEvent>> {
-    this.files.push(...files)
-
-    return []
-  }
 }
 
 const createInput = (cwd: string, targets: Array<string> = []): CommandInput =>
@@ -191,7 +181,7 @@ test('should keep workspace ignore patterns with root-relative explicit test fil
     join(workspace, 'package.json'),
     `${JSON.stringify({ type: 'module', testIgnorePatterns: ['sources/ignored.test.js'] })}\n`
   )
-  const tester = new RecordingTester(workspace, { projectCwd: cwd })
+  const tester = await Tester.initialize(workspace, { projectCwd: cwd })
   await writeFile(
     ignoredFile,
     [
@@ -217,14 +207,34 @@ test('should keep workspace ignore patterns with root-relative explicit test fil
     ].join('\n')
   )
 
-  await tester.unit(
-    createInput(workspace, [
-      'packages/tools/sources/ignored.test.js',
-      'packages/tools/sources/kept.test.js',
-    ])
-  )
+  const previousExecArgv = process.env[TEST_EXEC_ARGV_ENV]
 
-  assert.deepEqual(tester.files, [keptFile])
+  process.env[TEST_EXEC_ARGV_ENV] = JSON.stringify(['--enable-source-maps'])
+
+  let results: Awaited<ReturnType<typeof tester.unit>>
+
+  try {
+    results = await tester.unit(
+      createInput(workspace, [
+        'packages/tools/sources/ignored.test.js',
+        'packages/tools/sources/kept.test.js',
+      ]),
+      {
+        testReporter: 'tap',
+      }
+    )
+  } finally {
+    if (previousExecArgv === undefined) {
+      Reflect.deleteProperty(process.env, TEST_EXEC_ARGV_ENV)
+    } else {
+      process.env[TEST_EXEC_ARGV_ENV] = previousExecArgv
+    }
+  }
+
+  assert.equal(
+    results.some((result) => result.type === 'test:fail'),
+    false
+  )
   assert.deepEqual(
     await (tester as unknown as TestFileCollector).collectTestFiles(
       createInput(workspace, [
