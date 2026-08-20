@@ -1,7 +1,7 @@
 import type { CommandInput }                    from '@atls/raijin/commands'
 
-import type { FormatSourcesOptions }            from './format.interfaces.js'
-import type { FormatSourcesResult }             from './format.interfaces.js'
+import type { FormatSourcesOptions }            from './interfaces/input.js'
+import type { FormatSourcesResult }             from './interfaces/result.js'
 
 import { readFile }                             from 'node:fs/promises'
 import { stat }                                 from 'node:fs/promises'

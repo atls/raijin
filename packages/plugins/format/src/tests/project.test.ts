@@ -10,7 +10,7 @@ import { test }                 from 'node:test'
 import { createCommandInput }   from '@atls/raijin/commands'
 import { toPortableCwd }        from '@atls/raijin/commands'
 
-import { formatProjectSources } from './format.js'
+import { formatProjectSources } from '../project.js'
 
 const createProject = async (): Promise<string> => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-format-project-'))

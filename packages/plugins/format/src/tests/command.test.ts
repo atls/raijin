@@ -4,7 +4,7 @@ import { test }               from 'node:test'
 import { createCommandInput } from '@atls/raijin/commands'
 import { toPortableCwd }      from '@atls/raijin/commands'
 
-import { runFormatCommand }   from './format.command.jsx'
+import { runFormatCommand }   from '../command.jsx'
 
 test('should map explicit targets and successful results to command completion', async () => {
   const cwd = '/repo'

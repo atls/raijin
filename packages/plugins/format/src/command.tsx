@@ -1,7 +1,7 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import type { FormatCommandOptions }    from './format.command.interfaces.js'
-import type { FormatCommandResult }     from './format.command.interfaces.js'
+import type { FormatCommandOptions }    from './interfaces/input.js'
+import type { FormatCommandResult }     from './interfaces/result.js'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { Option }                       from 'clipanion'
@@ -13,7 +13,7 @@ import { createCommandInput }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
 import { getWorkspacePackageNames }     from '@atls/raijin/project'
 
-import { formatProjectSources }         from './format.js'
+import { formatProjectSources }         from './project.js'
 
 export const runFormatCommand = async (
   options: FormatCommandOptions,
