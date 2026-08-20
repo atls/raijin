@@ -49,7 +49,9 @@ export class GenerateIconsCommand extends BaseCommand {
                 })
 
                 return 0
-              } catch {
+              } catch (error) {
+                await presentIconGenerationError(this.context, yarn.configuration, error)
+
                 return 1
               }
             },
