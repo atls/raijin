@@ -93,4 +93,8 @@ jobs:
       - name: Test unit
         shell: bash
         run: |
-          yarn test unit
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            yarn test unit yarn/plugin-checks/sources/command-invocation-corepack-env.behavior.test.js --test-reporter=tap
+          else
+            yarn test unit
+          fi
