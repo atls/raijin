@@ -17,7 +17,8 @@
     "build": "yarn library build",
     "build:worker": "rollup -c",
     "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "postpack": "rm -rf dist",
+    "verify:event-paths": "yarn test unit --test-reporter=tap src/tester.test.ts"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
