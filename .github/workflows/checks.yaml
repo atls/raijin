@@ -63,16 +63,10 @@ jobs:
           yarn raijin:check
 
   unit:
-    name: Unit / ${{ matrix.os }}
+    name: Unit / ubuntu-latest
     env:
       NODE_VERSION: '24'
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: read-all
 
@@ -94,3 +88,30 @@ jobs:
         shell: bash
         run: |
           yarn test unit
+
+  windows-invocation:
+    name: Windows invocation
+    env:
+      NODE_VERSION: '24'
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions: read-all
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install
+        uses: ./.github/actions/install
+
+      - name: Verify Windows invocation
+        shell: bash
+        run: |
+          yarn workspace @atls/raijin verify:windows-invocation

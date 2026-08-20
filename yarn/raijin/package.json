@@ -60,7 +60,8 @@
     "build:library": "yarn library build",
     "build:project-generation": "node ./scripts/generation/project/build.ts",
     "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "postpack": "rm -rf dist",
+    "verify:windows-invocation": "yarn test unit --test-reporter=tap src/commands/invocation/scope/resolution.test.ts src/infrastructure/providers/execa/subprocess/execute.test.ts"
   },
   "dependencies": {
     "@angular-devkit/core": "19.1.5",
