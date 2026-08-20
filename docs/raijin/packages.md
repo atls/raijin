@@ -27,7 +27,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Group: `yarn`
 - Visibility: `public`
 - Description: Public Raijin initializer and runtime package
-- Scripts: `build`, `build:library`, `build:project-generation`, `postpack`, `prepack`
+- Scripts: `build`, `build:library`, `build:project-generation`, `postpack`, `prepack`, `verify:windows-invocation`
 
 <!-- sync:package-card:atls-raijin-assembly -->
 
