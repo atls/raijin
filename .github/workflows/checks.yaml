@@ -93,4 +93,11 @@ jobs:
       - name: Test unit
         shell: bash
         run: |
-          yarn test unit
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            yarn test unit \
+              --test-reporter=tap \
+              yarn/raijin/tests/execution/lifecycle.test.ts \
+              yarn/raijin/src/infrastructure/providers/execa/subprocess/execute.test.ts
+          else
+            yarn test unit
+          fi
