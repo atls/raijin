@@ -873,7 +873,7 @@ const workspaceGroupIntro = (group, language) => {
     runtime: 'Runtime-модули и инфраструктура исполнения',
     webpack: 'Webpack-интеграции и сборочные адаптеры',
     prettier: 'Форматирование и Prettier-интеграции',
-    cli: 'Компактный список CLI-пакетов и их роль',
+    cli: 'Пакеты представления командного интерфейса',
     schematics: 'Схемы, генераторы и связанные шаблоны',
   }
 
@@ -885,7 +885,7 @@ const workspaceGroupIntro = (group, language) => {
     runtime: 'Runtime modules and execution infrastructure',
     webpack: 'Webpack integrations and build adapters',
     prettier: 'Formatting and Prettier integrations',
-    cli: 'Compact list of CLI packages and their role',
+    cli: 'Command-line interface presentation packages',
     schematics: 'Schematics, generators, and related templates',
   }
 
@@ -990,14 +990,6 @@ const renderPackagesDoc = (workspaces, language) => {
     lines.push('')
     lines.push(workspaceGroupIntro(group, language))
     lines.push('')
-    lines.push(isRu ? 'Короткий список:' : 'Compact list:')
-    lines.push('')
-
-    for (const workspace of groupItems) {
-      lines.push(`- \`${workspace.name}\` — \`${workspace.location}\``)
-    }
-
-    lines.push('')
     lines.push('<details>')
     lines.push(
       isRu
@@ -1007,11 +999,6 @@ const renderPackagesDoc = (workspaces, language) => {
     lines.push('')
 
     const compact = !DETAILED_GROUPS.has(group)
-
-    if (compact) {
-      lines.push(isRu ? '_Компактные карточки для этой группы_' : '_Compact cards for this group_')
-      lines.push('')
-    }
 
     for (const workspace of groupItems) {
       lines.push(...renderWorkspaceCard(workspace, language, compact))
