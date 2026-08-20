@@ -8,7 +8,8 @@
     "webpack/**/*",
     "config/**/*",
     "yarn/**/*",
-    "cli/**/*"
+    "cli/**/*",
+    "packages/**/*"
   ],
   "scripts": {
     "cli:build": "yarn workspace @atls/raijin-assembly build",

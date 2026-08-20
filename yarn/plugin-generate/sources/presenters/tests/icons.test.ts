@@ -110,3 +110,33 @@ test('should preserve result exit codes and report provider exceptions as comman
     1
   )
 })
+
+test('should report a formatter provider error before the format failure summary', async () => {
+  const configuration = await createConfiguration()
+  const stdout = new PassThrough()
+  const output: Array<Buffer> = []
+
+  stdout.on('data', (data: Buffer) => output.push(data))
+
+  assert.equal(
+    await presentIconGenerationError({ stdout }, configuration, new Error('Formatter unavailable')),
+    1
+  )
+  assert.equal(
+    await presentIconGeneration({ stdout }, configuration, {
+      exitCode: 1,
+      files: ['src/Alert.icon.tsx', 'src/index.ts'],
+      reason: 'format-failed',
+      status: 'failed',
+    }),
+    1
+  )
+
+  const diagnostic = Buffer.concat(output).toString()
+  const providerErrorPosition = diagnostic.indexOf('Formatter unavailable')
+  const formatSummaryPosition = diagnostic.indexOf('Format failed with exit code 1')
+
+  assert.notEqual(providerErrorPosition, -1)
+  assert.notEqual(formatSummaryPosition, -1)
+  assert.ok(providerErrorPosition < formatSummaryPosition)
+})

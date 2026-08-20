@@ -37,7 +37,8 @@
     "runtime/**/*",
     "config/**/*",
     "yarn/**/*",
-    "cli/**/*"
+    "cli/**/*",
+    "packages/**/*"
   ],
   "types": ["@atls/raijin/types"]
 }

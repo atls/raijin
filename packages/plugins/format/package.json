@@ -5,9 +5,10 @@
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
-    ".": "./sources/index.ts",
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
+  "main": "./src/index.ts",
   "files": [
     "dist"
   ],
@@ -18,12 +19,11 @@
   },
   "dependencies": {
     "@atls/cli-ui-error-info-component": "workspace:*",
-    "@atls/cli-ui-format-progress-component": "workspace:*",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
-    "@atls/code-format": "workspace:*",
     "@atls/raijin": "workspace:*",
     "clipanion": "4.0.0-rc.2",
-    "ink": "3.2.0",
+    "ignore": "5.3.2",
+    "prettier": "3.5.3",
     "react": "18.3.1"
   },
   "devDependencies": {

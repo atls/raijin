@@ -98,6 +98,7 @@ const slugify = (value) =>
 
 const WORKSPACE_GROUP_ORDER = [
   'yarn',
+  'plugins',
   'code',
   'config',
   'runtime',
@@ -108,6 +109,13 @@ const WORKSPACE_GROUP_ORDER = [
 ]
 
 const DETAILED_GROUPS = new Set(WORKSPACE_GROUP_ORDER.filter((group) => group !== 'cli'))
+
+/** @param {string} location */
+const workspaceGroupFromLocation = (location) => {
+  const [root, artifactRole] = location.split('/')
+
+  return root === 'packages' && artifactRole ? artifactRole : root
+}
 
 const COVER_IMAGE_URL =
   'https://github.com/user-attachments/assets/ac98b900-ee3c-4ea8-a081-e83a1f5f3282'
@@ -218,7 +226,7 @@ const loadWorkspacePackages = () => {
   const packages = workspacePackageJsonFiles.map((relativePackageJsonPath) => {
     const packageJson = readJson(relativePackageJsonPath)
     const location = toPosix(path.dirname(relativePackageJsonPath))
-    const group = location.split('/')[0]
+    const group = workspaceGroupFromLocation(location)
 
     return {
       name: packageJson.name,
@@ -868,24 +876,26 @@ const workspaceGroupIntro = (group, language) => {
   /** @type {Record<string, string>} */
   const ru = {
     yarn: 'Пакеты кастомного Yarn CLI, плагинов и bundle-инфраструктуры',
+    plugins: 'Приватные пакеты плагинов и их точки входа',
     code: 'Базовые code-библиотеки для сборки, тестов и утилит',
     config: 'Пакеты конфигурации и shared presets',
     runtime: 'Runtime-модули и инфраструктура исполнения',
     webpack: 'Webpack-интеграции и сборочные адаптеры',
     prettier: 'Форматирование и Prettier-интеграции',
-    cli: 'Компактный список CLI-пакетов и их роль',
+    cli: 'Пакеты представления командного интерфейса',
     schematics: 'Схемы, генераторы и связанные шаблоны',
   }
 
   /** @type {Record<string, string>} */
   const en = {
     yarn: 'Custom Yarn CLI, plugin, and bundle infrastructure packages',
+    plugins: 'Private plugin packages and their entrypoints',
     code: 'Core code libraries for build, checks, and utilities',
     config: 'Configuration packages and shared presets',
     runtime: 'Runtime modules and execution infrastructure',
     webpack: 'Webpack integrations and build adapters',
     prettier: 'Formatting and Prettier integrations',
-    cli: 'Compact list of CLI packages and their role',
+    cli: 'Command-line interface presentation packages',
     schematics: 'Schematics, generators, and related templates',
   }
 
@@ -990,14 +1000,6 @@ const renderPackagesDoc = (workspaces, language) => {
     lines.push('')
     lines.push(workspaceGroupIntro(group, language))
     lines.push('')
-    lines.push(isRu ? 'Короткий список:' : 'Compact list:')
-    lines.push('')
-
-    for (const workspace of groupItems) {
-      lines.push(`- \`${workspace.name}\` — \`${workspace.location}\``)
-    }
-
-    lines.push('')
     lines.push('<details>')
     lines.push(
       isRu
@@ -1007,11 +1009,6 @@ const renderPackagesDoc = (workspaces, language) => {
     lines.push('')
 
     const compact = !DETAILED_GROUPS.has(group)
-
-    if (compact) {
-      lines.push(isRu ? '_Компактные карточки для этой группы_' : '_Compact cards for this group_')
-      lines.push('')
-    }
 
     for (const workspace of groupItems) {
       lines.push(...renderWorkspaceCard(workspace, language, compact))

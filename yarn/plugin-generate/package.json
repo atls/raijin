@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
+    "@atls/yarn-plugin-format": "workspace:*",
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {

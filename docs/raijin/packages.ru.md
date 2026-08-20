@@ -16,31 +16,6 @@
 
 Пакеты кастомного Yarn CLI, плагинов и bundle-инфраструктуры
 
-Короткий список:
-
-- `@atls/raijin` — `yarn/raijin`
-- `@atls/raijin-assembly` — `yarn/cli`
-- `@atls/yarn-pack-utils` — `yarn/pack-utils`
-- `@atls/yarn-plugin-badges` — `yarn/plugin-badges`
-- `@atls/yarn-plugin-check` — `yarn/plugin-check`
-- `@atls/yarn-plugin-checks` — `yarn/plugin-checks`
-- `@atls/yarn-plugin-commit` — `yarn/plugin-commit`
-- `@atls/yarn-plugin-essentials` — `yarn/plugin-essentials`
-- `@atls/yarn-plugin-export` — `yarn/plugin-export`
-- `@atls/yarn-plugin-files` — `yarn/plugin-files`
-- `@atls/yarn-plugin-format` — `yarn/plugin-format`
-- `@atls/yarn-plugin-generate` — `yarn/plugin-generate`
-- `@atls/yarn-plugin-image` — `yarn/plugin-image`
-- `@atls/yarn-plugin-library` — `yarn/plugin-library`
-- `@atls/yarn-plugin-lint` — `yarn/plugin-lint`
-- `@atls/yarn-plugin-release` — `yarn/plugin-release`
-- `@atls/yarn-plugin-renderer` — `yarn/plugin-renderer`
-- `@atls/yarn-plugin-service` — `yarn/plugin-service`
-- `@atls/yarn-plugin-test` — `yarn/plugin-test`
-- `@atls/yarn-plugin-tools` — `yarn/plugin-tools`
-- `@atls/yarn-plugin-typescript` — `yarn/plugin-typescript`
-- `@atls/yarn-plugin-workspaces` — `yarn/plugin-workspaces`
-
 <details>
 <summary>Подробности группы `yarn`</summary>
 
@@ -131,15 +106,6 @@
 #### `@atls/yarn-plugin-files`
 
 - Локация: `yarn/plugin-files`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-format -->
-
-#### `@atls/yarn-plugin-format`
-
-- Локация: `yarn/plugin-format`
 - Группа: `yarn`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
@@ -245,21 +211,27 @@
 
 </details>
 
+## Group `plugins`
+
+Приватные пакеты плагинов и их точки входа
+
+<details>
+<summary>Подробности группы `plugins`</summary>
+
+<!-- sync:package-card:atls-yarn-plugin-format -->
+
+#### `@atls/yarn-plugin-format`
+
+- Локация: `packages/plugins/format`
+- Группа: `plugins`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
+</details>
+
 ## Group `code`
 
 Базовые code-библиотеки для сборки, тестов и утилит
-
-Короткий список:
-
-- `@atls/code-commit` — `code/code-commit`
-- `@atls/code-configuration` — `code/code-configuration`
-- `@atls/code-format` — `code/code-format`
-- `@atls/code-github` — `code/code-github`
-- `@atls/code-lint` — `code/code-lint`
-- `@atls/code-pack` — `code/code-pack`
-- `@atls/code-service` — `code/code-service`
-- `@atls/code-test` — `code/code-test`
-- `@atls/code-typescript` — `code/code-typescript`
 
 <details>
 <summary>Подробности группы `code`</summary>
@@ -351,10 +323,6 @@
 
 Webpack-интеграции и сборочные адаптеры
 
-Короткий список:
-
-- `@atls/webpack-start-server-plugin` — `webpack/webpack-start-server-plugin`
-
 <details>
 <summary>Подробности группы `webpack`</summary>
 
@@ -371,35 +339,10 @@ Webpack-интеграции и сборочные адаптеры
 
 ## Group `cli`
 
-Компактный список CLI-пакетов и их роль
-
-Короткий список:
-
-- `@atls/cli-ui-error-info-component` — `cli/cli-ui-error-info`
-- `@atls/cli-ui-file-link-component` — `cli/cli-ui-file-link`
-- `@atls/cli-ui-file-path-component` — `cli/cli-ui-file-path`
-- `@atls/cli-ui-format-progress-component` — `cli/cli-ui-format-progress`
-- `@atls/cli-ui-git-commit-component` — `cli/cli-ui-git-commit`
-- `@atls/cli-ui-line-component` — `cli/cli-ui-line`
-- `@atls/cli-ui-lint-progress-component` — `cli/cli-ui-lint-progress`
-- `@atls/cli-ui-lint-result-component` — `cli/cli-ui-lint-result`
-- `@atls/cli-ui-log-record-component` — `cli/cli-ui-log-record`
-- `@atls/cli-ui-pretty-logs-component` — `cli/cli-ui-pretty-logs`
-- `@atls/cli-ui-raw-output-component` — `cli/cli-ui-raw-output`
-- `@atls/cli-ui-renderer-static-component` — `cli/cli-ui-render-static`
-- `@atls/cli-ui-schematics-component` — `cli/cli-ui-schematics-component`
-- `@atls/cli-ui-service-progress-component` — `cli/cli-ui-service-progress`
-- `@atls/cli-ui-source-preview-component` — `cli/cli-ui-source-preview`
-- `@atls/cli-ui-stack-trace-component` — `cli/cli-ui-stack-trace`
-- `@atls/cli-ui-test-failure-component` — `cli/cli-ui-test-failure`
-- `@atls/cli-ui-test-progress-component` — `cli/cli-ui-test-progress`
-- `@atls/cli-ui-typescript-diagnostic-component` — `cli/cli-ui-typescript-diagnostic`
-- `@atls/cli-ui-typescript-progress-component` — `cli/cli-ui-types-check-progress`
+Пакеты представления командного интерфейса
 
 <details>
 <summary>Подробности группы `cli`</summary>
-
-_Компактные карточки для этой группы_
 
 <!-- sync:package-card:atls-cli-ui-error-info-component -->
 
