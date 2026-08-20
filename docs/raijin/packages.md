@@ -211,6 +211,24 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 </details>
 
+## Group `plugins`
+
+Private plugin packages and their entrypoints
+
+<details>
+<summary>Group details: `plugins`</summary>
+
+<!-- sync:package-card:atls-yarn-plugin-format -->
+
+#### `@atls/yarn-plugin-format`
+
+- Location: `packages/plugins/format`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+</details>
+
 ## Group `code`
 
 Core code libraries for build, checks, and utilities
@@ -465,21 +483,5 @@ Command-line interface presentation packages
 
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-types-check-progress`
-
-</details>
-
-## Group `packages`
-
-Other workspace packages
-
-<details>
-<summary>Group details: `packages`</summary>
-
-<!-- sync:package-card:atls-yarn-plugin-format -->
-
-#### `@atls/yarn-plugin-format`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `packages/plugins/format`
 
 </details>

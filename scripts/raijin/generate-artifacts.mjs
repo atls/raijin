@@ -98,6 +98,7 @@ const slugify = (value) =>
 
 const WORKSPACE_GROUP_ORDER = [
   'yarn',
+  'plugins',
   'code',
   'config',
   'runtime',
@@ -108,6 +109,13 @@ const WORKSPACE_GROUP_ORDER = [
 ]
 
 const DETAILED_GROUPS = new Set(WORKSPACE_GROUP_ORDER.filter((group) => group !== 'cli'))
+
+/** @param {string} location */
+const workspaceGroupFromLocation = (location) => {
+  const [root, artifactRole] = location.split('/')
+
+  return root === 'packages' && artifactRole ? artifactRole : root
+}
 
 const COVER_IMAGE_URL =
   'https://github.com/user-attachments/assets/ac98b900-ee3c-4ea8-a081-e83a1f5f3282'
@@ -218,7 +226,7 @@ const loadWorkspacePackages = () => {
   const packages = workspacePackageJsonFiles.map((relativePackageJsonPath) => {
     const packageJson = readJson(relativePackageJsonPath)
     const location = toPosix(path.dirname(relativePackageJsonPath))
-    const group = location.split('/')[0]
+    const group = workspaceGroupFromLocation(location)
 
     return {
       name: packageJson.name,
@@ -868,6 +876,7 @@ const workspaceGroupIntro = (group, language) => {
   /** @type {Record<string, string>} */
   const ru = {
     yarn: 'Пакеты кастомного Yarn CLI, плагинов и bundle-инфраструктуры',
+    plugins: 'Приватные пакеты плагинов и их точки входа',
     code: 'Базовые code-библиотеки для сборки, тестов и утилит',
     config: 'Пакеты конфигурации и shared presets',
     runtime: 'Runtime-модули и инфраструктура исполнения',
@@ -880,6 +889,7 @@ const workspaceGroupIntro = (group, language) => {
   /** @type {Record<string, string>} */
   const en = {
     yarn: 'Custom Yarn CLI, plugin, and bundle infrastructure packages',
+    plugins: 'Private plugin packages and their entrypoints',
     code: 'Core code libraries for build, checks, and utilities',
     config: 'Configuration packages and shared presets',
     runtime: 'Runtime modules and execution infrastructure',

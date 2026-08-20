@@ -211,6 +211,24 @@
 
 </details>
 
+## Group `plugins`
+
+Приватные пакеты плагинов и их точки входа
+
+<details>
+<summary>Подробности группы `plugins`</summary>
+
+<!-- sync:package-card:atls-yarn-plugin-format -->
+
+#### `@atls/yarn-plugin-format`
+
+- Локация: `packages/plugins/format`
+- Группа: `plugins`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
+</details>
+
 ## Group `code`
 
 Базовые code-библиотеки для сборки, тестов и утилит
@@ -465,21 +483,5 @@ Webpack-интеграции и сборочные адаптеры
 
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-types-check-progress`
-
-</details>
-
-## Group `packages`
-
-Прочая группа workspace-пакетов
-
-<details>
-<summary>Подробности группы `packages`</summary>
-
-<!-- sync:package-card:atls-yarn-plugin-format -->
-
-#### `@atls/yarn-plugin-format`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `packages/plugins/format`
 
 </details>
