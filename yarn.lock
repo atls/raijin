@@ -337,7 +337,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-lint-progress-component@workspace:*, @atls/cli-ui-lint-progress-component@workspace:cli/cli-ui-lint-progress":
+"@atls/cli-ui-lint-progress-component@workspace:cli/cli-ui-lint-progress":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-lint-progress-component@workspace:cli/cli-ui-lint-progress"
   dependencies:
@@ -352,7 +352,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-lint-result-component@workspace:*, @atls/cli-ui-lint-result-component@workspace:cli/cli-ui-lint-result":
+"@atls/cli-ui-lint-result-component@workspace:cli/cli-ui-lint-result":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-lint-result-component@workspace:cli/cli-ui-lint-result"
   dependencies:
@@ -626,7 +626,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-lint@workspace:*, @atls/code-lint@workspace:code/code-lint":
+"@atls/code-lint@workspace:code/code-lint":
   version: 0.0.0-use.local
   resolution: "@atls/code-lint@workspace:code/code-lint"
   dependencies:
@@ -869,27 +869,23 @@ __metadata:
   dependencies:
     "@actions/core": "npm:1.10.1"
     "@actions/github": "npm:6.0.0"
-    "@atls/cli-ui-lint-result-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
-    "@atls/code-lint": "workspace:*"
     "@atls/code-test": "workspace:*"
     "@atls/code-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
+    "@atls/yarn-plugin-lint": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
     "@atls/yarn-plugin-workspaces": "workspace:*"
     "@babel/code-frame": "npm:7.24.7"
     "@octokit/types": "npm:13.5.0"
     "@types/babel__code-frame": "npm:7.0.6"
     "@types/node": "npm:24.12.2"
-    "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
     clipanion: "npm:4.0.0-rc.2"
-    react: "npm:18.3.1"
     strip-ansi: "npm:7.1.0"
     typescript: "npm:5.9.3"
   peerDependencies:
@@ -1008,6 +1004,7 @@ __metadata:
   dependencies:
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-format": "workspace:*"
+    "@atls/yarn-plugin-lint": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
@@ -1067,24 +1064,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-lint@workspace:*, @atls/yarn-plugin-lint@workspace:yarn/plugin-lint":
+"@atls/yarn-plugin-lint@workspace:*, @atls/yarn-plugin-lint@workspace:packages/plugins/lint":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-lint@workspace:yarn/plugin-lint"
+  resolution: "@atls/yarn-plugin-lint@workspace:packages/plugins/lint"
   dependencies:
-    "@atls/cli-ui-error-info-component": "workspace:*"
-    "@atls/cli-ui-lint-progress-component": "workspace:*"
-    "@atls/cli-ui-lint-result-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
-    "@atls/code-lint": "workspace:*"
     "@atls/raijin": "workspace:*"
-    "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
-    "@yarnpkg/fslib": "npm:3.1.5"
     clipanion: "npm:4.0.0-rc.2"
-    ink: "npm:3.2.0"
-    react: "npm:18.3.1"
     typescript: "npm:5.9.3"
   peerDependencies:
     "@yarnpkg/cli": "*"

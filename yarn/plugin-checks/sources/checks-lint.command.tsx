@@ -1,33 +1,70 @@
 /* eslint-disable n/no-sync */
 
-import type { CommandInput }             from '@atls/raijin/commands'
-import type { ProjectProcessInvocation } from '@atls/raijin/commands'
-import type { ProjectCommandContext }    from '@atls/raijin/commands'
-import type { LintMessage }              from '@atls/raijin/eslint'
-import type { LintResult as Result }     from '@atls/raijin/eslint'
-import type { Project }                  from '@yarnpkg/core'
+import type { CommandInput }               from '@atls/raijin/commands'
+import type { ProjectProcessInvocation }   from '@atls/raijin/commands'
+import type { ProjectCommandContext }      from '@atls/raijin/commands'
+import type { LintDiagnostic }             from '@atls/yarn-plugin-lint'
+import type { LintFileResult }             from '@atls/yarn-plugin-lint'
+import type { LintProjectCompletedResult } from '@atls/yarn-plugin-lint'
+import type { Project }                    from '@yarnpkg/core'
 
-import type { Annotation }               from './github.checks.js'
+import type { Annotation }                 from './github.checks.js'
 
-import { readFileSync }                  from 'node:fs'
+import { readFileSync }                    from 'node:fs'
 
-import { BaseCommand }                   from '@yarnpkg/cli'
-import { StreamReport }                  from '@yarnpkg/core'
-import { MessageName }                   from '@yarnpkg/core'
-import { codeFrameColumns }              from '@babel/code-frame'
-import { xfs }                           from '@yarnpkg/fslib'
-import { Option }                        from 'clipanion'
-import React                             from 'react'
+import { BaseCommand }                     from '@yarnpkg/cli'
+import { StreamReport }                    from '@yarnpkg/core'
+import { MessageName }                     from '@yarnpkg/core'
+import { codeFrameColumns }                from '@babel/code-frame'
+import { xfs }                             from '@yarnpkg/fslib'
+import { Option }                          from 'clipanion'
 
-import { LintResult }                    from '@atls/cli-ui-lint-result-component'
-import { Linter }                        from '@atls/code-lint'
-import { renderStatic }                  from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }            from '@atls/raijin/commands'
-import { toNativeCwd }                   from '@atls/raijin/commands'
-import { getChangedFiles }               from '@atls/yarn-plugin-files'
+import { createCommandInput }              from '@atls/raijin/commands'
+import { toNativeCwd }                     from '@atls/raijin/commands'
+import { toNativePath }                    from '@atls/raijin/filesystem'
+import { getChangedFiles }                 from '@atls/yarn-plugin-files'
+import { lintProjectSources }              from '@atls/yarn-plugin-lint'
 
-import { GitHubChecks }                  from './github.checks.js'
-import { AnnotationLevel }               from './github.checks.js'
+import { GitHubChecks }                    from './github.checks.js'
+import { AnnotationLevel }                 from './github.checks.js'
+
+const getAnnotationLevel = (severity: LintDiagnostic['severity']): AnnotationLevel =>
+  severity === 1 ? AnnotationLevel.Warning : AnnotationLevel.Failure
+
+export const formatLintAnnotations = (
+  results: ReadonlyArray<LintFileResult>,
+  cwd?: string
+): Array<Annotation> =>
+  results
+    .filter(({ diagnostics }) => diagnostics.length > 0)
+    .flatMap((result) =>
+      result.diagnostics.map((diagnostic) => {
+        const line = diagnostic.line || 1
+        const column = diagnostic.column || 1
+
+        return {
+          path: cwd ? result.filePath.substring(cwd.length + 1) : result.filePath,
+          start_line: line,
+          end_line: line,
+          annotation_level: getAnnotationLevel(diagnostic.severity),
+          raw_details: codeFrameColumns(
+            result.source ?? readFileSync(result.filePath).toString(),
+            { start: { line, column } },
+            { highlightCode: false }
+          ),
+          title: `(${diagnostic.ruleId || 'unknown'}): ${diagnostic.message}`,
+          message: diagnostic.message,
+        }
+      }))
+
+export const reportLintOutput = (
+  report: Pick<StreamReport, 'reportInfo'>,
+  result: LintProjectCompletedResult
+): void => {
+  if (result.output.length > 0) {
+    report.reportInfo(MessageName.UNNAMED, result.output)
+  }
+}
 
 class ChecksLintCommand extends BaseCommand {
   static override paths = [['checks', 'lint']]
@@ -58,27 +95,36 @@ class ChecksLintCommand extends BaseCommand {
         await report.startTimerPromise('Lint', async () => {
           try {
             const projectCwd = toNativeCwd(projectModel.cwd)
-            const linter = await Linter.initialize(projectCwd, projectCwd)
             const lintTargets = await this.getLintTargets(project, invocation.process)
-            let results: Array<Result> = []
 
-            if (lintTargets === null) {
-              results = await linter.lint()
-            } else if (lintTargets.targets.length > 0) {
-              results = await linter.lint(lintTargets)
-            }
-
-            results
-              .filter((result) => result.messages.length > 0)
-              .forEach((result) => {
-                const output = renderStatic(<LintResult {...result} />)
-
-                output.split('\n').forEach((line) => {
-                  report.reportInfo(MessageName.UNNAMED, line)
-                })
+            if (lintTargets !== null && lintTargets.targets.length === 0) {
+              await checks.complete(checkId, {
+                title: 'Successful',
+                summary: 'All checks passed',
+                annotations: [],
               })
 
-            const annotations = this.formatResults(results, projectCwd)
+              return
+            }
+
+            const result = await lintProjectSources({
+              rootCwd: projectCwd,
+              cwd: projectCwd,
+              targets: lintTargets?.targets.map(({ path }) => toNativePath(path)),
+            })
+
+            if (result.status === 'provider-failed') {
+              const summary = `${result.failure.name}: ${result.failure.message}`
+
+              await checks.failure({ title: 'Lint run failed', summary }, checkId)
+              report.reportError(MessageName.UNNAMED, summary)
+
+              return
+            }
+
+            reportLintOutput(report, result)
+
+            const annotations = formatLintAnnotations(result.results, projectCwd)
 
             const warnings: number = annotations.filter(
               (annotation) => annotation.annotation_level === AnnotationLevel.Warning
@@ -98,13 +144,16 @@ class ChecksLintCommand extends BaseCommand {
               annotations,
             })
           } catch (error) {
+            const summary = error instanceof Error ? error.message : String(error)
+
             await checks.failure(
               {
                 title: 'Lint run failed',
-                summary: error instanceof Error ? error.message : (error as string),
+                summary,
               },
               checkId
             )
+            report.reportError(MessageName.UNNAMED, summary)
           }
         })
       }
@@ -136,40 +185,6 @@ class ChecksLintCommand extends BaseCommand {
       ...input,
       targets: input.targets.filter((_, index) => existsMap[index]),
     }
-  }
-
-  private getAnnotationLevel(severity: LintMessage['severity']): AnnotationLevel {
-    if (severity === 1) {
-      return AnnotationLevel.Warning
-    }
-
-    return AnnotationLevel.Failure
-  }
-
-  private formatResults(results: Array<Result>, cwd?: string): Array<Annotation> {
-    return results
-      .filter((result) => result.messages.length > 0)
-      .map((result) =>
-        result.messages.map((message) => {
-          const line = (message.line || 0) + 1
-
-          return {
-            path: cwd ? result.filePath.substring(cwd.length + 1) : result.filePath,
-            start_line: line,
-            end_line: line,
-            annotation_level: this.getAnnotationLevel(message.severity),
-            raw_details: codeFrameColumns(
-              readFileSync(result.filePath).toString(),
-              {
-                start: { line: message.line || 0, column: message.column || 0 },
-              },
-              { highlightCode: false }
-            ),
-            title: `(${message.ruleId || 'unknown'}): ${message.message}`,
-            message: message.message,
-          }
-        }))
-      .flat()
   }
 }
 

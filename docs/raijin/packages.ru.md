@@ -137,15 +137,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-lint -->
-
-#### `@atls/yarn-plugin-lint`
-
-- Локация: `yarn/plugin-lint`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-release -->
 
 #### `@atls/yarn-plugin-release`
@@ -223,6 +214,15 @@
 #### `@atls/yarn-plugin-format`
 
 - Локация: `packages/plugins/format`
+- Группа: `plugins`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-lint -->
+
+#### `@atls/yarn-plugin-lint`
+
+- Локация: `packages/plugins/lint`
 - Группа: `plugins`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`

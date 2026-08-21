@@ -798,6 +798,14 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/yarn-plugin-lint",
+      "location": "packages/plugins/lint",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/webpack-start-server-plugin",
       "location": "webpack/webpack-start-server-plugin",
       "group": "webpack",
@@ -913,14 +921,6 @@
     {
       "name": "@atls/yarn-plugin-library",
       "location": "yarn/plugin-library",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-lint",
-      "location": "yarn/plugin-lint",
       "group": "yarn",
       "private": true,
       "description": "",
@@ -1048,5 +1048,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-20T16:10:17.563Z"
+  "lastGenerated": "2026-08-21T20:09:22.250Z"
 }
