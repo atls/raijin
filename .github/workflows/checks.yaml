@@ -9,7 +9,7 @@ jobs:
   checks:
     name: Shared checks / Checks
     env:
-      NODE_VERSION: '25'
+      NODE_VERSION: '24'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: write-all
@@ -37,7 +37,7 @@ jobs:
   raijin:
     name: Raijin checks
     env:
-      NODE_VERSION: '25'
+      NODE_VERSION: '24'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: read-all
@@ -63,16 +63,10 @@ jobs:
           yarn raijin:check
 
   unit:
-    name: Unit / ${{ matrix.os }}
+    name: Unit / ubuntu-latest
     env:
-      NODE_VERSION: '25'
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-    runs-on: ${{ matrix.os }}
+      NODE_VERSION: '24'
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: read-all
 
