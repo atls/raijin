@@ -306,7 +306,7 @@ Core code libraries for build, checks, and utilities
 - Location: `code/code-test`
 - Group: `code`
 - Visibility: `private`
-- Scripts: `build`, `build:worker`, `postpack`, `prepack`, `verify:event-paths`
+- Scripts: `build`, `build:worker`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-typescript -->
 

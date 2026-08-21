@@ -779,7 +779,7 @@
       "group": "code",
       "private": true,
       "description": "",
-      "scripts": ["build", "build:worker", "postpack", "prepack", "verify:event-paths"]
+      "scripts": ["build", "build:worker", "postpack", "prepack"]
     },
     {
       "name": "@atls/code-typescript",
@@ -1048,5 +1048,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-20T23:34:27.589Z"
+  "lastGenerated": "2026-08-20T16:10:17.563Z"
 }
