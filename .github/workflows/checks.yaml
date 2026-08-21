@@ -89,8 +89,8 @@ jobs:
         run: |
           yarn test unit
 
-  windows-invocation:
-    name: Windows invocation
+  windows:
+    name: Windows
     env:
       NODE_VERSION: '24'
     runs-on: windows-latest
@@ -111,10 +111,10 @@ jobs:
       - name: Install
         uses: ./.github/actions/install
 
-      - name: Verify Windows invocation
+      - name: Verify Windows
         shell: bash
         run: |
-          yarn workspace @atls/raijin verify:windows-invocation
+          yarn workspace @atls/raijin test unit --test-reporter=tap src/commands/invocation/scope/resolution.test.ts src/infrastructure/providers/execa/subprocess/execute.test.ts
 
   windows-test-events:
     name: Windows test events

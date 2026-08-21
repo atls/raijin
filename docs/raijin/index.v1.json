@@ -811,14 +811,7 @@
       "group": "yarn",
       "private": false,
       "description": "Public Raijin initializer and runtime package",
-      "scripts": [
-        "build",
-        "build:library",
-        "build:project-generation",
-        "postpack",
-        "prepack",
-        "verify:windows-invocation"
-      ]
+      "scripts": ["build", "build:library", "build:project-generation", "postpack", "prepack"]
     },
     {
       "name": "@atls/raijin-assembly",
