@@ -175,18 +175,15 @@ test(
   { skip: process.platform !== 'win32' },
   async () => {
     const invocation = await resolveProjectCommandInvocation(
-      createContext(
-        repoRoot,
-        {},
-        {
-          stderr: process.stderr,
-          stdin: process.stdin,
-          stdout: process.stdout,
-        }
-      )
+      createContext(repoRoot, { RAIJIN_INVOCATION_CONTEXT_TEST: 'windows' })
     )
     const exitCode = await invocation.yarn.execute(
-      ['exec', 'node', '--version'],
+      [
+        'exec',
+        'node',
+        '-e',
+        "process.exit(process.env.RAIJIN_INVOCATION_CONTEXT_TEST === 'windows' ? 0 : 1)",
+      ],
       { input: 'ignore' }
     )
 
