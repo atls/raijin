@@ -40,7 +40,7 @@ test('should let ESLint own literal expansion, ignore, deduplication, fixes, and
   )
   await writeFile(
     join(cwd, 'eslint.config.mjs'),
-    "export default [{ files: ['**/*.{cjs,mjs,ts}'], rules: { semi: ['error', 'always'], 'no-console': 'error' } }]\n"
+    "export default [{ files: ['**/*.{cjs,mjs,ts}'], languageOptions: { parserOptions: { project: './tsconfig.json', projectService: false } }, rules: { semi: ['error', 'always'], 'no-console': 'error' } }]\n"
   )
   await writeFile(sourceFile, "console.log('value')\n")
   await writeFile(ignoredFile, "console.log('ignored')\n")

@@ -82,7 +82,7 @@ test('should write ESLint diagnostics and return their exit code', async (t) => 
   )
   await writeFile(
     join(cwd, 'eslint.config.mjs'),
-    "export default [{ files: ['**/*.ts'], rules: { semi: ['error', 'always'], 'no-console': 'error' } }]\n"
+    "export default [{ files: ['**/*.ts'], languageOptions: { parserOptions: { project: './tsconfig.json', projectService: false } }, rules: { semi: ['error', 'always'], 'no-console': 'error' } }]\n"
   )
   await writeFile(sourceFile, "console.log('value')\n")
 
