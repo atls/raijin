@@ -116,23 +116,36 @@ test('should let ESLint own literal expansion, ignore, deduplication, fixes, and
   )
 })
 
-test('should lint the project directory when targets are omitted', async (t) => {
+test('should lint project sources and ignore generated output when targets are omitted', async (t) => {
   const cwd = await createProject('lint-targetless')
-  const sourceFile = join(cwd, 'index.ts')
+  const sourceDirectory = join(cwd, 'src')
+  const sourceFile = join(sourceDirectory, 'index.ts')
+  const generatedDirectories = ['.next', 'build', 'bundles', 'coverage', 'dist']
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
+  await mkdir(sourceDirectory, { recursive: true })
   await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
-  await writeFile(join(cwd, 'tsconfig.json'), '{"files":["index.ts"]}\n')
+  await writeFile(join(cwd, 'tsconfig.json'), '{"include":["src/**/*.ts","packages/**/*.ts"]}\n')
   await writeFile(sourceFile, 'export const value = 1\n')
+  await Promise.all(
+    generatedDirectories.map(async (directory, index) => {
+      const generatedDirectory = join(cwd, 'packages/example', directory)
+
+      await mkdir(generatedDirectory, { recursive: true })
+      await writeFile(
+        join(generatedDirectory, 'generated.ts'),
+        `export const generated = ${index}\n`
+      )
+    })
+  )
 
   const result = await lintProjectSources({ rootCwd: cwd, cwd })
 
   assert.equal(result.status, 'completed', JSON.stringify(result, undefined, 2))
-
-  assert.equal(
-    result.results.some(({ filePath }) => filePath === sourceFile),
-    true
+  assert.deepEqual(
+    result.results.map(({ filePath }) => filePath),
+    [sourceFile]
   )
 })
 
