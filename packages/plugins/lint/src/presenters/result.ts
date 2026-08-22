@@ -1,6 +1,6 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import type { LintProjectResult }       from './interfaces/result.js'
+import type { LintProjectResult }       from '../interfaces/result.js'
 
 export const writeLintResult = (
   context: Pick<WorkspaceCommandContext, 'stderr' | 'stdout'>,

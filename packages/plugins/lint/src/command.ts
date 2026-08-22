@@ -7,9 +7,9 @@ import { createCommandInput }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
 import { toNativePath }                 from '@atls/raijin/filesystem'
 
-import { writeLintException }           from './exception-output.js'
+import { writeLintException }           from './presenters/exception.js'
+import { writeLintResult }              from './presenters/result.js'
 import { lintProjectSources }           from './project.js'
-import { writeLintResult }              from './result-output.js'
 
 export class LintCommand extends BaseCommand {
   static override paths = [['lint']]
