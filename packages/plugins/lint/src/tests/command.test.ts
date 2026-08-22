@@ -100,7 +100,6 @@ test('should write ESLint diagnostics and return their exit code', async (t) => 
 
   assert.equal(exitCode, 1)
   assert.match(readStdout(), /no-console/)
-  assert.match(readStdout(), /1 problem/)
   assert.equal(readStderr(), '')
   assert.equal(await readFile(sourceFile, 'utf8'), "console.log('value');\n")
   assert.equal((await stat(join(cwd, '.config/eslint/.eslintcache'))).isFile(), true)

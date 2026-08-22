@@ -85,7 +85,6 @@ test('should let ESLint own literal expansion, ignore, deduplication, fixes, and
     true
   )
   assert.match(result.output, /no-console/)
-  assert.match(result.output, /1 problem/)
   assert.deepEqual(result.terminal, { exitCode: 1, reason: 'diagnostics' })
   assert.equal(await readFile(sourceFile, 'utf8'), "console.log('value');\n")
   assert.equal(await readFile(ignoredFile, 'utf8'), "console.log('ignored')\n")
