@@ -15,7 +15,7 @@ import { resolve }                                           from 'node:path'
 
 const ESLINT_RUNTIME_SPECIFIER = '@atls/raijin/eslint'
 const ESLINT_CONFIG_SPECIFIER = '@atls/raijin/config/eslint'
-const BASELINE_IGNORE_PATTERNS = ['.pnp.cjs', '.yarn/**']
+const BASELINE_IGNORE_PATTERNS = ['.pnp.cjs', '.pnp.loader.mjs', '.yarn/**']
 const EMPTY_COUNTS: LintCounts = {
   errors: 0,
   fatalErrors: 0,

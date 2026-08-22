@@ -21,6 +21,7 @@ test('should let ESLint own literal expansion, ignore, deduplication, fixes, and
   const sourceFile = join(sourceDirectory, 'index.ts')
   const ignoredFile = join(cwd, 'ignored.ts')
   const pnpFile = join(cwd, '.pnp.cjs')
+  const pnpLoaderFile = join(cwd, '.pnp.loader.mjs')
   const yarnFile = join(cwd, '.yarn/generated.ts')
   const cacheFile = join(cwd, '.config/eslint/.eslintcache')
 
@@ -39,17 +40,25 @@ test('should let ESLint own literal expansion, ignore, deduplication, fixes, and
   )
   await writeFile(
     join(cwd, 'eslint.config.mjs'),
-    "export default [{ files: ['**/*.{cjs,ts}'], rules: { semi: ['error', 'always'], 'no-console': 'error' } }]\n"
+    "export default [{ files: ['**/*.{cjs,mjs,ts}'], rules: { semi: ['error', 'always'], 'no-console': 'error' } }]\n"
   )
   await writeFile(sourceFile, "console.log('value')\n")
   await writeFile(ignoredFile, "console.log('ignored')\n")
   await writeFile(pnpFile, 'module.exports = { findPackageLocator: () => null }\n')
+  await writeFile(pnpLoaderFile, "console.log('generated pnp loader')\n")
   await writeFile(yarnFile, "console.log('generated yarn')\n")
 
   const result = await lintProjectSources({
     rootCwd: cwd,
     cwd,
-    targets: ['src/[id]', 'src/[id]/index.ts', 'ignored.ts', '.pnp.cjs', '.yarn/generated.ts'],
+    targets: [
+      'src/[id]',
+      'src/[id]/index.ts',
+      'ignored.ts',
+      '.pnp.cjs',
+      '.pnp.loader.mjs',
+      '.yarn/generated.ts',
+    ],
     fix: true,
     cache: true,
   })
@@ -60,6 +69,10 @@ test('should let ESLint own literal expansion, ignore, deduplication, fixes, and
   assert.equal(result.results[0]?.filePath, sourceFile)
   assert.equal(
     result.results.some(({ filePath }) => filePath === pnpFile),
+    false
+  )
+  assert.equal(
+    result.results.some(({ filePath }) => filePath === pnpLoaderFile),
     false
   )
   assert.equal(
@@ -80,6 +93,7 @@ test('should let ESLint own literal expansion, ignore, deduplication, fixes, and
     await readFile(pnpFile, 'utf8'),
     'module.exports = { findPackageLocator: () => null }\n'
   )
+  assert.equal(await readFile(pnpLoaderFile, 'utf8'), "console.log('generated pnp loader')\n")
   assert.equal(await readFile(yarnFile, 'utf8'), "console.log('generated yarn')\n")
   assert.equal((await stat(cacheFile)).isFile(), true)
 
