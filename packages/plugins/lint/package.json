@@ -6,33 +6,25 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./sources/index.ts"
+    ".": "./src/index.ts"
   },
+  "main": "./src/index.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "builder build plugin --external-file ../builder/externals.json",
+    "build": "builder build plugin",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:*",
-    "@atls/cli-ui-lint-progress-component": "workspace:*",
-    "@atls/cli-ui-lint-result-component": "workspace:*",
-    "@atls/cli-ui-renderer-static-component": "workspace:*",
-    "@atls/code-lint": "workspace:*",
     "@atls/raijin": "workspace:*",
-    "clipanion": "4.0.0-rc.2",
-    "ink": "3.2.0",
-    "react": "18.3.1"
+    "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
-    "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",
-    "@yarnpkg/fslib": "3.1.5",
     "typescript": "5.9.3"
   },
   "peerDependencies": {

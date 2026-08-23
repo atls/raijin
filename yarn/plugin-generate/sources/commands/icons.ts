@@ -1,4 +1,5 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
+import type { LintProjectResult }       from '@atls/yarn-plugin-lint'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { Option }                       from 'clipanion'
@@ -9,12 +10,22 @@ import { toNativeCwd }                  from '@atls/raijin/commands'
 import { createOutputReplacer }         from '@atls/raijin/infrastructure/providers/node/icons'
 import { createSourceReader }           from '@atls/raijin/infrastructure/providers/node/icons'
 import { createTransformer }            from '@atls/raijin/infrastructure/providers/svgr/icons'
-import { createLinter }                 from '@atls/raijin/infrastructure/providers/yarn/icons'
 import { getWorkspacePackageNames }     from '@atls/raijin/project'
 import { formatProjectSources }         from '@atls/yarn-plugin-format'
+import { lintProjectSources }           from '@atls/yarn-plugin-lint'
+import { writeLintResult }              from '@atls/yarn-plugin-lint'
 
 import { presentIconGeneration }        from '../presenters/icons.js'
 import { presentIconGenerationError }   from '../presenters/icons.js'
+
+export const completeGeneratedIconLint = (
+  context: Pick<WorkspaceCommandContext, 'stderr' | 'stdout'>,
+  result: LintProjectResult
+): number => {
+  writeLintResult(context, result)
+
+  return result.terminal.exitCode
+}
 
 export class GenerateIconsCommand extends BaseCommand {
   static override paths = [['ui', 'icons', 'generate']]
@@ -28,8 +39,9 @@ export class GenerateIconsCommand extends BaseCommand {
   declare context: WorkspaceCommandContext
 
   override async execute(): Promise<number> {
-    const { executionCwd, yarn } = this.context.invocation
+    const { executionCwd, project, yarn } = this.context.invocation
     const cwd = toNativeCwd(executionCwd)
+    const rootCwd = toNativeCwd(project.cwd)
 
     try {
       const result = await generate(
@@ -56,7 +68,18 @@ export class GenerateIconsCommand extends BaseCommand {
               }
             },
           },
-          linter: createLinter(executionCwd, yarn.execute),
+          linter: {
+            lint: async (files) => {
+              const lintResult = await lintProjectSources({
+                rootCwd,
+                cwd,
+                targets: files,
+                fix: true,
+              })
+
+              return completeGeneratedIconLint(this.context, lintResult)
+            },
+          },
           output: createOutputReplacer(),
           sources: createSourceReader(),
           transformer: createTransformer(cwd),
