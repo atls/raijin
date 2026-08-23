@@ -3,6 +3,7 @@ import type { CommandInput }  from '@atls/raijin/commands'
 import assert                 from 'node:assert/strict'
 import { mkdir }              from 'node:fs/promises'
 import { mkdtemp }            from 'node:fs/promises'
+import { rm }                 from 'node:fs/promises'
 import { writeFile }          from 'node:fs/promises'
 import { tmpdir }             from 'node:os'
 import { join }               from 'node:path'
@@ -31,6 +32,50 @@ const createProject = async (): Promise<string> => {
 
   return cwd
 }
+
+test('should complete through the TestsStream lifecycle without a keep-alive timer', async (t) => {
+  const cwd = await createProject()
+  const tester = await Tester.initialize(cwd)
+  const testFile = join(cwd, 'sample.test.js')
+  const previousExecArgv = process.env[TEST_EXEC_ARGV_ENV]
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+  t.mock.method(globalThis, 'setInterval', () => {
+    throw new Error('Tester must not retain a keep-alive timer')
+  })
+
+  await writeFile(
+    testFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('sample', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  process.env[TEST_EXEC_ARGV_ENV] = JSON.stringify(['--enable-source-maps'])
+
+  let results: Awaited<ReturnType<typeof tester.unit>>
+
+  try {
+    results = await tester.unit(createInput(cwd, ['sample.test.js']))
+  } finally {
+    if (previousExecArgv === undefined) {
+      Reflect.deleteProperty(process.env, TEST_EXEC_ARGV_ENV)
+    } else {
+      process.env[TEST_EXEC_ARGV_ENV] = previousExecArgv
+    }
+  }
+
+  const summary = results.find((result) => result.type === 'test:summary')
+
+  assert.ok(summary)
+  assert.equal(summary.data.success, true)
+})
 
 test('should expand explicit directory targets before collecting unit tests', async () => {
   const cwd = await createProject()
