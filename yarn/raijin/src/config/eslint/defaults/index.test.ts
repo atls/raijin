@@ -5,8 +5,10 @@ import eslintconfig from './index.js'
 
 test('should allow generated project config files outside tsconfig scope', () => {
   const [baseConfig] = eslintconfig
-  const allowDefaultProject =
-    baseConfig.languageOptions?.parserOptions?.projectService?.allowDefaultProject
+  const parserOptions = baseConfig.languageOptions?.parserOptions as
+    | { projectService?: { allowDefaultProject?: ReadonlyArray<string> } }
+    | undefined
+  const allowDefaultProject = parserOptions?.projectService?.allowDefaultProject
 
   assert.deepEqual(allowDefaultProject, [
     'scripts/raijin/*.mjs',

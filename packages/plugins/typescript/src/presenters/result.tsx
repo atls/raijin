@@ -1,6 +1,6 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import type { TypecheckProjectResult }  from '../interfaces/result.js'
+import type { TypecheckProjectResult }  from '../typecheck.js'
 
 import React                            from 'react'
 
@@ -13,6 +13,20 @@ export const writeTypecheckResult = (
 ): void => {
   if (result.status === 'provider-failed') {
     context.stderr.write(`${result.failure.name}: ${result.failure.message}\n`)
+
+    return
+  }
+
+  if (result.status === 'missing-project') {
+    context.stderr.write(`TypeScript project not found in ${result.cwd}; provide explicit files.\n`)
+
+    return
+  }
+
+  if (result.status === 'unresolved-target') {
+    result.targets.forEach(({ request }) => {
+      context.stderr.write(`TypeScript target is not owned by a configured project: ${request}\n`)
+    })
 
     return
   }

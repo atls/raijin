@@ -1,25 +1,14 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
-import type { PortablePath }            from '@yarnpkg/fslib'
-import type { hasTypeScriptProject }    from '@atls/raijin/config/typescript'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { Option }                       from 'clipanion'
 
 import { createCommandInput }           from '@atls/raijin/commands'
-import { toCommandArguments }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
+import { toNativePath }                 from '@atls/raijin/filesystem'
 
 import { writeTypecheckResult }         from './presenters/result.jsx'
-import { typecheckProjectSources }      from './project.js'
-
-const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
-
-const importTypeScriptConfig = async (): Promise<{
-  hasTypeScriptProject: typeof hasTypeScriptProject
-}> =>
-  import(TYPESCRIPT_CONFIG_SPECIFIER) as Promise<{
-    hasTypeScriptProject: typeof hasTypeScriptProject
-  }>
+import { typecheckProjectSources }      from './typecheck.js'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -33,19 +22,30 @@ export class TypeCheckCommand extends BaseCommand {
   args: Array<string> = Option.Rest({ required: 0 })
 
   override async execute(): Promise<number> {
-    const { executionCwd, invocationCwd, project } = this.context.invocation
+    const { executionCwd, invocationCwd, project, workspace } = this.context.invocation
 
     try {
-      const typecheckCwd = await this.resolveTypecheckCwd(executionCwd, project.cwd)
       const input = createCommandInput({
         cwd: invocationCwd,
         source: 'explicit',
         targets: this.args,
       })
       const result = await typecheckProjectSources({
-        cwd: toNativeCwd(typecheckCwd),
-        manifestCwds: [toNativeCwd(project.cwd), toNativeCwd(typecheckCwd)],
-        targets: input.targets.length > 0 ? toCommandArguments(input, typecheckCwd) : undefined,
+        cwd: toNativeCwd(executionCwd),
+        manifestPolicySources: [project.topLevelWorkspace, workspace].map(({ cwd, manifest }) => ({
+          cwd: toNativeCwd(cwd),
+          ...(Object.hasOwn(manifest.raw, 'typecheckSkipLibCheck')
+            ? { typecheckSkipLibCheck: manifest.raw.typecheckSkipLibCheck }
+            : {}),
+        })),
+        rootCwd: toNativeCwd(project.cwd),
+        targets:
+          input.targets.length > 0
+            ? input.targets.map(({ path, request }) => ({
+                path: toNativePath(path),
+                request,
+              }))
+            : undefined,
       })
 
       writeTypecheckResult(this.context, result)
@@ -58,14 +58,5 @@ export class TypeCheckCommand extends BaseCommand {
 
       return 1
     }
-  }
-
-  protected async resolveTypecheckCwd(
-    workspaceCwd: PortablePath,
-    projectCwd: PortablePath
-  ): Promise<PortablePath> {
-    const { hasTypeScriptProject } = await importTypeScriptConfig()
-
-    return hasTypeScriptProject(toNativeCwd(workspaceCwd)) ? workspaceCwd : projectCwd
   }
 }

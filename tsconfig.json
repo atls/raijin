@@ -41,5 +41,6 @@
     "cli/**/*",
     "packages/**/*"
   ],
+  "exclude": ["**/bundles/**", "**/dist/**", "yarn/plugin-checks/sources/*.test.js"],
   "types": ["@atls/raijin/types"]
 }
