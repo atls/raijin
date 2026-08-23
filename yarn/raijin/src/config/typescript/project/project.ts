@@ -21,23 +21,14 @@ const readManifest = async (cwd: string): Promise<TypeScriptPackageManifest> => 
   return JSON.parse(content) as TypeScriptPackageManifest
 }
 
-const resolveSkipLibCheck = (
-  manifests: ReadonlyArray<TypeScriptPackageManifest>,
-  projectSkipLibCheck: boolean | undefined
-): boolean => {
+const resolveTypecheckSkipLibCheck = (
+  manifests: ReadonlyArray<TypeScriptPackageManifest>
+): boolean | undefined => {
   const manifest = [...manifests]
     .reverse()
     .find((item) => Object.hasOwn(item, 'typecheckSkipLibCheck'))
 
-  if (manifest) {
-    return manifest.typecheckSkipLibCheck!
-  }
-
-  if (projectSkipLibCheck !== undefined) {
-    return projectSkipLibCheck
-  }
-
-  return false
+  return manifest?.typecheckSkipLibCheck
 }
 
 const createParseHost = (
@@ -90,6 +81,7 @@ export const resolveTypeScriptProject = async ({
     ? projectConfigFileName
     : undefined
   const manifests = await Promise.all(Array.from(new Set(manifestCwds)).map(readManifest))
+  const typecheckSkipLibCheck = resolveTypecheckSkipLibCheck(manifests)
   const projectIgnorePatterns = manifests.flatMap(
     ({ typecheckIgnorePatterns = [] }) => typecheckIgnorePatterns
   )
@@ -117,6 +109,7 @@ export const resolveTypeScriptProject = async ({
       errors: fatalDiagnostics,
       fileNames: [],
       options: {},
+      ...(typecheckSkipLibCheck === undefined ? {} : { typecheckSkipLibCheck }),
     }
   }
 
@@ -141,8 +134,9 @@ export const resolveTypeScriptProject = async ({
     options: {
       ...convertedDefaults.options,
       ...parsed.options,
-      skipLibCheck: resolveSkipLibCheck(manifests, parsed.options.skipLibCheck),
+      skipLibCheck: typecheckSkipLibCheck ?? parsed.options.skipLibCheck ?? false,
     },
     projectReferences: hasProjectSelection ? undefined : parsed.projectReferences,
+    ...(typecheckSkipLibCheck === undefined ? {} : { typecheckSkipLibCheck }),
   }
 }

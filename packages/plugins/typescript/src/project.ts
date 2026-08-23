@@ -48,6 +48,7 @@ const checkProgram = (
 
 const checkSolution = (
   configFileName: string,
+  typecheckSkipLibCheck: boolean | undefined,
   typescript: typeof TypeScriptRuntime
 ): Pick<TypecheckProjectCompletedResult, 'diagnostics' | 'files'> => {
   const diagnostics: Array<TypeScriptRuntime.Diagnostic> = []
@@ -78,6 +79,7 @@ const checkSolution = (
       rootNames,
       {
         ...options,
+        ...(typecheckSkipLibCheck === undefined ? {} : { skipLibCheck: typecheckSkipLibCheck }),
         noEmit: true,
       },
       compilerHost,
@@ -126,7 +128,7 @@ export const typecheckProjectSources = async ({
 
     const checked =
       project.configFileName && (project.projectReferences?.length ?? 0) > 0
-        ? checkSolution(project.configFileName, typescript)
+        ? checkSolution(project.configFileName, project.typecheckSkipLibCheck, typescript)
         : checkProgram(project, typescript)
     const diagnostics = typescript.sortAndDeduplicateDiagnostics([...checked.diagnostics])
 

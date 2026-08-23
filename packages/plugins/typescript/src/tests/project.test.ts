@@ -47,6 +47,42 @@ const createProject = async (
   return cwd
 }
 
+const createReferencedSolution = async (
+  manifest: Record<string, unknown>,
+  skipLibCheck: { readonly app: boolean; readonly lib: boolean; readonly root: boolean }
+): Promise<string> =>
+  createProject(
+    {
+      'tsconfig.json': `${JSON.stringify({
+        compilerOptions: { noUnusedLocals: false, skipLibCheck: skipLibCheck.root },
+        files: [],
+        references: [{ path: './packages/app' }],
+      })}\n`,
+      'packages/app/tsconfig.json': `${JSON.stringify({
+        compilerOptions: {
+          composite: true,
+          noUnusedLocals: true,
+          skipLibCheck: skipLibCheck.app,
+        },
+        files: ['src/index.ts', 'types/broken.d.ts'],
+        references: [{ path: '../lib' }],
+      })}\n`,
+      'packages/app/src/index.ts': 'const unused = true\n\nexport {}\n',
+      'packages/app/types/broken.d.ts': 'export declare const appValue: AppMissingType\n',
+      'packages/lib/tsconfig.json': `${JSON.stringify({
+        compilerOptions: {
+          composite: true,
+          noUnusedLocals: false,
+          skipLibCheck: skipLibCheck.lib,
+        },
+        files: ['src/index.ts', 'types/broken.d.ts'],
+      })}\n`,
+      'packages/lib/src/index.ts': 'const unused = true\n\nexport {}\n',
+      'packages/lib/types/broken.d.ts': 'export declare const libValue: LibMissingType\n',
+    },
+    manifest
+  )
+
 test('should typecheck project references without emitting artifacts', async (t) => {
   const cwd = await createProject({
     'tsconfig.json': '{"files":[],"references":[{"path":"./packages/app"}]}\n',
@@ -92,6 +128,95 @@ test('should keep an empty solution scoped to its declared references', async (t
     result.files.some((file) => file.includes('/packages/unreferenced/')),
     false
   )
+})
+
+test('should preserve per-project skipLibCheck when manifest policy is absent', async (t) => {
+  const cwd = await createReferencedSolution({}, { root: true, app: false, lib: true })
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const result = await typecheckProjectSources({ cwd })
+
+  assert.equal(result.status, 'completed', describeResult(result))
+
+  const diagnosticFiles = result.diagnostics
+    .filter(({ code }) => code === 2304)
+    .map(({ file }) => file?.fileName)
+
+  assert.equal(
+    diagnosticFiles.some((file) => file?.endsWith('/packages/app/types/broken.d.ts')),
+    true,
+    describeResult(result)
+  )
+  assert.equal(
+    diagnosticFiles.some((file) => file?.endsWith('/packages/lib/types/broken.d.ts')),
+    false,
+    describeResult(result)
+  )
+  assert.deepEqual(result.terminal, { exitCode: 1, reason: 'diagnostics' })
+})
+
+test('should apply true manifest policy to every nested solution project', async (t) => {
+  const cwd = await createReferencedSolution(
+    { typecheckSkipLibCheck: true },
+    { root: false, app: false, lib: false }
+  )
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const result = await typecheckProjectSources({ cwd })
+
+  assert.equal(result.status, 'completed', describeResult(result))
+
+  assert.equal(
+    result.diagnostics.some(({ code }) => code === 2304),
+    false,
+    describeResult(result)
+  )
+  assert.equal(
+    result.diagnostics.some(
+      ({ code, file }) => code === 6133 && file?.fileName.endsWith('/packages/app/src/index.ts')
+    ),
+    true,
+    describeResult(result)
+  )
+  assert.equal(
+    result.diagnostics.some(
+      ({ code, file }) => code === 6133 && file?.fileName.endsWith('/packages/lib/src/index.ts')
+    ),
+    false,
+    describeResult(result)
+  )
+  assert.deepEqual(result.terminal, { exitCode: 1, reason: 'diagnostics' })
+})
+
+test('should apply false manifest policy to every nested solution project', async (t) => {
+  const cwd = await createReferencedSolution(
+    { typecheckSkipLibCheck: false },
+    { root: true, app: true, lib: true }
+  )
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const result = await typecheckProjectSources({ cwd })
+
+  assert.equal(result.status, 'completed', describeResult(result))
+
+  const diagnosticFiles = result.diagnostics
+    .filter(({ code }) => code === 2304)
+    .map(({ file }) => file?.fileName)
+
+  assert.equal(
+    diagnosticFiles.some((file) => file?.endsWith('/packages/app/types/broken.d.ts')),
+    true,
+    describeResult(result)
+  )
+  assert.equal(
+    diagnosticFiles.some((file) => file?.endsWith('/packages/lib/types/broken.d.ts')),
+    true,
+    describeResult(result)
+  )
+  assert.deepEqual(result.terminal, { exitCode: 1, reason: 'diagnostics' })
 })
 
 test('should preserve project options for explicit targets', async (t) => {
