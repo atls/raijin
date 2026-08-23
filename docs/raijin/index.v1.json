@@ -806,6 +806,14 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/yarn-plugin-typescript",
+      "location": "packages/plugins/typescript",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/webpack-start-server-plugin",
       "location": "webpack/webpack-start-server-plugin",
       "group": "webpack",
@@ -967,14 +975,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/yarn-plugin-typescript",
-      "location": "yarn/plugin-typescript",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/yarn-plugin-workspaces",
       "location": "yarn/plugin-workspaces",
       "group": "yarn",
@@ -1048,5 +1048,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-21T20:09:22.250Z"
+  "lastGenerated": "2026-08-23T01:13:27.688Z"
 }

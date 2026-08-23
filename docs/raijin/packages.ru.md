@@ -182,15 +182,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-typescript -->
-
-#### `@atls/yarn-plugin-typescript`
-
-- Локация: `yarn/plugin-typescript`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-workspaces -->
 
 #### `@atls/yarn-plugin-workspaces`
@@ -223,6 +214,15 @@
 #### `@atls/yarn-plugin-lint`
 
 - Локация: `packages/plugins/lint`
+- Группа: `plugins`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-typescript -->
+
+#### `@atls/yarn-plugin-typescript`
+
+- Локация: `packages/plugins/typescript`
 - Группа: `plugins`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
