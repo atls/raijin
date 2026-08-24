@@ -13,7 +13,7 @@ import { test }                         from 'node:test'
 
 import { ts }                           from '@atls/raijin/typescript'
 
-import { checkProject }                 from './project.js'
+import { checkProject }                 from '../project.js'
 
 const createProject = async (files: Record<string, string>): Promise<string> => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-project-'))
@@ -104,6 +104,33 @@ describe('root project discovery', () => {
     assert.equal(checkProject(projectCwd, projectCwd, undefined, ts), undefined)
     assert.deepEqual(checkedFiles, [ts.sys.resolvePath(join(projectCwd, 'tsconfig.json'))])
   })
+})
+
+test('preserves native extends, include, exclude, and compiler options', async (t) => {
+  const cwd = await createProject({
+    'configs/base.json': JSON.stringify({
+      compilerOptions: { noUnusedLocals: true, strict: true },
+    }),
+    'tsconfig.json': JSON.stringify({
+      extends: './configs/base.json',
+      include: ['src/**/*.ts'],
+      exclude: ['src/excluded.ts'],
+    }),
+    'src/included.ts': 'const unused = true\nexport const included: string = 1\n',
+    'src/excluded.ts': 'export const excluded = missing.value\n',
+  })
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const diagnostics = checkProject(cwd, cwd, undefined, ts)
+
+  assertDiagnostics(diagnostics)
+  assert.equal(hasDiagnostic(diagnostics, 2322, '/src/included.ts'), true)
+  assert.equal(hasDiagnostic(diagnostics, 6133, '/src/included.ts'), true)
+  assert.equal(
+    diagnostics.some(({ file }) => file?.fileName.endsWith('/src/excluded.ts')),
+    false
+  )
 })
 
 test('checks root, app, and lib sources without prebuilt declarations or writes', async (t) => {

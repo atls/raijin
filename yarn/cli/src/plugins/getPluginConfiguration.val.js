@@ -7,9 +7,6 @@ import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
 
-/**
- * @param {{ modules: Array<string>, plugins: Array<string> }} configuration
- */
 const getPluginConfigurationSource = ({ modules, plugins }) => {
   const pluginRequests = new Set(plugins)
   const importSegment = modules

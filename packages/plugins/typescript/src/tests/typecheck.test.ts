@@ -1,4 +1,4 @@
-import type { TypecheckResult } from './typecheck.js'
+import type { TypecheckResult } from '../typecheck.js'
 
 import assert                    from 'node:assert/strict'
 import { mkdir }                 from 'node:fs/promises'
@@ -13,7 +13,7 @@ import { createCommandInput }    from '@atls/raijin/commands'
 import { toPortableCwd }         from '@atls/raijin/commands'
 import { ts }                    from '@atls/raijin/typescript'
 
-import { typecheckProjectSources } from './typecheck.js'
+import { typecheckProjectSources } from '../typecheck.js'
 
 type CompletedResult = Extract<TypecheckResult, { kind: 'completed' }>
 
@@ -98,6 +98,45 @@ test('dispatches positional files without requiring a project', async (t) => {
   assertCompleted(result)
   assert.equal(result.exitCode, 0)
   assert.deepEqual(result.diagnostics, [])
+})
+
+const exactFilePolicies: ReadonlyArray<{
+  readonly name: string
+  readonly sources: ReadonlyArray<{
+    readonly cwd: string
+    readonly typecheckSkipLibCheck?: unknown
+  }>
+}> = [
+  { name: 'absent', sources: [] },
+  { name: 'true', sources: [{ cwd: '.', typecheckSkipLibCheck: true }] },
+  { name: 'false', sources: [{ cwd: '.', typecheckSkipLibCheck: false }] },
+  { name: 'invalid', sources: [{ cwd: '.', typecheckSkipLibCheck: 'true' }] },
+]
+
+exactFilePolicies.forEach(({ name, sources }) => {
+  test(`uses native TypeScript defaults with ${name} manifest policy`, async (t) => {
+    const cwd = await createProject({
+      'selected.d.ts': 'export declare const value: MissingType\n',
+    })
+    const targets = createCommandInput({
+      cwd: toPortableCwd(cwd),
+      source: 'explicit',
+      targets: ['selected.d.ts'],
+    })
+
+    t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+    const result = await typecheckProjectSources({
+      cwd,
+      projectCwd: cwd,
+      manifestPolicySources: sources.map((source) => ({ ...source, cwd })),
+      targets,
+    })
+
+    assertCompleted(result)
+    assert.equal(result.exitCode, 1)
+    assert.equal(hasDiagnostic(result, 2304, '/selected.d.ts'), true)
+  })
 })
 
 test('preserves configured skipLibCheck when manifest policy is absent', async (t) => {

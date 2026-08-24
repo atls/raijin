@@ -49,7 +49,7 @@ export class TypeCheckCommand extends BaseCommand {
   args: Array<string> = Option.Rest({ required: 0 })
 
   override async execute(): Promise<number> {
-    const { executionCwd, invocationCwd, project, workspace } = this.context.invocation
+    const { invocationCwd, project, workspace } = this.context.invocation
 
     try {
       const input = createCommandInput({
@@ -58,7 +58,7 @@ export class TypeCheckCommand extends BaseCommand {
         targets: this.args,
       })
       const result = await typecheckProjectSources({
-        cwd: toNativeCwd(executionCwd),
+        cwd: toNativeCwd(invocationCwd),
         projectCwd: toNativeCwd(project.cwd),
         manifestPolicySources: [project.topLevelWorkspace, workspace].map(({ cwd, manifest }) => ({
           cwd: toNativeCwd(cwd),

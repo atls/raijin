@@ -17,8 +17,8 @@ import { composeCommandInvocations }    from '@atls/raijin/commands'
 import { toPortableCwd }                from '@atls/raijin/commands'
 import { ts }                           from '@atls/raijin/typescript'
 
-import { TypeCheckCommand }             from './command.jsx'
-import { plugin }                       from './plugin.js'
+import { TypeCheckCommand }             from '../command.jsx'
+import { plugin }                       from '../plugin.js'
 
 const capture = (stream: PassThrough): (() => string) => {
   let output = ''
@@ -58,7 +58,9 @@ const assignContext = (
   stderr: PassThrough,
   stdout: PassThrough,
   manifestRaw: Record<string, unknown> = {},
-  projectCwd: string = cwd
+  projectCwd: string = cwd,
+  invocationCwd: string = cwd,
+  executionCwd: string = cwd
 ): void => {
   const portableCwd = toPortableCwd(cwd)
   const portableProjectCwd = toPortableCwd(projectCwd)
@@ -76,8 +78,8 @@ const assignContext = (
 
   command.context = {
     invocation: {
-      executionCwd: portableCwd,
-      invocationCwd: portableCwd,
+      executionCwd: toPortableCwd(executionCwd),
+      invocationCwd: toPortableCwd(invocationCwd),
       project: {
         cwd: portableProjectCwd,
         topLevelWorkspace,
@@ -112,6 +114,45 @@ test('writes TypeScript diagnostics and returns their exit code', async (t) => {
 
   assert.ok(command instanceof TypeCheckCommand)
   assignContext(command, cwd, stderr, stdout)
+
+  const exitCode = await TypeCheckCommand.prototype.execute.call(command)
+
+  assert.equal(exitCode, 1)
+  assert.match(readStdout(), /not assignable to type/)
+  assert.equal(readStderr(), '')
+})
+
+test('discovers a nested project from invocation cwd instead of execution cwd', async (t) => {
+  const projectCwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-command-nested-'))
+  const workspaceCwd = join(projectCwd, 'packages/app')
+  const invocationCwd = join(workspaceCwd, 'src')
+  const command = createCli().process(['typecheck'])
+  const stderr = new PassThrough()
+  const stdout = new PassThrough()
+  const readStderr = capture(stderr)
+  const readStdout = capture(stdout)
+
+  t.after(async () => rm(projectCwd, { recursive: true, force: true }))
+
+  await mkdir(invocationCwd, { recursive: true })
+  await writeFile(join(projectCwd, 'package.json'), '{"type":"module"}\n')
+  await writeFile(join(projectCwd, 'tsconfig.json'), '{"files":["root.ts"]}\n')
+  await writeFile(join(projectCwd, 'root.ts'), 'export const root = true\n')
+  await writeFile(join(workspaceCwd, 'package.json'), '{"type":"module"}\n')
+  await writeFile(join(workspaceCwd, 'tsconfig.json'), '{"files":["src/index.ts"]}\n')
+  await writeFile(join(invocationCwd, 'index.ts'), 'export const nested: string = 1\n')
+
+  assert.ok(command instanceof TypeCheckCommand)
+  assignContext(
+    command,
+    workspaceCwd,
+    stderr,
+    stdout,
+    {},
+    projectCwd,
+    invocationCwd,
+    projectCwd
+  )
 
   const exitCode = await TypeCheckCommand.prototype.execute.call(command)
 

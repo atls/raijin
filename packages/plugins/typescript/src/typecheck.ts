@@ -81,6 +81,12 @@ export const typecheckProjectSources = async ({
   manifestPolicySources = [],
   targets,
 }: TypecheckInput): Promise<TypecheckResult> => {
+  if (targets && targets.targets.length > 0) {
+    const typescript = await importTypeScript()
+
+    return toCompletedResult(checkFiles(targets, typescript), typescript)
+  }
+
   const policy = resolveTypecheckSkipLibCheck(manifestPolicySources)
 
   if (typeof policy === 'object') {
@@ -88,11 +94,6 @@ export const typecheckProjectSources = async ({
   }
 
   const typescript = await importTypeScript()
-
-  if (targets && targets.targets.length > 0) {
-    return toCompletedResult(checkFiles(targets, policy, typescript), typescript)
-  }
-
   const diagnostics = checkProject(cwd, projectCwd, policy, typescript)
 
   return diagnostics

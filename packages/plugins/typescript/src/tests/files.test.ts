@@ -11,7 +11,7 @@ import { createCommandInput }        from '@atls/raijin/commands'
 import { toPortableCwd }             from '@atls/raijin/commands'
 import { ts }                        from '@atls/raijin/typescript'
 
-import { checkFiles }                from './files.js'
+import { checkFiles }                from '../files.js'
 
 test('checks exact files without reading tsconfig or writing files', async (t) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-files-'))
@@ -31,7 +31,7 @@ test('checks exact files without reading tsconfig or writing files', async (t) =
     source: 'explicit',
     targets: ['selected.ts'],
   })
-  const diagnostics = checkFiles(input, undefined, ts)
+  const diagnostics = checkFiles(input, ts)
 
   assert.equal(
     diagnostics.some(
