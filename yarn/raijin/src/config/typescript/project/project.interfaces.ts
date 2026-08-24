@@ -26,5 +26,4 @@ export interface TypeScriptProjectConfig {
   readonly fileNames: ReadonlyArray<string>
   readonly options: ts.CompilerOptions
   readonly projectReferences?: ReadonlyArray<ts.ProjectReference>
-  readonly typecheckSkipLibCheck?: boolean
 }

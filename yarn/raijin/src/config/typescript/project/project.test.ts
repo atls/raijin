@@ -2,7 +2,6 @@ import assert                       from 'node:assert/strict'
 import { mkdir }                    from 'node:fs/promises'
 import { mkdtemp }                  from 'node:fs/promises'
 import { readFile }                 from 'node:fs/promises'
-import { rm }                       from 'node:fs/promises'
 import { writeFile }                from 'node:fs/promises'
 import { tmpdir }                   from 'node:os'
 import { join }                     from 'node:path'
@@ -142,63 +141,6 @@ test('should apply project options over Raijin defaults', async () => {
   assert.equal(config.options.module, typescript.ModuleKind.CommonJS)
   assert.equal(config.options.strict, false)
   assert.equal(config.options.target, typescript.ScriptTarget.ES2022)
-})
-
-test('should preserve root option when manifest policy is absent', async (t) => {
-  const cwd = await createProject()
-
-  t.after(async () => rm(cwd, { recursive: true, force: true }))
-
-  await writeFile(
-    join(cwd, 'tsconfig.json'),
-    '{"compilerOptions":{"skipLibCheck":true},"include":["src/index.ts"]}\n'
-  )
-
-  const config = await resolveTypeScriptProject({ cwd, typescript })
-
-  assert.equal(Object.hasOwn(config, 'typecheckSkipLibCheck'), false)
-  assert.equal(config.options.skipLibCheck, true)
-})
-
-test('should expose true manifest policy separately from resolved root options', async (t) => {
-  const cwd = await createProject()
-
-  t.after(async () => rm(cwd, { recursive: true, force: true }))
-
-  await writeFile(join(cwd, 'package.json'), '{"typecheckSkipLibCheck":true}\n')
-  await writeFile(
-    join(cwd, 'tsconfig.json'),
-    '{"compilerOptions":{"skipLibCheck":false},"include":["src/index.ts"]}\n'
-  )
-
-  const config = await resolveTypeScriptProject({ cwd, typescript })
-
-  assert.equal(config.typecheckSkipLibCheck, true)
-  assert.equal(config.options.skipLibCheck, true)
-})
-
-test('should prefer nearer false manifest policy', async (t) => {
-  const cwd = await createProject()
-  const workspaceCwd = join(cwd, 'packages/app')
-
-  t.after(async () => rm(cwd, { recursive: true, force: true }))
-
-  await mkdir(workspaceCwd, { recursive: true })
-  await writeFile(join(cwd, 'package.json'), '{"typecheckSkipLibCheck":true}\n')
-  await writeFile(join(workspaceCwd, 'package.json'), '{"typecheckSkipLibCheck":false}\n')
-  await writeFile(
-    join(cwd, 'tsconfig.json'),
-    '{"compilerOptions":{"skipLibCheck":true},"include":["src/index.ts"]}\n'
-  )
-
-  const config = await resolveTypeScriptProject({
-    cwd,
-    manifestCwds: [cwd, workspaceCwd],
-    typescript,
-  })
-
-  assert.equal(config.typecheckSkipLibCheck, false)
-  assert.equal(config.options.skipLibCheck, false)
 })
 
 test('should append manifest ignore patterns through TypeScript discovery', async () => {
