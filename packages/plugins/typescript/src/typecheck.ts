@@ -2,7 +2,6 @@ import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
 
 import { join }                         from 'node:path'
 
-const PACKAGE_MANIFEST = 'package.json'
 const PROJECT_CONFIG = 'tsconfig.json'
 const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
 
@@ -26,6 +25,8 @@ export type TypecheckProjectInput = {
 export type TypecheckTerminal =
   | { readonly exitCode: 0; readonly reason: 'clean' }
   | { readonly exitCode: 1; readonly reason: 'diagnostics' }
+  | { readonly exitCode: 1; readonly reason: 'incomplete-project-graph' }
+  | { readonly exitCode: 1; readonly reason: 'invalid-policy' }
   | { readonly exitCode: 1; readonly reason: 'missing-project' }
   | { readonly exitCode: 1; readonly reason: 'provider-failed' }
   | { readonly exitCode: 1; readonly reason: 'unresolved-target' }
@@ -65,9 +66,26 @@ export type TypecheckProjectProviderFailedResult = {
   readonly terminal: Extract<TypecheckTerminal, { reason: 'provider-failed' }>
 }
 
+type TypecheckProjectInternalFailedResult = {
+  readonly status: 'internal-failed'
+  readonly reason: 'incomplete-project-graph'
+  readonly missingConfigPaths: ReadonlyArray<string>
+  readonly terminal: Extract<TypecheckTerminal, { reason: 'incomplete-project-graph' }>
+}
+
+type TypecheckProjectInvalidPolicyResult = {
+  readonly status: 'invalid-policy'
+  readonly cwd: string
+  readonly policy: 'typecheckSkipLibCheck'
+  readonly expected: 'boolean'
+  readonly terminal: Extract<TypecheckTerminal, { reason: 'invalid-policy' }>
+}
+
 export type TypecheckProjectResult =
   | TypecheckProjectCleanResult
   | TypecheckProjectDiagnosticsResult
+  | TypecheckProjectInternalFailedResult
+  | TypecheckProjectInvalidPolicyResult
   | TypecheckProjectMissingResult
   | TypecheckProjectProviderFailedResult
   | TypecheckProjectUnresolvedTargetResult
@@ -89,6 +107,11 @@ type ParsedProjectGraph = {
 
 type CheckedProject = {
   readonly diagnostics: ReadonlyArray<TypeScriptRuntime.Diagnostic>
+}
+
+type SelectedProjectGraph = {
+  readonly missingConfigPaths: ReadonlyArray<string>
+  readonly projects: ReadonlyArray<PreparedProject>
 }
 
 type ProjectReferenceRedirectHost = TypeScriptRuntime.CompilerHost & {
@@ -136,7 +159,7 @@ const resolveTypecheckSkipLibCheck = (
   sources: ReadonlyArray<TypecheckManifestPolicySource>,
   manifestCwds: ReadonlyArray<string>,
   typescript: typeof TypeScriptRuntime
-): boolean | undefined => {
+): TypecheckProjectInvalidPolicyResult | boolean | undefined => {
   const applicableCwds = new Set(
     uniquePaths(manifestCwds, typescript).map((cwd) => toCanonicalPath(cwd, typescript))
   )
@@ -159,9 +182,13 @@ const resolveTypecheckSkipLibCheck = (
   }
 
   if (typeof configured.typecheckSkipLibCheck !== 'boolean') {
-    throw new TypeError(
-      `typecheckSkipLibCheck in ${join(configured.cwd, PACKAGE_MANIFEST)} must be a boolean`
-    )
+    return {
+      status: 'invalid-policy',
+      cwd: configured.cwd,
+      policy: 'typecheckSkipLibCheck',
+      expected: 'boolean',
+      terminal: { exitCode: 1, reason: 'invalid-policy' },
+    }
   }
 
   return configured.typecheckSkipLibCheck
@@ -272,22 +299,51 @@ const resolveTargetProjects = (
   )
   const resolvedTargets = new Set<string>()
   const configFileNames: Array<string> = []
+  const directOwners = new Map<string, Array<string>>()
+  const importedOwners = new Map<string, Array<string>>()
+
+  projects.forEach(({ commandLine, configFileName }) => {
+    if (!commandLine) {
+      return
+    }
+
+    const configuredFiles = new Set(
+      commandLine.fileNames.map((fileName) => toCanonicalPath(fileName, typescript))
+    )
+
+    targetPaths.forEach((_target, targetPath) => {
+      if (configuredFiles.has(targetPath)) {
+        directOwners.set(targetPath, [...(directOwners.get(targetPath) ?? []), configFileName])
+      }
+    })
+  })
+
+  const targetsWithoutDirectOwners = new Set(
+    Array.from(targetPaths.keys()).filter((targetPath) => !directOwners.has(targetPath))
+  )
 
   projects.forEach(({ configFileName, program }) => {
-    if (!program) {
+    if (!program || targetsWithoutDirectOwners.size === 0) {
       return
     }
 
     const sourceFiles = new Set(
       program.getSourceFiles().map(({ fileName }) => toCanonicalPath(fileName, typescript))
     )
-    const ownedTargetPaths = Array.from(targetPaths.keys()).filter((targetPath) =>
-      sourceFiles.has(targetPath))
 
-    ownedTargetPaths.forEach((targetPath) => resolvedTargets.add(targetPath))
+    targetsWithoutDirectOwners.forEach((targetPath) => {
+      if (sourceFiles.has(targetPath)) {
+        importedOwners.set(targetPath, [...(importedOwners.get(targetPath) ?? []), configFileName])
+      }
+    })
+  })
 
-    if (ownedTargetPaths.length > 0) {
-      configFileNames.push(configFileName)
+  targetPaths.forEach((_target, targetPath) => {
+    const owners = directOwners.get(targetPath) ?? importedOwners.get(targetPath) ?? []
+
+    if (owners.length > 0) {
+      resolvedTargets.add(targetPath)
+      configFileNames.push(...owners)
     }
   })
 
@@ -325,13 +381,14 @@ const selectProjectGraph = (
   projects: ReadonlyArray<PreparedProject>,
   configFileNames: ReadonlyArray<string>,
   typescript: typeof TypeScriptRuntime
-): Array<PreparedProject> => {
+): SelectedProjectGraph => {
   const projectsByConfig = new Map(
     projects.map(
       (project) => [toCanonicalPath(project.configFileName, typescript), project] as const
     )
   )
   const selected: Array<PreparedProject> = []
+  const missingConfigPaths: Array<string> = []
   const pending = [...configFileNames]
   const visited = new Set<string>()
 
@@ -353,7 +410,9 @@ const selectProjectGraph = (
     const project = projectsByConfig.get(canonicalConfigFileName)
 
     if (!project) {
-      throw new Error(`TypeScript project graph is missing ${configFileName}`)
+      missingConfigPaths.push(configFileName)
+
+      continue
     }
 
     selected.push(project)
@@ -363,34 +422,19 @@ const selectProjectGraph = (
     )
   }
 
-  return selected
-}
-
-const getProjectGraphDiagnostics = (
-  configFileNames: ReadonlyArray<string>,
-  typescript: typeof TypeScriptRuntime
-): ReadonlyArray<TypeScriptRuntime.Diagnostic> => {
-  const diagnostics: Array<TypeScriptRuntime.Diagnostic> = []
-  const host = typescript.createSolutionBuilderHost(
-    typescript.sys,
-    undefined,
-    (diagnostic) => diagnostics.push(diagnostic),
-    () => undefined
-  )
-
-  typescript.createSolutionBuilder(host, configFileNames, { dry: true }).clean()
-
-  return typescript.sortAndDeduplicateDiagnostics(diagnostics)
+  return {
+    missingConfigPaths: uniquePaths(missingConfigPaths, typescript),
+    projects: selected,
+  }
 }
 
 const checkConfiguredProjects = (
   projects: ReadonlyArray<PreparedProject>,
-  configFileNames: ReadonlyArray<string>,
   typescript: typeof TypeScriptRuntime
 ): CheckedProject => {
   const diagnostics: Array<TypeScriptRuntime.Diagnostic> = []
 
-  selectProjectGraph(projects, configFileNames, typescript).forEach((project) => {
+  projects.forEach((project) => {
     if (!project.commandLine || !project.program) {
       diagnostics.push(...project.diagnostics)
 
@@ -444,11 +488,17 @@ export const typecheckProjectSources = async ({
       }
     }
 
-    const typecheckSkipLibCheck = resolveTypecheckSkipLibCheck(
+    const policy = resolveTypecheckSkipLibCheck(
       manifestPolicySources,
       [rootCwd, projectCwd],
       typescript
     )
+
+    if (typeof policy === 'object') {
+      return policy
+    }
+
+    const typecheckSkipLibCheck = policy
 
     if (!hasProject) {
       return toCheckedResult(checkFiles(targets, typecheckSkipLibCheck, typescript), typescript)
@@ -475,13 +525,18 @@ export const typecheckProjectSources = async ({
       }
     }
 
-    const graphDiagnostics = getProjectGraphDiagnostics(selected.configFileNames, typescript)
-    const checked = checkConfiguredProjects(projects, selected.configFileNames, typescript)
+    const selectedGraph = selectProjectGraph(projects, selected.configFileNames, typescript)
 
-    return toCheckedResult(
-      { diagnostics: [...graphDiagnostics, ...checked.diagnostics] },
-      typescript
-    )
+    if (selectedGraph.missingConfigPaths.length > 0) {
+      return {
+        status: 'internal-failed',
+        reason: 'incomplete-project-graph',
+        missingConfigPaths: selectedGraph.missingConfigPaths,
+        terminal: { exitCode: 1, reason: 'incomplete-project-graph' },
+      }
+    }
+
+    return toCheckedResult(checkConfiguredProjects(selectedGraph.projects, typescript), typescript)
   } catch (error) {
     return {
       status: 'provider-failed',

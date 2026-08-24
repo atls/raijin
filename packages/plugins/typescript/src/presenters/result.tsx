@@ -11,6 +11,22 @@ export const writeTypecheckResult = (
   context: Pick<WorkspaceCommandContext, 'stderr' | 'stdout'>,
   result: TypecheckProjectResult
 ): void => {
+  if (result.status === 'invalid-policy') {
+    context.stderr.write(
+      `Invalid ${result.policy} in ${result.cwd}: expected ${result.expected}.\n`
+    )
+
+    return
+  }
+
+  if (result.status === 'internal-failed') {
+    result.missingConfigPaths.forEach((path) => {
+      context.stderr.write(`TypeScript project graph is missing configured project ${path}.\n`)
+    })
+
+    return
+  }
+
   if (result.status === 'provider-failed') {
     context.stderr.write(`${result.failure.name}: ${result.failure.message}\n`)
 

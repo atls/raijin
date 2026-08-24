@@ -1,6 +1,8 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 import type { PluginConfiguration }     from '@yarnpkg/core'
 
+import type { TypecheckProjectResult }  from '../typecheck.js'
+
 import assert                           from 'node:assert/strict'
 import { mkdir }                        from 'node:fs/promises'
 import { mkdtemp }                      from 'node:fs/promises'
@@ -18,6 +20,7 @@ import { toPortableCwd }                from '@atls/raijin/commands'
 
 import { TypeCheckCommand }             from '../command.jsx'
 import { plugin }                       from '../plugin.js'
+import { writeTypecheckResult }         from '../presenters/result.jsx'
 
 const capture = (stream: PassThrough): (() => string) => {
   let output = ''
@@ -55,12 +58,13 @@ const assignContext = (
   command: TypeCheckCommand,
   cwd: string,
   stderr: PassThrough,
-  stdout: PassThrough
+  stdout: PassThrough,
+  manifestRaw: Record<string, unknown> = {}
 ): void => {
   const portableCwd = toPortableCwd(cwd)
   const workspace = {
     cwd: portableCwd,
-    manifest: { raw: {} },
+    manifest: { raw: manifestRaw },
   }
 
   command.context = {
@@ -131,6 +135,58 @@ test('should return zero without output for a clean project', async (t) => {
   assert.equal(exitCode, 0)
   assert.equal(readStdout(), '')
   assert.equal(readStderr(), '')
+})
+
+test('should present invalid manifest policy on stderr and return exit one', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-command-policy-'))
+  const command = createCli().process(['typecheck'])
+  const stderr = new PassThrough()
+  const stdout = new PassThrough()
+  const readStderr = capture(stderr)
+  const readStdout = capture(stdout)
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
+  await writeFile(join(cwd, 'tsconfig.json'), '{"files":["index.ts"]}\n')
+  await writeFile(join(cwd, 'index.ts'), 'export const value = true\n')
+
+  assert.ok(command instanceof TypeCheckCommand)
+  assignContext(command, cwd, stderr, stdout, { typecheckSkipLibCheck: 'true' })
+
+  const exitCode = await TypeCheckCommand.prototype.execute.call(command)
+
+  assert.equal(exitCode, 1)
+  assert.equal(readStderr(), `Invalid typecheckSkipLibCheck in ${cwd}: expected boolean.\n`)
+  assert.equal(readStdout(), '')
+})
+
+test('should present incomplete project graph failures on stderr', () => {
+  const stderr = new PassThrough()
+  const stdout = new PassThrough()
+  const readStderr = capture(stderr)
+  const readStdout = capture(stdout)
+  const missingConfigPaths = [
+    '/workspace/packages/a/tsconfig.json',
+    '/workspace/packages/b/tsconfig.json',
+  ]
+  const result: TypecheckProjectResult = {
+    status: 'internal-failed',
+    reason: 'incomplete-project-graph',
+    missingConfigPaths,
+    terminal: { exitCode: 1, reason: 'incomplete-project-graph' },
+  }
+
+  writeTypecheckResult({ stderr, stdout }, result)
+
+  assert.equal(result.terminal.exitCode, 1)
+  assert.equal(
+    readStderr(),
+    missingConfigPaths
+      .map((path) => `TypeScript project graph is missing configured project ${path}.\n`)
+      .join('')
+  )
+  assert.equal(readStdout(), '')
 })
 
 test('should present missing-project on stderr and return exit one', async (t) => {

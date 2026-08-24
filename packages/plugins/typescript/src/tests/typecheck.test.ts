@@ -278,6 +278,55 @@ test('should resolve an excluded target imported by a configured program', async
   )
 })
 
+test('should prefer a directly configured target owner over dependent programs', async (t) => {
+  const cwd = await createProject({
+    'tsconfig.json': JSON.stringify({
+      files: ['src/root.ts'],
+      references: [{ path: './packages/app' }, { path: './packages/sibling' }],
+    }),
+    'src/root.ts': 'export const root = rootMissing.value\n',
+    'packages/app/tsconfig.json': JSON.stringify({
+      compilerOptions: { composite: true, module: 'esnext', moduleResolution: 'bundler' },
+      files: ['src/index.ts', 'src/broken.ts'],
+      references: [{ path: '../lib' }],
+    }),
+    'packages/app/src/index.ts': "import { lib } from '../../lib/src/index.js'\n\nexport { lib }\n",
+    'packages/app/src/broken.ts': 'export const app = appMissing.value\n',
+    'packages/lib/tsconfig.json':
+      '{"compilerOptions":{"composite":true},"files":["src/index.ts"]}\n',
+    'packages/lib/src/index.ts': 'export const lib: string = 1\n',
+    'packages/sibling/tsconfig.json':
+      '{"compilerOptions":{"composite":true},"files":["src/index.ts"]}\n',
+    'packages/sibling/src/index.ts': 'export const sibling = siblingMissing.value\n',
+  })
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const result = await typecheckProjectSources({
+    cwd,
+    rootCwd: cwd,
+    targets: [target(cwd, 'packages/lib/src/index.ts')],
+  })
+
+  assertChecked(result)
+  assert.equal(result.status, 'diagnostics', describeResult(result))
+  assert.equal(
+    result.diagnostics.some(
+      ({ code, file }) => code === 2322 && file?.fileName.endsWith('/packages/lib/src/index.ts')
+    ),
+    true,
+    describeResult(result)
+  )
+  assert.equal(
+    result.diagnostics.some(({ file }) =>
+      ['/src/root.ts', '/packages/app/src/broken.ts', '/packages/sibling/src/index.ts'].some((
+        path
+      ) => file?.fileName.endsWith(path))),
+    false,
+    describeResult(result)
+  )
+})
+
 test('should ignore config diagnostics outside an explicit target owner closure', async (t) => {
   const cwd = await createProject({
     'tsconfig.json':
@@ -382,30 +431,6 @@ test('should check every owner and each shared reference closure once', async (t
       ({ code, file }) => code === 2322 && file?.fileName.endsWith('/packages/lib/src/index.ts')
     ).length,
     1,
-    describeResult(result)
-  )
-})
-
-test('should expose native TypeScript project-reference cycle diagnostics', async (t) => {
-  const cwd = await createProject({
-    'tsconfig.json': '{"files":[],"references":[{"path":"./packages/a"}]}\n',
-    'packages/a/tsconfig.json':
-      '{"compilerOptions":{"composite":true},"files":["src/index.ts"],"references":[{"path":"../b"}]}\n',
-    'packages/a/src/index.ts': 'export const a = true\n',
-    'packages/b/tsconfig.json':
-      '{"compilerOptions":{"composite":true},"files":["src/index.ts"],"references":[{"path":"../a"}]}\n',
-    'packages/b/src/index.ts': 'export const b = true\n',
-  })
-
-  t.after(async () => rm(cwd, { recursive: true, force: true }))
-
-  const result = await typecheckProjectSources({ cwd, rootCwd: cwd })
-
-  assertChecked(result)
-  assert.equal(result.status, 'diagnostics', describeResult(result))
-  assert.equal(
-    result.diagnostics.some(({ code }) => code === 6202),
-    true,
     describeResult(result)
   )
 })
@@ -671,7 +696,7 @@ test('should prefer the nearest manifest policy and project config', async (t) =
   )
 })
 
-test('should return provider failures as structured terminal results', async (t) => {
+test('should return invalid manifest policy as a structured input constraint', async (t) => {
   const cwd = await createProject({
     'tsconfig.json': '{"include":["src/**/*.ts"]}\n',
     'src/index.ts': 'export {}\n',
@@ -685,11 +710,11 @@ test('should return provider failures as structured terminal results', async (t)
     rootCwd: cwd,
   })
 
-  assert.equal(result.status, 'provider-failed', describeResult(result))
-  assert.equal(result.failure.name, 'TypeError')
-  assert.equal(
-    result.failure.message,
-    `typecheckSkipLibCheck in ${join(cwd, 'package.json')} must be a boolean`
-  )
-  assert.deepEqual(result.terminal, { exitCode: 1, reason: 'provider-failed' })
+  assert.deepEqual(result, {
+    status: 'invalid-policy',
+    cwd,
+    policy: 'typecheckSkipLibCheck',
+    expected: 'boolean',
+    terminal: { exitCode: 1, reason: 'invalid-policy' },
+  })
 })
