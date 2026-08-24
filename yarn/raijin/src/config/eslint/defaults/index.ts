@@ -66,6 +66,7 @@ const config: Array<Linter.Config> = [
       globals: {},
       parser,
       parserOptions: {
+        disallowAutomaticSingleRunInference: true,
         projectService: {
           allowDefaultProject: [
             'scripts/raijin/*.mjs',

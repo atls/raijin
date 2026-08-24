@@ -3,6 +3,14 @@ import { test }     from 'node:test'
 
 import eslintconfig from './index.js'
 
+test('should preserve project-backed programs across repeated typed linting', () => {
+  const [baseConfig] = eslintconfig
+
+  assert.partialDeepStrictEqual(baseConfig.languageOptions?.parserOptions, {
+    disallowAutomaticSingleRunInference: true,
+  })
+})
+
 test('should allow generated project config files outside tsconfig scope', () => {
   const [baseConfig] = eslintconfig
   const allowDefaultProject =
