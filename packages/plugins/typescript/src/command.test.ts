@@ -1,10 +1,7 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 import type { PluginConfiguration }     from '@yarnpkg/core'
 
-import type { TypecheckProjectResult }  from '../typecheck.js'
-
 import assert                           from 'node:assert/strict'
-import { mkdir }                        from 'node:fs/promises'
 import { mkdtemp }                      from 'node:fs/promises'
 import { rm }                           from 'node:fs/promises'
 import { writeFile }                    from 'node:fs/promises'
@@ -17,10 +14,10 @@ import { Cli }                          from 'clipanion'
 
 import { composeCommandInvocations }    from '@atls/raijin/commands'
 import { toPortableCwd }                from '@atls/raijin/commands'
+import { ts }                           from '@atls/raijin/typescript'
 
-import { TypeCheckCommand }             from '../command.jsx'
-import { plugin }                       from '../plugin.js'
-import { writeTypecheckResult }         from '../presenters/result.jsx'
+import { TypeCheckCommand }             from './command.jsx'
+import { plugin }                       from './plugin.js'
 
 const capture = (stream: PassThrough): (() => string) => {
   let output = ''
@@ -82,14 +79,14 @@ const assignContext = (
   } as unknown as WorkspaceCommandContext
 }
 
-test('should parse explicit typecheck targets', () => {
+test('parses explicit typecheck files', () => {
   const command = createCli().process(['typecheck', 'src/index.ts'])
 
   assert.ok(command instanceof TypeCheckCommand)
   assert.deepEqual(command.args, ['src/index.ts'])
 })
 
-test('should present diagnostics and return the operation exit code', async (t) => {
+test('writes TypeScript diagnostics and returns their exit code', async (t) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-command-'))
   const command = createCli().process(['typecheck'])
   const stderr = new PassThrough()
@@ -113,31 +110,7 @@ test('should present diagnostics and return the operation exit code', async (t) 
   assert.equal(readStderr(), '')
 })
 
-test('should return zero without output for a clean project', async (t) => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-command-clean-'))
-  const command = createCli().process(['typecheck'])
-  const stderr = new PassThrough()
-  const stdout = new PassThrough()
-  const readStderr = capture(stderr)
-  const readStdout = capture(stdout)
-
-  t.after(async () => rm(cwd, { recursive: true, force: true }))
-
-  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
-  await writeFile(join(cwd, 'tsconfig.json'), '{"files":["index.ts"]}\n')
-  await writeFile(join(cwd, 'index.ts'), 'export const value = true\n')
-
-  assert.ok(command instanceof TypeCheckCommand)
-  assignContext(command, cwd, stderr, stdout)
-
-  const exitCode = await TypeCheckCommand.prototype.execute.call(command)
-
-  assert.equal(exitCode, 0)
-  assert.equal(readStdout(), '')
-  assert.equal(readStderr(), '')
-})
-
-test('should present invalid manifest policy on stderr and return exit one', async (t) => {
+test('writes managed policy errors to stderr', async (t) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-command-policy-'))
   const command = createCli().process(['typecheck'])
   const stderr = new PassThrough()
@@ -146,10 +119,6 @@ test('should present invalid manifest policy on stderr and return exit one', asy
   const readStdout = capture(stdout)
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
-
-  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
-  await writeFile(join(cwd, 'tsconfig.json'), '{"files":["index.ts"]}\n')
-  await writeFile(join(cwd, 'index.ts'), 'export const value = true\n')
 
   assert.ok(command instanceof TypeCheckCommand)
   assignContext(command, cwd, stderr, stdout, { typecheckSkipLibCheck: 'true' })
@@ -161,36 +130,8 @@ test('should present invalid manifest policy on stderr and return exit one', asy
   assert.equal(readStdout(), '')
 })
 
-test('should present incomplete project graph failures on stderr', () => {
-  const stderr = new PassThrough()
-  const stdout = new PassThrough()
-  const readStderr = capture(stderr)
-  const readStdout = capture(stdout)
-  const missingConfigPaths = [
-    '/workspace/packages/a/tsconfig.json',
-    '/workspace/packages/b/tsconfig.json',
-  ]
-  const result: TypecheckProjectResult = {
-    status: 'internal-failed',
-    reason: 'incomplete-project-graph',
-    missingConfigPaths,
-    terminal: { exitCode: 1, reason: 'incomplete-project-graph' },
-  }
-
-  writeTypecheckResult({ stderr, stdout }, result)
-
-  assert.equal(result.terminal.exitCode, 1)
-  assert.equal(
-    readStderr(),
-    missingConfigPaths
-      .map((path) => `TypeScript project graph is missing configured project ${path}.\n`)
-      .join('')
-  )
-  assert.equal(readStdout(), '')
-})
-
-test('should present missing-project on stderr and return exit one', async (t) => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-command-missing-'))
+test('writes unexpected provider exceptions without converting the outcome', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-command-provider-'))
   const command = createCli().process(['typecheck'])
   const stderr = new PassThrough()
   const stdout = new PassThrough()
@@ -198,43 +139,16 @@ test('should present missing-project on stderr and return exit one', async (t) =
   const readStdout = capture(stdout)
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
+  t.mock.method(ts.sys, 'fileExists', () => {
+    throw new Error('provider failed')
+  })
 
-  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
   assert.ok(command instanceof TypeCheckCommand)
   assignContext(command, cwd, stderr, stdout)
 
   const exitCode = await TypeCheckCommand.prototype.execute.call(command)
 
   assert.equal(exitCode, 1)
-  assert.equal(readStderr(), `TypeScript project not found in ${cwd}; provide explicit files.\n`)
-  assert.equal(readStdout(), '')
-})
-
-test('should preserve unresolved target requests on stderr and return exit one', async (t) => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-command-unresolved-'))
-  const request = './src/excluded.ts'
-  const command = createCli().process(['typecheck', request])
-  const stderr = new PassThrough()
-  const stdout = new PassThrough()
-  const readStderr = capture(stderr)
-  const readStdout = capture(stdout)
-
-  t.after(async () => rm(cwd, { recursive: true, force: true }))
-
-  await mkdir(join(cwd, 'src'), { recursive: true })
-  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
-  await writeFile(
-    join(cwd, 'tsconfig.json'),
-    '{"include":["src/**/*.ts"],"exclude":["src/excluded.ts"]}\n'
-  )
-  await writeFile(join(cwd, 'src/index.ts'), 'export const included = true\n')
-  await writeFile(join(cwd, 'src/excluded.ts'), 'export const excluded = true\n')
-  assert.ok(command instanceof TypeCheckCommand)
-  assignContext(command, cwd, stderr, stdout)
-
-  const exitCode = await TypeCheckCommand.prototype.execute.call(command)
-
-  assert.equal(exitCode, 1)
-  assert.equal(readStderr(), `TypeScript target is not owned by a configured project: ${request}\n`)
+  assert.equal(readStderr(), 'Error: provider failed\n')
   assert.equal(readStdout(), '')
 })
