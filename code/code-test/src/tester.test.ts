@@ -1,6 +1,7 @@
 import type { CommandInput }  from '@atls/raijin/commands'
 
 import assert                 from 'node:assert/strict'
+import { execFile }           from 'node:child_process'
 import { mkdir }              from 'node:fs/promises'
 import { mkdtemp }            from 'node:fs/promises'
 import { rm }                 from 'node:fs/promises'
@@ -8,6 +9,7 @@ import { writeFile }          from 'node:fs/promises'
 import { tmpdir }             from 'node:os'
 import { join }               from 'node:path'
 import { test }               from 'node:test'
+import { promisify }          from 'node:util'
 
 import { createCommandInput } from '@atls/raijin/commands'
 import { toPortableCwd }      from '@atls/raijin/commands'
@@ -22,6 +24,9 @@ type TestFileCollector = {
   ) => Promise<Array<string>>
 }
 
+const REGRESSION_TIMEOUT = 20_000
+const executeFile = promisify(execFile)
+
 const createInput = (cwd: string, targets: Array<string> = []): CommandInput =>
   createCommandInput({ cwd: toPortableCwd(cwd), source: 'explicit', targets })
 
@@ -33,16 +38,62 @@ const createProject = async (): Promise<string> => {
   return cwd
 }
 
-test('should complete through the TestsStream lifecycle without a keep-alive timer', async (t) => {
+const runTesterProcess = async (
+  cwd: string,
+  projectCwd: string,
+  input: CommandInput,
+  modes: Array<'events' | 'tap'>
+): Promise<{ stdout: string; stderr: string }> => {
+  const runner = join(projectCwd, 'tester-runner.mjs')
+  const testerUrl = new URL('./tester.ts', import.meta.url).href
+  const env = { ...process.env }
+
+  Reflect.deleteProperty(env, 'NODE_TEST_CONTEXT')
+  Reflect.deleteProperty(env, 'NODE_TEST_WORKER_ID')
+
+  await writeFile(
+    runner,
+    [
+      "import assert from 'node:assert/strict'",
+      `import { Tester } from ${JSON.stringify(testerUrl)}`,
+      '',
+      `const tester = await Tester.initialize(${JSON.stringify(cwd)}, {`,
+      `  projectCwd: ${JSON.stringify(projectCwd)},`,
+      '})',
+      `const input = ${JSON.stringify(input)}`,
+      `const modes = ${JSON.stringify(modes)}`,
+      '',
+      `process.env[${JSON.stringify(TEST_EXEC_ARGV_ENV)}] = JSON.stringify(['--enable-source-maps'])`,
+      '',
+      'for (const mode of modes) {',
+      "  const options = mode === 'tap' ? { testReporter: 'tap' } : undefined",
+      '  const results = await tester.unit(input, options)',
+      '  const summary = results.find(',
+      "    (result) => result.type === 'test:summary' && !result.data.file",
+      '  )',
+      '',
+      '  assert.ok(summary)',
+      '  assert.equal(summary.data.success, true)',
+      "  assert.equal(results.some((result) => result.type === 'test:fail'), false)",
+      "  console.log('tester:' + mode + ':complete')",
+      '}',
+      '',
+    ].join('\n')
+  )
+
+  return executeFile(process.execPath, [...process.execArgv, runner], {
+    cwd: process.cwd(),
+    env,
+    encoding: 'utf8',
+    timeout: REGRESSION_TIMEOUT,
+  })
+}
+
+test('should drain event and TAP reporter streams before the process exits', async (t) => {
   const cwd = await createProject()
-  const tester = await Tester.initialize(cwd)
   const testFile = join(cwd, 'sample.test.js')
-  const previousExecArgv = process.env[TEST_EXEC_ARGV_ENV]
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
-  t.mock.method(globalThis, 'setInterval', () => {
-    throw new Error('Tester must not retain a keep-alive timer')
-  })
 
   await writeFile(
     testFile,
@@ -57,24 +108,19 @@ test('should complete through the TestsStream lifecycle without a keep-alive tim
     ].join('\n')
   )
 
-  process.env[TEST_EXEC_ARGV_ENV] = JSON.stringify(['--enable-source-maps'])
+  const { stdout, stderr } = await runTesterProcess(
+    cwd,
+    cwd,
+    createInput(cwd, ['sample.test.js']),
+    ['events', 'tap']
+  )
 
-  let results: Awaited<ReturnType<typeof tester.unit>>
-
-  try {
-    results = await tester.unit(createInput(cwd, ['sample.test.js']))
-  } finally {
-    if (previousExecArgv === undefined) {
-      Reflect.deleteProperty(process.env, TEST_EXEC_ARGV_ENV)
-    } else {
-      process.env[TEST_EXEC_ARGV_ENV] = previousExecArgv
-    }
-  }
-
-  const summary = results.find((result) => result.type === 'test:summary')
-
-  assert.ok(summary)
-  assert.equal(summary.data.success, true)
+  assert.match(stdout, /tester:events:complete/)
+  assert.match(stdout, /tester:tap:complete/)
+  assert.match(stdout, /# tests 1/)
+  assert.match(stdout, /# pass 1/)
+  assert.match(stdout, /# fail 0/)
+  assert.doesNotMatch(stderr, /run\(\) is being called recursively/)
 })
 
 test('should expand explicit directory targets before collecting unit tests', async () => {
@@ -215,11 +261,13 @@ test('should resolve root-relative glob test files when collecting from workspac
   assert.deepEqual(files, [testFile])
 })
 
-test('should keep workspace ignore patterns with root-relative explicit test files', async () => {
+test('should keep workspace ignore patterns with root-relative explicit test files', async (t) => {
   const cwd = await createProject()
   const workspace = join(cwd, 'packages/tools')
   const ignoredFile = join(workspace, 'sources/ignored.test.js')
   const keptFile = join(workspace, 'sources/kept.test.js')
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
 
   await mkdir(join(workspace, 'sources'), { recursive: true })
   await writeFile(
@@ -252,42 +300,20 @@ test('should keep workspace ignore patterns with root-relative explicit test fil
     ].join('\n')
   )
 
-  const previousExecArgv = process.env[TEST_EXEC_ARGV_ENV]
+  const input = createInput(workspace, [
+    'packages/tools/sources/ignored.test.js',
+    'packages/tools/sources/kept.test.js',
+  ])
+  const { stdout, stderr } = await runTesterProcess(workspace, cwd, input, ['events', 'tap'])
 
-  process.env[TEST_EXEC_ARGV_ENV] = JSON.stringify(['--enable-source-maps'])
-
-  let results: Awaited<ReturnType<typeof tester.unit>>
-
-  try {
-    results = await tester.unit(
-      createInput(workspace, [
-        'packages/tools/sources/ignored.test.js',
-        'packages/tools/sources/kept.test.js',
-      ]),
-      {
-        testReporter: 'tap',
-      }
-    )
-  } finally {
-    if (previousExecArgv === undefined) {
-      Reflect.deleteProperty(process.env, TEST_EXEC_ARGV_ENV)
-    } else {
-      process.env[TEST_EXEC_ARGV_ENV] = previousExecArgv
-    }
-  }
-
-  assert.equal(
-    results.some((result) => result.type === 'test:fail'),
-    false
-  )
+  assert.match(stdout, /tester:events:complete/)
+  assert.match(stdout, /tester:tap:complete/)
+  assert.match(stdout, /# tests 1/)
+  assert.match(stdout, /# pass 1/)
+  assert.match(stdout, /# fail 0/)
+  assert.doesNotMatch(stderr, /run\(\) is being called recursively/)
   assert.deepEqual(
-    await (tester as unknown as TestFileCollector).collectTestFiles(
-      createInput(workspace, [
-        'packages/tools/sources/ignored.test.js',
-        'packages/tools/sources/kept.test.js',
-      ]),
-      'unit'
-    ),
+    await (tester as unknown as TestFileCollector).collectTestFiles(input, 'unit'),
     [ignoredFile, keptFile]
   )
 })
