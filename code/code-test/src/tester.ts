@@ -7,6 +7,7 @@ import EventEmitter                  from 'node:events'
 import { readFileSync }              from 'node:fs'
 import { stat }                      from 'node:fs/promises'
 /* eslint-disable @typescript-eslint/member-ordering */
+import { isAbsolute }                from 'node:path'
 import { relative }                  from 'node:path'
 import { resolve as resolvePath }    from 'node:path'
 import { join }                      from 'node:path'
@@ -116,10 +117,6 @@ export class Tester extends EventEmitter {
       this.emit('test:pass', data)
     }
 
-    const onFail = (data: TestFail): void => {
-      this.emit('test:fail', data)
-    }
-
     const onStdout = (data: TestStdout): void => {
       this.emit('test:stdout', data)
     }
@@ -129,17 +126,15 @@ export class Tester extends EventEmitter {
     }
 
     testsStream.on('test:pass', onPass)
-    testsStream.on('test:fail', onFail)
     testsStream.on('test:stdout', onStdout)
     testsStream.on('test:stderr', onStderr)
 
     try {
-      return await this.collectTestsStream(testsStream)
+      return await this.collectTestsStream(testsStream, undefined, true)
     } finally {
       this.emit('end')
 
       testsStream.off('test:pass', onPass)
-      testsStream.off('test:fail', onFail)
       testsStream.off('test:stdout', onStdout)
       testsStream.off('test:stderr', onStderr)
     }
@@ -151,15 +146,28 @@ export class Tester extends EventEmitter {
 
   private async collectTestsStream(
     testsStream: TestsStream,
-    reporter?: NodeJS.ReadableStream
+    reporter?: NodeJS.ReadableStream,
+    emitTestFailures = false
   ): Promise<Array<TestEvent>> {
     const events: Array<TestEvent> = []
+
+    const collectTestFailure = (data: TestFail): void => {
+      const event = createTestEvent('test:fail', this.toCanonicalTestFailure(data))
+
+      events.push(event)
+
+      if (emitTestFailures) {
+        this.emit(event.type, event.data)
+      }
+    }
 
     if (!reporter) {
       for await (const event of testsStream as AsyncIterable<TestEvent>) {
         switch (event.type) {
-          case 'test:pass':
           case 'test:fail':
+            collectTestFailure(event.data)
+            break
+          case 'test:pass':
           case 'test:stdout':
           case 'test:stderr':
           case 'test:summary':
@@ -187,7 +195,7 @@ export class Tester extends EventEmitter {
       }
 
       function onFail(data: TestFail): void {
-        events.push(createTestEvent('test:fail', data))
+        collectTestFailure(data)
       }
 
       function onStdout(data: TestStdout): void {
@@ -234,6 +242,17 @@ export class Tester extends EventEmitter {
       reporter.once('end', onReporterEnd)
       reporter.once('error', onError)
     })
+  }
+
+  private toCanonicalTestFailure(data: TestFail): TestFail {
+    if (!data.file || isAbsolute(data.file)) {
+      return data
+    }
+
+    return {
+      ...data,
+      file: resolvePath(this.projectCwd, data.file),
+    }
   }
 
   async unit(input: CommandInput, options?: TestOptions): Promise<Array<TestEvent>> {

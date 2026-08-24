@@ -1,14 +1,25 @@
-import assert       from 'node:assert/strict'
-import { test }     from 'node:test'
+import type { ParserOptions } from '@typescript-eslint/parser'
 
-import eslintconfig from './index.js'
+import assert                 from 'node:assert/strict'
+import { test }               from 'node:test'
+
+import eslintconfig           from './index.js'
+
+test('should preserve project-backed programs across repeated typed linting', () => {
+  const [baseConfig] = eslintconfig
+  const parserOptions = baseConfig.languageOptions?.parserOptions as ParserOptions | undefined
+
+  assert.equal(parserOptions?.disallowAutomaticSingleRunInference, true)
+})
 
 test('should allow generated project config files outside tsconfig scope', () => {
   const [baseConfig] = eslintconfig
-  const allowDefaultProject =
-    baseConfig.languageOptions?.parserOptions?.projectService?.allowDefaultProject
+  const parserOptions = baseConfig.languageOptions?.parserOptions as ParserOptions | undefined
+  const projectService = parserOptions?.projectService
 
-  assert.deepEqual(allowDefaultProject, [
+  assert.ok(projectService && typeof projectService === 'object')
+
+  assert.deepEqual(projectService.allowDefaultProject, [
     'scripts/raijin/*.mjs',
     'scripts/raijin/cli-surface/*.mjs',
     '.eslintrc.js',
