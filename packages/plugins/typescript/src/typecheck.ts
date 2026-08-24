@@ -13,6 +13,7 @@ type TypecheckManifestPolicySource = {
 
 type TypecheckInput = {
   readonly cwd: string
+  readonly projectCwd: string
   readonly manifestPolicySources?: ReadonlyArray<TypecheckManifestPolicySource>
   readonly targets?: CommandInput
 }
@@ -76,6 +77,7 @@ const toCompletedResult = (
 
 export const typecheckProjectSources = async ({
   cwd,
+  projectCwd,
   manifestPolicySources = [],
   targets,
 }: TypecheckInput): Promise<TypecheckResult> => {
@@ -91,7 +93,7 @@ export const typecheckProjectSources = async ({
     return toCompletedResult(checkFiles(targets, policy, typescript), typescript)
   }
 
-  const diagnostics = checkProject(cwd, policy, typescript)
+  const diagnostics = checkProject(cwd, projectCwd, policy, typescript)
 
   return diagnostics
     ? toCompletedResult(diagnostics, typescript)

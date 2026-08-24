@@ -76,7 +76,7 @@ test('dispatches project diagnostics into a completed result', async (t) => {
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const result = await typecheckProjectSources({ cwd })
+  const result = await typecheckProjectSources({ cwd, projectCwd: cwd })
 
   assertCompleted(result)
   assert.equal(result.exitCode, 1)
@@ -93,7 +93,7 @@ test('dispatches positional files without requiring a project', async (t) => {
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const result = await typecheckProjectSources({ cwd, targets })
+  const result = await typecheckProjectSources({ cwd, projectCwd: cwd, targets })
 
   assertCompleted(result)
   assert.equal(result.exitCode, 0)
@@ -105,7 +105,7 @@ test('preserves configured skipLibCheck when manifest policy is absent', async (
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const result = await typecheckProjectSources({ cwd })
+  const result = await typecheckProjectSources({ cwd, projectCwd: cwd })
 
   assertCompleted(result)
   assert.equal(hasDiagnostic(result, 2304, '/packages/app/types/broken.d.ts'), false)
@@ -119,6 +119,7 @@ test('applies explicit true typecheckSkipLibCheck to every project', async (t) =
 
   const result = await typecheckProjectSources({
     cwd,
+    projectCwd: cwd,
     manifestPolicySources: [{ cwd, typecheckSkipLibCheck: true }],
   })
 
@@ -135,6 +136,7 @@ test('uses the nearest explicit false typecheckSkipLibCheck policy', async (t) =
 
   const result = await typecheckProjectSources({
     cwd,
+    projectCwd: cwd,
     manifestPolicySources: [
       { cwd, typecheckSkipLibCheck: true },
       { cwd: workspaceCwd, typecheckSkipLibCheck: false },
@@ -150,6 +152,7 @@ test('returns a managed error for an invalid manifest policy', async () => {
   const cwd = '/workspace/package'
   const result = await typecheckProjectSources({
     cwd,
+    projectCwd: cwd,
     manifestPolicySources: [{ cwd, typecheckSkipLibCheck: 'true' }],
   })
 
@@ -161,7 +164,23 @@ test('returns a managed error when no root project exists', async (t) => {
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const result = await typecheckProjectSources({ cwd })
+  const result = await typecheckProjectSources({ cwd, projectCwd: cwd })
+
+  assert.deepEqual(result, { kind: 'error', reason: 'missing-project', cwd })
+})
+
+test('returns missing-project when only a parent config exists', async (t) => {
+  const parentCwd = await createProject({
+    'tsconfig.json': '{"files":["parent.ts"]}\n',
+    'parent.ts': 'export const parentValue = true\n',
+    'project/package.json': '{"type":"module"}\n',
+    'project/index.ts': 'export const projectValue = true\n',
+  })
+  const cwd = join(parentCwd, 'project')
+
+  t.after(async () => rm(parentCwd, { recursive: true, force: true }))
+
+  const result = await typecheckProjectSources({ cwd, projectCwd: cwd })
 
   assert.deepEqual(result, { kind: 'error', reason: 'missing-project', cwd })
 })
@@ -174,5 +193,8 @@ test('propagates unexpected TypeScript provider failures', async (t) => {
     throw new Error('provider failed')
   })
 
-  await assert.rejects(typecheckProjectSources({ cwd }), /provider failed/)
+  await assert.rejects(
+    typecheckProjectSources({ cwd, projectCwd: cwd }),
+    /provider failed/
+  )
 })

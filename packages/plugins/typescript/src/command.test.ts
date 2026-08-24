@@ -2,6 +2,7 @@ import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 import type { PluginConfiguration }     from '@yarnpkg/core'
 
 import assert                           from 'node:assert/strict'
+import { mkdir }                        from 'node:fs/promises'
 import { mkdtemp }                      from 'node:fs/promises'
 import { rm }                           from 'node:fs/promises'
 import { writeFile }                    from 'node:fs/promises'
@@ -56,21 +57,30 @@ const assignContext = (
   cwd: string,
   stderr: PassThrough,
   stdout: PassThrough,
-  manifestRaw: Record<string, unknown> = {}
+  manifestRaw: Record<string, unknown> = {},
+  projectCwd: string = cwd
 ): void => {
   const portableCwd = toPortableCwd(cwd)
+  const portableProjectCwd = toPortableCwd(projectCwd)
   const workspace = {
     cwd: portableCwd,
     manifest: { raw: manifestRaw },
   }
+  const topLevelWorkspace =
+    projectCwd === cwd
+      ? workspace
+      : {
+          cwd: portableProjectCwd,
+          manifest: { raw: {} },
+        }
 
   command.context = {
     invocation: {
       executionCwd: portableCwd,
       invocationCwd: portableCwd,
       project: {
-        cwd: portableCwd,
-        topLevelWorkspace: workspace,
+        cwd: portableProjectCwd,
+        topLevelWorkspace,
       },
       workspace,
     },
@@ -108,6 +118,38 @@ test('writes TypeScript diagnostics and returns their exit code', async (t) => {
   assert.equal(exitCode, 1)
   assert.match(readStdout(), /not assignable to type/)
   assert.equal(readStderr(), '')
+})
+
+test('does not use a config above the active project root', async (t) => {
+  const parentCwd = await mkdtemp(join(tmpdir(), 'raijin-typecheck-command-parent-'))
+  const projectCwd = join(parentCwd, 'project')
+  const cwd = join(projectCwd, 'packages/app')
+  const command = createCli().process(['typecheck'])
+  const stderr = new PassThrough()
+  const stdout = new PassThrough()
+  const readStderr = capture(stderr)
+  const readStdout = capture(stdout)
+
+  t.after(async () => rm(parentCwd, { recursive: true, force: true }))
+
+  await mkdir(cwd, { recursive: true })
+  await writeFile(join(parentCwd, 'tsconfig.json'), '{"files":["parent.ts"]}\n')
+  await writeFile(join(parentCwd, 'parent.ts'), 'export const parentValue = true\n')
+  await writeFile(join(projectCwd, 'package.json'), '{"type":"module"}\n')
+  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
+  await writeFile(join(cwd, 'index.ts'), 'export const value = true\n')
+
+  assert.ok(command instanceof TypeCheckCommand)
+  assignContext(command, cwd, stderr, stdout, {}, projectCwd)
+
+  const exitCode = await TypeCheckCommand.prototype.execute.call(command)
+
+  assert.equal(exitCode, 1)
+  assert.equal(
+    readStderr(),
+    `TypeScript project not found in ${cwd}; provide explicit files.\n`
+  )
+  assert.equal(readStdout(), '')
 })
 
 test('writes managed policy errors to stderr', async (t) => {

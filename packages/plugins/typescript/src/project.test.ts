@@ -8,6 +8,7 @@ import { rm }                           from 'node:fs/promises'
 import { writeFile }                    from 'node:fs/promises'
 import { tmpdir }                       from 'node:os'
 import { join }                         from 'node:path'
+import { describe }                     from 'node:test'
 import { test }                         from 'node:test'
 
 import { ts }                           from '@atls/raijin/typescript'
@@ -50,20 +51,59 @@ const hasDiagnostic = (
       (fileSuffix === undefined || diagnostic.file?.fileName.endsWith(fileSuffix) === true)
   )
 
-test('checks a normal project without writing files', async (t) => {
-  const cwd = await createProject({
-    'tsconfig.json': '{"files":["src/index.ts"]}\n',
-    'src/index.ts': 'export const value = true\n',
+describe('root project discovery', () => {
+  test('checks the root config when invoked from the project root', async (t) => {
+    const cwd = await createProject({
+      'tsconfig.json': '{"files":["src/index.ts"]}\n',
+      'src/index.ts': 'export const value = true\n',
+    })
+    const before = await readTree(cwd)
+
+    t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+    const diagnostics = checkProject(cwd, cwd, undefined, ts)
+
+    assertDiagnostics(diagnostics)
+    assert.deepEqual(diagnostics, [])
+    assert.deepEqual(await readTree(cwd), before)
   })
-  const before = await readTree(cwd)
 
-  t.after(async () => rm(cwd, { recursive: true, force: true }))
+  test('finds an internal root config when invoked from a nested directory', async (t) => {
+    const cwd = await createProject({
+      'tsconfig.json': '{"files":["packages/app/src/index.ts"]}\n',
+      'packages/app/src/index.ts': 'export const value = true\n',
+    })
+    const nestedCwd = join(cwd, 'packages/app/src')
 
-  const diagnostics = checkProject(cwd, undefined, ts)
+    t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  assertDiagnostics(diagnostics)
-  assert.deepEqual(diagnostics, [])
-  assert.deepEqual(await readTree(cwd), before)
+    const diagnostics = checkProject(nestedCwd, cwd, undefined, ts)
+
+    assertDiagnostics(diagnostics)
+    assert.deepEqual(diagnostics, [])
+  })
+
+  test('does not accept a config above the project root', async (t) => {
+    const parentCwd = await createProject({
+      'tsconfig.json': '{"files":["parent.ts"]}\n',
+      'parent.ts': 'export const parentValue = true\n',
+      'project/package.json': '{"type":"module"}\n',
+      'project/index.ts': 'export const projectValue = true\n',
+    })
+    const projectCwd = join(parentCwd, 'project')
+    const checkedFiles: Array<string> = []
+    const fileExists = ts.sys.fileExists
+
+    t.after(async () => rm(parentCwd, { recursive: true, force: true }))
+    t.mock.method(ts.sys, 'fileExists', (fileName: string) => {
+      checkedFiles.push(ts.sys.resolvePath(fileName))
+
+      return fileExists(fileName)
+    })
+
+    assert.equal(checkProject(projectCwd, projectCwd, undefined, ts), undefined)
+    assert.deepEqual(checkedFiles, [ts.sys.resolvePath(join(projectCwd, 'tsconfig.json'))])
+  })
 })
 
 test('checks root, app, and lib sources without prebuilt declarations or writes', async (t) => {
@@ -102,7 +142,7 @@ test('checks root, app, and lib sources without prebuilt declarations or writes'
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const diagnostics = checkProject(cwd, undefined, ts)
+  const diagnostics = checkProject(cwd, cwd, undefined, ts)
 
   assertDiagnostics(diagnostics)
   assert.equal(hasDiagnostic(diagnostics, 2322, '/packages/app/src/index.ts'), true)
@@ -117,7 +157,7 @@ test('keeps missing reference failures as TypeScript diagnostics', async (t) => 
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const diagnostics = checkProject(cwd, undefined, ts)
+  const diagnostics = checkProject(cwd, cwd, undefined, ts)
 
   assertDiagnostics(diagnostics)
   assert.equal(hasDiagnostic(diagnostics, 5083), true)

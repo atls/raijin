@@ -59,6 +59,7 @@ export class TypeCheckCommand extends BaseCommand {
       })
       const result = await typecheckProjectSources({
         cwd: toNativeCwd(executionCwd),
+        projectCwd: toNativeCwd(project.cwd),
         manifestPolicySources: [project.topLevelWorkspace, workspace].map(({ cwd, manifest }) => ({
           cwd: toNativeCwd(cwd),
           ...(Object.hasOwn(manifest.raw, 'typecheckSkipLibCheck')

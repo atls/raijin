@@ -1,5 +1,9 @@
 import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
 
+import { isAbsolute }                  from 'node:path'
+import { relative }                    from 'node:path'
+import { sep }                         from 'node:path'
+
 const PROJECT_CONFIG = 'tsconfig.json'
 
 const parseProjects = (
@@ -87,12 +91,26 @@ const checkPrograms = (
 
 export const checkProject = (
   cwd: string,
+  projectCwd: string,
   typecheckSkipLibCheck: boolean | undefined,
   typescript: typeof TypeScriptRuntime
 ): ReadonlyArray<TypeScriptRuntime.Diagnostic> | undefined => {
+  const resolvedProjectCwd = typescript.sys.resolvePath(projectCwd)
   const rootConfigFileName = typescript.findConfigFile(
     cwd,
-    typescript.sys.fileExists,
+    (fileName) => {
+      const relativeFileName = relative(
+        resolvedProjectCwd,
+        typescript.sys.resolvePath(fileName)
+      )
+
+      return (
+        relativeFileName !== '..' &&
+        !relativeFileName.startsWith(`..${sep}`) &&
+        !isAbsolute(relativeFileName) &&
+        typescript.sys.fileExists(fileName)
+      )
+    },
     PROJECT_CONFIG
   )
 
