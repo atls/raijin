@@ -1,12 +1,21 @@
 import type { CommandInput }  from '@atls/raijin/commands'
+import type { EventData }     from 'node:test'
+import type { TestEvent }     from 'node:test/reporters'
 
 import assert                 from 'node:assert/strict'
+import { execFile }           from 'node:child_process'
+import { once }               from 'node:events'
 import { mkdir }              from 'node:fs/promises'
 import { mkdtemp }            from 'node:fs/promises'
+import { readFile }           from 'node:fs/promises'
+import { rm }                 from 'node:fs/promises'
 import { writeFile }          from 'node:fs/promises'
 import { tmpdir }             from 'node:os'
 import { join }               from 'node:path'
+import { resolve }            from 'node:path'
+import { sep }                from 'node:path'
 import { test }               from 'node:test'
+import { promisify }          from 'node:util'
 
 import { createCommandInput } from '@atls/raijin/commands'
 import { toPortableCwd }      from '@atls/raijin/commands'
@@ -21,6 +30,16 @@ type TestFileCollector = {
   ) => Promise<Array<string>>
 }
 
+const REGRESSION_TIMEOUT = 20_000
+const executeFile = promisify(execFile)
+type TestEventCollector = {
+  collectTestsStream: (
+    testsStream: AsyncIterable<TestEvent>,
+    reporter?: NodeJS.ReadableStream,
+    emitTestFailures?: boolean
+  ) => Promise<Array<TestEvent>>
+}
+
 const createInput = (cwd: string, targets: Array<string> = []): CommandInput =>
   createCommandInput({ cwd: toPortableCwd(cwd), source: 'explicit', targets })
 
@@ -31,6 +50,173 @@ const createProject = async (): Promise<string> => {
 
   return cwd
 }
+
+const runTesterProcess = async (
+  cwd: string,
+  projectCwd: string,
+  input: CommandInput,
+  modes: Array<'events' | 'tap'>
+): Promise<{ stdout: string; stderr: string }> => {
+  const runner = join(projectCwd, 'tester-runner.mjs')
+  const testerUrl = new URL('./tester.ts', import.meta.url).href
+  const env = { ...process.env }
+
+  Reflect.deleteProperty(env, 'NODE_TEST_CONTEXT')
+  Reflect.deleteProperty(env, 'NODE_TEST_WORKER_ID')
+
+  await writeFile(
+    runner,
+    [
+      "import assert from 'node:assert/strict'",
+      `import { Tester } from ${JSON.stringify(testerUrl)}`,
+      '',
+      `const tester = await Tester.initialize(${JSON.stringify(cwd)}, {`,
+      `  projectCwd: ${JSON.stringify(projectCwd)},`,
+      '})',
+      `const input = ${JSON.stringify(input)}`,
+      `const modes = ${JSON.stringify(modes)}`,
+      '',
+      `process.env[${JSON.stringify(TEST_EXEC_ARGV_ENV)}] = JSON.stringify(['--enable-source-maps'])`,
+      '',
+      'for (const mode of modes) {',
+      "  const options = mode === 'tap' ? { testReporter: 'tap' } : undefined",
+      '  const results = await tester.unit(input, options)',
+      '  const summary = results.find(',
+      "    (result) => result.type === 'test:summary' && !result.data.file",
+      '  )',
+      '',
+      '  assert.ok(summary)',
+      '  assert.equal(summary.data.success, true)',
+      "  assert.equal(results.some((result) => result.type === 'test:fail'), false)",
+      "  console.log('tester:' + mode + ':complete')",
+      '}',
+      '',
+    ].join('\n')
+  )
+
+  return executeFile(process.execPath, [...process.execArgv, runner], {
+    cwd: process.cwd(),
+    env,
+    encoding: 'utf8',
+    timeout: REGRESSION_TIMEOUT,
+  })
+}
+
+test('should drain event and TAP reporter streams before the process exits', async (t) => {
+  const cwd = await createProject()
+  const testFile = join(cwd, 'sample.test.js')
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  await writeFile(
+    testFile,
+    [
+      "import assert from 'node:assert/strict'",
+      "import { test } from 'node:test'",
+      '',
+      "test('sample', () => {",
+      '  assert.equal(1, 1)',
+      '})',
+      '',
+    ].join('\n')
+  )
+
+  const { stdout, stderr } = await runTesterProcess(
+    cwd,
+    cwd,
+    createInput(cwd, ['sample.test.js']),
+    ['events', 'tap']
+  )
+
+  assert.match(stdout, /tester:events:complete/)
+  assert.match(stdout, /tester:tap:complete/)
+  assert.match(stdout, /# tests 1/)
+  assert.match(stdout, /# pass 1/)
+  assert.match(stdout, /# fail 0/)
+  assert.doesNotMatch(stderr, /run\(\) is being called recursively/)
+})
+
+const createTestFailure = (file: string, error: EventData.Error): EventData.TestFail => ({
+  details: {
+    duration_ms: 1,
+    error,
+  },
+  file,
+  name: 'sample',
+  nesting: 0,
+  testNumber: 1,
+})
+
+const createTestError = (cause: Error): EventData.Error =>
+  Object.assign(new Error('test failed'), { cause })
+
+const createTestEventStream = (events: Array<TestEvent>): AsyncIterable<TestEvent> => ({
+  async *[Symbol.asyncIterator]() {
+    yield* events
+  },
+})
+
+test('should resolve relative failure files once for emitted and returned events', async () => {
+  const projectCwd = await createProject()
+  const executionCwd = join(projectCwd, 'packages', 'tools')
+  const relativeFile = join('packages', 'tools', 'src', 'sample.test.ts')
+  const absoluteFile = resolve(projectCwd, relativeFile)
+
+  await mkdir(join(executionCwd, 'src'), { recursive: true })
+  await writeFile(join(executionCwd, 'package.json'), `${JSON.stringify({ type: 'module' })}\n`)
+  await writeFile(absoluteFile, 'test source\n')
+
+  const tester = await Tester.initialize(executionCwd, { projectCwd })
+  const originalError = new Error('original test failure')
+  const testError = createTestError(originalError)
+  const failure = createTestFailure(relativeFile, testError)
+  const emittedEvent = once(tester, 'test:fail')
+  const resultsPromise = (tester as unknown as TestEventCollector).collectTestsStream(
+    createTestEventStream([{ type: 'test:fail', data: failure } as TestEvent]),
+    undefined,
+    true
+  )
+
+  const [emittedArguments, results] = await Promise.all([emittedEvent, resultsPromise])
+  const result = results.find((event) => event.type === 'test:fail')
+
+  assert.ok(result)
+  assert.equal(result.data.file, absoluteFile)
+  assert.equal(await readFile(result.data.file, 'utf8'), 'test source\n')
+  assert.strictEqual(result.data.details.error, testError)
+  assert.strictEqual(result.data.details.error.cause, originalError)
+  assert.strictEqual(emittedArguments[0], result.data)
+})
+
+test('should preserve absolute failure files for emitted and returned events', async () => {
+  const projectCwd = await createProject()
+  const executionCwd = join(projectCwd, 'packages', 'tools')
+
+  await mkdir(executionCwd, { recursive: true })
+  await writeFile(join(executionCwd, 'package.json'), `${JSON.stringify({ type: 'module' })}\n`)
+
+  const tester = await Tester.initialize(executionCwd, { projectCwd })
+  const absoluteFile = `${projectCwd}${sep}packages${sep}tools${sep}src${sep}..${sep}sample.test.ts`
+  const originalError = new Error('original test failure')
+  const testError = createTestError(originalError)
+  const failure = createTestFailure(absoluteFile, testError)
+  const emittedEvent = once(tester, 'test:fail')
+  const resultsPromise = (tester as unknown as TestEventCollector).collectTestsStream(
+    createTestEventStream([{ type: 'test:fail', data: failure } as TestEvent]),
+    undefined,
+    true
+  )
+
+  const [emittedArguments, results] = await Promise.all([emittedEvent, resultsPromise])
+  const result = results.find((event) => event.type === 'test:fail')
+
+  assert.ok(result)
+  assert.strictEqual(result.data, failure)
+  assert.equal(result.data.file, absoluteFile)
+  assert.strictEqual(result.data.details.error, testError)
+  assert.strictEqual(result.data.details.error.cause, originalError)
+  assert.strictEqual(emittedArguments[0], result.data)
+})
 
 test('should expand explicit directory targets before collecting unit tests', async () => {
   const cwd = await createProject()
@@ -170,11 +356,13 @@ test('should resolve root-relative glob test files when collecting from workspac
   assert.deepEqual(files, [testFile])
 })
 
-test('should keep workspace ignore patterns with root-relative explicit test files', async () => {
+test('should keep workspace ignore patterns with root-relative explicit test files', async (t) => {
   const cwd = await createProject()
   const workspace = join(cwd, 'packages/tools')
   const ignoredFile = join(workspace, 'sources/ignored.test.js')
   const keptFile = join(workspace, 'sources/kept.test.js')
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
 
   await mkdir(join(workspace, 'sources'), { recursive: true })
   await writeFile(
@@ -207,44 +395,22 @@ test('should keep workspace ignore patterns with root-relative explicit test fil
     ].join('\n')
   )
 
-  const previousExecArgv = process.env[TEST_EXEC_ARGV_ENV]
+  const input = createInput(workspace, [
+    'packages/tools/sources/ignored.test.js',
+    'packages/tools/sources/kept.test.js',
+  ])
+  const { stdout, stderr } = await runTesterProcess(workspace, cwd, input, ['events', 'tap'])
 
-  process.env[TEST_EXEC_ARGV_ENV] = JSON.stringify(['--enable-source-maps'])
-
-  let results: Awaited<ReturnType<typeof tester.unit>>
-
-  try {
-    results = await tester.unit(
-      createInput(workspace, [
-        'packages/tools/sources/ignored.test.js',
-        'packages/tools/sources/kept.test.js',
-      ]),
-      {
-        testReporter: 'tap',
-      }
-    )
-  } finally {
-    if (previousExecArgv === undefined) {
-      Reflect.deleteProperty(process.env, TEST_EXEC_ARGV_ENV)
-    } else {
-      process.env[TEST_EXEC_ARGV_ENV] = previousExecArgv
-    }
-  }
-
-  assert.equal(
-    results.some((result) => result.type === 'test:fail'),
-    false
-  )
-  assert.deepEqual(
-    await (tester as unknown as TestFileCollector).collectTestFiles(
-      createInput(workspace, [
-        'packages/tools/sources/ignored.test.js',
-        'packages/tools/sources/kept.test.js',
-      ]),
-      'unit'
-    ),
-    [ignoredFile, keptFile]
-  )
+  assert.match(stdout, /tester:events:complete/)
+  assert.match(stdout, /tester:tap:complete/)
+  assert.match(stdout, /# tests 1/)
+  assert.match(stdout, /# pass 1/)
+  assert.match(stdout, /# fail 0/)
+  assert.doesNotMatch(stderr, /run\(\) is being called recursively/)
+  assert.deepEqual(await (tester as unknown as TestFileCollector).collectTestFiles(input, 'unit'), [
+    ignoredFile,
+    keptFile,
+  ])
 })
 
 test('should expand explicit directory targets with glob metacharacters as literal paths', async () => {
