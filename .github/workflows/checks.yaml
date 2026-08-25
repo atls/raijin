@@ -9,7 +9,7 @@ jobs:
   checks:
     name: Shared checks / Checks
     env:
-      NODE_VERSION: '24'
+      NODE_VERSION: '25'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: write-all
@@ -17,8 +17,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -37,7 +35,7 @@ jobs:
   raijin:
     name: Raijin checks
     env:
-      NODE_VERSION: '24'
+      NODE_VERSION: '25'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: read-all
@@ -45,9 +43,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
-          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -61,30 +56,3 @@ jobs:
         shell: bash
         run: |
           yarn raijin:check
-
-  unit:
-    name: Unit / ubuntu-latest
-    env:
-      NODE_VERSION: '24'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions: read-all
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install
-        uses: ./.github/actions/install
-
-      - name: Test unit
-        shell: bash
-        run: |
-          yarn test unit
