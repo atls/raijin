@@ -135,7 +135,8 @@ test('preserves native extends, include, exclude, and compiler options', async (
 
 test('checks root, app, and lib sources without prebuilt declarations or writes', async (t) => {
   const cwd = await createProject({
-    'tsconfig.json': '{"files":[],"references":[{"path":"./packages/app"}]}\n',
+    'tsconfig.json': '{"files":["root.ts"],"references":[{"path":"./packages/app"}]}\n',
+    'root.ts': 'export const root: string = 1\n',
     'packages/app/tsconfig.json': JSON.stringify({
       compilerOptions: {
         composite: true,
@@ -166,14 +167,89 @@ test('checks root, app, and lib sources without prebuilt declarations or writes'
     'packages/lib/src/index.ts': 'export const lib: string = true\n',
   })
   const before = await readTree(cwd)
+  const parsedConfigFiles: Array<string> = []
+  const { getParsedCommandLineOfConfigFile } = ts
+  const typescript = new Proxy(ts, {
+    get: (runtime, property, receiver) => {
+      if (property === 'getParsedCommandLineOfConfigFile') {
+        return (...args: Parameters<typeof ts.getParsedCommandLineOfConfigFile>) => {
+          parsedConfigFiles.push(args[0])
+
+          return getParsedCommandLineOfConfigFile(...args)
+        }
+      }
+
+      return Reflect.get(runtime, property, receiver)
+    },
+  })
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const diagnostics = checkProject(cwd, cwd, undefined, ts)
+  const diagnostics = checkProject(cwd, cwd, undefined, typescript)
 
   assertDiagnostics(diagnostics)
+  assert.deepEqual(parsedConfigFiles, [join(cwd, 'tsconfig.json')])
+  assert.equal(hasDiagnostic(diagnostics, 2322, '/root.ts'), true)
   assert.equal(hasDiagnostic(diagnostics, 2322, '/packages/app/src/index.ts'), true)
   assert.equal(hasDiagnostic(diagnostics, 2322, '/packages/lib/src/index.ts'), true)
+  assert.deepEqual(await readTree(cwd), before)
+})
+
+test('checks a shared TypeScript-resolved project once without writes', async (t) => {
+  const cwd = await createProject({
+    'tsconfig.json': JSON.stringify({
+      files: [],
+      references: [{ path: './packages/left' }, { path: './packages/right' }],
+    }),
+    'packages/left/tsconfig.json': JSON.stringify({
+      compilerOptions: { composite: true },
+      files: ['src/index.ts'],
+      references: [{ path: '../shared' }],
+    }),
+    'packages/left/src/index.ts': 'export const left: string = 1\n',
+    'packages/right/tsconfig.json': JSON.stringify({
+      compilerOptions: { composite: true },
+      files: ['src/index.ts'],
+      references: [{ path: '../shared' }],
+    }),
+    'packages/right/src/index.ts': 'export const right: string = 1\n',
+    'packages/shared/tsconfig.json': JSON.stringify({
+      compilerOptions: { composite: true },
+      files: ['src/index.ts'],
+    }),
+    'packages/shared/src/index.ts': 'export const shared: string = 1\n',
+  })
+  const before = await readTree(cwd)
+  const checkedPrograms: Array<ReadonlyArray<string>> = []
+  const { getPreEmitDiagnostics } = ts
+  const typescript = new Proxy(ts, {
+    get: (runtime, property, receiver) => {
+      if (property === 'getPreEmitDiagnostics') {
+        return (...args: Parameters<typeof ts.getPreEmitDiagnostics>) => {
+          checkedPrograms.push(args[0].getRootFileNames())
+
+          return getPreEmitDiagnostics(...args)
+        }
+      }
+
+      return Reflect.get(runtime, property, receiver)
+    },
+  })
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const diagnostics = checkProject(cwd, cwd, undefined, typescript)
+
+  assertDiagnostics(diagnostics)
+  assert.equal(checkedPrograms.length, 4)
+  assert.equal(
+    checkedPrograms.filter((files) =>
+      files.some((fileName) => fileName.endsWith('/packages/shared/src/index.ts'))).length,
+    1
+  )
+  assert.equal(hasDiagnostic(diagnostics, 2322, '/packages/left/src/index.ts'), true)
+  assert.equal(hasDiagnostic(diagnostics, 2322, '/packages/right/src/index.ts'), true)
+  assert.equal(hasDiagnostic(diagnostics, 2322, '/packages/shared/src/index.ts'), true)
   assert.deepEqual(await readTree(cwd), before)
 })
 
@@ -187,5 +263,22 @@ test('keeps missing reference failures as TypeScript diagnostics', async (t) => 
   const diagnostics = checkProject(cwd, cwd, undefined, ts)
 
   assertDiagnostics(diagnostics)
-  assert.equal(hasDiagnostic(diagnostics, 5083), true)
+  assert.equal(hasDiagnostic(diagnostics, 6053), true)
+})
+
+test('keeps invalid reference configuration as TypeScript diagnostics', async (t) => {
+  const cwd = await createProject({
+    'tsconfig.json': '{"files":[],"references":[{"path":"./broken"}]}\n',
+    'broken/tsconfig.json': JSON.stringify({
+      compilerOptions: { composite: true, unknownOption: true },
+      files: [],
+    }),
+  })
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const diagnostics = checkProject(cwd, cwd, undefined, ts)
+
+  assertDiagnostics(diagnostics)
+  assert.equal(hasDiagnostic(diagnostics, 5023), true)
 })
