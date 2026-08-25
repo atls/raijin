@@ -1,41 +1,15 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import type { TypecheckResult }          from './typecheck.js'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { Option }                       from 'clipanion'
 
-import { BaseCommand }                   from '@yarnpkg/cli'
-import { Option }                        from 'clipanion'
-import React                             from 'react'
+import { createCommandInput }           from '@atls/raijin/commands'
+import { toNativeCwd }                  from '@atls/raijin/commands'
 
-import { TypeScriptDiagnostic }          from '@atls/cli-ui-typescript-diagnostic-component'
-import { renderStatic }                  from '@atls/cli-ui-renderer-static-component'
-import { createCommandInput }            from '@atls/raijin/commands'
-import { toNativeCwd }                   from '@atls/raijin/commands'
-
-import { typecheckProjectSources }       from './typecheck.js'
-
-const writeTypecheckResult = (
-  context: Pick<WorkspaceCommandContext, 'stderr' | 'stdout'>,
-  result: TypecheckResult
-): void => {
-  if (result.kind === 'error') {
-    const message =
-      result.reason === 'invalid-policy'
-        ? `Invalid typecheckSkipLibCheck in ${result.cwd}: expected boolean.`
-        : `TypeScript project not found in ${result.cwd}; provide explicit files.`
-
-    context.stderr.write(`${message}\n`)
-
-    return
-  }
-
-  result.diagnostics.forEach((diagnostic) => {
-    renderStatic(<TypeScriptDiagnostic {...diagnostic} />)
-      .split('\n')
-      .forEach((line) => {
-        context.stdout.write(`${line}\n`)
-      })
-  })
-}
+import { writeCompleted }               from './presenters/completed.jsx'
+import { writeManagedError }            from './presenters/error.js'
+import { writeException }               from './presenters/exception.js'
+import { typecheckProjectSources }      from './typecheck.js'
 
 export class TypeCheckCommand extends BaseCommand {
   static override paths = [['typecheck']]
@@ -57,25 +31,38 @@ export class TypeCheckCommand extends BaseCommand {
         source: 'explicit',
         targets: this.args,
       })
-      const result = await typecheckProjectSources({
-        cwd: toNativeCwd(invocationCwd),
-        projectCwd: toNativeCwd(project.cwd),
-        manifestPolicySources: [project.topLevelWorkspace, workspace].map(({ cwd, manifest }) => ({
-          cwd: toNativeCwd(cwd),
-          ...(Object.hasOwn(manifest.raw, 'typecheckSkipLibCheck')
-            ? { typecheckSkipLibCheck: manifest.raw.typecheckSkipLibCheck }
-            : {}),
-        })),
-        targets: input.targets.length > 0 ? input : undefined,
-      })
+      const result =
+        input.targets.length > 0
+          ? await typecheckProjectSources({
+              kind: 'files',
+              files: input.targets.map(({ path }) => path),
+            })
+          : await typecheckProjectSources({
+              kind: 'project',
+              cwd: toNativeCwd(invocationCwd),
+              projectCwd: toNativeCwd(project.cwd),
+              manifestPolicySources: [project.topLevelWorkspace, workspace].map(({
+                cwd,
+                manifest,
+              }) => ({
+                cwd: toNativeCwd(cwd),
+                ...(Object.hasOwn(manifest.raw, 'typecheckSkipLibCheck')
+                  ? { typecheckSkipLibCheck: manifest.raw.typecheckSkipLibCheck }
+                  : {}),
+              })),
+            })
 
-      writeTypecheckResult(this.context, result)
+      if (result.kind === 'error') {
+        writeManagedError(this.context, result)
 
-      return result.kind === 'completed' ? result.exitCode : 1
+        return 1
+      }
+
+      writeCompleted(this.context, result)
+
+      return result.exitCode
     } catch (error) {
-      const message = error instanceof Error ? `${error.name}: ${error.message}` : String(error)
-
-      this.context.stderr.write(`${message}\n`)
+      writeException(this.context, error)
 
       return 1
     }

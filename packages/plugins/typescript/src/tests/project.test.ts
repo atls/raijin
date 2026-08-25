@@ -92,7 +92,7 @@ describe('root project discovery', () => {
     })
     const projectCwd = join(parentCwd, 'project')
     const checkedFiles: Array<string> = []
-    const fileExists = ts.sys.fileExists
+    const { fileExists } = ts.sys
 
     t.after(async () => rm(parentCwd, { recursive: true, force: true }))
     t.mock.method(ts.sys, 'fileExists', (fileName: string) => {

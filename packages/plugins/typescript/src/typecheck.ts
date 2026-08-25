@@ -1,43 +1,21 @@
-import type { CommandInput }            from '@atls/raijin/commands'
-import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
+import type { ts as TypeScriptRuntime }       from '@atls/raijin/typescript'
 
-import { checkFiles }                   from './files.js'
-import { checkProject }                 from './project.js'
+import type { TypecheckInput }                from './interfaces/input.js'
+import type { TypecheckManifestPolicySource } from './interfaces/input.js'
+import type { TypeScriptProvider }            from './interfaces/provider.js'
+import type { TypecheckCompletedResult }      from './interfaces/result.js'
+import type { TypecheckManagedError }         from './interfaces/result.js'
+import type { TypecheckResult }               from './interfaces/result.js'
+
+import { checkFiles }                         from './files.js'
+import { checkProject }                       from './project.js'
 
 const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
 
-type TypecheckManifestPolicySource = {
-  readonly cwd: string
-  readonly typecheckSkipLibCheck?: unknown
-}
-
-type TypecheckInput = {
-  readonly cwd: string
-  readonly projectCwd: string
-  readonly manifestPolicySources?: ReadonlyArray<TypecheckManifestPolicySource>
-  readonly targets?: CommandInput
-}
-
-type TypecheckCompletedResult = {
-  readonly kind: 'completed'
-  readonly diagnostics: ReadonlyArray<TypeScriptRuntime.Diagnostic>
-  readonly exitCode: 0 | 1
-}
-
-type TypecheckManagedError = {
-  readonly kind: 'error'
-  readonly reason: 'invalid-policy' | 'missing-project'
-  readonly cwd: string
-}
-
-export type TypecheckResult = TypecheckCompletedResult | TypecheckManagedError
-
 const importTypeScript = async (): Promise<typeof TypeScriptRuntime> => {
-  const runtime = await (import(TYPESCRIPT_RUNTIME_SPECIFIER) as Promise<{
-    ts: typeof TypeScriptRuntime
-  }>)
+  const provider = (await import(TYPESCRIPT_RUNTIME_SPECIFIER)) as TypeScriptProvider
 
-  return runtime.ts
+  return provider.ts
 }
 
 const resolveTypecheckSkipLibCheck = (
@@ -75,28 +53,23 @@ const toCompletedResult = (
   }
 }
 
-export const typecheckProjectSources = async ({
-  cwd,
-  projectCwd,
-  manifestPolicySources = [],
-  targets,
-}: TypecheckInput): Promise<TypecheckResult> => {
-  if (targets && targets.targets.length > 0) {
+export const typecheckProjectSources = async (input: TypecheckInput): Promise<TypecheckResult> => {
+  if (input.kind === 'files') {
     const typescript = await importTypeScript()
 
-    return toCompletedResult(checkFiles(targets, typescript), typescript)
+    return toCompletedResult(checkFiles(input.files, typescript), typescript)
   }
 
-  const policy = resolveTypecheckSkipLibCheck(manifestPolicySources)
+  const policy = resolveTypecheckSkipLibCheck(input.manifestPolicySources ?? [])
 
   if (typeof policy === 'object') {
     return policy
   }
 
   const typescript = await importTypeScript()
-  const diagnostics = checkProject(cwd, projectCwd, policy, typescript)
+  const diagnostics = checkProject(input.cwd, input.projectCwd, policy, typescript)
 
   return diagnostics
     ? toCompletedResult(diagnostics, typescript)
-    : { kind: 'error', reason: 'missing-project', cwd }
+    : { kind: 'error', reason: 'missing-project', cwd: input.cwd }
 }
