@@ -6,6 +6,18 @@ import { test }                       from 'node:test'
 
 import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
+import { createReleaseBuildArguments } from './checks-release.command.js'
+
+test('runs unnamed root release builds through native foreach path selection', () => {
+  assert.deepEqual(createReleaseBuildArguments({ path: '.' }), [
+    'workspaces',
+    'foreach',
+    '--include',
+    '.',
+    '--all',
+    'build',
+  ])
+})
 
 const createProject = (tools?: Record<string, unknown>): Project =>
   ({

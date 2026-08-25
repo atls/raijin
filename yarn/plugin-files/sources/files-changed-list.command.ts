@@ -1,10 +1,12 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
+import { MessageName }                  from '@yarnpkg/core'
 import { StreamReport }                 from '@yarnpkg/core'
 import { Option }                       from 'clipanion'
 
-import { getChangedFiles }              from './changed-files.util.js'
+import { formatChangedStateManagedError } from './changed-state/message.js'
+import { resolveChangedProjectStateForEntrypoint } from './changed-state/resolve.js'
 
 class FilesChangedListCommand extends BaseCommand {
   static override paths = [['files', 'changed', 'list']]
@@ -20,7 +22,7 @@ class FilesChangedListCommand extends BaseCommand {
   override async execute(): Promise<number> {
     const { invocation } = this.context
     const { yarn } = invocation
-    const { configuration } = yarn
+    const { configuration, project } = yarn
 
     const commandReport = await StreamReport.start(
       {
@@ -29,12 +31,23 @@ class FilesChangedListCommand extends BaseCommand {
         stdout: this.context.stdout,
       },
       async (report) => {
-        const files = await getChangedFiles(invocation.process)
+        const result = await resolveChangedProjectStateForEntrypoint({
+          processInvocation: invocation.process,
+          project,
+        })
 
-        for (const file of files) {
-          report.reportInfo(null, file)
+        if (result.kind === 'error') {
+          report.reportError(MessageName.UNNAMED, formatChangedStateManagedError(result))
+
+          return
+        }
+
+        for (const file of result.state.files) {
+          report.reportInfo(null, file.path)
           report.reportJson({
-            location: file,
+            location: file.path,
+            previousLocation: file.previousPath ?? null,
+            status: file.status,
           })
         }
       }

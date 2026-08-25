@@ -6,29 +6,6 @@ import { structUtils }                   from '@yarnpkg/core'
 import { isReleaseVersionWorkspace }     from '../release-version-defer.command.js'
 import { parseDeferredReleaseDecisions } from '../release-version-defer.command.js'
 import { selectLocalCommitDiffParent }   from '../release-version-defer.command.js'
-import { toGitHubChange }                from '../release-version-defer.command.js'
-
-test('should include previous GitHub filenames for renamed files', () => {
-  const change = toGitHubChange({
-    data: {
-      commit: {
-        message: 'fix(runtime): move loader',
-      },
-      files: [
-        {
-          filename: 'code/code-test/src/loader.ts',
-          previous_filename: 'yarn/raijin/src/loader.ts',
-        },
-      ],
-    },
-  } as Parameters<typeof toGitHubChange>[0])
-
-  assert.deepEqual(change, {
-    message: 'fix(runtime): move loader',
-    files: ['code/code-test/src/loader.ts', 'yarn/raijin/src/loader.ts'],
-  })
-})
-
 test('should diff merge commits against the parent outside the local range', () => {
   assert.equal(
     selectLocalCommitDiffParent(['feature-parent', 'base-parent'], new Set(['feature-parent'])),

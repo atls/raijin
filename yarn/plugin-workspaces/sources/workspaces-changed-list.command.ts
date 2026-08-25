@@ -1,13 +1,16 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
+import { MessageName }                  from '@yarnpkg/core'
 import { StreamReport }                 from '@yarnpkg/core'
 import { structUtils }                  from '@yarnpkg/core'
 import { Option }                       from 'clipanion'
 
-import { getChangedFiles }              from '@atls/yarn-plugin-files'
+import { formatChangedStateManagedError } from '@atls/yarn-plugin-files'
+import { resolveChangedProjectStateForEntrypoint } from '@atls/yarn-plugin-files'
+import { resolveProjectWorkspaces }     from '@atls/yarn-plugin-files'
 
-import { getChangedWorkspaces }         from './get-changed-workspaces.util.js'
+import { expandWorkspaceDependents }    from './expand-workspace-dependents.js'
 
 class WorkspacesChangedListCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'list']]
@@ -33,8 +36,19 @@ class WorkspacesChangedListCommand extends BaseCommand {
       },
 
       async (streamReport) => {
-        const files = await getChangedFiles(invocation.process)
-        const workspaces = getChangedWorkspaces(project, files)
+        const result = await resolveChangedProjectStateForEntrypoint({
+          processInvocation: invocation.process,
+          project,
+        })
+
+        if (result.kind === 'error') {
+          streamReport.reportError(MessageName.UNNAMED, formatChangedStateManagedError(result))
+
+          return
+        }
+
+        const state = expandWorkspaceDependents(project, result.state)
+        const workspaces = resolveProjectWorkspaces(project, state.workspaces)
 
         for (const ws of workspaces) {
           streamReport.reportInfo(null, ws.relativeCwd)

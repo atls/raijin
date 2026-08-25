@@ -1,20 +1,32 @@
 import type { ProjectCommandContext } from '@atls/raijin/commands'
+import type { ChangedWorkspaceIdentity } from '@atls/yarn-plugin-files'
+import type { Workspace }             from '@yarnpkg/core'
 
 import type { Annotation }            from './github.checks.js'
 
 import { BaseCommand }                from '@yarnpkg/cli'
+import { MessageName }                from '@yarnpkg/core'
+import { StreamReport }               from '@yarnpkg/core'
 import { ppath }                      from '@yarnpkg/fslib'
 import { Command }                    from 'clipanion'
 import { Option }                     from 'clipanion'
 import stripAnsi                      from 'strip-ansi'
 
-import { getChangedFiles }            from '@atls/yarn-plugin-files'
-import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
+import { formatChangedStateManagedError } from '@atls/yarn-plugin-files'
+import { resolveChangedProjectStateForEntrypoint } from '@atls/yarn-plugin-files'
+import { resolveProjectWorkspaces }   from '@atls/yarn-plugin-files'
+import { toWorkspaceIdentity }        from '@atls/yarn-plugin-files'
+import { createForeachInput }         from '@atls/yarn-plugin-workspaces'
+import { expandWorkspaceDependents }  from '@atls/yarn-plugin-workspaces'
 
 import { GitHubChecks }               from './github.checks.js'
 import { AnnotationLevel }            from './github.checks.js'
 import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
 import { resolveChecksReleaseConfig } from './checks-release.config.js'
+
+export const createReleaseBuildArguments = (
+  workspace: ChangedWorkspaceIdentity
+): Array<string> => [...createForeachInput([workspace.path], {}), 'build']
 
 class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]
@@ -36,18 +48,43 @@ class ChecksReleaseCommand extends BaseCommand {
   override async execute(): Promise<number> {
     const { invocation } = this.context
     const { yarn } = invocation
-    const { project } = yarn
+    const { configuration, project } = yarn
 
     const releaseConfig = resolveChecksReleaseConfig(project)
     const effectiveReleaseConfig = {
       ...releaseConfig,
       privateWorkspaces: this.noPrivate ? false : releaseConfig.privateWorkspaces,
     }
-    const workspaces = releaseConfig.enabled
-      ? getChangedWorkspaces(project, await getChangedFiles(invocation.process)).filter((
-          workspace
-        ) => isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
-      : []
+    let workspaces: Array<Workspace> = []
+
+    if (releaseConfig.enabled) {
+      const result = await resolveChangedProjectStateForEntrypoint({
+        processInvocation: invocation.process,
+        project,
+      })
+
+      if (result.kind === 'error') {
+        const commandReport = await StreamReport.start(
+          {
+            configuration,
+            stdout: this.context.stdout,
+          },
+          async (report) => {
+            report.reportError(
+              MessageName.UNNAMED,
+              formatChangedStateManagedError(result)
+            )
+          }
+        )
+
+        return commandReport.exitCode()
+      }
+
+      const state = expandWorkspaceDependents(project, result.state)
+
+      workspaces = resolveProjectWorkspaces(project, state.workspaces).filter((workspace) =>
+        isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
+    }
 
     const checks = new GitHubChecks('Release')
 
@@ -59,7 +96,7 @@ class ChecksReleaseCommand extends BaseCommand {
       for await (const workspace of workspaces) {
         if (workspace.manifest.scripts.get('build')) {
           const result = await yarn.capture(
-            ['workspace', workspace.manifest.raw.name as string, 'build'],
+            createReleaseBuildArguments(toWorkspaceIdentity(workspace)),
             { forwardOutput: true }
           )
 

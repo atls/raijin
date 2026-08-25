@@ -6,6 +6,8 @@ import type { ProjectCommandContext }      from '@atls/raijin/commands'
 import type { LintDiagnostic }             from '@atls/yarn-plugin-lint'
 import type { LintFileResult }             from '@atls/yarn-plugin-lint'
 import type { LintProjectCompletedResult } from '@atls/yarn-plugin-lint'
+import type { ChangedProjectState }        from '@atls/yarn-plugin-files'
+import type { ChangedStateManagedError }   from '@atls/yarn-plugin-files'
 import type { Project }                    from '@yarnpkg/core'
 
 import type { Annotation }                 from './github.checks.js'
@@ -22,7 +24,8 @@ import { Option }                          from 'clipanion'
 import { createCommandInput }              from '@atls/raijin/commands'
 import { toNativeCwd }                     from '@atls/raijin/commands'
 import { toNativePath }                    from '@atls/raijin/filesystem'
-import { getChangedFiles }                 from '@atls/yarn-plugin-files'
+import { formatChangedStateManagedError }  from '@atls/yarn-plugin-files'
+import { resolveChangedProjectStateForEntrypoint } from '@atls/yarn-plugin-files'
 import { lintProjectSources }              from '@atls/yarn-plugin-lint'
 
 import { GitHubChecks }                    from './github.checks.js'
@@ -30,6 +33,13 @@ import { AnnotationLevel }                 from './github.checks.js'
 
 const getAnnotationLevel = (severity: LintDiagnostic['severity']): AnnotationLevel =>
   severity === 1 ? AnnotationLevel.Warning : AnnotationLevel.Failure
+
+type LintTargetsResult =
+  | ChangedStateManagedError
+  | {
+      readonly kind: 'completed'
+      readonly targets: CommandInput | null
+    }
 
 export const formatLintAnnotations = (
   results: ReadonlyArray<LintFileResult>,
@@ -66,6 +76,11 @@ export const reportLintOutput = (
   }
 }
 
+export const selectChangedLintFiles = (state: ChangedProjectState): ReadonlyArray<string> =>
+  state.files
+    .filter(({ path, status }) => status !== 'deleted' && /\.(c|m)?(j|t)sx?$/.test(path))
+    .map(({ path }) => path)
+
 class ChecksLintCommand extends BaseCommand {
   static override paths = [['checks', 'lint']]
 
@@ -95,7 +110,18 @@ class ChecksLintCommand extends BaseCommand {
         await report.startTimerPromise('Lint', async () => {
           try {
             const projectCwd = toNativeCwd(projectModel.cwd)
-            const lintTargets = await this.getLintTargets(project, invocation.process)
+            const targetsResult = await this.getLintTargets(project, invocation.process)
+
+            if (targetsResult.kind === 'error') {
+              const summary = formatChangedStateManagedError(targetsResult)
+
+              await checks.failure({ title: 'Lint run failed', summary }, checkId)
+              report.reportError(MessageName.UNNAMED, summary)
+
+              return
+            }
+
+            const lintTargets = targetsResult.targets
 
             if (lintTargets !== null && lintTargets.targets.length === 0) {
               await checks.complete(checkId, {
@@ -165,16 +191,24 @@ class ChecksLintCommand extends BaseCommand {
   private async getLintTargets(
     project: Project,
     processInvocation: ProjectProcessInvocation
-  ): Promise<CommandInput | null> {
+  ): Promise<LintTargetsResult> {
     if (!this.changed) {
-      return null
+      return { kind: 'completed', targets: null }
+    }
+
+    const result = await resolveChangedProjectStateForEntrypoint({
+      processInvocation,
+      project,
+    })
+
+    if (result.kind === 'error') {
+      return result
     }
 
     const input = createCommandInput({
       cwd: project.cwd,
       source: 'changed',
-      targets: (await getChangedFiles(processInvocation)).filter((file) =>
-        /\.(c|m)?(j|t)sx?$/.test(file)),
+      targets: selectChangedLintFiles(result.state),
     })
 
     const existsMap = await Promise.all(
@@ -182,8 +216,11 @@ class ChecksLintCommand extends BaseCommand {
     )
 
     return {
-      ...input,
-      targets: input.targets.filter((_, index) => existsMap[index]),
+      kind: 'completed',
+      targets: {
+        ...input,
+        targets: input.targets.filter((_, index) => existsMap[index]),
+      },
     }
   }
 }

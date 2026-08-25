@@ -1,28 +1,21 @@
-import type { CommandInput }             from '@atls/raijin/commands'
-import type { ProcessExecutionResult }   from '@atls/raijin/commands'
-import type { ProjectCommandContext }    from '@atls/raijin/commands'
-import type { ProjectInvocation }        from '@atls/raijin/commands'
-import type { ProjectProcessInvocation } from '@atls/raijin/commands'
-import type { Project }                  from '@yarnpkg/core'
+import type { ProcessExecutionResult } from '@atls/raijin/commands'
+import type { ProjectCommandContext }  from '@atls/raijin/commands'
+import type { ProjectInvocation }      from '@atls/raijin/commands'
+import type { ChangedProjectState }    from '@atls/yarn-plugin-files'
 
-import type { TypeScriptConfigRuntime }  from './checks-typecheck.interfaces.js'
+import { BaseCommand }                 from '@yarnpkg/cli'
+import { MessageName }                 from '@yarnpkg/core'
+import { StreamReport }                from '@yarnpkg/core'
+import { Option }                      from 'clipanion'
 
-import { BaseCommand }                   from '@yarnpkg/cli'
-import { StreamReport }                  from '@yarnpkg/core'
-import { MessageName }                   from '@yarnpkg/core'
-import { xfs }                           from '@yarnpkg/fslib'
-import { Option }                        from 'clipanion'
+import { formatChangedStateManagedError } from '@atls/yarn-plugin-files'
+import { resolveChangedProjectStateForEntrypoint } from '@atls/yarn-plugin-files'
+import { createForeachInput }          from '@atls/yarn-plugin-workspaces'
+import { expandWorkspaceDependents }   from '@atls/yarn-plugin-workspaces'
 
-import { createCommandInput }            from '@atls/raijin/commands'
-import { toCommandArguments }            from '@atls/raijin/commands'
-import { toNativeCwd }                   from '@atls/raijin/commands'
-import { resolveRaijinRuntimeUrl }       from '@atls/raijin/runtime-resolver'
-import { getChangedFiles }               from '@atls/yarn-plugin-files'
-
-import { GitHubChecks }                  from './github.checks.js'
+import { GitHubChecks }                from './github.checks.js'
 
 const TYPECHECK_TIMEOUT_MS = 5 * 60 * 1000
-const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
 
 const formatTypecheckFailure = (result: ProcessExecutionResult): string => {
   switch (result.reason) {
@@ -48,10 +41,25 @@ const formatTypecheckFailure = (result: ProcessExecutionResult): string => {
   }
 }
 
-const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptConfigRuntime> =>
-  (await import(
-    resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_CONFIG_SPECIFIER)
-  )) as TypeScriptConfigRuntime
+export const createTypecheckArguments = (
+  state?: ChangedProjectState
+): Array<string> | undefined => {
+  if (!state) {
+    return ['typecheck']
+  }
+
+  if (state.workspaces.length === 0) {
+    return undefined
+  }
+
+  return [
+    ...createForeachInput(
+      state.workspaces.map(({ path }) => path),
+      {}
+    ),
+    'typecheck',
+  ]
+}
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
@@ -66,7 +74,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
   override async execute(): Promise<number> {
     const { invocation } = this.context
-    const { project, yarn } = invocation
+    const { yarn } = invocation
     const { configuration } = yarn
 
     const commandReport = await StreamReport.start(
@@ -82,18 +90,34 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
           await report.startTimerPromise('TypeCheck', async () => {
             try {
-              const input = await this.getInput(
-                yarn.project,
-                project.workspacePatterns,
-                invocation.process
-              )
+              let state: ChangedProjectState | undefined
 
-              if (this.changed && input?.targets.length === 0) {
-                report.reportInfo(MessageName.UNNAMED, 'No TypeScript files changed')
+              if (this.changed) {
+                const result = await resolveChangedProjectStateForEntrypoint({
+                  processInvocation: invocation.process,
+                  project: yarn.project,
+                })
+
+                if (result.kind === 'error') {
+                  const summary = formatChangedStateManagedError(result)
+
+                  await checks.failure({ title: 'TypeCheck run failed', summary }, checkId)
+                  report.reportError(MessageName.UNNAMED, summary)
+
+                  return
+                }
+
+                state = expandWorkspaceDependents(yarn.project, result.state)
+              }
+
+              const args = createTypecheckArguments(state)
+
+              if (!args) {
+                report.reportInfo(MessageName.UNNAMED, 'No TypeScript projects changed')
 
                 await checks.complete(checkId, {
                   title: 'Successful',
-                  summary: 'No TypeScript files changed',
+                  summary: 'No TypeScript projects changed',
                   annotations: [],
                 })
 
@@ -102,12 +126,12 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
               report.reportInfo(
                 MessageName.UNNAMED,
-                input
-                  ? `TypeCheck targets: ${input.targets.length}`
-                  : 'TypeCheck targets: project tsconfig'
+                state
+                  ? `TypeCheck projects: ${state.workspaces.length}`
+                  : 'TypeCheck project: current workspace'
               )
 
-              const result = await this.runTypecheck(invocation, input)
+              const result = await this.runTypecheck(invocation, args)
 
               if (result.reason === 'completed' && result.exitCode === 0) {
                 await checks.complete(checkId, {
@@ -129,20 +153,26 @@ class ChecksTypeCheckCommand extends BaseCommand {
                 report.reportError(MessageName.UNNAMED, summary)
               }
             } catch (error) {
+              const summary = error instanceof Error ? error.message : String(error)
+
               await checks.failure(
                 {
                   title: 'TypeCheck run failed',
-                  summary: error instanceof Error ? error.message : (error as string),
+                  summary,
                 },
                 checkId
               )
+              report.reportError(MessageName.UNNAMED, summary)
             }
           })
         } catch (error) {
+          const summary = error instanceof Error ? error.message : String(error)
+
           await checks.failure({
             title: 'TypeCheck start failed',
-            summary: error instanceof Error ? error.message : (error as string),
+            summary,
           })
+          report.reportError(MessageName.UNNAMED, summary)
         }
       }
     )
@@ -150,58 +180,14 @@ class ChecksTypeCheckCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
-  protected async getInput(
-    project: Project,
-    workspacePatterns: Array<string>,
-    processInvocation?: ProjectProcessInvocation
-  ): Promise<CommandInput | undefined> {
-    if (this.changed) {
-      if (!processInvocation) {
-        throw new Error('Changed TypeScript targets require command invocation')
-      }
-
-      const input = createCommandInput({
-        cwd: project.cwd,
-        source: 'changed',
-        targets: (await getChangedFiles(processInvocation)).filter((file) =>
-          /\.(cts|mts|ts|tsx)$/.test(file)),
-      })
-
-      const existsMap = await Promise.all(
-        input.targets.map(async ({ path }) => xfs.existsPromise(path))
-      )
-
-      return {
-        ...input,
-        targets: input.targets.filter((_, index) => existsMap[index]),
-      }
-    }
-
-    const nativeProjectCwd = toNativeCwd(project.cwd)
-    const { hasTypeScriptProject } = await importTypeScriptConfigRuntime(nativeProjectCwd)
-
-    if (hasTypeScriptProject(nativeProjectCwd)) {
-      return undefined
-    }
-
-    return createCommandInput({
-      cwd: project.cwd,
-      source: 'generated',
-      targets: workspacePatterns,
-    })
-  }
-
-  private async runTypecheck(
+  protected async runTypecheck(
     invocation: ProjectInvocation,
-    input: CommandInput | undefined
+    args: Array<string>
   ): Promise<ProcessExecutionResult> {
-    return invocation.yarn.run(
-      ['typecheck', ...(input ? toCommandArguments(input, invocation.project.cwd) : [])],
-      {
-        input: 'ignore',
-        timeoutMs: TYPECHECK_TIMEOUT_MS,
-      }
-    )
+    return invocation.yarn.run(args, {
+      input: 'ignore',
+      timeoutMs: TYPECHECK_TIMEOUT_MS,
+    })
   }
 }
 

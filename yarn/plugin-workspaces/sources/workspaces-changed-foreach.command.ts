@@ -1,13 +1,14 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
+import { MessageName }                  from '@yarnpkg/core'
 import { StreamReport }                 from '@yarnpkg/core'
-import { structUtils }                  from '@yarnpkg/core'
 import { Option }                       from 'clipanion'
 
-import { getChangedFiles }              from '@atls/yarn-plugin-files'
+import { formatChangedStateManagedError } from '@atls/yarn-plugin-files'
+import { resolveChangedProjectStateForEntrypoint } from '@atls/yarn-plugin-files'
 
-import { getChangedWorkspaces }         from './get-changed-workspaces.util.js'
+import { expandWorkspaceDependents }    from './expand-workspace-dependents.js'
 import { createForeachInput }           from './workspaces-changed-foreach.input.js'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
@@ -52,10 +53,29 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
     const { yarn } = invocation
     const { configuration, project } = yarn
 
-    const files = await getChangedFiles(invocation.process, this.since)
-    const workspaces = getChangedWorkspaces(project, files)
+    const result = await resolveChangedProjectStateForEntrypoint({
+      processInvocation: invocation.process,
+      project,
+      since: this.since || undefined,
+    })
 
-    if (!workspaces.length) {
+    if (result.kind === 'error') {
+      const commandReport = await StreamReport.start(
+        {
+          configuration,
+          stdout: this.context.stdout,
+        },
+        async (report) => {
+          report.reportError(MessageName.UNNAMED, formatChangedStateManagedError(result))
+        }
+      )
+
+      return commandReport.exitCode()
+    }
+
+    const state = expandWorkspaceDependents(project, result.state)
+
+    if (!state.workspaces.length) {
       const commandReport = await StreamReport.start(
         {
           configuration,
@@ -70,7 +90,7 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
     }
 
     const input = createForeachInput(
-      workspaces.map((ws) => structUtils.stringifyIdent(ws.anchoredLocator)),
+      state.workspaces.map(({ path }) => path),
       {
         exclude: this.exclude,
         verbose: this.verbose,

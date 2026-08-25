@@ -17,14 +17,10 @@ import { xfs }                                      from '@yarnpkg/fslib'
 import { parseSyml }                                from '@yarnpkg/parsers'
 
 import { assertProcessCompleted }                   from '@atls/raijin/commands'
-import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
-
 import { isReleaseVersionStrategy }                 from './release-version-policy.utils.js'
 import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
 import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
-
-type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
-type GitHubCommitFile = NonNullable<GitHubCommit['data']['files']>[number]
+import { readGitHubReleaseVersionChanges }          from './release-version/providers/github.js'
 
 interface ReleaseVersionWorkspaceCandidate {
   relativeCwd: string
@@ -123,18 +119,6 @@ export const isPublicReleaseWorkspace = (workspace: ReleaseVersionWorkspace): bo
 export const toReleaseWorkspaceOwner = (workspace: Workspace): ReleaseVersionWorkspaceOwner => ({
   relativeCwd: workspace.relativeCwd,
 })
-
-const toGitHubFileNames = (file: GitHubCommitFile): Array<string> =>
-  [file.filename, file.previous_filename].filter((filename): filename is string =>
-    Boolean(filename))
-
-export const toGitHubChange = (commit: GitHubCommit): ReleaseVersionChange => ({
-  message: commit.data.commit.message,
-  files: [...new Set((commit.data.files ?? []).flatMap(toGitHubFileNames))],
-})
-
-const getGitHubChanges = async (): Promise<Array<ReleaseVersionChange>> =>
-  (await getChangedCommmits()).map(toGitHubChange)
 
 const getLocalCommitShas = async (
   processInvocation: ProjectProcessInvocation,
@@ -292,7 +276,7 @@ export const getReleaseVersionChanges = async (
   gitRange?: string
 ): Promise<Array<ReleaseVersionChange>> => {
   if (gitRange === undefined && process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
-    return getGitHubChanges()
+    return [...await readGitHubReleaseVersionChanges()]
   }
 
   return getLocalChanges(processInvocation, gitRange ?? DEFAULT_GIT_RANGE)

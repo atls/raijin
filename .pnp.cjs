@@ -1790,7 +1790,6 @@ const RAW_RUNTIME_STATE =
           ["@actions/github", "npm:6.0.0"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-files", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-files"],\
-          ["@octokit/types", "npm:13.5.0"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
@@ -1812,7 +1811,6 @@ const RAW_RUNTIME_STATE =
           ["@actions/github", "npm:6.0.0"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
           ["@atls/yarn-plugin-files", "workspace:yarn/plugin-files"],\
-          ["@octokit/types", "npm:13.5.0"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
@@ -2054,9 +2052,9 @@ const RAW_RUNTIME_STATE =
       ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-release", {\
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-release-virtual-73ec8c1ec4/1/yarn/plugin-release/",\
         "packageDependencies": [\
+          ["@actions/github", "npm:6.0.0"],\
           ["@atls/code-github", "virtual:73ec8c1ec4994200b1ea51278470ae8a391f1e4825854ec187a42b68bf4b281ae006cbbe98ae9572bf00c46f0fa94b5957c9fa003910b3ff0e829d2b4b4341b2#workspace:code/code-github"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
-          ["@atls/yarn-plugin-files", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-files"],\
           ["@atls/yarn-plugin-release", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-release"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -2080,9 +2078,9 @@ const RAW_RUNTIME_STATE =
       ["workspace:yarn/plugin-release", {\
         "packageLocation": "./yarn/plugin-release/",\
         "packageDependencies": [\
+          ["@actions/github", "npm:6.0.0"],\
           ["@atls/code-github", "virtual:73ec8c1ec4994200b1ea51278470ae8a391f1e4825854ec187a42b68bf4b281ae006cbbe98ae9572bf00c46f0fa94b5957c9fa003910b3ff0e829d2b4b4341b2#workspace:code/code-github"],\
           ["@atls/raijin", "workspace:yarn/raijin"],\
-          ["@atls/yarn-plugin-files", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-files"],\
           ["@atls/yarn-plugin-release", "workspace:yarn/plugin-release"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\

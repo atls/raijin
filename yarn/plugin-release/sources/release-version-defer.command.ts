@@ -13,7 +13,6 @@ import { resolveReleaseVersionStrategies }        from './release-version.utils.
 export { isReleaseVersionWorkspace }     from './release-version.utils.js'
 export { parseDeferredReleaseDecisions } from './release-version.utils.js'
 export { selectLocalCommitDiffParent }   from './release-version.utils.js'
-export { toGitHubChange }                from './release-version.utils.js'
 
 export class ReleaseVersionDeferCommand extends BaseCommand {
   static override paths = [['release', 'version', 'defer']]
