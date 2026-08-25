@@ -25,7 +25,6 @@
     "target": "es2022",
     "jsx": "react-jsx",
     "strictPropertyInitialization": false,
-    "rootDir": ".",
     "outDir": "./dist",
     "noImplicitOverride": true,
     "checkJs": true
