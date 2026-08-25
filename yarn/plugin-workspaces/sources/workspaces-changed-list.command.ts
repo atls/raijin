@@ -39,6 +39,7 @@ class WorkspacesChangedListCommand extends BaseCommand {
         const result = await resolveChangedProjectStateForEntrypoint({
           processInvocation: invocation.process,
           project,
+          source: { kind: 'working-tree' },
         })
 
         if (result.kind === 'error') {

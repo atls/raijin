@@ -11,6 +11,16 @@ const cases: ReadonlyArray<readonly [ChangedStateManagedError, string]> = [
     'GitHub pull_request event context is incomplete',
   ],
   [
+    {
+      kind: 'error',
+      reason: 'incomplete-pull-request-files',
+      expected: 3001,
+      received: 3000,
+      limit: 3000,
+    },
+    'GitHub pull request file list is incomplete: expected 3001, received 3000, provider limit 3000',
+  ],
+  [
     { kind: 'error', reason: 'invalid-comparison', source: 'push' },
     'push changed state does not define two comparable Git objects',
   ],

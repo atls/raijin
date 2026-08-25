@@ -3,7 +3,6 @@ import type { ResolveChangedProjectStateEntrypointInput } from './interfaces/inp
 import type { ChangedProjectStateResult } from './interfaces/result.js'
 import type { ChangedProjectStateResolutionResult } from './interfaces/result.js'
 
-import { readGitHubActionsEvent }          from './event.js'
 import { resolveGitChangedFiles }          from './git.js'
 import { createPullRequestFilesProvider }  from './github.js'
 import { resolvePullRequestChangedFiles }  from './github.js'
@@ -45,10 +44,9 @@ export const resolveChangedProjectState = async (
 export const resolveChangedProjectStateForEntrypoint = async ({
   processInvocation,
   project,
-  readEvent = readGitHubActionsEvent,
-  since,
+  source,
 }: ResolveChangedProjectStateEntrypointInput): Promise<ChangedProjectStateResult> => {
-  const selection = selectChangedStateSource(since, since === undefined ? readEvent() : undefined)
+  const selection = selectChangedStateSource(source)
 
   if (selection.kind === 'error') {
     return selection

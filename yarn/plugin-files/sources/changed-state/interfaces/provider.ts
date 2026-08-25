@@ -8,6 +8,7 @@ export interface PullRequestFilesProvider {
 
 export interface PullRequestMetadata {
   readonly base: string
+  readonly changedFiles: number
   readonly head: string
 }
 

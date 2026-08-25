@@ -4,7 +4,11 @@ import { test }                     from 'node:test'
 import { selectChangedStateSource } from '../select-source.js'
 
 test('selects an explicit Git range before any GitHub event source', () => {
-  assert.deepEqual(selectChangedStateSource('origin/main', { name: 'schedule' }), {
+  assert.deepEqual(selectChangedStateSource({
+    kind: 'git-range',
+    base: 'origin/main',
+    head: 'HEAD',
+  }), {
     kind: 'selected',
     source: {
       kind: 'git-range',
@@ -14,18 +18,21 @@ test('selects an explicit Git range before any GitHub event source', () => {
   })
 })
 
-test('selects the local working tree when no external event is present', () => {
-  assert.deepEqual(selectChangedStateSource(), {
+test('selects the explicit local working tree', () => {
+  assert.deepEqual(selectChangedStateSource({ kind: 'working-tree' }), {
     kind: 'selected',
     source: { kind: 'working-tree' },
   })
 })
 
 test('selects exact pull request context without credential data', () => {
-  const result = selectChangedStateSource(undefined, {
-    name: 'pull_request',
-    repository: { owner: 'atls', repo: 'raijin' },
-    pullRequest: { base: 'base-sha', head: 'head-sha', number: 912 },
+  const result = selectChangedStateSource({
+    kind: 'github-event',
+    event: {
+      name: 'pull_request',
+      repository: { owner: 'atls', repo: 'raijin' },
+      pullRequest: { base: 'base-sha', head: 'head-sha', number: 912 },
+    },
   })
 
   assert.deepEqual(result, {
@@ -44,9 +51,12 @@ test('selects exact pull request context without credential data', () => {
 
 test('selects the exact push event comparison', () => {
   assert.deepEqual(
-    selectChangedStateSource(undefined, {
-      name: 'push',
-      push: { before: 'before-sha', after: 'after-sha' },
+    selectChangedStateSource({
+      kind: 'github-event',
+      event: {
+        name: 'push',
+        push: { before: 'before-sha', after: 'after-sha' },
+      },
     }),
     {
       kind: 'selected',
@@ -60,26 +70,40 @@ test('selects the exact push event comparison', () => {
 })
 
 test('returns typed managed errors for controlled input constraints', () => {
-  assert.deepEqual(selectChangedStateSource(undefined, { name: 'workflow_dispatch' }), {
+  assert.deepEqual(selectChangedStateSource({
+    kind: 'github-event',
+    event: { name: 'workflow_dispatch' },
+  }), {
     kind: 'error',
     reason: 'unsupported-event',
     eventName: 'workflow_dispatch',
   })
-  assert.deepEqual(selectChangedStateSource(undefined, { name: 'pull_request' }), {
+  assert.deepEqual(selectChangedStateSource({
+    kind: 'github-event',
+    event: { name: 'pull_request' },
+  }), {
     kind: 'error',
     reason: 'incomplete-event',
     eventName: 'pull_request',
   })
   assert.deepEqual(
-    selectChangedStateSource(undefined, {
-      name: 'push',
-      push: { before: '0000000000', after: 'head-sha' },
+    selectChangedStateSource({
+      kind: 'github-event',
+      event: {
+        name: 'push',
+        push: { before: '0000000000', after: 'head-sha' },
+      },
     }),
     { kind: 'error', reason: 'invalid-comparison', source: 'push' }
   )
-  assert.deepEqual(selectChangedStateSource('  '), {
+  assert.deepEqual(selectChangedStateSource({ kind: 'git-range', base: '  ', head: 'HEAD' }), {
     kind: 'error',
     reason: 'invalid-comparison',
     source: 'git-range',
+  })
+  assert.deepEqual(selectChangedStateSource({ kind: 'github-event', event: undefined }), {
+    kind: 'error',
+    reason: 'unsupported-event',
+    eventName: 'unknown',
   })
 })

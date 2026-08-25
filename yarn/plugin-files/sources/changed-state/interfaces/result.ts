@@ -30,6 +30,13 @@ export type ChangedStateManagedError =
     }
   | {
       readonly kind: 'error'
+      readonly reason: 'incomplete-pull-request-files'
+      readonly expected: number
+      readonly received: number
+      readonly limit: number
+    }
+  | {
+      readonly kind: 'error'
       readonly reason: 'invalid-comparison'
       readonly source: 'git-range' | 'push'
     }
@@ -59,7 +66,8 @@ export type GitChangedFilesManagedError = Extract<
 
 export type PullRequestChangedFilesManagedError = Extract<
   ChangedStateManagedError,
-  { readonly reason: 'stale-pull-request' }
+  | { readonly reason: 'incomplete-pull-request-files' }
+  | { readonly reason: 'stale-pull-request' }
 >
 
 export type GitChangedFilesResult =

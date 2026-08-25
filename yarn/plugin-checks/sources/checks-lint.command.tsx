@@ -25,6 +25,7 @@ import { createCommandInput }              from '@atls/raijin/commands'
 import { toNativeCwd }                     from '@atls/raijin/commands'
 import { toNativePath }                    from '@atls/raijin/filesystem'
 import { formatChangedStateManagedError }  from '@atls/yarn-plugin-files'
+import { readGitHubActionsEvent }          from '@atls/yarn-plugin-files'
 import { resolveChangedProjectStateForEntrypoint } from '@atls/yarn-plugin-files'
 import { lintProjectSources }              from '@atls/yarn-plugin-lint'
 
@@ -199,6 +200,7 @@ class ChecksLintCommand extends BaseCommand {
     const result = await resolveChangedProjectStateForEntrypoint({
       processInvocation,
       project,
+      source: { kind: 'github-event', event: readGitHubActionsEvent() },
     })
 
     if (result.kind === 'error') {

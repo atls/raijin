@@ -1,29 +1,30 @@
 import type { ChangedStateSourceSelection } from './interfaces/source.js'
-import type { GitHubActionsEventInput }   from './interfaces/source.js'
+import type { ChangedStateSourceInput }   from './interfaces/source.js'
 
 const EMPTY_GIT_OBJECT = /^0+$/
 
 export const selectChangedStateSource = (
-  since?: string,
-  event?: GitHubActionsEventInput
+  input: ChangedStateSourceInput
 ): ChangedStateSourceSelection => {
-  if (since !== undefined) {
-    if (since.trim().length === 0) {
+  if (input.kind === 'git-range') {
+    if (input.base.trim().length === 0) {
       return { kind: 'error', reason: 'invalid-comparison', source: 'git-range' }
     }
 
     return {
       kind: 'selected',
-      source: {
-        kind: 'git-range',
-        base: since,
-        head: 'HEAD',
-      },
+      source: input,
     }
   }
 
+  if (input.kind === 'working-tree') {
+    return { kind: 'selected', source: input }
+  }
+
+  const { event } = input
+
   if (!event) {
-    return { kind: 'selected', source: { kind: 'working-tree' } }
+    return { kind: 'error', reason: 'unsupported-event', eventName: 'unknown' }
   }
 
   if (event.name === 'pull_request') {

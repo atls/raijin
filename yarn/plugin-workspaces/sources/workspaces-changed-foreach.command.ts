@@ -11,6 +11,11 @@ import { resolveChangedProjectStateForEntrypoint } from '@atls/yarn-plugin-files
 import { expandWorkspaceDependents }    from './expand-workspace-dependents.js'
 import { createForeachInput }           from './workspaces-changed-foreach.input.js'
 
+export const selectChangedWorkspacesSource = (since: string | undefined) =>
+  since === undefined
+    ? ({ kind: 'working-tree' } as const)
+    : ({ kind: 'git-range', base: since, head: 'HEAD' } as const)
+
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'foreach']]
 
@@ -30,7 +35,7 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
 
   recursive = Option.Boolean('-R,--recursive', false)
 
-  since = Option.String('--since', '')
+  since = Option.String('--since')
 
   interlaced = Option.Boolean('-i,--interlaced', false)
 
@@ -56,7 +61,7 @@ class WorkspacesChangedForeachCommand extends BaseCommand {
     const result = await resolveChangedProjectStateForEntrypoint({
       processInvocation: invocation.process,
       project,
-      since: this.since || undefined,
+      source: selectChangedWorkspacesSource(this.since),
     })
 
     if (result.kind === 'error') {

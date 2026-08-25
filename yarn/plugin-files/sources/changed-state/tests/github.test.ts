@@ -21,7 +21,7 @@ const source: Extract<ChangedStateSource, { readonly kind: 'pull-request' }> = {
 const createProvider = (
   overrides: Partial<PullRequestFilesProvider> = {}
 ): PullRequestFilesProvider => ({
-  readMetadata: async () => ({ base: source.base, head: source.head }),
+  readMetadata: async () => ({ base: source.base, changedFiles: 0, head: source.head }),
   listFiles: async () => [],
   ...overrides,
 })
@@ -37,6 +37,11 @@ test('normalizes GitHub files without leaking provider payloads', async () => {
   const result = await resolvePullRequestChangedFiles(
     source,
     createProvider({
+      readMetadata: async () => ({
+        base: source.base,
+        changedFiles: 2,
+        head: source.head,
+      }),
       listFiles: async () => [
         {
           filename: 'src/new.ts',
@@ -73,7 +78,11 @@ test('returns stale pull request snapshots as managed errors', async () => {
     await resolvePullRequestChangedFiles(
       source,
       createProvider({
-        readMetadata: async () => ({ base: source.base, head: 'new-head' }),
+        readMetadata: async () => ({
+          base: source.base,
+          changedFiles: 0,
+          head: 'new-head',
+        }),
       })
     ),
     { kind: 'error', reason: 'stale-pull-request' }
@@ -92,12 +101,63 @@ test('rejects a pull request that moves while files are being paginated', async 
 
           return {
             base: source.base,
+            changedFiles: 0,
             head: metadataReads === 1 ? source.head : 'new-head',
           }
         },
       })
     ),
     { kind: 'error', reason: 'stale-pull-request' }
+  )
+})
+
+test('returns a managed error when GitHub cannot prove the selected file list is complete', async () => {
+  const files = Array.from({ length: 3000 }, (_, index) => ({
+    filename: `src/file-${index}.ts`,
+    status: 'modified',
+  }))
+
+  assert.deepEqual(
+    await resolvePullRequestChangedFiles(
+      source,
+      createProvider({
+        readMetadata: async () => ({
+          base: source.base,
+          changedFiles: 3001,
+          head: source.head,
+        }),
+        listFiles: async () => files,
+      })
+    ),
+    {
+      kind: 'error',
+      reason: 'incomplete-pull-request-files',
+      expected: 3001,
+      received: 3000,
+      limit: 3000,
+    }
+  )
+})
+
+test('returns a managed error when the returned file count is incomplete below the limit', async () => {
+  assert.deepEqual(
+    await resolvePullRequestChangedFiles(
+      source,
+      createProvider({
+        readMetadata: async () => ({
+          base: source.base,
+          changedFiles: 1,
+          head: source.head,
+        }),
+      })
+    ),
+    {
+      kind: 'error',
+      reason: 'incomplete-pull-request-files',
+      expected: 1,
+      received: 0,
+      limit: 3000,
+    }
   )
 })
 
@@ -142,7 +202,14 @@ test('keeps invalid provider payload as an exception with payload context', asyn
   await assert.rejects(
     resolvePullRequestChangedFiles(
       source,
-      createProvider({ listFiles: async () => [payload] })
+      createProvider({
+        readMetadata: async () => ({
+          base: source.base,
+          changedFiles: 1,
+          head: source.head,
+        }),
+        listFiles: async () => [payload],
+      })
     ),
     (error: unknown) =>
       error instanceof PullRequestPayloadException &&

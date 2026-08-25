@@ -57,22 +57,103 @@ test('keeps an empty explicit source as an empty result without provider fallbac
   ])
 })
 
-test('explicit since entrypoint never reads the GitHub environment', async () => {
+test('explicit working-tree entrypoint ignores the ambient GitHub event', async (t) => {
+  const previousEventPath = process.env.GITHUB_EVENT_PATH
+  const previousToken = process.env.GITHUB_TOKEN
+  const calls: Array<ReadonlyArray<string>> = []
+
+  process.env.GITHUB_EVENT_PATH = '/tmp/pull-request-event.json'
+  process.env.GITHUB_TOKEN = 'ambient-token'
+  t.after(() => {
+    if (previousEventPath === undefined) {
+      delete process.env.GITHUB_EVENT_PATH
+    } else {
+      process.env.GITHUB_EVENT_PATH = previousEventPath
+    }
+
+    if (previousToken === undefined) {
+      delete process.env.GITHUB_TOKEN
+    } else {
+      process.env.GITHUB_TOKEN = previousToken
+    }
+  })
+
   const processInvocation = {
     project: {
-      execute: async () => ({ reason: 'completed', exitCode: 0, stdout: '', stderr: '' }),
+      execute: async (_command: string, args: ReadonlyArray<string>) => {
+        calls.push(args)
+
+        return { reason: 'completed', exitCode: 0, stdout: '', stderr: '' }
+      },
     },
   } as unknown as ProjectProcessInvocation
   const result = await resolveChangedProjectStateForEntrypoint({
     processInvocation,
     project: createProject(),
-    since: 'origin/main',
-    readEvent: () => {
-      throw new Error('GitHub event must not be read')
+    source: { kind: 'working-tree' },
+  })
+
+  assert.deepEqual(result, {
+    kind: 'completed',
+    state: { files: [], workspaces: [] },
+  })
+  assert.deepEqual(calls, [
+    ['diff', '--name-status', '-z', '--find-renames', '--end-of-options', 'HEAD', '--'],
+    ['ls-files', '-z', '--others', '--exclude-standard'],
+  ])
+})
+
+test('explicit range entrypoint resolves only the selected range', async () => {
+  const calls: Array<ReadonlyArray<string>> = []
+  const processInvocation = {
+    project: {
+      execute: async (_command: string, args: ReadonlyArray<string>) => {
+        calls.push(args)
+
+        return { reason: 'completed', exitCode: 0, stdout: '', stderr: '' }
+      },
     },
+  } as unknown as ProjectProcessInvocation
+
+  const result = await resolveChangedProjectStateForEntrypoint({
+    processInvocation,
+    project: createProject(),
+    source: { kind: 'git-range', base: 'origin/main', head: 'HEAD' },
   })
 
   assert.equal(result.kind, 'completed')
+  assert.equal(calls.some((args) => args.includes('origin/main...HEAD')), true)
+})
+
+test('push event entrypoint resolves only the selected event range', async () => {
+  const calls: Array<ReadonlyArray<string>> = []
+  const processInvocation = {
+    project: {
+      execute: async (_command: string, args: ReadonlyArray<string>) => {
+        calls.push(args)
+
+        return { reason: 'completed', exitCode: 0, stdout: '', stderr: '' }
+      },
+    },
+  } as unknown as ProjectProcessInvocation
+
+  const result = await resolveChangedProjectStateForEntrypoint({
+    processInvocation,
+    project: createProject(),
+    source: {
+      kind: 'github-event',
+      event: {
+        name: 'push',
+        push: { before: 'before-sha', after: 'after-sha' },
+      },
+    },
+  })
+
+  assert.deepEqual(result, {
+    kind: 'completed',
+    state: { files: [], workspaces: [] },
+  })
+  assert.equal(calls.some((args) => args.includes('before-sha..after-sha')), true)
 })
 
 test('returns missing GitHub credential from the entrypoint as a managed error', async () => {
@@ -91,11 +172,14 @@ test('returns missing GitHub credential from the entrypoint as a managed error',
     const result = await resolveChangedProjectStateForEntrypoint({
       processInvocation,
       project: createProject(),
-      readEvent: () => ({
-        name: 'pull_request',
-        repository: { owner: 'atls', repo: 'raijin' },
-        pullRequest: { base: 'base-sha', head: 'head-sha', number: 852 },
-      }),
+      source: {
+        kind: 'github-event',
+        event: {
+          name: 'pull_request',
+          repository: { owner: 'atls', repo: 'raijin' },
+          pullRequest: { base: 'base-sha', head: 'head-sha', number: 852 },
+        },
+      },
     })
 
     assert.deepEqual(result, { kind: 'error', reason: 'missing-token' })
@@ -121,7 +205,7 @@ test('resolves a pull request through its required provider input', async () => 
     processInvocation,
     project: createProject(),
     provider: {
-      readMetadata: async () => ({ base: 'base-sha', head: 'head-sha' }),
+      readMetadata: async () => ({ base: 'base-sha', changedFiles: 0, head: 'head-sha' }),
       listFiles: async () => [],
     },
     source: {

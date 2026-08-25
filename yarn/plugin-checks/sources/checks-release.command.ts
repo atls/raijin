@@ -18,6 +18,7 @@ import { resolveProjectWorkspaces }   from '@atls/yarn-plugin-files'
 import { toWorkspaceIdentity }        from '@atls/yarn-plugin-files'
 import { createForeachInput }         from '@atls/yarn-plugin-workspaces'
 import { expandWorkspaceDependents }  from '@atls/yarn-plugin-workspaces'
+import { readGitHubActionsEvent }     from '@atls/yarn-plugin-files'
 
 import { GitHubChecks }               from './github.checks.js'
 import { AnnotationLevel }            from './github.checks.js'
@@ -61,6 +62,7 @@ class ChecksReleaseCommand extends BaseCommand {
       const result = await resolveChangedProjectStateForEntrypoint({
         processInvocation: invocation.process,
         project,
+        source: { kind: 'github-event', event: readGitHubActionsEvent() },
       })
 
       if (result.kind === 'error') {

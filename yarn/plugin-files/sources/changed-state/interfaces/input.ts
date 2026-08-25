@@ -2,8 +2,8 @@ import type { ProjectProcessInvocation } from '@atls/raijin/commands'
 import type { Project }                  from '@yarnpkg/core'
 
 import type { PullRequestFilesProvider } from './provider.js'
+import type { ChangedStateSourceInput }  from './source.js'
 import type { GitChangedStateSource }    from './source.js'
-import type { GitHubActionsEventInput }  from './source.js'
 import type { PullRequestChangedStateSource } from './source.js'
 
 interface ChangedProjectStateResolutionContext {
@@ -25,6 +25,5 @@ export type ResolveChangedProjectStateInput =
 
 export interface ResolveChangedProjectStateEntrypointInput
   extends ChangedProjectStateResolutionContext {
-  readonly readEvent?: () => GitHubActionsEventInput | undefined
-  readonly since?: string
+  readonly source: ChangedStateSourceInput
 }

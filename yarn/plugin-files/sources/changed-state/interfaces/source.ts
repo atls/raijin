@@ -48,6 +48,14 @@ export type WorkingTreeChangedStateSource = {
   readonly kind: 'working-tree'
 }
 
+export type ChangedStateSourceInput =
+  | GitRangeChangedStateSource
+  | WorkingTreeChangedStateSource
+  | {
+      readonly event: GitHubActionsEventInput | undefined
+      readonly kind: 'github-event'
+    }
+
 export type GitChangedStateSource =
   | GitRangeChangedStateSource
   | PushChangedStateSource

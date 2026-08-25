@@ -21,11 +21,16 @@ const GITHUB_STATUS: Readonly<Partial<Record<string, ChangedFileStatus>>> = {
   renamed: 'renamed',
 }
 
+const GITHUB_PULL_REQUEST_FILES_LIMIT = 3000
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null
 
 const readString = (value: unknown): string | undefined =>
   typeof value === 'string' && value.length > 0 ? value : undefined
+
+const readNonNegativeInteger = (value: unknown): number | undefined =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : undefined
 
 export const createPullRequestFilesProvider = (
   source: PullRequestChangedStateSource,
@@ -57,6 +62,7 @@ export const createPullRequestFilesProvider = (
 
         return {
           base: response.data.base.sha,
+          changedFiles: response.data.changed_files,
           head: response.data.head.sha,
         }
       },
@@ -89,13 +95,16 @@ const readPullRequestMetadata = async (
   }
 
   const base = isRecord(payload) ? readString(payload.base) : undefined
+  const changedFiles = isRecord(payload)
+    ? readNonNegativeInteger(payload.changedFiles)
+    : undefined
   const head = isRecord(payload) ? readString(payload.head) : undefined
 
-  if (!base || !head) {
+  if (!base || changedFiles === undefined || !head) {
     throw new PullRequestPayloadException('metadata', source, payload)
   }
 
-  return { base, head }
+  return { base, changedFiles, head }
 }
 
 const readPullRequestFiles = async (
@@ -178,12 +187,27 @@ export const resolvePullRequestChangedFiles = async (
   }
 
   const payloads = await readPullRequestFiles(source, provider)
-  const files = payloads.map((payload) => normalizePullRequestFile(source, payload))
   const finalMetadata = await readPullRequestMetadata(source, provider)
 
   if (!isSelectedSnapshot(source, finalMetadata)) {
     return { kind: 'error', reason: 'stale-pull-request' }
   }
+
+  if (
+    initialMetadata.changedFiles !== finalMetadata.changedFiles ||
+    finalMetadata.changedFiles > GITHUB_PULL_REQUEST_FILES_LIMIT ||
+    payloads.length !== finalMetadata.changedFiles
+  ) {
+    return {
+      kind: 'error',
+      reason: 'incomplete-pull-request-files',
+      expected: finalMetadata.changedFiles,
+      received: payloads.length,
+      limit: GITHUB_PULL_REQUEST_FILES_LIMIT,
+    }
+  }
+
+  const files = payloads.map((payload) => normalizePullRequestFile(source, payload))
 
   return { kind: 'completed', files }
 }
