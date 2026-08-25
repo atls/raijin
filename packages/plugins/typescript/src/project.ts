@@ -40,11 +40,11 @@ const checkPrograms = (
     references: ReadonlyArray<TypeScriptRuntime.ResolvedProjectReference | undefined> | undefined
   ): void => {
     references?.forEach((reference) => {
-      if (!reference || scheduledProjectPaths.has(reference.sourceFile.path)) {
+      if (!reference || scheduledProjectPaths.has(reference.sourceFile.fileName)) {
         return
       }
 
-      scheduledProjectPaths.add(reference.sourceFile.path)
+      scheduledProjectPaths.add(reference.sourceFile.fileName)
 
       const program = createDiagnosticsProgram(
         reference.commandLine,
