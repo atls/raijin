@@ -1,93 +1,66 @@
 import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
 
-import { isAbsolute }                  from 'node:path'
-import { relative }                    from 'node:path'
-import { sep }                         from 'node:path'
+import { isAbsolute }                   from 'node:path'
+import { relative }                     from 'node:path'
+import { sep }                          from 'node:path'
 
 const PROJECT_CONFIG = 'tsconfig.json'
 
-const parseProjects = (
-  rootConfigFileName: string,
+const createDiagnosticsProgram = (
+  commandLine: TypeScriptRuntime.ParsedCommandLine,
+  typecheckSkipLibCheck: boolean | undefined,
   typescript: typeof TypeScriptRuntime
-): {
-  readonly diagnostics: ReadonlyArray<TypeScriptRuntime.Diagnostic>
-  readonly projects: ReadonlyArray<TypeScriptRuntime.ParsedCommandLine>
-} => {
-  const diagnostics: Array<TypeScriptRuntime.Diagnostic> = []
-  const projects: Array<TypeScriptRuntime.ParsedCommandLine> = []
-  const pending = [rootConfigFileName]
-  const visited = new Set<string>()
-
-  while (pending.length > 0) {
-    const configFileName = pending.shift()
-
-    if (!configFileName) {
-      continue
-    }
-
-    const resolvedConfigFileName = typescript.sys.resolvePath(configFileName)
-    const canonicalConfigFileName = typescript.sys.useCaseSensitiveFileNames
-      ? resolvedConfigFileName
-      : resolvedConfigFileName.toLowerCase()
-
-    if (visited.has(canonicalConfigFileName)) {
-      continue
-    }
-
-    visited.add(canonicalConfigFileName)
-
-    const parseDiagnostics: Array<TypeScriptRuntime.Diagnostic> = []
-    const commandLine = typescript.getParsedCommandLineOfConfigFile(
-      resolvedConfigFileName,
-      undefined,
-      {
-        ...typescript.sys,
-        onUnRecoverableConfigFileDiagnostic: (diagnostic) => {
-          parseDiagnostics.push(diagnostic)
-        },
-      }
-    )
-
-    if (!commandLine) {
-      diagnostics.push(...parseDiagnostics)
-
-      continue
-    }
-
-    projects.push(commandLine)
-    pending.push(
-      ...(commandLine.projectReferences?.map((reference) =>
-        typescript.resolveProjectReferencePath(reference)) ?? [])
-    )
+): TypeScriptRuntime.Program => {
+  const options: TypeScriptRuntime.CompilerOptions = {
+    ...commandLine.options,
+    ...(typecheckSkipLibCheck === undefined ? {} : { skipLibCheck: typecheckSkipLibCheck }),
+    noEmit: true,
   }
+  const host = Object.assign(typescript.createCompilerHost(options), {
+    useSourceOfProjectReferenceRedirect: (): true => true,
+  })
 
-  return { diagnostics, projects }
+  return typescript.createProgram({
+    rootNames: commandLine.fileNames,
+    options,
+    host,
+    configFileParsingDiagnostics: commandLine.errors,
+    projectReferences: commandLine.projectReferences,
+  })
 }
 
 const checkPrograms = (
-  projects: ReadonlyArray<TypeScriptRuntime.ParsedCommandLine>,
+  rootProgram: TypeScriptRuntime.Program,
   typecheckSkipLibCheck: boolean | undefined,
   typescript: typeof TypeScriptRuntime
-): ReadonlyArray<TypeScriptRuntime.Diagnostic> =>
-  projects.flatMap((commandLine) => {
-    const options: TypeScriptRuntime.CompilerOptions = {
-      ...commandLine.options,
-      ...(typecheckSkipLibCheck === undefined ? {} : { skipLibCheck: typecheckSkipLibCheck }),
-      noEmit: true,
-    }
-    const host = Object.assign(typescript.createCompilerHost(options), {
-      useSourceOfProjectReferenceRedirect: (): true => true,
-    })
-    const program = typescript.createProgram({
-      rootNames: commandLine.fileNames,
-      options,
-      host,
-      configFileParsingDiagnostics: commandLine.errors,
-      projectReferences: commandLine.projectReferences,
-    })
+): ReadonlyArray<TypeScriptRuntime.Diagnostic> => {
+  const diagnostics = [...typescript.getPreEmitDiagnostics(rootProgram)]
+  const scheduledProjectPaths = new Set<string>()
+  const checkReferences = (
+    references: ReadonlyArray<TypeScriptRuntime.ResolvedProjectReference | undefined> | undefined
+  ): void => {
+    references?.forEach((reference) => {
+      if (!reference || scheduledProjectPaths.has(reference.sourceFile.fileName)) {
+        return
+      }
 
-    return [...typescript.getPreEmitDiagnostics(program)]
-  })
+      scheduledProjectPaths.add(reference.sourceFile.fileName)
+
+      const program = createDiagnosticsProgram(
+        reference.commandLine,
+        typecheckSkipLibCheck,
+        typescript
+      )
+
+      diagnostics.push(...typescript.getPreEmitDiagnostics(program))
+      checkReferences(reference.references)
+    })
+  }
+
+  checkReferences(rootProgram.getResolvedProjectReferences())
+
+  return diagnostics
+}
 
 export const checkProject = (
   cwd: string,
@@ -99,10 +72,7 @@ export const checkProject = (
   const rootConfigFileName = typescript.findConfigFile(
     cwd,
     (fileName) => {
-      const relativeFileName = relative(
-        resolvedProjectCwd,
-        typescript.sys.resolvePath(fileName)
-      )
+      const relativeFileName = relative(resolvedProjectCwd, typescript.sys.resolvePath(fileName))
 
       return (
         relativeFileName !== '..' &&
@@ -118,10 +88,23 @@ export const checkProject = (
     return undefined
   }
 
-  const parsed = parseProjects(rootConfigFileName, typescript)
+  const parseDiagnostics: Array<TypeScriptRuntime.Diagnostic> = []
+  const rootCommandLine = typescript.getParsedCommandLineOfConfigFile(
+    rootConfigFileName,
+    undefined,
+    {
+      ...typescript.sys,
+      onUnRecoverableConfigFileDiagnostic: (diagnostic) => {
+        parseDiagnostics.push(diagnostic)
+      },
+    }
+  )
 
-  return [
-    ...parsed.diagnostics,
-    ...checkPrograms(parsed.projects, typecheckSkipLibCheck, typescript),
-  ]
+  if (!rootCommandLine) {
+    return parseDiagnostics
+  }
+
+  const rootProgram = createDiagnosticsProgram(rootCommandLine, typecheckSkipLibCheck, typescript)
+
+  return [...parseDiagnostics, ...checkPrograms(rootProgram, typecheckSkipLibCheck, typescript)]
 }

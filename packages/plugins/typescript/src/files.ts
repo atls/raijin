@@ -1,14 +1,14 @@
-import type { CommandInput }            from '@atls/raijin/commands'
 import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
+import type { PortablePath }            from '@yarnpkg/fslib'
 
 import { toNativePath }                 from '@atls/raijin/filesystem'
 
 export const checkFiles = (
-  input: CommandInput,
+  files: ReadonlyArray<PortablePath>,
   typescript: typeof TypeScriptRuntime
 ): ReadonlyArray<TypeScriptRuntime.Diagnostic> => {
   const program = typescript.createProgram({
-    rootNames: input.targets.map(({ path }) => toNativePath(path)),
+    rootNames: files.map(toNativePath),
     options: {
       noEmit: true,
     },

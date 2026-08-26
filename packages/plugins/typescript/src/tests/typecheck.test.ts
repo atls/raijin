@@ -1,17 +1,17 @@
-import type { TypecheckResult } from '../typecheck.js'
+import type { TypecheckResult }    from '../interfaces/result.js'
 
-import assert                    from 'node:assert/strict'
-import { mkdir }                 from 'node:fs/promises'
-import { mkdtemp }               from 'node:fs/promises'
-import { rm }                    from 'node:fs/promises'
-import { writeFile }             from 'node:fs/promises'
-import { tmpdir }                from 'node:os'
-import { join }                  from 'node:path'
-import { test }                  from 'node:test'
+import assert                      from 'node:assert/strict'
+import { mkdir }                   from 'node:fs/promises'
+import { mkdtemp }                 from 'node:fs/promises'
+import { rm }                      from 'node:fs/promises'
+import { writeFile }               from 'node:fs/promises'
+import { tmpdir }                  from 'node:os'
+import { join }                    from 'node:path'
+import { test }                    from 'node:test'
 
-import { createCommandInput }    from '@atls/raijin/commands'
-import { toPortableCwd }         from '@atls/raijin/commands'
-import { ts }                    from '@atls/raijin/typescript'
+import { npath }                   from '@yarnpkg/fslib'
+
+import { ts }                      from '@atls/raijin/typescript'
 
 import { typecheckProjectSources } from '../typecheck.js'
 
@@ -39,11 +39,7 @@ const createProject = async (files: Record<string, string>): Promise<string> => 
   return cwd
 }
 
-const hasDiagnostic = (
-  result: CompletedResult,
-  code: number,
-  fileSuffix?: string
-): boolean =>
+const hasDiagnostic = (result: CompletedResult, code: number, fileSuffix?: string): boolean =>
   result.diagnostics.some(
     (diagnostic) =>
       diagnostic.code === code &&
@@ -58,14 +54,12 @@ const createPolicySolution = async (): Promise<string> =>
       files: ['types/broken.d.ts'],
       references: [{ path: '../lib' }],
     }),
-    'packages/app/types/broken.d.ts':
-      'export declare const appValue: AppMissingType\n',
+    'packages/app/types/broken.d.ts': 'export declare const appValue: AppMissingType\n',
     'packages/lib/tsconfig.json': JSON.stringify({
       compilerOptions: { composite: true, skipLibCheck: false },
       files: ['types/broken.d.ts'],
     }),
-    'packages/lib/types/broken.d.ts':
-      'export declare const libValue: LibMissingType\n',
+    'packages/lib/types/broken.d.ts': 'export declare const libValue: LibMissingType\n',
   })
 
 test('dispatches project diagnostics into a completed result', async (t) => {
@@ -76,7 +70,7 @@ test('dispatches project diagnostics into a completed result', async (t) => {
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const result = await typecheckProjectSources({ cwd, projectCwd: cwd })
+  const result = await typecheckProjectSources({ kind: 'project', cwd, projectCwd: cwd })
 
   assertCompleted(result)
   assert.equal(result.exitCode, 1)
@@ -85,58 +79,15 @@ test('dispatches project diagnostics into a completed result', async (t) => {
 
 test('dispatches positional files without requiring a project', async (t) => {
   const cwd = await createProject({ 'selected.ts': 'export const value = true\n' })
-  const targets = createCommandInput({
-    cwd: toPortableCwd(cwd),
-    source: 'explicit',
-    targets: ['selected.ts'],
-  })
+  const files = [npath.toPortablePath(join(cwd, 'selected.ts'))]
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const result = await typecheckProjectSources({ cwd, projectCwd: cwd, targets })
+  const result = await typecheckProjectSources({ kind: 'files', files })
 
   assertCompleted(result)
   assert.equal(result.exitCode, 0)
   assert.deepEqual(result.diagnostics, [])
-})
-
-const exactFilePolicies: ReadonlyArray<{
-  readonly name: string
-  readonly sources: ReadonlyArray<{
-    readonly cwd: string
-    readonly typecheckSkipLibCheck?: unknown
-  }>
-}> = [
-  { name: 'absent', sources: [] },
-  { name: 'true', sources: [{ cwd: '.', typecheckSkipLibCheck: true }] },
-  { name: 'false', sources: [{ cwd: '.', typecheckSkipLibCheck: false }] },
-  { name: 'invalid', sources: [{ cwd: '.', typecheckSkipLibCheck: 'true' }] },
-]
-
-exactFilePolicies.forEach(({ name, sources }) => {
-  test(`uses native TypeScript defaults with ${name} manifest policy`, async (t) => {
-    const cwd = await createProject({
-      'selected.d.ts': 'export declare const value: MissingType\n',
-    })
-    const targets = createCommandInput({
-      cwd: toPortableCwd(cwd),
-      source: 'explicit',
-      targets: ['selected.d.ts'],
-    })
-
-    t.after(async () => rm(cwd, { recursive: true, force: true }))
-
-    const result = await typecheckProjectSources({
-      cwd,
-      projectCwd: cwd,
-      manifestPolicySources: sources.map((source) => ({ ...source, cwd })),
-      targets,
-    })
-
-    assertCompleted(result)
-    assert.equal(result.exitCode, 1)
-    assert.equal(hasDiagnostic(result, 2304, '/selected.d.ts'), true)
-  })
 })
 
 test('preserves configured skipLibCheck when manifest policy is absent', async (t) => {
@@ -144,7 +95,7 @@ test('preserves configured skipLibCheck when manifest policy is absent', async (
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const result = await typecheckProjectSources({ cwd, projectCwd: cwd })
+  const result = await typecheckProjectSources({ kind: 'project', cwd, projectCwd: cwd })
 
   assertCompleted(result)
   assert.equal(hasDiagnostic(result, 2304, '/packages/app/types/broken.d.ts'), false)
@@ -157,6 +108,7 @@ test('applies explicit true typecheckSkipLibCheck to every project', async (t) =
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
   const result = await typecheckProjectSources({
+    kind: 'project',
     cwd,
     projectCwd: cwd,
     manifestPolicySources: [{ cwd, typecheckSkipLibCheck: true }],
@@ -174,6 +126,7 @@ test('uses the nearest explicit false typecheckSkipLibCheck policy', async (t) =
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
   const result = await typecheckProjectSources({
+    kind: 'project',
     cwd,
     projectCwd: cwd,
     manifestPolicySources: [
@@ -190,6 +143,7 @@ test('uses the nearest explicit false typecheckSkipLibCheck policy', async (t) =
 test('returns a managed error for an invalid manifest policy', async () => {
   const cwd = '/workspace/package'
   const result = await typecheckProjectSources({
+    kind: 'project',
     cwd,
     projectCwd: cwd,
     manifestPolicySources: [{ cwd, typecheckSkipLibCheck: 'true' }],
@@ -203,7 +157,7 @@ test('returns a managed error when no root project exists', async (t) => {
 
   t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  const result = await typecheckProjectSources({ cwd, projectCwd: cwd })
+  const result = await typecheckProjectSources({ kind: 'project', cwd, projectCwd: cwd })
 
   assert.deepEqual(result, { kind: 'error', reason: 'missing-project', cwd })
 })
@@ -219,7 +173,7 @@ test('returns missing-project when only a parent config exists', async (t) => {
 
   t.after(async () => rm(parentCwd, { recursive: true, force: true }))
 
-  const result = await typecheckProjectSources({ cwd, projectCwd: cwd })
+  const result = await typecheckProjectSources({ kind: 'project', cwd, projectCwd: cwd })
 
   assert.deepEqual(result, { kind: 'error', reason: 'missing-project', cwd })
 })
@@ -233,7 +187,7 @@ test('propagates unexpected TypeScript provider failures', async (t) => {
   })
 
   await assert.rejects(
-    typecheckProjectSources({ cwd, projectCwd: cwd }),
+    typecheckProjectSources({ kind: 'project', cwd, projectCwd: cwd }),
     /provider failed/
   )
 })
