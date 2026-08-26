@@ -1,12 +1,17 @@
-import type { Project }               from '@yarnpkg/core'
-import type { Workspace }             from '@yarnpkg/core'
+import type { ProjectCommandContext }  from '@atls/raijin/commands'
+import type { ProjectInvocation }      from '@atls/raijin/commands'
+import type { Project }                from '@yarnpkg/core'
+import type { Workspace }              from '@yarnpkg/core'
 
-import assert                         from 'node:assert/strict'
-import { test }                       from 'node:test'
+import type { GitHubChecks }           from './github.checks.js'
 
-import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
-import { resolveChecksReleaseConfig } from './checks-release.config.js'
+import assert                          from 'node:assert/strict'
+import { test }                        from 'node:test'
+
+import { ChecksReleaseCommand }        from './checks-release.command.js'
 import { createReleaseBuildArguments } from './checks-release.command.js'
+import { isReleaseWorkspaceAllowed }   from './checks-release.config.js'
+import { resolveChecksReleaseConfig }  from './checks-release.config.js'
 
 test('runs unnamed root release builds through native foreach path selection', () => {
   assert.deepEqual(createReleaseBuildArguments({ path: '.' }), [
@@ -29,6 +34,94 @@ const createProject = (tools?: Record<string, unknown>): Project =>
       },
     },
   }) as unknown as Project
+
+const createContext = (project: Project): ProjectCommandContext =>
+  ({
+    invocation: {
+      yarn: { project },
+    },
+  }) as unknown as ProjectCommandContext
+
+class TestChecksReleaseCommand extends ChecksReleaseCommand {
+  readonly events: Array<unknown> = []
+
+  protected override createGitHubChecks(name: string): GitHubChecks {
+    this.events.push(['create', name])
+
+    return {
+      start: async () => {
+        this.events.push(['start'])
+
+        return { id: 17 }
+      },
+      failure: async (output: unknown, id?: number) => {
+        this.events.push(['failure', output, id])
+
+        return {}
+      },
+      complete: async (id: number, output: unknown) => {
+        this.events.push(['complete', id, output])
+
+        return {}
+      },
+    } as unknown as GitHubChecks
+  }
+
+  protected override async resolveChangedProjectState(_invocation: ProjectInvocation) {
+    this.events.push(['resolve'])
+
+    return { kind: 'error', reason: 'missing-token' } as const
+  }
+
+  protected override async reportManagedError(summary: string): Promise<number> {
+    this.events.push(['report', summary])
+
+    return 1
+  }
+}
+
+test('publishes the named Release failure before returning a managed state error', async () => {
+  const command = new TestChecksReleaseCommand()
+
+  command.context = createContext(createProject())
+
+  assert.equal(await command.execute(), 1)
+  assert.deepEqual(command.events, [
+    ['create', 'Release'],
+    ['start'],
+    ['resolve'],
+    [
+      'failure',
+      {
+        title: 'Release run failed',
+        summary: 'Pull request changed state requires GITHUB_TOKEN',
+      },
+      17,
+    ],
+    ['report', 'Pull request changed state requires GITHUB_TOKEN'],
+  ])
+})
+
+test('keeps disabled release checks successful without resolving changed state', async () => {
+  const command = new TestChecksReleaseCommand()
+
+  command.context = createContext(createProject({ checks: { release: false } }))
+
+  assert.equal(await command.execute(), 0)
+  assert.deepEqual(command.events, [
+    ['create', 'Release'],
+    ['start'],
+    [
+      'complete',
+      17,
+      {
+        title: 'Successful',
+        summary: 'All checks passed',
+        annotations: [],
+      },
+    ],
+  ])
+})
 
 const createWorkspace = (isPrivate: boolean): Workspace =>
   ({
