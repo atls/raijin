@@ -59,35 +59,36 @@ class ChecksReleaseCommand extends BaseCommand {
       ...releaseConfig,
       privateWorkspaces: this.noPrivate ? false : releaseConfig.privateWorkspaces,
     }
-    let workspaces: Array<Workspace> = []
     const checks = this.createGitHubChecks('Release')
 
     const { id: checkId } = await checks.start()
 
-    if (releaseConfig.enabled) {
-      const result = await this.resolveChangedProjectState(invocation)
+    try {
+      let workspaces: Array<Workspace> = []
 
-      if (result.kind === 'error') {
-        const summary = formatChangedStateManagedError(result)
+      if (releaseConfig.enabled) {
+        const result = await this.resolveChangedProjectState(invocation)
 
-        await checks.failure(
-          {
-            title: 'Release run failed',
-            summary,
-          },
-          checkId
-        )
+        if (result.kind === 'error') {
+          const summary = formatChangedStateManagedError(result)
 
-        return this.reportManagedError(summary)
+          await checks.failure(
+            {
+              title: 'Release run failed',
+              summary,
+            },
+            checkId
+          )
+
+          return this.reportManagedError(summary)
+        }
+
+        const state = expandWorkspaceDependents(project, result.state)
+
+        workspaces = resolveProjectWorkspaces(project, state.workspaces).filter((workspace) =>
+          isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
       }
 
-      const state = expandWorkspaceDependents(project, result.state)
-
-      workspaces = resolveProjectWorkspaces(project, state.workspaces).filter((workspace) =>
-        isReleaseWorkspaceAllowed(workspace, effectiveReleaseConfig))
-    }
-
-    try {
       const annotations: Array<Annotation> = []
 
       for await (const workspace of workspaces) {
@@ -122,17 +123,21 @@ class ChecksReleaseCommand extends BaseCommand {
           annotations.length > 0 ? `Found ${annotations.length} errors` : 'All checks passed',
         annotations,
       })
+
+      return 0
     } catch (error) {
+      const summary = error instanceof Error ? error.message : String(error)
+
       await checks.failure(
         {
           title: 'Release run failed',
-          summary: error instanceof Error ? error.message : (error as string),
+          summary,
         },
         checkId
       )
-    }
 
-    return 0
+      return this.reportManagedError(summary)
+    }
   }
 
   protected createGitHubChecks(name: string): GitHubChecks {

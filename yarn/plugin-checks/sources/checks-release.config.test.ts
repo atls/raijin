@@ -46,6 +46,8 @@ const createContext = (project: Project): ProjectCommandContext =>
 class TestChecksReleaseCommand extends ChecksReleaseCommand {
   readonly events: Array<unknown> = []
 
+  resolutionError?: Error
+
   protected override createGitHubChecks(name: string): GitHubChecks {
     this.events.push(['create', name])
 
@@ -70,6 +72,10 @@ class TestChecksReleaseCommand extends ChecksReleaseCommand {
 
   protected override async resolveChangedProjectState(_invocation: ProjectInvocation) {
     this.events.push(['resolve'])
+
+    if (this.resolutionError) {
+      throw this.resolutionError
+    }
 
     return { kind: 'error', reason: 'missing-token' } as const
   }
@@ -100,6 +106,29 @@ test('publishes the named Release failure before returning a managed state error
       17,
     ],
     ['report', 'Pull request changed state requires GITHUB_TOKEN'],
+  ])
+})
+
+test('publishes and reports thrown post-start resolution failures', async () => {
+  const command = new TestChecksReleaseCommand()
+
+  command.context = createContext(createProject())
+  command.resolutionError = new Error('Changed-state provider failed')
+
+  assert.equal(await command.execute(), 1)
+  assert.deepEqual(command.events, [
+    ['create', 'Release'],
+    ['start'],
+    ['resolve'],
+    [
+      'failure',
+      {
+        title: 'Release run failed',
+        summary: 'Changed-state provider failed',
+      },
+      17,
+    ],
+    ['report', 'Changed-state provider failed'],
   ])
 })
 
