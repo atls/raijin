@@ -1,30 +1,20 @@
-import type { CommandInput }             from '@atls/raijin/commands'
-import type { ProcessExecutionResult }   from '@atls/raijin/commands'
-import type { ProjectCommandContext }    from '@atls/raijin/commands'
-import type { ProjectInvocation }        from '@atls/raijin/commands'
-import type { ChangedProjectState }      from '@atls/yarn-plugin-files'
-import type { Project }                  from '@yarnpkg/core'
+import type { ProcessExecutionResult }             from '@atls/raijin/commands'
+import type { ProjectCommandContext }              from '@atls/raijin/commands'
+import type { ProjectInvocation }                  from '@atls/raijin/commands'
+import type { ChangedProjectState }                from '@atls/yarn-plugin-files'
 
-import type { TypeScriptConfigRuntime }  from './checks-typecheck.interfaces.js'
+import { BaseCommand }                             from '@yarnpkg/cli'
+import { MessageName }                             from '@yarnpkg/core'
+import { StreamReport }                            from '@yarnpkg/core'
+import { Option }                                  from 'clipanion'
 
-import { BaseCommand }                   from '@yarnpkg/cli'
-import { MessageName }                   from '@yarnpkg/core'
-import { StreamReport }                  from '@yarnpkg/core'
-import { xfs }                           from '@yarnpkg/fslib'
-import { Option }                        from 'clipanion'
-
-import { createCommandInput }            from '@atls/raijin/commands'
-import { toCommandArguments }            from '@atls/raijin/commands'
-import { toNativeCwd }                   from '@atls/raijin/commands'
-import { resolveRaijinRuntimeUrl }       from '@atls/raijin/runtime-resolver'
-import { formatChangedStateManagedError } from '@atls/yarn-plugin-files'
-import { readGitHubActionsEvent }         from '@atls/yarn-plugin-files'
+import { formatChangedStateManagedError }          from '@atls/yarn-plugin-files'
+import { readGitHubActionsEvent }                  from '@atls/yarn-plugin-files'
 import { resolveChangedProjectStateForEntrypoint } from '@atls/yarn-plugin-files'
 
-import { GitHubChecks }                  from './github.checks.js'
+import { GitHubChecks }                            from './github.checks.js'
 
 const TYPECHECK_TIMEOUT_MS = 5 * 60 * 1000
-const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
 
 const formatTypecheckFailure = (result: ProcessExecutionResult): string => {
   switch (result.reason) {
@@ -50,17 +40,8 @@ const formatTypecheckFailure = (result: ProcessExecutionResult): string => {
   }
 }
 
-const importTypeScriptConfigRuntime = async (cwd: string): Promise<TypeScriptConfigRuntime> =>
-  (await import(
-    resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_CONFIG_SPECIFIER)
-  )) as TypeScriptConfigRuntime
-
-export const selectChangedTypecheckFiles = (
-  state: ChangedProjectState
-): ReadonlyArray<string> =>
-  state.files
-    .filter(({ path, status }) => status !== 'deleted' && /\.(cts|mts|ts|tsx)$/.test(path))
-    .map(({ path }) => path)
+const hasChangedTypeScriptFiles = (state: ChangedProjectState): boolean =>
+  state.files.some(({ path, status }) => status !== 'deleted' && /\.(cts|mts|ts|tsx)$/.test(path))
 
 class ChecksTypeCheckCommand extends BaseCommand {
   static override paths = [['checks', 'typecheck']]
@@ -75,7 +56,7 @@ class ChecksTypeCheckCommand extends BaseCommand {
 
   override async execute(): Promise<number> {
     const { invocation } = this.context
-    const { project, yarn } = invocation
+    const { yarn } = invocation
     const { configuration } = yarn
 
     const commandReport = await StreamReport.start(
@@ -112,9 +93,9 @@ class ChecksTypeCheckCommand extends BaseCommand {
                 state = result.state
               }
 
-              const input = await this.getInput(yarn.project, project.workspacePatterns, state)
+              const shouldRun = this.shouldRunTypecheck(state)
 
-              if (this.changed && input?.targets.length === 0) {
+              if (!shouldRun) {
                 report.reportInfo(MessageName.UNNAMED, 'No TypeScript files changed')
 
                 await checks.complete(checkId, {
@@ -126,14 +107,9 @@ class ChecksTypeCheckCommand extends BaseCommand {
                 return
               }
 
-              report.reportInfo(
-                MessageName.UNNAMED,
-                input
-                  ? `TypeCheck targets: ${input.targets.length}`
-                  : 'TypeCheck targets: project tsconfig'
-              )
+              report.reportInfo(MessageName.UNNAMED, 'TypeCheck targets: project tsconfig')
 
-              const result = await this.runTypecheck(invocation, input)
+              const result = await this.runTypecheck(invocation)
 
               if (result.reason === 'completed' && result.exitCode === 0) {
                 await checks.complete(checkId, {
@@ -182,58 +158,23 @@ class ChecksTypeCheckCommand extends BaseCommand {
     return commandReport.exitCode()
   }
 
-  protected async getInput(
-    project: Project,
-    workspacePatterns: Array<string>,
-    state?: ChangedProjectState
-  ): Promise<CommandInput | undefined> {
-    if (this.changed) {
-      if (!state) {
-        throw new Error('Changed TypeScript targets require changed project state')
-      }
-
-      const input = createCommandInput({
-        cwd: project.cwd,
-        source: 'changed',
-        targets: selectChangedTypecheckFiles(state),
-      })
-      const existsMap = await Promise.all(
-        input.targets.map(async ({ path }) => xfs.existsPromise(path))
-      )
-
-      return {
-        ...input,
-        targets: input.targets.filter((_, index) => existsMap[index]),
-      }
+  protected shouldRunTypecheck(state?: ChangedProjectState): boolean {
+    if (!this.changed) {
+      return true
     }
 
-    const nativeProjectCwd = toNativeCwd(project.cwd)
-    const { hasTypeScriptProject: hasProject } = await importTypeScriptConfigRuntime(
-      nativeProjectCwd
-    )
-
-    if (hasProject(nativeProjectCwd)) {
-      return undefined
+    if (!state) {
+      throw new Error('Changed TypeScript targets require changed project state')
     }
 
-    return createCommandInput({
-      cwd: project.cwd,
-      source: 'generated',
-      targets: workspacePatterns,
-    })
+    return hasChangedTypeScriptFiles(state)
   }
 
-  protected async runTypecheck(
-    invocation: ProjectInvocation,
-    input: CommandInput | undefined
-  ): Promise<ProcessExecutionResult> {
-    return invocation.yarn.run(
-      ['typecheck', ...(input ? toCommandArguments(input, invocation.project.cwd) : [])],
-      {
-        input: 'ignore',
-        timeoutMs: TYPECHECK_TIMEOUT_MS,
-      }
-    )
+  protected async runTypecheck(invocation: ProjectInvocation): Promise<ProcessExecutionResult> {
+    return invocation.yarn.run(['typecheck'], {
+      input: 'ignore',
+      timeoutMs: TYPECHECK_TIMEOUT_MS,
+    })
   }
 }
 
