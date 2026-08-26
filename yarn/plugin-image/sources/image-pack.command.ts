@@ -84,7 +84,7 @@ class ImagePackCommand extends BaseCommand {
             MessageName.UNNAMED,
             `Workspace ${
               workspace.manifest.name
-                ? structUtils.prettyIdent(configuration, workspace.manifest.name)
+                ? structUtils.stringifyIdent(workspace.manifest.name)
                 : workspace.relativeCwd
             } is not eligible for image publication.`
           )

@@ -64,8 +64,15 @@ test('should reject direct publication for an ineligible workspace', async () =>
   const exitCode = await ImagePackCommand.prototype.execute.call(command)
   const output = readOutput()
   const diagnostic = 'Workspace @app/library is not eligible for image publication.'
+  const records = output
+    .trim()
+    .split('\n')
+    .map((line) => JSON.parse(line) as { data?: unknown; type?: unknown })
+  const diagnostics = records.filter(
+    (record) => record.type === 'error' && record.data === diagnostic
+  )
 
   assert.equal(exitCode, 1)
-  assert.equal(output.split(diagnostic).length - 1, 1)
+  assert.equal(diagnostics.length, 1)
   assert.equal(processExecutions, 0)
 })
