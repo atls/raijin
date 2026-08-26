@@ -1,13 +1,14 @@
-import type { ProjectProcessInvocation } from '@atls/raijin/commands'
-import type { Project }                  from '@yarnpkg/core'
-import type { Workspace }                from '@yarnpkg/core'
+import type { ProjectProcessInvocation }           from '@atls/raijin/commands'
+import type { Project }                            from '@yarnpkg/core'
+import type { Workspace }                          from '@yarnpkg/core'
 
-import assert                            from 'node:assert/strict'
-import { test }                          from 'node:test'
+import assert                                      from 'node:assert/strict'
+import { test }                                    from 'node:test'
 
-import { resolveChangedProjectState }    from '../resolve.js'
+import { resolveChangedProjectState }              from '../resolve.js'
 import { resolveChangedProjectStateForEntrypoint } from '../resolve.js'
-import { resolveProjectWorkspaces }      from '../workspaces.js'
+import { resolveChangedWorkspaces }                from '../workspaces.js'
+import { resolveProjectWorkspaces }                from '../workspaces.js'
 
 const createProject = (): Project => {
   const root = { relativeCwd: '.', manifest: { name: null } } as unknown as Workspace
@@ -122,7 +123,10 @@ test('explicit range entrypoint resolves only the selected range', async () => {
   })
 
   assert.equal(result.kind, 'completed')
-  assert.equal(calls.some((args) => args.includes('origin/main...HEAD')), true)
+  assert.equal(
+    calls.some((args) => args.includes('origin/main...HEAD')),
+    true
+  )
 })
 
 test('push event entrypoint resolves only the selected event range', async () => {
@@ -153,7 +157,10 @@ test('push event entrypoint resolves only the selected event range', async () =>
     kind: 'completed',
     state: { files: [], workspaces: [] },
   })
-  assert.equal(calls.some((args) => args.includes('before-sha..after-sha')), true)
+  assert.equal(
+    calls.some((args) => args.includes('before-sha..after-sha')),
+    true
+  )
 })
 
 test('returns missing GitHub credential from the entrypoint as a managed error', async () => {
@@ -230,8 +237,7 @@ test('maps files to stable nearest-workspace identities including unnamed root',
       execute: async () => ({
         reason: 'completed',
         exitCode: 0,
-        stdout:
-          'R100\0packages/app/src/index.ts\0packages/app-tools/src/index.ts\0M\0README.md\0',
+        stdout: 'R100\0packages/app/src/index.ts\0packages/app-tools/src/index.ts\0M\0README.md\0',
         stderr: '',
       }),
     },
@@ -249,6 +255,41 @@ test('maps files to stable nearest-workspace identities including unnamed root',
     { path: 'packages/app' },
     { path: 'packages/app-tools' },
   ])
+})
+
+test('selects only destination ownership for a cross-workspace copy', () => {
+  const workspaces = resolveChangedWorkspaces(createProject(), [
+    {
+      path: 'packages/app-tools/src/copied.ts',
+      previousPath: 'packages/app/src/source.ts',
+      status: 'copied',
+    },
+  ])
+
+  assert.deepEqual(workspaces, [{ path: 'packages/app-tools' }])
+})
+
+test('selects old and new ownership for a cross-workspace rename', () => {
+  const workspaces = resolveChangedWorkspaces(createProject(), [
+    {
+      path: 'packages/app-tools/src/renamed.ts',
+      previousPath: 'packages/app/src/original.ts',
+      status: 'renamed',
+    },
+  ])
+
+  assert.deepEqual(workspaces, [{ path: 'packages/app' }, { path: 'packages/app-tools' }])
+})
+
+test('retains ownership for a deleted file path', () => {
+  const workspaces = resolveChangedWorkspaces(createProject(), [
+    {
+      path: 'packages/app/src/deleted.ts',
+      status: 'deleted',
+    },
+  ])
+
+  assert.deepEqual(workspaces, [{ path: 'packages/app' }])
 })
 
 test('resolves unnamed root identity back through the Yarn project model', () => {

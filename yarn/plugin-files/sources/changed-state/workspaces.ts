@@ -33,8 +33,7 @@ export const resolveProjectWorkspaces = (
   identities: ReadonlyArray<ChangedWorkspaceIdentity>
 ): ReadonlyArray<Workspace> =>
   identities.map((identity) => {
-    const workspace = project.workspaces.find(
-      ({ relativeCwd }) => relativeCwd === identity.path)
+    const workspace = project.workspaces.find(({ relativeCwd }) => relativeCwd === identity.path)
 
     if (!workspace) {
       throw new WorkspaceIdentityException(identity)
@@ -49,8 +48,8 @@ export const resolveChangedWorkspaces = (
 ): ReadonlyArray<ChangedWorkspaceIdentity> => {
   const selected = new Set(
     files
-      .flatMap(({ path, previousPath }) =>
-        [path, previousPath].filter((candidate): candidate is string => Boolean(candidate)))
+      .flatMap(({ path, previousPath, status }) =>
+        status === 'renamed' && previousPath ? [path, previousPath] : [path])
       .map((path) => findOwningWorkspace(project, path))
       .filter((workspace): workspace is Workspace => Boolean(workspace))
   )
