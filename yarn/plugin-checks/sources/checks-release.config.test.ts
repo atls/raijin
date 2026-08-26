@@ -20,6 +20,7 @@ test('runs unnamed root release builds through native foreach path selection', (
     '--include',
     '.',
     '--all',
+    'run',
     'build',
   ])
 })

@@ -28,6 +28,7 @@ import { resolveChecksReleaseConfig }              from './checks-release.config
 
 export const createReleaseBuildArguments = (workspace: ChangedWorkspaceIdentity): Array<string> => [
   ...createForeachInput([workspace.path], {}),
+  'run',
   'build',
 ]
 
