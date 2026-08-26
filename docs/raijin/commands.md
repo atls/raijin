@@ -262,7 +262,7 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 ### Domain `image`
 
-- Commands: `image pack`
+- Commands: `image pack`, `image workspaces resolve`
 
 <details>
 <summary>Domain details: `image`</summary>
@@ -273,12 +273,22 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 - Status: `active`
 - Description: build and optionally publish a container image
-- Usage: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0]`
+- Usage: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0] [--json]`
 - Example: `yarn image pack`
 - Contract: `packConfiguration` defaults to `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Contract: `packConfiguration.builderTag` selects the supported Node/buildpack channel.
 - Contract: `packConfiguration.buildpackVersion` pins an immutable buildpack tag for rollback.
 - Contract: `packConfiguration.buildpack` overrides the full buildpack reference.
+- Plugin: `@atls/yarn-plugin-image`
+
+<!-- sync:command-card:image-workspaces-resolve -->
+
+#### `image workspaces resolve`
+
+- Status: `active`
+- Description: resolve selected workspaces eligible for image publication
+- Usage: `yarn image workspaces resolve [--json] ...`
+- Example: `yarn image workspaces resolve`
 - Plugin: `@atls/yarn-plugin-image`
 
 </details>

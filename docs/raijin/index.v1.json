@@ -289,7 +289,20 @@
       "options": [],
       "pathTokens": ["image", "pack"],
       "plugin": "@atls/yarn-plugin-image",
-      "usage": "yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0]",
+      "usage": "yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0] [--json]",
+      "availabilityReason": "registered by the assembled @atls/raijin-assembly runtime",
+      "domain": "image",
+      "pluginDir": "plugin-image",
+      "status": "active"
+    },
+    {
+      "command": "image workspaces resolve",
+      "description": "resolve selected workspaces eligible for image publication",
+      "examples": [],
+      "options": [],
+      "pathTokens": ["image", "workspaces", "resolve"],
+      "plugin": "@atls/yarn-plugin-image",
+      "usage": "yarn image workspaces resolve [--json] ...",
       "availabilityReason": "registered by the assembled @atls/raijin-assembly runtime",
       "domain": "image",
       "pluginDir": "plugin-image",
@@ -1003,6 +1016,7 @@
       "generate project",
       "ui icons generate",
       "image pack",
+      "image workspaces resolve",
       "library build",
       "lint",
       "raijin sync",
@@ -1048,5 +1062,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-21T20:09:22.250Z"
+  "lastGenerated": "2026-08-26T23:03:41.313Z"
 }

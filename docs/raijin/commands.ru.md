@@ -262,7 +262,7 @@
 
 ### Домен `image`
 
-- Команды: `image pack`
+- Команды: `image pack`, `image workspaces resolve`
 
 <details>
 <summary>Подробности домена `image`</summary>
@@ -273,12 +273,22 @@
 
 - Статус: `active`
 - Описание: build and optionally publish a container image
-- Использование: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0]`
+- Использование: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0] [--json]`
 - Пример: `yarn image pack`
 - Контракт: `packConfiguration` по умолчанию использует `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Контракт: `packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.
 - Контракт: `packConfiguration.buildpackVersion` фиксирует неизменяемый buildpack tag для rollback.
 - Контракт: `packConfiguration.buildpack` переопределяет полную buildpack-ссылку.
+- Плагин: `@atls/yarn-plugin-image`
+
+<!-- sync:command-card:image-workspaces-resolve -->
+
+#### `image workspaces resolve`
+
+- Статус: `active`
+- Описание: resolve selected workspaces eligible for image publication
+- Использование: `yarn image workspaces resolve [--json] ...`
+- Пример: `yarn image workspaces resolve`
 - Плагин: `@atls/yarn-plugin-image`
 
 </details>
