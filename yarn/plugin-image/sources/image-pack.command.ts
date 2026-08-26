@@ -1,7 +1,6 @@
 import type { CommandExecutor }              from '@atls/code-pack'
 import type { TagPolicy }                    from '@atls/code-pack'
 import type { WorkspaceCommandContext }      from '@atls/raijin/commands'
-import type { Workspace }                    from '@yarnpkg/core'
 
 import type { ImagePackConfiguration }       from './image-pack.utils.js'
 
@@ -9,6 +8,7 @@ import { readFileSync }                      from 'node:fs'
 import { join }                              from 'node:path'
 
 import { BaseCommand }                       from '@yarnpkg/cli'
+import { MessageName }                       from '@yarnpkg/core'
 import { StreamReport }                      from '@yarnpkg/core'
 import { structUtils }                       from '@yarnpkg/core'
 import { xfs }                               from '@yarnpkg/fslib'
@@ -22,6 +22,8 @@ import { packUtils }                         from '@atls/yarn-pack-utils'
 import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
 import { resolveBuildpackReference }         from './image-pack.utils.js'
 import { resolveBuilderReference }           from './image-pack.utils.js'
+import { createPackResult }                  from './pack-result.js'
+import { isWorkspaceEligibleForImage }       from './workspace-eligibility.js'
 
 class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]
@@ -37,6 +39,8 @@ class ImagePackCommand extends BaseCommand {
   publish: boolean = Option.Boolean('-p,--publish', false)
 
   platform?: string = Option.String('--platform')
+
+  json: boolean = Option.Boolean('--json', false)
 
   declare context: WorkspaceCommandContext
 
@@ -71,17 +75,18 @@ class ImagePackCommand extends BaseCommand {
     const commandReport = await StreamReport.start(
       {
         configuration,
+        json: this.json,
         stdout: this.context.stdout,
       },
       async (report) => {
-        if (!this.isWorkspaceAllowedForBundle(workspace)) {
-          report.reportInfo(
-            null,
+        if (!isWorkspaceEligibleForImage(workspace)) {
+          report.reportError(
+            MessageName.UNNAMED,
             `Workspace ${
               workspace.manifest.name
                 ? structUtils.prettyIdent(configuration, workspace.manifest.name)
                 : workspace.relativeCwd
-            } not allowed for package.`
+            } is not eligible for image publication.`
           )
 
           return
@@ -108,47 +113,33 @@ class ImagePackCommand extends BaseCommand {
           platform: this.platform ?? getDefaultMaterializationPlatform(),
         })
 
-        await pack(
-          {
-            workspace: workspace.manifest.raw.name,
-            registry: this.registry,
-            publish: this.publish,
-            tagPolicy: this.tagPolicy,
-            buildpack: resolveBuildpackReference(packConfiguration),
-            builder: resolveBuilderReference(packConfiguration),
-            platform: this.platform,
-            require,
-            cwd: destination,
-          },
-          commandExecutor
+        const result = createPackResult(
+          await pack(
+            {
+              workspace: workspace.manifest.raw.name,
+              registry: this.registry,
+              publish: this.publish,
+              tagPolicy: this.tagPolicy,
+              buildpack: resolveBuildpackReference(packConfiguration),
+              builder: resolveBuilderReference(packConfiguration),
+              platform: this.platform,
+              require,
+              cwd: destination,
+            },
+            commandExecutor
+          ),
+          this.publish
         )
+
+        report.reportInfo(
+          null,
+          `${this.publish ? 'Published' : 'Built'} ${result.images.join(', ')}.`
+        )
+        report.reportJson(result)
       }
     )
 
     return commandReport.exitCode()
-  }
-
-  private isWorkspaceAllowedForBundle(workspace: Workspace): boolean {
-    const { scripts, name } = workspace.manifest
-
-    const buildCommand = scripts.get('build')
-
-    const hasAllowedBuildScript = [
-      'actl service build',
-      'actl renderer build',
-      'build-storybook',
-      'storybook build',
-      'next build',
-      'builder build library',
-      'app service build',
-      'app renderer build',
-      'service build',
-      'renderer build',
-      'strapi build',
-      'astro build',
-    ].some((command) => buildCommand?.includes(command))
-
-    return hasAllowedBuildScript && Boolean(name)
   }
 }
 
