@@ -1,36 +1,35 @@
 /* eslint-disable n/no-sync */
 
-import type { CommandInput }               from '@atls/raijin/commands'
-import type { ProjectProcessInvocation }   from '@atls/raijin/commands'
-import type { ProjectCommandContext }      from '@atls/raijin/commands'
-import type { LintDiagnostic }             from '@atls/yarn-plugin-lint'
-import type { LintFileResult }             from '@atls/yarn-plugin-lint'
-import type { LintProjectCompletedResult } from '@atls/yarn-plugin-lint'
-import type { ChangedProjectState }        from '@atls/yarn-plugin-files'
-import type { ChangedStateManagedError }   from '@atls/yarn-plugin-files'
-import type { Project }                    from '@yarnpkg/core'
+import type { CommandInput }                       from '@atls/raijin/commands'
+import type { ProjectProcessInvocation }           from '@atls/raijin/commands'
+import type { ProjectCommandContext }              from '@atls/raijin/commands'
+import type { ChangedProjectState }                from '@atls/yarn-plugin-files'
+import type { ChangedStateManagedError }           from '@atls/yarn-plugin-files'
+import type { LintDiagnostic }                     from '@atls/yarn-plugin-lint'
+import type { LintFileResult }                     from '@atls/yarn-plugin-lint'
+import type { LintProjectCompletedResult }         from '@atls/yarn-plugin-lint'
+import type { Project }                            from '@yarnpkg/core'
 
-import type { Annotation }                 from './github.checks.js'
+import type { Annotation }                         from './github.checks.js'
 
-import { readFileSync }                    from 'node:fs'
+import { readFileSync }                            from 'node:fs'
 
-import { BaseCommand }                     from '@yarnpkg/cli'
-import { StreamReport }                    from '@yarnpkg/core'
-import { MessageName }                     from '@yarnpkg/core'
-import { codeFrameColumns }                from '@babel/code-frame'
-import { xfs }                             from '@yarnpkg/fslib'
-import { Option }                          from 'clipanion'
+import { BaseCommand }                             from '@yarnpkg/cli'
+import { StreamReport }                            from '@yarnpkg/core'
+import { MessageName }                             from '@yarnpkg/core'
+import { codeFrameColumns }                        from '@babel/code-frame'
+import { Option }                                  from 'clipanion'
 
-import { createCommandInput }              from '@atls/raijin/commands'
-import { toNativeCwd }                     from '@atls/raijin/commands'
-import { toNativePath }                    from '@atls/raijin/filesystem'
-import { formatChangedStateManagedError }  from '@atls/yarn-plugin-files'
-import { readGitHubActionsEvent }          from '@atls/yarn-plugin-files'
+import { createCommandInput }                      from '@atls/raijin/commands'
+import { toNativeCwd }                             from '@atls/raijin/commands'
+import { toNativePath }                            from '@atls/raijin/filesystem'
+import { formatChangedStateManagedError }          from '@atls/yarn-plugin-files'
+import { readGitHubActionsEvent }                  from '@atls/yarn-plugin-files'
 import { resolveChangedProjectStateForEntrypoint } from '@atls/yarn-plugin-files'
-import { lintProjectSources }              from '@atls/yarn-plugin-lint'
+import { lintProjectSources }                      from '@atls/yarn-plugin-lint'
 
-import { GitHubChecks }                    from './github.checks.js'
-import { AnnotationLevel }                 from './github.checks.js'
+import { GitHubChecks }                            from './github.checks.js'
+import { AnnotationLevel }                         from './github.checks.js'
 
 const getAnnotationLevel = (severity: LintDiagnostic['severity']): AnnotationLevel =>
   severity === 1 ? AnnotationLevel.Warning : AnnotationLevel.Failure
@@ -81,6 +80,16 @@ export const selectChangedLintFiles = (state: ChangedProjectState): ReadonlyArra
   state.files
     .filter(({ path, status }) => status !== 'deleted' && /\.(c|m)?(j|t)sx?$/.test(path))
     .map(({ path }) => path)
+
+export const createChangedLintInput = (
+  project: Project,
+  state: ChangedProjectState
+): CommandInput =>
+  createCommandInput({
+    cwd: project.cwd,
+    source: 'changed',
+    targets: selectChangedLintFiles(state),
+  })
 
 class ChecksLintCommand extends BaseCommand {
   static override paths = [['checks', 'lint']]
@@ -207,22 +216,9 @@ class ChecksLintCommand extends BaseCommand {
       return result
     }
 
-    const input = createCommandInput({
-      cwd: project.cwd,
-      source: 'changed',
-      targets: selectChangedLintFiles(result.state),
-    })
-
-    const existsMap = await Promise.all(
-      input.targets.map(async ({ path }) => xfs.existsPromise(path))
-    )
-
     return {
       kind: 'completed',
-      targets: {
-        ...input,
-        targets: input.targets.filter((_, index) => existsMap[index]),
-      },
+      targets: createChangedLintInput(project, result.state),
     }
   }
 }

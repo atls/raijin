@@ -1,6 +1,7 @@
+import type { ChangedProjectState }        from '@atls/yarn-plugin-files'
 import type { LintFileResult }             from '@atls/yarn-plugin-lint'
 import type { LintProjectCompletedResult } from '@atls/yarn-plugin-lint'
-import type { ChangedProjectState }        from '@atls/yarn-plugin-files'
+import type { Project }                    from '@yarnpkg/core'
 import type { StreamReport }               from '@yarnpkg/core'
 
 import assert                              from 'node:assert/strict'
@@ -9,6 +10,7 @@ import { test }                            from 'node:test'
 import { MessageName }                     from '@yarnpkg/core'
 
 import { AnnotationLevel }                 from './github.checks.js'
+import { createChangedLintInput }          from './checks-lint.command.jsx'
 import { formatLintAnnotations }           from './checks-lint.command.jsx'
 import { reportLintOutput }                from './checks-lint.command.jsx'
 import { selectChangedLintFiles }          from './checks-lint.command.jsx'
@@ -90,4 +92,23 @@ test('should consume changed-state files without linting deleted paths', () => {
   }
 
   assert.deepEqual(selectChangedLintFiles(state), ['src/index.ts', 'src/renamed.ts'])
+})
+
+test('retains selected changed targets without filesystem existence revalidation', () => {
+  const state: ChangedProjectState = {
+    files: [{ path: 'src/not-present.ts', status: 'modified' }],
+    workspaces: [],
+  }
+  const project = { cwd: '/repo' } as unknown as Project
+
+  assert.deepEqual(createChangedLintInput(project, state), {
+    cwd: '/repo',
+    source: 'changed',
+    targets: [
+      {
+        path: '/repo/src/not-present.ts',
+        request: 'src/not-present.ts',
+      },
+    ],
+  })
 })
