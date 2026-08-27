@@ -11,11 +11,8 @@ type RuntimeExecArgvModule = {
   createRuntimeExecArgv: typeof createRuntimeExecArgvFn
 }
 
-export const resolveRuntimeExecArgvModuleUrl = (cwd: string): string =>
-  resolveRaijinRuntimeUrl(cwd, RUNTIME_EXEC_ARGV_SPECIFIER)
-
 const importRuntimeExecArgvModule = async (cwd: string): Promise<RuntimeExecArgvModule> =>
-  (await import(resolveRuntimeExecArgvModuleUrl(cwd))) as RuntimeExecArgvModule
+  (await import(resolveRaijinRuntimeUrl(cwd, RUNTIME_EXEC_ARGV_SPECIFIER))) as RuntimeExecArgvModule
 
 export const createTestExecArgv = (
   pnpEsmLoader?: string,

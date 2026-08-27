@@ -1,9 +1,14 @@
 import type { CommandContext }                                             from '@yarnpkg/core'
 
-import type { EntryInvocation } from './invocation.interfaces.js'
+import type { EntryInvocation } from '../invocation.interfaces.js'
 
 import assert                                                              from 'node:assert/strict'
+import { mkdtemp }                                                         from 'node:fs/promises'
+import { rm }                                                              from 'node:fs/promises'
+import { writeFile }                                                       from 'node:fs/promises'
+import { tmpdir }                                                          from 'node:os'
 import { dirname }                                                         from 'node:path'
+import { join }                                                            from 'node:path'
 import { PassThrough }                                                     from 'node:stream'
 import { before }                                                          from 'node:test'
 import test                                                                from 'node:test'
@@ -15,10 +20,10 @@ import { getPluginConfiguration }                                          from 
 import { npath }                                                           from '@yarnpkg/fslib'
 import { ppath }                                                           from '@yarnpkg/fslib'
 
-import { create as createProcessExecutor } from '../../../infrastructure/process/execa/executor.js'
-import { resolveEntryCommandInvocation as resolveEntryInvocation }         from './entry.js'
-import { resolveProjectCommandInvocation as resolveProjectInvocation }     from './project.js'
-import { resolveWorkspaceCommandInvocation as resolveWorkspaceInvocation } from './workspace.js'
+import { create as createProcessExecutor } from '../../../../infrastructure/process/execa/executor.js'
+import { resolveEntryCommandInvocation as resolveEntryInvocation }         from '../entry.js'
+import { resolveProjectCommandInvocation as resolveProjectInvocation }     from '../project.js'
+import { resolveWorkspaceCommandInvocation as resolveWorkspaceInvocation } from '../workspace.js'
 
 const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
 
@@ -98,6 +103,29 @@ test('should resolve project command invocation from a nested cwd', async () => 
   assert.equal(invocation.executionCwd, repoRoot)
   assert.equal(invocation.project.cwd, repoRoot)
   assert.equal(invocation.yarn.project.cwd, repoRoot)
+})
+
+test('should expose the existing managed Node executor with one IPC channel', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-command-node-'))
+  const entry = join(cwd, 'entry.mjs')
+
+  context.after(async () => rm(cwd, { force: true, recursive: true }))
+  await writeFile(
+    entry,
+    "process.once('message', (message) => process.send({ received: message }, () => process.disconnect()))\n"
+  )
+
+  const invocation = await resolveProjectCommandInvocation(createContext(rendererNestedCwd))
+  const result = await invocation.node.execute({
+    channel: { input: { scenario: 'unit' } },
+    cwd: npath.fromPortablePath(repoRoot),
+    entry,
+    input: 'ignore',
+    output: { mode: 'capture' },
+  })
+
+  assert.equal(result.reason, 'completed')
+  assert.deepEqual(result.messages, [{ received: { scenario: 'unit' } }])
 })
 
 test('should resolve workspace execution cwd without a duplicate workspace cwd field', async () => {

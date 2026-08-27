@@ -17,22 +17,14 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:*",
-    "@atls/cli-ui-log-record-component": "workspace:*",
-    "@atls/cli-ui-raw-output-component": "workspace:*",
-    "@atls/cli-ui-renderer-static-component": "workspace:*",
-    "@atls/cli-ui-test-failure-component": "workspace:*",
-    "@atls/cli-ui-test-progress-component": "workspace:*",
-    "@atls/code-test": "workspace:*",
     "@atls/raijin": "workspace:*",
     "@atls/yarn-plugin-tools": "workspace:*",
     "clipanion": "4.0.0-rc.2",
-    "ink": "3.2.0",
-    "react": "18.3.1",
+    "ignore": "5.3.2",
     "typanion": "3.14.0"
   },
   "devDependencies": {
-    "@types/react": "18.3.18",
+    "@types/node": "24.12.2",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",

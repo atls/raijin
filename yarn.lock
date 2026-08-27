@@ -409,7 +409,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-raw-output-component@workspace:*, @atls/cli-ui-raw-output-component@workspace:cli/cli-ui-raw-output":
+"@atls/cli-ui-raw-output-component@workspace:cli/cli-ui-raw-output":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-raw-output-component@workspace:cli/cli-ui-raw-output"
   dependencies:
@@ -513,7 +513,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-test-failure-component@workspace:*, @atls/cli-ui-test-failure-component@workspace:cli/cli-ui-test-failure":
+"@atls/cli-ui-test-failure-component@workspace:cli/cli-ui-test-failure":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-test-failure-component@workspace:cli/cli-ui-test-failure"
   dependencies:
@@ -533,7 +533,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-test-progress-component@workspace:*, @atls/cli-ui-test-progress-component@workspace:cli/cli-ui-test-progress":
+"@atls/cli-ui-test-progress-component@workspace:cli/cli-ui-test-progress":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-test-progress-component@workspace:cli/cli-ui-test-progress"
   dependencies:
@@ -670,16 +670,6 @@ __metadata:
     "@yarnpkg/fslib": "npm:3.1.5"
     package-json-type: "npm:1.0.3"
     typescript: "npm:5.9.3"
-  languageName: unknown
-  linkType: soft
-
-"@atls/code-test@workspace:*, @atls/code-test@workspace:code/code-test":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-test@workspace:code/code-test"
-  dependencies:
-    "@atls/raijin": "workspace:*"
-    "@types/node": "npm:24.12.2"
-    ignore: "npm:5.3.2"
   languageName: unknown
   linkType: soft
 
@@ -870,11 +860,11 @@ __metadata:
     "@actions/core": "npm:1.10.1"
     "@actions/github": "npm:6.0.0"
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
-    "@atls/code-test": "workspace:*"
     "@atls/code-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-lint": "workspace:*"
+    "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
     "@atls/yarn-plugin-workspaces": "workspace:*"
     "@babel/code-frame": "npm:7.24.7"
@@ -1151,23 +1141,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-test@workspace:yarn/plugin-test"
   dependencies:
-    "@atls/cli-ui-error-info-component": "workspace:*"
-    "@atls/cli-ui-log-record-component": "workspace:*"
-    "@atls/cli-ui-raw-output-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
-    "@atls/cli-ui-test-failure-component": "workspace:*"
-    "@atls/cli-ui-test-progress-component": "workspace:*"
-    "@atls/code-test": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
-    "@types/react": "npm:18.3.18"
+    "@types/node": "npm:24.12.2"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
     clipanion: "npm:4.0.0-rc.2"
-    ink: "npm:3.2.0"
-    react: "npm:18.3.1"
+    ignore: "npm:5.3.2"
     typanion: "npm:3.14.0"
     typescript: "npm:5.9.3"
   peerDependencies:

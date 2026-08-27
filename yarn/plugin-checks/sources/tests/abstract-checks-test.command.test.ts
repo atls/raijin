@@ -1,11 +1,14 @@
-import type { EventData }  from 'node:test'
-import type { TestEvent }  from 'node:test/reporters'
+import type { ProjectTestResult }   from '@atls/yarn-plugin-test'
+import type { EventData }           from 'node:test'
+import type { TestEvent }           from 'node:test/reporters'
 
-import type { Annotation } from './github.checks.js'
+import type { Annotation }          from '../github.checks.js'
 
-import assert              from 'node:assert/strict'
-import { join }            from 'node:path'
-import { test }            from 'node:test'
+import assert                       from 'node:assert/strict'
+import { join }                     from 'node:path'
+import { test }                     from 'node:test'
+
+import { createProjectTestOutcome } from '@atls/yarn-plugin-test'
 
 type TestFail = EventData.TestFail
 
@@ -15,7 +18,7 @@ type FormatTestResults = (
   events?: Array<TestEvent>
 ) => Array<Annotation>
 
-const { formatTestResults } = (await import('./test-results.formatter.ts')) as {
+const { formatTestResults } = (await import('../test-results.formatter.ts')) as {
   formatTestResults: FormatTestResults
 }
 
@@ -148,4 +151,28 @@ test('should ignore non-error stderr for non-generic failures', () => {
   assert.equal(annotation.title, 'The provided credentials are invalid.')
   assert.equal(annotation.message, 'The provided credentials are invalid.')
   assert.equal(annotation.raw_details, cause.stack)
+})
+
+test('keeps typed capability failures non-zero in the Checks route', () => {
+  const result = {
+    detail: {
+      message: 'Raijin runtime argv provider is unavailable',
+      stage: 'runtime-argv',
+    },
+    output: { stderr: '', stdout: '' },
+    providerReason: 'runtime-argv-failed',
+    reason: 'provider-failed',
+    state: {
+      events: [],
+      failures: [],
+      interrupted: [],
+      passes: [],
+      watch: { drained: 0, restarted: 0 },
+    },
+  } satisfies ProjectTestResult
+
+  assert.deepEqual(createProjectTestOutcome(result), {
+    exitCode: 1,
+    summary: 'Raijin runtime argv provider is unavailable',
+  })
 })

@@ -8,6 +8,7 @@ import { createProjectModel }           from '@atls/raijin/project'
 import { UnsupportedNodeLinkerError }   from '../exceptions/unsupported-node-linker.js'
 import { resolveProject }               from '../adapters/yarn/project.js'
 import { createInvocationCapabilities } from '../capabilities/create.js'
+import { createManagedNodeExecutor }    from '../composition/node.js'
 import { resolveInvocationCwd }         from './context.js'
 
 export const resolveProjectScope = async (
@@ -39,6 +40,11 @@ export const resolveProjectCommandInvocation = async (
       environment: context.env,
       executionCwd: project.cwd,
       executor,
+      nodeExecutor: createManagedNodeExecutor({
+        baseEnvironment: context.env,
+        locator: project.topLevelWorkspace.anchoredLocator,
+        project,
+      }),
       project,
     }),
   }

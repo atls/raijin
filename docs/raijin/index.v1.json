@@ -774,14 +774,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-test",
-      "location": "code/code-test",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "build:worker", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/code-typescript",
       "location": "code/code-typescript",
       "group": "code",
@@ -1048,5 +1040,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-21T20:09:22.250Z"
+  "lastGenerated": "2026-08-27T19:17:49.318Z"
 }

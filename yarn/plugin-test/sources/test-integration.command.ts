@@ -1,4 +1,4 @@
-import { AbstractTestCommand } from './abstract-test.command.jsx'
+import { AbstractTestCommand } from './abstract-test.command.js'
 
 export class TestIntegrationCommand extends AbstractTestCommand {
   static override paths = [['test', 'integration']]
@@ -8,6 +8,6 @@ export class TestIntegrationCommand extends AbstractTestCommand {
   })
 
   override async execute(): Promise<number> {
-    return this.executeRegular('integration', this.context.invocation)
+    return this.executeScenario('integration', this.context.invocation)
   }
 }

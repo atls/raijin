@@ -1,10 +1,10 @@
-import type { EventData }       from 'node:test'
-import type { TestEvent }       from 'node:test/reporters'
+import type { ProjectTestEvent } from '@atls/yarn-plugin-test'
+import type { EventData }        from 'node:test'
 
-import type { Annotation }      from './github.checks.js'
-import type { AnnotationLevel } from './github.checks.js'
+import type { Annotation }       from './github.checks.js'
+import type { AnnotationLevel }  from './github.checks.js'
 
-import { relative }             from 'node:path'
+import { relative }              from 'node:path'
 
 const DEFAULT_LINE = 1
 const FAILURE_ANNOTATION_LEVEL = 'failure' as AnnotationLevel
@@ -73,7 +73,7 @@ const findRootError = (error: unknown): unknown => {
 const isGenericFailureMessage = (message: string | undefined): boolean =>
   message === undefined || GENERIC_TEST_FAILURE_MESSAGES.has(message)
 
-const collectStderrByFile = (events: Array<TestEvent>): Map<string, string> =>
+const collectStderrByFile = (events: Array<ProjectTestEvent>): Map<string, string> =>
   events.reduce((stderrByFile, event) => {
     if (event.type !== 'test:stderr') {
       return stderrByFile
@@ -159,7 +159,7 @@ const getAnnotationDetails = (error: unknown, stderr: string | undefined): strin
 export const formatTestResults = (
   results: Array<TestFail>,
   cwd: string,
-  events: Array<TestEvent> = []
+  events: Array<ProjectTestEvent> = []
 ): Array<Annotation> => {
   const stderrByFile = collectStderrByFile(events)
   const failureCountByFile = collectFailureCountByFile(results)

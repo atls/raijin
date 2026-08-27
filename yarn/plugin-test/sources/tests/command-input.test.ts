@@ -1,13 +1,13 @@
-import type { PortablePath } from '@yarnpkg/fslib'
+import type { PortablePath }      from '@yarnpkg/fslib'
 
-import assert                from 'node:assert/strict'
-import { test }              from 'node:test'
+import assert                     from 'node:assert/strict'
+import { test }                   from 'node:test'
 
-import { createTestInput }   from './abstract-test.command.jsx'
+import { createTestCommandInput } from '../command-input.js'
 
 test('should default test discovery to the invocation cwd', () => {
   assert.deepEqual(
-    createTestInput({ files: [], invocationCwd: '/repo/packages/client' as PortablePath }),
+    createTestCommandInput({ files: [], invocationCwd: '/repo/packages/client' as PortablePath }),
     {
       cwd: '/repo/packages/client',
       source: 'explicit',
@@ -18,7 +18,7 @@ test('should default test discovery to the invocation cwd', () => {
 
 test('should resolve explicit test files from the invocation cwd', () => {
   assert.deepEqual(
-    createTestInput({
+    createTestCommandInput({
       files: ['src/client.test.ts'],
       invocationCwd: '/repo/packages/client' as PortablePath,
     }),
@@ -37,7 +37,7 @@ test('should resolve explicit test files from the invocation cwd', () => {
 
 test('should use an explicit test target as the discovery cwd', () => {
   assert.equal(
-    createTestInput({
+    createTestCommandInput({
       files: [],
       invocationCwd: '/repo/packages/client/src' as PortablePath,
       target: '..',

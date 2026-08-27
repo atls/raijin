@@ -299,15 +299,6 @@ Core code libraries for build, checks, and utilities
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-code-test -->
-
-#### `@atls/code-test`
-
-- Location: `code/code-test`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `build:worker`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-typescript -->
 
 #### `@atls/code-typescript`

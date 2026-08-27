@@ -1,7 +1,4 @@
-import { Tester }              from '@atls/code-test'
-import { toNativeCwd }         from '@atls/raijin/commands'
-
-import { AbstractTestCommand } from './abstract-test.command.jsx'
+import { AbstractTestCommand } from './abstract-test.command.js'
 
 export class TestCommand extends AbstractTestCommand {
   static override paths = [['test']]
@@ -11,22 +8,6 @@ export class TestCommand extends AbstractTestCommand {
   })
 
   override async execute(): Promise<number> {
-    const { invocation } = this.context
-    const { executionCwd, invocationCwd, project } = invocation
-
-    const tester = await Tester.initialize(toNativeCwd(executionCwd), {
-      projectCwd: toNativeCwd(project.cwd),
-    })
-    const input = this.createInput(invocationCwd)
-
-    try {
-      const results = await tester.general(input, this.createTestOptions())
-
-      return results.some((result) => result.type === 'test:fail') ? 1 : 0
-    } catch (error) {
-      console.error(error) // eslint-disable-line no-console
-
-      return 1
-    }
+    return this.executeScenario('general', this.context.invocation)
   }
 }

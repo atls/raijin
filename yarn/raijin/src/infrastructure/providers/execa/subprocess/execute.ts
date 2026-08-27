@@ -1,6 +1,7 @@
 import type { Options }            from 'execa'
 import type { Result }             from 'execa'
 import type { StdoutStderrOption } from 'execa'
+import type { Message }            from 'execa'
 
 import type { ExecuteOptions }     from './execute.interfaces.js'
 import type { OutputEvent }        from './execute.interfaces.js'
@@ -37,21 +38,27 @@ const resolveOutput = (
 
 const createExecaOptions = ({
   cancelSignal,
+  channel,
   cwd,
   env,
+  forceKillAfterDelay,
   input,
   output,
   streams,
   timeoutMs,
 }: ExecuteOptions): Options => ({
-  buffer: output?.mode === 'capture',
+  buffer: channel !== undefined || output?.mode === 'capture',
   cancelSignal,
   cleanup: true,
   cwd,
   encoding: 'utf8',
   env,
   extendEnv: false,
+  forceKillAfterDelay,
+  ipc: channel !== undefined,
+  ipcInput: channel?.input as Message | undefined,
   reject: false,
+  serialization: 'advanced',
   stderr: resolveOutput(streams.stderr, output, 'stderr'),
   stdin: input === 'ignore' ? 'ignore' : streams.stdin,
   stdout: resolveOutput(streams.stdout, output, 'stdout'),
@@ -59,7 +66,11 @@ const createExecaOptions = ({
   timeout: timeoutMs,
 })
 
-const resolveExecutionOutput = (result: Result): Pick<ExecuteResult, 'stderr' | 'stdout'> => ({
+const resolveExecutionOutput = (
+  result: Result,
+  channelEnabled: boolean
+): Pick<ExecuteResult, 'messages' | 'stderr' | 'stdout'> => ({
+  ...(channelEnabled ? { messages: result.ipcOutput as ReadonlyArray<unknown> } : {}),
   stderr: typeof result.stderr === 'string' ? result.stderr : '',
   stdout: typeof result.stdout === 'string' ? result.stdout : '',
 })
@@ -74,10 +85,16 @@ export const execute = async (
   try {
     result = await execa(command, args, createExecaOptions(options))
   } catch (cause) {
-    return { reason: 'start-failed', cause, stderr: '', stdout: '' }
+    return {
+      reason: 'start-failed',
+      cause,
+      ...(options.channel ? { messages: [] } : {}),
+      stderr: '',
+      stdout: '',
+    }
   }
 
-  const output = resolveExecutionOutput(result)
+  const output = resolveExecutionOutput(result, options.channel !== undefined)
 
   if (result.timedOut) {
     return { ...output, reason: 'timed-out', cause: result }
