@@ -1137,12 +1137,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-test@workspace:*, @atls/yarn-plugin-test@workspace:yarn/plugin-test":
+"@atls/yarn-plugin-test@workspace:*, @atls/yarn-plugin-test@workspace:packages/plugins/test":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-test@workspace:yarn/plugin-test"
+  resolution: "@atls/yarn-plugin-test@workspace:packages/plugins/test"
   dependencies:
     "@atls/raijin": "workspace:*"
-    "@atls/yarn-plugin-tools": "workspace:*"
     "@types/node": "npm:24.12.2"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"

@@ -1,0 +1,13 @@
+export { plugin as default }        from './registration.js'
+
+export type *                       from './project/event.js'
+export type *                       from './project/input.js'
+export type *                       from './project/result.js'
+export type { ProjectTestOutcome }  from './project/outcome.js'
+export type { TestProducerInput }   from './child/protocol.js'
+export { executeProjectTests }      from './composition.js'
+export { getScenarioPolicy }        from './project/scenario.js'
+export { createProjectTestOutcome } from './project/outcome.js'
+export { AbstractTestCommand }      from './commands/base.js'
+export { TestIntegrationCommand }   from './commands/integration.js'
+export { TestUnitCommand }          from './commands/unit.js'
