@@ -39,10 +39,8 @@ export const createInvocationCapabilities = ({
   environment,
   executionCwd,
   executor,
-  nodeExecutor,
   project,
-}: InvocationCapabilitiesOptions): Pick<ProjectInvocation, 'node' | 'process' | 'yarn'> => ({
-  node: nodeExecutor,
+}: InvocationCapabilitiesOptions): Pick<ProjectInvocation, 'process' | 'yarn'> => ({
   process: createProjectProcessInvocation({
     environment,
     executionCwd,

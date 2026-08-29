@@ -1,21 +1,17 @@
-import type { ProjectTestResult }   from '@atls/yarn-plugin-test'
-import type { EventData }           from 'node:test'
-import type { TestEvent }           from 'node:test/reporters'
+import type { EventData }  from 'node:test'
 
-import type { Annotation }          from '../github.checks.js'
+import type { Annotation } from '../github.checks.js'
 
-import assert                       from 'node:assert/strict'
-import { join }                     from 'node:path'
-import { test }                     from 'node:test'
-
-import { createProjectTestOutcome } from '@atls/yarn-plugin-test'
+import assert              from 'node:assert/strict'
+import { join }            from 'node:path'
+import { test }            from 'node:test'
 
 type TestFail = EventData.TestFail
 
 type FormatTestResults = (
   results: Array<TestFail>,
   cwd: string,
-  events?: Array<TestEvent>
+  events?: Array<EventData.TestStderr>
 ) => Array<Annotation>
 
 const { formatTestResults } = (await import('../test-results.formatter.ts')) as {
@@ -51,13 +47,7 @@ test('should include stderr details in loader failure annotation', () => {
     '            ^\n',
     'Error [ERR_REQUIRE_CYCLE_MODULE]: Cannot require() ES Module in a cycle\n',
   ]
-  const events = stderr.map((message) => ({
-    type: 'test:stderr',
-    data: {
-      file,
-      message,
-    },
-  })) as Array<TestEvent>
+  const events = stderr.map((message) => ({ file, message }))
 
   const [annotation] = formatTestResults([createFailure(cwd, error)], cwd, events)
 
@@ -98,21 +88,9 @@ test('should keep failure-specific details for multiple fails in one file', () =
   const secondError = new Error('test failed', { cause: secondCause })
 
   const events = [
-    {
-      type: 'test:stderr',
-      data: {
-        file,
-        message: 'Error: unrelated merged stderr chunk for first failure\n',
-      },
-    },
-    {
-      type: 'test:stderr',
-      data: {
-        file,
-        message: 'Error: unrelated merged stderr chunk for second failure\n',
-      },
-    },
-  ] as Array<TestEvent>
+    { file, message: 'Error: unrelated merged stderr chunk for first failure\n' },
+    { file, message: 'Error: unrelated merged stderr chunk for second failure\n' },
+  ]
 
   const annotations = formatTestResults(
     [
@@ -136,43 +114,11 @@ test('should ignore non-error stderr for non-generic failures', () => {
   cause.stack = 'Error: The provided credentials are invalid.\n    at auth.ts:149:11'
 
   const error = new Error('test failed', { cause })
-  const events = [
-    {
-      type: 'test:stderr',
-      data: {
-        file,
-        message: 'diagnostic line from passing test\n',
-      },
-    },
-  ] as Array<TestEvent>
+  const events = [{ file, message: 'diagnostic line from passing test\n' }]
 
   const [annotation] = formatTestResults([createFailure(cwd, error)], cwd, events)
 
   assert.equal(annotation.title, 'The provided credentials are invalid.')
   assert.equal(annotation.message, 'The provided credentials are invalid.')
   assert.equal(annotation.raw_details, cause.stack)
-})
-
-test('keeps typed capability failures non-zero in the Checks route', () => {
-  const result = {
-    detail: {
-      message: 'Raijin runtime argv provider is unavailable',
-      stage: 'runtime-argv',
-    },
-    output: { stderr: '', stdout: '' },
-    providerReason: 'runtime-argv-failed',
-    reason: 'provider-failed',
-    state: {
-      events: [],
-      failures: [],
-      interrupted: [],
-      passes: [],
-      watch: { drained: 0, restarted: 0 },
-    },
-  } satisfies ProjectTestResult
-
-  assert.deepEqual(createProjectTestOutcome(result), {
-    exitCode: 1,
-    summary: 'Raijin runtime argv provider is unavailable',
-  })
 })

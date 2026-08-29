@@ -15,11 +15,7 @@ import { directory }                          from './directory.js'
 type ProcessResult = Exclude<ExecuteResult, { reason: 'cleanup-failed' }>
 
 const toProcessResult = (result: ProcessExecuteResult): ProcessResult => {
-  const output = {
-    ...(result.messages ? { messages: result.messages } : {}),
-    stderr: result.stderr,
-    stdout: result.stdout,
-  }
+  const output = { stderr: result.stderr, stdout: result.stdout }
 
   switch (result.reason) {
     case 'cancelled':
@@ -87,7 +83,6 @@ const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<E
       createArguments(input, await resolveLoader()),
       {
         cancelSignal: input.cancelSignal,
-        channel: input.channel,
         streams: {
           stderr: 'inherit',
           stdin: 'inherit',
@@ -95,7 +90,6 @@ const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<E
         },
         cwd: input.cwd,
         env: environment,
-        forceKillAfterDelay: input.channel ? false : undefined,
         input: input.input === 'ignore' ? 'ignore' : undefined,
         output,
         timeoutMs: input.timeoutMs,
@@ -104,12 +98,7 @@ const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<E
 
     execution = toProcessResult(result)
   } catch {
-    execution = {
-      reason: 'start-failed',
-      ...(input.channel ? { messages: [] } : {}),
-      stderr: '',
-      stdout: '',
-    }
+    execution = { reason: 'start-failed', stderr: '', stdout: '' }
   }
 
   if (temporaryDirectory) {

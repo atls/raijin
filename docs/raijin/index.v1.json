@@ -480,7 +480,25 @@
     {
       "command": "test",
       "description": "run all workspace tests",
-      "examples": [],
+      "details": "Run either integration or unit tests with Node.js built-in test runner.\n\nIntegration tests are defined by placing *.test.[j|t]sx? in 'integration' folder \nanywhere.\n\nUnit tests are all *.test.[j|t]sx? except in 'integration' folder.",
+      "examples": [
+        {
+          "command": "yarn test unit",
+          "description": "Run all unit tests"
+        },
+        {
+          "command": "yarn test integration",
+          "description": "Run all integration tests"
+        },
+        {
+          "command": "yarn test integration menu",
+          "description": "Run all integration tests which file names include 'menu'"
+        },
+        {
+          "command": "yarn test unit -w",
+          "description": "Run all unit tests in watch mode - reloading after any change in file"
+        }
+      ],
       "options": [],
       "pathTokens": ["test"],
       "plugin": "@atls/yarn-plugin-test",
@@ -493,7 +511,25 @@
     {
       "command": "test integration",
       "description": "run integration tests",
-      "examples": [],
+      "details": "Run either integration or unit tests with Node.js built-in test runner.\n\nIntegration tests are defined by placing *.test.[j|t]sx? in 'integration' folder \nanywhere.\n\nUnit tests are all *.test.[j|t]sx? except in 'integration' folder.",
+      "examples": [
+        {
+          "command": "yarn test unit",
+          "description": "Run all unit tests"
+        },
+        {
+          "command": "yarn test integration",
+          "description": "Run all integration tests"
+        },
+        {
+          "command": "yarn test integration menu",
+          "description": "Run all integration tests which file names include 'menu'"
+        },
+        {
+          "command": "yarn test unit -w",
+          "description": "Run all unit tests in watch mode - reloading after any change in file"
+        }
+      ],
       "options": [],
       "pathTokens": ["test", "integration"],
       "plugin": "@atls/yarn-plugin-test",
@@ -506,7 +542,25 @@
     {
       "command": "test unit",
       "description": "run unit tests",
-      "examples": [],
+      "details": "Run either integration or unit tests with Node.js built-in test runner.\n\nIntegration tests are defined by placing *.test.[j|t]sx? in 'integration' folder \nanywhere.\n\nUnit tests are all *.test.[j|t]sx? except in 'integration' folder.",
+      "examples": [
+        {
+          "command": "yarn test unit",
+          "description": "Run all unit tests"
+        },
+        {
+          "command": "yarn test integration",
+          "description": "Run all integration tests"
+        },
+        {
+          "command": "yarn test integration menu",
+          "description": "Run all integration tests which file names include 'menu'"
+        },
+        {
+          "command": "yarn test unit -w",
+          "description": "Run all unit tests in watch mode - reloading after any change in file"
+        }
+      ],
       "options": [],
       "pathTokens": ["test", "unit"],
       "plugin": "@atls/yarn-plugin-test",
@@ -1040,5 +1094,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-08-28T23:28:27.345Z"
+  "lastGenerated": "2026-08-29T02:09:09.314Z"
 }

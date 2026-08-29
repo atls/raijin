@@ -5,7 +5,6 @@ import type { WorkspaceInvocation }     from './invocation.interfaces.js'
 import { createProjectModel }           from '@atls/raijin/project'
 
 import { createInvocationCapabilities } from '../capabilities/create.js'
-import { createManagedNodeExecutor }    from '../composition/node.js'
 import { resolveProjectScope }          from './project.js'
 
 export const resolveWorkspaceCommandInvocation = async (
@@ -25,11 +24,6 @@ export const resolveWorkspaceCommandInvocation = async (
       environment: context.env,
       executionCwd: resolvedWorkspace.cwd,
       executor,
-      nodeExecutor: createManagedNodeExecutor({
-        baseEnvironment: context.env,
-        locator: resolvedWorkspace.anchoredLocator,
-        project,
-      }),
       project,
     }),
   }

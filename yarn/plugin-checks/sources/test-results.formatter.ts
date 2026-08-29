@@ -1,10 +1,9 @@
-import type { ProjectTestEvent } from '@atls/yarn-plugin-test'
-import type { EventData }        from 'node:test'
+import type { EventData }       from 'node:test'
 
-import type { Annotation }       from './github.checks.js'
-import type { AnnotationLevel }  from './github.checks.js'
+import type { Annotation }      from './github.checks.js'
+import type { AnnotationLevel } from './github.checks.js'
 
-import { relative }              from 'node:path'
+import { relative }             from 'node:path'
 
 const DEFAULT_LINE = 1
 const FAILURE_ANNOTATION_LEVEL = 'failure' as AnnotationLevel
@@ -26,11 +25,6 @@ type ErrorLike = {
   message?: unknown
   stack?: unknown
   cause?: unknown
-}
-
-type TestStderrData = {
-  file?: string
-  message?: string
 }
 
 const isErrorLike = (value: unknown): value is ErrorLike =>
@@ -73,14 +67,8 @@ const findRootError = (error: unknown): unknown => {
 const isGenericFailureMessage = (message: string | undefined): boolean =>
   message === undefined || GENERIC_TEST_FAILURE_MESSAGES.has(message)
 
-const collectStderrByFile = (events: Array<ProjectTestEvent>): Map<string, string> =>
-  events.reduce((stderrByFile, event) => {
-    if (event.type !== 'test:stderr') {
-      return stderrByFile
-    }
-
-    const { file, message } = event.data as TestStderrData
-
+const collectStderrByFile = (events: ReadonlyArray<EventData.TestStderr>): Map<string, string> =>
+  events.reduce((stderrByFile, { file, message }) => {
     if (file && message) {
       stderrByFile.set(file, `${stderrByFile.get(file) ?? ''}${message}`)
     }
@@ -101,7 +89,7 @@ const getStderrTitle = (stderr: string | undefined): string | undefined => {
   return lines.find((line) => ERROR_TITLE_PREFIXES.some((prefix) => line.startsWith(prefix)))
 }
 
-const collectFailureCountByFile = (results: Array<TestFail>): Map<string, number> =>
+const collectFailureCountByFile = (results: ReadonlyArray<TestFail>): Map<string, number> =>
   results.reduce((failureCountByFile, result) => {
     if (!result.file) {
       return failureCountByFile
@@ -157,9 +145,9 @@ const getAnnotationDetails = (error: unknown, stderr: string | undefined): strin
 }
 
 export const formatTestResults = (
-  results: Array<TestFail>,
+  results: ReadonlyArray<TestFail>,
   cwd: string,
-  events: Array<ProjectTestEvent> = []
+  events: ReadonlyArray<EventData.TestStderr> = []
 ): Array<Annotation> => {
   const stderrByFile = collectStderrByFile(events)
   const failureCountByFile = collectFailureCountByFile(results)

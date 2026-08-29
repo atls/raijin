@@ -3,7 +3,7 @@
 import type { CommandInput }  from '@atls/raijin/commands'
 import type { CommandTarget } from '@atls/raijin/commands'
 
-import type { TestScenario }  from './project/input.js'
+import type { TestScenario }  from './interfaces/input.js'
 
 import { readFileSync }       from 'node:fs'
 import { stat }               from 'node:fs/promises'
@@ -30,6 +30,13 @@ type MissingTargetPath = {
 }
 type TargetPathResult = ExistingTargetPath | MissingTargetPath
 
+interface DiscoverProjectTestsInput {
+  cwd: string
+  input: CommandInput
+  rootCwd: string
+  scenario: TestScenario
+}
+
 const DISCOVERY_IGNORE = ['**/node_modules/**', '**/dist/**', '**/.yarn/**']
 
 const isMissingPathError = (error: unknown): boolean =>
@@ -41,12 +48,12 @@ const isExistingTargetPath = (result: TargetPathResult): result is ExistingTarge
 const toNativeFiles = (files: Awaited<ReturnType<typeof discoverFiles>>): Array<string> =>
   files.map((file) => toNativePath(file))
 
-export class TestDiscovery {
+class ProjectTestDiscovery {
   private readonly ignore: ignorer.Ignore
 
   constructor(
     private readonly cwd: string,
-    private readonly projectCwd: string
+    private readonly rootCwd: string
   ) {
     const content = readFileSync(join(cwd, 'package.json'), 'utf8')
     const { testIgnorePatterns = [] } = JSON.parse(content) as {
@@ -146,13 +153,13 @@ export class TestDiscovery {
       dot: true,
     })
 
-    if (files.length > 0 || cwd === this.projectCwd) {
+    if (files.length > 0 || cwd === this.rootCwd) {
       return toNativeFiles(files)
     }
 
     return toNativeFiles(
       await discoverFiles({
-        cwd: toPortableCwd(this.projectCwd),
+        cwd: toPortableCwd(this.rootCwd),
         patterns: [pattern],
         ignore: DISCOVERY_IGNORE,
         dot: true,
@@ -200,11 +207,9 @@ export class TestDiscovery {
 
   private createTargetPaths(target: CommandTarget): Array<string> {
     const cwdTargetPath = toNativePath(target.path)
-    const projectTargetPath = resolve(this.projectCwd, target.request)
+    const rootTargetPath = resolve(this.rootCwd, target.request)
 
-    return cwdTargetPath === projectTargetPath
-      ? [cwdTargetPath]
-      : [cwdTargetPath, projectTargetPath]
+    return cwdTargetPath === rootTargetPath ? [cwdTargetPath] : [cwdTargetPath, rootTargetPath]
   }
 
   private isFilename(pattern: string): boolean {
@@ -250,3 +255,11 @@ export class TestDiscovery {
     return scenario === 'unit' ? '!(integration)' : 'integration'
   }
 }
+
+export const discoverProjectTests = async ({
+  cwd,
+  input,
+  rootCwd,
+  scenario,
+}: DiscoverProjectTestsInput): Promise<Array<string>> =>
+  new ProjectTestDiscovery(cwd, rootCwd).collect(input, scenario)

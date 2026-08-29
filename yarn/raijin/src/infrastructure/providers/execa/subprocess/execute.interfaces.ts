@@ -18,12 +18,8 @@ export type OutputPolicy =
 
 export interface ExecuteOptions {
   cancelSignal?: AbortSignal
-  channel?: {
-    input: unknown
-  }
   cwd: string
   env: NodeJS.ProcessEnv
-  forceKillAfterDelay?: boolean
   input?: 'ignore'
   output?: OutputPolicy
   streams: Streams
@@ -31,7 +27,6 @@ export interface ExecuteOptions {
 }
 
 export interface ExecuteOutput {
-  messages?: ReadonlyArray<unknown>
   stderr: string
   stdout: string
 }

@@ -2,7 +2,6 @@ import type { EnvironmentPatch } from './environment.interfaces.js'
 import type { OutputPolicy }     from './output.interfaces.js'
 
 type Output = {
-  messages?: ReadonlyArray<unknown>
   stderr: string
   stdout: string
 }
@@ -25,9 +24,6 @@ type CleanupFailed = {
 export interface ExecuteInput {
   arguments?: ReadonlyArray<string>
   cancelSignal?: AbortSignal
-  channel?: {
-    input: unknown
-  }
   cwd: string
   entry: string
   environment?: EnvironmentPatch

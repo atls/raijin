@@ -8,8 +8,6 @@ on:
 jobs:
   checks:
     name: Shared checks / Checks
-    env:
-      NODE_VERSION: '25'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: write-all
@@ -21,7 +19,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: package.json
 
       - name: Install
         uses: ./.github/actions/install
@@ -34,8 +32,6 @@ jobs:
 
   raijin:
     name: Raijin checks
-    env:
-      NODE_VERSION: '25'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: read-all
@@ -47,7 +43,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: package.json
 
       - name: Install
         uses: ./.github/actions/install
