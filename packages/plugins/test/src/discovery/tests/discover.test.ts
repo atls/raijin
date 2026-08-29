@@ -10,7 +10,7 @@ import { test }                 from 'node:test'
 import { createCommandInput }   from '@atls/raijin/commands'
 import { toPortableCwd }        from '@atls/raijin/commands'
 
-import { discoverProjectTests } from '../discovery.js'
+import { discoverProjectTests } from '../index.js'
 
 const createProject = async () => {
   const rootCwd = await mkdtemp(join(tmpdir(), 'raijin-test-discovery-'))

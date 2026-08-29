@@ -1,6 +1,6 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
-import type { PortablePath }            from '@yarnpkg/fslib'
 
+import type { CommandInputOptions }     from './interfaces/command.js'
 import type { TestScenario }            from './interfaces/input.js'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
@@ -13,15 +13,7 @@ import { toNativeCwd }                  from '@atls/raijin/commands'
 
 import { testProject }                  from './project.js'
 
-const createTestCommandInput = ({
-  files,
-  invocationCwd,
-  target,
-}: {
-  files: Array<string>
-  invocationCwd: PortablePath
-  target?: string
-}) => {
+const createTestCommandInput = ({ files, invocationCwd, target }: CommandInputOptions) => {
   const targetInput = target
     ? createCommandInput({ cwd: invocationCwd, source: 'explicit', targets: [target] })
     : undefined

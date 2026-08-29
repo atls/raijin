@@ -1,48 +1,25 @@
-import type { createRuntimeExecArgv as CreateRuntimeExecArgv } from '@atls/raijin/runtime-exec-argv'
-import type { EventData }                                      from 'node:test'
+import type { EventData }         from 'node:test'
 
-import type { TestProjectInput }                               from './interfaces/input.js'
-import type { TestReporter }                                   from './interfaces/input.js'
-import type { TestScenario }                                   from './interfaces/input.js'
-import type { TestProjectResult }                              from './interfaces/result.js'
+import type { TestProjectInput }  from './interfaces/input.js'
+import type { TestReporter }      from './interfaces/input.js'
+import type { TestProjectResult } from './interfaces/result.js'
 
-import { isAbsolute }                                          from 'node:path'
-import { resolve }                                             from 'node:path'
-import { finished }                                            from 'node:stream/promises'
-import { pipeline }                                            from 'node:stream/promises'
-import { run }                                                 from 'node:test'
-import { spec }                                                from 'node:test/reporters'
-import { tap }                                                 from 'node:test/reporters'
+import { isAbsolute }             from 'node:path'
+import { resolve }                from 'node:path'
+import { finished }               from 'node:stream/promises'
+import { pipeline }               from 'node:stream/promises'
+import { run }                    from 'node:test'
+import { spec }                   from 'node:test/reporters'
+import { tap }                    from 'node:test/reporters'
 
-import { resolveRaijinRuntimeUrl }                             from '@atls/raijin/runtime-resolver'
-
-import { discoverProjectTests }                                from './discovery.js'
-
-const RUNTIME_EXEC_ARGV_SPECIFIER = '@atls/raijin/runtime-exec-argv'
-const SCENARIO_POLICIES: Record<
-  TestScenario,
-  { readonly concurrency: boolean; readonly timeout: number }
-> = {
-  general: { concurrency: true, timeout: 420_000 },
-  integration: { concurrency: false, timeout: 420_000 },
-  unit: { concurrency: true, timeout: 240_000 },
-}
-
-type RuntimeExecArgvModule = {
-  createRuntimeExecArgv: typeof CreateRuntimeExecArgv
-}
+import { discoverProjectTests }   from './discovery/index.js'
+import { resolveRuntimeExecArgv } from './runtime-exec-argv.js'
+import { scenarioPolicies }       from './scenario-policy.js'
 
 const toFailure = (error: unknown): { name: string; message: string } => ({
   name: error instanceof Error ? error.name : 'Error',
   message: error instanceof Error ? error.message : String(error),
 })
-
-const resolveRuntimeArgv = async (cwd: string): Promise<Array<string>> => {
-  const runtimeUrl = resolveRaijinRuntimeUrl(cwd, RUNTIME_EXEC_ARGV_SPECIFIER)
-  const { createRuntimeExecArgv } = (await import(runtimeUrl)) as RuntimeExecArgvModule
-
-  return createRuntimeExecArgv(cwd)
-}
 
 const resolveEventFile = (file: string | undefined, rootCwd: string): string | undefined =>
   file && !isAbsolute(file) ? resolve(rootCwd, file) : file
@@ -90,11 +67,11 @@ export const testProject = async ({
 }: TestProjectInput): Promise<TestProjectResult> => {
   try {
     const files = await discoverProjectTests({ cwd, input, rootCwd, scenario })
-    const execArgv = await resolveRuntimeArgv(cwd)
+    const execArgv = await resolveRuntimeExecArgv(cwd)
     const failures: Array<EventData.TestFail> = []
     const stderr: Array<EventData.TestStderr> = []
     let summary: EventData.TestSummary | undefined
-    const policy = SCENARIO_POLICIES[scenario]
+    const policy = scenarioPolicies[scenario]
     const stream = run({
       concurrency: policy.concurrency,
       cwd,
