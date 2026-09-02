@@ -1,1 +1,1 @@
-export { testProject } from './run.js'
+export { run as testProject } from './run.js'

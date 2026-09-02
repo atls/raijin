@@ -19,7 +19,7 @@ export const requireOutput = (stdout: TestProjectInput['stdout']): Writable => {
   return stdout
 }
 
-export const consumeTestReport = async (
+export const consumeReport = async (
   stream: ReturnType<typeof runTests>,
   reporter: TestReporter,
   stdout: TestProjectInput['stdout']

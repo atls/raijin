@@ -3,7 +3,7 @@ import type { EventData }                    from 'node:test'
 import type { TestProjectInput }             from '../interfaces/input.js'
 import type { TestProjectResult }            from '../interfaces/result.js'
 
-import { run }                               from 'node:test'
+import { run as runNative }                  from 'node:test'
 
 import { SummaryMissing }                    from './exceptions/summary.js'
 import { discoverProjectTests }              from '../discovery/index.js'
@@ -12,10 +12,10 @@ import { configuration }                     from './configuration.js'
 import { mapFailure }                        from './mappers/failure.js'
 import { normalizeFailureFile }              from './mappers/files.js'
 import { normalizeStderrFile }               from './mappers/files.js'
-import { consumeTestReport }                 from './report.js'
+import { consumeReport }                     from './report.js'
 import { requireOutput }                     from './report.js'
 
-export const testProject = async ({
+export const run = async ({
   rootCwd,
   cwd,
   input,
@@ -37,7 +37,7 @@ export const testProject = async ({
     const stderr: Array<EventData.TestStderr> = []
     let summary: EventData.TestSummary | undefined
     const config = configuration[scenario]
-    const stream = run({
+    const stream = runNative({
       concurrency: config.concurrency,
       cwd,
       execArgv,
@@ -58,7 +58,7 @@ export const testProject = async ({
       watch,
     })
 
-    await consumeTestReport(stream, reporter, stdout)
+    await consumeReport(stream, reporter, stdout)
 
     if (!summary) {
       throw new SummaryMissing()
