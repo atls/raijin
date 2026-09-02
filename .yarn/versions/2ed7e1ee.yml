@@ -32,7 +32,6 @@ declined:
   - "@atls/code-pack"
   - "@atls/code-schematics"
   - "@atls/code-service"
-  - "@atls/code-test"
   - "@atls/code-typescript"
   - "@atls/webpack-start-server-plugin"
   - "@atls/raijin-assembly"

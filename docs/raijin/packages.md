@@ -164,15 +164,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-test -->
-
-#### `@atls/yarn-plugin-test`
-
-- Location: `yarn/plugin-test`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-tools -->
 
 #### `@atls/yarn-plugin-tools`
@@ -223,6 +214,15 @@ Private plugin packages and their entrypoints
 #### `@atls/yarn-plugin-lint`
 
 - Location: `packages/plugins/lint`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-test -->
+
+#### `@atls/yarn-plugin-test`
+
+- Location: `packages/plugins/test`
 - Group: `plugins`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
@@ -298,15 +298,6 @@ Core code libraries for build, checks, and utilities
 - Group: `code`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-test -->
-
-#### `@atls/code-test`
-
-- Location: `code/code-test`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `build:worker`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-code-typescript -->
 

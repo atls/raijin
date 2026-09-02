@@ -491,7 +491,10 @@
 - Статус: `active`
 - Описание: run all workspace tests
 - Использование: `yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
-- Пример: `yarn test`
+- Пример: `yarn test unit`
+- Пример: `yarn test integration`
+- Пример: `yarn test integration menu`
+- Пример: `yarn test unit -w`
 - Плагин: `@atls/yarn-plugin-test`
 
 <!-- sync:command-card:test-integration -->
@@ -501,7 +504,10 @@
 - Статус: `active`
 - Описание: run integration tests
 - Использование: `yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
+- Пример: `yarn test unit`
 - Пример: `yarn test integration`
+- Пример: `yarn test integration menu`
+- Пример: `yarn test unit -w`
 - Плагин: `@atls/yarn-plugin-test`
 
 <!-- sync:command-card:test-unit -->
@@ -512,6 +518,9 @@
 - Описание: run unit tests
 - Использование: `yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
 - Пример: `yarn test unit`
+- Пример: `yarn test integration`
+- Пример: `yarn test integration menu`
+- Пример: `yarn test unit -w`
 - Плагин: `@atls/yarn-plugin-test`
 
 </details>

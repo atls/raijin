@@ -491,7 +491,10 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Status: `active`
 - Description: run all workspace tests
 - Usage: `yarn test [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
-- Example: `yarn test`
+- Example: `yarn test unit`
+- Example: `yarn test integration`
+- Example: `yarn test integration menu`
+- Example: `yarn test unit -w`
 - Plugin: `@atls/yarn-plugin-test`
 
 <!-- sync:command-card:test-integration -->
@@ -501,7 +504,10 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Status: `active`
 - Description: run integration tests
 - Usage: `yarn test integration [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
+- Example: `yarn test unit`
 - Example: `yarn test integration`
+- Example: `yarn test integration menu`
+- Example: `yarn test unit -w`
 - Plugin: `@atls/yarn-plugin-test`
 
 <!-- sync:command-card:test-unit -->
@@ -512,6 +518,9 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Description: run unit tests
 - Usage: `yarn test unit [-t,--target #0] [-w,--watch] [--test-reporter #0] ...`
 - Example: `yarn test unit`
+- Example: `yarn test integration`
+- Example: `yarn test integration menu`
+- Example: `yarn test unit -w`
 - Plugin: `@atls/yarn-plugin-test`
 
 </details>
