@@ -15,12 +15,14 @@ import { fileURLToPath }          from 'node:url'
 const RESULT_MARKER = '__RAIJIN_TEST_RESULT__'
 const fixture = fileURLToPath(new URL('./project.fixture.ts', import.meta.url))
 
-const createProject = async (source: string) => {
+const createProject = async (source?: string) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-test-project-'))
 
   await mkdir(join(cwd, 'src'), { recursive: true })
   await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
-  await writeFile(join(cwd, 'src', 'example.test.js'), source)
+  if (source !== undefined) {
+    await writeFile(join(cwd, 'src', 'example.test.js'), source)
+  }
 
   return cwd
 }
@@ -53,6 +55,7 @@ const runProject = async ({
         RAIJIN_TEST_FIXTURE_WATCH: String(watch),
       },
       stdio: ['ignore', 'pipe', 'pipe'],
+      timeout: 15_000,
     })
     let stdout = ''
     let stderr = ''
@@ -106,6 +109,21 @@ test('returns the native passing summary', async (context) => {
   assert.deepEqual(result.terminal, { exitCode: 0, reason: 'passed' })
   assert.equal(result.failures.length, 0)
   assert.equal(result.summary.success, true)
+})
+
+test('returns the native successful summary for an empty selection', async (context) => {
+  const cwd = await createProject()
+
+  context.after(async () => rm(cwd, { force: true, recursive: true }))
+
+  const { result } = await runProject({ cwd })
+
+  assert.equal(result.status, 'completed')
+  assert.equal(result.summary.success, true)
+  assert.equal(result.summary.counts.tests, 0)
+  assert.deepEqual(result.failures, [])
+  assert.deepEqual(result.stderr, [])
+  assert.deepEqual(result.terminal, { exitCode: 0, reason: 'passed' })
 })
 
 test('returns native failures and stderr for consumers', async (context) => {
@@ -168,15 +186,35 @@ for (const reporter of [null, 'spec', 'tap'] as const) {
 
 test('ends watch mode through the native abort signal', async (context) => {
   const cwd = await createProject(
-    "import test from 'node:test'; import { setTimeout } from 'node:timers/promises'; test('watched', async () => setTimeout(10_000));\n"
+    "import test from 'node:test'; import { writeFile } from 'node:fs/promises'; import { setTimeout } from 'node:timers/promises'; test('watched', async () => { await writeFile('watch-ready', 'ready'); await setTimeout(10_000) });\n"
   )
 
   context.after(async () => rm(cwd, { force: true, recursive: true }))
 
-  const { result } = await runProject({ cwd, watch: true })
+  const { output, result } = await runProject({ cwd, watch: true })
 
+  assert.match(output, /__RAIJIN_TEST_ABORT__/)
+  assert.equal(await readFile(join(cwd, 'watch-ready'), 'utf8'), 'ready')
   assert.equal(result.status, 'completed')
   assert.deepEqual(result.terminal, { exitCode: 1, reason: 'failed' })
+})
+
+test('keeps a completed watch run active until abort', async (context) => {
+  const cwd = await createProject(
+    "import test from 'node:test'; import { writeFile } from 'node:fs/promises'; test('watched', async () => writeFile('watch-ready', 'ready'));\n"
+  )
+
+  context.after(async () => rm(cwd, { force: true, recursive: true }))
+
+  const { output, result } = await runProject({ cwd, watch: true })
+
+  assert.match(output, /__RAIJIN_TEST_ABORT__/)
+  assert.equal(await readFile(join(cwd, 'watch-ready'), 'utf8'), 'ready')
+  assert.equal(result.status, 'completed')
+  assert.deepEqual(
+    result.terminal,
+    result.summary.success ? { exitCode: 0, reason: 'passed' } : { exitCode: 1, reason: 'failed' }
+  )
 })
 
 test('maps discovery and runtime configuration failures into one result', async (context) => {
