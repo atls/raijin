@@ -1,4 +1,4 @@
-import type { DiscoveryInput }                  from './input.js'
+import type { Input }                           from './input.js'
 
 import { toNativeCwd }                          from '@atls/raijin/commands'
 
@@ -12,7 +12,7 @@ export const discoverProjectTests = async ({
   input,
   rootCwd,
   scenario,
-}: DiscoveryInput): Promise<Array<string>> => {
+}: Input): Promise<Array<string>> => {
   const includeFile = createFileFilter(cwd)
   const nativeCwd = toNativeCwd(input.cwd)
   const folderPattern = resolveFolderPattern(scenario)
