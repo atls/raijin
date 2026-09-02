@@ -10,7 +10,9 @@ if (!cwd) {
 }
 
 const targets = JSON.parse(process.env.RAIJIN_TEST_FIXTURE_TARGETS ?? '[]') as Array<string>
-const reporter = process.env.RAIJIN_TEST_FIXTURE_REPORTER === 'tap' ? 'tap' : 'silent'
+const requestedReporter = process.env.RAIJIN_TEST_FIXTURE_REPORTER
+const reporter = (['spec', 'tap', 'silent'] as const).find((value) => value === requestedReporter)
+const provideOutput = process.env.RAIJIN_TEST_FIXTURE_OUTPUT !== 'false'
 const watch = process.env.RAIJIN_TEST_FIXTURE_WATCH === 'true'
 const controller = watch ? new AbortController() : undefined
 const abortTimer = controller
@@ -26,10 +28,10 @@ const result = await testProject({
     source: targets.length > 0 ? 'explicit' : 'generated',
     targets,
   }),
-  reporter,
+  ...(reporter ? { reporter } : {}),
   ...(controller ? { signal: controller.signal } : {}),
   scenario: 'unit',
-  ...(reporter === 'tap' ? { stdout: process.stdout } : {}),
+  ...(provideOutput && reporter !== 'silent' ? { stdout: process.stdout } : {}),
   watch,
 })
 

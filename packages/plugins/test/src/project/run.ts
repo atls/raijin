@@ -12,6 +12,7 @@ import { normalizeStderr }         from './event-files.js'
 import { resolveRuntimeExecArgv }  from './exec-argv.js'
 import { toProviderFailure }       from './provider-failure.js'
 import { consumeTestReport }       from './report.js'
+import { requireOutput }           from './report.js'
 import { scenarioConfig }          from './scenarios.js'
 
 export const testProject = async ({
@@ -27,6 +28,11 @@ export const testProject = async ({
   try {
     const files = await discoverProjectTests({ cwd, input, rootCwd, scenario })
     const execArgv = await resolveRuntimeExecArgv(cwd)
+
+    if (reporter !== 'silent') {
+      requireOutput(stdout)
+    }
+
     const failures: Array<EventData.TestFail> = []
     const stderr: Array<EventData.TestStderr> = []
     let summary: EventData.TestSummary | undefined

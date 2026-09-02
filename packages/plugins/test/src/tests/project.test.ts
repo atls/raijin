@@ -4,6 +4,7 @@ import assert                     from 'node:assert/strict'
 import { spawn }                  from 'node:child_process'
 import { mkdir }                  from 'node:fs/promises'
 import { mkdtemp }                from 'node:fs/promises'
+import { readFile }               from 'node:fs/promises'
 import { rm }                     from 'node:fs/promises'
 import { writeFile }              from 'node:fs/promises'
 import { tmpdir }                 from 'node:os'
@@ -26,12 +27,14 @@ const createProject = async (source: string) => {
 
 const runProject = async ({
   cwd,
+  provideOutput = true,
   reporter = 'silent',
   targets = [],
   watch = false,
 }: {
   cwd: string
-  reporter?: 'silent' | 'tap'
+  provideOutput?: boolean
+  reporter?: 'silent' | 'spec' | 'tap' | null
   targets?: Array<string>
   watch?: boolean
 }): Promise<{ output: string; result: TestProjectResult; stderr: string }> =>
@@ -44,7 +47,8 @@ const runProject = async ({
       env: {
         ...env,
         RAIJIN_TEST_FIXTURE_CWD: cwd,
-        RAIJIN_TEST_FIXTURE_REPORTER: reporter,
+        RAIJIN_TEST_FIXTURE_OUTPUT: String(provideOutput),
+        RAIJIN_TEST_FIXTURE_REPORTER: reporter ?? 'default',
         RAIJIN_TEST_FIXTURE_TARGETS: JSON.stringify(targets),
         RAIJIN_TEST_FIXTURE_WATCH: String(watch),
       },
@@ -124,21 +128,43 @@ test('returns native failures and stderr for consumers', async (context) => {
   assert.match(result.stderr.map(({ message }) => message).join(''), /failure detail/)
 })
 
-test('uses the built-in reporter stream', async (context) => {
-  const cwd = await createProject("import test from 'node:test'; test('reported', () => {});\n")
+for (const reporter of ['spec', 'tap'] as const) {
+  test(`uses the built-in ${reporter} reporter stream`, async (context) => {
+    const cwd = await createProject("import test from 'node:test'; test('reported', () => {});\n")
 
-  context.after(async () => rm(cwd, { force: true, recursive: true }))
+    context.after(async () => rm(cwd, { force: true, recursive: true }))
 
-  const { output, result, stderr } = await runProject({ cwd, reporter: 'tap' })
+    const { output, result, stderr } = await runProject({ cwd, reporter })
 
-  assert.equal(
-    result.terminal.exitCode,
-    0,
-    result.status === 'provider-failed' ? `${result.failure.message}\n${stderr}` : undefined
-  )
-  assert.match(output, /TAP version 13/)
-  assert.match(output, /reported/)
-})
+    assert.equal(
+      result.terminal.exitCode,
+      0,
+      result.status === 'provider-failed' ? `${result.failure.message}\n${stderr}` : undefined
+    )
+    if (reporter === 'tap') {
+      assert.match(output, /TAP version 13/)
+    }
+    assert.match(output, /reported/)
+  })
+}
+
+for (const reporter of [null, 'spec', 'tap'] as const) {
+  test(`rejects ${reporter ?? 'default'} reporter without output before loading tests`, async (context) => {
+    const cwd = await createProject(
+      "import { writeFileSync } from 'node:fs'; writeFileSync('executed', 'unexpected');\n"
+    )
+
+    context.after(async () => rm(cwd, { force: true, recursive: true }))
+
+    const { result } = await runProject({ cwd, reporter, provideOutput: false })
+
+    assert.equal(result.status, 'provider-failed')
+    assert.equal(result.failure.name, 'Error')
+    assert.equal(result.failure.message, 'Node test reporter output is unavailable')
+    assert.deepEqual(result.terminal, { exitCode: 1, reason: 'provider-failed' })
+    await assert.rejects(readFile(join(cwd, 'executed')), { code: 'ENOENT' })
+  })
+}
 
 test('ends watch mode through the native abort signal', async (context) => {
   const cwd = await createProject(

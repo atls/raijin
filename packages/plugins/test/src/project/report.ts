@@ -1,3 +1,4 @@
+import type { Writable }                      from 'node:stream'
 import type { run as runTests }               from 'node:test'
 
 import type { TestProjectInput }              from '../interfaces/input.js'
@@ -9,6 +10,14 @@ import { spec }                               from 'node:test/reporters'
 import { tap }                                from 'node:test/reporters'
 
 import { ReporterOutputUnavailableException } from './exceptions/output.js'
+
+export const requireOutput = (stdout: TestProjectInput['stdout']): Writable => {
+  if (!stdout) {
+    throw new ReporterOutputUnavailableException()
+  }
+
+  return stdout
+}
 
 export const consumeTestReport = async (
   stream: ReturnType<typeof runTests>,
@@ -22,11 +31,8 @@ export const consumeTestReport = async (
     return
   }
 
-  if (!stdout) {
-    throw new ReporterOutputUnavailableException()
-  }
-
+  const destination = requireOutput(stdout)
   const output = stream.compose(reporter === 'tap' ? tap : spec)
 
-  await pipeline(output, stdout, { end: false })
+  await pipeline(output, destination, { end: false })
 }
