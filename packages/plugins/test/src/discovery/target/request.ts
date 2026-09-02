@@ -1,8 +1,8 @@
-export const isFilenameTarget = (pattern: string): boolean => {
+export const isNameRequest = (pattern: string): boolean => {
   const hasPathSeparator = pattern.includes('/') || pattern.includes('\\')
   const hasValidExtension = /\.(js|jsx|ts|tsx)$/.test(pattern)
 
   return !hasPathSeparator && !hasValidExtension
 }
 
-export const isGlobTarget = (pattern: string): boolean => /[*?[\]{}]/.test(pattern)
+export const isGlobRequest = (pattern: string): boolean => /[*?[\]{}]/.test(pattern)

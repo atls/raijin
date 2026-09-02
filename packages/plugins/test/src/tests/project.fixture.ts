@@ -1,7 +1,7 @@
 import { createCommandInput } from '@atls/raijin/commands'
 import { toPortableCwd }      from '@atls/raijin/commands'
 
-import { testProject }        from '../project.js'
+import { testProject }        from '../project/index.js'
 
 const cwd = process.env.RAIJIN_TEST_FIXTURE_CWD
 

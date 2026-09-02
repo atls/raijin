@@ -1,4 +1,4 @@
-import type { TestScenario } from '../interfaces/input.js'
+import type { TestScenario } from '../../interfaces/input.js'
 
 import { basename }          from 'node:path'
 

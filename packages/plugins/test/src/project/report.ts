@@ -1,14 +1,14 @@
 import type { run as runTests }               from 'node:test'
 
-import type { TestProjectInput }              from './interfaces/input.js'
-import type { TestReporter }                  from './interfaces/input.js'
+import type { TestProjectInput }              from '../interfaces/input.js'
+import type { TestReporter }                  from '../interfaces/input.js'
 
 import { finished }                           from 'node:stream/promises'
 import { pipeline }                           from 'node:stream/promises'
 import { spec }                               from 'node:test/reporters'
 import { tap }                                from 'node:test/reporters'
 
-import { ReporterOutputUnavailableException } from './exceptions/reporter-output-unavailable.js'
+import { ReporterOutputUnavailableException } from './exceptions/output.js'
 
 export const consumeTestReport = async (
   stream: ReturnType<typeof runTests>,

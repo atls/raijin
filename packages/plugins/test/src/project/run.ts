@@ -1,18 +1,18 @@
 import type { EventData }          from 'node:test'
 
-import type { TestProjectInput }   from './interfaces/input.js'
-import type { TestProjectResult }  from './interfaces/result.js'
+import type { TestProjectInput }   from '../interfaces/input.js'
+import type { TestProjectResult }  from '../interfaces/result.js'
 
 import { run }                     from 'node:test'
 
-import { SummaryMissingException } from './exceptions/summary-missing.js'
-import { discoverProjectTests }    from './discovery/index.js'
-import { normalizeFailure }        from './event-normalization.js'
-import { normalizeStderr }         from './event-normalization.js'
+import { SummaryMissingException } from './exceptions/summary.js'
+import { discoverProjectTests }    from '../discovery/index.js'
+import { normalizeFailure }        from './event-files.js'
+import { normalizeStderr }         from './event-files.js'
+import { resolveRuntimeExecArgv }  from './exec-argv.js'
 import { toProviderFailure }       from './provider-failure.js'
-import { consumeTestReport }       from './report-output.js'
-import { resolveRuntimeExecArgv }  from './runtime-exec-argv.js'
-import { scenarioConfig }          from './scenario-config.js'
+import { consumeTestReport }       from './report.js'
+import { scenarioConfig }          from './scenarios.js'
 
 export const testProject = async ({
   rootCwd,

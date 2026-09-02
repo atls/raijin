@@ -1,4 +1,4 @@
-import type { TestScenario } from './interfaces/input.js'
+import type { TestScenario } from '../interfaces/input.js'
 
 export const scenarioConfig: Record<
   TestScenario,

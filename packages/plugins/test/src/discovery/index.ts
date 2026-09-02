@@ -1,1 +1,1 @@
-export { discoverProjectTests } from './discover.js'
+export { discoverProjectTests } from './project.js'

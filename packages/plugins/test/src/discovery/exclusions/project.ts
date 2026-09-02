@@ -1,14 +1,14 @@
 /* eslint-disable n/no-sync */
 
-import type { ProjectManifest } from './interfaces/manifest.js'
+import { readFileSync } from 'node:fs'
+import { join }         from 'node:path'
+import { relative }     from 'node:path'
 
-import { readFileSync }         from 'node:fs'
-import { join }                 from 'node:path'
-import { relative }             from 'node:path'
+import ignorer          from 'ignore'
 
-import ignorer                  from 'ignore'
-
-export const discoveryIgnorePatterns = ['**/node_modules/**', '**/dist/**', '**/.yarn/**']
+type ProjectManifest = {
+  testIgnorePatterns?: Array<string>
+}
 
 export const createFileFilter = (cwd: string): ((file: string) => boolean) => {
   const content = readFileSync(join(cwd, 'package.json'), 'utf8')
