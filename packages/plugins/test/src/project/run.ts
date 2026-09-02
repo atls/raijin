@@ -5,7 +5,7 @@ import type { TestProjectResult }            from '../interfaces/result.js'
 
 import { run }                               from 'node:test'
 
-import { SummaryMissingException }           from './exceptions/summary.js'
+import { SummaryMissing }                    from './exceptions/summary.js'
 import { discoverProjectTests }              from '../discovery/index.js'
 import { resolve as resolveRuntimeExecArgv } from './arguments/resolve.js'
 import { configuration }                     from './configuration.js'
@@ -61,7 +61,7 @@ export const testProject = async ({
     await consumeTestReport(stream, reporter, stdout)
 
     if (!summary) {
-      throw new SummaryMissingException()
+      throw new SummaryMissing()
     }
 
     const completed = {
