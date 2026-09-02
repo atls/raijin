@@ -7,13 +7,13 @@ import { run }                     from 'node:test'
 
 import { SummaryMissingException } from './exceptions/summary.js'
 import { discoverProjectTests }    from '../discovery/index.js'
+import { configuration }           from './configuration.js'
 import { resolveRuntimeExecArgv }  from './exec-argv.js'
 import { mapFailure }              from './mappers/failure.js'
 import { normalizeFailureFile }    from './mappers/files.js'
 import { normalizeStderrFile }     from './mappers/files.js'
 import { consumeTestReport }       from './report.js'
 import { requireOutput }           from './report.js'
-import { scenarioConfig }          from './scenarios.js'
 
 export const testProject = async ({
   rootCwd,
@@ -36,7 +36,7 @@ export const testProject = async ({
     const failures: Array<EventData.TestFail> = []
     const stderr: Array<EventData.TestStderr> = []
     let summary: EventData.TestSummary | undefined
-    const config = scenarioConfig[scenario]
+    const config = configuration[scenario]
     const stream = run({
       concurrency: config.concurrency,
       cwd,

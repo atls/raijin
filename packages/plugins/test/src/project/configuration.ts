@@ -1,6 +1,6 @@
 import type { TestScenario } from '../interfaces/input.js'
 
-export const scenarioConfig: Record<
+export const configuration: Record<
   TestScenario,
   { readonly concurrency: boolean; readonly timeout: number }
 > = {
