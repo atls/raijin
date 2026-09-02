@@ -29,12 +29,14 @@ const createProject = async (source?: string) => {
 
 const runProject = async ({
   cwd,
+  observeCycle = false,
   provideOutput = true,
   reporter = 'silent',
   targets = [],
   watch = false,
 }: {
   cwd: string
+  observeCycle?: boolean
   provideOutput?: boolean
   reporter?: 'silent' | 'spec' | 'tap' | null
   targets?: Array<string>
@@ -49,6 +51,7 @@ const runProject = async ({
       env: {
         ...env,
         RAIJIN_TEST_FIXTURE_CWD: cwd,
+        RAIJIN_TEST_FIXTURE_CYCLE: String(observeCycle),
         RAIJIN_TEST_FIXTURE_OUTPUT: String(provideOutput),
         RAIJIN_TEST_FIXTURE_REPORTER: reporter ?? 'default',
         RAIJIN_TEST_FIXTURE_TARGETS: JSON.stringify(targets),
@@ -200,20 +203,39 @@ test('ends watch mode through the native abort signal', async (context) => {
 })
 
 test('keeps a completed watch run active until abort', async (context) => {
-  const cwd = await createProject(
-    "import test from 'node:test'; import { writeFile } from 'node:fs/promises'; test('watched', async () => writeFile('watch-ready', 'ready'));\n"
-  )
+  const cwd = await createProject("import test from 'node:test'; test('watched', () => {});\n")
 
   context.after(async () => rm(cwd, { force: true, recursive: true }))
 
-  const { output, result } = await runProject({ cwd, watch: true })
+  const { output, result } = await runProject({
+    cwd,
+    observeCycle: true,
+    reporter: 'tap',
+    watch: true,
+  })
 
   assert.match(output, /__RAIJIN_TEST_ABORT__/)
-  assert.equal(await readFile(join(cwd, 'watch-ready'), 'utf8'), 'ready')
+  const completedCycle = output.slice(0, output.indexOf('__RAIJIN_TEST_ABORT__'))
+
+  assert.match(completedCycle, /^# tests 1$/m)
+  assert.match(completedCycle, /^# pass 1$/m)
+  assert.match(completedCycle, /^# fail 0$/m)
+  assert.match(completedCycle, /^# cancelled 0$/m)
+  assert.match(completedCycle, /^# duration_ms .+$/m)
   assert.equal(result.status, 'completed')
-  assert.deepEqual(
-    result.terminal,
-    result.summary.success ? { exitCode: 0, reason: 'passed' } : { exitCode: 1, reason: 'failed' }
+  assert.equal(result.summary.success, true)
+  assert.deepEqual(result.failures, [])
+  assert.deepEqual(result.terminal, { exitCode: 0, reason: 'passed' })
+})
+
+test('rejects a completed cycle without watch before the controlled abort', async (context) => {
+  const cwd = await createProject("import test from 'node:test'; test('not watched', () => {});\n")
+
+  context.after(async () => rm(cwd, { force: true, recursive: true }))
+
+  await assert.rejects(
+    runProject({ cwd, observeCycle: true, reporter: 'tap' }),
+    /Watch completed before the controlled abort/
   )
 })
 
