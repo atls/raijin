@@ -7,9 +7,9 @@ import { run }                     from 'node:test'
 
 import { SummaryMissingException } from './exceptions/summary.js'
 import { discoverProjectTests }    from '../discovery/index.js'
-import { normalizeFailure }        from './event-files.js'
-import { normalizeStderr }         from './event-files.js'
 import { resolveRuntimeExecArgv }  from './exec-argv.js'
+import { normalizeFailureFile }    from './mappers/files.js'
+import { normalizeStderrFile }     from './mappers/files.js'
 import { toProviderFailure }       from './provider-failure.js'
 import { consumeTestReport }       from './report.js'
 import { requireOutput }           from './report.js'
@@ -44,10 +44,10 @@ export const testProject = async ({
       files,
       setup: (tests) => {
         tests.on('test:fail', (failure) => {
-          failures.push(normalizeFailure(failure, rootCwd))
+          failures.push(normalizeFailureFile(failure, rootCwd))
         })
         tests.on('test:stderr', (event) => {
-          stderr.push(normalizeStderr(event, rootCwd))
+          stderr.push(normalizeStderrFile(event, rootCwd))
         })
         tests.on('test:summary', (event) => {
           summary = event
