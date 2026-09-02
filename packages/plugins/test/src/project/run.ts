@@ -1,19 +1,19 @@
-import type { EventData }          from 'node:test'
+import type { EventData }                    from 'node:test'
 
-import type { TestProjectInput }   from '../interfaces/input.js'
-import type { TestProjectResult }  from '../interfaces/result.js'
+import type { TestProjectInput }             from '../interfaces/input.js'
+import type { TestProjectResult }            from '../interfaces/result.js'
 
-import { run }                     from 'node:test'
+import { run }                               from 'node:test'
 
-import { SummaryMissingException } from './exceptions/summary.js'
-import { discoverProjectTests }    from '../discovery/index.js'
-import { configuration }           from './configuration.js'
-import { resolveRuntimeExecArgv }  from './exec-argv.js'
-import { mapFailure }              from './mappers/failure.js'
-import { normalizeFailureFile }    from './mappers/files.js'
-import { normalizeStderrFile }     from './mappers/files.js'
-import { consumeTestReport }       from './report.js'
-import { requireOutput }           from './report.js'
+import { SummaryMissingException }           from './exceptions/summary.js'
+import { discoverProjectTests }              from '../discovery/index.js'
+import { resolve as resolveRuntimeExecArgv } from './arguments/resolve.js'
+import { configuration }                     from './configuration.js'
+import { mapFailure }                        from './mappers/failure.js'
+import { normalizeFailureFile }              from './mappers/files.js'
+import { normalizeStderrFile }               from './mappers/files.js'
+import { consumeTestReport }                 from './report.js'
+import { requireOutput }                     from './report.js'
 
 export const testProject = async ({
   rootCwd,
