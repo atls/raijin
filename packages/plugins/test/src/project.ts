@@ -1,59 +1,18 @@
-import type { EventData }         from 'node:test'
+import type { EventData }          from 'node:test'
 
-import type { TestProjectInput }  from './interfaces/input.js'
-import type { TestReporter }      from './interfaces/input.js'
-import type { TestProjectResult } from './interfaces/result.js'
+import type { TestProjectInput }   from './interfaces/input.js'
+import type { TestProjectResult }  from './interfaces/result.js'
 
-import { isAbsolute }             from 'node:path'
-import { resolve }                from 'node:path'
-import { finished }               from 'node:stream/promises'
-import { pipeline }               from 'node:stream/promises'
-import { run }                    from 'node:test'
-import { spec }                   from 'node:test/reporters'
-import { tap }                    from 'node:test/reporters'
+import { run }                     from 'node:test'
 
-import { discoverProjectTests }   from './discovery/index.js'
-import { resolveRuntimeExecArgv } from './runtime-exec-argv.js'
-import { scenarioPolicies }       from './scenario-policy.js'
-
-const toFailure = (error: unknown): { name: string; message: string } => ({
-  name: error instanceof Error ? error.name : 'Error',
-  message: error instanceof Error ? error.message : String(error),
-})
-
-const resolveEventFile = (file: string | undefined, rootCwd: string): string | undefined =>
-  file && !isAbsolute(file) ? resolve(rootCwd, file) : file
-
-const normalizeFailure = (failure: EventData.TestFail, rootCwd: string): EventData.TestFail => ({
-  ...failure,
-  file: resolveEventFile(failure.file, rootCwd),
-})
-
-const normalizeStderr = (stderr: EventData.TestStderr, rootCwd: string): EventData.TestStderr => ({
-  ...stderr,
-  file: resolveEventFile(stderr.file, rootCwd) ?? stderr.file,
-})
-
-const consumeReport = async (
-  stream: ReturnType<typeof run>,
-  reporter: TestReporter,
-  stdout: TestProjectInput['stdout']
-): Promise<void> => {
-  if (reporter === 'silent') {
-    stream.resume()
-    await finished(stream)
-
-    return
-  }
-
-  if (!stdout) {
-    throw new Error('Node test reporter output is unavailable')
-  }
-
-  const output = stream.compose(reporter === 'tap' ? tap : spec)
-
-  await pipeline(output, stdout, { end: false })
-}
+import { SummaryMissingException } from './exceptions/summary-missing.js'
+import { discoverProjectTests }    from './discovery/index.js'
+import { normalizeFailure }        from './event-normalization.js'
+import { normalizeStderr }         from './event-normalization.js'
+import { toProviderFailure }       from './provider-failure.js'
+import { consumeTestReport }       from './report-output.js'
+import { resolveRuntimeExecArgv }  from './runtime-exec-argv.js'
+import { scenarioConfig }          from './scenario-config.js'
 
 export const testProject = async ({
   rootCwd,
@@ -71,9 +30,9 @@ export const testProject = async ({
     const failures: Array<EventData.TestFail> = []
     const stderr: Array<EventData.TestStderr> = []
     let summary: EventData.TestSummary | undefined
-    const policy = scenarioPolicies[scenario]
+    const config = scenarioConfig[scenario]
     const stream = run({
-      concurrency: policy.concurrency,
+      concurrency: config.concurrency,
       cwd,
       execArgv,
       files,
@@ -89,14 +48,14 @@ export const testProject = async ({
         })
       },
       signal,
-      timeout: policy.timeout,
+      timeout: config.timeout,
       watch,
     })
 
-    await consumeReport(stream, reporter, stdout)
+    await consumeTestReport(stream, reporter, stdout)
 
     if (!summary) {
-      throw new Error('Node test runner did not report a final summary')
+      throw new SummaryMissingException()
     }
 
     const completed = {
@@ -112,7 +71,7 @@ export const testProject = async ({
   } catch (error) {
     return {
       status: 'provider-failed',
-      failure: toFailure(error),
+      failure: toProviderFailure(error),
       terminal: { exitCode: 1, reason: 'provider-failed' },
     }
   }

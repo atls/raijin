@@ -9,24 +9,16 @@ import { resolve }                 from 'node:path'
 
 import { toNativePath }            from '@atls/raijin/filesystem'
 
-import { isMissingPathError }      from './missing-path.js'
-
 const isExistingTargetPath = (result: TargetPathResult): result is ExistingTargetPath =>
   'stat' in result
 
-export const isFilenameTarget = (pattern: string): boolean => {
-  const hasPathSeparator = pattern.includes('/') || pattern.includes('\\')
-  const hasValidExtension = /\.(js|jsx|ts|tsx)$/.test(pattern)
-
-  return !hasPathSeparator && !hasValidExtension
-}
-
-export const isGlobTarget = (pattern: string): boolean => /[*?[\]{}]/.test(pattern)
+const isMissingPathError = (error: unknown): boolean =>
+  !!(error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT')
 
 export const findExistingTargetPath = async (
   target: CommandTarget,
   rootCwd: string
-): Promise<ExistingTargetPath> => {
+): Promise<ExistingTargetPath | undefined> => {
   const cwdTargetPath = toNativePath(target.path)
   const rootTargetPath = resolve(rootCwd, target.request)
   const targetPaths =
@@ -57,11 +49,5 @@ export const findExistingTargetPath = async (
     throw unexpectedTarget.error
   }
 
-  for (const targetResult of targetResults) {
-    if ('error' in targetResult) {
-      throw targetResult.error
-    }
-  }
-
-  throw new Error(`Test target does not exist: ${target.request}`)
+  return undefined
 }

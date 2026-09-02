@@ -141,7 +141,9 @@ test('uses the built-in reporter stream', async (context) => {
 })
 
 test('ends watch mode through the native abort signal', async (context) => {
-  const cwd = await createProject("import test from 'node:test'; test('watched', () => {});\n")
+  const cwd = await createProject(
+    "import test from 'node:test'; import { setTimeout } from 'node:timers/promises'; test('watched', async () => setTimeout(10_000));\n"
+  )
 
   context.after(async () => rm(cwd, { force: true, recursive: true }))
 
