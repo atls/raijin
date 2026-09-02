@@ -17,7 +17,7 @@ export const isExistingLocation = (result: ProbeResult): result is ExistingLocat
 const isMissingPathError = (error: unknown): boolean =>
   !!(error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT')
 
-export const isUnexpectedFailure = (result: ProbeResult): result is ProbeFailure =>
+export const isUnexpectedFailure = (result: ProbeResult): boolean =>
   'error' in result && !isMissingPathError(result.error)
 
 export const probePath = async (path: string): Promise<ProbeResult> => {

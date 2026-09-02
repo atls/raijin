@@ -27,7 +27,7 @@ export const locateExisting = async (
 
   const unexpectedTarget = targetResults.find(isUnexpectedFailure)
 
-  if (unexpectedTarget) {
+  if (unexpectedTarget && 'error' in unexpectedTarget) {
     throw unexpectedTarget.error
   }
 
