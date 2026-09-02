@@ -98,3 +98,37 @@ test('preserves the explicit missing target failure', async (context) => {
     new Error('Test target does not exist: src/missing.test.ts')
   )
 })
+
+test('preserves manifest read failures before target discovery', async (context) => {
+  const { cwd, rootCwd } = await createProject()
+
+  context.after(async () => rm(rootCwd, { force: true, recursive: true }))
+  await rm(join(cwd, 'package.json'))
+
+  await assert.rejects(
+    discoverProjectTests({
+      cwd,
+      input: createInput(cwd, ['src/missing.test.ts']),
+      rootCwd,
+      scenario: 'unit',
+    }),
+    { code: 'ENOENT', path: join(cwd, 'package.json') }
+  )
+})
+
+test('preserves manifest parse failures before target discovery', async (context) => {
+  const { cwd, rootCwd } = await createProject()
+
+  context.after(async () => rm(rootCwd, { force: true, recursive: true }))
+  await writeFile(join(cwd, 'package.json'), '{')
+
+  await assert.rejects(
+    discoverProjectTests({
+      cwd,
+      input: createInput(cwd, ['src/missing.test.ts']),
+      rootCwd,
+      scenario: 'unit',
+    }),
+    SyntaxError
+  )
+})

@@ -13,7 +13,7 @@ export const discoverProjectTests = async ({
   rootCwd,
   scenario,
 }: Input): Promise<Array<string>> => {
-  const includeFile = createFileFilter(cwd)
+  const includeFile = await createFileFilter(cwd)
   const nativeCwd = toNativeCwd(input.cwd)
   const folderPattern = resolveFolderPattern(scenario)
   const files =

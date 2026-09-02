@@ -34,7 +34,6 @@ test('keeps a missing failure assignable in the negative classification branch',
   const error = Object.assign(new Error('missing'), { code: 'ENOENT' })
   const verify = (result: Result): void => {
     if (!isUnexpectedFailure(result)) {
-      // A false classification must not narrow the union to an existing location.
       const retained: typeof result = { error }
 
       assert.deepEqual(result, retained)
