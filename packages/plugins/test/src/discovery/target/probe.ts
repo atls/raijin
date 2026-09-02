@@ -1,26 +1,17 @@
-import { stat } from 'node:fs/promises'
+import type { ExistingLocation } from './result.js'
+import type { Result }           from './result.js'
 
-export type ExistingLocation = {
-  path: string
-  stat: Awaited<ReturnType<typeof stat>>
-}
+import { stat }                  from 'node:fs/promises'
 
-type ProbeFailure = {
-  error: unknown
-}
-
-export type ProbeResult = ExistingLocation | ProbeFailure
-
-export const isExistingLocation = (result: ProbeResult): result is ExistingLocation =>
-  'stat' in result
+export const isExistingLocation = (result: Result): result is ExistingLocation => 'stat' in result
 
 const isMissingPathError = (error: unknown): boolean =>
   !!(error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT')
 
-export const isUnexpectedFailure = (result: ProbeResult): boolean =>
+export const isUnexpectedFailure = (result: Result): boolean =>
   'error' in result && !isMissingPathError(result.error)
 
-export const probePath = async (path: string): Promise<ProbeResult> => {
+export const probePath = async (path: string): Promise<Result> => {
   try {
     return {
       path,

@@ -1,5 +1,4 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
-import type { PortablePath }            from '@yarnpkg/fslib'
 
 import type { TestScenario }            from './interfaces/input.js'
 
@@ -8,25 +7,10 @@ import { Command }                      from 'clipanion'
 import { Option }                       from 'clipanion'
 import { isEnum }                       from 'typanion'
 
-import { createCommandInput }           from '@atls/raijin/commands'
 import { toNativeCwd }                  from '@atls/raijin/commands'
 
+import { resolveInput }                 from './command/resolve.js'
 import { testProject }                  from './project/index.js'
-
-type CommandInputOptions = {
-  files: Array<string>
-  invocationCwd: PortablePath
-  target?: string
-}
-
-const createTestCommandInput = ({ files, invocationCwd, target }: CommandInputOptions) => {
-  const targetInput = target
-    ? createCommandInput({ cwd: invocationCwd, source: 'explicit', targets: [target] })
-    : undefined
-  const cwd = targetInput?.targets.at(0)?.path ?? invocationCwd
-
-  return createCommandInput({ cwd, source: 'explicit', targets: files })
-}
 
 const createTestCommand = (path: Array<string>, scenario: TestScenario, description: string) =>
   class TestCommand extends BaseCommand {
@@ -69,7 +53,7 @@ const createTestCommand = (path: Array<string>, scenario: TestScenario, descript
       const result = await testProject({
         rootCwd: toNativeCwd(project.cwd),
         cwd: toNativeCwd(executionCwd),
-        input: createTestCommandInput({
+        input: resolveInput({
           files: this.files,
           invocationCwd,
           target: this.target,

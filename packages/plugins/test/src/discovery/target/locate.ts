@@ -1,6 +1,6 @@
 import type { CommandTarget }    from '@atls/raijin/commands'
 
-import type { ExistingLocation } from './probe.js'
+import type { ExistingLocation } from './result.js'
 
 import { resolve }               from 'node:path'
 

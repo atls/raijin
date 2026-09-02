@@ -1,4 +1,4 @@
-import type { ProbeResult }    from '../probe.js'
+import type { Result }         from '../result.js'
 
 import assert                  from 'node:assert/strict'
 import { stat }                from 'node:fs/promises'
@@ -32,7 +32,7 @@ test('selects unexpected failures without replacing their error', () => {
 
 test('keeps a missing failure assignable in the negative classification branch', () => {
   const error = Object.assign(new Error('missing'), { code: 'ENOENT' })
-  const verify = (result: ProbeResult): void => {
+  const verify = (result: Result): void => {
     if (!isUnexpectedFailure(result)) {
       // A false classification must not narrow the union to an existing location.
       const retained: typeof result = { error }
