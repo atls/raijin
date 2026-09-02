@@ -8,9 +8,9 @@ import { run }                     from 'node:test'
 import { SummaryMissingException } from './exceptions/summary.js'
 import { discoverProjectTests }    from '../discovery/index.js'
 import { resolveRuntimeExecArgv }  from './exec-argv.js'
+import { mapFailure }              from './mappers/failure.js'
 import { normalizeFailureFile }    from './mappers/files.js'
 import { normalizeStderrFile }     from './mappers/files.js'
-import { toProviderFailure }       from './provider-failure.js'
 import { consumeTestReport }       from './report.js'
 import { requireOutput }           from './report.js'
 import { scenarioConfig }          from './scenarios.js'
@@ -77,7 +77,7 @@ export const testProject = async ({
   } catch (error) {
     return {
       status: 'provider-failed',
-      failure: toProviderFailure(error),
+      failure: mapFailure(error),
       terminal: { exitCode: 1, reason: 'provider-failed' },
     }
   }
