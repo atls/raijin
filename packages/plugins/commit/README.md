@@ -38,14 +38,17 @@ yarn typecheck packages/plugins/commit/src
 yarn lint packages/plugins/commit/src
 ```
 
-Run the checked runtime against its self-contained PnP/backend and independent
-node_modules/client consumer:
+Run the Node consumer tests against the packed package and checked runtime:
 
 ```sh
-yarn workspace @atls/raijin-assembly verify:consumers \
-  ../../.yarn/releases/yarn.mjs \
-  ../../package.json \
-  staged-projects
+yarn raijin:smoke:cli
+```
+
+Select only the staged-project checks with Node's test-name filter:
+
+```sh
+yarn workspace @atls/raijin-assembly exec node --test \
+  --test-concurrency=1 --test-name-pattern=staged-projects tests/consumers.test.mjs
 ```
 
 The consumer uses the existing packed `@atls/raijin` archive and checked Yarn

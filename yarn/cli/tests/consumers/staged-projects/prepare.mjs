@@ -1,15 +1,11 @@
-import { execFile } from 'node:child_process'
 import { cp } from 'node:fs/promises'
 import { rename } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { promisify } from 'node:util'
-
-const execFileAsync = promisify(execFile)
 const fixturePath = fileURLToPath(new URL('./fixture', import.meta.url))
 
-/** @param {string} fixtureCwd */
-export const prepareStagedProjects = async (fixtureCwd) => {
+/** @param {Awaited<ReturnType<import('../fixture.mjs').createFixture>>} fixture */
+export const prepareStagedProjects = async ({ cwd: fixtureCwd, run }) => {
   await cp(fixturePath, fixtureCwd, { recursive: true })
   await Promise.all([
     rename(join(fixtureCwd, 'yarnrc.yml.fixture'), join(fixtureCwd, '.yarnrc.yml')),
@@ -37,7 +33,7 @@ export const prepareStagedProjects = async (fixtureCwd) => {
   ])
 
   /** @param {Array<string>} args */
-  const git = (args) => execFileAsync('git', args, { cwd: fixtureCwd })
+  const git = async (args) => run('git', args)
 
   await git(['init', '--quiet'])
   await git(['config', 'user.name', 'Raijin Consumer'])

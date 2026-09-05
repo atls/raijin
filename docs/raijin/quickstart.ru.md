@@ -116,7 +116,7 @@ yarn files changed list
 ## 7. Локальная проверка генерации проекта
 
 ```bash
-yarn raijin:smoke:cli project-generation
+yarn workspace @atls/raijin-assembly exec node --test --test-name-pattern=project-generation tests/consumers.test.mjs
 ```
 
 Ожидаемый результат:
