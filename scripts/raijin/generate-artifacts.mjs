@@ -667,12 +667,13 @@ const renderQuickstart = (language) => {
     '',
     '```bash',
     'yarn test unit --target yarn/raijin/src/infrastructure/generation/project',
+    'yarn test integration --target yarn/raijin/src/infrastructure/generation/project',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Тесты генератора проверяют создание каркаса проекта, сохранность пользовательских файлов и загрузку коллекции из архива'
-      : '- Generator tests verify project scaffolding, preservation of user files, and archive-backed collection loading',
+      ? '- Тесты генератора проверяют каркас и сохранность пользовательских файлов; интеграционная проверка устанавливает упакованный пакет и запускает поставляемый CLI, включая отказ при отсутствии коллекции'
+      : '- Generator tests verify scaffolding and preservation of user files; the integration test installs the packed package and runs the shipped CLI, including failure when the collection is missing',
     '',
     '<!-- sync:consumer-howto -->',
     isRu ? '## 7. Как использовать в чужом проекте' : '## 7. How to use in an external project',

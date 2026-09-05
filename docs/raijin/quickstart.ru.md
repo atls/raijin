@@ -80,11 +80,12 @@ yarn files changed list
 
 ```bash
 yarn test unit --target yarn/raijin/src/infrastructure/generation/project
+yarn test integration --target yarn/raijin/src/infrastructure/generation/project
 ```
 
 Ожидаемый результат:
 
-- Тесты генератора проверяют создание каркаса проекта, сохранность пользовательских файлов и загрузку коллекции из архива
+- Тесты генератора проверяют каркас и сохранность пользовательских файлов; интеграционная проверка устанавливает упакованный пакет и запускает поставляемый CLI, включая отказ при отсутствии коллекции
 
 <!-- sync:consumer-howto -->
 

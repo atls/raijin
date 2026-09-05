@@ -80,11 +80,12 @@ Expected result:
 
 ```bash
 yarn test unit --target yarn/raijin/src/infrastructure/generation/project
+yarn test integration --target yarn/raijin/src/infrastructure/generation/project
 ```
 
 Expected result:
 
-- Generator tests verify project scaffolding, preservation of user files, and archive-backed collection loading
+- Generator tests verify scaffolding and preservation of user files; the integration test installs the packed package and runs the shipped CLI, including failure when the collection is missing
 
 <!-- sync:consumer-howto -->
 
