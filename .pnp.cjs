@@ -1572,7 +1572,6 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:18.3.18"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
-          ["@types/yarnpkg__fslib", null],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
@@ -1589,10 +1588,8 @@ const RAW_RUNTIME_STATE =
         "packagePeers": [\
           "@types/yarnpkg__cli",\
           "@types/yarnpkg__core",\
-          "@types/yarnpkg__fslib",\
           "@yarnpkg/cli",\
-          "@yarnpkg/core",\
-          "@yarnpkg/fslib"\
+          "@yarnpkg/core"\
         ],\
         "linkType": "SOFT"\
       }],\

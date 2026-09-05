@@ -39,8 +39,7 @@
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
-    "@yarnpkg/core": "*",
-    "@yarnpkg/fslib": "*"
+    "@yarnpkg/core": "*"
   },
   "raijin": {
     "pack": {

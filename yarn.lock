@@ -909,7 +909,6 @@ __metadata:
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
-    "@yarnpkg/fslib": "*"
   languageName: unknown
   linkType: soft
 
