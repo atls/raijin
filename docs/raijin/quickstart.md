@@ -64,15 +64,13 @@ Expected result:
 
 - Bundle is upgraded to the latest available version, and `packageManager` is normalized to the installed runtime manifest value
 
-When upgrading to v2, complete the following step before the first commit with the updated bundle: the implicit v1 check configuration has been removed.
-
 <!-- sync:staged-checks -->
 
 <a id="staged-checks"></a>
 
 ## 5. Pre-commit checks
 
-This step is required for new projects, connecting existing projects, and upgrading to v2. The installed Git hook calls `yarn commit staged`. Raijin supplies no default configuration: without one, lint-staged blocks a commit with staged files.
+This step is required when setting up new or existing projects. The installed Git hook calls `yarn commit staged`. Raijin supplies no default configuration: without one, lint-staged blocks a commit with staged files.
 
 Check existing settings first. The `lint-staged` field in `package.json`, JSON/YAML `.lintstagedrc` files, and `lint-staged.config.*` remain valid native formats. Preserve the project's chosen format, commands, and exclusions; do not create a competing configuration.
 
@@ -132,5 +130,5 @@ Expected result:
 
 - Use `yarn init @atls/raijin --type project` or `yarn dlx @atls/raijin init --type project` for the first setup; use `library` for the library scaffold
 - After the first setup, keep the bundle current with `yarn set version atls`
-- Before the first commit or a v2 upgrade commit, complete the [check configuration](#staged-checks) and commit it together with `.yarn/releases` and `.yarnrc.yml`
+- Before the first commit, complete the [check configuration](#staged-checks) and commit it together with `.yarn/releases` and `.yarnrc.yml`
 - Use the same commands in CI and locally to avoid behavior drift

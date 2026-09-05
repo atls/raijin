@@ -1,15 +1,14 @@
 # Commit Plugin
 
 The private plugin registers `yarn commit message`, `yarn commit message lint`,
-and `yarn commit staged`. The v2 migration changes staged checks only; message
+and `yarn commit staged`. This change affects staged checks only; message
 preparation and validation retain their existing behavior.
 
 ## Staged Checks
 
 Keep the Git pre-commit route `yarn commit staged`. Every independent Yarn
 project declares its required checks through an ordinary lint-staged
-configuration. The v1 implicit Raijin configuration is removed. Existing
-repositories must add a checked-in root configuration, and nested independent
+configuration. Repositories use a checked-in root configuration, and nested independent
 projects must own their nearest configuration. All lint-staged native formats
 are supported, including the `lint-staged` field in `package.json`.
 

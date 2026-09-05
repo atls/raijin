@@ -62,7 +62,7 @@ Expected result:
 
 ### Before the first commit
 
-After connecting a new or existing project, complete the [pre-commit check setup](./docs/raijin/quickstart.md#staged-checks). Raijin v2 requires an explicit project-owned lint-staged configuration. The installed hook calls `yarn commit staged`; without configuration, a commit with staged files fails.
+After connecting a new or existing project, complete the [pre-commit check setup](./docs/raijin/quickstart.md#staged-checks). Raijin requires an explicit project-owned lint-staged configuration. The installed hook calls `yarn commit staged`; without configuration, a commit with staged files fails.
 
 ### Upgrade
 
@@ -73,8 +73,6 @@ yarn set version atls
 Expected result:
 
 - The bundle is upgraded to the latest available version through Yarn
-
-When upgrading to v2, complete the [same configuration step](./docs/raijin/quickstart.md#staged-checks) before the next commit. Raijin no longer supplies an implicit configuration; preserve and verify existing native lint-staged configs.
 
 ### Verify
 

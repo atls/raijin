@@ -362,8 +362,8 @@ const renderRootReadme = (language) => {
     isRu ? '### Перед первым коммитом' : '### Before the first commit',
     '',
     isRu
-      ? `После подключения нового или существующего проекта выполните [настройку проверок перед коммитом](./${quickstartPath}#staged-checks). Raijin v2 требует явную конфигурацию lint-staged, принадлежащую проекту. Установленный hook вызывает \`yarn commit staged\`; без конфигурации коммит с подготовленными файлами завершится ошибкой.`
-      : `After connecting a new or existing project, complete the [pre-commit check setup](./${quickstartPath}#staged-checks). Raijin v2 requires an explicit project-owned lint-staged configuration. The installed hook calls \`yarn commit staged\`; without configuration, a commit with staged files fails.`,
+      ? `После подключения нового или существующего проекта выполните [настройку проверок перед коммитом](./${quickstartPath}#staged-checks). Raijin требует явную конфигурацию lint-staged, принадлежащую проекту. Установленный hook вызывает \`yarn commit staged\`; без конфигурации коммит с подготовленными файлами завершится ошибкой.`
+      : `After connecting a new or existing project, complete the [pre-commit check setup](./${quickstartPath}#staged-checks). Raijin requires an explicit project-owned lint-staged configuration. The installed hook calls \`yarn commit staged\`; without configuration, a commit with staged files fails.`,
     '',
     isRu ? '### Обновление' : '### Upgrade',
     '',
@@ -375,10 +375,6 @@ const renderRootReadme = (language) => {
     isRu
       ? '- Бандл обновляется до последней доступной версии штатным механизмом Yarn'
       : '- The bundle is upgraded to the latest available version through Yarn',
-    '',
-    isRu
-      ? `При переходе на v2 выполните [тот же шаг настройки](./${quickstartPath}#staged-checks) до следующего коммита. Неявная конфигурация Raijin больше не используется; существующие native-конфиги lint-staged сохраняйте и проверяйте.`
-      : `When upgrading to v2, complete the [same configuration step](./${quickstartPath}#staged-checks) before the next commit. Raijin no longer supplies an implicit configuration; preserve and verify existing native lint-staged configs.`,
     '',
     isRu ? '### Проверка' : '### Verify',
     '',
@@ -667,18 +663,14 @@ const renderQuickstart = (language) => {
       ? '- Бандл обновлён до последней доступной версии, а `packageManager` приведён к значению из манифеста установленной среды выполнения'
       : '- Bundle is upgraded to the latest available version, and `packageManager` is normalized to the installed runtime manifest value',
     '',
-    isRu
-      ? 'При переходе на v2 выполните следующий шаг до первого коммита с обновлённым бандлом: неявная конфигурация проверок из v1 удалена.'
-      : 'When upgrading to v2, complete the following step before the first commit with the updated bundle: the implicit v1 check configuration has been removed.',
-    '',
     '<!-- sync:staged-checks -->',
     '<a id="staged-checks"></a>',
     '',
     isRu ? '## 5. Проверки перед коммитом' : '## 5. Pre-commit checks',
     '',
     isRu
-      ? 'Этот шаг обязателен для новых проектов, подключения существующих проектов и перехода на v2. Установленный Git hook вызывает `yarn commit staged`. Raijin не подставляет конфигурацию по умолчанию: без неё lint-staged блокирует коммит с подготовленными файлами.'
-      : 'This step is required for new projects, connecting existing projects, and upgrading to v2. The installed Git hook calls `yarn commit staged`. Raijin supplies no default configuration: without one, lint-staged blocks a commit with staged files.',
+      ? 'Этот шаг обязателен при подключении новых и существующих проектов. Установленный Git hook вызывает `yarn commit staged`. Raijin не подставляет конфигурацию по умолчанию: без неё lint-staged блокирует коммит с подготовленными файлами.'
+      : 'This step is required when setting up new or existing projects. The installed Git hook calls `yarn commit staged`. Raijin supplies no default configuration: without one, lint-staged blocks a commit with staged files.',
     '',
     isRu
       ? 'Сначала проверьте существующие настройки. Поле `lint-staged` в `package.json`, `.lintstagedrc` в JSON/YAML и `lint-staged.config.*` остаются допустимыми native-форматами. Сохраняйте выбранный формат, команды и исключения проекта; не создавайте конкурирующую конфигурацию.'
@@ -758,8 +750,8 @@ const renderQuickstart = (language) => {
       ? '- После первого подключения обновляйте бандл командой `yarn set version atls`'
       : '- After the first setup, keep the bundle current with `yarn set version atls`',
     isRu
-      ? '- До первого коммита или коммита обновления до v2 выполните [настройку проверок](#staged-checks) и включите конфигурацию в коммит вместе с `.yarn/releases` и `.yarnrc.yml`'
-      : '- Before the first commit or a v2 upgrade commit, complete the [check configuration](#staged-checks) and commit it together with `.yarn/releases` and `.yarnrc.yml`',
+      ? '- До первого коммита выполните [настройку проверок](#staged-checks) и включите конфигурацию в коммит вместе с `.yarn/releases` и `.yarnrc.yml`'
+      : '- Before the first commit, complete the [check configuration](#staged-checks) and commit it together with `.yarn/releases` and `.yarnrc.yml`',
     isRu
       ? '- Для CI используйте те же команды, что и локально, чтобы избежать расхождения поведения'
       : '- Use the same commands in CI and locally to avoid behavior drift',
