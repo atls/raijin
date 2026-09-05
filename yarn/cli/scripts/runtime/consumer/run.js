@@ -62,9 +62,11 @@ const runScenario = async ({
 }) => {
   const fixtureCwd = await mkdtemp(join(tmpdir(), `raijin-${scenario.name}-consumer-`))
   const fixtureRuntimePath = join(fixtureCwd, '.yarn/releases/yarn.mjs')
+  const scenarioEnvironment = { ...environment, ...scenario.environment }
 
   /** @param {string} command @param {Array<string>} args @param {string} [cwd] */
-  const run = async (command, args, cwd = fixtureCwd) => execute(command, args, cwd, environment)
+  const run = async (command, args, cwd = fixtureCwd) =>
+    execute(command, args, cwd, scenarioEnvironment)
   /** @param {Array<string>} args @param {string} [cwd] */
   const runYarn = async (args, cwd = fixtureCwd) => run('yarn', args, cwd)
 

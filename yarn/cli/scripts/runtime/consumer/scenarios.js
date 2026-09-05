@@ -20,6 +20,7 @@ const scenarios = [
   },
   {
     dependencies: { typescript: '5.9.3' },
+    environment: { GITHUB_ACTIONS: undefined, IMAGE_PACK: undefined },
     name: 'staged-projects',
     prepare: prepareStagedProjects,
     run: runStagedProjects,
