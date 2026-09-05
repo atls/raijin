@@ -2,6 +2,7 @@ import { constants } from 'node:fs'
 import { access } from 'node:fs/promises'
 import { readFile } from 'node:fs/promises'
 import { realpath } from 'node:fs/promises'
+import { rename } from 'node:fs/promises'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { resolve } from 'node:path'
@@ -78,6 +79,8 @@ export const runStagedProjects = async ({ fixtureCwd, run, runYarn }) => {
   }
 
   await run('corepack', ['yarn', 'install', '--no-immutable'], clientCwd)
+  await runYarn(['generate', 'project', '--type', 'project'])
+  await runYarn(['raijin', 'sync'])
 
   const rootTypeScript = (await runYarn(['exec', 'tsc', '--version'])).trim()
   const clientTypeScript = (
@@ -129,8 +132,30 @@ export const runStagedProjects = async ({ fixtureCwd, run, runYarn }) => {
 
   await access(hookPath, constants.X_OK)
 
+  await writeFile(backendFile, 'export const backend: number = 10\n')
   await git(['add', '--all'])
-  await git(['commit', '--quiet', '--no-verify', '-m', 'test: materialize staged projects'])
+  const unconfiguredIndex = await git(['diff', '--cached', '--binary'])
+
+  assertCommit(await commit('check required setup configuration'), {
+    exitCode: 1,
+    name: 'setup without project-owned configuration',
+    output: ['No valid configuration'],
+  })
+
+  if ((await git(['diff', '--cached', '--binary'])) !== unconfiguredIndex) {
+    throw new Error('Unconfigured setup changed the staged state')
+  }
+
+  await rename(
+    join(fixtureCwd, 'lint-staged.config.mjs.fixture'),
+    join(fixtureCwd, 'lint-staged.config.mjs')
+  )
+  await rename(join(clientCwd, 'lint-staged.config.mjs.fixture'), clientConfig)
+  await git(['add', '--all'])
+  assertCommit(await commit('configure project-owned staged checks'), {
+    exitCode: 0,
+    name: 'first configured setup commit',
+  })
 
   /** @param {ValidChange} input */
   const valid = async ({ name, backend, client }) => {

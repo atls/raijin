@@ -34,6 +34,8 @@ Expected result:
 - Project scaffold is created through the embedded Raijin collection
 - Bundle commands (`check`, `files changed list`, etc.) become available
 
+Before the first commit, complete the required [check configuration](#staged-checks). Scaffolding does not create a lint-staged configuration.
+
 <!-- sync:existing-project -->
 
 ## 3. Existing project
@@ -48,6 +50,8 @@ Expected result:
 
 - Existing project gets the public `@atls/raijin` package, Raijin runtime, project scaffold, first sync, and `packageManager` from the installed runtime manifest
 
+Before committing the setup changes, complete the [check configuration](#staged-checks). Preserve any existing lint-staged configuration; do not replace it with the example.
+
 <!-- sync:bundle-upgrade -->
 
 ## 4. Upgrade installed bundle
@@ -60,9 +64,44 @@ Expected result:
 
 - Bundle is upgraded to the latest available version, and `packageManager` is normalized to the installed runtime manifest value
 
+When upgrading to v2, complete the following step before the first commit with the updated bundle: the implicit v1 check configuration has been removed.
+
+<!-- sync:staged-checks -->
+
+<a id="staged-checks"></a>
+
+## 5. Pre-commit checks
+
+This step is required for new projects, connecting existing projects, and upgrading to v2. The installed Git hook calls `yarn commit staged`. Raijin supplies no default configuration: without one, lint-staged blocks a commit with staged files.
+
+Check existing settings first. The `lint-staged` field in `package.json`, JSON/YAML `.lintstagedrc` files, and `lint-staged.config.*` remain valid native formats. Preserve the project's chosen format, commands, and exclusions; do not create a competing configuration.
+
+If there is no configuration yet, for a single Raijin PnP/ESM project with TypeScript and Node-run `*.test.ts`/`*.spec.ts` tests, create `.lintstagedrc.json` at its root:
+
+```json
+{
+  "*.{yml,yaml,json,graphql,md}": "yarn format",
+  "*.{js,mjs,cjs,jsx,ts,tsx}": ["yarn format", "yarn lint"],
+  "*.{ts,tsx}": "yarn typecheck",
+  "*.{test,spec}.{ts,tsx}": "yarn test unit"
+}
+```
+
+Each independent Yarn project in the same Git repository defines its configuration in its own directory: lint-staged uses the nearest config and does not merge it with the root config. Root backend checks must not run checks for an independent client.
+
+A TypeScript/Jest client uses its own compiler and `yarn run test` when its `test` script runs Jest; it does not need a Raijin dependency. To check an entire `tsconfig.json` without appending staged paths, use a lint-staged JS configuration callback such as `() => "yarn exec tsc --noEmit -p tsconfig.json"`. Configurations must cover all required checks; a missing client config must not leave its files unchecked.
+
+After configuring checks, stage the configuration and intended changes, then run from the repository root:
+
+```bash
+yarn commit staged
+```
+
+Confirm that checks ran for every affected project, then make a normal commit. An empty staged set or no matching files does not prove that checks are configured. Fix missing commands or required configuration rather than bypassing the hook.
+
 <!-- sync:verification -->
 
-## 5. Basic verification
+## 6. Basic verification
 
 ```bash
 yarn check
@@ -76,7 +115,7 @@ Expected result:
 
 <!-- sync:project-generation-check -->
 
-## 6. Local project generation check
+## 7. Local project generation check
 
 ```bash
 yarn raijin:smoke:cli project-generation
@@ -89,9 +128,9 @@ Expected result:
 
 <!-- sync:consumer-howto -->
 
-## 7. How to use in an external project
+## 8. How to use in an external project
 
 - Use `yarn init @atls/raijin --type project` or `yarn dlx @atls/raijin init --type project` for the first setup; use `library` for the library scaffold
 - After the first setup, keep the bundle current with `yarn set version atls`
-- Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates
+- Before the first commit or a v2 upgrade commit, complete the [check configuration](#staged-checks) and commit it together with `.yarn/releases` and `.yarnrc.yml`
 - Use the same commands in CI and locally to avoid behavior drift

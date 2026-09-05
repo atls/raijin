@@ -356,8 +356,14 @@ const renderRootReadme = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Проект получает ту же среду выполнения Raijin, каркас и первичную синхронизацию без ручных шагов первичного подключения'
-      : '- The project gets the same Raijin runtime, scaffold, and first sync without manual bootstrap steps',
+      ? '- Проект получает среду выполнения Raijin, каркас и первичную синхронизацию; проверки перед коммитом настраиваются отдельно'
+      : '- The project gets the Raijin runtime, scaffold, and first sync; pre-commit checks are configured separately',
+    '',
+    isRu ? '### Перед первым коммитом' : '### Before the first commit',
+    '',
+    isRu
+      ? `После подключения нового или существующего проекта выполните [настройку проверок перед коммитом](./${quickstartPath}#staged-checks). Raijin v2 требует явную конфигурацию lint-staged, принадлежащую проекту. Установленный hook вызывает \`yarn commit staged\`; без конфигурации коммит с подготовленными файлами завершится ошибкой.`
+      : `After connecting a new or existing project, complete the [pre-commit check setup](./${quickstartPath}#staged-checks). Raijin v2 requires an explicit project-owned lint-staged configuration. The installed hook calls \`yarn commit staged\`; without configuration, a commit with staged files fails.`,
     '',
     isRu ? '### Обновление' : '### Upgrade',
     '',
@@ -369,6 +375,10 @@ const renderRootReadme = (language) => {
     isRu
       ? '- Бандл обновляется до последней доступной версии штатным механизмом Yarn'
       : '- The bundle is upgraded to the latest available version through Yarn',
+    '',
+    isRu
+      ? `При переходе на v2 выполните [тот же шаг настройки](./${quickstartPath}#staged-checks) до следующего коммита. Неявная конфигурация Raijin больше не используется; существующие native-конфиги lint-staged сохраняйте и проверяйте.`
+      : `When upgrading to v2, complete the [same configuration step](./${quickstartPath}#staged-checks) before the next commit. Raijin no longer supplies an implicit configuration; preserve and verify existing native lint-staged configs.`,
     '',
     isRu ? '### Проверка' : '### Verify',
     '',
@@ -390,11 +400,14 @@ const renderRootReadme = (language) => {
       ? `1. Подключите бандл по разделу [Быстрый старт](./${quickstartPath})`
       : `1. Install the bundle using [Quickstart](./${quickstartPath})`,
     isRu
-      ? '2. Зафиксируйте изменения `.yarn/releases` и `.yarnrc.yml` в системе контроля версий'
-      : '2. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control',
+      ? `2. Настройте [проверки перед коммитом](./${quickstartPath}#staged-checks) для каждого самостоятельного проекта`
+      : `2. Configure [pre-commit checks](./${quickstartPath}#staged-checks) for each independent project`,
     isRu
-      ? '3. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий'
-      : '3. Update with `yarn set version atls` when newer bundle versions are released',
+      ? '3. Зафиксируйте конфигурацию проверок вместе с изменениями `.yarn/releases` и `.yarnrc.yml`'
+      : '3. Commit the check configuration together with `.yarn/releases` and `.yarnrc.yml` changes',
+    isRu
+      ? '4. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий'
+      : '4. Update with `yarn set version atls` when newer bundle versions are released',
     '',
     '<!-- sync:root-read-more -->',
     '',
@@ -618,6 +631,10 @@ const renderQuickstart = (language) => {
       ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
       : '- Bundle commands (`check`, `files changed list`, etc.) become available',
     '',
+    isRu
+      ? 'Перед первым коммитом обязательно выполните [настройку проверок](#staged-checks). Создание каркаса не создаёт конфигурацию lint-staged.'
+      : 'Before the first commit, complete the required [check configuration](#staged-checks). Scaffolding does not create a lint-staged configuration.',
+    '',
     '<!-- sync:existing-project -->',
     isRu ? '## 3. Существующий проект' : '## 3. Existing project',
     '',
@@ -634,6 +651,10 @@ const renderQuickstart = (language) => {
       ? '- Установленный проект получает публичный пакет `@atls/raijin`, среду выполнения Raijin, проектный каркас, первичную синхронизацию и значение `packageManager` из манифеста установленной среды выполнения'
       : '- Existing project gets the public `@atls/raijin` package, Raijin runtime, project scaffold, first sync, and `packageManager` from the installed runtime manifest',
     '',
+    isRu
+      ? 'До коммита изменений подключения выполните [настройку проверок](#staged-checks). Существующую конфигурацию lint-staged сохраняйте; заменять её примером не нужно.'
+      : 'Before committing the setup changes, complete the [check configuration](#staged-checks). Preserve any existing lint-staged configuration; do not replace it with the example.',
+    '',
     '<!-- sync:bundle-upgrade -->',
     isRu ? '## 4. Обновление установленного бандла' : '## 4. Upgrade installed bundle',
     '',
@@ -646,8 +667,58 @@ const renderQuickstart = (language) => {
       ? '- Бандл обновлён до последней доступной версии, а `packageManager` приведён к значению из манифеста установленной среды выполнения'
       : '- Bundle is upgraded to the latest available version, and `packageManager` is normalized to the installed runtime manifest value',
     '',
+    isRu
+      ? 'При переходе на v2 выполните следующий шаг до первого коммита с обновлённым бандлом: неявная конфигурация проверок из v1 удалена.'
+      : 'When upgrading to v2, complete the following step before the first commit with the updated bundle: the implicit v1 check configuration has been removed.',
+    '',
+    '<!-- sync:staged-checks -->',
+    '<a id="staged-checks"></a>',
+    '',
+    isRu ? '## 5. Проверки перед коммитом' : '## 5. Pre-commit checks',
+    '',
+    isRu
+      ? 'Этот шаг обязателен для новых проектов, подключения существующих проектов и перехода на v2. Установленный Git hook вызывает `yarn commit staged`. Raijin не подставляет конфигурацию по умолчанию: без неё lint-staged блокирует коммит с подготовленными файлами.'
+      : 'This step is required for new projects, connecting existing projects, and upgrading to v2. The installed Git hook calls `yarn commit staged`. Raijin supplies no default configuration: without one, lint-staged blocks a commit with staged files.',
+    '',
+    isRu
+      ? 'Сначала проверьте существующие настройки. Поле `lint-staged` в `package.json`, `.lintstagedrc` в JSON/YAML и `lint-staged.config.*` остаются допустимыми native-форматами. Сохраняйте выбранный формат, команды и исключения проекта; не создавайте конкурирующую конфигурацию.'
+      : "Check existing settings first. The `lint-staged` field in `package.json`, JSON/YAML `.lintstagedrc` files, and `lint-staged.config.*` remain valid native formats. Preserve the project's chosen format, commands, and exclusions; do not create a competing configuration.",
+    '',
+    isRu
+      ? 'Если конфигурации ещё нет, для одного Raijin PnP/ESM-проекта с TypeScript и тестами `*.test.ts`/`*.spec.ts`, исполняемыми Node, создайте в корне `.lintstagedrc.json`:'
+      : 'If there is no configuration yet, for a single Raijin PnP/ESM project with TypeScript and Node-run `*.test.ts`/`*.spec.ts` tests, create `.lintstagedrc.json` at its root:',
+    '',
+    '```json',
+    '{',
+    '  "*.{yml,yaml,json,graphql,md}": "yarn format",',
+    '  "*.{js,mjs,cjs,jsx,ts,tsx}": ["yarn format", "yarn lint"],',
+    '  "*.{ts,tsx}": "yarn typecheck",',
+    '  "*.{test,spec}.{ts,tsx}": "yarn test unit"',
+    '}',
+    '```',
+    '',
+    isRu
+      ? 'Каждый самостоятельный Yarn-проект внутри того же Git-репозитория задаёт конфигурацию в своём каталоге: lint-staged использует ближайшую и не объединяет её с корневой. Корневые проверки backend не должны выполнять проверки независимого клиента.'
+      : 'Each independent Yarn project in the same Git repository defines its configuration in its own directory: lint-staged uses the nearest config and does not merge it with the root config. Root backend checks must not run checks for an independent client.',
+    '',
+    isRu
+      ? 'Клиент с TypeScript и Jest использует собственный компилятор и `yarn run test`, если его script `test` запускает Jest; зависимость от Raijin ему не требуется. Для проверки всего `tsconfig.json` без добавления staged-путей используйте JS-конфигурацию lint-staged с callback, например `() => "yarn exec tsc --noEmit -p tsconfig.json"`. Конфигурации должны покрывать все обязательные проверки; отсутствие клиентского конфига не должно оставлять его файлы без проверок.'
+      : 'A TypeScript/Jest client uses its own compiler and `yarn run test` when its `test` script runs Jest; it does not need a Raijin dependency. To check an entire `tsconfig.json` without appending staged paths, use a lint-staged JS configuration callback such as `() => "yarn exec tsc --noEmit -p tsconfig.json"`. Configurations must cover all required checks; a missing client config must not leave its files unchecked.',
+    '',
+    isRu
+      ? 'После настройки добавьте конфигурацию и нужные изменения в Git index и выполните из корня репозитория:'
+      : 'After configuring checks, stage the configuration and intended changes, then run from the repository root:',
+    '',
+    '```bash',
+    'yarn commit staged',
+    '```',
+    '',
+    isRu
+      ? 'Убедитесь, что выполнены проверки каждого затронутого проекта, затем сделайте обычный коммит. Пустой staged-набор или отсутствие совпавших файлов не доказывает, что проверки настроены. Отсутствующую команду или обязательную конфигурацию исправляйте; обходить hook не нужно.'
+      : 'Confirm that checks ran for every affected project, then make a normal commit. An empty staged set or no matching files does not prove that checks are configured. Fix missing commands or required configuration rather than bypassing the hook.',
+    '',
     '<!-- sync:verification -->',
-    isRu ? '## 5. Базовая проверка' : '## 5. Basic verification',
+    isRu ? '## 6. Базовая проверка' : '## 6. Basic verification',
     '',
     '```bash',
     'yarn check',
@@ -663,7 +734,7 @@ const renderQuickstart = (language) => {
       : '- `yarn files changed list` returns file list (or empty list if no changes)',
     '',
     '<!-- sync:project-generation-check -->',
-    isRu ? '## 6. Локальная проверка генерации проекта' : '## 6. Local project generation check',
+    isRu ? '## 7. Локальная проверка генерации проекта' : '## 7. Local project generation check',
     '',
     '```bash',
     'yarn raijin:smoke:cli project-generation',
@@ -678,7 +749,7 @@ const renderQuickstart = (language) => {
       : '- Check fails if helper or Markdown docs invoke an inactive command',
     '',
     '<!-- sync:consumer-howto -->',
-    isRu ? '## 7. Как использовать в чужом проекте' : '## 7. How to use in an external project',
+    isRu ? '## 8. Как использовать в чужом проекте' : '## 8. How to use in an external project',
     '',
     isRu
       ? '- Для первого подключения используйте `yarn init @atls/raijin --type project` или `yarn dlx @atls/raijin init --type project`; для библиотеки замените тип на `library`'
@@ -687,8 +758,8 @@ const renderQuickstart = (language) => {
       ? '- После первого подключения обновляйте бандл командой `yarn set version atls`'
       : '- After the first setup, keep the bundle current with `yarn set version atls`',
     isRu
-      ? '- Коммитьте изменения `.yarn/releases` и `.yarnrc.yml` вместе с обновлением бандла'
-      : '- Commit `.yarn/releases` and `.yarnrc.yml` changes together with bundle updates',
+      ? '- До первого коммита или коммита обновления до v2 выполните [настройку проверок](#staged-checks) и включите конфигурацию в коммит вместе с `.yarn/releases` и `.yarnrc.yml`'
+      : '- Before the first commit or a v2 upgrade commit, complete the [check configuration](#staged-checks) and commit it together with `.yarn/releases` and `.yarnrc.yml`',
     isRu
       ? '- Для CI используйте те же команды, что и локально, чтобы избежать расхождения поведения'
       : '- Use the same commands in CI and locally to avoid behavior drift',

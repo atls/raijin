@@ -14,10 +14,6 @@ export const prepareStagedProjects = async (fixtureCwd) => {
   await Promise.all([
     rename(join(fixtureCwd, 'yarnrc.yml.fixture'), join(fixtureCwd, '.yarnrc.yml')),
     rename(
-      join(fixtureCwd, 'lint-staged.config.mjs.fixture'),
-      join(fixtureCwd, 'lint-staged.config.mjs')
-    ),
-    rename(
       join(fixtureCwd, 'backend/value with spaces.ts.fixture'),
       join(fixtureCwd, 'backend/value with spaces.ts')
     ),
@@ -30,10 +26,6 @@ export const prepareStagedProjects = async (fixtureCwd) => {
       join(fixtureCwd, 'client/package.json')
     ),
     rename(join(fixtureCwd, 'client/yarnrc.yml.fixture'), join(fixtureCwd, 'client/.yarnrc.yml')),
-    rename(
-      join(fixtureCwd, 'client/lint-staged.config.mjs.fixture'),
-      join(fixtureCwd, 'client/lint-staged.config.mjs')
-    ),
     rename(
       join(fixtureCwd, 'client/src/value with spaces.ts.fixture'),
       join(fixtureCwd, 'client/src/value with spaces.ts')

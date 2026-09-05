@@ -58,7 +58,11 @@ Use `--type library` for the library scaffold
 
 Expected result:
 
-- The project gets the same Raijin runtime, scaffold, and first sync without manual bootstrap steps
+- The project gets the Raijin runtime, scaffold, and first sync; pre-commit checks are configured separately
+
+### Before the first commit
+
+After connecting a new or existing project, complete the [pre-commit check setup](./docs/raijin/quickstart.md#staged-checks). Raijin v2 requires an explicit project-owned lint-staged configuration. The installed hook calls `yarn commit staged`; without configuration, a commit with staged files fails.
 
 ### Upgrade
 
@@ -69,6 +73,8 @@ yarn set version atls
 Expected result:
 
 - The bundle is upgraded to the latest available version through Yarn
+
+When upgrading to v2, complete the [same configuration step](./docs/raijin/quickstart.md#staged-checks) before the next commit. Raijin no longer supplies an implicit configuration; preserve and verify existing native lint-staged configs.
 
 ### Verify
 
@@ -86,8 +92,9 @@ Expected result:
 ## How to use in another project
 
 1. Install the bundle using [Quickstart](./docs/raijin/quickstart.md)
-2. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control
-3. Update with `yarn set version atls` when newer bundle versions are released
+2. Configure [pre-commit checks](./docs/raijin/quickstart.md#staged-checks) for each independent project
+3. Commit the check configuration together with `.yarn/releases` and `.yarnrc.yml` changes
+4. Update with `yarn set version atls` when newer bundle versions are released
 
 <!-- sync:root-read-more -->
 
