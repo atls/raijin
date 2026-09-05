@@ -47,15 +47,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Visibility: `private`
 - Scripts: none
 
-<!-- sync:package-card:atls-yarn-plugin-badges -->
-
-#### `@atls/yarn-plugin-badges`
-
-- Location: `yarn/plugin-badges`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-check -->
 
 #### `@atls/yarn-plugin-check`

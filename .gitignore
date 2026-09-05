@@ -48,12 +48,6 @@ dist/
 !yarn/cli/dist/
 yarn/cli/dist/*
 yarn/plugin-*/bundles/
-!yarn/plugin-badges/bundles/
-!yarn/plugin-badges/bundles/**
-
-yarn/plugin-*/bundles/
-!yarn/plugin-badges/bundles/
-!yarn/plugin-badges/bundles/**
 
 package.tgz
 
