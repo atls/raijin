@@ -47,15 +47,6 @@
 - Видимость: `private`
 - Скрипты: отсутствуют
 
-<!-- sync:package-card:atls-yarn-plugin-badges -->
-
-#### `@atls/yarn-plugin-badges`
-
-- Локация: `yarn/plugin-badges`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-check -->
 
 #### `@atls/yarn-plugin-check`
