@@ -10,22 +10,7 @@
       "type": "string",
       "enum": ["project", "library"]
     },
-    "checkoutAction": { "type": "string" },
-    "containerRegistry": { "type": "string" },
-    "containerRepositoryExpression": { "type": "string" },
-    "nodeVersion": { "type": "string" },
-    "npmTokenSecret": { "type": "string" },
-    "setupNodeAction": { "type": "string" },
     "typescriptCompilerOptions": { "type": "object" }
   },
-  "required": [
-    "scaffoldType",
-    "checkoutAction",
-    "containerRegistry",
-    "containerRepositoryExpression",
-    "nodeVersion",
-    "npmTokenSecret",
-    "setupNodeAction",
-    "typescriptCompilerOptions"
-  ]
+  "required": ["scaffoldType", "typescriptCompilerOptions"]
 }

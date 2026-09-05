@@ -92,7 +92,6 @@
     "protocol-buffers-schema": "3.6.0",
     "react": "18.3.1",
     "rxjs": "7.8.1",
-    "semver": "7.6.3",
     "sort-package-json": "2.4.1",
     "strip-json-comments": "3.1.1",
     "ts-loader": "9.5.2",
@@ -104,7 +103,6 @@
   "devDependencies": {
     "@types/node": "24.12.2",
     "@types/protocol-buffers-schema": "3.4.3",
-    "@types/semver": "7.5.8",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/esbuild-plugin-pnp": "3.0.0-rc.15",
     "esbuild": "0.24.2"

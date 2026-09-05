@@ -79,13 +79,13 @@ Expected result:
 ## 6. Local project generation check
 
 ```bash
-yarn raijin:smoke:cli project-generation
+yarn test unit --target yarn/raijin/src/infrastructure/generation/project
+yarn test integration --target yarn/raijin/src/infrastructure/generation/project
 ```
 
 Expected result:
 
-- Temporary fixture is created through the collection embedded in public `@atls/raijin`
-- Check fails if helper or Markdown docs invoke an inactive command
+- Generator tests verify scaffolding and preservation of user files; the integration test installs the packed package and runs the shipped CLI, including failure when the collection is missing
 
 <!-- sync:consumer-howto -->
 
