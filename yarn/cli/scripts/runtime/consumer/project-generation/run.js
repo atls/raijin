@@ -32,4 +32,7 @@ export const runProjectGeneration = async ({ fixtureCwd, runYarn }) => {
   }
 
   await verifyProjectGeneration(generatedTarget)
+
+  await runYarn(['generate', 'project', '--type', 'library'], generatedTarget)
+  await verifyProjectGeneration(generatedTarget)
 }

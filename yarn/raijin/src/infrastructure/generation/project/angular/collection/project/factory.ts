@@ -1,20 +1,18 @@
-import type { Rule }           from '@angular-devkit/schematics'
-import type { Tree }           from '@angular-devkit/schematics'
+import type { Rule }     from '@angular-devkit/schematics'
+import type { Tree }     from '@angular-devkit/schematics'
 
-import type { GitIgnoreState } from './factory.interfaces.js'
-import type { Options }        from './factory.interfaces.js'
+import type { Options }  from './factory.interfaces.js'
 
-import { MergeStrategy }       from '@angular-devkit/schematics'
-import { strings }             from '@angular-devkit/core'
-import { apply }               from '@angular-devkit/schematics'
-import { chain }               from '@angular-devkit/schematics'
-import { mergeWith }           from '@angular-devkit/schematics'
-import { move }                from '@angular-devkit/schematics'
-import { template }            from '@angular-devkit/schematics'
-import { url }                 from '@angular-devkit/schematics'
-import stripJsonComments       from 'strip-json-comments'
+import { strings }       from '@angular-devkit/core'
+import { apply }         from '@angular-devkit/schematics'
+import { chain }         from '@angular-devkit/schematics'
+import { filter }        from '@angular-devkit/schematics'
+import { mergeWith }     from '@angular-devkit/schematics'
+import { move }          from '@angular-devkit/schematics'
+import { template }      from '@angular-devkit/schematics'
+import { url }           from '@angular-devkit/schematics'
+import stripJsonComments from 'strip-json-comments'
 
-const GITIGNORE_PATH = '.gitignore'
 const TSCONFIG_PATH = 'tsconfig.json'
 
 const serializeJson = (value: unknown): string => `${JSON.stringify(value, null, 2)}\n`
@@ -44,52 +42,17 @@ const updateTypeScriptConfig = (options: Options): Rule =>
     return tree
   }
 
-const captureExistingGitIgnore = (state: GitIgnoreState): Rule =>
-  (tree: Tree): Tree => {
-    const content = tree.read(GITIGNORE_PATH)
-
-    if (content) {
-      state.content = Buffer.from(content)
-    }
-
-    return tree
-  }
-
-const restoreExistingGitIgnore = (state: GitIgnoreState): Rule =>
-  (tree: Tree): Tree => {
-    if (!state.content) {
-      return tree
-    }
-
-    if (tree.exists(GITIGNORE_PATH)) {
-      tree.overwrite(GITIGNORE_PATH, state.content)
-    } else {
-      tree.create(GITIGNORE_PATH, state.content)
-    }
-
-    return tree
-  }
-
-const projectSource = (path: string, options: Options) =>
-  apply(url(path), [
+const projectSource = (tree: Tree, options: Options) =>
+  apply(url('../templates/common'), [
     template({
       ...strings,
       ...options,
       dot: '.',
     }),
     move('/'),
+    filter((path) => !tree.exists(path)),
   ])
 
-export const main = (options: Options): Rule => {
-  const gitIgnoreState: GitIgnoreState = {}
-  const variantPath =
-    options.scaffoldType === 'library' ? '../templates/libraries' : '../templates/project'
-
-  return chain([
-    captureExistingGitIgnore(gitIgnoreState),
-    updateTypeScriptConfig(options),
-    mergeWith(projectSource('../templates/common', options), MergeStrategy.Overwrite),
-    mergeWith(projectSource(variantPath, options), MergeStrategy.Overwrite),
-    restoreExistingGitIgnore(gitIgnoreState),
-  ])
-}
+export const main = (options: Options): Rule =>
+  (tree: Tree) =>
+    chain([updateTypeScriptConfig(options), mergeWith(projectSource(tree, options))])

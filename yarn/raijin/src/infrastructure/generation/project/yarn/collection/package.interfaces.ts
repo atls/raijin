@@ -11,18 +11,14 @@ export interface Context {
 }
 
 export interface Manifest {
-  readonly dependencies?: Record<string, string>
-  readonly devDependencies?: Record<string, string>
   readonly schematics?: unknown
 }
 
 export interface Source {
   readonly collectionRoot: PortablePath
-  readonly manifest: Manifest
   readonly packageFs: FakeFS<PortablePath>
 }
 
 export interface Materialized {
   readonly collectionPath: string
-  readonly manifest: Manifest
 }

@@ -1289,7 +1289,6 @@ const RAW_RUNTIME_STATE =
           ["@svgr/plugin-jsx", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:8.1.0"],\
           ["@types/node", "npm:24.12.2"],\
           ["@types/protocol-buffers-schema", "npm:3.4.3"],\
-          ["@types/semver", "npm:7.5.8"],\
           ["@typescript-eslint/eslint-plugin", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:8.48.1"],\
           ["@typescript-eslint/parser", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:8.48.1"],\
           ["@yarnpkg/cli", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:4.14.1"],\
@@ -1316,7 +1315,6 @@ const RAW_RUNTIME_STATE =
           ["protocol-buffers-schema", "npm:3.6.0"],\
           ["react", "npm:18.3.1"],\
           ["rxjs", "npm:7.8.1"],\
-          ["semver", "npm:7.6.3"],\
           ["sort-package-json", "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=tools%40workspace%3A."],\
           ["strip-json-comments", "npm:3.1.1"],\
           ["ts-loader", "virtual:53c7fd388a1087ce85d672e345c3944e5568ff7e26925354e1b27f671e7446c38eff0b985b8e5fc97f6b6c4187c0a6ce32d0d089e84e6c4f49c839f5fe89eadd#npm:9.5.2"],\

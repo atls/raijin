@@ -3,7 +3,6 @@ import type { DryRunEvent }              from '@angular-devkit/schematics'
 import type { ProjectScaffoldType }      from '../../../../application/generation/project/index.js'
 import type { ProjectScaffoldingResult } from '../../../../application/generation/project/index.js'
 import type { GeneratedProjectChange }   from '../../../../application/generation/project/index.js'
-import type { Policy }                   from '../github/workflows/policy.interfaces.js'
 
 import { readFile }                      from 'node:fs/promises'
 import { join }                          from 'node:path'
@@ -100,14 +99,12 @@ const executeProjectWorkflow = async ({
   collectionPath,
   dryRun,
   onEvent,
-  policy,
   scaffoldType,
   targetPath,
 }: {
   collectionPath: string
   dryRun: boolean
   onEvent?: (event: DryRunEvent) => void
-  policy: Policy
   scaffoldType: ProjectScaffoldType
   targetPath: string
 }): Promise<void> => {
@@ -127,7 +124,6 @@ const executeProjectWorkflow = async ({
         collection: collectionPath,
         debug: false,
         options: {
-          ...policy,
           scaffoldType,
           typescriptCompilerOptions: typescriptDefaults.compilerOptions,
         },
@@ -142,12 +138,10 @@ const executeProjectWorkflow = async ({
 
 export const scaffoldProjectWithAngular = async ({
   collectionPath,
-  policy,
   scaffoldType,
   targetPath,
 }: {
   collectionPath: string
-  policy: Policy
   scaffoldType: ProjectScaffoldType
   targetPath: string
 }): Promise<ProjectScaffoldingResult> => {
@@ -158,7 +152,6 @@ export const scaffoldProjectWithAngular = async ({
       collectionPath,
       dryRun: true,
       onEvent: (event) => events.push(event),
-      policy,
       scaffoldType,
       targetPath,
     })
@@ -168,7 +161,6 @@ export const scaffoldProjectWithAngular = async ({
       await executeProjectWorkflow({
         collectionPath,
         dryRun: false,
-        policy,
         scaffoldType,
         targetPath,
       })

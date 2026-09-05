@@ -1,55 +1,50 @@
-import { access } from 'node:fs/promises'
+import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
+import { readdir } from 'node:fs/promises'
 import { join } from 'node:path'
+import { relative } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const expectedPath = fileURLToPath(new URL('./expected', import.meta.url))
+const fixturePath = fileURLToPath(new URL('./fixture/packages/generated', import.meta.url))
 
 /** @param {string} target */
 export const verifyProjectGeneration = async (target) => {
-  const requiredFiles = [
-    '.config/husky/pre-commit',
-    '.github/workflows/checks.yaml',
-    '.github/workflows/preview.yaml',
-    '.github/workflows/release.yaml',
-    '.prettierrc.mjs',
-    'eslint.config.mjs',
-  ]
+  const expected = (await readdir(expectedPath)).map((path) => path.replace(/\.fixture$/u, ''))
+  const entries = await readdir(target, { recursive: true, withFileTypes: true })
+  const actual = entries
+    .filter((entry) => entry.isFile())
+    .map((entry) => relative(target, join(entry.parentPath, entry.name)))
 
-  await Promise.all(requiredFiles.map(async (path) => access(join(target, path))))
-
-  const gitIgnore = await readFile(join(target, '.gitignore'), 'utf8')
-  const manifest = JSON.parse(await readFile(join(target, 'package.json'), 'utf8'))
-  const typeScript = JSON.parse(await readFile(join(target, 'tsconfig.json'), 'utf8'))
-  const workflows = await Promise.all(
-    ['checks.yaml', 'preview.yaml', 'release.yaml'].map(async (name) =>
-      readFile(join(target, '.github/workflows', name), 'utf8')
-    )
+  assert.deepEqual(
+    actual.sort(),
+    [...expected, '.gitignore', '.github/workflows/user.yaml', 'package.json'].sort(),
+    'Unexpected generated scaffold files'
   )
-  const workflowContent = workflows.join('\n')
 
-  if (gitIgnore !== 'node_modules\n.consumer-private\n') {
-    throw new Error(`Project generation changed the existing .gitignore: ${gitIgnore}`)
-  }
+  await Promise.all(
+    expected.map(async (path) => {
+      const content = await readFile(join(target, path), 'utf8')
+      const fixture = await readFile(join(expectedPath, `${path}.fixture`), 'utf8')
 
-  if (manifest.scripts?.start !== 'yarn node dist/index.js') {
-    throw new Error('Project generation changed existing package scripts')
-  }
+      if (path === 'tsconfig.json') {
+        assert.deepEqual(JSON.parse(content), JSON.parse(fixture))
+      } else {
+        assert.equal(content, fixture, path)
+      }
+    })
+  )
 
-  if (typeScript.compilerOptions?.module !== 'NodeNext') {
-    throw new Error('Project generation did not apply the TypeScript baseline')
-  }
-
-  for (const expected of [
-    'actions/checkout@v6',
-    'actions/setup-node@v6',
-    "node-version: '24'",
-    'ghcr.io',
-    'packages: write',
-  ]) {
-    if (!workflowContent.includes(expected)) {
-      throw new Error(`Generated workflows are missing ${expected}`)
-    }
-  }
-
-  if (/18\.19|eu\.gcr\.io|GCR_KEYFILE|GCR_PROJECT_ID/.test(workflowContent)) {
-    throw new Error('Generated workflows retain the retired Node or GCR policy')
-  }
+  await Promise.all(
+    ['.gitignore', '.github/workflows/user.yaml', 'package.json'].map(async (path) => {
+      assert.equal(
+        await readFile(join(target, path), 'utf8'),
+        await readFile(
+          join(fixturePath, path === 'package.json' ? 'package.json.fixture' : path),
+          'utf8'
+        ),
+        path
+      )
+    })
+  )
 }
