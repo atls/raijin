@@ -74,15 +74,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-commit -->
-
-#### `@atls/yarn-plugin-commit`
-
-- Location: `yarn/plugin-commit`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-essentials -->
 
 #### `@atls/yarn-plugin-essentials`
@@ -199,6 +190,15 @@ Private plugin packages and their entrypoints
 
 <details>
 <summary>Group details: `plugins`</summary>
+
+<!-- sync:package-card:atls-yarn-plugin-commit -->
+
+#### `@atls/yarn-plugin-commit`
+
+- Location: `packages/plugins/commit`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-plugin-format -->
 
