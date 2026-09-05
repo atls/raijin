@@ -688,7 +688,6 @@ __metadata:
   resolution: "@atls/raijin-assembly@workspace:yarn/cli"
   dependencies:
     "@atls/raijin": "workspace:*"
-    "@atls/yarn-plugin-badges": "workspace:*"
     "@atls/yarn-plugin-check": "workspace:*"
     "@atls/yarn-plugin-checks": "workspace:*"
     "@atls/yarn-plugin-commit": "workspace:*"
@@ -817,22 +816,6 @@ __metadata:
     "@yarnpkg/plugin-patch": "npm:4.0.3"
     semver: "npm:7.6.3"
     tar-stream: "npm:3.1.7"
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-plugin-badges@workspace:*, @atls/yarn-plugin-badges@workspace:yarn/plugin-badges":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-badges@workspace:yarn/plugin-badges"
-  dependencies:
-    "@atls/raijin": "workspace:*"
-    "@types/child-process-promise": "npm:2.2.6"
-    "@yarnpkg/builder": "npm:4.2.0"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    typescript: "npm:5.9.3"
-  peerDependencies:
-    "@yarnpkg/cli": "*"
-    "@yarnpkg/core": "*"
   languageName: unknown
   linkType: soft
 
@@ -3392,15 +3375,6 @@ __metadata:
     "@types/node": "npm:*"
     "@types/responselike": "npm:^1.0.0"
   checksum: 10/159f9fdb2a1b7175eef453ae2ced5ea04c0d2b9610cc9ccd9f9abb066d36dacb1f37acd879ace10ad7cbb649490723feb396fb7307004c9670be29636304b988
-  languageName: node
-  linkType: hard
-
-"@types/child-process-promise@npm:2.2.6":
-  version: 2.2.6
-  resolution: "@types/child-process-promise@npm:2.2.6"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10/a0ae5ebe41995ff7217f9d3c040d5b5e20f553bba608540fb978e53b5dd62dc6e161dc80eadf7bdf452f7ea444b890029edb3c3fee418514e163ead77abaafc6
   languageName: node
   linkType: hard
 

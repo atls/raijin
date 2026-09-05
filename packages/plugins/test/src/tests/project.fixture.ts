@@ -44,11 +44,16 @@ const output = observeCycle
   : process.stdout
 const readiness = observeCycle
   ? cycle.promise
-  : changes?.next().then(({ done, value }) => {
-      if (done || value.filename !== 'watch-ready') {
-        throw new Error('Watch did not report the fixture readiness marker')
+  : changes &&
+    (async () => {
+      for await (const { filename } of changes) {
+        if (filename === 'watch-ready') {
+          return
+        }
       }
-    })
+
+      throw new Error('Watch did not report the fixture readiness marker')
+    })()
 const observation = { settled: false }
 const completion = testProject({
   rootCwd: cwd,

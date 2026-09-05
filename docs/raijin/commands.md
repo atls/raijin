@@ -6,25 +6,6 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 ## Active (safe to route)
 
-### Domain `badges`
-
-- Commands: `badges generate`
-
-<details>
-<summary>Domain details: `badges`</summary>
-
-<!-- sync:command-card:badges-generate -->
-
-#### `badges generate`
-
-- Status: `active`
-- Description: generate package badges in the project README
-- Usage: `yarn badges generate`
-- Example: `yarn badges generate`
-- Plugin: `@atls/yarn-plugin-badges`
-
-</details>
-
 ### Domain `check`
 
 - Commands: `check`
