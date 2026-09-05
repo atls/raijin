@@ -1,6 +1,0 @@
-export default {
-  '*.{js,ts}': () => [
-    'corepack yarn exec tsc --noEmit -p tsconfig.json',
-    'corepack yarn run test --runInBand --no-cache',
-  ],
-}

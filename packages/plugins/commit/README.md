@@ -38,24 +38,16 @@ yarn typecheck packages/plugins/commit/src
 yarn lint packages/plugins/commit/src
 ```
 
-Run the Node consumer tests against the packed package and checked runtime:
+Run the plugin's integration test against the packed package and checked runtime:
 
 ```sh
-yarn raijin:smoke:cli
+yarn test integration --target packages/plugins/commit
 ```
 
-Select only the staged-project checks with Node's test-name filter:
-
-```sh
-yarn workspace @atls/raijin-assembly exec node --test \
-  --test-concurrency=1 --test-name-pattern=staged-projects tests/consumers.test.mjs
-```
-
-The consumer uses the existing packed `@atls/raijin` archive and checked Yarn
-runtime. Real Git commits execute the installed `yarn commit staged` hook for
-backend-only, client-only, and mixed changes, then verify backend and client
-TypeScript failures, a Jest assertion failure, missing client configuration,
-paths with spaces, and partial-staged state. The backend remains PnP with
-TypeScript 5.9.3; the client remains a separate node_modules project with
-TypeScript 6.0.3 and Jest 29.7.0, without a Raijin dependency or synthetic
-`typecheck` script.
+The test packs this checkout's `@atls/raijin` package and copies its checked Yarn
+runtime into a temporary Git repository. Normal commits exercise the installed
+hook, required project configuration, backend TypeScript 5.9.3 under PnP, and
+an independent node_modules client with TypeScript 6.0.3 and Jest 29.7.0.
+The client has no Raijin dependency or synthetic `typecheck` script.
+The unit tests cover transaction mechanics, including rollback, partial staging,
+renames, deletions, literal paths, and argument chunking.

@@ -116,13 +116,12 @@ yarn files changed list
 ## 7. Локальная проверка генерации проекта
 
 ```bash
-yarn workspace @atls/raijin-assembly exec node --test --test-name-pattern=project-generation tests/consumers.test.mjs
+yarn test unit --target yarn/raijin/src/infrastructure/generation/project
 ```
 
 Ожидаемый результат:
 
-- Временный проект создаётся через встроенную коллекцию публичного пакета `@atls/raijin`
-- Проверка падает, если вспомогательный код или Markdown-документация вызывают отключённую команду
+- Тесты генератора проверяют создание каркаса проекта, сохранность пользовательских файлов и загрузку коллекции из архива
 
 <!-- sync:consumer-howto -->
 

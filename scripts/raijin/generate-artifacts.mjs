@@ -729,16 +729,13 @@ const renderQuickstart = (language) => {
     isRu ? '## 7. Локальная проверка генерации проекта' : '## 7. Local project generation check',
     '',
     '```bash',
-    'yarn workspace @atls/raijin-assembly exec node --test --test-name-pattern=project-generation tests/consumers.test.mjs',
+    'yarn test unit --target yarn/raijin/src/infrastructure/generation/project',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Временный проект создаётся через встроенную коллекцию публичного пакета `@atls/raijin`'
-      : '- Temporary fixture is created through the collection embedded in public `@atls/raijin`',
-    isRu
-      ? '- Проверка падает, если вспомогательный код или Markdown-документация вызывают отключённую команду'
-      : '- Check fails if helper or Markdown docs invoke an inactive command',
+      ? '- Тесты генератора проверяют создание каркаса проекта, сохранность пользовательских файлов и загрузку коллекции из архива'
+      : '- Generator tests verify project scaffolding, preservation of user files, and archive-backed collection loading',
     '',
     '<!-- sync:consumer-howto -->',
     isRu ? '## 8. Как использовать в чужом проекте' : '## 8. How to use in an external project',

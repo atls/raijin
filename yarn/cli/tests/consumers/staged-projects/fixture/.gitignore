@@ -1,5 +1,0 @@
-.pnp.*
-.yarn
-client/.yarn
-client/node_modules
-node_modules

@@ -1,9 +1,14 @@
-import type { MessageName }        from '@yarnpkg/core'
+import type { MessageName }         from '@yarnpkg/core'
 
-import assert                      from 'node:assert/strict'
-import { test }                    from 'node:test'
+import assert                       from 'node:assert/strict'
+import { PassThrough }              from 'node:stream'
+import { test }                     from 'node:test'
 
-import { reportProjectGeneration } from './project.js'
+import { Configuration }            from '@yarnpkg/core'
+import { npath }                    from '@yarnpkg/fslib'
+
+import { presentProjectGeneration } from './project.js'
+import { reportProjectGeneration }  from './project.js'
 
 const createReport = () => {
   const errors: Array<string> = []
@@ -64,4 +69,23 @@ test('should report a current scaffold without fabricating changes', () => {
 
   assert.deepEqual(infos, ['Project scaffold is already current'])
   assert.deepEqual(errors, [])
+})
+
+test('should return a native nonzero report for an unsupported scaffold type', async (context) => {
+  const configuration = Configuration.create(npath.toPortablePath(import.meta.dirname))
+  const stdout = new PassThrough()
+  const output: Array<Buffer> = []
+  const message = 'Unsupported project scaffold type "service". Expected one of: library, project.'
+
+  context.after(() => stdout.destroy())
+  stdout.on('data', (data: Buffer) => output.push(data))
+
+  assert.equal(
+    await presentProjectGeneration({ stdout }, configuration, {
+      status: 'rejected',
+      failure: { code: 'unsupported-project-scaffold-type', message },
+    }),
+    1
+  )
+  assert.ok(Buffer.concat(output).toString().includes(message))
 })
