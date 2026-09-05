@@ -1,3 +1,0 @@
-name: User workflow
-on: workflow_dispatch
-jobs: {}

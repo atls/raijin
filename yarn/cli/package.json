@@ -11,8 +11,7 @@
     "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs",
     "build:dynamic-require": "yarn node patches/dynamic-require.mjs",
     "build:materialize": "yarn node scripts/runtime/materialize.mjs",
-    "build:nbind": "yarn node patches/nbind.mjs",
-    "verify:consumers": "node --test --test-concurrency=1 tests/consumers.test.mjs"
+    "build:nbind": "yarn node patches/nbind.mjs"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",

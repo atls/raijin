@@ -2,6 +2,7 @@ import assert                     from 'node:assert/strict'
 import { mkdtemp }                from 'node:fs/promises'
 import { mkdir }                  from 'node:fs/promises'
 import { readFile }               from 'node:fs/promises'
+import { rm }                     from 'node:fs/promises'
 import { stat }                   from 'node:fs/promises'
 import { utimes }                 from 'node:fs/promises'
 import { writeFile }              from 'node:fs/promises'
@@ -84,4 +85,27 @@ test('should reject missing explicit targets', async () => {
     new TargetMissingException('missing-first')
   )
   assert.equal(await readFile(laterTarget, 'utf8'), 'const later={value:1}\n')
+})
+
+test('should resolve a bare Prettier configuration import through project PnP', async (context) => {
+  assert.ok(process.versions.pnp)
+
+  const cwd = await mkdtemp(join(import.meta.dirname, '.pnp-config-'))
+
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  await writeFile(join(cwd, 'package.json'), '{"private":true}\n')
+  await writeFile(
+    join(cwd, '.prettierrc.mjs'),
+    "import config from '@atls/raijin/prettier'\nexport default { ...config, semi: true, singleQuote: false }\n"
+  )
+  await writeFile(join(cwd, 'source.ts'), "export const value='test'\n")
+
+  assert.deepEqual(
+    await formatProjectSources({ cwd, targets: createTargets(cwd, ['source.ts']) }),
+    {
+      files: [{ file: 'source.ts', status: 'changed' }],
+    }
+  )
+  assert.equal(await readFile(join(cwd, 'source.ts'), 'utf8'), 'export const value = "test";\n')
 })

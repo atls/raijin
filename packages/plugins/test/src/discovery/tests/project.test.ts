@@ -36,6 +36,13 @@ test('discovers files allowed by each scenario', async (context) => {
 
   context.after(async () => rm(rootCwd, { force: true, recursive: true }))
 
+  const sibling = join(rootCwd, 'packages', 'sibling')
+
+  await mkdir(join(sibling, 'src', 'integration'), { recursive: true })
+  await writeFile(join(sibling, 'package.json'), '{"type":"module"}\n')
+  await writeFile(join(sibling, 'src', 'unit.test.ts'), '')
+  await writeFile(join(sibling, 'src', 'integration', 'api.test.ts'), '')
+
   assert.deepEqual(
     (
       await discoverProjectTests({ cwd, input: createInput(cwd), rootCwd, scenario: 'general' })

@@ -36,7 +36,7 @@
 - Локация: `yarn/cli`
 - Группа: `yarn`
 - Видимость: `private`
-- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`, `build:nbind`, `verify:consumers`
+- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`, `build:nbind`
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
 

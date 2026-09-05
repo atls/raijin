@@ -79,13 +79,12 @@ Expected result:
 ## 6. Local project generation check
 
 ```bash
-yarn workspace @atls/raijin-assembly exec node --test --test-name-pattern=project-generation tests/consumers.test.mjs
+yarn test unit --target yarn/raijin/src/infrastructure/generation/project
 ```
 
 Expected result:
 
-- Temporary fixture is created through the collection embedded in public `@atls/raijin`
-- Check fails if helper or Markdown docs invoke an inactive command
+- Generator tests verify project scaffolding, preservation of user files, and archive-backed collection loading
 
 <!-- sync:consumer-howto -->
 
