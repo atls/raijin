@@ -187,9 +187,29 @@ for (const reporter of [null, 'spec', 'tap'] as const) {
   })
 }
 
-test('ends watch mode through the native abort signal', async (context) => {
+test('waits for published readiness before aborting an in-flight watch run', async (context) => {
   const cwd = await createProject(
-    "import test from 'node:test'; import { writeFile } from 'node:fs/promises'; import { setTimeout } from 'node:timers/promises'; test('watched', async () => { await writeFile('watch-ready', 'ready'); await setTimeout(10_000) });\n"
+    `import assert from 'node:assert/strict';
+import test from 'node:test';
+import { readFile, rename, watch, writeFile } from 'node:fs/promises';
+import { setTimeout } from 'node:timers/promises';
+
+test('watched', async () => {
+  const changes = watch('.');
+  try {
+    const created = changes.next();
+    await writeFile('watch-ready.pending', '');
+    assert.equal((await created).value.filename, 'watch-ready.pending');
+    assert.equal(await readFile('watch-ready.pending', 'utf8'), '');
+  } finally {
+    await changes.return();
+  }
+
+  await writeFile('watch-ready.pending', 'ready');
+  await rename('watch-ready.pending', 'watch-ready');
+  await setTimeout(10_000);
+});
+`
   )
 
   context.after(async () => rm(cwd, { force: true, recursive: true }))
@@ -198,6 +218,7 @@ test('ends watch mode through the native abort signal', async (context) => {
 
   assert.match(output, /__RAIJIN_TEST_ABORT__/)
   assert.equal(await readFile(join(cwd, 'watch-ready'), 'utf8'), 'ready')
+  await assert.rejects(readFile(join(cwd, 'watch-ready.pending')), { code: 'ENOENT' })
   assert.equal(result.status, 'completed')
   assert.deepEqual(result.terminal, { exitCode: 1, reason: 'failed' })
 })
