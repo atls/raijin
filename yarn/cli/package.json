@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
-    "@atls/yarn-plugin-badges": "workspace:*",
     "@atls/yarn-plugin-check": "workspace:*",
     "@atls/yarn-plugin-checks": "workspace:*",
     "@atls/yarn-plugin-commit": "workspace:*",
@@ -75,7 +74,6 @@
   "@yarnpkg/builder": {
     "bundles": {
       "standard": [
-        "@atls/yarn-plugin-badges",
         "@atls/yarn-plugin-check",
         "@atls/yarn-plugin-checks",
         "@atls/yarn-plugin-commit",

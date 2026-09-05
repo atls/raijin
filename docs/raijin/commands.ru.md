@@ -6,25 +6,6 @@
 
 ## Active (можно маршрутизировать)
 
-### Домен `badges`
-
-- Команды: `badges generate`
-
-<details>
-<summary>Подробности домена `badges`</summary>
-
-<!-- sync:command-card:badges-generate -->
-
-#### `badges generate`
-
-- Статус: `active`
-- Описание: generate package badges in the project README
-- Использование: `yarn badges generate`
-- Пример: `yarn badges generate`
-- Плагин: `@atls/yarn-plugin-badges`
-
-</details>
-
 ### Домен `check`
 
 - Команды: `check`

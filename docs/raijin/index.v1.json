@@ -9,9 +9,8 @@
   "bundle": {
     "package": "@atls/raijin-assembly",
     "bundleName": "standard",
-    "pluginCount": 44,
+    "pluginCount": 43,
     "plugins": [
-      "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-check",
       "@atls/yarn-plugin-checks",
       "@atls/yarn-plugin-commit",
@@ -58,19 +57,6 @@
     ]
   },
   "commands": [
-    {
-      "command": "badges generate",
-      "description": "generate package badges in the project README",
-      "examples": [],
-      "options": [],
-      "pathTokens": ["badges", "generate"],
-      "plugin": "@atls/yarn-plugin-badges",
-      "usage": "yarn badges generate",
-      "availabilityReason": "registered by the assembled @atls/raijin-assembly runtime",
-      "domain": "badges",
-      "pluginDir": "plugin-badges",
-      "status": "active"
-    },
     {
       "command": "check",
       "description": "run formatting, type checking, and linting",
@@ -909,14 +895,6 @@
       "scripts": []
     },
     {
-      "name": "@atls/yarn-plugin-badges",
-      "location": "yarn/plugin-badges",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/yarn-plugin-check",
       "location": "yarn/plugin-check",
       "group": "yarn",
@@ -1031,7 +1009,6 @@
   ],
   "availability": {
     "activeCommands": [
-      "badges generate",
       "check",
       "checks lint",
       "checks release",
@@ -1072,7 +1049,6 @@
     ],
     "inactiveCommands": [],
     "activePlugins": [
-      "@atls/yarn-plugin-badges",
       "@atls/yarn-plugin-check",
       "@atls/yarn-plugin-checks",
       "@atls/yarn-plugin-commit",
@@ -1094,5 +1070,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-05T14:51:51.957Z"
+  "lastGenerated": "2026-09-05T15:53:49.161Z"
 }
