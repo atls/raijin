@@ -1,5 +1,7 @@
 import { prepareProjectGeneration } from './project-generation/prepare.js'
 import { runProjectGeneration } from './project-generation/run.js'
+import { prepareStagedProjects } from './staged-projects/prepare.js'
+import { runStagedProjects } from './staged-projects/run.js'
 import { prepareSurface } from './surface/prepare.js'
 import { runSurface } from './surface/run.js'
 
@@ -15,6 +17,12 @@ const scenarios = [
     name: 'project-generation',
     prepare: prepareProjectGeneration,
     run: runProjectGeneration,
+  },
+  {
+    dependencies: { typescript: '5.9.3' },
+    name: 'staged-projects',
+    prepare: prepareStagedProjects,
+    run: runStagedProjects,
   },
 ]
 

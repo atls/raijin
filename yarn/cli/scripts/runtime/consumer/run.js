@@ -18,6 +18,9 @@ const createEnvironment = () => {
   delete environment.NODE_OPTIONS
   delete environment.NODE_PATH
   delete environment.RAIJIN_CLI_INVENTORY
+  delete environment.RAIJIN_NODE_LOADER
+  delete environment.RAIJIN_NODE_LOADER_REGISTRATION
+  delete environment.RAIJIN_REGISTERED_PNP_LOADER
   delete environment.YARN_IGNORE_PATH
 
   return environment
@@ -60,8 +63,10 @@ const runScenario = async ({
   const fixtureCwd = await mkdtemp(join(tmpdir(), `raijin-${scenario.name}-consumer-`))
   const fixtureRuntimePath = join(fixtureCwd, '.yarn/releases/yarn.mjs')
 
+  /** @param {string} command @param {Array<string>} args @param {string} [cwd] */
+  const run = async (command, args, cwd = fixtureCwd) => execute(command, args, cwd, environment)
   /** @param {Array<string>} args @param {string} [cwd] */
-  const runYarn = async (args, cwd = fixtureCwd) => execute('yarn', args, cwd, environment)
+  const runYarn = async (args, cwd = fixtureCwd) => run('yarn', args, cwd)
 
   try {
     await cp(archivePath, join(fixtureCwd, 'atls-raijin.tgz'))
@@ -104,7 +109,7 @@ const runScenario = async ({
       )
     }
 
-    await scenario.run({ fixtureCwd, runYarn })
+    await scenario.run({ fixtureCwd, run, runYarn })
     process.stdout.write(`Disposable ${scenario.name} PnP consumer passed (${version})\n`)
   } finally {
     await rm(fixtureCwd, { recursive: true, force: true })

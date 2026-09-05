@@ -1,0 +1,3 @@
+test('client staged project', () => {
+  expect(1).toBe(1)
+})

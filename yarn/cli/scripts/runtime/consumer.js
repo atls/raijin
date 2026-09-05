@@ -12,7 +12,7 @@ if (
   (scenarioArgument && !scenarioNames.includes(scenarioArgument))
 ) {
   throw new Error(
-    'Usage: consumer.js <runtime-path> <project-manifest> [surface|project-generation] [raijin-archive]'
+    'Usage: consumer.js <runtime-path> <project-manifest> [surface|project-generation|staged-projects] [raijin-archive]'
   )
 }
 

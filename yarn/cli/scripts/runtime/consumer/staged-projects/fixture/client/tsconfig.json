@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "target": "es2022",
+    "types": []
+  },
+  "include": ["src/**/*.ts"]
+}

@@ -5,7 +5,7 @@
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
-    ".": "./sources/index.ts",
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "files": [

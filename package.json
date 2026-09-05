@@ -21,6 +21,15 @@
     "raijin:smoke:cli": "yarn workspace @atls/raijin-assembly verify:consumers ../../.yarn/releases/yarn.mjs ../../package.json",
     "raijin:smoke:deterministic": "node scripts/raijin/run-deterministic-smoke.mjs"
   },
+  "lint-staged": {
+    "*.{yml,yaml,json,graphql,md}": "yarn format",
+    "*.{js,mjs,cjs,jsx,ts,tsx}": [
+      "yarn format",
+      "yarn lint"
+    ],
+    "*.{ts,tsx}": "yarn typecheck",
+    "*.{test,spec}.{ts,tsx}": "yarn test unit"
+  },
   "resolutions": {
     "@yarnpkg/builder": "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6",
     "clipanion": "4.0.0-rc.2",

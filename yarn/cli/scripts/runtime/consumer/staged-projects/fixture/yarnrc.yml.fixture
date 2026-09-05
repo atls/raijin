@@ -1,0 +1,5 @@
+nodeLinker: pnp
+pnpEnableEsmLoader: true
+pnpIgnorePatterns:
+  - ./client/**
+yarnPath: .yarn/releases/yarn.mjs

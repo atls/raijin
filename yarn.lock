@@ -885,9 +885,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-commit@workspace:*, @atls/yarn-plugin-commit@workspace:yarn/plugin-commit":
+"@atls/yarn-plugin-commit@workspace:*, @atls/yarn-plugin-commit@workspace:packages/plugins/commit":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-commit@workspace:yarn/plugin-commit"
+  resolution: "@atls/yarn-plugin-commit@workspace:packages/plugins/commit"
   dependencies:
     "@atls/cli-ui-git-commit-component": "workspace:*"
     "@atls/code-commit": "workspace:*"
