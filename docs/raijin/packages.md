@@ -36,7 +36,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Location: `yarn/cli`
 - Group: `yarn`
 - Visibility: `private`
-- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`, `build:nbind`, `verify:consumers`
+- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`, `build:nbind`
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
 
@@ -61,15 +61,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 #### `@atls/yarn-plugin-checks`
 
 - Location: `yarn/plugin-checks`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-commit -->
-
-#### `@atls/yarn-plugin-commit`
-
-- Location: `yarn/plugin-commit`
 - Group: `yarn`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
@@ -190,6 +181,15 @@ Private plugin packages and their entrypoints
 
 <details>
 <summary>Group details: `plugins`</summary>
+
+<!-- sync:package-card:atls-yarn-plugin-commit -->
+
+#### `@atls/yarn-plugin-commit`
+
+- Location: `packages/plugins/commit`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-yarn-plugin-format -->
 

@@ -1,6 +1,0 @@
-{
-  "name": "fixture-prettier-config",
-  "version": "1.0.0",
-  "type": "module",
-  "exports": "./index.mjs"
-}
