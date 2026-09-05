@@ -20,8 +20,6 @@ import { npath }                      from '@yarnpkg/fslib'
 import { ppath }                      from '@yarnpkg/fslib'
 import { lastValueFrom }              from 'rxjs'
 
-import { prepareProjectGeneration } from '../../../../../../../cli/scripts/runtime/consumer/project-generation/prepare.js'
-import { verifyProjectGeneration } from '../../../../../../../cli/scripts/runtime/consumer/project-generation/verify.js'
 import { buildProjectCollection }     from '../../../../../../scripts/generation/project/build.js'
 import { materialize }                from '../../yarn/collection/package.js'
 import { readSource }                 from '../../yarn/collection/package.js'
@@ -49,6 +47,29 @@ const snapshot = async (root: string): Promise<Record<string, string>> => {
         })
     )
   )
+}
+
+const assertBaseline = async (target: string): Promise<Array<string>> => {
+  const expected = Object.fromEntries<string>(
+    Object.entries(await snapshot(baselinePath)).map(([path, content]): [string, string] => [
+      path.replace(/\.fixture$/u, ''),
+      content,
+    ])
+  )
+  const actual = await snapshot(target)
+  const paths = Object.keys(expected).sort()
+
+  assert.deepEqual(Object.keys(actual).sort(), paths)
+
+  for (const [path, content] of Object.entries(expected)) {
+    if (path === 'tsconfig.json') {
+      assert.deepEqual(JSON.parse(actual[path]), JSON.parse(content))
+    } else {
+      assert.equal(actual[path], content, path)
+    }
+  }
+
+  return paths
 }
 
 const createTarget = async (name: string): Promise<string> => {
@@ -82,12 +103,6 @@ after(async () => {
 scaffoldTypes.forEach((scaffoldType) => {
   test(`should generate exactly the neutral ${scaffoldType} baseline from the built collection`, async () => {
     const target = await createTarget(scaffoldType)
-    const expected = Object.fromEntries<string>(
-      Object.entries(await snapshot(baselinePath)).map(([path, content]): [string, string] => [
-        path.replace(/\.fixture$/u, ''),
-        content,
-      ])
-    )
     const result = await scaffoldProjectWithAngular({
       collectionPath,
       scaffoldType,
@@ -96,23 +111,11 @@ scaffoldTypes.forEach((scaffoldType) => {
 
     assert.equal(result.status, 'generated', JSON.stringify(result))
 
-    const actual = await snapshot(target)
-
-    assert.deepEqual(Object.keys(actual).sort(), Object.keys(expected).sort())
-
-    for (const [path, content] of Object.entries(expected)) {
-      if (path === 'tsconfig.json') {
-        assert.deepEqual(JSON.parse(actual[path]), JSON.parse(content))
-      } else {
-        assert.equal(actual[path], content, path)
-      }
-    }
+    const paths = await assertBaseline(target)
 
     assert.deepEqual(
       result.changes.map(({ artifact }) => artifact).sort(),
-      Object.keys(expected)
-        .map((path) => `/${path}`)
-        .sort()
+      paths.map((path) => `/${path}`)
     )
     assert.deepEqual(
       await scaffoldProjectWithAngular({ collectionPath, scaffoldType, targetPath: target }),
@@ -236,10 +239,9 @@ test('should return the actual collection provider failure', async () => {
   assert.deepEqual(await snapshot(target), {})
 })
 
-test('should materialize an archived collection without policy metadata and satisfy the consumer verifier', async () => {
+test('should generate both baselines from an archived collection without policy metadata', async () => {
   const packageRoot = join(fixtureRoot, 'package')
   const prefixPath = ppath.resolve('/node_modules/@atls/raijin')
-  const consumerRoot = await createTarget('consumer')
 
   await cp(join(buildRoot, 'dist'), join(packageRoot, 'dist'), { recursive: true })
   await writeFile(
@@ -248,7 +250,6 @@ test('should materialize an archived collection without policy metadata and sati
       schematics: './dist/generation/project/collection/collection.json',
     })
   )
-  await prepareProjectGeneration(consumerRoot)
 
   const packageFs = await tgzUtils.makeArchiveFromDirectory(npath.toPortablePath(packageRoot), {
     prefixPath,
@@ -260,7 +261,7 @@ test('should materialize an archived collection without policy metadata and sati
 
     await materialize(source, async ({ collectionPath: installedCollection }) => {
       const verifyScaffold = async (scaffoldType: 'library' | 'project'): Promise<void> => {
-        const target = join(consumerRoot, 'packages/generated')
+        const target = await createTarget(`archive-${scaffoldType}`)
         const result = await scaffoldProjectWithAngular({
           collectionPath: installedCollection,
           scaffoldType,
@@ -268,22 +269,19 @@ test('should materialize an archived collection without policy metadata and sati
         })
 
         assert.equal(result.status, 'generated', JSON.stringify(result))
-        await verifyProjectGeneration(target)
+        await assertBaseline(target)
+        assert.deepEqual(
+          await scaffoldProjectWithAngular({
+            collectionPath: installedCollection,
+            scaffoldType,
+            targetPath: target,
+          }),
+          { status: 'generated', changes: [] }
+        )
       }
 
       await verifyScaffold('project')
       await verifyScaffold('library')
-
-      const retiredWorkflow = join(
-        consumerRoot,
-        'packages/generated/.github/workflows/preview.yaml'
-      )
-
-      await writeFile(retiredWorkflow, 'name: Retired generated workflow\n')
-      await assert.rejects(
-        verifyProjectGeneration(join(consumerRoot, 'packages/generated')),
-        /Unexpected generated scaffold files/
-      )
     })
   } finally {
     packageFs.discardAndClose()

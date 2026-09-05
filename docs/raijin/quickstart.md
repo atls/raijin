@@ -79,7 +79,7 @@ Expected result:
 ## 6. Local project generation check
 
 ```bash
-yarn raijin:smoke:cli project-generation
+yarn workspace @atls/raijin-assembly exec node --test --test-name-pattern=project-generation tests/consumers.test.mjs
 ```
 
 Expected result:

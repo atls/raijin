@@ -12,7 +12,7 @@
     "build:dynamic-require": "yarn node patches/dynamic-require.mjs",
     "build:materialize": "yarn node scripts/runtime/materialize.mjs",
     "build:nbind": "yarn node patches/nbind.mjs",
-    "verify:consumers": "node ./scripts/runtime/consumer.js"
+    "verify:consumers": "node --test --test-concurrency=1 tests/consumers.test.mjs"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
