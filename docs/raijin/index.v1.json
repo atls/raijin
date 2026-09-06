@@ -881,8 +881,7 @@
         "build:clean",
         "build:dist",
         "build:dynamic-require",
-        "build:materialize",
-        "build:nbind"
+        "build:materialize"
       ]
     },
     {
@@ -1069,5 +1068,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-05T20:50:46.236Z"
+  "lastGenerated": "2026-09-06T03:38:45.906Z"
 }
