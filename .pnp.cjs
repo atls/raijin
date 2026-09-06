@@ -11414,7 +11414,7 @@ const RAW_RUNTIME_STATE =
           ["widest-line", "npm:3.1.0"],\
           ["wrap-ansi", "npm:6.2.0"],\
           ["ws", "virtual:064d121dfd458cad9d1879c6bbca027a4ab0fd0870ad99c550e70922eed8266f00c4a7a5986bf8132bfada7297781f842c3812868a51228aa3fb6291f3b2dc5c#npm:7.5.10"],\
-          ["yoga-layout-prebuilt", "npm:1.10.0"]\
+          ["yoga-layout-prebuilt", "patch:yoga-layout-prebuilt@npm%3A1.10.0#~/.yarn/patches/yoga-layout-prebuilt-npm-1.10.0-855b15449f.patch::version=1.10.0&hash=6cac4e"]\
         ],\
         "packagePeers": [\
           "@types/react",\
@@ -11452,7 +11452,7 @@ const RAW_RUNTIME_STATE =
           ["widest-line", "npm:3.1.0"],\
           ["wrap-ansi", "npm:6.2.0"],\
           ["ws", "virtual:064d121dfd458cad9d1879c6bbca027a4ab0fd0870ad99c550e70922eed8266f00c4a7a5986bf8132bfada7297781f842c3812868a51228aa3fb6291f3b2dc5c#npm:7.5.10"],\
-          ["yoga-layout-prebuilt", "npm:1.10.0"]\
+          ["yoga-layout-prebuilt", "patch:yoga-layout-prebuilt@npm%3A1.10.0#~/.yarn/patches/yoga-layout-prebuilt-npm-1.10.0-855b15449f.patch::version=1.10.0&hash=6cac4e"]\
         ],\
         "packagePeers": [\
           "react"\
@@ -15752,11 +15752,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["yoga-layout-prebuilt", [\
-      ["npm:1.10.0", {\
-        "packageLocation": "../.yarn/berry/cache/yoga-layout-prebuilt-npm-1.10.0-855b15449f-10.zip/node_modules/yoga-layout-prebuilt/",\
+      ["patch:yoga-layout-prebuilt@npm%3A1.10.0#~/.yarn/patches/yoga-layout-prebuilt-npm-1.10.0-855b15449f.patch::version=1.10.0&hash=6cac4e", {\
+        "packageLocation": "../.yarn/berry/cache/yoga-layout-prebuilt-patch-e5d34b911b-10.zip/node_modules/yoga-layout-prebuilt/",\
         "packageDependencies": [\
           ["@types/yoga-layout", "npm:1.9.2"],\
-          ["yoga-layout-prebuilt", "npm:1.10.0"]\
+          ["yoga-layout-prebuilt", "patch:yoga-layout-prebuilt@npm%3A1.10.0#~/.yarn/patches/yoga-layout-prebuilt-npm-1.10.0-855b15449f.patch::version=1.10.0&hash=6cac4e"]\
         ],\
         "linkType": "HARD"\
       }]\

@@ -36,7 +36,7 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Location: `yarn/cli`
 - Group: `yarn`
 - Visibility: `private`
-- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`, `build:nbind`
+- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
 
 <!-- sync:package-card:atls-yarn-pack-utils -->
 
