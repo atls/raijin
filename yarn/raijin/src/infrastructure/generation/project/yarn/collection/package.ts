@@ -80,7 +80,6 @@ export const readSource = async ({ packageFs, prefixPath }: FetchResult): Promis
 
   return {
     collectionRoot: ppath.dirname(collectionPath),
-    manifest,
     packageFs,
   }
 }
@@ -98,7 +97,6 @@ export const materialize = async <T>(
       collectionPath: npath.fromPortablePath(
         ppath.join(materializedRoot, 'collection.json' as PortablePath)
       ),
-      manifest: source.manifest,
     })
   })
 
