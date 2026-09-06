@@ -38,10 +38,9 @@ const createInstalledPackage = async (
   }
 }
 
-test('should resolve the collection and metadata through packageFs and prefixPath', async () => {
+test('should resolve the collection through packageFs and prefixPath without workflow metadata', async () => {
   await xfs.mktempPromise(async (packageRoot) => {
     const fetchResult = await createInstalledPackage(packageRoot, {
-      devDependencies: { '@types/node': '24.12.2' },
       schematics: './dist/generation/project/collection/collection.json',
     })
     const source = await readSource(fetchResult)
@@ -50,7 +49,6 @@ test('should resolve the collection and metadata through packageFs and prefixPat
       source.collectionRoot,
       ppath.join(packageRoot, 'dist/generation/project/collection' as PortablePath)
     )
-    assert.equal(source.manifest.devDependencies?.['@types/node'], '24.12.2')
   })
 })
 

@@ -79,13 +79,13 @@ yarn files changed list
 ## 6. Локальная проверка генерации проекта
 
 ```bash
-yarn raijin:smoke:cli project-generation
+yarn test unit --target yarn/raijin/src/infrastructure/generation/project
+yarn test integration --target yarn/raijin/src/infrastructure/generation/project
 ```
 
 Ожидаемый результат:
 
-- Временный проект создаётся через встроенную коллекцию публичного пакета `@atls/raijin`
-- Проверка падает, если вспомогательный код или Markdown-документация вызывают отключённую команду
+- Тесты генератора проверяют каркас и сохранность пользовательских файлов; интеграционная проверка устанавливает упакованный пакет и запускает поставляемый CLI, включая отказ при отсутствии коллекции
 
 <!-- sync:consumer-howto -->
 

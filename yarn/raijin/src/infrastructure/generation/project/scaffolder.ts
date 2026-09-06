@@ -8,7 +8,6 @@ import type { ProjectScaffolder }     from '../../../application/generation/proj
 import { npath }                      from '@yarnpkg/fslib'
 
 import { scaffoldProjectWithAngular } from './angular/scaffold.js'
-import { createPolicy }               from './github/workflows/policy.js'
 import { withCollection }             from './yarn/collection/package.js'
 
 const failureMessage = (error: unknown): string =>
@@ -29,11 +28,9 @@ export const createInstalledProjectScaffolder = ({
     try {
       return await withCollection({ configuration, project, workspace }, async ({
         collectionPath,
-        manifest,
       }) =>
         scaffoldProjectWithAngular({
           collectionPath,
-          policy: createPolicy(manifest),
           scaffoldType,
           targetPath: npath.fromPortablePath(targetCwd),
         }))

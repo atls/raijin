@@ -10,8 +10,7 @@
     "build:clean": "rm -rf dist/runtime",
     "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs",
     "build:dynamic-require": "yarn node patches/dynamic-require.mjs",
-    "build:materialize": "yarn node scripts/runtime/materialize.mjs",
-    "verify:consumers": "node ./scripts/runtime/consumer.js"
+    "build:materialize": "yarn node scripts/runtime/materialize.mjs"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
