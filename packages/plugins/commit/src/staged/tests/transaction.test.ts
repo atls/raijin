@@ -155,7 +155,7 @@ test('fails when configuration or a configured required command is missing', asy
   const missing = await run(cwd)
 
   assert.equal(missing.code, 1, missing.output)
-  assert.match(missing.output, /No valid configuration/i)
+  assert.match(missing.output, /lint-staged could not find any valid configuration/i)
 })
 
 test('maps a provider failure outside a Git repository to a non-zero command exit', async (t) => {
@@ -179,7 +179,7 @@ test('reports invalid provider configuration instead of converting it into succe
   const result = await run(cwd)
 
   assert.equal(result.code, 1, result.output)
-  assert.match(result.output, /Invalid value|Invalid configuration/i)
+  assert.match(result.output, /Failed to parse config from file/)
 })
 
 test('lets the provider chunk large sets of literal paths without losing arguments', async (t) => {
@@ -212,4 +212,18 @@ test('lets the provider chunk large sets of literal paths without losing argumen
   assert.doesNotMatch(await git(cwd, 'diff', '--cached'), /\+unformatted/)
   assert.equal(await git(cwd, 'diff'), '')
   assert.equal(await git(cwd, 'stash', 'list'), '')
+})
+
+test('loads native YAML configuration through the installed provider', async (t) => {
+  const cwd = await createRepository(t)
+
+  await rm(join(cwd, '.lintstagedrc.json'))
+  await writeFile(join(cwd, '.lintstagedrc.yaml'), '"*.txt": "node check.mjs backend"\n')
+  await writeFile(join(cwd, 'file with spaces.txt'), 'unformatted staged\n')
+  await git(cwd, 'add', '--all')
+
+  const result = await run(cwd)
+
+  assert.equal(result.code, 0, result.output)
+  assert.equal(await git(cwd, 'show', ':file with spaces.txt'), 'formatted staged\n')
 })

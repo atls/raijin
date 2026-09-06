@@ -49,7 +49,7 @@ for (const form of ['separate', 'equals']) {
 
 for (const [failure, diagnostic] of [
   ['check', /INVALID/],
-  ['configuration', /Invalid value|Invalid configuration/i],
+  ['configuration', /Failed to parse config from file/],
   ['directory', /ENOENT|chdir/],
 ] as const) {
   test(`restores the native CLI cwd after ${failure} failure`, async (t) => {

@@ -171,7 +171,7 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
       assert.equal(Reflect.get(error, 'code'), 1)
       assert.match(
         [Reflect.get(error, 'stdout'), Reflect.get(error, 'stderr')].join(''),
-        /No valid configuration/
+        /lint-staged could not find any valid configuration/
       )
       return true
     })
@@ -252,5 +252,15 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
       )
       return true
     })
+  })
+
+  await t.test('installed hook loads native YAML configuration', async () => {
+    await git('restore', '--source=HEAD', '--staged', '--worktree', '--', 'client')
+    await git('rm', 'lint-staged.config.mjs')
+    await writeFile(join(cwd, '.lintstagedrc.yaml'), '"backend/**/*.ts": "yarn typecheck"\n')
+    await writeFile(backendFile, 'export const value: number = 4\n')
+    await git('add', '--all')
+    await git('commit', '-m', 'test(common): yaml staged checks')
+    assert.equal(await git('show', 'HEAD:backend/value.ts'), 'export const value: number = 4\n')
   })
 })

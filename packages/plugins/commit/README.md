@@ -12,14 +12,20 @@ configuration. Repositories use a checked-in root configuration, and nested inde
 projects must own their nearest configuration. All lint-staged native formats
 are supported, including the `lint-staged` field in `package.json`.
 
-Raijin invokes the public lint-staged 15.2.9 API once with
-`{ concurrent: false, maxArgLength: 4095, shell: false }`. It does not provide
+Raijin invokes the public lint-staged 17.5.0 API once with
+`{ concurrent: false, maxArgLength: 4095 }`. The provider parses command arguments
+without shell evaluation. It does not provide
 `config`, `configPath`, or `cwd`. lint-staged retains native configuration
 discovery and grouping, staged-file selection, task ordering, argument parsing
 and chunking, partial staging, backup, rollback, and restaging. Missing required
 project coverage must be rejected by that project's checked-in configuration;
 an absent command, provider `false` result, or provider exception remains a
 non-zero hook result.
+
+The Yarn patch for lint-staged defers `createRequire(import.meta.url)` until
+configuration resolution. The standalone CommonJS plugin has no module URL
+during factory initialization; the provider's existing resolution fallback
+remains inside its own `try`/`catch`. TypeScript uses the official package types.
 
 Yarn's `--cwd` changes the command context without changing `process.cwd()`.
 The staged command enters `invocation.executionCwd` for the awaited transaction
