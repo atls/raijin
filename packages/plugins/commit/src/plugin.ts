@@ -2,9 +2,9 @@ import type { Plugin }              from '@yarnpkg/core'
 
 import { defineCommandInvocations } from '@atls/raijin/commands'
 
-import { CommitMessageLintCommand } from './commit-message-lint.command.js'
-import { CommitMessageCommand }     from './commit-message.command.jsx'
-import { CommitStagedCommand }      from './commit-staged.command.js'
+import { CommitMessageCommand }     from './message/command.jsx'
+import { CommitMessageLintCommand } from './message/lint/command.js'
+import { CommitStagedCommand }      from './staged/command.js'
 
 export const plugin: Plugin = {
   commands: defineCommandInvocations({

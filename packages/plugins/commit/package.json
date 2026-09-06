@@ -5,9 +5,10 @@
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
-    ".": "./sources/index.ts",
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
+  "main": "./src/index.ts",
   "files": [
     "dist"
   ],
@@ -25,12 +26,11 @@
     "commitizen": "4.3.0",
     "force-stdin-tty": "0.0.1",
     "ink": "3.2.0",
-    "lint-staged": "patch:lint-staged@npm%3A15.2.9#~/.yarn/patches/lint-staged-npm-15.2.9-092f307382.patch",
+    "lint-staged": "patch:lint-staged@npm%3A17.5.0#~/.yarn/patches/lint-staged-npm-17.5.0.patch",
     "react": "18.3.1",
     "word-wrap": "1.2.5"
   },
   "devDependencies": {
-    "@types/lint-staged": "13.3.0",
     "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
@@ -39,8 +39,7 @@
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
-    "@yarnpkg/core": "*",
-    "@yarnpkg/fslib": "*"
+    "@yarnpkg/core": "*"
   },
   "raijin": {
     "pack": {
