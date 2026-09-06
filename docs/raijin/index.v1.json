@@ -874,7 +874,6 @@
         "build:dist",
         "build:dynamic-require",
         "build:materialize",
-        "build:nbind",
         "verify:consumers"
       ]
     },
@@ -1070,5 +1069,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-05T01:41:41.039Z"
+  "lastGenerated": "2026-09-06T02:37:00.602Z"
 }
