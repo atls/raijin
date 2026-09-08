@@ -6,9 +6,9 @@ import { BaseCommand }                  from '@yarnpkg/cli'
 import { Option }                       from 'clipanion'
 import React                            from 'react'
 
-import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
+import { ErrorInfo }                    from '@atls/cli-ui'
 import { LogRecord }                    from '@atls/cli-ui-log-record-component'
-import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { renderStatic }                 from '@atls/cli-ui'
 
 export abstract class AbstractServiceCommand extends BaseCommand {
   declare context: WorkspaceCommandContext

@@ -1,6 +1,6 @@
 {
-  "name": "@atls/cli-ui-source-preview-component",
-  "version": "1.0.2",
+  "name": "@atls/cli-ui",
+  "version": "1.0.0",
   "private": true,
   "license": "BSD-3-Clause",
   "type": "module",
@@ -13,12 +13,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn library build",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "build": "yarn library build"
   },
   "dependencies": {
     "@babel/code-frame": "7.24.7",
+    "@monstrs/stack-trace": "0.0.6",
+    "ink-link": "4.1.0",
+    "nanoid": "5.0.7",
     "supports-color": "9.4.0"
   },
   "devDependencies": {
@@ -28,23 +29,12 @@
     "ink": "3.2.0",
     "ink-testing-library": "4.0.0",
     "react": "18.3.1",
-    "strip-ansi": "7.1.0"
+    "strip-ansi": "7.1.0",
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
     "ink": "^3",
     "react": "^18"
   },
-  "publishConfig": {
-    "access": "public",
-    "exports": {
-      "./package.json": "./package.json",
-      ".": {
-        "import": "./dist/index.js",
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts"
-  }
+  "typecheckSkipLibCheck": true
 }

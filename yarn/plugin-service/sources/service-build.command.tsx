@@ -1,10 +1,10 @@
 import { render }                   from 'ink'
 import React                        from 'react'
 
-import { ErrorInfo }                from '@atls/cli-ui-error-info-component'
+import { ErrorInfo }                from '@atls/cli-ui'
 import { ServiceProgress }          from '@atls/cli-ui-service-progress-component'
 import { Service }                  from '@atls/code-service'
-import { renderStatic }             from '@atls/cli-ui-renderer-static-component'
+import { renderStatic }             from '@atls/cli-ui'
 import { toNativeCwd }              from '@atls/raijin/commands'
 
 import { AbstractServiceCommand }   from './abstract-service.command.jsx'

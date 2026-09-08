@@ -11,9 +11,9 @@ import { useMemo }                      from 'react'
 import { flattenDiagnosticMessageText } from 'typescript'
 import React                            from 'react'
 
-import { FilePath }                     from '@atls/cli-ui-file-path-component'
-import { Line }                         from '@atls/cli-ui-line-component'
-import { SourcePreview }                from '@atls/cli-ui-source-preview-component'
+import { FilePath }                     from './file-path.component.jsx'
+import { Line }                         from './line.component.jsx'
+import { SourcePreview }                from './source-preview.component.jsx'
 
 export interface TypeScriptDiagnosticProps {
   messageText: DiagnosticMessageChain | string

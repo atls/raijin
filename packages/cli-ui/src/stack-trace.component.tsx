@@ -8,9 +8,8 @@ import { nanoid }            from 'nanoid'
 import { useMemo }           from 'react'
 import React                 from 'react'
 
-import { FileLink }          from '@atls/cli-ui-file-link-component'
-import { SourcePreview }     from '@atls/cli-ui-source-preview-component'
-
+import { FileLink }          from './file-link.component.jsx'
+import { SourcePreview }     from './source-preview.component.jsx'
 import { getFrameSource }    from './stack-trace.utils.js'
 
 export interface StackTraceProps {

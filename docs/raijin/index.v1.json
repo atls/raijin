@@ -598,40 +598,8 @@
   ],
   "workspaces": [
     {
-      "name": "@atls/cli-ui-error-info-component",
-      "location": "cli/cli-ui-error-info",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-file-link-component",
-      "location": "cli/cli-ui-file-link",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-file-path-component",
-      "location": "cli/cli-ui-file-path",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/cli-ui-git-commit-component",
       "location": "cli/cli-ui-git-commit",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-line-component",
-      "location": "cli/cli-ui-line",
       "group": "cli",
       "private": true,
       "description": "",
@@ -646,40 +614,8 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/cli-ui-renderer-static-component",
-      "location": "cli/cli-ui-render-static",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/cli-ui-service-progress-component",
       "location": "cli/cli-ui-service-progress",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-source-preview-component",
-      "location": "cli/cli-ui-source-preview",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-stack-trace-component",
-      "location": "cli/cli-ui-stack-trace",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-typescript-diagnostic-component",
-      "location": "cli/cli-ui-typescript-diagnostic",
       "group": "cli",
       "private": true,
       "description": "",
@@ -692,6 +628,14 @@
       "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
+    },
+    {
+      "name": "@atls/cli-ui",
+      "location": "packages/cli-ui",
+      "group": "cli-ui",
+      "private": true,
+      "description": "",
+      "scripts": ["build"]
     },
     {
       "name": "@atls/code-commit",
@@ -1004,5 +948,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-08T02:00:29.499Z"
+  "lastGenerated": "2026-09-08T02:42:25.090Z"
 }

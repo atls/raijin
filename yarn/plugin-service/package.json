@@ -17,9 +17,8 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-error-info-component": "workspace:*",
+    "@atls/cli-ui": "workspace:*",
     "@atls/cli-ui-log-record-component": "workspace:*",
-    "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/cli-ui-service-progress-component": "workspace:*",
     "@atls/code-service": "workspace:*",
     "@atls/raijin": "workspace:*",

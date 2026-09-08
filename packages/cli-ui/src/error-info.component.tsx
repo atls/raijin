@@ -4,7 +4,7 @@ import { Box }               from 'ink'
 import { Text }              from 'ink'
 import React                 from 'react'
 
-import { StackTrace }        from '@atls/cli-ui-stack-trace-component'
+import { StackTrace }        from './stack-trace.component.jsx'
 
 export interface ErrorProps {
   error: Error

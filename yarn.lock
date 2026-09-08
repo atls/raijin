@@ -239,51 +239,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/cli-ui-error-info-component@workspace:*, @atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-error-info-component@workspace:cli/cli-ui-error-info"
-  dependencies:
-    "@atls/cli-ui-stack-trace-component": "workspace:*"
-    "@types/node": "npm:22.13.10"
-    "@types/react": "npm:18.3.18"
-    ink: "npm:3.2.0"
-    react: "npm:18.3.1"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
-"@atls/cli-ui-file-link-component@workspace:*, @atls/cli-ui-file-link-component@workspace:cli/cli-ui-file-link":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-file-link-component@workspace:cli/cli-ui-file-link"
-  dependencies:
-    "@types/react": "npm:18.3.18"
-    ink: "npm:3.2.0"
-    ink-link: "npm:4.1.0"
-    react: "npm:18.3.1"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
-"@atls/cli-ui-file-path-component@workspace:*, @atls/cli-ui-file-path-component@workspace:cli/cli-ui-file-path":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-file-path-component@workspace:cli/cli-ui-file-path"
-  dependencies:
-    "@types/node": "npm:22.13.10"
-    "@types/react": "npm:18.3.18"
-    ink: "npm:3.2.0"
-    ink-testing-library: "npm:4.0.0"
-    react: "npm:18.3.1"
-    strip-ansi: "npm:7.1.0"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
 "@atls/cli-ui-git-commit-component@workspace:*, @atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit"
@@ -306,28 +261,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-line-component@workspace:*, @atls/cli-ui-line-component@workspace:cli/cli-ui-line":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-line-component@workspace:cli/cli-ui-line"
-  dependencies:
-    "@types/node": "npm:22.13.10"
-    "@types/react": "npm:18.3.18"
-    ink: "npm:3.2.0"
-    ink-testing-library: "npm:4.0.0"
-    react: "npm:18.3.1"
-    strip-ansi: "npm:7.1.0"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
 "@atls/cli-ui-log-record-component@workspace:*, @atls/cli-ui-log-record-component@workspace:cli/cli-ui-log-record":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-log-record-component@workspace:cli/cli-ui-log-record"
   dependencies:
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
-    "@atls/cli-ui-stack-trace-component": "workspace:*"
+    "@atls/cli-ui": "workspace:*"
     "@mikro-orm/sql-highlighter": "npm:1.0.1"
     "@monstrs/logger": "npm:0.0.20"
     "@monstrs/mikro-orm-logger": "npm:0.0.16"
@@ -346,17 +284,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-renderer-static-component@workspace:*, @atls/cli-ui-renderer-static-component@workspace:cli/cli-ui-render-static":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-renderer-static-component@workspace:cli/cli-ui-render-static"
-  dependencies:
-    "@types/node": "npm:22.13.10"
-    "@types/react": "npm:18.3.18"
-    ink: "npm:3.2.0"
-    react: "npm:18.3.1"
-  languageName: unknown
-  linkType: soft
-
 "@atls/cli-ui-service-progress-component@workspace:*, @atls/cli-ui-service-progress-component@workspace:cli/cli-ui-service-progress":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-service-progress-component@workspace:cli/cli-ui-service-progress"
@@ -372,63 +299,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-source-preview-component@workspace:*, @atls/cli-ui-source-preview-component@workspace:cli/cli-ui-source-preview":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-source-preview-component@workspace:cli/cli-ui-source-preview"
-  dependencies:
-    "@babel/code-frame": "npm:7.24.7"
-    "@types/babel__code-frame": "npm:7.0.6"
-    "@types/node": "npm:22.13.10"
-    "@types/react": "npm:18.3.18"
-    ink: "npm:3.2.0"
-    ink-testing-library: "npm:4.0.0"
-    react: "npm:18.3.1"
-    strip-ansi: "npm:7.1.0"
-    supports-color: "npm:9.4.0"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
-"@atls/cli-ui-stack-trace-component@workspace:*, @atls/cli-ui-stack-trace-component@workspace:cli/cli-ui-stack-trace":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-stack-trace-component@workspace:cli/cli-ui-stack-trace"
-  dependencies:
-    "@atls/cli-ui-file-link-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
-    "@atls/cli-ui-source-preview-component": "workspace:*"
-    "@monstrs/stack-trace": "npm:0.0.6"
-    "@types/react": "npm:18.3.18"
-    ink: "npm:3.2.0"
-    nanoid: "npm:5.0.7"
-    react: "npm:18.3.1"
-    strip-ansi: "npm:7.1.0"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
-"@atls/cli-ui-typescript-diagnostic-component@workspace:*, @atls/cli-ui-typescript-diagnostic-component@workspace:cli/cli-ui-typescript-diagnostic":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-typescript-diagnostic-component@workspace:cli/cli-ui-typescript-diagnostic"
-  dependencies:
-    "@atls/cli-ui-file-path-component": "workspace:*"
-    "@atls/cli-ui-line-component": "workspace:*"
-    "@atls/cli-ui-source-preview-component": "workspace:*"
-    "@types/react": "npm:18.3.18"
-    ink: "npm:3.2.0"
-    ink-testing-library: "npm:4.0.0"
-    react: "npm:18.3.1"
-    strip-ansi: "npm:7.1.0"
-    typescript: "npm:5.9.3"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
 "@atls/cli-ui-typescript-progress-component@workspace:*, @atls/cli-ui-typescript-progress-component@workspace:cli/cli-ui-types-check-progress":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui-typescript-progress-component@workspace:cli/cli-ui-types-check-progress"
@@ -438,6 +308,29 @@ __metadata:
     figures: "npm:6.1.0"
     ink: "npm:3.2.0"
     react: "npm:18.3.1"
+  peerDependencies:
+    ink: ^3
+    react: ^18
+  languageName: unknown
+  linkType: soft
+
+"@atls/cli-ui@workspace:*, @atls/cli-ui@workspace:packages/cli-ui":
+  version: 0.0.0-use.local
+  resolution: "@atls/cli-ui@workspace:packages/cli-ui"
+  dependencies:
+    "@babel/code-frame": "npm:7.24.7"
+    "@monstrs/stack-trace": "npm:0.0.6"
+    "@types/babel__code-frame": "npm:7.0.6"
+    "@types/node": "npm:22.13.10"
+    "@types/react": "npm:18.3.18"
+    ink: "npm:3.2.0"
+    ink-link: "npm:4.1.0"
+    ink-testing-library: "npm:4.0.0"
+    nanoid: "npm:5.0.7"
+    react: "npm:18.3.1"
+    strip-ansi: "npm:7.1.0"
+    supports-color: "npm:9.4.0"
+    typescript: "npm:5.9.3"
   peerDependencies:
     ink: ^3
     react: ^18
@@ -702,7 +595,6 @@ __metadata:
   dependencies:
     "@actions/core": "npm:1.10.1"
     "@actions/github": "npm:6.0.0"
-    "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
     "@atls/code-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
@@ -811,8 +703,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-format@workspace:packages/plugins/format"
   dependencies:
-    "@atls/cli-ui-error-info-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
+    "@atls/cli-ui": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
@@ -873,10 +764,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-library@workspace:yarn/plugin-library"
   dependencies:
-    "@atls/cli-ui-error-info-component": "workspace:*"
+    "@atls/cli-ui": "workspace:*"
     "@atls/cli-ui-log-record-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
-    "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
     "@atls/cli-ui-typescript-progress-component": "workspace:*"
     "@atls/code-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"
@@ -954,9 +843,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-service@workspace:yarn/plugin-service"
   dependencies:
-    "@atls/cli-ui-error-info-component": "workspace:*"
+    "@atls/cli-ui": "workspace:*"
     "@atls/cli-ui-log-record-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
     "@atls/cli-ui-service-progress-component": "workspace:*"
     "@atls/code-service": "workspace:*"
     "@atls/raijin": "workspace:*"
@@ -1018,9 +906,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-typescript@workspace:yarn/plugin-typescript"
   dependencies:
-    "@atls/cli-ui-error-info-component": "workspace:*"
-    "@atls/cli-ui-renderer-static-component": "workspace:*"
-    "@atls/cli-ui-typescript-diagnostic-component": "workspace:*"
+    "@atls/cli-ui": "workspace:*"
     "@atls/cli-ui-typescript-progress-component": "workspace:*"
     "@atls/code-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"

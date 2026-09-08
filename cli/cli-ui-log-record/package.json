@@ -18,8 +18,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/cli-ui-renderer-static-component": "workspace:*",
-    "@atls/cli-ui-stack-trace-component": "workspace:*",
+    "@atls/cli-ui": "workspace:*",
     "@mikro-orm/sql-highlighter": "1.0.1",
     "@monstrs/logger": "0.0.20",
     "@monstrs/mikro-orm-logger": "0.0.16",

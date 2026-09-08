@@ -10,12 +10,9 @@ import { FilePath } from './file-path.component.jsx'
 test('should render file path', () => {
   const { lastFrame } = render(
     <FilePath line={1} column={1}>
-      cli-ui/cli-ui-file-path/src/file-path.component.test.tsx
+      packages/cli-ui/src/file-path.component.test.tsx
     </FilePath>
   )
 
-  assert.equal(
-    stripAnsi(lastFrame()!),
-    'cli-ui/cli-ui-file-path/src/file-path.component.test.tsx:1:1'
-  )
+  assert.equal(stripAnsi(lastFrame()!), 'packages/cli-ui/src/file-path.component.test.tsx:1:1')
 })

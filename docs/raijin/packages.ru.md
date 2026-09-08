@@ -326,40 +326,12 @@ Webpack-интеграции и сборочные адаптеры
 <details>
 <summary>Подробности группы `cli`</summary>
 
-<!-- sync:package-card:atls-cli-ui-error-info-component -->
-
-#### `@atls/cli-ui-error-info-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-error-info`
-
-<!-- sync:package-card:atls-cli-ui-file-link-component -->
-
-#### `@atls/cli-ui-file-link-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-file-link`
-
-<!-- sync:package-card:atls-cli-ui-file-path-component -->
-
-#### `@atls/cli-ui-file-path-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-file-path`
-
 <!-- sync:package-card:atls-cli-ui-git-commit-component -->
 
 #### `@atls/cli-ui-git-commit-component`
 
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-git-commit`
-
-<!-- sync:package-card:atls-cli-ui-line-component -->
-
-#### `@atls/cli-ui-line-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-line`
 
 <!-- sync:package-card:atls-cli-ui-log-record-component -->
 
@@ -368,13 +340,6 @@ Webpack-интеграции и сборочные адаптеры
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-log-record`
 
-<!-- sync:package-card:atls-cli-ui-renderer-static-component -->
-
-#### `@atls/cli-ui-renderer-static-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-render-static`
-
 <!-- sync:package-card:atls-cli-ui-service-progress-component -->
 
 #### `@atls/cli-ui-service-progress-component`
@@ -382,32 +347,27 @@ Webpack-интеграции и сборочные адаптеры
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-service-progress`
 
-<!-- sync:package-card:atls-cli-ui-source-preview-component -->
-
-#### `@atls/cli-ui-source-preview-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-source-preview`
-
-<!-- sync:package-card:atls-cli-ui-stack-trace-component -->
-
-#### `@atls/cli-ui-stack-trace-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-stack-trace`
-
-<!-- sync:package-card:atls-cli-ui-typescript-diagnostic-component -->
-
-#### `@atls/cli-ui-typescript-diagnostic-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-typescript-diagnostic`
-
 <!-- sync:package-card:atls-cli-ui-typescript-progress-component -->
 
 #### `@atls/cli-ui-typescript-progress-component`
 
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-types-check-progress`
+
+</details>
+
+## Group `cli-ui`
+
+Прочая группа workspace-пакетов
+
+<details>
+<summary>Подробности группы `cli-ui`</summary>
+
+<!-- sync:package-card:atls-cli-ui -->
+
+#### `@atls/cli-ui`
+
+- Скрипты: `build`
+- Локация: `packages/cli-ui`
 
 </details>
