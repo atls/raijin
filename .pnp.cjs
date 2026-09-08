@@ -495,7 +495,6 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:18.3.18"],\
           ["ink", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:3.2.0"],\
           ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:2.0.1"],\
-          ["ink-testing-library", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.0.0"],\
           ["react", "npm:18.3.1"],\
           ["strip-ansi", "npm:7.1.0"],\
           ["supports-color", "npm:9.4.0"],\
@@ -519,7 +518,6 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:18.3.18"],\
           ["ink", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:3.2.0"],\
           ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:2.0.1"],\
-          ["ink-testing-library", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.0.0"],\
           ["react", "npm:18.3.1"],\
           ["strip-ansi", "npm:7.1.0"],\
           ["supports-color", "npm:9.4.0"],\
@@ -543,7 +541,6 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:18.3.18"],\
           ["ink", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:3.2.0"],\
           ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:2.0.1"],\
-          ["ink-testing-library", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.0.0"],\
           ["react", "npm:18.3.1"],\
           ["strip-ansi", "npm:7.1.0"],\
           ["supports-color", "npm:9.4.0"],\
@@ -10994,27 +10991,6 @@ const RAW_RUNTIME_STATE =
           "@types/react",\
           "ink",\
           "react"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["ink-testing-library", [\
-      ["npm:4.0.0", {\
-        "packageLocation": "../.yarn/berry/cache/ink-testing-library-npm-4.0.0-06cc10e681-10.zip/node_modules/ink-testing-library/",\
-        "packageDependencies": [\
-          ["ink-testing-library", "npm:4.0.0"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.0.0", {\
-        "packageLocation": "./.yarn/__virtual__/ink-testing-library-virtual-3b87b1c305/2/.yarn/berry/cache/ink-testing-library-npm-4.0.0-06cc10e681-10.zip/node_modules/ink-testing-library/",\
-        "packageDependencies": [\
-          ["@types/react", "npm:18.3.18"],\
-          ["ink", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:3.2.0"],\
-          ["ink-testing-library", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.0.0"]\
-        ],\
-        "packagePeers": [\
-          "@types/react"\
         ],\
         "linkType": "HARD"\
       }]\

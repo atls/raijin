@@ -325,7 +325,6 @@ __metadata:
     "@types/react": "npm:18.3.18"
     ink: "npm:3.2.0"
     ink-link: "npm:2.0.1"
-    ink-testing-library: "npm:4.0.0"
     react: "npm:18.3.1"
     strip-ansi: "npm:7.1.0"
     supports-color: "npm:9.4.0"
@@ -7724,18 +7723,6 @@ __metadata:
     lodash.isequal: "npm:^4.5.0"
     prop-types: "npm:^15.5.10"
   checksum: 10/a6dc385aefd76ac7176dbd2a3ba0a50046e65103964741251eb099a8b738d2a63ef291eda8341ab5816f84cf31a45c6d5e7ff91fa8cb9d711f55c6cdcde351d2
-  languageName: node
-  linkType: hard
-
-"ink-testing-library@npm:4.0.0":
-  version: 4.0.0
-  resolution: "ink-testing-library@npm:4.0.0"
-  peerDependencies:
-    "@types/react": ">=18.0.0"
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10/f1f8549fe5ade85c4561adb548ab72586186b829184868e40ae1a77c608410d6898a24467a7f9fd7867c05b5a8a9bfc01bec7a1beff30932f1bfcf64bf893603
   languageName: node
   linkType: hard
 
