@@ -347,13 +347,6 @@ Command-line interface presentation packages
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-file-path`
 
-<!-- sync:package-card:atls-cli-ui-format-progress-component -->
-
-#### `@atls/cli-ui-format-progress-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-format-progress`
-
 <!-- sync:package-card:atls-cli-ui-git-commit-component -->
 
 #### `@atls/cli-ui-git-commit-component`
@@ -368,20 +361,6 @@ Command-line interface presentation packages
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-line`
 
-<!-- sync:package-card:atls-cli-ui-lint-progress-component -->
-
-#### `@atls/cli-ui-lint-progress-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-lint-progress`
-
-<!-- sync:package-card:atls-cli-ui-lint-result-component -->
-
-#### `@atls/cli-ui-lint-result-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-lint-result`
-
 <!-- sync:package-card:atls-cli-ui-log-record-component -->
 
 #### `@atls/cli-ui-log-record-component`
@@ -389,33 +368,12 @@ Command-line interface presentation packages
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-log-record`
 
-<!-- sync:package-card:atls-cli-ui-pretty-logs-component -->
-
-#### `@atls/cli-ui-pretty-logs-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-pretty-logs`
-
-<!-- sync:package-card:atls-cli-ui-raw-output-component -->
-
-#### `@atls/cli-ui-raw-output-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-raw-output`
-
 <!-- sync:package-card:atls-cli-ui-renderer-static-component -->
 
 #### `@atls/cli-ui-renderer-static-component`
 
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-render-static`
-
-<!-- sync:package-card:atls-cli-ui-schematics-component -->
-
-#### `@atls/cli-ui-schematics-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-schematics-component`
 
 <!-- sync:package-card:atls-cli-ui-service-progress-component -->
 
@@ -437,20 +395,6 @@ Command-line interface presentation packages
 
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-stack-trace`
-
-<!-- sync:package-card:atls-cli-ui-test-failure-component -->
-
-#### `@atls/cli-ui-test-failure-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-test-failure`
-
-<!-- sync:package-card:atls-cli-ui-test-progress-component -->
-
-#### `@atls/cli-ui-test-progress-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-test-progress`
 
 <!-- sync:package-card:atls-cli-ui-typescript-diagnostic-component -->
 

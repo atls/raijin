@@ -19,7 +19,6 @@
   "dependencies": {
     "@atls/cli-ui-error-info-component": "workspace:*",
     "@atls/cli-ui-log-record-component": "workspace:*",
-    "@atls/cli-ui-pretty-logs-component": "workspace:*",
     "@atls/cli-ui-renderer-static-component": "workspace:*",
     "@atls/cli-ui-typescript-diagnostic-component": "workspace:*",
     "@atls/cli-ui-typescript-progress-component": "workspace:*",

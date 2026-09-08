@@ -622,14 +622,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/cli-ui-format-progress-component",
-      "location": "cli/cli-ui-format-progress",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/cli-ui-git-commit-component",
       "location": "cli/cli-ui-git-commit",
       "group": "cli",
@@ -646,22 +638,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/cli-ui-lint-progress-component",
-      "location": "cli/cli-ui-lint-progress",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-lint-result-component",
-      "location": "cli/cli-ui-lint-result",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/cli-ui-log-record-component",
       "location": "cli/cli-ui-log-record",
       "group": "cli",
@@ -670,32 +646,8 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/cli-ui-pretty-logs-component",
-      "location": "cli/cli-ui-pretty-logs",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-raw-output-component",
-      "location": "cli/cli-ui-raw-output",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/cli-ui-renderer-static-component",
       "location": "cli/cli-ui-render-static",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-schematics-component",
-      "location": "cli/cli-ui-schematics-component",
       "group": "cli",
       "private": true,
       "description": "",
@@ -720,22 +672,6 @@
     {
       "name": "@atls/cli-ui-stack-trace-component",
       "location": "cli/cli-ui-stack-trace",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-test-failure-component",
-      "location": "cli/cli-ui-test-failure",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-test-progress-component",
-      "location": "cli/cli-ui-test-progress",
       "group": "cli",
       "private": true,
       "description": "",
@@ -1068,5 +1004,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-06T03:53:09.790Z"
+  "lastGenerated": "2026-09-08T02:00:29.499Z"
 }
