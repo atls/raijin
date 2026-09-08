@@ -491,12 +491,11 @@ const RAW_RUNTIME_STATE =
           ["@monstrs/stack-trace", "npm:0.0.6"],\
           ["@types/babel__code-frame", "npm:7.0.6"],\
           ["@types/ink", null],\
-          ["@types/node", "npm:22.13.10"],\
+          ["@types/node", "npm:24.12.2"],\
           ["@types/react", "npm:18.3.18"],\
           ["ink", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:3.2.0"],\
-          ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.1.0"],\
+          ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:2.0.1"],\
           ["ink-testing-library", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.0.0"],\
-          ["nanoid", "npm:5.0.7"],\
           ["react", "npm:18.3.1"],\
           ["strip-ansi", "npm:7.1.0"],\
           ["supports-color", "npm:9.4.0"],\
@@ -516,12 +515,11 @@ const RAW_RUNTIME_STATE =
           ["@monstrs/stack-trace", "npm:0.0.6"],\
           ["@types/babel__code-frame", "npm:7.0.6"],\
           ["@types/ink", null],\
-          ["@types/node", "npm:22.13.10"],\
+          ["@types/node", "npm:24.12.2"],\
           ["@types/react", "npm:18.3.18"],\
           ["ink", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:3.2.0"],\
-          ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.1.0"],\
+          ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:2.0.1"],\
           ["ink-testing-library", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.0.0"],\
-          ["nanoid", "npm:5.0.7"],\
           ["react", "npm:18.3.1"],\
           ["strip-ansi", "npm:7.1.0"],\
           ["supports-color", "npm:9.4.0"],\
@@ -541,12 +539,11 @@ const RAW_RUNTIME_STATE =
           ["@babel/code-frame", "npm:7.24.7"],\
           ["@monstrs/stack-trace", "npm:0.0.6"],\
           ["@types/babel__code-frame", "npm:7.0.6"],\
-          ["@types/node", "npm:22.13.10"],\
+          ["@types/node", "npm:24.12.2"],\
           ["@types/react", "npm:18.3.18"],\
           ["ink", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:3.2.0"],\
-          ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.1.0"],\
+          ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:2.0.1"],\
           ["ink-testing-library", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.0.0"],\
-          ["nanoid", "npm:5.0.7"],\
           ["react", "npm:18.3.1"],\
           ["strip-ansi", "npm:7.1.0"],\
           ["supports-color", "npm:9.4.0"],\
@@ -7438,14 +7435,6 @@ const RAW_RUNTIME_STATE =
           ["type-fest", "npm:0.21.3"]\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["npm:5.0.0", {\
-        "packageLocation": "../.yarn/berry/cache/ansi-escapes-npm-5.0.0-8a26b6a77d-10.zip/node_modules/ansi-escapes/",\
-        "packageDependencies": [\
-          ["ansi-escapes", "npm:5.0.0"],\
-          ["type-fest", "npm:1.4.0"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["ansi-regex", [\
@@ -10901,27 +10890,28 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["ink-link", [\
-      ["npm:4.1.0", {\
-        "packageLocation": "../.yarn/berry/cache/ink-link-npm-4.1.0-495ae50a6c-10.zip/node_modules/ink-link/",\
+      ["npm:2.0.1", {\
+        "packageLocation": "../.yarn/berry/cache/ink-link-npm-2.0.1-fd30d0c558-10.zip/node_modules/ink-link/",\
         "packageDependencies": [\
-          ["ink-link", "npm:4.1.0"]\
+          ["ink-link", "npm:2.0.1"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.1.0", {\
-        "packageLocation": "./.yarn/__virtual__/ink-link-virtual-ff64f35b57/2/.yarn/berry/cache/ink-link-npm-4.1.0-495ae50a6c-10.zip/node_modules/ink-link/",\
+      ["virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:2.0.1", {\
+        "packageLocation": "./.yarn/__virtual__/ink-link-virtual-427bde4d18/2/.yarn/berry/cache/ink-link-npm-2.0.1-fd30d0c558-10.zip/node_modules/ink-link/",\
         "packageDependencies": [\
           ["@types/ink", null],\
           ["@types/react", "npm:18.3.18"],\
           ["ink", "virtual:2ab28270327683990289a1b7afafce85b583fffb18552e2dd3d05f5fbb51329a2f1baf6ac982ebd9fe6858849949626fd5d309c5a4ac8c7723cfd4e7d5e4e7d3#npm:3.2.0"],\
-          ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:4.1.0"],\
+          ["ink-link", "virtual:bea75f5f0e00eedc66944dc4a1413076b3f22fe6a2056b75c735662d978336bd4f0ecaf025c6c1fae6f9d2c20b188bf05b8f273dcf86e044ceeaf14cf694eb4b#npm:2.0.1"],\
           ["prop-types", "npm:15.8.1"],\
           ["react", "npm:18.3.1"],\
-          ["terminal-link", "npm:3.0.0"]\
+          ["terminal-link", "npm:2.1.1"]\
         ],\
         "packagePeers": [\
           "@types/ink",\
-          "ink"\
+          "ink",\
+          "react"\
         ],\
         "linkType": "HARD"\
       }]\
@@ -14092,12 +14082,12 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["terminal-link", [\
-      ["npm:3.0.0", {\
-        "packageLocation": "../.yarn/berry/cache/terminal-link-npm-3.0.0-82cbbd7f4a-10.zip/node_modules/terminal-link/",\
+      ["npm:2.1.1", {\
+        "packageLocation": "../.yarn/berry/cache/terminal-link-npm-2.1.1-de80341758-10.zip/node_modules/terminal-link/",\
         "packageDependencies": [\
-          ["ansi-escapes", "npm:5.0.0"],\
+          ["ansi-escapes", "npm:4.3.2"],\
           ["supports-hyperlinks", "npm:2.3.0"],\
-          ["terminal-link", "npm:3.0.0"]\
+          ["terminal-link", "npm:2.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -14425,13 +14415,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/type-fest-npm-0.21.3-5ff2a9c6fd-10.zip/node_modules/type-fest/",\
         "packageDependencies": [\
           ["type-fest", "npm:0.21.3"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:1.4.0", {\
-        "packageLocation": "../.yarn/berry/cache/type-fest-npm-1.4.0-7dd848962a-10.zip/node_modules/type-fest/",\
-        "packageDependencies": [\
-          ["type-fest", "npm:1.4.0"]\
         ],\
         "linkType": "HARD"\
       }],\

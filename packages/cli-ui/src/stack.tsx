@@ -2,43 +2,45 @@ import type { StackFrame }   from '@monstrs/stack-trace'
 import type { ReactElement } from 'react'
 
 import { parse }             from '@monstrs/stack-trace'
-import { Text }              from 'ink'
 import { Box }               from 'ink'
-import { nanoid }            from 'nanoid'
+import { Text }              from 'ink'
 import { useMemo }           from 'react'
 import React                 from 'react'
 
-import { FileLink }          from './file-link.component.jsx'
-import { SourcePreview }     from './source-preview.component.jsx'
-import { getFrameSource }    from './stack-trace.utils.js'
+import { FileLink }          from './location.js'
+import { SourcePreview }     from './source.js'
+import { getFrameSource }    from './stack-source.js'
 
-export interface StackTraceProps {
+interface StackTraceProps {
   children: string
   cwd?: string
 }
 
-export const StackTrace = ({ children, cwd }: StackTraceProps): ReactElement | null => {
+const frameKey = (frame: StackFrame, index: number): string =>
+  [frame.file, frame.line, frame.column, frame.function, index].join(':')
+
+export const StackTrace = ({ children, cwd }: StackTraceProps): ReactElement => {
   const stack = useMemo(() => parse(children), [children])
-  const topFrame = useMemo(() => stack.topFrame || stack.frames.at(0), [stack])
+  const { topFrame } = stack
   const source = useMemo(() => (topFrame ? getFrameSource(topFrame) : null), [topFrame])
 
   return (
     <Box flexDirection='column' flexGrow={1}>
-      {!!source && !!stack.topFrame?.line && (
+      {source && topFrame?.line !== undefined && (
         <Box marginBottom={1}>
-          <SourcePreview line={stack.topFrame.line} column={stack.topFrame.column}>
+          <SourcePreview line={topFrame.line} column={topFrame.column}>
             {source}
           </SourcePreview>
         </Box>
       )}
-      {stack.frames.map((frame: StackFrame) => (
-        <Box key={nanoid()} flexDirection='row'>
+      {stack.frames.map((frame, index) => (
+        <Box key={frameKey(frame, index)} flexDirection='row'>
           <Box flexBasis='30%'>
             <Text>{frame.function}</Text>
           </Box>
           <Box flexBasis='70%' justifyContent='flex-end'>
-            {!!frame.file && (
-              <FileLink cwd={cwd} url={frame.file} line={frame.line} column={frame.column} />
+            {frame.file && (
+              <FileLink cwd={cwd} target={frame.file} line={frame.line} column={frame.column} />
             )}
           </Box>
         </Box>

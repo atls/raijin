@@ -4,9 +4,9 @@ import { test }   from 'node:test'
 import React      from 'react'
 import stripAnsi  from 'strip-ansi'
 
-import * as cliUi from './index.js'
+import * as cliUi from '../index.js'
 
-test('should expose the shared CLI presentation entrypoints', () => {
+test('exposes only the shared CLI presentation entrypoints', () => {
   assert.deepEqual(Object.keys(cliUi).sort(), [
     'ErrorInfo',
     'StackTrace',
@@ -15,7 +15,7 @@ test('should expose the shared CLI presentation entrypoints', () => {
   ])
 })
 
-test('should render an error through the shared entrypoint', () => {
+test('renders an error through the public API', () => {
   const error = new Error('Example failure')
   error.stack = undefined
 

@@ -4,18 +4,18 @@ import { Box }               from 'ink'
 import { Text }              from 'ink'
 import React                 from 'react'
 
-import { StackTrace }        from './stack-trace.component.jsx'
+import { StackTrace }        from './stack.js'
 
-export interface ErrorProps {
+interface ErrorInfoProps {
   error: Error
   cwd?: string
 }
 
-export interface ErrorMessageProps {
+interface ErrorMessageProps {
   children?: string
 }
 
-export const ErrorMessage = ({ children }: ErrorMessageProps): ReactElement | null => {
+const ErrorMessage = ({ children }: ErrorMessageProps): ReactElement | null => {
   if (!children) {
     return null
   }
@@ -29,10 +29,10 @@ export const ErrorMessage = ({ children }: ErrorMessageProps): ReactElement | nu
   )
 }
 
-export const ErrorInfo = ({ error, cwd }: ErrorProps): ReactElement => (
+export const ErrorInfo = ({ error, cwd }: ErrorInfoProps): ReactElement => (
   <Box flexDirection='column' borderStyle='single' borderColor='gray' paddingX={2} paddingY={1}>
     <ErrorMessage>{error.message}</ErrorMessage>
-    {!!error.stack && (
+    {error.stack && (
       <Box>
         <StackTrace cwd={cwd}>{error.stack}</StackTrace>
       </Box>

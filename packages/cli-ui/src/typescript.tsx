@@ -1,21 +1,20 @@
-import type { FC }                      from 'react'
+import type { ReactElement }            from 'react'
 import type { DiagnosticMessageChain }  from 'typescript'
 import type { SourceFile }              from 'typescript'
 
 import { isAbsolute }                   from 'node:path'
 import { relative }                     from 'node:path'
 
-import { Text }                         from 'ink'
 import { Box }                          from 'ink'
-import { useMemo }                      from 'react'
+import { Text }                         from 'ink'
 import { flattenDiagnosticMessageText } from 'typescript'
 import React                            from 'react'
 
-import { FilePath }                     from './file-path.component.jsx'
-import { Line }                         from './line.component.jsx'
-import { SourcePreview }                from './source-preview.component.jsx'
+import { FilePath }                     from './location.js'
+import { Separator }                    from './separator.js'
+import { SourcePreview }                from './source.js'
 
-export interface TypeScriptDiagnosticProps {
+interface TypeScriptDiagnosticProps {
   messageText: DiagnosticMessageChain | string
   file?: SourceFile
   start?: number
@@ -23,39 +22,32 @@ export interface TypeScriptDiagnosticProps {
   cwd?: string
 }
 
-export const TypeScriptDiagnostic: FC<TypeScriptDiagnosticProps> = ({
+const getFilePath = (file: SourceFile | undefined, cwd: string): string | null => {
+  if (!file) {
+    return null
+  }
+
+  return isAbsolute(file.fileName) ? relative(cwd, file.fileName) : file.fileName
+}
+
+export const TypeScriptDiagnostic = ({
   messageText,
   start,
   file,
   code,
   cwd = process.cwd(),
-}) => {
-  const filePath = useMemo(() => {
-    if (!file) {
-      return null
-    }
-
-    if (isAbsolute(file.fileName)) {
-      return relative(cwd, file.fileName)
-    }
-
-    return file.fileName
-  }, [file])
-
-  const position = useMemo(() => {
-    if (file && start) {
-      return file.getLineAndCharacterOfPosition(start)
-    }
-
-    return null
-  }, [file, start])
+}: TypeScriptDiagnosticProps): ReactElement => {
+  const filePath = getFilePath(file, cwd)
+  const position = file && start !== undefined ? file.getLineAndCharacterOfPosition(start) : null
+  const line = position ? position.line + 1 : undefined
+  const column = position ? position.character + 1 : undefined
 
   return (
     <Box flexDirection='column' borderStyle='round' borderColor='gray' paddingY={1} width='100%'>
-      {!!filePath && (
+      {filePath && (
         <Box flexDirection='row'>
           <Box marginBottom={1} paddingX={2} flexGrow={1}>
-            <FilePath line={position ? position.line + 1 : 1} column={position?.character}>
+            <FilePath line={line} column={column}>
               {filePath}
             </FilePath>
           </Box>
@@ -66,15 +58,15 @@ export const TypeScriptDiagnostic: FC<TypeScriptDiagnosticProps> = ({
           </Box>
         </Box>
       )}
-      <Line offset={2} />
-      {!!file?.text && !!position && (
+      <Separator inset={2} />
+      {file?.text && position && line !== undefined && (
         <>
           <Box>
-            <SourcePreview line={position.line + 1} column={position.character}>
+            <SourcePreview line={line} column={column}>
               {file.text}
             </SourcePreview>
           </Box>
-          <Line offset={2} />
+          <Separator inset={2} />
         </>
       )}
       <Box marginTop={1} paddingX={2}>
