@@ -42,7 +42,7 @@ const parseRecord = (body: string): ServiceLogRecord => {
       return record
     }
   } catch {
-    // Plain application output is represented as an informational log record.
+    return { body, severityNumber: SeverityNumber.INFO }
   }
 
   return { body, severityNumber: SeverityNumber.INFO }
