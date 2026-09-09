@@ -137,15 +137,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-service -->
-
-#### `@atls/yarn-plugin-service`
-
-- Локация: `yarn/plugin-service`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-tools -->
 
 #### `@atls/yarn-plugin-tools`
@@ -209,6 +200,15 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-service -->
+
+#### `@atls/yarn-plugin-service`
+
+- Локация: `packages/plugins/service`
+- Группа: `plugins`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-test -->
 
 #### `@atls/yarn-plugin-test`
@@ -232,15 +232,6 @@
 #### `@atls/code-commit`
 
 - Локация: `code/code-commit`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-configuration -->
-
-#### `@atls/code-configuration`
-
-- Локация: `code/code-configuration`
 - Группа: `code`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
@@ -281,15 +272,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-code-service -->
-
-#### `@atls/code-service`
-
-- Локация: `code/code-service`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-typescript -->
 
 #### `@atls/code-typescript`
@@ -298,24 +280,6 @@
 - Группа: `code`
 - Видимость: `private`
 - Скрипты: `build`, `build:worker`, `postpack`, `prepack`
-
-</details>
-
-## Group `webpack`
-
-Webpack-интеграции и сборочные адаптеры
-
-<details>
-<summary>Подробности группы `webpack`</summary>
-
-<!-- sync:package-card:atls-webpack-start-server-plugin -->
-
-#### `@atls/webpack-start-server-plugin`
-
-- Локация: `webpack/webpack-start-server-plugin`
-- Группа: `webpack`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
 
 </details>
 
@@ -332,20 +296,6 @@ Webpack-интеграции и сборочные адаптеры
 
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-git-commit`
-
-<!-- sync:package-card:atls-cli-ui-log-record-component -->
-
-#### `@atls/cli-ui-log-record-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-log-record`
-
-<!-- sync:package-card:atls-cli-ui-service-progress-component -->
-
-#### `@atls/cli-ui-service-progress-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-service-progress`
 
 <!-- sync:package-card:atls-cli-ui-typescript-progress-component -->
 

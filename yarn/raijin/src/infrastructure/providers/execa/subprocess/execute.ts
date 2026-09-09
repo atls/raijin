@@ -46,7 +46,7 @@ const createExecaOptions = ({
 }: ExecuteOptions): Options => ({
   buffer: output?.mode === 'capture',
   cancelSignal,
-  cleanup: true,
+  cleanup: !cancelSignal,
   cwd,
   encoding: 'utf8',
   env,

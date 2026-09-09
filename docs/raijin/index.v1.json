@@ -606,22 +606,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/cli-ui-log-record-component",
-      "location": "cli/cli-ui-log-record",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/cli-ui-service-progress-component",
-      "location": "cli/cli-ui-service-progress",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/cli-ui-typescript-progress-component",
       "location": "cli/cli-ui-types-check-progress",
       "group": "cli",
@@ -640,14 +624,6 @@
     {
       "name": "@atls/code-commit",
       "location": "code/code-commit",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/code-configuration",
-      "location": "code/code-configuration",
       "group": "code",
       "private": true,
       "description": "",
@@ -686,14 +662,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-service",
-      "location": "code/code-service",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/code-typescript",
       "location": "code/code-typescript",
       "group": "code",
@@ -726,17 +694,17 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/yarn-plugin-test",
-      "location": "packages/plugins/test",
+      "name": "@atls/yarn-plugin-service",
+      "location": "packages/plugins/service",
       "group": "plugins",
       "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/webpack-start-server-plugin",
-      "location": "webpack/webpack-start-server-plugin",
-      "group": "webpack",
+      "name": "@atls/yarn-plugin-test",
+      "location": "packages/plugins/test",
+      "group": "plugins",
       "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
@@ -853,14 +821,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/yarn-plugin-service",
-      "location": "yarn/plugin-service",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/yarn-plugin-tools",
       "location": "yarn/plugin-tools",
       "group": "yarn",
@@ -948,5 +908,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-08T02:42:25.090Z"
+  "lastGenerated": "2026-09-09T17:37:46.201Z"
 }

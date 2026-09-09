@@ -1,4 +1,5 @@
 import type { Configuration } from '@yarnpkg/core'
+import type { Locator }       from '@yarnpkg/core'
 import type { Project }       from '@yarnpkg/core'
 import type { PortablePath }  from '@yarnpkg/fslib'
 
@@ -15,5 +16,11 @@ export interface InvocationCapabilitiesOptions {
   environment: NodeJS.ProcessEnv
   executionCwd: PortablePath
   executor: Executor
+  project: Project
+}
+
+export interface ApplicationInvocationOptions {
+  environment: NodeJS.ProcessEnv
+  locator: Locator
   project: Project
 }

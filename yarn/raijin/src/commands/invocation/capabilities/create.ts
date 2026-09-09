@@ -1,11 +1,38 @@
 import type { ProjectInvocation }             from '../scope/invocation.interfaces.js'
+import type { ApplicationInvocation }         from './application.interfaces.js'
+import type { ApplicationInvocationOptions }  from './create.interfaces.js'
 import type { InvocationCapabilitiesOptions } from './create.interfaces.js'
 import type { ProcessInvocationOptions }      from './create.interfaces.js'
 import type { ProcessInvocation }             from './process.interfaces.js'
 import type { ProjectProcessInvocation }      from './process.interfaces.js'
 
+import { create as createApplicationExecutor } from '../../../infrastructure/adapters/node/execution/executor.js'
+import { create as createYarnEnvironment } from '../../../infrastructure/providers/yarn/environment/create.js'
+import { resolveRaijinRuntimeUrl }            from '../../../runtime/runtime-resolver.js'
 import { toNativeCwd }                        from '../adapters/path/index.js'
 import { executeYarnCommand }                 from '../adapters/yarn/execution.js'
+
+const TYPESCRIPT_LOADER_SPECIFIER = '@atls/raijin/typescript-loader'
+
+export const createApplicationInvocation = ({
+  environment,
+  locator,
+  project,
+}: ApplicationInvocationOptions): ApplicationInvocation =>
+  createApplicationExecutor({
+    environment: {
+      prepare: async (input) =>
+        createYarnEnvironment({
+          ...input,
+          baseEnvironment: environment,
+          locator,
+          project,
+        }),
+    },
+    loader: {
+      resolve: async (cwd) => resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_LOADER_SPECIFIER),
+    },
+  })
 
 export const createProcessInvocation = ({
   environment,

@@ -1,36 +1,45 @@
 {
-  "name": "@atls/yarn-plugin-library",
-  "version": "1.0.30",
+  "name": "@atls/yarn-plugin-service",
+  "version": "1.0.38",
   "private": true,
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
-    ".": "./sources/index.ts",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
   },
+  "main": "./src/index.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "builder build plugin --external-file ../builder/externals.json",
+    "build": "builder build plugin --external-file ../../../yarn/builder/externals.json",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@atls/cli-ui": "workspace:*",
-    "@atls/cli-ui-typescript-progress-component": "workspace:*",
-    "@atls/code-typescript": "workspace:*",
+    "@atls/logger": "0.0.4",
     "@atls/raijin": "workspace:*",
+    "@inkjs/ui": "2.0.0",
+    "@mikro-orm/sql-highlighter": "1.0.1",
     "clipanion": "4.0.0-rc.2",
+    "decamelize": "6.0.0",
     "ink": "3.2.0",
-    "react": "18.3.1"
+    "nanoid": "5.0.7",
+    "react": "18.3.1",
+    "sql-formatter": "15.4.2",
+    "uniqolor": "1.1.1"
   },
   "devDependencies": {
     "@types/react": "18.3.18",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",
-    "@yarnpkg/fslib": "3.1.5"
+    "@yarnpkg/fslib": "3.1.5",
+    "package-json-type": "1.0.3",
+    "strip-ansi": "7.1.0",
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
