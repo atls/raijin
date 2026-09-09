@@ -2,7 +2,6 @@ import type { ReactElement }   from 'react'
 
 import { codeFrameColumns }    from '@babel/code-frame'
 import { Text }                from 'ink'
-import { useStdout }           from 'ink'
 import { createSupportsColor } from 'supports-color'
 import React                   from 'react'
 
@@ -19,8 +18,7 @@ export const SourcePreview = ({
   column,
   message,
 }: SourcePreviewProps): ReactElement => {
-  const { stdout } = useStdout()
-  const colorSupport = createSupportsColor(stdout)
+  const colorSupport = createSupportsColor(process.stdout)
   const forceColor = colorSupport !== false && colorSupport.level >= 1
 
   return (
