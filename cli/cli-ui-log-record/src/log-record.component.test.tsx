@@ -6,7 +6,7 @@ import stripAnsi        from 'strip-ansi'
 
 import { renderStatic } from '@atls/cli-ui'
 
-import { LogRecord }    from './log-record.component.jsx'
+import { LogRecord }    from './index.js'
 
 test('renders established service log attributes', () => {
   const output = stripAnsi(
