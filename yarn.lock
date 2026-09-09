@@ -266,9 +266,8 @@ __metadata:
   resolution: "@atls/cli-ui-log-record-component@workspace:cli/cli-ui-log-record"
   dependencies:
     "@atls/cli-ui": "workspace:*"
+    "@atls/logger": "npm:0.0.4"
     "@mikro-orm/sql-highlighter": "npm:1.0.1"
-    "@opentelemetry/api": "npm:1.9.0"
-    "@opentelemetry/api-logs": "npm:0.42.0"
     "@types/node": "npm:22.13.10"
     "@types/react": "npm:18.3.18"
     decamelize: "npm:6.0.0"
@@ -414,9 +413,9 @@ __metadata:
   resolution: "@atls/code-service@workspace:code/code-service"
   dependencies:
     "@atls/code-configuration": "workspace:*"
+    "@atls/logger": "npm:0.0.4"
     "@atls/raijin": "workspace:*"
     "@atls/webpack-start-server-plugin": "workspace:*"
-    "@opentelemetry/api-logs": "npm:0.42.0"
     "@types/node": "npm:24.12.2"
     "@types/webpack": "npm:5.28.5"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -436,6 +435,20 @@ __metadata:
     typescript: "npm:5.9.3"
   languageName: unknown
   linkType: soft
+
+"@atls/logger@npm:0.0.4":
+  version: 0.0.4
+  resolution: "@atls/logger@npm:0.0.4"
+  dependencies:
+    "@opentelemetry/api": "npm:1.8.0"
+    "@opentelemetry/api-logs": "npm:0.49.1"
+    "@opentelemetry/core": "npm:1.22.0"
+    "@opentelemetry/sdk-logs": "npm:0.49.1"
+    on-exit-leak-free: "npm:2.1.2"
+    sonic-boom: "npm:3.8.0"
+  checksum: 10/c62b80f94cca66d08bef329bc2856b0bed3126ee200c7095a07f1c2f8141b1014b9d0132068357e2d722ffe159f19d4caca29b97a640c0045af6198e33d55d2f
+  languageName: node
+  linkType: hard
 
 "@atls/raijin-assembly@workspace:yarn/cli":
   version: 0.0.0-use.local
@@ -846,9 +859,9 @@ __metadata:
     "@atls/cli-ui-log-record-component": "workspace:*"
     "@atls/cli-ui-service-progress-component": "workspace:*"
     "@atls/code-service": "workspace:*"
+    "@atls/logger": "npm:0.0.4"
     "@atls/raijin": "workspace:*"
     "@atls/yarn-pack-utils": "workspace:*"
-    "@opentelemetry/api-logs": "npm:0.42.0"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -2667,19 +2680,69 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/api-logs@npm:0.42.0":
-  version: 0.42.0
-  resolution: "@opentelemetry/api-logs@npm:0.42.0"
+"@opentelemetry/api-logs@npm:0.49.1":
+  version: 0.49.1
+  resolution: "@opentelemetry/api-logs@npm:0.49.1"
   dependencies:
     "@opentelemetry/api": "npm:^1.0.0"
-  checksum: 10/05346b50d818ff60adf4348160f2ed566d13c611144e1bed9de0840273c0b078986ddd2892f5d23a6e08eafd19ce5e6297f385a29da2abb0e6ec3ffe3d7a4fb0
+  checksum: 10/e7adeb207aed838d663501171c9666b8682594ccd8041932ea1ff9e24bd6e4f84d59d1c5e642811083e99dfaf4ec0013e1d31812f2fa2068478ad2d7b7af60e1
   languageName: node
   linkType: hard
 
-"@opentelemetry/api@npm:1.9.0, @opentelemetry/api@npm:^1.0.0":
+"@opentelemetry/api@npm:1.8.0":
+  version: 1.8.0
+  resolution: "@opentelemetry/api@npm:1.8.0"
+  checksum: 10/62f0c42711b9f0c56ea9527c2e6e609e371bfb47d0b78956c91fe27365b4744d7dcc407636ef5b19a24a1d5e2c3cfa79c1b715deca829074e24e3ffba1315ba2
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/api@npm:^1.0.0":
   version: 1.9.0
   resolution: "@opentelemetry/api@npm:1.9.0"
   checksum: 10/a607f0eef971893c4f2ee2a4c2069aade6ec3e84e2a1f5c2aac19f65c5d9eeea41aa72db917c1029faafdd71789a1a040bdc18f40d63690e22ccae5d7070f194
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/core@npm:1.22.0":
+  version: 1.22.0
+  resolution: "@opentelemetry/core@npm:1.22.0"
+  dependencies:
+    "@opentelemetry/semantic-conventions": "npm:1.22.0"
+  peerDependencies:
+    "@opentelemetry/api": ">=1.0.0 <1.9.0"
+  checksum: 10/f19d9dabd52428b427b332f2d7e7bedf68af5463dcff0395680499d5513beb22ad4e23a90223711e32ee4328c02c9b994024f988e48537a0696e8e0164cd168a
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/resources@npm:1.22.0":
+  version: 1.22.0
+  resolution: "@opentelemetry/resources@npm:1.22.0"
+  dependencies:
+    "@opentelemetry/core": "npm:1.22.0"
+    "@opentelemetry/semantic-conventions": "npm:1.22.0"
+  peerDependencies:
+    "@opentelemetry/api": ">=1.0.0 <1.9.0"
+  checksum: 10/8a2ddc82257fc57ec01e17ec99a4e06b7f7e274ddd3acd023c7417b01bd6f2bdc965d1f3591ed0c67307c2dd53ad81ca619a19f3a092242034ab84ce19414221
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/sdk-logs@npm:0.49.1":
+  version: 0.49.1
+  resolution: "@opentelemetry/sdk-logs@npm:0.49.1"
+  dependencies:
+    "@opentelemetry/core": "npm:1.22.0"
+    "@opentelemetry/resources": "npm:1.22.0"
+  peerDependencies:
+    "@opentelemetry/api": ">=1.4.0 <1.9.0"
+    "@opentelemetry/api-logs": ">=0.39.1"
+  checksum: 10/c32130b67a1630e6e13fcb46eac1224247ac6e75a2c0bd6dc0057812acf28b942fd7f531871c7b7412e111bd697ea0e6c3cc934037e138f3d7aa2e22046f9943
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/semantic-conventions@npm:1.22.0":
+  version: 1.22.0
+  resolution: "@opentelemetry/semantic-conventions@npm:1.22.0"
+  checksum: 10/6dd21678bebe1ee78cea2d52cbccaac457694cb92f143c1692c109a89d070d8bc5e39f7a7f777c0e855a9393f6cc6f682ce771705e5042d037486c11e8d3a60c
   languageName: node
   linkType: hard
 
@@ -4708,6 +4771,13 @@ __metadata:
   version: 1.0.0
   resolution: "at-least-node@npm:1.0.0"
   checksum: 10/463e2f8e43384f1afb54bc68485c436d7622acec08b6fad269b421cb1d29cebb5af751426793d0961ed243146fe4dc983402f6d5a51b720b277818dbf6f2e49e
+  languageName: node
+  linkType: hard
+
+"atomic-sleep@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "atomic-sleep@npm:1.0.0"
+  checksum: 10/3ab6d2cf46b31394b4607e935ec5c1c3c4f60f3e30f0913d35ea74b51b3585e84f590d09e58067f11762eec71c87d25314ce859030983dc0e4397eed21daa12e
   languageName: node
   linkType: hard
 
@@ -8905,6 +8975,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"on-exit-leak-free@npm:2.1.2":
+  version: 2.1.2
+  resolution: "on-exit-leak-free@npm:2.1.2"
+  checksum: 10/f7b4b7200026a08f6e4a17ba6d72e6c5cbb41789ed9cf7deaf9d9e322872c7dc5a7898549a894651ee0ee9ae635d34a678115bf8acdfba8ebd2ba2af688b563c
+  languageName: node
+  linkType: hard
+
 "once@npm:^1.3.0, once@npm:^1.3.1, once@npm:^1.4.0":
   version: 1.4.0
   resolution: "once@npm:1.4.0"
@@ -9918,6 +9995,15 @@ __metadata:
     ip-address: "npm:^9.0.5"
     smart-buffer: "npm:^4.2.0"
   checksum: 10/ffcb622c22481dfcd7589aae71fbfd71ca34334064d181df64bf8b7feaeee19706aba4cffd1de35cc7bbaeeaa0af96be2d7f40fcbc7bc0ab69533a7ae9ffc4fb
+  languageName: node
+  linkType: hard
+
+"sonic-boom@npm:3.8.0":
+  version: 3.8.0
+  resolution: "sonic-boom@npm:3.8.0"
+  dependencies:
+    atomic-sleep: "npm:^1.0.0"
+  checksum: 10/470a82cb1af3ab99fcd3003bbecb2ce79a6b243d0f6012c59e5f567f71cbe039c8cd810752748b5820ee20d72c8da81aa298e510eec9e41a4ca05c7f419825ff
   languageName: node
   linkType: hard
 

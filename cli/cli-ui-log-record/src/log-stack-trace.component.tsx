@@ -1,4 +1,4 @@
-import type { LogAttributeValue } from '@opentelemetry/api-logs'
+import type { LogAttributeValue } from '@atls/logger'
 import type { ReactElement }      from 'react'
 
 import { Box }                    from 'ink'

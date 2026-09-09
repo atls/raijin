@@ -5,7 +5,7 @@ import type { ServiceLogRecord }        from './service.interfaces.js'
 import EventEmitter                     from 'node:events'
 import { PassThrough }                  from 'node:stream'
 
-import { SeverityNumber }               from '@opentelemetry/api-logs'
+import { SeverityNumber }               from '@atls/logger'
 
 import { StartServerPlugin }            from '@atls/webpack-start-server-plugin'
 import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'

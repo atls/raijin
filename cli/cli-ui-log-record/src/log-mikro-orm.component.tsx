@@ -1,5 +1,5 @@
-import type { LogAttributes }     from '@opentelemetry/api-logs'
-import type { LogAttributeValue } from '@opentelemetry/api-logs'
+import type { LogAttributes }     from '@atls/logger'
+import type { LogAttributeValue } from '@atls/logger'
 import type { ReactElement }      from 'react'
 
 import { SqlHighlighter }         from '@mikro-orm/sql-highlighter'
