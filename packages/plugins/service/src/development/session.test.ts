@@ -140,6 +140,27 @@ test('accepts a signalled application result during requested cancellation', asy
   assert.deepEqual(await session, { reason: 'test-complete', status: 'cancelled' })
 })
 
+test('accepts a signalled result immediately before session cancellation', async () => {
+  const cwd = await createProject()
+  let resolveExecution: ((result: ApplicationExecutionResult) => void) | undefined
+  const application: ApplicationInvocation = {
+    execute: async () =>
+      new Promise<ApplicationExecutionResult>((resolve) => {
+        resolveExecution = resolve
+      }),
+  }
+  const controller = new AbortController()
+  const session = runDevelopmentSession({ application, cwd, signal: controller.signal })
+
+  await waitFor(() => Boolean(resolveExecution))
+  resolveExecution?.({ reason: 'signalled', signal: 'SIGINT', stderr: '', stdout: '' })
+  setImmediate(() => {
+    controller.abort('SIGINT')
+  })
+
+  assert.deepEqual(await session, { reason: 'SIGINT', status: 'cancelled' })
+})
+
 test('returns a failed outcome when an application is unexpectedly signalled', async () => {
   const cwd = await createProject()
   const execution: ApplicationExecutionResult = {

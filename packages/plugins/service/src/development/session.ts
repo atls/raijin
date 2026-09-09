@@ -73,6 +73,25 @@ const isSuccessfulStop = (
   (cancellationRequested && result.reason === 'signalled') ||
   (result.reason === 'completed' && result.exitCode === 0)
 
+const waitForAbortOrNextTurn = async (signal: AbortSignal): Promise<boolean> =>
+  new Promise((resolve) => {
+    if (signal.aborted) {
+      resolve(true)
+
+      return
+    }
+
+    const onAbort = (): void => {
+      resolve(true)
+    }
+
+    signal.addEventListener('abort', onAbort, { once: true })
+    setImmediate(() => {
+      signal.removeEventListener('abort', onAbort)
+      resolve(signal.aborted)
+    })
+  })
+
 export const runDevelopmentSession = async ({
   application,
   cwd,
@@ -147,8 +166,18 @@ export const runDevelopmentSession = async ({
     current = running
 
     result.then(
-      (execution) => {
-        if (current !== running || stopping) {
+      async (execution) => {
+        const isActive = (): boolean => current === running && !stopping
+
+        if (!isActive()) {
+          return
+        }
+
+        if (execution.reason === 'signalled' && (await waitForAbortOrNextTurn(signal))) {
+          return
+        }
+
+        if (!isActive()) {
           return
         }
 
