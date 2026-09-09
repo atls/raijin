@@ -1,7 +1,7 @@
-import type { LogRecord as Record }        from '@monstrs/logger'
+import type { LogRecord as Record }        from '@atls/logger'
 import type { ReactElement }               from 'react'
 
-import { LOGGER_NAMESPACE_ATTRIBUTE_NAME } from '@monstrs/logger'
+import { LOGGER_NAMESPACE_ATTRIBUTE_NAME } from '@atls/logger'
 import { Box }                             from 'ink'
 import React                               from 'react'
 
@@ -9,6 +9,8 @@ import { LogMessage }                      from './log-message.component.jsx'
 import { LogMikroOrm }                     from './log-mikro-orm.component.jsx'
 import { LogNamespace }                    from './log-namespace.component.jsx'
 import { LogStackTrace }                   from './log-stack-trace.component.jsx'
+
+const LOG_STACK_ATTRIBUTE_NAME = '@stack'
 
 export interface LogRecordProps extends Record {
   namespace?: string
@@ -39,7 +41,7 @@ export const LogRecord = ({
         </Box>
       </Box>
     </Box>
-    <LogStackTrace>{stack || attributes['@stack']}</LogStackTrace>
+    <LogStackTrace>{stack || attributes[LOG_STACK_ATTRIBUTE_NAME]}</LogStackTrace>
     <LogMikroOrm>{attributes}</LogMikroOrm>
   </Box>
 )

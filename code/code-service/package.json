@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@atls/code-configuration": "workspace:*",
+    "@atls/logger": "0.0.4",
     "@atls/raijin": "workspace:*",
     "@atls/webpack-start-server-plugin": "workspace:*",
     "@yarnpkg/cli": "4.14.1",
@@ -27,7 +28,6 @@
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@monstrs/logger": "0.0.20",
     "@types/node": "24.12.2",
     "@types/webpack": "5.28.5",
     "@yarnpkg/fslib": "3.1.5",

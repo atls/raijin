@@ -1,4 +1,4 @@
-import type { SeverityNumber }              from '@monstrs/logger'
+import type { SeverityNumber }              from '@atls/logger'
 import type { materializeTypeScriptConfig } from '@atls/raijin/config/typescript'
 import type { typescriptDefaults }          from '@atls/raijin/config/typescript'
 import type { webpack }                     from '@atls/raijin/webpack'

@@ -1,10 +1,10 @@
-import type { LogAttributeValue } from '@monstrs/logger'
+import type { LogAttributeValue } from '@atls/logger'
 import type { ReactElement }      from 'react'
 
 import { Box }                    from 'ink'
 import React                      from 'react'
 
-import { StackTrace }             from '@atls/cli-ui-stack-trace-component'
+import { StackTrace }             from '@atls/cli-ui'
 
 export interface LogStackTraceProps {
   children?: LogAttributeValue | string

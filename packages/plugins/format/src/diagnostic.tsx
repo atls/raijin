@@ -2,8 +2,8 @@ import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
 import React                            from 'react'
 
-import { ErrorInfo }                    from '@atls/cli-ui-error-info-component'
-import { renderStatic }                 from '@atls/cli-ui-renderer-static-component'
+import { ErrorInfo }                    from '@atls/cli-ui'
+import { renderStatic }                 from '@atls/cli-ui'
 
 export const writeDiagnostic = (
   context: Pick<WorkspaceCommandContext, 'stderr' | 'stdout'>,
