@@ -1,5 +1,5 @@
-import type { LogAttributeValue } from '@monstrs/logger'
-import type { AttributeValue }    from '@monstrs/logger'
+import type { AttributeValue }    from '@opentelemetry/api'
+import type { LogAttributeValue } from '@opentelemetry/api-logs'
 import type { ReactElement }      from 'react'
 
 import { Text }                   from 'ink'

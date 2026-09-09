@@ -1,7 +1,7 @@
 import type { ServiceLogRecord }        from '@atls/code-service'
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import { SeverityNumber }               from '@monstrs/logger'
+import { SeverityNumber }               from '@opentelemetry/api-logs'
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { Option }                       from 'clipanion'
 import React                            from 'react'

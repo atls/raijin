@@ -1,4 +1,4 @@
-import type { LogAttributeValue } from '@monstrs/logger'
+import type { LogAttributeValue } from '@opentelemetry/api-logs'
 import type { ReactElement }      from 'react'
 
 import { Box }                    from 'ink'

@@ -23,7 +23,7 @@
     "@atls/code-service": "workspace:*",
     "@atls/raijin": "workspace:*",
     "@atls/yarn-pack-utils": "workspace:*",
-    "@monstrs/logger": "0.0.20",
+    "@opentelemetry/api-logs": "0.42.0",
     "clipanion": "4.0.0-rc.2",
     "ink": "3.2.0",
     "react": "18.3.1"

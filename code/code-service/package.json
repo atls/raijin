@@ -22,12 +22,12 @@
     "@atls/code-configuration": "workspace:*",
     "@atls/raijin": "workspace:*",
     "@atls/webpack-start-server-plugin": "workspace:*",
+    "@opentelemetry/api-logs": "0.42.0",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@monstrs/logger": "0.0.20",
     "@types/node": "24.12.2",
     "@types/webpack": "5.28.5",
     "@yarnpkg/fslib": "3.1.5",
