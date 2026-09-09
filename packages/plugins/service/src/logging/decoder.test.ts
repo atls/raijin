@@ -21,11 +21,35 @@ test('preserves JSON that is not a logger record as plain application output', (
     '{"result":"ok"}',
     '{"body":{"result":"ok"}}',
     '{"record":null}',
+    '{"body":"ok","severityNumber":9,"record":null}',
+    '{"record":{"details":"missing message"},"severityNumber":17}',
+    '{"record":{"message":"invalid details","details":3},"severityNumber":17}',
+    '{"record":"wrong severity","severityNumber":9}',
     '["result","ok"]',
   ]
 
   assert.deepEqual(
     decoder.push({ data: `${lines.join('\n')}\n`, source: 'stdout' }),
     lines.map((body) => ({ body, severityNumber: 9 }))
+  )
+})
+
+test('decodes valid build diagnostics', () => {
+  const decoder = new LogRecordDecoder()
+
+  assert.deepEqual(
+    decoder.push({
+      data: [
+        '{"record":"build warning","severityNumber":13}',
+        '{"record":{"message":"build failed","details":"stack"},"severityNumber":17}',
+      ]
+        .join('\n')
+        .concat('\n'),
+      source: 'stderr',
+    }),
+    [
+      { record: 'build warning', severityNumber: 13 },
+      { record: { message: 'build failed', details: 'stack' }, severityNumber: 17 },
+    ]
   )
 })

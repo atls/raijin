@@ -14,6 +14,8 @@ import { execa }                   from 'execa'
 type InputStream = Exclude<ExecuteOptions['streams']['stdin'], 'inherit'>
 type OutputStream = Exclude<ExecuteOptions['streams']['stdout'], 'inherit'>
 
+type ForwardingResult = { reason: 'completed' } | { reason: 'failed'; cause: unknown }
+
 interface ResolvedInput {
   input?: InputStream
   stdin: StdinOption
@@ -91,6 +93,12 @@ const resolveExecutionOutput = (result: Result): Pick<ExecuteResult, 'stderr' | 
   stdout: typeof result.stdout === 'string' ? result.stdout : '',
 })
 
+const settleForwarding = async (forwarding: Array<Promise<void>>): Promise<ForwardingResult> =>
+  Promise.all(forwarding).then(
+    () => ({ reason: 'completed' }),
+    (cause: unknown) => ({ reason: 'failed', cause })
+  )
+
 export const execute = async (
   command: string,
   args: ReadonlyArray<string>,
@@ -120,8 +128,35 @@ export const execute = async (
       }
     }
 
-    result = await subprocess
-    await Promise.all(forwarding)
+    const forwardingResult = settleForwarding(forwarding)
+    const first = await Promise.race([
+      subprocess.then((execution) => ({ execution, source: 'process' as const })),
+      forwardingResult.then((settled) => ({ forwarding: settled, source: 'forwarding' as const })),
+    ])
+
+    if (first.source === 'forwarding' && first.forwarding.reason === 'failed') {
+      subprocess.kill()
+      await subprocess
+
+      return { reason: 'start-failed', cause: first.forwarding.cause, stderr: '', stdout: '' }
+    }
+
+    result = first.source === 'process' ? first.execution : await subprocess
+
+    const settledForwarding = await forwardingResult
+
+    if (settledForwarding.reason === 'failed') {
+      const output = resolveExecutionOutput(result)
+
+      return result.exitCode === undefined
+        ? { ...output, reason: 'start-failed', cause: settledForwarding.cause }
+        : {
+            ...output,
+            reason: 'output-failed',
+            cause: settledForwarding.cause,
+            exitCode: result.exitCode,
+          }
+    }
   } catch (cause) {
     return { reason: 'start-failed', cause, stderr: '', stdout: '' }
   }

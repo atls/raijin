@@ -1,6 +1,7 @@
 import type { LogRecord }          from '@atls/logger'
 import type { ProcessOutputEvent } from '@atls/raijin/commands'
 
+import type { BuildDiagnostic }    from '../build/interfaces.js'
 import type { ServiceLogRecord }   from './interfaces.js'
 
 import { SeverityNumber }          from '@atls/logger'
@@ -13,6 +14,23 @@ const isObjectRecord = (value: unknown): value is Record<string, unknown> =>
 
 const isOptionalString = (value: unknown): boolean =>
   value === undefined || typeof value === 'string'
+
+const isBuildDiagnostic = (value: unknown): value is BuildDiagnostic => {
+  if (!isObjectRecord(value)) {
+    return false
+  }
+
+  const { record, severityNumber } = value
+  const isRecord =
+    typeof record === 'string' ||
+    (isObjectRecord(record) &&
+      typeof record.message === 'string' &&
+      isOptionalString(record.details))
+
+  return (
+    isRecord && (severityNumber === SeverityNumber.ERROR || severityNumber === SeverityNumber.WARN)
+  )
+}
 
 const isLoggerRecord = (value: unknown): value is LogRecord => {
   if (!isObjectRecord(value)) {
@@ -30,7 +48,8 @@ const isLoggerRecord = (value: unknown): value is LogRecord => {
     (attributes === undefined || isObjectRecord(attributes)) &&
     isOptionalString(namespace) &&
     isOptionalString(severityText) &&
-    isOptionalString(stack)
+    isOptionalString(stack) &&
+    !('record' in value)
   )
 }
 
@@ -38,7 +57,7 @@ const parseRecord = (body: string): ServiceLogRecord => {
   try {
     const record: unknown = JSON.parse(body)
 
-    if (isLoggerRecord(record)) {
+    if (isBuildDiagnostic(record) || isLoggerRecord(record)) {
       return record
     }
   } catch {
