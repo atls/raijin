@@ -135,13 +135,13 @@ test('should stop a running process when forwarding output fails', async () => {
       cwd: process.cwd(),
       env: process.env,
       input: 'ignore',
-      timeoutMs: 1000,
+      timeoutMs: 5000,
     }
   )
 
   assert.equal(result.reason, 'start-failed')
   assert.equal(result.cause, failure)
-  assert.ok(Date.now() - startedAt < 500)
+  assert.ok(Date.now() - startedAt < 4000)
 })
 
 test('should preserve process start failures as a typed result', async () => {

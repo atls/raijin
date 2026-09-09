@@ -5,12 +5,11 @@ import { LOGGER_NAMESPACE_ATTRIBUTE_NAME } from '@atls/logger'
 import { Box }                             from 'ink'
 import React                               from 'react'
 
+import { LOG_STACK_ATTRIBUTE_NAME }        from './attributes.js'
 import { LogMessage }                      from './message.jsx'
 import { LogMikroOrm }                     from './mikro-orm.jsx'
 import { LogNamespace }                    from './namespace.jsx'
 import { LogStackTrace }                   from './stack-trace.jsx'
-
-const LOG_STACK_ATTRIBUTE_NAME = '@stack'
 
 export interface LogRecordProps extends Record {
   namespace?: string

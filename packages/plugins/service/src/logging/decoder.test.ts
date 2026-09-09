@@ -25,6 +25,10 @@ test('preserves JSON that is not a logger record as plain application output', (
     '{"record":{"details":"missing message"},"severityNumber":17}',
     '{"record":{"message":"invalid details","details":3},"severityNumber":17}',
     '{"record":"wrong severity","severityNumber":9}',
+    '{"body":"ok","severityNumber":9,"attributes":{"@namespace":{}}}',
+    '{"body":"ok","severityNumber":9,"attributes":{"@stack":[]}}',
+    '{"body":"ok","severityNumber":9,"attributes":{"@mikro-orm-sql":{}}}',
+    '{"body":"ok","severityNumber":9,"attributes":{"@mikro-orm-params":[{}]}}',
     '["result","ok"]',
   ]
 
@@ -32,6 +36,25 @@ test('preserves JSON that is not a logger record as plain application output', (
     decoder.push({ data: `${lines.join('\n')}\n`, source: 'stdout' }),
     lines.map((body) => ({ body, severityNumber: 9 }))
   )
+})
+
+test('decodes logger records with renderable attributes', () => {
+  const decoder = new LogRecordDecoder()
+  const record = {
+    attributes: {
+      '@mikro-orm-params': ['42'],
+      '@mikro-orm-sql': 'select * from users where id = ?',
+      '@namespace': 'service:api',
+      '@stack': 'Error: Request failed',
+      custom: { nested: true },
+    },
+    body: 'Request failed',
+    severityNumber: 9,
+  }
+
+  assert.deepEqual(decoder.push({ data: `${JSON.stringify(record)}\n`, source: 'stdout' }), [
+    record,
+  ])
 })
 
 test('decodes valid build diagnostics', () => {

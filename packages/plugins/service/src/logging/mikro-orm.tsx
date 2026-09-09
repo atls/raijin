@@ -1,16 +1,16 @@
-import type { LogAttributes }     from '@atls/logger'
-import type { LogAttributeValue } from '@atls/logger'
-import type { ReactElement }      from 'react'
+import type { LogAttributes }              from '@atls/logger'
+import type { LogAttributeValue }          from '@atls/logger'
+import type { ReactElement }               from 'react'
 
-import { SqlHighlighter }         from '@mikro-orm/sql-highlighter'
-import { Text }                   from 'ink'
-import { Box }                    from 'ink'
-import { nanoid }                 from 'nanoid'
-import { format }                 from 'sql-formatter'
-import React                      from 'react'
+import { SqlHighlighter }                  from '@mikro-orm/sql-highlighter'
+import { Text }                            from 'ink'
+import { Box }                             from 'ink'
+import { nanoid }                          from 'nanoid'
+import { format }                          from 'sql-formatter'
+import React                               from 'react'
 
-const MIKRO_ORM_SQL_ATTRIBUTE_NAME = '@mikro-orm-sql'
-const MIKRO_ORM_PARAMS_ATTRIBUTE_NAME = '@mikro-orm-params'
+import { MIKRO_ORM_PARAMS_ATTRIBUTE_NAME } from './attributes.js'
+import { MIKRO_ORM_SQL_ATTRIBUTE_NAME }    from './attributes.js'
 
 export interface LogMikroOrmProps {
   children?: LogAttributes

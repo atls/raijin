@@ -1,10 +1,12 @@
-import type { LogRecord }          from '@atls/logger'
-import type { ProcessOutputEvent } from '@atls/raijin/commands'
+import type { LogRecord }            from '@atls/logger'
+import type { ProcessOutputEvent }   from '@atls/raijin/commands'
 
-import type { BuildDiagnostic }    from '../build/interfaces.js'
-import type { ServiceLogRecord }   from './interfaces.js'
+import type { BuildDiagnostic }      from '../build/interfaces.js'
+import type { ServiceLogRecord }     from './interfaces.js'
 
-import { SeverityNumber }          from '@atls/logger'
+import { SeverityNumber }            from '@atls/logger'
+
+import { isRenderableLogAttributes } from './attributes.js'
 
 const MIN_SEVERITY_NUMBER: number = SeverityNumber.UNSPECIFIED
 const MAX_SEVERITY_NUMBER: number = SeverityNumber.FATAL4
@@ -45,7 +47,8 @@ const isLoggerRecord = (value: unknown): value is LogRecord => {
     Number.isInteger(severityNumber) &&
     severityNumber >= MIN_SEVERITY_NUMBER &&
     severityNumber <= MAX_SEVERITY_NUMBER &&
-    (attributes === undefined || isObjectRecord(attributes)) &&
+    (attributes === undefined ||
+      (isObjectRecord(attributes) && isRenderableLogAttributes(attributes))) &&
     isOptionalString(namespace) &&
     isOptionalString(severityText) &&
     isOptionalString(stack) &&
