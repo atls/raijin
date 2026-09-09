@@ -49,8 +49,10 @@ test('starts initially, restarts only after successful rebuild, and closes on ca
   const inputs: Array<ApplicationExecutionInput> = []
   const stopped: Array<ApplicationExecutionInput> = []
   const diagnostics: Array<number> = []
+  let completedCompilations = 0
   const application: ApplicationInvocation = {
     execute: async (input) => {
+      assert.equal(completedCompilations, inputs.length + 1)
       inputs.push(input)
 
       return new Promise<ApplicationExecutionResult>((resolve) => {
@@ -69,6 +71,9 @@ test('starts initially, restarts only after successful rebuild, and closes on ca
   const session = runDevelopmentSession({
     application,
     cwd,
+    onCompilationComplete: () => {
+      completedCompilations += 1
+    },
     onDiagnostics: (records) => diagnostics.push(records.length),
     signal: controller.signal,
   })
@@ -86,6 +91,7 @@ test('starts initially, restarts only after successful rebuild, and closes on ca
 
   assert.equal(inputs.length, 2)
   assert.equal(stopped.length, 1)
+  assert.ok(completedCompilations >= 3)
 
   controller.abort('test-complete')
 

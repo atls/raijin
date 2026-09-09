@@ -30,6 +30,9 @@ export class ServiceDevCommand extends AbstractServiceCommand {
       const result = await runDevelopmentSession({
         application: invocation.application,
         cwd: toNativeCwd(executionCwd),
+        onCompilationComplete: () => {
+          progress.clear()
+        },
         onDiagnostics: (diagnostics) => {
           diagnostics.forEach((diagnostic) => {
             this.renderLogRecord(diagnostic)

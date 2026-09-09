@@ -17,6 +17,7 @@ import { loadWebpackRuntime }              from '../build/runtime.js'
 export interface DevelopmentSessionInput {
   application: ApplicationInvocation
   cwd: string
+  onCompilationComplete?: () => void
   onDiagnostics?: (diagnostics: Array<BuildDiagnostic>) => void
   onLogRecord?: (record: ServiceLogRecord) => void
   onProgress?: (progress: { message: string; percent: number }) => void
@@ -95,6 +96,7 @@ const waitForAbortOrNextTurn = async (signal: AbortSignal): Promise<boolean> =>
 export const runDevelopmentSession = async ({
   application,
   cwd,
+  onCompilationComplete = () => undefined,
   onDiagnostics = () => undefined,
   onLogRecord = () => undefined,
   onProgress,
@@ -233,6 +235,8 @@ export const runDevelopmentSession = async ({
           if (stopping) {
             return
           }
+
+          onCompilationComplete()
 
           if (error) {
             finish({ error, status: 'provider-failed' })
