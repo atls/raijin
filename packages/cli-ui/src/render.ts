@@ -8,13 +8,21 @@ const STATIC_COLUMNS = 160
 const STATIC_ROWS = 24
 
 class OutputCapture extends EventEmitter {
-  readonly columns = STATIC_COLUMNS
-
-  readonly rows = STATIC_ROWS
-
   readonly isTTY = false
 
   frame = ''
+
+  constructor(private readonly destination: NodeJS.WriteStream) {
+    super()
+  }
+
+  get columns(): number {
+    return this.destination.columns || STATIC_COLUMNS
+  }
+
+  get rows(): number {
+    return this.destination.rows || STATIC_ROWS
+  }
 
   write = (chunk: Uint8Array | string): boolean => {
     this.frame = typeof chunk === 'string' ? chunk : Buffer.from(chunk).toString()
@@ -27,8 +35,8 @@ const toWriteStream = (capture: OutputCapture): NodeJS.WriteStream =>
   capture as unknown as NodeJS.WriteStream
 
 export const renderStatic = (tree: ReactElement): string => {
-  const stdout = new OutputCapture()
-  const stderr = new OutputCapture()
+  const stdout = new OutputCapture(process.stdout)
+  const stderr = new OutputCapture(process.stderr)
   const { unmount } = render(tree, {
     stdout: toWriteStream(stdout),
     stderr: toWriteStream(stderr),
