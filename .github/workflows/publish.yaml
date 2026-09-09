@@ -24,21 +24,21 @@ jobs:
     permissions: write-all
 
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3.2.0
         id: app-token
         with:
-          app-id: ${{ vars.ATLANTIS_SUPER_BOT_APP_ID }}
+          client-id: ${{ vars.ATLANTIS_SUPER_BOT_CLIENT_ID }}
           private-key: ${{ secrets.ATLANTIS_SUPER_BOT_PRIVATE_KEY }}
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || 'master' }}
           token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 0
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
 
