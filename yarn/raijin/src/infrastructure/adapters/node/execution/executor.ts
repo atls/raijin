@@ -82,11 +82,7 @@ const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<E
       createArguments(input, await options.loader.resolve(input.cwd)),
       {
         cancelSignal: input.cancelSignal,
-        streams: {
-          stderr: 'inherit',
-          stdin: 'inherit',
-          stdout: 'inherit',
-        },
+        streams: options.streams,
         cwd: input.cwd,
         env: environment,
         input: input.input === 'ignore' ? 'ignore' : undefined,

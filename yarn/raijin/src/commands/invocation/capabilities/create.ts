@@ -18,6 +18,7 @@ export const createApplicationInvocation = ({
   environment,
   locator,
   project,
+  streams,
 }: ApplicationInvocationOptions): ApplicationInvocation =>
   createApplicationExecutor({
     environment: {
@@ -32,6 +33,7 @@ export const createApplicationInvocation = ({
     loader: {
       resolve: async (cwd) => resolveRaijinRuntimeUrl(cwd, TYPESCRIPT_LOADER_SPECIFIER),
     },
+    streams,
   })
 
 export const createProcessInvocation = ({

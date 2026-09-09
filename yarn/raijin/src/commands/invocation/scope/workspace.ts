@@ -20,6 +20,11 @@ export const resolveWorkspaceCommandInvocation = async (
       environment: context.env,
       locator: resolvedWorkspace.anchoredLocator,
       project,
+      streams: {
+        stderr: context.stderr,
+        stdin: context.stdin,
+        stdout: context.stdout,
+      },
     }),
     executionCwd: resolvedWorkspace.cwd,
     invocationCwd,

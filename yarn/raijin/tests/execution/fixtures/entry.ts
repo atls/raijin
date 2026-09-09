@@ -4,6 +4,15 @@ switch (mode) {
   case 'fail':
     process.exitCode = 7
     break
+  case 'input': {
+    process.stdin.setEncoding('utf8')
+    process.stderr.write('context-error')
+
+    for await (const chunk of process.stdin as AsyncIterable<string>) {
+      process.stdout.write(chunk)
+    }
+    break
+  }
   case 'report': {
     const { Configuration } = await import('@yarnpkg/core')
 
