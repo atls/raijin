@@ -113,6 +113,53 @@ test('keeps watching after a disposable non-HTTP application completes', async (
   assert.deepEqual(await session, { reason: 'test-complete', status: 'cancelled' })
 })
 
+test('accepts a signalled application result during requested cancellation', async () => {
+  const cwd = await createProject()
+  let started = false
+  const application: ApplicationInvocation = {
+    execute: async (input) => {
+      started = true
+
+      return new Promise<ApplicationExecutionResult>((resolve) => {
+        input.cancelSignal?.addEventListener(
+          'abort',
+          () => {
+            resolve({ reason: 'signalled', signal: 'SIGINT', stderr: '', stdout: '' })
+          },
+          { once: true }
+        )
+      })
+    },
+  }
+  const controller = new AbortController()
+  const session = runDevelopmentSession({ application, cwd, signal: controller.signal })
+
+  await waitFor(() => started)
+  controller.abort('test-complete')
+
+  assert.deepEqual(await session, { reason: 'test-complete', status: 'cancelled' })
+})
+
+test('returns a failed outcome when an application is unexpectedly signalled', async () => {
+  const cwd = await createProject()
+  const execution: ApplicationExecutionResult = {
+    reason: 'signalled',
+    signal: 'SIGTERM',
+    stderr: '',
+    stdout: '',
+  }
+  const application: ApplicationInvocation = {
+    execute: async () => execution,
+  }
+  const result = await runDevelopmentSession({
+    application,
+    cwd,
+    signal: new AbortController().signal,
+  })
+
+  assert.deepEqual(result, { execution, status: 'launch-failed' })
+})
+
 test('returns a failed outcome when the application cannot launch', async () => {
   const cwd = await createProject()
   const application: ApplicationInvocation = {

@@ -65,8 +65,13 @@ const collectDiagnostics = (stats: wp.Stats): Array<BuildDiagnostic> => {
   ]
 }
 
-const isSuccessfulStop = (result: ApplicationExecutionResult): boolean =>
-  result.reason === 'cancelled' || (result.reason === 'completed' && result.exitCode === 0)
+const isSuccessfulStop = (
+  result: ApplicationExecutionResult,
+  cancellationRequested: boolean
+): boolean =>
+  result.reason === 'cancelled' ||
+  (cancellationRequested && result.reason === 'signalled') ||
+  (result.reason === 'completed' && result.exitCode === 0)
 
 export const runDevelopmentSession = async ({
   application,
@@ -108,7 +113,7 @@ export const runDevelopmentSession = async ({
 
     const result = await running.result
 
-    if (!isSuccessfulStop(result)) {
+    if (!isSuccessfulStop(result, running.controller.signal.aborted)) {
       throw new Error(`Application cleanup failed with ${result.reason}`)
     }
   }
