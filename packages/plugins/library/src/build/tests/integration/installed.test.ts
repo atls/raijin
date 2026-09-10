@@ -79,10 +79,10 @@ test(
         private: true,
         type: 'module',
         packageManager,
-        files: ['dist'],
+        files: ['lib'],
         scripts: {
-          build: 'yarn library build',
-          postpack: 'rm -rf dist',
+          build: 'yarn library build --target ./lib',
+          postpack: 'rm -rf lib',
           prepack: 'yarn run build',
         },
         devDependencies: {
@@ -92,13 +92,11 @@ test(
         publishConfig: {
           exports: {
             '.': {
-              default: './dist/index.js',
-              import: './dist/index.js',
-              types: './dist/index.d.ts',
+              default: './lib/index.js',
+              import: './lib/index.js',
+              types: './lib/index.d.ts',
             },
           },
-          main: 'dist/index.js',
-          types: 'dist/index.d.ts',
         },
       })}\n`
     )
@@ -128,7 +126,7 @@ test(
 
     await run(libraryCwd, ['install'])
     await run(libraryCwd, ['pack', '--out', libraryArchive])
-    await assert.rejects(access(join(libraryCwd, 'dist')))
+    await assert.rejects(access(join(libraryCwd, 'lib')))
 
     await mkdir(consumerCwd)
     await materializeRuntime(consumerCwd)

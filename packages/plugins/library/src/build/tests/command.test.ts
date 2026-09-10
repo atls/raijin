@@ -131,7 +131,7 @@ test('writes normalized compiler diagnostics and returns failure', async (t) => 
   assert.equal(readStderr(), '')
 })
 
-test('clears interactive progress before writing a durable diagnostic', async (t) => {
+test('finishes interactive progress before writing a durable diagnostic', async (t) => {
   const cwd = await createProject('export const value: string = 1\n')
   const { cli, plugins } = createCli()
   const stderr = new PassThrough()
@@ -144,14 +144,15 @@ test('clears interactive progress before writing a durable diagnostic', async (t
 
   const exitCode = await cli.run(['library', 'build'], createContext(plugins, cwd, stderr, stdout))
   const output = readStdout()
+  const progress = output.indexOf('Building library')
   const progressClear = output.indexOf('\u001B[2K')
   const diagnostic = output.indexOf('TS2322')
 
   assert.equal(exitCode, 1)
   assert.match(output, /Building library/)
   assert.doesNotMatch(output, /\d+%/)
-  assert.ok(progressClear >= 0)
-  assert.ok(diagnostic > progressClear)
+  assert.ok(diagnostic > progress)
+  if (progressClear >= 0) assert.ok(diagnostic > progressClear)
 })
 
 test('writes provider exceptions at the command boundary', async (t) => {

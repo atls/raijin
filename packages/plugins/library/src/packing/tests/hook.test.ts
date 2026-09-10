@@ -24,10 +24,10 @@ const createWorkspace = (cwd: string, isPrivate: boolean, build?: string): Works
     },
   }) as Workspace
 
-const createArtifact = async (cwd: string): Promise<void> => {
-  await mkdir(join(cwd, 'dist'), { recursive: true })
-  await writeFile(join(cwd, 'dist/index.js'), 'export const value = true\n')
-  await writeFile(join(cwd, 'dist/index.d.ts'), 'export declare const value = true\n')
+const createArtifact = async (cwd: string, target = 'dist'): Promise<void> => {
+  await mkdir(join(cwd, target), { recursive: true })
+  await writeFile(join(cwd, target, 'index.js'), 'export const value = true\n')
+  await writeFile(join(cwd, target, 'index.d.ts'), 'export declare const value = true\n')
 }
 
 test('applies private plugin pack metadata without requiring a library artifact', async (t) => {
@@ -106,6 +106,113 @@ test('applies publish metadata after consuming a private library artifact', asyn
     },
     types: 'dist/index.d.ts',
   })
+})
+
+test('recognizes a private library build with command arguments', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-arguments-'))
+  const manifest: RawManifest = {
+    exports: { '.': './src/index.ts' },
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './lib/index.js',
+          types: './lib/index.d.ts',
+        },
+      },
+    },
+  }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  await createArtifact(cwd, 'lib')
+  await beforeWorkspacePacking(
+    createWorkspace(cwd, true, 'yarn library build --target ./lib'),
+    manifest
+  )
+
+  assert.deepEqual(manifest.exports, manifest.publishConfig?.exports)
+})
+
+test('does not classify near-match or chained scripts as library builds', async (t) => {
+  const scripts = ['yarn library builder', 'yarn library build && yarn other']
+
+  await Promise.all(
+    scripts.map(async (script) => {
+      const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-other-script-'))
+      const manifest: RawManifest = {
+        exports: { '.': './src/index.ts' },
+        publishConfig: { exports: { '.': './dist/index.js' } },
+      }
+
+      t.after(async () => rm(cwd, { force: true, recursive: true }))
+      await beforeWorkspacePacking(createWorkspace(cwd, true, script), manifest)
+
+      assert.deepEqual(manifest.exports, { '.': './src/index.ts' })
+    })
+  )
+})
+
+test('verifies a completed artifact referenced only by exports', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-exports-only-'))
+  const manifest: RawManifest = {
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          types: './dist/index.d.ts',
+        },
+      },
+    },
+  }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  await createArtifact(cwd)
+  await beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest)
+
+  assert.deepEqual(manifest.exports, manifest.publishConfig?.exports)
+})
+
+test('rejects a missing file referenced only by exports', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-missing-export-'))
+  const manifest: RawManifest = {
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          types: './dist/index.d.ts',
+        },
+        './missing': './dist/missing.js',
+      },
+    },
+  }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  await createArtifact(cwd)
+
+  await assert.rejects(
+    beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest),
+    /ENOENT/
+  )
+})
+
+test('rejects an incomplete artifact referenced only by exports', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-missing-artifact-'))
+  const manifest: RawManifest = {
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          types: './dist/index.d.ts',
+        },
+      },
+    },
+  }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+
+  await assert.rejects(
+    beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest),
+    /Library artifact is incomplete/
+  )
 })
 
 test('allows an existing static type export outside the completed artifact root', async (t) => {
