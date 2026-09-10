@@ -14,33 +14,74 @@ import { FilePath }                     from './location.js'
 import { Separator }                    from './separator.js'
 import { SourcePreview }                from './source.js'
 
-interface TypeScriptDiagnosticProps {
-  messageText: DiagnosticMessageChain | string
-  file?: SourceFile
-  start?: number
+interface TypeScriptDiagnosticFields {
   code: number
   cwd?: string
 }
 
-const getFilePath = (file: SourceFile | undefined, cwd: string): string | null => {
+type TypeScriptCompilerDiagnostic = TypeScriptDiagnosticFields & {
+  messageText: DiagnosticMessageChain | string
+  file?: SourceFile
+  start?: number
+}
+
+type TypeScriptStructuredDiagnostic = TypeScriptDiagnosticFields & {
+  column?: number
+  file?: string
+  line?: number
+  message: string
+  sourceText?: string
+}
+
+type TypeScriptDiagnosticProps = TypeScriptCompilerDiagnostic | TypeScriptStructuredDiagnostic
+
+interface TypeScriptDiagnosticView {
+  code: number
+  column?: number
+  cwd: string
+  file?: SourceFile | string
+  line?: number
+  message: string
+  sourceText?: string
+}
+
+const getFilePath = (file: SourceFile | string | undefined, cwd: string): string | null => {
   if (!file) {
     return null
   }
 
-  return isAbsolute(file.fileName) ? relative(cwd, file.fileName) : file.fileName
+  const fileName = typeof file === 'string' ? file : file.fileName
+
+  return isAbsolute(fileName) ? relative(cwd, fileName) : fileName
 }
 
-export const TypeScriptDiagnostic = ({
-  messageText,
-  start,
-  file,
-  code,
-  cwd = process.cwd(),
-}: TypeScriptDiagnosticProps): ReactElement => {
+const toDiagnosticView = (props: TypeScriptDiagnosticProps): TypeScriptDiagnosticView => {
+  const { code, cwd = process.cwd() } = props
+
+  if ('message' in props) {
+    const { column, file, line, message, sourceText } = props
+
+    return { code, column, cwd, file, line, message, sourceText }
+  }
+
+  const { file, messageText, start } = props
+  const position =
+    file && start !== undefined ? file.getLineAndCharacterOfPosition(start) : undefined
+
+  return {
+    code,
+    column: position ? position.character + 1 : undefined,
+    cwd,
+    file,
+    line: position ? position.line + 1 : undefined,
+    message: flattenDiagnosticMessageText(messageText, '\n'),
+    sourceText: file?.text,
+  }
+}
+
+export const TypeScriptDiagnostic = (props: TypeScriptDiagnosticProps): ReactElement => {
+  const { code, column, cwd, file, line, message, sourceText } = toDiagnosticView(props)
   const filePath = getFilePath(file, cwd)
-  const position = file && start !== undefined ? file.getLineAndCharacterOfPosition(start) : null
-  const line = position ? position.line + 1 : undefined
-  const column = position ? position.character + 1 : undefined
 
   return (
     <Box flexDirection='column' borderStyle='round' borderColor='gray' paddingY={1} width='100%'>
@@ -59,18 +100,18 @@ export const TypeScriptDiagnostic = ({
         </Box>
       )}
       <Separator inset={2} />
-      {file?.text && position && line !== undefined && (
+      {sourceText && line !== undefined && (
         <>
           <Box>
             <SourcePreview line={line} column={column}>
-              {file.text}
+              {sourceText}
             </SourcePreview>
           </Box>
           <Separator inset={2} />
         </>
       )}
       <Box marginTop={1} paddingX={2}>
-        <Text color='white'>{flattenDiagnosticMessageText(messageText, '\n')}</Text>
+        <Text color='white'>{message}</Text>
       </Box>
     </Box>
   )

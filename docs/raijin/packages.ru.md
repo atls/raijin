@@ -110,15 +110,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-library -->
-
-#### `@atls/yarn-plugin-library`
-
-- Локация: `yarn/plugin-library`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-release -->
 
 #### `@atls/yarn-plugin-release`
@@ -178,6 +169,15 @@
 #### `@atls/yarn-plugin-format`
 
 - Локация: `packages/plugins/format`
+- Группа: `plugins`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-library -->
+
+#### `@atls/yarn-plugin-library`
+
+- Локация: `packages/plugins/library`
 - Группа: `plugins`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
@@ -272,15 +272,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-code-typescript -->
-
-#### `@atls/code-typescript`
-
-- Локация: `code/code-typescript`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `build:worker`, `postpack`, `prepack`
-
 </details>
 
 ## Group `cli`
@@ -296,13 +287,6 @@
 
 - Скрипты: `build`, `postpack`, `prepack`
 - Локация: `cli/cli-ui-git-commit`
-
-<!-- sync:package-card:atls-cli-ui-typescript-progress-component -->
-
-#### `@atls/cli-ui-typescript-progress-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-types-check-progress`
 
 </details>
 

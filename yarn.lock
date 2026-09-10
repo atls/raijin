@@ -261,21 +261,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/cli-ui-typescript-progress-component@workspace:*, @atls/cli-ui-typescript-progress-component@workspace:cli/cli-ui-types-check-progress":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-typescript-progress-component@workspace:cli/cli-ui-types-check-progress"
-  dependencies:
-    "@inkjs/ui": "npm:2.0.0"
-    "@types/react": "npm:18.3.18"
-    figures: "npm:6.1.0"
-    ink: "npm:3.2.0"
-    react: "npm:18.3.1"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
 "@atls/cli-ui@workspace:*, @atls/cli-ui@workspace:packages/cli-ui":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui@workspace:packages/cli-ui"
@@ -359,16 +344,6 @@ __metadata:
     "@iarna/toml": "npm:2.2.5"
     "@types/node": "npm:24.12.2"
     "@yarnpkg/fslib": "npm:3.1.5"
-  languageName: unknown
-  linkType: soft
-
-"@atls/code-typescript@workspace:*, @atls/code-typescript@workspace:code/code-typescript":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-typescript@workspace:code/code-typescript"
-  dependencies:
-    "@atls/raijin": "workspace:*"
-    "@types/node": "npm:24.12.2"
-    typescript: "npm:5.9.3"
   languageName: unknown
   linkType: soft
 
@@ -534,7 +509,6 @@ __metadata:
   dependencies:
     "@actions/core": "npm:1.10.1"
     "@actions/github": "npm:6.0.0"
-    "@atls/code-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-lint": "workspace:*"
@@ -699,13 +673,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-library@workspace:*, @atls/yarn-plugin-library@workspace:yarn/plugin-library":
+"@atls/yarn-plugin-library@workspace:*, @atls/yarn-plugin-library@workspace:packages/plugins/library":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-library@workspace:yarn/plugin-library"
+  resolution: "@atls/yarn-plugin-library@workspace:packages/plugins/library"
   dependencies:
     "@atls/cli-ui": "workspace:*"
-    "@atls/cli-ui-typescript-progress-component": "workspace:*"
-    "@atls/code-typescript": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
@@ -715,6 +687,7 @@ __metadata:
     clipanion: "npm:4.0.0-rc.2"
     ink: "npm:3.2.0"
     react: "npm:18.3.1"
+    typescript: "npm:5.9.3"
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"

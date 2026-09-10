@@ -34,3 +34,24 @@ test('renders a diagnostic at the first source character with one-based coordina
   assert.match(output, /TS2322/)
   assert.match(output, /Type 'number' is not assignable to type 'string'/)
 })
+
+test('renders a structured diagnostic without a compiler source object', () => {
+  const output = stripAnsi(
+    renderStatic(
+      <TypeScriptDiagnostic
+        code={2322}
+        column={7}
+        cwd='/workspace'
+        file='/workspace/src/example.ts'
+        line={1}
+        message="Type 'number' is not assignable to type 'string'"
+        sourceText='const value: string = 1\n'
+      />
+    )
+  )
+
+  assert.match(output, /src\/example\.ts:1:7/)
+  assert.match(output, /> 1 \| const value: string = 1/)
+  assert.match(output, /TS2322/)
+  assert.match(output, /Type 'number' is not assignable to type 'string'/)
+})

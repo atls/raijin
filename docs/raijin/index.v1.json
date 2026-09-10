@@ -606,14 +606,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/cli-ui-typescript-progress-component",
-      "location": "cli/cli-ui-types-check-progress",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/cli-ui",
       "location": "packages/cli-ui",
       "group": "cli-ui",
@@ -662,14 +654,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-typescript",
-      "location": "code/code-typescript",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "build:worker", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/yarn-plugin-commit",
       "location": "packages/plugins/commit",
       "group": "plugins",
@@ -680,6 +664,14 @@
     {
       "name": "@atls/yarn-plugin-format",
       "location": "packages/plugins/format",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
+      "name": "@atls/yarn-plugin-library",
+      "location": "packages/plugins/library",
       "group": "plugins",
       "private": true,
       "description": "",
@@ -805,14 +797,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/yarn-plugin-library",
-      "location": "yarn/plugin-library",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/yarn-plugin-release",
       "location": "yarn/plugin-release",
       "group": "yarn",
@@ -908,5 +892,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-10T16:52:23.154Z"
+  "lastGenerated": "2026-09-10T19:19:59.168Z"
 }
