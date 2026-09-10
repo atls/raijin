@@ -8,7 +8,6 @@ export interface TypeScriptProjectSelection {
 }
 
 export interface TypeScriptPackageManifest {
-  readonly typecheckIgnorePatterns?: ReadonlyArray<string>
   readonly typecheckSkipLibCheck?: boolean
 }
 
