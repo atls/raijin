@@ -2,6 +2,7 @@ import type { Filename } from '@yarnpkg/fslib'
 
 import assert            from 'node:assert/strict'
 import { PassThrough }   from 'node:stream'
+import { Writable }      from 'node:stream'
 import test              from 'node:test'
 
 import { npath }         from '@yarnpkg/fslib'
@@ -116,6 +117,31 @@ test('should classify an output handler failure independently from process compl
   assert.equal(result.reason, 'output-failed')
   assert.equal(result.cause, failure)
   assert.equal(result.exitCode, 0)
+})
+
+test('should stop a running process when forwarding output fails', async () => {
+  const failure = new Error('stream failed')
+  const stdout = new Writable({
+    write: (_chunk, _encoding, callback) => {
+      callback(failure)
+    },
+  })
+  const startedAt = Date.now()
+  const result = await execute(
+    process.execPath,
+    ['-e', "process.stdout.write('ready'); setInterval(() => {}, 1000)"],
+    {
+      streams: { ...createStreams(), stdout },
+      cwd: process.cwd(),
+      env: process.env,
+      input: 'ignore',
+      timeoutMs: 5000,
+    }
+  )
+
+  assert.equal(result.reason, 'start-failed')
+  assert.equal(result.cause, failure)
+  assert.ok(Date.now() - startedAt < 4000)
 })
 
 test('should preserve process start failures as a typed result', async () => {

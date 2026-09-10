@@ -9,7 +9,6 @@ import { isManagedNodeEnvironmentName }       from '../../../providers/node/load
 import { removeEnvironmentMarkers }           from '../../../providers/node/loader/environment.js'
 import { removeAppliedLoaderRegistration }    from '../../../providers/node/loader/environment.js'
 import { create as createRegistrationImport } from '../../../providers/node/loader/registration.js'
-import { resolve as resolveLoader }           from '../loaders/typescript/resolve.js'
 import { directory }                          from './directory.js'
 
 type ProcessResult = Exclude<ExecuteResult, { reason: 'cleanup-failed' }>
@@ -80,14 +79,10 @@ const execute = async (input: ExecuteInput, options: ExecutorOptions): Promise<E
     const output = input.output?.mode === 'inherit' ? undefined : input.output
     const result = await executeProcess(
       process.execPath,
-      createArguments(input, await resolveLoader()),
+      createArguments(input, await options.loader.resolve(input.cwd)),
       {
         cancelSignal: input.cancelSignal,
-        streams: {
-          stderr: 'inherit',
-          stdin: 'inherit',
-          stdout: 'inherit',
-        },
+        streams: options.streams,
         cwd: input.cwd,
         env: environment,
         input: input.input === 'ignore' ? 'ignore' : undefined,

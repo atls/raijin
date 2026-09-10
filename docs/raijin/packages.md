@@ -137,15 +137,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-service -->
-
-#### `@atls/yarn-plugin-service`
-
-- Location: `yarn/plugin-service`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-tools -->
 
 #### `@atls/yarn-plugin-tools`
@@ -209,6 +200,15 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-service -->
+
+#### `@atls/yarn-plugin-service`
+
+- Location: `packages/plugins/service`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-test -->
 
 #### `@atls/yarn-plugin-test`
@@ -232,15 +232,6 @@ Core code libraries for build, checks, and utilities
 #### `@atls/code-commit`
 
 - Location: `code/code-commit`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-configuration -->
-
-#### `@atls/code-configuration`
-
-- Location: `code/code-configuration`
 - Group: `code`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
@@ -281,15 +272,6 @@ Core code libraries for build, checks, and utilities
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-code-service -->
-
-#### `@atls/code-service`
-
-- Location: `code/code-service`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-typescript -->
 
 #### `@atls/code-typescript`
@@ -298,24 +280,6 @@ Core code libraries for build, checks, and utilities
 - Group: `code`
 - Visibility: `private`
 - Scripts: `build`, `build:worker`, `postpack`, `prepack`
-
-</details>
-
-## Group `webpack`
-
-Webpack integrations and build adapters
-
-<details>
-<summary>Group details: `webpack`</summary>
-
-<!-- sync:package-card:atls-webpack-start-server-plugin -->
-
-#### `@atls/webpack-start-server-plugin`
-
-- Location: `webpack/webpack-start-server-plugin`
-- Group: `webpack`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
 
 </details>
 
@@ -332,20 +296,6 @@ Command-line interface presentation packages
 
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-git-commit`
-
-<!-- sync:package-card:atls-cli-ui-log-record-component -->
-
-#### `@atls/cli-ui-log-record-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-log-record`
-
-<!-- sync:package-card:atls-cli-ui-service-progress-component -->
-
-#### `@atls/cli-ui-service-progress-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-service-progress`
 
 <!-- sync:package-card:atls-cli-ui-typescript-progress-component -->
 

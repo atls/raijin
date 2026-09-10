@@ -1,4 +1,5 @@
 import assert                        from 'node:assert/strict'
+import { PassThrough }               from 'node:stream'
 import { test }                      from 'node:test'
 
 import { npath }                     from '@yarnpkg/fslib'
@@ -71,6 +72,38 @@ test('should expose output through the application handler contract', async () =
   assert.equal(report.argument, 'handled-value')
   assert.equal(report.dependencyLoaded, true)
   assert.equal(report.preserved, 'handled-environment')
+})
+
+test('should inherit the streams supplied by the application invocation', async () => {
+  const { project } = await createProjectContext()
+  const stderr = new PassThrough()
+  const stdin = new PassThrough()
+  const stdout = new PassThrough()
+  let errorOutput = ''
+  let output = ''
+
+  stderr.on('data', (chunk: Buffer) => {
+    errorOutput += chunk.toString()
+  })
+  stdout.on('data', (chunk: Buffer) => {
+    output += chunk.toString()
+  })
+  stdin.end('context-input')
+
+  const executor = compose({ project, streams: { stderr, stdin, stdout } })
+  const result = await executor.execute({
+    arguments: ['input'],
+    cwd: npath.fromPortablePath(project.cwd),
+    output: { mode: 'inherit' },
+    entry,
+  })
+
+  assertCompleted(result)
+  assert.equal(result.exitCode, 0, result.stderr)
+  assert.equal(errorOutput, 'context-error')
+  assert.equal(output, 'context-input')
+  assert.equal(stderr.writableEnded, false)
+  assert.equal(stdout.writableEnded, false)
 })
 
 test('should preserve a Node-reported missing entry as a completed non-zero exit', async () => {

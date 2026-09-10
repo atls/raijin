@@ -48,6 +48,7 @@ dist/
 !yarn/cli/dist/
 yarn/cli/dist/*
 yarn/plugin-*/bundles/
+packages/plugins/*/bundles/
 
 package.tgz
 

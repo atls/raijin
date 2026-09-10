@@ -23,8 +23,6 @@ type PackageManifestShape = Record<string, unknown> & {
   peerDependencies?: Record<string, unknown>
 }
 
-const selfRequire = createRequire(import.meta.url)
-
 const readPackageManifestAt = (cwd: string): PackageManifestShape | undefined => {
   try {
     return JSON.parse(readFileSync(join(cwd, PACKAGE_MANIFEST), 'utf-8')) as PackageManifestShape
@@ -65,7 +63,7 @@ export const resolveRaijinRuntimePath = (cwd: string, specifier: string): string
     return createRequire(join(boundary, PACKAGE_MANIFEST)).resolve(specifier)
   }
 
-  return selfRequire.resolve(specifier)
+  return createRequire(import.meta.url).resolve(specifier)
 }
 
 export const resolveRaijinRuntimeUrl = (cwd: string, specifier: string): string =>
