@@ -96,6 +96,11 @@ test(
               import: './lib/index.js',
               types: './lib/index.d.ts',
             },
+            './features/*': {
+              default: './lib/features/*.js',
+              import: './lib/features/*.js',
+              types: './lib/features/*.d.ts',
+            },
           },
         },
       })}\n`
@@ -120,6 +125,11 @@ test(
     await writeFile(
       join(libraryCwd, 'src/index.ts'),
       "export { legacy } from './legacy.jsx'\nexport { typed } from './typed.ts'\n"
+    )
+    await mkdir(join(libraryCwd, 'src/features/nested'), { recursive: true })
+    await writeFile(
+      join(libraryCwd, 'src/features/nested/value.ts'),
+      "export const feature: string = 'feature'\n"
     )
     await writeFile(join(libraryCwd, 'src/legacy.tsx'), "export const legacy = 'legacy'\n")
     await writeFile(join(libraryCwd, 'src/typed.ts'), "export const typed: string = 'typed'\n")
@@ -153,18 +163,18 @@ test(
     )
     await writeFile(
       join(consumerCwd, 'index.mjs'),
-      "import { legacy, typed } from '@fixture/library'\nprocess.stdout.write(`${legacy}:${typed}\\n`)\n"
+      "import { legacy, typed } from '@fixture/library'\nimport { feature } from '@fixture/library/features/nested/value'\nprocess.stdout.write(`${legacy}:${typed}:${feature}\\n`)\n"
     )
     await writeFile(
       join(consumerCwd, 'index.ts'),
-      "import { legacy, typed } from '@fixture/library'\nconst values: Array<string> = [legacy, typed]\nexport { values }\n"
+      "import { legacy, typed } from '@fixture/library'\nimport { feature } from '@fixture/library/features/nested/value'\nconst values: Array<string> = [legacy, typed, feature]\nexport { values }\n"
     )
 
     await run(consumerCwd, ['install'])
 
     const imported = await run(consumerCwd, ['node', 'index.mjs'])
 
-    assert.equal(imported.stdout, 'legacy:typed\n')
+    assert.equal(imported.stdout, 'legacy:typed:feature\n')
     await run(consumerCwd, ['exec', 'tsc', '--noEmit'])
     assert.match(
       (await run(consumerCwd, ['node', '-p', 'process.versions.pnp'])).stdout,

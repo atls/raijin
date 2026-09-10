@@ -2,6 +2,7 @@ import type { Workspace }         from '@yarnpkg/core'
 import type { Argument }          from '@yarnpkg/parsers'
 
 import { access }                 from 'node:fs/promises'
+import { readdir }                from 'node:fs/promises'
 import { isAbsolute }             from 'node:path'
 import { relative }               from 'node:path'
 import { resolve }                from 'node:path'
@@ -83,6 +84,55 @@ const resolveArtifactRoot = (
   return topLevel === normalized ? workspaceCwd : resolve(workspaceCwd, topLevel)
 }
 
+const resolveWorkspacePath = (workspaceCwd: string, path: string): string => {
+  const file = resolve(workspaceCwd, path)
+  const workspaceRelative = relative(workspaceCwd, file)
+
+  if (
+    workspaceRelative === '..' ||
+    workspaceRelative.startsWith(`..${npath.sep}`) ||
+    isAbsolute(workspaceRelative)
+  ) {
+    throw new Error(`Library pack path must stay inside its workspace: ${path}`)
+  }
+
+  return file
+}
+
+const matchesExportPattern = (path: string, entry: string): boolean => {
+  const parts = path.replace(/^\.\//u, '').split('*')
+  const wildcardCount = parts.length - 1
+  const fixedLength = parts.reduce((length, part) => length + part.length, 0)
+  const wildcardLength = (entry.length - fixedLength) / wildcardCount
+
+  if (!Number.isInteger(wildcardLength) || wildcardLength < 1) return false
+
+  const wildcard = entry.slice(parts[0]?.length ?? 0, (parts[0]?.length ?? 0) + wildcardLength)
+
+  return parts.join(wildcard) === entry
+}
+
+const verifyReferencedPath = async (
+  workspaceCwd: string,
+  path: string,
+  workspaceEntries: Array<string>
+): Promise<void> => {
+  const file = resolveWorkspacePath(workspaceCwd, path)
+
+  if (!path.includes('*')) {
+    await access(file)
+    return
+  }
+
+  const matches = workspaceEntries.filter((entry) =>
+    matchesExportPattern(path, npath.toPortablePath(entry)))
+
+  if (matches.length === 0)
+    throw new Error(`Library pack pattern does not match an artifact: ${path}`)
+
+  await Promise.all(matches.map(async (entry) => access(resolveWorkspacePath(workspaceCwd, entry))))
+}
+
 const verifyCompletedArtifact = async (
   workspaceCwd: string,
   packManifest: PackManifest
@@ -102,21 +152,12 @@ const verifyCompletedArtifact = async (
     }
   }
 
+  const workspaceEntries = referenced.some((path) => path.includes('*'))
+    ? await readdir(workspaceCwd, { recursive: true })
+    : []
+
   await Promise.all(
-    referenced.map(async (path) => {
-      const file = resolve(workspaceCwd, path)
-      const workspaceRelative = relative(workspaceCwd, file)
-
-      if (
-        workspaceRelative === '..' ||
-        workspaceRelative.startsWith(`..${npath.sep}`) ||
-        isAbsolute(workspaceRelative)
-      ) {
-        throw new Error(`Library pack path must stay inside its workspace: ${path}`)
-      }
-
-      await access(file)
-    })
+    referenced.map(async (path) => verifyReferencedPath(workspaceCwd, path, workspaceEntries))
   )
 }
 

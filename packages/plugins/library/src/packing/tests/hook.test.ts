@@ -194,6 +194,83 @@ test('rejects a missing file referenced only by exports', async (t) => {
   )
 })
 
+test('expands export patterns across nested subpaths', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-export-pattern-'))
+  const manifest: RawManifest = {
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          types: './dist/index.d.ts',
+        },
+        './features/*': './dist/features/*.js',
+      },
+    },
+  }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  await createArtifact(cwd)
+  await mkdir(join(cwd, 'dist/features/nested'), { recursive: true })
+  await writeFile(join(cwd, 'dist/features/one.js'), 'export const one = true\n')
+  await writeFile(join(cwd, 'dist/features/nested/two.js'), 'export const two = true\n')
+  await beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest)
+
+  assert.deepEqual(manifest.exports, manifest.publishConfig?.exports)
+})
+
+test('rejects an export pattern without matching artifacts', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-missing-pattern-'))
+  const manifest: RawManifest = {
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          types: './dist/index.d.ts',
+        },
+        './features/*': './dist/features/*.js',
+      },
+    },
+  }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  await createArtifact(cwd)
+
+  await assert.rejects(
+    beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest),
+    /Library pack pattern does not match an artifact/
+  )
+})
+
+test('uses the same replacement for every wildcard in an export target', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-repeated-pattern-'))
+  const manifest: RawManifest = {
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          types: './dist/index.d.ts',
+        },
+        './features/*': './dist/features/*/index-*.js',
+      },
+    },
+  }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  await createArtifact(cwd)
+  await mkdir(join(cwd, 'dist/features/one'), { recursive: true })
+  await writeFile(join(cwd, 'dist/features/one/index-two.js'), 'export const value = true\n')
+
+  await assert.rejects(
+    beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest),
+    /Library pack pattern does not match an artifact/
+  )
+
+  await writeFile(join(cwd, 'dist/features/one/index-one.js'), 'export const value = true\n')
+  await beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest)
+
+  assert.deepEqual(manifest.exports, manifest.publishConfig?.exports)
+})
+
 test('rejects an incomplete artifact referenced only by exports', async (t) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-missing-artifact-'))
   const manifest: RawManifest = {
