@@ -117,6 +117,48 @@ test('preserves relative jsx specifiers when TypeScript emits jsx files', async 
   await readFile(join(cwd, 'dist/view.jsx'), 'utf8')
 })
 
+test('loads TypeScript providers from the direct workspace boundary', async (t) => {
+  const cwd = await createProject({ 'src/index.ts': 'export const value = true\n' })
+  const raijinCwd = join(cwd, 'node_modules/@atls/raijin')
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+
+  await writeFile(
+    join(cwd, 'package.json'),
+    JSON.stringify({
+      name: 'fixture',
+      type: 'module',
+      devDependencies: { '@atls/raijin': '1.0.0' },
+    })
+  )
+  await mkdir(raijinCwd, { recursive: true })
+  await writeFile(
+    join(raijinCwd, 'package.json'),
+    JSON.stringify({
+      name: '@atls/raijin',
+      type: 'module',
+      exports: {
+        './config/typescript': './config-typescript.js',
+        './typescript': './typescript.js',
+      },
+    })
+  )
+  await writeFile(
+    join(raijinCwd, 'config-typescript.js'),
+    [
+      'export const resolveTypeScriptProject = ({ typescript }) => {',
+      "  if (typescript.provider !== 'workspace') throw new Error('unexpected TypeScript runtime')",
+      "  throw new Error('workspace TypeScript providers loaded')",
+      '}',
+      '',
+    ].join('\n')
+  )
+  await writeFile(join(raijinCwd, 'typescript.js'), "export const ts = { provider: 'workspace' }\n")
+
+  await assert.rejects(build(cwd), /workspace TypeScript providers loaded/u)
+  assert.deepEqual(await readStagingDirectories(cwd), [])
+})
+
 test('preserves the previous artifact when compilation fails', async (t) => {
   const cwd = await createProject({ 'src/index.ts': 'export const value = true\n' })
 

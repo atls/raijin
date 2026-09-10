@@ -4,6 +4,8 @@ import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
 import type { LibraryDiagnostic }       from './diagnostic.js'
 import type { LibraryBuildInput }       from './input.js'
 
+import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
+
 import { rewriteLegacyJsxSpecifiers }   from './compatibility/legacy-jsx.js'
 
 export interface TypeScriptEmission {
@@ -51,8 +53,8 @@ export const emitTypeScript = async (
   outputRoot: string
 ): Promise<TypeScriptEmission> => {
   const [{ resolveTypeScriptProject }, { ts: typescript }] = (await Promise.all([
-    import(TYPESCRIPT_CONFIG_SPECIFIER),
-    import(TYPESCRIPT_RUNTIME_SPECIFIER),
+    import(resolveRaijinRuntimeUrl(input.cwd, TYPESCRIPT_CONFIG_SPECIFIER)),
+    import(resolveRaijinRuntimeUrl(input.cwd, TYPESCRIPT_RUNTIME_SPECIFIER)),
   ])) as [TypeScriptConfigProvider, TypeScriptProvider]
   const project = await resolveTypeScriptProject({
     compilerOptions: {
