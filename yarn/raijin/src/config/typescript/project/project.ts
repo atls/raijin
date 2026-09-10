@@ -41,20 +41,11 @@ const resolveSkipLibCheck = (
 }
 
 const createParseHost = (
-  excludes: ReadonlyArray<string>,
   diagnostics: Array<Diagnostic>,
   typescript: ResolveTypeScriptProjectOptions['typescript']
 ): ParseConfigFileHost => ({
   ...typescript.sys,
   onUnRecoverableConfigFileDiagnostic: (diagnostic) => diagnostics.push(diagnostic),
-  readDirectory: (rootDir, extensions, projectExcludes, includes, depth) =>
-    typescript.sys.readDirectory(
-      rootDir,
-      extensions,
-      Array.from(new Set([...(projectExcludes ?? []), ...excludes])),
-      includes,
-      depth
-    ),
 })
 
 const parseSelection = (
@@ -90,15 +81,8 @@ export const resolveTypeScriptProject = async ({
     ? projectConfigFileName
     : undefined
   const manifests = await Promise.all(Array.from(new Set(manifestCwds)).map(readManifest))
-  const projectIgnorePatterns = manifests.flatMap(
-    ({ typecheckIgnorePatterns = [] }) => typecheckIgnorePatterns
-  )
   const fatalDiagnostics: Array<Diagnostic> = []
-  const host = createParseHost(
-    [...defaults.exclude, ...projectIgnorePatterns],
-    fatalDiagnostics,
-    typescript
-  )
+  const host = createParseHost(fatalDiagnostics, typescript)
   const parsed = configFileName
     ? typescript.getParsedCommandLineOfConfigFile(configFileName, compilerOptions, host)
     : typescript.parseJsonConfigFileContent(

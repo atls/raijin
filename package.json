@@ -54,8 +54,5 @@
   "formatterIgnorePatterns": [
     "CHANGELOG.md"
   ],
-  "typecheckIgnorePatterns": [
-    "yarn/plugin-checks/sources/*.test.js"
-  ],
   "typecheckSkipLibCheck": true
 }

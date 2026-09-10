@@ -211,7 +211,7 @@ test('should typecheck solution workspace sources without emitting files', async
   )
 })
 
-test('should preserve project manifest options with workspace tsconfig', async () => {
+test('should preserve project configuration with workspace tsconfig', async () => {
   const cwd = await createProject(
     {
       'packages/app/package.json': JSON.stringify(
@@ -225,6 +225,7 @@ test('should preserve project manifest options with workspace tsconfig', async (
       'packages/app/tsconfig.json': JSON.stringify(
         {
           include: ['src/**/*.ts', 'generated/**/*.ts', 'types/**/*.d.ts'],
+          exclude: ['generated/**/*.ts'],
         },
         null,
         2
@@ -235,10 +236,7 @@ test('should preserve project manifest options with workspace tsconfig', async (
       'packages/app/types/problem.d.ts':
         "import type { MissingType } from 'missing-package'\n\nexport type { MissingType }\n",
     },
-    {
-      typecheckIgnorePatterns: ['generated/**/*.ts'],
-      typecheckSkipLibCheck: true,
-    }
+    { typecheckSkipLibCheck: true }
   )
   const workspaceCwd = join(cwd, 'packages/app')
   const diagnostics = await new TypeScript(ts, workspaceCwd, {
@@ -428,7 +426,7 @@ test('should import TypeScript config through the same package boundary as its r
   assert.equal(diagnostics[0]?.code, 9999)
 })
 
-test('should ignore generated artifacts during typecheck', async () => {
+test('should preserve TypeScript project exclusions during typecheck', async () => {
   const cwd = await createProject({
     'tsconfig.json': JSON.stringify(
       {
@@ -437,6 +435,7 @@ test('should ignore generated artifacts during typecheck', async () => {
           checkJs: true,
         },
         include: ['src/**/*.ts', 'bundles/**/*.js', 'dist/**/*.js', 'src/**/*.val.js'],
+        exclude: ['bundles/**/*.js', 'dist/**/*.js', 'src/**/*.val.js'],
       },
       null,
       2

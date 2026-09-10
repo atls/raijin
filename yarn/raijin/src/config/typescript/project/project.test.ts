@@ -143,16 +143,12 @@ test('should apply project options over Raijin defaults', async () => {
   assert.equal(config.options.target, typescript.ScriptTarget.ES2022)
 })
 
-test('should append manifest ignore patterns through TypeScript discovery', async () => {
+test('should leave project exclusions to TypeScript configuration', async () => {
   const cwd = await createProject()
 
   await writeFile(
-    join(cwd, 'package.json'),
-    '{"type":"module","typecheckIgnorePatterns":["src/runtime.js"]}\n'
-  )
-  await writeFile(
     join(cwd, 'tsconfig.json'),
-    '{"compilerOptions":{"allowJs":true},"include":["src/**/*"]}\n'
+    '{"compilerOptions":{"allowJs":true},"include":["src/**/*"],"exclude":["src/runtime.js"]}\n'
   )
 
   const config = await resolveTypeScriptProject({ cwd, typescript })
