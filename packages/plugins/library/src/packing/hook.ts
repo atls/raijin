@@ -1,8 +1,8 @@
 import type { Workspace }         from '@yarnpkg/core'
 import type { Argument }          from '@yarnpkg/parsers'
 
-import { access }                 from 'node:fs/promises'
 import { readdir }                from 'node:fs/promises'
+import { stat }                   from 'node:fs/promises'
 import { isAbsolute }             from 'node:path'
 import { relative }               from 'node:path'
 import { resolve }                from 'node:path'
@@ -112,15 +112,21 @@ const matchesExportPattern = (path: string, entry: string): boolean => {
   return parts.join(wildcard) === entry
 }
 
+const verifyArtifactFile = async (workspaceCwd: string, path: string): Promise<void> => {
+  const file = resolveWorkspacePath(workspaceCwd, path)
+
+  if (!(await stat(file)).isFile()) {
+    throw new Error(`Library pack path must reference a file: ${path}`)
+  }
+}
+
 const verifyReferencedPath = async (
   workspaceCwd: string,
   path: string,
   workspaceEntries: Array<string>
 ): Promise<void> => {
-  const file = resolveWorkspacePath(workspaceCwd, path)
-
   if (!path.includes('*')) {
-    await access(file)
+    await verifyArtifactFile(workspaceCwd, path)
     return
   }
 
@@ -130,7 +136,7 @@ const verifyReferencedPath = async (
   if (matches.length === 0)
     throw new Error(`Library pack pattern does not match an artifact: ${path}`)
 
-  await Promise.all(matches.map(async (entry) => access(resolveWorkspacePath(workspaceCwd, entry))))
+  await Promise.all(matches.map(async (entry) => verifyArtifactFile(workspaceCwd, entry)))
 }
 
 const verifyCompletedArtifact = async (

@@ -194,6 +194,30 @@ test('rejects a missing file referenced only by exports', async (t) => {
   )
 })
 
+test('rejects a directory used as a direct artifact path', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-directory-export-'))
+  const manifest: RawManifest = {
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          types: './dist/index.d.ts',
+        },
+        './directory': './dist/directory.js',
+      },
+    },
+  }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  await createArtifact(cwd)
+  await mkdir(join(cwd, 'dist/directory.js'))
+
+  await assert.rejects(
+    beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest),
+    /Library pack path must reference a file: \.\/dist\/directory\.js/u
+  )
+})
+
 test('expands export patterns across nested subpaths', async (t) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-export-pattern-'))
   const manifest: RawManifest = {
@@ -216,6 +240,30 @@ test('expands export patterns across nested subpaths', async (t) => {
   await beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest)
 
   assert.deepEqual(manifest.exports, manifest.publishConfig?.exports)
+})
+
+test('rejects a directory matched by an export pattern', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-pack-pattern-directory-'))
+  const manifest: RawManifest = {
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          types: './dist/index.d.ts',
+        },
+        './features/*': './dist/features/*.js',
+      },
+    },
+  }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  await createArtifact(cwd)
+  await mkdir(join(cwd, 'dist/features/one.js'), { recursive: true })
+
+  await assert.rejects(
+    beforeWorkspacePacking(createWorkspace(cwd, true, 'yarn library build'), manifest),
+    /Library pack path must reference a file: dist\/features\/one\.js/u
+  )
 })
 
 test('rejects an export pattern without matching artifacts', async (t) => {
