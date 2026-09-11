@@ -4,6 +4,7 @@ import { mkdtemp }      from 'node:fs/promises'
 import { readFile }     from 'node:fs/promises'
 import { readdir }      from 'node:fs/promises'
 import { rm }           from 'node:fs/promises'
+import { stat }         from 'node:fs/promises'
 import { writeFile }    from 'node:fs/promises'
 import { tmpdir }       from 'node:os'
 import { join }         from 'node:path'
@@ -96,6 +97,9 @@ test('emits one complete artifact with native TypeScript extension rewriting', a
   assert.ok(result.artifact.declarations.some((path) => path.endsWith('/index.d.ts')))
   assert.ok(result.artifact.sourceMaps.some((path) => path.endsWith('/index.js.map')))
   assert.ok(result.artifact.sourceMaps.some((path) => path.endsWith('/index.d.ts.map')))
+  if (process.platform !== 'win32') {
+    assert.equal((await stat(join(cwd, 'dist'))).mode & 0o777, 0o777 & ~process.umask())
+  }
   assert.deepEqual(await readStagingDirectories(cwd), [])
 })
 
@@ -178,6 +182,24 @@ test('preserves the previous artifact when compilation fails', async (t) => {
   assert.equal(await readFile(join(cwd, 'dist/index.js'), 'utf8'), previous)
   assert.deepEqual(await readStagingDirectories(cwd), [])
 })
+
+test(
+  'preserves target directory permissions when replacing an artifact',
+  { skip: process.platform === 'win32' },
+  async (t) => {
+    const cwd = await createProject({ 'src/index.ts': 'export const value = true\n' })
+    const targetRoot = join(cwd, 'dist')
+
+    t.after(async () => rm(cwd, { force: true, recursive: true }))
+
+    await mkdir(targetRoot, { mode: 0o750 })
+
+    const result = await build(cwd)
+
+    assert.equal(result.kind, 'completed')
+    assert.equal((await stat(targetRoot)).mode & 0o777, 0o750)
+  }
+)
 
 test('preserves the previous artifact when emitted output is incomplete', async (t) => {
   const cwd = await createProject({ 'src/types.d.ts': 'export declare const value: true\n' })

@@ -1,4 +1,6 @@
 import { randomUUID } from 'node:crypto'
+import { chmod }      from 'node:fs/promises'
+import { lstat }      from 'node:fs/promises'
 import { mkdtemp }    from 'node:fs/promises'
 import { mkdir }      from 'node:fs/promises'
 import { rename }     from 'node:fs/promises'
@@ -9,8 +11,22 @@ import { join }       from 'node:path'
 
 type NodeError = Error & { code?: string }
 
+const DIRECTORY_PERMISSIONS = 0o777
+
 const isMissing = (error: unknown): error is NodeError =>
   error instanceof Error && (error as NodeError).code === 'ENOENT'
+
+const resolveTargetMode = async (targetRoot: string): Promise<number> => {
+  try {
+    const target = await lstat(targetRoot)
+
+    if (target.isDirectory()) return target.mode & DIRECTORY_PERMISSIONS
+  } catch (error) {
+    if (!isMissing(error)) throw error
+  }
+
+  return DIRECTORY_PERMISSIONS & ~process.umask()
+}
 
 export interface StagedLibraryArtifact {
   readonly root: string
@@ -31,6 +47,9 @@ export const stageLibraryArtifact = async (targetRoot: string): Promise<StagedLi
     root,
     commit: async () => {
       let hasBackup = false
+      const mode = await resolveTargetMode(targetRoot)
+
+      await chmod(root, mode)
 
       try {
         await rename(targetRoot, backup)
