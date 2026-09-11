@@ -121,7 +121,7 @@ test(
     )
     await writeFile(
       join(libraryCwd, 'src/index.ts'),
-      "export { legacy } from './legacy.jsx'\nexport { typed } from './typed.ts'\n"
+      "export { legacy } from './legacy.tsx'\nexport { typed } from './typed.ts'\n"
     )
     await mkdir(join(libraryCwd, 'src/features/nested'), { recursive: true })
     await writeFile(

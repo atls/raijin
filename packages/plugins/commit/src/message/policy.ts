@@ -1,14 +1,13 @@
-import type { RaijinProjectModel } from '@atls/raijin/project'
-import type { LintOptions }        from '@commitlint/types'
-import type { LintOutcome }        from '@commitlint/types'
-import type { QualifiedRules }     from '@commitlint/types'
-import type { Workspace }          from '@yarnpkg/core'
+import type { LintOptions }    from '@commitlint/types'
+import type { LintOutcome }    from '@commitlint/types'
+import type { QualifiedRules } from '@commitlint/types'
+import type { PortablePath }   from '@yarnpkg/fslib'
 
-import { RuleConfigSeverity }      from '@commitlint/types'
-import commitlintFormat            from '@commitlint/format'
-import commitlint                  from '@commitlint/lint'
+import { RuleConfigSeverity }  from '@commitlint/types'
+import commitlintFormat        from '@commitlint/format'
+import commitlint              from '@commitlint/lint'
 
-import { COMMIT_TYPE_ENUM }        from './type-options.js'
+import { COMMIT_TYPE_ENUM }    from './type-options.js'
 
 const PARSER_OPTIONS: LintOptions = {
   parserOpts: {
@@ -37,7 +36,21 @@ const RULES: QualifiedRules = {
   'scope-empty': [2, 'never'],
 }
 
-const createAllowedScopes = ({ workspaces }: RaijinProjectModel<Workspace>): Array<string> => {
+interface CommitMessageWorkspace {
+  readonly manifest: {
+    readonly name: {
+      readonly name: string
+      readonly scope: string | null
+    } | null
+  }
+}
+
+export interface CommitMessageProject {
+  readonly cwd: PortablePath
+  readonly workspaces: ReadonlyArray<CommitMessageWorkspace>
+}
+
+const createAllowedScopes = ({ workspaces }: CommitMessageProject): Array<string> => {
   const workspaceNames = new Set(workspaces.map(({ manifest }) => manifest.name?.name ?? ''))
   const scopes = new Set(workspaces.map(({ manifest }) => manifest.name?.scope ?? ''))
 
@@ -74,6 +87,5 @@ export class CommitMessagePolicy {
   }
 }
 
-export const createCommitMessagePolicy = (
-  project: RaijinProjectModel<Workspace>
-): CommitMessagePolicy => new CommitMessagePolicy(createAllowedScopes(project))
+export const createCommitMessagePolicy = (project: CommitMessageProject): CommitMessagePolicy =>
+  new CommitMessagePolicy(createAllowedScopes(project))

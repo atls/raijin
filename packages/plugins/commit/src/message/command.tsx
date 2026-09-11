@@ -1,12 +1,11 @@
 import type { ProjectCommandContext }   from '@atls/raijin/commands'
-import type { PortablePath }            from '@yarnpkg/fslib'
 import type { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
-import type { ComponentType }           from 'react'
 import type { ReactElement }            from 'react'
 
 import type { CommitMessageInput }      from './input.js'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
+import { npath }                        from '@yarnpkg/fslib'
 import { xfs }                          from '@yarnpkg/fslib'
 import { renderForm }                   from '@yarnpkg/libui/sources/misc/renderForm.js'
 import { Option }                       from 'clipanion'
@@ -38,20 +37,20 @@ const RequestCommitMessageSubmit = ({
   return null
 }
 
-interface RequestCommitMessageAppProps {
-  allowedScopes?: Array<string>
+interface RequestCommitMessageAppInput {
+  allowedScopes: Array<string>
   initialValue?: CommitMessageInput
 }
 
-type RequestCommitMessageAppComponent = ComponentType<RequestCommitMessageAppProps>
+interface RequestCommitMessageAppProps extends RequestCommitMessageAppInput {
+  useSubmit: (commit: CommitMessageInput) => void
+}
 
 const RequestCommitMessageApp = ({
-  allowedScopes = [],
+  allowedScopes,
   initialValue,
   useSubmit,
-}: RequestCommitMessageAppProps & {
-  useSubmit: (commit: CommitMessageInput) => void
-}): ReactElement => {
+}: RequestCommitMessageAppProps): ReactElement => {
   const [commit, setCommit] = useState<CommitMessageInput>()
 
   if (!commit) {
@@ -66,6 +65,18 @@ const RequestCommitMessageApp = ({
 
   return <RequestCommitMessageSubmit commit={commit} useSubmit={useSubmit} />
 }
+
+const bindRequestCommitMessageApp = ({
+    allowedScopes,
+    initialValue,
+  }: RequestCommitMessageAppInput): SubmitInjectedComponent<CommitMessageInput> =>
+  ({ useSubmit }) => (
+    <RequestCommitMessageApp
+      allowedScopes={allowedScopes}
+      initialValue={initialValue}
+      useSubmit={useSubmit}
+    />
+  )
 
 export class CommitMessageCommand extends BaseCommand {
   static override paths = [['commit', 'message']]
@@ -107,12 +118,12 @@ export class CommitMessageCommand extends BaseCommand {
       const message = await prepareCommitMessage({
         policy,
         prompt: async (initialValue) =>
-          renderForm<CommitMessageInput, RequestCommitMessageAppComponent>(
-            RequestCommitMessageApp as SubmitInjectedComponent<
-              CommitMessageInput,
-              RequestCommitMessageAppComponent
-            >,
-            { allowedScopes: policy.allowedScopes, initialValue },
+          renderForm(
+            bindRequestCommitMessageApp({
+              allowedScopes: policy.allowedScopes,
+              initialValue,
+            }),
+            {},
             {
               stdin: process.stdin,
               stdout: this.context.stdout,
@@ -126,7 +137,7 @@ export class CommitMessageCommand extends BaseCommand {
         return 1
       }
 
-      await xfs.writeFilePromise(commitMessageFile as PortablePath, message)
+      await xfs.writeFilePromise(npath.toPortablePath(commitMessageFile), message)
 
       return 0
     } finally {
