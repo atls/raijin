@@ -56,23 +56,30 @@ export const emitTypeScript = async (
     import(resolveRaijinRuntimeUrl(input.cwd, TYPESCRIPT_CONFIG_SPECIFIER)),
     import(resolveRaijinRuntimeUrl(input.cwd, TYPESCRIPT_RUNTIME_SPECIFIER)),
   ])) as [TypeScriptConfigProvider, TypeScriptProvider]
-  const project = await resolveTypeScriptProject({
-    compilerOptions: {
-      composite: false,
-      declaration: true,
-      declarationDir: outputRoot,
-      emitDeclarationOnly: false,
-      incremental: false,
-      noEmit: false,
-      outDir: outputRoot,
-      rewriteRelativeImportExtensions: true,
-      rootDir: input.sourceRoot,
-      tsBuildInfoFile: undefined,
-    },
-    cwd: input.cwd,
-    selection: { kind: 'explicit', patterns: [input.sourceRoot] },
-    typescript,
-  })
+  const resolveProject = (rootDir?: string) =>
+    resolveTypeScriptProject({
+      compilerOptions: {
+        composite: false,
+        declaration: true,
+        declarationDir: outputRoot,
+        emitDeclarationOnly: false,
+        incremental: false,
+        noEmit: false,
+        outDir: outputRoot,
+        rewriteRelativeImportExtensions: true,
+        ...(rootDir ? { rootDir } : {}),
+        tsBuildInfoFile: undefined,
+      },
+      cwd: input.cwd,
+      selection: { kind: 'explicit', patterns: [input.sourceRoot] },
+      typescript,
+    })
+  let project = await resolveProject()
+
+  if (project.options.rootDir === undefined) {
+    project = await resolveProject(input.sourceRoot)
+  }
+
   const host = typescript.createCompilerHost(project.options)
   const program = typescript.createProgram({
     configFileParsingDiagnostics: [...project.errors],

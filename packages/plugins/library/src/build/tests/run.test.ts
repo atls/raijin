@@ -121,6 +121,29 @@ test('preserves relative jsx specifiers when TypeScript emits jsx files', async 
   await readFile(join(cwd, 'dist/view.jsx'), 'utf8')
 })
 
+test('preserves a configured root directory and its emitted layout', async (t) => {
+  const cwd = await createProject(
+    {
+      'generated/value.ts': "export const generated = 'generated'\n",
+      'src/index.ts': "export { generated } from '../generated/value.ts'\n",
+    },
+    { rootDir: '.' }
+  )
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+
+  const result = await build(cwd)
+
+  assert.equal(result.kind, 'completed')
+  assert.match(
+    await readFile(join(cwd, 'dist/src/index.js'), 'utf8'),
+    /['"]\.\.\/generated\/value\.js['"]/u
+  )
+  await readFile(join(cwd, 'dist/generated/value.js'), 'utf8')
+  await readFile(join(cwd, 'dist/src/index.d.ts'), 'utf8')
+  await readFile(join(cwd, 'dist/generated/value.d.ts'), 'utf8')
+})
+
 test('loads TypeScript providers from the direct workspace boundary', async (t) => {
   const cwd = await createProject({ 'src/index.ts': 'export const value = true\n' })
   const raijinCwd = join(cwd, 'node_modules/@atls/raijin')
@@ -150,8 +173,13 @@ test('loads TypeScript providers from the direct workspace boundary', async (t) 
   await writeFile(
     join(raijinCwd, 'config-typescript.js'),
     [
-      'export const resolveTypeScriptProject = ({ typescript }) => {',
+      'let invocation = 0',
+      'export const resolveTypeScriptProject = ({ compilerOptions, typescript }) => {',
       "  if (typescript.provider !== 'workspace') throw new Error('unexpected TypeScript runtime')",
+      '  invocation += 1',
+      "  if (invocation === 1 && compilerOptions.rootDir !== undefined) throw new Error('unexpected root directory override')",
+      '  if (invocation === 1) return { errors: [], fileNames: [], options: {} }',
+      "  if (!compilerOptions.rootDir) throw new Error('missing root directory fallback')",
       "  throw new Error('workspace TypeScript providers loaded')",
       '}',
       '',
