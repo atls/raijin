@@ -13,7 +13,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build plugin --external-file ../../../yarn/builder/externals.json",
+    "build": "builder build plugin --external-file ../../assembly/externals.json",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
