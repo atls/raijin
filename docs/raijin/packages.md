@@ -110,15 +110,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-library -->
-
-#### `@atls/yarn-plugin-library`
-
-- Location: `yarn/plugin-library`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-release -->
 
 #### `@atls/yarn-plugin-release`
@@ -178,6 +169,15 @@ Private plugin packages and their entrypoints
 #### `@atls/yarn-plugin-format`
 
 - Location: `packages/plugins/format`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-library -->
+
+#### `@atls/yarn-plugin-library`
+
+- Location: `packages/plugins/library`
 - Group: `plugins`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
@@ -272,15 +272,6 @@ Core code libraries for build, checks, and utilities
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-code-typescript -->
-
-#### `@atls/code-typescript`
-
-- Location: `code/code-typescript`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `build:worker`, `postpack`, `prepack`
-
 </details>
 
 ## Group `cli`
@@ -296,13 +287,6 @@ Command-line interface presentation packages
 
 - Scripts: `build`, `postpack`, `prepack`
 - Location: `cli/cli-ui-git-commit`
-
-<!-- sync:package-card:atls-cli-ui-typescript-progress-component -->
-
-#### `@atls/cli-ui-typescript-progress-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-types-check-progress`
 
 </details>
 
