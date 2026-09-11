@@ -29,6 +29,7 @@ type CommandExecution = InstanceType<YarnCommandClass>['execute']
 interface RegisteredCommand {
   context: CommandContext
   execute: CommandExecution
+  executeBeforeInvocation?: () => Promise<number | undefined> | number | undefined
 }
 
 export type RegisteredCommandClass = YarnCommandClass & {

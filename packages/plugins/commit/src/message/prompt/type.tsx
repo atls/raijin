@@ -18,18 +18,23 @@ const types: Array<{ label: string; value: string }> = Object.keys(COMMIT_TYPE_E
 }))
 
 export interface RequestCommitMessageTypeProps {
+  initialValue?: string
   onSubmit: (value: string) => void
 }
 
 export const RequestCommitMessageType = ({
+  initialValue,
   onSubmit,
 }: RequestCommitMessageTypeProps): ReactElement => {
   const [value, setValue] = useState('')
 
   const matches = useMemo(() => {
     if (value.length > 0) {
-      return types.filter((item: { label: string; value: string }) =>
-        item.label.toLowerCase().includes(value.toLowerCase()))
+      return types.filter((item: { label: string; value: string }) => {
+        const query = value.toLowerCase()
+
+        return item.label.toLowerCase().includes(query) || item.value.includes(query)
+      })
     }
 
     return types
@@ -51,6 +56,10 @@ export const RequestCommitMessageType = ({
           items={matches}
           indicatorComponent={IndicatorComponent}
           itemComponent={ItemComponent}
+          initialIndex={Math.max(
+            0,
+            matches.findIndex((item) => item.value === initialValue)
+          )}
           onSelect={(v): void => {
             onSubmit(v.value)
           }}

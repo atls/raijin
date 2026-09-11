@@ -1,9 +1,10 @@
-import type { EntryCommandContext }     from '@atls/raijin/commands'
+import type { ProjectCommandContext }   from '@atls/raijin/commands'
 import type { PortablePath }            from '@yarnpkg/fslib'
 import type { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
+import type { ComponentType }           from 'react'
 import type { ReactElement }            from 'react'
 
-import type { CommitProperties }        from './prompt/form.jsx'
+import type { CommitMessageInput }      from './input.js'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { xfs }                          from '@yarnpkg/fslib'
@@ -14,16 +15,17 @@ import { useStdin }                     from 'ink'
 import { useEffect }                    from 'react'
 import { useState }                     from 'react'
 import React                            from 'react'
-import wrap                             from 'word-wrap'
 
 import { RequestCommitMessage }         from './prompt/form.jsx'
+import { createCommitMessagePolicy }    from './policy.js'
+import { prepareCommitMessage }         from './prepare.js'
 
 const RequestCommitMessageSubmit = ({
   commit,
   useSubmit,
 }: {
-  commit: CommitProperties
-  useSubmit: (commit: CommitProperties) => void
+  commit: CommitMessageInput
+  useSubmit: (commit: CommitMessageInput) => void
 }): null => {
   const { stdin } = useStdin()
 
@@ -36,13 +38,30 @@ const RequestCommitMessageSubmit = ({
   return null
 }
 
+interface RequestCommitMessageAppProps {
+  allowedScopes?: Array<string>
+  initialValue?: CommitMessageInput
+}
+
+type RequestCommitMessageAppComponent = ComponentType<RequestCommitMessageAppProps>
+
 const RequestCommitMessageApp = ({
+  allowedScopes = [],
+  initialValue,
   useSubmit,
-}: CommitProperties & { useSubmit: (commit: CommitProperties) => void }): ReactElement => {
-  const [commit, setCommit] = useState<CommitProperties>()
+}: RequestCommitMessageAppProps & {
+  useSubmit: (commit: CommitMessageInput) => void
+}): ReactElement => {
+  const [commit, setCommit] = useState<CommitMessageInput>()
 
   if (!commit) {
-    return <RequestCommitMessage onSubmit={setCommit} />
+    return (
+      <RequestCommitMessage
+        allowedScopes={allowedScopes}
+        initialValue={initialValue}
+        onSubmit={setCommit}
+      />
+    )
   }
 
   return <RequestCommitMessageSubmit commit={commit} useSubmit={useSubmit} />
@@ -57,9 +76,9 @@ export class CommitMessageCommand extends BaseCommand {
 
   args: Array<string> = Option.Rest({ required: 0 })
 
-  declare context: EntryCommandContext
+  declare context: ProjectCommandContext
 
-  override async execute(): Promise<number> {
+  executeBeforeInvocation(): number | undefined {
     const [commitMessageFile, source] = this.args
 
     if (source) {
@@ -70,55 +89,50 @@ export class CommitMessageCommand extends BaseCommand {
       throw new Error('Commit edit message file required.')
     }
 
-    const overwroteStdin = forceStdinTty()
-
-    const commit: CommitProperties | undefined = await renderForm(
-      RequestCommitMessageApp as SubmitInjectedComponent<CommitProperties>,
-      {},
-      {
-        stdin: process.stdin,
-        stdout: this.context.stdout,
-        stderr: this.context.stderr,
-      }
-    )
-
-    if (commit) {
-      await xfs.writeFilePromise(commitMessageFile as PortablePath, this.formatCommit(commit))
-    }
-
-    if (overwroteStdin) {
-      process.stdin.destroy()
-    }
-
-    return commit ? 0 : 1
+    return undefined
   }
 
-  private formatCommit(commit: CommitProperties): string {
-    const wrapOptions = {
-      trim: true,
-      cut: false,
-      newline: '\n',
-      indent: '',
-      width: 100,
+  override async execute(): Promise<number> {
+    const [commitMessageFile] = this.args
+
+    if (!commitMessageFile) {
+      throw new Error('Commit edit message file required.')
     }
 
-    let head = `${commit.type}${commit.scope ? `(${commit.scope})` : ''}: ${commit.subject}`
+    const policy = createCommitMessagePolicy(this.context.invocation.project)
 
-    if (commit.skipci) {
-      head += ' [skip ci]'
+    const overwroteStdin = forceStdinTty()
+
+    try {
+      const message = await prepareCommitMessage({
+        policy,
+        prompt: async (initialValue) =>
+          renderForm<CommitMessageInput, RequestCommitMessageAppComponent>(
+            RequestCommitMessageApp as SubmitInjectedComponent<
+              CommitMessageInput,
+              RequestCommitMessageAppComponent
+            >,
+            { allowedScopes: policy.allowedScopes, initialValue },
+            {
+              stdin: process.stdin,
+              stdout: this.context.stdout,
+              stderr: this.context.stderr,
+            }
+          ),
+        writeDiagnostics: (output) => this.context.stderr.write(output),
+      })
+
+      if (!message) {
+        return 1
+      }
+
+      await xfs.writeFilePromise(commitMessageFile as PortablePath, message)
+
+      return 0
+    } finally {
+      if (overwroteStdin) {
+        process.stdin.destroy()
+      }
     }
-
-    const body = commit.body ? wrap(commit.body, wrapOptions) : false
-
-    const breaking = commit.breaking
-      ? wrap(
-          `BREAKING CHANGE: ${commit.breaking.trim().replace(/^BREAKING CHANGE: /, '')}`,
-          wrapOptions
-        )
-      : false
-
-    const issues = commit.issues ? wrap(commit.issues, wrapOptions) : false
-
-    return [head, body, breaking, issues].filter(Boolean).join('\n\n')
   }
 }

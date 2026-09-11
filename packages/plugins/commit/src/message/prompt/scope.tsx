@@ -1,96 +1,45 @@
-import type { ReactElement }     from 'react'
+import type { ReactElement }  from 'react'
 
-import { Text }                  from 'ink'
-import { Box }                   from 'ink'
-import { UncontrolledTextInput } from 'ink-text-input'
-import { useState }              from 'react'
-import { useMemo }               from 'react'
-import { useCallback }           from 'react'
-import Select                    from 'ink-select-input'
-import TextInput                 from 'ink-text-input'
-import React                     from 'react'
+import { Text }               from 'ink'
+import { Box }                from 'ink'
+import Select                 from 'ink-select-input'
+import React                  from 'react'
 
-import { COMMIT_SCOPE_ENUM }     from './scope-options.js'
-import { IndicatorComponent }    from './select-indicator.jsx'
-import { ItemComponent }         from './select-item.jsx'
-
-const scopes: Array<{ label: string; value: string }> = Object.keys(COMMIT_SCOPE_ENUM).map((
-  key
-) => ({
-  label: COMMIT_SCOPE_ENUM[key as keyof typeof COMMIT_SCOPE_ENUM].description,
-  value: key,
-}))
+import { IndicatorComponent } from './select-indicator.jsx'
+import { ItemComponent }      from './select-item.jsx'
 
 export interface RequestCommitMessageScopeProps {
+  initialValue?: string
+  scopes: Array<string>
   onSubmit: (value: string) => void
 }
 
 export const RequestCommitMessageScope = ({
+  initialValue,
+  scopes,
   onSubmit,
 }: RequestCommitMessageScopeProps): ReactElement => {
-  const [custom, setCustom] = useState(false)
-  const [value, setValue] = useState('')
-
-  const matches = useMemo(() => {
-    if (value.length > 0) {
-      return scopes.filter((item: { label: string; value: string }) =>
-        item.label.toLowerCase().includes(value.toLowerCase()))
-    }
-
-    return scopes
-  }, [value])
-
-  const hasSuggestion: boolean = useMemo(() => matches.length > 0, [matches])
-
-  const onSubmitValue = useCallback(
-    (v: { value: string }) => {
-      if (v.value === 'custom') {
-        setCustom(true)
-      } else {
-        onSubmit(v.value)
-      }
-    },
-    [setCustom, onSubmit]
-  )
-
-  if (custom) {
-    return (
-      <Box flexDirection='column'>
-        <Box>
-          <Text bold color='cyanBright'>
-            Please state the scope of the change:
-          </Text>
-        </Box>
-        <Box>
-          <Box marginRight={1}>
-            <Text color='gray'>→</Text>
-          </Box>
-          <Box>
-            <UncontrolledTextInput onSubmit={onSubmit} />
-          </Box>
-        </Box>
-      </Box>
-    )
-  }
+  const items = scopes.map((scope) => ({ label: '', value: scope }))
 
   return (
     <Box flexDirection='column'>
       <Box>
-        <Box marginRight={1}>
-          <Text bold color='cyanBright'>
-            Type of scope:
-          </Text>
-        </Box>
-        <TextInput value={value} onChange={setValue} />
+        <Text bold color='cyanBright'>
+          Scope:
+        </Text>
       </Box>
-      {!!hasSuggestion && (
-        <Select
-          items={matches}
-          indicatorComponent={IndicatorComponent}
-          itemComponent={ItemComponent}
-          onSelect={onSubmitValue}
-        />
-      )}
+      <Select
+        items={items}
+        indicatorComponent={IndicatorComponent}
+        itemComponent={ItemComponent}
+        initialIndex={Math.max(
+          0,
+          items.findIndex((item) => item.value === initialValue)
+        )}
+        onSelect={(item): void => {
+          onSubmit(item.value)
+        }}
+      />
     </Box>
   )
 }

@@ -8,7 +8,7 @@ import { CommitStagedCommand }      from './staged/command.js'
 
 export const plugin: Plugin = {
   commands: defineCommandInvocations({
-    entry: [CommitMessageCommand, CommitStagedCommand],
-    project: [CommitMessageLintCommand],
+    entry: [CommitStagedCommand],
+    project: [CommitMessageCommand, CommitMessageLintCommand],
   }),
 }

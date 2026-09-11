@@ -6,10 +6,12 @@ import { UncontrolledTextInput } from 'ink-text-input'
 import React                     from 'react'
 
 export interface RequestCommitMessageBreakingProps {
+  initialValue?: string
   onSubmit: (value: string) => void
 }
 
 export const RequestCommitMessageBreaking = ({
+  initialValue,
   onSubmit,
 }: RequestCommitMessageBreakingProps): ReactElement => (
   <Box flexDirection='column'>
@@ -23,7 +25,7 @@ export const RequestCommitMessageBreaking = ({
         <Text color='gray'>→</Text>
       </Box>
       <Box>
-        <UncontrolledTextInput onSubmit={onSubmit} />
+        <UncontrolledTextInput initialValue={initialValue} onSubmit={onSubmit} />
       </Box>
     </Box>
   </Box>

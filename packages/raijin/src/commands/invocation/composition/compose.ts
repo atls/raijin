@@ -57,10 +57,16 @@ const composeCommand = (command: RegisteredCommandClass): RegisteredCommandClass
   }
 
   const commandScope = scope
-  const { execute } = command.prototype
+  const { execute, executeBeforeInvocation } = command.prototype
 
   class ComposedCommand extends command {
     async execute() {
+      const exitCode = await executeBeforeInvocation?.call(this)
+
+      if (exitCode !== undefined) {
+        return exitCode
+      }
+
       const invocation = await resolveInvocation(commandScope, this.context)
       const context = { ...this.context, invocation }
 

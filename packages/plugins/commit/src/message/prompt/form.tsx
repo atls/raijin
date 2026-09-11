@@ -1,5 +1,6 @@
 import type { FC }                        from 'react'
 
+import type { CommitMessageInput }        from '../input.js'
 import type { AdditionalProperties }      from './additional.jsx'
 
 import { useEffect }                      from 'react'
@@ -14,18 +15,8 @@ import { RequestCommitMessageScope }      from './scope.jsx'
 import { RequestCommitMessageSubject }    from './subject.jsx'
 import { RequestCommitMessageType }       from './type.jsx'
 
-export interface CommitProperties {
-  type: string
-  subject: string
-  scope?: string
-  body?: string
-  breaking?: string
-  issues?: string
-  skipci?: boolean
-}
-
-interface SubmitProps extends CommitProperties {
-  onSubmit: (value: CommitProperties) => void
+interface SubmitProps extends CommitMessageInput {
+  onSubmit: (value: CommitMessageInput) => void
 }
 
 const Submit: FC<SubmitProps> = ({ onSubmit, ...props }): null => {
@@ -37,10 +28,16 @@ const Submit: FC<SubmitProps> = ({ onSubmit, ...props }): null => {
 }
 
 interface RequestCommitMessageProps {
-  onSubmit: (props: CommitProperties) => void
+  allowedScopes: Array<string>
+  initialValue?: CommitMessageInput
+  onSubmit: (props: CommitMessageInput) => void
 }
 
-export const RequestCommitMessage: FC<RequestCommitMessageProps> = ({ onSubmit }) => {
+export const RequestCommitMessage: FC<RequestCommitMessageProps> = ({
+  allowedScopes,
+  initialValue,
+  onSubmit,
+}) => {
   const [type, setType] = useState<string | undefined>()
   const [scope, setScope] = useState<string | undefined>()
   const [subject, setSubject] = useState<string | undefined>()
@@ -50,31 +47,41 @@ export const RequestCommitMessage: FC<RequestCommitMessageProps> = ({ onSubmit }
   const [additional, setAdditional] = useState<AdditionalProperties>()
 
   if (!type) {
-    return <RequestCommitMessageType onSubmit={setType} />
+    return <RequestCommitMessageType initialValue={initialValue?.type} onSubmit={setType} />
   }
 
   if (!subject) {
-    return <RequestCommitMessageSubject onSubmit={setSubject} />
+    return (
+      <RequestCommitMessageSubject initialValue={initialValue?.subject} onSubmit={setSubject} />
+    )
   }
 
   if (!additional) {
-    return <RequestCommitMessageAdditional onSubmit={setAdditional} />
+    return <RequestCommitMessageAdditional initialValue={initialValue} onSubmit={setAdditional} />
   }
 
   if (additional.scope && !scope) {
-    return <RequestCommitMessageScope onSubmit={setScope} />
+    return (
+      <RequestCommitMessageScope
+        initialValue={initialValue?.scope}
+        scopes={allowedScopes}
+        onSubmit={setScope}
+      />
+    )
   }
 
   if (additional.issues && !issues) {
-    return <RequestCommitMessageIssues onSubmit={setIssues} />
+    return <RequestCommitMessageIssues initialValue={initialValue?.issues} onSubmit={setIssues} />
   }
 
   if (additional.body && !body) {
-    return <RequestCommitMessageBody onSubmit={setBody} />
+    return <RequestCommitMessageBody initialValue={initialValue?.body} onSubmit={setBody} />
   }
 
   if (additional.breaking && !breaking) {
-    return <RequestCommitMessageBreaking onSubmit={setBreaking} />
+    return (
+      <RequestCommitMessageBreaking initialValue={initialValue?.breaking} onSubmit={setBreaking} />
+    )
   }
 
   return (

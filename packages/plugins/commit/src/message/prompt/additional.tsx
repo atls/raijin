@@ -1,13 +1,15 @@
-import type { ReactElement } from 'react'
+import type { ReactElement }       from 'react'
 
-import { Text }              from 'ink'
-import { Box }               from 'ink'
-import { useCallback }       from 'react'
-import MultiSelectPkg        from 'ink-multi-select'
-import React                 from 'react'
-import figures               from 'figures'
+import type { CommitMessageInput } from '../input.js'
 
-import { ItemComponent }     from './select-item.jsx'
+import { Text }                    from 'ink'
+import { Box }                     from 'ink'
+import { useCallback }             from 'react'
+import MultiSelectPkg              from 'ink-multi-select'
+import React                       from 'react'
+import figures                     from 'figures'
+
+import { ItemComponent }           from './select-item.jsx'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MultiSelect = (MultiSelectPkg as any).default || (MultiSelectPkg as any)
@@ -62,12 +64,19 @@ export interface AdditionalProperties {
 }
 
 interface RequestCommitMessageAdditionalProps {
+  initialValue?: CommitMessageInput
   onSubmit: (props: AdditionalProperties) => void
 }
 
 export const RequestCommitMessageAdditional = ({
+  initialValue,
   onSubmit,
 }: RequestCommitMessageAdditionalProps): ReactElement => {
+  const defaultSelected = COMMIT_ADDITIONAL.filter(({ value }) =>
+    value === 'scope'
+      ? initialValue?.scope !== undefined || !initialValue
+      : initialValue?.[value as keyof CommitMessageInput])
+
   const onSubmitValues = useCallback(
     (values: Array<{ value: string }>) => {
       onSubmit(
@@ -93,6 +102,7 @@ export const RequestCommitMessageAdditional = ({
       <Box>
         <MultiSelect
           items={COMMIT_ADDITIONAL}
+          defaultSelected={defaultSelected}
           indicatorComponent={IndicatorComponent}
           itemComponent={ItemComponent}
           checkboxComponent={CheckboxComponent}

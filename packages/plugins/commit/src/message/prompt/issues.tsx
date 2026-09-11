@@ -9,10 +9,12 @@ import React                     from 'react'
 import figures                   from 'figures'
 
 export interface RequestCommitMessageIssuesProps {
+  initialValue?: string
   onSubmit: (value: string) => void
 }
 
 export const RequestCommitMessageIssues = ({
+  initialValue,
   onSubmit,
 }: RequestCommitMessageIssuesProps): ReactElement => (
   <Box flexDirection='column'>
@@ -26,7 +28,7 @@ export const RequestCommitMessageIssues = ({
         <Text color='gray'>{figures.arrowRight}</Text>
       </Box>
       <Box>
-        <UncontrolledTextInput onSubmit={onSubmit} />
+        <UncontrolledTextInput initialValue={initialValue} onSubmit={onSubmit} />
       </Box>
     </Box>
   </Box>
