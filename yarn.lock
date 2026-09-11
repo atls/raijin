@@ -239,28 +239,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/cli-ui-git-commit-component@workspace:*, @atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit":
-  version: 0.0.0-use.local
-  resolution: "@atls/cli-ui-git-commit-component@workspace:cli/cli-ui-git-commit"
-  dependencies:
-    "@atls/code-commit": "workspace:*"
-    "@inkjs/ui": "npm:2.0.0"
-    "@types/node": "npm:22.13.10"
-    "@types/react": "npm:18.3.18"
-    camelcase: "npm:8.0.0"
-    figures: "npm:6.1.0"
-    ink: "npm:3.2.0"
-    ink-autocomplete: "npm:^0.0.0"
-    ink-multi-select: "npm:2.0.0"
-    ink-select-input: "npm:6.0.0"
-    ink-text-input: "npm:6.0.0"
-    react: "npm:18.3.1"
-  peerDependencies:
-    ink: ^3
-    react: ^18
-  languageName: unknown
-  linkType: soft
-
 "@atls/cli-ui@workspace:*, @atls/cli-ui@workspace:packages/cli-ui":
   version: 0.0.0-use.local
   resolution: "@atls/cli-ui@workspace:packages/cli-ui"
@@ -280,18 +258,6 @@ __metadata:
   peerDependencies:
     ink: ^3
     react: ^18
-  languageName: unknown
-  linkType: soft
-
-"@atls/code-commit@workspace:*, @atls/code-commit@workspace:code/code-commit":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-commit@workspace:code/code-commit"
-  dependencies:
-    "@commitlint/format": "npm:21.2.0"
-    "@commitlint/lint": "npm:21.2.0"
-    "@commitlint/read": "npm:21.2.0"
-    "@commitlint/types": "npm:21.2.0"
-    "@types/node": "npm:24.12.2"
   languageName: unknown
   linkType: soft
 
@@ -537,9 +503,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-commit@workspace:packages/plugins/commit"
   dependencies:
-    "@atls/cli-ui-git-commit-component": "workspace:*"
-    "@atls/code-commit": "workspace:*"
     "@atls/raijin": "workspace:*"
+    "@commitlint/format": "npm:21.2.0"
+    "@commitlint/lint": "npm:21.2.0"
+    "@commitlint/read": "npm:21.2.0"
+    "@commitlint/types": "npm:21.2.0"
     "@types/react": "npm:18.3.18"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
@@ -548,8 +516,12 @@ __metadata:
     "@yarnpkg/libui": "npm:3.0.1"
     clipanion: "npm:4.0.0-rc.2"
     commitizen: "npm:4.3.0"
+    figures: "npm:6.1.0"
     force-stdin-tty: "npm:0.0.1"
     ink: "npm:3.2.0"
+    ink-multi-select: "npm:2.0.0"
+    ink-select-input: "npm:6.0.0"
+    ink-text-input: "npm:6.0.0"
     lint-staged: "patch:lint-staged@npm%3A17.5.0#~/.yarn/patches/lint-staged-npm-17.5.0.patch"
     react: "npm:18.3.1"
     word-wrap: "npm:1.2.5"
@@ -3069,7 +3041,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:22.13.10":
+"@types/node@npm:*":
   version: 22.13.10
   resolution: "@types/node@npm:22.13.10"
   dependencies:
@@ -4471,13 +4443,6 @@ __metadata:
   dependencies:
     type-fest: "npm:^0.21.3"
   checksum: 10/8661034456193ffeda0c15c8c564a9636b0c04094b7f78bd01517929c17c504090a60f7a75f949f5af91289c264d3e1001d91492c1bd58efc8e100500ce04de2
-  languageName: node
-  linkType: hard
-
-"ansi-regex@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "ansi-regex@npm:3.0.1"
-  checksum: 10/09daf180c5f59af9850c7ac1bd7fda85ba596cc8cbeb210826e90755f06c818af86d9fa1e6e8322fab2c3b9e9b03f56c537b42241139f824dd75066a1e7257cc
   languageName: node
   linkType: hard
 
@@ -7171,15 +7136,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"has-ansi@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "has-ansi@npm:3.0.0"
-  dependencies:
-    ansi-regex: "npm:^3.0.0"
-  checksum: 10/a5d8db9c9ebfeed2c537787a3c09bfc9ee3b573018187f8a786d5a59b71c287687d7ff482d5356c3a077cd26aca27a5994f91df72bdce89cf4435654c8c400d9
-  languageName: node
-  linkType: hard
-
 "has-bigints@npm:^1.0.2":
   version: 1.0.2
   resolution: "has-bigints@npm:1.0.2"
@@ -7466,17 +7422,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink-autocomplete@npm:^0.0.0":
-  version: 0.0.0
-  resolution: "ink-autocomplete@npm:0.0.0"
-  dependencies:
-    ink-select-input: "npm:^1.0.0"
-    ink-text-input: "npm:^1.1.0"
-    prop-types: "npm:^15.5.10"
-  checksum: 10/6ebd5668c69bce98fe83643c92189586ce1af83be1e117883e4c8b87ea0fd52e537ed8f43e9362357129892e467570e91ee74b4e17f32a54dffb70bb66a45ec0
-  languageName: node
-  linkType: hard
-
 "ink-link@npm:2.0.1":
   version: 2.0.1
   resolution: "ink-link@npm:2.0.1"
@@ -7516,18 +7461,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink-select-input@npm:^1.0.0":
-  version: 1.1.0
-  resolution: "ink-select-input@npm:1.1.0"
-  dependencies:
-    arr-rotate: "npm:^1.0.0"
-    figures: "npm:^2.0.0"
-    lodash.isequal: "npm:^4.5.0"
-    prop-types: "npm:^15.5.10"
-  checksum: 10/a6dc385aefd76ac7176dbd2a3ba0a50046e65103964741251eb099a8b738d2a63ef291eda8341ab5816f84cf31a45c6d5e7ff91fa8cb9d711f55c6cdcde351d2
-  languageName: node
-  linkType: hard
-
 "ink-text-input@npm:6.0.0":
   version: 6.0.0
   resolution: "ink-text-input@npm:6.0.0"
@@ -7538,16 +7471,6 @@ __metadata:
     ink: ">=5"
     react: ">=18"
   checksum: 10/dc2511df2bf6a93a7ee94efce03eb7fb99028d378bd5446047fa9f4c13de67e8651e9fc89331cc3d158ca84974dfdd2df465a52e241a070cdc3f85048a707931
-  languageName: node
-  linkType: hard
-
-"ink-text-input@npm:^1.1.0":
-  version: 1.1.1
-  resolution: "ink-text-input@npm:1.1.1"
-  dependencies:
-    has-ansi: "npm:^3.0.0"
-    prop-types: "npm:^15.5.10"
-  checksum: 10/0027cc9893a5c7a4be034f083e29bc910dfcb8ce7309b18e56dc93c8ad12c88a97d045672e1ea9576c4512441ac70ea5eb5aceb06afe5ecf4aaf0c49085816f7
   languageName: node
   linkType: hard
 

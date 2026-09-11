@@ -18,9 +18,6 @@ const rewriteSpecifier = (
   return specifier
 }
 
-// @atls/cli-ui-git-commit-component uses relative .jsx specifiers while its
-// configured TypeScript emit creates .js files. Remove this rule when that
-// consumer uses TypeScript-owned .tsx specifiers or leaves this build path.
 export const rewriteLegacyJsxSpecifiers = (
     typescript: typeof TypeScriptRuntime,
     jsx: TypeScriptRuntime.JsxEmit | undefined

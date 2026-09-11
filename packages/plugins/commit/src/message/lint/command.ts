@@ -1,9 +1,9 @@
 import type { ProjectCommandContext } from '@atls/raijin/commands'
 
 import { BaseCommand }                from '@yarnpkg/cli'
+import read                           from '@commitlint/read'
 
-import { CommitLinter }               from '@atls/code-commit'
-import { read }                       from '@atls/code-commit'
+import { CommitLinter }               from './linter.js'
 
 class CommitMessageLintCommand extends BaseCommand {
   static override paths = [['commit', 'message', 'lint']]

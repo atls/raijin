@@ -1,8 +1,9 @@
-import type { CommitProperties }        from '@atls/cli-ui-git-commit-component'
 import type { EntryCommandContext }     from '@atls/raijin/commands'
 import type { PortablePath }            from '@yarnpkg/fslib'
 import type { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
 import type { ReactElement }            from 'react'
+
+import type { CommitProperties }        from './prompt/form.jsx'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { xfs }                          from '@yarnpkg/fslib'
@@ -15,7 +16,7 @@ import { useState }                     from 'react'
 import React                            from 'react'
 import wrap                             from 'word-wrap'
 
-import { RequestCommitMessage }         from '@atls/cli-ui-git-commit-component'
+import { RequestCommitMessage }         from './prompt/form.jsx'
 
 const RequestCommitMessageSubmit = ({
   commit,

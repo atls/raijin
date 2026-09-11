@@ -236,15 +236,6 @@
 <details>
 <summary>Подробности группы `code`</summary>
 
-<!-- sync:package-card:atls-code-commit -->
-
-#### `@atls/code-commit`
-
-- Локация: `code/code-commit`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-format -->
 
 #### `@atls/code-format`
@@ -280,22 +271,6 @@
 - Группа: `code`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
-
-</details>
-
-## Group `cli`
-
-Пакеты представления командного интерфейса
-
-<details>
-<summary>Подробности группы `cli`</summary>
-
-<!-- sync:package-card:atls-cli-ui-git-commit-component -->
-
-#### `@atls/cli-ui-git-commit-component`
-
-- Скрипты: `build`, `postpack`, `prepack`
-- Локация: `cli/cli-ui-git-commit`
 
 </details>
 

@@ -1,7 +1,7 @@
 import assert           from 'node:assert/strict'
 import { test }         from 'node:test'
 
-import { CommitLinter } from './commit.linter.js'
+import { CommitLinter } from './linter.js'
 
 test('should lint valid commit', async () => {
   const { valid } = await new CommitLinter({}).lint('feat(common): init')

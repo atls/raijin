@@ -236,15 +236,6 @@ Core code libraries for build, checks, and utilities
 <details>
 <summary>Group details: `code`</summary>
 
-<!-- sync:package-card:atls-code-commit -->
-
-#### `@atls/code-commit`
-
-- Location: `code/code-commit`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-format -->
 
 #### `@atls/code-format`
@@ -280,22 +271,6 @@ Core code libraries for build, checks, and utilities
 - Group: `code`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
-
-</details>
-
-## Group `cli`
-
-Command-line interface presentation packages
-
-<details>
-<summary>Group details: `cli`</summary>
-
-<!-- sync:package-card:atls-cli-ui-git-commit-component -->
-
-#### `@atls/cli-ui-git-commit-component`
-
-- Scripts: `build`, `postpack`, `prepack`
-- Location: `cli/cli-ui-git-commit`
 
 </details>
 

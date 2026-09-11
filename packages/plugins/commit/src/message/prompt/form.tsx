@@ -1,18 +1,18 @@
 import type { FC }                        from 'react'
 
-import type { AdditionalProperties }      from './request-commit-message-additional.component.jsx'
+import type { AdditionalProperties }      from './additional.jsx'
 
 import { useEffect }                      from 'react'
 import { useState }                       from 'react'
 import React                              from 'react'
 
-import { RequestCommitMessageAdditional } from './request-commit-message-additional.component.jsx'
-import { RequestCommitMessageBody }       from './request-commit-message-body.component.jsx'
-import { RequestCommitMessageBreaking }   from './request-commit-message-breaking.component.jsx'
-import { RequestCommitMessageIssues }     from './request-commit-message-issues.component.jsx'
-import { RequestCommitMessageScope }      from './request-commit-message-scope.component.jsx'
-import { RequestCommitMessageSubject }    from './request-commit-message-subject.component.jsx'
-import { RequestCommitMessageType }       from './request-commit-message-type.component.jsx'
+import { RequestCommitMessageAdditional } from './additional.jsx'
+import { RequestCommitMessageBody }       from './body.jsx'
+import { RequestCommitMessageBreaking }   from './breaking.jsx'
+import { RequestCommitMessageIssues }     from './issues.jsx'
+import { RequestCommitMessageScope }      from './scope.jsx'
+import { RequestCommitMessageSubject }    from './subject.jsx'
+import { RequestCommitMessageType }       from './type.jsx'
 
 export interface CommitProperties {
   type: string

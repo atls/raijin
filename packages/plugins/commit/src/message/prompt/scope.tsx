@@ -10,10 +10,9 @@ import Select                    from 'ink-select-input'
 import TextInput                 from 'ink-text-input'
 import React                     from 'react'
 
-import { COMMIT_SCOPE_ENUM }     from '@atls/code-commit'
-
-import { IndicatorComponent }    from './select-indicator.component.jsx'
-import { ItemComponent }         from './select-item.component.jsx'
+import { COMMIT_SCOPE_ENUM }     from './scope-options.js'
+import { IndicatorComponent }    from './select-indicator.jsx'
+import { ItemComponent }         from './select-item.jsx'
 
 const scopes: Array<{ label: string; value: string }> = Object.keys(COMMIT_SCOPE_ENUM).map((
   key

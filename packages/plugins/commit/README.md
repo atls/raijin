@@ -1,8 +1,23 @@
 # Commit Plugin
 
 The private plugin registers `yarn commit message`, `yarn commit message lint`,
-and `yarn commit staged`. This change affects staged checks only; message
-preparation and validation retain their existing behavior.
+and `yarn commit staged`. Message preparation, commitlint validation, and staged
+verification live with their command owner instead of separate code and CLI UI
+workspaces.
+
+## Message Preparation
+
+`yarn commit message` renders its Ink prompt inside this plugin and writes the
+selected conventional commit fields to the requested edit-message file. The
+prompt owns only interactive presentation and input collection. Commit formatting,
+command arguments, terminal streams, and exit status remain with the command.
+
+## Message Validation
+
+`yarn commit message lint` uses the repository-pinned commitlint packages directly.
+The plugin adds the current Yarn workspace names and scopes to the retained commit
+policy, reads the active edit message through commitlint, writes its native formatted
+result, and returns a non-zero result when any message is invalid.
 
 ## Staged Checks
 
@@ -42,6 +57,7 @@ commands:
 yarn test unit --target packages/plugins/commit
 yarn typecheck packages/plugins/commit/src
 yarn lint packages/plugins/commit/src
+yarn workspace @atls/yarn-plugin-commit build
 ```
 
 Run the plugin's integration test against the packed package and checked runtime:
@@ -56,4 +72,6 @@ hook, required project configuration, backend TypeScript 5.9.3 under PnP, and
 an independent node_modules client with TypeScript 6.0.3 and Jest 29.7.0.
 The client has no Raijin dependency or synthetic `typecheck` script.
 The unit tests cover transaction mechanics, including rollback, partial staging,
-renames, deletions, literal paths, and argument chunking.
+renames, deletions, literal paths, and argument chunking. They also preserve the
+commitlint policy and dynamic workspace-scope behavior after the legacy packages are
+removed.

@@ -1,6 +1,6 @@
 import type { QualifiedRules } from '@commitlint/types'
 
-import { COMMIT_TYPE_ENUM }    from './commitlint.enums.js'
+import { COMMIT_TYPE_ENUM }    from '../type-options.js'
 
 export const rules: QualifiedRules = {
   'body-leading-blank': [1, 'always'],

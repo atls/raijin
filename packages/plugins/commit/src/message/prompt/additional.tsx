@@ -7,7 +7,7 @@ import MultiSelectPkg        from 'ink-multi-select'
 import React                 from 'react'
 import figures               from 'figures'
 
-import { ItemComponent }     from './select-item.component.jsx'
+import { ItemComponent }     from './select-item.jsx'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MultiSelect = (MultiSelectPkg as any).default || (MultiSelectPkg as any)
