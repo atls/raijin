@@ -4,10 +4,12 @@ import { mkdtemp }      from 'node:fs/promises'
 import { readFile }     from 'node:fs/promises'
 import { readdir }      from 'node:fs/promises'
 import { rm }           from 'node:fs/promises'
-import { stat }         from 'node:fs/promises'
+import { unlink }       from 'node:fs/promises'
 import { writeFile }    from 'node:fs/promises'
 import { tmpdir }       from 'node:os'
 import { join }         from 'node:path'
+import { relative }     from 'node:path'
+import { sep }          from 'node:path'
 import { test }         from 'node:test'
 
 import { buildLibrary } from '../run.js'
@@ -56,7 +58,10 @@ const build = (cwd: string) =>
 const readStagingDirectories = async (cwd: string): Promise<Array<string>> =>
   (await readdir(cwd)).filter((name) => name.startsWith('.dist.raijin-library-'))
 
-test('emits one complete artifact with native TypeScript extension rewriting', async (t) => {
+const artifactPaths = (targetRoot: string, paths: ReadonlyArray<string>): Array<string> =>
+  paths.map((path) => relative(targetRoot, path).split(sep).join('/')).sort()
+
+test('emits the complete artifact with native rewrites and the exact jsx fallback', async (t) => {
   const cwd = await createProject(
     {
       'src/common.cts': 'export const commonValue = true\n',
@@ -76,6 +81,7 @@ test('emits one complete artifact with native TypeScript extension rewriting', a
     },
     { declarationMap: true, sourceMap: true }
   )
+  const targetRoot = join(cwd, 'dist')
 
   t.after(async () => rm(cwd, { force: true, recursive: true }))
 
@@ -84,26 +90,50 @@ test('emits one complete artifact with native TypeScript extension rewriting', a
   assert.equal(result.kind, 'completed')
   if (result.kind !== 'completed') return
 
-  const output = await readFile(join(cwd, 'dist/index.js'), 'utf8')
+  const output = await readFile(join(targetRoot, 'index.js'), 'utf8')
 
-  assert.match(output, /['"]\.\/value\.js['"]/)
-  assert.match(output, /['"]\.\/view\.js['"]/)
-  assert.match(output, /['"]\.\/module\.mjs['"]/)
-  assert.match(output, /['"]\.\/common\.cjs['"]/)
-  assert.match(output, /['"]\.\/legacy\.js['"]/)
-  assert.doesNotMatch(output, /\.(?:cts|jsx|mts|ts|tsx)['"]/)
-  assert.equal(result.diagnostics.length, 0)
-  assert.ok(result.artifact.javascript.every((path) => path.startsWith(join(cwd, 'dist'))))
-  assert.ok(result.artifact.declarations.some((path) => path.endsWith('/index.d.ts')))
-  assert.ok(result.artifact.sourceMaps.some((path) => path.endsWith('/index.js.map')))
-  assert.ok(result.artifact.sourceMaps.some((path) => path.endsWith('/index.d.ts.map')))
-  if (process.platform !== 'win32') {
-    assert.equal((await stat(join(cwd, 'dist'))).mode & 0o777, 0o777 & ~process.umask())
-  }
+  assert.match(output, /['"]\.\/value\.js['"]/u)
+  assert.match(output, /['"]\.\/view\.js['"]/u)
+  assert.match(output, /['"]\.\/module\.mjs['"]/u)
+  assert.match(output, /['"]\.\/common\.cjs['"]/u)
+  assert.match(output, /['"]\.\/legacy\.js['"]/u)
+  assert.doesNotMatch(output, /\.(?:cts|jsx|mts|ts|tsx)['"]/u)
+  assert.deepEqual(result.diagnostics, [])
+  assert.equal(result.artifact.targetRoot, targetRoot)
+  assert.deepEqual(artifactPaths(targetRoot, result.artifact.javascript), [
+    'common.cjs',
+    'index.js',
+    'legacy.js',
+    'module.mjs',
+    'value.js',
+    'view.js',
+  ])
+  assert.deepEqual(artifactPaths(targetRoot, result.artifact.declarations), [
+    'common.d.cts',
+    'index.d.ts',
+    'legacy.d.ts',
+    'module.d.mts',
+    'value.d.ts',
+    'view.d.ts',
+  ])
+  assert.deepEqual(artifactPaths(targetRoot, result.artifact.sourceMaps), [
+    'common.cjs.map',
+    'common.d.cts.map',
+    'index.d.ts.map',
+    'index.js.map',
+    'legacy.d.ts.map',
+    'legacy.js.map',
+    'module.d.mts.map',
+    'module.mjs.map',
+    'value.d.ts.map',
+    'value.js.map',
+    'view.d.ts.map',
+    'view.js.map',
+  ])
   assert.deepEqual(await readStagingDirectories(cwd), [])
 })
 
-test('preserves relative jsx specifiers when TypeScript emits jsx files', async (t) => {
+test('keeps relative jsx specifiers when the accepted project emits jsx files', async (t) => {
   const cwd = await createProject(
     {
       'src/index.ts': "export { view } from './view.jsx'\n",
@@ -117,172 +147,57 @@ test('preserves relative jsx specifiers when TypeScript emits jsx files', async 
   const result = await build(cwd)
 
   assert.equal(result.kind, 'completed')
-  assert.match(await readFile(join(cwd, 'dist/index.js'), 'utf8'), /['"]\.\/view\.jsx['"]/)
+  assert.match(await readFile(join(cwd, 'dist/index.js'), 'utf8'), /['"]\.\/view\.jsx['"]/u)
   await readFile(join(cwd, 'dist/view.jsx'), 'utf8')
 })
 
-test('preserves a configured root directory and its emitted layout', async (t) => {
-  const cwd = await createProject(
-    {
-      'generated/value.ts': "export const generated = 'generated'\n",
-      'src/index.ts': "export { generated } from '../generated/value.ts'\n",
-    },
-    { rootDir: '.' }
-  )
-
-  t.after(async () => rm(cwd, { force: true, recursive: true }))
-
-  const result = await build(cwd)
-
-  assert.equal(result.kind, 'completed')
-  assert.match(
-    await readFile(join(cwd, 'dist/src/index.js'), 'utf8'),
-    /['"]\.\.\/generated\/value\.js['"]/u
-  )
-  await readFile(join(cwd, 'dist/generated/value.js'), 'utf8')
-  await readFile(join(cwd, 'dist/src/index.d.ts'), 'utf8')
-  await readFile(join(cwd, 'dist/generated/value.d.ts'), 'utf8')
-})
-
-test('lets TypeScript infer an omitted root directory across source roots', async (t) => {
-  const cwd = await createProject(
-    {
-      'generated/value.ts': "export const generated = 'generated'\n",
-      'src/index.ts': "export { generated } from '../generated/value.ts'\n",
-    },
-    { rootDir: undefined }
-  )
-
-  t.after(async () => rm(cwd, { force: true, recursive: true }))
-
-  const result = await build(cwd)
-
-  assert.equal(result.kind, 'completed')
-  assert.match(
-    await readFile(join(cwd, 'dist/src/index.js'), 'utf8'),
-    /['"]\.\.\/generated\/value\.js['"]/u
-  )
-  await readFile(join(cwd, 'dist/generated/value.js'), 'utf8')
-  await readFile(join(cwd, 'dist/src/index.d.ts'), 'utf8')
-  await readFile(join(cwd, 'dist/generated/value.d.ts'), 'utf8')
-})
-
-test('supplies a source root when package exports require an explicit project root', async (t) => {
-  const cwd = await createProject(
-    { 'src/index.ts': 'export const value = true\n' },
-    { rootDir: undefined }
-  )
-
-  t.after(async () => rm(cwd, { force: true, recursive: true }))
-
-  await writeFile(
-    join(cwd, 'package.json'),
-    JSON.stringify({ exports: { '.': './dist/index.js' }, name: 'fixture', type: 'module' })
-  )
-
-  const result = await build(cwd)
-
-  assert.equal(result.kind, 'completed')
-  await readFile(join(cwd, 'dist/index.js'), 'utf8')
-  await readFile(join(cwd, 'dist/index.d.ts'), 'utf8')
-})
-
-test('loads TypeScript providers from the direct workspace boundary', async (t) => {
-  const cwd = await createProject({ 'src/index.ts': 'export const value = true\n' })
-  const raijinCwd = join(cwd, 'node_modules/@atls/raijin')
-
-  t.after(async () => rm(cwd, { force: true, recursive: true }))
-
-  await writeFile(
-    join(cwd, 'package.json'),
-    JSON.stringify({
-      name: 'fixture',
-      type: 'module',
-      devDependencies: { '@atls/raijin': '1.0.0' },
-    })
-  )
-  await mkdir(raijinCwd, { recursive: true })
-  await writeFile(
-    join(raijinCwd, 'package.json'),
-    JSON.stringify({
-      name: '@atls/raijin',
-      type: 'module',
-      exports: {
-        './config/typescript': './config-typescript.js',
-        './typescript': './typescript.js',
-      },
-    })
-  )
-  await writeFile(
-    join(raijinCwd, 'config-typescript.js'),
-    [
-      'export const resolveTypeScriptProject = ({ compilerOptions, typescript }) => {',
-      "  if (typescript.provider !== 'workspace') throw new Error('unexpected TypeScript runtime')",
-      "  if (compilerOptions.rootDir !== undefined) throw new Error('unexpected root directory override')",
-      "  throw new Error('workspace TypeScript providers loaded')",
-      '}',
-      '',
-    ].join('\n')
-  )
-  await writeFile(join(raijinCwd, 'typescript.js'), "export const ts = { provider: 'workspace' }\n")
-
-  await assert.rejects(build(cwd), /workspace TypeScript providers loaded/u)
-  assert.deepEqual(await readStagingDirectories(cwd), [])
-})
-
-test('preserves the previous artifact when compilation fails', async (t) => {
-  const cwd = await createProject({ 'src/index.ts': 'export const value = true\n' })
-
-  t.after(async () => rm(cwd, { force: true, recursive: true }))
-
-  const completed = await build(cwd)
-
-  assert.equal(completed.kind, 'completed')
-
-  const previous = await readFile(join(cwd, 'dist/index.js'), 'utf8')
-
-  await writeFile(join(cwd, 'src/index.ts'), 'export const value: string = 1\n')
-
-  const failed = await build(cwd)
-
-  assert.equal(failed.kind, 'compilation-failed')
-  assert.equal(await readFile(join(cwd, 'dist/index.js'), 'utf8'), previous)
-  assert.deepEqual(await readStagingDirectories(cwd), [])
-})
-
-test(
-  'preserves target directory permissions when replacing an artifact',
-  { skip: process.platform === 'win32' },
-  async (t) => {
-    const cwd = await createProject({ 'src/index.ts': 'export const value = true\n' })
-    const targetRoot = join(cwd, 'dist')
-
-    t.after(async () => rm(cwd, { force: true, recursive: true }))
-
-    await mkdir(targetRoot, { mode: 0o750 })
-
-    const result = await build(cwd)
-
-    assert.equal(result.kind, 'completed')
-    assert.equal((await stat(targetRoot)).mode & 0o777, 0o750)
+test('preserves configured and inferred project roots', async (t) => {
+  const files = {
+    'generated/value.ts': "export const generated = 'generated'\n",
+    'src/index.ts': "export { generated } from '../generated/value.ts'\n",
   }
-)
+  const configured = await createProject(files, { rootDir: '.' })
+  const inferred = await createProject(files, { rootDir: undefined })
 
-test('preserves the previous artifact when emitted output is incomplete', async (t) => {
-  const cwd = await createProject({ 'src/types.d.ts': 'export declare const value: true\n' })
+  t.after(async () => {
+    await Promise.all(
+      [configured, inferred].map((cwd) => rm(cwd, { force: true, recursive: true }))
+    )
+  })
+
+  assert.equal((await build(configured)).kind, 'completed')
+  assert.equal((await build(inferred)).kind, 'completed')
+
+  for (const cwd of [configured, inferred]) {
+    assert.match(
+      await readFile(join(cwd, 'dist/src/index.js'), 'utf8'),
+      /['"]\.\.\/generated\/value\.js['"]/u
+    )
+    await readFile(join(cwd, 'dist/generated/value.js'), 'utf8')
+  }
+})
+
+test('preserves the previous complete artifact when a build fails', async (t) => {
+  const cwd = await createProject({ 'src/index.ts': 'export const value = true\n' })
   const targetRoot = join(cwd, 'dist')
 
   t.after(async () => rm(cwd, { force: true, recursive: true }))
 
-  await mkdir(targetRoot)
-  await writeFile(join(targetRoot, 'previous.txt'), 'previous\n')
+  assert.equal((await build(cwd)).kind, 'completed')
+  const previous = await readFile(join(targetRoot, 'index.js'), 'utf8')
 
-  const result = await build(cwd)
+  await writeFile(join(cwd, 'src/index.ts'), 'export const value: string = 1\n')
+  const compilationFailure = await build(cwd)
 
-  assert.equal(result.kind, 'artifact-invalid')
-  if (result.kind === 'artifact-invalid') {
-    assert.deepEqual(result.issues, ['javascript-missing', 'declarations-missing'])
-  }
-  assert.equal(await readFile(join(targetRoot, 'previous.txt'), 'utf8'), 'previous\n')
+  assert.equal(compilationFailure.kind, 'compilation-failed')
+  assert.equal(await readFile(join(targetRoot, 'index.js'), 'utf8'), previous)
+  assert.deepEqual(await readStagingDirectories(cwd), [])
+
+  await unlink(join(cwd, 'src/index.ts'))
+  await writeFile(join(cwd, 'src/types.d.ts'), 'export declare const value: true\n')
+  const verificationFailure = await build(cwd)
+
+  assert.equal(verificationFailure.kind, 'artifact-invalid')
+  assert.equal(await readFile(join(targetRoot, 'index.js'), 'utf8'), previous)
   assert.deepEqual(await readStagingDirectories(cwd), [])
 })

@@ -1,6 +1,5 @@
 import assert            from 'node:assert/strict'
 import { execFile }      from 'node:child_process'
-import { access }        from 'node:fs/promises'
 import { copyFile }      from 'node:fs/promises'
 import { mkdir }         from 'node:fs/promises'
 import { mkdtemp }       from 'node:fs/promises'
@@ -53,7 +52,7 @@ const materializeRuntime = async (cwd: string): Promise<void> => {
 }
 
 test(
-  'packs an atomic library artifact for a disposable Yarn PnP ESM consumer',
+  'imports and typechecks a packed library artifact from a disposable Yarn PnP ESM consumer',
   { timeout: 120_000 },
   async (t) => {
     const cwd = await mkdtemp(join(tmpdir(), 'raijin-library-consumer-'))
@@ -82,7 +81,6 @@ test(
         files: ['lib'],
         scripts: {
           build: 'yarn library build --target ./lib',
-          postpack: 'rm -rf lib',
           prepack: 'yarn run build',
         },
         devDependencies: {
@@ -115,7 +113,6 @@ test(
         compilerOptions: {
           module: 'NodeNext',
           moduleResolution: 'NodeNext',
-          rootDir: 'src',
           strict: true,
           target: 'es2022',
         },
@@ -136,7 +133,6 @@ test(
 
     await run(libraryCwd, ['install'])
     await run(libraryCwd, ['pack', '--out', libraryArchive])
-    await assert.rejects(access(join(libraryCwd, 'lib')))
 
     await mkdir(consumerCwd)
     await materializeRuntime(consumerCwd)

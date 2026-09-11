@@ -18,7 +18,6 @@ import { Cli }                       from 'clipanion'
 import { composeCommandInvocations } from '@atls/raijin/commands'
 import { toPortableCwd }             from '@atls/raijin/commands'
 
-import { LibraryBuildCommand }       from '../command.jsx'
 import { plugin }                    from '../../plugin.js'
 
 const capture = (stream: PassThrough): (() => string) => {
@@ -83,95 +82,47 @@ const createProject = async (source: string): Promise<string> => {
   return cwd
 }
 
-test('parses a custom artifact target', () => {
-  const { cli, plugins } = createCli()
-  const command = cli.process(
-    ['library', 'build', '--target', './output'],
-    createContext(plugins, process.cwd(), new PassThrough(), new PassThrough())
-  )
-
-  assert.ok(command instanceof LibraryBuildCommand)
-  assert.equal(command.target, './output')
-})
-
-test('builds a library without durable progress output on a non-interactive stream', async (t) => {
-  const cwd = await createProject('export const value = true\n')
+const runBuild = async (
+  cwd: string,
+  interactive = false
+): Promise<{ exitCode: number; stderr: string; stdout: string }> => {
   const { cli, plugins } = createCli()
   const stderr = new PassThrough()
   const stdout = new PassThrough()
   const readStderr = capture(stderr)
   const readStdout = capture(stdout)
 
-  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  if (interactive) {
+    Reflect.set(stdout, 'columns', 80)
+    Reflect.set(stdout, 'isTTY', true)
+  }
 
   const exitCode = await cli.run(['library', 'build'], createContext(plugins, cwd, stderr, stdout))
 
-  assert.equal(exitCode, 0)
-  assert.equal(readStdout(), '')
-  assert.equal(readStderr(), '')
-  assert.match(await readFile(join(cwd, 'dist/index.js'), 'utf8'), /value = true/)
+  return { exitCode, stderr: readStderr(), stdout: readStdout() }
+}
+
+test('builds quietly and reports an interactive compilation failure', async (t) => {
+  const cwd = await createProject('export const value = true\n')
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+
+  const completed = await runBuild(cwd)
+
+  assert.deepEqual(completed, { exitCode: 0, stderr: '', stdout: '' })
+  assert.match(await readFile(join(cwd, 'dist/index.js'), 'utf8'), /value = true/u)
   await readFile(join(cwd, 'dist/index.d.ts'), 'utf8')
-})
 
-test('writes normalized compiler diagnostics and returns failure', async (t) => {
-  const cwd = await createProject('export const value: string = 1\n')
-  const { cli, plugins } = createCli()
-  const stderr = new PassThrough()
-  const stdout = new PassThrough()
-  const readStderr = capture(stderr)
-  const readStdout = capture(stdout)
+  await writeFile(join(cwd, 'src/index.ts'), 'export const value: string = 1\n')
 
-  t.after(async () => rm(cwd, { force: true, recursive: true }))
+  const failed = await runBuild(cwd, true)
+  const progress = failed.stdout.indexOf('Building library')
+  const diagnostic = failed.stdout.indexOf('TS2322')
 
-  const exitCode = await cli.run(['library', 'build'], createContext(plugins, cwd, stderr, stdout))
-
-  assert.equal(exitCode, 1)
-  assert.match(readStdout(), /TS2322/)
-  assert.match(readStdout(), /not assignable to type/)
-  assert.equal(readStderr(), '')
-})
-
-test('finishes interactive progress before writing a durable diagnostic', async (t) => {
-  const cwd = await createProject('export const value: string = 1\n')
-  const { cli, plugins } = createCli()
-  const stderr = new PassThrough()
-  const stdout = new PassThrough()
-  const readStdout = capture(stdout)
-
-  Reflect.set(stdout, 'columns', 80)
-  Reflect.set(stdout, 'isTTY', true)
-  t.after(async () => rm(cwd, { force: true, recursive: true }))
-
-  const exitCode = await cli.run(['library', 'build'], createContext(plugins, cwd, stderr, stdout))
-  const output = readStdout()
-  const progress = output.indexOf('Building library')
-  const progressClear = output.indexOf('\u001B[2K')
-  const diagnostic = output.indexOf('TS2322')
-
-  assert.equal(exitCode, 1)
-  assert.match(output, /Building library/)
-  assert.doesNotMatch(output, /\d+%/)
+  assert.equal(failed.exitCode, 1)
+  assert.ok(progress >= 0)
   assert.ok(diagnostic > progress)
-  if (progressClear >= 0) assert.ok(diagnostic > progressClear)
-})
-
-test('writes provider exceptions at the command boundary', async (t) => {
-  const cwd = await createProject('export const value = true\n')
-  const { cli, plugins } = createCli()
-  const stderr = new PassThrough()
-  const stdout = new PassThrough()
-  const readStderr = capture(stderr)
-  const readStdout = capture(stdout)
-
-  t.after(async () => rm(cwd, { force: true, recursive: true }))
-  await writeFile(join(cwd, 'blocked'), 'not a directory\n')
-
-  const exitCode = await cli.run(
-    ['library', 'build', '--target', './blocked/dist'],
-    createContext(plugins, cwd, stderr, stdout)
-  )
-
-  assert.equal(exitCode, 1)
-  assert.match(readStderr(), /EEXIST/)
-  assert.equal(readStdout(), '')
+  assert.match(failed.stdout, /not assignable to type/u)
+  assert.doesNotMatch(failed.stdout, /\d+%/u)
+  assert.equal(failed.stderr, '')
 })

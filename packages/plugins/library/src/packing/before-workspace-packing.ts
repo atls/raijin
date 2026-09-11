@@ -1,10 +1,7 @@
 import type { Workspace }         from '@yarnpkg/core'
 import type { Argument }          from '@yarnpkg/parsers'
 
-import { readdir }                from 'node:fs/promises'
-import { stat }                   from 'node:fs/promises'
 import { isAbsolute }             from 'node:path'
-import { relative }               from 'node:path'
 import { resolve }                from 'node:path'
 
 import { npath }                  from '@yarnpkg/fslib'
@@ -84,61 +81,6 @@ const resolveArtifactRoot = (
   return topLevel === normalized ? workspaceCwd : resolve(workspaceCwd, topLevel)
 }
 
-const resolveWorkspacePath = (workspaceCwd: string, path: string): string => {
-  const file = resolve(workspaceCwd, path)
-  const workspaceRelative = relative(workspaceCwd, file)
-
-  if (
-    workspaceRelative === '..' ||
-    workspaceRelative.startsWith(`..${npath.sep}`) ||
-    isAbsolute(workspaceRelative)
-  ) {
-    throw new Error(`Library pack path must stay inside its workspace: ${path}`)
-  }
-
-  return file
-}
-
-const matchesExportPattern = (path: string, entry: string): boolean => {
-  const parts = path.replace(/^\.\//u, '').split('*')
-  const wildcardCount = parts.length - 1
-  const fixedLength = parts.reduce((length, part) => length + part.length, 0)
-  const wildcardLength = (entry.length - fixedLength) / wildcardCount
-
-  if (!Number.isInteger(wildcardLength) || wildcardLength < 1) return false
-
-  const wildcard = entry.slice(parts[0]?.length ?? 0, (parts[0]?.length ?? 0) + wildcardLength)
-
-  return parts.join(wildcard) === entry
-}
-
-const verifyArtifactFile = async (workspaceCwd: string, path: string): Promise<void> => {
-  const file = resolveWorkspacePath(workspaceCwd, path)
-
-  if (!(await stat(file)).isFile()) {
-    throw new Error(`Library pack path must reference a file: ${path}`)
-  }
-}
-
-const verifyReferencedPath = async (
-  workspaceCwd: string,
-  path: string,
-  workspaceEntries: Array<string>
-): Promise<void> => {
-  if (!path.includes('*')) {
-    await verifyArtifactFile(workspaceCwd, path)
-    return
-  }
-
-  const matches = workspaceEntries.filter((entry) =>
-    matchesExportPattern(path, npath.toPortablePath(entry)))
-
-  if (matches.length === 0)
-    throw new Error(`Library pack pattern does not match an artifact: ${path}`)
-
-  await Promise.all(matches.map(async (entry) => verifyArtifactFile(workspaceCwd, entry)))
-}
-
 const verifyCompletedArtifact = async (
   workspaceCwd: string,
   packManifest: PackManifest
@@ -146,25 +88,19 @@ const verifyCompletedArtifact = async (
   const referenced = collectArtifactPaths(packManifest)
   const targetRoot = resolveArtifactRoot(workspaceCwd, referenced)
 
-  if (targetRoot) {
-    const artifact = await inspectLibraryArtifact(targetRoot)
-    const issues = verifyLibraryArtifact(artifact, {
-      declarationMaps: false,
-      javascriptSourceMaps: false,
-    })
-
-    if (issues.length > 0) {
-      throw new Error(`Library artifact is incomplete at ${targetRoot}: ${issues.join(', ')}`)
-    }
+  if (!targetRoot) {
+    throw new Error('Library pack metadata does not reference an artifact')
   }
 
-  const workspaceEntries = referenced.some((path) => path.includes('*'))
-    ? await readdir(workspaceCwd, { recursive: true })
-    : []
+  const artifact = await inspectLibraryArtifact(targetRoot)
+  const issues = verifyLibraryArtifact(artifact, {
+    declarationMaps: false,
+    javascriptSourceMaps: false,
+  })
 
-  await Promise.all(
-    referenced.map(async (path) => verifyReferencedPath(workspaceCwd, path, workspaceEntries))
-  )
+  if (issues.length > 0) {
+    throw new Error(`Library artifact is incomplete at ${targetRoot}: ${issues.join(', ')}`)
+  }
 }
 
 const literalArgument = (argument: Argument): string | undefined => {
@@ -194,7 +130,7 @@ const isLibraryBuildScript = (script: string): boolean => {
 }
 
 const buildsLibraryArtifact = (workspace: Workspace): boolean =>
-  [...workspace.manifest.scripts.values()].some(isLibraryBuildScript)
+  isLibraryBuildScript(workspace.manifest.scripts.get('build') ?? '')
 
 export const beforeWorkspacePacking = async (
   workspace: Workspace,
