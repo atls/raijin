@@ -423,9 +423,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/raijin@workspace:*, @atls/raijin@workspace:yarn/raijin":
+"@atls/raijin@workspace:*, @atls/raijin@workspace:packages/raijin":
   version: 0.0.0-use.local
-  resolution: "@atls/raijin@workspace:yarn/raijin"
+  resolution: "@atls/raijin@workspace:packages/raijin"
   dependencies:
     "@angular-devkit/core": "npm:19.1.5"
     "@angular-devkit/schematics": "npm:19.1.5"

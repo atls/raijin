@@ -30,7 +30,7 @@ const createWorkspace = (
     },
   }) as unknown as Workspace
 
-const runtimeWorkspace = createWorkspace('@atls/raijin', 'yarn/raijin', '2.1.33')
+const runtimeWorkspace = createWorkspace('@atls/raijin', 'packages/raijin', '2.1.33')
 const cliWorkspace = createWorkspace('@atls/raijin-assembly', 'yarn/cli', '4.14.1', true)
 const rootWorkspace = createWorkspace('tools', '.', '1.0.0', true)
 const projectCwd = '/repo' as PortablePath
@@ -58,7 +58,7 @@ test('should route internal workspace changes through public Raijin release work
     {
       workspace: {
         ident: '@atls/raijin',
-        relativeCwd: 'yarn/raijin',
+        relativeCwd: 'packages/raijin',
       },
       strategy: 'patch',
     },
@@ -96,7 +96,7 @@ test('should keep strongest strategy when internal and public changes share Raij
     },
     {
       message: 'feat(runtime): expose public runtime contract',
-      files: ['yarn/raijin/src/runtime.ts'],
+      files: ['packages/raijin/src/runtime.ts'],
     },
   ])
 
@@ -104,7 +104,7 @@ test('should keep strongest strategy when internal and public changes share Raij
     {
       workspace: {
         ident: '@atls/raijin',
-        relativeCwd: 'yarn/raijin',
+        relativeCwd: 'packages/raijin',
       },
       strategy: 'minor',
     },
@@ -125,7 +125,7 @@ test('should default touched Raijin workspace changes to patch strategy', () => 
     {
       workspace: {
         ident: '@atls/raijin',
-        relativeCwd: 'yarn/raijin',
+        relativeCwd: 'packages/raijin',
       },
       strategy: 'patch',
     },

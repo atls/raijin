@@ -6,11 +6,30 @@
 
 Публичная поверхность Raijin публикуется как npm-пакет:
 
-- `@atls/raijin` — `yarn/raijin`
+- `@atls/raijin` — `packages/raijin`
 
 ## Internal workspace map
 
 <!-- sync:packages-groups -->
+
+## Group `raijin`
+
+Публичный пакет Raijin и его initializer
+
+<details>
+<summary>Подробности группы `raijin`</summary>
+
+<!-- sync:package-card:atls-raijin -->
+
+#### `@atls/raijin`
+
+- Локация: `packages/raijin`
+- Группа: `raijin`
+- Видимость: `public`
+- Описание: Public Raijin initializer and runtime package
+- Скрипты: `build`, `build:library`, `build:project-generation`, `postpack`, `prepack`
+
+</details>
 
 ## Group `yarn`
 
@@ -18,16 +37,6 @@
 
 <details>
 <summary>Подробности группы `yarn`</summary>
-
-<!-- sync:package-card:atls-raijin -->
-
-#### `@atls/raijin`
-
-- Локация: `yarn/raijin`
-- Группа: `yarn`
-- Видимость: `public`
-- Описание: Public Raijin initializer and runtime package
-- Скрипты: `build`, `build:library`, `build:project-generation`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-raijin-assembly -->
 
