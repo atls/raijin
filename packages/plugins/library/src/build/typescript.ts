@@ -4,6 +4,10 @@ import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
 import type { LibraryDiagnostic }       from './diagnostic.js'
 import type { LibraryBuildInput }       from './input.js'
 
+import { isAbsolute }                   from 'node:path'
+import { relative }                     from 'node:path'
+import { sep }                          from 'node:path'
+
 import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
 
 import { rewriteLegacyJsxSpecifiers }   from './compatibility/legacy-jsx.js'
@@ -25,6 +29,13 @@ interface TypeScriptProvider {
 
 const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'
 const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
+const AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE = 2209
+
+const isWithinRoot = (root: string, path: string): boolean => {
+  const rootRelative = relative(root, path)
+
+  return rootRelative !== '..' && !rootRelative.startsWith(`..${sep}`) && !isAbsolute(rootRelative)
+}
 
 const toDiagnostic = (
   diagnostic: TypeScriptRuntime.Diagnostic,
@@ -74,20 +85,36 @@ export const emitTypeScript = async (
       selection: { kind: 'explicit', patterns: [input.sourceRoot] },
       typescript,
     })
-  let project = await resolveProject()
+  const createProgram = (project: Awaited<ReturnType<typeof resolveProject>>) => {
+    const host = typescript.createCompilerHost(project.options)
 
-  if (project.options.rootDir === undefined) {
+    return typescript.createProgram({
+      configFileParsingDiagnostics: [...project.errors],
+      host,
+      options: project.options,
+      projectReferences: project.projectReferences ? [...project.projectReferences] : undefined,
+      rootNames: [...project.fileNames],
+    })
+  }
+  let project = await resolveProject()
+  let program = createProgram(project)
+  const requiresExplicitRoot = typescript
+    .getPreEmitDiagnostics(program)
+    .some(({ code }) => code === AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE)
+  const hasSourceOutsideRoot = program
+    .getSourceFiles()
+    .some(
+      (source) =>
+        !source.isDeclarationFile &&
+        !program.isSourceFileFromExternalLibrary(source) &&
+        !isWithinRoot(input.sourceRoot, source.fileName)
+    )
+
+  if (project.options.rootDir === undefined && requiresExplicitRoot && !hasSourceOutsideRoot) {
     project = await resolveProject(input.sourceRoot)
+    program = createProgram(project)
   }
 
-  const host = typescript.createCompilerHost(project.options)
-  const program = typescript.createProgram({
-    configFileParsingDiagnostics: [...project.errors],
-    host,
-    options: project.options,
-    projectReferences: project.projectReferences ? [...project.projectReferences] : undefined,
-    rootNames: [...project.fileNames],
-  })
   const emitted = program.emit(undefined, undefined, undefined, undefined, {
     after: [rewriteLegacyJsxSpecifiers(typescript, project.options.jsx)],
   })
