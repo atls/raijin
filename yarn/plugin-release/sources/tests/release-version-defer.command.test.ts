@@ -17,7 +17,7 @@ test('should include previous GitHub filenames for renamed files', () => {
       files: [
         {
           filename: 'code/code-test/src/loader.ts',
-          previous_filename: 'yarn/raijin/src/loader.ts',
+          previous_filename: 'packages/raijin/src/loader.ts',
         },
       ],
     },
@@ -25,7 +25,7 @@ test('should include previous GitHub filenames for renamed files', () => {
 
   assert.deepEqual(change, {
     message: 'fix(runtime): move loader',
-    files: ['code/code-test/src/loader.ts', 'yarn/raijin/src/loader.ts'],
+    files: ['code/code-test/src/loader.ts', 'packages/raijin/src/loader.ts'],
   })
 })
 

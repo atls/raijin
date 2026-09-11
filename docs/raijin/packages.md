@@ -6,11 +6,30 @@ Grouped cards for workspace packages
 
 Raijin public surface is published as npm package:
 
-- `@atls/raijin` — `yarn/raijin`
+- `@atls/raijin` — `packages/raijin`
 
 ## Internal workspace map
 
 <!-- sync:packages-groups -->
+
+## Group `raijin`
+
+Public Raijin package and initializer
+
+<details>
+<summary>Group details: `raijin`</summary>
+
+<!-- sync:package-card:atls-raijin -->
+
+#### `@atls/raijin`
+
+- Location: `packages/raijin`
+- Group: `raijin`
+- Visibility: `public`
+- Description: Public Raijin initializer and runtime package
+- Scripts: `build`, `build:library`, `build:project-generation`, `postpack`, `prepack`
+
+</details>
 
 ## Group `yarn`
 
@@ -18,16 +37,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 <details>
 <summary>Group details: `yarn`</summary>
-
-<!-- sync:package-card:atls-raijin -->
-
-#### `@atls/raijin`
-
-- Location: `yarn/raijin`
-- Group: `yarn`
-- Visibility: `public`
-- Description: Public Raijin initializer and runtime package
-- Scripts: `build`, `build:library`, `build:project-generation`, `postpack`, `prepack`
 
 <!-- sync:package-card:atls-raijin-assembly -->
 

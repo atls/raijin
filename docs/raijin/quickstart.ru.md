@@ -116,8 +116,8 @@ yarn files changed list
 ## 7. Локальная проверка генерации проекта
 
 ```bash
-yarn test unit --target yarn/raijin/src/infrastructure/generation/project
-yarn test integration --target yarn/raijin/src/infrastructure/generation/project
+yarn test unit --target packages/raijin/src/infrastructure/generation/project
+yarn test integration --target packages/raijin/src/infrastructure/generation/project
 ```
 
 Ожидаемый результат:

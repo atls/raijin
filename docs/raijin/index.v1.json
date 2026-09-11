@@ -711,8 +711,8 @@
     },
     {
       "name": "@atls/raijin",
-      "location": "yarn/raijin",
-      "group": "yarn",
+      "location": "packages/raijin",
+      "group": "raijin",
       "private": false,
       "description": "Public Raijin initializer and runtime package",
       "scripts": ["build", "build:library", "build:project-generation", "postpack", "prepack"]
@@ -892,5 +892,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-10T19:19:59.168Z"
+  "lastGenerated": "2026-09-11T15:05:51.456Z"
 }

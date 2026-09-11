@@ -116,8 +116,8 @@ Expected result:
 ## 7. Local project generation check
 
 ```bash
-yarn test unit --target yarn/raijin/src/infrastructure/generation/project
-yarn test integration --target yarn/raijin/src/infrastructure/generation/project
+yarn test unit --target packages/raijin/src/infrastructure/generation/project
+yarn test integration --target packages/raijin/src/infrastructure/generation/project
 ```
 
 Expected result:

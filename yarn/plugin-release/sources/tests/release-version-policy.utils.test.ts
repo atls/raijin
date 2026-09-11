@@ -16,7 +16,7 @@ const rootWorkspace: ReleaseVersionWorkspace = {
 
 const runtimeWorkspace: ReleaseVersionWorkspace = {
   ident: '@atls/raijin',
-  relativeCwd: 'yarn/raijin',
+  relativeCwd: 'packages/raijin',
 }
 
 const testWorkspace: ReleaseVersionWorkspace = {
@@ -29,7 +29,7 @@ const privateWorkspace = {
 }
 
 const privateRuntimeWorkspace = {
-  relativeCwd: 'yarn/raijin/examples/private-service',
+  relativeCwd: 'packages/raijin/examples/private-service',
 }
 
 const workspaces: Array<ReleaseVersionWorkspace> = [rootWorkspace, runtimeWorkspace, testWorkspace]
@@ -126,7 +126,7 @@ test('should default changed workspaces without conventional commits to patch st
   const changes: Array<ReleaseVersionChange> = [
     {
       message: 'update runtime',
-      files: ['yarn/raijin/src/typescript.ts'],
+      files: ['packages/raijin/src/typescript.ts'],
     },
   ]
 
@@ -142,7 +142,7 @@ test('should resolve strategies per changed workspace', () => {
   const changes: Array<ReleaseVersionChange> = [
     {
       message: 'feat(runtime): add loader',
-      files: ['yarn/raijin/src/typescript.ts'],
+      files: ['packages/raijin/src/typescript.ts'],
     },
     {
       message: 'fix(test): repair runner',
@@ -166,15 +166,15 @@ test('should keep highest strategy per workspace', () => {
   const changes: Array<ReleaseVersionChange> = [
     {
       message: 'fix(runtime): repair loader',
-      files: ['yarn/raijin/src/typescript.ts'],
+      files: ['packages/raijin/src/typescript.ts'],
     },
     {
       message: 'feat(runtime): add loader',
-      files: ['yarn/raijin/src/typescript.ts'],
+      files: ['packages/raijin/src/typescript.ts'],
     },
     {
       message: 'chore(runtime)!: remove legacy hook',
-      files: ['yarn/raijin/src/typescript.ts'],
+      files: ['packages/raijin/src/typescript.ts'],
     },
   ]
 
@@ -206,7 +206,7 @@ test('should resolve root workspace files not claimed by nested workspaces', () 
   const changes: Array<ReleaseVersionChange> = [
     {
       message: 'fix(root): update release policy',
-      files: ['package.json', 'yarn/raijin/src/typescript.ts'],
+      files: ['package.json', 'packages/raijin/src/typescript.ts'],
     },
   ]
 
@@ -240,7 +240,7 @@ test('should not resolve nested private workspace files as parent workspace chan
   const changes: Array<ReleaseVersionChange> = [
     {
       message: 'fix(runtime): update example service',
-      files: ['yarn/raijin/examples/private-service/src/service.ts'],
+      files: ['packages/raijin/examples/private-service/src/service.ts'],
     },
   ]
 

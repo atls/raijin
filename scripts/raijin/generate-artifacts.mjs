@@ -97,6 +97,7 @@ const slugify = (value) =>
     .replace(/--+/g, '-')
 
 const WORKSPACE_GROUP_ORDER = [
+  'raijin',
   'yarn',
   'plugins',
   'code',
@@ -729,8 +730,8 @@ const renderQuickstart = (language) => {
     isRu ? '## 7. Локальная проверка генерации проекта' : '## 7. Local project generation check',
     '',
     '```bash',
-    'yarn test unit --target yarn/raijin/src/infrastructure/generation/project',
-    'yarn test integration --target yarn/raijin/src/infrastructure/generation/project',
+    'yarn test unit --target packages/raijin/src/infrastructure/generation/project',
+    'yarn test integration --target packages/raijin/src/infrastructure/generation/project',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
@@ -936,6 +937,7 @@ const orderedWorkspaceGroups = (workspaces) => {
 const workspaceGroupIntro = (group, language) => {
   /** @type {Record<string, string>} */
   const ru = {
+    raijin: 'Публичный пакет Raijin и его initializer',
     yarn: 'Пакеты кастомного Yarn CLI, плагинов и bundle-инфраструктуры',
     plugins: 'Приватные пакеты плагинов и их точки входа',
     code: 'Базовые code-библиотеки для сборки, тестов и утилит',
@@ -949,6 +951,7 @@ const workspaceGroupIntro = (group, language) => {
 
   /** @type {Record<string, string>} */
   const en = {
+    raijin: 'Public Raijin package and initializer',
     yarn: 'Custom Yarn CLI, plugin, and bundle infrastructure packages',
     plugins: 'Private plugin packages and their entrypoints',
     code: 'Core code libraries for build, checks, and utilities',

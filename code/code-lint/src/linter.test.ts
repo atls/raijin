@@ -19,7 +19,7 @@ import { Linter }                  from './linter.js'
 import { resolveEslintRuntimeUrl } from './linter.js'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
-const raijinPackagePath = resolve(currentDir, '../../../yarn/raijin')
+const raijinPackagePath = resolve(currentDir, '../../../packages/raijin')
 
 const createInput = (cwd: string, targets: Array<string>) =>
   createCommandInput({
@@ -169,7 +169,10 @@ test('should import ESLint runtime through ancestor package boundary', async () 
   )
   await linkRaijinRuntime(rootCwd)
 
-  assert.match(resolveEslintRuntimeUrl(workspaceCwd), /\/yarn\/raijin\/src\/runtime\/eslint\.ts$/)
+  assert.match(
+    resolveEslintRuntimeUrl(workspaceCwd),
+    /\/packages\/raijin\/src\/runtime\/eslint\.ts$/
+  )
 })
 
 test('should import ESLint config through the same package boundary as its runtime', async () => {
