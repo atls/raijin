@@ -177,6 +177,25 @@ test('preserves configured and inferred project roots', async (t) => {
   }
 })
 
+test('does not re-emit a previous artifact from an in-source target', async (t) => {
+  const cwd = await createProject(
+    { 'src/index.ts': 'export const value = true\n' },
+    { allowJs: true }
+  )
+  const targetRoot = join(cwd, 'src/lib')
+  const input = { cwd, sourceRoot: join(cwd, 'src'), targetRoot }
+
+  t.after(async () => rm(cwd, { force: true, recursive: true }))
+
+  assert.equal((await buildLibrary(input)).kind, 'completed')
+  const result = await buildLibrary(input)
+
+  assert.equal(result.kind, 'completed')
+  if (result.kind !== 'completed') return
+  assert.deepEqual(artifactPaths(targetRoot, result.artifact.javascript), ['index.js'])
+  assert.deepEqual(artifactPaths(targetRoot, result.artifact.declarations), ['index.d.ts'])
+})
+
 test('preserves the previous complete artifact when a build fails', async (t) => {
   const cwd = await createProject({ 'src/index.ts': 'export const value = true\n' })
   const targetRoot = join(cwd, 'dist')

@@ -93,7 +93,7 @@ export const emitTypeScript = async (
       host,
       options: project.options,
       projectReferences: project.projectReferences ? [...project.projectReferences] : undefined,
-      rootNames: [...project.fileNames],
+      rootNames: project.fileNames.filter((file) => !isWithinRoot(input.targetRoot, file)),
     })
   }
   let project = await resolveProject()
