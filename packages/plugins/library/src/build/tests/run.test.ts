@@ -61,7 +61,7 @@ const readStagingDirectories = async (cwd: string): Promise<Array<string>> =>
 const artifactPaths = (targetRoot: string, paths: ReadonlyArray<string>): Array<string> =>
   paths.map((path) => relative(targetRoot, path).split(sep).join('/')).sort()
 
-test('emits the complete artifact with native rewrites and the exact jsx fallback', async (t) => {
+test('emits the complete artifact with native relative import rewrites', async (t) => {
   const cwd = await createProject(
     {
       'src/common.cts': 'export const commonValue = true\n',
@@ -70,11 +70,9 @@ test('emits the complete artifact with native rewrites and the exact jsx fallbac
         "import './view.tsx'",
         "import './module.mts'",
         "import './common.cts'",
-        "export { legacy } from './legacy.jsx'",
         'export const value = true',
         '',
       ].join('\n'),
-      'src/legacy.tsx': 'export const legacy = true\n',
       'src/module.mts': 'export const moduleValue = true\n',
       'src/value.ts': 'export const value = true\n',
       'src/view.tsx': 'export const view = true\n',
@@ -96,14 +94,12 @@ test('emits the complete artifact with native rewrites and the exact jsx fallbac
   assert.match(output, /['"]\.\/view\.js['"]/u)
   assert.match(output, /['"]\.\/module\.mjs['"]/u)
   assert.match(output, /['"]\.\/common\.cjs['"]/u)
-  assert.match(output, /['"]\.\/legacy\.js['"]/u)
   assert.doesNotMatch(output, /\.(?:cts|jsx|mts|ts|tsx)['"]/u)
   assert.deepEqual(result.diagnostics, [])
   assert.equal(result.artifact.targetRoot, targetRoot)
   assert.deepEqual(artifactPaths(targetRoot, result.artifact.javascript), [
     'common.cjs',
     'index.js',
-    'legacy.js',
     'module.mjs',
     'value.js',
     'view.js',
@@ -111,7 +107,6 @@ test('emits the complete artifact with native rewrites and the exact jsx fallbac
   assert.deepEqual(artifactPaths(targetRoot, result.artifact.declarations), [
     'common.d.cts',
     'index.d.ts',
-    'legacy.d.ts',
     'module.d.mts',
     'value.d.ts',
     'view.d.ts',
@@ -121,8 +116,6 @@ test('emits the complete artifact with native rewrites and the exact jsx fallbac
     'common.d.cts.map',
     'index.d.ts.map',
     'index.js.map',
-    'legacy.d.ts.map',
-    'legacy.js.map',
     'module.d.mts.map',
     'module.mjs.map',
     'value.d.ts.map',
@@ -133,10 +126,10 @@ test('emits the complete artifact with native rewrites and the exact jsx fallbac
   assert.deepEqual(await readStagingDirectories(cwd), [])
 })
 
-test('keeps relative jsx specifiers when the accepted project emits jsx files', async (t) => {
+test('uses native TypeScript rewriting when the project emits jsx files', async (t) => {
   const cwd = await createProject(
     {
-      'src/index.ts': "export { view } from './view.jsx'\n",
+      'src/index.ts': "export { view } from './view.tsx'\n",
       'src/view.tsx': 'export const view = true\n',
     },
     { jsx: 'preserve' }

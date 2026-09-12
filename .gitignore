@@ -43,6 +43,7 @@ node_modules
 /.yarn/install-state.gz
 /.yarn/sdks
 /.yarn/raijin
+/.config/eslint/.eslintcache
 
 dist/
 !yarn/cli/dist/

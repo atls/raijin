@@ -10,8 +10,6 @@ import { sep }                          from 'node:path'
 
 import { resolveRaijinRuntimeUrl }      from '@atls/raijin/runtime-resolver'
 
-import { rewriteLegacyJsxSpecifiers }   from './compatibility/legacy-jsx.js'
-
 export interface TypeScriptEmission {
   readonly declarationMaps: boolean
   readonly diagnostics: ReadonlyArray<LibraryDiagnostic>
@@ -115,9 +113,7 @@ export const emitTypeScript = async (
     program = createProgram(project)
   }
 
-  const emitted = program.emit(undefined, undefined, undefined, undefined, {
-    after: [rewriteLegacyJsxSpecifiers(typescript, project.options.jsx)],
-  })
+  const emitted = program.emit()
   const diagnostics = typescript
     .sortAndDeduplicateDiagnostics([
       ...typescript.getPreEmitDiagnostics(program),

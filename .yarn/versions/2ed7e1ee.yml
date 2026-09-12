@@ -3,12 +3,10 @@ releases:
 
 declined:
   - "@atls/cli-ui"
-  - "@atls/cli-ui-git-commit-component"
   - "@atls/cli-ui-icons-progress-component"
   - "@atls/cli-ui-log-record-component"
   - "@atls/cli-ui-service-progress-component"
   - "@atls/cli-ui-typescript-progress-component"
-  - "@atls/code-commit"
   - "@atls/code-configuration"
   - "@atls/code-format"
   - "@atls/code-github"

@@ -11,6 +11,7 @@ import test                          from 'node:test'
 import { BaseCommand }               from '@yarnpkg/cli'
 import { npath }                     from '@yarnpkg/fslib'
 
+import { BypassedProjectCommand }    from './bypassed-project.fixture.js'
 import { composeCommandInvocations } from '../compose.js'
 import { defineCommandInvocations }  from '../definition.js'
 
@@ -60,4 +61,35 @@ test('should compose a registered command without replacing its static contract'
 
   assert.equal(await command.execute(), 7)
   assert.equal(resolvedInvocationCwd, '/repo')
+})
+
+test('should allow a command to exit before resolving its registered invocation scope', async () => {
+  const plugin: Plugin = {
+    commands: defineCommandInvocations({ project: [BypassedProjectCommand] }),
+  }
+  const configuration: PluginConfiguration = {
+    modules: new Map([['@atls/yarn-plugin-bypassed-project', plugin]]),
+    plugins: new Set(['@atls/yarn-plugin-bypassed-project']),
+  }
+
+  composeCommandInvocations(configuration)
+
+  const [CommandClass] = plugin.commands ?? []
+
+  assert.ok(CommandClass)
+
+  const command = new CommandClass()
+
+  command.context = {
+    colorDepth: 8,
+    cwd: npath.toPortablePath('/not-a-yarn-project'),
+    env: {},
+    plugins: configuration,
+    quiet: false,
+    stderr: new PassThrough(),
+    stdin: new PassThrough(),
+    stdout: new PassThrough(),
+  }
+
+  assert.equal(await command.execute(), 9)
 })

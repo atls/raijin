@@ -598,28 +598,12 @@
   ],
   "workspaces": [
     {
-      "name": "@atls/cli-ui-git-commit-component",
-      "location": "cli/cli-ui-git-commit",
-      "group": "cli",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/cli-ui",
       "location": "packages/cli-ui",
       "group": "cli-ui",
       "private": true,
       "description": "",
       "scripts": ["build"]
-    },
-    {
-      "name": "@atls/code-commit",
-      "location": "code/code-commit",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
     },
     {
       "name": "@atls/code-format",
@@ -892,5 +876,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-11T15:05:51.456Z"
+  "lastGenerated": "2026-09-11T16:43:12.425Z"
 }

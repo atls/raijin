@@ -1,32 +1,31 @@
-/* eslint-disable react/jsx-curly-brace-presence */
-
 import type { ReactElement }     from 'react'
 
 import { Text }                  from 'ink'
 import { Box }                   from 'ink'
 import { UncontrolledTextInput } from 'ink-text-input'
 import React                     from 'react'
-import figures                   from 'figures'
 
-export interface RequestCommitMessageIssuesProps {
+export interface RequestCommitMessageBreakingProps {
+  initialValue?: string
   onSubmit: (value: string) => void
 }
 
-export const RequestCommitMessageIssues = ({
+export const RequestCommitMessageBreaking = ({
+  initialValue,
   onSubmit,
-}: RequestCommitMessageIssuesProps): ReactElement => (
+}: RequestCommitMessageBreakingProps): ReactElement => (
   <Box flexDirection='column'>
     <Box>
       <Text bold color='cyanBright'>
-        {'Add issue references (e.g. "fix #123, re #124".):'}
+        Describe the breaking changes:
       </Text>
     </Box>
     <Box>
       <Box marginRight={1}>
-        <Text color='gray'>{figures.arrowRight}</Text>
+        <Text color='gray'>→</Text>
       </Box>
       <Box>
-        <UncontrolledTextInput onSubmit={onSubmit} />
+        <UncontrolledTextInput initialValue={initialValue} onSubmit={onSubmit} />
       </Box>
     </Box>
   </Box>

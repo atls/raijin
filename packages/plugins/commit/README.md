@@ -1,8 +1,33 @@
 # Commit Plugin
 
 The private plugin registers `yarn commit message`, `yarn commit message lint`,
-and `yarn commit staged`. This change affects staged checks only; message
-preparation and validation retain their existing behavior.
+and `yarn commit staged`. Message preparation, commitlint validation, and staged
+verification live with their command owner instead of separate code and CLI UI
+workspaces.
+
+## Message Preparation
+
+`yarn commit message` renders its Ink prompt inside this plugin and writes the
+selected conventional commit fields to the requested edit-message file. It uses
+the same commitlint-backed policy as `yarn commit message lint` before writing.
+The prompt offers the accepted scopes derived from the current Yarn project and
+starts with the required scope selected. If commitlint rejects the composed
+message, its native report is shown and the prompt reopens with every entered
+value preserved for correction. Only a valid message reaches the edit file.
+
+Git's prepare-commit-msg source argument exits before project resolution or
+interactive work. Cancellation returns a non-zero result without changing the
+edit file. Commitlint, prompt, and file-write failures remain observable and
+non-zero.
+
+## Message Validation
+
+`yarn commit message lint` uses the repository-pinned commitlint packages directly.
+The plugin adds the current Yarn workspace names and scopes to the retained commit
+policy. It passes the resolved Yarn project cwd to commitlint, which retains Git-root
+and edit-message discovery, parsing, lint evaluation, and diagnostic formatting. The
+command writes the native report and returns a non-zero result when any message is
+invalid.
 
 ## Staged Checks
 
@@ -40,8 +65,10 @@ commands:
 
 ```sh
 yarn test unit --target packages/plugins/commit
-yarn typecheck packages/plugins/commit/src
+yarn typecheck
 yarn lint packages/plugins/commit/src
+yarn workspace @atls/yarn-plugin-commit build
+yarn raijin:check
 ```
 
 Run the plugin's integration test against the packed package and checked runtime:
@@ -56,4 +83,8 @@ hook, required project configuration, backend TypeScript 5.9.3 under PnP, and
 an independent node_modules client with TypeScript 6.0.3 and Jest 29.7.0.
 The client has no Raijin dependency or synthetic `typecheck` script.
 The unit tests cover transaction mechanics, including rollback, partial staging,
-renames, deletions, literal paths, and argument chunking.
+renames, deletions, literal paths, and argument chunking. Message tests cover the
+shared commitlint policy, resolved-project edit-file lookup, early source bypass,
+correction with preserved input, cancellation, and provider failures. A disposable
+Git/Yarn project using the checked runtime provides the final PTY/edit-file proof for
+interactive preparation and separate validation.
