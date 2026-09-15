@@ -7,8 +7,8 @@ import { test }                     from 'node:test'
 import { Configuration }            from '@yarnpkg/core'
 import { npath }                    from '@yarnpkg/fslib'
 
-import { presentProjectGeneration } from './project.js'
-import { reportProjectGeneration }  from './project.js'
+import { presentProjectGeneration } from '../project.js'
+import { reportProjectGeneration }  from '../project.js'
 
 const createReport = () => {
   const errors: Array<string> = []

@@ -564,9 +564,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-generate@workspace:*, @atls/yarn-plugin-generate@workspace:yarn/plugin-generate":
+"@atls/yarn-plugin-generate@workspace:*, @atls/yarn-plugin-generate@workspace:packages/plugins/generate":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-generate@workspace:yarn/plugin-generate"
+  resolution: "@atls/yarn-plugin-generate@workspace:packages/plugins/generate"
   dependencies:
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-format": "workspace:*"

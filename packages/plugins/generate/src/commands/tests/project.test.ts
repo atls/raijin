@@ -3,7 +3,7 @@ import type { ProjectInvocation }         from '@atls/raijin/commands'
 import assert                             from 'node:assert/strict'
 import { test }                           from 'node:test'
 
-import { createProjectScaffolderOptions } from './project.js'
+import { createProjectScaffolderOptions } from '../project.js'
 
 test('should preserve the nested invocation cwd as the generation target', () => {
   const configuration = { source: 'configuration' }
