@@ -17,7 +17,7 @@ import { Option }                            from 'clipanion'
 import { pack }                              from '@atls/code-pack'
 import { assertProcessCompleted }            from '@atls/raijin/commands'
 import { toNativeCwd }                       from '@atls/raijin/commands'
-import { packUtils }                         from '@atls/yarn-pack-utils'
+import { packUtils }                         from '@atls/yarn-plugin-export/artifact'
 
 import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
 import { resolveBuildpackReference }         from './image-pack.utils.js'

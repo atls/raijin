@@ -6,9 +6,10 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./sources/index.ts"
+    ".": "./src/index.ts",
+    "./artifact": "./src/artifact/index.ts"
   },
-  "main": "sources/index.ts",
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -19,14 +20,18 @@
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
-    "@atls/yarn-pack-utils": "workspace:*",
-    "clipanion": "4.0.0-rc.2"
+    "clipanion": "4.0.0-rc.2",
+    "semver": "7.6.3",
+    "tar-stream": "3.1.7"
   },
   "devDependencies": {
+    "@types/semver": "7.5.8",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",
     "@yarnpkg/fslib": "3.1.5",
+    "@yarnpkg/plugin-pack": "4.0.4",
+    "@yarnpkg/plugin-patch": "4.0.3",
     "typescript": "5.9.3"
   },
   "peerDependencies": {
@@ -41,6 +46,11 @@
           "import": "./dist/index.js",
           "types": "./dist/index.d.ts",
           "default": "./dist/index.js"
+        },
+        "./artifact": {
+          "import": "./dist/artifact/index.js",
+          "types": "./dist/artifact/index.d.ts",
+          "default": "./dist/artifact/index.js"
         }
       },
       "main": "dist/index.js",

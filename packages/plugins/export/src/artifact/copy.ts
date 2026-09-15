@@ -11,7 +11,7 @@ import { ppath }                          from '@yarnpkg/fslib'
 import { getProjectResolutionPatchPaths } from './patch-files/paths.js'
 import { getWorkspacePatchPaths }         from './patch-files/paths.js'
 import { resolvePatchPath }               from './patch-files/paths.js'
-import { getRequiredWorkspaces }          from './workspaces.utils.js'
+import { getRequiredWorkspaces }          from './workspaces.js'
 
 export const copyCacheMarkedFiles = async (
   project: Project,

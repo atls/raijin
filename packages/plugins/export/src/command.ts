@@ -6,7 +6,7 @@ import { StreamReport }                 from '@yarnpkg/core'
 import { structUtils }                  from '@yarnpkg/core'
 import { Option }                       from 'clipanion'
 
-import { packUtils }                    from '@atls/yarn-pack-utils'
+import { packUtils }                    from './artifact/index.js'
 
 export class WorkspaceExportCommand extends BaseCommand {
   static override paths = [['export']]

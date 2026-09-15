@@ -16,7 +16,6 @@ declined:
   - "@atls/code-typescript"
   - "@atls/webpack-start-server-plugin"
   - "@atls/raijin-assembly"
-  - "@atls/yarn-pack-utils"
   - "@atls/yarn-plugin-badges"
   - "@atls/yarn-plugin-check"
   - "@atls/yarn-plugin-checks"

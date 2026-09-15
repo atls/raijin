@@ -410,21 +410,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-pack-utils@workspace:*, @atls/yarn-pack-utils@workspace:yarn/pack-utils":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-pack-utils@workspace:yarn/pack-utils"
-  dependencies:
-    "@types/semver": "npm:7.5.8"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    "@yarnpkg/fslib": "npm:3.1.5"
-    "@yarnpkg/plugin-pack": "npm:4.0.4"
-    "@yarnpkg/plugin-patch": "npm:4.0.3"
-    semver: "npm:7.6.3"
-    tar-stream: "npm:3.1.7"
-  languageName: unknown
-  linkType: soft
-
 "@atls/yarn-plugin-check@workspace:*, @atls/yarn-plugin-check@workspace:packages/plugins/check":
   version: 0.0.0-use.local
   resolution: "@atls/yarn-plugin-check@workspace:packages/plugins/check"
@@ -519,17 +504,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-export@workspace:*, @atls/yarn-plugin-export@workspace:yarn/plugin-export":
+"@atls/yarn-plugin-export@workspace:*, @atls/yarn-plugin-export@workspace:packages/plugins/export":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-export@workspace:yarn/plugin-export"
+  resolution: "@atls/yarn-plugin-export@workspace:packages/plugins/export"
   dependencies:
     "@atls/raijin": "workspace:*"
-    "@atls/yarn-pack-utils": "workspace:*"
+    "@types/semver": "npm:7.5.8"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
+    "@yarnpkg/plugin-pack": "npm:4.0.4"
+    "@yarnpkg/plugin-patch": "npm:4.0.3"
     clipanion: "npm:4.0.0-rc.2"
+    semver: "npm:7.6.3"
+    tar-stream: "npm:3.1.7"
     typescript: "npm:5.9.3"
   peerDependencies:
     "@yarnpkg/cli": "*"
@@ -599,7 +588,7 @@ __metadata:
   dependencies:
     "@atls/code-pack": "workspace:*"
     "@atls/raijin": "workspace:*"
-    "@atls/yarn-pack-utils": "workspace:*"
+    "@atls/yarn-plugin-export": "workspace:*"
     "@iarna/toml": "npm:2.2.5"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"

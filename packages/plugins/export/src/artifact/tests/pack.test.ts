@@ -18,11 +18,11 @@ import { xfs }                           from '@yarnpkg/fslib'
 import { packUtils }                     from '@yarnpkg/plugin-pack'
 import { patchUtils }                    from '@yarnpkg/plugin-patch'
 
-import { IMAGE_PACK_NODE_LINKER }        from './pack.utils.js'
-import { copyYarnRelease }               from './copy.utils.js'
-import { copyPatchFiles }                from './copy.utils.js'
-import { getWorkspacePackFiles }         from './export/exportUtils.js'
-import { resolveSupportedArchitectures } from './pack.utils.js'
+import { IMAGE_PACK_NODE_LINKER }        from '../pack.js'
+import { copyYarnRelease }               from '../copy.js'
+import { copyPatchFiles }                from '../copy.js'
+import { getWorkspacePackFiles }         from '../export/exportUtils.js'
+import { resolveSupportedArchitectures } from '../pack.js'
 
 const makePatchDescriptor = (
   name: string,

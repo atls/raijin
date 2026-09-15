@@ -47,29 +47,11 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Visibility: `private`
 - Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
 
-<!-- sync:package-card:atls-yarn-pack-utils -->
-
-#### `@atls/yarn-pack-utils`
-
-- Location: `yarn/pack-utils`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: none
-
 <!-- sync:package-card:atls-yarn-plugin-checks -->
 
 #### `@atls/yarn-plugin-checks`
 
 - Location: `yarn/plugin-checks`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-export -->
-
-#### `@atls/yarn-plugin-export`
-
-- Location: `yarn/plugin-export`
 - Group: `yarn`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
@@ -142,6 +124,15 @@ Private plugin packages and their entrypoints
 #### `@atls/yarn-plugin-essentials`
 
 - Location: `packages/plugins/essentials`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-export -->
+
+#### `@atls/yarn-plugin-export`
+
+- Location: `packages/plugins/export`
 - Group: `plugins`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
