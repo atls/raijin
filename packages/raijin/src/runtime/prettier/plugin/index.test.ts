@@ -62,9 +62,9 @@ test('should align source clauses in export barrel declarations', async () => {
 })
 
 test('should separate Yarn project packages from external modules', async () => {
-  const plugin = await createPlugin({ workspacePackageNames: ['@atls/code-format'] })
+  const plugin = await createPlugin({ workspacePackageNames: ['@atls/yarn-plugin-format'] })
   const source = [
-    "import { Formatter } from '@atls/code-format'",
+    "import { formatProjectSources } from '@atls/yarn-plugin-format'",
     "import { Project } from '@yarnpkg/core'",
   ].join('\n')
 
@@ -78,9 +78,9 @@ test('should separate Yarn project packages from external modules', async () => 
   assert.equal(
     formatted,
     [
-      "import { Project }   from '@yarnpkg/core'",
+      "import { Project }              from '@yarnpkg/core'",
       '',
-      "import { Formatter } from '@atls/code-format'",
+      "import { formatProjectSources } from '@atls/yarn-plugin-format'",
       '',
     ].join('\n')
   )
@@ -88,13 +88,13 @@ test('should separate Yarn project packages from external modules', async () => 
 
 test('should preserve Yarn workspace classification for plugin defaults', async () => {
   const source = [
-    "import { Formatter } from '@atls/code-format'",
+    "import { formatProjectSources } from '@atls/yarn-plugin-format'",
     "import { Project } from '@yarnpkg/core'",
   ].join('\n')
   const expected = [
-    "import { Project }   from '@yarnpkg/core'",
+    "import { Project }              from '@yarnpkg/core'",
     '',
-    "import { Formatter } from '@atls/code-format'",
+    "import { formatProjectSources } from '@atls/yarn-plugin-format'",
     '',
   ].join('\n')
 
