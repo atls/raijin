@@ -39,7 +39,7 @@ test('should find stored package by ident', () => {
 
   assert.equal(
     findStoredPackageByIdent(
-      [createPackage('@atls/code-lint'), raijinPackage],
+      [createPackage('@atls/yarn-plugin-lint'), raijinPackage],
       structUtils.parseIdent('@atls/raijin')
     ),
     raijinPackage
@@ -50,7 +50,7 @@ test('should read TypeScript range from installed Raijin package graph', () => {
   const project = {
     storedPackages: new Map([
       ['raijin', createPackage('@atls/raijin', { typescript: '5.5.4' })],
-      ['code-lint', createPackage('@atls/code-lint')],
+      ['yarn-plugin-lint', createPackage('@atls/yarn-plugin-lint')],
     ]),
   }
 
@@ -69,7 +69,7 @@ test('should normalize Yarn package protocols', () => {
 
 test('should not invent TypeScript range when Raijin is absent', () => {
   const project = {
-    storedPackages: new Map([['code-lint', createPackage('@atls/code-lint')]]),
+    storedPackages: new Map([['yarn-plugin-lint', createPackage('@atls/yarn-plugin-lint')]]),
   }
 
   assert.equal(getRaijinTypeScriptRange(project as never), undefined)

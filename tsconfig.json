@@ -30,17 +30,7 @@
     "noImplicitOverride": true,
     "checkJs": true
   },
-  "include": [
-    "project.types.d.ts",
-    "prettier/**/*",
-    "code/**/*",
-    "webpack/**/*",
-    "runtime/**/*",
-    "config/**/*",
-    "yarn/**/*",
-    "cli/**/*",
-    "packages/**/*"
-  ],
+  "include": ["project.types.d.ts", "packages/**/*"],
   "exclude": ["**/bundles/**", "**/dist/**"],
   "types": ["@atls/raijin/types"]
 }

@@ -598,6 +598,21 @@
   ],
   "workspaces": [
     {
+      "name": "@atls/raijin-assembly",
+      "location": "packages/assembly",
+      "group": "assembly",
+      "private": true,
+      "description": "",
+      "scripts": [
+        "build",
+        "build:bundle",
+        "build:clean",
+        "build:dist",
+        "build:dynamic-require",
+        "build:materialize"
+      ]
+    },
+    {
       "name": "@atls/cli-ui",
       "location": "packages/cli-ui",
       "group": "cli-ui",
@@ -756,21 +771,6 @@
       "private": false,
       "description": "Public Raijin initializer and runtime package",
       "scripts": ["build", "build:library", "build:project-generation", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/raijin-assembly",
-      "location": "yarn/cli",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": [
-        "build",
-        "build:bundle",
-        "build:clean",
-        "build:dist",
-        "build:dynamic-require",
-        "build:materialize"
-      ]
     }
   ],
   "availability": {
@@ -836,5 +836,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-15T05:56:35.631Z"
+  "lastGenerated": "2026-09-15T06:16:50.499Z"
 }

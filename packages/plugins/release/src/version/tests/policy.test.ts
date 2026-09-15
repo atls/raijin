@@ -20,8 +20,8 @@ const runtimeWorkspace: ReleaseVersionWorkspace = {
 }
 
 const testWorkspace: ReleaseVersionWorkspace = {
-  ident: '@atls/code-test',
-  relativeCwd: 'code/code-test',
+  ident: '@atls/yarn-plugin-test',
+  relativeCwd: 'packages/plugins/test',
 }
 
 const privateWorkspace = {
@@ -146,7 +146,7 @@ test('should resolve strategies per changed workspace', () => {
     },
     {
       message: 'fix(test): repair runner',
-      files: ['code/code-test/src/tester.ts'],
+      files: ['packages/plugins/test/src/tester.ts'],
     },
   ]
 
@@ -190,7 +190,7 @@ test('should not match sibling workspace path prefixes', () => {
   const changes: Array<ReleaseVersionChange> = [
     {
       message: 'feat(test): add tester feature',
-      files: ['code/code-test/src/tester.ts'],
+      files: ['packages/plugins/test/src/tester.ts'],
     },
   ]
 

@@ -31,24 +31,6 @@ Public Raijin package and initializer
 
 </details>
 
-## Group `yarn`
-
-Custom Yarn CLI, plugin, and bundle infrastructure packages
-
-<details>
-<summary>Group details: `yarn`</summary>
-
-<!-- sync:package-card:atls-raijin-assembly -->
-
-#### `@atls/raijin-assembly`
-
-- Location: `yarn/cli`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
-
-</details>
-
 ## Group `plugins`
 
 Private plugin packages and their entrypoints
@@ -217,6 +199,22 @@ Private plugin packages and their entrypoints
 - Group: `plugins`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
+
+</details>
+
+## Group `assembly`
+
+Other workspace packages
+
+<details>
+<summary>Group details: `assembly`</summary>
+
+<!-- sync:package-card:atls-raijin-assembly -->
+
+#### `@atls/raijin-assembly`
+
+- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
+- Location: `packages/assembly`
 
 </details>
 
