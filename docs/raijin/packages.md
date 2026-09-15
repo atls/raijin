@@ -128,15 +128,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-tools -->
-
-#### `@atls/yarn-plugin-tools`
-
-- Location: `yarn/plugin-tools`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 </details>
 
 ## Group `plugins`
@@ -205,6 +196,15 @@ Private plugin packages and their entrypoints
 #### `@atls/yarn-plugin-test`
 
 - Location: `packages/plugins/test`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-tools -->
+
+#### `@atls/yarn-plugin-tools`
+
+- Location: `packages/plugins/tools`
 - Group: `plugins`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`

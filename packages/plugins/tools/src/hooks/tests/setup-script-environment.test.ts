@@ -9,10 +9,10 @@ import { Project }                from '@yarnpkg/core'
 import { getPluginConfiguration } from '@yarnpkg/cli'
 import { npath }                  from '@yarnpkg/fslib'
 
-import { setupScriptEnvironment } from './setup-script-environment.hook.js'
+import { setupScriptEnvironment } from '../setup-script-environment.js'
 
 const repoRoot = npath.toPortablePath(
-  resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+  resolve(dirname(fileURLToPath(import.meta.url)), '../../../../../..')
 )
 const noopPathWrapper = async (): Promise<void> => undefined
 

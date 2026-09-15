@@ -128,15 +128,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-tools -->
-
-#### `@atls/yarn-plugin-tools`
-
-- Локация: `yarn/plugin-tools`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 </details>
 
 ## Group `plugins`
@@ -205,6 +196,15 @@
 #### `@atls/yarn-plugin-test`
 
 - Локация: `packages/plugins/test`
+- Группа: `plugins`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-tools -->
+
+#### `@atls/yarn-plugin-tools`
+
+- Локация: `packages/plugins/tools`
 - Группа: `plugins`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`

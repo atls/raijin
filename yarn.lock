@@ -743,9 +743,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-tools@workspace:*, @atls/yarn-plugin-tools@workspace:yarn/plugin-tools":
+"@atls/yarn-plugin-tools@workspace:*, @atls/yarn-plugin-tools@workspace:packages/plugins/tools":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-tools@workspace:yarn/plugin-tools"
+  resolution: "@atls/yarn-plugin-tools@workspace:packages/plugins/tools"
   dependencies:
     "@atls/raijin": "workspace:*"
     "@types/semver": "npm:7.5.8"

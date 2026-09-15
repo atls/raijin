@@ -6,7 +6,7 @@ import { structUtils }            from '@yarnpkg/core'
 
 import { syncTypeScriptManifest } from '@atls/raijin/config/sync'
 
-import { createRaijinSyncTarget } from './target.js'
+import { createRaijinSyncTarget } from '../target.js'
 
 const getTypeScriptRange = (manifest: Manifest): string =>
   manifest.devDependencies.get(structUtils.parseIdent('typescript').identHash)?.range ?? ''

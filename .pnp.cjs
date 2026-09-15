@@ -55,6 +55,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/plugins/test"\
     },\
     {\
+      "name": "@atls/yarn-plugin-tools",\
+      "reference": "workspace:packages/plugins/tools"\
+    },\
+    {\
       "name": "@atls/yarn-plugin-typescript",\
       "reference": "workspace:packages/plugins/typescript"\
     },\
@@ -105,10 +109,6 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@atls/yarn-plugin-renderer",\
       "reference": "workspace:yarn/plugin-renderer"\
-    },\
-    {\
-      "name": "@atls/yarn-plugin-tools",\
-      "reference": "workspace:yarn/plugin-tools"\
     }\
   ],\
   "enableTopLevelFallback": true,\
@@ -136,7 +136,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/yarn-plugin-renderer", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-renderer", "workspace:yarn/plugin-renderer"]],\
     ["@atls/yarn-plugin-service", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/service", "workspace:packages/plugins/service"]],\
     ["@atls/yarn-plugin-test", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/test", "workspace:packages/plugins/test"]],\
-    ["@atls/yarn-plugin-tools", ["workspace:yarn/plugin-tools"]],\
+    ["@atls/yarn-plugin-tools", ["workspace:packages/plugins/tools"]],\
     ["@atls/yarn-plugin-typescript", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/typescript", "workspace:packages/plugins/typescript"]],\
     ["@atls/yarn-plugin-workspaces", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/workspaces", "workspace:packages/plugins/workspaces"]],\
     ["tools", ["workspace:."]]\
@@ -622,7 +622,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-renderer", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-renderer"],\
           ["@atls/yarn-plugin-service", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/service"],\
           ["@atls/yarn-plugin-test", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/test"],\
-          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
+          ["@atls/yarn-plugin-tools", "workspace:packages/plugins/tools"],\
           ["@atls/yarn-plugin-typescript", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/typescript"],\
           ["@atls/yarn-plugin-workspaces", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/workspaces"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
@@ -727,7 +727,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-files", "virtual:32de97ebb91241345dd44edc87331c4d2b6a47d26c9c36648c78e07dcf28236fe5ac6521149250d7f0ffbf28f663ee2229d6dff149acc528d478c7d759beb035#workspace:packages/plugins/files"],\
           ["@atls/yarn-plugin-lint", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/lint"],\
           ["@atls/yarn-plugin-test", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/test"],\
-          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
+          ["@atls/yarn-plugin-tools", "workspace:packages/plugins/tools"],\
           ["@atls/yarn-plugin-workspaces", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/workspaces"],\
           ["@babel/code-frame", "npm:7.24.7"],\
           ["@octokit/types", "npm:13.5.0"],\
@@ -764,7 +764,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-files", "virtual:32de97ebb91241345dd44edc87331c4d2b6a47d26c9c36648c78e07dcf28236fe5ac6521149250d7f0ffbf28f663ee2229d6dff149acc528d478c7d759beb035#workspace:packages/plugins/files"],\
           ["@atls/yarn-plugin-lint", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/lint"],\
           ["@atls/yarn-plugin-test", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/test"],\
-          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
+          ["@atls/yarn-plugin-tools", "workspace:packages/plugins/tools"],\
           ["@atls/yarn-plugin-workspaces", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/workspaces"],\
           ["@babel/code-frame", "npm:7.24.7"],\
           ["@octokit/types", "npm:13.5.0"],\
@@ -1237,7 +1237,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/raijin", "workspace:packages/raijin"],\
           ["@atls/yarn-plugin-renderer", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-renderer"],\
-          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
+          ["@atls/yarn-plugin-tools", "workspace:packages/plugins/tools"],\
           ["@types/localtunnel", "npm:2.0.4"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
@@ -1261,7 +1261,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/raijin", "workspace:packages/raijin"],\
           ["@atls/yarn-plugin-renderer", "workspace:yarn/plugin-renderer"],\
-          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
+          ["@atls/yarn-plugin-tools", "workspace:packages/plugins/tools"],\
           ["@types/localtunnel", "npm:2.0.4"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
@@ -1382,11 +1382,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@atls/yarn-plugin-tools", [\
-      ["workspace:yarn/plugin-tools", {\
-        "packageLocation": "./yarn/plugin-tools/",\
+      ["workspace:packages/plugins/tools", {\
+        "packageLocation": "./packages/plugins/tools/",\
         "packageDependencies": [\
           ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@atls/yarn-plugin-tools", "workspace:yarn/plugin-tools"],\
+          ["@atls/yarn-plugin-tools", "workspace:packages/plugins/tools"],\
           ["@types/semver", "npm:7.5.8"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\

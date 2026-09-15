@@ -678,6 +678,14 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/yarn-plugin-tools",
+      "location": "packages/plugins/tools",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/yarn-plugin-typescript",
       "location": "packages/plugins/typescript",
       "group": "plugins",
@@ -787,14 +795,6 @@
       "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-tools",
-      "location": "yarn/plugin-tools",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
     }
   ],
   "availability": {
@@ -860,5 +860,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-15T03:14:57.953Z"
+  "lastGenerated": "2026-09-15T03:32:06.018Z"
 }

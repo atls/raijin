@@ -9,7 +9,7 @@ import { npath }             from '@yarnpkg/fslib'
 import { ppath }             from '@yarnpkg/fslib'
 import { xfs }               from '@yarnpkg/fslib'
 
-import { afterAllInstalled } from './after-all-installed.hook.js'
+import { afterAllInstalled } from '../after-all-installed.js'
 
 const execFileAsync = async (
   file: string,

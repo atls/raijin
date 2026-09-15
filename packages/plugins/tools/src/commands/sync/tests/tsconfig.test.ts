@@ -4,7 +4,7 @@ import test                       from 'node:test'
 import { Manifest }               from '@yarnpkg/core'
 import { npath }                  from '@yarnpkg/fslib'
 
-import { createRaijinSyncTarget } from './target.js'
+import { createRaijinSyncTarget } from '../target.js'
 
 test('should keep tsconfig sync target at the project root workspace', () => {
   const projectRoot = npath.toPortablePath('/repo')
