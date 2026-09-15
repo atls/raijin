@@ -46,9 +46,8 @@ node_modules
 /.config/eslint/.eslintcache
 
 dist/
-!yarn/cli/dist/
-yarn/cli/dist/*
-yarn/plugin-*/bundles/
+!packages/assembly/dist/
+packages/assembly/dist/*
 packages/plugins/*/bundles/
 
 package.tgz

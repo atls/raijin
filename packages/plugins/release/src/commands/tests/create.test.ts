@@ -1,0 +1,281 @@
+import type { PortablePath }                    from '@yarnpkg/fslib'
+
+import assert                                   from 'node:assert/strict'
+import { Buffer }                               from 'node:buffer'
+import { mkdtemp }                              from 'node:fs/promises'
+import { readFile }                             from 'node:fs/promises'
+import { writeFile }                            from 'node:fs/promises'
+import { tmpdir }                               from 'node:os'
+import { join }                                 from 'node:path'
+import { test }                                 from 'node:test'
+
+import { parseRaijinRuntimeManifest }           from '@atls/raijin/runtime'
+
+import { assertYarnRuntimeReleaseAssetMatches } from '../create.js'
+import { createGitHubReleaseNotesOptions }      from '../create.js'
+import { createGitHubReleaseOptions }           from '../create.js'
+import { createYarnRuntimeManifest }            from '../create.js'
+import { createYarnRuntimeManifestPath }        from '../create.js'
+import { createYarnRuntimeReleaseAssetOptions } from '../create.js'
+import { isReleaseAlreadyExistsError }          from '../create.js'
+import { parseGitHubReleaseTagVersion }         from '../create.js'
+import { readYarnRuntimePackageManager }        from '../create.js'
+import { selectPreviousGitHubReleaseTagName }   from '../create.js'
+
+test('should keep release creation on the GitHub-native dependency boundary', async () => {
+  const manifest = JSON.parse(
+    await readFile(new URL('../../../package.json', import.meta.url), 'utf-8')
+  ) as {
+    dependencies?: Record<string, string>
+  }
+
+  assert.ok(manifest.dependencies)
+  assert.equal(manifest.dependencies['@octokit/auth-action'], '5.1.1')
+  assert.equal(manifest.dependencies['@octokit/rest'], '21.0.2')
+})
+
+test('should create releases with GitHub generated release notes', () => {
+  assert.deepEqual(
+    createGitHubReleaseOptions('@atls/raijin', '1.2.3', 'Release body', 'atls', 'raijin', 'main'),
+    {
+      body: 'Release body',
+      draft: false,
+      make_latest: true,
+      name: '@atls/raijin@1.2.3',
+      owner: 'atls',
+      repo: 'raijin',
+      tag_name: '@atls/raijin@1.2.3',
+      target_commitish: 'main',
+    }
+  )
+})
+
+test('should create release note options with package-specific previous tags', () => {
+  assert.deepEqual(
+    createGitHubReleaseNotesOptions(
+      '@atls/raijin',
+      '1.2.3',
+      'atls',
+      'raijin',
+      'main',
+      '@atls/raijin@1.2.2'
+    ),
+    {
+      owner: 'atls',
+      previous_tag_name: '@atls/raijin@1.2.2',
+      repo: 'raijin',
+      tag_name: '@atls/raijin@1.2.3',
+      target_commitish: 'main',
+    }
+  )
+})
+
+test('should create yarn runtime release asset options only for Raijin release', () => {
+  const projectCwd = '/repo' as PortablePath
+
+  assert.deepEqual(
+    createYarnRuntimeReleaseAssetOptions('@atls/yarn-plugin-release', projectCwd),
+    undefined
+  )
+  assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/raijin', projectCwd), {
+    content_type: 'text/javascript',
+    name: 'yarn.mjs',
+    path: '/repo/packages/assembly/dist/runtime/yarn.mjs',
+  })
+})
+
+test('should create yarn runtime manifest path', () => {
+  assert.equal(
+    createYarnRuntimeManifestPath('/repo' as PortablePath),
+    '/repo/.yarn/releases/raijin-runtime.json'
+  )
+})
+
+test('should read yarn runtime package manager from root package manifest', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-release-'))
+
+  await writeFile(
+    join(cwd, 'package.json'),
+    `${JSON.stringify({ packageManager: 'yarn@5.0.0' })}\n`
+  )
+
+  assert.equal(await readYarnRuntimePackageManager(cwd as PortablePath), 'yarn@5.0.0')
+})
+
+test('should reject root package manifest without package manager', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-release-'))
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify({ private: true })}\n`)
+
+  await assert.rejects(
+    readYarnRuntimePackageManager(cwd as PortablePath),
+    /Missing root packageManager/
+  )
+})
+
+test('should create canonical Raijin runtime manifest from verified release asset', () => {
+  const manifest = createYarnRuntimeManifest(
+    '1.2.3',
+    {
+      browser_download_url:
+        'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
+      name: 'yarn.mjs',
+    },
+    Buffer.from('runtime'),
+    'yarn@5.0.0'
+  )
+  const expectedManifest = {
+    assetName: 'yarn.mjs',
+    assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
+    packageName: '@atls/raijin',
+    packageManager: 'yarn@5.0.0',
+    schemaVersion: 1,
+    sha256: 'd92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23',
+    tagName: '@atls/raijin@1.2.3',
+    version: '1.2.3',
+  }
+
+  assert.deepEqual(manifest, expectedManifest)
+  assert.deepEqual(parseRaijinRuntimeManifest(manifest), expectedManifest)
+})
+
+test('should accept existing yarn runtime release assets with matching content', async () => {
+  const originalFetch = globalThis.fetch
+
+  globalThis.fetch = (async () => new Response('runtime')) as typeof fetch
+
+  try {
+    await assertYarnRuntimeReleaseAssetMatches(
+      {
+        browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+        name: 'yarn.mjs',
+      },
+      Buffer.from('runtime')
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('should reject existing yarn runtime release assets with mismatching content', async () => {
+  const originalFetch = globalThis.fetch
+
+  globalThis.fetch = (async () => new Response('stale-runtime')) as typeof fetch
+
+  try {
+    await assert.rejects(
+      assertYarnRuntimeReleaseAssetMatches(
+        {
+          browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
+          name: 'yarn.mjs',
+        },
+        Buffer.from('runtime')
+      ),
+      /Existing release asset yarn\.mjs digest mismatch/
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('should omit previous release tag from first package release notes', () => {
+  assert.deepEqual(
+    createGitHubReleaseNotesOptions('@atls/raijin', '1.2.3', 'atls', 'raijin', 'main'),
+    {
+      owner: 'atls',
+      repo: 'raijin',
+      tag_name: '@atls/raijin@1.2.3',
+      target_commitish: 'main',
+    }
+  )
+})
+
+test('should parse scoped package release tag versions', () => {
+  assert.equal(parseGitHubReleaseTagVersion('@atls/raijin', '@atls/raijin@1.2.3'), '1.2.3')
+})
+
+test('should ignore release tags from other packages', () => {
+  assert.equal(
+    parseGitHubReleaseTagVersion('@atls/raijin', '@atls/yarn-plugin-tools@1.2.3'),
+    undefined
+  )
+})
+
+test('should select previous package-specific release tag', () => {
+  assert.equal(
+    selectPreviousGitHubReleaseTagName('@atls/raijin', '1.2.3', [
+      '@atls/yarn-plugin-tools@1.2.2',
+      '@atls/raijin@1.2.1',
+      '@atls/raijin@1.2.2',
+      '@atls/raijin@1.2.3',
+      '@atls/raijin@1.2.4',
+    ]),
+    '@atls/raijin@1.2.2'
+  )
+})
+
+test('should skip previous release tag when package has no older release', () => {
+  assert.equal(
+    selectPreviousGitHubReleaseTagName('@atls/raijin', '1.2.3', [
+      '@atls/yarn-plugin-tools@1.2.2',
+      '@atls/raijin@1.2.3',
+      '@atls/raijin@1.2.4',
+    ]),
+    undefined
+  )
+})
+
+test('should select previous package prerelease tag', () => {
+  assert.equal(
+    selectPreviousGitHubReleaseTagName('@atls/raijin', '1.2.3-1', [
+      '@atls/raijin@1.2.2',
+      '@atls/raijin@1.2.3-0',
+      '@atls/raijin@1.2.3-1',
+      '@atls/raijin@1.2.3',
+    ]),
+    '@atls/raijin@1.2.3-0'
+  )
+})
+
+test('should treat stable releases as newer than prereleases', () => {
+  assert.equal(
+    selectPreviousGitHubReleaseTagName('@atls/raijin', '1.2.3', [
+      '@atls/raijin@1.2.2',
+      '@atls/raijin@1.2.3-0',
+      '@atls/raijin@1.2.3-1',
+    ]),
+    '@atls/raijin@1.2.3-1'
+  )
+})
+
+test('should detect existing release tag errors', () => {
+  assert.equal(
+    isReleaseAlreadyExistsError({
+      status: 422,
+      message:
+        'Validation Failed: {"resource":"Release","code":"already_exists","field":"tag_name"}',
+    }),
+    true
+  )
+})
+
+test('should ignore other GitHub validation errors', () => {
+  assert.equal(
+    isReleaseAlreadyExistsError({
+      status: 422,
+      message: 'Validation Failed: {"resource":"Release","code":"already_exists","field":"name"}',
+    }),
+    false
+  )
+})
+
+test('should ignore non-validation errors', () => {
+  assert.equal(
+    isReleaseAlreadyExistsError({
+      status: 500,
+      message:
+        'Validation Failed: {"resource":"Release","code":"already_exists","field":"tag_name"}',
+    }),
+    false
+  )
+})

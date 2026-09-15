@@ -21,7 +21,7 @@
 - Описание: run formatting, type checking, and linting
 - Использование: `yarn check ...`
 - Пример: `yarn check`
-- Пример: `yarn check yarn/plugin-check/sources`
+- Пример: `yarn check packages/plugins/check/src`
 - Плагин: `@atls/yarn-plugin-check`
 
 </details>

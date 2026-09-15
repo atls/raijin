@@ -31,8 +31,8 @@ before(async () => {
   const { project } = await Project.find(configuration, testCwd)
 
   repoRoot = project.cwd
-  rendererWorkspaceCwd = ppath.join(repoRoot, 'yarn/plugin-renderer')
-  rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'sources/commands')
+  rendererWorkspaceCwd = ppath.join(repoRoot, 'packages/plugins/renderer')
+  rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'src/commands')
 })
 
 const createContext = (

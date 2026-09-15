@@ -44,7 +44,7 @@ const execFileAsync = async (
 
 test('should create script env for the selected workspace locator', async () => {
   const { project } = await resolveTestProject()
-  const workspace = project.getWorkspaceByCwd(ppath.join(project.cwd, 'yarn/plugin-renderer'))
+  const workspace = project.getWorkspaceByCwd(ppath.join(project.cwd, 'packages/plugins/renderer'))
   const binFolder = await xfs.mktempPromise()
   const { env } = await createYarnExecutable({
     binFolder,
@@ -53,7 +53,7 @@ test('should create script env for the selected workspace locator', async () => 
   })
 
   assert.equal(env.npm_package_name, '@atls/yarn-plugin-renderer')
-  assert.match(env.npm_package_json ?? '', /yarn[\\/]plugin-renderer[\\/]package\.json/)
+  assert.match(env.npm_package_json ?? '', /packages[\\/]plugins[\\/]renderer[\\/]package\.json/)
 })
 
 test('should preserve Yarn PnP options when adding command node options', async () => {
