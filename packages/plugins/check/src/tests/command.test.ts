@@ -3,7 +3,7 @@ import type { WorkspaceInvocation } from '@atls/raijin/commands'
 import assert                       from 'node:assert/strict'
 import test                         from 'node:test'
 
-import { CheckCommand }             from './check.command.js'
+import { CheckCommand }             from '../command.js'
 
 const runCheckCommand = async (
   targets: Array<string>,
@@ -60,13 +60,13 @@ test('should run nested targetless checks from the invoking workspace', async ()
 })
 
 test('should forward explicit targets to every check command', async () => {
-  const { exitCode, commands } = await runCheckCommand(['yarn/plugin-check/sources'])
+  const { exitCode, commands } = await runCheckCommand(['packages/plugins/check/src'])
 
   assert.equal(exitCode, 0)
   assert.deepEqual(commands, [
-    ['format', 'yarn/plugin-check/sources'],
-    ['typecheck', 'yarn/plugin-check/sources'],
-    ['lint', 'yarn/plugin-check/sources'],
+    ['format', 'packages/plugins/check/src'],
+    ['typecheck', 'packages/plugins/check/src'],
+    ['lint', 'packages/plugins/check/src'],
   ])
 })
 
@@ -86,12 +86,12 @@ test('should serialize nested workspace targets from the workspace execution cwd
 })
 
 test('should preserve non-zero exit code after running every check command', async () => {
-  const { exitCode, commands } = await runCheckCommand(['yarn/plugin-check/sources'], [0, 1, 0])
+  const { exitCode, commands } = await runCheckCommand(['packages/plugins/check/src'], [0, 1, 0])
 
   assert.equal(exitCode, 1)
   assert.deepEqual(commands, [
-    ['format', 'yarn/plugin-check/sources'],
-    ['typecheck', 'yarn/plugin-check/sources'],
-    ['lint', 'yarn/plugin-check/sources'],
+    ['format', 'packages/plugins/check/src'],
+    ['typecheck', 'packages/plugins/check/src'],
+    ['lint', 'packages/plugins/check/src'],
   ])
 })

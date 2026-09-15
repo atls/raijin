@@ -27,6 +27,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/cli-ui"\
     },\
     {\
+      "name": "@atls/yarn-plugin-check",\
+      "reference": "workspace:packages/plugins/check"\
+    },\
+    {\
       "name": "@atls/yarn-plugin-commit",\
       "reference": "workspace:packages/plugins/commit"\
     },\
@@ -83,10 +87,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:yarn/pack-utils"\
     },\
     {\
-      "name": "@atls/yarn-plugin-check",\
-      "reference": "workspace:yarn/plugin-check"\
-    },\
-    {\
       "name": "@atls/yarn-plugin-checks",\
       "reference": "workspace:yarn/plugin-checks"\
     },\
@@ -121,7 +121,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/raijin", ["workspace:packages/raijin"]],\
     ["@atls/raijin-assembly", ["workspace:yarn/cli"]],\
     ["@atls/yarn-pack-utils", ["workspace:yarn/pack-utils"]],\
-    ["@atls/yarn-plugin-check", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-check", "workspace:yarn/plugin-check"]],\
+    ["@atls/yarn-plugin-check", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/check", "workspace:packages/plugins/check"]],\
     ["@atls/yarn-plugin-checks", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-checks", "workspace:yarn/plugin-checks"]],\
     ["@atls/yarn-plugin-commit", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/commit", "workspace:packages/plugins/commit"]],\
     ["@atls/yarn-plugin-essentials", ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/essentials", "workspace:packages/plugins/essentials"]],\
@@ -607,7 +607,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/raijin", "workspace:packages/raijin"],\
           ["@atls/raijin-assembly", "workspace:yarn/cli"],\
-          ["@atls/yarn-plugin-check", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-check"],\
+          ["@atls/yarn-plugin-check", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/check"],\
           ["@atls/yarn-plugin-checks", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-checks"],\
           ["@atls/yarn-plugin-commit", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/commit"],\
           ["@atls/yarn-plugin-essentials", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/essentials"],\
@@ -683,11 +683,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@atls/yarn-plugin-check", [\
-      ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-check", {\
-        "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-check-virtual-15988a6d59/1/yarn/plugin-check/",\
+      ["virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/check", {\
+        "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-check-virtual-f440b562c0/1/packages/plugins/check/",\
         "packageDependencies": [\
           ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@atls/yarn-plugin-check", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:yarn/plugin-check"],\
+          ["@atls/yarn-plugin-check", "virtual:f9cee17f8f06dbb5893f5c49b8f431af1ceee223deb5f9ad2f62d895c4881eb5e48f0ba7ffbc10510c55e77ac6cce66a3be6aa91307ef1c0857f4601d58879ad#workspace:packages/plugins/check"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
@@ -703,11 +703,11 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["workspace:yarn/plugin-check", {\
-        "packageLocation": "./yarn/plugin-check/",\
+      ["workspace:packages/plugins/check", {\
+        "packageLocation": "./packages/plugins/check/",\
         "packageDependencies": [\
           ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@atls/yarn-plugin-check", "workspace:yarn/plugin-check"],\
+          ["@atls/yarn-plugin-check", "workspace:packages/plugins/check"],\
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\

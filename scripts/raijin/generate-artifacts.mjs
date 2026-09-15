@@ -123,7 +123,7 @@ const COVER_IMAGE_URL =
 
 /** @type {Record<string, Array<string>>} */
 const COMMAND_EXAMPLES = {
-  check: ['yarn check', 'yarn check yarn/plugin-check/sources'],
+  check: ['yarn check', 'yarn check packages/plugins/check/src'],
 }
 
 /** @type {Record<string, { en: Array<string>, ru: Array<string> }>} */
