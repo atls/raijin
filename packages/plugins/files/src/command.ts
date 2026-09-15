@@ -4,7 +4,7 @@ import { BaseCommand }                  from '@yarnpkg/cli'
 import { StreamReport }                 from '@yarnpkg/core'
 import { Option }                       from 'clipanion'
 
-import { getChangedFiles }              from './changed-files.util.js'
+import { getChangedFiles }              from './changes.js'
 
 class FilesChangedListCommand extends BaseCommand {
   static override paths = [['files', 'changed', 'list']]

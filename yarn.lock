@@ -537,9 +537,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-files@workspace:*, @atls/yarn-plugin-files@workspace:yarn/plugin-files":
+"@atls/yarn-plugin-files@workspace:*, @atls/yarn-plugin-files@workspace:packages/plugins/files":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-files@workspace:yarn/plugin-files"
+  resolution: "@atls/yarn-plugin-files@workspace:packages/plugins/files"
   dependencies:
     "@actions/github": "npm:6.0.0"
     "@atls/raijin": "workspace:*"

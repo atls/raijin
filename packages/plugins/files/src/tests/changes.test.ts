@@ -3,7 +3,7 @@ import type { ProjectProcessInvocation } from '@atls/raijin/commands'
 import assert                            from 'node:assert/strict'
 import { test }                          from 'node:test'
 
-import { getChangedFiles }               from './changed-files.util.js'
+import { getChangedFiles }               from '../changes.js'
 
 test('should prefer local git diff over GitHub event files', async (t) => {
   const previousEventPath = process.env.GITHUB_EVENT_PATH
