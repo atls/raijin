@@ -2,7 +2,7 @@ import type { Workspace }           from '@yarnpkg/core'
 
 import { structUtils }              from '@yarnpkg/core'
 
-import { getWorkspaceDependencies } from './get-workspace-dependencies.util.js'
+import { getWorkspaceDependencies } from './dependencies.js'
 
 export const getWorkspaceDependents = (workspace: Workspace): ReadonlyArray<Workspace> => {
   const dependents = new Set<Workspace>()

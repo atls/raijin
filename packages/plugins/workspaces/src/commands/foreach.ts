@@ -7,8 +7,8 @@ import { Option }                       from 'clipanion'
 
 import { getChangedFiles }              from '@atls/yarn-plugin-files'
 
-import { getChangedWorkspaces }         from './get-changed-workspaces.util.js'
-import { createForeachInput }           from './workspaces-changed-foreach.input.js'
+import { getChangedWorkspaces }         from '../changes.js'
+import { createForeachInput }           from './foreach-input.js'
 
 class WorkspacesChangedForeachCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'foreach']]

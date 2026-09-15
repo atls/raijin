@@ -7,7 +7,7 @@ import { Option }                       from 'clipanion'
 
 import { getChangedFiles }              from '@atls/yarn-plugin-files'
 
-import { getChangedWorkspaces }         from './get-changed-workspaces.util.js'
+import { getChangedWorkspaces }         from '../changes.js'
 
 class WorkspacesChangedListCommand extends BaseCommand {
   static override paths = [['workspaces', 'changed', 'list']]

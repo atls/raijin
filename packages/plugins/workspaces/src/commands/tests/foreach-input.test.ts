@@ -1,7 +1,7 @@
 import assert                 from 'node:assert/strict'
 import test                   from 'node:test'
 
-import { createForeachInput } from './workspaces-changed-foreach.input.js'
+import { createForeachInput } from '../foreach-input.js'
 
 test('should run native foreach over selected workspaces without worktree refiltering', () => {
   const input = createForeachInput(['@atls/raijin-assembly', '@atls/yarn-plugin-release'], {

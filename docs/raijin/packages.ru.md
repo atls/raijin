@@ -137,15 +137,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-workspaces -->
-
-#### `@atls/yarn-plugin-workspaces`
-
-- Локация: `yarn/plugin-workspaces`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 </details>
 
 ## Group `plugins`
@@ -223,6 +214,15 @@
 #### `@atls/yarn-plugin-typescript`
 
 - Локация: `packages/plugins/typescript`
+- Группа: `plugins`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-workspaces -->
+
+#### `@atls/yarn-plugin-workspaces`
+
+- Локация: `packages/plugins/workspaces`
 - Группа: `plugins`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
