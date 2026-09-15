@@ -1,0 +1,51 @@
+{
+  "name": "@atls/yarn-plugin-renderer",
+  "version": "1.0.13",
+  "private": true,
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "builder build plugin",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atls/raijin": "workspace:*",
+    "@atls/yarn-plugin-tools": "workspace:*",
+    "clipanion": "4.0.0-rc.2",
+    "localtunnel": "2.0.2"
+  },
+  "devDependencies": {
+    "@types/localtunnel": "2.0.4",
+    "@yarnpkg/builder": "4.2.0",
+    "@yarnpkg/cli": "4.14.1",
+    "@yarnpkg/core": "4.7.0",
+    "@yarnpkg/fslib": "3.1.5"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "^4",
+    "@yarnpkg/core": "^4"
+  },
+  "raijin": {
+    "pack": {
+      "exports": {
+        "./package.json": "./package.json",
+        ".": {
+          "import": "./dist/index.js",
+          "types": "./dist/index.d.ts",
+          "default": "./dist/index.js"
+        }
+      },
+      "main": "dist/index.js",
+      "types": "dist/index.d.ts"
+    }
+  }
+}

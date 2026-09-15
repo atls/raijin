@@ -1,0 +1,191 @@
+/* eslint-disable n/no-sync */
+
+import type { CommandInput }               from '@atls/raijin/commands'
+import type { ProjectProcessInvocation }   from '@atls/raijin/commands'
+import type { ProjectCommandContext }      from '@atls/raijin/commands'
+import type { LintDiagnostic }             from '@atls/yarn-plugin-lint'
+import type { LintFileResult }             from '@atls/yarn-plugin-lint'
+import type { LintProjectCompletedResult } from '@atls/yarn-plugin-lint'
+import type { Project }                    from '@yarnpkg/core'
+
+import type { Annotation }                 from '../github/checks.js'
+
+import { readFileSync }                    from 'node:fs'
+
+import { BaseCommand }                     from '@yarnpkg/cli'
+import { StreamReport }                    from '@yarnpkg/core'
+import { MessageName }                     from '@yarnpkg/core'
+import { codeFrameColumns }                from '@babel/code-frame'
+import { xfs }                             from '@yarnpkg/fslib'
+import { Option }                          from 'clipanion'
+
+import { createCommandInput }              from '@atls/raijin/commands'
+import { toNativeCwd }                     from '@atls/raijin/commands'
+import { toNativePath }                    from '@atls/raijin/filesystem'
+import { getChangedFiles }                 from '@atls/yarn-plugin-files'
+import { lintProjectSources }              from '@atls/yarn-plugin-lint'
+
+import { GitHubChecks }                    from '../github/checks.js'
+import { AnnotationLevel }                 from '../github/checks.js'
+
+const getAnnotationLevel = (severity: LintDiagnostic['severity']): AnnotationLevel =>
+  severity === 1 ? AnnotationLevel.Warning : AnnotationLevel.Failure
+
+export const formatLintAnnotations = (
+  results: ReadonlyArray<LintFileResult>,
+  cwd?: string
+): Array<Annotation> =>
+  results
+    .filter(({ diagnostics }) => diagnostics.length > 0)
+    .flatMap((result) =>
+      result.diagnostics.map((diagnostic) => {
+        const line = diagnostic.line || 1
+        const column = diagnostic.column || 1
+
+        return {
+          path: cwd ? result.filePath.substring(cwd.length + 1) : result.filePath,
+          start_line: line,
+          end_line: line,
+          annotation_level: getAnnotationLevel(diagnostic.severity),
+          raw_details: codeFrameColumns(
+            result.source ?? readFileSync(result.filePath).toString(),
+            { start: { line, column } },
+            { highlightCode: false }
+          ),
+          title: `(${diagnostic.ruleId || 'unknown'}): ${diagnostic.message}`,
+          message: diagnostic.message,
+        }
+      }))
+
+export const reportLintOutput = (
+  report: Pick<StreamReport, 'reportInfo'>,
+  result: LintProjectCompletedResult
+): void => {
+  if (result.output.length > 0) {
+    report.reportInfo(MessageName.UNNAMED, result.output)
+  }
+}
+
+class ChecksLintCommand extends BaseCommand {
+  static override paths = [['checks', 'lint']]
+
+  static override usage = BaseCommand.Usage({
+    description: 'report lint results to GitHub Checks',
+  })
+
+  changed = Option.Boolean('--changed', false)
+
+  declare context: ProjectCommandContext
+
+  override async execute(): Promise<number> {
+    const { invocation } = this.context
+    const { project: projectModel, yarn } = invocation
+    const { configuration, project } = yarn
+
+    const commandReport = await StreamReport.start(
+      {
+        stdout: this.context.stdout,
+        configuration,
+      },
+      async (report) => {
+        const checks = new GitHubChecks('Lint')
+
+        const { id: checkId } = await checks.start()
+
+        await report.startTimerPromise('Lint', async () => {
+          try {
+            const projectCwd = toNativeCwd(projectModel.cwd)
+            const lintTargets = await this.getLintTargets(project, invocation.process)
+
+            if (lintTargets !== null && lintTargets.targets.length === 0) {
+              await checks.complete(checkId, {
+                title: 'Successful',
+                summary: 'All checks passed',
+                annotations: [],
+              })
+
+              return
+            }
+
+            const result = await lintProjectSources({
+              rootCwd: projectCwd,
+              cwd: projectCwd,
+              targets: lintTargets?.targets.map(({ path }) => toNativePath(path)),
+            })
+
+            if (result.status === 'provider-failed') {
+              const summary = `${result.failure.name}: ${result.failure.message}`
+
+              await checks.failure({ title: 'Lint run failed', summary }, checkId)
+              report.reportError(MessageName.UNNAMED, summary)
+
+              return
+            }
+
+            reportLintOutput(report, result)
+
+            const annotations = formatLintAnnotations(result.results, projectCwd)
+
+            const warnings: number = annotations.filter(
+              (annotation) => annotation.annotation_level === AnnotationLevel.Warning
+            ).length
+
+            const errors: number = annotations.filter(
+              (annotation) => annotation.annotation_level === AnnotationLevel.Failure
+            ).length
+
+            await checks.complete(checkId, {
+              title:
+                annotations.length > 0 ? `Errors ${errors}, Warnings ${warnings}` : 'Successful',
+              summary:
+                annotations.length > 0
+                  ? `Found ${errors} errors and ${warnings} warnings`
+                  : 'All checks passed',
+              annotations,
+            })
+          } catch (error) {
+            const summary = error instanceof Error ? error.message : String(error)
+
+            await checks.failure(
+              {
+                title: 'Lint run failed',
+                summary,
+              },
+              checkId
+            )
+            report.reportError(MessageName.UNNAMED, summary)
+          }
+        })
+      }
+    )
+
+    return commandReport.exitCode()
+  }
+
+  private async getLintTargets(
+    project: Project,
+    processInvocation: ProjectProcessInvocation
+  ): Promise<CommandInput | null> {
+    if (!this.changed) {
+      return null
+    }
+
+    const input = createCommandInput({
+      cwd: project.cwd,
+      source: 'changed',
+      targets: (await getChangedFiles(processInvocation)).filter((file) =>
+        /\.(c|m)?(j|t)sx?$/.test(file)),
+    })
+
+    const existsMap = await Promise.all(
+      input.targets.map(async ({ path }) => xfs.existsPromise(path))
+    )
+
+    return {
+      ...input,
+      targets: input.targets.filter((_, index) => existsMap[index]),
+    }
+  }
+}
+
+export { ChecksLintCommand }

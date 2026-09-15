@@ -1,0 +1,112 @@
+import assert                            from 'node:assert/strict'
+import { test }                          from 'node:test'
+
+import { structUtils }                   from '@yarnpkg/core'
+
+import { isReleaseVersionWorkspace }     from '../defer.js'
+import { parseDeferredReleaseDecisions } from '../defer.js'
+import { selectLocalCommitDiffParent }   from '../defer.js'
+import { toGitHubChange }                from '../defer.js'
+
+test('should include previous GitHub filenames for renamed files', () => {
+  const change = toGitHubChange({
+    data: {
+      commit: {
+        message: 'fix(runtime): move loader',
+      },
+      files: [
+        {
+          filename: 'packages/plugins/test/src/loader.ts',
+          previous_filename: 'packages/raijin/src/loader.ts',
+        },
+      ],
+    },
+  } as Parameters<typeof toGitHubChange>[0])
+
+  assert.deepEqual(change, {
+    message: 'fix(runtime): move loader',
+    files: ['packages/plugins/test/src/loader.ts', 'packages/raijin/src/loader.ts'],
+  })
+})
+
+test('should diff merge commits against the parent outside the local range', () => {
+  assert.equal(
+    selectLocalCommitDiffParent(['feature-parent', 'base-parent'], new Set(['feature-parent'])),
+    'base-parent'
+  )
+})
+
+test('should fall back to the first parent when all merge parents are local', () => {
+  assert.equal(
+    selectLocalCommitDiffParent(
+      ['feature-parent', 'topic-parent'],
+      new Set(['feature-parent', 'topic-parent'])
+    ),
+    'feature-parent'
+  )
+})
+
+test('should include private versioned workspaces in release version policy', () => {
+  assert.equal(
+    isReleaseVersionWorkspace({
+      relativeCwd: 'packages/plugins/renderer',
+      manifest: {
+        name: structUtils.makeIdent('atls', 'yarn-plugin-renderer'),
+        version: '1.0.7',
+        raw: {
+          private: true,
+        },
+      },
+    }),
+    true
+  )
+})
+
+test('should parse deferred release decisions', () => {
+  assert.deepEqual(
+    parseDeferredReleaseDecisions(`
+releases:
+  "@atls/raijin": minor
+  "@atls/raijin-assembly": 4.14.1
+declined:
+  - "@atls/yarn-plugin-test"
+`),
+    new Map([
+      ['@atls/yarn-plugin-test', 'decline'],
+      ['@atls/raijin', 'minor'],
+      ['@atls/raijin-assembly', '4.14.1'],
+    ])
+  )
+})
+
+test('should exclude root workspace from release version policy', () => {
+  assert.equal(
+    isReleaseVersionWorkspace({
+      relativeCwd: '.',
+      manifest: {
+        name: structUtils.makeIdent(null, 'tools'),
+        version: '1.0.0',
+        raw: {
+          private: true,
+        },
+      },
+    }),
+    false
+  )
+})
+
+test('should exclude unversioned workspaces from release version policy', () => {
+  assert.equal(
+    isReleaseVersionWorkspace({
+      relativeCwd: 'fixtures/unversioned',
+      manifest: {
+        name: structUtils.makeIdent('atls', 'unversioned-fixture'),
+        version: null,
+        raw: {
+          private: true,
+        },
+      },
+    }),
+    false
+  )
+})

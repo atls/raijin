@@ -21,7 +21,7 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Description: run formatting, type checking, and linting
 - Usage: `yarn check ...`
 - Example: `yarn check`
-- Example: `yarn check yarn/plugin-check/sources`
+- Example: `yarn check packages/plugins/check/src`
 - Plugin: `@atls/yarn-plugin-check`
 
 </details>

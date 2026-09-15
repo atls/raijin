@@ -123,7 +123,7 @@ const COVER_IMAGE_URL =
 
 /** @type {Record<string, Array<string>>} */
 const COMMAND_EXAMPLES = {
-  check: ['yarn check', 'yarn check yarn/plugin-check/sources'],
+  check: ['yarn check', 'yarn check packages/plugins/check/src'],
 }
 
 /** @type {Record<string, { en: Array<string>, ru: Array<string> }>} */
@@ -1157,7 +1157,7 @@ const describeCommand = (command) => ({
 })
 
 const rootPackage = readJson('package.json')
-const yarnCliPackage = readJson('yarn/cli/package.json')
+const yarnCliPackage = readJson('packages/assembly/package.json')
 const yarnRc = fs.readFileSync(path.join(repoRoot, '.yarnrc.yml'), 'utf8')
 const runtimePath = path.join(repoRoot, '.yarn/releases/yarn.mjs')
 const runtimeCliSurface = await loadRuntimeCliSurface({ cwd: repoRoot, runtimePath })

@@ -31,37 +31,19 @@ Public Raijin package and initializer
 
 </details>
 
-## Group `yarn`
+## Group `plugins`
 
-Custom Yarn CLI, plugin, and bundle infrastructure packages
+Private plugin packages and their entrypoints
 
 <details>
-<summary>Group details: `yarn`</summary>
-
-<!-- sync:package-card:atls-raijin-assembly -->
-
-#### `@atls/raijin-assembly`
-
-- Location: `yarn/cli`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
-
-<!-- sync:package-card:atls-yarn-pack-utils -->
-
-#### `@atls/yarn-pack-utils`
-
-- Location: `yarn/pack-utils`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: none
+<summary>Group details: `plugins`</summary>
 
 <!-- sync:package-card:atls-yarn-plugin-check -->
 
 #### `@atls/yarn-plugin-check`
 
-- Location: `yarn/plugin-check`
-- Group: `yarn`
+- Location: `packages/plugins/check`
+- Group: `plugins`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
@@ -69,100 +51,10 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 
 #### `@atls/yarn-plugin-checks`
 
-- Location: `yarn/plugin-checks`
-- Group: `yarn`
+- Location: `packages/plugins/checks`
+- Group: `plugins`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-essentials -->
-
-#### `@atls/yarn-plugin-essentials`
-
-- Location: `yarn/plugin-essentials`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-export -->
-
-#### `@atls/yarn-plugin-export`
-
-- Location: `yarn/plugin-export`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-files -->
-
-#### `@atls/yarn-plugin-files`
-
-- Location: `yarn/plugin-files`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-generate -->
-
-#### `@atls/yarn-plugin-generate`
-
-- Location: `yarn/plugin-generate`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-image -->
-
-#### `@atls/yarn-plugin-image`
-
-- Location: `yarn/plugin-image`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-release -->
-
-#### `@atls/yarn-plugin-release`
-
-- Location: `yarn/plugin-release`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-renderer -->
-
-#### `@atls/yarn-plugin-renderer`
-
-- Location: `yarn/plugin-renderer`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-tools -->
-
-#### `@atls/yarn-plugin-tools`
-
-- Location: `yarn/plugin-tools`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-workspaces -->
-
-#### `@atls/yarn-plugin-workspaces`
-
-- Location: `yarn/plugin-workspaces`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-</details>
-
-## Group `plugins`
-
-Private plugin packages and their entrypoints
-
-<details>
-<summary>Group details: `plugins`</summary>
 
 <!-- sync:package-card:atls-yarn-plugin-commit -->
 
@@ -173,11 +65,56 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-essentials -->
+
+#### `@atls/yarn-plugin-essentials`
+
+- Location: `packages/plugins/essentials`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-export -->
+
+#### `@atls/yarn-plugin-export`
+
+- Location: `packages/plugins/export`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-files -->
+
+#### `@atls/yarn-plugin-files`
+
+- Location: `packages/plugins/files`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-format -->
 
 #### `@atls/yarn-plugin-format`
 
 - Location: `packages/plugins/format`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-generate -->
+
+#### `@atls/yarn-plugin-generate`
+
+- Location: `packages/plugins/generate`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-image -->
+
+#### `@atls/yarn-plugin-image`
+
+- Location: `packages/plugins/image`
 - Group: `plugins`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
@@ -200,6 +137,24 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-release -->
+
+#### `@atls/yarn-plugin-release`
+
+- Location: `packages/plugins/release`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
+<!-- sync:package-card:atls-yarn-plugin-renderer -->
+
+#### `@atls/yarn-plugin-renderer`
+
+- Location: `packages/plugins/renderer`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-service -->
 
 #### `@atls/yarn-plugin-service`
@@ -218,6 +173,15 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-tools -->
+
+#### `@atls/yarn-plugin-tools`
+
+- Location: `packages/plugins/tools`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-typescript -->
 
 #### `@atls/yarn-plugin-typescript`
@@ -227,50 +191,30 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-workspaces -->
+
+#### `@atls/yarn-plugin-workspaces`
+
+- Location: `packages/plugins/workspaces`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
 </details>
 
-## Group `code`
+## Group `assembly`
 
-Core code libraries for build, checks, and utilities
+Other workspace packages
 
 <details>
-<summary>Group details: `code`</summary>
+<summary>Group details: `assembly`</summary>
 
-<!-- sync:package-card:atls-code-format -->
+<!-- sync:package-card:atls-raijin-assembly -->
 
-#### `@atls/code-format`
+#### `@atls/raijin-assembly`
 
-- Location: `code/code-format`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-github -->
-
-#### `@atls/code-github`
-
-- Location: `code/code-github`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-lint -->
-
-#### `@atls/code-lint`
-
-- Location: `code/code-lint`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-pack -->
-
-#### `@atls/code-pack`
-
-- Location: `code/code-pack`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
+- Location: `packages/assembly`
 
 </details>
 

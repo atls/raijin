@@ -298,7 +298,7 @@ test('should classify PnP package TypeScript sources as dependency boundary', ()
     true
   )
 
-  assert.equal(isPnpPackageSource('/repo/yarn/plugin-tools/sources/dependency.ts'), false)
+  assert.equal(isPnpPackageSource('/repo/packages/plugins/tools/src/dependency.ts'), false)
 })
 
 test('should reject TypeScript sources from CommonJS package boundary', async () => {

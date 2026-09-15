@@ -598,6 +598,21 @@
   ],
   "workspaces": [
     {
+      "name": "@atls/raijin-assembly",
+      "location": "packages/assembly",
+      "group": "assembly",
+      "private": true,
+      "description": "",
+      "scripts": [
+        "build",
+        "build:bundle",
+        "build:clean",
+        "build:dist",
+        "build:dynamic-require",
+        "build:materialize"
+      ]
+    },
+    {
       "name": "@atls/cli-ui",
       "location": "packages/cli-ui",
       "group": "cli-ui",
@@ -606,33 +621,17 @@
       "scripts": ["build"]
     },
     {
-      "name": "@atls/code-format",
-      "location": "code/code-format",
-      "group": "code",
+      "name": "@atls/yarn-plugin-check",
+      "location": "packages/plugins/check",
+      "group": "plugins",
       "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-github",
-      "location": "code/code-github",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/code-lint",
-      "location": "code/code-lint",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/code-pack",
-      "location": "code/code-pack",
-      "group": "code",
+      "name": "@atls/yarn-plugin-checks",
+      "location": "packages/plugins/checks",
+      "group": "plugins",
       "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
@@ -646,8 +645,48 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/yarn-plugin-essentials",
+      "location": "packages/plugins/essentials",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
+      "name": "@atls/yarn-plugin-export",
+      "location": "packages/plugins/export",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
+      "name": "@atls/yarn-plugin-files",
+      "location": "packages/plugins/files",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/yarn-plugin-format",
       "location": "packages/plugins/format",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
+      "name": "@atls/yarn-plugin-generate",
+      "location": "packages/plugins/generate",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
+      "name": "@atls/yarn-plugin-image",
+      "location": "packages/plugins/image",
       "group": "plugins",
       "private": true,
       "description": "",
@@ -670,6 +709,22 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/yarn-plugin-release",
+      "location": "packages/plugins/release",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
+      "name": "@atls/yarn-plugin-renderer",
+      "location": "packages/plugins/renderer",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/yarn-plugin-service",
       "location": "packages/plugins/service",
       "group": "plugins",
@@ -686,8 +741,24 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/yarn-plugin-tools",
+      "location": "packages/plugins/tools",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/yarn-plugin-typescript",
       "location": "packages/plugins/typescript",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
+      "name": "@atls/yarn-plugin-workspaces",
+      "location": "packages/plugins/workspaces",
       "group": "plugins",
       "private": true,
       "description": "",
@@ -700,117 +771,6 @@
       "private": false,
       "description": "Public Raijin initializer and runtime package",
       "scripts": ["build", "build:library", "build:project-generation", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/raijin-assembly",
-      "location": "yarn/cli",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": [
-        "build",
-        "build:bundle",
-        "build:clean",
-        "build:dist",
-        "build:dynamic-require",
-        "build:materialize"
-      ]
-    },
-    {
-      "name": "@atls/yarn-pack-utils",
-      "location": "yarn/pack-utils",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": []
-    },
-    {
-      "name": "@atls/yarn-plugin-check",
-      "location": "yarn/plugin-check",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-checks",
-      "location": "yarn/plugin-checks",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-essentials",
-      "location": "yarn/plugin-essentials",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-export",
-      "location": "yarn/plugin-export",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-files",
-      "location": "yarn/plugin-files",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-generate",
-      "location": "yarn/plugin-generate",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-image",
-      "location": "yarn/plugin-image",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-release",
-      "location": "yarn/plugin-release",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-renderer",
-      "location": "yarn/plugin-renderer",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-tools",
-      "location": "yarn/plugin-tools",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-workspaces",
-      "location": "yarn/plugin-workspaces",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
     }
   ],
   "availability": {
@@ -876,5 +836,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-11T16:43:12.425Z"
+  "lastGenerated": "2026-09-15T06:16:50.499Z"
 }
