@@ -236,15 +236,6 @@
 <details>
 <summary>Подробности группы `code`</summary>
 
-<!-- sync:package-card:atls-code-format -->
-
-#### `@atls/code-format`
-
-- Локация: `code/code-format`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-github -->
 
 #### `@atls/code-github`

@@ -261,17 +261,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-format@workspace:code/code-format":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-format@workspace:code/code-format"
-  dependencies:
-    "@atls/raijin": "workspace:*"
-    "@types/node": "npm:24.12.2"
-    ignore: "npm:5.3.2"
-    prettier: "npm:3.5.3"
-  languageName: unknown
-  linkType: soft
-
 "@atls/code-github@workspace:*, @atls/code-github@workspace:code/code-github":
   version: 0.0.0-use.local
   resolution: "@atls/code-github@workspace:code/code-github"

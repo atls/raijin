@@ -15,10 +15,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:."\
     },\
     {\
-      "name": "@atls/code-format",\
-      "reference": "workspace:code/code-format"\
-    },\
-    {\
       "name": "@atls/code-github",\
       "reference": "workspace:code/code-github"\
     },\
@@ -124,7 +120,6 @@ const RAW_RUNTIME_STATE =
   "pnpZipBackend": "libzip",\
   "fallbackExclusionList": [\
     ["@atls/cli-ui", ["virtual:956ab9ca1bd91d649b8bcd39bf4265eec48c7e7c84db431efef00f76573383deb0b78cac5aa16bc28fb042f9321d711d5a83db44af0e9695f695ded5a22be6c1#workspace:packages/cli-ui", "virtual:bd16d45d9c0b1b4377a2a022b5cec55debff151af9199abcfda5e0952c364680c43a251511243f9dd06434457ddf915fbfc897af10991fe1b4c045962eb8e609#workspace:packages/cli-ui", "workspace:packages/cli-ui"]],\
-    ["@atls/code-format", ["workspace:code/code-format"]],\
     ["@atls/code-github", ["virtual:73ec8c1ec4994200b1ea51278470ae8a391f1e4825854ec187a42b68bf4b281ae006cbbe98ae9572bf00c46f0fa94b5957c9fa003910b3ff0e829d2b4b4341b2#workspace:code/code-github", "workspace:code/code-github"]],\
     ["@atls/code-lint", ["workspace:code/code-lint"]],\
     ["@atls/code-pack", ["workspace:code/code-pack"]],\
@@ -503,19 +498,6 @@ const RAW_RUNTIME_STATE =
           ["strip-ansi", "npm:7.1.0"],\
           ["supports-color", "npm:9.4.0"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/code-format", [\
-      ["workspace:code/code-format", {\
-        "packageLocation": "./code/code-format/",\
-        "packageDependencies": [\
-          ["@atls/code-format", "workspace:code/code-format"],\
-          ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@types/node", "npm:24.12.2"],\
-          ["ignore", "npm:5.3.2"],\
-          ["prettier", "npm:3.5.3"]\
         ],\
         "linkType": "SOFT"\
       }]\

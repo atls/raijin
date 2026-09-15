@@ -236,15 +236,6 @@ Core code libraries for build, checks, and utilities
 <details>
 <summary>Group details: `code`</summary>
 
-<!-- sync:package-card:atls-code-format -->
-
-#### `@atls/code-format`
-
-- Location: `code/code-format`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-github -->
 
 #### `@atls/code-github`
