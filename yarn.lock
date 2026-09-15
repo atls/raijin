@@ -425,9 +425,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-checks@workspace:*, @atls/yarn-plugin-checks@workspace:yarn/plugin-checks":
+"@atls/yarn-plugin-checks@workspace:*, @atls/yarn-plugin-checks@workspace:packages/plugins/checks":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-checks@workspace:yarn/plugin-checks"
+  resolution: "@atls/yarn-plugin-checks@workspace:packages/plugins/checks"
   dependencies:
     "@actions/core": "npm:1.10.1"
     "@actions/github": "npm:6.0.0"

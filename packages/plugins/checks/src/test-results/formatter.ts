@@ -1,7 +1,7 @@
 import type { EventData }       from 'node:test'
 
-import type { Annotation }      from './github.checks.js'
-import type { AnnotationLevel } from './github.checks.js'
+import type { Annotation }      from '../github/checks.js'
+import type { AnnotationLevel } from '../github/checks.js'
 
 import { relative }             from 'node:path'
 

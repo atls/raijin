@@ -7,9 +7,9 @@ import { test }                            from 'node:test'
 
 import { MessageName }                     from '@yarnpkg/core'
 
-import { AnnotationLevel }                 from './github.checks.js'
-import { formatLintAnnotations }           from './checks-lint.command.jsx'
-import { reportLintOutput }                from './checks-lint.command.jsx'
+import { AnnotationLevel }                 from '../../github/checks.js'
+import { formatLintAnnotations }           from '../lint.jsx'
+import { reportLintOutput }                from '../lint.jsx'
 
 test('should preserve one-based ESLint coordinates in GitHub annotations', () => {
   const result: LintFileResult = {

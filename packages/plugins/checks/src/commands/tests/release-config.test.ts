@@ -4,8 +4,8 @@ import type { Workspace }             from '@yarnpkg/core'
 import assert                         from 'node:assert/strict'
 import { test }                       from 'node:test'
 
-import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
-import { resolveChecksReleaseConfig } from './checks-release.config.js'
+import { isReleaseWorkspaceAllowed }  from '../release-config.js'
+import { resolveChecksReleaseConfig } from '../release-config.js'
 
 const createProject = (tools?: Record<string, unknown>): Project =>
   ({

@@ -2,7 +2,7 @@ import type { ProjectCommandContext } from '@atls/raijin/commands'
 import type { TestScenario }          from '@atls/yarn-plugin-test'
 import type { EventData }             from 'node:test'
 
-import type { Annotation }            from './github.checks.js'
+import type { Annotation }            from '../../github/checks.js'
 
 import { BaseCommand }                from '@yarnpkg/cli'
 import { MessageName }                from '@yarnpkg/core'
@@ -12,8 +12,8 @@ import { createCommandInput }         from '@atls/raijin/commands'
 import { toNativeCwd }                from '@atls/raijin/commands'
 import { testProject }                from '@atls/yarn-plugin-test'
 
-import { GitHubChecks }               from './github.checks.js'
-import { formatTestResults }          from './test-results.formatter.js'
+import { GitHubChecks }               from '../../github/checks.js'
+import { formatTestResults }          from '../../test-results/formatter.js'
 
 type TestFail = EventData.TestFail
 

@@ -630,6 +630,14 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/yarn-plugin-checks",
+      "location": "packages/plugins/checks",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/yarn-plugin-commit",
       "location": "packages/plugins/commit",
       "group": "plugins",
@@ -765,14 +773,6 @@
       ]
     },
     {
-      "name": "@atls/yarn-plugin-checks",
-      "location": "yarn/plugin-checks",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/yarn-plugin-image",
       "location": "yarn/plugin-image",
       "group": "yarn",
@@ -852,5 +852,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-15T05:05:04.245Z"
+  "lastGenerated": "2026-09-15T05:21:18.536Z"
 }

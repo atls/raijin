@@ -1,6 +1,6 @@
 import type { EventData }  from 'node:test'
 
-import type { Annotation } from '../github.checks.js'
+import type { Annotation } from '../../github/checks.js'
 
 import assert              from 'node:assert/strict'
 import { join }            from 'node:path'
@@ -14,7 +14,7 @@ type FormatTestResults = (
   events?: Array<EventData.TestStderr>
 ) => Array<Annotation>
 
-const { formatTestResults } = (await import('../test-results.formatter.ts')) as {
+const { formatTestResults } = (await import('../formatter.ts')) as {
   formatTestResults: FormatTestResults
 }
 

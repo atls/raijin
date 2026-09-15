@@ -1,6 +1,6 @@
 import type { ProjectCommandContext } from '@atls/raijin/commands'
 
-import type { Annotation }            from './github.checks.js'
+import type { Annotation }            from '../github/checks.js'
 
 import { BaseCommand }                from '@yarnpkg/cli'
 import { ppath }                      from '@yarnpkg/fslib'
@@ -11,10 +11,10 @@ import stripAnsi                      from 'strip-ansi'
 import { getChangedFiles }            from '@atls/yarn-plugin-files'
 import { getChangedWorkspaces }       from '@atls/yarn-plugin-workspaces'
 
-import { GitHubChecks }               from './github.checks.js'
-import { AnnotationLevel }            from './github.checks.js'
-import { isReleaseWorkspaceAllowed }  from './checks-release.config.js'
-import { resolveChecksReleaseConfig } from './checks-release.config.js'
+import { GitHubChecks }               from '../github/checks.js'
+import { AnnotationLevel }            from '../github/checks.js'
+import { isReleaseWorkspaceAllowed }  from './release-config.js'
+import { resolveChecksReleaseConfig } from './release-config.js'
 
 class ChecksReleaseCommand extends BaseCommand {
   static override paths = [['checks', 'release']]

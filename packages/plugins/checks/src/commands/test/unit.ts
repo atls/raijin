@@ -1,4 +1,4 @@
-import { AbstractChecksTestCommand } from './abstract-checks-test.command.js'
+import { AbstractChecksTestCommand } from './abstract.js'
 
 export class ChecksTestUnitCommand extends AbstractChecksTestCommand {
   static override paths = [['checks', 'test', 'unit']]

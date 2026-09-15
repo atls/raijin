@@ -12,7 +12,7 @@ import { npath }                  from '@yarnpkg/fslib'
 
 import { toCommandArguments }     from '@atls/raijin/commands'
 
-import { ChecksTypeCheckCommand } from './checks-typecheck.command.jsx'
+import { ChecksTypeCheckCommand } from '../typecheck.jsx'
 
 class TestChecksTypeCheckCommand extends ChecksTypeCheckCommand {
   async resolveInput(cwd: string): Promise<CommandInput | undefined> {

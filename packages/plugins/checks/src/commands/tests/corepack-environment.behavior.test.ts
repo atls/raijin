@@ -1,20 +1,34 @@
-import assert from 'node:assert/strict'
-import { execFile } from 'node:child_process'
-import { mkdtemp } from 'node:fs/promises'
-import { readFile } from 'node:fs/promises'
-import { realpath } from 'node:fs/promises'
-import { rm } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { dirname } from 'node:path'
-import { delimiter } from 'node:path'
-import { join } from 'node:path'
-import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { test } from 'node:test'
+import type { ExecFileException }                 from 'node:child_process'
+import type { ExecFileOptionsWithStringEncoding } from 'node:child_process'
 
-const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
+import assert                                     from 'node:assert/strict'
+import { execFile }                               from 'node:child_process'
+import { mkdtemp }                                from 'node:fs/promises'
+import { readFile }                               from 'node:fs/promises'
+import { realpath }                               from 'node:fs/promises'
+import { rm }                                     from 'node:fs/promises'
+import { tmpdir }                                 from 'node:os'
+import { dirname }                                from 'node:path'
+import { delimiter }                              from 'node:path'
+import { join }                                   from 'node:path'
+import { resolve }                                from 'node:path'
+import { test }                                   from 'node:test'
+import { fileURLToPath }                          from 'node:url'
 
-const runExecFile = async (file, args, options = {}) =>
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../../../..')
+
+interface ExecFileResult {
+  readonly code: number | string
+  readonly error: ExecFileException | null
+  readonly stderr: string
+  readonly stdout: string
+}
+
+const runExecFile = async (
+  file: string,
+  args: Array<string>,
+  options: Omit<ExecFileOptionsWithStringEncoding, 'encoding'> = {}
+): Promise<ExecFileResult> =>
   new Promise((resolvePromise) => {
     execFile(
       file,
@@ -27,16 +41,16 @@ const runExecFile = async (file, args, options = {}) =>
       },
       (error, stdout, stderr) => {
         resolvePromise({
-          code: error ? error.code : 0,
+          code: error?.code ?? 0,
           error,
-          stdout: stdout ?? '',
-          stderr: stderr ?? '',
+          stdout,
+          stderr,
         })
       }
     )
   })
 
-const isCorepackUnavailable = ({ code, error, stdout, stderr }) => {
+const isCorepackUnavailable = ({ code, error, stdout, stderr }: ExecFileResult): boolean => {
   if (error?.code === 'ENOENT') {
     return true
   }
@@ -96,7 +110,7 @@ test('should run command invocation via Corepack shim without Corepack package r
     assert.match(resolvedShimPath, /corepack[\\/]+dist[\\/]+yarn\.js$/)
   }
 
-  const env = {
+  const env: NodeJS.ProcessEnv = {
     ...process.env,
     NODE_OPTIONS: '',
     PATH: `${shimDir}${delimiter}${process.env.PATH ?? ''}`,

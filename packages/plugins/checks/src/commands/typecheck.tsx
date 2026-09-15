@@ -5,7 +5,7 @@ import type { ProjectInvocation }        from '@atls/raijin/commands'
 import type { ProjectProcessInvocation } from '@atls/raijin/commands'
 import type { Project }                  from '@yarnpkg/core'
 
-import type { TypeScriptConfigRuntime }  from './checks-typecheck.interfaces.js'
+import type { TypeScriptConfigRuntime }  from './typecheck.interfaces.js'
 
 import { BaseCommand }                   from '@yarnpkg/cli'
 import { StreamReport }                  from '@yarnpkg/core'
@@ -19,7 +19,7 @@ import { toNativeCwd }                   from '@atls/raijin/commands'
 import { resolveRaijinRuntimeUrl }       from '@atls/raijin/runtime-resolver'
 import { getChangedFiles }               from '@atls/yarn-plugin-files'
 
-import { GitHubChecks }                  from './github.checks.js'
+import { GitHubChecks }                  from '../github/checks.js'
 
 const TYPECHECK_TIMEOUT_MS = 5 * 60 * 1000
 const TYPESCRIPT_CONFIG_SPECIFIER = '@atls/raijin/config/typescript'

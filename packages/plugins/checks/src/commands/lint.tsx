@@ -8,7 +8,7 @@ import type { LintFileResult }             from '@atls/yarn-plugin-lint'
 import type { LintProjectCompletedResult } from '@atls/yarn-plugin-lint'
 import type { Project }                    from '@yarnpkg/core'
 
-import type { Annotation }                 from './github.checks.js'
+import type { Annotation }                 from '../github/checks.js'
 
 import { readFileSync }                    from 'node:fs'
 
@@ -25,8 +25,8 @@ import { toNativePath }                    from '@atls/raijin/filesystem'
 import { getChangedFiles }                 from '@atls/yarn-plugin-files'
 import { lintProjectSources }              from '@atls/yarn-plugin-lint'
 
-import { GitHubChecks }                    from './github.checks.js'
-import { AnnotationLevel }                 from './github.checks.js'
+import { GitHubChecks }                    from '../github/checks.js'
+import { AnnotationLevel }                 from '../github/checks.js'
 
 const getAnnotationLevel = (severity: LintDiagnostic['severity']): AnnotationLevel =>
   severity === 1 ? AnnotationLevel.Warning : AnnotationLevel.Failure

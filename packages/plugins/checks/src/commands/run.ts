@@ -7,7 +7,7 @@ import { MessageName }                from '@yarnpkg/core'
 import { Command }                    from 'clipanion'
 import { Option }                     from 'clipanion'
 
-import { resolveChecksReleaseConfig } from './checks-release.config.js'
+import { resolveChecksReleaseConfig } from './release-config.js'
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
