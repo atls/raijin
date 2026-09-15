@@ -273,24 +273,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-lint@workspace:code/code-lint":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-lint@workspace:code/code-lint"
-  dependencies:
-    "@atls/raijin": "workspace:*"
-    "@types/node": "npm:24.12.2"
-    ignore: "npm:5.3.2"
-  peerDependencies:
-    react: "*"
-    typescript: "*"
-  peerDependenciesMeta:
-    react:
-      optional: true
-    typescript:
-      optional: true
-  languageName: unknown
-  linkType: soft
-
 "@atls/code-pack@workspace:*, @atls/code-pack@workspace:code/code-pack":
   version: 0.0.0-use.local
   resolution: "@atls/code-pack@workspace:code/code-pack"

@@ -245,15 +245,6 @@ Core code libraries for build, checks, and utilities
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-code-lint -->
-
-#### `@atls/code-lint`
-
-- Location: `code/code-lint`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-pack -->
 
 #### `@atls/code-pack`

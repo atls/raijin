@@ -614,14 +614,6 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
-      "name": "@atls/code-lint",
-      "location": "code/code-lint",
-      "group": "code",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
-    },
-    {
       "name": "@atls/code-pack",
       "location": "code/code-pack",
       "group": "code",
@@ -868,5 +860,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-15T02:08:47.328Z"
+  "lastGenerated": "2026-09-15T02:44:38.802Z"
 }

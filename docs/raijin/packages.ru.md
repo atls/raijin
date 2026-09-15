@@ -245,15 +245,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-code-lint -->
-
-#### `@atls/code-lint`
-
-- Локация: `code/code-lint`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-code-pack -->
 
 #### `@atls/code-pack`
