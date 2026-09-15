@@ -8,7 +8,6 @@ declined:
   - "@atls/cli-ui-service-progress-component"
   - "@atls/cli-ui-typescript-progress-component"
   - "@atls/code-configuration"
-  - "@atls/code-github"
   - "@atls/code-icons"
   - "@atls/code-schematics"
   - "@atls/code-service"

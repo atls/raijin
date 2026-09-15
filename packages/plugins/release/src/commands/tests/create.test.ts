@@ -11,27 +11,27 @@ import { test }                                 from 'node:test'
 
 import { parseRaijinRuntimeManifest }           from '@atls/raijin/runtime'
 
-import { assertYarnRuntimeReleaseAssetMatches } from '../release-create.command.js'
-import { createGitHubReleaseNotesOptions }      from '../release-create.command.js'
-import { createGitHubReleaseOptions }           from '../release-create.command.js'
-import { createYarnRuntimeManifest }            from '../release-create.command.js'
-import { createYarnRuntimeManifestPath }        from '../release-create.command.js'
-import { createYarnRuntimeReleaseAssetOptions } from '../release-create.command.js'
-import { isReleaseAlreadyExistsError }          from '../release-create.command.js'
-import { parseGitHubReleaseTagVersion }         from '../release-create.command.js'
-import { readYarnRuntimePackageManager }        from '../release-create.command.js'
-import { selectPreviousGitHubReleaseTagName }   from '../release-create.command.js'
+import { assertYarnRuntimeReleaseAssetMatches } from '../create.js'
+import { createGitHubReleaseNotesOptions }      from '../create.js'
+import { createGitHubReleaseOptions }           from '../create.js'
+import { createYarnRuntimeManifest }            from '../create.js'
+import { createYarnRuntimeManifestPath }        from '../create.js'
+import { createYarnRuntimeReleaseAssetOptions } from '../create.js'
+import { isReleaseAlreadyExistsError }          from '../create.js'
+import { parseGitHubReleaseTagVersion }         from '../create.js'
+import { readYarnRuntimePackageManager }        from '../create.js'
+import { selectPreviousGitHubReleaseTagName }   from '../create.js'
 
 test('should keep release creation on the GitHub-native dependency boundary', async () => {
   const manifest = JSON.parse(
-    await readFile(new URL('../../package.json', import.meta.url), 'utf-8')
+    await readFile(new URL('../../../package.json', import.meta.url), 'utf-8')
   ) as {
     dependencies?: Record<string, string>
   }
 
   assert.ok(manifest.dependencies)
-  assert.equal(manifest.dependencies['@atls/code-github'], 'workspace:*')
-  assert.equal(manifest.dependencies['@atls/code-changelog'], undefined)
+  assert.equal(manifest.dependencies['@octokit/auth-action'], '5.1.1')
+  assert.equal(manifest.dependencies['@octokit/rest'], '21.0.2')
 })
 
 test('should create releases with GitHub generated release notes', () => {
@@ -73,7 +73,10 @@ test('should create release note options with package-specific previous tags', (
 test('should create yarn runtime release asset options only for Raijin release', () => {
   const projectCwd = '/repo' as PortablePath
 
-  assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/code-github', projectCwd), undefined)
+  assert.deepEqual(
+    createYarnRuntimeReleaseAssetOptions('@atls/yarn-plugin-release', projectCwd),
+    undefined
+  )
   assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/raijin', projectCwd), {
     content_type: 'text/javascript',
     name: 'yarn.mjs',

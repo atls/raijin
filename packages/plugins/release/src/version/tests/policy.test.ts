@@ -1,13 +1,13 @@
-import type { ReleaseVersionChange }                from '../release-version-policy.utils.js'
-import type { ReleaseVersionWorkspace }             from '../release-version-policy.utils.js'
+import type { ReleaseVersionChange }                from '../policy.js'
+import type { ReleaseVersionWorkspace }             from '../policy.js'
 
 import assert                                       from 'node:assert/strict'
 import { test }                                     from 'node:test'
 
-import { mergeReleaseVersionDeferredDecision }      from '../release-version-policy.utils.js'
-import { resolveReleaseVersionDeferredStrategy }    from '../release-version-policy.utils.js'
-import { resolveReleaseVersionStrategy }            from '../release-version-policy.utils.js'
-import { resolveReleaseVersionWorkspaceStrategies } from '../release-version-policy.utils.js'
+import { mergeReleaseVersionDeferredDecision }      from '../policy.js'
+import { resolveReleaseVersionDeferredStrategy }    from '../policy.js'
+import { resolveReleaseVersionStrategy }            from '../policy.js'
+import { resolveReleaseVersionWorkspaceStrategies } from '../policy.js'
 
 const rootWorkspace: ReleaseVersionWorkspace = {
   ident: 'tools',

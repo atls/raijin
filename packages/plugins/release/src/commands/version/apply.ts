@@ -6,8 +6,8 @@ import { BaseCommand }                  from '@yarnpkg/cli'
 import { StreamReport }                 from '@yarnpkg/core'
 import { Option }                       from 'clipanion'
 
-import { getDeferredReleaseDecisions }  from './release-version.utils.js'
-import { isDeferredReleaseRequired }    from './release-version.utils.js'
+import { getDeferredReleaseDecisions }  from '../../version/state.js'
+import { isDeferredReleaseRequired }    from '../../version/state.js'
 
 const GITHUB_OUTPUT_PATH = 'GITHUB_OUTPUT'
 const DEFAULT_WORKSPACE_IDENT = '@atls/raijin'

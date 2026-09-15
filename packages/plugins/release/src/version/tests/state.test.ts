@@ -8,9 +8,9 @@ import { test }                                   from 'node:test'
 import { structUtils }                            from '@yarnpkg/core'
 import { ppath }                                  from '@yarnpkg/fslib'
 
-import { isDeferredReleaseRequired }              from '../release-version.utils.js'
-import { resolveReleaseVersionDeclineStrategies } from '../release-version.utils.js'
-import { resolveReleaseVersionStrategies }        from '../release-version.utils.js'
+import { isDeferredReleaseRequired }              from '../state.js'
+import { resolveReleaseVersionDeclineStrategies } from '../state.js'
+import { resolveReleaseVersionStrategies }        from '../state.js'
 
 const createWorkspace = (
   ident: string,

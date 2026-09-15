@@ -17,10 +17,10 @@ import { npath }                         from '@yarnpkg/fslib'
 import { ppath }                         from '@yarnpkg/fslib'
 import { xfs }                           from '@yarnpkg/fslib'
 
-import { Release }                       from '@atls/code-github'
 import { assertProcessCompleted }        from '@atls/raijin/commands'
 
-import { parseGitHubUrl }                from './utils/parse-git-url.js'
+import { Release }                       from '../github/release.js'
+import { parseGitHubUrl }                from '../github/url.js'
 
 const RELEASE_ALREADY_EXISTS_STATUS = 422
 const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'

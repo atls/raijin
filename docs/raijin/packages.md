@@ -47,15 +47,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Visibility: `private`
 - Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
 
-<!-- sync:package-card:atls-yarn-plugin-release -->
-
-#### `@atls/yarn-plugin-release`
-
-- Location: `yarn/plugin-release`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 </details>
 
 ## Group `plugins`
@@ -164,6 +155,15 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-release -->
+
+#### `@atls/yarn-plugin-release`
+
+- Location: `packages/plugins/release`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-renderer -->
 
 #### `@atls/yarn-plugin-renderer`
@@ -215,24 +215,6 @@ Private plugin packages and their entrypoints
 
 - Location: `packages/plugins/workspaces`
 - Group: `plugins`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-</details>
-
-## Group `code`
-
-Core code libraries for build, checks, and utilities
-
-<details>
-<summary>Group details: `code`</summary>
-
-<!-- sync:package-card:atls-code-github -->
-
-#### `@atls/code-github`
-
-- Location: `code/code-github`
-- Group: `code`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 

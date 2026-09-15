@@ -38,7 +38,7 @@ test('should prefer local git diff over GitHub event files', async (t) => {
           reason: 'completed',
           exitCode: 0,
           stderr: '',
-          stdout: 'yarn/plugin-release/package.json\n',
+          stdout: 'packages/plugins/release/package.json\n',
         }
       },
     },
@@ -46,5 +46,5 @@ test('should prefer local git diff over GitHub event files', async (t) => {
 
   const files = await getChangedFiles(processInvocation)
 
-  assert.deepEqual(files, ['yarn/plugin-release/package.json'])
+  assert.deepEqual(files, ['packages/plugins/release/package.json'])
 })

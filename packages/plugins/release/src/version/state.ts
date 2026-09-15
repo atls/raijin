@@ -5,11 +5,11 @@ import type { Project }                             from '@yarnpkg/core'
 import type { Filename }                            from '@yarnpkg/fslib'
 import type { PortablePath }                        from '@yarnpkg/fslib'
 
-import type { ReleaseVersionChange }                from './release-version-policy.utils.js'
-import type { ReleaseVersionWorkspace }             from './release-version-policy.utils.js'
-import type { ReleaseVersionWorkspaceOwner }        from './release-version-policy.utils.js'
-import type { ReleaseVersionStrategy }              from './release-version-policy.utils.js'
-import type { ReleaseVersionWorkspaceStrategy }     from './release-version-policy.utils.js'
+import type { ReleaseVersionChange }                from './policy.js'
+import type { ReleaseVersionWorkspace }             from './policy.js'
+import type { ReleaseVersionWorkspaceOwner }        from './policy.js'
+import type { ReleaseVersionStrategy }              from './policy.js'
+import type { ReleaseVersionWorkspaceStrategy }     from './policy.js'
 
 import { structUtils }                              from '@yarnpkg/core'
 import { ppath }                                    from '@yarnpkg/fslib'
@@ -19,9 +19,9 @@ import { parseSyml }                                from '@yarnpkg/parsers'
 import { assertProcessCompleted }                   from '@atls/raijin/commands'
 import { getChangedCommmits }                       from '@atls/yarn-plugin-files'
 
-import { isReleaseVersionStrategy }                 from './release-version-policy.utils.js'
-import { mergeReleaseVersionDeferredDecision }      from './release-version-policy.utils.js'
-import { resolveReleaseVersionWorkspaceStrategies } from './release-version-policy.utils.js'
+import { isReleaseVersionStrategy }                 from './policy.js'
+import { mergeReleaseVersionDeferredDecision }      from './policy.js'
+import { resolveReleaseVersionWorkspaceStrategies } from './policy.js'
 
 type GitHubCommit = Awaited<ReturnType<typeof getChangedCommmits>>[number]
 type GitHubCommitFile = NonNullable<GitHubCommit['data']['files']>[number]

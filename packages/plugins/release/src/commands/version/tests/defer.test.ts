@@ -3,10 +3,10 @@ import { test }                          from 'node:test'
 
 import { structUtils }                   from '@yarnpkg/core'
 
-import { isReleaseVersionWorkspace }     from '../release-version-defer.command.js'
-import { parseDeferredReleaseDecisions } from '../release-version-defer.command.js'
-import { selectLocalCommitDiffParent }   from '../release-version-defer.command.js'
-import { toGitHubChange }                from '../release-version-defer.command.js'
+import { isReleaseVersionWorkspace }     from '../defer.js'
+import { parseDeferredReleaseDecisions } from '../defer.js'
+import { selectLocalCommitDiffParent }   from '../defer.js'
+import { toGitHubChange }                from '../defer.js'
 
 test('should include previous GitHub filenames for renamed files', () => {
   const change = toGitHubChange({

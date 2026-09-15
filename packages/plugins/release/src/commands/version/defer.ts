@@ -4,16 +4,16 @@ import { BaseCommand }                            from '@yarnpkg/cli'
 import { StreamReport }                           from '@yarnpkg/core'
 import { Option }                                 from 'clipanion'
 
-import { resolveReleaseVersionDeferredStrategy }  from './release-version-policy.utils.js'
-import { getDeferredReleaseDecisions }            from './release-version.utils.js'
-import { getReleaseVersionChanges }               from './release-version.utils.js'
-import { resolveReleaseVersionDeclineStrategies } from './release-version.utils.js'
-import { resolveReleaseVersionStrategies }        from './release-version.utils.js'
+import { resolveReleaseVersionDeferredStrategy }  from '../../version/policy.js'
+import { getDeferredReleaseDecisions }            from '../../version/state.js'
+import { getReleaseVersionChanges }               from '../../version/state.js'
+import { resolveReleaseVersionDeclineStrategies } from '../../version/state.js'
+import { resolveReleaseVersionStrategies }        from '../../version/state.js'
 
-export { isReleaseVersionWorkspace }     from './release-version.utils.js'
-export { parseDeferredReleaseDecisions } from './release-version.utils.js'
-export { selectLocalCommitDiffParent }   from './release-version.utils.js'
-export { toGitHubChange }                from './release-version.utils.js'
+export { isReleaseVersionWorkspace }     from '../../version/state.js'
+export { parseDeferredReleaseDecisions } from '../../version/state.js'
+export { selectLocalCommitDiffParent }   from '../../version/state.js'
+export { toGitHubChange }                from '../../version/state.js'
 
 export class ReleaseVersionDeferCommand extends BaseCommand {
   static override paths = [['release', 'version', 'defer']]

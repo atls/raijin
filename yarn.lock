@@ -261,18 +261,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-github@workspace:*, @atls/code-github@workspace:code/code-github":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-github@workspace:code/code-github"
-  dependencies:
-    "@octokit/auth-action": "npm:5.1.1"
-    "@octokit/rest": "npm:21.0.2"
-    "@octokit/types": "npm:13.5.0"
-  peerDependencies:
-    "@octokit/types": "*"
-  languageName: unknown
-  linkType: soft
-
 "@atls/logger@npm:0.0.4":
   version: 0.0.4
   resolution: "@atls/logger@npm:0.0.4"
@@ -632,13 +620,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-release@workspace:*, @atls/yarn-plugin-release@workspace:yarn/plugin-release":
+"@atls/yarn-plugin-release@workspace:*, @atls/yarn-plugin-release@workspace:packages/plugins/release":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-release@workspace:yarn/plugin-release"
+  resolution: "@atls/yarn-plugin-release@workspace:packages/plugins/release"
   dependencies:
-    "@atls/code-github": "workspace:*"
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-files": "workspace:*"
+    "@octokit/auth-action": "npm:5.1.1"
+    "@octokit/rest": "npm:21.0.2"
+    "@octokit/types": "npm:13.5.0"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
