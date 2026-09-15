@@ -15,14 +15,14 @@ import { RAIJIN_RENDERER_OUTPUT_ENV }        from '@atls/raijin/config/next'
 import { RAIJIN_RENDERER_WORKSPACE_CWD_ENV } from '@atls/raijin/config/next'
 import { MANAGED_NODE_LOADER_ENV }           from '@atls/raijin/runtime/node/bootstrap'
 
-import { createNextExecutable }              from './executable.js'
+import { createNextExecutable }              from '../executable.js'
 
 const testCwd = npath.toPortablePath(dirname(fileURLToPath(import.meta.url)))
 
 test('should create the renderer-owned Next execution environment', async () => {
   const configuration = await Configuration.find(testCwd, getPluginConfiguration())
   const { project } = await Project.find(configuration, testCwd)
-  const workspace = project.getWorkspaceByCwd(ppath.join(project.cwd, 'yarn/plugin-renderer'))
+  const workspace = project.getWorkspaceByCwd(ppath.join(project.cwd, 'packages/plugins/renderer'))
 
   await xfs.mktempPromise(async (binFolder) => {
     const { env, executable } = await createNextExecutable({

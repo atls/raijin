@@ -686,6 +686,14 @@
       "scripts": ["build", "postpack", "prepack"]
     },
     {
+      "name": "@atls/yarn-plugin-renderer",
+      "location": "packages/plugins/renderer",
+      "group": "plugins",
+      "private": true,
+      "description": "",
+      "scripts": ["build", "postpack", "prepack"]
+    },
+    {
       "name": "@atls/yarn-plugin-service",
       "location": "packages/plugins/service",
       "group": "plugins",
@@ -779,14 +787,6 @@
       "private": true,
       "description": "",
       "scripts": ["build", "postpack", "prepack"]
-    },
-    {
-      "name": "@atls/yarn-plugin-renderer",
-      "location": "yarn/plugin-renderer",
-      "group": "yarn",
-      "private": true,
-      "description": "",
-      "scripts": ["build", "postpack", "prepack"]
     }
   ],
   "availability": {
@@ -852,5 +852,5 @@
     ],
     "inactivePlugins": []
   },
-  "lastGenerated": "2026-09-15T04:35:14.196Z"
+  "lastGenerated": "2026-09-15T04:49:00.803Z"
 }

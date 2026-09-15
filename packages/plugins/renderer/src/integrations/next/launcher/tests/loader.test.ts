@@ -1,8 +1,8 @@
 import assert                                             from 'node:assert/strict'
 import test                                               from 'node:test'
 
-import { NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE } from './loader.js'
-import { createNextRendererLoaderSource }                 from './loader.js'
+import { NEXT_COMPILED_CONF_REQUIRE_CACHE_LOADER_SOURCE } from '../loader.js'
+import { createNextRendererLoaderSource }                 from '../loader.js'
 
 interface NextLoader {
   load: (

@@ -1,3 +1,3 @@
-export { plugin as default } from './renderer.plugin.js'
+export { plugin as default } from './plugin.js'
 
 export *                     from './commands/index.js'

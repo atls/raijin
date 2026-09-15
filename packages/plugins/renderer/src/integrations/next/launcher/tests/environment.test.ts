@@ -7,9 +7,9 @@ import { pathToFileURL }                       from 'node:url'
 import { ppath }                               from '@yarnpkg/fslib'
 import { xfs }                                 from '@yarnpkg/fslib'
 
-import { createNextExecutionEnvironmentPatch } from './environment.js'
-import { extractPnpLoaderOption }              from './environment.js'
-import { resolvePnpLoader }                    from './environment.js'
+import { createNextExecutionEnvironmentPatch } from '../environment.js'
+import { extractPnpLoaderOption }              from '../environment.js'
+import { resolvePnpLoader }                    from '../environment.js'
 
 test('should disable Next telemetry for renderer execution', () => {
   const env = createNextExecutionEnvironmentPatch('/repo/client' as PortablePath)

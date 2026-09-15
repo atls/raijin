@@ -49,7 +49,7 @@ test('should fall back to the first parent when all merge parents are local', ()
 test('should include private versioned workspaces in release version policy', () => {
   assert.equal(
     isReleaseVersionWorkspace({
-      relativeCwd: 'yarn/plugin-renderer',
+      relativeCwd: 'packages/plugins/renderer',
       manifest: {
         name: structUtils.makeIdent('atls', 'yarn-plugin-renderer'),
         version: '1.0.7',

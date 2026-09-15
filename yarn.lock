@@ -663,9 +663,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-renderer@workspace:*, @atls/yarn-plugin-renderer@workspace:yarn/plugin-renderer":
+"@atls/yarn-plugin-renderer@workspace:*, @atls/yarn-plugin-renderer@workspace:packages/plugins/renderer":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-renderer@workspace:yarn/plugin-renderer"
+  resolution: "@atls/yarn-plugin-renderer@workspace:packages/plugins/renderer"
   dependencies:
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"

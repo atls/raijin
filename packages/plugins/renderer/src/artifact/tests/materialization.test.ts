@@ -4,14 +4,14 @@ import test                      from 'node:test'
 import { ppath }                 from '@yarnpkg/fslib'
 import { xfs }                   from '@yarnpkg/fslib'
 
-import { materializeEntrypoint } from './entrypoint.js'
-import { createArtifactLayout }  from './layout.js'
-import { createArtifactTarget }  from './layout.js'
-import { assertArtifactSource }  from './materialization.js'
-import { copyEdgeChunks }        from './materialization.js'
-import { copyPublicAssets }      from './materialization.js'
-import { copyStandalone }        from './materialization.js'
-import { copyStaticAssets }      from './materialization.js'
+import { materializeEntrypoint } from '../entrypoint.js'
+import { createArtifactLayout }  from '../layout.js'
+import { createArtifactTarget }  from '../layout.js'
+import { assertArtifactSource }  from '../materialization.js'
+import { copyEdgeChunks }        from '../materialization.js'
+import { copyPublicAssets }      from '../materialization.js'
+import { copyStandalone }        from '../materialization.js'
+import { copyStaticAssets }      from '../materialization.js'
 
 const createFixture = async (nested = false) => {
   const repoRoot = await xfs.mktempPromise()

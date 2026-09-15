@@ -3,12 +3,12 @@ import test                            from 'node:test'
 
 import { structUtils }                 from '@yarnpkg/core'
 
-import { assertNextBuildExitCode }     from './arguments.js'
-import { createNextBuildArguments }    from './arguments.js'
-import { createNextDevArguments }      from './arguments.js'
-import { assertSupportedNextVersion }  from './version.js'
-import { normalizeNextPackageVersion } from './version.js'
-import { resolveNextPackageVersion }   from './version.js'
+import { assertNextBuildExitCode }     from '../arguments.js'
+import { createNextBuildArguments }    from '../arguments.js'
+import { createNextDevArguments }      from '../arguments.js'
+import { assertSupportedNextVersion }  from '../version.js'
+import { normalizeNextPackageVersion } from '../version.js'
+import { resolveNextPackageVersion }   from '../version.js'
 
 test('should reject unsupported Next versions before 16', () => {
   for (const version of ['14.0.0', '14.2.24', '15.0.0', '15.3.1', '15.5.0']) {

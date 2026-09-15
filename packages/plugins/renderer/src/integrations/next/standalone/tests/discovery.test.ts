@@ -7,8 +7,8 @@ import { npath }                               from '@yarnpkg/fslib'
 import { ppath }                               from '@yarnpkg/fslib'
 import { xfs }                                 from '@yarnpkg/fslib'
 
-import { resolveNextStandaloneArtifactSource } from './discovery.js'
-import { snapshotNextStandaloneManifests }     from './discovery.js'
+import { resolveNextStandaloneArtifactSource } from '../discovery.js'
+import { snapshotNextStandaloneManifests }     from '../discovery.js'
 
 interface StandaloneFixture {
   readonly appCwd: PortablePath

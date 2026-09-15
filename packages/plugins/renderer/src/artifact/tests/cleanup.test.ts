@@ -4,11 +4,11 @@ import test                          from 'node:test'
 import { ppath }                     from '@yarnpkg/fslib'
 import { xfs }                       from '@yarnpkg/fslib'
 
-import { cleanupDiscoveryArtifacts } from './cleanup.js'
-import { cleanupSourceArtifacts }    from './cleanup.js'
-import { cleanupTargetArtifacts }    from './cleanup.js'
-import { createArtifactLayout }      from './layout.js'
-import { createArtifactTarget }      from './layout.js'
+import { cleanupDiscoveryArtifacts } from '../cleanup.js'
+import { cleanupSourceArtifacts }    from '../cleanup.js'
+import { cleanupTargetArtifacts }    from '../cleanup.js'
+import { createArtifactLayout }      from '../layout.js'
+import { createArtifactTarget }      from '../layout.js'
 
 test('should remove stale target artifacts before project discovery', async () => {
   const cwd = await xfs.mktempPromise()

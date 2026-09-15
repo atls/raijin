@@ -5,8 +5,8 @@ import test                     from 'node:test'
 
 import { ppath }                from '@yarnpkg/fslib'
 
-import { createArtifactLayout } from './layout.js'
-import { createArtifactTarget } from './layout.js'
+import { createArtifactLayout } from '../layout.js'
+import { createArtifactTarget } from '../layout.js'
 
 test('should map a nested Next standalone source into the renderer artifact', () => {
   const rendererCwd = '/repo/apps/web' as PortablePath

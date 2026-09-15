@@ -6,9 +6,9 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./sources/index.ts"
+    ".": "./src/index.ts"
   },
-  "main": "sources/index.ts",
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
