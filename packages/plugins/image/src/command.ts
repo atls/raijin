@@ -1,9 +1,9 @@
-import type { CommandExecutor }              from '@atls/code-pack'
-import type { TagPolicy }                    from '@atls/code-pack'
 import type { WorkspaceCommandContext }      from '@atls/raijin/commands'
 import type { Workspace }                    from '@yarnpkg/core'
 
-import type { ImagePackConfiguration }       from './image-pack.utils.js'
+import type { CommandExecutor }              from './buildpack/executor.interfaces.js'
+import type { TagPolicy }                    from './buildpack/pack.interfaces.js'
+import type { ImagePackConfiguration }       from './configuration.js'
 
 import { readFileSync }                      from 'node:fs'
 import { join }                              from 'node:path'
@@ -14,14 +14,14 @@ import { structUtils }                       from '@yarnpkg/core'
 import { xfs }                               from '@yarnpkg/fslib'
 import { Option }                            from 'clipanion'
 
-import { pack }                              from '@atls/code-pack'
 import { assertProcessCompleted }            from '@atls/raijin/commands'
 import { toNativeCwd }                       from '@atls/raijin/commands'
 import { packUtils }                         from '@atls/yarn-plugin-export/artifact'
 
-import { getDefaultMaterializationPlatform } from './image-pack.utils.js'
-import { resolveBuildpackReference }         from './image-pack.utils.js'
-import { resolveBuilderReference }           from './image-pack.utils.js'
+import { pack }                              from './buildpack/pack.js'
+import { getDefaultMaterializationPlatform } from './configuration.js'
+import { resolveBuildpackReference }         from './configuration.js'
+import { resolveBuilderReference }           from './configuration.js'
 
 class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]

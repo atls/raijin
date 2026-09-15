@@ -47,15 +47,6 @@ Custom Yarn CLI, plugin, and bundle infrastructure packages
 - Visibility: `private`
 - Scripts: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
 
-<!-- sync:package-card:atls-yarn-plugin-image -->
-
-#### `@atls/yarn-plugin-image`
-
-- Location: `yarn/plugin-image`
-- Group: `yarn`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-release -->
 
 #### `@atls/yarn-plugin-release`
@@ -146,6 +137,15 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-image -->
+
+#### `@atls/yarn-plugin-image`
+
+- Location: `packages/plugins/image`
+- Group: `plugins`
+- Visibility: `private`
+- Scripts: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-library -->
 
 #### `@atls/yarn-plugin-library`
@@ -232,15 +232,6 @@ Core code libraries for build, checks, and utilities
 #### `@atls/code-github`
 
 - Location: `code/code-github`
-- Group: `code`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-pack -->
-
-#### `@atls/code-pack`
-
-- Location: `code/code-pack`
 - Group: `code`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`

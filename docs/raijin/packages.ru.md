@@ -47,15 +47,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
 
-<!-- sync:package-card:atls-yarn-plugin-image -->
-
-#### `@atls/yarn-plugin-image`
-
-- Локация: `yarn/plugin-image`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-release -->
 
 #### `@atls/yarn-plugin-release`
@@ -146,6 +137,15 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
+<!-- sync:package-card:atls-yarn-plugin-image -->
+
+#### `@atls/yarn-plugin-image`
+
+- Локация: `packages/plugins/image`
+- Группа: `plugins`
+- Видимость: `private`
+- Скрипты: `build`, `postpack`, `prepack`
+
 <!-- sync:package-card:atls-yarn-plugin-library -->
 
 #### `@atls/yarn-plugin-library`
@@ -232,15 +232,6 @@
 #### `@atls/code-github`
 
 - Локация: `code/code-github`
-- Группа: `code`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-code-pack -->
-
-#### `@atls/code-pack`
-
-- Локация: `code/code-pack`
 - Группа: `code`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`

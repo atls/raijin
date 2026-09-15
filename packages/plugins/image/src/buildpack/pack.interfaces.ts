@@ -1,6 +1,6 @@
 import type { PortablePath }    from '@yarnpkg/fslib'
 
-import type { CommandExecutor } from './command.interfaces.js'
+import type { CommandExecutor } from './executor.interfaces.js'
 
 export interface InstallPackOptions {
   commandExecutor: CommandExecutor

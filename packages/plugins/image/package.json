@@ -6,8 +6,9 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./sources/index.ts"
+    ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -17,7 +18,7 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@atls/code-pack": "workspace:*",
+    "@actions/github": "6.0.0",
     "@atls/raijin": "workspace:*",
     "@atls/yarn-plugin-export": "workspace:*",
     "@iarna/toml": "2.2.5",
@@ -25,6 +26,7 @@
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
+    "@types/node": "24.12.2",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",

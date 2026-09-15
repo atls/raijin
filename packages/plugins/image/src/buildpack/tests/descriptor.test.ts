@@ -4,8 +4,8 @@ import test                          from 'node:test'
 import { xfs }                       from '@yarnpkg/fslib'
 import { ppath }                     from '@yarnpkg/fslib'
 
-import { createProjectDescriptor }   from '../src/pack-descriptor.utils.js'
-import { getPnpUnpluggedReferences } from '../src/pack-descriptor.utils.js'
+import { createProjectDescriptor }   from '../descriptor.js'
+import { getPnpUnpluggedReferences } from '../descriptor.js'
 
 const repo = 'service'
 const builder = 'builder'

@@ -1,9 +1,9 @@
-import type { CommandExecutor } from './command.interfaces.js'
+import type { CommandExecutor } from './executor.interfaces.js'
 import type { TagPolicy }       from './pack.interfaces.js'
 
 import { context }              from '@actions/github'
 
-import { execOrThrow }          from './pack.utils.js'
+import { execOrThrow }          from './pack-cli.js'
 
 export const getPullRequestSha = (): string => {
   const event = context.payload

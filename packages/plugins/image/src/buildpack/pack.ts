@@ -1,4 +1,4 @@
-import type { CommandExecutor }    from './command.interfaces.js'
+import type { CommandExecutor }    from './executor.interfaces.js'
 import type { PackOptions }        from './pack.interfaces.js'
 import type { PackOutputs }        from './pack.interfaces.js'
 
@@ -8,10 +8,10 @@ import { stringify }               from '@iarna/toml'
 import { xfs }                     from '@yarnpkg/fslib'
 import { ppath }                   from '@yarnpkg/fslib'
 
-import { createProjectDescriptor } from './pack-descriptor.utils.js'
-import { execOrThrow }             from './pack.utils.js'
-import { installPack }             from './pack.utils.js'
-import { getTag }                  from './tag.utils.js'
+import { createProjectDescriptor } from './descriptor.js'
+import { execOrThrow }             from './pack-cli.js'
+import { installPack }             from './pack-cli.js'
+import { getTag }                  from './tags.js'
 
 export const pack = async (
   {

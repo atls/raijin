@@ -1,4 +1,4 @@
-import type { CommandExecutor } from '../src/command.interfaces.js'
+import type { CommandExecutor } from '../executor.interfaces.js'
 
 import assert                   from 'node:assert/strict'
 import test                     from 'node:test'
@@ -6,9 +6,9 @@ import test                     from 'node:test'
 import { npath }                from '@yarnpkg/fslib'
 import { xfs }                  from '@yarnpkg/fslib'
 
-import { pack }                 from '../src/pack.js'
-import { execOrThrow }          from '../src/pack.utils.js'
-import { installPack }          from '../src/pack.utils.js'
+import { execOrThrow }          from '../pack-cli.js'
+import { installPack }          from '../pack-cli.js'
+import { pack }                 from '../pack.js'
 
 const cwd = npath.toPortablePath('/workspace')
 

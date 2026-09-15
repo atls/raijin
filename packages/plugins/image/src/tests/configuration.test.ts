@@ -1,8 +1,8 @@
 import assert                        from 'node:assert/strict'
 import { test }                      from 'node:test'
 
-import { resolveBuildpackReference } from '../image-pack.utils.js'
-import { resolveBuilderReference }   from '../image-pack.utils.js'
+import { resolveBuildpackReference } from '../configuration.js'
+import { resolveBuilderReference }   from '../configuration.js'
 
 test('should use buildpack channel for the default Node line', () => {
   assert.equal(resolveBuildpackReference({}), 'ghcr.io/atls/buildpack-yarn-workspace:24')

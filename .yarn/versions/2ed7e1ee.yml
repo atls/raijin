@@ -10,7 +10,6 @@ declined:
   - "@atls/code-configuration"
   - "@atls/code-github"
   - "@atls/code-icons"
-  - "@atls/code-pack"
   - "@atls/code-schematics"
   - "@atls/code-service"
   - "@atls/code-typescript"

@@ -1,6 +1,6 @@
-import type { CommandExecutionOptions } from './command.interfaces.js'
-import type { CommandExecutionResult }  from './command.interfaces.js'
-import type { CommandExecutor }         from './command.interfaces.js'
+import type { CommandExecutionOptions } from './executor.interfaces.js'
+import type { CommandExecutionResult }  from './executor.interfaces.js'
+import type { CommandExecutor }         from './executor.interfaces.js'
 import type { InstallPackOptions }      from './pack.interfaces.js'
 
 import { platform }                     from 'node:os'

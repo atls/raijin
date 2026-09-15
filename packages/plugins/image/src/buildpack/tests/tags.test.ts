@@ -1,11 +1,11 @@
-import type { CommandExecutor } from '../src/command.interfaces.js'
+import type { CommandExecutor } from '../executor.interfaces.js'
 
 import assert                   from 'node:assert/strict'
 import test                     from 'node:test'
 
 import { npath }                from '@yarnpkg/fslib'
 
-import { getRevision }          from '../src/tag.utils.js'
+import { getRevision }          from '../tags.js'
 
 test('should capture the local git revision through the command capability', async (t) => {
   const githubEventPath = process.env.GITHUB_EVENT_PATH

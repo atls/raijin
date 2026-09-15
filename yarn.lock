@@ -273,17 +273,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/code-pack@workspace:*, @atls/code-pack@workspace:code/code-pack":
-  version: 0.0.0-use.local
-  resolution: "@atls/code-pack@workspace:code/code-pack"
-  dependencies:
-    "@actions/github": "npm:6.0.0"
-    "@iarna/toml": "npm:2.2.5"
-    "@types/node": "npm:24.12.2"
-    "@yarnpkg/fslib": "npm:3.1.5"
-  languageName: unknown
-  linkType: soft
-
 "@atls/logger@npm:0.0.4":
   version: 0.0.4
   resolution: "@atls/logger@npm:0.0.4"
@@ -582,14 +571,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-image@workspace:*, @atls/yarn-plugin-image@workspace:yarn/plugin-image":
+"@atls/yarn-plugin-image@workspace:*, @atls/yarn-plugin-image@workspace:packages/plugins/image":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-image@workspace:yarn/plugin-image"
+  resolution: "@atls/yarn-plugin-image@workspace:packages/plugins/image"
   dependencies:
-    "@atls/code-pack": "workspace:*"
+    "@actions/github": "npm:6.0.0"
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-export": "workspace:*"
     "@iarna/toml": "npm:2.2.5"
+    "@types/node": "npm:24.12.2"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
