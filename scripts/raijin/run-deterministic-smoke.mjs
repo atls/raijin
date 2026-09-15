@@ -1,6 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+import { loadRuntimeCliSurface } from './cli-surface/runtime-inventory.mjs'
+
 const repoRoot = process.cwd()
 
 /**
@@ -142,13 +144,15 @@ const routePrompt = (prompt, commands) => {
   return best.command
 }
 
-const index = readJson('docs/raijin/index.v1.json')
+const runtimePath = path.join(repoRoot, '.yarn/releases/yarn.mjs')
+const inventory = await loadRuntimeCliSurface({ cwd: repoRoot, runtimePath })
+const commands = inventory.commands.map((command) => ({ ...command, status: 'active' }))
 /** @type {SmokeFixture} */
-const fixture = readJson('docs/raijin/smoke-prompts.json')
+const fixture = readJson('scripts/raijin/smoke/prompts.json')
 const failures = []
 
 for (const testCase of fixture.cases) {
-  const routed = routePrompt(testCase.prompt, index.commands)
+  const routed = routePrompt(testCase.prompt, commands)
 
   if (testCase.expectedStatus === 'unavailable') {
     if (routed.status !== 'unavailable') {

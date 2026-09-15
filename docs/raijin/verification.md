@@ -9,7 +9,7 @@ Repository verification exposes stable aggregate capabilities while each check, 
 - Unit and contract tests stay with the production responsibility they verify
 - Disposable consumer assets stay outside runtime source and keep fixtures local to their scenario
 - Shared runner code represents semantics required by multiple scenarios, never a generic `test-utils`, `fixtures`, or `helpers` collection
-- The generated command inventory remains in `commands.md` and `index.v1.json`; this document does not duplicate it
+- The generated command inventory remains in `commands.md`; executable verification reads the exact checked runtime directly
 
 ## Ownership Transitions
 

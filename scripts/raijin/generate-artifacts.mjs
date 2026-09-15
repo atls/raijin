@@ -1,5 +1,4 @@
 import { execFileSync } from 'node:child_process'
-import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -29,9 +28,8 @@ const DOCS_DIR = 'docs/raijin'
  * @typedef {{
  *   availability: { activeCommands: Array<string>, inactiveCommands: Array<string> },
  *   commands: Array<Command>,
- *   lastGenerated: string,
  *   workspaces: Array<Workspace>,
- * }} DocumentationIndex
+ * }} DocumentationSource
  */
 
 /** @param {string} relativePath */
@@ -46,14 +44,6 @@ const writeText = (relativePath, content) => {
   const absolutePath = path.join(repoRoot, relativePath)
   fs.mkdirSync(path.dirname(absolutePath), { recursive: true })
   fs.writeFileSync(absolutePath, content)
-}
-
-/**
- * @param {string} relativePath
- * @param {unknown} value
- */
-const writeJson = (relativePath, value) => {
-  writeText(relativePath, `${JSON.stringify(value, null, 2)}\n`)
 }
 
 /** @param {Array<string>} paths */
@@ -495,10 +485,10 @@ const renderDocsRootReadme = (language) => {
 }
 
 /**
- * @param {DocumentationIndex} index
+ * @param {DocumentationSource} source
  * @param {Language} language
  */
-const renderRaijinReadme = (index, language) => {
+const renderRaijinReadme = (source, language) => {
   const isRu = language === 'ru'
   const quickstartPath = linkByLanguage('quickstart', language)
   const commandsPath = linkByLanguage('commands', language)
@@ -561,14 +551,11 @@ const renderRaijinReadme = (index, language) => {
     isRu ? '## Покрытие текущей версии' : '## Coverage snapshot',
     '',
     isRu
-      ? `- Команд: ${index.commands.length} (active: ${index.availability.activeCommands.length}, inactive: ${index.availability.inactiveCommands.length})`
-      : `- Commands: ${index.commands.length} (active: ${index.availability.activeCommands.length}, inactive: ${index.availability.inactiveCommands.length})`,
+      ? `- Команд: ${source.commands.length} (active: ${source.availability.activeCommands.length}, inactive: ${source.availability.inactiveCommands.length})`
+      : `- Commands: ${source.commands.length} (active: ${source.availability.activeCommands.length}, inactive: ${source.availability.inactiveCommands.length})`,
     isRu
-      ? `- Workspace-пакетов: ${index.workspaces.length}`
-      : `- Workspace packages: ${index.workspaces.length}`,
-    isRu
-      ? `- Последняя генерация: ${index.lastGenerated}`
-      : `- Last generated: ${index.lastGenerated}`,
+      ? `- Workspace-пакетов: ${source.workspaces.length}`
+      : `- Workspace packages: ${source.workspaces.length}`,
     '',
   ].join('\n')
 }
@@ -1086,64 +1073,6 @@ const renderPackagesDoc = (workspaces, language) => {
   return `${lines.join('\n')}\n`
 }
 
-const smokeFixture = {
-  version: 4,
-  cases: [
-    {
-      id: 'check-before-pr',
-      prompt: 'run check before pull request',
-      expectedCommand: 'check',
-      expectedStatus: 'active',
-    },
-    {
-      id: 'files-changed-list',
-      prompt: 'show changed files in workspace',
-      routingHint: 'Need file-level changes list, not changed workspaces list',
-      expectedCommand: 'files changed list',
-      expectedStatus: 'active',
-    },
-    {
-      id: 'run-unit-tests',
-      prompt: 'run unit tests only',
-      routingHint: 'Prefer plain unit test route, not checks namespace route',
-      expectedCommand: 'test unit',
-      expectedStatus: 'active',
-    },
-    {
-      id: 'service-build',
-      prompt: 'build service artifact',
-      expectedCommand: 'service build',
-      expectedStatus: 'active',
-    },
-    {
-      id: 'set-version-atls',
-      prompt: 'upgrade raijin with set version atls',
-      expectedCommand: 'set version atls',
-      expectedStatus: 'active',
-    },
-    {
-      id: 'generate-project',
-      prompt: 'generate project scaffold',
-      expectedCommand: 'generate project',
-      expectedStatus: 'active',
-    },
-    {
-      id: 'no-route-unavailable',
-      prompt: 'what is the distance to mars',
-      expectedCommand: '',
-      expectedStatus: 'unavailable',
-      llmSkip: true,
-    },
-  ],
-}
-
-/** @param {Record<string, unknown>} value */
-const stripLastGenerated = (value) => {
-  const clone = JSON.parse(JSON.stringify(value))
-  delete clone.lastGenerated
-  return clone
-}
-
 /**
  * @param {RuntimeCommand} command
  * @returns {Command}
@@ -1156,12 +1085,8 @@ const describeCommand = (command) => ({
   status: 'active',
 })
 
-const rootPackage = readJson('package.json')
-const yarnCliPackage = readJson('packages/assembly/package.json')
-const yarnRc = fs.readFileSync(path.join(repoRoot, '.yarnrc.yml'), 'utf8')
 const runtimePath = path.join(repoRoot, '.yarn/releases/yarn.mjs')
 const runtimeCliSurface = await loadRuntimeCliSurface({ cwd: repoRoot, runtimePath })
-const bundlePlugins = runtimeCliSurface.plugins
 /** @type {Array<Command>} */
 const commands = runtimeCliSurface.commands.map(describeCommand).sort((left, right) => {
   if (left.domain !== right.domain) return left.domain.localeCompare(right.domain)
@@ -1173,89 +1098,29 @@ const workspaces = loadWorkspacePackages()
 const activeCommands = commands.map((command) => command.command)
 /** @type {Array<string>} */
 const inactiveCommands = []
-const activePlugins = bundlePlugins.filter((plugin) => plugin.startsWith('@atls/'))
-/** @type {Array<string>} */
-const inactivePlugins = []
 
-const yarnPathMatch = yarnRc.match(/^\s*yarnPath:\s*(.+)\s*$/m)
-
-const draftIndex = {
-  environment: {
-    nodeVersion: '24',
-    requiresSourceEnv: false,
-    requiredEnv: [],
-    pnpEnableEsmLoader: /pnpEnableEsmLoader:\s*true/.test(yarnRc),
-    yarnPath: yarnPathMatch ? yarnPathMatch[1].trim() : '',
-  },
-  bundle: {
-    package: yarnCliPackage.name,
-    bundleName: 'standard',
-    pluginCount: bundlePlugins.length,
-    plugins: bundlePlugins,
-  },
+const documentationSource = {
   commands,
   workspaces,
   availability: {
     activeCommands,
     inactiveCommands,
-    activePlugins,
-    inactivePlugins,
   },
 }
-
-const indexPath = path.join(repoRoot, `${DOCS_DIR}/index.v1.json`)
-let lastGenerated = new Date().toISOString()
-
-if (fs.existsSync(indexPath)) {
-  const previous = JSON.parse(fs.readFileSync(indexPath, 'utf8'))
-
-  if (
-    JSON.stringify(stripLastGenerated(previous)) === JSON.stringify(stripLastGenerated(draftIndex))
-  ) {
-    lastGenerated =
-      typeof previous.lastGenerated === 'string' ? previous.lastGenerated : lastGenerated
-  }
-}
-
-const index = {
-  ...draftIndex,
-  lastGenerated,
-}
-
-writeJson(`${DOCS_DIR}/index.v1.json`, index)
-writeJson(`${DOCS_DIR}/index.meta.v1.json`, {
-  schemaVersion: 1,
-  generatedBy: 'scripts/raijin/generate-artifacts.mjs',
-  contentSha256: crypto
-    .createHash('sha256')
-    .update(JSON.stringify(stripLastGenerated(index)))
-    .digest('hex'),
-  packageManager: rootPackage.packageManager,
-  workspaceCount: workspaces.length,
-  commandCount: commands.length,
-  activeCommandCount: activeCommands.length,
-  inactiveCommandCount: inactiveCommands.length,
-  lastGenerated,
-})
 
 writeText('README.md', `${renderRootReadme('ru')}\n`)
 writeText('README_EN.md', `${renderRootReadme('en')}\n`)
 writeText('docs/README.md', `${renderDocsRootReadme('en')}\n`)
 writeText('docs/README.ru.md', `${renderDocsRootReadme('ru')}\n`)
-writeText(`${DOCS_DIR}/README.md`, `${renderRaijinReadme(index, 'en')}\n`)
-writeText(`${DOCS_DIR}/README.ru.md`, `${renderRaijinReadme(index, 'ru')}\n`)
+writeText(`${DOCS_DIR}/README.md`, `${renderRaijinReadme(documentationSource, 'en')}\n`)
+writeText(`${DOCS_DIR}/README.ru.md`, `${renderRaijinReadme(documentationSource, 'ru')}\n`)
 writeText(`${DOCS_DIR}/quickstart.md`, `${renderQuickstart('en')}\n`)
 writeText(`${DOCS_DIR}/quickstart.ru.md`, `${renderQuickstart('ru')}\n`)
 writeText(`${DOCS_DIR}/commands.md`, renderCommandsDoc(commands, 'en'))
 writeText(`${DOCS_DIR}/commands.ru.md`, renderCommandsDoc(commands, 'ru'))
 writeText(`${DOCS_DIR}/packages.md`, renderPackagesDoc(workspaces, 'en'))
 writeText(`${DOCS_DIR}/packages.ru.md`, renderPackagesDoc(workspaces, 'ru'))
-writeJson(`${DOCS_DIR}/smoke-prompts.json`, smokeFixture)
-
 formatGeneratedFiles([
-  `${DOCS_DIR}/index.v1.json`,
-  `${DOCS_DIR}/index.meta.v1.json`,
-  `${DOCS_DIR}/smoke-prompts.json`,
   'README.md',
   'README_EN.md',
   'docs/README.md',
