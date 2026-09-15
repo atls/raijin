@@ -5,16 +5,17 @@ import path from 'node:path'
 import { executeRuntime } from './runtime-inventory.mjs'
 import { loadRuntimeCliSurface } from './runtime-inventory.mjs'
 
-const [builtRuntimeArgument, checkedRuntimeArgument, docsIndexArgument] = process.argv.slice(2)
+const [builtRuntimeArgument, checkedRuntimeArgument, assemblyManifestArgument] =
+  process.argv.slice(2)
 
-if (!builtRuntimeArgument || !checkedRuntimeArgument || !docsIndexArgument) {
-  throw new Error('Usage: check-runtime.mjs <built-runtime> <checked-runtime> <docs-index>')
+if (!builtRuntimeArgument || !checkedRuntimeArgument || !assemblyManifestArgument) {
+  throw new Error('Usage: check-runtime.mjs <built-runtime> <checked-runtime> <assembly-manifest>')
 }
 
 const cwd = process.cwd()
 const builtRuntimePath = path.resolve(cwd, builtRuntimeArgument)
 const checkedRuntimePath = path.resolve(cwd, checkedRuntimeArgument)
-const docsIndexPath = path.resolve(cwd, docsIndexArgument)
+const assemblyManifestPath = path.resolve(cwd, assemblyManifestArgument)
 const builtRuntime = await fs.readFile(builtRuntimePath)
 const checkedRuntime = await fs.readFile(checkedRuntimePath)
 
@@ -24,40 +25,18 @@ assert.ok(
 )
 
 const inventory = await loadRuntimeCliSurface({ cwd, runtimePath: checkedRuntimePath })
-/**
- * @type {{
- *   bundle: { plugins: Array<string> },
- *   commands: Awaited<ReturnType<typeof loadRuntimeCliSurface>>['commands'],
- * }}
- */
-const docsIndex = JSON.parse(await fs.readFile(docsIndexPath, 'utf8'))
-const inventoryCommands = inventory.commands.map(
-  ({ command, description, details, examples, options, pathTokens, plugin, usage }) => ({
-    command,
-    description,
-    ...(details ? { details } : {}),
-    examples,
-    options,
-    pathTokens,
-    plugin,
-    usage,
-  })
-)
-const documentedCommands = docsIndex.commands
-  .map(({ command, description, details, examples, options, pathTokens, plugin, usage }) => ({
-    command,
-    description,
-    ...(details ? { details } : {}),
-    examples,
-    options,
-    pathTokens,
-    plugin,
-    usage,
-  }))
-  .sort((left, right) => left.command.localeCompare(right.command))
+const assemblyManifest = JSON.parse(await fs.readFile(assemblyManifestPath, 'utf8'))
+const configuredPlugins = assemblyManifest['@yarnpkg/builder']?.bundles?.standard
 
-assert.deepEqual(documentedCommands, inventoryCommands, 'Documented command metadata has drifted')
-assert.deepEqual(docsIndex.bundle.plugins, inventory.plugins, 'Documented plugin graph has drifted')
+assert.ok(
+  Array.isArray(configuredPlugins),
+  'Assembly manifest is missing the standard plugin bundle'
+)
+assert.deepEqual(
+  inventory.plugins,
+  [...configuredPlugins].sort((left, right) => left.localeCompare(right)),
+  'Checked runtime plugin graph has drifted from the assembly manifest'
+)
 
 const generalHelp = await executeRuntime({
   args: ['--help'],
