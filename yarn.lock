@@ -501,9 +501,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@atls/yarn-plugin-essentials@workspace:*, @atls/yarn-plugin-essentials@workspace:yarn/plugin-essentials":
+"@atls/yarn-plugin-essentials@workspace:*, @atls/yarn-plugin-essentials@workspace:packages/plugins/essentials":
   version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-essentials@workspace:yarn/plugin-essentials"
+  resolution: "@atls/yarn-plugin-essentials@workspace:packages/plugins/essentials"
   dependencies:
     "@atls/raijin": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"

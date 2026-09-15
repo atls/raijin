@@ -19,7 +19,7 @@ import { createSha256Digest }                 from '@atls/raijin/runtime'
 import { getRaijinRuntimeYarnPath }           from '@atls/raijin/runtime'
 import { parseRaijinRuntimeManifest }         from '@atls/raijin/runtime'
 
-import { portableToNativePath }               from './set-version.utils.js'
+import { portableToNativePath }               from './project.js'
 
 type ConfigurationUpdate = Parameters<typeof YarnConfiguration.updateConfiguration>[1]
 type ConfigurationUpdateCwd = Parameters<typeof YarnConfiguration.updateConfiguration>[0]
