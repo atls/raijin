@@ -31,24 +31,6 @@
 
 </details>
 
-## Group `yarn`
-
-Пакеты кастомного Yarn CLI, плагинов и bundle-инфраструктуры
-
-<details>
-<summary>Подробности группы `yarn`</summary>
-
-<!-- sync:package-card:atls-raijin-assembly -->
-
-#### `@atls/raijin-assembly`
-
-- Локация: `yarn/cli`
-- Группа: `yarn`
-- Видимость: `private`
-- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
-
-</details>
-
 ## Group `plugins`
 
 Приватные пакеты плагинов и их точки входа
@@ -217,6 +199,22 @@
 - Группа: `plugins`
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
+
+</details>
+
+## Group `assembly`
+
+Прочая группа workspace-пакетов
+
+<details>
+<summary>Подробности группы `assembly`</summary>
+
+<!-- sync:package-card:atls-raijin-assembly -->
+
+#### `@atls/raijin-assembly`
+
+- Скрипты: `build`, `build:bundle`, `build:clean`, `build:dist`, `build:dynamic-require`, `build:materialize`
+- Локация: `packages/assembly`
 
 </details>
 

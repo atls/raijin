@@ -80,7 +80,7 @@ test('should create yarn runtime release asset options only for Raijin release',
   assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/raijin', projectCwd), {
     content_type: 'text/javascript',
     name: 'yarn.mjs',
-    path: '/repo/yarn/cli/dist/runtime/yarn.mjs',
+    path: '/repo/packages/assembly/dist/runtime/yarn.mjs',
   })
 })
 

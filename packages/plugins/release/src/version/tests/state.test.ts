@@ -31,7 +31,7 @@ const createWorkspace = (
   }) as unknown as Workspace
 
 const runtimeWorkspace = createWorkspace('@atls/raijin', 'packages/raijin', '2.1.33')
-const cliWorkspace = createWorkspace('@atls/raijin-assembly', 'yarn/cli', '4.14.1', true)
+const cliWorkspace = createWorkspace('@atls/raijin-assembly', 'packages/assembly', '4.14.1', true)
 const rootWorkspace = createWorkspace('tools', '.', '1.0.0', true)
 const projectCwd = '/repo' as PortablePath
 
@@ -50,7 +50,7 @@ test('should route internal workspace changes through public Raijin release work
   const strategies = resolveReleaseVersionStrategies(project, [
     {
       message: 'fix(cli): repair runtime bundle',
-      files: ['yarn/cli/src/cli.ts'],
+      files: ['packages/assembly/src/cli.ts'],
     },
   ])
 
@@ -71,7 +71,7 @@ test('should decline internal workspace changes when public Raijin release works
   const strategies = resolveReleaseVersionDeclineStrategies(project, [
     {
       message: 'fix(cli): repair runtime bundle',
-      files: ['yarn/cli/src/cli.ts'],
+      files: ['packages/assembly/src/cli.ts'],
     },
   ])
 
@@ -79,7 +79,7 @@ test('should decline internal workspace changes when public Raijin release works
     {
       workspace: {
         ident: '@atls/raijin-assembly',
-        relativeCwd: 'yarn/cli',
+        relativeCwd: 'packages/assembly',
       },
       strategy: 'patch',
     },
@@ -92,7 +92,7 @@ test('should keep strongest strategy when internal and public changes share Raij
   const strategies = resolveReleaseVersionStrategies(project, [
     {
       message: 'fix(cli): repair runtime bundle',
-      files: ['yarn/cli/src/cli.ts'],
+      files: ['packages/assembly/src/cli.ts'],
     },
     {
       message: 'feat(runtime): expose public runtime contract',
@@ -117,7 +117,7 @@ test('should default touched Raijin workspace changes to patch strategy', () => 
   const strategies = resolveReleaseVersionStrategies(project, [
     {
       message: 'update docs',
-      files: ['yarn/cli/src/cli.ts'],
+      files: ['packages/assembly/src/cli.ts'],
     },
   ])
 

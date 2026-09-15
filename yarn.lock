@@ -275,9 +275,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@atls/raijin-assembly@workspace:yarn/cli":
+"@atls/raijin-assembly@workspace:packages/assembly":
   version: 0.0.0-use.local
-  resolution: "@atls/raijin-assembly@workspace:yarn/cli"
+  resolution: "@atls/raijin-assembly@workspace:packages/assembly"
   dependencies:
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-check": "workspace:*"

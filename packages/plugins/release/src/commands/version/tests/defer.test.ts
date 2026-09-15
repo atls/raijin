@@ -16,7 +16,7 @@ test('should include previous GitHub filenames for renamed files', () => {
       },
       files: [
         {
-          filename: 'code/code-test/src/loader.ts',
+          filename: 'packages/plugins/test/src/loader.ts',
           previous_filename: 'packages/raijin/src/loader.ts',
         },
       ],
@@ -25,7 +25,7 @@ test('should include previous GitHub filenames for renamed files', () => {
 
   assert.deepEqual(change, {
     message: 'fix(runtime): move loader',
-    files: ['code/code-test/src/loader.ts', 'packages/raijin/src/loader.ts'],
+    files: ['packages/plugins/test/src/loader.ts', 'packages/raijin/src/loader.ts'],
   })
 })
 
@@ -69,10 +69,10 @@ releases:
   "@atls/raijin": minor
   "@atls/raijin-assembly": 4.14.1
 declined:
-  - "@atls/code-test"
+  - "@atls/yarn-plugin-test"
 `),
     new Map([
-      ['@atls/code-test', 'decline'],
+      ['@atls/yarn-plugin-test', 'decline'],
       ['@atls/raijin', 'minor'],
       ['@atls/raijin-assembly', '4.14.1'],
     ])
