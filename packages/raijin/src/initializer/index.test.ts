@@ -144,6 +144,37 @@ test('configured update preserves project configuration and does not scaffold', 
   assert.match(yarnrc, /yarnPath: .yarn\/releases\/yarn.js/)
 })
 
+test('update onboards an existing package without creating a scaffold', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-onboard-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  const packageJson = { name: 'existing', type: 'commonjs', scripts: { verify: 'node verify.js' } }
+  const commands: Array<Array<string>> = []
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(packageJson)}\n`)
+  await writeFile(join(cwd, 'tsconfig.json'), '{"compilerOptions":{"strict":false}}\n')
+
+  await runRaijinInitializer({
+    argv: ['update'],
+    cwd,
+    fetchImpl,
+    queryYarnPackage,
+    readYarnCommand,
+    runYarnCommand: async (args) => {
+      commands.push(args)
+    },
+  })
+
+  assert.deepEqual(commands, [['add', '--prefer-dev', '-E', '@atls/raijin@1.2.3']])
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
+    ...packageJson,
+    packageManager: 'yarn@4.14.1',
+  })
+  assert.equal(
+    await readFile(join(cwd, 'tsconfig.json'), 'utf-8'),
+    '{"compilerOptions":{"strict":false}}\n'
+  )
+})
+
 test('metadata mismatch leaves the configured package and runtime untouched', async (context) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-mismatch-'))
   context.after(async () => rm(cwd, { recursive: true, force: true }))

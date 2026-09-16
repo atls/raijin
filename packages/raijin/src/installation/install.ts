@@ -32,7 +32,7 @@ import { runYarnCommand }                       from '../yarn/command.js'
 export interface InstallRaijinOptions {
   cwd: string
   fetchImpl?: FetchLike
-  mode: 'bootstrap' | 'update'
+  mode: 'bootstrap' | 'onboard' | 'update'
   queryYarnPackage?: YarnPackageQuery
   readYarnCommand?: YarnCommandReader
   runYarnCommand?: YarnCommandRunner
@@ -197,6 +197,9 @@ export const installRaijin = async ({
 
   if (mode === 'bootstrap') {
     await ensurePackageManifest(cwd)
+  }
+
+  if (mode !== 'update') {
     await ensureYarnLock(cwd)
   }
 
@@ -208,7 +211,7 @@ export const installRaijin = async ({
 
   try {
     await runCommand(
-      mode === 'bootstrap'
+      mode !== 'update'
         ? ['add', '--prefer-dev', '-E', `${manifest.packageName}@${manifest.version}`]
         : ['up', '-E', `${manifest.packageName}@${manifest.version}`],
       cwd,

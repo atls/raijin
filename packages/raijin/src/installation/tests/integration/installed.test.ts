@@ -128,6 +128,31 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       runYarnCommand,
     }
 
+    if (scaffoldType === 'onboard') {
+      await writeFile(
+        join(cwd, 'package.json'),
+        '{"name":"existing","type":"commonjs","scripts":{"verify":"node verify.js"}}\n'
+      )
+      await writeFile(join(cwd, 'tsconfig.json'), '{"compilerOptions":{"strict":false}}\n')
+
+      await runRaijinInitializer({ ...options, argv: ['update'] })
+
+      const existing = JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')) as {
+        type: string
+        scripts: Record<string, string>
+      }
+
+      assert.equal(existing.type, 'commonjs')
+      assert.deepEqual(existing.scripts, { verify: 'node verify.js' })
+      assert.equal(
+        await readFile(join(cwd, 'tsconfig.json'), 'utf-8'),
+        '{"compilerOptions":{"strict":false}}\n'
+      )
+      assert.equal(await readYarnCommand(['--version'], cwd), '4.14.1\n')
+      assert.equal((await readdir(cwd)).includes('eslint.config.mjs'), false)
+      return
+    }
+
     await runRaijinInitializer({ ...options, argv: ['init', '--type', scaffoldType] })
 
     assert.equal(await readYarnCommand(['--version'], cwd), '4.14.1\n')
@@ -167,4 +192,5 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
 
   await verifyScaffoldType('project')
   await verifyScaffoldType('library')
+  await verifyScaffoldType('onboard')
 })
