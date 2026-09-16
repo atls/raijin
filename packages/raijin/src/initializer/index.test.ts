@@ -145,6 +145,118 @@ test('configured update preserves project configuration and does not scaffold', 
   assert.match(yarnrc, /nodeLinker: node-modules/)
   assert.match(yarnrc, /enableGlobalCache: false/)
   assert.match(yarnrc, /yarnPath: .yarn\/releases\/yarn.js/)
+  assert.equal(await exists(join(cwd, 'yarn.lock')), true)
+})
+
+test('member-only package cannot split its Yarn project runtime', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'raijin-member-'))
+  context.after(async () => rm(root, { recursive: true, force: true }))
+  const cwd = join(root, 'packages/member')
+  const memberManifest = '{"name":"member","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+
+  await mkdir(cwd, { recursive: true })
+  await writeFile(
+    join(root, 'package.json'),
+    '{"name":"root","private":true,"workspaces":["packages/*"]}\n'
+  )
+  await writeFile(join(root, 'yarn.lock'), '')
+  await writeFile(join(cwd, 'package.json'), memberManifest)
+
+  await assert.rejects(
+    runRaijinInitializer({ argv: ['update'], cwd, fetchImpl }),
+    /run update from that root, which must declare @atls\/raijin/
+  )
+
+  assert.equal(await exists(join(cwd, 'yarn.lock')), false)
+  assert.equal(await exists(join(cwd, '.yarn')), false)
+  assert.equal(await exists(join(cwd, '.yarnrc.yml')), false)
+  assert.equal(await exists(join(root, '.yarn/releases/yarn.js')), false)
+  assert.equal(await exists(join(root, '.yarnrc.yml')), false)
+  assert.equal(await readFile(join(root, 'yarn.lock'), 'utf-8'), '')
+  assert.equal(await readFile(join(cwd, 'package.json'), 'utf-8'), memberManifest)
+
+  const newMemberCwd = join(root, 'packages/new-member')
+
+  await mkdir(newMemberCwd)
+  await writeFile(join(newMemberCwd, 'package.json'), '{"name":"new-member"}\n')
+  await assert.rejects(
+    runRaijinInitializer({
+      argv: ['init', '--type', 'project'],
+      cwd: newMemberCwd,
+      fetchImpl,
+    }),
+    /cannot scaffold a member workspace/
+  )
+  assert.equal(await exists(join(newMemberCwd, 'yarn.lock')), false)
+})
+
+test('non-member nested package is rejected without creating a lockfile', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'raijin-nonmember-'))
+  context.after(async () => rm(root, { recursive: true, force: true }))
+  const cwd = join(root, 'child')
+
+  await mkdir(cwd)
+  await writeFile(join(root, 'package.json'), '{"name":"root","private":true}\n')
+  await writeFile(join(root, 'yarn.lock'), '')
+  await writeFile(
+    join(cwd, 'package.json'),
+    '{"name":"child","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+  )
+
+  await assert.rejects(
+    runRaijinInitializer({ argv: ['update'], cwd, fetchImpl }),
+    /not a member workspace/
+  )
+
+  assert.equal(await exists(join(cwd, 'yarn.lock')), false)
+  assert.equal(await exists(join(cwd, '.yarn')), false)
+
+  const bootstrapCwd = join(root, 'new-project')
+
+  await mkdir(bootstrapCwd)
+  await assert.rejects(
+    runRaijinInitializer({
+      argv: ['init', '--type', 'project'],
+      cwd: bootstrapCwd,
+      fetchImpl,
+    }),
+    /bootstrap target is nested beneath Yarn project/
+  )
+  assert.equal(await exists(join(bootstrapCwd, 'package.json')), false)
+  assert.equal(await exists(join(bootstrapCwd, 'yarn.lock')), false)
+})
+
+test('nested project with its own lockfile updates only its own runtime', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'raijin-nested-root-'))
+  context.after(async () => rm(root, { recursive: true, force: true }))
+  const cwd = join(root, 'child')
+  const commands: Array<Array<string>> = []
+
+  await mkdir(cwd)
+  await writeFile(join(root, 'package.json'), '{"name":"root","private":true}\n')
+  await writeFile(join(root, 'yarn.lock'), '# parent lock\n')
+  await writeFile(
+    join(cwd, 'package.json'),
+    '{"name":"child","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+  )
+  await writeFile(join(cwd, 'yarn.lock'), '# child lock\n')
+
+  await runRaijinInitializer({
+    argv: ['update'],
+    cwd,
+    fetchImpl,
+    queryYarnPackage,
+    readYarnCommand,
+    runYarnCommand: async (args) => {
+      commands.push(args)
+    },
+  })
+
+  assert.equal(commands[0][0], 'up')
+  assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js')), true)
+  assert.equal(await exists(join(root, '.yarnrc.yml')), false)
+  assert.equal(await readFile(join(root, 'yarn.lock'), 'utf-8'), '# parent lock\n')
+  assert.equal(await readFile(join(cwd, 'yarn.lock'), 'utf-8'), '# child lock\n')
 })
 
 test('update onboards an existing package without creating a scaffold', async (context) => {

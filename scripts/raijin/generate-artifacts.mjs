@@ -349,6 +349,9 @@ const renderRootReadme = (language) => {
     isRu
       ? '- Подключённый проект обновляет только проверенную пару пакета и среды выполнения; пользовательские настройки сохраняются'
       : '- A configured project updates only the verified package/runtime pair; project settings are preserved',
+    isRu
+      ? '- В монорепозитории запускайте команду из корня Yarn-проекта, где объявлен `@atls/raijin`. Отдельному вложенному проекту нужен собственный `yarn.lock`; каталог member workspace не становится отдельным проектом автоматически'
+      : '- In a monorepo, run the command from the Yarn project root that declares `@atls/raijin`. A separate nested project needs its own `yarn.lock`; a member workspace is not made into a separate project automatically',
     '',
     isRu ? '### Перед первым коммитом' : '### Before the first commit',
     '',
@@ -638,6 +641,9 @@ const renderQuickstart = (language) => {
     isRu
       ? '- Установленный проект получает точную пару `@atls/raijin` и проверенной среды выполнения, сохраняя TypeScript, ESLint, Prettier и hooks'
       : '- Existing project gets one exact `@atls/raijin` and checked runtime pair while preserving TypeScript, ESLint, Prettier, and hooks',
+    isRu
+      ? '- Для Yarn workspaces команда запускается в корне проекта с `@atls/raijin`; отдельный вложенный проект должен иметь собственный `yarn.lock`'
+      : '- For Yarn workspaces, run this at the project root that declares `@atls/raijin`; a separate nested project must have its own `yarn.lock`',
     '',
     isRu
       ? 'До коммита изменений подключения выполните [настройку проверок](#staged-checks). Существующую конфигурацию lint-staged сохраняйте; заменять её примером не нужно.'

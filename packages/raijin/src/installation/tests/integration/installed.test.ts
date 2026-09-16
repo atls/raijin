@@ -83,6 +83,64 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       runYarnCommand,
     }
 
+    if (scaffoldType === 'member-root') {
+      const memberCwd = join(cwd, 'packages/member')
+
+      await mkdir(memberCwd, { recursive: true })
+      await writeFile(
+        join(cwd, 'package.json'),
+        `${JSON.stringify({
+          name: 'monorepo',
+          private: true,
+          type: 'module',
+          packageManager: manifest.packageManager,
+          workspaces: ['packages/*'],
+          devDependencies: { '@atls/raijin': `file:${archive}` },
+        })}\n`
+      )
+      await writeFile(join(cwd, 'yarn.lock'), '')
+      await writeFile(join(memberCwd, 'package.json'), '{"name":"member"}\n')
+      await runNativeYarnCommand(['install'], cwd, {
+        packageManager: manifest.packageManager,
+        skipInstallHooks: true,
+      })
+
+      await runRaijinInitializer({ ...options, argv: ['update'] })
+
+      assert.equal(
+        createSha256Digest(await readFile(join(cwd, '.yarn/releases/yarn.js'))),
+        manifest.sha256
+      )
+      assert.ok((await readFile(join(cwd, '.pnp.cjs'))).length > 0)
+      assert.equal((await readdir(memberCwd)).includes('.yarnrc.yml'), false)
+      assert.equal((await readdir(memberCwd)).includes('yarn.lock'), false)
+      await assert.rejects(
+        runRaijinInitializer({ ...options, cwd: memberCwd, argv: ['update'] }),
+        /package and runtime must share Yarn project root/
+      )
+      return
+    }
+
+    if (scaffoldType === 'separate') {
+      await writeFile(join(fixtureRoot, 'package.json'), '{"name":"parent","private":true}\n')
+      await writeFile(join(fixtureRoot, 'yarn.lock'), '# parent lock\n')
+      await writeFile(
+        join(cwd, 'package.json'),
+        '{"name":"nested","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+      )
+      await writeFile(join(cwd, 'yarn.lock'), '')
+
+      await runRaijinInitializer({ ...options, argv: ['update'] })
+
+      assert.equal(
+        createSha256Digest(await readFile(join(cwd, '.yarn/releases/yarn.js'))),
+        manifest.sha256
+      )
+      assert.equal(await readFile(join(fixtureRoot, 'yarn.lock'), 'utf-8'), '# parent lock\n')
+      assert.equal((await readdir(fixtureRoot)).includes('.yarnrc.yml'), false)
+      return
+    }
+
     if (scaffoldType === 'onboard') {
       await writeFile(
         join(cwd, 'package.json'),
@@ -170,4 +228,6 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
   await verifyScaffoldType('project')
   await verifyScaffoldType('library')
   await verifyScaffoldType('onboard')
+  await verifyScaffoldType('separate')
+  await verifyScaffoldType('member-root')
 })

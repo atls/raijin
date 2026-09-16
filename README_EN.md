@@ -59,6 +59,7 @@ Existing project settings are preserved
 Expected result:
 
 - A configured project updates only the verified package/runtime pair; project settings are preserved
+- In a monorepo, run the command from the Yarn project root that declares `@atls/raijin`. A separate nested project needs its own `yarn.lock`; a member workspace is not made into a separate project automatically
 
 ### Before the first commit
 
