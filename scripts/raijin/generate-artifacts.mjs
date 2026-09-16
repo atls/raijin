@@ -353,8 +353,8 @@ const renderRootReadme = (language) => {
     isRu ? '### Перед первым коммитом' : '### Before the first commit',
     '',
     isRu
-      ? `После подключения нового или существующего проекта выполните [настройку проверок перед коммитом](./${quickstartPath}#staged-checks). Raijin требует явную конфигурацию lint-staged, принадлежащую проекту. Установленный hook вызывает \`yarn commit staged\`; без конфигурации коммит с подготовленными файлами завершится ошибкой.`
-      : `After connecting a new or existing project, complete the [pre-commit check setup](./${quickstartPath}#staged-checks). Raijin requires an explicit project-owned lint-staged configuration. The installed hook calls \`yarn commit staged\`; without configuration, a commit with staged files fails.`,
+      ? `После подключения нового или существующего проекта выполните [настройку проверок перед коммитом](./${quickstartPath}#staged-checks). Raijin требует явную конфигурацию lint-staged, принадлежащую проекту. Когда Git hook настроен, он вызывает \`yarn commit staged\`; без конфигурации проверка подготовленных файлов завершится ошибкой.`
+      : `After connecting a new or existing project, complete the [pre-commit check setup](./${quickstartPath}#staged-checks). Raijin requires explicit project-owned lint-staged configuration. When configured, the Git hook calls \`yarn commit staged\`; without that configuration, staged-file checks fail.`,
     '',
     isRu ? '### Обновление' : '### Upgrade',
     '',
@@ -658,8 +658,8 @@ const renderQuickstart = (language) => {
     isRu ? '## 5. Проверки перед коммитом' : '## 5. Pre-commit checks',
     '',
     isRu
-      ? 'Этот шаг обязателен при подключении новых и существующих проектов. Установленный Git hook вызывает `yarn commit staged`. Raijin не подставляет конфигурацию по умолчанию: без неё lint-staged блокирует коммит с подготовленными файлами.'
-      : 'This step is required when setting up new or existing projects. The installed Git hook calls `yarn commit staged`. Raijin supplies no default configuration: without one, lint-staged blocks a commit with staged files.',
+      ? 'Этот шаг обязателен при подключении новых и существующих проектов. Настроенный Git hook вызывает `yarn commit staged`. Raijin не подставляет конфигурацию по умолчанию: без неё проверка подготовленных файлов завершается ошибкой.'
+      : 'This step is required when setting up new or existing projects. A configured Git hook calls `yarn commit staged`. Raijin supplies no default lint-staged configuration: without one, staged-file checks fail.',
     '',
     isRu
       ? 'Сначала проверьте существующие настройки. Поле `lint-staged` в `package.json`, `.lintstagedrc` в JSON/YAML и `lint-staged.config.*` остаются допустимыми native-форматами. Сохраняйте выбранный формат, команды и исключения проекта; не создавайте конкурирующую конфигурацию.'

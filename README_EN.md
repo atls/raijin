@@ -62,7 +62,7 @@ Expected result:
 
 ### Before the first commit
 
-After connecting a new or existing project, complete the [pre-commit check setup](./docs/raijin/quickstart.md#staged-checks). Raijin requires an explicit project-owned lint-staged configuration. The installed hook calls `yarn commit staged`; without configuration, a commit with staged files fails.
+After connecting a new or existing project, complete the [pre-commit check setup](./docs/raijin/quickstart.md#staged-checks). Raijin requires explicit project-owned lint-staged configuration. When configured, the Git hook calls `yarn commit staged`; without that configuration, staged-file checks fail.
 
 ### Upgrade
 
