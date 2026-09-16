@@ -1,5 +1,6 @@
 export type { YarnCommandRunner }        from './runner.js'
 export type { YarnCommandReader }        from './runner.js'
+export type { YarnCommandOptions }       from './runner.js'
 export type { YarnPackageMetadata }      from './runner.js'
 export type { YarnPackageQuery }         from './runner.js'
 

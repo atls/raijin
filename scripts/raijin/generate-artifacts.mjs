@@ -577,6 +577,9 @@ const renderQuickstart = (language) => {
     isRu ? '- Node.js: `>= 24` (не ниже `24`)' : '- Node.js: `>= 24`',
     isRu ? '- Yarn: `>= 4` (не ниже `4`)' : '- Yarn: `>= 4`',
     isRu
+      ? '- Corepack доступен для запуска точной версии Yarn из проверенного манифеста до активации Raijin runtime'
+      : '- Corepack is available to run the exact Yarn version from the verified manifest before activating the Raijin runtime',
+    isRu
       ? '- Новый проект использует Yarn PnP и ESM; при обновлении существующие `type` и `nodeLinker` сохраняются'
       : '- A new project uses Yarn PnP and ESM; update preserves the existing `type` and `nodeLinker`',
     isRu ? '- Для нового проекта: пустая директория' : '- For a new project: an empty directory',

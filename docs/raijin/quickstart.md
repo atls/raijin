@@ -8,6 +8,7 @@ Minimal flow for creating or connecting a project to Raijin
 
 - Node.js: `>= 24`
 - Yarn: `>= 4`
+- Corepack is available to run the exact Yarn version from the verified manifest before activating the Raijin runtime
 - A new project uses Yarn PnP and ESM; update preserves the existing `type` and `nodeLinker`
 - For a new project: an empty directory
 - For an existing project: `package.json` in the project root

@@ -6,6 +6,7 @@ import type { YarnPackageQuery }                from '../yarn/runner.js'
 
 import { randomUUID }                           from 'node:crypto'
 import { copyFile }                             from 'node:fs/promises'
+import { access }                               from 'node:fs/promises'
 import { mkdir }                                from 'node:fs/promises'
 import { readFile }                             from 'node:fs/promises'
 import { rename }                               from 'node:fs/promises'
@@ -30,6 +31,7 @@ import { readYarnCommand }                      from '../yarn/command.js'
 import { runYarnCommand }                       from '../yarn/command.js'
 
 export interface InstallRaijinOptions {
+  afterActivated?: (packageManager: string) => Promise<void>
   cwd: string
   fetchImpl?: FetchLike
   mode: 'bootstrap' | 'onboard' | 'update'
@@ -39,16 +41,43 @@ export interface InstallRaijinOptions {
 }
 
 const STAGED_RUNTIME_EXTENSION = '.pending'
+const BOOTSTRAP_STAGED_RUNTIME_EXTENSION = '.bootstrap.pending'
 const RELEASE_PACKAGE_MANIFEST = 'package.json'
 const RELEASE_PACKAGE_TYPE = 'module'
 const RAIJIN_PACKAGE_NAME = '@atls/raijin'
+
+const getStagedRuntimePath = (cwd: string, mode: InstallRaijinOptions['mode']): string =>
+  join(
+    cwd,
+    `${getRaijinRuntimeYarnPath()}${
+      mode === 'bootstrap' ? BOOTSTRAP_STAGED_RUNTIME_EXTENSION : STAGED_RUNTIME_EXTENSION
+    }`
+  )
+
+export const hasRaijinBootstrapStage = async (cwd: string): Promise<boolean> => {
+  try {
+    await access(getStagedRuntimePath(cwd, 'bootstrap'))
+    return true
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return false
+    }
+
+    throw error
+  }
+}
 
 const assertPackageMetadata = async (
   manifest: RaijinRuntimeManifest,
   cwd: string,
   queryPackage: YarnPackageQuery
 ): Promise<void> => {
-  const metadata = await queryPackage(manifest.packageName, manifest.version, cwd)
+  const metadata = await queryPackage(
+    manifest.packageName,
+    manifest.version,
+    cwd,
+    manifest.packageManager
+  )
 
   if (
     metadata.name !== manifest.packageName ||
@@ -63,6 +92,7 @@ const assertPackageMetadata = async (
 const assertInstalledPackage = async (
   cwd: string,
   version: string,
+  packageManager: string,
   readCommand: YarnCommandReader
 ): Promise<void> => {
   const stdout = await readCommand(
@@ -71,7 +101,8 @@ const assertInstalledPackage = async (
       '-e',
       "const p=require('@atls/raijin/package.json');process.stdout.write(JSON.stringify({name:p.name,version:p.version}))",
     ],
-    cwd
+    cwd,
+    { packageManager }
   )
   const installed: unknown = JSON.parse(stdout)
 
@@ -125,14 +156,12 @@ const updatePackageManager = async (cwd: string, packageManager: string): Promis
   }
 }
 
-const activateRuntime = async (cwd: string, runtime: Buffer): Promise<void> => {
+const activateRuntime = async (cwd: string, stagedPath: string): Promise<void> => {
   const yarnPath = getRaijinRuntimeYarnPath()
   const runtimePath = join(cwd, yarnPath)
-  const stagedPath = `${runtimePath}${STAGED_RUNTIME_EXTENSION}`
   const temporaryPath = `${runtimePath}.${process.pid}.${randomUUID()}.tmp`
 
   await mkdir(dirname(runtimePath), { recursive: true })
-  await writeFile(stagedPath, runtime)
 
   try {
     await ensureRuntimeModuleScope(runtimePath)
@@ -166,7 +195,12 @@ const assertActivatedPair = async (
     throw new Error('Activated Raijin runtime path or digest does not match the release')
   }
 
-  const version = (await readCommand(['--version'], cwd)).trim()
+  const version = (
+    await readCommand(['--version'], cwd, {
+      packageManager: manifest.packageManager,
+      followYarnPath: true,
+    })
+  ).trim()
   const expectedVersion = manifest.packageManager.replace(/^yarn@/, '')
 
   if (version !== expectedVersion) {
@@ -175,6 +209,7 @@ const assertActivatedPair = async (
 }
 
 export const installRaijin = async ({
+  afterActivated,
   cwd,
   fetchImpl = fetch,
   mode,
@@ -203,8 +238,7 @@ export const installRaijin = async ({
     await ensureYarnLock(cwd)
   }
 
-  const yarnPath = getRaijinRuntimeYarnPath()
-  const stagedPath = join(cwd, `${yarnPath}${STAGED_RUNTIME_EXTENSION}`)
+  const stagedPath = getStagedRuntimePath(cwd, mode)
 
   await mkdir(dirname(stagedPath), { recursive: true })
   await writeFile(stagedPath, runtime)
@@ -215,12 +249,13 @@ export const installRaijin = async ({
         ? ['add', '--prefer-dev', '-E', `${manifest.packageName}@${manifest.version}`]
         : ['up', '-E', `${manifest.packageName}@${manifest.version}`],
       cwd,
-      { skipInstallHooks: true }
+      { packageManager: manifest.packageManager, skipInstallHooks: true }
     )
-    await assertInstalledPackage(cwd, manifest.version, readCommand)
+    await assertInstalledPackage(cwd, manifest.version, manifest.packageManager, readCommand)
     await updatePackageManager(cwd, manifest.packageManager)
-    await activateRuntime(cwd, runtime)
+    await activateRuntime(cwd, stagedPath)
     await assertActivatedPair(cwd, manifest, readCommand)
+    await afterActivated?.(manifest.packageManager)
     await rm(stagedPath, { force: true })
   } catch (error) {
     throw new Error(

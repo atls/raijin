@@ -1,51 +1,23 @@
-import type { RunRaijinInitializerOptions } from '../../../initializer/interface.js'
+import type { RunRaijinInitializerOptions }       from '../../../initializer/interface.js'
 
-import assert                               from 'node:assert/strict'
-import { execFile }                         from 'node:child_process'
-import { readFile }                         from 'node:fs/promises'
-import { mkdir }                            from 'node:fs/promises'
-import { mkdtemp }                          from 'node:fs/promises'
-import { readdir }                          from 'node:fs/promises'
-import { rm }                               from 'node:fs/promises'
-import { writeFile }                        from 'node:fs/promises'
-import { tmpdir }                           from 'node:os'
-import { delimiter }                        from 'node:path'
-import { join }                             from 'node:path'
-import { resolve }                          from 'node:path'
-import { test }                             from 'node:test'
-import { promisify }                        from 'node:util'
+import assert                                     from 'node:assert/strict'
+import { readFile }                               from 'node:fs/promises'
+import { mkdir }                                  from 'node:fs/promises'
+import { mkdtemp }                                from 'node:fs/promises'
+import { readdir }                                from 'node:fs/promises'
+import { rm }                                     from 'node:fs/promises'
+import { writeFile }                              from 'node:fs/promises'
+import { tmpdir }                                 from 'node:os'
+import { join }                                   from 'node:path'
+import { resolve }                                from 'node:path'
+import { test }                                   from 'node:test'
 
-import { runRaijinInitializer }             from '../../../index.js'
-import { createSha256Digest }               from '../../../runtime/manifest.js'
+import { runRaijinInitializer }                   from '../../../index.js'
+import { createSha256Digest }                     from '../../../runtime/manifest.js'
+import { readYarnCommand }                        from '../../../yarn/command.js'
+import { runYarnCommand as runNativeYarnCommand } from '../../../yarn/command.js'
 
-const execute = promisify(execFile)
 const repoRoot = resolve(import.meta.dirname, '../../../../../..')
-
-const createEnvironment = (): NodeJS.ProcessEnv => {
-  const environment: NodeJS.ProcessEnv = { ...process.env, GITHUB_ACTIONS: 'true' }
-  const berryBinFolder = environment.BERRY_BIN_FOLDER
-
-  if (berryBinFolder && environment.PATH) {
-    environment.PATH = environment.PATH.split(delimiter)
-      .filter((path) => path !== berryBinFolder)
-      .join(delimiter)
-  }
-
-  for (const name of [
-    'NODE_OPTIONS',
-    'NODE_PATH',
-    'BERRY_BIN_FOLDER',
-    'YARN_IGNORE_PATH',
-    'INIT_CWD',
-    'PROJECT_CWD',
-    'npm_execpath',
-    'npm_node_execpath',
-  ]) {
-    Reflect.deleteProperty(environment, name)
-  }
-
-  return environment
-}
 
 test('packed Raijin package and checked runtime bootstrap project and library, then update safely', async (context) => {
   const fixtureRoot = await mkdtemp(join(tmpdir(), 'raijin-installed-initializer-'))
@@ -70,12 +42,9 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
     tagName: `@atls/raijin@${version}`,
     version,
   }
-  const environment = createEnvironment()
-
-  await execute('yarn', ['workspace', '@atls/raijin', 'pack', '--out', archive], {
-    cwd: repoRoot,
-    env: environment,
-    maxBuffer: 16 * 1024 * 1024,
+  await runNativeYarnCommand(['workspace', '@atls/raijin', 'pack', '--out', archive], repoRoot, {
+    packageManager: manifest.packageManager,
+    followYarnPath: true,
   })
 
   const verifyScaffoldType = async (scaffoldType: string): Promise<void> => {
@@ -91,30 +60,16 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
     }) as typeof fetch
     const runYarnCommand: NonNullable<RunRaijinInitializerOptions['runYarnCommand']> = async (
       args,
-      commandCwd
+      commandCwd,
+      commandOptions
     ) => {
       const command =
         args[0] === 'add' || args[0] === 'up'
           ? ['add', '--prefer-dev', `@atls/raijin@file:${archive}`]
           : args
 
-      await execute('yarn', command, {
-        cwd: commandCwd,
-        env: environment,
-        maxBuffer: 16 * 1024 * 1024,
-      })
+      await runNativeYarnCommand(command, commandCwd, commandOptions)
     }
-    const readYarnCommand: NonNullable<RunRaijinInitializerOptions['readYarnCommand']> = async (
-      args,
-      commandCwd
-    ) =>
-      (
-        await execute('yarn', args, {
-          cwd: commandCwd,
-          env: environment,
-          maxBuffer: 16 * 1024 * 1024,
-        })
-      ).stdout
     const options: RunRaijinInitializerOptions = {
       cwd,
       fetchImpl,
@@ -148,18 +103,34 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
         await readFile(join(cwd, 'tsconfig.json'), 'utf-8'),
         '{"compilerOptions":{"strict":false}}\n'
       )
-      assert.equal(await readYarnCommand(['--version'], cwd), '4.14.1\n')
+      assert.equal(
+        await readYarnCommand(['--version'], cwd, {
+          packageManager: manifest.packageManager,
+          followYarnPath: true,
+        }),
+        '4.14.1\n'
+      )
       assert.equal((await readdir(cwd)).includes('eslint.config.mjs'), false)
       return
     }
 
     await runRaijinInitializer({ ...options, argv: ['init', '--type', scaffoldType] })
 
-    assert.equal(await readYarnCommand(['--version'], cwd), '4.14.1\n')
+    assert.equal(
+      await readYarnCommand(['--version'], cwd, {
+        packageManager: manifest.packageManager,
+        followYarnPath: true,
+      }),
+      '4.14.1\n'
+    )
     assert.ok((await readFile(join(cwd, '.pnp.cjs'))).length > 0)
     assert.equal(
       createSha256Digest(await readFile(join(cwd, '.yarn/releases/yarn.js'))),
       manifest.sha256
+    )
+    assert.equal(
+      (await readdir(join(cwd, '.yarn/releases'))).includes('yarn.js.bootstrap.pending'),
+      false
     )
     assert.ok((await readdir(cwd)).includes('tsconfig.json'))
 
@@ -185,7 +156,13 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       }
 
       assert.equal(projectManifest.type, 'commonjs')
-      assert.equal(await readYarnCommand(['--version'], cwd), '4.14.1\n')
+      assert.equal(
+        await readYarnCommand(['--version'], cwd, {
+          packageManager: manifest.packageManager,
+          followYarnPath: true,
+        }),
+        '4.14.1\n'
+      )
     }
     assert.equal((await readdir(join(cwd, '.yarn/releases'))).includes('yarn.js.pending'), false)
   }
