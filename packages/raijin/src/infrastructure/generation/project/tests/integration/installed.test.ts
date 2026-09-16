@@ -77,10 +77,10 @@ test('installed packed collection generates both baselines and rejects an omitte
           : 'published project and library scaffolds',
         async () => {
           const cwd = join(temporaryRoot, missingCollection ? 'damaged' : 'installed')
-          const fixtureRuntime = join(cwd, '.yarn/releases/yarn.mjs')
+          const fixtureRuntime = join(cwd, '.yarn/releases/yarn.js')
 
           await mkdir(join(cwd, '.yarn/releases'), { recursive: true })
-          await copyFile(join(repoRoot, '.yarn/releases/yarn.mjs'), fixtureRuntime)
+          await copyFile(join(repoRoot, '.yarn/releases/yarn.js'), fixtureRuntime)
           await copyFile(missingCollection ? damagedArchive : archive, join(cwd, 'raijin.tgz'))
           await writeFile(
             join(cwd, 'package.json'),
@@ -94,7 +94,7 @@ test('installed packed collection generates both baselines and rejects an omitte
           )
           await writeFile(
             join(cwd, '.yarnrc.yml'),
-            'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.mjs\n'
+            'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.js\n'
           )
           await execute(process.execPath, [fixtureRuntime, 'install', '--no-immutable'], {
             cwd,
