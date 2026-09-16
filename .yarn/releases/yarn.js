@@ -3061,7 +3061,7 @@ Please remove the following two lines from $0:
 
 They WILL FAIL in v10.0.0
 "`,ags=(e=".husky")=>{if(process.env.HUSKY==="0")return"HUSKY=0 skip install";if(e.includes(".."))return".. not allowed";if(!Ypr.existsSync(".git"))return".git can't be found";let t=(s="")=>Ciu.join(e,"_",s),{status:r,stderr:n}=biu.spawnSync("git",["config","core.hooksPath",`${e}/_`]);return r==null?"git command not found":r?""+n:(Ypr.rmSync(t("husky.sh"),{force:!0}),Ypr.mkdirSync(t(),{recursive:!0}),TTn(t(".gitignore"),"*"),Ypr.copyFileSync(new URL("husky",import.meta.url),t("h")),Siu.forEach(s=>TTn(t(s),`#!/usr/bin/env sh
-. "$(dirname "$0")/h"`,{mode:493})),TTn(t("husky.sh"),Tiu),"")};var zpr=()=>process.env.CI==="true"||process.env.GITHUB_ACTIONS==="true"||!!process.env.IMAGE_PACK||process.env.HUSKY==="0";var lgs=".config/husky",fgs="# Raijin-managed hook",kiu=493,Biu={"commit-msg":'yarn commit message lint "$1"',"pre-commit":"yarn commit staged","prepare-commit-msg":'yarn commit message "$@"'},Piu={"commit-msg":`yarn commit message lint
+. "$(dirname "$0")/h"`,{mode:493})),TTn(t("husky.sh"),Tiu),"")};var zpr=()=>{let e=process.env.CI?.trim().toLowerCase();return e!==void 0&&e!==""&&e!=="false"&&e!=="0"||process.env.GITHUB_ACTIONS==="true"||!!process.env.IMAGE_PACK||process.env.HUSKY==="0"};var lgs=".config/husky",fgs="# Raijin-managed hook",kiu=493,Biu={"commit-msg":'yarn commit message lint "$1"',"pre-commit":"yarn commit staged","prepare-commit-msg":'yarn commit message "$@"'},Piu={"commit-msg":`yarn commit message lint
 `,"pre-commit":`yarn commit staged
 `,"prepare-commit-msg":`yarn commit message $@
 `},ITn=e=>e instanceof Error&&"code"in e&&e.code==="ENOENT",Niu=e=>`${fgs}

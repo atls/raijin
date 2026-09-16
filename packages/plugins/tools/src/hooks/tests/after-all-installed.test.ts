@@ -23,18 +23,17 @@ const withoutSkip = async (run: () => Promise<void>): Promise<void> => {
   }
 }
 
-test('skipped installation does not resolve a Raijin binary', async () => {
-  const previous = process.env.GITHUB_ACTIONS
-
-  process.env.GITHUB_ACTIONS = 'true'
-
-  try {
-    await afterAllInstalled({} as Project)
-  } finally {
-    if (previous === undefined) delete process.env.GITHUB_ACTIONS
-    else process.env.GITHUB_ACTIONS = previous
-  }
-})
+for (const [name, value] of [
+  ['GITHUB_ACTIONS', 'true'],
+  ['CI', '1'],
+]) {
+  test(`${name}=${value} skips before resolving a Raijin binary`, async () => {
+    await withoutSkip(async () => {
+      process.env[name] = value
+      await afterAllInstalled({} as Project)
+    })
+  })
+}
 
 test('project without an installed Raijin package does not resolve a hook binary', async () => {
   await withoutSkip(async () => {

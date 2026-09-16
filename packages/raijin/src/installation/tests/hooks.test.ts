@@ -274,6 +274,8 @@ test('each sibling worktree uses its own hook entries with one relative Git sett
 
 for (const [name, value] of [
   ['CI', 'true'],
+  ['CI', '1'],
+  ['CI', 'yes'],
   ['GITHUB_ACTIONS', 'true'],
   ['IMAGE_PACK', '1'],
   ['HUSKY', '0'],
@@ -288,6 +290,22 @@ for (const [name, value] of [
 
     await assert.rejects(access(join(cwd, '.config/husky')))
     await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
+  })
+}
+
+for (const value of ['false', '0', ' FALSE ']) {
+  test(`CI=${value} keeps local hook installation active`, async (context) => {
+    const cwd = await createRepository(context)
+
+    await withoutSkipEnvironment(async () => {
+      process.env.CI = value
+      await installRepositoryHooks(cwd)
+    })
+
+    assert.equal(
+      (await executeGit(['config', 'core.hooksPath'], cwd)).stdout.trim(),
+      '.config/husky/_'
+    )
   })
 }
 
