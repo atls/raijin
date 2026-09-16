@@ -123,7 +123,7 @@ test('should normalize Docker platform aliases before Yarn install', () => {
 test('should copy yarn release without runtime cache side effects', async () => {
   await xfs.mktempPromise(async (source) => {
     await xfs.mktempPromise(async (destination) => {
-      const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
+      const yarnPath = ppath.join(source, '.yarn/releases/yarn.js')
       const yarnNativePath = npath.fromPortablePath(yarnPath)
 
       await mkdir(npath.dirname(yarnNativePath), { recursive: true })
@@ -140,10 +140,7 @@ test('should copy yarn release without runtime cache side effects', async () => 
         { reportInfo: () => undefined } as unknown as Report
       )
 
-      assert.equal(
-        await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
-        true
-      )
+      assert.equal(await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.js')), true)
     })
   })
 })
@@ -151,7 +148,7 @@ test('should copy yarn release without runtime cache side effects', async () => 
 test('should copy yarn release from native yarn path', async (context) => {
   await xfs.mktempPromise(async (source) => {
     await xfs.mktempPromise(async (destination) => {
-      const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
+      const yarnPath = ppath.join(source, '.yarn/releases/yarn.js')
       const yarnNativePath = npath.fromPortablePath(yarnPath)
 
       await mkdir(npath.dirname(yarnNativePath), { recursive: true })
@@ -176,10 +173,7 @@ test('should copy yarn release from native yarn path', async (context) => {
         { reportInfo: () => undefined } as unknown as Report
       )
 
-      assert.equal(
-        await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
-        true
-      )
+      assert.equal(await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.js')), true)
     })
   })
 })

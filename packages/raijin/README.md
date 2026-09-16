@@ -2,6 +2,8 @@
 
 Raijin provides project commands and an optional ESLint flat configuration.
 
+The new public install/update path uses one exact published package and checked `yarn.js` runtime pair. Published `@atls/raijin@0.7.0` still provides only `yarn.mjs`; until a schemaVersion 2 release is published, the initializer rejects that historical manifest without changing the active runtime.
+
 ## ESLint configuration
 
 `yarn lint` uses Raijin's default rules only when ESLint finds no project `eslint.config.*`. If your project has a configuration file, ESLint loads that file without Raijin injecting its defaults. Keep an existing configuration as the project's source of truth; no Raijin import is required.

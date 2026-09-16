@@ -8,20 +8,21 @@
 
 - Node.js: `>= 24` (не ниже `24`)
 - Yarn: `>= 4` (не ниже `4`)
-- Raijin поддерживает только Yarn PnP и ESM; режим `node-modules` и CommonJS не входят в контракт быстрого старта
+- Новый проект использует Yarn PnP и ESM; при обновлении существующие `type` и `nodeLinker` сохраняются
 - Для нового проекта: пустая директория
 - Для существующего проекта: `package.json` в корне проекта
 
 Ожидаемый результат:
 
 - Команда `yarn --version` выполняется
+- Опубликованный релиз `@atls/raijin@0.7.0` использует старый `yarn.mjs`. Новый путь установки требует следующего релиза с манифестом schemaVersion 2 и реальным asset `yarn.js`; до публикации команда завершается без активации новой среды выполнения
 
 <!-- sync:new-project -->
 
 ## 2. Новый проект
 
 ```bash
-yarn init @atls/raijin --type project
+yarn dlx @atls/raijin init --type project
 ```
 
 Для библиотечного каркаса используйте `--type library`
@@ -29,8 +30,8 @@ yarn init @atls/raijin --type project
 Ожидаемый результат:
 
 - Создаётся `package.json`, если его ещё не было, а `packageManager` приводится к значению из манифеста установленной среды выполнения
-- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/yarn.mjs`
-- `.yarnrc.yml` сразу получает `nodeLinker: pnp` и финальный `yarnPath` без временного файла
+- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/yarn.js`
+- Yarn завершает установку пакета до переключения `.yarnrc.yml` на проверенный `yarnPath`
 - Проектный каркас создаётся через встроенную коллекцию Raijin
 - Команды из бандла (`check`, `files changed list` и другие) становятся доступны
 
@@ -41,14 +42,14 @@ yarn init @atls/raijin --type project
 ## 3. Существующий проект
 
 ```bash
-yarn dlx @atls/raijin init --type project
+yarn dlx @atls/raijin update
 ```
 
-Для библиотечного каркаса используйте `--type library`
+Каркас при обновлении не запускается
 
 Ожидаемый результат:
 
-- Установленный проект получает публичный пакет `@atls/raijin`, среду выполнения Raijin, проектный каркас, первичную синхронизацию и значение `packageManager` из манифеста установленной среды выполнения
+- Установленный проект получает точную пару `@atls/raijin` и проверенной среды выполнения, сохраняя TypeScript, ESLint, Prettier и hooks
 
 До коммита изменений подключения выполните [настройку проверок](#staged-checks). Существующую конфигурацию lint-staged сохраняйте; заменять её примером не нужно.
 
@@ -57,7 +58,7 @@ yarn dlx @atls/raijin init --type project
 ## 4. Обновление установленного бандла
 
 ```bash
-yarn set version atls
+yarn dlx @atls/raijin update
 ```
 
 Ожидаемый результат:
@@ -128,7 +129,7 @@ yarn test integration --target packages/raijin/src/infrastructure/generation/pro
 
 ## 8. Как использовать в чужом проекте
 
-- Для первого подключения используйте `yarn init @atls/raijin --type project` или `yarn dlx @atls/raijin init --type project`; для библиотеки замените тип на `library`
-- После первого подключения обновляйте бандл командой `yarn set version atls`
+- Для первого подключения используйте `yarn dlx @atls/raijin init --type project`; для библиотеки замените тип на `library`
+- После первого подключения обновляйте пару командой `yarn dlx @atls/raijin update`
 - До первого коммита выполните [настройку проверок](#staged-checks) и включите конфигурацию в коммит вместе с `.yarn/releases` и `.yarnrc.yml`
 - Для CI используйте те же команды, что и локально, чтобы избежать расхождения поведения

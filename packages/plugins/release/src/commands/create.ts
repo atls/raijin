@@ -13,9 +13,11 @@ import { dirname }                       from 'node:path'
 
 import { BaseCommand }                   from '@yarnpkg/cli'
 import { StreamReport }                  from '@yarnpkg/core'
+import { structUtils }                   from '@yarnpkg/core'
 import { npath }                         from '@yarnpkg/fslib'
 import { ppath }                         from '@yarnpkg/fslib'
 import { xfs }                           from '@yarnpkg/fslib'
+import { npmHttpUtils }                  from '@yarnpkg/plugin-npm'
 
 import { assertProcessCompleted }        from '@atls/raijin/commands'
 
@@ -27,10 +29,10 @@ const RELEASE_ALREADY_EXISTS_RESOURCE = '"resource":"Release"'
 const RELEASE_ALREADY_EXISTS_CODE = '"code":"already_exists"'
 const RELEASE_ALREADY_EXISTS_FIELD = '"field":"tag_name"'
 const RAIJIN_PUBLIC_PACKAGE_NAME = '@atls/raijin'
-const YARN_RUNTIME_ASSET_NAME = 'yarn.mjs'
+const YARN_RUNTIME_ASSET_NAME = 'yarn.js'
 const YARN_RUNTIME_ASSET_CONTENT_TYPE = 'text/javascript'
 const YARN_RUNTIME_MANIFEST_PATH = '.yarn/releases/raijin-runtime.json'
-const YARN_RUNTIME_MANIFEST_SCHEMA_VERSION = 1
+const YARN_RUNTIME_MANIFEST_SCHEMA_VERSION = 2
 const PACKAGE_JSON = 'package.json'
 
 interface GitHubReleaseError {
@@ -83,10 +85,12 @@ interface PackageManifest {
 interface YarnRuntimeManifest {
   assetName: string
   assetUrl: string
+  packageIntegrity: string
   packageName: string
   packageManager: string
   schemaVersion: number
   sha256: string
+  sourceRevision: string
   tagName: string
   version: string
 }
@@ -169,7 +173,7 @@ export const createYarnRuntimeReleaseAssetOptions = (
     content_type: YARN_RUNTIME_ASSET_CONTENT_TYPE,
     name: YARN_RUNTIME_ASSET_NAME,
     path: npath.fromPortablePath(
-      ppath.join(projectCwd, 'packages/assembly/dist/runtime/yarn.mjs' as PortablePath)
+      ppath.join(projectCwd, 'packages/assembly/dist/runtime/yarn.js' as PortablePath)
     ),
   }
 }
@@ -195,17 +199,53 @@ export const createYarnRuntimeManifest = (
   version: string,
   asset: GitHubReleaseAsset,
   data: Buffer,
-  packageManager: string
+  packageManager: string,
+  sourceRevision: string,
+  packageIntegrity: string
 ): YarnRuntimeManifest => ({
   assetName: asset.name,
   assetUrl: asset.browser_download_url,
+  packageIntegrity,
   packageName: RAIJIN_PUBLIC_PACKAGE_NAME,
   packageManager,
   schemaVersion: YARN_RUNTIME_MANIFEST_SCHEMA_VERSION,
   sha256: createYarnRuntimeReleaseAssetDigest(data),
+  sourceRevision,
   tagName: createGitHubReleaseTagName(RAIJIN_PUBLIC_PACKAGE_NAME, version),
   version,
 })
+
+const readPublishedPackageIdentity = async (
+  project: Project,
+  version: string
+): Promise<{ sourceRevision: string; packageIntegrity: string }> => {
+  const ident = structUtils.makeIdent('atls', 'raijin')
+  const metadata: unknown = await npmHttpUtils.get(
+    `${npmHttpUtils.getIdentUrl(ident)}/${version}`,
+    { configuration: project.configuration, ident }
+  )
+
+  if (!metadata || typeof metadata !== 'object') {
+    throw new Error('Published Raijin package metadata is unavailable')
+  }
+
+  const packageMetadata = metadata as Record<string, unknown>
+  const dist = packageMetadata.dist as Record<string, unknown> | undefined
+
+  if (
+    packageMetadata.name !== RAIJIN_PUBLIC_PACKAGE_NAME ||
+    packageMetadata.version !== version ||
+    typeof packageMetadata.gitHead !== 'string' ||
+    typeof dist?.integrity !== 'string'
+  ) {
+    throw new Error('Published Raijin package identity does not match the release')
+  }
+
+  return {
+    sourceRevision: packageMetadata.gitHead,
+    packageIntegrity: dist.integrity,
+  }
+}
 
 export const fetchYarnRuntimeReleaseAssetData = async (
   asset: GitHubReleaseAsset
@@ -256,6 +296,7 @@ const ensureYarnRuntimeReleaseAsset = async (
   githubRelease: GitHubRelease,
   packageName: string,
   version: string,
+  targetCommitish: string,
   project: Project,
   owner: string,
   repo: string,
@@ -272,6 +313,11 @@ const ensureYarnRuntimeReleaseAsset = async (
   }
 
   const data = await readFile(assetOptions.path)
+  const packageIdentity = await readPublishedPackageIdentity(project, version)
+
+  if (packageIdentity.sourceRevision !== targetCommitish) {
+    throw new Error('Published Raijin package source revision differs from release target')
+  }
   const existingAsset = githubRelease.assets.find((asset) => asset.name === assetOptions.name)
   let asset: GitHubReleaseAsset
 
@@ -296,7 +342,9 @@ const ensureYarnRuntimeReleaseAsset = async (
       version,
       asset,
       data,
-      await readYarnRuntimePackageManager(project.cwd)
+      await readYarnRuntimePackageManager(project.cwd),
+      packageIdentity.sourceRevision,
+      packageIdentity.packageIntegrity
     )
   )
 }
@@ -519,9 +567,10 @@ export class ReleaseCreateCommand extends BaseCommand {
           assert.ok(owner, 'Could not get url of the repo')
           assert.ok(repo, 'Could not get url of the repo')
 
+          const targetCommitish = await getGitHubReleaseTargetCommitish(processInvocation)
+
           try {
             const tagNames = await getGitHubReleaseTagNames(processInvocation, packageName)
-            const targetCommitish = await getGitHubReleaseTargetCommitish(processInvocation)
             const previousTagName = selectPreviousGitHubReleaseTagName(
               packageName,
               version,
@@ -552,6 +601,7 @@ export class ReleaseCreateCommand extends BaseCommand {
               githubRelease,
               packageName,
               version,
+              targetCommitish,
               project,
               owner,
               repo,
@@ -571,6 +621,7 @@ export class ReleaseCreateCommand extends BaseCommand {
                 githubRelease,
                 packageName,
                 version,
+                targetCommitish,
                 project,
                 owner,
                 repo,

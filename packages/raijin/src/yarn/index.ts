@@ -1,6 +1,11 @@
 export type { YarnCommandRunner }        from './runner.js'
+export type { YarnCommandReader }        from './runner.js'
+export type { YarnPackageMetadata }      from './runner.js'
+export type { YarnPackageQuery }         from './runner.js'
 
 export { createYarnCommandEnvironment }  from './command.js'
 export { runYarnCommand }                from './command.js'
+export { queryYarnPackage }              from './command.js'
+export { readYarnCommand }               from './command.js'
 export { createLauncherBaseEnvironment } from './launcher.js'
 export { isLauncherEnvironmentName }     from './launcher.js'

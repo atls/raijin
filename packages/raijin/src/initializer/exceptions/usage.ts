@@ -1,5 +1,5 @@
 const RAIJIN_INITIALIZER_USAGE_MESSAGE =
-  'Usage: yarn init @atls/raijin --type project or yarn dlx @atls/raijin init --type project'
+  'Usage: yarn dlx @atls/raijin init --type project|library or yarn dlx @atls/raijin update'
 
 export class RaijinInitializerUsageException extends Error {
   constructor() {

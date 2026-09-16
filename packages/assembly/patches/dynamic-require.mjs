@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 const before = ',freshCacheIndex=dynamicModule.children.indexOf(freshCacheEntry);'
 const after =
   ',freshCacheIndex=dynamicModule.children?dynamicModule.children.indexOf(freshCacheEntry):-1;'
-const bundlePath = fileURLToPath(new URL('../bundles/yarn.mjs', import.meta.url))
+const bundlePath = fileURLToPath(new URL('../bundles/yarn.js', import.meta.url))
 const source = await readFile(bundlePath, 'utf8')
 
 assert.equal(source.split(before).length - 1, 1)

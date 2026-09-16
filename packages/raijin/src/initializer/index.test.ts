@@ -1,417 +1,249 @@
-import assert                                                 from 'node:assert/strict'
-import { mkdtemp }                                            from 'node:fs/promises'
-import { readFile }                                           from 'node:fs/promises'
-import { writeFile }                                          from 'node:fs/promises'
-import { tmpdir }                                             from 'node:os'
-import { join }                                               from 'node:path'
-import { PassThrough }                                        from 'node:stream'
-import { test }                                               from 'node:test'
+import type { YarnCommandRunner } from '../yarn/runner.js'
 
-import { RaijinInitializerScaffoldTypeRequiredException } from './exceptions/scaffold-type-required.js'
-import { RaijinInitializerScaffoldTypeException }             from './exceptions/scaffold-type.js'
-import { RaijinInitializerUsageException }                    from './exceptions/usage.js'
-import { runRaijinInitializer as runPublicRaijinInitializer } from '../index.js'
-import { createSha256Digest }                                 from '../runtime/manifest.js'
-import { runRaijinInitializer }                               from './index.js'
-import { selectRaijinScaffoldType }                           from './scaffold.js'
+import assert                     from 'node:assert/strict'
+import { access }                 from 'node:fs/promises'
+import { mkdir }                  from 'node:fs/promises'
+import { mkdtemp }                from 'node:fs/promises'
+import { readFile }               from 'node:fs/promises'
+import { rm }                     from 'node:fs/promises'
+import { writeFile }              from 'node:fs/promises'
+import { tmpdir }                 from 'node:os'
+import { join }                   from 'node:path'
+import { test }                   from 'node:test'
 
-const TEST_PACKAGE_MANAGER = 'yarn@4.14.1'
+import { createSha256Digest }     from '../runtime/manifest.js'
+import { runRaijinInitializer }   from './index.js'
 
-const getRequestHref = (url: Request | URL | string): string => {
-  if (typeof url === 'string') {
-    return url
-  }
-
-  if (url instanceof URL) {
-    return url.href
-  }
-
-  return url.url
+const runtime = Buffer.from('runtime')
+const manifest = {
+  assetName: 'yarn.js',
+  assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.js',
+  packageIntegrity: 'sha512-YWJjZA==',
+  packageManager: 'yarn@4.14.1',
+  packageName: '@atls/raijin',
+  schemaVersion: 2,
+  sha256: createSha256Digest(runtime),
+  sourceRevision: 'a'.repeat(40),
+  tagName: '@atls/raijin@1.2.3',
+  version: '1.2.3',
 }
 
-const createFetch = (
-  runtime: Buffer,
-  packageManager = TEST_PACKAGE_MANAGER,
-  packageName = '@atls/raijin'
-): typeof fetch => {
-  const manifest = {
-    assetName: 'yarn.mjs',
-    assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
-    packageName,
-    packageManager,
-    schemaVersion: 1,
-    sha256: createSha256Digest(runtime),
-    tagName: '@atls/raijin@1.2.3',
-    version: '1.2.3',
+const fetchImpl = (async (input: Request | URL | string) => {
+  const url = input instanceof Request ? input.url : String(input)
+
+  return url.endsWith('raijin-runtime.json')
+    ? Response.json(manifest)
+    : new Response(new Uint8Array(runtime))
+}) as typeof fetch
+
+const queryYarnPackage = async () => ({
+  name: manifest.packageName,
+  version: manifest.version,
+  gitHead: manifest.sourceRevision,
+  dist: { integrity: manifest.packageIntegrity },
+})
+
+const readYarnCommand = async (args: Array<string>): Promise<string> =>
+  args[0] === '--version'
+    ? '4.14.1\n'
+    : JSON.stringify({ name: manifest.packageName, version: manifest.version })
+
+const exists = async (path: string): Promise<boolean> => {
+  try {
+    await access(path)
+    return true
+  } catch {
+    return false
   }
+}
 
-  return (async (url: Request | URL | string) => {
-    const href = getRequestHref(url)
+test('bootstrap installs exact package before runtime activation and scaffolds once', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-install-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  const commands: Array<Array<string>> = []
+  const runYarnCommand: YarnCommandRunner = async (args) => {
+    commands.push(args)
 
-    if (href.endsWith('raijin-runtime.json')) {
-      return Response.json(manifest)
+    if (args[0] === 'add') {
+      assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js')), false)
+      assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.pending')), true)
+      assert.equal(await exists(join(cwd, '.yarnrc.yml')), false)
     }
-
-    return new Response(new Uint8Array(runtime))
-  }) as typeof fetch
-}
-
-const EXPECTED_INITIALIZER_COMMANDS = [
-  ['add', '-D', '@atls/raijin@latest'],
-  ['generate', 'project', '--type', 'project'],
-  ['raijin', 'sync'],
-]
-
-const noopYarnCommand = async (): Promise<void> => undefined
-
-const collectInitializerCommands = async (
-  runInitializer: typeof runRaijinInitializer,
-  packageJson = false,
-  argv = ['init', '--type', 'project']
-): Promise<Array<Array<string>>> => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const commands: Array<Array<string>> = []
-
-  if (packageJson) {
-    await writeFile(join(cwd, 'package.json'), '{}')
   }
 
-  await runInitializer({
-    argv,
-    cwd,
-    fetchImpl: createFetch(Buffer.from('runtime')),
-    runYarnCommand: async (args) => {
-      commands.push(args)
-    },
-  })
-
-  return commands
-}
-
-const createTerminalStream = (isTTY: boolean): PassThrough & { isTTY?: boolean } => {
-  const stream = new PassThrough() as PassThrough & { isTTY?: boolean }
-
-  stream.isTTY = isTTY
-
-  return stream
-}
-
-test('should run initializer command sequence', async () => {
-  assert.deepEqual(
-    await collectInitializerCommands(runRaijinInitializer),
-    EXPECTED_INITIALIZER_COMMANDS
-  )
-})
-
-test('should preserve existing package initialization', async () => {
-  assert.deepEqual(
-    await collectInitializerCommands(runRaijinInitializer, true),
-    EXPECTED_INITIALIZER_COMMANDS
-  )
-})
-
-test('should expose initializer command through public index', async () => {
-  assert.deepEqual(
-    await collectInitializerCommands(runPublicRaijinInitializer),
-    EXPECTED_INITIALIZER_COMMANDS
-  )
-})
-
-test('should install only public Raijin package directly', async () => {
-  const commands = await collectInitializerCommands(runRaijinInitializer)
-
-  assert.deepEqual(commands[0], ['add', '-D', '@atls/raijin@latest'])
-})
-
-test('should accept legacy Yarn CLI runtime manifest', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const commands: Array<Array<string>> = []
-
   await runRaijinInitializer({
-    argv: ['init', '--type', 'project'],
+    argv: ['init', '--type', 'library'],
     cwd,
-    fetchImpl: createFetch(Buffer.from('runtime'), TEST_PACKAGE_MANAGER, '@atls/yarn-cli'),
-    runYarnCommand: async (args) => {
-      commands.push(args)
-    },
-  })
-
-  assert.deepEqual(commands, EXPECTED_INITIALIZER_COMMANDS)
-  assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.mjs'), 'utf-8'), 'runtime')
-})
-
-test('should support initializer arguments without init command', async () => {
-  assert.deepEqual(
-    await collectInitializerCommands(runRaijinInitializer, false, ['--type', 'project']),
-    EXPECTED_INITIALIZER_COMMANDS
-  )
-})
-
-test('should pass project scaffold type to project generation', async () => {
-  assert.deepEqual(
-    await collectInitializerCommands(runRaijinInitializer, false, ['init', '--type=project']),
-    EXPECTED_INITIALIZER_COMMANDS
-  )
-})
-
-test('should pass library scaffold type to project generation', async () => {
-  assert.deepEqual(
-    await collectInitializerCommands(runRaijinInitializer, false, ['init', '--type', 'library']),
-    [
-      ['add', '-D', '@atls/raijin@latest'],
-      ['generate', 'project', '--type', 'library'],
-      ['raijin', 'sync'],
-    ]
-  )
-})
-
-test('should use interactive scaffold type selector when type is omitted', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const commands: Array<Array<string>> = []
-
-  await runRaijinInitializer({
-    argv: ['init'],
-    cwd,
-    fetchImpl: createFetch(Buffer.from('runtime')),
-    runYarnCommand: async (args) => {
-      commands.push(args)
-    },
-    selectScaffoldType: async () => 'library',
+    fetchImpl,
+    queryYarnPackage,
+    readYarnCommand,
+    runYarnCommand,
   })
 
   assert.deepEqual(commands, [
-    ['add', '-D', '@atls/raijin@latest'],
+    ['add', '--prefer-dev', '-E', '@atls/raijin@1.2.3'],
     ['generate', 'project', '--type', 'library'],
-    ['raijin', 'sync'],
   ])
-})
-
-test('should select scaffold type from interactive input', async () => {
-  const input = createTerminalStream(true)
-  const output = createTerminalStream(true)
-
-  const scaffoldType = selectRaijinScaffoldType({ input, output })
-
-  input.write('2\n')
-
-  assert.equal(await scaffoldType, 'library')
-})
-
-test('should reject scaffold type selection when interactive input closes', async () => {
-  const input = createTerminalStream(true)
-  const output = createTerminalStream(true)
-
-  const scaffoldType = selectRaijinScaffoldType({ input, output })
-
-  input.end()
-
-  await assert.rejects(
-    scaffoldType,
-    (error) => error instanceof RaijinInitializerScaffoldTypeRequiredException
-  )
-})
-
-test('should reject missing scaffold type without interactive terminal', async () => {
-  const input = createTerminalStream(false)
-  const output = createTerminalStream(false)
-
-  await assert.rejects(
-    selectRaijinScaffoldType({ input, output }),
-    (error) => error instanceof RaijinInitializerScaffoldTypeRequiredException
-  )
-})
-
-test('should reject unknown scaffold type', async () => {
-  await assert.rejects(
-    runRaijinInitializer({
-      argv: ['init', '--type', 'service'],
-      fetchImpl: createFetch(Buffer.from('runtime')),
-      runYarnCommand: noopYarnCommand,
-    }),
-    (error) => error instanceof RaijinInitializerScaffoldTypeException
-  )
-})
-
-test('should create package manifest for empty project', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-
-  await runRaijinInitializer({
-    argv: ['init', '--type', 'project'],
-    cwd,
-    fetchImpl: createFetch(Buffer.from('runtime')),
-    runYarnCommand: noopYarnCommand,
-  })
-
-  const packageJson = await readFile(join(cwd, 'package.json'), 'utf-8')
-
-  assert.match(packageJson, /"name": "raijin-initializer-/)
-  assert.equal(JSON.parse(packageJson).packageManager, TEST_PACKAGE_MANAGER)
-  assert.equal(JSON.parse(packageJson).type, 'module')
-})
-
-test('should normalize package manager in existing package manifest', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const manifest = {
-    name: 'wallet',
-    packageManager: 'yarn@4.12.0',
-    private: true,
-    scripts: {
-      check: 'raijin check',
-    },
-  }
-
-  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-
-  await runRaijinInitializer({
-    argv: ['init', '--type', 'project'],
-    cwd,
-    fetchImpl: createFetch(Buffer.from('runtime')),
-    runYarnCommand: noopYarnCommand,
-  })
-
-  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
-    ...manifest,
-    packageManager: TEST_PACKAGE_MANAGER,
+  assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.js'), 'utf-8'), 'runtime')
+  assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.pending')), false)
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, '.yarn/releases/package.json'), 'utf-8')), {
     type: 'module',
   })
 })
 
-test('should normalize module type in existing current package manifest', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const manifest = {
-    name: 'wallet',
-    packageManager: TEST_PACKAGE_MANAGER,
-    private: true,
-    scripts: {
-      check: 'raijin check',
-    },
-  }
-
-  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-
-  await runRaijinInitializer({
-    argv: ['init', '--type', 'project'],
-    cwd,
-    fetchImpl: createFetch(Buffer.from('runtime')),
-    runYarnCommand: noopYarnCommand,
-  })
-
-  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
-    ...manifest,
-    type: 'module',
-  })
-})
-
-test('should rewrite commonjs type in existing current package manifest', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const manifest = {
-    name: 'wallet',
-    packageManager: TEST_PACKAGE_MANAGER,
+test('configured update preserves project configuration and does not scaffold', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-update-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  const packageJson = {
+    name: 'consumer',
     type: 'commonjs',
+    packageManager: 'yarn@4.12.0',
+    devDependencies: { '@atls/raijin': '0.7.0' },
+    scripts: { verify: 'node verify.js' },
   }
+  const userConfig = 'nodeLinker: node-modules\nenableGlobalCache: false\n'
+  const commands: Array<Array<string>> = []
 
-  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-
-  await runRaijinInitializer({
-    argv: ['init', '--type', 'project'],
-    cwd,
-    fetchImpl: createFetch(Buffer.from('runtime')),
-    runYarnCommand: noopYarnCommand,
-  })
-
-  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
-    ...manifest,
-    type: 'module',
-  })
-})
-
-test('should normalize package manager from runtime manifest', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const packageManager = 'yarn@4.15.0'
-
-  await writeFile(
-    join(cwd, 'package.json'),
-    `${JSON.stringify({
-      name: 'wallet',
-      packageManager: 'yarn@4.12.0',
-    })}\n`
-  )
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(packageJson)}\n`)
+  await writeFile(join(cwd, '.yarnrc.yml'), userConfig)
+  await writeFile(join(cwd, 'tsconfig.json'), '{"compilerOptions":{"strict":false}}\n')
+  await writeFile(join(cwd, 'eslint.config.mjs'), 'export default []\n')
 
   await runRaijinInitializer({
-    argv: ['init', '--type', 'project'],
+    argv: ['update'],
     cwd,
-    fetchImpl: createFetch(Buffer.from('runtime'), packageManager),
-    runYarnCommand: noopYarnCommand,
+    fetchImpl,
+    queryYarnPackage,
+    readYarnCommand,
+    runYarnCommand: async (args) => {
+      commands.push(args)
+    },
   })
 
+  assert.equal(commands[0][0], 'up')
   assert.equal(
-    JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')).packageManager,
-    packageManager
+    commands.some((args) => args[0] === 'generate'),
+    false
   )
+  assert.equal(
+    commands.some((args) => args[0] === 'install'),
+    false
+  )
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
+    ...packageJson,
+    packageManager: 'yarn@4.14.1',
+  })
+  assert.equal(
+    await readFile(join(cwd, 'tsconfig.json'), 'utf-8'),
+    '{"compilerOptions":{"strict":false}}\n'
+  )
+  assert.equal(await readFile(join(cwd, 'eslint.config.mjs'), 'utf-8'), 'export default []\n')
+  const yarnrc = await readFile(join(cwd, '.yarnrc.yml'), 'utf-8')
+  assert.match(yarnrc, /nodeLinker: node-modules/)
+  assert.match(yarnrc, /enableGlobalCache: false/)
+  assert.match(yarnrc, /yarnPath: .yarn\/releases\/yarn.js/)
 })
 
-test('should preserve package manifest when runtime install fails', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const manifest = {
-    name: 'wallet',
-    packageManager: 'pnpm@10.12.0',
+test('metadata mismatch leaves the configured package and runtime untouched', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-mismatch-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  const packageJson = '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+
+  await writeFile(join(cwd, 'package.json'), packageJson)
+
+  await assert.rejects(
+    runRaijinInitializer({
+      argv: ['update'],
+      cwd,
+      fetchImpl,
+      readYarnCommand,
+      queryYarnPackage: async () => ({ ...(await queryYarnPackage()), gitHead: 'b'.repeat(40) }),
+      runYarnCommand: async () => {
+        throw new Error('Yarn must not run')
+      },
+    }),
+    /metadata does not match/
+  )
+
+  assert.equal(await readFile(join(cwd, 'package.json'), 'utf-8'), packageJson)
+  assert.equal(await exists(join(cwd, '.yarn')), false)
+})
+
+test('incompatible runtime module scope fails before Yarn changes the package', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-scope-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  await writeFile(join(cwd, 'package.json'), '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n')
+  await mkdir(join(cwd, '.yarn/releases'), { recursive: true })
+  await writeFile(join(cwd, '.yarn/releases/package.json'), '{"type":"commonjs"}\n')
+
+  await assert.rejects(
+    runRaijinInitializer({
+      argv: ['update'],
+      cwd,
+      fetchImpl,
+      queryYarnPackage,
+      readYarnCommand,
+      runYarnCommand: async () => {
+        throw new Error('Yarn must not run')
+      },
+    }),
+    /not type module/
+  )
+
+  assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.pending')), false)
+})
+
+test('wrong active runtime version remains staged and cannot report success', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-version-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  await writeFile(join(cwd, 'package.json'), '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n')
+
+  await assert.rejects(
+    runRaijinInitializer({
+      argv: ['update'],
+      cwd,
+      fetchImpl,
+      queryYarnPackage,
+      readYarnCommand: async (args) =>
+        args[0] === '--version'
+          ? '4.12.0\n'
+          : JSON.stringify({ name: manifest.packageName, version: manifest.version }),
+      runYarnCommand: async () => undefined,
+    }),
+    /staged at/
+  )
+
+  assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.pending')), true)
+})
+
+test('failed Yarn install exposes one retryable staged runtime without activation', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-retry-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  await writeFile(join(cwd, 'package.json'), '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n')
+  await mkdir(join(cwd, '.yarn/releases'), { recursive: true })
+  await writeFile(join(cwd, '.yarn/releases/yarn.js'), 'old-runtime')
+  await writeFile(join(cwd, '.yarnrc.yml'), 'yarnPath: .yarn/releases/yarn.js\n')
+  let fail = true
+  const runYarnCommand: YarnCommandRunner = async (args) => {
+    if (args[0] === 'up' && fail) {
+      throw new Error('install failed')
+    }
+  }
+  const options = {
+    argv: ['update'],
+    cwd,
+    fetchImpl,
+    queryYarnPackage,
+    readYarnCommand,
+    runYarnCommand,
   }
 
-  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+  await assert.rejects(runRaijinInitializer(options), /staged at/)
+  assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.js'), 'utf-8'), 'old-runtime')
+  assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.js.pending'), 'utf-8'), 'runtime')
 
-  await assert.rejects(
-    runRaijinInitializer({
-      argv: ['init', '--type', 'project'],
-      cwd,
-      fetchImpl: (async () => {
-        throw new Error('Runtime manifest unavailable')
-      }) as typeof fetch,
-      runYarnCommand: noopYarnCommand,
-    }),
-    /Runtime manifest unavailable/
-  )
-
-  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), manifest)
-})
-
-test('should create project lockfile boundary before yarn commands', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-
-  await runRaijinInitializer({
-    argv: ['init', '--type', 'project'],
-    cwd,
-    fetchImpl: createFetch(Buffer.from('runtime')),
-    runYarnCommand: noopYarnCommand,
-  })
-
-  assert.equal(await readFile(join(cwd, 'yarn.lock'), 'utf-8'), '')
-})
-
-test('should preserve existing project lockfile boundary', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'raijin-initializer-'))
-  const lockfile = '# existing lockfile\n'
-
-  await writeFile(join(cwd, 'package.json'), '{}')
-  await writeFile(join(cwd, 'yarn.lock'), lockfile)
-
-  await runRaijinInitializer({
-    argv: ['init', '--type', 'project'],
-    cwd,
-    fetchImpl: createFetch(Buffer.from('runtime')),
-    runYarnCommand: noopYarnCommand,
-  })
-
-  assert.equal(await readFile(join(cwd, 'yarn.lock'), 'utf-8'), lockfile)
-})
-
-test('should reject unknown initializer arguments', async () => {
-  await assert.rejects(
-    runRaijinInitializer({
-      argv: ['unknown'],
-      fetchImpl: createFetch(Buffer.from('runtime')),
-    }),
-    (error) =>
-      error instanceof RaijinInitializerUsageException &&
-      error.message.includes('Usage: yarn init @atls/raijin')
-  )
+  fail = false
+  await runRaijinInitializer(options)
+  assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.js'), 'utf-8'), 'runtime')
+  assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.pending')), false)
 })
