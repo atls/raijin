@@ -53,6 +53,7 @@ Update does not run the scaffold
 Expected result:
 
 - Existing project gets one exact `@atls/raijin` and checked runtime pair while preserving TypeScript, ESLint, Prettier, and hooks
+- For Yarn workspaces, run this at the project root that declares `@atls/raijin`; a separate nested project must have its own `yarn.lock`
 
 Before committing the setup changes, complete the [check configuration](#staged-checks). Preserve any existing lint-staged configuration; do not replace it with the example.
 

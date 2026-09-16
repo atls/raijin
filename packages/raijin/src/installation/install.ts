@@ -17,12 +17,14 @@ import { join }                                 from 'node:path'
 import { resolve }                              from 'node:path'
 
 import { Configuration }                        from '@yarnpkg/core'
+import { Project }                              from '@yarnpkg/core'
 import { npath }                                from '@yarnpkg/fslib'
 
 import { RaijinRuntimeDigestMismatchException } from '../runtime/exceptions/digest-mismatch.js'
 import { installRepositoryHooks }               from '../../hooks/install.js'
 import { ensurePackageManifest }                from '../initializer/project.js'
 import { ensureYarnLock }                       from '../initializer/project.js'
+import { hasPackageJson }                       from '../initializer/project.js'
 import { downloadRaijinRuntime }                from '../runtime/download.js'
 import { fetchRaijinRuntimeManifest }           from '../runtime/download.js'
 import { createSha256Digest }                   from '../runtime/manifest.js'
@@ -66,6 +68,59 @@ export const hasRaijinBootstrapStage = async (cwd: string): Promise<boolean> => 
 
     throw error
   }
+}
+
+const resolveInstallationTarget = async (
+  cwd: string,
+  mode: InstallRaijinOptions['mode']
+): Promise<string> => {
+  const targetCwd = npath.toPortablePath(resolve(cwd))
+  const projectCwd = await Configuration.findProjectCwd(targetCwd)
+
+  if (!projectCwd || projectCwd === targetCwd) {
+    return npath.fromPortablePath(targetCwd)
+  }
+
+  if (!(await hasPackageJson(cwd))) {
+    throw new Error(
+      `Raijin bootstrap target is nested beneath Yarn project ${projectCwd}; ` +
+        'use the project root or establish a separate yarn.lock before retrying'
+    )
+  }
+
+  const configuration = await Configuration.find(targetCwd, null, {
+    strict: false,
+    usePathCheck: null,
+  })
+
+  let isMemberWorkspace: boolean
+
+  try {
+    const { workspace } = await Project.find(configuration, targetCwd)
+    isMemberWorkspace = workspace?.cwd === targetCwd
+  } catch (error) {
+    throw new Error(
+      `Raijin target is nested beneath Yarn project ${projectCwd} but is not a member workspace; ` +
+        'declare workspace membership or establish a separate yarn.lock before retrying',
+      { cause: error }
+    )
+  }
+
+  if (isMemberWorkspace && mode === 'bootstrap') {
+    throw new Error(
+      `Raijin bootstrap cannot scaffold a member workspace of Yarn project ${projectCwd}; ` +
+        'run init at the project root or establish a separate project boundary'
+    )
+  }
+
+  if (isMemberWorkspace) {
+    throw new Error(
+      `Raijin package and runtime must share Yarn project root ${projectCwd}; ` +
+        'run update from that root, which must declare @atls/raijin in its package.json'
+    )
+  }
+
+  throw new Error(`Raijin target is inside Yarn project ${projectCwd} but is not its root`)
 }
 
 const assertPackageMetadata = async (
@@ -218,9 +273,11 @@ export const installRaijin = async ({
   readYarnCommand: readCommand = readYarnCommand,
   runYarnCommand: runCommand = runYarnCommand,
 }: InstallRaijinOptions): Promise<RaijinRuntimeManifest> => {
+  const targetCwd = await resolveInstallationTarget(cwd, mode)
+
   const manifest = await fetchRaijinRuntimeManifest(fetchImpl)
 
-  await assertPackageMetadata(manifest, cwd, queryPackage)
+  await assertPackageMetadata(manifest, targetCwd, queryPackage)
 
   const runtime = await downloadRaijinRuntime(fetchImpl, manifest)
   const digest = createSha256Digest(runtime)
@@ -229,17 +286,15 @@ export const installRaijin = async ({
     throw new RaijinRuntimeDigestMismatchException(manifest.sha256, digest)
   }
 
-  await assertRuntimeModuleScope(join(cwd, getRaijinRuntimeYarnPath()))
+  await assertRuntimeModuleScope(join(targetCwd, getRaijinRuntimeYarnPath()))
 
   if (mode === 'bootstrap') {
-    await ensurePackageManifest(cwd)
+    await ensurePackageManifest(targetCwd)
   }
 
-  if (mode !== 'update') {
-    await ensureYarnLock(cwd)
-  }
+  await ensureYarnLock(targetCwd)
 
-  const stagedPath = getStagedRuntimePath(cwd, mode)
+  const stagedPath = getStagedRuntimePath(targetCwd, mode)
 
   await mkdir(dirname(stagedPath), { recursive: true })
   await writeFile(stagedPath, runtime)
@@ -249,15 +304,15 @@ export const installRaijin = async ({
       mode !== 'update'
         ? ['add', '--prefer-dev', '-E', `${manifest.packageName}@${manifest.version}`]
         : ['up', '-E', `${manifest.packageName}@${manifest.version}`],
-      cwd,
+      targetCwd,
       { packageManager: manifest.packageManager, skipInstallHooks: true }
     )
-    await assertInstalledPackage(cwd, manifest.version, manifest.packageManager, readCommand)
-    await updatePackageManager(cwd, manifest.packageManager)
-    await activateRuntime(cwd, stagedPath)
-    await assertActivatedPair(cwd, manifest, readCommand)
+    await assertInstalledPackage(targetCwd, manifest.version, manifest.packageManager, readCommand)
+    await updatePackageManager(targetCwd, manifest.packageManager)
+    await activateRuntime(targetCwd, stagedPath)
+    await assertActivatedPair(targetCwd, manifest, readCommand)
     await afterActivated?.(manifest.packageManager)
-    await installRepositoryHooks(cwd)
+    await installRepositoryHooks(targetCwd)
     await rm(stagedPath, { force: true })
   } catch (error) {
     throw new Error(
