@@ -14,7 +14,9 @@ import { join }                   from 'node:path'
 import test                       from 'node:test'
 import { promisify }              from 'node:util'
 
-import { installRepositoryHooks } from '../../../bin/hooks.js'
+import { installRepositoryHooks } from '../../../hooks/install.js'
+import { createSha256Digest }     from '../../runtime/manifest.js'
+import { installRaijin }          from '../install.js'
 
 const execute = promisify(execFile)
 const gitLocalVariables = (await execute('git', ['rev-parse', '--local-env-vars'])).stdout
@@ -31,6 +33,45 @@ const gitEnvironment = (): NodeJS.ProcessEnv => {
 
 const executeGit = async (args: Array<string>, cwd: string, environment: NodeJS.ProcessEnv = {}) =>
   execute('git', args, { cwd, env: { ...gitEnvironment(), ...environment } })
+
+const runtime = Buffer.from('runtime')
+const manifest = {
+  assetName: 'yarn.js',
+  assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.js',
+  packageIntegrity: 'sha512-YWJjZA==',
+  packageManager: 'yarn@4.14.1',
+  packageName: '@atls/raijin',
+  schemaVersion: 2,
+  sha256: createSha256Digest(runtime),
+  sourceRevision: 'a'.repeat(40),
+  tagName: '@atls/raijin@1.2.3',
+  version: '1.2.3',
+}
+
+const fetchImpl = (async (input: Request | URL | string) => {
+  const url = input instanceof Request ? input.url : String(input)
+
+  return url.endsWith('raijin-runtime.json')
+    ? Response.json(manifest)
+    : new Response(new Uint8Array(runtime))
+}) as typeof fetch
+
+const installOptions = (cwd: string) => ({
+  cwd,
+  fetchImpl,
+  mode: 'update' as const,
+  queryYarnPackage: async () => ({
+    name: manifest.packageName,
+    version: manifest.version,
+    gitHead: manifest.sourceRevision,
+    dist: { integrity: manifest.packageIntegrity },
+  }),
+  readYarnCommand: async (args: Array<string>) =>
+    args[0] === '--version'
+      ? '4.14.1\n'
+      : JSON.stringify({ name: manifest.packageName, version: manifest.version }),
+  runYarnCommand: async () => undefined,
+})
 
 const createRepository = async (context: { after: (callback: () => Promise<void>) => void }) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-hooks-'))
@@ -92,6 +133,53 @@ test('native Husky install is relative, idempotent, and preserves unrelated hook
       await access(join(hooks, '_', name), constants.X_OK)
     })
   )
+})
+
+test('runtime update installs hooks only after activation and remains idempotent', async (context) => {
+  const cwd = await createRepository(context)
+
+  await writeFile(join(cwd, 'package.json'), '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n')
+
+  await withoutSkipEnvironment(async () => {
+    await installRaijin({
+      ...installOptions(cwd),
+      afterActivated: async () => {
+        assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.js'), 'utf8'), 'runtime')
+        await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
+      },
+    })
+    await installRaijin(installOptions(cwd))
+  })
+
+  assert.equal(
+    (await executeGit(['config', 'core.hooksPath'], cwd)).stdout.trim(),
+    '.config/husky/_'
+  )
+  await access(join(cwd, '.config/husky/_/pre-commit'), constants.X_OK)
+  await assert.rejects(access(join(cwd, '.yarn/releases/yarn.js.pending')))
+})
+
+test('failed runtime activation leaves Git hooks untouched', async (context) => {
+  const cwd = await createRepository(context)
+
+  await writeFile(join(cwd, 'package.json'), '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n')
+
+  await withoutSkipEnvironment(async () => {
+    await assert.rejects(
+      installRaijin({
+        ...installOptions(cwd),
+        readYarnCommand: async (args) =>
+          args[0] === '--version'
+            ? '4.12.0\n'
+            : JSON.stringify({ name: manifest.packageName, version: manifest.version }),
+      }),
+      /staged at/
+    )
+  })
+
+  await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
+  await assert.rejects(access(join(cwd, '.config/husky')))
+  await access(join(cwd, '.yarn/releases/yarn.js.pending'))
 })
 
 test('unowned same-name hook fails before Husky changes Git configuration', async (context) => {

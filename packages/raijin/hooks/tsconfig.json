@@ -5,5 +5,5 @@
     "checkJs": false,
     "noEmit": true
   },
-  "include": ["hooks.js", "raijin-hooks.js", "skip.js"]
+  "include": ["install.js", "skip.js"]
 }
