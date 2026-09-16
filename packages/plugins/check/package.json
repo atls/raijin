@@ -23,16 +23,19 @@
     "@atls/yarn-plugin-lint": "workspace:*",
     "@atls/yarn-plugin-test": "workspace:*",
     "@atls/yarn-plugin-typescript": "workspace:*",
+    "@yarnpkg/plugin-git": "3.2.0",
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
-    "@yarnpkg/core": "4.7.0"
+    "@yarnpkg/core": "4.7.0",
+    "@yarnpkg/fslib": "3.1.5"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
-    "@yarnpkg/core": "*"
+    "@yarnpkg/core": "*",
+    "@yarnpkg/fslib": "*"
   },
   "raijin": {
     "pack": {

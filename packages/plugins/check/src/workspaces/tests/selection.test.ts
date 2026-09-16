@@ -11,8 +11,8 @@ import { gitUtils }                 from '@yarnpkg/plugin-git'
 
 import { toPortableCwd }            from '@atls/raijin/commands'
 
-import { resolveCheckWorkspaces }   from '../run.js'
-import { selectAffectedWorkspaces } from '../run.js'
+import { resolveCheckWorkspaces }   from '../selection.js'
+import { selectAffectedWorkspaces } from '../selection.js'
 
 const workspace = (name: string, dependents: () => Set<Workspace> = () => new Set()): Workspace =>
   ({

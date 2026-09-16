@@ -27,6 +27,7 @@ export type CheckPolicyInput = {
   readonly verify: boolean
   readonly skipTypecheck?: boolean
   readonly targets?: CommandInput
+  readonly testTargets?: CommandInput
   readonly typecheckScopes?: ReadonlyArray<TypecheckScope>
   readonly workspacePackageNames: ReadonlyArray<string>
   readonly manifestPolicySources: ReadonlyArray<TypecheckManifestPolicySource>
@@ -64,6 +65,7 @@ export const runCheckPolicy = async (input: CheckPolicyInput): Promise<number> =
     verify,
     skipTypecheck = false,
     targets,
+    testTargets,
     typecheckScopes,
     workspacePackageNames,
     manifestPolicySources,
@@ -111,9 +113,9 @@ export const runCheckPolicy = async (input: CheckPolicyInput): Promise<number> =
           return 0
         }
 
-        const scopes = targets
-          ? [{ cwd, manifestPolicySources }]
-          : (typecheckScopes ?? [{ cwd, manifestPolicySources }])
+        const scopes: ReadonlyArray<TypecheckScope> = typecheckScopes ?? [
+          { kind: 'project', cwd, manifestPolicySources },
+        ]
         let failed = false
 
         for await (const scope of scopes) {
@@ -121,11 +123,8 @@ export const runCheckPolicy = async (input: CheckPolicyInput): Promise<number> =
             cwd: scope.cwd,
             projectCwd,
             manifestPolicySources: scope.manifestPolicySources,
-            ...(targets
-              ? {
-                  kind: 'files' as const,
-                  files: targets.targets.map(({ path }) => toNativePath(path)),
-                }
+            ...(scope.kind === 'files'
+              ? { kind: 'files' as const, files: scope.files }
               : { kind: 'project' as const }),
           })
 
@@ -141,17 +140,19 @@ export const runCheckPolicy = async (input: CheckPolicyInput): Promise<number> =
         return failed ? 1 : 0
       },
     },
-    ...(targets
+    ...(targets && !testTargets
       ? []
       : (['unit', 'integration'] as const).map(
           (scenario): CheckStage => ({
             name: `Test:${scenario}`,
             run: async () => {
-              const testInput = createCommandInput({
-                cwd: toPortablePath(cwd),
-                source: 'generated',
-                targets: [],
-              })
+              const testInput =
+                testTargets ??
+                createCommandInput({
+                  cwd: toPortablePath(cwd),
+                  source: 'generated',
+                  targets: [],
+                })
               const selectedTests = await discoverProjectTests({
                 rootCwd: projectCwd,
                 cwd,

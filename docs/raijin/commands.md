@@ -19,31 +19,12 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 - Status: `active`
 - Description: run Format, Lint, TypeCheck, unit and integration verification
-- Usage: `yarn check [--verify] ...`
+- Usage: `yarn check [--verify] [--since #0] ...`
 - Example: `yarn check`
-- Example: `yarn check packages/plugins/check/src/policy.ts`
+- Example: `yarn check --verify --since origin/main`
+- Example: `yarn check packages/app`
+- Example: `yarn check packages/app/src/index.ts`
 - Plugin: `@atls/yarn-plugin-check`
-
-</details>
-
-### Domain `checks`
-
-- Commands: `checks run`
-
-<details>
-<summary>Domain details: `checks`</summary>
-
-> Important: `checks run --since <ref>` requires an available Git ref and merge-base history; GitHub Actions displays the ordinary command output and diagnostics
-
-<!-- sync:command-card:checks-run -->
-
-#### `checks run`
-
-- Status: `active`
-- Description: verify the active project or workspaces changed since a Git ref
-- Usage: `yarn checks run [--since #0]`
-- Example: `yarn checks run`
-- Plugin: `@atls/yarn-plugin-checks`
 
 </details>
 

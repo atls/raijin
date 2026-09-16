@@ -1,27 +1,26 @@
 /// <reference path='./configuration-value-map.d.ts' />
 
-import type { Workspace }             from '@yarnpkg/core'
-import type { Report }                from '@yarnpkg/core'
-import type { PortablePath }          from '@yarnpkg/fslib'
+import type { Workspace }    from '@yarnpkg/core'
+import type { Report }       from '@yarnpkg/core'
+import type { PortablePath } from '@yarnpkg/fslib'
 
-import { arch }                       from 'node:os'
+import { arch }              from 'node:os'
 
-import { Configuration }              from '@yarnpkg/core'
-import { Project }                    from '@yarnpkg/core'
-import { Cache }                      from '@yarnpkg/core'
-import { CwdFS }                      from '@yarnpkg/fslib'
-import { tgzUtils }                   from '@yarnpkg/core'
-import { ppath }                      from '@yarnpkg/fslib'
-import { packUtils }                  from '@yarnpkg/plugin-pack'
+import { Configuration }     from '@yarnpkg/core'
+import { Project }           from '@yarnpkg/core'
+import { Cache }             from '@yarnpkg/core'
+import { CwdFS }             from '@yarnpkg/fslib'
+import { tgzUtils }          from '@yarnpkg/core'
+import { ppath }             from '@yarnpkg/fslib'
+import { packUtils }         from '@yarnpkg/plugin-pack'
 
-import { ExportCache }                from './export/ExportCache.js'
-import { copyRcFile }                 from './copy.js'
-import { copyPatchFiles }             from './copy.js'
-import { copyYarnRelease }            from './copy.js'
-import { genPackTgz }                 from './export/exportUtils.js'
-import { makeFetcher }                from './export/exportUtils.js'
-import { makeResolver }               from './export/exportUtils.js'
-import { getYarnPathFromDestination } from './yarn-path.js'
+import { ExportCache }       from './export/ExportCache.js'
+import { copyRcFile }        from './copy.js'
+import { copyPatchFiles }    from './copy.js'
+import { copyYarnRelease }   from './copy.js'
+import { genPackTgz }        from './export/exportUtils.js'
+import { makeFetcher }       from './export/exportUtils.js'
+import { makeResolver }      from './export/exportUtils.js'
 
 const DEFAULT_IMAGE_OS = 'linux'
 const DEFAULT_LINUX_LIBC = 'glibc'
@@ -89,9 +88,9 @@ export const pack = async (
     await copyRcFile(project, destination, report)
     await copyPatchFiles(project, workspace, destination, report)
 
-    if (project.configuration.get('yarnPath')) {
-      await copyYarnRelease(project, destination, report)
-    }
+    const yarnPath = project.configuration.get('yarnPath')
+      ? await copyYarnRelease(project, destination, report)
+      : undefined
 
     const tmpConfiguration = Configuration.create(destination, destination, configuration.plugins)
 
@@ -121,7 +120,7 @@ export const pack = async (
       enableMirror: tmpConfiguration.get(`enableMirror`),
       globalFolder: `.yarn/berry` as PortablePath,
       nodeLinker: IMAGE_PACK_NODE_LINKER,
-      yarnPath: await getYarnPathFromDestination(destination),
+      yarnPath,
     })
 
     await tmpConfiguration.getPackageExtensions()
