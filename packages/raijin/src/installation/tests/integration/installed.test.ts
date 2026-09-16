@@ -177,7 +177,10 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
         '{"name":"existing","type":"commonjs","scripts":{"verify":"node verify.js"}}\n'
       )
       await writeFile(join(cwd, 'tsconfig.json'), '{"compilerOptions":{"strict":false}}\n')
-      await git(['init', '--quiet'], cwd)
+      const template = join(cwd, 'git-template')
+
+      await mkdir(template)
+      await git(['init', '--quiet', `--template=${template}`], cwd)
 
       await withLocalHooks(async () => runRaijinInitializer({ ...options, argv: ['update'] }))
 
