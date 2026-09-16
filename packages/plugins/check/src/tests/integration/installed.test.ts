@@ -26,7 +26,7 @@ test(
     const cwd = await realpath(await mkdtemp(join(tmpdir(), 'raijin-focused-check-')))
     const app = join(cwd, 'packages/app')
     const archive = join(cwd, 'raijin.tgz')
-    const runtime = join(cwd, '.yarn/releases/yarn.mjs')
+    const runtime = join(cwd, '.yarn/releases/yarn.js')
     const source = "export {};\nconst unused = 1;\nconsole.log('hello');\n"
     const environment: NodeJS.ProcessEnv = {
       ...process.env,
@@ -66,7 +66,7 @@ test(
     })
     await mkdir(join(cwd, '.yarn/releases'), { recursive: true })
     await mkdir(app, { recursive: true })
-    await copyFile(join(repoRoot, '.yarn/releases/yarn.mjs'), runtime)
+    await copyFile(join(repoRoot, '.yarn/releases/yarn.js'), runtime)
     await writeFile(
       join(cwd, 'package.json'),
       JSON.stringify({
@@ -80,7 +80,7 @@ test(
     )
     await writeFile(
       join(cwd, '.yarnrc.yml'),
-      'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.mjs\n'
+      'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.js\n'
     )
     await writeFile(join(cwd, '.prettierrc.mjs'), 'export default { singleQuote: false }\n')
     await writeFile(join(app, '.prettierrc.mjs'), 'export default { singleQuote: true }\n')
