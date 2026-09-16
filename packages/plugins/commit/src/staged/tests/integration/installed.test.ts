@@ -56,6 +56,7 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
     env: environment,
   })
   delete environment.GITHUB_ACTIONS
+  delete environment.CI
   delete environment.IMAGE_PACK
   const run = async (command: string, args: Array<string>, directory = cwd): Promise<string> =>
     (await execute(command, args, { cwd: directory, env: environment })).stdout
