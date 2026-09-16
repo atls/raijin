@@ -31,12 +31,12 @@ export class CheckCommand extends BaseCommand {
     const { invocation } = this.context
     const { project, workspace, invocationCwd } = invocation
 
-    const cwd = toNativeCwd(project.cwd)
     const projectCwd = toNativeCwd(project.cwd)
     const targets =
       this.targets.length > 0
         ? createCommandInput({ cwd: invocationCwd, source: 'explicit', targets: this.targets })
         : undefined
+    const cwd = toNativeCwd(targets ? workspace.cwd : project.cwd)
 
     return runCheckPolicy({
       cwd,
