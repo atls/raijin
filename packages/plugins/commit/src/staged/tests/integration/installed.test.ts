@@ -266,4 +266,48 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
     await git('commit', '-m', 'test(common): yaml staged checks')
     assert.equal(await git('show', 'HEAD:backend/value.ts'), 'export const value: number = 4\n')
   })
+
+  await t.test('member-only Raijin dependency installs root Git hooks', async () => {
+    const memberRoot = await realpath(await mkdtemp(join(tmpdir(), 'raijin-member-hooks-')))
+    t.after(async () => rm(memberRoot, { recursive: true, force: true }))
+    const member = join(memberRoot, 'packages/member')
+    const memberRuntime = join(memberRoot, '.yarn/releases/yarn.js')
+
+    await mkdir(member, { recursive: true })
+    await mkdir(join(memberRoot, '.yarn/releases'), { recursive: true })
+    await copyFile(join(repoRoot, '.yarn/releases/yarn.js'), memberRuntime)
+    await writeFile(
+      join(memberRoot, 'package.json'),
+      JSON.stringify({
+        name: 'member-hooks',
+        private: true,
+        packageManager,
+        workspaces: ['packages/*'],
+      })
+    )
+    await writeFile(
+      join(member, 'package.json'),
+      JSON.stringify({
+        name: 'member',
+        private: true,
+        devDependencies: { '@atls/raijin': `file:${archive}` },
+      })
+    )
+    await writeFile(
+      join(memberRoot, '.yarnrc.yml'),
+      'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.js\n'
+    )
+    await run('git', ['init', '--quiet'], memberRoot)
+    await run(process.execPath, [memberRuntime, 'install', '--no-immutable'], memberRoot)
+
+    assert.equal(
+      (await run('git', ['config', 'core.hooksPath'], memberRoot)).trim(),
+      '.config/husky/_'
+    )
+    assert.equal(
+      await readFile(join(memberRoot, '.config/husky/pre-commit'), 'utf8'),
+      '# Raijin-managed hook\nyarn commit staged\n'
+    )
+    await access(join(memberRoot, '.config/husky/_/pre-commit'), constants.X_OK)
+  })
 })
