@@ -1,0 +1,284 @@
+import assert                     from 'node:assert/strict'
+import { execFile }               from 'node:child_process'
+import { constants }              from 'node:fs'
+import { access }                 from 'node:fs/promises'
+import { mkdir }                  from 'node:fs/promises'
+import { mkdtemp }                from 'node:fs/promises'
+import { readFile }               from 'node:fs/promises'
+import { rm }                     from 'node:fs/promises'
+import { writeFile }              from 'node:fs/promises'
+import { tmpdir }                 from 'node:os'
+import { basename }               from 'node:path'
+import { dirname }                from 'node:path'
+import { join }                   from 'node:path'
+import test                       from 'node:test'
+import { promisify }              from 'node:util'
+
+import { installRepositoryHooks } from '../../../bin/hooks.js'
+
+const execute = promisify(execFile)
+const gitLocalVariables = (await execute('git', ['rev-parse', '--local-env-vars'])).stdout
+  .trim()
+  .split('\n')
+
+const gitEnvironment = (): NodeJS.ProcessEnv => {
+  const environment = { ...process.env }
+
+  for (const name of gitLocalVariables) Reflect.deleteProperty(environment, name)
+
+  return environment
+}
+
+const executeGit = async (args: Array<string>, cwd: string, environment: NodeJS.ProcessEnv = {}) =>
+  execute('git', args, { cwd, env: { ...gitEnvironment(), ...environment } })
+
+const createRepository = async (context: { after: (callback: () => Promise<void>) => void }) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-hooks-'))
+
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  await executeGit(['init', '--quiet'], cwd)
+
+  return cwd
+}
+
+const withoutSkipEnvironment = async (run: () => Promise<void>): Promise<void> => {
+  const original = Object.fromEntries(
+    [...gitLocalVariables, 'CI', 'GITHUB_ACTIONS', 'IMAGE_PACK', 'HUSKY'].map((name) => [
+      name,
+      process.env[name],
+    ])
+  )
+
+  for (const name of Object.keys(original)) Reflect.deleteProperty(process.env, name)
+
+  try {
+    await run()
+  } finally {
+    for (const [name, value] of Object.entries(original)) {
+      if (value === undefined) Reflect.deleteProperty(process.env, name)
+      else process.env[name] = value
+    }
+  }
+}
+
+test('native Husky install is relative, idempotent, and preserves unrelated hooks', async (context) => {
+  const cwd = await createRepository(context)
+  const hooks = join(cwd, '.config/husky')
+  const unrelated = join(hooks, 'pre-push')
+
+  await mkdir(hooks, { recursive: true })
+  await writeFile(unrelated, 'echo user hook\n')
+
+  await withoutSkipEnvironment(async () => {
+    await installRepositoryHooks(cwd)
+    await installRepositoryHooks(cwd)
+  })
+
+  assert.equal(
+    (await executeGit(['config', 'core.hooksPath'], cwd)).stdout.trim(),
+    '.config/husky/_'
+  )
+  assert.equal(await readFile(unrelated, 'utf8'), 'echo user hook\n')
+  assert.match(await readFile(join(hooks, '_/h'), 'utf8'), /HUSKY-/)
+
+  await Promise.all(
+    [
+      ['commit-msg', 'yarn commit message lint "$1"'],
+      ['pre-commit', 'yarn commit staged'],
+      ['prepare-commit-msg', 'yarn commit message "$@"'],
+    ].map(async ([name, command]) => {
+      assert.equal(await readFile(join(hooks, name), 'utf8'), `# Raijin-managed hook\n${command}\n`)
+      await access(join(hooks, name), constants.X_OK)
+      await access(join(hooks, '_', name), constants.X_OK)
+    })
+  )
+})
+
+test('unowned same-name hook fails before Husky changes Git configuration', async (context) => {
+  const cwd = await createRepository(context)
+  const hooks = join(cwd, '.config/husky')
+
+  await mkdir(hooks, { recursive: true })
+  await writeFile(join(hooks, 'pre-commit'), 'echo user hook\n')
+
+  await withoutSkipEnvironment(async () => {
+    await assert.rejects(installRepositoryHooks(cwd), /existing hook is not Raijin-owned/)
+  })
+
+  assert.equal(await readFile(join(hooks, 'pre-commit'), 'utf8'), 'echo user hook\n')
+  await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
+  await assert.rejects(access(join(hooks, '_')))
+})
+
+test('exact legacy Raijin entries migrate while keeping an unrelated Husky file', async (context) => {
+  const cwd = await createRepository(context)
+  const hooks = join(cwd, '.config/husky')
+
+  await mkdir(join(hooks, '_'), { recursive: true })
+  await writeFile(join(hooks, 'commit-msg'), 'yarn commit message lint\n')
+  await writeFile(join(hooks, 'pre-commit'), 'yarn commit staged\n')
+  await writeFile(join(hooks, 'prepare-commit-msg'), 'yarn commit message $@\n')
+  await writeFile(join(hooks, '_/custom'), 'keep native neighbor\n')
+
+  await withoutSkipEnvironment(async () => installRepositoryHooks(cwd))
+
+  assert.equal(await readFile(join(hooks, '_/custom'), 'utf8'), 'keep native neighbor\n')
+  assert.match(await readFile(join(hooks, 'commit-msg'), 'utf8'), /lint "\$1"\n$/)
+})
+
+test('each sibling worktree uses its own hook entries with one relative Git setting', async (context) => {
+  const cwd = await createRepository(context)
+  const sibling = join(dirname(cwd), `${basename(cwd)}-sibling`)
+
+  context.after(async () => rm(sibling, { recursive: true, force: true }))
+
+  await executeGit(
+    [
+      '-c',
+      'core.hooksPath=/dev/null',
+      '-c',
+      'user.name=Fixture',
+      '-c',
+      'user.email=fixture@example.invalid',
+      'commit',
+      '--allow-empty',
+      '-m',
+      'initial',
+    ],
+    cwd
+  )
+  await executeGit(['worktree', 'add', '--quiet', '-b', 'sibling', sibling], cwd)
+
+  await withoutSkipEnvironment(async () => {
+    await installRepositoryHooks(cwd)
+    await installRepositoryHooks(sibling)
+  })
+
+  assert.equal(
+    (await executeGit(['config', 'core.hooksPath'], sibling)).stdout.trim(),
+    '.config/husky/_'
+  )
+  await access(join(cwd, '.config/husky/_/pre-commit'))
+  await access(join(sibling, '.config/husky/_/pre-commit'))
+  assert.equal(
+    await readFile(join(cwd, '.config/husky/pre-commit'), 'utf8'),
+    await readFile(join(sibling, '.config/husky/pre-commit'), 'utf8')
+  )
+})
+
+for (const [name, value] of [
+  ['CI', 'true'],
+  ['GITHUB_ACTIONS', 'true'],
+  ['IMAGE_PACK', '1'],
+  ['HUSKY', '0'],
+]) {
+  test(`${name}=${value} leaves hook state untouched`, async (context) => {
+    const cwd = await createRepository(context)
+
+    await withoutSkipEnvironment(async () => {
+      process.env[name] = value
+      await installRepositoryHooks(cwd)
+    })
+
+    await assert.rejects(access(join(cwd, '.config/husky')))
+    await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
+  })
+}
+
+test('missing Git repository is a non-installing bootstrap state', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-hooks-no-git-'))
+
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  await withoutSkipEnvironment(async () => installRepositoryHooks(cwd))
+  await assert.rejects(access(join(cwd, '.config/husky')))
+})
+
+test('Husky provider failure does not create Raijin entry files', async (context) => {
+  const cwd = await createRepository(context)
+  const previousPath = process.env.PATH
+
+  await withoutSkipEnvironment(async () => {
+    process.env.PATH = cwd
+
+    try {
+      await assert.rejects(
+        installRepositoryHooks(cwd),
+        /Husky installation failed: git command not found/
+      )
+    } finally {
+      if (previousPath === undefined) delete process.env.PATH
+      else process.env.PATH = previousPath
+    }
+  })
+
+  await assert.rejects(access(join(cwd, '.config/husky/pre-commit')))
+})
+
+test('a failing hook command blocks a real Git commit through Husky', async (context) => {
+  const cwd = await createRepository(context)
+  const bin = join(cwd, 'bin')
+
+  await mkdir(bin)
+  await writeFile(join(bin, 'yarn'), '#!/bin/sh\nexit 17\n', { mode: 0o755 })
+  await withoutSkipEnvironment(async () => installRepositoryHooks(cwd))
+
+  await assert.rejects(
+    executeGit(
+      [
+        '-c',
+        'user.name=Fixture',
+        '-c',
+        'user.email=fixture@example.invalid',
+        'commit',
+        '--allow-empty',
+        '-m',
+        'test: fail hook',
+      ],
+      cwd,
+      { PATH: `${bin}:${process.env.PATH ?? ''}` }
+    ),
+    (error: unknown) => {
+      assert.ok(error instanceof Error)
+      assert.notEqual(Reflect.get(error, 'code'), 0)
+      assert.match(
+        `${String(Reflect.get(error, 'stdout'))}${String(Reflect.get(error, 'stderr'))}`,
+        /husky - pre-commit script failed \(code 17\)/
+      )
+
+      return true
+    }
+  )
+})
+
+test('installed commit-message entries preserve Git arguments containing spaces', async (context) => {
+  const cwd = await createRepository(context)
+  const bin = join(cwd, 'bin')
+  const log = join(cwd, 'hook-arguments.txt')
+  const messageFile = join(cwd, 'message with spaces.txt')
+
+  await mkdir(bin)
+  await writeFile(join(bin, 'yarn'), '#!/bin/sh\nprintf "<%s>\\n" "$@" > "$RAIJIN_HOOK_LOG"\n', {
+    mode: 0o755,
+  })
+
+  await withoutSkipEnvironment(async () => {
+    await installRepositoryHooks(cwd)
+
+    const env = {
+      ...process.env,
+      PATH: `${bin}:${process.env.PATH ?? ''}`,
+      RAIJIN_HOOK_LOG: log,
+      XDG_CONFIG_HOME: cwd,
+    }
+
+    await execute(join(cwd, '.config/husky/_/commit-msg'), [messageFile], { cwd, env })
+    assert.equal(await readFile(log, 'utf8'), `<commit>\n<message>\n<lint>\n<${messageFile}>\n`)
+
+    await execute(join(cwd, '.config/husky/_/prepare-commit-msg'), [messageFile, 'message'], {
+      cwd,
+      env,
+    })
+    assert.equal(await readFile(log, 'utf8'), `<commit>\n<message>\n<${messageFile}>\n<message>\n`)
+  })
+})

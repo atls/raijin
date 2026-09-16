@@ -619,6 +619,10 @@ const renderQuickstart = (language) => {
       : '- Bundle commands (`check`, `files changed list`, etc.) become available',
     '',
     isRu
+      ? 'Если проект ещё не является Git-репозиторием, установка hooks откладывается: выполните `git init`, затем `yarn install`. При наличии `.git` локальная установка создаёт hooks через Husky.'
+      : 'If the project is not yet a Git repository, hook installation is deferred: run `git init`, then `yarn install`. In a local project with `.git`, installation creates hooks through Husky.',
+    '',
+    isRu
       ? 'Перед первым коммитом обязательно выполните [настройку проверок](#staged-checks). Создание каркаса не создаёт конфигурацию lint-staged.'
       : 'Before the first commit, complete the required [check configuration](#staged-checks). Scaffolding does not create a lint-staged configuration.',
     '',
@@ -660,6 +664,10 @@ const renderQuickstart = (language) => {
     isRu
       ? 'Этот шаг обязателен при подключении новых и существующих проектов. Настроенный Git hook вызывает `yarn commit staged`. Raijin не подставляет конфигурацию по умолчанию: без неё проверка подготовленных файлов завершается ошибкой.'
       : 'This step is required when setting up new or existing projects. A configured Git hook calls `yarn commit staged`. Raijin supplies no default lint-staged configuration: without one, staged-file checks fail.',
+    '',
+    isRu
+      ? 'Husky 9.1.7 настраивает относительный `core.hooksPath` как `.config/husky/_`. Raijin меняет только помеченные entry-файлы `pre-commit`, `commit-msg` и `prepare-commit-msg`; другие hooks сохраняются. Если файл с одним из этих имён принадлежит проекту, установка завершается конфликтом и не перезаписывает его. В CI, при упаковке image и с `HUSKY=0` hooks не устанавливаются.'
+      : 'Husky 9.1.7 sets the relative `core.hooksPath` to `.config/husky/_`. Raijin changes only its marked `pre-commit`, `commit-msg`, and `prepare-commit-msg` entry files; other hooks are preserved. An existing project-owned file with one of those names causes an explicit conflict instead of being overwritten. CI, image packaging, and `HUSKY=0` skip hook installation.',
     '',
     isRu
       ? 'Сначала проверьте существующие настройки. Поле `lint-staged` в `package.json`, `.lintstagedrc` в JSON/YAML и `lint-staged.config.*` остаются допустимыми native-форматами. Сохраняйте выбранный формат, команды и исключения проекта; не создавайте конкурирующую конфигурацию.'

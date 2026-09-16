@@ -70,7 +70,7 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 - Status: `active`
 - Description: validate commit messages against project scopes
-- Usage: `yarn commit message lint`
+- Usage: `yarn commit message lint [messageFile]`
 - Example: `yarn commit message lint`
 - Plugin: `@atls/yarn-plugin-commit`
 

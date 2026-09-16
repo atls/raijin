@@ -50,6 +50,19 @@ test('should read and validate the edit message from the resolved project cwd', 
       1
     )
     assert.match(output.join(''), /scope must be one of/)
+
+    const alternateEditFile = join(projectCwd, 'message with spaces.txt')
+
+    await writeFile(alternateEditFile, 'feat(service): use Git-provided file\n')
+
+    assert.equal(
+      await lintCommitMessage({
+        messageFile: alternateEditFile,
+        project,
+        writeOutput: (value) => output.push(value),
+      }),
+      0
+    )
   } finally {
     await rm(projectCwd, { recursive: true })
   }

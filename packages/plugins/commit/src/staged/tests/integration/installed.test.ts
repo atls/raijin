@@ -158,8 +158,11 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
   assert.match((await yarn('node', '-p', 'process.versions.pnp')).trim(), /^\d+$/)
   await access(join(client, 'node_modules/jest/package.json'))
   const hooks = await realpath(resolve(cwd, (await git('config', 'core.hooksPath')).trim()))
-  assert.equal(hooks, await realpath(join(cwd, '.config/husky')))
-  assert.equal(await readFile(join(hooks, 'pre-commit'), 'utf8'), 'yarn commit staged\n')
+  assert.equal(hooks, await realpath(join(cwd, '.config/husky/_')))
+  assert.equal(
+    await readFile(join(cwd, '.config/husky/pre-commit'), 'utf8'),
+    '# Raijin-managed hook\nyarn commit staged\n'
+  )
   await access(join(hooks, 'pre-commit'), constants.X_OK)
 
   await t.test('explicit project configuration enables the first mixed commit', async () => {

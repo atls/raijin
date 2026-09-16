@@ -1,58 +1,25 @@
-import type { Project }          from '@yarnpkg/core'
-import type { SpawnSyncReturns } from 'node:child_process'
+import type { Project }              from '@yarnpkg/core'
 
-import { spawnSync }             from 'node:child_process'
+import { scriptUtils }               from '@yarnpkg/core'
 
-import { npath }                 from '@yarnpkg/fslib'
-import { ppath }                 from '@yarnpkg/fslib'
-import { xfs }                   from '@yarnpkg/fslib'
+import { shouldSkipRepositoryHooks } from '@atls/raijin/installation/hooks/skip'
 
-const hook = (command: string): string => `${command}\n`
-const preCommitHook = (): string => hook('yarn commit staged')
-
-const git = (args: Array<string>, cwd?: string): SpawnSyncReturns<string> =>
-  // eslint-disable-next-line n/no-sync
-  spawnSync('git', args, { cwd, encoding: 'utf-8' })
+const HOOKS_BINARY = 'raijin-hooks'
 
 export const afterAllInstalled = async (project: Project): Promise<void> => {
-  if (process.env.GITHUB_ACTIONS) {
-    // eslint-disable-next-line no-console
-    console.log('AFTER INSTALL HOOK: Execution in GitHub Action')
-    return
-  }
+  if (shouldSkipRepositoryHooks()) return
 
-  if (process.env.IMAGE_PACK) return
-
-  const gitCheck = git(['--version'])
-
-  if ((gitCheck.error as NodeJS.ErrnoException | undefined)?.code === 'ENOENT') return
-
-  const target = ppath.join(project.cwd, '.config/husky')
-  const legacyTarget = ppath.join(target, '_')
-
-  if (await xfs.existsPromise(legacyTarget)) {
-    await xfs.removePromise(target)
-  }
-
-  if (!(await xfs.existsPromise(target))) {
-    await xfs.mkdirPromise(target, { recursive: true })
-  }
-
-  await xfs.writeFilePromise(ppath.join(target, 'commit-msg'), hook('yarn commit message lint'), {
-    mode: 0o755,
-  })
-
-  await xfs.writeFilePromise(ppath.join(target, 'pre-commit'), preCommitHook(), {
-    mode: 0o755,
-  })
-
-  await xfs.writeFilePromise(
-    ppath.join(target, 'prepare-commit-msg'),
-    hook('yarn commit message $@'),
-    { mode: 0o755 }
+  const status = await scriptUtils.executeWorkspaceAccessibleBinary(
+    project.topLevelWorkspace,
+    HOOKS_BINARY,
+    [],
+    {
+      cwd: project.cwd,
+      stdin: process.stdin,
+      stdout: process.stdout,
+      stderr: process.stderr,
+    }
   )
 
-  const { error } = git(['config', 'core.hooksPath', target], npath.fromPortablePath(project.cwd))
-
-  if (error) throw error
+  if (status !== 0) throw new Error(`Raijin hook installation failed with exit code ${status}`)
 }

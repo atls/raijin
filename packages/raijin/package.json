@@ -24,6 +24,7 @@
     "./config/prettier": "./src/config/prettier/index.ts",
     "./config/typescript": "./src/config/typescript/index.ts",
     "./filesystem": "./src/filesystem/index.ts",
+    "./installation/hooks/skip": "./bin/skip.js",
     "./infrastructure/providers/node/icons": "./src/infrastructure/providers/node/icons/index.ts",
     "./infrastructure/providers/svgr/icons": "./src/infrastructure/providers/svgr/icons/index.ts",
     "./infrastructure/providers/yarn/icons": "./src/infrastructure/providers/yarn/icons/index.ts",
@@ -48,7 +49,10 @@
     "./typescript-config": "./src/runtime/typescript-config.ts"
   },
   "main": "src/index.ts",
-  "bin": "./bin/raijin.mjs",
+  "bin": {
+    "raijin": "./bin/raijin.mjs",
+    "raijin-hooks": "./bin/raijin-hooks.js"
+  },
   "files": [
     "bin",
     "dist",
@@ -83,6 +87,7 @@
     "eslint-plugin-security": "3.0.1",
     "execa": "10.0.1",
     "fast-glob": "3.3.2",
+    "husky": "9.1.7",
     "import-sort": "6.0.0",
     "import-sort-parser": "6.0.0",
     "import-sort-parser-typescript": "6.0.0",
@@ -110,11 +115,17 @@
   "publishConfig": {
     "access": "public",
     "bin": {
-      "raijin": "./bin/raijin.mjs"
+      "raijin": "./bin/raijin.mjs",
+      "raijin-hooks": "./bin/raijin-hooks.js"
     },
     "exports": {
       "./package.json": "./package.json",
       "./types": "./types/index.d.ts",
+      "./installation/hooks/skip": {
+        "import": "./bin/skip.js",
+        "types": "./bin/skip.d.ts",
+        "default": "./bin/skip.js"
+      },
       "./config/eslint": {
         "import": "./dist/config/eslint/index.js",
         "types": "./dist/config/eslint/index.d.ts",
