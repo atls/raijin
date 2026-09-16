@@ -130,7 +130,7 @@ export const copyYarnRelease = async (
   project: Project,
   destination: PortablePath,
   report: Report
-): Promise<void> => {
+): Promise<PortablePath> => {
   const src = project.configuration.get('yarnPath')
 
   if (!src) {
@@ -145,4 +145,16 @@ export const copyYarnRelease = async (
   await xfs.copyPromise(dest, src, {
     overwrite: true,
   })
+
+  const scopePath = ppath.join(ppath.dirname(path), Manifest.fileName)
+  const scopeSrc = ppath.join(ppath.dirname(src), Manifest.fileName)
+
+  if (await xfs.existsPromise(scopeSrc)) {
+    report.reportInfo(null, scopePath)
+    await xfs.copyPromise(ppath.join(destination, scopePath), scopeSrc, {
+      overwrite: true,
+    })
+  }
+
+  return path
 }
