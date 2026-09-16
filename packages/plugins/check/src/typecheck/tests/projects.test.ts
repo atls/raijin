@@ -11,9 +11,12 @@ import { tmpdir }                        from 'node:os'
 import { join }                          from 'node:path'
 import { test }                          from 'node:test'
 
+import { createCommandInput }            from '@atls/raijin/commands'
 import { toPortableCwd }                 from '@atls/raijin/commands'
 
+import { selectTargetGroups }            from '../../targets/selection.js'
 import { resolveProjectTypecheckScopes } from '../projects.js'
+import { resolveTargetTypecheckScopes }  from '../projects.js'
 
 const createProject = async (
   workspaceConfig: boolean
@@ -88,4 +91,49 @@ test('full-project check includes an independent workspace TypeScript config', a
     scopes.map(({ cwd: scopeCwd }) => scopeCwd),
     [cwd, join(cwd, 'packages/app')]
   )
+})
+
+test('package directory uses its complete TypeScript project, not a file root', async (t) => {
+  const { cwd, project } = await createProject(true)
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const input = createCommandInput({
+    cwd: project.cwd,
+    source: 'explicit',
+    targets: ['packages/app', 'packages/app/source.ts'],
+  })
+  const [group] = await selectTargetGroups(project, input)
+
+  assert.ok(group)
+
+  const scopes = await resolveTargetTypecheckScopes(project, group)
+
+  assert.equal(scopes.length, 1)
+  assert.equal(scopes[0]?.kind, 'project')
+  assert.equal(scopes[0]?.cwd, join(cwd, 'packages/app'))
+})
+
+test('one source file remains a TypeScript files-mode input', async (t) => {
+  const { cwd, project } = await createProject(true)
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const input = createCommandInput({
+    cwd: project.cwd,
+    source: 'explicit',
+    targets: ['packages/app/source.ts'],
+  })
+  const [group] = await selectTargetGroups(project, input)
+
+  assert.ok(group)
+
+  const scopes = await resolveTargetTypecheckScopes(project, group)
+
+  assert.equal(scopes.length, 1)
+  const [scope] = scopes
+
+  assert.ok(scope)
+  assert.equal(scope.kind, 'files')
+  assert.deepEqual(scope.files, [join(cwd, 'packages/app/source.ts')])
 })

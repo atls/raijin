@@ -38,5 +38,5 @@
 
 ## Покрытие текущей версии
 
-- Команд: 32 (active: 32, inactive: 0)
-- Workspace-пакетов: 21
+- Команд: 31 (active: 31, inactive: 0)
+- Workspace-пакетов: 20
