@@ -1,7 +1,13 @@
+export interface YarnCommandOptions {
+  followYarnPath?: boolean
+  packageManager?: string
+  skipInstallHooks?: boolean
+}
+
 export type YarnCommandRunner = (
   args: Array<string>,
   cwd: string,
-  options?: { skipInstallHooks?: boolean }
+  options?: YarnCommandOptions
 ) => Promise<void>
 
 export interface YarnPackageMetadata {
@@ -14,7 +20,12 @@ export interface YarnPackageMetadata {
 export type YarnPackageQuery = (
   name: string,
   version: string,
-  cwd: string
+  cwd: string,
+  packageManager: string
 ) => Promise<YarnPackageMetadata>
 
-export type YarnCommandReader = (args: Array<string>, cwd: string) => Promise<string>
+export type YarnCommandReader = (
+  args: Array<string>,
+  cwd: string,
+  options?: YarnCommandOptions
+) => Promise<string>

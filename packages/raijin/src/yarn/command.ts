@@ -1,5 +1,6 @@
 import type { YarnCommandRunner }          from './runner.js'
 import type { YarnCommandReader }          from './runner.js'
+import type { YarnCommandOptions }         from './runner.js'
 import type { YarnPackageMetadata }        from './runner.js'
 import type { YarnPackageQuery }           from './runner.js'
 
@@ -20,24 +21,40 @@ export const createYarnCommandEnvironment = (
   return yarnEnvironment
 }
 
+const createYarnInvocation = (
+  args: Array<string>,
+  cwd: string,
+  options: YarnCommandOptions
+): { command: string; args: Array<string>; environment: NodeJS.ProcessEnv } => {
+  const environment = createYarnCommandEnvironment(cwd)
+
+  if (options.packageManager && !options.followYarnPath) {
+    environment.YARN_IGNORE_PATH = '1'
+  }
+
+  if (options.skipInstallHooks) {
+    environment.IMAGE_PACK = '1'
+  }
+
+  return options.packageManager
+    ? { command: 'corepack', args: [options.packageManager, ...args], environment }
+    : { command: 'yarn', args, environment }
+}
+
 export const runYarnCommand: YarnCommandRunner = async (
   args: Array<string>,
   cwd: string,
   options = {}
 ): Promise<void> => {
-  const environment = createYarnCommandEnvironment(cwd)
-
-  if (options.skipInstallHooks) {
-    environment.IMAGE_PACK = '1'
-  }
+  const invocation = createYarnInvocation(args, cwd, options)
   const executor = createProcessExecutor({
     stderr: process.stderr,
     stdin: process.stdin,
     stdout: process.stdout,
   })
-  const result = await executor.execute('yarn', args, {
+  const result = await executor.execute(invocation.command, invocation.args, {
     cwd,
-    environment,
+    environment: invocation.environment,
   })
 
   assertProcessCompleted(result)
@@ -47,15 +64,16 @@ export const runYarnCommand: YarnCommandRunner = async (
   }
 }
 
-export const readYarnCommand: YarnCommandReader = async (args, cwd) => {
+export const readYarnCommand: YarnCommandReader = async (args, cwd, options = {}) => {
+  const invocation = createYarnInvocation(args, cwd, options)
   const executor = createProcessExecutor({
     stderr: process.stderr,
     stdin: process.stdin,
     stdout: process.stdout,
   })
-  const result = await executor.execute('yarn', args, {
+  const result = await executor.execute(invocation.command, invocation.args, {
     cwd,
-    environment: createYarnCommandEnvironment(cwd),
+    environment: invocation.environment,
     output: { mode: 'capture' },
   })
 
@@ -68,7 +86,7 @@ export const readYarnCommand: YarnCommandReader = async (args, cwd) => {
   return result.stdout
 }
 
-export const queryYarnPackage: YarnPackageQuery = async (name, version, cwd) => {
+export const queryYarnPackage: YarnPackageQuery = async (name, version, cwd, packageManager) => {
   const args = [
     'npm',
     'info',
@@ -77,7 +95,7 @@ export const queryYarnPackage: YarnPackageQuery = async (name, version, cwd) => 
     '--fields',
     'name,version,gitHead,dist',
   ]
-  const stdout = await readYarnCommand(args, cwd)
+  const stdout = await readYarnCommand(args, cwd, { packageManager })
 
   const metadata: unknown = JSON.parse(stdout)
 

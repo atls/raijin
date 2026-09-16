@@ -61,13 +61,16 @@ test('bootstrap installs exact package before runtime activation and scaffolds o
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-install-'))
   context.after(async () => rm(cwd, { recursive: true, force: true }))
   const commands: Array<Array<string>> = []
-  const runYarnCommand: YarnCommandRunner = async (args) => {
+  const runYarnCommand: YarnCommandRunner = async (args, _commandCwd, options) => {
     commands.push(args)
 
     if (args[0] === 'add') {
+      assert.deepEqual(options, { packageManager: 'yarn@4.14.1', skipInstallHooks: true })
       assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js')), false)
-      assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.pending')), true)
+      assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.bootstrap.pending')), true)
       assert.equal(await exists(join(cwd, '.yarnrc.yml')), false)
+    } else if (args[0] === 'generate') {
+      assert.deepEqual(options, { packageManager: 'yarn@4.14.1', followYarnPath: true })
     }
   }
 
@@ -85,7 +88,7 @@ test('bootstrap installs exact package before runtime activation and scaffolds o
     ['generate', 'project', '--type', 'library'],
   ])
   assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.js'), 'utf-8'), 'runtime')
-  assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.pending')), false)
+  assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.bootstrap.pending')), false)
   assert.deepEqual(JSON.parse(await readFile(join(cwd, '.yarn/releases/package.json'), 'utf-8')), {
     type: 'module',
   })
@@ -142,6 +145,37 @@ test('configured update preserves project configuration and does not scaffold', 
   assert.match(yarnrc, /nodeLinker: node-modules/)
   assert.match(yarnrc, /enableGlobalCache: false/)
   assert.match(yarnrc, /yarnPath: .yarn\/releases\/yarn.js/)
+})
+
+test('update onboards an existing package without creating a scaffold', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-onboard-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  const packageJson = { name: 'existing', type: 'commonjs', scripts: { verify: 'node verify.js' } }
+  const commands: Array<Array<string>> = []
+
+  await writeFile(join(cwd, 'package.json'), `${JSON.stringify(packageJson)}\n`)
+  await writeFile(join(cwd, 'tsconfig.json'), '{"compilerOptions":{"strict":false}}\n')
+
+  await runRaijinInitializer({
+    argv: ['update'],
+    cwd,
+    fetchImpl,
+    queryYarnPackage,
+    readYarnCommand,
+    runYarnCommand: async (args) => {
+      commands.push(args)
+    },
+  })
+
+  assert.deepEqual(commands, [['add', '--prefer-dev', '-E', '@atls/raijin@1.2.3']])
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
+    ...packageJson,
+    packageManager: 'yarn@4.14.1',
+  })
+  assert.equal(
+    await readFile(join(cwd, 'tsconfig.json'), 'utf-8'),
+    '{"compilerOptions":{"strict":false}}\n'
+  )
 })
 
 test('metadata mismatch leaves the configured package and runtime untouched', async (context) => {
@@ -246,4 +280,60 @@ test('failed Yarn install exposes one retryable staged runtime without activatio
   await runRaijinInitializer(options)
   assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.js'), 'utf-8'), 'runtime')
   assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.pending')), false)
+})
+
+test('retrying init after package add completes the still-pending scaffold', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-bootstrap-retry-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  const commands: Array<Array<string>> = []
+  let rejectVersion = true
+
+  const options = {
+    argv: ['init', '--type', 'project'],
+    cwd,
+    fetchImpl,
+    queryYarnPackage,
+    readYarnCommand: async (args: Array<string>): Promise<string> => {
+      if (args[0] === '--version') {
+        return rejectVersion ? '4.0.0\n' : '4.14.1\n'
+      }
+
+      return JSON.stringify({ name: manifest.packageName, version: manifest.version })
+    },
+    runYarnCommand: async (args: Array<string>): Promise<void> => {
+      commands.push(args)
+
+      if (args[0] === 'add') {
+        const project = JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')) as Record<
+          string,
+          unknown
+        >
+
+        await writeFile(
+          join(cwd, 'package.json'),
+          `${JSON.stringify({
+            ...project,
+            devDependencies: { '@atls/raijin': '1.2.3' },
+          })}\n`
+        )
+      }
+    },
+  }
+
+  await assert.rejects(runRaijinInitializer(options), /staged at/)
+  assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.bootstrap.pending')), true)
+  assert.equal(
+    commands.some((args) => args[0] === 'generate'),
+    false
+  )
+  await assert.rejects(
+    runRaijinInitializer({ ...options, argv: ['update'] }),
+    /rerun init to finish the scaffold/
+  )
+
+  rejectVersion = false
+  await runRaijinInitializer(options)
+
+  assert.equal(commands.filter((args) => args[0] === 'generate').length, 1)
+  assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.bootstrap.pending')), false)
 })
