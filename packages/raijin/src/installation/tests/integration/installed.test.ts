@@ -1,6 +1,7 @@
 import type { RunRaijinInitializerOptions }       from '../../../initializer/interface.js'
 
 import assert                                     from 'node:assert/strict'
+import { execFile }                               from 'node:child_process'
 import { readFile }                               from 'node:fs/promises'
 import { mkdir }                                  from 'node:fs/promises'
 import { mkdtemp }                                from 'node:fs/promises'
@@ -11,6 +12,7 @@ import { tmpdir }                                 from 'node:os'
 import { join }                                   from 'node:path'
 import { resolve }                                from 'node:path'
 import { test }                                   from 'node:test'
+import { promisify }                              from 'node:util'
 
 import { runRaijinInitializer }                   from '../../../index.js'
 import { createSha256Digest }                     from '../../../runtime/manifest.js'
@@ -18,6 +20,34 @@ import { readYarnCommand }                        from '../../../yarn/command.js
 import { runYarnCommand as runNativeYarnCommand } from '../../../yarn/command.js'
 
 const repoRoot = resolve(import.meta.dirname, '../../../../../..')
+const execute = promisify(execFile)
+const gitLocalVariables = (await execute('git', ['rev-parse', '--local-env-vars'])).stdout
+  .trim()
+  .split('\n')
+
+const git = async (args: Array<string>, cwd: string) => {
+  const environment = { ...process.env }
+
+  for (const name of gitLocalVariables) Reflect.deleteProperty(environment, name)
+
+  return execute('git', args, { cwd, env: environment })
+}
+
+const withLocalHooks = async (run: () => Promise<void>): Promise<void> => {
+  const names = [...gitLocalVariables, 'CI', 'GITHUB_ACTIONS', 'IMAGE_PACK', 'HUSKY']
+  const previous = Object.fromEntries(names.map((name) => [name, process.env[name]]))
+
+  for (const name of names) Reflect.deleteProperty(process.env, name)
+
+  try {
+    await run()
+  } finally {
+    for (const [name, value] of Object.entries(previous)) {
+      if (value === undefined) Reflect.deleteProperty(process.env, name)
+      else process.env[name] = value
+    }
+  }
+}
 
 test('packed Raijin package and checked runtime bootstrap project and library, then update safely', async (context) => {
   const fixtureRoot = await mkdtemp(join(tmpdir(), 'raijin-installed-initializer-'))
@@ -147,8 +177,16 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
         '{"name":"existing","type":"commonjs","scripts":{"verify":"node verify.js"}}\n'
       )
       await writeFile(join(cwd, 'tsconfig.json'), '{"compilerOptions":{"strict":false}}\n')
+      await git(['init', '--quiet'], cwd)
 
-      await runRaijinInitializer({ ...options, argv: ['update'] })
+      await withLocalHooks(async () => runRaijinInitializer({ ...options, argv: ['update'] }))
+
+      assert.equal((await git(['config', 'core.hooksPath'], cwd)).stdout.trim(), '.config/husky/_')
+      assert.equal(
+        await readFile(join(cwd, '.config/husky/pre-commit'), 'utf8'),
+        '# Raijin-managed hook\nyarn commit staged\n'
+      )
+      assert.match(await readFile(join(cwd, '.config/husky/_/h'), 'utf8'), /HUSKY-/)
 
       const existing = JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')) as {
         type: string
