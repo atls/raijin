@@ -19,31 +19,12 @@
 
 - Статус: `active`
 - Описание: run Format, Lint, TypeCheck, unit and integration verification
-- Использование: `yarn check [--verify] ...`
+- Использование: `yarn check [--verify] [--since #0] ...`
 - Пример: `yarn check`
-- Пример: `yarn check packages/plugins/check/src/policy.ts`
+- Пример: `yarn check --verify --since origin/main`
+- Пример: `yarn check packages/app`
+- Пример: `yarn check packages/app/src/index.ts`
 - Плагин: `@atls/yarn-plugin-check`
-
-</details>
-
-### Домен `checks`
-
-- Команды: `checks run`
-
-<details>
-<summary>Подробности домена `checks`</summary>
-
-> Важно: `checks run --since <ref>` требует доступную Git-ссылку и историю для merge-base; результат и диагностику показывает обычный вывод команды в GitHub Actions
-
-<!-- sync:command-card:checks-run -->
-
-#### `checks run`
-
-- Статус: `active`
-- Описание: verify the active project or workspaces changed since a Git ref
-- Использование: `yarn checks run [--since #0]`
-- Пример: `yarn checks run`
-- Плагин: `@atls/yarn-plugin-checks`
 
 </details>
 

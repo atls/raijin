@@ -111,11 +111,6 @@ const workspaceGroupFromLocation = (location) => {
 const COVER_IMAGE_URL =
   'https://github.com/user-attachments/assets/ac98b900-ee3c-4ea8-a081-e83a1f5f3282'
 
-/** @type {Record<string, Array<string>>} */
-const COMMAND_EXAMPLES = {
-  check: ['yarn check', 'yarn check packages/plugins/check/src'],
-}
-
 /** @type {Record<string, { en: Array<string>, ru: Array<string> }>} */
 const COMMAND_NOTES = {
   'image pack': {
@@ -297,8 +292,8 @@ const renderRootReadme = (language) => {
     isRu ? '## Что умеет Raijin' : '## What Raijin can do',
     '',
     isRu
-      ? '- Проверки кода: `check`, `lint`, `typecheck`, `test`, `checks *`'
-      : '- Code validation: `check`, `lint`, `typecheck`, `test`, `checks *`',
+      ? '- Проверки кода: `check`, `lint`, `typecheck`, `test`'
+      : '- Code validation: `check`, `lint`, `typecheck`, `test`',
     isRu
       ? '- Работа с изменениями: `files changed *`, `workspaces changed *`'
       : '- Change scope tooling: `files changed *`, `workspaces changed *`',
@@ -795,7 +790,7 @@ const renderCommandCard = (command, language) => {
   const examples =
     command.examples.length > 0
       ? command.examples.map((example) => example.command)
-      : (COMMAND_EXAMPLES[command.command] ?? [`yarn ${command.command}`])
+      : [`yarn ${command.command}`]
 
   examples.forEach((example) => {
     lines.push(isRu ? `- Пример: \`${example}\`` : `- Example: \`${example}\``)
@@ -857,15 +852,6 @@ const renderCommandsDoc = (commands, language) => {
         : `<summary>Domain details: \`${domain}\`</summary>`
     )
     lines.push('')
-
-    if (domain === 'checks') {
-      lines.push(
-        isRu
-          ? '> Важно: `checks run --since <ref>` требует доступную Git-ссылку и историю для merge-base; результат и диагностику показывает обычный вывод команды в GitHub Actions'
-          : '> Important: `checks run --since <ref>` requires an available Git ref and merge-base history; GitHub Actions displays the ordinary command output and diagnostics'
-      )
-      lines.push('')
-    }
 
     for (const command of domainCommands) {
       lines.push(...renderCommandCard(command, language))

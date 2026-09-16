@@ -120,6 +120,15 @@ test(
     )
     await writeFile(join(app, 'package.json'), JSON.stringify({ name: 'app', type: 'module' }))
     await writeFile(join(app, 'source.ts'), source)
+    await mkdir(join(app, 'integration'))
+    await writeFile(
+      join(app, 'source.test.js'),
+      "import test from 'node:test'\ntest('unit', () => {})\n"
+    )
+    await writeFile(
+      join(app, 'integration/source.test.js'),
+      "import test from 'node:test'\ntest('integration', () => {})\n"
+    )
 
     await execute(process.execPath, [runtime, 'install'], { cwd, env: environment })
     await execute(process.execPath, [runtime, 'format', 'source.ts'], {
@@ -150,5 +159,33 @@ test(
       }
     )
     assert.equal(await readFile(join(app, 'source.ts'), 'utf8'), formattedSource)
+
+    await execute(process.execPath, [runtime, 'format', 'packages/app'], {
+      cwd,
+      env: environment,
+    })
+    const packageSource = await readFile(join(app, 'source.ts'), 'utf8')
+
+    await assert.rejects(
+      execute(process.execPath, [runtime, 'check', '--verify', 'packages/app'], {
+        cwd,
+        env: environment,
+        maxBuffer: 8 * 1024 * 1024,
+      }),
+      (error: unknown) => {
+        assert.ok(error instanceof Error)
+        assert.equal(Reflect.get(error, 'code'), 1)
+        const output = `${Reflect.get(error, 'stdout')}${Reflect.get(error, 'stderr')}`
+
+        assert.match(output, /Format\nLint\nTypeCheck\n/)
+        assert.match(output, /TS6133/)
+        assert.match(output, /Test:unit\n/)
+        assert.match(output, /Test:integration\n/)
+        assert.doesNotMatch(output, /TS6053|Format drift|no-console/)
+
+        return true
+      }
+    )
+    assert.equal(await readFile(join(app, 'source.ts'), 'utf8'), packageSource)
   }
 )

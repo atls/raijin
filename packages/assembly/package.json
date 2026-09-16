@@ -15,7 +15,6 @@
   "dependencies": {
     "@atls/raijin": "workspace:*",
     "@atls/yarn-plugin-check": "workspace:*",
-    "@atls/yarn-plugin-checks": "workspace:*",
     "@atls/yarn-plugin-commit": "workspace:*",
     "@atls/yarn-plugin-essentials": "workspace:*",
     "@atls/yarn-plugin-export": "workspace:*",
@@ -73,7 +72,6 @@
     "bundles": {
       "standard": [
         "@atls/yarn-plugin-check",
-        "@atls/yarn-plugin-checks",
         "@atls/yarn-plugin-commit",
         "@atls/yarn-plugin-essentials",
         "@atls/yarn-plugin-export",
