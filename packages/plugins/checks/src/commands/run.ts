@@ -30,6 +30,10 @@ export const selectAffectedWorkspaces = (
     }
   }
 
+  if (affected.has(project.topLevelWorkspace)) {
+    return [project.topLevelWorkspace]
+  }
+
   return [...affected].sort((left, right) =>
     structUtils
       .stringifyIdent(left.anchoredLocator)

@@ -34,3 +34,11 @@ test('a package change includes Yarn-reported recursive dependents once', () => 
 
   assert.deepEqual(selectAffectedWorkspaces(project, new Set([alpha, beta])), [alpha, beta, gamma])
 })
+
+test('a dependent root workspace collapses affected packages to one project check', () => {
+  const root = workspace('root')
+  const alpha = workspace('alpha', () => new Set([root]))
+  const project = { topLevelWorkspace: root, workspaces: [root, alpha] } as Project
+
+  assert.deepEqual(selectAffectedWorkspaces(project, new Set([alpha])), [root])
+})
