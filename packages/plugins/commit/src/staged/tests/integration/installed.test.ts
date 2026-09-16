@@ -59,7 +59,7 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
   delete environment.IMAGE_PACK
   const run = async (command: string, args: Array<string>, directory = cwd): Promise<string> =>
     (await execute(command, args, { cwd: directory, env: environment })).stdout
-  const runtime = join(cwd, '.yarn/releases/yarn.mjs')
+  const runtime = join(cwd, '.yarn/releases/yarn.js')
   const yarn = async (...args: Array<string>): Promise<string> =>
     run(process.execPath, [runtime, ...args])
   const git = async (...args: Array<string>): Promise<string> => run('git', args)
@@ -74,10 +74,10 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
   await mkdir(join(cwd, '.yarn/releases'), { recursive: true })
   await mkdir(join(cwd, 'backend'))
   await mkdir(client)
-  await copyFile(join(repoRoot, '.yarn/releases/yarn.mjs'), runtime)
+  await copyFile(join(repoRoot, '.yarn/releases/yarn.js'), runtime)
   assert.deepEqual(
     await readFile(runtime),
-    await readFile(join(repoRoot, '.yarn/releases/yarn.mjs'))
+    await readFile(join(repoRoot, '.yarn/releases/yarn.js'))
   )
   await writeFile(join(cwd, '.gitignore'), '.yarn\n.pnp.*\n*.tgz\nnode_modules\n')
   await writeFile(
@@ -92,7 +92,7 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
   )
   await writeFile(
     join(cwd, '.yarnrc.yml'),
-    'nodeLinker: pnp\npnpEnableEsmLoader: true\npnpIgnorePatterns: ["./client/**"]\nyarnPath: .yarn/releases/yarn.mjs\n'
+    'nodeLinker: pnp\npnpEnableEsmLoader: true\npnpIgnorePatterns: ["./client/**"]\nyarnPath: .yarn/releases/yarn.js\n'
   )
   await writeFile(
     join(cwd, 'tsconfig.json'),
