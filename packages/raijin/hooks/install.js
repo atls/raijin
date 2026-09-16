@@ -1,5 +1,6 @@
 import { access } from 'node:fs/promises'
 import { chmod } from 'node:fs/promises'
+import { lstat } from 'node:fs/promises'
 import { mkdir } from 'node:fs/promises'
 import { readFile } from 'node:fs/promises'
 import { writeFile } from 'node:fs/promises'
@@ -53,7 +54,14 @@ export const installRepositoryHooks = async (cwd) => {
   await Promise.all(
     entries.map(async ([name]) => {
       try {
-        const current = await readFile(join(target, name), 'utf8')
+        const path = join(target, name)
+        const kind = await lstat(path)
+
+        if (!kind.isFile()) {
+          throw new Error(`Cannot install Raijin hook ${name}: existing hook is not Raijin-owned`)
+        }
+
+        const current = await readFile(path, 'utf8')
 
         if (!isRaijinOwned(name, current)) {
           throw new Error(`Cannot install Raijin hook ${name}: existing hook is not Raijin-owned`)

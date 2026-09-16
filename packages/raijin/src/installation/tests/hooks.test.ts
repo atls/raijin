@@ -6,6 +6,7 @@ import { mkdir }                  from 'node:fs/promises'
 import { mkdtemp }                from 'node:fs/promises'
 import { readFile }               from 'node:fs/promises'
 import { rm }                     from 'node:fs/promises'
+import { symlink }                from 'node:fs/promises'
 import { writeFile }              from 'node:fs/promises'
 import { tmpdir }                 from 'node:os'
 import { basename }               from 'node:path'
@@ -196,6 +197,23 @@ test('unowned same-name hook fails before Husky changes Git configuration', asyn
   assert.equal(await readFile(join(hooks, 'pre-commit'), 'utf8'), 'echo user hook\n')
   await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
   await assert.rejects(access(join(hooks, '_')))
+})
+
+test('a symlink with an ownership marker is still an unowned hook path', async (context) => {
+  const cwd = await createRepository(context)
+  const hooks = join(cwd, '.config/husky')
+  const target = join(cwd, 'external-hook')
+
+  await mkdir(hooks, { recursive: true })
+  await writeFile(target, '# Raijin-managed hook\nyarn commit staged\n')
+  await symlink(target, join(hooks, 'pre-commit'))
+
+  await withoutSkipEnvironment(async () => {
+    await assert.rejects(installRepositoryHooks(cwd), /existing hook is not Raijin-owned/)
+  })
+
+  assert.equal(await readFile(target, 'utf8'), '# Raijin-managed hook\nyarn commit staged\n')
+  await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
 })
 
 test('exact legacy Raijin entries migrate while keeping an unrelated Husky file', async (context) => {
