@@ -100,7 +100,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       )
       await writeFile(join(cwd, 'yarn.lock'), '')
       await writeFile(join(memberCwd, 'package.json'), '{"name":"member"}\n')
-      await runNativeYarnCommand(['install'], cwd, {
+      await runNativeYarnCommand(['install', '--no-immutable'], cwd, {
         packageManager: manifest.packageManager,
         skipInstallHooks: true,
       })
