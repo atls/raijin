@@ -13,12 +13,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "builder build plugin",
+    "build": "builder build plugin --external-file ../../assembly/externals.json --external @atls/raijin/runtime-resolver",
     "prepack": "yarn run build",
     "postpack": "rm -rf dist"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
+    "@atls/yarn-plugin-format": "workspace:*",
+    "@atls/yarn-plugin-lint": "workspace:*",
+    "@atls/yarn-plugin-test": "workspace:*",
+    "@atls/yarn-plugin-typescript": "workspace:*",
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {

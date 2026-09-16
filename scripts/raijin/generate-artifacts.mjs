@@ -853,8 +853,8 @@ const renderCommandsDoc = (commands, language) => {
     if (domain === 'checks') {
       lines.push(
         isRu
-          ? '> Важно: `checks` рассчитан на запуск в раннерах GitHub Actions, требует `GITHUB_TOKEN` и контекст проверки (`context.repo`, `GITHUB_SHA`)'
-          : '> Important: `checks` targets GitHub Actions runners, requires `GITHUB_TOKEN`, and relies on check context (`context.repo`, `GITHUB_SHA`)'
+          ? '> Важно: `checks run --since <ref>` требует доступную Git-ссылку и историю для merge-base; результат и диагностику показывает обычный вывод команды в GitHub Actions'
+          : '> Important: `checks run --since <ref>` requires an available Git ref and merge-base history; GitHub Actions displays the ordinary command output and diagnostics'
       )
       lines.push('')
     }

@@ -10,7 +10,8 @@ import { resolvePrettierProject }   from '@atls/raijin/config/prettier'
 export const formatFile = async (
   file: string,
   path: string,
-  workspacePackageNames?: ReadonlyArray<string>
+  workspacePackageNames?: ReadonlyArray<string>,
+  write = true
 ): Promise<FormattedFileResult> => {
   const content = await readFile(path, 'utf8')
   const configuration = await resolvePrettierProject({
@@ -19,7 +20,7 @@ export const formatFile = async (
   })
   const output = await format(content, { ...configuration, filepath: file })
 
-  if (output !== content) {
+  if (write && output !== content) {
     await writeFile(path, output, 'utf8')
   }
 

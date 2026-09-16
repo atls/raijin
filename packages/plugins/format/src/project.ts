@@ -7,6 +7,7 @@ import { selectFiles }              from './selection.js'
 export const formatProjectSources = async ({
   cwd,
   targets,
+  write = true,
   workspacePackageNames,
 }: FormatProjectInput): Promise<FormatProjectResult> => {
   const selectedFiles = await selectFiles(cwd, targets)
@@ -15,7 +16,7 @@ export const formatProjectSources = async ({
   await selectedFiles.reduce<Promise<void>>(async (previous, file) => {
     await previous
 
-    files.push(await formatFile(file.file, file.path, workspacePackageNames))
+    files.push(await formatFile(file.file, file.path, workspacePackageNames, write))
   }, Promise.resolve())
 
   return { files }

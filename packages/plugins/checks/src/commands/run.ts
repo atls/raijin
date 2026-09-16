@@ -1,97 +1,114 @@
-import type { ProjectCommandContext } from '@atls/raijin/commands'
-import type { ProjectInvocation }     from '@atls/raijin/commands'
+import type { ProjectCommandContext }    from '@atls/raijin/commands'
+import type { Project }                  from '@yarnpkg/core'
+import type { Workspace }                from '@yarnpkg/core'
 
-import { BaseCommand }                from '@yarnpkg/cli'
-import { StreamReport }               from '@yarnpkg/core'
-import { MessageName }                from '@yarnpkg/core'
-import { Command }                    from 'clipanion'
-import { Option }                     from 'clipanion'
+import { BaseCommand }                   from '@yarnpkg/cli'
+import { structUtils }                   from '@yarnpkg/core'
+import { gitUtils }                      from '@yarnpkg/plugin-git'
+import { Option }                        from 'clipanion'
 
-import { resolveChecksReleaseConfig } from './release-config.js'
+import { toNativeCwd }                   from '@atls/raijin/commands'
+import { toPortablePath }                from '@atls/raijin/filesystem'
+import { getWorkspacePackageNames }      from '@atls/raijin/project'
+import { runCheckPolicy }                from '@atls/yarn-plugin-check'
+import { resolveProjectTypecheckScopes } from '@atls/yarn-plugin-check'
+import { resolveTypecheckProjectConfig } from '@atls/yarn-plugin-typescript'
+
+export const selectAffectedWorkspaces = (
+  project: Project,
+  changed: ReadonlySet<Workspace>
+): ReadonlyArray<Workspace> => {
+  if (changed.has(project.topLevelWorkspace)) {
+    return [project.topLevelWorkspace]
+  }
+
+  const affected = new Set<Workspace>(changed)
+
+  for (const workspace of changed) {
+    for (const dependent of workspace.getRecursiveWorkspaceDependents()) {
+      affected.add(dependent)
+    }
+  }
+
+  return [...affected].sort((left, right) =>
+    structUtils
+      .stringifyIdent(left.anchoredLocator)
+      .localeCompare(structUtils.stringifyIdent(right.anchoredLocator)))
+}
 
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
 
-  static override usage = Command.Usage({
-    description: 'run the standard GitHub check sequence',
-    details: `
-      The standard sequence is typecheck, lint, unit tests, integration tests, then release.
-      Use --no-release for private application pipelines that need the standard checks without the Release check.
-      The same release step can be disabled from top-level package.json with tools.checks.release=false.
-    `,
+  static override usage = BaseCommand.Usage({
+    description: 'verify the active project or workspaces changed since a Git ref',
   })
 
-  changed = Option.Boolean('--changed', false)
-
-  noRelease = Option.Boolean('--no-release', false)
+  since = Option.String('--since')
 
   declare context: ProjectCommandContext
 
   override async execute(): Promise<number> {
     const { invocation } = this.context
-    const { configuration, project } = invocation.yarn
-    const releaseConfig = resolveChecksReleaseConfig(project)
+    const { project } = invocation.yarn
+    const projectCwd = toNativeCwd(project.cwd)
+    const changed = this.since
+      ? await gitUtils.fetchChangedWorkspaces({ ref: this.since, project })
+      : new Set([project.topLevelWorkspace])
+    const workspaces = selectAffectedWorkspaces(project, changed)
 
-    const commandReport = await StreamReport.start(
-      {
-        stdout: this.context.stdout,
-        configuration,
-      },
-      async (report) => {
-        if ((await this.runCheck(invocation, ['typecheck'], report)) !== 0) {
-          return
-        }
+    if (workspaces.length === 0) {
+      this.context.stdout.write('No workspaces changed\n')
 
-        if ((await this.runCheck(invocation, ['lint'], report)) !== 0) {
-          return
-        }
+      return 0
+    }
 
-        const testResults = await Promise.all([
-          this.runCheck(invocation, ['test', 'unit'], report),
-          this.runCheck(invocation, ['test', 'integration'], report),
-        ])
+    const checkedConfigs = new Set<string>()
+    const workspacePackageNames = getWorkspacePackageNames(project)
+    let failed = false
 
-        if (testResults.some((code) => code !== 0)) {
-          return
-        }
+    for await (const workspace of workspaces) {
+      const cwd = toNativeCwd(workspace.cwd)
+      const config = await resolveTypecheckProjectConfig(cwd, projectCwd)
+      const skipTypecheck = config !== undefined && checkedConfigs.has(config)
+      const configOwner = config
+        ? (project.tryWorkspaceByFilePath(toPortablePath(config)) ?? project.topLevelWorkspace)
+        : workspace
 
-        if (!this.noRelease && releaseConfig.enabled) {
-          await this.runCheck(invocation, ['release'], report)
-        }
+      if (config) {
+        checkedConfigs.add(config)
       }
-    )
 
-    return commandReport.exitCode()
-  }
+      this.context.stdout.write(`Checking ${workspace.relativeCwd}\n`)
 
-  private async runCheck(
-    invocation: ProjectInvocation,
-    args: Array<string>,
-    report: StreamReport
-  ): Promise<number> {
-    try {
-      const shouldAppendChanged =
-        this.changed &&
-        (args[0] === 'lint' || args[0] === 'typecheck') &&
-        !args.includes('--changed')
-      const checkArgs = shouldAppendChanged ? [...args, '--changed'] : args
-      const code = await invocation.yarn.execute(['checks', ...checkArgs])
+      const code = await runCheckPolicy({
+        cwd,
+        projectCwd,
+        verify: true,
+        skipTypecheck,
+        typecheckScopes:
+          workspace === project.topLevelWorkspace
+            ? await resolveProjectTypecheckScopes(project)
+            : undefined,
+        workspacePackageNames,
+        manifestPolicySources: [project.topLevelWorkspace, configOwner].map(({
+          cwd: sourceCwd,
+          manifest,
+        }) => ({
+          cwd: toNativeCwd(sourceCwd),
+          ...(Object.hasOwn(manifest.raw, 'typecheckSkipLibCheck')
+            ? { typecheckSkipLibCheck: manifest.raw.typecheckSkipLibCheck }
+            : {}),
+        })),
+        stdout: this.context.stdout,
+        stderr: this.context.stderr,
+      })
 
       if (code !== 0) {
-        report.reportError(MessageName.UNNAMED, `Run check ${args.join(' ')} failed: ${code}`)
+        failed = true
       }
-
-      return code
-    } catch (error) {
-      report.reportError(
-        MessageName.UNNAMED,
-        `Run check ${args.join(' ')} error: ${
-          error instanceof Error ? error.message : (error as string)
-        }`
-      )
-
-      return 1
     }
+
+    return failed ? 1 : 0
   }
 }
 

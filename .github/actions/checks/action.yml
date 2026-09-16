@@ -2,13 +2,9 @@ name: Checks composite action
 description: Run checks
 
 inputs:
-  GITHUB_TOKEN:
+  BASE_REF:
     required: true
-    description: GitHub token
-  CHANGED:
-    required: false
-    description: Run lint and typecheck only for changed files
-    default: 'false'
+    description: Pull request base commit SHA
 
 runs:
   using: composite
@@ -16,11 +12,7 @@ runs:
   steps:
     - name: Checks
       env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        RAIJIN_BASE_REF: ${{ inputs.BASE_REF }}
       shell: bash
       run: |
-        if [ "${{ inputs.CHANGED }}" = "true" ]; then
-          yarn checks run --changed
-        else
-          yarn checks run
-        fi
+        yarn checks run --since "$RAIJIN_BASE_REF"

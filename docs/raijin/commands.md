@@ -18,81 +18,31 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 #### `check`
 
 - Status: `active`
-- Description: run formatting, type checking, and linting
-- Usage: `yarn check ...`
+- Description: run Format, Lint, TypeCheck, unit and integration verification
+- Usage: `yarn check [--verify] ...`
 - Example: `yarn check`
-- Example: `yarn check packages/plugins/check/src`
+- Example: `yarn check packages/plugins/check/src/policy.ts`
 - Plugin: `@atls/yarn-plugin-check`
 
 </details>
 
 ### Domain `checks`
 
-- Commands: `checks lint`, `checks release`, `checks run`, `checks test integration`, `checks test unit`, `checks typecheck`
+- Commands: `checks run`
 
 <details>
 <summary>Domain details: `checks`</summary>
 
-> Important: `checks` targets GitHub Actions runners, requires `GITHUB_TOKEN`, and relies on check context (`context.repo`, `GITHUB_SHA`)
-
-<!-- sync:command-card:checks-lint -->
-
-#### `checks lint`
-
-- Status: `active`
-- Description: report lint results to GitHub Checks
-- Usage: `yarn checks lint [--changed]`
-- Example: `yarn checks lint`
-- Plugin: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-release -->
-
-#### `checks release`
-
-- Status: `active`
-- Description: run the release GitHub check for changed workspaces
-- Usage: `yarn checks release [--no-private]`
-- Example: `yarn checks release`
-- Plugin: `@atls/yarn-plugin-checks`
+> Important: `checks run --since <ref>` requires an available Git ref and merge-base history; GitHub Actions displays the ordinary command output and diagnostics
 
 <!-- sync:command-card:checks-run -->
 
 #### `checks run`
 
 - Status: `active`
-- Description: run the standard GitHub check sequence
-- Usage: `yarn checks run [--changed] [--no-release]`
+- Description: verify the active project or workspaces changed since a Git ref
+- Usage: `yarn checks run [--since #0]`
 - Example: `yarn checks run`
-- Plugin: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-test-integration -->
-
-#### `checks test integration`
-
-- Status: `active`
-- Description: report integration test results to GitHub Checks
-- Usage: `yarn checks test integration`
-- Example: `yarn checks test integration`
-- Plugin: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-test-unit -->
-
-#### `checks test unit`
-
-- Status: `active`
-- Description: report unit test results to GitHub Checks
-- Usage: `yarn checks test unit`
-- Example: `yarn checks test unit`
-- Plugin: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-typecheck -->
-
-#### `checks typecheck`
-
-- Status: `active`
-- Description: report TypeScript diagnostics to GitHub Checks
-- Usage: `yarn checks typecheck [--changed]`
-- Example: `yarn checks typecheck`
 - Plugin: `@atls/yarn-plugin-checks`
 
 </details>

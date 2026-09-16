@@ -18,81 +18,31 @@
 #### `check`
 
 - Статус: `active`
-- Описание: run formatting, type checking, and linting
-- Использование: `yarn check ...`
+- Описание: run Format, Lint, TypeCheck, unit and integration verification
+- Использование: `yarn check [--verify] ...`
 - Пример: `yarn check`
-- Пример: `yarn check packages/plugins/check/src`
+- Пример: `yarn check packages/plugins/check/src/policy.ts`
 - Плагин: `@atls/yarn-plugin-check`
 
 </details>
 
 ### Домен `checks`
 
-- Команды: `checks lint`, `checks release`, `checks run`, `checks test integration`, `checks test unit`, `checks typecheck`
+- Команды: `checks run`
 
 <details>
 <summary>Подробности домена `checks`</summary>
 
-> Важно: `checks` рассчитан на запуск в раннерах GitHub Actions, требует `GITHUB_TOKEN` и контекст проверки (`context.repo`, `GITHUB_SHA`)
-
-<!-- sync:command-card:checks-lint -->
-
-#### `checks lint`
-
-- Статус: `active`
-- Описание: report lint results to GitHub Checks
-- Использование: `yarn checks lint [--changed]`
-- Пример: `yarn checks lint`
-- Плагин: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-release -->
-
-#### `checks release`
-
-- Статус: `active`
-- Описание: run the release GitHub check for changed workspaces
-- Использование: `yarn checks release [--no-private]`
-- Пример: `yarn checks release`
-- Плагин: `@atls/yarn-plugin-checks`
+> Важно: `checks run --since <ref>` требует доступную Git-ссылку и историю для merge-base; результат и диагностику показывает обычный вывод команды в GitHub Actions
 
 <!-- sync:command-card:checks-run -->
 
 #### `checks run`
 
 - Статус: `active`
-- Описание: run the standard GitHub check sequence
-- Использование: `yarn checks run [--changed] [--no-release]`
+- Описание: verify the active project or workspaces changed since a Git ref
+- Использование: `yarn checks run [--since #0]`
 - Пример: `yarn checks run`
-- Плагин: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-test-integration -->
-
-#### `checks test integration`
-
-- Статус: `active`
-- Описание: report integration test results to GitHub Checks
-- Использование: `yarn checks test integration`
-- Пример: `yarn checks test integration`
-- Плагин: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-test-unit -->
-
-#### `checks test unit`
-
-- Статус: `active`
-- Описание: report unit test results to GitHub Checks
-- Использование: `yarn checks test unit`
-- Пример: `yarn checks test unit`
-- Плагин: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-typecheck -->
-
-#### `checks typecheck`
-
-- Статус: `active`
-- Описание: report TypeScript diagnostics to GitHub Checks
-- Использование: `yarn checks typecheck [--changed]`
-- Пример: `yarn checks typecheck`
 - Плагин: `@atls/yarn-plugin-checks`
 
 </details>
