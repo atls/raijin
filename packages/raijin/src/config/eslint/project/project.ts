@@ -46,15 +46,18 @@ export const resolveEslintProject = async ({
   fix = false,
   rootCwd,
 }: ResolveEslintProjectOptions): Promise<EslintProjectOptions> => {
-  const tsconfigRootCwd = hasTypeScriptProject(cwd) ? cwd : rootCwd
   const configFile = await new ESLint({ cwd }).findConfigFile()
 
   return {
-    baseConfig: withTypeScriptRoot(defaults, tsconfigRootCwd),
+    ...(!configFile
+      ? {
+          baseConfig: withTypeScriptRoot(defaults, hasTypeScriptProject(cwd) ? cwd : rootCwd),
+          overrideConfigFile: true,
+        }
+      : {}),
     cache,
     ...(cacheLocation ? { cacheLocation } : {}),
     cwd,
     fix,
-    ...(!configFile ? { overrideConfigFile: true } : {}),
   }
 }
