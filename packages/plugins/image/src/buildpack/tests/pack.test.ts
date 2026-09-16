@@ -113,8 +113,9 @@ test('should pass the packed destination as the build context', async (t) => {
       }
     })
 
-    await pack(
+    const result = await pack(
       {
+        additionalTags: ['stage', 'production'],
         builder: 'example/builder',
         buildpack: 'example/buildpack',
         cwd: packCwd,
@@ -130,5 +131,29 @@ test('should pass the packed destination as the build context', async (t) => {
 
     assert.ok(buildCall)
     assert.equal(buildCall.args[buildCall.args.indexOf('--path') + 1], packCwd)
+    assert.deepEqual(
+      buildCall.args.reduce<Array<string>>((tags, argument, index) => {
+        if (argument === '--tag') {
+          tags.push(buildCall.args[index + 1] ?? '')
+        }
+
+        return tags
+      }, []),
+      [
+        'registry.example/atls-example:latest',
+        'registry.example/atls-example:stage',
+        'registry.example/atls-example:production',
+      ]
+    )
+    assert.deepEqual(result, {
+      images: [
+        'registry.example/atls-example:abc123',
+        'registry.example/atls-example:latest',
+        'registry.example/atls-example:stage',
+        'registry.example/atls-example:production',
+      ],
+      tags: ['abc123', 'latest', 'stage', 'production'],
+      workspace: '@atls/example',
+    })
   })
 })

@@ -14,6 +14,7 @@ export interface PackOptions {
   builder: string
   buildpack: string
   tagPolicy: TagPolicy
+  additionalTags?: Array<string>
   platform?: string
   require?: Array<string>
   cwd?: PortablePath
