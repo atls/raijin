@@ -137,7 +137,10 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
   await writeFile(backendFile, 'export const value: number = 1\n')
   await writeFile(clientFile, 'export const value: number = 1\n')
   await writeFile(clientTest, "test('client', () => expect(1).toBe(1))\n")
-  await git('init', '--quiet')
+  const template = join(cwd, 'git-template')
+
+  await mkdir(template)
+  await git('init', '--quiet', `--template=${template}`)
   await git('config', 'user.name', 'Fixture')
   await git('config', 'user.email', 'fixture@example.invalid')
   await git('config', 'commit.gpgsign', 'false')
