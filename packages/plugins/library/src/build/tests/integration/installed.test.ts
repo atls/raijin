@@ -14,7 +14,7 @@ import { promisify }     from 'node:util'
 
 const execute = promisify(execFile)
 const repoRoot = fileURLToPath(new URL('../../../../../../../', import.meta.url))
-const repositoryRuntime = join(repoRoot, '.yarn/releases/yarn.mjs')
+const repositoryRuntime = join(repoRoot, '.yarn/releases/yarn.js')
 
 const environment = (): NodeJS.ProcessEnv => {
   const env = { ...process.env }
@@ -40,7 +40,7 @@ const environment = (): NodeJS.ProcessEnv => {
 }
 
 const run = async (cwd: string, args: Array<string>) =>
-  execute(process.execPath, [join(cwd, '.yarn/releases/yarn.mjs'), ...args], {
+  execute(process.execPath, [join(cwd, '.yarn/releases/yarn.js'), ...args], {
     cwd,
     env: environment(),
     maxBuffer: 8 * 1024 * 1024,
@@ -48,7 +48,7 @@ const run = async (cwd: string, args: Array<string>) =>
 
 const materializeRuntime = async (cwd: string): Promise<void> => {
   await mkdir(join(cwd, '.yarn/releases'), { recursive: true })
-  await copyFile(repositoryRuntime, join(cwd, '.yarn/releases/yarn.mjs'))
+  await copyFile(repositoryRuntime, join(cwd, '.yarn/releases/yarn.js'))
 }
 
 test(
@@ -105,7 +105,7 @@ test(
     )
     await writeFile(
       join(libraryCwd, '.yarnrc.yml'),
-      'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.mjs\n'
+      'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.js\n'
     )
     await writeFile(
       join(libraryCwd, 'tsconfig.json'),
@@ -151,7 +151,7 @@ test(
     )
     await writeFile(
       join(consumerCwd, '.yarnrc.yml'),
-      'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.mjs\n'
+      'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.js\n'
     )
     await writeFile(
       join(consumerCwd, 'tsconfig.json'),
