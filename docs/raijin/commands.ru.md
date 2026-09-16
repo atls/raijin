@@ -254,12 +254,13 @@
 
 - Статус: `active`
 - Описание: build and optionally publish a container image
-- Использование: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0]`
+- Использование: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [--tags #0] [-p,--publish] [--platform #0]`
 - Пример: `yarn image pack`
 - Контракт: `packConfiguration` по умолчанию использует `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Контракт: `packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.
 - Контракт: `packConfiguration.buildpackVersion` фиксирует неизменяемый buildpack tag для rollback.
 - Контракт: `packConfiguration.buildpack` переопределяет полную buildpack-ссылку.
+- Контракт: `--tags <alias,...>` добавляет дополнительные image tags в тот же вызов `pack build`.
 - Плагин: `@atls/yarn-plugin-image`
 
 </details>

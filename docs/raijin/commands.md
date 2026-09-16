@@ -254,12 +254,13 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 - Status: `active`
 - Description: build and optionally publish a container image
-- Usage: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [-p,--publish] [--platform #0]`
+- Usage: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [--tags #0] [-p,--publish] [--platform #0]`
 - Example: `yarn image pack`
 - Contract: `packConfiguration` defaults to `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Contract: `packConfiguration.builderTag` selects the supported Node/buildpack channel.
 - Contract: `packConfiguration.buildpackVersion` pins an immutable buildpack tag for rollback.
 - Contract: `packConfiguration.buildpack` overrides the full buildpack reference.
+- Contract: `--tags <alias,...>` adds additional image tags to the same `pack build` invocation.
 - Plugin: `@atls/yarn-plugin-image`
 
 </details>

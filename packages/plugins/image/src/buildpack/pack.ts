@@ -11,6 +11,8 @@ import { ppath }                   from '@yarnpkg/fslib'
 import { createProjectDescriptor } from './descriptor.js'
 import { execOrThrow }             from './pack-cli.js'
 import { installPack }             from './pack-cli.js'
+import { getPackImageTags }        from './tags.js'
+import { normalizeAdditionalTags } from './tags.js'
 import { getTag }                  from './tags.js'
 
 export const pack = async (
@@ -23,6 +25,7 @@ export const pack = async (
     buildpack,
     platform,
     require,
+    additionalTags,
     cwd,
   }: PackOptions,
   commandExecutor: CommandExecutor
@@ -63,26 +66,31 @@ export const pack = async (
 
   await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
 
+  const imageTags = getPackImageTags(image, tag, additionalTags)
+  const [primaryImageTag, ...extraImageTags] = imageTags
+
   // eslint-disable-next-line no-console, n/no-sync
   console.debug('project.toml', readFileSync(descriptorPath, 'utf8'))
 
   const args = [
     'build',
     '--trust-builder',
-    `${image}:${tag}`,
+    primaryImageTag,
     '--descriptor',
     descriptorPath,
     '--path',
     packCwd,
     '--buildpack',
     buildpack,
-    '--tag',
-    `${image}:latest`,
     '--creation-time',
     'now',
     '--clear-cache',
     '--verbose',
   ]
+
+  for (const imageTag of extraImageTags) {
+    args.push('--tag', imageTag)
+  }
 
   if (publish) {
     args.push('--publish')
@@ -102,8 +110,8 @@ export const pack = async (
   await execOrThrow(commandExecutor, 'pack', args)
 
   return {
-    images: [`${image}:${tag}`, `${image}:latest`],
-    tags: [tag, 'latest'],
+    images: imageTags,
+    tags: [tag, 'latest', ...normalizeAdditionalTags(additionalTags)],
     workspace,
   }
 }

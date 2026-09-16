@@ -1,11 +1,30 @@
-import type { CommandExecutor } from '../executor.interfaces.js'
+import type { CommandExecutor }    from '../executor.interfaces.js'
 
-import assert                   from 'node:assert/strict'
-import test                     from 'node:test'
+import assert                      from 'node:assert/strict'
+import test                        from 'node:test'
 
-import { npath }                from '@yarnpkg/fslib'
+import { npath }                   from '@yarnpkg/fslib'
 
-import { getRevision }          from '../tags.js'
+import { getPackImageTags }        from '../tags.js'
+import { getRevision }             from '../tags.js'
+import { normalizeAdditionalTags } from '../tags.js'
+
+test('should keep the primary, latest, and selected alias tags', () => {
+  assert.deepEqual(
+    getPackImageTags('registry.example.com/app', 'revision', ['stage', 'production']),
+    [
+      'registry.example.com/app:revision',
+      'registry.example.com/app:latest',
+      'registry.example.com/app:stage',
+      'registry.example.com/app:production',
+    ]
+  )
+})
+
+test('should reject unsafe image tag aliases', () => {
+  assert.throws(() => normalizeAdditionalTags(['']), /Invalid image tag alias/)
+  assert.throws(() => normalizeAdditionalTags(['stage/latest']), /Invalid image tag alias/)
+})
 
 test('should capture the local git revision through the command capability', async (t) => {
   const githubEventPath = process.env.GITHUB_EVENT_PATH
