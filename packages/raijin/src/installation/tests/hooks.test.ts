@@ -76,9 +76,11 @@ const installOptions = (cwd: string) => ({
 
 const createRepository = async (context: { after: (callback: () => Promise<void>) => void }) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-hooks-'))
+  const template = join(cwd, 'git-template')
 
   context.after(async () => rm(cwd, { recursive: true, force: true }))
-  await executeGit(['init', '--quiet'], cwd)
+  await mkdir(template)
+  await executeGit(['init', '--quiet', `--template=${template}`], cwd)
 
   return cwd
 }
@@ -197,6 +199,34 @@ test('unowned same-name hook fails before Husky changes Git configuration', asyn
   assert.equal(await readFile(join(hooks, 'pre-commit'), 'utf8'), 'echo user hook\n')
   await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
   await assert.rejects(access(join(hooks, '_')))
+})
+
+test('an active legacy hook keeps running when native Husky cannot wrap it', async (context) => {
+  const cwd = await createRepository(context)
+  const hooks = join(cwd, '.config/husky')
+  const activeHook = join(hooks, 'post-index-change')
+  const content = '#!/bin/sh\nprintf "ran\\n" >> observed-hook\n'
+
+  await mkdir(hooks, { recursive: true })
+  await writeFile(activeHook, content, { mode: 0o755 })
+  await executeGit(['config', 'core.hooksPath', '.config/husky'], cwd)
+  await writeFile(join(cwd, 'first.txt'), 'first\n')
+  await executeGit(['add', 'first.txt'], cwd)
+  assert.equal(await readFile(join(cwd, 'observed-hook'), 'utf8'), 'ran\n')
+
+  await withoutSkipEnvironment(async () => {
+    await assert.rejects(
+      installRepositoryHooks(cwd),
+      /active existing hook post-index-change would be disabled/
+    )
+  })
+
+  assert.equal((await executeGit(['config', 'core.hooksPath'], cwd)).stdout.trim(), '.config/husky')
+  assert.equal(await readFile(activeHook, 'utf8'), content)
+  await assert.rejects(access(join(hooks, '_')))
+  await writeFile(join(cwd, 'second.txt'), 'second\n')
+  await executeGit(['add', 'second.txt'], cwd)
+  assert.equal(await readFile(join(cwd, 'observed-hook'), 'utf8'), 'ran\nran\n')
 })
 
 test('a symlink with an ownership marker is still an unowned hook path', async (context) => {
@@ -318,7 +348,7 @@ test('missing Git repository is a non-installing bootstrap state', async (contex
   await assert.rejects(access(join(cwd, '.config/husky')))
 })
 
-test('Husky provider failure does not create Raijin entry files', async (context) => {
+test('unavailable Git fails before creating Raijin entry files', async (context) => {
   const cwd = await createRepository(context)
   const previousPath = process.env.PATH
 
@@ -326,10 +356,7 @@ test('Husky provider failure does not create Raijin entry files', async (context
     process.env.PATH = cwd
 
     try {
-      await assert.rejects(
-        installRepositoryHooks(cwd),
-        /Husky installation failed: git command not found/
-      )
+      await assert.rejects(installRepositoryHooks(cwd), /spawn git ENOENT/)
     } finally {
       if (previousPath === undefined) delete process.env.PATH
       else process.env.PATH = previousPath

@@ -6,7 +6,7 @@ The new public install/update path uses one exact published package and checked 
 
 ## Git hooks
 
-Local Yarn installation and successful Raijin runtime update install repository hooks through the pinned Husky 9.1.7 package. Husky owns `.config/husky/_` and the relative Git `core.hooksPath`; Raijin owns only its marked entry files for `pre-commit`, `commit-msg`, and `prepare-commit-msg`. An unrelated hook stays untouched, while an unowned file with one of those names stops installation with a conflict. CI, image packaging, and `HUSKY=0` skip hook installation. In a new directory without `.git`, initialize Git and run `yarn install` to activate hooks before the first commit.
+Local Yarn installation and successful Raijin runtime update install repository hooks through the pinned Husky 9.1.7 package. Husky owns `.config/husky/_` and the relative Git `core.hooksPath`; Raijin owns only its marked entry files for `pre-commit`, `commit-msg`, and `prepare-commit-msg`. Other hook files are not overwritten. If switching from Git's current hook directory would leave an active existing hook behind, installation stops with an explicit conflict before changing hook state; an unowned Raijin-name entry also conflicts. CI, image packaging, and `HUSKY=0` skip hook installation. In a new directory without `.git`, initialize Git and run `yarn install` to activate hooks before the first commit.
 
 ## ESLint configuration
 
