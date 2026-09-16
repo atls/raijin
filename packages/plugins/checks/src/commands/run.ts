@@ -3,7 +3,9 @@ import type { Project }                  from '@yarnpkg/core'
 import type { Workspace }                from '@yarnpkg/core'
 
 import { BaseCommand }                   from '@yarnpkg/cli'
+import { Filename }                      from '@yarnpkg/fslib'
 import { structUtils }                   from '@yarnpkg/core'
+import { ppath }                         from '@yarnpkg/fslib'
 import { gitUtils }                      from '@yarnpkg/plugin-git'
 import { Option }                        from 'clipanion'
 
@@ -40,6 +42,33 @@ export const selectAffectedWorkspaces = (
       .localeCompare(structUtils.stringifyIdent(right.anchoredLocator)))
 }
 
+export const resolveCheckWorkspaces = async (
+  project: Project,
+  since?: string
+): Promise<ReadonlyArray<Workspace>> => {
+  if (!since) {
+    return [project.topLevelWorkspace]
+  }
+
+  const changed = await gitUtils.fetchChangedWorkspaces({ ref: since, project })
+  const affected = selectAffectedWorkspaces(project, changed)
+  const gitRoot = await gitUtils.fetchRoot(project.cwd)
+
+  if (!gitRoot) {
+    throw new Error('Git root is unavailable for changed-project verification')
+  }
+
+  const base = await gitUtils.fetchBase(gitRoot, { baseRefs: [since] })
+  const files = await gitUtils.fetchChangedFiles(gitRoot, { base: base.hash, project })
+  const lockfile = ppath.resolve(project.cwd, Filename.lockfile)
+
+  if (files.includes(lockfile) || (affected.length === 0 && files.length > 0)) {
+    return [project.topLevelWorkspace]
+  }
+
+  return affected
+}
+
 class ChecksRunCommand extends BaseCommand {
   static override paths = [['checks', 'run']]
 
@@ -55,10 +84,7 @@ class ChecksRunCommand extends BaseCommand {
     const { invocation } = this.context
     const { project } = invocation.yarn
     const projectCwd = toNativeCwd(project.cwd)
-    const changed = this.since
-      ? await gitUtils.fetchChangedWorkspaces({ ref: this.since, project })
-      : new Set([project.topLevelWorkspace])
-    const workspaces = selectAffectedWorkspaces(project, changed)
+    const workspaces = await resolveCheckWorkspaces(project, this.since)
 
     if (workspaces.length === 0) {
       this.context.stdout.write('No workspaces changed\n')

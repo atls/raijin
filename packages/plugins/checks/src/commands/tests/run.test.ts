@@ -4,8 +4,14 @@ import type { Workspace }           from '@yarnpkg/core'
 import assert                       from 'node:assert/strict'
 import { test }                     from 'node:test'
 
+import { Filename }                 from '@yarnpkg/fslib'
 import { structUtils }              from '@yarnpkg/core'
+import { ppath }                    from '@yarnpkg/fslib'
+import { gitUtils }                 from '@yarnpkg/plugin-git'
 
+import { toPortableCwd }            from '@atls/raijin/commands'
+
+import { resolveCheckWorkspaces }   from '../run.js'
 import { selectAffectedWorkspaces } from '../run.js'
 
 const workspace = (name: string, dependents: () => Set<Workspace> = () => new Set()): Workspace =>
@@ -41,4 +47,58 @@ test('a dependent root workspace collapses affected packages to one project chec
   const project = { topLevelWorkspace: root, workspaces: [root, alpha] } as Project
 
   assert.deepEqual(selectAffectedWorkspaces(project, new Set([alpha])), [root])
+})
+
+test('lockfile-only changes require one full-project check', async (t) => {
+  const root = workspace('root')
+  const project = {
+    cwd: toPortableCwd('/project'),
+    topLevelWorkspace: root,
+    workspaces: [root],
+  } as Project
+
+  t.mock.method(gitUtils, 'fetchChangedWorkspaces', async () => new Set<Workspace>())
+  t.mock.method(gitUtils, 'fetchRoot', async () => project.cwd)
+  t.mock.method(gitUtils, 'fetchBase', async () => ({ hash: 'base', title: 'base' }))
+  t.mock.method(gitUtils, 'fetchChangedFiles', async () => [
+    ppath.resolve(project.cwd, Filename.lockfile),
+  ])
+
+  assert.deepEqual(await resolveCheckWorkspaces(project, 'base'), [root])
+})
+
+test('lockfile and package changes still require one full-project check', async (t) => {
+  const root = workspace('root')
+  const alpha = workspace('alpha')
+  const project = {
+    cwd: toPortableCwd('/project'),
+    topLevelWorkspace: root,
+    workspaces: [root, alpha],
+  } as Project
+
+  t.mock.method(gitUtils, 'fetchChangedWorkspaces', async () => new Set([alpha]))
+  t.mock.method(gitUtils, 'fetchRoot', async () => project.cwd)
+  t.mock.method(gitUtils, 'fetchBase', async () => ({ hash: 'base', title: 'base' }))
+  t.mock.method(gitUtils, 'fetchChangedFiles', async () => [
+    ppath.resolve(project.cwd, Filename.lockfile),
+    ppath.resolve(project.cwd, 'packages/alpha/source.ts'),
+  ])
+
+  assert.deepEqual(await resolveCheckWorkspaces(project, 'base'), [root])
+})
+
+test('a native empty comparison remains a successful no-op', async (t) => {
+  const root = workspace('root')
+  const project = {
+    cwd: toPortableCwd('/project'),
+    topLevelWorkspace: root,
+    workspaces: [root],
+  } as Project
+
+  t.mock.method(gitUtils, 'fetchChangedWorkspaces', async () => new Set<Workspace>())
+  t.mock.method(gitUtils, 'fetchRoot', async () => project.cwd)
+  t.mock.method(gitUtils, 'fetchBase', async () => ({ hash: 'base', title: 'base' }))
+  t.mock.method(gitUtils, 'fetchChangedFiles', async () => [])
+
+  assert.deepEqual(await resolveCheckWorkspaces(project, 'base'), [])
 })
