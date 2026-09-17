@@ -144,7 +144,7 @@ const routePrompt = (prompt, commands) => {
   return best.command
 }
 
-const runtimePath = path.join(repoRoot, '.yarn/releases/yarn.mjs')
+const runtimePath = path.join(repoRoot, '.yarn/releases/yarn.js')
 const inventory = await loadRuntimeCliSurface({ cwd: repoRoot, runtimePath })
 const commands = inventory.commands.map((command) => ({ ...command, status: 'active' }))
 /** @type {SmokeFixture} */

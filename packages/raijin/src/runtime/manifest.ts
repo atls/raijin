@@ -5,10 +5,12 @@ import { InvalidRaijinRuntimeManifestException } from './exceptions/invalid-mani
 export interface RaijinRuntimeManifest {
   assetName: string
   assetUrl: string
+  packageIntegrity: string
   packageName: string
   packageManager: string
   schemaVersion: number
   sha256: string
+  sourceRevision: string
   tagName: string
   version: string
 }
@@ -16,12 +18,14 @@ export interface RaijinRuntimeManifest {
 export const RAIJIN_RUNTIME_MANIFEST_URL =
   'https://raw.githubusercontent.com/atls/raijin/master/.yarn/releases/raijin-runtime.json'
 export const RAIJIN_RUNTIME_PACKAGE_NAME = '@atls/raijin'
-export const LEGACY_RAIJIN_RUNTIME_PACKAGE_NAME = '@atls/yarn-cli'
-export const RAIJIN_RUNTIME_ASSET_NAME = 'yarn.mjs'
-export const RAIJIN_RUNTIME_YARN_PATH = '.yarn/releases/yarn.mjs'
-export const RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION = 1
+export const RAIJIN_RUNTIME_ASSET_NAME = 'yarn.js'
+export const RAIJIN_RUNTIME_YARN_PATH = '.yarn/releases/yarn.js'
+export const RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION = 2
 
 const SHA256_PATTERN = /^[a-f0-9]{64}$/
+const SOURCE_REVISION_PATTERN = /^[a-f0-9]{40}$/
+const PACKAGE_INTEGRITY_PATTERN = /^sha512-[A-Za-z0-9+/]+={0,2}$/
+const YARN_PACKAGE_MANAGER_PATTERN = /^yarn@\d+\.\d+\.\d+$/
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null
@@ -51,11 +55,10 @@ export const parseRaijinRuntimeManifest = (value: unknown): RaijinRuntimeManifes
   const packageName = assertManifestString(value, 'packageName')
   const assetName = assertManifestString(value, 'assetName')
   const sha256 = assertManifestString(value, 'sha256')
+  const sourceRevision = assertManifestString(value, 'sourceRevision')
+  const packageIntegrity = assertManifestString(value, 'packageIntegrity')
 
-  if (
-    packageName !== RAIJIN_RUNTIME_PACKAGE_NAME &&
-    packageName !== LEGACY_RAIJIN_RUNTIME_PACKAGE_NAME
-  ) {
+  if (packageName !== RAIJIN_RUNTIME_PACKAGE_NAME) {
     throw InvalidRaijinRuntimeManifestException.unexpectedPackage(RAIJIN_RUNTIME_PACKAGE_NAME)
   }
 
@@ -65,6 +68,13 @@ export const parseRaijinRuntimeManifest = (value: unknown): RaijinRuntimeManifes
 
   if (!SHA256_PATTERN.test(sha256)) {
     throw InvalidRaijinRuntimeManifestException.invalidSha256()
+  }
+
+  if (
+    !SOURCE_REVISION_PATTERN.test(sourceRevision) ||
+    !PACKAGE_INTEGRITY_PATTERN.test(packageIntegrity)
+  ) {
+    throw InvalidRaijinRuntimeManifestException.invalidIdentity()
   }
 
   const assetUrl = assertManifestString(value, 'assetUrl')
@@ -77,13 +87,35 @@ export const parseRaijinRuntimeManifest = (value: unknown): RaijinRuntimeManifes
     throw InvalidRaijinRuntimeManifestException.unexpectedTagName(expectedTagName)
   }
 
+  if (!YARN_PACKAGE_MANAGER_PATTERN.test(packageManager)) {
+    throw InvalidRaijinRuntimeManifestException.invalidIdentity()
+  }
+
+  let releaseUrl: URL
+
+  try {
+    releaseUrl = new URL(assetUrl)
+  } catch {
+    throw InvalidRaijinRuntimeManifestException.unexpectedAsset(RAIJIN_RUNTIME_ASSET_NAME)
+  }
+
+  if (
+    releaseUrl.origin !== 'https://github.com' ||
+    decodeURIComponent(releaseUrl.pathname) !==
+      `/atls/raijin/releases/download/${tagName}/${assetName}`
+  ) {
+    throw InvalidRaijinRuntimeManifestException.unexpectedAsset(RAIJIN_RUNTIME_ASSET_NAME)
+  }
+
   return {
     assetName,
     assetUrl,
+    packageIntegrity,
     packageName,
     packageManager,
     schemaVersion: RAIJIN_RUNTIME_MANIFEST_SCHEMA_VERSION,
     sha256,
+    sourceRevision,
     tagName,
     version,
   }

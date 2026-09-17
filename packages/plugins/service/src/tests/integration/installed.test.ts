@@ -16,7 +16,7 @@ import { promisify }     from 'node:util'
 
 const execute = promisify(execFile)
 const repoRoot = fileURLToPath(new URL('../../../../../../', import.meta.url))
-const runtime = join(repoRoot, '.yarn/releases/yarn.mjs')
+const runtime = join(repoRoot, '.yarn/releases/yarn.js')
 
 const environment = (): NodeJS.ProcessEnv => {
   const env = { ...process.env }

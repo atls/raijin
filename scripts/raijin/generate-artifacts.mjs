@@ -311,7 +311,7 @@ const renderRootReadme = (language) => {
     isRu ? '### Новый проект' : '### New project',
     '',
     '```bash',
-    'yarn init @atls/raijin --type project',
+    'yarn dlx @atls/raijin init --type project',
     '```',
     '',
     isRu
@@ -323,11 +323,11 @@ const renderRootReadme = (language) => {
       ? '- Создаётся каркас проекта и устанавливается версионная среда выполнения Raijin'
       : '- Project scaffold is created and the versioned Raijin runtime is installed',
     isRu
-      ? '- `.yarnrc.yml` сразу указывает на стабильный файл `.yarn/releases/yarn.mjs`'
-      : '- `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.mjs` file',
+      ? '- `.yarnrc.yml` сразу указывает на стабильный файл `.yarn/releases/yarn.js`'
+      : '- `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.js` file',
     isRu
-      ? '- Каркас проекта и первичная синхронизация создаются автоматически'
-      : '- The project scaffold and first sync are generated automatically',
+      ? '- Каркас проекта создаётся один раз после установки пакета и среды выполнения'
+      : '- The project scaffold is created once after the package and runtime are installed',
     isRu
       ? '- Команды `raijin` становятся доступны через `yarn`'
       : '- Raijin commands are available via `yarn`',
@@ -335,28 +335,29 @@ const renderRootReadme = (language) => {
     isRu ? '### Существующий проект' : '### Existing project',
     '',
     '```bash',
-    'yarn dlx @atls/raijin init --type project',
+    'yarn dlx @atls/raijin update',
     '```',
     '',
-    isRu
-      ? 'Для библиотечного каркаса используйте `--type library`'
-      : 'Use `--type library` for the library scaffold',
+    isRu ? 'Существующие настройки проекта сохраняются' : 'Existing project settings are preserved',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Проект получает среду выполнения Raijin, каркас и первичную синхронизацию; проверки перед коммитом настраиваются отдельно'
-      : '- The project gets the Raijin runtime, scaffold, and first sync; pre-commit checks are configured separately',
+      ? '- Подключённый проект обновляет только проверенную пару пакета и среды выполнения; пользовательские настройки сохраняются'
+      : '- A configured project updates only the verified package/runtime pair; project settings are preserved',
+    isRu
+      ? '- В монорепозитории запускайте команду из корня Yarn-проекта, где объявлен `@atls/raijin`. Отдельному вложенному проекту нужен собственный `yarn.lock`; каталог member workspace не становится отдельным проектом автоматически'
+      : '- In a monorepo, run the command from the Yarn project root that declares `@atls/raijin`. A separate nested project needs its own `yarn.lock`; a member workspace is not made into a separate project automatically',
     '',
     isRu ? '### Перед первым коммитом' : '### Before the first commit',
     '',
     isRu
-      ? `После подключения нового или существующего проекта выполните [настройку проверок перед коммитом](./${quickstartPath}#staged-checks). Raijin требует явную конфигурацию lint-staged, принадлежащую проекту. Установленный hook вызывает \`yarn commit staged\`; без конфигурации коммит с подготовленными файлами завершится ошибкой.`
-      : `After connecting a new or existing project, complete the [pre-commit check setup](./${quickstartPath}#staged-checks). Raijin requires an explicit project-owned lint-staged configuration. The installed hook calls \`yarn commit staged\`; without configuration, a commit with staged files fails.`,
+      ? `После подключения нового или существующего проекта выполните [настройку проверок перед коммитом](./${quickstartPath}#staged-checks). Raijin требует явную конфигурацию lint-staged, принадлежащую проекту. Когда Git hook настроен, он вызывает \`yarn commit staged\`; без конфигурации проверка подготовленных файлов завершится ошибкой.`
+      : `After connecting a new or existing project, complete the [pre-commit check setup](./${quickstartPath}#staged-checks). Raijin requires explicit project-owned lint-staged configuration. When configured, the Git hook calls \`yarn commit staged\`; without that configuration, staged-file checks fail.`,
     '',
     isRu ? '### Обновление' : '### Upgrade',
     '',
     '```bash',
-    'yarn set version atls',
+    'yarn dlx @atls/raijin update',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
@@ -390,8 +391,8 @@ const renderRootReadme = (language) => {
       ? '3. Зафиксируйте конфигурацию проверок вместе с изменениями `.yarn/releases` и `.yarnrc.yml`'
       : '3. Commit the check configuration together with `.yarn/releases` and `.yarnrc.yml` changes',
     isRu
-      ? '4. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий'
-      : '4. Update with `yarn set version atls` when newer bundle versions are released',
+      ? '4. Обновляйте пару пакета и среды выполнения командой `yarn dlx @atls/raijin update` после выхода нового релиза'
+      : '4. Update the package/runtime pair with `yarn dlx @atls/raijin update` after a new release',
     '',
     '<!-- sync:root-read-more -->',
     '',
@@ -574,8 +575,11 @@ const renderQuickstart = (language) => {
     isRu ? '- Node.js: `>= 24` (не ниже `24`)' : '- Node.js: `>= 24`',
     isRu ? '- Yarn: `>= 4` (не ниже `4`)' : '- Yarn: `>= 4`',
     isRu
-      ? '- Raijin поддерживает только Yarn PnP и ESM; режим `node-modules` и CommonJS не входят в контракт быстрого старта'
-      : '- Raijin supports only Yarn PnP and ESM; `node-modules` and CommonJS are outside the quickstart contract',
+      ? '- Corepack доступен для запуска точной версии Yarn из проверенного манифеста до активации Raijin runtime'
+      : '- Corepack is available to run the exact Yarn version from the verified manifest before activating the Raijin runtime',
+    isRu
+      ? '- Новый проект использует Yarn PnP и ESM; при обновлении существующие `type` и `nodeLinker` сохраняются'
+      : '- A new project uses Yarn PnP and ESM; update preserves the existing `type` and `nodeLinker`',
     isRu ? '- Для нового проекта: пустая директория' : '- For a new project: an empty directory',
     isRu
       ? '- Для существующего проекта: `package.json` в корне проекта'
@@ -583,41 +587,12 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu ? '- Команда `yarn --version` выполняется' : '- `yarn --version` works',
+    isRu
+      ? '- Опубликованный релиз `@atls/raijin@0.7.0` использует старый `yarn.mjs`. Новый путь установки требует следующего релиза с манифестом schemaVersion 2 и реальным asset `yarn.js`; до публикации команда завершается без активации новой среды выполнения'
+      : '- Published `@atls/raijin@0.7.0` still uses `yarn.mjs`. The new installer requires a later release with a schemaVersion 2 manifest and a real `yarn.js` asset; until publication it exits without activating a new runtime',
     '',
     '<!-- sync:new-project -->',
     isRu ? '## 2. Новый проект' : '## 2. New project',
-    '',
-    '```bash',
-    'yarn init @atls/raijin --type project',
-    '```',
-    '',
-    isRu
-      ? 'Для библиотечного каркаса используйте `--type library`'
-      : 'Use `--type library` for the library scaffold',
-    '',
-    isRu ? 'Ожидаемый результат:' : 'Expected result:',
-    isRu
-      ? '- Создаётся `package.json`, если его ещё не было, а `packageManager` приводится к значению из манифеста установленной среды выполнения'
-      : '- `package.json` is created when it does not exist yet, and `packageManager` is normalized to the installed runtime manifest value',
-    isRu
-      ? '- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/yarn.mjs`'
-      : '- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.mjs`',
-    isRu
-      ? '- `.yarnrc.yml` сразу получает `nodeLinker: pnp` и финальный `yarnPath` без временного файла'
-      : '- `.yarnrc.yml` gets `nodeLinker: pnp` and the final `yarnPath` directly without a temporary file',
-    isRu
-      ? '- Проектный каркас создаётся через встроенную коллекцию Raijin'
-      : '- Project scaffold is created through the embedded Raijin collection',
-    isRu
-      ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
-      : '- Bundle commands (`check`, `files changed list`, etc.) become available',
-    '',
-    isRu
-      ? 'Перед первым коммитом обязательно выполните [настройку проверок](#staged-checks). Создание каркаса не создаёт конфигурацию lint-staged.'
-      : 'Before the first commit, complete the required [check configuration](#staged-checks). Scaffolding does not create a lint-staged configuration.',
-    '',
-    '<!-- sync:existing-project -->',
-    isRu ? '## 3. Существующий проект' : '## 3. Existing project',
     '',
     '```bash',
     'yarn dlx @atls/raijin init --type project',
@@ -629,8 +604,45 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Установленный проект получает публичный пакет `@atls/raijin`, среду выполнения Raijin, проектный каркас, первичную синхронизацию и значение `packageManager` из манифеста установленной среды выполнения'
-      : '- Existing project gets the public `@atls/raijin` package, Raijin runtime, project scaffold, first sync, and `packageManager` from the installed runtime manifest',
+      ? '- Создаётся `package.json`, если его ещё не было, а `packageManager` приводится к значению из манифеста установленной среды выполнения'
+      : '- `package.json` is created when it does not exist yet, and `packageManager` is normalized to the installed runtime manifest value',
+    isRu
+      ? '- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/yarn.js`'
+      : '- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.js`',
+    isRu
+      ? '- Yarn завершает установку пакета до переключения `.yarnrc.yml` на проверенный `yarnPath`'
+      : '- Yarn completes package installation before `.yarnrc.yml` switches to the verified `yarnPath`',
+    isRu
+      ? '- Проектный каркас создаётся через встроенную коллекцию Raijin'
+      : '- Project scaffold is created through the embedded Raijin collection',
+    isRu
+      ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
+      : '- Bundle commands (`check`, `files changed list`, etc.) become available',
+    '',
+    isRu
+      ? 'Если проект ещё не является Git-репозиторием, установка hooks откладывается: выполните `git init`, затем `yarn install`. При наличии `.git` локальная установка создаёт hooks через Husky.'
+      : 'If the project is not yet a Git repository, hook installation is deferred: run `git init`, then `yarn install`. In a local project with `.git`, installation creates hooks through Husky.',
+    '',
+    isRu
+      ? 'Перед первым коммитом обязательно выполните [настройку проверок](#staged-checks). Создание каркаса не создаёт конфигурацию lint-staged.'
+      : 'Before the first commit, complete the required [check configuration](#staged-checks). Scaffolding does not create a lint-staged configuration.',
+    '',
+    '<!-- sync:existing-project -->',
+    isRu ? '## 3. Существующий проект' : '## 3. Existing project',
+    '',
+    '```bash',
+    'yarn dlx @atls/raijin update',
+    '```',
+    '',
+    isRu ? 'Каркас при обновлении не запускается' : 'Update does not run the scaffold',
+    '',
+    isRu ? 'Ожидаемый результат:' : 'Expected result:',
+    isRu
+      ? '- Установленный проект получает точную пару `@atls/raijin` и проверенной среды выполнения, сохраняя TypeScript, ESLint, Prettier и hooks'
+      : '- Existing project gets one exact `@atls/raijin` and checked runtime pair while preserving TypeScript, ESLint, Prettier, and hooks',
+    isRu
+      ? '- Для Yarn workspaces команда запускается в корне проекта с `@atls/raijin`; отдельный вложенный проект должен иметь собственный `yarn.lock`'
+      : '- For Yarn workspaces, run this at the project root that declares `@atls/raijin`; a separate nested project must have its own `yarn.lock`',
     '',
     isRu
       ? 'До коммита изменений подключения выполните [настройку проверок](#staged-checks). Существующую конфигурацию lint-staged сохраняйте; заменять её примером не нужно.'
@@ -640,7 +652,7 @@ const renderQuickstart = (language) => {
     isRu ? '## 4. Обновление установленного бандла' : '## 4. Upgrade installed bundle',
     '',
     '```bash',
-    'yarn set version atls',
+    'yarn dlx @atls/raijin update',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
@@ -654,8 +666,12 @@ const renderQuickstart = (language) => {
     isRu ? '## 5. Проверки перед коммитом' : '## 5. Pre-commit checks',
     '',
     isRu
-      ? 'Этот шаг обязателен при подключении новых и существующих проектов. Установленный Git hook вызывает `yarn commit staged`. Raijin не подставляет конфигурацию по умолчанию: без неё lint-staged блокирует коммит с подготовленными файлами.'
-      : 'This step is required when setting up new or existing projects. The installed Git hook calls `yarn commit staged`. Raijin supplies no default configuration: without one, lint-staged blocks a commit with staged files.',
+      ? 'Этот шаг обязателен при подключении новых и существующих проектов. Настроенный Git hook вызывает `yarn commit staged`. Raijin не подставляет конфигурацию по умолчанию: без неё проверка подготовленных файлов завершается ошибкой.'
+      : 'This step is required when setting up new or existing projects. A configured Git hook calls `yarn commit staged`. Raijin supplies no default lint-staged configuration: without one, staged-file checks fail.',
+    '',
+    isRu
+      ? 'Husky 9.1.7 настраивает относительный `core.hooksPath` как `.config/husky/_`. Raijin меняет только помеченные entry-файлы `pre-commit`, `commit-msg` и `prepare-commit-msg`; другие файлы hooks не перезаписываются. Если переход из текущего каталога Git hooks оставил бы действующий hook без запуска, установка останавливается с явным конфликтом до изменения состояния hooks. Чужой файл с одним из имён Raijin также вызывает конфликт. В CI, при упаковке image и с `HUSKY=0` hooks не устанавливаются.'
+      : 'Husky 9.1.7 sets the relative `core.hooksPath` to `.config/husky/_`. Raijin changes only its marked `pre-commit`, `commit-msg`, and `prepare-commit-msg` entry files; other hook files are not overwritten. If switching from the current Git hooks directory would leave an active hook without execution, installation stops with an explicit conflict before changing hook state. An unowned Raijin-name entry also conflicts. CI, image packaging, and `HUSKY=0` skip hook installation.',
     '',
     isRu
       ? 'Сначала проверьте существующие настройки. Поле `lint-staged` в `package.json`, `.lintstagedrc` в JSON/YAML и `lint-staged.config.*` остаются допустимыми native-форматами. Сохраняйте выбранный формат, команды и исключения проекта; не создавайте конкурирующую конфигурацию.'
@@ -727,11 +743,11 @@ const renderQuickstart = (language) => {
     isRu ? '## 8. Как использовать в чужом проекте' : '## 8. How to use in an external project',
     '',
     isRu
-      ? '- Для первого подключения используйте `yarn init @atls/raijin --type project` или `yarn dlx @atls/raijin init --type project`; для библиотеки замените тип на `library`'
-      : '- Use `yarn init @atls/raijin --type project` or `yarn dlx @atls/raijin init --type project` for the first setup; use `library` for the library scaffold',
+      ? '- Для первого подключения используйте `yarn dlx @atls/raijin init --type project`; для библиотеки замените тип на `library`'
+      : '- Use `yarn dlx @atls/raijin init --type project` for first setup; use `library` for the library scaffold',
     isRu
-      ? '- После первого подключения обновляйте бандл командой `yarn set version atls`'
-      : '- After the first setup, keep the bundle current with `yarn set version atls`',
+      ? '- После первого подключения обновляйте пару командой `yarn dlx @atls/raijin update`'
+      : '- After first setup, update the pair with `yarn dlx @atls/raijin update`',
     isRu
       ? '- До первого коммита выполните [настройку проверок](#staged-checks) и включите конфигурацию в коммит вместе с `.yarn/releases` и `.yarnrc.yml`'
       : '- Before the first commit, complete the [check configuration](#staged-checks) and commit it together with `.yarn/releases` and `.yarnrc.yml`',
@@ -1073,7 +1089,7 @@ const describeCommand = (command) => ({
   status: 'active',
 })
 
-const runtimePath = path.join(repoRoot, '.yarn/releases/yarn.mjs')
+const runtimePath = path.join(repoRoot, '.yarn/releases/yarn.js')
 const runtimeCliSurface = await loadRuntimeCliSurface({ cwd: repoRoot, runtimePath })
 /** @type {Array<Command>} */
 const commands = runtimeCliSurface.commands.map(describeCommand).sort((left, right) => {

@@ -16,8 +16,8 @@ import rootPackage from '../../../../package.json' with { type: 'json' }
 
 const execute = promisify(execFile)
 const repoRoot = fileURLToPath(new URL('../../../../', import.meta.url))
-const runtimePath = fileURLToPath(new URL('../../dist/runtime/yarn.mjs', import.meta.url))
-const checkedRuntimePath = join(repoRoot, '.yarn/releases/yarn.mjs')
+const runtimePath = fileURLToPath(new URL('../../dist/runtime/yarn.js', import.meta.url))
+const checkedRuntimePath = join(repoRoot, '.yarn/releases/yarn.js')
 const fixtureCwd = await mkdtemp(join(tmpdir(), 'raijin-runtime-materialize-'))
 const environment = { ...process.env }
 const yarnPlatformVersion = rootPackage.packageManager.replace(/^yarn@/, '')

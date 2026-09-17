@@ -27,6 +27,7 @@ export interface SelectRaijinScaffoldTypeOptions {
 }
 
 export interface RaijinInitializerArguments {
+  mode: 'init' | 'update'
   scaffoldType?: RaijinScaffoldType
 }
 
@@ -97,9 +98,13 @@ export const parseRaijinInitializerArguments = (
 ): RaijinInitializerArguments => {
   const args = [...argv]
   const command = args[0]
+  let mode: RaijinInitializerArguments['mode'] = 'init'
 
   if (command === 'init') {
     args.shift()
+  } else if (command === 'update') {
+    args.shift()
+    mode = 'update'
   } else if (command && !command.startsWith('-')) {
     throw new RaijinInitializerUsageException()
   }
@@ -142,7 +147,11 @@ export const parseRaijinInitializerArguments = (
     throw new RaijinInitializerUsageException()
   }
 
-  return { scaffoldType }
+  if (mode === 'update' && scaffoldType) {
+    throw new RaijinInitializerUsageException()
+  }
+
+  return { mode, scaffoldType }
 }
 
 export const selectRaijinScaffoldType = async ({

@@ -1,67 +1,60 @@
 import type { Project }      from '@yarnpkg/core'
-import type { Filename }     from '@yarnpkg/fslib'
 
 import assert                from 'node:assert/strict'
-import { execFile }          from 'node:child_process'
 import test                  from 'node:test'
 
-import { npath }             from '@yarnpkg/fslib'
-import { ppath }             from '@yarnpkg/fslib'
-import { xfs }               from '@yarnpkg/fslib'
+import { structUtils }       from '@yarnpkg/core'
 
 import { afterAllInstalled } from '../after-all-installed.js'
 
-const execFileAsync = async (
-  file: string,
-  args: Array<string>,
-  options: { cwd?: string } = {}
-): Promise<{ stdout: string }> =>
-  new Promise((resolve, reject) => {
-    execFile(file, args, options, (error, stdout) => {
-      if (error) {
-        reject(error)
+const withoutSkip = async (run: () => Promise<void>): Promise<void> => {
+  const names = ['CI', 'GITHUB_ACTIONS', 'IMAGE_PACK', 'HUSKY']
+  const previous = Object.fromEntries(names.map((name) => [name, process.env[name]]))
 
-        return
-      }
-
-      resolve({ stdout })
-    })
-  })
-
-test('should materialize Husky hooks as newline-terminated text files', async () => {
-  const cwd = await xfs.mktempPromise()
-  const hooksPath = ppath.join(cwd, '.config/husky')
-  const previousGitHubActions = process.env.GITHUB_ACTIONS
-  const previousImagePack = process.env.IMAGE_PACK
-
-  await execFileAsync('git', ['init'], { cwd: npath.fromPortablePath(cwd) })
-
-  delete process.env.GITHUB_ACTIONS
-  delete process.env.IMAGE_PACK
+  for (const name of names) Reflect.deleteProperty(process.env, name)
 
   try {
-    await afterAllInstalled({ cwd } as Project)
+    await run()
   } finally {
-    if (previousGitHubActions === undefined) delete process.env.GITHUB_ACTIONS
-    else process.env.GITHUB_ACTIONS = previousGitHubActions
-
-    if (previousImagePack === undefined) delete process.env.IMAGE_PACK
-    else process.env.IMAGE_PACK = previousImagePack
+    for (const [name, value] of Object.entries(previous)) {
+      if (value === undefined) Reflect.deleteProperty(process.env, name)
+      else process.env[name] = value
+    }
   }
+}
 
-  const hookNames: Array<Filename> = [
-    'commit-msg' as Filename,
-    'pre-commit' as Filename,
-    'prepare-commit-msg' as Filename,
-  ]
-  const hooks = await Promise.all(
-    hookNames.map(async (name) => xfs.readFilePromise(ppath.join(hooksPath, name), 'utf-8'))
-  )
-  const { stdout } = await execFileAsync('git', ['config', 'core.hooksPath'], {
-    cwd: npath.fromPortablePath(cwd),
+for (const [name, value] of [
+  ['GITHUB_ACTIONS', 'true'],
+  ['CI', '1'],
+]) {
+  test(`${name}=${value} skips before resolving a Raijin binary`, async () => {
+    await withoutSkip(async () => {
+      process.env[name] = value
+      await afterAllInstalled({} as Project)
+    })
   })
+}
 
-  for (const hookContent of hooks) assert.match(hookContent, /\n$/)
+test('project without an installed Raijin package does not resolve a hook binary', async () => {
+  await withoutSkip(async () => {
+    await afterAllInstalled({ storedPackages: new Map() } as unknown as Project)
+  })
+})
 
-  assert.equal(stdout.trim(), npath.fromPortablePath(hooksPath))
+test('multiple resolved Raijin packages fail instead of choosing an arbitrary binary', async () => {
+  const ident = structUtils.makeIdent('atls', 'raijin')
+  const first = structUtils.makeLocator(ident, 'npm:1.0.0')
+  const second = structUtils.makeLocator(ident, 'npm:2.0.0')
+
+  await withoutSkip(async () => {
+    await assert.rejects(
+      afterAllInstalled({
+        storedPackages: new Map([
+          [first.locatorHash, first],
+          [second.locatorHash, second],
+        ]),
+      } as unknown as Project),
+      /Multiple installed @atls\/raijin packages/
+    )
+  })
 })

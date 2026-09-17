@@ -56,10 +56,11 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
     env: environment,
   })
   delete environment.GITHUB_ACTIONS
+  delete environment.CI
   delete environment.IMAGE_PACK
   const run = async (command: string, args: Array<string>, directory = cwd): Promise<string> =>
     (await execute(command, args, { cwd: directory, env: environment })).stdout
-  const runtime = join(cwd, '.yarn/releases/yarn.mjs')
+  const runtime = join(cwd, '.yarn/releases/yarn.js')
   const yarn = async (...args: Array<string>): Promise<string> =>
     run(process.execPath, [runtime, ...args])
   const git = async (...args: Array<string>): Promise<string> => run('git', args)
@@ -74,10 +75,10 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
   await mkdir(join(cwd, '.yarn/releases'), { recursive: true })
   await mkdir(join(cwd, 'backend'))
   await mkdir(client)
-  await copyFile(join(repoRoot, '.yarn/releases/yarn.mjs'), runtime)
+  await copyFile(join(repoRoot, '.yarn/releases/yarn.js'), runtime)
   assert.deepEqual(
     await readFile(runtime),
-    await readFile(join(repoRoot, '.yarn/releases/yarn.mjs'))
+    await readFile(join(repoRoot, '.yarn/releases/yarn.js'))
   )
   await writeFile(join(cwd, '.gitignore'), '.yarn\n.pnp.*\n*.tgz\nnode_modules\n')
   await writeFile(
@@ -92,7 +93,7 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
   )
   await writeFile(
     join(cwd, '.yarnrc.yml'),
-    'nodeLinker: pnp\npnpEnableEsmLoader: true\npnpIgnorePatterns: ["./client/**"]\nyarnPath: .yarn/releases/yarn.mjs\n'
+    'nodeLinker: pnp\npnpEnableEsmLoader: true\npnpIgnorePatterns: ["./client/**"]\nyarnPath: .yarn/releases/yarn.js\n'
   )
   await writeFile(
     join(cwd, 'tsconfig.json'),
@@ -136,7 +137,10 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
   await writeFile(backendFile, 'export const value: number = 1\n')
   await writeFile(clientFile, 'export const value: number = 1\n')
   await writeFile(clientTest, "test('client', () => expect(1).toBe(1))\n")
-  await git('init', '--quiet')
+  const template = join(cwd, 'git-template')
+
+  await mkdir(template)
+  await git('init', '--quiet', `--template=${template}`)
   await git('config', 'user.name', 'Fixture')
   await git('config', 'user.email', 'fixture@example.invalid')
   await git('config', 'commit.gpgsign', 'false')
@@ -158,8 +162,11 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
   assert.match((await yarn('node', '-p', 'process.versions.pnp')).trim(), /^\d+$/)
   await access(join(client, 'node_modules/jest/package.json'))
   const hooks = await realpath(resolve(cwd, (await git('config', 'core.hooksPath')).trim()))
-  assert.equal(hooks, await realpath(join(cwd, '.config/husky')))
-  assert.equal(await readFile(join(hooks, 'pre-commit'), 'utf8'), 'yarn commit staged\n')
+  assert.equal(hooks, await realpath(join(cwd, '.config/husky/_')))
+  assert.equal(
+    await readFile(join(cwd, '.config/husky/pre-commit'), 'utf8'),
+    '# Raijin-managed hook\nyarn commit staged\n'
+  )
   await access(join(hooks, 'pre-commit'), constants.X_OK)
 
   await t.test('explicit project configuration enables the first mixed commit', async () => {
@@ -262,5 +269,49 @@ test('installed staged hook uses independent TypeScript and Jest projects', asyn
     await git('add', '--all')
     await git('commit', '-m', 'test(common): yaml staged checks')
     assert.equal(await git('show', 'HEAD:backend/value.ts'), 'export const value: number = 4\n')
+  })
+
+  await t.test('member-only Raijin dependency installs root Git hooks', async () => {
+    const memberRoot = await realpath(await mkdtemp(join(tmpdir(), 'raijin-member-hooks-')))
+    t.after(async () => rm(memberRoot, { recursive: true, force: true }))
+    const member = join(memberRoot, 'packages/member')
+    const memberRuntime = join(memberRoot, '.yarn/releases/yarn.js')
+
+    await mkdir(member, { recursive: true })
+    await mkdir(join(memberRoot, '.yarn/releases'), { recursive: true })
+    await copyFile(join(repoRoot, '.yarn/releases/yarn.js'), memberRuntime)
+    await writeFile(
+      join(memberRoot, 'package.json'),
+      JSON.stringify({
+        name: 'member-hooks',
+        private: true,
+        packageManager,
+        workspaces: ['packages/*'],
+      })
+    )
+    await writeFile(
+      join(member, 'package.json'),
+      JSON.stringify({
+        name: 'member',
+        private: true,
+        devDependencies: { '@atls/raijin': `file:${archive}` },
+      })
+    )
+    await writeFile(
+      join(memberRoot, '.yarnrc.yml'),
+      'nodeLinker: pnp\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.js\n'
+    )
+    await run('git', ['init', '--quiet'], memberRoot)
+    await run(process.execPath, [memberRuntime, 'install', '--no-immutable'], memberRoot)
+
+    assert.equal(
+      (await run('git', ['config', 'core.hooksPath'], memberRoot)).trim(),
+      '.config/husky/_'
+    )
+    assert.equal(
+      await readFile(join(memberRoot, '.config/husky/pre-commit'), 'utf8'),
+      '# Raijin-managed hook\nyarn commit staged\n'
+    )
+    await access(join(memberRoot, '.config/husky/_/pre-commit'), constants.X_OK)
   })
 })

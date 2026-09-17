@@ -511,6 +511,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-security", "npm:3.0.1"],\
           ["execa", "npm:10.0.1"],\
           ["fast-glob", "npm:3.3.2"],\
+          ["husky", "npm:9.1.7"],\
           ["import-sort", "npm:6.0.0"],\
           ["import-sort-parser", "npm:6.0.0"],\
           ["import-sort-parser-typescript", "npm:6.0.0"],\
@@ -721,6 +722,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
+          ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["@yarnpkg/plugin-essentials", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.5.0"],\
           ["@yarnpkg/plugin-git", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:3.2.0"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
@@ -743,6 +745,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
           ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
+          ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["@yarnpkg/plugin-essentials", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.5.0"],\
           ["@yarnpkg/plugin-git", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:3.2.0"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
@@ -1075,6 +1078,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/plugin-git", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:3.2.0"],\
+          ["@yarnpkg/plugin-npm", "virtual:24d2e67bdec56757052b94858c94f13adfce27bc9a0b575056f01607b2105b2e7064cfc823e6f791e2352081e58bb393fcdfbdd019e094430f5a4cfb834efe74#npm:3.5.0"],\
           ["@yarnpkg/plugin-version", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.2.0"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
         ],\
@@ -1101,6 +1105,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["@yarnpkg/parsers", "npm:3.0.3"],\
           ["@yarnpkg/plugin-git", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:3.2.0"],\
+          ["@yarnpkg/plugin-npm", "virtual:24d2e67bdec56757052b94858c94f13adfce27bc9a0b575056f01607b2105b2e7064cfc823e6f791e2352081e58bb393fcdfbdd019e094430f5a4cfb834efe74#npm:3.5.0"],\
           ["@yarnpkg/plugin-version", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.2.0"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
         ],\
@@ -1270,7 +1275,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
           ["deepmerge", "npm:4.3.1"],\
-          ["husky", "npm:9.1.7"],\
           ["semver", "npm:7.6.3"]\
         ],\
         "linkType": "SOFT"\
@@ -6002,6 +6006,30 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
+      ["virtual:24d2e67bdec56757052b94858c94f13adfce27bc9a0b575056f01607b2105b2e7064cfc823e6f791e2352081e58bb393fcdfbdd019e094430f5a4cfb834efe74#npm:3.5.0", {\
+        "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-npm-virtual-6e44cfb262/2/.yarn/berry/cache/@yarnpkg-plugin-npm-npm-3.5.0-b99c4e13b6-10.zip/node_modules/@yarnpkg/plugin-npm/",\
+        "packageDependencies": [\
+          ["@types/yarnpkg__core", null],\
+          ["@types/yarnpkg__plugin-pack", null],\
+          ["@yarnpkg/core", "npm:4.7.0"],\
+          ["@yarnpkg/fslib", "npm:3.1.5"],\
+          ["@yarnpkg/plugin-npm", "virtual:24d2e67bdec56757052b94858c94f13adfce27bc9a0b575056f01607b2105b2e7064cfc823e6f791e2352081e58bb393fcdfbdd019e094430f5a4cfb834efe74#npm:3.5.0"],\
+          ["@yarnpkg/plugin-pack", "virtual:6e44cfb262ffe64740898fe2f8325a3e3862fa161280e6ba4997d585271670ff9d08ceecdc3e44d845d2956cf2194b6919281cd0081088a36a5e0c44c43a3c36#npm:4.0.4"],\
+          ["enquirer", "npm:2.4.1"],\
+          ["es-toolkit", "npm:1.46.1"],\
+          ["micromatch", "npm:4.0.8"],\
+          ["semver", "npm:7.6.3"],\
+          ["sigstore", "npm:3.1.0"],\
+          ["ssri", "npm:12.0.0"],\
+          ["tslib", "npm:2.8.1"]\
+        ],\
+        "packagePeers": [\
+          "@types/yarnpkg__core",\
+          "@types/yarnpkg__plugin-pack",\
+          "@yarnpkg/core"\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:3.5.0", {\
         "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-npm-virtual-1896ed5a3c/2/.yarn/berry/cache/@yarnpkg-plugin-npm-npm-3.5.0-b99c4e13b6-10.zip/node_modules/@yarnpkg/plugin-npm/",\
         "packageDependencies": [\
@@ -6140,6 +6168,27 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/plugin-pack", "npm:4.0.4"]\
         ],\
         "linkType": "SOFT"\
+      }],\
+      ["virtual:6e44cfb262ffe64740898fe2f8325a3e3862fa161280e6ba4997d585271670ff9d08ceecdc3e44d845d2956cf2194b6919281cd0081088a36a5e0c44c43a3c36#npm:4.0.4", {\
+        "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-pack-virtual-5e9d4f5295/2/.yarn/berry/cache/@yarnpkg-plugin-pack-npm-4.0.4-25506c2be7-10.zip/node_modules/@yarnpkg/plugin-pack/",\
+        "packageDependencies": [\
+          ["@types/yarnpkg__cli", null],\
+          ["@types/yarnpkg__core", null],\
+          ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
+          ["@yarnpkg/core", "npm:4.7.0"],\
+          ["@yarnpkg/fslib", "npm:3.1.5"],\
+          ["@yarnpkg/plugin-pack", "virtual:6e44cfb262ffe64740898fe2f8325a3e3862fa161280e6ba4997d585271670ff9d08ceecdc3e44d845d2956cf2194b6919281cd0081088a36a5e0c44c43a3c36#npm:4.0.4"],\
+          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
+          ["micromatch", "npm:4.0.8"],\
+          ["tar-stream", "npm:2.2.0"],\
+          ["tslib", "npm:2.8.1"]\
+        ],\
+        "packagePeers": [\
+          "@types/yarnpkg__cli",\
+          "@types/yarnpkg__core",\
+          "@yarnpkg/core"\
+        ],\
+        "linkType": "HARD"\
       }],\
       ["virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.0.4", {\
         "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-pack-virtual-a1c4913000/2/.yarn/berry/cache/@yarnpkg-plugin-pack-npm-4.0.4-25506c2be7-10.zip/node_modules/@yarnpkg/plugin-pack/",\

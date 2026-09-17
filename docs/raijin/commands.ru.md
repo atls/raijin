@@ -51,7 +51,7 @@
 
 - Статус: `active`
 - Описание: validate commit messages against project scopes
-- Использование: `yarn commit message lint`
+- Использование: `yarn commit message lint [messageFile]`
 - Пример: `yarn commit message lint`
 - Плагин: `@atls/yarn-plugin-commit`
 
@@ -79,7 +79,7 @@
 #### `set version atls`
 
 - Статус: `active`
-- Описание: lock the Yarn version used by the project
+- Описание: install the verified Raijin package and checked runtime pair
 - Использование: `yarn set version atls`
 - Пример: `yarn set version atls`
 - Плагин: `@atls/yarn-plugin-essentials`
@@ -231,45 +231,6 @@
 - Использование: `yarn lint [--fix] [--cache] ...`
 - Пример: `yarn lint`
 - Плагин: `@atls/yarn-plugin-lint`
-
-</details>
-
-### Домен `raijin`
-
-- Команды: `raijin sync`, `raijin sync tsconfig`, `raijin sync typescript`
-
-<details>
-<summary>Подробности домена `raijin`</summary>
-
-<!-- sync:command-card:raijin-sync -->
-
-#### `raijin sync`
-
-- Статус: `active`
-- Описание: synchronize Raijin project support files
-- Использование: `yarn raijin sync`
-- Пример: `yarn raijin sync`
-- Плагин: `@atls/yarn-plugin-tools`
-
-<!-- sync:command-card:raijin-sync-tsconfig -->
-
-#### `raijin sync tsconfig`
-
-- Статус: `active`
-- Описание: synchronize Raijin TypeScript configuration
-- Использование: `yarn raijin sync tsconfig`
-- Пример: `yarn raijin sync tsconfig`
-- Плагин: `@atls/yarn-plugin-tools`
-
-<!-- sync:command-card:raijin-sync-typescript -->
-
-#### `raijin sync typescript`
-
-- Статус: `active`
-- Описание: synchronize the Raijin TypeScript dependency
-- Использование: `yarn raijin sync typescript`
-- Пример: `yarn raijin sync typescript`
-- Плагин: `@atls/yarn-plugin-tools`
 
 </details>
 

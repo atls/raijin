@@ -51,7 +51,7 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 - Status: `active`
 - Description: validate commit messages against project scopes
-- Usage: `yarn commit message lint`
+- Usage: `yarn commit message lint [messageFile]`
 - Example: `yarn commit message lint`
 - Plugin: `@atls/yarn-plugin-commit`
 
@@ -79,7 +79,7 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 #### `set version atls`
 
 - Status: `active`
-- Description: lock the Yarn version used by the project
+- Description: install the verified Raijin package and checked runtime pair
 - Usage: `yarn set version atls`
 - Example: `yarn set version atls`
 - Plugin: `@atls/yarn-plugin-essentials`
@@ -231,45 +231,6 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Usage: `yarn lint [--fix] [--cache] ...`
 - Example: `yarn lint`
 - Plugin: `@atls/yarn-plugin-lint`
-
-</details>
-
-### Domain `raijin`
-
-- Commands: `raijin sync`, `raijin sync tsconfig`, `raijin sync typescript`
-
-<details>
-<summary>Domain details: `raijin`</summary>
-
-<!-- sync:command-card:raijin-sync -->
-
-#### `raijin sync`
-
-- Status: `active`
-- Description: synchronize Raijin project support files
-- Usage: `yarn raijin sync`
-- Example: `yarn raijin sync`
-- Plugin: `@atls/yarn-plugin-tools`
-
-<!-- sync:command-card:raijin-sync-tsconfig -->
-
-#### `raijin sync tsconfig`
-
-- Status: `active`
-- Description: synchronize Raijin TypeScript configuration
-- Usage: `yarn raijin sync tsconfig`
-- Example: `yarn raijin sync tsconfig`
-- Plugin: `@atls/yarn-plugin-tools`
-
-<!-- sync:command-card:raijin-sync-typescript -->
-
-#### `raijin sync typescript`
-
-- Status: `active`
-- Description: synchronize the Raijin TypeScript dependency
-- Usage: `yarn raijin sync typescript`
-- Example: `yarn raijin sync typescript`
-- Plugin: `@atls/yarn-plugin-tools`
 
 </details>
 

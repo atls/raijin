@@ -41,34 +41,40 @@ const hasProjectFile = async (cwd: string, fileName: string): Promise<boolean> =
 export const hasPackageJson = async (cwd: string): Promise<boolean> =>
   hasProjectFile(cwd, PACKAGE_JSON)
 
+export const hasRaijinPackage = async (cwd: string): Promise<boolean> => {
+  if (!(await hasPackageJson(cwd))) {
+    return false
+  }
+
+  const manifest = JSON.parse(await readFile(join(cwd, PACKAGE_JSON), 'utf-8')) as Record<
+    string,
+    unknown
+  >
+
+  return ['dependencies', 'devDependencies', 'optionalDependencies'].some((field) => {
+    const dependencies = manifest[field]
+
+    return (
+      dependencies !== null &&
+      typeof dependencies === 'object' &&
+      Object.hasOwn(dependencies, '@atls/raijin')
+    )
+  })
+}
+
 export const hasYarnLock = async (cwd: string): Promise<boolean> => hasProjectFile(cwd, YARN_LOCK)
 
 const writePackageManifest = async (cwd: string, manifest: PackageManifest): Promise<void> => {
   await writeFile(join(cwd, PACKAGE_JSON), `${JSON.stringify(manifest, null, 2)}\n`)
 }
 
-export const ensurePackageManifest = async (cwd: string, packageManager: string): Promise<void> => {
+export const ensurePackageManifest = async (cwd: string): Promise<void> => {
   if (!(await hasPackageJson(cwd))) {
     await writePackageManifest(cwd, {
       name: getPackageName(cwd),
-      packageManager,
       type: 'module',
     })
-
-    return
   }
-
-  const manifest = JSON.parse(await readFile(join(cwd, PACKAGE_JSON), 'utf-8')) as PackageManifest
-
-  if (manifest.packageManager === packageManager && manifest.type === 'module') {
-    return
-  }
-
-  await writePackageManifest(cwd, {
-    ...manifest,
-    packageManager,
-    type: 'module',
-  })
 }
 
 export const ensureYarnLock = async (cwd: string): Promise<void> => {
