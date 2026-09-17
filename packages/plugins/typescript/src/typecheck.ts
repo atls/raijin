@@ -8,6 +8,7 @@ import type { TypecheckManagedError }         from './interfaces/result.js'
 import type { TypecheckResult }               from './interfaces/result.js'
 
 import { checkProject }                       from './project.js'
+import { findProjectConfig }                  from './project.js'
 
 const TYPESCRIPT_RUNTIME_SPECIFIER = '@atls/raijin/typescript'
 
@@ -15,6 +16,18 @@ const importTypeScript = async (): Promise<typeof TypeScriptRuntime> => {
   const provider = (await import(TYPESCRIPT_RUNTIME_SPECIFIER)) as TypeScriptProvider
 
   return provider.ts
+}
+
+export const resolveTypecheckProjectConfig = async (
+  cwd: string,
+  projectCwd: string
+): Promise<string | undefined> => {
+  const typescript = await importTypeScript()
+  const config = findProjectConfig(cwd, projectCwd, typescript)
+
+  return config
+    ? (typescript.sys.realpath?.(config) ?? typescript.sys.resolvePath(config))
+    : undefined
 }
 
 const resolveTypecheckSkipLibCheck = (

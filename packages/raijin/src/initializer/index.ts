@@ -1,28 +1,59 @@
 import type { RunRaijinInitializerOptions } from './interface.js'
 
-import { installRaijinRuntime }             from '../runtime/installer.js'
+import { installRaijin }                    from '../installation/install.js'
+import { hasRaijinBootstrapStage }          from '../installation/install.js'
 import { runYarnCommand }                   from '../yarn/command.js'
-import { ensurePackageManifest }            from './project.js'
-import { ensureYarnLock }                   from './project.js'
+import { hasRaijinPackage }                 from './project.js'
+import { hasPackageJson }                   from './project.js'
 import { parseRaijinInitializerArguments }  from './scaffold.js'
 import { selectRaijinScaffoldType }         from './scaffold.js'
-
-const RAIJIN_PACKAGE = '@atls/raijin@latest'
 
 export const runRaijinInitializer = async ({
   argv = [],
   cwd = process.cwd(),
   fetchImpl = fetch,
   runYarnCommand: runCommand = runYarnCommand,
+  queryYarnPackage,
+  readYarnCommand,
   selectScaffoldType = selectRaijinScaffoldType,
 }: RunRaijinInitializerOptions = {}): Promise<void> => {
-  const { scaffoldType: parsedScaffoldType } = parseRaijinInitializerArguments(argv)
-  const scaffoldType = parsedScaffoldType ?? (await selectScaffoldType())
+  const { mode, scaffoldType: parsedScaffoldType } = parseRaijinInitializerArguments(argv)
+  const configured = await hasRaijinPackage(cwd)
+  const hasManifest = await hasPackageJson(cwd)
+  const unfinishedBootstrap = await hasRaijinBootstrapStage(cwd)
+  const bootstrap = mode === 'init' && (!configured || unfinishedBootstrap)
+  const scaffoldType = bootstrap ? (parsedScaffoldType ?? (await selectScaffoldType())) : undefined
 
-  const runtimeManifest = await installRaijinRuntime({ cwd, fetchImpl })
-  await ensurePackageManifest(cwd, runtimeManifest.packageManager)
-  await ensureYarnLock(cwd)
-  await runCommand(['add', '-D', RAIJIN_PACKAGE], cwd)
-  await runCommand(['generate', 'project', '--type', scaffoldType], cwd)
-  await runCommand(['raijin', 'sync'], cwd)
+  if (mode === 'update' && !hasManifest) {
+    throw new Error('Raijin update requires an existing package.json')
+  }
+
+  if (mode === 'update' && unfinishedBootstrap) {
+    throw new Error('Raijin bootstrap is staged; rerun init to finish the scaffold')
+  }
+
+  let installationMode: 'bootstrap' | 'onboard' | 'update' = 'onboard'
+
+  if (bootstrap) {
+    installationMode = 'bootstrap'
+  } else if (configured) {
+    installationMode = 'update'
+  }
+
+  await installRaijin({
+    afterActivated: scaffoldType
+      ? async (packageManager) => {
+          await runCommand(['generate', 'project', '--type', scaffoldType], cwd, {
+            packageManager,
+            followYarnPath: true,
+          })
+        }
+      : undefined,
+    cwd,
+    fetchImpl,
+    mode: installationMode,
+    queryYarnPackage,
+    readYarnCommand,
+    runYarnCommand: runCommand,
+  })
 }

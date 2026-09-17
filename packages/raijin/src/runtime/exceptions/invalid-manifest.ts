@@ -2,8 +2,10 @@ import type { RaijinRuntimeManifest } from '../manifest.js'
 
 const INVALID_RUNTIME_MANIFEST_OBJECT_MESSAGE = 'Invalid Raijin runtime manifest: expected object'
 const INVALID_RUNTIME_MANIFEST_SCHEMA_VERSION_MESSAGE =
-  'Invalid Raijin runtime manifest: unsupported schemaVersion'
+  'Invalid Raijin runtime manifest: unsupported schemaVersion; no compatible yarn.js release is published yet'
 const INVALID_RUNTIME_MANIFEST_SHA256_MESSAGE = 'Invalid Raijin runtime manifest: invalid sha256'
+const INVALID_RUNTIME_MANIFEST_IDENTITY_MESSAGE =
+  'Invalid Raijin runtime manifest: invalid release identity'
 
 const createInvalidRuntimeManifestFieldMessage = (key: keyof RaijinRuntimeManifest): string =>
   `Invalid Raijin runtime manifest: missing ${key}`
@@ -57,5 +59,9 @@ export class InvalidRaijinRuntimeManifestException extends Error {
 
   static invalidSha256(): InvalidRaijinRuntimeManifestException {
     return new InvalidRaijinRuntimeManifestException(INVALID_RUNTIME_MANIFEST_SHA256_MESSAGE)
+  }
+
+  static invalidIdentity(): InvalidRaijinRuntimeManifestException {
+    return new InvalidRaijinRuntimeManifestException(INVALID_RUNTIME_MANIFEST_IDENTITY_MESSAGE)
   }
 }

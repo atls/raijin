@@ -66,7 +66,7 @@ const checkResolvedReferences = (
   return diagnostics
 }
 
-const findProjectConfig = (
+export const findProjectConfig = (
   cwd: string,
   projectCwd: string,
   typescript: typeof TypeScriptRuntime

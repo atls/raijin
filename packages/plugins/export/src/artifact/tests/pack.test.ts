@@ -6,11 +6,15 @@ import type { Descriptor }               from '@yarnpkg/core'
 import type { PortablePath }             from '@yarnpkg/fslib'
 
 import assert                            from 'node:assert/strict'
+import { execFile }                      from 'node:child_process'
 import { mkdir }                         from 'node:fs/promises'
 import { writeFile }                     from 'node:fs/promises'
 import { arch }                          from 'node:os'
+import { resolve }                       from 'node:path'
 import test                              from 'node:test'
+import { promisify }                     from 'node:util'
 
+import { Configuration }                 from '@yarnpkg/core'
 import { structUtils }                   from '@yarnpkg/core'
 import { npath }                         from '@yarnpkg/fslib'
 import { ppath }                         from '@yarnpkg/fslib'
@@ -23,6 +27,9 @@ import { copyYarnRelease }               from '../copy.js'
 import { copyPatchFiles }                from '../copy.js'
 import { getWorkspacePackFiles }         from '../export/exportUtils.js'
 import { resolveSupportedArchitectures } from '../pack.js'
+
+const execute = promisify(execFile)
+const repoRoot = npath.toPortablePath(resolve(import.meta.dirname, '../../../../../..'))
 
 const makePatchDescriptor = (
   name: string,
@@ -123,7 +130,7 @@ test('should normalize Docker platform aliases before Yarn install', () => {
 test('should copy yarn release without runtime cache side effects', async () => {
   await xfs.mktempPromise(async (source) => {
     await xfs.mktempPromise(async (destination) => {
-      const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
+      const yarnPath = ppath.join(source, '.yarn/releases/yarn.js')
       const yarnNativePath = npath.fromPortablePath(yarnPath)
 
       await mkdir(npath.dirname(yarnNativePath), { recursive: true })
@@ -140,10 +147,7 @@ test('should copy yarn release without runtime cache side effects', async () => 
         { reportInfo: () => undefined } as unknown as Report
       )
 
-      assert.equal(
-        await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
-        true
-      )
+      assert.equal(await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.js')), true)
     })
   })
 })
@@ -151,7 +155,7 @@ test('should copy yarn release without runtime cache side effects', async () => 
 test('should copy yarn release from native yarn path', async (context) => {
   await xfs.mktempPromise(async (source) => {
     await xfs.mktempPromise(async (destination) => {
-      const yarnPath = ppath.join(source, '.yarn/releases/yarn.mjs')
+      const yarnPath = ppath.join(source, '.yarn/releases/yarn.js')
       const yarnNativePath = npath.fromPortablePath(yarnPath)
 
       await mkdir(npath.dirname(yarnNativePath), { recursive: true })
@@ -176,10 +180,56 @@ test('should copy yarn release from native yarn path', async (context) => {
         { reportInfo: () => undefined } as unknown as Report
       )
 
-      assert.equal(
-        await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.mjs')),
-        true
+      assert.equal(await xfs.existsPromise(ppath.join(destination, '.yarn/releases/yarn.js')), true)
+    })
+  })
+})
+
+test('should export the configured checked runtime and launch it from a CommonJS artifact', async () => {
+  await xfs.mktempPromise(async (source) => {
+    await xfs.mktempPromise(async (destination) => {
+      const releasePath = '.yarn/releases/yarn.js' as PortablePath
+      const scopePath = '.yarn/releases/package.json' as PortablePath
+      const environment = { ...process.env }
+      delete environment.YARN_IGNORE_PATH
+
+      await xfs.writeFilePromise(
+        ppath.join(source, 'package.json'),
+        '{"name":"commonjs-artifact","type":"commonjs","packageManager":"yarn@4.14.1"}\n'
       )
+      await xfs.mkdirpPromise(ppath.dirname(ppath.join(source, releasePath)))
+      await xfs.copyPromise(ppath.join(source, releasePath), ppath.join(repoRoot, releasePath))
+      await xfs.copyPromise(ppath.join(source, scopePath), ppath.join(repoRoot, scopePath))
+      await Configuration.updateConfiguration(source, { yarnPath: releasePath })
+
+      await execute('corepack', ['yarn@4.14.1', 'install', '--no-immutable'], {
+        cwd: npath.fromPortablePath(source),
+        env: environment,
+      })
+      await execute(
+        'corepack',
+        ['yarn@4.14.1', 'export', '-d', npath.fromPortablePath(destination)],
+        {
+          cwd: npath.fromPortablePath(source),
+          env: environment,
+        }
+      )
+
+      assert.equal(
+        JSON.parse(await xfs.readFilePromise(ppath.join(destination, scopePath), 'utf8')).type,
+        'module'
+      )
+
+      const configuration = await Configuration.find(destination, null, { strict: false })
+
+      assert.equal(configuration.get('yarnPath'), ppath.join(destination, releasePath))
+
+      const { stdout } = await execute('corepack', ['yarn@4.14.1', '--help'], {
+        cwd: npath.fromPortablePath(destination),
+        env: environment,
+      })
+
+      assert.match(stdout, /yarn export <-d,--destination/)
     })
   })
 })

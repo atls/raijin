@@ -18,82 +18,13 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 #### `check`
 
 - Status: `active`
-- Description: run formatting, type checking, and linting
-- Usage: `yarn check ...`
+- Description: run Format, Lint, TypeCheck, unit and integration verification
+- Usage: `yarn check [--verify] [--since #0] ...`
 - Example: `yarn check`
-- Example: `yarn check packages/plugins/check/src`
+- Example: `yarn check --verify --since origin/main`
+- Example: `yarn check packages/app`
+- Example: `yarn check packages/app/src/index.ts`
 - Plugin: `@atls/yarn-plugin-check`
-
-</details>
-
-### Domain `checks`
-
-- Commands: `checks lint`, `checks release`, `checks run`, `checks test integration`, `checks test unit`, `checks typecheck`
-
-<details>
-<summary>Domain details: `checks`</summary>
-
-> Important: `checks` targets GitHub Actions runners, requires `GITHUB_TOKEN`, and relies on check context (`context.repo`, `GITHUB_SHA`)
-
-<!-- sync:command-card:checks-lint -->
-
-#### `checks lint`
-
-- Status: `active`
-- Description: report lint results to GitHub Checks
-- Usage: `yarn checks lint [--changed]`
-- Example: `yarn checks lint`
-- Plugin: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-release -->
-
-#### `checks release`
-
-- Status: `active`
-- Description: run the release GitHub check for changed workspaces
-- Usage: `yarn checks release [--no-private]`
-- Example: `yarn checks release`
-- Plugin: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-run -->
-
-#### `checks run`
-
-- Status: `active`
-- Description: run the standard GitHub check sequence
-- Usage: `yarn checks run [--changed] [--no-release]`
-- Example: `yarn checks run`
-- Plugin: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-test-integration -->
-
-#### `checks test integration`
-
-- Status: `active`
-- Description: report integration test results to GitHub Checks
-- Usage: `yarn checks test integration`
-- Example: `yarn checks test integration`
-- Plugin: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-test-unit -->
-
-#### `checks test unit`
-
-- Status: `active`
-- Description: report unit test results to GitHub Checks
-- Usage: `yarn checks test unit`
-- Example: `yarn checks test unit`
-- Plugin: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-typecheck -->
-
-#### `checks typecheck`
-
-- Status: `active`
-- Description: report TypeScript diagnostics to GitHub Checks
-- Usage: `yarn checks typecheck [--changed]`
-- Example: `yarn checks typecheck`
-- Plugin: `@atls/yarn-plugin-checks`
 
 </details>
 
@@ -120,7 +51,7 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 - Status: `active`
 - Description: validate commit messages against project scopes
-- Usage: `yarn commit message lint`
+- Usage: `yarn commit message lint [messageFile]`
 - Example: `yarn commit message lint`
 - Plugin: `@atls/yarn-plugin-commit`
 
@@ -148,7 +79,7 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 #### `set version atls`
 
 - Status: `active`
-- Description: lock the Yarn version used by the project
+- Description: install the verified Raijin package and checked runtime pair
 - Usage: `yarn set version atls`
 - Example: `yarn set version atls`
 - Plugin: `@atls/yarn-plugin-essentials`
@@ -300,45 +231,6 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Usage: `yarn lint [--fix] [--cache] ...`
 - Example: `yarn lint`
 - Plugin: `@atls/yarn-plugin-lint`
-
-</details>
-
-### Domain `raijin`
-
-- Commands: `raijin sync`, `raijin sync tsconfig`, `raijin sync typescript`
-
-<details>
-<summary>Domain details: `raijin`</summary>
-
-<!-- sync:command-card:raijin-sync -->
-
-#### `raijin sync`
-
-- Status: `active`
-- Description: synchronize Raijin project support files
-- Usage: `yarn raijin sync`
-- Example: `yarn raijin sync`
-- Plugin: `@atls/yarn-plugin-tools`
-
-<!-- sync:command-card:raijin-sync-tsconfig -->
-
-#### `raijin sync tsconfig`
-
-- Status: `active`
-- Description: synchronize Raijin TypeScript configuration
-- Usage: `yarn raijin sync tsconfig`
-- Example: `yarn raijin sync tsconfig`
-- Plugin: `@atls/yarn-plugin-tools`
-
-<!-- sync:command-card:raijin-sync-typescript -->
-
-#### `raijin sync typescript`
-
-- Status: `active`
-- Description: synchronize the Raijin TypeScript dependency
-- Usage: `yarn raijin sync typescript`
-- Example: `yarn raijin sync typescript`
-- Plugin: `@atls/yarn-plugin-tools`
 
 </details>
 

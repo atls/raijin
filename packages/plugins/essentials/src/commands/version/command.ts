@@ -1,76 +1,42 @@
-import type { EntryCommandContext }      from '@atls/raijin/commands'
+import type { EntryCommandContext } from '@atls/raijin/commands'
+import type { PortablePath }        from '@yarnpkg/fslib'
 
-import { BaseCommand }                   from '@yarnpkg/cli'
-import { Configuration }                 from '@yarnpkg/core'
-import { Command }                       from 'clipanion'
+import { BaseCommand }              from '@yarnpkg/cli'
+import { npath }                    from '@yarnpkg/fslib'
+import { ppath }                    from '@yarnpkg/fslib'
+import { xfs }                      from '@yarnpkg/fslib'
+import { Command }                  from 'clipanion'
 
-import { findPackageCwd }                from './project.js'
-import { normalizePackageManager }       from './project.js'
-import { portableToNativePath }          from './project.js'
-import { preparePackageProjectBoundary } from './project.js'
-import { assertInstalledRaijinRuntime }  from './runtime.js'
-import { fetchRaijinRuntimeManifest }    from './runtime.js'
-import { installRaijinRuntime }          from './runtime.js'
+import { runRaijinInitializer }     from '@atls/raijin'
 
-const RAIJIN_PUBLIC_PACKAGE = '@atls/raijin'
+const findPackageCwd = async (cwd: PortablePath): Promise<PortablePath> => {
+  if (await xfs.existsPromise(ppath.join(cwd, 'package.json'))) {
+    return cwd
+  }
+
+  const parent = ppath.dirname(cwd)
+
+  if (parent === cwd) {
+    throw new Error('Package manifest was not found for Raijin update')
+  }
+
+  return findPackageCwd(parent)
+}
 
 export class SetVersionCommand extends BaseCommand {
   static override paths = [['set', 'version', 'atls']]
 
   static override usage = Command.Usage({
-    description: 'lock the Yarn version used by the project',
-    details: `
-    This command will get the latest Atlantis bundle from [Atlantis Raijin repo](https://github.com/atls/raijin) and update the public Raijin package
-    `,
+    description: 'install the verified Raijin package and checked runtime pair',
   })
 
   declare context: EntryCommandContext
 
   override async execute(): Promise<number> {
     const cwd = await findPackageCwd(this.context.invocation.invocationCwd)
-    const previousCwd = process.cwd()
 
-    await preparePackageProjectBoundary(cwd)
+    await runRaijinInitializer({ argv: ['update'], cwd: npath.fromPortablePath(cwd) })
 
-    try {
-      process.chdir(portableToNativePath(cwd))
-
-      const configuration = await Configuration.find(
-        cwd as typeof this.context.cwd,
-        this.context.plugins
-      )
-      const runtimeManifest = await fetchRaijinRuntimeManifest(configuration)
-      await installRaijinRuntime(configuration, cwd, runtimeManifest)
-      await normalizePackageManager(cwd, runtimeManifest.packageManager)
-
-      const updatedConfiguration = await Configuration.find(
-        cwd as typeof this.context.cwd,
-        this.context.plugins
-      )
-
-      await assertInstalledRaijinRuntime(updatedConfiguration, cwd, runtimeManifest)
-
-      const bumpArgs = ['up', RAIJIN_PUBLIC_PACKAGE]
-      const bumpExitCode = await this.cli.run(bumpArgs, { cwd: cwd as typeof this.context.cwd })
-
-      const finalConfiguration = await Configuration.find(
-        cwd as typeof this.context.cwd,
-        this.context.plugins
-      )
-
-      await finalConfiguration.triggerHook(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
-        (hooks) => (hooks as any).afterYarnVersionSet,
-        finalConfiguration,
-        {
-          ...this.context,
-          cwd: cwd as typeof this.context.cwd,
-        }
-      )
-
-      return bumpExitCode
-    } finally {
-      process.chdir(previousCwd)
-    }
+    return 0
   }
 }

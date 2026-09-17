@@ -4,22 +4,25 @@ import type { CommitMessageProject }  from '../policy.js'
 
 import { BaseCommand }                from '@yarnpkg/cli'
 import read                           from '@commitlint/read'
+import { Option }                     from 'clipanion'
 
 import { toNativeCwd }                from '@atls/raijin/commands'
 
 import { createCommitMessagePolicy }  from '../policy.js'
 
 interface LintCommitMessageOptions {
+  messageFile?: string
   project: CommitMessageProject
   writeOutput: (output: string) => void
 }
 
 export const lintCommitMessage = async ({
+  messageFile,
   project,
   writeOutput,
 }: LintCommitMessageOptions): Promise<number> => {
   const policy = createCommitMessagePolicy(project)
-  const messages = await read({ cwd: toNativeCwd(project.cwd), edit: true })
+  const messages = await read({ cwd: toNativeCwd(project.cwd), edit: messageFile ?? true })
   const results = await Promise.all(messages.map(async (message) => policy.lint(message)))
   const output = policy.format(results)
 
@@ -37,12 +40,15 @@ class CommitMessageLintCommand extends BaseCommand {
     description: 'validate commit messages against project scopes',
   })
 
+  messageFile = Option.String({ required: false })
+
   declare context: ProjectCommandContext
 
   override async execute(): Promise<number> {
     const { project } = this.context.invocation
 
     return lintCommitMessage({
+      messageFile: this.messageFile,
       project,
       writeOutput: (output) => {
         this.context.stdout.write(output)

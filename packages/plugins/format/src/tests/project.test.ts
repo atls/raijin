@@ -74,6 +74,24 @@ test('should use project Prettier configuration for targetless formatting', asyn
   assert.equal(await readFile(sourceFile, 'utf8'), 'const value = { foo: 1 }\n')
 })
 
+test('should report formatter drift without writing in verification mode', async (t) => {
+  const cwd = await createProject()
+  const sourceFile = join(cwd, 'source.ts')
+  const source = 'const value={foo:1}\n'
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+  await writeFile(sourceFile, source)
+
+  const result = await formatProjectSources({
+    cwd,
+    targets: createTargets(cwd, ['source.ts']),
+    write: false,
+  })
+
+  assert.deepEqual(result, { files: [{ file: 'source.ts', status: 'changed' }] })
+  assert.equal(await readFile(sourceFile, 'utf8'), source)
+})
+
 test('should reject missing explicit targets', async () => {
   const cwd = await createProject()
   const laterTarget = join(cwd, 'later.ts')

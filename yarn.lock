@@ -5,16 +5,6 @@ __metadata:
   version: 9
   cacheKey: 10
 
-"@actions/core@npm:1.10.1":
-  version: 1.10.1
-  resolution: "@actions/core@npm:1.10.1"
-  dependencies:
-    "@actions/http-client": "npm:^2.0.1"
-    uuid: "npm:^8.3.2"
-  checksum: 10/d32af783ecb07f25a0f190112ee8e749a4c4cb88327d6df756ea1dcee146ab413c0e651a9c949294f8202ced1436c049d7b469485431a5cc4491d66926ec8323
-  languageName: node
-  linkType: hard
-
 "@actions/github@npm:6.0.0":
   version: 6.0.0
   resolution: "@actions/github@npm:6.0.0"
@@ -27,7 +17,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@actions/http-client@npm:^2.0.1, @actions/http-client@npm:^2.2.0":
+"@actions/http-client@npm:^2.2.0":
   version: 2.2.3
   resolution: "@actions/http-client@npm:2.2.3"
   dependencies:
@@ -281,7 +271,6 @@ __metadata:
   dependencies:
     "@atls/raijin": "workspace:*"
     "@atls/yarn-plugin-check": "workspace:*"
-    "@atls/yarn-plugin-checks": "workspace:*"
     "@atls/yarn-plugin-commit": "workspace:*"
     "@atls/yarn-plugin-essentials": "workspace:*"
     "@atls/yarn-plugin-export": "workspace:*"
@@ -366,6 +355,7 @@ __metadata:
     eslint-plugin-security: "npm:3.0.1"
     execa: "npm:10.0.1"
     fast-glob: "npm:3.3.2"
+    husky: "npm:9.1.7"
     import-sort: "npm:6.0.0"
     import-sort-parser: "npm:6.0.0"
     import-sort-parser-typescript: "npm:6.0.0"
@@ -384,6 +374,7 @@ __metadata:
     zod-validation-error: "npm:4.0.2"
   bin:
     raijin: ./bin/raijin.mjs
+    raijin-hooks: ./bin/raijin-hooks.js
   languageName: unknown
   linkType: soft
 
@@ -392,39 +383,16 @@ __metadata:
   resolution: "@atls/yarn-plugin-check@workspace:packages/plugins/check"
   dependencies:
     "@atls/raijin": "workspace:*"
-    "@yarnpkg/builder": "npm:4.2.0"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    clipanion: "npm:4.0.0-rc.2"
-  peerDependencies:
-    "@yarnpkg/cli": "*"
-    "@yarnpkg/core": "*"
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-plugin-checks@workspace:*, @atls/yarn-plugin-checks@workspace:packages/plugins/checks":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-checks@workspace:packages/plugins/checks"
-  dependencies:
-    "@actions/core": "npm:1.10.1"
-    "@actions/github": "npm:6.0.0"
-    "@atls/raijin": "workspace:*"
-    "@atls/yarn-plugin-files": "workspace:*"
+    "@atls/yarn-plugin-format": "workspace:*"
     "@atls/yarn-plugin-lint": "workspace:*"
     "@atls/yarn-plugin-test": "workspace:*"
-    "@atls/yarn-plugin-tools": "workspace:*"
-    "@atls/yarn-plugin-workspaces": "workspace:*"
-    "@babel/code-frame": "npm:7.24.7"
-    "@octokit/types": "npm:13.5.0"
-    "@types/babel__code-frame": "npm:7.0.6"
-    "@types/node": "npm:24.12.2"
+    "@atls/yarn-plugin-typescript": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
+    "@yarnpkg/plugin-git": "npm:3.2.0"
     clipanion: "npm:4.0.0-rc.2"
-    strip-ansi: "npm:7.1.0"
-    typescript: "npm:5.9.3"
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
@@ -471,6 +439,7 @@ __metadata:
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
+    "@yarnpkg/fslib": "npm:3.1.5"
     "@yarnpkg/plugin-essentials": "npm:4.5.0"
     "@yarnpkg/plugin-git": "npm:3.2.0"
     clipanion: "npm:4.0.0-rc.2"
@@ -635,6 +604,7 @@ __metadata:
     "@yarnpkg/fslib": "npm:3.1.5"
     "@yarnpkg/parsers": "npm:3.0.3"
     "@yarnpkg/plugin-git": "npm:3.2.0"
+    "@yarnpkg/plugin-npm": "npm:3.5.0"
     "@yarnpkg/plugin-version": "npm:4.2.0"
     clipanion: "npm:4.0.0-rc.2"
   peerDependencies:
@@ -724,7 +694,6 @@ __metadata:
     "@yarnpkg/fslib": "npm:3.1.5"
     clipanion: "npm:4.0.0-rc.2"
     deepmerge: "npm:4.3.1"
-    husky: "npm:9.1.7"
     semver: "npm:7.6.3"
   languageName: unknown
   linkType: soft
@@ -10054,15 +10023,6 @@ __metadata:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 10/474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^8.3.2":
-  version: 8.3.2
-  resolution: "uuid@npm:8.3.2"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 10/9a5f7aa1d6f56dd1e8d5f2478f855f25c645e64e26e347a98e98d95781d5ed20062d6cca2eecb58ba7c84bc3910be95c0451ef4161906abaab44f9cb68ffbdd1
   languageName: node
   linkType: hard
 

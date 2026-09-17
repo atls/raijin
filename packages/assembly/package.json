@@ -6,16 +6,15 @@
   "type": "module",
   "scripts": {
     "build": "yarn run build:clean && yarn run build:bundle && yarn run build:dynamic-require && yarn run build:dist && yarn run build:materialize",
-    "build:bundle": "builder build bundle --no-git-hash --format esm --target esnext --external-file ./externals.json && mv bundles/yarn.js bundles/yarn.mjs",
+    "build:bundle": "builder build bundle --no-git-hash --format esm --target esnext --external-file ./externals.json",
     "build:clean": "rm -rf dist/runtime",
-    "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.mjs dist/runtime/yarn.mjs",
+    "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.js dist/runtime/yarn.js",
     "build:dynamic-require": "yarn node patches/dynamic-require.mjs",
     "build:materialize": "yarn node scripts/runtime/materialize.mjs"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
     "@atls/yarn-plugin-check": "workspace:*",
-    "@atls/yarn-plugin-checks": "workspace:*",
     "@atls/yarn-plugin-commit": "workspace:*",
     "@atls/yarn-plugin-essentials": "workspace:*",
     "@atls/yarn-plugin-export": "workspace:*",
@@ -73,7 +72,6 @@
     "bundles": {
       "standard": [
         "@atls/yarn-plugin-check",
-        "@atls/yarn-plugin-checks",
         "@atls/yarn-plugin-commit",
         "@atls/yarn-plugin-essentials",
         "@atls/yarn-plugin-export",

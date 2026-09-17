@@ -79,8 +79,8 @@ test('should create yarn runtime release asset options only for Raijin release',
   )
   assert.deepEqual(createYarnRuntimeReleaseAssetOptions('@atls/raijin', projectCwd), {
     content_type: 'text/javascript',
-    name: 'yarn.mjs',
-    path: '/repo/packages/assembly/dist/runtime/yarn.mjs',
+    name: 'yarn.js',
+    path: '/repo/packages/assembly/dist/runtime/yarn.js',
   })
 })
 
@@ -118,19 +118,23 @@ test('should create canonical Raijin runtime manifest from verified release asse
     '1.2.3',
     {
       browser_download_url:
-        'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
-      name: 'yarn.mjs',
+        'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.js',
+      name: 'yarn.js',
     },
     Buffer.from('runtime'),
-    'yarn@5.0.0'
+    'yarn@5.0.0',
+    'a'.repeat(40),
+    'sha512-YWJjZA=='
   )
   const expectedManifest = {
-    assetName: 'yarn.mjs',
-    assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.mjs',
+    assetName: 'yarn.js',
+    assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.js',
+    packageIntegrity: 'sha512-YWJjZA==',
     packageName: '@atls/raijin',
     packageManager: 'yarn@5.0.0',
-    schemaVersion: 1,
+    schemaVersion: 2,
     sha256: 'd92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23',
+    sourceRevision: 'a'.repeat(40),
     tagName: '@atls/raijin@1.2.3',
     version: '1.2.3',
   }
@@ -147,8 +151,8 @@ test('should accept existing yarn runtime release assets with matching content',
   try {
     await assertYarnRuntimeReleaseAssetMatches(
       {
-        browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
-        name: 'yarn.mjs',
+        browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.js',
+        name: 'yarn.js',
       },
       Buffer.from('runtime')
     )
@@ -166,12 +170,12 @@ test('should reject existing yarn runtime release assets with mismatching conten
     await assert.rejects(
       assertYarnRuntimeReleaseAssetMatches(
         {
-          browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.mjs',
-          name: 'yarn.mjs',
+          browser_download_url: 'https://github.com/atls/raijin/releases/download/yarn/yarn.js',
+          name: 'yarn.js',
         },
         Buffer.from('runtime')
       ),
-      /Existing release asset yarn\.mjs digest mismatch/
+      /Existing release asset yarn\.js digest mismatch/
     )
   } finally {
     globalThis.fetch = originalFetch

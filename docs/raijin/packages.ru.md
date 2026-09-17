@@ -47,15 +47,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-checks -->
-
-#### `@atls/yarn-plugin-checks`
-
-- Локация: `packages/plugins/checks`
-- Группа: `plugins`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-commit -->
 
 #### `@atls/yarn-plugin-commit`

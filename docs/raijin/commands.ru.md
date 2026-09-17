@@ -18,82 +18,13 @@
 #### `check`
 
 - Статус: `active`
-- Описание: run formatting, type checking, and linting
-- Использование: `yarn check ...`
+- Описание: run Format, Lint, TypeCheck, unit and integration verification
+- Использование: `yarn check [--verify] [--since #0] ...`
 - Пример: `yarn check`
-- Пример: `yarn check packages/plugins/check/src`
+- Пример: `yarn check --verify --since origin/main`
+- Пример: `yarn check packages/app`
+- Пример: `yarn check packages/app/src/index.ts`
 - Плагин: `@atls/yarn-plugin-check`
-
-</details>
-
-### Домен `checks`
-
-- Команды: `checks lint`, `checks release`, `checks run`, `checks test integration`, `checks test unit`, `checks typecheck`
-
-<details>
-<summary>Подробности домена `checks`</summary>
-
-> Важно: `checks` рассчитан на запуск в раннерах GitHub Actions, требует `GITHUB_TOKEN` и контекст проверки (`context.repo`, `GITHUB_SHA`)
-
-<!-- sync:command-card:checks-lint -->
-
-#### `checks lint`
-
-- Статус: `active`
-- Описание: report lint results to GitHub Checks
-- Использование: `yarn checks lint [--changed]`
-- Пример: `yarn checks lint`
-- Плагин: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-release -->
-
-#### `checks release`
-
-- Статус: `active`
-- Описание: run the release GitHub check for changed workspaces
-- Использование: `yarn checks release [--no-private]`
-- Пример: `yarn checks release`
-- Плагин: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-run -->
-
-#### `checks run`
-
-- Статус: `active`
-- Описание: run the standard GitHub check sequence
-- Использование: `yarn checks run [--changed] [--no-release]`
-- Пример: `yarn checks run`
-- Плагин: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-test-integration -->
-
-#### `checks test integration`
-
-- Статус: `active`
-- Описание: report integration test results to GitHub Checks
-- Использование: `yarn checks test integration`
-- Пример: `yarn checks test integration`
-- Плагин: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-test-unit -->
-
-#### `checks test unit`
-
-- Статус: `active`
-- Описание: report unit test results to GitHub Checks
-- Использование: `yarn checks test unit`
-- Пример: `yarn checks test unit`
-- Плагин: `@atls/yarn-plugin-checks`
-
-<!-- sync:command-card:checks-typecheck -->
-
-#### `checks typecheck`
-
-- Статус: `active`
-- Описание: report TypeScript diagnostics to GitHub Checks
-- Использование: `yarn checks typecheck [--changed]`
-- Пример: `yarn checks typecheck`
-- Плагин: `@atls/yarn-plugin-checks`
 
 </details>
 
@@ -120,7 +51,7 @@
 
 - Статус: `active`
 - Описание: validate commit messages against project scopes
-- Использование: `yarn commit message lint`
+- Использование: `yarn commit message lint [messageFile]`
 - Пример: `yarn commit message lint`
 - Плагин: `@atls/yarn-plugin-commit`
 
@@ -148,7 +79,7 @@
 #### `set version atls`
 
 - Статус: `active`
-- Описание: lock the Yarn version used by the project
+- Описание: install the verified Raijin package and checked runtime pair
 - Использование: `yarn set version atls`
 - Пример: `yarn set version atls`
 - Плагин: `@atls/yarn-plugin-essentials`
@@ -300,45 +231,6 @@
 - Использование: `yarn lint [--fix] [--cache] ...`
 - Пример: `yarn lint`
 - Плагин: `@atls/yarn-plugin-lint`
-
-</details>
-
-### Домен `raijin`
-
-- Команды: `raijin sync`, `raijin sync tsconfig`, `raijin sync typescript`
-
-<details>
-<summary>Подробности домена `raijin`</summary>
-
-<!-- sync:command-card:raijin-sync -->
-
-#### `raijin sync`
-
-- Статус: `active`
-- Описание: synchronize Raijin project support files
-- Использование: `yarn raijin sync`
-- Пример: `yarn raijin sync`
-- Плагин: `@atls/yarn-plugin-tools`
-
-<!-- sync:command-card:raijin-sync-tsconfig -->
-
-#### `raijin sync tsconfig`
-
-- Статус: `active`
-- Описание: synchronize Raijin TypeScript configuration
-- Использование: `yarn raijin sync tsconfig`
-- Пример: `yarn raijin sync tsconfig`
-- Плагин: `@atls/yarn-plugin-tools`
-
-<!-- sync:command-card:raijin-sync-typescript -->
-
-#### `raijin sync typescript`
-
-- Статус: `active`
-- Описание: synchronize the Raijin TypeScript dependency
-- Использование: `yarn raijin sync typescript`
-- Пример: `yarn raijin sync typescript`
-- Плагин: `@atls/yarn-plugin-tools`
 
 </details>
 

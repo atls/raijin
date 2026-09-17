@@ -47,15 +47,6 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-checks -->
-
-#### `@atls/yarn-plugin-checks`
-
-- Location: `packages/plugins/checks`
-- Group: `plugins`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-commit -->
 
 #### `@atls/yarn-plugin-commit`

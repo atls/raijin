@@ -17,7 +17,7 @@
     {
       "id": "run-unit-tests",
       "prompt": "run unit tests only",
-      "routingHint": "Prefer plain unit test route, not checks namespace route",
+      "routingHint": "Use the unit-test command rather than the full check policy",
       "expectedCommand": "test unit",
       "expectedStatus": "active"
     },

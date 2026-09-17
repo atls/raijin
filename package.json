@@ -10,7 +10,7 @@
     "raijin:check": "yarn raijin:check:drift && yarn raijin:check:runtime && yarn raijin:check:localization && yarn raijin:smoke:deterministic",
     "raijin:check:drift": "node scripts/raijin/generate-artifacts.mjs && git diff --exit-code -- README.md README_EN.md docs/README.md docs/README.ru.md docs/raijin && test -z \"$(git ls-files --others --exclude-standard -- README.md README_EN.md docs/README.md docs/README.ru.md docs/raijin)\"",
     "raijin:check:localization": "node scripts/raijin/check-localization-sync.mjs",
-    "raijin:check:runtime": "yarn cli:build && node scripts/raijin/cli-surface/check-runtime.mjs packages/assembly/dist/runtime/yarn.mjs .yarn/releases/yarn.mjs packages/assembly/package.json",
+    "raijin:check:runtime": "yarn cli:build && node scripts/raijin/cli-surface/check-runtime.mjs packages/assembly/dist/runtime/yarn.js .yarn/releases/yarn.js packages/assembly/package.json",
     "raijin:generate": "node scripts/raijin/generate-artifacts.mjs",
     "raijin:smoke:deterministic": "node scripts/raijin/run-deterministic-smoke.mjs"
   },
