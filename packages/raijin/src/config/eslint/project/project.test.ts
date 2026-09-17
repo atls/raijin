@@ -5,6 +5,7 @@ import { readFile }                           from 'node:fs/promises'
 import { writeFile }                          from 'node:fs/promises'
 import { rm }                                 from 'node:fs/promises'
 import { tmpdir }                             from 'node:os'
+import { dirname }                            from 'node:path'
 import { join }                               from 'node:path'
 import test                                   from 'node:test'
 import { setTimeout }                         from 'node:timers/promises'
@@ -59,6 +60,57 @@ test('should use defaults when project config is absent', async () => {
     result.messages.some(({ ruleId }) => ruleId === 'no-console'),
     true
   )
+})
+
+test('should accept release templates only in native semantic-release config files', async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-eslint-release-'))
+  const ordinaryPath = join(cwd, 'src/index.js')
+  const configPaths = [
+    'release.config.js',
+    'nested/release.config.mjs',
+    '.github/actions/release/release.config.cjs',
+    '.releaserc.js',
+    'nested/.releaserc.mjs',
+    'nested/.releaserc.cjs',
+  ].map((file) => join(cwd, file))
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
+  await writeFile(
+    join(cwd, 'tsconfig.json'),
+    '{"compilerOptions":{"allowJs":true},"include":["src/**/*.js"]}\n'
+  )
+  await mkdir(dirname(ordinaryPath), { recursive: true })
+  await writeFile(ordinaryPath, `export const tagFormat = 'v\${version}'\n`)
+  await Promise.all(
+    configPaths.map(async (file) => {
+      await mkdir(dirname(file), { recursive: true })
+      await writeFile(
+        file,
+        file.endsWith('.cjs')
+          ? `module.exports = { tagFormat: 'v\${version}' }\n`
+          : `export default { tagFormat: 'v\${version}' }\n`
+      )
+    })
+  )
+
+  const eslint = new ESLint(await resolveEslintProject({ cwd, eslint: ESLint, rootCwd: cwd }))
+  const results = await eslint.lintFiles([...configPaths, ordinaryPath])
+
+  assert.equal(results.length, configPaths.length + 1)
+
+  for (const result of results) {
+    if (result.filePath === ordinaryPath) {
+      assert.equal(
+        result.messages.some(({ ruleId }) => ruleId === 'no-template-curly-in-string'),
+        true
+      )
+    } else {
+      assert.equal(result.errorCount, 0, JSON.stringify(result.messages))
+      assert.equal(result.warningCount, 0, JSON.stringify(result.messages))
+    }
+  }
 })
 
 test('should apply explicitly imported Raijin defaults before project rules', async (t) => {
