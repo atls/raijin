@@ -36,6 +36,8 @@ Expected result:
 - Project scaffold is created through the embedded Raijin collection
 - Bundle commands (`check`, `files changed list`, etc.) become available
 
+If the project is not yet a Git repository, hook installation is deferred: run `git init`, then `yarn install`. In a local project with `.git`, installation creates hooks through Husky.
+
 Before the first commit, complete the required [check configuration](#staged-checks). Scaffolding does not create a lint-staged configuration.
 
 <!-- sync:existing-project -->
@@ -74,6 +76,8 @@ Expected result:
 ## 5. Pre-commit checks
 
 This step is required when setting up new or existing projects. A configured Git hook calls `yarn commit staged`. Raijin supplies no default lint-staged configuration: without one, staged-file checks fail.
+
+Husky 9.1.7 sets the relative `core.hooksPath` to `.config/husky/_`. Raijin changes only its marked `pre-commit`, `commit-msg`, and `prepare-commit-msg` entry files; other hook files are not overwritten. If switching from the current Git hooks directory would leave an active hook without execution, installation stops with an explicit conflict before changing hook state. An unowned Raijin-name entry also conflicts. CI, image packaging, and `HUSKY=0` skip hook installation.
 
 Check existing settings first. The `lint-staged` field in `package.json`, JSON/YAML `.lintstagedrc` files, and `lint-staged.config.*` remain valid native formats. Preserve the project's chosen format, commands, and exclusions; do not create a competing configuration.
 

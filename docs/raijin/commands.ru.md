@@ -51,7 +51,7 @@
 
 - Статус: `active`
 - Описание: validate commit messages against project scopes
-- Использование: `yarn commit message lint`
+- Использование: `yarn commit message lint [messageFile]`
 - Пример: `yarn commit message lint`
 - Плагин: `@atls/yarn-plugin-commit`
 

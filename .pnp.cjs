@@ -511,6 +511,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-security", "npm:3.0.1"],\
           ["execa", "npm:10.0.1"],\
           ["fast-glob", "npm:3.3.2"],\
+          ["husky", "npm:9.1.7"],\
           ["import-sort", "npm:6.0.0"],\
           ["import-sort-parser", "npm:6.0.0"],\
           ["import-sort-parser-typescript", "npm:6.0.0"],\
@@ -1274,7 +1275,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/fslib", "npm:3.1.5"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
           ["deepmerge", "npm:4.3.1"],\
-          ["husky", "npm:9.1.7"],\
           ["semver", "npm:7.6.3"]\
         ],\
         "linkType": "SOFT"\

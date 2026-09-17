@@ -21,6 +21,7 @@ import { Project }                              from '@yarnpkg/core'
 import { npath }                                from '@yarnpkg/fslib'
 
 import { RaijinRuntimeDigestMismatchException } from '../runtime/exceptions/digest-mismatch.js'
+import { installRepositoryHooks }               from '../../hooks/install.js'
 import { ensurePackageManifest }                from '../initializer/project.js'
 import { ensureYarnLock }                       from '../initializer/project.js'
 import { hasPackageJson }                       from '../initializer/project.js'
@@ -311,6 +312,7 @@ export const installRaijin = async ({
     await activateRuntime(targetCwd, stagedPath)
     await assertActivatedPair(targetCwd, manifest, readCommand)
     await afterActivated?.(manifest.packageManager)
+    await installRepositoryHooks(targetCwd)
     await rm(stagedPath, { force: true })
   } catch (error) {
     throw new Error(
