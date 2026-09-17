@@ -1,7 +1,7 @@
 import type { FetchLike }                       from '../runtime/download.js'
-import type { RaijinRuntimeManifest }           from '../runtime/manifest.js'
 import type { YarnCommandRunner }               from '../yarn/runner.js'
 import type { YarnCommandReader }               from '../yarn/runner.js'
+import type { YarnPackageMetadata }             from '../yarn/runner.js'
 import type { YarnPackageQuery }                from '../yarn/runner.js'
 
 import { randomUUID }                           from 'node:crypto'
@@ -21,14 +21,19 @@ import { Project }                              from '@yarnpkg/core'
 import { npath }                                from '@yarnpkg/fslib'
 
 import { RaijinRuntimeDigestMismatchException } from '../runtime/exceptions/digest-mismatch.js'
+import { RAIJIN_RUNTIME_PACKAGE_NAME }          from '../runtime/release.js'
 import { installRepositoryHooks }               from '../../hooks/install.js'
 import { ensurePackageManifest }                from '../initializer/project.js'
 import { ensureYarnLock }                       from '../initializer/project.js'
 import { hasPackageJson }                       from '../initializer/project.js'
 import { downloadRaijinRuntime }                from '../runtime/download.js'
-import { fetchRaijinRuntimeManifest }           from '../runtime/download.js'
-import { createSha256Digest }                   from '../runtime/manifest.js'
-import { getRaijinRuntimeYarnPath }             from '../runtime/manifest.js'
+import { createRaijinReleaseTagName }           from '../runtime/download.js'
+import { fetchPublishedRaijinPackage }          from '../runtime/download.js'
+import { fetchRaijinReleasePackageManager }     from '../runtime/download.js'
+import { fetchRaijinReleaseRuntimeAsset }       from '../runtime/download.js'
+import { fetchRaijinReleaseSourceRevision }     from '../runtime/download.js'
+import { createSha256Digest }                   from '../runtime/release.js'
+import { getRaijinRuntimeYarnPath }             from '../runtime/release.js'
 import { queryYarnPackage }                     from '../yarn/command.js'
 import { readYarnCommand }                      from '../yarn/command.js'
 import { runYarnCommand }                       from '../yarn/command.js'
@@ -47,7 +52,6 @@ const STAGED_RUNTIME_EXTENSION = '.pending'
 const BOOTSTRAP_STAGED_RUNTIME_EXTENSION = '.bootstrap.pending'
 const RELEASE_PACKAGE_MANIFEST = 'package.json'
 const RELEASE_PACKAGE_TYPE = 'module'
-const RAIJIN_PACKAGE_NAME = '@atls/raijin'
 
 const getStagedRuntimePath = (cwd: string, mode: InstallRaijinOptions['mode']): string =>
   join(
@@ -124,24 +128,29 @@ const resolveInstallationTarget = async (
 }
 
 const assertPackageMetadata = async (
-  manifest: RaijinRuntimeManifest,
+  published: YarnPackageMetadata,
+  sourceRevision: string,
+  packageManager: string,
   cwd: string,
   queryPackage: YarnPackageQuery
 ): Promise<void> => {
   const metadata = await queryPackage(
-    manifest.packageName,
-    manifest.version,
+    RAIJIN_RUNTIME_PACKAGE_NAME,
+    published.version,
     cwd,
-    manifest.packageManager
+    packageManager
   )
 
   if (
-    metadata.name !== manifest.packageName ||
-    metadata.version !== manifest.version ||
-    metadata.gitHead !== manifest.sourceRevision ||
-    metadata.dist.integrity !== manifest.packageIntegrity
+    published.gitHead !== sourceRevision ||
+    metadata.name !== RAIJIN_RUNTIME_PACKAGE_NAME ||
+    metadata.version !== published.version ||
+    metadata.gitHead !== sourceRevision ||
+    metadata.dist.integrity !== published.dist.integrity
   ) {
-    throw new Error(`Raijin package metadata does not match release ${manifest.tagName}`)
+    throw new Error(
+      `Raijin package metadata does not match release ${createRaijinReleaseTagName(published.version)}`
+    )
   }
 }
 
@@ -166,7 +175,7 @@ const assertInstalledPackage = async (
     !installed ||
     typeof installed !== 'object' ||
     !('name' in installed) ||
-    installed.name !== RAIJIN_PACKAGE_NAME ||
+    installed.name !== RAIJIN_RUNTIME_PACKAGE_NAME ||
     !('version' in installed) ||
     installed.version !== version
   ) {
@@ -237,7 +246,8 @@ const activateRuntime = async (cwd: string, stagedPath: string): Promise<void> =
 
 const assertActivatedPair = async (
   cwd: string,
-  manifest: RaijinRuntimeManifest,
+  packageManager: string,
+  sha256: string,
   readCommand: YarnCommandReader
 ): Promise<void> => {
   const runtimePath = resolve(cwd, getRaijinRuntimeYarnPath())
@@ -246,21 +256,21 @@ const assertActivatedPair = async (
 
   if (
     configuredPath !== npath.toPortablePath(runtimePath) ||
-    createSha256Digest(await readFile(runtimePath)) !== manifest.sha256
+    createSha256Digest(await readFile(runtimePath)) !== sha256
   ) {
     throw new Error('Activated Raijin runtime path or digest does not match the release')
   }
 
   const version = (
     await readCommand(['--version'], cwd, {
-      packageManager: manifest.packageManager,
+      packageManager,
       followYarnPath: true,
     })
   ).trim()
-  const expectedVersion = manifest.packageManager.replace(/^yarn@/, '')
+  const expectedVersion = packageManager.replace(/^yarn@/, '')
 
   if (version !== expectedVersion) {
-    throw new Error(`Activated Yarn version ${version} does not match ${manifest.packageManager}`)
+    throw new Error(`Activated Yarn version ${version} does not match ${packageManager}`)
   }
 }
 
@@ -272,18 +282,23 @@ export const installRaijin = async ({
   queryYarnPackage: queryPackage = queryYarnPackage,
   readYarnCommand: readCommand = readYarnCommand,
   runYarnCommand: runCommand = runYarnCommand,
-}: InstallRaijinOptions): Promise<RaijinRuntimeManifest> => {
+}: InstallRaijinOptions): Promise<void> => {
   const targetCwd = await resolveInstallationTarget(cwd, mode)
 
-  const manifest = await fetchRaijinRuntimeManifest(fetchImpl)
+  const published = await fetchPublishedRaijinPackage(fetchImpl)
+  const { version } = published
+  const tagName = createRaijinReleaseTagName(version)
+  const asset = await fetchRaijinReleaseRuntimeAsset(fetchImpl, tagName)
+  const sourceRevision = await fetchRaijinReleaseSourceRevision(fetchImpl, tagName)
+  const packageManager = await fetchRaijinReleasePackageManager(fetchImpl, sourceRevision)
 
-  await assertPackageMetadata(manifest, targetCwd, queryPackage)
+  await assertPackageMetadata(published, sourceRevision, packageManager, targetCwd, queryPackage)
 
-  const runtime = await downloadRaijinRuntime(fetchImpl, manifest)
+  const runtime = await downloadRaijinRuntime(fetchImpl, asset.url)
   const digest = createSha256Digest(runtime)
 
-  if (digest !== manifest.sha256) {
-    throw new RaijinRuntimeDigestMismatchException(manifest.sha256, digest)
+  if (digest !== asset.sha256) {
+    throw new RaijinRuntimeDigestMismatchException(asset.sha256, digest)
   }
 
   await assertRuntimeModuleScope(join(targetCwd, getRaijinRuntimeYarnPath()))
@@ -302,16 +317,16 @@ export const installRaijin = async ({
   try {
     await runCommand(
       mode !== 'update'
-        ? ['add', '--prefer-dev', '-E', `${manifest.packageName}@${manifest.version}`]
-        : ['up', '-E', `${manifest.packageName}@${manifest.version}`],
+        ? ['add', '--prefer-dev', '-E', `${RAIJIN_RUNTIME_PACKAGE_NAME}@${version}`]
+        : ['up', '-E', `${RAIJIN_RUNTIME_PACKAGE_NAME}@${version}`],
       targetCwd,
-      { packageManager: manifest.packageManager, skipInstallHooks: true }
+      { packageManager, skipInstallHooks: true }
     )
-    await assertInstalledPackage(targetCwd, manifest.version, manifest.packageManager, readCommand)
-    await updatePackageManager(targetCwd, manifest.packageManager)
+    await assertInstalledPackage(targetCwd, version, packageManager, readCommand)
+    await updatePackageManager(targetCwd, packageManager)
     await activateRuntime(targetCwd, stagedPath)
-    await assertActivatedPair(targetCwd, manifest, readCommand)
-    await afterActivated?.(manifest.packageManager)
+    await assertActivatedPair(targetCwd, packageManager, asset.sha256, readCommand)
+    await afterActivated?.(packageManager)
     await installRepositoryHooks(targetCwd)
     await rm(stagedPath, { force: true })
   } catch (error) {
@@ -322,6 +337,4 @@ export const installRaijin = async ({
       }
     )
   }
-
-  return manifest
 }
