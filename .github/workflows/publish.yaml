@@ -2,9 +2,7 @@ name: Publish
 
 on:
   workflow_dispatch:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
       - master
     paths-ignore:
@@ -15,93 +13,39 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  run:
-    name: Publish
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true }}
-    env:
-      NODE_VERSION: '24'
+  release:
+    name: Release
+    if: ${{ github.ref == 'refs/heads/master' && vars.RAIJIN_RELEASE_ENABLED == 'true' }}
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      contents: write
+      packages: write
 
     steps:
-      - uses: actions/create-github-app-token@v3.2.0
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v3.2.0
         id: app-token
         with:
           client-id: ${{ vars.ATLANTIS_SUPER_BOT_CLIENT_ID }}
           private-key: ${{ secrets.ATLANTIS_SUPER_BOT_PRIVATE_KEY }}
 
-      - name: Checkout
+      - name: Checkout accepted master revision
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || 'master' }}
+          ref: ${{ github.sha }}
           token: ${{ steps.app-token.outputs.token }}
-          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: package.json
 
-      - name: Install
+      - name: Install Raijin
         uses: ./.github/actions/install
 
-      - name: Version
-        id: version
-        if: ${{ github.event.pull_request.merged == true }}
-        uses: ./.github/actions/version
-        with:
+      - name: Release Raijin
+        env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-
-      - name: Verify NPM auth
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: |
-          yarn npm whoami --publish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_REGISTRY_SERVER: https://registry.npmjs.org
-          YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
-
-      - name: Verify GitHub Packages auth
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: |
-          yarn npm whoami --publish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ github.token }}
-          YARN_NPM_REGISTRY_SERVER: https://npm.pkg.github.com
-          YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
-
-      - name: Publish to NPM
-        if: ${{ success() && (github.event_name == 'workflow_dispatch' || steps.version.outputs.release_required == 'true') }}
-        id: npm
-        uses: ./.github/actions/publish-npm
-        with:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        env:
-          YARN_NPM_REGISTRY_SERVER: https://registry.npmjs.org
-          YARN_NPM_PUBLISH_REGISTRY: https://registry.npmjs.org
-
-      - name: Publish to GitHub Packages
-        if: ${{ success() && (github.event_name == 'workflow_dispatch' || steps.version.outputs.release_required == 'true') }}
-        id: github-packages
-        uses: ./.github/actions/publish-github-packages
-        with:
           GITHUB_PACKAGES_TOKEN: ${{ github.token }}
-        env:
-          YARN_NPM_REGISTRY_SERVER: https://npm.pkg.github.com
-          YARN_NPM_PUBLISH_REGISTRY: https://npm.pkg.github.com
-
-      - name: Bundle yarn
-        if: ${{ success() && steps.version.outputs.release_required == 'true' }}
-        uses: ./.github/actions/bundle
-
-      - name: Create release
-        if: ${{ success() && steps.version.outputs.release_required == 'true' }}
-        uses: ./.github/actions/release
-        with:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-
-      - name: Commit changes
-        if: ${{ success() && steps.version.outputs.release_required == 'true' }}
-        uses: ./.github/actions/commit
-        with:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn semantic-release --extends ./.github/actions/release/release.config.js
