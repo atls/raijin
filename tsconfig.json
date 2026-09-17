@@ -30,7 +30,12 @@
     "noImplicitOverride": true,
     "checkJs": true
   },
-  "include": ["project.types.d.ts", "packages/**/*"],
+  "include": [
+    "project.types.d.ts",
+    "packages/**/*",
+    "eslint.config.js",
+    ".github/actions/release/release.config.js"
+  ],
   "exclude": ["**/bundles/**", "**/dist/**"],
   "types": ["@atls/raijin/types"]
 }
