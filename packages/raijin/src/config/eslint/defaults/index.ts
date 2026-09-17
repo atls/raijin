@@ -110,6 +110,18 @@ const config: Array<Linter.Config> = [
     },
   },
   {
+    files: ['**/release.config.{js,cjs,mjs}', '**/.releaserc.{js,cjs,mjs}'],
+    languageOptions: {
+      parserOptions: {
+        project: false,
+        projectService: false,
+      },
+    },
+    rules: {
+      'no-template-curly-in-string': 'off',
+    },
+  },
+  {
     files: ['scripts/raijin/*.mjs'],
     rules: {
       'n/no-sync': 'off',
