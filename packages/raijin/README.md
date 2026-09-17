@@ -2,7 +2,7 @@
 
 Raijin provides project commands and an optional ESLint flat configuration.
 
-The new public install/update path uses one exact published package and checked `yarn.js` runtime pair. Published `@atls/raijin@0.7.0` still provides only `yarn.mjs`; until a schemaVersion 2 release is published, the initializer rejects that historical manifest without changing the active runtime.
+The public install/update path selects npm's published `latest` version and requires the exact matching GitHub release to contain an uploaded `yarn.js` asset with a SHA-256 digest. The package's `gitHead` must match the release tag commit; Corepack uses the Yarn version from that commit's root `package.json`. Published `@atls/raijin@0.7.0` still provides only `yarn.mjs`, so the new installer refuses that release before changing the active runtime. A generated release manifest is not needed.
 
 ## Git hooks
 

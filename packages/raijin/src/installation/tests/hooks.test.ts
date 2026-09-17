@@ -16,7 +16,7 @@ import test                       from 'node:test'
 import { promisify }              from 'node:util'
 
 import { installRepositoryHooks } from '../../../hooks/install.js'
-import { createSha256Digest }     from '../../runtime/manifest.js'
+import { createSha256Digest }     from '../../runtime/release.js'
 import { installRaijin }          from '../install.js'
 
 const execute = promisify(execFile)
@@ -36,13 +36,12 @@ const executeGit = async (args: Array<string>, cwd: string, environment: NodeJS.
   execute('git', args, { cwd, env: { ...gitEnvironment(), ...environment } })
 
 const runtime = Buffer.from('runtime')
-const manifest = {
+const releaseFixture = {
   assetName: 'yarn.js',
   assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.js',
   packageIntegrity: 'sha512-YWJjZA==',
   packageManager: 'yarn@4.14.1',
   packageName: '@atls/raijin',
-  schemaVersion: 2,
   sha256: createSha256Digest(runtime),
   sourceRevision: 'a'.repeat(40),
   tagName: '@atls/raijin@1.2.3',
@@ -52,9 +51,46 @@ const manifest = {
 const fetchImpl = (async (input: Request | URL | string) => {
   const url = input instanceof Request ? input.url : String(input)
 
-  return url.endsWith('raijin-runtime.json')
-    ? Response.json(manifest)
-    : new Response(new Uint8Array(runtime))
+  if (url.startsWith('https://registry.npmjs.org/')) {
+    return Response.json({
+      name: releaseFixture.packageName,
+      'dist-tags': { latest: releaseFixture.version },
+      versions: {
+        [releaseFixture.version]: {
+          name: releaseFixture.packageName,
+          version: releaseFixture.version,
+          gitHead: releaseFixture.sourceRevision,
+          dist: { integrity: releaseFixture.packageIntegrity },
+        },
+      },
+    })
+  }
+
+  if (url.includes('/releases/tags/')) {
+    return Response.json({
+      tag_name: releaseFixture.tagName,
+      draft: false,
+      prerelease: false,
+      assets: [
+        {
+          name: releaseFixture.assetName,
+          state: 'uploaded',
+          digest: `sha256:${releaseFixture.sha256}`,
+          browser_download_url: releaseFixture.assetUrl,
+        },
+      ],
+    })
+  }
+
+  if (url.includes('/commits/')) {
+    return Response.json({ sha: releaseFixture.sourceRevision })
+  }
+
+  if (url.includes('/contents/package.json')) {
+    return Response.json({ packageManager: releaseFixture.packageManager })
+  }
+
+  return new Response(new Uint8Array(runtime))
 }) as typeof fetch
 
 const installOptions = (cwd: string) => ({
@@ -62,15 +98,15 @@ const installOptions = (cwd: string) => ({
   fetchImpl,
   mode: 'update' as const,
   queryYarnPackage: async () => ({
-    name: manifest.packageName,
-    version: manifest.version,
-    gitHead: manifest.sourceRevision,
-    dist: { integrity: manifest.packageIntegrity },
+    name: releaseFixture.packageName,
+    version: releaseFixture.version,
+    gitHead: releaseFixture.sourceRevision,
+    dist: { integrity: releaseFixture.packageIntegrity },
   }),
   readYarnCommand: async (args: Array<string>) =>
     args[0] === '--version'
       ? '4.14.1\n'
-      : JSON.stringify({ name: manifest.packageName, version: manifest.version }),
+      : JSON.stringify({ name: releaseFixture.packageName, version: releaseFixture.version }),
   runYarnCommand: async () => undefined,
 })
 
@@ -174,7 +210,7 @@ test('failed runtime activation leaves Git hooks untouched', async (context) => 
         readYarnCommand: async (args) =>
           args[0] === '--version'
             ? '4.12.0\n'
-            : JSON.stringify({ name: manifest.packageName, version: manifest.version }),
+            : JSON.stringify({ name: releaseFixture.packageName, version: releaseFixture.version }),
       }),
       /staged at/
     )

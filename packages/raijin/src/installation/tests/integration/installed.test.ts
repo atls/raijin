@@ -15,7 +15,7 @@ import { test }                                   from 'node:test'
 import { promisify }                              from 'node:util'
 
 import { runRaijinInitializer }                   from '../../../index.js'
-import { createSha256Digest }                     from '../../../runtime/manifest.js'
+import { createSha256Digest }                     from '../../../runtime/release.js'
 import { readYarnCommand }                        from '../../../yarn/command.js'
 import { runYarnCommand as runNativeYarnCommand } from '../../../yarn/command.js'
 
@@ -60,20 +60,19 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
     version: string
   }
   const { version } = packageJson
-  const manifest = {
+  const releaseFixture = {
     assetName: 'yarn.js',
     assetUrl: `https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%40${version}/yarn.js`,
     packageIntegrity: 'sha512-YWJjZA==',
     packageManager: 'yarn@4.14.1',
     packageName: '@atls/raijin',
-    schemaVersion: 2,
     sha256: createSha256Digest(runtime),
     sourceRevision: 'a'.repeat(40),
     tagName: `@atls/raijin@${version}`,
     version,
   }
   await runNativeYarnCommand(['workspace', '@atls/raijin', 'pack', '--out', archive], repoRoot, {
-    packageManager: manifest.packageManager,
+    packageManager: releaseFixture.packageManager,
     followYarnPath: true,
   })
 
@@ -84,9 +83,46 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
     const fetchImpl = (async (input: Request | URL | string) => {
       const url = input instanceof Request ? input.url : String(input)
 
-      return url.endsWith('raijin-runtime.json')
-        ? Response.json(manifest)
-        : new Response(new Uint8Array(runtime))
+      if (url.startsWith('https://registry.npmjs.org/')) {
+        return Response.json({
+          name: releaseFixture.packageName,
+          'dist-tags': { latest: releaseFixture.version },
+          versions: {
+            [releaseFixture.version]: {
+              name: releaseFixture.packageName,
+              version: releaseFixture.version,
+              gitHead: releaseFixture.sourceRevision,
+              dist: { integrity: releaseFixture.packageIntegrity },
+            },
+          },
+        })
+      }
+
+      if (url.includes('/releases/tags/')) {
+        return Response.json({
+          tag_name: releaseFixture.tagName,
+          draft: false,
+          prerelease: false,
+          assets: [
+            {
+              name: releaseFixture.assetName,
+              state: 'uploaded',
+              digest: `sha256:${releaseFixture.sha256}`,
+              browser_download_url: releaseFixture.assetUrl,
+            },
+          ],
+        })
+      }
+
+      if (url.includes('/commits/')) {
+        return Response.json({ sha: releaseFixture.sourceRevision })
+      }
+
+      if (url.includes('/contents/package.json')) {
+        return Response.json({ packageManager: releaseFixture.packageManager })
+      }
+
+      return new Response(new Uint8Array(runtime))
     }) as typeof fetch
     const runYarnCommand: NonNullable<RunRaijinInitializerOptions['runYarnCommand']> = async (
       args,
@@ -104,10 +140,10 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       cwd,
       fetchImpl,
       queryYarnPackage: async () => ({
-        name: manifest.packageName,
-        version: manifest.version,
-        gitHead: manifest.sourceRevision,
-        dist: { integrity: manifest.packageIntegrity },
+        name: releaseFixture.packageName,
+        version: releaseFixture.version,
+        gitHead: releaseFixture.sourceRevision,
+        dist: { integrity: releaseFixture.packageIntegrity },
       }),
       readYarnCommand,
       runYarnCommand,
@@ -123,7 +159,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
           name: 'monorepo',
           private: true,
           type: 'module',
-          packageManager: manifest.packageManager,
+          packageManager: releaseFixture.packageManager,
           workspaces: ['packages/*'],
           devDependencies: { '@atls/raijin': `file:${archive}` },
         })}\n`
@@ -131,7 +167,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       await writeFile(join(cwd, 'yarn.lock'), '')
       await writeFile(join(memberCwd, 'package.json'), '{"name":"member"}\n')
       await runNativeYarnCommand(['install', '--no-immutable'], cwd, {
-        packageManager: manifest.packageManager,
+        packageManager: releaseFixture.packageManager,
         skipInstallHooks: true,
       })
 
@@ -139,7 +175,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
 
       assert.equal(
         createSha256Digest(await readFile(join(cwd, '.yarn/releases/yarn.js'))),
-        manifest.sha256
+        releaseFixture.sha256
       )
       assert.ok((await readFile(join(cwd, '.pnp.cjs'))).length > 0)
       assert.equal((await readdir(memberCwd)).includes('.yarnrc.yml'), false)
@@ -164,7 +200,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
 
       assert.equal(
         createSha256Digest(await readFile(join(cwd, '.yarn/releases/yarn.js'))),
-        manifest.sha256
+        releaseFixture.sha256
       )
       assert.equal(await readFile(join(fixtureRoot, 'yarn.lock'), 'utf-8'), '# parent lock\n')
       assert.equal((await readdir(fixtureRoot)).includes('.yarnrc.yml'), false)
@@ -204,7 +240,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       )
       assert.equal(
         await readYarnCommand(['--version'], cwd, {
-          packageManager: manifest.packageManager,
+          packageManager: releaseFixture.packageManager,
           followYarnPath: true,
         }),
         '4.14.1\n'
@@ -217,7 +253,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
 
     assert.equal(
       await readYarnCommand(['--version'], cwd, {
-        packageManager: manifest.packageManager,
+        packageManager: releaseFixture.packageManager,
         followYarnPath: true,
       }),
       '4.14.1\n'
@@ -225,7 +261,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
     assert.ok((await readFile(join(cwd, '.pnp.cjs'))).length > 0)
     assert.equal(
       createSha256Digest(await readFile(join(cwd, '.yarn/releases/yarn.js'))),
-      manifest.sha256
+      releaseFixture.sha256
     )
     assert.equal(
       (await readdir(join(cwd, '.yarn/releases'))).includes('yarn.js.bootstrap.pending'),
@@ -257,7 +293,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       assert.equal(projectManifest.type, 'commonjs')
       assert.equal(
         await readYarnCommand(['--version'], cwd, {
-          packageManager: manifest.packageManager,
+          packageManager: releaseFixture.packageManager,
           followYarnPath: true,
         }),
         '4.14.1\n'

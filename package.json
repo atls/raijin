@@ -35,10 +35,16 @@
   },
   "devDependencies": {
     "@atls/raijin": "workspace:*",
+    "@semantic-release/commit-analyzer": "13.0.1",
+    "@semantic-release/exec": "7.1.0",
+    "@semantic-release/github": "12.0.9",
+    "@semantic-release/release-notes-generator": "14.1.1",
     "@types/node": "24.12.2",
     "@yarnpkg/builder": "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6",
+    "conventional-changelog-conventionalcommits": "9.3.1",
     "prettier": "3.5.3",
     "react": "18.3.1",
+    "semantic-release": "25.0.9",
     "typescript": "5.9.3"
   },
   "packageManager": "yarn@4.14.1",

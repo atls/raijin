@@ -575,8 +575,8 @@ const renderQuickstart = (language) => {
     isRu ? '- Node.js: `>= 24` (не ниже `24`)' : '- Node.js: `>= 24`',
     isRu ? '- Yarn: `>= 4` (не ниже `4`)' : '- Yarn: `>= 4`',
     isRu
-      ? '- Corepack доступен для запуска точной версии Yarn из проверенного манифеста до активации Raijin runtime'
-      : '- Corepack is available to run the exact Yarn version from the verified manifest before activating the Raijin runtime',
+      ? '- Corepack доступен для запуска точной версии Yarn из корневого `package.json` проверенной ревизии релиза до активации Raijin runtime'
+      : "- Corepack is available to run the exact Yarn version from the verified release revision's root `package.json` before activating the Raijin runtime",
     isRu
       ? '- Новый проект использует Yarn PnP и ESM; при обновлении существующие `type` и `nodeLinker` сохраняются'
       : '- A new project uses Yarn PnP and ESM; update preserves the existing `type` and `nodeLinker`',
@@ -588,8 +588,8 @@ const renderQuickstart = (language) => {
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu ? '- Команда `yarn --version` выполняется' : '- `yarn --version` works',
     isRu
-      ? '- Опубликованный релиз `@atls/raijin@0.7.0` использует старый `yarn.mjs`. Новый путь установки требует следующего релиза с манифестом schemaVersion 2 и реальным asset `yarn.js`; до публикации команда завершается без активации новой среды выполнения'
-      : '- Published `@atls/raijin@0.7.0` still uses `yarn.mjs`. The new installer requires a later release with a schemaVersion 2 manifest and a real `yarn.js` asset; until publication it exits without activating a new runtime',
+      ? '- Опубликованный релиз `@atls/raijin@0.7.0` использует старый `yarn.mjs`. Новый путь установки требует следующего опубликованного релиза с проверенным asset `yarn.js` и его digest; до публикации команда завершается без активации новой среды выполнения'
+      : '- Published `@atls/raijin@0.7.0` still uses `yarn.mjs`. The new installer requires a later published release with a checked `yarn.js` asset and its digest; until publication it exits without activating a new runtime',
     '',
     '<!-- sync:new-project -->',
     isRu ? '## 2. Новый проект' : '## 2. New project',
@@ -604,8 +604,8 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Создаётся `package.json`, если его ещё не было, а `packageManager` приводится к значению из манифеста установленной среды выполнения'
-      : '- `package.json` is created when it does not exist yet, and `packageManager` is normalized to the installed runtime manifest value',
+      ? '- Создаётся `package.json`, если его ещё не было, а `packageManager` приводится к значению из корневого `package.json` проверенной ревизии релиза'
+      : "- `package.json` is created when it does not exist yet, and `packageManager` is normalized to the verified release revision's root `package.json` value",
     isRu
       ? '- Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/yarn.js`'
       : '- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.js`',
@@ -657,8 +657,8 @@ const renderQuickstart = (language) => {
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
     isRu
-      ? '- Бандл обновлён до последней доступной версии, а `packageManager` приведён к значению из манифеста установленной среды выполнения'
-      : '- Bundle is upgraded to the latest available version, and `packageManager` is normalized to the installed runtime manifest value',
+      ? '- Бандл обновлён до последней доступной версии, а `packageManager` приведён к значению из корневого `package.json` проверенной ревизии релиза'
+      : "- Bundle is upgraded to the latest available version, and `packageManager` is normalized to the verified release revision's root `package.json` value",
     '',
     '<!-- sync:staged-checks -->',
     '<a id="staged-checks"></a>',

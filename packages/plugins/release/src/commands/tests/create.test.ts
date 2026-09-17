@@ -9,8 +9,6 @@ import { tmpdir }                               from 'node:os'
 import { join }                                 from 'node:path'
 import { test }                                 from 'node:test'
 
-import { parseRaijinRuntimeManifest }           from '@atls/raijin/runtime'
-
 import { assertYarnRuntimeReleaseAssetMatches } from '../create.js'
 import { createGitHubReleaseNotesOptions }      from '../create.js'
 import { createGitHubReleaseOptions }           from '../create.js'
@@ -140,7 +138,6 @@ test('should create canonical Raijin runtime manifest from verified release asse
   }
 
   assert.deepEqual(manifest, expectedManifest)
-  assert.deepEqual(parseRaijinRuntimeManifest(manifest), expectedManifest)
 })
 
 test('should accept existing yarn runtime release assets with matching content', async () => {

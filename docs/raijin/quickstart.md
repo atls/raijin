@@ -8,7 +8,7 @@ Minimal flow for creating or connecting a project to Raijin
 
 - Node.js: `>= 24`
 - Yarn: `>= 4`
-- Corepack is available to run the exact Yarn version from the verified manifest before activating the Raijin runtime
+- Corepack is available to run the exact Yarn version from the verified release revision's root `package.json` before activating the Raijin runtime
 - A new project uses Yarn PnP and ESM; update preserves the existing `type` and `nodeLinker`
 - For a new project: an empty directory
 - For an existing project: `package.json` in the project root
@@ -16,7 +16,7 @@ Minimal flow for creating or connecting a project to Raijin
 Expected result:
 
 - `yarn --version` works
-- Published `@atls/raijin@0.7.0` still uses `yarn.mjs`. The new installer requires a later release with a schemaVersion 2 manifest and a real `yarn.js` asset; until publication it exits without activating a new runtime
+- Published `@atls/raijin@0.7.0` still uses `yarn.mjs`. The new installer requires a later published release with a checked `yarn.js` asset and its digest; until publication it exits without activating a new runtime
 
 <!-- sync:new-project -->
 
@@ -30,7 +30,7 @@ Use `--type library` for the library scaffold
 
 Expected result:
 
-- `package.json` is created when it does not exist yet, and `packageManager` is normalized to the installed runtime manifest value
+- `package.json` is created when it does not exist yet, and `packageManager` is normalized to the verified release revision's root `package.json` value
 - Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.js`
 - Yarn completes package installation before `.yarnrc.yml` switches to the verified `yarnPath`
 - Project scaffold is created through the embedded Raijin collection
@@ -67,7 +67,7 @@ yarn dlx @atls/raijin update
 
 Expected result:
 
-- Bundle is upgraded to the latest available version, and `packageManager` is normalized to the installed runtime manifest value
+- Bundle is upgraded to the latest available version, and `packageManager` is normalized to the verified release revision's root `package.json` value
 
 <!-- sync:staged-checks -->
 

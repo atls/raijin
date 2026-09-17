@@ -11,17 +11,16 @@ import { tmpdir }                 from 'node:os'
 import { join }                   from 'node:path'
 import { test }                   from 'node:test'
 
-import { createSha256Digest }     from '../runtime/manifest.js'
+import { createSha256Digest }     from '../runtime/release.js'
 import { runRaijinInitializer }   from './index.js'
 
 const runtime = Buffer.from('runtime')
-const manifest = {
+const releaseFixture = {
   assetName: 'yarn.js',
   assetUrl: 'https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%401.2.3/yarn.js',
   packageIntegrity: 'sha512-YWJjZA==',
   packageManager: 'yarn@4.14.1',
   packageName: '@atls/raijin',
-  schemaVersion: 2,
   sha256: createSha256Digest(runtime),
   sourceRevision: 'a'.repeat(40),
   tagName: '@atls/raijin@1.2.3',
@@ -31,22 +30,59 @@ const manifest = {
 const fetchImpl = (async (input: Request | URL | string) => {
   const url = input instanceof Request ? input.url : String(input)
 
-  return url.endsWith('raijin-runtime.json')
-    ? Response.json(manifest)
-    : new Response(new Uint8Array(runtime))
+  if (url.startsWith('https://registry.npmjs.org/')) {
+    return Response.json({
+      name: releaseFixture.packageName,
+      'dist-tags': { latest: releaseFixture.version },
+      versions: {
+        [releaseFixture.version]: {
+          name: releaseFixture.packageName,
+          version: releaseFixture.version,
+          gitHead: releaseFixture.sourceRevision,
+          dist: { integrity: releaseFixture.packageIntegrity },
+        },
+      },
+    })
+  }
+
+  if (url.includes('/releases/tags/')) {
+    return Response.json({
+      tag_name: releaseFixture.tagName,
+      draft: false,
+      prerelease: false,
+      assets: [
+        {
+          name: releaseFixture.assetName,
+          state: 'uploaded',
+          digest: `sha256:${releaseFixture.sha256}`,
+          browser_download_url: releaseFixture.assetUrl,
+        },
+      ],
+    })
+  }
+
+  if (url.includes('/commits/')) {
+    return Response.json({ sha: releaseFixture.sourceRevision })
+  }
+
+  if (url.includes('/contents/package.json')) {
+    return Response.json({ packageManager: releaseFixture.packageManager })
+  }
+
+  return new Response(new Uint8Array(runtime))
 }) as typeof fetch
 
 const queryYarnPackage = async () => ({
-  name: manifest.packageName,
-  version: manifest.version,
-  gitHead: manifest.sourceRevision,
-  dist: { integrity: manifest.packageIntegrity },
+  name: releaseFixture.packageName,
+  version: releaseFixture.version,
+  gitHead: releaseFixture.sourceRevision,
+  dist: { integrity: releaseFixture.packageIntegrity },
 })
 
 const readYarnCommand = async (args: Array<string>): Promise<string> =>
   args[0] === '--version'
     ? '4.14.1\n'
-    : JSON.stringify({ name: manifest.packageName, version: manifest.version })
+    : JSON.stringify({ name: releaseFixture.packageName, version: releaseFixture.version })
 
 const exists = async (path: string): Promise<boolean> => {
   try {
@@ -94,7 +130,7 @@ test('bootstrap installs exact package before runtime activation and scaffolds o
   })
 })
 
-test('configured update preserves project configuration and does not scaffold', async (context) => {
+test('an older installed package updates to npm latest without changing project configuration', async (context) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-update-'))
   context.after(async () => rm(cwd, { recursive: true, force: true }))
   const packageJson = {
@@ -123,7 +159,7 @@ test('configured update preserves project configuration and does not scaffold', 
     },
   })
 
-  assert.equal(commands[0][0], 'up')
+  assert.deepEqual(commands[0], ['up', '-E', '@atls/raijin@1.2.3'])
   assert.equal(
     commands.some((args) => args[0] === 'generate'),
     false
@@ -311,8 +347,81 @@ test('metadata mismatch leaves the configured package and runtime untouched', as
     /metadata does not match/
   )
 
+  await assert.rejects(
+    runRaijinInitializer({
+      argv: ['update'],
+      cwd,
+      fetchImpl,
+      readYarnCommand,
+      queryYarnPackage: async () => ({
+        ...(await queryYarnPackage()),
+        dist: { integrity: 'sha512-ZWZnaA==' },
+      }),
+      runYarnCommand: async () => {
+        throw new Error('Yarn must not run')
+      },
+    }),
+    /metadata does not match/
+  )
+
   assert.equal(await readFile(join(cwd, 'package.json'), 'utf-8'), packageJson)
   assert.equal(await exists(join(cwd, '.yarn')), false)
+})
+
+test('missing release asset and wrong runtime digest stop update before changing the project', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-release-asset-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  const packageJson = '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+
+  await writeFile(join(cwd, 'package.json'), packageJson)
+
+  const assertStopsBeforeChange = async (
+    assets: Array<Record<string, string>>,
+    expectedError: RegExp
+  ): Promise<void> => {
+    const invalidReleaseFetch = (async (input: Request | URL | string, init?: RequestInit) => {
+      const url = input instanceof Request ? input.url : String(input)
+
+      return url.includes('/releases/tags/')
+        ? Response.json({
+            tag_name: releaseFixture.tagName,
+            draft: false,
+            prerelease: false,
+            assets,
+          })
+        : fetchImpl(input, init)
+    }) as typeof fetch
+
+    await assert.rejects(
+      runRaijinInitializer({
+        argv: ['update'],
+        cwd,
+        fetchImpl: invalidReleaseFetch,
+        queryYarnPackage,
+        readYarnCommand,
+        runYarnCommand: async () => {
+          throw new Error('Yarn must not run')
+        },
+      }),
+      expectedError
+    )
+
+    assert.equal(await readFile(join(cwd, 'package.json'), 'utf8'), packageJson)
+    assert.equal(await exists(join(cwd, '.yarn')), false)
+  }
+
+  await assertStopsBeforeChange([], /no checked yarn.js asset/)
+  await assertStopsBeforeChange(
+    [
+      {
+        name: releaseFixture.assetName,
+        state: 'uploaded',
+        digest: `sha256:${'b'.repeat(64)}`,
+        browser_download_url: releaseFixture.assetUrl,
+      },
+    ],
+    /digest mismatch/
+  )
 })
 
 test('incompatible runtime module scope fails before Yarn changes the package', async (context) => {
@@ -353,7 +462,7 @@ test('wrong active runtime version remains staged and cannot report success', as
       readYarnCommand: async (args) =>
         args[0] === '--version'
           ? '4.12.0\n'
-          : JSON.stringify({ name: manifest.packageName, version: manifest.version }),
+          : JSON.stringify({ name: releaseFixture.packageName, version: releaseFixture.version }),
       runYarnCommand: async () => undefined,
     }),
     /staged at/
@@ -410,7 +519,7 @@ test('retrying init after package add completes the still-pending scaffold', asy
         return rejectVersion ? '4.0.0\n' : '4.14.1\n'
       }
 
-      return JSON.stringify({ name: manifest.packageName, version: manifest.version })
+      return JSON.stringify({ name: releaseFixture.packageName, version: releaseFixture.version })
     },
     runYarnCommand: async (args: Array<string>): Promise<void> => {
       commands.push(args)
