@@ -26,7 +26,7 @@ It aligns teams on strict standards and strong contracts to increase delivery pr
 
 - Code validation: `check`, `lint`, `typecheck`, `test`
 - Change scope tooling: `files changed *`, `workspaces changed *`
-- Build and release flows: `service build`, `library build`, `release create`, `npm publish`
+- Build and package publication: `service build`, `library build`, `npm publish`
 - Generators and utility commands for monorepo infrastructure
 
 <!-- sync:root-quickstart -->

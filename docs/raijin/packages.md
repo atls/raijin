@@ -128,15 +128,6 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-release -->
-
-#### `@atls/yarn-plugin-release`
-
-- Location: `packages/plugins/release`
-- Group: `plugins`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-renderer -->
 
 #### `@atls/yarn-plugin-renderer`

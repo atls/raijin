@@ -234,45 +234,6 @@
 
 </details>
 
-### Домен `release`
-
-- Команды: `release create`, `release version apply`, `release version defer`
-
-<details>
-<summary>Подробности домена `release`</summary>
-
-<!-- sync:command-card:release-create -->
-
-#### `release create`
-
-- Статус: `active`
-- Описание: create and publish a project release
-- Использование: `yarn release create`
-- Пример: `yarn release create`
-- Плагин: `@atls/yarn-plugin-release`
-
-<!-- sync:command-card:release-version-apply -->
-
-#### `release version apply`
-
-- Статус: `active`
-- Описание: apply deferred workspace versions
-- Использование: `yarn release version apply [--workspace #0] [--github-output #0] [--since #0]`
-- Пример: `yarn release version apply`
-- Плагин: `@atls/yarn-plugin-release`
-
-<!-- sync:command-card:release-version-defer -->
-
-#### `release version defer`
-
-- Статус: `active`
-- Описание: defer version bumps for changed workspaces
-- Использование: `yarn release version defer [--since #0] [--dry-run]`
-- Пример: `yarn release version defer`
-- Плагин: `@atls/yarn-plugin-release`
-
-</details>
-
 ### Домен `renderer`
 
 - Команды: `renderer build`, `renderer dev`, `renderer start`

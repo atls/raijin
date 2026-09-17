@@ -4,7 +4,7 @@ import test                   from 'node:test'
 import { createForeachInput } from '../foreach-input.js'
 
 test('should run native foreach over selected workspaces without worktree refiltering', () => {
-  const input = createForeachInput(['@atls/raijin-assembly', '@atls/yarn-plugin-release'], {
+  const input = createForeachInput(['@atls/raijin-assembly', '@atls/yarn-plugin-service'], {
     exclude: '.',
     verbose: true,
   })
@@ -15,7 +15,7 @@ test('should run native foreach over selected workspaces without worktree refilt
     '--include',
     '@atls/raijin-assembly',
     '--include',
-    '@atls/yarn-plugin-release',
+    '@atls/yarn-plugin-service',
     '--all',
     '--exclude',
     '.',

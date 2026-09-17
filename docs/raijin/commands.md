@@ -234,45 +234,6 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 </details>
 
-### Domain `release`
-
-- Commands: `release create`, `release version apply`, `release version defer`
-
-<details>
-<summary>Domain details: `release`</summary>
-
-<!-- sync:command-card:release-create -->
-
-#### `release create`
-
-- Status: `active`
-- Description: create and publish a project release
-- Usage: `yarn release create`
-- Example: `yarn release create`
-- Plugin: `@atls/yarn-plugin-release`
-
-<!-- sync:command-card:release-version-apply -->
-
-#### `release version apply`
-
-- Status: `active`
-- Description: apply deferred workspace versions
-- Usage: `yarn release version apply [--workspace #0] [--github-output #0] [--since #0]`
-- Example: `yarn release version apply`
-- Plugin: `@atls/yarn-plugin-release`
-
-<!-- sync:command-card:release-version-defer -->
-
-#### `release version defer`
-
-- Status: `active`
-- Description: defer version bumps for changed workspaces
-- Usage: `yarn release version defer [--since #0] [--dry-run]`
-- Example: `yarn release version defer`
-- Plugin: `@atls/yarn-plugin-release`
-
-</details>
-
 ### Domain `renderer`
 
 - Commands: `renderer build`, `renderer dev`, `renderer start`

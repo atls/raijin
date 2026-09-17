@@ -298,8 +298,8 @@ const renderRootReadme = (language) => {
       ? '- Работа с изменениями: `files changed *`, `workspaces changed *`'
       : '- Change scope tooling: `files changed *`, `workspaces changed *`',
     isRu
-      ? '- Сборка и выпуск: `service build`, `library build`, `release create`, `npm publish`'
-      : '- Build and release flows: `service build`, `library build`, `release create`, `npm publish`',
+      ? '- Сборка и публикация пакетов: `service build`, `library build`, `npm publish`'
+      : '- Build and package publication: `service build`, `library build`, `npm publish`',
     isRu
       ? '- Генераторы и служебные команды для инфраструктуры монорепозитория'
       : '- Generators and utility commands for monorepo infrastructure',

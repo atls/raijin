@@ -26,7 +26,7 @@ Raijin — это подход к работе в едином инженерн�
 
 - Проверки кода: `check`, `lint`, `typecheck`, `test`
 - Работа с изменениями: `files changed *`, `workspaces changed *`
-- Сборка и выпуск: `service build`, `library build`, `release create`, `npm publish`
+- Сборка и публикация пакетов: `service build`, `library build`, `npm publish`
 - Генераторы и служебные команды для инфраструктуры монорепозитория
 
 <!-- sync:root-quickstart -->

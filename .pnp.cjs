@@ -63,10 +63,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/plugins/lint"\
     },\
     {\
-      "name": "@atls/yarn-plugin-release",\
-      "reference": "workspace:packages/plugins/release"\
-    },\
-    {\
       "name": "@atls/yarn-plugin-renderer",\
       "reference": "workspace:packages/plugins/renderer"\
     },\
@@ -112,7 +108,6 @@ const RAW_RUNTIME_STATE =
     ["@atls/yarn-plugin-image", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/image", "workspace:packages/plugins/image"]],\
     ["@atls/yarn-plugin-library", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/library", "workspace:packages/plugins/library"]],\
     ["@atls/yarn-plugin-lint", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/lint", "workspace:packages/plugins/lint"]],\
-    ["@atls/yarn-plugin-release", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/release", "workspace:packages/plugins/release"]],\
     ["@atls/yarn-plugin-renderer", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/renderer", "workspace:packages/plugins/renderer"]],\
     ["@atls/yarn-plugin-service", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/service", "workspace:packages/plugins/service"]],\
     ["@atls/yarn-plugin-test", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/test", "workspace:packages/plugins/test"]],\
@@ -593,7 +588,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-image", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/image"],\
           ["@atls/yarn-plugin-library", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/library"],\
           ["@atls/yarn-plugin-lint", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/lint"],\
-          ["@atls/yarn-plugin-release", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/release"],\
           ["@atls/yarn-plugin-renderer", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/renderer"],\
           ["@atls/yarn-plugin-service", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/service"],\
           ["@atls/yarn-plugin-test", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/test"],\
@@ -1101,58 +1095,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@atls/yarn-plugin-release", [\
-      ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/release", {\
-        "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-release-virtual-24d2e67bde/1/packages/plugins/release/",\
-        "packageDependencies": [\
-          ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@atls/yarn-plugin-files", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/files"],\
-          ["@atls/yarn-plugin-release", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/release"],\
-          ["@octokit/auth-action", "npm:5.1.1"],\
-          ["@octokit/rest", "npm:21.0.2"],\
-          ["@octokit/types", "npm:13.5.0"],\
-          ["@types/yarnpkg__cli", null],\
-          ["@types/yarnpkg__core", null],\
-          ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
-          ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/parsers", "npm:3.0.3"],\
-          ["@yarnpkg/plugin-git", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:3.2.0"],\
-          ["@yarnpkg/plugin-npm", "virtual:24d2e67bdec56757052b94858c94f13adfce27bc9a0b575056f01607b2105b2e7064cfc823e6f791e2352081e58bb393fcdfbdd019e094430f5a4cfb834efe74#npm:3.5.0"],\
-          ["@yarnpkg/plugin-version", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.2.0"],\
-          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
-        ],\
-        "packagePeers": [\
-          "@types/yarnpkg__cli",\
-          "@types/yarnpkg__core",\
-          "@yarnpkg/cli",\
-          "@yarnpkg/core"\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["workspace:packages/plugins/release", {\
-        "packageLocation": "./packages/plugins/release/",\
-        "packageDependencies": [\
-          ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@atls/yarn-plugin-files", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/files"],\
-          ["@atls/yarn-plugin-release", "workspace:packages/plugins/release"],\
-          ["@octokit/auth-action", "npm:5.1.1"],\
-          ["@octokit/rest", "npm:21.0.2"],\
-          ["@octokit/types", "npm:13.5.0"],\
-          ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
-          ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/parsers", "npm:3.0.3"],\
-          ["@yarnpkg/plugin-git", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:3.2.0"],\
-          ["@yarnpkg/plugin-npm", "virtual:24d2e67bdec56757052b94858c94f13adfce27bc9a0b575056f01607b2105b2e7064cfc823e6f791e2352081e58bb393fcdfbdd019e094430f5a4cfb834efe74#npm:3.5.0"],\
-          ["@yarnpkg/plugin-version", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.2.0"],\
-          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -3460,29 +3402,11 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@octokit/auth-action", [\
-      ["npm:5.1.1", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-auth-action-npm-5.1.1-5cb97e21b8-10.zip/node_modules/@octokit/auth-action/",\
-        "packageDependencies": [\
-          ["@octokit/auth-action", "npm:5.1.1"],\
-          ["@octokit/auth-token", "npm:5.1.1"],\
-          ["@octokit/types", "npm:13.6.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@octokit/auth-token", [\
       ["npm:4.0.0", {\
         "packageLocation": "../.yarn/berry/cache/@octokit-auth-token-npm-4.0.0-9ad78a752f-10.zip/node_modules/@octokit/auth-token/",\
         "packageDependencies": [\
           ["@octokit/auth-token", "npm:4.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:5.1.1", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-auth-token-npm-5.1.1-eaee62a7d6-10.zip/node_modules/@octokit/auth-token/",\
-        "packageDependencies": [\
-          ["@octokit/auth-token", "npm:5.1.1"]\
         ],\
         "linkType": "HARD"\
       }],\
@@ -3509,20 +3433,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:6.1.2", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-core-npm-6.1.2-f07edffd39-10.zip/node_modules/@octokit/core/",\
-        "packageDependencies": [\
-          ["@octokit/auth-token", "npm:5.1.1"],\
-          ["@octokit/core", "npm:6.1.2"],\
-          ["@octokit/graphql", "npm:8.1.1"],\
-          ["@octokit/request", "npm:9.1.3"],\
-          ["@octokit/request-error", "npm:6.1.5"],\
-          ["@octokit/types", "npm:13.6.2"],\
-          ["before-after-hook", "npm:3.0.2"],\
-          ["universal-user-agent", "npm:7.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:7.0.8", {\
         "packageLocation": "../.yarn/berry/cache/@octokit-core-npm-7.0.8-7c36bf4f93-10.zip/node_modules/@octokit/core/",\
         "packageDependencies": [\
@@ -3539,15 +3449,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@octokit/endpoint", [\
-      ["npm:10.1.1", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-endpoint-npm-10.1.1-ac8c51d408-10.zip/node_modules/@octokit/endpoint/",\
-        "packageDependencies": [\
-          ["@octokit/endpoint", "npm:10.1.1"],\
-          ["@octokit/types", "npm:13.6.2"],\
-          ["universal-user-agent", "npm:7.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:11.0.5", {\
         "packageLocation": "../.yarn/berry/cache/@octokit-endpoint-npm-11.0.5-d3d5b0a5a7-10.zip/node_modules/@octokit/endpoint/",\
         "packageDependencies": [\
@@ -3575,16 +3476,6 @@ const RAW_RUNTIME_STATE =
           ["@octokit/request", "npm:8.4.0"],\
           ["@octokit/types", "npm:13.6.2"],\
           ["universal-user-agent", "npm:6.0.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:8.1.1", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-graphql-npm-8.1.1-2d1a29021f-10.zip/node_modules/@octokit/graphql/",\
-        "packageDependencies": [\
-          ["@octokit/graphql", "npm:8.1.1"],\
-          ["@octokit/request", "npm:9.1.3"],\
-          ["@octokit/types", "npm:13.6.2"],\
-          ["universal-user-agent", "npm:7.0.2"]\
         ],\
         "linkType": "HARD"\
       }],\
@@ -3637,13 +3528,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@octokit/plugin-paginate-rest", [\
-      ["npm:11.3.6", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-plugin-paginate-rest-npm-11.3.6-c099e46507-10.zip/node_modules/@octokit/plugin-paginate-rest/",\
-        "packageDependencies": [\
-          ["@octokit/plugin-paginate-rest", "npm:11.3.6"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["npm:14.0.0", {\
         "packageLocation": "../.yarn/berry/cache/@octokit-plugin-paginate-rest-npm-14.0.0-c3b530d1dc-10.zip/node_modules/@octokit/plugin-paginate-rest/",\
         "packageDependencies": [\
@@ -3657,20 +3541,6 @@ const RAW_RUNTIME_STATE =
           ["@octokit/plugin-paginate-rest", "npm:9.2.1"]\
         ],\
         "linkType": "SOFT"\
-      }],\
-      ["virtual:46636e39cdef5ae2ad5f4b2baf24b8396aaf9fc4a5f92ba6623ebff41d022917dabfc7720b6c78fac675b2fb381256810171b866745c718bf78e80bb7d289131#npm:11.3.6", {\
-        "packageLocation": "./.yarn/__virtual__/@octokit-plugin-paginate-rest-virtual-2f2b732c1c/2/.yarn/berry/cache/@octokit-plugin-paginate-rest-npm-11.3.6-c099e46507-10.zip/node_modules/@octokit/plugin-paginate-rest/",\
-        "packageDependencies": [\
-          ["@octokit/core", "npm:6.1.2"],\
-          ["@octokit/plugin-paginate-rest", "virtual:46636e39cdef5ae2ad5f4b2baf24b8396aaf9fc4a5f92ba6623ebff41d022917dabfc7720b6c78fac675b2fb381256810171b866745c718bf78e80bb7d289131#npm:11.3.6"],\
-          ["@octokit/types", "npm:13.6.2"],\
-          ["@types/octokit__core", null]\
-        ],\
-        "packagePeers": [\
-          "@octokit/core",\
-          "@types/octokit__core"\
-        ],\
-        "linkType": "HARD"\
       }],\
       ["virtual:555bf7818cab3a528e703f9591e499a9d8446a36bfc32303a22edc93a38d7ac96c1e8d289171e10a31fa4e136295d1bbd128212714c0e206a220908d6a92ff2f#npm:9.2.1", {\
         "packageLocation": "./.yarn/__virtual__/@octokit-plugin-paginate-rest-virtual-abca132599/2/.yarn/berry/cache/@octokit-plugin-paginate-rest-npm-9.2.1-9310cd3549-10.zip/node_modules/@octokit/plugin-paginate-rest/",\
@@ -3701,28 +3571,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@octokit/plugin-request-log", [\
-      ["npm:5.3.1", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-plugin-request-log-npm-5.3.1-86ca827f31-10.zip/node_modules/@octokit/plugin-request-log/",\
-        "packageDependencies": [\
-          ["@octokit/plugin-request-log", "npm:5.3.1"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:46636e39cdef5ae2ad5f4b2baf24b8396aaf9fc4a5f92ba6623ebff41d022917dabfc7720b6c78fac675b2fb381256810171b866745c718bf78e80bb7d289131#npm:5.3.1", {\
-        "packageLocation": "./.yarn/__virtual__/@octokit-plugin-request-log-virtual-9ca864ba83/2/.yarn/berry/cache/@octokit-plugin-request-log-npm-5.3.1-86ca827f31-10.zip/node_modules/@octokit/plugin-request-log/",\
-        "packageDependencies": [\
-          ["@octokit/core", "npm:6.1.2"],\
-          ["@octokit/plugin-request-log", "virtual:46636e39cdef5ae2ad5f4b2baf24b8396aaf9fc4a5f92ba6623ebff41d022917dabfc7720b6c78fac675b2fb381256810171b866745c718bf78e80bb7d289131#npm:5.3.1"],\
-          ["@types/octokit__core", null]\
-        ],\
-        "packagePeers": [\
-          "@octokit/core",\
-          "@types/octokit__core"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@octokit/plugin-rest-endpoint-methods", [\
       ["npm:10.4.1", {\
         "packageLocation": "../.yarn/berry/cache/@octokit-plugin-rest-endpoint-methods-npm-10.4.1-3fc380dbdf-10.zip/node_modules/@octokit/plugin-rest-endpoint-methods/",\
@@ -3730,27 +3578,6 @@ const RAW_RUNTIME_STATE =
           ["@octokit/plugin-rest-endpoint-methods", "npm:10.4.1"]\
         ],\
         "linkType": "SOFT"\
-      }],\
-      ["npm:13.2.6", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-plugin-rest-endpoint-methods-npm-13.2.6-928f20d840-10.zip/node_modules/@octokit/plugin-rest-endpoint-methods/",\
-        "packageDependencies": [\
-          ["@octokit/plugin-rest-endpoint-methods", "npm:13.2.6"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:46636e39cdef5ae2ad5f4b2baf24b8396aaf9fc4a5f92ba6623ebff41d022917dabfc7720b6c78fac675b2fb381256810171b866745c718bf78e80bb7d289131#npm:13.2.6", {\
-        "packageLocation": "./.yarn/__virtual__/@octokit-plugin-rest-endpoint-methods-virtual-625e863c1d/2/.yarn/berry/cache/@octokit-plugin-rest-endpoint-methods-npm-13.2.6-928f20d840-10.zip/node_modules/@octokit/plugin-rest-endpoint-methods/",\
-        "packageDependencies": [\
-          ["@octokit/core", "npm:6.1.2"],\
-          ["@octokit/plugin-rest-endpoint-methods", "virtual:46636e39cdef5ae2ad5f4b2baf24b8396aaf9fc4a5f92ba6623ebff41d022917dabfc7720b6c78fac675b2fb381256810171b866745c718bf78e80bb7d289131#npm:13.2.6"],\
-          ["@octokit/types", "npm:13.6.2"],\
-          ["@types/octokit__core", null]\
-        ],\
-        "packagePeers": [\
-          "@octokit/core",\
-          "@types/octokit__core"\
-        ],\
-        "linkType": "HARD"\
       }],\
       ["virtual:555bf7818cab3a528e703f9591e499a9d8446a36bfc32303a22edc93a38d7ac96c1e8d289171e10a31fa4e136295d1bbd128212714c0e206a220908d6a92ff2f#npm:10.4.1", {\
         "packageLocation": "./.yarn/__virtual__/@octokit-plugin-rest-endpoint-methods-virtual-e92379a7c6/2/.yarn/berry/cache/@octokit-plugin-rest-endpoint-methods-npm-10.4.1-3fc380dbdf-10.zip/node_modules/@octokit/plugin-rest-endpoint-methods/",\
@@ -3840,17 +3667,6 @@ const RAW_RUNTIME_STATE =
           ["universal-user-agent", "npm:6.0.1"]\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["npm:9.1.3", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-request-npm-9.1.3-2e5cfb5355-10.zip/node_modules/@octokit/request/",\
-        "packageDependencies": [\
-          ["@octokit/endpoint", "npm:10.1.1"],\
-          ["@octokit/request", "npm:9.1.3"],\
-          ["@octokit/request-error", "npm:6.1.5"],\
-          ["@octokit/types", "npm:13.6.2"],\
-          ["universal-user-agent", "npm:7.0.2"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["@octokit/request-error", [\
@@ -3864,32 +3680,11 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:6.1.5", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-request-error-npm-6.1.5-16f7159f09-10.zip/node_modules/@octokit/request-error/",\
-        "packageDependencies": [\
-          ["@octokit/request-error", "npm:6.1.5"],\
-          ["@octokit/types", "npm:13.6.2"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:7.1.2", {\
         "packageLocation": "../.yarn/berry/cache/@octokit-request-error-npm-7.1.2-561c8a2eaf-10.zip/node_modules/@octokit/request-error/",\
         "packageDependencies": [\
           ["@octokit/request-error", "npm:7.1.2"],\
           ["@octokit/types", "npm:18.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@octokit/rest", [\
-      ["npm:21.0.2", {\
-        "packageLocation": "../.yarn/berry/cache/@octokit-rest-npm-21.0.2-46636e39cd-10.zip/node_modules/@octokit/rest/",\
-        "packageDependencies": [\
-          ["@octokit/core", "npm:6.1.2"],\
-          ["@octokit/plugin-paginate-rest", "virtual:46636e39cdef5ae2ad5f4b2baf24b8396aaf9fc4a5f92ba6623ebff41d022917dabfc7720b6c78fac675b2fb381256810171b866745c718bf78e80bb7d289131#npm:11.3.6"],\
-          ["@octokit/plugin-request-log", "virtual:46636e39cdef5ae2ad5f4b2baf24b8396aaf9fc4a5f92ba6623ebff41d022917dabfc7720b6c78fac675b2fb381256810171b866745c718bf78e80bb7d289131#npm:5.3.1"],\
-          ["@octokit/plugin-rest-endpoint-methods", "virtual:46636e39cdef5ae2ad5f4b2baf24b8396aaf9fc4a5f92ba6623ebff41d022917dabfc7720b6c78fac675b2fb381256810171b866745c718bf78e80bb7d289131#npm:13.2.6"],\
-          ["@octokit/rest", "npm:21.0.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -6742,30 +6537,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:24d2e67bdec56757052b94858c94f13adfce27bc9a0b575056f01607b2105b2e7064cfc823e6f791e2352081e58bb393fcdfbdd019e094430f5a4cfb834efe74#npm:3.5.0", {\
-        "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-npm-virtual-6e44cfb262/2/.yarn/berry/cache/@yarnpkg-plugin-npm-npm-3.5.0-b99c4e13b6-10.zip/node_modules/@yarnpkg/plugin-npm/",\
-        "packageDependencies": [\
-          ["@types/yarnpkg__core", null],\
-          ["@types/yarnpkg__plugin-pack", null],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/plugin-npm", "virtual:24d2e67bdec56757052b94858c94f13adfce27bc9a0b575056f01607b2105b2e7064cfc823e6f791e2352081e58bb393fcdfbdd019e094430f5a4cfb834efe74#npm:3.5.0"],\
-          ["@yarnpkg/plugin-pack", "virtual:6e44cfb262ffe64740898fe2f8325a3e3862fa161280e6ba4997d585271670ff9d08ceecdc3e44d845d2956cf2194b6919281cd0081088a36a5e0c44c43a3c36#npm:4.0.4"],\
-          ["enquirer", "npm:2.4.1"],\
-          ["es-toolkit", "npm:1.46.1"],\
-          ["micromatch", "npm:4.0.8"],\
-          ["semver", "npm:7.6.3"],\
-          ["sigstore", "npm:3.1.0"],\
-          ["ssri", "npm:12.0.0"],\
-          ["tslib", "npm:2.8.1"]\
-        ],\
-        "packagePeers": [\
-          "@types/yarnpkg__core",\
-          "@types/yarnpkg__plugin-pack",\
-          "@yarnpkg/core"\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:3.5.0", {\
         "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-npm-virtual-1896ed5a3c/2/.yarn/berry/cache/@yarnpkg-plugin-npm-npm-3.5.0-b99c4e13b6-10.zip/node_modules/@yarnpkg/plugin-npm/",\
         "packageDependencies": [\
@@ -6904,27 +6675,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/plugin-pack", "npm:4.0.4"]\
         ],\
         "linkType": "SOFT"\
-      }],\
-      ["virtual:6e44cfb262ffe64740898fe2f8325a3e3862fa161280e6ba4997d585271670ff9d08ceecdc3e44d845d2956cf2194b6919281cd0081088a36a5e0c44c43a3c36#npm:4.0.4", {\
-        "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-pack-virtual-5e9d4f5295/2/.yarn/berry/cache/@yarnpkg-plugin-pack-npm-4.0.4-25506c2be7-10.zip/node_modules/@yarnpkg/plugin-pack/",\
-        "packageDependencies": [\
-          ["@types/yarnpkg__cli", null],\
-          ["@types/yarnpkg__core", null],\
-          ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/plugin-pack", "virtual:6e44cfb262ffe64740898fe2f8325a3e3862fa161280e6ba4997d585271670ff9d08ceecdc3e44d845d2956cf2194b6919281cd0081088a36a5e0c44c43a3c36#npm:4.0.4"],\
-          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
-          ["micromatch", "npm:4.0.8"],\
-          ["tar-stream", "npm:2.2.0"],\
-          ["tslib", "npm:2.8.1"]\
-        ],\
-        "packagePeers": [\
-          "@types/yarnpkg__cli",\
-          "@types/yarnpkg__core",\
-          "@yarnpkg/core"\
-        ],\
-        "linkType": "HARD"\
       }],\
       ["virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.0.4", {\
         "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-pack-virtual-a1c4913000/2/.yarn/berry/cache/@yarnpkg-plugin-pack-npm-4.0.4-25506c2be7-10.zip/node_modules/@yarnpkg/plugin-pack/",\
@@ -8037,13 +7787,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/before-after-hook-npm-2.2.3-d79e3d6608-10.zip/node_modules/before-after-hook/",\
         "packageDependencies": [\
           ["before-after-hook", "npm:2.2.3"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:3.0.2", {\
-        "packageLocation": "../.yarn/berry/cache/before-after-hook-npm-3.0.2-d214257f27-10.zip/node_modules/before-after-hook/",\
-        "packageDependencies": [\
-          ["before-after-hook", "npm:3.0.2"]\
         ],\
         "linkType": "HARD"\
       }],\

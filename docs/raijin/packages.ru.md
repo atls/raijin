@@ -128,15 +128,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-release -->
-
-#### `@atls/yarn-plugin-release`
-
-- Локация: `packages/plugins/release`
-- Группа: `plugins`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-renderer -->
 
 #### `@atls/yarn-plugin-renderer`
