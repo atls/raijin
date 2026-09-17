@@ -25,7 +25,7 @@ Raijin — это подход к работе в едином инженерн�
 ## Что умеет Raijin
 
 - Проверки кода: `check`, `lint`, `typecheck`, `test`
-- Работа с изменениями: `files changed *`, `workspaces changed *`
+- Проверка изменений относительно Git ref: `check --verify --since <ref>`
 - Сборка и публикация пакетов: `service build`, `library build`, `npm publish`
 - Генераторы и служебные команды для инфраструктуры монорепозитория
 
@@ -79,7 +79,7 @@ yarn dlx @atls/raijin update
 
 ```bash
 yarn check
-yarn files changed list
+yarn workspaces list
 ```
 
 Ожидаемый результат:

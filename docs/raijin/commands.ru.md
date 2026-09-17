@@ -105,25 +105,6 @@
 
 </details>
 
-### Домен `files`
-
-- Команды: `files changed list`
-
-<details>
-<summary>Подробности домена `files`</summary>
-
-<!-- sync:command-card:files-changed-list -->
-
-#### `files changed list`
-
-- Статус: `active`
-- Описание: list files changed since the comparison base
-- Использование: `yarn files changed list [--json]`
-- Пример: `yarn files changed list`
-- Плагин: `@atls/yarn-plugin-files`
-
-</details>
-
 ### Домен `format`
 
 - Команды: `format`
@@ -376,34 +357,5 @@
 - Использование: `yarn typecheck ...`
 - Пример: `yarn typecheck`
 - Плагин: `@atls/yarn-plugin-typescript`
-
-</details>
-
-### Домен `workspaces`
-
-- Команды: `workspaces changed foreach`, `workspaces changed list`
-
-<details>
-<summary>Подробности домена `workspaces`</summary>
-
-<!-- sync:command-card:workspaces-changed-foreach -->
-
-#### `workspaces changed foreach`
-
-- Статус: `active`
-- Описание: run a command in changed workspaces
-- Использование: `yarn workspaces changed foreach [--exclude #0] [-v,--verbose] [-p,--parallel] [-W,--worktree] [-A,--all] [-R,--recursive] [--since #0] [-i,--interlaced] [--no-private] [-t,--topological] [--topological-dev] [-j,--jobs #0] <commandName> ...`
-- Пример: `yarn workspaces changed foreach`
-- Плагин: `@atls/yarn-plugin-workspaces`
-
-<!-- sync:command-card:workspaces-changed-list -->
-
-#### `workspaces changed list`
-
-- Статус: `active`
-- Описание: list changed workspaces
-- Использование: `yarn workspaces changed list [--json]`
-- Пример: `yarn workspaces changed list`
-- Плагин: `@atls/yarn-plugin-workspaces`
 
 </details>

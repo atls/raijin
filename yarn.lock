@@ -310,7 +310,6 @@ __metadata:
     "@atls/yarn-plugin-commit": "workspace:*"
     "@atls/yarn-plugin-essentials": "workspace:*"
     "@atls/yarn-plugin-export": "workspace:*"
-    "@atls/yarn-plugin-files": "workspace:*"
     "@atls/yarn-plugin-format": "workspace:*"
     "@atls/yarn-plugin-generate": "workspace:*"
     "@atls/yarn-plugin-image": "workspace:*"
@@ -321,7 +320,6 @@ __metadata:
     "@atls/yarn-plugin-test": "workspace:*"
     "@atls/yarn-plugin-tools": "workspace:*"
     "@atls/yarn-plugin-typescript": "workspace:*"
-    "@atls/yarn-plugin-workspaces": "workspace:*"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
@@ -501,23 +499,6 @@ __metadata:
     semver: "npm:7.6.3"
     tar-stream: "npm:3.1.7"
     typescript: "npm:5.9.3"
-  peerDependencies:
-    "@yarnpkg/cli": "*"
-    "@yarnpkg/core": "*"
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-plugin-files@workspace:*, @atls/yarn-plugin-files@workspace:packages/plugins/files":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-files@workspace:packages/plugins/files"
-  dependencies:
-    "@actions/github": "npm:6.0.0"
-    "@atls/raijin": "workspace:*"
-    "@octokit/types": "npm:13.5.0"
-    "@yarnpkg/builder": "npm:4.2.0"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    clipanion: "npm:4.0.0-rc.2"
   peerDependencies:
     "@yarnpkg/cli": "*"
     "@yarnpkg/core": "*"
@@ -721,23 +702,6 @@ __metadata:
     "@yarnpkg/core": "npm:4.7.0"
     clipanion: "npm:4.0.0-rc.2"
     react: "npm:18.3.1"
-    typescript: "npm:5.9.3"
-  peerDependencies:
-    "@yarnpkg/cli": "*"
-    "@yarnpkg/core": "*"
-  languageName: unknown
-  linkType: soft
-
-"@atls/yarn-plugin-workspaces@workspace:*, @atls/yarn-plugin-workspaces@workspace:packages/plugins/workspaces":
-  version: 0.0.0-use.local
-  resolution: "@atls/yarn-plugin-workspaces@workspace:packages/plugins/workspaces"
-  dependencies:
-    "@atls/raijin": "workspace:*"
-    "@atls/yarn-plugin-files": "workspace:*"
-    "@yarnpkg/builder": "npm:4.2.0"
-    "@yarnpkg/cli": "npm:4.14.1"
-    "@yarnpkg/core": "npm:4.7.0"
-    clipanion: "npm:4.0.0-rc.2"
     typescript: "npm:5.9.3"
   peerDependencies:
     "@yarnpkg/cli": "*"
@@ -2673,15 +2637,6 @@ __metadata:
     "@octokit/types": "npm:^13.1.0"
     universal-user-agent: "npm:^7.0.2"
   checksum: 10/b445f263157a2c608d8cfa89162be5f5d39551607d0ec973c3fdf9d3fd3753e33861c4e34942f5dbf47576ac91a99238ed482f2d6c6af3f9070e0b190b3f07a2
-  languageName: node
-  linkType: hard
-
-"@octokit/types@npm:13.5.0":
-  version: 13.5.0
-  resolution: "@octokit/types@npm:13.5.0"
-  dependencies:
-    "@octokit/openapi-types": "npm:^22.2.0"
-  checksum: 10/d2aeebc1d8684c4e950f054a52b484e898b72d9f5f8433bcf010161716eea20d1132820d922212f19557a8f147354f2674d1a27b22941308b7c298bdd2674ffa
   languageName: node
   linkType: hard
 

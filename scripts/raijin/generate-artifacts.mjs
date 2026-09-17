@@ -295,8 +295,8 @@ const renderRootReadme = (language) => {
       ? '- Проверки кода: `check`, `lint`, `typecheck`, `test`'
       : '- Code validation: `check`, `lint`, `typecheck`, `test`',
     isRu
-      ? '- Работа с изменениями: `files changed *`, `workspaces changed *`'
-      : '- Change scope tooling: `files changed *`, `workspaces changed *`',
+      ? '- Проверка изменений относительно Git ref: `check --verify --since <ref>`'
+      : '- Verify changes against a Git ref: `check --verify --since <ref>`',
     isRu
       ? '- Сборка и публикация пакетов: `service build`, `library build`, `npm publish`'
       : '- Build and package publication: `service build`, `library build`, `npm publish`',
@@ -369,7 +369,7 @@ const renderRootReadme = (language) => {
     '',
     '```bash',
     'yarn check',
-    'yarn files changed list',
+    'yarn workspaces list',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
@@ -616,8 +616,8 @@ const renderQuickstart = (language) => {
       ? '- Проектный каркас создаётся через встроенную коллекцию Raijin'
       : '- Project scaffold is created through the embedded Raijin collection',
     isRu
-      ? '- Команды из бандла (`check`, `files changed list` и другие) становятся доступны'
-      : '- Bundle commands (`check`, `files changed list`, etc.) become available',
+      ? '- Команды из бандла (`check`, `workspaces list` и другие) становятся доступны'
+      : '- Bundle commands (`check`, `workspaces list`, etc.) become available',
     '',
     isRu
       ? 'Если проект ещё не является Git-репозиторием, установка hooks откладывается: выполните `git init`, затем `yarn install`. При наличии `.git` локальная установка создаёт hooks через Husky.'
@@ -715,7 +715,7 @@ const renderQuickstart = (language) => {
     '',
     '```bash',
     'yarn check',
-    'yarn files changed list',
+    'yarn workspaces list',
     '```',
     '',
     isRu ? 'Ожидаемый результат:' : 'Expected result:',
@@ -723,8 +723,8 @@ const renderQuickstart = (language) => {
       ? '- `yarn check` завершает полный проход проверок без ошибок маршрутизации'
       : '- `yarn check` runs a complete validation pass without routing errors',
     isRu
-      ? '- `yarn files changed list` возвращает список файлов или пустой список, если изменений нет'
-      : '- `yarn files changed list` returns file list (or empty list if no changes)',
+      ? '- Штатная команда Yarn `yarn workspaces list` возвращает доступные workspaces проекта'
+      : '- The native Yarn command `yarn workspaces list` returns the available project workspaces',
     '',
     '<!-- sync:project-generation-check -->',
     isRu ? '## 7. Локальная проверка генерации проекта' : '## 7. Local project generation check',

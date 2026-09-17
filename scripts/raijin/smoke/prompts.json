@@ -8,13 +8,6 @@
       "expectedStatus": "active"
     },
     {
-      "id": "files-changed-list",
-      "prompt": "show changed files in workspace",
-      "routingHint": "Need file-level changes list, not changed workspaces list",
-      "expectedCommand": "files changed list",
-      "expectedStatus": "active"
-    },
-    {
       "id": "run-unit-tests",
       "prompt": "run unit tests only",
       "routingHint": "Use the unit-test command rather than the full check policy",

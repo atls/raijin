@@ -105,25 +105,6 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 </details>
 
-### Domain `files`
-
-- Commands: `files changed list`
-
-<details>
-<summary>Domain details: `files`</summary>
-
-<!-- sync:command-card:files-changed-list -->
-
-#### `files changed list`
-
-- Status: `active`
-- Description: list files changed since the comparison base
-- Usage: `yarn files changed list [--json]`
-- Example: `yarn files changed list`
-- Plugin: `@atls/yarn-plugin-files`
-
-</details>
-
 ### Domain `format`
 
 - Commands: `format`
@@ -376,34 +357,5 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Usage: `yarn typecheck ...`
 - Example: `yarn typecheck`
 - Plugin: `@atls/yarn-plugin-typescript`
-
-</details>
-
-### Domain `workspaces`
-
-- Commands: `workspaces changed foreach`, `workspaces changed list`
-
-<details>
-<summary>Domain details: `workspaces`</summary>
-
-<!-- sync:command-card:workspaces-changed-foreach -->
-
-#### `workspaces changed foreach`
-
-- Status: `active`
-- Description: run a command in changed workspaces
-- Usage: `yarn workspaces changed foreach [--exclude #0] [-v,--verbose] [-p,--parallel] [-W,--worktree] [-A,--all] [-R,--recursive] [--since #0] [-i,--interlaced] [--no-private] [-t,--topological] [--topological-dev] [-j,--jobs #0] <commandName> ...`
-- Example: `yarn workspaces changed foreach`
-- Plugin: `@atls/yarn-plugin-workspaces`
-
-<!-- sync:command-card:workspaces-changed-list -->
-
-#### `workspaces changed list`
-
-- Status: `active`
-- Description: list changed workspaces
-- Usage: `yarn workspaces changed list [--json]`
-- Example: `yarn workspaces changed list`
-- Plugin: `@atls/yarn-plugin-workspaces`
 
 </details>

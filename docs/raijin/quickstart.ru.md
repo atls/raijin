@@ -34,7 +34,7 @@ yarn dlx @atls/raijin init --type project
 - Среда выполнения Raijin скачивается из файла релиза GitHub, проверяется по `sha256` и сохраняется как `.yarn/releases/yarn.js`
 - Yarn завершает установку пакета до переключения `.yarnrc.yml` на проверенный `yarnPath`
 - Проектный каркас создаётся через встроенную коллекцию Raijin
-- Команды из бандла (`check`, `files changed list` и другие) становятся доступны
+- Команды из бандла (`check`, `workspaces list` и другие) становятся доступны
 
 Если проект ещё не является Git-репозиторием, установка hooks откладывается: выполните `git init`, затем `yarn install`. При наличии `.git` локальная установка создаёт hooks через Husky.
 
@@ -110,13 +110,13 @@ yarn commit staged
 
 ```bash
 yarn check
-yarn files changed list
+yarn workspaces list
 ```
 
 Ожидаемый результат:
 
 - `yarn check` завершает полный проход проверок без ошибок маршрутизации
-- `yarn files changed list` возвращает список файлов или пустой список, если изменений нет
+- Штатная команда Yarn `yarn workspaces list` возвращает доступные workspaces проекта
 
 <!-- sync:project-generation-check -->
 
