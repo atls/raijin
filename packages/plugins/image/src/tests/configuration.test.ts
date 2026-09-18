@@ -49,7 +49,7 @@ test('should allow full buildpack reference override', () => {
 })
 
 test('should keep builder default and explicit override contract', () => {
-  assert.equal(resolveBuilderReference({}), 'atlantislab/builder-base:24')
+  assert.equal(resolveBuilderReference({}), 'ghcr.io/atls/builder-base:24')
 
   assert.equal(
     resolveBuilderReference({

@@ -65,15 +65,6 @@
 - Видимость: `private`
 - Скрипты: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-export -->
-
-#### `@atls/yarn-plugin-export`
-
-- Локация: `packages/plugins/export`
-- Группа: `plugins`
-- Видимость: `private`
-- Скрипты: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-format -->
 
 #### `@atls/yarn-plugin-format`

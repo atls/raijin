@@ -35,10 +35,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/plugins/essentials"\
     },\
     {\
-      "name": "@atls/yarn-plugin-export",\
-      "reference": "workspace:packages/plugins/export"\
-    },\
-    {\
       "name": "@atls/yarn-plugin-format",\
       "reference": "workspace:packages/plugins/format"\
     },\
@@ -93,7 +89,6 @@ const RAW_RUNTIME_STATE =
     ["@atls/yarn-plugin-check", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/check", "workspace:packages/plugins/check"]],\
     ["@atls/yarn-plugin-commit", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/commit", "workspace:packages/plugins/commit"]],\
     ["@atls/yarn-plugin-essentials", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/essentials", "workspace:packages/plugins/essentials"]],\
-    ["@atls/yarn-plugin-export", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/export", "workspace:packages/plugins/export"]],\
     ["@atls/yarn-plugin-format", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/format", "workspace:packages/plugins/format"]],\
     ["@atls/yarn-plugin-generate", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/generate", "workspace:packages/plugins/generate"]],\
     ["@atls/yarn-plugin-image", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/image", "workspace:packages/plugins/image"]],\
@@ -571,7 +566,6 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-check", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/check"],\
           ["@atls/yarn-plugin-commit", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/commit"],\
           ["@atls/yarn-plugin-essentials", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/essentials"],\
-          ["@atls/yarn-plugin-export", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/export"],\
           ["@atls/yarn-plugin-format", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/format"],\
           ["@atls/yarn-plugin-generate", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/generate"],\
           ["@atls/yarn-plugin-image", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/image"],\
@@ -780,54 +774,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@atls/yarn-plugin-export", [\
-      ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/export", {\
-        "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-export-virtual-6f9413e7f3/1/packages/plugins/export/",\
-        "packageDependencies": [\
-          ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@atls/yarn-plugin-export", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/export"],\
-          ["@types/semver", "npm:7.5.8"],\
-          ["@types/yarnpkg__cli", null],\
-          ["@types/yarnpkg__core", null],\
-          ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
-          ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/plugin-pack", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.0.4"],\
-          ["@yarnpkg/plugin-patch", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.0.3"],\
-          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
-          ["semver", "npm:7.6.3"],\
-          ["tar-stream", "npm:3.1.7"],\
-          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
-        ],\
-        "packagePeers": [\
-          "@types/yarnpkg__cli",\
-          "@types/yarnpkg__core",\
-          "@yarnpkg/cli",\
-          "@yarnpkg/core"\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["workspace:packages/plugins/export", {\
-        "packageLocation": "./packages/plugins/export/",\
-        "packageDependencies": [\
-          ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@atls/yarn-plugin-export", "workspace:packages/plugins/export"],\
-          ["@types/semver", "npm:7.5.8"],\
-          ["@yarnpkg/builder", "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"],\
-          ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
-          ["@yarnpkg/core", "npm:4.7.0"],\
-          ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/plugin-pack", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.0.4"],\
-          ["@yarnpkg/plugin-patch", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.0.3"],\
-          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
-          ["semver", "npm:7.6.3"],\
-          ["tar-stream", "npm:3.1.7"],\
-          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
     ["@atls/yarn-plugin-format", [\
       ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/format", {\
         "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-format-virtual-980d2eba0d/1/packages/plugins/format/",\
@@ -920,7 +866,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@actions/github", "npm:6.0.0"],\
           ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@atls/yarn-plugin-export", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/export"],\
           ["@atls/yarn-plugin-image", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/image"],\
           ["@iarna/toml", "npm:2.2.5"],\
           ["@types/node", "npm:24.12.2"],\
@@ -931,7 +876,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/plugin-patch", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.0.3"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
         ],\
@@ -950,7 +894,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@actions/github", "npm:6.0.0"],\
           ["@atls/raijin", "workspace:packages/raijin"],\
-          ["@atls/yarn-plugin-export", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/export"],\
           ["@atls/yarn-plugin-image", "workspace:packages/plugins/image"],\
           ["@iarna/toml", "npm:2.2.5"],\
           ["@types/node", "npm:24.12.2"],\
@@ -958,7 +901,6 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.14.1"],\
           ["@yarnpkg/core", "npm:4.7.0"],\
           ["@yarnpkg/fslib", "npm:3.1.5"],\
-          ["@yarnpkg/plugin-patch", "virtual:cf68392dd08094c831bf4007f6744774255ec58c4c8220371c14ba75cb2cdb385e0c6505c4e31be4e5df12b8470607f910cfe977e8709a6f5bab682ffd8397a8#npm:4.0.3"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
         ],\
@@ -7643,15 +7585,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["b4a", [\
-      ["npm:1.6.7", {\
-        "packageLocation": "../.yarn/berry/cache/b4a-npm-1.6.7-a52d28b4e2-10.zip/node_modules/b4a/",\
-        "packageDependencies": [\
-          ["b4a", "npm:1.6.7"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["balanced-match", [\
       ["npm:1.0.2", {\
         "packageLocation": "../.yarn/berry/cache/balanced-match-npm-1.0.2-a53c126459-10.zip/node_modules/balanced-match/",\
@@ -7664,15 +7597,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/balanced-match-npm-4.0.4-fd666b3c7f-10.zip/node_modules/balanced-match/",\
         "packageDependencies": [\
           ["balanced-match", "npm:4.0.4"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["bare-events", [\
-      ["npm:2.5.0", {\
-        "packageLocation": "../.yarn/berry/cache/bare-events-npm-2.5.0-bfce18b5a5-10.zip/node_modules/bare-events/",\
-        "packageDependencies": [\
-          ["bare-events", "npm:2.5.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -9882,15 +9806,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/fast-deep-equal-npm-3.1.3-790edcfcf5-10.zip/node_modules/fast-deep-equal/",\
         "packageDependencies": [\
           ["fast-deep-equal", "npm:3.1.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["fast-fifo", [\
-      ["npm:1.3.2", {\
-        "packageLocation": "../.yarn/berry/cache/fast-fifo-npm-1.3.2-391cc25df4-10.zip/node_modules/fast-fifo/",\
-        "packageDependencies": [\
-          ["fast-fifo", "npm:1.3.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -14024,15 +13939,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["queue-tick", [\
-      ["npm:1.0.1", {\
-        "packageLocation": "../.yarn/berry/cache/queue-tick-npm-1.0.1-10bd6eaf3d-10.zip/node_modules/queue-tick/",\
-        "packageDependencies": [\
-          ["queue-tick", "npm:1.0.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["quick-lru", [\
       ["npm:5.1.1", {\
         "packageLocation": "../.yarn/berry/cache/quick-lru-npm-5.1.1-e38e0edce3-10.zip/node_modules/quick-lru/",\
@@ -15102,19 +15008,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["streamx", [\
-      ["npm:2.20.1", {\
-        "packageLocation": "../.yarn/berry/cache/streamx-npm-2.20.1-2a3f1504e4-10.zip/node_modules/streamx/",\
-        "packageDependencies": [\
-          ["bare-events", "npm:2.5.0"],\
-          ["fast-fifo", "npm:1.3.2"],\
-          ["queue-tick", "npm:1.0.1"],\
-          ["streamx", "npm:2.20.1"],\
-          ["text-decoder", "npm:1.2.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["string-argv", [\
       ["npm:0.3.2", {\
         "packageLocation": "../.yarn/berry/cache/string-argv-npm-0.3.2-6e057a88f1-10.zip/node_modules/string-argv/",\
@@ -15498,16 +15391,6 @@ const RAW_RUNTIME_STATE =
           ["tar-stream", "npm:2.2.0"]\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["npm:3.1.7", {\
-        "packageLocation": "../.yarn/berry/cache/tar-stream-npm-3.1.7-c34f9aa00f-10.zip/node_modules/tar-stream/",\
-        "packageDependencies": [\
-          ["b4a", "npm:1.6.7"],\
-          ["fast-fifo", "npm:1.3.2"],\
-          ["streamx", "npm:2.20.1"],\
-          ["tar-stream", "npm:3.1.7"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["tau-prolog", [\
@@ -15602,15 +15485,6 @@ const RAW_RUNTIME_STATE =
           "esbuild",\
           "uglify-js",\
           "webpack"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["text-decoder", [\
-      ["npm:1.2.1", {\
-        "packageLocation": "../.yarn/berry/cache/text-decoder-npm-1.2.1-b84148d5cf-10.zip/node_modules/text-decoder/",\
-        "packageDependencies": [\
-          ["text-decoder", "npm:1.2.1"]\
         ],\
         "linkType": "HARD"\
       }]\

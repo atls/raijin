@@ -86,25 +86,6 @@
 
 </details>
 
-### Домен `export`
-
-- Команды: `export`
-
-<details>
-<summary>Подробности домена `export`</summary>
-
-<!-- sync:command-card:export -->
-
-#### `export`
-
-- Статус: `active`
-- Описание: export a workspace and its production dependencies
-- Использование: `yarn export <-d,--destination #0>`
-- Пример: `yarn export`
-- Плагин: `@atls/yarn-plugin-export`
-
-</details>
-
 ### Домен `format`
 
 - Команды: `format`
@@ -166,13 +147,19 @@
 
 - Статус: `active`
 - Описание: build and optionally publish a container image
-- Использование: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [--tags #0] [-p,--publish] [--platform #0]`
+- Использование: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [--tags #0] [--tag-suffixes #0] [-p,--publish] [--platform #0] [--json]`
 - Пример: `yarn image pack`
+- Контракт: Запускайте команду из выбранного workspace. Ему нужны имя пакета и production-скрипт `start`; объявленный `build` выполняет buildpack.
+- Контракт: Контекстом сборки служит исходный корень Yarn-проекта. `pack` применяет фильтры корневого `project.toml`. Команда не создаёт отдельный export-проект и не гарантирует минимальный образ.
+- Контракт: Установите `pack` перед вызовом команды. Raijin не скачивает его и не меняет глобальную конфигурацию.
 - Контракт: `packConfiguration` по умолчанию использует `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Контракт: `packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.
 - Контракт: `packConfiguration.buildpackVersion` фиксирует неизменяемый buildpack tag для rollback.
 - Контракт: `packConfiguration.buildpack` переопределяет полную buildpack-ссылку.
 - Контракт: `--tags <alias,...>` добавляет дополнительные image tags в тот же вызов `pack build`.
+- Контракт: `--tag-policy explicit --tags <tag,...>` использует только переданные теги без Git и автоматического тега `latest`.
+- Контракт: `--tag-suffixes stage,production` добавляет `<primary>-stage` и `<primary>-production` к вычисленному основному тегу; параметр применяется с политикой на основе ревизии, а не с `explicit`.
+- Контракт: `--json` возвращает теги провайдера и ID локального образа либо digest в registry при явном `--publish`. Локальная сборка образы не публикует.
 - Плагин: `@atls/yarn-plugin-image`
 
 </details>

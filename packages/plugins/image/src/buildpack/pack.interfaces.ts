@@ -1,11 +1,4 @@
-import type { PortablePath }    from '@yarnpkg/fslib'
-
-import type { CommandExecutor } from './executor.interfaces.js'
-
-export interface InstallPackOptions {
-  commandExecutor: CommandExecutor
-  cwd: PortablePath
-}
+import type { PortablePath } from '@yarnpkg/fslib'
 
 export interface PackOptions {
   workspace: string
@@ -15,15 +8,15 @@ export interface PackOptions {
   buildpack: string
   tagPolicy: TagPolicy
   additionalTags?: Array<string>
+  tagSuffixes?: Array<string>
   platform?: string
   require?: Array<string>
-  cwd?: PortablePath
+  cwd: PortablePath
 }
 
-export type TagPolicy = 'ctx-hash-timestamp' | 'hash-timestamp' | 'revision'
+export type TagPolicy = 'ctx-hash-timestamp' | 'explicit' | 'hash-timestamp' | 'revision'
 
-export interface PackOutputs {
-  images: Array<string>
-  tags: Array<string>
+export type PackOutputs = {
   workspace: string
-}
+  tags: Array<string>
+} & ({ published: false; imageId: string } | { published: true; digest: string })

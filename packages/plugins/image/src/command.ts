@@ -1,28 +1,22 @@
-import type { WorkspaceCommandContext }      from '@atls/raijin/commands'
-import type { Workspace }                    from '@yarnpkg/core'
+import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import type { CommandExecutor }              from './buildpack/executor.interfaces.js'
-import type { TagPolicy }                    from './buildpack/pack.interfaces.js'
-import type { ImagePackConfiguration }       from './configuration.js'
+import type { CommandExecutor }         from './buildpack/executor.interfaces.js'
+import type { TagPolicy }               from './buildpack/pack.interfaces.js'
+import type { ImagePackConfiguration }  from './configuration.js'
 
-import { readFileSync }                      from 'node:fs'
-import { join }                              from 'node:path'
+import { BaseCommand }                  from '@yarnpkg/cli'
+import { StreamReport }                 from '@yarnpkg/core'
+import { MessageName }                  from '@yarnpkg/core'
+import { structUtils }                  from '@yarnpkg/core'
+import { Option }                       from 'clipanion'
 
-import { BaseCommand }                       from '@yarnpkg/cli'
-import { StreamReport }                      from '@yarnpkg/core'
-import { structUtils }                       from '@yarnpkg/core'
-import { xfs }                               from '@yarnpkg/fslib'
-import { Option }                            from 'clipanion'
+import { assertProcessCompleted }       from '@atls/raijin/commands'
 
-import { assertProcessCompleted }            from '@atls/raijin/commands'
-import { toNativeCwd }                       from '@atls/raijin/commands'
-import { packUtils }                         from '@atls/yarn-plugin-export/artifact'
-
-import { pack }                              from './buildpack/pack.js'
-import { getDefaultMaterializationPlatform } from './configuration.js'
-import { parseAdditionalTags }               from './configuration.js'
-import { resolveBuildpackReference }         from './configuration.js'
-import { resolveBuilderReference }           from './configuration.js'
+import { pack }                         from './buildpack/pack.js'
+import { parseAdditionalTags }          from './configuration.js'
+import { resolveBuildpackReference }    from './configuration.js'
+import { resolveBuilderReference }      from './configuration.js'
+import { isImageWorkspace }             from './eligibility.js'
 
 class ImagePackCommand extends BaseCommand {
   static override paths = [['image', 'pack']]
@@ -37,123 +31,85 @@ class ImagePackCommand extends BaseCommand {
 
   tags: string = Option.String('--tags', '')
 
+  tagSuffixes: string = Option.String('--tag-suffixes', '')
+
   publish: boolean = Option.Boolean('-p,--publish', false)
 
   platform?: string = Option.String('--platform')
 
+  json: boolean = Option.Boolean('--json', false)
+
   declare context: WorkspaceCommandContext
 
   override async execute(): Promise<number> {
-    const { invocation } = this.context
-    const { executionCwd, process: processInvocation, workspace, yarn } = invocation
+    const { workspace, yarn, process: processInvocation } = this.context.invocation
     const { configuration, project } = yarn
-    const additionalTags = parseAdditionalTags(this.tags)
     const commandExecutor: CommandExecutor = {
-      cwd: executionCwd,
+      cwd: project.cwd,
       execute: async (command, args, options = {}) => {
-        const result = await processInvocation.execute(
+        const result = await processInvocation.project.execute(
           command,
           args,
-          options.capture
-            ? {
-                input: 'ignore',
-                output: { mode: 'capture' },
-              }
+          options.capture || this.json
+            ? { input: 'ignore', output: { mode: 'capture' } }
             : undefined
         )
 
         assertProcessCompleted(result)
 
-        return {
-          exitCode: result.exitCode,
-          stderr: result.stderr,
-          stdout: result.stdout,
-        }
+        return { exitCode: result.exitCode, stderr: result.stderr, stdout: result.stdout }
       },
     }
 
     const commandReport = await StreamReport.start(
-      {
-        configuration,
-        stdout: this.context.stdout,
-      },
+      { configuration, stdout: this.context.stdout, json: this.json },
       async (report) => {
-        if (!this.isWorkspaceAllowedForBundle(workspace)) {
-          report.reportInfo(
-            null,
-            `Workspace ${
-              workspace.manifest.name
-                ? structUtils.prettyIdent(configuration, workspace.manifest.name)
-                : workspace.relativeCwd
-            } not allowed for package.`
+        if (!isImageWorkspace(workspace.manifest)) {
+          report.reportError(
+            MessageName.UNNAMED,
+            `Workspace ${workspace.manifest.name ? structUtils.stringifyIdent(workspace.manifest.name) : workspace.relativeCwd} requires a name and a production start script for image packaging.`
           )
 
           return
         }
-        const destination = await xfs.mktempPromise()
 
-        report.reportInfo(
-          null,
-          `Package workspace ${
-            workspace.manifest.name
-              ? structUtils.prettyIdent(configuration, workspace.manifest.name)
-              : workspace.relativeCwd
-          } to ${destination}`
-        )
-
-        // eslint-disable-next-line n/no-sync
-        const content = readFileSync(join(toNativeCwd(executionCwd), 'package.json'), 'utf-8')
-        const { packConfiguration = {} } = JSON.parse(content) as {
-          packConfiguration?: ImagePackConfiguration
+        if (!configuration.get('yarnPath')) {
+          throw new Error('Image packaging requires the checked application yarnPath')
         }
-        const { require } = packConfiguration
 
-        await packUtils.pack(configuration, project, workspace, report, destination, {
-          platform: this.platform ?? getDefaultMaterializationPlatform(),
-        })
-
-        await pack(
+        const packConfiguration =
+          (workspace.manifest.raw.packConfiguration as ImagePackConfiguration | undefined) ?? {}
+        const result = await pack(
           {
-            workspace: workspace.manifest.raw.name,
+            workspace: structUtils.stringifyIdent(workspace.anchoredLocator),
             registry: this.registry,
             publish: this.publish,
             tagPolicy: this.tagPolicy,
-            additionalTags,
+            additionalTags: parseAdditionalTags(this.tags),
+            tagSuffixes: parseAdditionalTags(this.tagSuffixes),
             buildpack: resolveBuildpackReference(packConfiguration),
             builder: resolveBuilderReference(packConfiguration),
             platform: this.platform,
-            require,
-            cwd: destination,
+            require: packConfiguration.require,
+            cwd: project.cwd,
           },
           commandExecutor
         )
+
+        if (this.json) {
+          report.reportJson(result)
+        } else {
+          report.reportInfo(
+            null,
+            result.published
+              ? `Published image ${result.digest}: ${result.tags.join(', ')}`
+              : `Built image ${result.imageId}: ${result.tags.join(', ')}`
+          )
+        }
       }
     )
 
     return commandReport.exitCode()
-  }
-
-  private isWorkspaceAllowedForBundle(workspace: Workspace): boolean {
-    const { scripts, name } = workspace.manifest
-
-    const buildCommand = scripts.get('build')
-
-    const hasAllowedBuildScript = [
-      'actl service build',
-      'actl renderer build',
-      'build-storybook',
-      'storybook build',
-      'next build',
-      'builder build library',
-      'app service build',
-      'app renderer build',
-      'service build',
-      'renderer build',
-      'strapi build',
-      'astro build',
-    ].some((command) => buildCommand?.includes(command))
-
-    return hasAllowedBuildScript && Boolean(name)
   }
 }
 
