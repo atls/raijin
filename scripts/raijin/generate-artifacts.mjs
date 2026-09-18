@@ -115,18 +115,30 @@ const COVER_IMAGE_URL =
 const COMMAND_NOTES = {
   'image pack': {
     en: [
+      'Run the command from the selected workspace. It must have a package name and a production `start` script; a declared `build` script is run by the buildpack.',
+      'The original Yarn project root is the build context. `pack` applies the root `project.toml` filters. The command does not create a standalone export project or guarantee a minimal image.',
+      'Install `pack` before invoking the command. Raijin does not download it or change its global configuration.',
       '`packConfiguration` defaults to `ghcr.io/atls/buildpack-yarn-workspace:24`.',
       '`packConfiguration.builderTag` selects the supported Node/buildpack channel.',
       '`packConfiguration.buildpackVersion` pins an immutable buildpack tag for rollback.',
       '`packConfiguration.buildpack` overrides the full buildpack reference.',
       '`--tags <alias,...>` adds additional image tags to the same `pack build` invocation.',
+      '`--tag-policy explicit --tags <tag,...>` uses only the supplied tags without Git or an automatic `latest` tag.',
+      '`--tag-suffixes stage,production` adds `<primary>-stage` and `<primary>-production` to a computed primary tag; use it with a revision-derived policy, not `explicit`.',
+      '`--json` returns provider tags and the local image ID, or the registry digest when `--publish` is explicitly requested. Local builds do not publish images.',
     ],
     ru: [
+      'Запускайте команду из выбранного workspace. Ему нужны имя пакета и production-скрипт `start`; объявленный `build` выполняет buildpack.',
+      'Контекстом сборки служит исходный корень Yarn-проекта. `pack` применяет фильтры корневого `project.toml`. Команда не создаёт отдельный export-проект и не гарантирует минимальный образ.',
+      'Установите `pack` перед вызовом команды. Raijin не скачивает его и не меняет глобальную конфигурацию.',
       '`packConfiguration` по умолчанию использует `ghcr.io/atls/buildpack-yarn-workspace:24`.',
       '`packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.',
       '`packConfiguration.buildpackVersion` фиксирует неизменяемый buildpack tag для rollback.',
       '`packConfiguration.buildpack` переопределяет полную buildpack-ссылку.',
       '`--tags <alias,...>` добавляет дополнительные image tags в тот же вызов `pack build`.',
+      '`--tag-policy explicit --tags <tag,...>` использует только переданные теги без Git и автоматического тега `latest`.',
+      '`--tag-suffixes stage,production` добавляет `<primary>-stage` и `<primary>-production` к вычисленному основному тегу; параметр применяется с политикой на основе ревизии, а не с `explicit`.',
+      '`--json` возвращает теги провайдера и ID локального образа либо digest в registry при явном `--publish`. Локальная сборка образы не публикует.',
     ],
   },
 }

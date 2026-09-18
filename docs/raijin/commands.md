@@ -149,11 +149,17 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Description: build and optionally publish a container image
 - Usage: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [--tags #0] [--tag-suffixes #0] [-p,--publish] [--platform #0] [--json]`
 - Example: `yarn image pack`
+- Contract: Run the command from the selected workspace. It must have a package name and a production `start` script; a declared `build` script is run by the buildpack.
+- Contract: The original Yarn project root is the build context. `pack` applies the root `project.toml` filters. The command does not create a standalone export project or guarantee a minimal image.
+- Contract: Install `pack` before invoking the command. Raijin does not download it or change its global configuration.
 - Contract: `packConfiguration` defaults to `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Contract: `packConfiguration.builderTag` selects the supported Node/buildpack channel.
 - Contract: `packConfiguration.buildpackVersion` pins an immutable buildpack tag for rollback.
 - Contract: `packConfiguration.buildpack` overrides the full buildpack reference.
 - Contract: `--tags <alias,...>` adds additional image tags to the same `pack build` invocation.
+- Contract: `--tag-policy explicit --tags <tag,...>` uses only the supplied tags without Git or an automatic `latest` tag.
+- Contract: `--tag-suffixes stage,production` adds `<primary>-stage` and `<primary>-production` to a computed primary tag; use it with a revision-derived policy, not `explicit`.
+- Contract: `--json` returns provider tags and the local image ID, or the registry digest when `--publish` is explicitly requested. Local builds do not publish images.
 - Plugin: `@atls/yarn-plugin-image`
 
 </details>
