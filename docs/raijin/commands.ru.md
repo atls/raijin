@@ -105,25 +105,6 @@
 
 </details>
 
-### Домен `files`
-
-- Команды: `files changed list`
-
-<details>
-<summary>Подробности домена `files`</summary>
-
-<!-- sync:command-card:files-changed-list -->
-
-#### `files changed list`
-
-- Статус: `active`
-- Описание: list files changed since the comparison base
-- Использование: `yarn files changed list [--json]`
-- Пример: `yarn files changed list`
-- Плагин: `@atls/yarn-plugin-files`
-
-</details>
-
 ### Домен `format`
 
 - Команды: `format`
@@ -231,45 +212,6 @@
 - Использование: `yarn lint [--fix] [--cache] ...`
 - Пример: `yarn lint`
 - Плагин: `@atls/yarn-plugin-lint`
-
-</details>
-
-### Домен `release`
-
-- Команды: `release create`, `release version apply`, `release version defer`
-
-<details>
-<summary>Подробности домена `release`</summary>
-
-<!-- sync:command-card:release-create -->
-
-#### `release create`
-
-- Статус: `active`
-- Описание: create and publish a project release
-- Использование: `yarn release create`
-- Пример: `yarn release create`
-- Плагин: `@atls/yarn-plugin-release`
-
-<!-- sync:command-card:release-version-apply -->
-
-#### `release version apply`
-
-- Статус: `active`
-- Описание: apply deferred workspace versions
-- Использование: `yarn release version apply [--workspace #0] [--github-output #0] [--since #0]`
-- Пример: `yarn release version apply`
-- Плагин: `@atls/yarn-plugin-release`
-
-<!-- sync:command-card:release-version-defer -->
-
-#### `release version defer`
-
-- Статус: `active`
-- Описание: defer version bumps for changed workspaces
-- Использование: `yarn release version defer [--since #0] [--dry-run]`
-- Пример: `yarn release version defer`
-- Плагин: `@atls/yarn-plugin-release`
 
 </details>
 
@@ -415,34 +357,5 @@
 - Использование: `yarn typecheck ...`
 - Пример: `yarn typecheck`
 - Плагин: `@atls/yarn-plugin-typescript`
-
-</details>
-
-### Домен `workspaces`
-
-- Команды: `workspaces changed foreach`, `workspaces changed list`
-
-<details>
-<summary>Подробности домена `workspaces`</summary>
-
-<!-- sync:command-card:workspaces-changed-foreach -->
-
-#### `workspaces changed foreach`
-
-- Статус: `active`
-- Описание: run a command in changed workspaces
-- Использование: `yarn workspaces changed foreach [--exclude #0] [-v,--verbose] [-p,--parallel] [-W,--worktree] [-A,--all] [-R,--recursive] [--since #0] [-i,--interlaced] [--no-private] [-t,--topological] [--topological-dev] [-j,--jobs #0] <commandName> ...`
-- Пример: `yarn workspaces changed foreach`
-- Плагин: `@atls/yarn-plugin-workspaces`
-
-<!-- sync:command-card:workspaces-changed-list -->
-
-#### `workspaces changed list`
-
-- Статус: `active`
-- Описание: list changed workspaces
-- Использование: `yarn workspaces changed list [--json]`
-- Пример: `yarn workspaces changed list`
-- Плагин: `@atls/yarn-plugin-workspaces`
 
 </details>

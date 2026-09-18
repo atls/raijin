@@ -74,15 +74,6 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-files -->
-
-#### `@atls/yarn-plugin-files`
-
-- Location: `packages/plugins/files`
-- Group: `plugins`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-format -->
 
 #### `@atls/yarn-plugin-format`
@@ -128,15 +119,6 @@ Private plugin packages and their entrypoints
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`
 
-<!-- sync:package-card:atls-yarn-plugin-release -->
-
-#### `@atls/yarn-plugin-release`
-
-- Location: `packages/plugins/release`
-- Group: `plugins`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
 <!-- sync:package-card:atls-yarn-plugin-renderer -->
 
 #### `@atls/yarn-plugin-renderer`
@@ -178,15 +160,6 @@ Private plugin packages and their entrypoints
 #### `@atls/yarn-plugin-typescript`
 
 - Location: `packages/plugins/typescript`
-- Group: `plugins`
-- Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
-
-<!-- sync:package-card:atls-yarn-plugin-workspaces -->
-
-#### `@atls/yarn-plugin-workspaces`
-
-- Location: `packages/plugins/workspaces`
 - Group: `plugins`
 - Visibility: `private`
 - Scripts: `build`, `postpack`, `prepack`

@@ -3,6 +3,7 @@ import type { ParserOptions } from '@typescript-eslint/parser'
 import assert                 from 'node:assert/strict'
 import { test }               from 'node:test'
 
+import { ESLint }             from '../../../runtime/eslint.js'
 import eslintconfig           from './index.js'
 
 test('should preserve project-backed programs across repeated typed linting', () => {
@@ -46,6 +47,16 @@ test('should lint nested Next.js config files without typed project matching', (
   assert.equal(nextConfig.rules['@typescript-eslint/no-require-imports'], 'off')
   assert.equal(nextConfig.rules['@typescript-eslint/no-var-requires'], 'off')
   assert.equal(nextConfig.rules['n/no-sync'], 'off')
+})
+
+test('should scope release templates to semantic-release configuration', async () => {
+  const eslint = new ESLint({ overrideConfigFile: true, baseConfig: eslintconfig })
+  const release = await eslint.calculateConfigForFile('.github/actions/release/release.config.js')
+  const source = await eslint.calculateConfigForFile('source.js')
+
+  assert.equal(release.rules['no-template-curly-in-string'][0], 0)
+  assert.equal(release.languageOptions.parserOptions.projectService, false)
+  assert.equal(source.rules['no-template-curly-in-string'][0], 2)
 })
 
 test('should disable type-aware TypeScript rules for JavaScript files', () => {

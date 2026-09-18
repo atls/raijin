@@ -25,8 +25,8 @@ It aligns teams on strict standards and strong contracts to increase delivery pr
 ## What Raijin can do
 
 - Code validation: `check`, `lint`, `typecheck`, `test`
-- Change scope tooling: `files changed *`, `workspaces changed *`
-- Build and release flows: `service build`, `library build`, `release create`, `npm publish`
+- Verify changes against a Git ref: `check --verify --since <ref>`
+- Build and package publication: `service build`, `library build`, `npm publish`
 - Generators and utility commands for monorepo infrastructure
 
 <!-- sync:root-quickstart -->
@@ -79,7 +79,7 @@ Expected result:
 
 ```bash
 yarn check
-yarn files changed list
+yarn workspaces list
 ```
 
 Expected result:

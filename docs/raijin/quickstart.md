@@ -34,7 +34,7 @@ Expected result:
 - Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.js`
 - Yarn completes package installation before `.yarnrc.yml` switches to the verified `yarnPath`
 - Project scaffold is created through the embedded Raijin collection
-- Bundle commands (`check`, `files changed list`, etc.) become available
+- Bundle commands (`check`, `workspaces list`, etc.) become available
 
 If the project is not yet a Git repository, hook installation is deferred: run `git init`, then `yarn install`. In a local project with `.git`, installation creates hooks through Husky.
 
@@ -110,13 +110,13 @@ Confirm that checks ran for every affected project, then make a normal commit. A
 
 ```bash
 yarn check
-yarn files changed list
+yarn workspaces list
 ```
 
 Expected result:
 
 - `yarn check` runs a complete validation pass without routing errors
-- `yarn files changed list` returns file list (or empty list if no changes)
+- The native Yarn command `yarn workspaces list` returns the available project workspaces
 
 <!-- sync:project-generation-check -->
 

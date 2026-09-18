@@ -105,25 +105,6 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 </details>
 
-### Domain `files`
-
-- Commands: `files changed list`
-
-<details>
-<summary>Domain details: `files`</summary>
-
-<!-- sync:command-card:files-changed-list -->
-
-#### `files changed list`
-
-- Status: `active`
-- Description: list files changed since the comparison base
-- Usage: `yarn files changed list [--json]`
-- Example: `yarn files changed list`
-- Plugin: `@atls/yarn-plugin-files`
-
-</details>
-
 ### Domain `format`
 
 - Commands: `format`
@@ -231,45 +212,6 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Usage: `yarn lint [--fix] [--cache] ...`
 - Example: `yarn lint`
 - Plugin: `@atls/yarn-plugin-lint`
-
-</details>
-
-### Domain `release`
-
-- Commands: `release create`, `release version apply`, `release version defer`
-
-<details>
-<summary>Domain details: `release`</summary>
-
-<!-- sync:command-card:release-create -->
-
-#### `release create`
-
-- Status: `active`
-- Description: create and publish a project release
-- Usage: `yarn release create`
-- Example: `yarn release create`
-- Plugin: `@atls/yarn-plugin-release`
-
-<!-- sync:command-card:release-version-apply -->
-
-#### `release version apply`
-
-- Status: `active`
-- Description: apply deferred workspace versions
-- Usage: `yarn release version apply [--workspace #0] [--github-output #0] [--since #0]`
-- Example: `yarn release version apply`
-- Plugin: `@atls/yarn-plugin-release`
-
-<!-- sync:command-card:release-version-defer -->
-
-#### `release version defer`
-
-- Status: `active`
-- Description: defer version bumps for changed workspaces
-- Usage: `yarn release version defer [--since #0] [--dry-run]`
-- Example: `yarn release version defer`
-- Plugin: `@atls/yarn-plugin-release`
 
 </details>
 
@@ -415,34 +357,5 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 - Usage: `yarn typecheck ...`
 - Example: `yarn typecheck`
 - Plugin: `@atls/yarn-plugin-typescript`
-
-</details>
-
-### Domain `workspaces`
-
-- Commands: `workspaces changed foreach`, `workspaces changed list`
-
-<details>
-<summary>Domain details: `workspaces`</summary>
-
-<!-- sync:command-card:workspaces-changed-foreach -->
-
-#### `workspaces changed foreach`
-
-- Status: `active`
-- Description: run a command in changed workspaces
-- Usage: `yarn workspaces changed foreach [--exclude #0] [-v,--verbose] [-p,--parallel] [-W,--worktree] [-A,--all] [-R,--recursive] [--since #0] [-i,--interlaced] [--no-private] [-t,--topological] [--topological-dev] [-j,--jobs #0] <commandName> ...`
-- Example: `yarn workspaces changed foreach`
-- Plugin: `@atls/yarn-plugin-workspaces`
-
-<!-- sync:command-card:workspaces-changed-list -->
-
-#### `workspaces changed list`
-
-- Status: `active`
-- Description: list changed workspaces
-- Usage: `yarn workspaces changed list [--json]`
-- Example: `yarn workspaces changed list`
-- Plugin: `@atls/yarn-plugin-workspaces`
 
 </details>
