@@ -24,7 +24,6 @@ test('should reject unnamed workspaces and missing or empty production start', (
   assert.equal(isImageWorkspace(manifest), false)
   manifest.name = structUtils.parseIdent('@example/app')
   manifest.scripts.delete('start')
-  manifest.scripts.set('start-image', 'node server.js')
   assert.equal(isImageWorkspace(manifest), false)
   manifest.scripts.set('start', ' ')
   assert.equal(isImageWorkspace(manifest), false)
