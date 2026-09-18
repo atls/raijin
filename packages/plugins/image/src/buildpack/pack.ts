@@ -2,15 +2,12 @@ import type { CommandExecutor }    from './executor.interfaces.js'
 import type { PackOptions }        from './pack.interfaces.js'
 import type { PackOutputs }        from './pack.interfaces.js'
 
-import { readFileSync }            from 'node:fs'
-
-import { stringify }               from '@iarna/toml'
+import { parse }                   from '@iarna/toml'
+import { npath }                   from '@yarnpkg/fslib'
 import { xfs }                     from '@yarnpkg/fslib'
 import { ppath }                   from '@yarnpkg/fslib'
 
-import { createProjectDescriptor } from './descriptor.js'
 import { execOrThrow }             from './pack-cli.js'
-import { installPack }             from './pack-cli.js'
 import { getPackImageTags }        from './tags.js'
 import { normalizeAdditionalTags } from './tags.js'
 import { getTag }                  from './tags.js'
@@ -25,93 +22,98 @@ export const pack = async (
     buildpack,
     platform,
     require,
-    additionalTags,
+    additionalTags = [],
+    tagSuffixes = [],
     cwd,
   }: PackOptions,
   commandExecutor: CommandExecutor
 ): Promise<PackOutputs> => {
-  const packCwd = cwd ?? commandExecutor.cwd
   const repo = workspace.replace('@', '').replace(/\//g, '-')
   const image = `${registry}${repo}`
+  const aliases = normalizeAdditionalTags(additionalTags)
+  const suffixes = normalizeAdditionalTags(tagSuffixes)
 
-  const tag = await getTag(tagPolicy, commandExecutor)
-
-  const envs = [
-    {
-      name: 'WORKSPACE',
-      value: workspace,
-    },
-    {
-      name: 'CNB_USER_ID',
-      value: '1001',
-    },
-  ]
-
-  if (require && require.length > 0) {
-    envs.push({
-      name: 'BP_REQUIRE',
-      value: require.join(','),
-    })
+  if (tagPolicy === 'explicit' && (aliases.length === 0 || suffixes.length > 0)) {
+    throw new Error('Explicit tag policy requires --tags and does not accept --tag-suffixes')
   }
 
-  const descriptor = await createProjectDescriptor({
-    repo,
-    builder,
-    envs,
-    cwd: packCwd,
-    platform,
-  })
-
-  const descriptorPath = ppath.join(await xfs.mktempPromise(), 'project.toml')
-
-  await xfs.writeFilePromise(descriptorPath, stringify(descriptor))
-
-  const imageTags = getPackImageTags(image, tag, additionalTags)
+  const imageTags =
+    tagPolicy === 'explicit'
+      ? [...new Set(aliases)].map((tag) => `${image}:${tag}`)
+      : getPackImageTags(image, await getTag(tagPolicy, commandExecutor), aliases, suffixes)
   const [primaryImageTag, ...extraImageTags] = imageTags
 
-  // eslint-disable-next-line no-console, n/no-sync
-  console.debug('project.toml', readFileSync(descriptorPath, 'utf8'))
+  return xfs.mktempPromise(async (reportDir) => {
+    const reportPath = ppath.join(reportDir, 'report.toml')
+    const descriptorPath = ppath.join(cwd, 'project.toml')
+    const args = [
+      'build',
+      primaryImageTag,
+      '--builder',
+      builder,
+      '--buildpack',
+      buildpack,
+      '--path',
+      npath.fromPortablePath(cwd),
+      '--env',
+      `WORKSPACE=${workspace}`,
+      '--report-output-dir',
+      npath.fromPortablePath(reportPath),
+      '--trust-builder',
+    ]
 
-  const args = [
-    'build',
-    '--trust-builder',
-    primaryImageTag,
-    '--descriptor',
-    descriptorPath,
-    '--path',
-    packCwd,
-    '--buildpack',
-    buildpack,
-    '--creation-time',
-    'now',
-    '--clear-cache',
-    '--verbose',
-  ]
+    if (await xfs.existsPromise(descriptorPath)) {
+      args.push('--descriptor', npath.fromPortablePath(descriptorPath))
+    }
 
-  for (const imageTag of extraImageTags) {
-    args.push('--tag', imageTag)
-  }
+    for (const imageTag of extraImageTags) {
+      args.push('--tag', imageTag)
+    }
 
-  if (publish) {
-    args.push('--publish')
-  }
+    if (require && require.length > 0) {
+      args.push('--env', `BP_REQUIRE=${require.join(',')}`)
+    }
 
-  if (platform) {
-    args.push('--platform', platform)
-  }
+    if (publish) {
+      args.push('--publish')
+    }
 
-  // eslint-disable-next-line no-console
-  console.debug(`Packing with args:`, args)
+    if (platform) {
+      args.push('--platform', platform)
+    }
 
-  await installPack({ commandExecutor, cwd: packCwd })
+    await execOrThrow(commandExecutor, 'pack', args)
 
-  await execOrThrow(commandExecutor, 'pack', ['config', 'experimental', 'true'])
+    const report = parse(await xfs.readFilePromise(reportPath, 'utf8'))
+    const imageReport = report.image
 
-  await execOrThrow(commandExecutor, 'pack', args)
+    if (!imageReport || typeof imageReport !== 'object' || Array.isArray(imageReport)) {
+      throw new Error('pack report is missing the image result')
+    }
 
-  return {
-    images: imageTags,
-    tags: [tag, 'latest', ...normalizeAdditionalTags(additionalTags)],
-    workspace,
-  }
+    const fields = imageReport as Record<string, unknown>
+    const { tags } = fields
+
+    if (
+      !Array.isArray(tags) ||
+      tags.length === 0 ||
+      tags.some((tag) => typeof tag !== 'string' || tag.length === 0)
+    ) {
+      throw new Error('pack report is missing image tags')
+    }
+
+    if (publish) {
+      if (typeof fields.digest !== 'string' || fields.digest.length === 0) {
+        throw new Error('pack report is missing the published image digest')
+      }
+
+      return { workspace, tags, published: true, digest: fields.digest }
+    }
+
+    if (typeof fields['image-id'] !== 'string' || fields['image-id'].length === 0) {
+      throw new Error('pack report is missing the local image ID')
+    }
+
+    return { workspace, tags, published: false, imageId: fields['image-id'] }
+  })
 }

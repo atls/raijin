@@ -1,11 +1,8 @@
-import { arch }                    from 'node:os'
-
 import { normalizeAdditionalTags } from './buildpack/tags.js'
 
 const DEFAULT_BUILDER_TAG = '24'
-const DEFAULT_BUILDER_IMAGE = 'atlantislab/builder-base'
+const DEFAULT_BUILDER_IMAGE = 'ghcr.io/atls/builder-base'
 const DEFAULT_BUILDPACK_IMAGE = 'ghcr.io/atls/buildpack-yarn-workspace'
-const DEFAULT_MATERIALIZATION_OS = 'linux'
 
 export interface ImagePackConfiguration {
   buildpack?: string
@@ -16,9 +13,6 @@ export interface ImagePackConfiguration {
   builderTag?: string
   require?: Array<string>
 }
-
-export const getDefaultMaterializationPlatform = (): string =>
-  `${DEFAULT_MATERIALIZATION_OS}/${arch()}`
 
 export const parseAdditionalTags = (tags: string): Array<string> => {
   if (tags === '') {

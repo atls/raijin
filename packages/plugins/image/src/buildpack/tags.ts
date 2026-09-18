@@ -20,76 +20,53 @@ export const normalizeAdditionalTags = (tags: Array<string> = []): Array<string>
 export const getPackImageTags = (
   image: string,
   primaryTag: string,
-  additionalTags: Array<string> = []
-): Array<string> => [
-  `${image}:${primaryTag}`,
-  `${image}:latest`,
-  ...normalizeAdditionalTags(additionalTags).map((tag) => `${image}:${tag}`),
-]
+  additionalTags: Array<string> = [],
+  tagSuffixes: Array<string> = []
+): Array<string> => {
+  const tags = normalizeAdditionalTags([
+    primaryTag,
+    'latest',
+    ...additionalTags,
+    ...normalizeAdditionalTags(tagSuffixes).map((suffix) => `${primaryTag}-${suffix}`),
+  ])
 
-export const getPullRequestSha = (): string => {
-  const event = context.payload
-
-  return (
-    process.env.GITHUB_PULL_REQUST_HEAD_SHA ||
-    (event.after as string) ||
-    (event.pull_request?.head?.sha as string) ||
-    // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
-    (process.env.GITHUB_SHA as string)
-  )
-}
-
-export const getPullRequestId = (): string => {
-  const event = context.payload
-
-  return event.pull_request?.id as string
-}
-
-export const getPullRequestNumber = (): string => {
-  const event = context.payload
-
-  return String(event.pull_request?.number)
+  return [...new Set(tags)].map((tag) => `${image}:${tag}`)
 }
 
 export const getRevision = async (commandExecutor: CommandExecutor): Promise<string> => {
-  if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
-    return getPullRequestSha()
-  }
-
-  const { stdout } = await execOrThrow(commandExecutor, 'git', ['log', '-1', '--format="%H"'], {
+  const { stdout } = await execOrThrow(commandExecutor, 'git', ['rev-parse', '--verify', 'HEAD'], {
     capture: true,
   })
+  const revision = stdout.trim()
 
-  const [revision] = stdout.split('\n')
-
-  return revision.replace(/"/g, '')
-}
-
-export const getContext = async (): Promise<string> => {
-  if (process.env.GITHUB_EVENT_PATH && process.env.GITHUB_TOKEN) {
-    return getPullRequestNumber()
-  }
-
-  return 'local'
-}
-
-export const getTag = async (
-  tagPolicy: TagPolicy,
-  commandExecutor: CommandExecutor
-): Promise<string> => {
-  const revision = await getRevision(commandExecutor)
-  // eslint-disable-next-line @typescript-eslint/no-deprecated
-  const hash = revision.substr(0, 7)
-
-  if (tagPolicy === 'hash-timestamp') {
-    return `${hash}-${Date.now()}`
-  }
-
-  if (tagPolicy === 'ctx-hash-timestamp') {
-    const ctx = await getContext()
-
-    return `${ctx}-${hash}-${Date.now()}`
+  if (!revision) {
+    throw new Error('Git did not return a revision for image tagging')
   }
 
   return revision
+}
+
+export const getTag = async (
+  tagPolicy: Exclude<TagPolicy, 'explicit'>,
+  commandExecutor: CommandExecutor
+): Promise<string> => {
+  if (!['revision', 'hash-timestamp', 'ctx-hash-timestamp'].includes(tagPolicy)) {
+    throw new Error(`Unknown image tag policy "${tagPolicy}"`)
+  }
+
+  const revision = await getRevision(commandExecutor)
+
+  if (tagPolicy === 'revision') {
+    return revision
+  }
+
+  const tag = `${revision.slice(0, 7)}-${Date.now()}`
+
+  if (tagPolicy === 'ctx-hash-timestamp') {
+    const number = process.env.GITHUB_ACTIONS === 'true' ? context.issue.number : undefined
+
+    return `${number ?? 'local'}-${tag}`
+  }
+
+  return tag
 }

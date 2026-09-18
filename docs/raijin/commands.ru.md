@@ -86,25 +86,6 @@
 
 </details>
 
-### Домен `export`
-
-- Команды: `export`
-
-<details>
-<summary>Подробности домена `export`</summary>
-
-<!-- sync:command-card:export -->
-
-#### `export`
-
-- Статус: `active`
-- Описание: export a workspace and its production dependencies
-- Использование: `yarn export <-d,--destination #0>`
-- Пример: `yarn export`
-- Плагин: `@atls/yarn-plugin-export`
-
-</details>
-
 ### Домен `format`
 
 - Команды: `format`
@@ -166,7 +147,7 @@
 
 - Статус: `active`
 - Описание: build and optionally publish a container image
-- Использование: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [--tags #0] [-p,--publish] [--platform #0]`
+- Использование: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [--tags #0] [--tag-suffixes #0] [-p,--publish] [--platform #0] [--json]`
 - Пример: `yarn image pack`
 - Контракт: `packConfiguration` по умолчанию использует `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Контракт: `packConfiguration.builderTag` выбирает поддерживаемый Node/buildpack-канал.

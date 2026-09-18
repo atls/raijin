@@ -86,25 +86,6 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 </details>
 
-### Domain `export`
-
-- Commands: `export`
-
-<details>
-<summary>Domain details: `export`</summary>
-
-<!-- sync:command-card:export -->
-
-#### `export`
-
-- Status: `active`
-- Description: export a workspace and its production dependencies
-- Usage: `yarn export <-d,--destination #0>`
-- Example: `yarn export`
-- Plugin: `@atls/yarn-plugin-export`
-
-</details>
-
 ### Domain `format`
 
 - Commands: `format`
@@ -166,7 +147,7 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 
 - Status: `active`
 - Description: build and optionally publish a container image
-- Usage: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [--tags #0] [-p,--publish] [--platform #0]`
+- Usage: `yarn image pack [-r,--registry #0] [-t,--tag-policy #0] [--tags #0] [--tag-suffixes #0] [-p,--publish] [--platform #0] [--json]`
 - Example: `yarn image pack`
 - Contract: `packConfiguration` defaults to `ghcr.io/atls/buildpack-yarn-workspace:24`.
 - Contract: `packConfiguration.builderTag` selects the supported Node/buildpack channel.
