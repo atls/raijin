@@ -6,6 +6,7 @@ import type { ImagePackConfiguration }  from './configuration.js'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { StreamReport }                 from '@yarnpkg/core'
+import { MessageName }                  from '@yarnpkg/core'
 import { structUtils }                  from '@yarnpkg/core'
 import { Option }                       from 'clipanion'
 
@@ -64,8 +65,8 @@ class ImagePackCommand extends BaseCommand {
       { configuration, stdout: this.context.stdout, json: this.json },
       async (report) => {
         if (!isImageWorkspace(workspace.manifest)) {
-          report.reportInfo(
-            null,
+          report.reportError(
+            MessageName.UNNAMED,
             `Workspace ${workspace.manifest.name ? structUtils.stringifyIdent(workspace.manifest.name) : workspace.relativeCwd} requires a name and a production start script for image packaging.`
           )
 
