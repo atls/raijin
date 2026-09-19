@@ -19,12 +19,9 @@
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
-    "@atls/yarn-plugin-tools": "workspace:*",
-    "clipanion": "4.0.0-rc.2",
-    "localtunnel": "2.0.2"
+    "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
-    "@types/localtunnel": "2.0.4",
     "@yarnpkg/builder": "4.2.0",
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/core": "4.7.0",

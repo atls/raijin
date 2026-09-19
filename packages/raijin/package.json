@@ -20,7 +20,6 @@
     "./application/generation/project": "./src/application/generation/project/index.ts",
     "./commands": "./src/commands/index.ts",
     "./config/eslint": "./src/config/eslint/index.ts",
-    "./config/next": "./src/config/next/index.ts",
     "./config/prettier": "./src/config/prettier/index.ts",
     "./config/typescript": "./src/config/typescript/index.ts",
     "./filesystem": "./src/filesystem/index.ts",
