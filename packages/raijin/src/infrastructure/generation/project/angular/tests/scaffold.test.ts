@@ -43,7 +43,7 @@ const snapshot = async (root: string): Promise<Record<string, string>> => {
         .map(async (entry): Promise<[string, string]> => {
           const path = join(entry.parentPath, entry.name)
 
-          return [relative(root, path), await readFile(path, 'utf8')]
+          return [npath.toPortablePath(relative(root, path)), await readFile(path, 'utf8')]
         })
     )
   )
@@ -81,7 +81,7 @@ const createTarget = async (name: string): Promise<string> => {
 }
 
 before(async () => {
-  fixtureRoot = await xfs.mktempPromise()
+  fixtureRoot = npath.fromPortablePath(await xfs.mktempPromise())
   buildRoot = await mkdtemp(join(import.meta.dirname, '.collection-'))
   await cp(join(import.meta.dirname, '../collection'), join(buildRoot, collectionSource), {
     recursive: true,

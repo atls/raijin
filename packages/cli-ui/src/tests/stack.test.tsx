@@ -17,5 +17,5 @@ test('renders stack frame locations relative to the requested working directory'
   )
 
   assert.match(output, /run/)
-  assert.match(output, /src\/run\.ts:3:5/)
+  assert.match(output, /src[/\\]run\.ts:3:5/)
 })

@@ -39,7 +39,7 @@ test('renders compiler and structured diagnostics identically', () => {
   )
 
   assert.equal(structuredOutput, compilerOutput)
-  assert.match(structuredOutput, /src\/example\.ts:1:1/u)
+  assert.match(structuredOutput, /src[/\\]example\.ts:1:1/u)
   assert.match(structuredOutput, /> 1 \| const value: string = 1/u)
   assert.match(structuredOutput, /TS2322/u)
   assert.match(structuredOutput, /Type 'number' is not assignable to type 'string'/u)

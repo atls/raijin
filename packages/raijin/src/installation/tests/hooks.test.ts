@@ -11,6 +11,7 @@ import { writeFile }              from 'node:fs/promises'
 import { tmpdir }                 from 'node:os'
 import { basename }               from 'node:path'
 import { dirname }                from 'node:path'
+import { delimiter }              from 'node:path'
 import { join }                   from 'node:path'
 import test                       from 'node:test'
 import { promisify }              from 'node:util'
@@ -423,7 +424,7 @@ test('a failing hook command blocks a real Git commit through Husky', async (con
         'test: fail hook',
       ],
       cwd,
-      { PATH: `${bin}:${process.env.PATH ?? ''}` }
+      { PATH: `${bin}${delimiter}${process.env.PATH ?? ''}` }
     ),
     (error: unknown) => {
       assert.ok(error instanceof Error)
@@ -454,18 +455,30 @@ test('installed commit-message entries preserve Git arguments containing spaces'
 
     const env = {
       ...process.env,
-      PATH: `${bin}:${process.env.PATH ?? ''}`,
+      PATH: `${bin}${delimiter}${process.env.PATH ?? ''}`,
       RAIJIN_HOOK_LOG: log,
       XDG_CONFIG_HOME: cwd,
     }
 
-    await execute(join(cwd, '.config/husky/_/commit-msg'), [messageFile], { cwd, env })
+    await executeGit(
+      ['-c', 'alias.fixture-hook=!sh', 'fixture-hook', '.config/husky/_/commit-msg', messageFile],
+      cwd,
+      env
+    )
     assert.equal(await readFile(log, 'utf8'), `<commit>\n<message>\n<lint>\n<${messageFile}>\n`)
 
-    await execute(join(cwd, '.config/husky/_/prepare-commit-msg'), [messageFile, 'message'], {
+    await executeGit(
+      [
+        '-c',
+        'alias.fixture-hook=!sh',
+        'fixture-hook',
+        '.config/husky/_/prepare-commit-msg',
+        messageFile,
+        'message',
+      ],
       cwd,
-      env,
-    })
+      env
+    )
     assert.equal(await readFile(log, 'utf8'), `<commit>\n<message>\n<${messageFile}>\n<message>\n`)
   })
 })

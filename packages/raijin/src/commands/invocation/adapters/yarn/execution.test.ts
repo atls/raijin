@@ -1,7 +1,6 @@
 import type { Filename }            from '@yarnpkg/fslib'
 
 import assert                       from 'node:assert/strict'
-import { execFile }                 from 'node:child_process'
 import { dirname }                  from 'node:path'
 import test                         from 'node:test'
 import { fileURLToPath }            from 'node:url'
@@ -10,6 +9,7 @@ import { pathToFileURL }            from 'node:url'
 import { Configuration }            from '@yarnpkg/core'
 import { Project }                  from '@yarnpkg/core'
 import { getPluginConfiguration }   from '@yarnpkg/cli'
+import { execUtils }                from '@yarnpkg/core'
 import { npath }                    from '@yarnpkg/fslib'
 import { ppath }                    from '@yarnpkg/fslib'
 import { xfs }                      from '@yarnpkg/fslib'
@@ -25,23 +25,6 @@ const resolveTestProject = async () => {
 
   return Project.find(configuration, testCwd)
 }
-const execFileAsync = async (
-  file: string,
-  args: Array<string>,
-  options: { cwd?: string; env?: NodeJS.ProcessEnv; shell?: boolean } = {}
-): Promise<{ stdout: string; stderr: string }> =>
-  new Promise((resolvePromise, rejectPromise) => {
-    execFile(file, args, { ...options, encoding: 'utf8' }, (error, stdout, stderr) => {
-      if (error) {
-        rejectPromise(error)
-
-        return
-      }
-
-      resolvePromise({ stdout, stderr })
-    })
-  })
-
 test('should create script env for the selected workspace locator', async () => {
   const { project } = await resolveTestProject()
   const workspace = project.getWorkspaceByCwd(ppath.join(project.cwd, 'packages/plugins/renderer'))
@@ -225,15 +208,14 @@ test('should forward node flags from managed node wrapper', async () => {
     nodeLoader: pathToFileURL(npath.fromPortablePath(loaderPath)).href,
     project,
   })
-  const nodeWrapper = npath.fromPortablePath(ppath.join(binFolder, 'node' as Filename))
-  const { stdout } = await execFileAsync(
-    nodeWrapper,
+  const { stdout } = await execUtils.execvp(
+    'node',
     [
       '--conditions=raijin-managed-wrapper-test',
       '-e',
       'process.stdout.write(JSON.stringify(process.execArgv))',
     ],
-    { env }
+    { cwd: project.cwd, env, encoding: 'utf8', strict: true }
   )
   const execArgv = JSON.parse(stdout) as Array<string>
 
