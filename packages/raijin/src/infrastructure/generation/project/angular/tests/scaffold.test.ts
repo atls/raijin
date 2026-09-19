@@ -6,6 +6,7 @@ import { readFile }                   from 'node:fs/promises'
 import { readdir }                    from 'node:fs/promises'
 import { rm }                         from 'node:fs/promises'
 import { writeFile }                  from 'node:fs/promises'
+import { EOL }                        from 'node:os'
 import { dirname }                    from 'node:path'
 import { join }                       from 'node:path'
 import { relative }                   from 'node:path'
@@ -43,7 +44,7 @@ const snapshot = async (root: string): Promise<Record<string, string>> => {
         .map(async (entry): Promise<[string, string]> => {
           const path = join(entry.parentPath, entry.name)
 
-          return [relative(root, path), await readFile(path, 'utf8')]
+          return [npath.toPortablePath(relative(root, path)), await readFile(path, 'utf8')]
         })
     )
   )
@@ -65,7 +66,7 @@ const assertBaseline = async (target: string): Promise<Array<string>> => {
     if (path === 'tsconfig.json') {
       assert.deepEqual(JSON.parse(actual[path]), JSON.parse(content))
     } else {
-      assert.equal(actual[path], content, path)
+      assert.equal(actual[path], content.replace(/\r?\n/gu, EOL), path)
     }
   }
 
@@ -81,7 +82,7 @@ const createTarget = async (name: string): Promise<string> => {
 }
 
 before(async () => {
-  fixtureRoot = await xfs.mktempPromise()
+  fixtureRoot = npath.fromPortablePath(await xfs.mktempPromise())
   buildRoot = await mkdtemp(join(import.meta.dirname, '.collection-'))
   await cp(join(import.meta.dirname, '../collection'), join(buildRoot, collectionSource), {
     recursive: true,

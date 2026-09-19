@@ -5,6 +5,8 @@ import { rename }           from 'node:fs/promises'
 import { rm }               from 'node:fs/promises'
 import { writeFile }        from 'node:fs/promises'
 import { join }             from 'node:path'
+import { normalize }        from 'node:path'
+import { posix }            from 'node:path'
 import { test }             from 'node:test'
 
 import { createRepository } from './repository.fixture.js'
@@ -35,7 +37,7 @@ for (const owners of [['backend'], ['client'], ['backend', 'client']]) {
   test(`uses nearest project configuration for ${owners.join(' and ')}`, async (t) => {
     const cwd = await createRepository(t)
     const files = owners.map((owner) =>
-      join(owner === 'backend' ? '' : 'client', 'file with spaces.txt'))
+      posix.join(owner === 'backend' ? '' : 'client', 'file with spaces.txt'))
 
     await Promise.all(
       files.map(async (file) => {
@@ -57,7 +59,10 @@ for (const owners of [['backend'], ['client'], ['backend', 'client']]) {
 
     assert.deepEqual(checks.map(({ owner }) => owner).sort(), owners.toSorted())
     assert.deepEqual(
-      checks.flatMap(({ files: checked }) => checked).sort(),
+      checks
+        .flatMap(({ files: checked }) => checked)
+        .map((file) => normalize(file))
+        .sort(),
       files.map((file) => join(cwd, file)).sort()
     )
 
@@ -146,7 +151,7 @@ test('fails when configuration or a configured required command is missing', asy
   const unsupported = await run(cwd)
 
   assert.equal(unsupported.code, 1, unsupported.output)
-  assert.match(unsupported.output, /ENOENT/)
+  assert.match(unsupported.output, /raijin-fixture-command-that-does-not-exist/)
 
   await rm(join(cwd, '.lintstagedrc.json'))
   await rm(join(cwd, 'client', '.lintstagedrc.json'))
@@ -185,7 +190,7 @@ test('reports invalid provider configuration instead of converting it into succe
 test('lets the provider chunk large sets of literal paths without losing arguments', async (t) => {
   const cwd = await createRepository(t)
   const files = Array.from({ length: 800 }, (_, index) =>
-    join('client', `${index} ${'long path '.repeat(18)}[literal].txt`))
+    posix.join('client', `${index} ${'long path '.repeat(18)}[literal].txt`))
 
   await Promise.all(
     files.map(async (file) => {
@@ -206,7 +211,10 @@ test('lets the provider chunk large sets of literal paths without losing argumen
 
   assert.ok(checks.length > 1)
   assert.deepEqual(
-    checks.flatMap(({ files: checked }) => checked).sort(),
+    checks
+      .flatMap(({ files: checked }) => checked)
+      .map((file) => normalize(file))
+      .sort(),
     files.map((file) => join(cwd, file)).sort()
   )
   assert.doesNotMatch(await git(cwd, 'diff', '--cached'), /\+unformatted/)

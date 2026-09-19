@@ -5,6 +5,7 @@ import { readFile }                 from 'node:fs/promises'
 import { writeFile }                from 'node:fs/promises'
 import { tmpdir }                   from 'node:os'
 import { join }                     from 'node:path'
+import { normalize }                from 'node:path'
 import test                         from 'node:test'
 
 import typescript                   from 'typescript'
@@ -119,11 +120,11 @@ test('should keep config ownership at the requested project scope', async () => 
 
   assert.equal(config.configFileName, undefined)
   assert.equal(
-    config.fileNames.some((file) => file === join(workspaceCwd, 'src/index.ts')),
+    config.fileNames.some((file) => normalize(file) === join(workspaceCwd, 'src/index.ts')),
     true
   )
   assert.equal(
-    config.fileNames.some((file) => file === join(cwd, 'src/index.ts')),
+    config.fileNames.some((file) => normalize(file) === join(cwd, 'src/index.ts')),
     false
   )
 })

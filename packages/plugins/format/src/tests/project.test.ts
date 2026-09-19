@@ -43,7 +43,7 @@ test('should format literal and duplicate targets once while keeping ignored fil
   const targets = createTargets(cwd, ['src/[id]', 'src/[id]/index.ts', 'ignored.ts'])
 
   assert.deepEqual(await formatProjectSources({ cwd, targets }), {
-    files: [{ file: 'src/[id]/index.ts', status: 'changed' }],
+    files: [{ file: join('src', '[id]', 'index.ts'), status: 'changed' }],
   })
   assert.equal(await readFile(sourceFile, 'utf8'), 'const value = { foo: 1 }\n')
   assert.equal(await readFile(ignoredFile, 'utf8'), 'const ignored={value:1}\n')
@@ -52,7 +52,7 @@ test('should format literal and duplicate targets once while keeping ignored fil
 
   await utimes(sourceFile, unchangedModificationTime, unchangedModificationTime)
   assert.deepEqual(await formatProjectSources({ cwd, targets }), {
-    files: [{ file: 'src/[id]/index.ts', status: 'unchanged' }],
+    files: [{ file: join('src', '[id]', 'index.ts'), status: 'unchanged' }],
   })
   assert.equal((await stat(sourceFile)).mtimeMs, unchangedModificationTime.getTime())
 })

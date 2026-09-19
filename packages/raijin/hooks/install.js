@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process'
+import { constants } from 'node:fs'
 import { access } from 'node:fs/promises'
 import { chmod } from 'node:fs/promises'
 import { lstat } from 'node:fs/promises'
@@ -6,7 +7,6 @@ import { mkdir } from 'node:fs/promises'
 import { readFile } from 'node:fs/promises'
 import { readdir } from 'node:fs/promises'
 import { realpath } from 'node:fs/promises'
-import { stat } from 'node:fs/promises'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { resolve } from 'node:path'
@@ -60,10 +60,15 @@ const findActiveForeignHook = async (path, allowRaijinEntries) => {
       if (file.name.startsWith('.') || file.name.endsWith('.sample')) return undefined
       if (!file.isFile() && !file.isSymbolicLink()) return undefined
 
-      const details = await stat(join(path, file.name))
+      try {
+        await access(join(path, file.name), constants.X_OK)
 
-      // eslint-disable-next-line no-bitwise
-      return (details.mode & 0o111) !== 0 ? file.name : undefined
+        return file.name
+      } catch (error) {
+        if (error instanceof Error && 'code' in error && error.code === 'EACCES') return undefined
+
+        throw error
+      }
     })
   )
 

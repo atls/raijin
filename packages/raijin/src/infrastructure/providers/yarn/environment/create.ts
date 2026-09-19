@@ -11,7 +11,11 @@ import { remove }       from '../../../process/environment/map.js'
 import { set }          from '../../../process/environment/map.js'
 
 const OWNED_ENVIRONMENT_NAMES = ['INIT_CWD', 'PROJECT_CWD']
-const CANONICAL_ENVIRONMENT_NAMES = createNames(OWNED_ENVIRONMENT_NAMES)
+const CANONICAL_ENVIRONMENT_NAMES = createNames([
+  'NODE_OPTIONS',
+  'PATH',
+  ...OWNED_ENVIRONMENT_NAMES,
+])
 
 const assertEnvironmentPatch = (patch: Input['patch']): void => {
   for (const name of Object.keys(patch)) {
@@ -37,23 +41,31 @@ export const create = async ({
 
   assertEnvironmentPatch(patch)
 
-  const baseEnv = merge([project.configuration.env, baseEnvironment])
+  const baseEnv = merge(
+    [project.configuration.env, baseEnvironment],
+    process.platform,
+    CANONICAL_ENVIRONMENT_NAMES
+  )
 
   for (const name of OWNED_ENVIRONMENT_NAMES) {
     remove(baseEnv, name)
   }
 
-  applyPatch(baseEnv, patch)
+  applyPatch(baseEnv, patch, process.platform, CANONICAL_ENVIRONMENT_NAMES)
 
-  const environment = merge([
-    await scriptUtils.makeScriptEnv({
-      baseEnv,
-      binFolder,
-      ignoreCorepack: true,
-      locator,
-      project,
-    }),
-  ])
+  const environment = merge(
+    [
+      await scriptUtils.makeScriptEnv({
+        baseEnv,
+        binFolder,
+        ignoreCorepack: true,
+        locator,
+        project,
+      }),
+    ],
+    process.platform,
+    CANONICAL_ENVIRONMENT_NAMES
+  )
 
   set(environment, 'INIT_CWD', cwd, process.platform, CANONICAL_ENVIRONMENT_NAMES)
   set(

@@ -145,9 +145,10 @@ test('should stop a running process when forwarding output fails', async () => {
 })
 
 test('should preserve process start failures as a typed result', async () => {
-  const result = await execute('raijin-missing-executable', [], {
+  const cwd = await xfs.mktempPromise()
+  const result = await execute(process.execPath, [], {
     streams: createStreams(),
-    cwd: process.cwd(),
+    cwd: npath.fromPortablePath(ppath.join(cwd, 'missing')),
     env: process.env,
     input: 'ignore',
     output: { mode: 'capture' },
