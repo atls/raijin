@@ -6,6 +6,7 @@ import { readFile }                   from 'node:fs/promises'
 import { readdir }                    from 'node:fs/promises'
 import { rm }                         from 'node:fs/promises'
 import { writeFile }                  from 'node:fs/promises'
+import { EOL }                        from 'node:os'
 import { dirname }                    from 'node:path'
 import { join }                       from 'node:path'
 import { relative }                   from 'node:path'
@@ -65,7 +66,7 @@ const assertBaseline = async (target: string): Promise<Array<string>> => {
     if (path === 'tsconfig.json') {
       assert.deepEqual(JSON.parse(actual[path]), JSON.parse(content))
     } else {
-      assert.equal(actual[path], content, path)
+      assert.equal(actual[path], content.replace(/\r?\n/gu, EOL), path)
     }
   }
 
