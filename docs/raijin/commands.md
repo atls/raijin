@@ -214,8 +214,8 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 #### `renderer build`
 
 - Status: `active`
-- Description: build a renderer production artifact
-- Usage: `yarn renderer build`
+- Description: build a Next.js application
+- Usage: `yarn renderer build ...`
 - Example: `yarn renderer build`
 - Plugin: `@atls/yarn-plugin-renderer`
 
@@ -224,8 +224,8 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 #### `renderer dev`
 
 - Status: `active`
-- Description: run a renderer in development mode
-- Usage: `yarn renderer dev [--tunnel] [--https]`
+- Description: run a Next.js development server
+- Usage: `yarn renderer dev ...`
 - Example: `yarn renderer dev`
 - Plugin: `@atls/yarn-plugin-renderer`
 
@@ -234,8 +234,8 @@ Command map assembled from the `@atls/raijin-assembly` runtime
 #### `renderer start`
 
 - Status: `active`
-- Description: start a built renderer artifact
-- Usage: `yarn renderer start`
+- Description: start a built Next.js application
+- Usage: `yarn renderer start ...`
 - Example: `yarn renderer start`
 - Plugin: `@atls/yarn-plugin-renderer`
 

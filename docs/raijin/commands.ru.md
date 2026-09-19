@@ -214,8 +214,8 @@
 #### `renderer build`
 
 - Статус: `active`
-- Описание: build a renderer production artifact
-- Использование: `yarn renderer build`
+- Описание: build a Next.js application
+- Использование: `yarn renderer build ...`
 - Пример: `yarn renderer build`
 - Плагин: `@atls/yarn-plugin-renderer`
 
@@ -224,8 +224,8 @@
 #### `renderer dev`
 
 - Статус: `active`
-- Описание: run a renderer in development mode
-- Использование: `yarn renderer dev [--tunnel] [--https]`
+- Описание: run a Next.js development server
+- Использование: `yarn renderer dev ...`
 - Пример: `yarn renderer dev`
 - Плагин: `@atls/yarn-plugin-renderer`
 
@@ -234,8 +234,8 @@
 #### `renderer start`
 
 - Статус: `active`
-- Описание: start a built renderer artifact
-- Использование: `yarn renderer start`
+- Описание: start a built Next.js application
+- Использование: `yarn renderer start ...`
 - Пример: `yarn renderer start`
 - Плагин: `@atls/yarn-plugin-renderer`
 
