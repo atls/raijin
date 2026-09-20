@@ -46,6 +46,7 @@ export const createRepository = async (t: TestContext): Promise<string> => {
   await git(cwd, 'config', 'user.email', 'fixture@example.invalid')
   await git(cwd, 'config', 'commit.gpgsign', 'false')
   await git(cwd, 'config', 'core.hooksPath', '.git/hooks')
+  await git(cwd, 'config', 'core.longpaths', 'true')
   await writeFile(join(cwd, '.gitignore'), '.checks.jsonl\n')
 
   await Promise.all(

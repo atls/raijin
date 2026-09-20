@@ -116,10 +116,14 @@ export const installRepositoryHooks = async (cwd) => {
     ['rev-parse', '--path-format=absolute', '--git-path', 'hooks'],
     { cwd }
   )
-  const currentHooksPath = resolve(stdout.replace(/\r?\n$/u, ''))
+  const currentHooksPath = await realpath(resolve(stdout.replace(/\r?\n$/u, ''))).catch((error) => {
+    if (isMissing(error)) return undefined
+
+    throw error
+  })
   const nativeHooksPath = resolve(target, '_')
 
-  if (currentHooksPath !== nativeHooksPath) {
+  if (currentHooksPath && currentHooksPath !== nativeHooksPath) {
     const active = await findActiveForeignHook(currentHooksPath, currentHooksPath === target)
 
     if (active) {
