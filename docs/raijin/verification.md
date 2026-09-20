@@ -26,6 +26,17 @@ This table records current implementation ownership. A tracking issue names a mi
 
 Project tests are invoked through Raijin's public Yarn commands. The test plugin uses the built-in Node.js test-runner API internally; this does not require calling Node.js directly.
 
+## Unit Platform Verification
+
+The Terraform-owned Checks workflow runs the complete repository unit suite with
+`yarn test unit` on Node.js 24 in `Unit / ubuntu-latest` and
+`Unit / windows-latest`. Each job has a ten-minute budget. Matrix fail-fast is
+disabled so a failure on one platform does not cancel the other platform's run.
+
+These full-suite platform checks complement the existing shared checks, which
+retain pull-request changed or affected scope. A successful native Windows run
+does not replace acceptance of the delivered GitHub Actions matrix.
+
 ## Update Contract
 
 - A pull request that changes implementation ownership updates the corresponding row in the same delivery unit

@@ -6,7 +6,6 @@ import { lstat } from 'node:fs/promises'
 import { mkdir } from 'node:fs/promises'
 import { readFile } from 'node:fs/promises'
 import { readdir } from 'node:fs/promises'
-import { realpath } from 'node:fs/promises'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { resolve } from 'node:path'
@@ -87,7 +86,8 @@ export const installRepositoryHooks = async (cwd) => {
     throw error
   }
 
-  const target = join(await realpath(cwd), HOOKS_DIRECTORY)
+  const { stdout: repositoryRoot } = await execute('git', ['rev-parse', '--show-toplevel'], { cwd })
+  const target = join(repositoryRoot.replace(/\r?\n$/u, ''), HOOKS_DIRECTORY)
   const entries = /** @type {Array<[keyof typeof hooks, string]>} */ (Object.entries(hooks))
 
   await Promise.all(
