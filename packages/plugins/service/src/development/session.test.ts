@@ -6,7 +6,6 @@ import assert                              from 'node:assert/strict'
 import { access }                          from 'node:fs/promises'
 import { mkdir }                           from 'node:fs/promises'
 import { mkdtemp }                         from 'node:fs/promises'
-import { realpath }                        from 'node:fs/promises'
 import { writeFile }                       from 'node:fs/promises'
 import { tmpdir }                          from 'node:os'
 import { join }                            from 'node:path'
@@ -36,7 +35,7 @@ const waitFor = async (predicate: () => boolean, timeoutMs = 5000): Promise<void
 }
 
 const createProject = async (): Promise<string> => {
-  const cwd = await realpath(await mkdtemp(join(tmpdir(), 'service-development-')))
+  const cwd = await mkdtemp(join(tmpdir(), 'service-development-'))
 
   await mkdir(join(cwd, 'src'))
   await writeFile(join(cwd, 'package.json'), JSON.stringify({ type: 'module' }))

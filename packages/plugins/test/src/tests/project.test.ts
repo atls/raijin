@@ -5,7 +5,6 @@ import { spawn }                  from 'node:child_process'
 import { mkdir }                  from 'node:fs/promises'
 import { mkdtemp }                from 'node:fs/promises'
 import { readFile }               from 'node:fs/promises'
-import { realpath }               from 'node:fs/promises'
 import { rm }                     from 'node:fs/promises'
 import { writeFile }              from 'node:fs/promises'
 import { tmpdir }                 from 'node:os'
@@ -17,7 +16,7 @@ const RESULT_MARKER = '__RAIJIN_TEST_RESULT__'
 const fixture = fileURLToPath(new URL('./project.fixture.ts', import.meta.url))
 
 const createProject = async (source?: string) => {
-  const cwd = await realpath(await mkdtemp(join(tmpdir(), 'raijin-test-project-')))
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-test-project-'))
 
   await mkdir(join(cwd, 'src'), { recursive: true })
   await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
