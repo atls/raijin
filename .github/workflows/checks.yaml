@@ -51,3 +51,32 @@ jobs:
         shell: bash
         run: |
           yarn raijin:check
+
+  unit:
+    name: Unit / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    permissions: read-all
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Install
+        uses: ./.github/actions/install
+
+      - name: Unit
+        shell: bash
+        run: yarn test unit
