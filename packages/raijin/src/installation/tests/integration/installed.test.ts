@@ -251,6 +251,19 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
 
     await runRaijinInitializer({ ...options, argv: ['init', '--type', scaffoldType] })
 
+    if (scaffoldType === 'project') {
+      await Promise.all(
+        ['--help', '-h'].map(async (flag) => {
+          const output = await readYarnCommand(['exec', 'raijin', flag], cwd, {
+            packageManager: releaseFixture.packageManager,
+            followYarnPath: true,
+          })
+
+          assert.match(output, /^Usage:.*init.*update\n$/u)
+        })
+      )
+    }
+
     assert.equal(
       await readYarnCommand(['--version'], cwd, {
         packageManager: releaseFixture.packageManager,
