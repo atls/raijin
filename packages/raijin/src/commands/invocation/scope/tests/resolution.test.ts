@@ -32,7 +32,7 @@ before(async () => {
 
   repoRoot = project.cwd
   rendererWorkspaceCwd = ppath.join(repoRoot, 'packages/plugins/renderer')
-  rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'src/commands')
+  rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'src/tests')
 })
 
 const createContext = (
