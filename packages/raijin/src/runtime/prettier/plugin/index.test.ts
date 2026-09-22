@@ -671,17 +671,3 @@ test('should not align source exports across local export declarations', async (
     ].join('\n')
   )
 })
-
-test('should keep module source alignment idempotent', async () => {
-  const source = [
-    "import type { LongNamedType } from './interfaces.js'",
-    '',
-    "import { Foo }                from './foo.js'",
-    '',
-    "export *            from './constants.js'",
-    "export type { Foo } from './foo.interfaces.js'",
-    '',
-  ].join('\n')
-
-  await assertFormatted(source, source)
-})

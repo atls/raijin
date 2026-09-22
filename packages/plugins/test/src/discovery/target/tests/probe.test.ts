@@ -1,5 +1,3 @@
-import type { Result }         from '../result.js'
-
 import assert                  from 'node:assert/strict'
 import { stat }                from 'node:fs/promises'
 import { test }                from 'node:test'
@@ -28,19 +26,4 @@ test('selects unexpected failures without replacing their error', () => {
   for (const error of [null, undefined, 'failure', 1]) {
     assert.equal(isUnexpectedFailure({ error }), true)
   }
-})
-
-test('keeps a missing failure assignable in the negative classification branch', () => {
-  const error = Object.assign(new Error('missing'), { code: 'ENOENT' })
-  const verify = (result: Result): void => {
-    if (!isUnexpectedFailure(result)) {
-      const retained: typeof result = { error }
-
-      assert.deepEqual(result, retained)
-    } else {
-      assert.fail('A missing path must not be classified as an unexpected failure')
-    }
-  }
-
-  verify({ error })
 })

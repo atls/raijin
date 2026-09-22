@@ -24,6 +24,15 @@ const createProject = (workspaces: Array<Workspace>): Project =>
     workspaces,
   }) as Project
 
+test('should preserve a single project without workspace patterns', () => {
+  const rootWorkspace = createWorkspace('/repo', createManifest())
+  const model = createProjectModel(createProject([rootWorkspace]))
+
+  assert.equal(model.type, 'single')
+  assert.deepEqual(model.workspacePatterns, [])
+  assert.deepEqual(model.workspaces, [rootWorkspace])
+})
+
 test('should project the top-level workspace and normalized project state', () => {
   const rootWorkspace = createWorkspace('/repo', createManifest({ workspaces: ['packages/*'] }))
   const clientWorkspace = createWorkspace('/repo/packages/client', createManifest({}))

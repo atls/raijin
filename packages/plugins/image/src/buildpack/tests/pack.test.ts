@@ -7,7 +7,6 @@ import { npath }                from '@yarnpkg/fslib'
 import { ppath }                from '@yarnpkg/fslib'
 import { xfs }                  from '@yarnpkg/fslib'
 
-import { execOrThrow }          from '../pack-cli.js'
 import { pack }                 from '../pack.js'
 
 const cwd = npath.toPortablePath('/workspace')
@@ -15,25 +14,6 @@ const cwd = npath.toPortablePath('/workspace')
 const createCommandExecutor = (execute: CommandExecutor['execute']): CommandExecutor => ({
   cwd,
   execute,
-})
-
-test('should resolve when command exits with zero code', async () => {
-  const executor = createCommandExecutor(async () => ({ exitCode: 0, stderr: '', stdout: '' }))
-
-  await assert.doesNotReject(execOrThrow(executor, 'pack', ['build', 'example']))
-})
-
-test('should reject when command exits with non-zero code', async () => {
-  const executor = createCommandExecutor(async () => ({
-    exitCode: 17,
-    stderr: 'build failed',
-    stdout: '',
-  }))
-
-  await assert.rejects(
-    execOrThrow(executor, 'pack', ['build', 'example']),
-    /exit code 17\nbuild failed/
-  )
 })
 
 test('should build from the project root and consume the native local image report', async () => {
@@ -174,10 +154,18 @@ test('should reject invalid explicit tags before calling a provider', async () =
 })
 
 for (const scenario of [
-  { name: 'provider failure', exitCode: 17, report: '', publish: false, error: /exit code 17/ },
+  {
+    name: 'provider failure',
+    exitCode: 17,
+    stderr: 'build failed',
+    report: '',
+    publish: false,
+    error: /exit code 17\nbuild failed/,
+  },
   {
     name: 'missing local identity',
     exitCode: 0,
+    stderr: '',
     report: '[image]\ntags = ["example:release"]\n',
     publish: false,
     error: /local image ID/,
@@ -185,6 +173,7 @@ for (const scenario of [
   {
     name: 'missing published digest',
     exitCode: 0,
+    stderr: '',
     report: '[image]\ntags = ["example:release"]\n',
     publish: true,
     error: /published image digest/,
@@ -200,7 +189,7 @@ for (const scenario of [
         await xfs.writeFilePromise(reportPath, scenario.report)
       }
 
-      return { exitCode: scenario.exitCode, stderr: '', stdout: '' }
+      return { exitCode: scenario.exitCode, stderr: scenario.stderr, stdout: '' }
     })
 
     await assert.rejects(
