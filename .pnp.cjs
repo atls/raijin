@@ -11,7 +11,7 @@ const RAW_RUNTIME_STATE =
   ],\
   "dependencyTreeRoots": [\
     {\
-      "name": "raijin-workspace",\
+      "name": "raijin",\
       "reference": "workspace:."\
     },\
     {\
@@ -99,7 +99,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/yarn-plugin-test", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/test", "workspace:packages/plugins/test"]],\
     ["@atls/yarn-plugin-tools", ["workspace:packages/plugins/tools"]],\
     ["@atls/yarn-plugin-typescript", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/typescript", "workspace:packages/plugins/typescript"]],\
-    ["raijin-workspace", ["workspace:."]]\
+    ["raijin", ["workspace:."]]\
   ],\
   "fallbackPool": [\
   ],\
@@ -110,13 +110,13 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@atls/raijin", "workspace:packages/raijin"],\
           ["@semantic-release/commit-analyzer", "virtual:b425f36ee3bd36ed7ce4329b08a91c18dbc73cc7eceef2f3da89e2f96df3f3a43d79e52bc3471cdd8fa6fd06a59f1ffd54eb6d8a3771d0b6304b2b66fa2d0f29#npm:13.0.1"],\
-          ["@semantic-release/exec", "virtual:b753e79bc8eb3cf340eb2cb304aa9dd04cdf04ff01e8bd55ab31798e17be1c5091a618dd74b979e67a68a27a552cb7b80e94180fb9ca1d4545bbfa466a2296df#npm:7.1.0"],\
+          ["@semantic-release/exec", "virtual:9201b4ce433f67556845ad83d3ac4b1afd2e7ab5035ded28a7edd38ab1ed58ca3d6aeb0db75f6b88b33558a6d44f37289812fab356283bd8902a29f32e1418b5#npm:7.1.0"],\
           ["@semantic-release/github", "virtual:b425f36ee3bd36ed7ce4329b08a91c18dbc73cc7eceef2f3da89e2f96df3f3a43d79e52bc3471cdd8fa6fd06a59f1ffd54eb6d8a3771d0b6304b2b66fa2d0f29#npm:12.0.9"],\
           ["@semantic-release/release-notes-generator", "virtual:b425f36ee3bd36ed7ce4329b08a91c18dbc73cc7eceef2f3da89e2f96df3f3a43d79e52bc3471cdd8fa6fd06a59f1ffd54eb6d8a3771d0b6304b2b66fa2d0f29#npm:14.1.1"],\
           ["@types/node", "npm:24.12.2"],\
           ["conventional-changelog-conventionalcommits", "npm:9.3.1"],\
           ["prettier", "npm:3.5.3"],\
-          ["raijin-workspace", "workspace:."],\
+          ["raijin", "workspace:."],\
           ["react", "npm:18.3.1"],\
           ["semantic-release", "npm:25.0.9"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
@@ -542,7 +542,7 @@ const RAW_RUNTIME_STATE =
           ["protocol-buffers-schema", "npm:3.6.0"],\
           ["react", "npm:18.3.1"],\
           ["rxjs", "npm:7.8.1"],\
-          ["sort-package-json", "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=raijin-workspace%40workspace%3A."],\
+          ["sort-package-json", "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=raijin%40workspace%3A."],\
           ["strip-json-comments", "npm:3.1.1"],\
           ["ts-loader", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:9.5.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
@@ -3497,11 +3497,11 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:b753e79bc8eb3cf340eb2cb304aa9dd04cdf04ff01e8bd55ab31798e17be1c5091a618dd74b979e67a68a27a552cb7b80e94180fb9ca1d4545bbfa466a2296df#npm:7.1.0", {\
-        "packageLocation": "./.yarn/__virtual__/@semantic-release-exec-virtual-d1b6607c5f/2/.yarn/berry/cache/@semantic-release-exec-npm-7.1.0-9a9fa30138-10.zip/node_modules/@semantic-release/exec/",\
+      ["virtual:9201b4ce433f67556845ad83d3ac4b1afd2e7ab5035ded28a7edd38ab1ed58ca3d6aeb0db75f6b88b33558a6d44f37289812fab356283bd8902a29f32e1418b5#npm:7.1.0", {\
+        "packageLocation": "./.yarn/__virtual__/@semantic-release-exec-virtual-6698d3d8fa/2/.yarn/berry/cache/@semantic-release-exec-npm-7.1.0-9a9fa30138-10.zip/node_modules/@semantic-release/exec/",\
         "packageDependencies": [\
           ["@semantic-release/error", "npm:4.0.0"],\
-          ["@semantic-release/exec", "virtual:b753e79bc8eb3cf340eb2cb304aa9dd04cdf04ff01e8bd55ab31798e17be1c5091a618dd74b979e67a68a27a552cb7b80e94180fb9ca1d4545bbfa466a2296df#npm:7.1.0"],\
+          ["@semantic-release/exec", "virtual:9201b4ce433f67556845ad83d3ac4b1afd2e7ab5035ded28a7edd38ab1ed58ca3d6aeb0db75f6b88b33558a6d44f37289812fab356283bd8902a29f32e1418b5#npm:7.1.0"],\
           ["@types/semantic-release", null],\
           ["aggregate-error", "npm:3.1.0"],\
           ["debug", "virtual:bed65fb439b27f5ee42eee249a4a8e0ba1a52c5b9bfd5b304ff08d40feaec6e75cbe3040de0d7f2f77bda9924740284b5eb84f285dcdf3b4a90fcd2748c9d104#npm:4.4.3"],\
@@ -12910,19 +12910,19 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["raijin-workspace", [\
+    ["raijin", [\
       ["workspace:.", {\
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@atls/raijin", "workspace:packages/raijin"],\
           ["@semantic-release/commit-analyzer", "virtual:b425f36ee3bd36ed7ce4329b08a91c18dbc73cc7eceef2f3da89e2f96df3f3a43d79e52bc3471cdd8fa6fd06a59f1ffd54eb6d8a3771d0b6304b2b66fa2d0f29#npm:13.0.1"],\
-          ["@semantic-release/exec", "virtual:b753e79bc8eb3cf340eb2cb304aa9dd04cdf04ff01e8bd55ab31798e17be1c5091a618dd74b979e67a68a27a552cb7b80e94180fb9ca1d4545bbfa466a2296df#npm:7.1.0"],\
+          ["@semantic-release/exec", "virtual:9201b4ce433f67556845ad83d3ac4b1afd2e7ab5035ded28a7edd38ab1ed58ca3d6aeb0db75f6b88b33558a6d44f37289812fab356283bd8902a29f32e1418b5#npm:7.1.0"],\
           ["@semantic-release/github", "virtual:b425f36ee3bd36ed7ce4329b08a91c18dbc73cc7eceef2f3da89e2f96df3f3a43d79e52bc3471cdd8fa6fd06a59f1ffd54eb6d8a3771d0b6304b2b66fa2d0f29#npm:12.0.9"],\
           ["@semantic-release/release-notes-generator", "virtual:b425f36ee3bd36ed7ce4329b08a91c18dbc73cc7eceef2f3da89e2f96df3f3a43d79e52bc3471cdd8fa6fd06a59f1ffd54eb6d8a3771d0b6304b2b66fa2d0f29#npm:14.1.1"],\
           ["@types/node", "npm:24.12.2"],\
           ["conventional-changelog-conventionalcommits", "npm:9.3.1"],\
           ["prettier", "npm:3.5.3"],\
-          ["raijin-workspace", "workspace:."],\
+          ["raijin", "workspace:."],\
           ["react", "npm:18.3.1"],\
           ["semantic-release", "npm:25.0.9"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
@@ -13782,8 +13782,8 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["sort-package-json", [\
-      ["patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=raijin-workspace%40workspace%3A.", {\
-        "packageLocation": "../.yarn/berry/cache/sort-package-json-patch-0df8b8ea21-10.zip/node_modules/sort-package-json/",\
+      ["patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=raijin%40workspace%3A.", {\
+        "packageLocation": "../.yarn/berry/cache/sort-package-json-patch-3967b322c2-10.zip/node_modules/sort-package-json/",\
         "packageDependencies": [\
           ["detect-indent", "npm:7.0.1"],\
           ["detect-newline", "npm:4.0.1"],\
@@ -13791,7 +13791,7 @@ const RAW_RUNTIME_STATE =
           ["globby", "npm:13.2.2"],\
           ["is-plain-obj", "npm:4.1.0"],\
           ["sort-object-keys", "npm:1.1.3"],\
-          ["sort-package-json", "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=raijin-workspace%40workspace%3A."]\
+          ["sort-package-json", "patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=raijin%40workspace%3A."]\
         ],\
         "linkType": "HARD"\
       }]\
