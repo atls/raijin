@@ -2,7 +2,7 @@
   "name": "@atls/yarn-plugin-library",
   "version": "1.0.30",
   "private": true,
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
