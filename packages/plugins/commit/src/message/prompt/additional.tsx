@@ -1,40 +1,14 @@
-import type { CheckBoxProps }      from 'ink-multi-select'
-import type { IndicatorProps }     from 'ink-multi-select'
-import type { ListedItem }         from 'ink-multi-select'
-import type { MultiSelectProps }   from 'ink-multi-select'
-import type { ComponentType }      from 'react'
 import type { ReactElement }       from 'react'
 
 import type { CommitMessageInput } from '../input.js'
 
 import { Text }                    from 'ink'
 import { Box }                     from 'ink'
+import { useInput }                from 'ink'
 import { useCallback }             from 'react'
-import MultiSelectPackage          from 'ink-multi-select'
+import { useState }                from 'react'
 import React                       from 'react'
 import figures                     from 'figures'
-
-import { ItemComponent }           from './select-item.jsx'
-
-const isMultiSelectComponent = (value: unknown): value is ComponentType<MultiSelectProps> =>
-  typeof value === 'function'
-
-const resolveMultiSelectComponent = (value: unknown): ComponentType<MultiSelectProps> => {
-  const defaultExport =
-    typeof value === 'object' && value !== null ? Reflect.get(value, 'default') : undefined
-
-  if (isMultiSelectComponent(defaultExport)) {
-    return defaultExport
-  }
-
-  if (isMultiSelectComponent(value)) {
-    return value
-  }
-
-  throw new TypeError('ink-multi-select did not provide a component export.')
-}
-
-const MultiSelect = resolveMultiSelectComponent(MultiSelectPackage)
 
 const COMMIT_ADDITIONAL = [
   {
@@ -59,16 +33,6 @@ const COMMIT_ADDITIONAL = [
   },
 ]
 
-const CheckboxComponent = ({ isSelected = false }: CheckBoxProps): ReactElement => (
-  <Box marginRight={1}>{isSelected ? <Text>{figures.circleFilled}</Text> : <Text> </Text>}</Box>
-)
-
-export const IndicatorComponent = ({ isHighlighted = false }: IndicatorProps): ReactElement => (
-  <Box marginRight={1}>
-    {isHighlighted ? <Text color='cyanBright'>{figures.pointer}</Text> : <Text> </Text>}
-  </Box>
-)
-
 export interface AdditionalProperties {
   scope?: boolean
   issues?: boolean
@@ -91,10 +55,12 @@ export const RequestCommitMessageAdditional = ({
       ? initialValue?.scope !== undefined || !initialValue
       : initialValue?.[value as keyof CommitMessageInput])
 
+  const [highlighted, setHighlighted] = useState(0)
+  const [selected, setSelected] = useState(() => new Set(defaultSelected.map(({ value }) => value)))
   const onSubmitValues = useCallback(
-    (values: Array<ListedItem>) => {
+    (values: ReadonlySet<string>) => {
       onSubmit(
-        values.reduce<AdditionalProperties>((result, { value }) => {
+        [...values].reduce<AdditionalProperties>((result, value) => {
           switch (value) {
             case 'scope':
               return { ...result, scope: true }
@@ -115,6 +81,30 @@ export const RequestCommitMessageAdditional = ({
     [onSubmit]
   )
 
+  useInput((input, key) => {
+    if (key.upArrow) {
+      setHighlighted((index) => (index + COMMIT_ADDITIONAL.length - 1) % COMMIT_ADDITIONAL.length)
+    } else if (key.downArrow) {
+      setHighlighted((index) => (index + 1) % COMMIT_ADDITIONAL.length)
+    } else if (input === ' ') {
+      const { value } = COMMIT_ADDITIONAL[highlighted]
+
+      setSelected((current) => {
+        const next = new Set(current)
+
+        if (next.has(value)) {
+          next.delete(value)
+        } else {
+          next.add(value)
+        }
+
+        return next
+      })
+    } else if (key.return) {
+      onSubmitValues(selected)
+    }
+  })
+
   return (
     <Box flexDirection='column'>
       <Box>
@@ -122,16 +112,21 @@ export const RequestCommitMessageAdditional = ({
           Please select additional actions:
         </Text>
       </Box>
-      <Box>
-        <MultiSelect
-          items={COMMIT_ADDITIONAL}
-          defaultSelected={defaultSelected}
-          indicatorComponent={IndicatorComponent}
-          itemComponent={ItemComponent}
-          checkboxComponent={CheckboxComponent}
-          onSubmit={onSubmitValues}
-        />
-      </Box>
+      {COMMIT_ADDITIONAL.map((item, index) => (
+        <Box key={item.value}>
+          <Box marginRight={1}>
+            {index === highlighted ? (
+              <Text color='cyanBright'>{figures.pointer}</Text>
+            ) : (
+              <Text> </Text>
+            )}
+          </Box>
+          <Box marginRight={1}>
+            <Text>{selected.has(item.value) ? figures.circleFilled : figures.circle}</Text>
+          </Box>
+          <Text>{item.label}</Text>
+        </Box>
+      ))}
     </Box>
   )
 }

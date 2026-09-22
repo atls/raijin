@@ -1,0 +1,11 @@
+diff --git a/lib/GitFetcher.d.ts b/lib/GitFetcher.d.ts
+index 5bbd1b0..3f68777 100644
+--- a/lib/GitFetcher.d.ts
++++ b/lib/GitFetcher.d.ts
+@@ -5,5 +5,5 @@ export declare class GitFetcher implements Fetcher {
+     getLocalPath(locator: Locator, opts: FetchOptions): null;
+     fetch(locator: Locator, opts: FetchOptions): Promise<FetchResult>;
+     downloadHosted(locator: Locator, opts: FetchOptions): Promise<FetchResult | null>;
+-    cloneFromRemote(locator: Locator, opts: FetchOptions): Promise<import("/home/runner/work/berry/berry/.yarn/__virtual__/@yarnpkg-libzip-virtual-4957b34c08/1/packages/yarnpkg-libzip").ZipFS>;
++    cloneFromRemote(locator: Locator, opts: FetchOptions): Promise<import("@yarnpkg/libzip").ZipFS>;
+ }

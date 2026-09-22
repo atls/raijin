@@ -1,14 +1,14 @@
 import { delimiter }                           from 'node:path'
 import { win32 }                               from 'node:path'
 
-import { createNames }                         from '../infrastructure/process/environment/map.js'
-import { get as getEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
-import { includesName }                        from '../infrastructure/process/environment/map.js'
-import { merge as mergeEnvironments }          from '../infrastructure/process/environment/map.js'
-import { remove as removeEnvironmentVariable } from '../infrastructure/process/environment/map.js'
-import { set as setEnvironmentVariable }       from '../infrastructure/process/environment/map.js'
-import { isManagedNodeEnvironmentName } from '../infrastructure/providers/node/loader/environment.js'
-import { removeAppliedLoaderRegistration } from '../infrastructure/providers/node/loader/environment.js'
+import { createNames }                         from '../execution/environment/map.js'
+import { get as getEnvironmentVariable }       from '../execution/environment/map.js'
+import { includesName }                        from '../execution/environment/map.js'
+import { merge as mergeEnvironments }          from '../execution/environment/map.js'
+import { remove as removeEnvironmentVariable } from '../execution/environment/map.js'
+import { set as setEnvironmentVariable }       from '../execution/environment/map.js'
+import { isManagedNodeEnvironmentName }        from '../runtime/node/loader/environment.js'
+import { removeAppliedLoaderRegistration }     from '../runtime/node/loader/environment.js'
 
 const TRANSIENT_ENVIRONMENT_NAMES = [
   'BERRY_BIN_FOLDER',

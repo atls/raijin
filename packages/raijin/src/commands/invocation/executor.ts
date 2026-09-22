@@ -1,5 +1,5 @@
-import type { ProcessExecutionOptions } from './capabilities/process.interfaces.js'
-import type { ProcessExecutionResult }  from './capabilities/process.interfaces.js'
+import type { ProcessExecutionOptions } from './capabilities/interfaces/process.js'
+import type { ProcessExecutionResult }  from './capabilities/interfaces/process.js'
 
 export interface ExecuteOptions extends ProcessExecutionOptions {
   cwd: string

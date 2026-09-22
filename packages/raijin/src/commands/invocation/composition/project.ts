@@ -1,6 +1,6 @@
-import type { InvocationContext }          from '../scope/context.interfaces.js'
+import type { InvocationContext }          from '../scope/interfaces/context.js'
 
-import { create as createProcessExecutor } from '../../../infrastructure/process/execa/executor.js'
+import { create as createProcessExecutor } from '../../../execution/process/executor.js'
 import { resolveProjectCommandInvocation } from '../scope/project.js'
 
 export const executeProjectYarnCommand = async (

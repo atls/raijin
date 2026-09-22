@@ -1,4 +1,4 @@
-import type { CommandExecutor }    from '../executor.interfaces.js'
+import type { CommandExecutor }    from '../interfaces/executor.js'
 
 import assert                      from 'node:assert/strict'
 import test                        from 'node:test'

@@ -2,6 +2,16 @@
   "name": "@atls/yarn-plugin-image",
   "version": "1.1.0",
   "private": true,
+  "description": "Project-root container builds through Cloud Native Buildpacks",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/plugins/image"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -9,13 +19,8 @@
     ".": "./src/index.ts"
   },
   "main": "src/index.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "builder build plugin",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "build": "builder build plugin"
   },
   "dependencies": {
     "@actions/github": "6.0.0",
@@ -24,10 +29,10 @@
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
-    "@types/node": "24.12.2",
-    "@yarnpkg/builder": "4.2.0",
-    "@yarnpkg/cli": "4.14.1",
-    "@yarnpkg/core": "4.7.0",
+    "@types/node": "24.13.6",
+    "@yarnpkg/builder": "4.2.4",
+    "@yarnpkg/cli": "4.18.0",
+    "@yarnpkg/core": "4.9.1",
     "@yarnpkg/fslib": "3.1.5",
     "typescript": "5.9.3"
   },
@@ -35,19 +40,5 @@
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*",
     "@yarnpkg/fslib": "*"
-  },
-  "raijin": {
-    "pack": {
-      "exports": {
-        "./package.json": "./package.json",
-        ".": {
-          "import": "./dist/index.js",
-          "types": "./dist/index.d.ts",
-          "default": "./dist/index.js"
-        }
-      },
-      "main": "dist/index.js",
-      "types": "dist/index.d.ts"
-    }
   }
 }

@@ -1,7 +1,7 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
 import type { LibraryDiagnostic }       from './diagnostic.js'
-import type { LibraryBuildResult }      from './result.js'
+import type { LibraryBuildResult }      from './interfaces/result.js'
 
 import React                            from 'react'
 

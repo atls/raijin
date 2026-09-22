@@ -15,9 +15,10 @@ export interface BuildProjectInput {
 }
 
 export type BuildProjectResult =
-  | { diagnostics: Array<BuildDiagnostic>; entry: string; status: 'built' }
-  | { diagnostics: Array<BuildDiagnostic>; status: 'build-failed' }
-  | { error: unknown; status: 'provider-failed' }
+
+    | { diagnostics: Array<BuildDiagnostic>; entry: string; status: 'built' }
+    | { diagnostics: Array<BuildDiagnostic>; status: 'build-failed' }
+    | { error: unknown; status: 'provider-failed' }
 
 const closeCompiler = async (compiler: wp.Compiler): Promise<void> =>
   new Promise((resolve, reject) => {

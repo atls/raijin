@@ -1,151 +1,67 @@
-
-
 ## [1.0.17](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.16...@atls/yarn-plugin-image@1.0.17) (2026-06-17)
-
 
 ### Bug Fixes
 
-
-* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
-
-
-
-
+- **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
 
 ## [1.0.16](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.15...@atls/yarn-plugin-image@1.0.16) (2026-06-16)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-image:** use start-image buildpack reference ([ec4cec1](https://github.com/atls/raijin/commit/ec4cec114d3c7bfa20f558b324487e7fe0a306b6))
-
-
-
-
+- **yarn-plugin-image:** use start-image buildpack reference ([ec4cec1](https://github.com/atls/raijin/commit/ec4cec114d3c7bfa20f558b324487e7fe0a306b6))
 
 ## [1.0.15](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.14...@atls/yarn-plugin-image@1.0.15) (2026-06-16)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-image:** keep node 24 builder default ([46ff690](https://github.com/atls/raijin/commit/46ff69048c4fb9b01c4d611c6065fd3098e9818c))
-* **yarn-plugin-image:** use ghcr buildpack defaults ([60031ea](https://github.com/atls/raijin/commit/60031eafebc2b8ca9270ef8be76346e06ad5db08))
-
-
-
-
+- **yarn-plugin-image:** keep node 24 builder default ([46ff690](https://github.com/atls/raijin/commit/46ff69048c4fb9b01c4d611c6065fd3098e9818c))
+- **yarn-plugin-image:** use ghcr buildpack defaults ([60031ea](https://github.com/atls/raijin/commit/60031eafebc2b8ca9270ef8be76346e06ad5db08))
 
 ## [1.0.14](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.14...@atls/yarn-plugin-image@1.0.14) (2026-06-15)
 
-
-
-
-
-
 ## [1.0.14](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.13...@atls/yarn-plugin-image@1.0.14) (2026-06-15)
-
 
 ### Bug Fixes
 
-
-* **yarn-pack-utils:** materialize pnp payload for image platform ([ed465b8](https://github.com/atls/raijin/commit/ed465b82f29a5c2a656f1306cffd94e6cf5f64d3))
-
-
-
-
+- **yarn-pack-utils:** materialize pnp payload for image platform ([ed465b8](https://github.com/atls/raijin/commit/ed465b82f29a5c2a656f1306cffd94e6cf5f64d3))
 
 ## [1.0.13](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.11...@atls/yarn-plugin-image@1.0.13) (2026-06-15)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-image:** use published buildpack default ([49c735a](https://github.com/atls/raijin/commit/49c735a6c6df8d440491beff2cbdaed66d3817dc))
-
-
-
-
+- **yarn-plugin-image:** use published buildpack default ([49c735a](https://github.com/atls/raijin/commit/49c735a6c6df8d440491beff2cbdaed66d3817dc))
 
 ## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.11...@atls/yarn-plugin-image@1.0.12) (2026-06-15)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-image:** use published buildpack default ([49c735a](https://github.com/atls/raijin/commit/49c735a6c6df8d440491beff2cbdaed66d3817dc))
-
-
-
-
+- **yarn-plugin-image:** use published buildpack default ([49c735a](https://github.com/atls/raijin/commit/49c735a6c6df8d440491beff2cbdaed66d3817dc))
 
 ## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.10...@atls/yarn-plugin-image@1.0.11) (2026-06-01)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-image:** derive buildpack tag from builder tag ([3863cba](https://github.com/atls/raijin/commit/3863cbaf81989a88185a30c6f353450a30bad27d))
-* **yarn-plugin-image:** drop pinned buildpack digest ([6ac7146](https://github.com/atls/raijin/commit/6ac714675bfb69c2ed67bbdac69b099d96ddaf7f))
-* **yarn-plugin-image:** pin default buildpack digest ([493d624](https://github.com/atls/raijin/commit/493d624e0e3c12721a6278cff68b811b96c22421))
-
-
-
-
-
+- **yarn-plugin-image:** derive buildpack tag from builder tag ([3863cba](https://github.com/atls/raijin/commit/3863cbaf81989a88185a30c6f353450a30bad27d))
+- **yarn-plugin-image:** drop pinned buildpack digest ([6ac7146](https://github.com/atls/raijin/commit/6ac714675bfb69c2ed67bbdac69b099d96ddaf7f))
+- **yarn-plugin-image:** pin default buildpack digest ([493d624](https://github.com/atls/raijin/commit/493d624e0e3c12721a6278cff68b811b96c22421))
 
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.9...@atls/yarn-plugin-image@1.0.10) (2026-05-14)
 
-
-
-
-
-
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.8...@atls/yarn-plugin-image@1.0.9) (2026-04-29)
-
-
-
-
-
 
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.7...@atls/yarn-plugin-image@1.0.8) (2026-04-01)
 
-
-
-
-
-
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.6...@atls/yarn-plugin-image@1.0.7) (2026-04-01)
-
-
-
-
-
 
 ## [1.0.6](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.5...@atls/yarn-plugin-image@1.0.6) (2026-02-18)
 
-
-
-
-
-
 ## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.4...@atls/yarn-plugin-image@1.0.5) (2026-01-15)
-
 
 ### Features
 
-
-* **yarn:** allow image pack astro services ([#527](https://github.com/atls/raijin/issues/527)) ([69d1f4e](https://github.com/atls/raijin/commit/69d1f4e8f2510069f3b6f2034c227ca483001acf))
-
-
-
-
+- **yarn:** allow image pack astro services ([#527](https://github.com/atls/raijin/issues/527)) ([69d1f4e](https://github.com/atls/raijin/commit/69d1f4e8f2510069f3b6f2034c227ca483001acf))
 
 ## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.3...@atls/yarn-plugin-image@1.0.4) (2025-12-07)
-
-
-
 
 ## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-image@1.0.3...@atls/yarn-plugin-image@1.0.3) (2025-03-09)
 

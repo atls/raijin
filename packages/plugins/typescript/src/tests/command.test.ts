@@ -64,17 +64,16 @@ const createContext = (
   stderr: PassThrough,
   stdout: PassThrough,
   invocationCwd: string = cwd
-): CommandContext =>
-  ({
-    colorDepth: 8,
-    cwd: toPortableCwd(cwd),
-    env: { ...process.env, INIT_CWD: invocationCwd },
-    plugins,
-    quiet: false,
-    stderr,
-    stdin: new PassThrough(),
-    stdout,
-  }) as CommandContext
+): CommandContext => ({
+  colorDepth: 8,
+  cwd: toPortableCwd(cwd),
+  env: { ...process.env, INIT_CWD: invocationCwd },
+  plugins,
+  quiet: false,
+  stderr,
+  stdin: new PassThrough(),
+  stdout,
+})
 
 test('parses exact typecheck files', () => {
   const { cli, plugins } = createCli()

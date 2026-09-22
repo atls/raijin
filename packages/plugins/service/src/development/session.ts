@@ -26,9 +26,10 @@ export interface DevelopmentSessionInput {
 }
 
 export type DevelopmentSessionResult =
-  | { error: unknown; status: 'provider-failed' }
-  | { execution: ApplicationExecutionResult; status: 'launch-failed' }
-  | { reason: unknown; status: 'cancelled' }
+
+    | { error: unknown; status: 'provider-failed' }
+    | { execution: ApplicationExecutionResult; status: 'launch-failed' }
+    | { reason: unknown; status: 'cancelled' }
 
 interface RunningApplication {
   controller: AbortController

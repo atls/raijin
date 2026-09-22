@@ -1,5 +1,5 @@
-import type { LibraryBuildInput }  from './input.js'
-import type { LibraryBuildResult } from './result.js'
+import type { LibraryBuildInput }  from './interfaces/input.js'
+import type { LibraryBuildResult } from './interfaces/result.js'
 
 import { inspectLibraryArtifact }  from './artifact.js'
 import { verifyLibraryArtifact }   from './artifact.js'

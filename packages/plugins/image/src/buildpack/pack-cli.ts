@@ -1,6 +1,6 @@
-import type { CommandExecutionOptions } from './executor.interfaces.js'
-import type { CommandExecutionResult }  from './executor.interfaces.js'
-import type { CommandExecutor }         from './executor.interfaces.js'
+import type { CommandExecutionOptions } from './interfaces/executor.js'
+import type { CommandExecutionResult }  from './interfaces/executor.js'
+import type { CommandExecutor }         from './interfaces/executor.js'
 
 export const execOrThrow = async (
   commandExecutor: CommandExecutor,

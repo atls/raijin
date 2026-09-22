@@ -1,9 +1,10 @@
 import type { EventData } from 'node:test'
 
 export type TestProjectTerminal =
-  | { readonly exitCode: 0; readonly reason: 'passed' }
-  | { readonly exitCode: 1; readonly reason: 'failed' }
-  | { readonly exitCode: 1; readonly reason: 'provider-failed' }
+
+    | { readonly exitCode: 0; readonly reason: 'passed' }
+    | { readonly exitCode: 1; readonly reason: 'failed' }
+    | { readonly exitCode: 1; readonly reason: 'provider-failed' }
 
 type TestProjectCompletedFields = {
   readonly status: 'completed'

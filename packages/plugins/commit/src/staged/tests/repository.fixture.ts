@@ -15,7 +15,7 @@ import { promisify }        from 'node:util'
 export const execute = promisify(execFile)
 
 const driver = fileURLToPath(new URL('./run.fixture.ts', import.meta.url))
-const checker = new URL('./check.fixture.mjs', import.meta.url)
+const checker = new URL('./check.fixture.js', import.meta.url)
 const localGitEnvironmentNames = (await execute('git', ['rev-parse', '--local-env-vars'])).stdout
   .trim()
   .split('\n')
@@ -54,12 +54,15 @@ export const createRepository = async (t: TestContext): Promise<string> => {
       ['', 'backend'],
       ['client', 'client'],
     ].map(async ([directory, owner]) => {
-      await writeFile(join(cwd, directory, 'package.json'), JSON.stringify({ name: owner }))
+      await writeFile(
+        join(cwd, directory, 'package.json'),
+        JSON.stringify({ name: owner, type: 'module' })
+      )
       await writeFile(
         join(cwd, directory, '.lintstagedrc.json'),
-        JSON.stringify({ '*.txt': `node check.mjs ${owner}` })
+        JSON.stringify({ '*.txt': `node check.js ${owner}` })
       )
-      await copyFile(checker, join(cwd, directory, 'check.mjs'))
+      await copyFile(checker, join(cwd, directory, 'check.js'))
       await writeFile(join(cwd, directory, 'file with spaces.txt'), 'initial\n')
     })
   )

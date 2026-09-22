@@ -12,7 +12,7 @@ interface SeparatorProps {
 
 export const Separator = ({ inset = 0 }: SeparatorProps): ReactElement => {
   const { stdout } = useStdout()
-  const columns = Math.max(0, (stdout?.columns || DEFAULT_COLUMNS) - inset)
+  const columns = Math.max(0, (stdout.columns || DEFAULT_COLUMNS) - inset)
 
   return <Text color='gray'>{'─'.repeat(columns)}</Text>
 }

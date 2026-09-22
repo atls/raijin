@@ -1,23 +1,21 @@
 import type { ProjectCommandContext }   from '@atls/raijin/commands'
-import type { SubmitInjectedComponent } from '@yarnpkg/libui/sources/misc/renderForm.js'
 import type { ReactElement }            from 'react'
 
 import type { CommitMessageInput }      from './input.js'
+import type { SubmitInjectedComponent } from './render-form.jsx'
 
 import { BaseCommand }                  from '@yarnpkg/cli'
 import { npath }                        from '@yarnpkg/fslib'
 import { xfs }                          from '@yarnpkg/fslib'
-import { renderForm }                   from '@yarnpkg/libui/sources/misc/renderForm.js'
 import { Option }                       from 'clipanion'
 import { forceStdinTty }                from 'force-stdin-tty'
-import { useStdin }                     from 'ink'
-import { useEffect }                    from 'react'
 import { useState }                     from 'react'
 import React                            from 'react'
 
 import { RequestCommitMessage }         from './prompt/form.jsx'
 import { createCommitMessagePolicy }    from './policy.js'
 import { prepareCommitMessage }         from './prepare.js'
+import { renderForm }                   from './render-form.jsx'
 
 const RequestCommitMessageSubmit = ({
   commit,
@@ -26,13 +24,7 @@ const RequestCommitMessageSubmit = ({
   commit: CommitMessageInput
   useSubmit: (commit: CommitMessageInput) => void
 }): null => {
-  const { stdin } = useStdin()
-
   useSubmit(commit)
-
-  useEffect(() => {
-    stdin?.emit('keypress', '', { name: 'return' })
-  }, [stdin])
 
   return null
 }
@@ -85,7 +77,7 @@ export class CommitMessageCommand extends BaseCommand {
     description: 'create a conventional commit message interactively',
   })
 
-  args: Array<string> = Option.Rest({ required: 0 })
+  args: Array<string> = Option.Rest()
 
   declare context: ProjectCommandContext
 
@@ -123,7 +115,6 @@ export class CommitMessageCommand extends BaseCommand {
               allowedScopes: policy.allowedScopes,
               initialValue,
             }),
-            {},
             {
               stdin: process.stdin,
               stdout: this.context.stdout,

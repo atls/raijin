@@ -123,8 +123,8 @@ yarn workspaces list
 ## 7. Локальная проверка генерации проекта
 
 ```bash
-yarn test unit --target packages/raijin/src/infrastructure/generation/project
-yarn test integration --target packages/raijin/src/infrastructure/generation/project
+yarn test unit --target packages/raijin/src/generation/project
+yarn test integration --target packages/raijin/src/generation/project
 ```
 
 Ожидаемый результат:

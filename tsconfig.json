@@ -31,6 +31,5 @@
     "checkJs": true
   },
   "include": ["project.types.d.ts", "packages/**/*"],
-  "exclude": ["**/bundles/**", "**/dist/**"],
-  "types": ["@atls/raijin/types"]
+  "exclude": ["**/bundles/**", "**/dist/**"]
 }

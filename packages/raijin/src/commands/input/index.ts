@@ -3,5 +3,5 @@ export type { CommandInputOptions } from './target.interfaces.js'
 export type { CommandInputSource }  from './target.interfaces.js'
 export type { CommandTarget }       from './target.interfaces.js'
 
-export { toCommandArguments }       from './adapters/cli.js'
+export { toCommandArguments }       from './cli.js'
 export { createCommandInput }       from './target.js'

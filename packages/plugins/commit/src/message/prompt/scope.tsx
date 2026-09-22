@@ -2,9 +2,9 @@ import type { ReactElement }  from 'react'
 
 import { Text }               from 'ink'
 import { Box }                from 'ink'
-import Select                 from 'ink-select-input'
 import React                  from 'react'
 
+import { SelectInput }        from './inputs.jsx'
 import { IndicatorComponent } from './select-indicator.jsx'
 import { ItemComponent }      from './select-item.jsx'
 
@@ -28,7 +28,7 @@ export const RequestCommitMessageScope = ({
           Scope:
         </Text>
       </Box>
-      <Select
+      <SelectInput
         items={items}
         indicatorComponent={IndicatorComponent}
         itemComponent={ItemComponent}

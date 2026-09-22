@@ -1,4 +1,4 @@
-import type { ExecuteResult } from '../../src/application/execution/index.js'
+import type { ExecuteResult } from '../../src/execution/index.js'
 
 import nodeAssert             from 'node:assert/strict'
 

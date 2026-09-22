@@ -2,7 +2,6 @@
   "@atls/raijin/config/eslint",
   "@atls/raijin/config/typescript",
   "@atls/raijin/eslint",
-  "@atls/raijin/svgr",
   "@atls/raijin/ts-ext-register",
   "@atls/raijin/ts-node-register",
   "@atls/raijin/typescript",

@@ -95,8 +95,8 @@ export const getOriginalNodeText = (
   node: Node | RangedNode,
   originalText: string | undefined
 ): string | undefined => {
-  const start = getRangeStart(node as RangedNode)
-  const end = getRangeEnd(node as RangedNode)
+  const start = getRangeStart(node)
+  const end = getRangeEnd(node)
 
   return originalText && start !== undefined && end !== undefined
     ? originalText.slice(start, end)
@@ -106,9 +106,9 @@ export const getOriginalNodeText = (
 export const hasComments = (node: CommentedNode | null | undefined): boolean =>
   Boolean(
     node &&
-      ((node.leadingComments && node.leadingComments.length > 0) ||
-        (node.innerComments && node.innerComments.length > 0) ||
-        (node.trailingComments && node.trailingComments.length > 0))
+    ((node.leadingComments && node.leadingComments.length > 0) ||
+      (node.innerComments && node.innerComments.length > 0) ||
+      (node.trailingComments && node.trailingComments.length > 0))
   )
 
 export const isCommentInsideNode = (node: Node, comment: LocatedComment): boolean => {
@@ -179,7 +179,7 @@ const isDocCommand = (doc: unknown): doc is DocCommand =>
 const findFromDocPart = (doc: Doc): Array<unknown> | undefined => {
   if (Array.isArray(doc)) {
     if (doc[0] === fromDocPart) {
-      return doc as Array<unknown>
+      return doc
     }
 
     for (const part of doc) {

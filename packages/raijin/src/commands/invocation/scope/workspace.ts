@@ -1,6 +1,6 @@
 import type { Executor }                from '../executor.js'
-import type { InvocationContext }       from './context.interfaces.js'
-import type { WorkspaceInvocation }     from './invocation.interfaces.js'
+import type { InvocationContext }       from './interfaces/context.js'
+import type { WorkspaceInvocation }     from './interfaces/invocation.js'
 
 import { createProjectModel }           from '@atls/raijin/project'
 

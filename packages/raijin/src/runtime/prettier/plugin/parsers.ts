@@ -49,9 +49,9 @@ export const createParsers = (
   },
   'json-stringify': {
     ...babel.parsers['json-stringify'],
-    preprocess(text, options) {
+    async preprocess(text, options) {
       if (babel.parsers['json-stringify'].preprocess) {
-        text = babel.parsers['json-stringify'].preprocess(text, options)
+        text = await babel.parsers['json-stringify'].preprocess(text, options)
       }
 
       return options.filepath && /(^|\\|\/)package\.json$/.test(options.filepath)

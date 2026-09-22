@@ -3,6 +3,9 @@ import type { PortablePath }       from '@yarnpkg/fslib'
 
 import type { TestScenario }       from '../../interfaces/input.js'
 
+import { relative }                from 'node:path'
+import { sep }                     from 'node:path'
+
 import { toPortableCwd }           from '@atls/raijin/commands'
 import { discoverFiles }           from '@atls/raijin/filesystem'
 import { toNativePath }            from '@atls/raijin/filesystem'
@@ -85,5 +88,9 @@ export const collectTests = async (
     )
   }
 
-  return [targetPath.path]
+  const inIntegrationFolder = relative(rootCwd, targetPath.path).split(sep).includes('integration')
+
+  return scenario === 'general' || (scenario === 'integration') === inIntegrationFolder
+    ? [targetPath.path]
+    : []
 }

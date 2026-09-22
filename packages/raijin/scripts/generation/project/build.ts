@@ -2,17 +2,20 @@ import { cp }            from 'node:fs/promises'
 import { rm }            from 'node:fs/promises'
 import { resolve }       from 'node:path'
 import { join }          from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { pathToFileURL } from 'node:url'
 
 import { pnpPlugin }     from '@yarnpkg/esbuild-plugin-pnp'
 import esbuild           from 'esbuild'
 
+const moduleDirectory = fileURLToPath(new URL('.', import.meta.url))
+
 export const buildProjectCollection = async ({
-  packageRoot = resolve(import.meta.dirname, '../../..'),
+  packageRoot = resolve(moduleDirectory, '../../..'),
 }: {
   packageRoot?: string
 } = {}): Promise<void> => {
-  const sourceRoot = join(packageRoot, 'src/infrastructure/generation/project/angular/collection')
+  const sourceRoot = join(packageRoot, 'src/generation/project/angular/collection')
   const outputRoot = join(packageRoot, 'dist/generation/project/collection')
   const sourceFactory = join(sourceRoot, 'project/factory.ts')
   const outputFactory = join(outputRoot, 'project/project.factory.cjs')

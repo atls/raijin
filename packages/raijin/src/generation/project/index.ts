@@ -1,0 +1,13 @@
+export type { GenerateProjectInput }            from './interfaces/input.js'
+export type { ProjectScaffoldType }             from './interfaces/input.js'
+export type { ProjectScaffolder }               from './interfaces/scaffolder.js'
+export type { FailedProjectGenerationResult }   from './interfaces/result.js'
+export type { GeneratedProjectChange }          from './interfaces/result.js'
+export type { GeneratedProjectResult }          from './interfaces/result.js'
+export type { GenerateProjectResult }           from './interfaces/result.js'
+export type { ProjectScaffoldingResult }        from './interfaces/result.js'
+export type { RejectedProjectGenerationResult } from './interfaces/result.js'
+
+export { generateProject }                      from './generate.js'
+export { isProjectScaffoldType }                from './interfaces/input.js'
+export { projectScaffoldTypes }                 from './interfaces/input.js'

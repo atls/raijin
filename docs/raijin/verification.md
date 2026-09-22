@@ -9,20 +9,20 @@ Repository verification exposes stable aggregate capabilities while each check, 
 - Unit and contract tests stay with the production responsibility they verify
 - Disposable consumer assets stay outside runtime source and keep fixtures local to their scenario
 - Shared runner code represents semantics required by multiple scenarios, never a generic `test-utils`, `fixtures`, or `helpers` collection
-- The generated command inventory remains in `commands.md`; executable verification reads the exact checked runtime directly
+- Executable CLI verification reads the exact checked runtime directly
 
 ## Ownership Transitions
 
 This table records current implementation ownership. A tracking issue names a migration, not the current owner.
 
-| Responsibility                    | Current owner                                            | State     | Transition condition                                                                                                         |
-| --------------------------------- | -------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Repository verification aggregate | Root `raijin:check` capability                           | Current   | It remains an aggregate and delegates only to stable owner capabilities                                                      |
-| CLI surface and checked runtime   | `scripts/raijin/cli-surface` and `@atls/raijin-assembly` | Current   | #845 established this boundary; later changes remain with the same capability                                                |
-| Disposable consumer scenarios     | `@atls/raijin-assembly` runtime consumer scripts         | Current   | #806 may extend their coverage only after the final command inventory is available                                           |
-| Project test execution            | `packages/plugins/test`                                  | Current   | #839 established one result for the general, unit, integration, and checks consumers                                         |
-| Check orchestration               | `packages/plugins/checks`                                | Migrating | #831 replaces it only after local and CI orchestration share one capability and the duplicate command composition is removed |
-| Complete command consumer matrix  | Not implemented                                          | Planned   | #806 becomes current only after the final registered inventory has a package-owned entrypoint and consumer proof             |
+| Responsibility                    | Current owner                                    | State     | Transition condition                                                                                                         |
+| --------------------------------- | ------------------------------------------------ | --------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Repository verification aggregate | Root `raijin:check` capability                   | Current   | It remains an aggregate and delegates only to stable owner capabilities                                                      |
+| CLI surface and checked runtime   | `@atls/raijin-assembly`                          | Current   | #845 established this boundary; later changes remain with the same capability                                                |
+| Disposable consumer scenarios     | `@atls/raijin-assembly` runtime consumer scripts | Current   | #806 may extend their coverage only after the final command inventory is available                                           |
+| Project test execution            | `packages/plugins/test`                          | Current   | #839 established one result for the general, unit, integration, and checks consumers                                         |
+| Check orchestration               | `packages/plugins/checks`                        | Migrating | #831 replaces it only after local and CI orchestration share one capability and the duplicate command composition is removed |
+| Complete command consumer matrix  | Not implemented                                  | Planned   | #806 becomes current only after the final registered inventory has a package-owned entrypoint and consumer proof             |
 
 Project tests are invoked through Raijin's public Yarn commands. The test plugin uses the built-in Node.js test-runner API internally; this does not require calling Node.js directly.
 

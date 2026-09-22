@@ -3,7 +3,6 @@ import type { LogAttributeValue } from '@atls/logger'
 import type { ReactElement }      from 'react'
 
 import { Text }                   from 'ink'
-import { nanoid }                 from 'nanoid'
 import { useMemo }                from 'react'
 import React                      from 'react'
 import decamelize                 from 'decamelize'
@@ -13,9 +12,7 @@ export interface NamespaceProps {
   children?: LogAttributeValue
 }
 
-export const LogNamespace = ({
-  children,
-}: NamespaceProps): Array<ReactElement> | ReactElement | null => {
+export const LogNamespace = ({ children }: NamespaceProps): ReactElement | null => {
   const value: LogAttributeValue | undefined = useMemo(() => {
     if (typeof children === 'string') {
       return decamelize(children, { separator: '-' })
@@ -37,11 +34,7 @@ export const LogNamespace = ({
   }
 
   if (Array.isArray(value)) {
-    return value.map((val) => (
-      <Text key={nanoid()} color={color}>
-        {val}
-      </Text>
-    ))
+    return <Text color={color}>{value.map(String).join('')}</Text>
   }
 
   return <Text color={color}>{value as AttributeValue}</Text>

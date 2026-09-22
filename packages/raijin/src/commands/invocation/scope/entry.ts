@@ -1,6 +1,6 @@
 import type { Executor }           from '../executor.js'
-import type { InvocationContext }  from './context.interfaces.js'
-import type { EntryInvocation }    from './invocation.interfaces.js'
+import type { InvocationContext }  from './interfaces/context.js'
+import type { EntryInvocation }    from './interfaces/invocation.js'
 
 import { createProcessInvocation } from '../capabilities/create.js'
 import { resolveInvocationCwd }    from './context.js'

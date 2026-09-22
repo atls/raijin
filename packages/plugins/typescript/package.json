@@ -2,6 +2,16 @@
   "name": "@atls/yarn-plugin-typescript",
   "version": "1.0.32",
   "private": true,
+  "description": "Project-aware TypeScript verification",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/plugins/typescript"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -9,13 +19,8 @@
     ".": "./src/index.ts"
   },
   "main": "./src/index.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "builder build plugin --external-file ../../assembly/externals.json",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "build": "builder build plugin --external-file ../../assembly/externals.json"
   },
   "dependencies": {
     "@atls/cli-ui": "workspace:*",
@@ -24,28 +29,14 @@
     "react": "18.3.1"
   },
   "devDependencies": {
-    "@types/react": "18.3.18",
-    "@yarnpkg/builder": "4.2.0",
-    "@yarnpkg/cli": "4.14.1",
-    "@yarnpkg/core": "4.7.0",
+    "@types/react": "18.3.31",
+    "@yarnpkg/builder": "4.2.4",
+    "@yarnpkg/cli": "4.18.0",
+    "@yarnpkg/core": "4.9.1",
     "typescript": "5.9.3"
   },
   "peerDependencies": {
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*"
-  },
-  "raijin": {
-    "pack": {
-      "exports": {
-        "./package.json": "./package.json",
-        ".": {
-          "import": "./dist/index.js",
-          "types": "./dist/index.d.ts",
-          "default": "./dist/index.js"
-        }
-      },
-      "main": "dist/index.js",
-      "types": "dist/index.d.ts"
-    }
   }
 }

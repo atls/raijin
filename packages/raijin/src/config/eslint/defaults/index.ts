@@ -25,6 +25,8 @@ const typeAwareJavaScriptRules = (
   }
 ).configs['flat/disable-type-checked'].rules
 
+type EslintPlugin = NonNullable<Linter.Config['plugins']>[string]
+
 const config: Array<Linter.Config> = [
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
@@ -44,7 +46,7 @@ const config: Array<Linter.Config> = [
       '@typescript-eslint': typescriptEslintPlugin,
       // @ts-expect-error: Invalid types
       'react-hooks': reactHooksPlugin,
-      '@next/next': nextjsPlugin,
+      '@next/next': nextjsPlugin as unknown as EslintPlugin,
       'jsx-a11y': jsxA11yPlugin,
       n: nodePlugin,
       security: securityPlugin,
@@ -69,9 +71,10 @@ const config: Array<Linter.Config> = [
         disallowAutomaticSingleRunInference: true,
         projectService: {
           allowDefaultProject: [
-            'scripts/raijin/*.mjs',
-            'scripts/raijin/cli-surface/*.mjs',
+            'scripts/raijin/*.js',
+            'scripts/raijin/cli-surface/*.js',
             '.eslintrc.js',
+            '.prettierrc.js',
             '.prettierrc.mjs',
             'eslint.config.mjs',
             'postcss.config.mjs',
@@ -122,7 +125,7 @@ const config: Array<Linter.Config> = [
     },
   },
   {
-    files: ['scripts/raijin/*.mjs'],
+    files: ['scripts/raijin/*.js'],
     rules: {
       'n/no-sync': 'off',
       'n/no-process-exit': 'off',

@@ -1,8 +1,10 @@
-import { access }    from 'node:fs/promises'
-import { readFile }  from 'node:fs/promises'
-import { writeFile } from 'node:fs/promises'
-import { basename }  from 'node:path'
-import { join }      from 'node:path'
+import { access }                               from 'node:fs/promises'
+import { readFile }                             from 'node:fs/promises'
+import { writeFile }                            from 'node:fs/promises'
+import { basename }                             from 'node:path'
+import { join }                                 from 'node:path'
+
+import { RaijinInitializerModuleTypeException } from './exceptions/module-type.js'
 
 interface PackageManifest extends Record<string, unknown> {
   packageManager?: string
@@ -41,15 +43,25 @@ const hasProjectFile = async (cwd: string, fileName: string): Promise<boolean> =
 export const hasPackageJson = async (cwd: string): Promise<boolean> =>
   hasProjectFile(cwd, PACKAGE_JSON)
 
+const readPackageManifest = async (cwd: string): Promise<PackageManifest> =>
+  JSON.parse(await readFile(join(cwd, PACKAGE_JSON), 'utf-8')) as PackageManifest
+
+export const assertRaijinProjectModuleType = async (cwd: string): Promise<void> => {
+  if (!(await hasPackageJson(cwd))) {
+    return
+  }
+
+  if ((await readPackageManifest(cwd)).type !== 'module') {
+    throw new RaijinInitializerModuleTypeException()
+  }
+}
+
 export const hasRaijinPackage = async (cwd: string): Promise<boolean> => {
   if (!(await hasPackageJson(cwd))) {
     return false
   }
 
-  const manifest = JSON.parse(await readFile(join(cwd, PACKAGE_JSON), 'utf-8')) as Record<
-    string,
-    unknown
-  >
+  const manifest = await readPackageManifest(cwd)
 
   return ['dependencies', 'devDependencies', 'optionalDependencies'].some((field) => {
     const dependencies = manifest[field]

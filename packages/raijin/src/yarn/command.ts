@@ -6,8 +6,8 @@ import type { YarnPackageQuery }           from './runner.js'
 
 import { RaijinYarnCommandException }      from './exceptions/command.js'
 import { assertProcessCompleted } from '../commands/invocation/capabilities/assert-process-completed.js'
-import { set as setEnvironmentVariable }   from '../infrastructure/process/environment/map.js'
-import { create as createProcessExecutor } from '../infrastructure/process/execa/executor.js'
+import { set as setEnvironmentVariable }   from '../execution/environment/map.js'
+import { create as createProcessExecutor } from '../execution/process/executor.js'
 import { createLauncherBaseEnvironment }   from './launcher.js'
 
 export const createYarnCommandEnvironment = (

@@ -9,7 +9,7 @@ import { isEnum }                       from 'typanion'
 
 import { toNativeCwd }                  from '@atls/raijin/commands'
 
-import { resolveInput }                 from './command/resolve.js'
+import { resolveInput }                 from './input.js'
 import { testProject }                  from './project/index.js'
 
 const createTestCommand = (path: Array<string>, scenario: TestScenario, description: string) =>
@@ -42,7 +42,7 @@ const createTestCommand = (path: Array<string>, scenario: TestScenario, descript
 
     watch: boolean = Option.Boolean('-w,--watch', false)
 
-    files: Array<string> = Option.Rest({ required: 0 })
+    files: Array<string> = Option.Rest()
 
     testReporter = Option.String('--test-reporter', {
       validator: isEnum(['tap']),

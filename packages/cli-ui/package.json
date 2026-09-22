@@ -2,6 +2,16 @@
   "name": "@atls/cli-ui",
   "version": "1.0.0",
   "private": true,
+  "description": "Terminal components for Raijin commands",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/cli-ui"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -17,22 +27,22 @@
   },
   "dependencies": {
     "@babel/code-frame": "7.24.7",
-    "ink-link": "2.0.1",
+    "ink-link": "4.1.0",
     "stack-utils": "2.0.6",
     "supports-color": "9.4.0"
   },
   "devDependencies": {
     "@types/babel__code-frame": "7.0.6",
-    "@types/node": "24.12.2",
-    "@types/react": "18.3.18",
+    "@types/node": "24.13.6",
+    "@types/react": "18.3.31",
     "@types/stack-utils": "2.0.3",
-    "ink": "3.2.0",
+    "ink": "5.2.1",
     "react": "18.3.1",
     "strip-ansi": "7.1.0",
     "typescript": "5.9.3"
   },
   "peerDependencies": {
-    "ink": "^3",
+    "ink": "^5",
     "react": "^18"
   }
 }

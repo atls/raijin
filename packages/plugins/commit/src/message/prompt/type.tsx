@@ -4,11 +4,11 @@ import { Text }               from 'ink'
 import { Box }                from 'ink'
 import { useState }           from 'react'
 import { useMemo }            from 'react'
-import Select                 from 'ink-select-input'
-import TextInput              from 'ink-text-input'
 import React                  from 'react'
 
 import { COMMIT_TYPE_ENUM }   from '../type-options.js'
+import { SelectInput }        from './inputs.jsx'
+import { TextInput }          from './inputs.jsx'
 import { IndicatorComponent } from './select-indicator.jsx'
 import { ItemComponent }      from './select-item.jsx'
 
@@ -52,7 +52,7 @@ export const RequestCommitMessageType = ({
         <TextInput value={value} onChange={setValue} />
       </Box>
       {!!hasSuggestion && (
-        <Select
+        <SelectInput
           items={matches}
           indicatorComponent={IndicatorComponent}
           itemComponent={ItemComponent}

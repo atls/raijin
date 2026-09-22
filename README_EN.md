@@ -105,5 +105,3 @@ Expected result:
 - Docs index EN: [docs/README.md](docs/README.md)
 - Raijin section router: [docs/raijin/README.md](docs/raijin/README.md)
 - Quickstart: [docs/raijin/quickstart.md](docs/raijin/quickstart.md)
-- Commands map: [docs/raijin/commands.md](docs/raijin/commands.md)
-- Packages map: [docs/raijin/packages.md](docs/raijin/packages.md)

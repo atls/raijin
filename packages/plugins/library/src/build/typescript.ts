@@ -2,7 +2,7 @@ import type { resolveTypeScriptProject as ResolveTypeScriptProject } from '@atls
 import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
 
 import type { LibraryDiagnostic }       from './diagnostic.js'
-import type { LibraryBuildInput }       from './input.js'
+import type { LibraryBuildInput }       from './interfaces/input.js'
 
 import { isAbsolute }                   from 'node:path'
 import { relative }                     from 'node:path'

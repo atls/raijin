@@ -1,4 +1,4 @@
-import type { GenerateProjectResult }       from '@atls/raijin/application/generation/project'
+import type { GenerateProjectResult }       from '@atls/raijin/generation/project'
 import type { CommandContext }              from '@yarnpkg/core'
 import type { Configuration }               from '@yarnpkg/core'
 import type { StreamReport }                from '@yarnpkg/core'

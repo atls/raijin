@@ -3,12 +3,15 @@ import type { MessageName }         from '@yarnpkg/core'
 import assert                       from 'node:assert/strict'
 import { PassThrough }              from 'node:stream'
 import { test }                     from 'node:test'
+import { fileURLToPath }            from 'node:url'
 
 import { Configuration }            from '@yarnpkg/core'
 import { npath }                    from '@yarnpkg/fslib'
 
 import { presentProjectGeneration } from '../project.js'
 import { reportProjectGeneration }  from '../project.js'
+
+const moduleDirectory = fileURLToPath(new URL('.', import.meta.url))
 
 const createReport = () => {
   const errors: Array<string> = []
@@ -30,7 +33,7 @@ test('should render semantic project changes', () => {
   reportProjectGeneration(report, {
     status: 'generated',
     changes: [
-      { artifact: '/eslint.config.mjs', bytes: 80, kind: 'created' },
+      { artifact: '/eslint.config.js', bytes: 80, kind: 'created' },
       { artifact: '/tsconfig.json', bytes: 120, kind: 'updated' },
       { artifact: '/retired.config.mjs', kind: 'deleted' },
       { artifact: '/before', destination: '/after', kind: 'renamed' },
@@ -38,7 +41,7 @@ test('should render semantic project changes', () => {
   })
 
   assert.deepEqual(infos, [
-    'CREATE /eslint.config.mjs (80 bytes)',
+    'CREATE /eslint.config.js (80 bytes)',
     'UPDATE /tsconfig.json (120 bytes)',
     'DELETE /retired.config.mjs',
     'RENAME /before -> /after',
@@ -72,7 +75,7 @@ test('should report a current scaffold without fabricating changes', () => {
 })
 
 test('should return a native nonzero report for an unsupported scaffold type', async (context) => {
-  const configuration = Configuration.create(npath.toPortablePath(import.meta.dirname))
+  const configuration = Configuration.create(npath.toPortablePath(moduleDirectory))
   const stdout = new PassThrough()
   const output: Array<Buffer> = []
   const message = 'Unsupported project scaffold type "service". Expected one of: library, project.'

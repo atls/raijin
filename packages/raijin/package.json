@@ -16,18 +16,14 @@
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
-    "./application/icons/generation": "./src/application/icons/generation/index.ts",
-    "./application/generation/project": "./src/application/generation/project/index.ts",
+    "./generation/project": "./src/generation/project/index.ts",
     "./commands": "./src/commands/index.ts",
     "./config/eslint": "./src/config/eslint/index.ts",
     "./config/prettier": "./src/config/prettier/index.ts",
     "./config/typescript": "./src/config/typescript/index.ts",
     "./filesystem": "./src/filesystem/index.ts",
     "./installation/hooks/skip": "./hooks/skip.js",
-    "./infrastructure/providers/node/icons": "./src/infrastructure/providers/node/icons/index.ts",
-    "./infrastructure/providers/svgr/icons": "./src/infrastructure/providers/svgr/icons/index.ts",
-    "./infrastructure/providers/yarn/icons": "./src/infrastructure/providers/yarn/icons/index.ts",
-    "./infrastructure/generation/project": "./src/infrastructure/generation/project/index.ts",
+    "./generation/project/installed": "./src/generation/project/installed.ts",
     "./project": "./src/project/index.ts",
     "./yarn": "./src/yarn/index.ts",
     "./runtime": "./src/runtime.ts",
@@ -40,7 +36,6 @@
     "./runtime-exec-argv": "./src/runtime/runtime-exec-argv.ts",
     "./runtime-resolver": "./src/runtime/runtime-resolver.ts",
     "./typescript-loader": "./src/runtime/typescript-loader.ts",
-    "./svgr": "./src/runtime/svgr.ts",
     "./ts-node-register": "./src/runtime/ts-node-register.ts",
     "./ts-ext-register": "./src/runtime/ts-ext-register.ts",
     "./prettier": "./src/runtime/prettier/index.ts",
@@ -49,7 +44,7 @@
   },
   "main": "src/index.ts",
   "bin": {
-    "raijin": "./bin/raijin.mjs",
+    "raijin": "./bin/raijin.js",
     "raijin-hooks": "./bin/raijin-hooks.js"
   },
   "files": [
@@ -67,24 +62,21 @@
     "postpack": "rm -rf dist"
   },
   "dependencies": {
-    "@angular-devkit/core": "19.1.5",
-    "@angular-devkit/schematics": "19.1.5",
+    "@angular-devkit/core": "22.1.8",
+    "@angular-devkit/schematics": "22.1.8",
     "@babel/types": "7.25.6",
-    "@next/eslint-plugin-next": "16.0.7",
-    "@svgr/core": "8.1.0",
-    "@svgr/plugin-jsx": "8.1.0",
-    "@typescript-eslint/eslint-plugin": "8.48.1",
-    "@typescript-eslint/parser": "8.48.1",
-    "@yarnpkg/core": "4.7.0",
+    "@next/eslint-plugin-next": "16.3.5",
+    "@typescript-eslint/eslint-plugin": "8.70.1",
+    "@typescript-eslint/parser": "8.70.1",
+    "@yarnpkg/core": "4.9.1",
     "@yarnpkg/fslib": "3.1.5",
-    "camelcase": "8.0.0",
     "eslint": "9.39.5",
     "eslint-plugin-jsx-a11y": "6.10.2",
-    "eslint-plugin-n": "17.23.1",
+    "eslint-plugin-n": "18.3.0",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
-    "eslint-plugin-react-hooks": "7.0.1",
-    "eslint-plugin-security": "3.0.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-security": "4.0.1",
     "execa": "10.0.1",
     "fast-glob": "3.3.2",
     "husky": "9.1.7",
@@ -93,29 +85,29 @@
     "import-sort-parser-typescript": "6.0.0",
     "import-sort-style": "6.0.0",
     "node-loader": "2.1.0",
-    "prettier": "3.5.3",
+    "prettier": "3.9.8",
     "protocol-buffers-schema": "3.6.0",
-    "react": "18.3.1",
-    "rxjs": "7.8.1",
-    "sort-package-json": "2.4.1",
+    "rxjs": "7.8.2",
+    "sort-package-json": "4.0.0",
     "strip-json-comments": "3.1.1",
     "ts-loader": "9.5.2",
     "typescript": "5.9.3",
-    "webpack": "5.98.0",
-    "zod": "4.1.13",
-    "zod-validation-error": "4.0.2"
+    "webpack": "5.111.1"
   },
   "devDependencies": {
-    "@types/node": "24.12.2",
+    "@types/node": "24.13.6",
     "@types/protocol-buffers-schema": "3.4.3",
-    "@yarnpkg/cli": "4.14.1",
+    "@yarnpkg/cli": "4.18.0",
     "@yarnpkg/esbuild-plugin-pnp": "3.0.0-rc.15",
     "esbuild": "0.24.2"
+  },
+  "engines": {
+    "node": ">=24.15.0 <25"
   },
   "publishConfig": {
     "access": "public",
     "bin": {
-      "raijin": "./bin/raijin.mjs",
+      "raijin": "./bin/raijin.js",
       "raijin-hooks": "./bin/raijin-hooks.js"
     },
     "exports": {
@@ -181,11 +173,6 @@
         "types": "./dist/runtime/typescript-loader.d.ts",
         "default": "./dist/runtime/typescript-loader.js"
       },
-      "./svgr": {
-        "import": "./dist/runtime/svgr.js",
-        "types": "./dist/runtime/svgr.d.ts",
-        "default": "./dist/runtime/svgr.js"
-      },
       "./ts-node-register": {
         "import": "./dist/runtime/ts-node-register.js",
         "types": "./dist/runtime/ts-node-register.d.ts",
@@ -215,6 +202,5 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts"
   },
-  "schematics": "./dist/generation/project/collection/collection.json",
-  "typecheckSkipLibCheck": true
+  "schematics": "./dist/generation/project/collection/collection.json"
 }

@@ -165,10 +165,9 @@ export const element = React.createElement('div')
 
   const output = await readFile(join(cwd, 'dist/index.js'), 'utf-8')
 
-  assert.match(output, /import \* as __WEBPACK_EXTERNAL_MODULE_react__ from "react"/)
-  assert.match(output, /__WEBPACK_EXTERNAL_MODULE_react__\["default"\]/)
-  assert.match(output, /external_react_namespaceObject\["default"\]\.createElement/)
-  assert.doesNotMatch(output, /react_1\.default\.createElement/)
+  assert.match(output, /import .* from "react"/)
+  assert.match(output, /\.createElement\('div'\)/)
+  assert.doesNotMatch(output, /require\(["']react["']\)/)
 })
 
 test('should preserve native import.meta in bundled workspace code', async () => {

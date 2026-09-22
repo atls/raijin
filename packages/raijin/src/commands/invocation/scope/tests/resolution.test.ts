@@ -1,6 +1,6 @@
 import type { CommandContext }                                             from '@yarnpkg/core'
 
-import type { EntryInvocation } from '../invocation.interfaces.js'
+import type { EntryInvocation } from '../interfaces/invocation.js'
 
 import assert                                                              from 'node:assert/strict'
 import { dirname }                                                         from 'node:path'
@@ -15,7 +15,7 @@ import { getPluginConfiguration }                                          from 
 import { npath }                                                           from '@yarnpkg/fslib'
 import { ppath }                                                           from '@yarnpkg/fslib'
 
-import { create as createProcessExecutor } from '../../../../infrastructure/process/execa/executor.js'
+import { create as createProcessExecutor } from '../../../../execution/process/executor.js'
 import { resolveEntryCommandInvocation as resolveEntryInvocation }         from '../entry.js'
 import { resolveProjectCommandInvocation as resolveProjectInvocation }     from '../project.js'
 import { resolveWorkspaceCommandInvocation as resolveWorkspaceInvocation } from '../workspace.js'
@@ -32,7 +32,7 @@ before(async () => {
 
   repoRoot = project.cwd
   rendererWorkspaceCwd = ppath.join(repoRoot, 'packages/plugins/renderer')
-  rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'src/commands')
+  rendererNestedCwd = ppath.join(rendererWorkspaceCwd, 'src/tests')
 })
 
 const createContext = (
