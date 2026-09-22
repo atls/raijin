@@ -1,9 +1,9 @@
-import type { ExecutorOptions } from '../../src/infrastructure/adapters/node/execution/executor.interfaces.js'
-import type { Input as YarnEnvironmentInput } from '../../src/infrastructure/providers/yarn/environment/create.interfaces.js'
+import type { ExecutorOptions }               from '../../src/execution/node/interfaces/executor.js'
+import type { Input as YarnEnvironmentInput } from '../../src/execution/yarn/create.interfaces.js'
 
-import { create as createNodeExecutor } from '../../src/infrastructure/adapters/node/execution/executor.js'
-import { resolve as resolveLoader } from '../../src/infrastructure/adapters/node/loaders/typescript/resolve.js'
-import { create as createYarnEnvironment } from '../../src/infrastructure/providers/yarn/environment/create.js'
+import { create as createNodeExecutor }       from '../../src/execution/node/executor.js'
+import { create as createYarnEnvironment }    from '../../src/execution/yarn/create.js'
+import { resolve as resolveLoader }           from '../../src/runtime/node/typescript.js'
 
 type Options = Omit<YarnEnvironmentInput, 'binDirectory' | 'cwd' | 'patch'> & {
   streams?: ExecutorOptions['streams']

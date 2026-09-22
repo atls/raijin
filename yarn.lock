@@ -402,10 +402,8 @@ __metadata:
     ts-loader: "npm:9.5.2"
     typescript: "npm:5.9.3"
     webpack: "npm:5.98.0"
-    zod: "npm:4.1.13"
-    zod-validation-error: "npm:4.0.2"
   bin:
-    raijin: ./bin/raijin.mjs
+    raijin: ./bin/raijin.js
     raijin-hooks: ./bin/raijin-hooks.js
   languageName: unknown
   linkType: soft
@@ -651,14 +649,10 @@ __metadata:
   resolution: "@atls/yarn-plugin-tools@workspace:packages/plugins/tools"
   dependencies:
     "@atls/raijin": "workspace:*"
-    "@types/semver": "npm:7.5.8"
     "@yarnpkg/builder": "npm:4.2.0"
     "@yarnpkg/cli": "npm:4.14.1"
     "@yarnpkg/core": "npm:4.7.0"
     "@yarnpkg/fslib": "npm:3.1.5"
-    clipanion: "npm:4.0.0-rc.2"
-    deepmerge: "npm:4.3.1"
-    semver: "npm:7.6.3"
   languageName: unknown
   linkType: soft
 
@@ -3423,7 +3417,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/semver@npm:7.5.8, @types/semver@npm:^7.1.0":
+"@types/semver@npm:^7.1.0":
   version: 7.5.8
   resolution: "@types/semver@npm:7.5.8"
   checksum: 10/3496808818ddb36deabfe4974fd343a78101fa242c4690044ccdc3b95dcf8785b494f5d628f2f47f38a702f8db9c53c67f47d7818f2be1b79f2efb09692e1178
@@ -6008,7 +6002,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge@npm:4.3.1, deepmerge@npm:^4.3.1":
+"deepmerge@npm:^4.3.1":
   version: 4.3.1
   resolution: "deepmerge@npm:4.3.1"
   checksum: 10/058d9e1b0ff1a154468bf3837aea436abcfea1ba1d165ddaaf48ca93765fdd01a30d33c36173da8fbbed951dd0a267602bc782fe288b0fc4b7e1e7091afc4529
@@ -10678,6 +10672,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"raijin-workspace@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "raijin-workspace@workspace:."
+  dependencies:
+    "@atls/raijin": "workspace:*"
+    "@semantic-release/commit-analyzer": "npm:13.0.1"
+    "@semantic-release/exec": "npm:7.1.0"
+    "@semantic-release/github": "npm:12.0.9"
+    "@semantic-release/release-notes-generator": "npm:14.1.1"
+    "@types/node": "npm:24.12.2"
+    conventional-changelog-conventionalcommits: "npm:9.3.1"
+    prettier: "npm:3.5.3"
+    react: "npm:18.3.1"
+    semantic-release: "npm:25.0.9"
+    typescript: "npm:5.9.3"
+  languageName: unknown
+  linkType: soft
+
 "railroad-diagrams@npm:^1.0.0":
   version: 1.0.0
   resolution: "railroad-diagrams@npm:1.0.0"
@@ -11489,9 +11501,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sort-package-json@patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::locator=tools%40workspace%3A.":
+"sort-package-json@patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::locator=raijin-workspace%40workspace%3A.":
   version: 2.4.1
-  resolution: "sort-package-json@patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=tools%40workspace%3A."
+  resolution: "sort-package-json@patch:sort-package-json@npm%3A2.4.1#./.yarn/patches/sort-package-json-npm-2.4.1-8ff012947f.patch::version=2.4.1&hash=d6d032&locator=raijin-workspace%40workspace%3A."
   dependencies:
     detect-indent: "npm:^7.0.1"
     detect-newline: "npm:^4.0.0"
@@ -12225,25 +12237,6 @@ __metadata:
   checksum: 10/235d08e8b61b7ec648652ca8ca4f3a35975adf1826255ceb99493331b9e76e93bbd9a11db856e7ad773daf16f1a3f21f372190de60bad9ed3227de4734a61f63
   languageName: node
   linkType: hard
-
-"tools@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "tools@workspace:."
-  dependencies:
-    "@atls/raijin": "workspace:*"
-    "@semantic-release/commit-analyzer": "npm:13.0.1"
-    "@semantic-release/exec": "npm:7.1.0"
-    "@semantic-release/github": "npm:12.0.9"
-    "@semantic-release/release-notes-generator": "npm:14.1.1"
-    "@types/node": "npm:24.12.2"
-    "@yarnpkg/builder": "https://github.com/TorinAsakura/yarnpkg-builder.git#commit=05a30e58225e52c7fa61664aa939f1fd7fedb7b6"
-    conventional-changelog-conventionalcommits: "npm:9.3.1"
-    prettier: "npm:3.5.3"
-    react: "npm:18.3.1"
-    semantic-release: "npm:25.0.9"
-    typescript: "npm:5.9.3"
-  languageName: unknown
-  linkType: soft
 
 "traverse@npm:0.6.8":
   version: 0.6.8
@@ -13079,15 +13072,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod-validation-error@npm:4.0.2, zod-validation-error@npm:^3.5.0 || ^4.0.0":
-  version: 4.0.2
-  resolution: "zod-validation-error@npm:4.0.2"
-  peerDependencies:
-    zod: ^3.25.0 || ^4.0.0
-  checksum: 10/5e35ca8ebb4602dcb526e122d7e9fca695c4a479bd97535f3400a732d49160f24f7213a9ed64986fc9dc3a2e8a6c4e1241ec0c4d8a4e3e69ea91a0328ded2192
-  languageName: node
-  linkType: hard
-
 "zod-validation-error@npm:^3.0.3":
   version: 3.4.0
   resolution: "zod-validation-error@npm:3.4.0"
@@ -13097,10 +13081,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:4.1.13, zod@npm:^3.25.0 || ^4.0.0":
-  version: 4.1.13
-  resolution: "zod@npm:4.1.13"
-  checksum: 10/0679190318928f69fcb07751063719de232c663b13955fcdb55db59839569d39f3f29b955cb0cba7af0b724233f88c06b3e84c550397ad4e68f8088fa6799d88
+"zod-validation-error@npm:^3.5.0 || ^4.0.0":
+  version: 4.0.2
+  resolution: "zod-validation-error@npm:4.0.2"
+  peerDependencies:
+    zod: ^3.25.0 || ^4.0.0
+  checksum: 10/5e35ca8ebb4602dcb526e122d7e9fca695c4a479bd97535f3400a732d49160f24f7213a9ed64986fc9dc3a2e8a6c4e1241ec0c4d8a4e3e69ea91a0328ded2192
   languageName: node
   linkType: hard
 
@@ -13108,5 +13094,12 @@ __metadata:
   version: 3.24.4
   resolution: "zod@npm:3.24.4"
   checksum: 10/3d545792fa54bb27ee5dbc34a5709e81f603185fcc94c8204b5d95c20dc4c81d870ff9c51f3884a30ef05cdc601449f4c4df254ac4783f0827b1faed7c1cdb48
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.25.0 || ^4.0.0":
+  version: 4.1.13
+  resolution: "zod@npm:4.1.13"
+  checksum: 10/0679190318928f69fcb07751063719de232c663b13955fcdb55db59839569d39f3f29b955cb0cba7af0b724233f88c06b3e84c550397ad4e68f8088fa6799d88
   languageName: node
   linkType: hard

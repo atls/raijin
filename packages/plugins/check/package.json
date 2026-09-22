@@ -2,6 +2,16 @@
   "name": "@atls/yarn-plugin-check",
   "version": "1.0.20",
   "private": true,
+  "description": "Project verification and affected-workspace checks",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/plugins/check"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -9,13 +19,8 @@
     ".": "./src/index.ts"
   },
   "main": "./src/index.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "builder build plugin --external-file ../../assembly/externals.json --external @atls/raijin/runtime-resolver",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "build": "builder build plugin --external-file ../../assembly/externals.json --external @atls/raijin/runtime-resolver"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
@@ -36,19 +41,5 @@
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*",
     "@yarnpkg/fslib": "*"
-  },
-  "raijin": {
-    "pack": {
-      "exports": {
-        "./package.json": "./package.json",
-        ".": {
-          "import": "./dist/index.js",
-          "types": "./dist/index.d.ts",
-          "default": "./dist/index.js"
-        }
-      },
-      "main": "dist/index.js",
-      "types": "dist/index.d.ts"
-    }
   }
 }

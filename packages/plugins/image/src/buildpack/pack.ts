@@ -1,6 +1,6 @@
-import type { CommandExecutor }    from './executor.interfaces.js'
-import type { PackOptions }        from './pack.interfaces.js'
-import type { PackOutputs }        from './pack.interfaces.js'
+import type { CommandExecutor }    from './interfaces/executor.js'
+import type { PackOptions }        from './interfaces/pack.js'
+import type { PackOutputs }        from './interfaces/pack.js'
 
 import { parse }                   from '@iarna/toml'
 import { npath }                   from '@yarnpkg/fslib'

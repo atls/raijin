@@ -1,4 +1,4 @@
-import type { RunRaijinInitializerOptions }       from '../../../initializer/interface.js'
+import type { RunRaijinInitializerOptions }       from '../../../initializer/input.js'
 
 import assert                                     from 'node:assert/strict'
 import { execFile }                               from 'node:child_process'

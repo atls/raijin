@@ -16,18 +16,18 @@
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
-    "./application/icons/generation": "./src/application/icons/generation/index.ts",
-    "./application/generation/project": "./src/application/generation/project/index.ts",
+    "./generation/icons": "./src/generation/icons/index.ts",
+    "./generation/project": "./src/generation/project/index.ts",
     "./commands": "./src/commands/index.ts",
     "./config/eslint": "./src/config/eslint/index.ts",
     "./config/prettier": "./src/config/prettier/index.ts",
     "./config/typescript": "./src/config/typescript/index.ts",
     "./filesystem": "./src/filesystem/index.ts",
     "./installation/hooks/skip": "./hooks/skip.js",
-    "./infrastructure/providers/node/icons": "./src/infrastructure/providers/node/icons/index.ts",
-    "./infrastructure/providers/svgr/icons": "./src/infrastructure/providers/svgr/icons/index.ts",
-    "./infrastructure/providers/yarn/icons": "./src/infrastructure/providers/yarn/icons/index.ts",
-    "./infrastructure/generation/project": "./src/infrastructure/generation/project/index.ts",
+    "./generation/icons/node": "./src/generation/icons/node/index.ts",
+    "./generation/icons/svgr": "./src/generation/icons/svgr/index.ts",
+    "./generation/icons/yarn": "./src/generation/icons/yarn/index.ts",
+    "./generation/project/installed": "./src/generation/project/installed.ts",
     "./project": "./src/project/index.ts",
     "./yarn": "./src/yarn/index.ts",
     "./runtime": "./src/runtime.ts",
@@ -101,9 +101,7 @@
     "strip-json-comments": "3.1.1",
     "ts-loader": "9.5.2",
     "typescript": "5.9.3",
-    "webpack": "5.98.0",
-    "zod": "4.1.13",
-    "zod-validation-error": "4.0.2"
+    "webpack": "5.98.0"
   },
   "devDependencies": {
     "@types/node": "24.12.2",
@@ -111,6 +109,9 @@
     "@yarnpkg/cli": "4.14.1",
     "@yarnpkg/esbuild-plugin-pnp": "3.0.0-rc.15",
     "esbuild": "0.24.2"
+  },
+  "engines": {
+    "node": ">=24.15.0 <25"
   },
   "publishConfig": {
     "access": "public",

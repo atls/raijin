@@ -12,7 +12,7 @@ export const buildProjectCollection = async ({
 }: {
   packageRoot?: string
 } = {}): Promise<void> => {
-  const sourceRoot = join(packageRoot, 'src/infrastructure/generation/project/angular/collection')
+  const sourceRoot = join(packageRoot, 'src/generation/project/angular/collection')
   const outputRoot = join(packageRoot, 'dist/generation/project/collection')
   const sourceFactory = join(sourceRoot, 'project/factory.ts')
   const outputFactory = join(outputRoot, 'project/project.factory.cjs')

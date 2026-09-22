@@ -12,7 +12,7 @@ Local Yarn installation and successful Raijin runtime update install repository 
 
 `yarn lint` uses Raijin's default rules only when ESLint finds no project `eslint.config.*`. If your project has a configuration file, ESLint loads that file without Raijin injecting its defaults. Keep an existing configuration as the project's source of truth; no Raijin import is required.
 
-To opt in to Raijin's rules, create or update `eslint.config.mjs` in the project root:
+To opt in to Raijin's rules, create or update `eslint.config.js` in the project root:
 
 ```js
 import { eslintconfig } from '@atls/raijin/eslint'
@@ -29,3 +29,16 @@ export default [
 ```
 
 Configuration order is explicit: Raijin defaults come first, and the project's rule overrides follow them. If you compose other shareable configurations, place them deliberately and avoid defining the same plugin namespace with different implementations for the same files. ESLint owns configuration discovery and merging.
+
+## Source map
+
+- `src/commands`: command input, workspace selection and invocation composition
+- `src/config`: ESLint, Prettier and TypeScript configuration
+- `src/execution`: managed Node applications, ordinary processes and their shared subprocess implementation
+- `src/filesystem`: project file discovery and native paths
+- `src/generation`: project scaffolding and SVG component generation
+- `src/initializer` and `src/installation`: public initialization, update and hook installation
+- `src/project` and `src/yarn`: project metadata and native Yarn execution
+- `src/runtime`: runtime delivery, loaders and tool entrypoints
+
+Tests live in the `tests` directory of the capability they verify. Package-wide execution and installation checks live in the package's own `tests` directory. Production files stay next to their capability; related contracts are grouped in local `interfaces` directories.

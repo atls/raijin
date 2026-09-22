@@ -1,13 +1,13 @@
 import type { Executor }                from '../executor.js'
-import type { InvocationContext }       from './context.interfaces.js'
-import type { ProjectInvocation }       from './invocation.interfaces.js'
-import type { ResolvedProjectScope }    from './project.interfaces.js'
+import type { InvocationContext }       from './interfaces/context.js'
+import type { ProjectInvocation }       from './interfaces/invocation.js'
+import type { ResolvedProjectScope }    from './interfaces/project.js'
 
 import { createProjectModel }           from '@atls/raijin/project'
 
 import { UnsupportedNodeLinkerError }   from '../exceptions/unsupported-node-linker.js'
-import { resolveProject }               from '../adapters/yarn/project.js'
 import { createInvocationCapabilities } from '../capabilities/create.js'
+import { resolveProject }               from '../yarn/project.js'
 import { resolveInvocationCwd }         from './context.js'
 
 export const resolveProjectScope = async (

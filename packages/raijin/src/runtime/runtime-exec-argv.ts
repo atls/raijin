@@ -1,11 +1,11 @@
-import { access }        from 'node:fs/promises'
-import { dirname }       from 'node:path'
-import { join }          from 'node:path'
-import { resolve }       from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { access }                   from 'node:fs/promises'
+import { dirname }                  from 'node:path'
+import { join }                     from 'node:path'
+import { resolve }                  from 'node:path'
+import { pathToFileURL }            from 'node:url'
 
-import { resolve as resolveLoader } from '../infrastructure/adapters/node/loaders/typescript/resolve.js'
-import { resolveSource } from '../infrastructure/adapters/node/loaders/typescript/resolve.js'
+import { resolve as resolveLoader } from './node/typescript.js'
+import { resolveSource }            from './node/typescript.js'
 
 export const resolveSourceTypeScriptLoader = async (packagePath: string): Promise<string> =>
   resolveSource(packagePath)

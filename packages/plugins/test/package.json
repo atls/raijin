@@ -2,6 +2,16 @@
   "name": "@atls/yarn-plugin-test",
   "version": "1.0.38",
   "private": true,
+  "description": "Project test discovery and Node.js test execution",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/plugins/test"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -9,13 +19,8 @@
     ".": "./src/index.ts"
   },
   "main": "./src/index.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "builder build plugin",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "build": "builder build plugin"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
@@ -34,19 +39,5 @@
   "peerDependencies": {
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*"
-  },
-  "raijin": {
-    "pack": {
-      "exports": {
-        "./package.json": "./package.json",
-        ".": {
-          "import": "./dist/index.js",
-          "types": "./dist/index.d.ts",
-          "default": "./dist/index.js"
-        }
-      },
-      "main": "dist/index.js",
-      "types": "dist/index.d.ts"
-    }
   }
 }

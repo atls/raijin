@@ -9,7 +9,7 @@ import { isEnum }                       from 'typanion'
 
 import { toNativeCwd }                  from '@atls/raijin/commands'
 
-import { resolveInput }                 from './command/resolve.js'
+import { resolveInput }                 from './input.js'
 import { testProject }                  from './project/index.js'
 
 const createTestCommand = (path: Array<string>, scenario: TestScenario, description: string) =>

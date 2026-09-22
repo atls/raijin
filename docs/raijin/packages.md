@@ -45,7 +45,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/check`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Project verification and affected-workspace checks
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-commit -->
 
@@ -54,7 +55,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/commit`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Commit messages and staged-file verification
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-essentials -->
 
@@ -63,7 +65,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/essentials`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Raijin runtime version command
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-format -->
 
@@ -72,7 +75,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/format`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Project-aware formatting through Prettier
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-generate -->
 
@@ -81,7 +85,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/generate`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Project and icon generation commands
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-image -->
 
@@ -90,7 +95,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/image`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Project-root container builds through Cloud Native Buildpacks
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-library -->
 
@@ -99,7 +105,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/library`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Library builds and package artifact preparation
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-lint -->
 
@@ -108,7 +115,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/lint`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Project-aware linting through ESLint
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-renderer -->
 
@@ -117,7 +125,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/renderer`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Native Next.js build, development and start commands
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-service -->
 
@@ -126,7 +135,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/service`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Node.js application build, development and start commands
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-test -->
 
@@ -135,7 +145,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/test`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Project test discovery and Node.js test execution
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-tools -->
 
@@ -144,7 +155,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/tools`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Yarn environment and repository hook integration
+- Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-typescript -->
 
@@ -153,7 +165,8 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/typescript`
 - Group: `plugins`
 - Visibility: `private`
-- Scripts: `build`, `postpack`, `prepack`
+- Description: Project-aware TypeScript verification
+- Scripts: `build`
 
 </details>
 

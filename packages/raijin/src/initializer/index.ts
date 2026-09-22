@@ -1,4 +1,4 @@
-import type { RunRaijinInitializerOptions } from './interface.js'
+import type { RunRaijinInitializerOptions } from './input.js'
 
 import { installRaijin }                    from '../installation/install.js'
 import { hasRaijinBootstrapStage }          from '../installation/install.js'

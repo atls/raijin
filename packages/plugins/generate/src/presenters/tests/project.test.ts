@@ -30,7 +30,7 @@ test('should render semantic project changes', () => {
   reportProjectGeneration(report, {
     status: 'generated',
     changes: [
-      { artifact: '/eslint.config.mjs', bytes: 80, kind: 'created' },
+      { artifact: '/eslint.config.js', bytes: 80, kind: 'created' },
       { artifact: '/tsconfig.json', bytes: 120, kind: 'updated' },
       { artifact: '/retired.config.mjs', kind: 'deleted' },
       { artifact: '/before', destination: '/after', kind: 'renamed' },
@@ -38,7 +38,7 @@ test('should render semantic project changes', () => {
   })
 
   assert.deepEqual(infos, [
-    'CREATE /eslint.config.mjs (80 bytes)',
+    'CREATE /eslint.config.js (80 bytes)',
     'UPDATE /tsconfig.json (120 bytes)',
     'DELETE /retired.config.mjs',
     'RENAME /before -> /after',

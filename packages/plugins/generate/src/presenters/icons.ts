@@ -1,4 +1,4 @@
-import type { Result }                      from '@atls/raijin/application/icons/generation'
+import type { Result }                      from '@atls/raijin/generation/icons'
 import type { CommandContext }              from '@yarnpkg/core'
 import type { Configuration }               from '@yarnpkg/core'
 import type { StreamReport }                from '@yarnpkg/core'

@@ -2,9 +2,9 @@ import type { Plugin }              from '@yarnpkg/core'
 
 import { defineCommandInvocations } from '@atls/raijin/commands'
 
-import { RendererBuildCommand }     from './commands/index.js'
-import { RendererDevCommand }       from './commands/index.js'
-import { RendererStartCommand }     from './commands/index.js'
+import { RendererBuildCommand }     from './build.js'
+import { RendererDevCommand }       from './dev.js'
+import { RendererStartCommand }     from './start.js'
 
 export const plugin: Plugin = {
   commands: defineCommandInvocations({

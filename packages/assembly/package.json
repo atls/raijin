@@ -2,6 +2,16 @@
   "name": "@atls/raijin-assembly",
   "version": "4.14.1",
   "private": true,
+  "description": "Checked Yarn runtime assembly for Raijin",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/assembly"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "scripts": {

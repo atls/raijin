@@ -1,14 +1,14 @@
 import type { CommandContext }                from '@yarnpkg/core'
 import type { PluginConfiguration }           from '@yarnpkg/core'
 
-import type { EntryInvocation }               from '../scope/invocation.interfaces.js'
-import type { ProjectInvocation }             from '../scope/invocation.interfaces.js'
-import type { WorkspaceInvocation }           from '../scope/invocation.interfaces.js'
+import type { EntryInvocation }               from '../scope/interfaces/invocation.js'
+import type { ProjectInvocation }             from '../scope/interfaces/invocation.js'
+import type { WorkspaceInvocation }           from '../scope/interfaces/invocation.js'
 import type { CommandInvocationScope }        from './definition.interfaces.js'
 import type { InvocationPluginConfiguration } from './definition.interfaces.js'
 import type { RegisteredCommandClass }        from './definition.interfaces.js'
 
-import { create as createProcessExecutor } from '../../../infrastructure/process/execa/executor.js'
+import { create as createProcessExecutor }    from '../../../execution/process/executor.js'
 import { resolveEntryCommandInvocation }      from '../scope/entry.js'
 import { resolveProjectCommandInvocation }    from '../scope/project.js'
 import { resolveWorkspaceCommandInvocation }  from '../scope/workspace.js'

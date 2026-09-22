@@ -9,7 +9,7 @@ const [builtRuntimeArgument, checkedRuntimeArgument, assemblyManifestArgument] =
   process.argv.slice(2)
 
 if (!builtRuntimeArgument || !checkedRuntimeArgument || !assemblyManifestArgument) {
-  throw new Error('Usage: check-runtime.mjs <built-runtime> <checked-runtime> <assembly-manifest>')
+  throw new Error('Usage: check-runtime.js <built-runtime> <checked-runtime> <assembly-manifest>')
 }
 
 const cwd = process.cwd()

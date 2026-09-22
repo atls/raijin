@@ -3,7 +3,7 @@ import React                        from 'react'
 
 import { toNativeCwd }              from '@atls/raijin/commands'
 
-import { AbstractServiceCommand }   from '../commands/base.jsx'
+import { AbstractServiceCommand }   from '../base.jsx'
 import { ServiceProgress }          from './progress.jsx'
 import { writeError }               from '../logging/write.jsx'
 import { getWorkspacePackageNames } from '../workspace/package-names.js'

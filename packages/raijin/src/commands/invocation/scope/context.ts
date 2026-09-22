@@ -1,6 +1,6 @@
 import type { PortablePath }      from '@yarnpkg/fslib'
 
-import type { InvocationContext } from './context.interfaces.js'
+import type { InvocationContext } from './interfaces/context.js'
 
 import { npath }                  from '@yarnpkg/fslib'
 import { ppath }                  from '@yarnpkg/fslib'

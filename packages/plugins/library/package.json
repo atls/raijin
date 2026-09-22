@@ -2,6 +2,16 @@
   "name": "@atls/yarn-plugin-library",
   "version": "1.0.30",
   "private": true,
+  "description": "Library builds and package artifact preparation",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/plugins/library"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -9,13 +19,8 @@
     "./package.json": "./package.json"
   },
   "main": "./src/index.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "builder build plugin --external-file ../../assembly/externals.json",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "build": "builder build plugin --external-file ../../assembly/externals.json"
   },
   "dependencies": {
     "@atls/cli-ui": "workspace:*",
@@ -36,19 +41,5 @@
   "peerDependencies": {
     "@yarnpkg/cli": "*",
     "@yarnpkg/core": "*"
-  },
-  "raijin": {
-    "pack": {
-      "exports": {
-        "./package.json": "./package.json",
-        ".": {
-          "import": "./dist/index.js",
-          "types": "./dist/index.d.ts",
-          "default": "./dist/index.js"
-        }
-      },
-      "main": "dist/index.js",
-      "types": "dist/index.d.ts"
-    }
   }
 }

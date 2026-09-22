@@ -1,7 +1,7 @@
 import type { WorkspaceCommandContext } from '@atls/raijin/commands'
 
-import type { CommandExecutor }         from './buildpack/executor.interfaces.js'
-import type { TagPolicy }               from './buildpack/pack.interfaces.js'
+import type { CommandExecutor }         from './buildpack/interfaces/executor.js'
+import type { TagPolicy }               from './buildpack/interfaces/pack.js'
 import type { ImagePackConfiguration }  from './configuration.js'
 
 import { BaseCommand }                  from '@yarnpkg/cli'

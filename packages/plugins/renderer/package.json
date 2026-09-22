@@ -2,6 +2,16 @@
   "name": "@atls/yarn-plugin-renderer",
   "version": "1.0.13",
   "private": true,
+  "description": "Native Next.js build, development and start commands",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/plugins/renderer"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
@@ -9,13 +19,8 @@
     ".": "./src/index.ts"
   },
   "main": "src/index.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "builder build plugin",
-    "prepack": "yarn run build",
-    "postpack": "rm -rf dist"
+    "build": "builder build plugin"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
@@ -30,19 +35,5 @@
   "peerDependencies": {
     "@yarnpkg/cli": "^4",
     "@yarnpkg/core": "^4"
-  },
-  "raijin": {
-    "pack": {
-      "exports": {
-        "./package.json": "./package.json",
-        ".": {
-          "import": "./dist/index.js",
-          "types": "./dist/index.d.ts",
-          "default": "./dist/index.js"
-        }
-      },
-      "main": "dist/index.js",
-      "types": "dist/index.d.ts"
-    }
   }
 }

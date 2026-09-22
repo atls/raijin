@@ -5,7 +5,7 @@ import { rm }               from 'node:fs/promises'
 import { tmpdir }           from 'node:os'
 import { join }             from 'node:path'
 
-import { directory }        from '../../src/infrastructure/adapters/node/execution/directory.js'
+import { directory }        from '../../src/execution/node/directory.js'
 
 export const trackTemporaryDirectories = (
   context: TestContext,

@@ -20,5 +20,5 @@ Run from the repository root:
 
 ```sh
 yarn test unit --target packages/plugins/generate
-yarn test integration --target packages/raijin/src/infrastructure/generation/project
+yarn test integration --target packages/raijin/src/generation/project
 ```

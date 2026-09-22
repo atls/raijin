@@ -2,8 +2,8 @@ import type { ProjectSource }           from '../project.interfaces.js'
 import type { ProjectWorkspaceSource }  from '../project.interfaces.js'
 import type { RaijinProjectModel }      from '../project.interfaces.js'
 
-import { getManifestWorkspacePatterns } from '../manifest/manifest.js'
-import { resolveProjectType }           from '../type/type.js'
+import { getManifestWorkspacePatterns } from '../manifest.js'
+import { resolveProjectType }           from '../type.js'
 
 export const createProjectModel = <TWorkspace extends ProjectWorkspaceSource>(
   project: ProjectSource<TWorkspace>

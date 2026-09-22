@@ -1,5 +1,5 @@
-import type { CommandExecutor } from './executor.interfaces.js'
-import type { TagPolicy }       from './pack.interfaces.js'
+import type { CommandExecutor } from './interfaces/executor.js'
+import type { TagPolicy }       from './interfaces/pack.js'
 
 import { context }              from '@actions/github'
 

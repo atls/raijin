@@ -1,5 +1,5 @@
-import type { CompletedProcessExecution } from './process.interfaces.js'
-import type { ProcessExecutionResult }    from './process.interfaces.js'
+import type { CompletedProcessExecution } from './interfaces/process.js'
+import type { ProcessExecutionResult }    from './interfaces/process.js'
 
 export function assertProcessCompleted(
   result: ProcessExecutionResult
