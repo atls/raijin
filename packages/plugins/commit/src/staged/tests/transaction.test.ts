@@ -17,11 +17,11 @@ test('runs a single root configuration and preserves declared task ordering', as
   const cwd = await createRepository(t)
 
   await rm(join(cwd, 'client', '.lintstagedrc.json'))
-  await copyFile(new URL('./verified.fixture.mjs', import.meta.url), join(cwd, 'verified.mjs'))
+  await copyFile(new URL('./verified.fixture.js', import.meta.url), join(cwd, 'verified.js'))
   await writeFile(
     join(cwd, '.lintstagedrc.json'),
     JSON.stringify({
-      '*.txt': ['node check.mjs backend', 'node verified.mjs'],
+      '*.txt': ['node check.js backend', 'node verified.js'],
     })
   )
   await writeFile(join(cwd, 'file with spaces.txt'), 'unformatted staged\n')
@@ -226,7 +226,7 @@ test('loads native YAML configuration through the installed provider', async (t)
   const cwd = await createRepository(t)
 
   await rm(join(cwd, '.lintstagedrc.json'))
-  await writeFile(join(cwd, '.lintstagedrc.yaml'), '"*.txt": "node check.mjs backend"\n')
+  await writeFile(join(cwd, '.lintstagedrc.yaml'), '"*.txt": "node check.js backend"\n')
   await writeFile(join(cwd, 'file with spaces.txt'), 'unformatted staged\n')
   await git(cwd, 'add', '--all')
 

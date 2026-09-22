@@ -9,8 +9,8 @@
     "build:bundle": "builder build bundle --no-git-hash --format esm --target esnext --external-file ./externals.json",
     "build:clean": "rm -rf dist/runtime",
     "build:dist": "mkdir -p dist/runtime && mv bundles/yarn.js dist/runtime/yarn.js",
-    "build:dynamic-require": "yarn node patches/dynamic-require.mjs",
-    "build:materialize": "yarn node scripts/runtime/materialize.mjs"
+    "build:dynamic-require": "yarn node patches/dynamic-require.js",
+    "build:materialize": "yarn node scripts/runtime/materialize.js"
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",

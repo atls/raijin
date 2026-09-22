@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { loadRuntimeCliSurface } from './cli-surface/runtime-inventory.mjs'
+import { loadRuntimeCliSurface } from './cli-surface/runtime-inventory.js'
 
 const repoRoot = process.cwd()
 

@@ -2,8 +2,8 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { executeRuntime } from './runtime-inventory.mjs'
-import { loadRuntimeCliSurface } from './runtime-inventory.mjs'
+import { executeRuntime } from './runtime-inventory.js'
+import { loadRuntimeCliSurface } from './runtime-inventory.js'
 
 const [builtRuntimeArgument, checkedRuntimeArgument, assemblyManifestArgument] =
   process.argv.slice(2)

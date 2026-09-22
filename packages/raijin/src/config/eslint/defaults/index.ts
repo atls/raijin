@@ -69,9 +69,10 @@ const config: Array<Linter.Config> = [
         disallowAutomaticSingleRunInference: true,
         projectService: {
           allowDefaultProject: [
-            'scripts/raijin/*.mjs',
-            'scripts/raijin/cli-surface/*.mjs',
+            'scripts/raijin/*.js',
+            'scripts/raijin/cli-surface/*.js',
             '.eslintrc.js',
+            '.prettierrc.js',
             '.prettierrc.mjs',
             'eslint.config.mjs',
             'postcss.config.mjs',
@@ -122,7 +123,7 @@ const config: Array<Linter.Config> = [
     },
   },
   {
-    files: ['scripts/raijin/*.mjs'],
+    files: ['scripts/raijin/*.js'],
     rules: {
       'n/no-sync': 'off',
       'n/no-process-exit': 'off',

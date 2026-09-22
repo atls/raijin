@@ -24,7 +24,7 @@ for (const form of ['separate', 'equals']) {
       join(target, 'package.json'),
       JSON.stringify({
         name: 'backend',
-        'lint-staged': { '*.txt': 'node check.mjs backend' },
+        'lint-staged': { '*.txt': 'node check.js backend' },
       })
     )
     await rm(join(target, '.lintstagedrc.json'))
