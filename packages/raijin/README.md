@@ -2,6 +2,8 @@
 
 Raijin provides project commands and an optional ESLint flat configuration.
 
+Raijin projects use ESM. Initialization and update stop before changing an existing project unless its `package.json` declares `"type": "module"`.
+
 The public install/update path selects npm's published `latest` version and requires the exact matching GitHub release to contain an uploaded `yarn.js` asset with a SHA-256 digest. The package's `gitHead` must match the release tag commit; Corepack uses the Yarn version from that commit's root `package.json`. Published `@atls/raijin@0.7.0` still provides only `yarn.mjs`, so the new installer refuses that release before changing the active runtime. A generated release manifest is not needed.
 
 ## Git hooks

@@ -21,11 +21,10 @@ test('should resolve css imports to css.ts source', async () => {
   try {
     await writeFile(join(workspace, 'global.css.ts'), 'export const style = {}', 'utf-8')
 
-    const actual = resolve(
-      './global.css',
-      createContext(parentPath),
-      (specifier) => ({ format: 'module', url: specifier }) as never
-    ) as { url: string }
+    const actual = resolve('./global.css', createContext(parentPath), (specifier) => ({
+      format: 'module',
+      url: specifier,
+    })) as { url: string }
 
     assert.equal(actual.url, './global.css.ts')
   } finally {
@@ -40,11 +39,10 @@ test('should resolve css imports to css source if css.ts is absent', async () =>
   try {
     await writeFile(join(workspace, 'global.css'), 'body {}', 'utf-8')
 
-    const actual = resolve(
-      './global.css',
-      createContext(parentPath),
-      (specifier) => ({ format: 'module', url: specifier }) as never
-    ) as { url: string }
+    const actual = resolve('./global.css', createContext(parentPath), (specifier) => ({
+      format: 'module',
+      url: specifier,
+    })) as { url: string }
 
     assert.equal(actual.url, './global.css')
   } finally {
@@ -59,11 +57,10 @@ test('should not resolve cjs imports to cts source', async () => {
   try {
     await writeFile(join(workspace, 'dependency.cts'), 'export const dependency = true', 'utf-8')
 
-    const actual = resolve(
-      './dependency.cjs',
-      createContext(parentPath),
-      (specifier) => ({ format: 'module', url: specifier }) as never
-    ) as { url: string }
+    const actual = resolve('./dependency.cjs', createContext(parentPath), (specifier) => ({
+      format: 'module',
+      url: specifier,
+    })) as { url: string }
 
     assert.equal(actual.url, './dependency.cjs')
   } finally {
@@ -76,11 +73,10 @@ test('should keep original specifier if css source is absent', async () => {
   const parentPath = join(workspace, 'entry.ts')
 
   try {
-    const actual = resolve(
-      './missing.css',
-      createContext(parentPath),
-      (specifier) => ({ format: 'module', url: specifier }) as never
-    ) as { url: string }
+    const actual = resolve('./missing.css', createContext(parentPath), (specifier) => ({
+      format: 'module',
+      url: specifier,
+    })) as { url: string }
 
     assert.equal(actual.url, './missing.css')
   } finally {

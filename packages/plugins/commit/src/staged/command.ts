@@ -13,7 +13,7 @@ export class CommitStagedCommand extends BaseCommand {
     description: 'run project checks for staged files',
   })
 
-  args: Array<string> = Option.Rest({ required: 0 })
+  args: Array<string> = Option.Rest()
 
   declare context: EntryCommandContext
 

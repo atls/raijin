@@ -19,7 +19,7 @@ export class FormatCommand extends BaseCommand {
 
   declare context: WorkspaceCommandContext
 
-  files: Array<string> = Option.Rest({ required: 0 })
+  files: Array<string> = Option.Rest()
 
   override async execute(): Promise<number> {
     try {

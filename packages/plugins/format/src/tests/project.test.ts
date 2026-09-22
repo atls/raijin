@@ -9,12 +9,15 @@ import { writeFile }              from 'node:fs/promises'
 import { tmpdir }                 from 'node:os'
 import { join }                   from 'node:path'
 import { test }                   from 'node:test'
+import { fileURLToPath }          from 'node:url'
 
 import { createCommandInput }     from '@atls/raijin/commands'
 import { toPortableCwd }          from '@atls/raijin/commands'
 
 import { TargetMissingException } from '../exceptions/target-missing.js'
 import { formatProjectSources }   from '../project.js'
+
+const moduleDirectory = fileURLToPath(new URL('.', import.meta.url))
 
 const createProject = async (): Promise<string> => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-format-project-'))
@@ -108,7 +111,7 @@ test('should reject missing explicit targets', async () => {
 test('should resolve a bare Prettier configuration import through project PnP', async (context) => {
   assert.ok(process.versions.pnp)
 
-  const cwd = await mkdtemp(join(import.meta.dirname, '.pnp-config-'))
+  const cwd = await mkdtemp(join(moduleDirectory, '.pnp-config-'))
 
   context.after(async () => rm(cwd, { recursive: true, force: true }))
 

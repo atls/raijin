@@ -4,6 +4,7 @@ export interface OutputEvent {
 }
 
 export type OutputPolicy =
-  | { mode: 'capture'; forward?: boolean }
-  | { mode: 'handle'; handler: (event: OutputEvent) => void }
-  | { mode: 'inherit' }
+
+    | { mode: 'capture'; forward?: boolean }
+    | { mode: 'handle'; handler: (event: OutputEvent) => void }
+    | { mode: 'inherit' }

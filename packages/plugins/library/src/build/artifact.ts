@@ -11,11 +11,12 @@ export interface LibraryArtifact {
 }
 
 export type LibraryArtifactIssue =
-  | 'declaration-source-maps-missing'
-  | 'declarations-missing'
-  | 'emit-skipped'
-  | 'javascript-missing'
-  | 'javascript-source-maps-missing'
+
+    | 'declaration-source-maps-missing'
+    | 'declarations-missing'
+    | 'emit-skipped'
+    | 'javascript-missing'
+    | 'javascript-source-maps-missing'
 
 export interface LibraryArtifactExpectations {
   readonly declarationMaps: boolean

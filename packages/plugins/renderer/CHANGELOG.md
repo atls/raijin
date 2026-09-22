@@ -1,164 +1,79 @@
-
-
 ## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.10...@atls/yarn-plugin-renderer@1.0.12) (2026-06-17)
-
 
 ### Bug Fixes
 
-
-* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
-* **yarn-plugin-renderer:** copy public assets into standalone artifact ([9f27060](https://github.com/atls/raijin/commit/9f270604a04c433470b043b099066a2d56329f68))
-
-
-
-
+- **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
+- **yarn-plugin-renderer:** copy public assets into standalone artifact ([9f27060](https://github.com/atls/raijin/commit/9f270604a04c433470b043b099066a2d56329f68))
 
 ## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.11...@atls/yarn-plugin-renderer@1.0.12) (2026-06-17)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
-
-
-
-
+- **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
 
 ## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.10...@atls/yarn-plugin-renderer@1.0.11) (2026-06-17)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-renderer:** copy public assets into standalone artifact ([9f27060](https://github.com/atls/raijin/commit/9f270604a04c433470b043b099066a2d56329f68))
-
-
-
-
+- **yarn-plugin-renderer:** copy public assets into standalone artifact ([9f27060](https://github.com/atls/raijin/commit/9f270604a04c433470b043b099066a2d56329f68))
 
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.10...@atls/yarn-plugin-renderer@1.0.10) (2026-06-16)
 
-
-
-
-
-
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.9...@atls/yarn-plugin-renderer@1.0.10) (2026-06-14)
-
 
 ### Bug Fixes
 
-
-* **yarn-plugin-renderer:** delegate pnp loader ([8e6c9cd](https://github.com/atls/raijin/commit/8e6c9cd0b2fdb6d6e1581571aae68d89d59dfe2b))
-* **yarn-plugin-renderer:** devirtualize next version ([465778e](https://github.com/atls/raijin/commit/465778e6417fca77154ab8c52f00ab892ed6b765))
-* **yarn-plugin-renderer:** normalize patched next refs ([2b0329b](https://github.com/atls/raijin/commit/2b0329b3d750c4fe27869a16315ee63fbca55036))
-* **yarn-plugin-renderer:** preserve pnp loader delegate ([2c692b9](https://github.com/atls/raijin/commit/2c692b95690fd726d74be9eca84ac9af3ea5e43a))
-* **yarn-plugin-renderer:** restore next webpack build route ([a903ee4](https://github.com/atls/raijin/commit/a903ee4647f1e731619328a563b623a75bc42e0b))
-
-
-
-
+- **yarn-plugin-renderer:** delegate pnp loader ([8e6c9cd](https://github.com/atls/raijin/commit/8e6c9cd0b2fdb6d6e1581571aae68d89d59dfe2b))
+- **yarn-plugin-renderer:** devirtualize next version ([465778e](https://github.com/atls/raijin/commit/465778e6417fca77154ab8c52f00ab892ed6b765))
+- **yarn-plugin-renderer:** normalize patched next refs ([2b0329b](https://github.com/atls/raijin/commit/2b0329b3d750c4fe27869a16315ee63fbca55036))
+- **yarn-plugin-renderer:** preserve pnp loader delegate ([2c692b9](https://github.com/atls/raijin/commit/2c692b95690fd726d74be9eca84ac9af3ea5e43a))
+- **yarn-plugin-renderer:** restore next webpack build route ([a903ee4](https://github.com/atls/raijin/commit/a903ee4647f1e731619328a563b623a75bc42e0b))
 
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.8...@atls/yarn-plugin-renderer@1.0.9) (2026-06-12)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-renderer:** stabilize workspace build route ([8e60b56](https://github.com/atls/raijin/commit/8e60b5623c6156133eae727b98c371fa65449474))
-
-
-
-
+- **yarn-plugin-renderer:** stabilize workspace build route ([8e60b56](https://github.com/atls/raijin/commit/8e60b5623c6156133eae727b98c371fa65449474))
 
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.7...@atls/yarn-plugin-renderer@1.0.8) (2026-06-12)
 
+### Bug Fixes
+
+- **yarn-plugin-renderer:** harden next build execution ([510f808](https://github.com/atls/raijin/commit/510f8088d98c57d16ff210cac3d26da4bacbb306))
+- **yarn-plugin-renderer:** patch next conf pnp loader ([efb6177](https://github.com/atls/raijin/commit/efb617750898d7d54d98811970490b907617e184))
+
+## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.7...@atls/yarn-plugin-renderer@1.0.7) (2026-06-11)
 
 ### Bug Fixes
 
-
-* **yarn-plugin-renderer:** harden next build execution ([510f808](https://github.com/atls/raijin/commit/510f8088d98c57d16ff210cac3d26da4bacbb306))
-* **yarn-plugin-renderer:** patch next conf pnp loader ([efb6177](https://github.com/atls/raijin/commit/efb617750898d7d54d98811970490b907617e184))
-
-
-
-
+- **yarn-plugin-renderer:** harden next build execution ([510f808](https://github.com/atls/raijin/commit/510f8088d98c57d16ff210cac3d26da4bacbb306))
 
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.7...@atls/yarn-plugin-renderer@1.0.7) (2026-06-11)
 
-
-### Bug Fixes
-
-
-* **yarn-plugin-renderer:** harden next build execution ([510f808](https://github.com/atls/raijin/commit/510f8088d98c57d16ff210cac3d26da4bacbb306))
-
-
-
-
-
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.7...@atls/yarn-plugin-renderer@1.0.7) (2026-06-11)
-
-
-
-
-
-
-## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.7...@atls/yarn-plugin-renderer@1.0.7) (2026-06-11)
-
-
-
-
-
 
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.6...@atls/yarn-plugin-renderer@1.0.7) (2026-06-10)
 
-
-
-
-
-
 ## [1.0.6](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.5...@atls/yarn-plugin-renderer@1.0.6) (2026-06-08)
-
 
 ### Bug Fixes
 
-
-* **common:** centralize current yarn executable ([0826676](https://github.com/atls/raijin/commit/0826676f7004ee1042c916eeead53851118c8d21))
-* **common:** use current executable for command re-entry ([7a4a03a](https://github.com/atls/raijin/commit/7a4a03a1eb0409361d4807deb5bbb6665cb1fc4b))
-
-
-
-
+- **common:** centralize current yarn executable ([0826676](https://github.com/atls/raijin/commit/0826676f7004ee1042c916eeead53851118c8d21))
+- **common:** use current executable for command re-entry ([7a4a03a](https://github.com/atls/raijin/commit/7a4a03a1eb0409361d4807deb5bbb6665cb1fc4b))
 
 ## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.4...@atls/yarn-plugin-renderer@1.0.5) (2026-04-29)
 
-
-
-
-
-
 ## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.3...@atls/yarn-plugin-renderer@1.0.4) (2026-04-27)
-
 
 ### Bug Fixes
 
-
-* **yarn:** avoid corepack in proxy script env ([#609](https://github.com/atls/raijin/issues/609)) ([bc924d9](https://github.com/atls/raijin/commit/bc924d9e8b469ff1d177bdefb267e288d697c991))
-
-
-
-
+- **yarn:** avoid corepack in proxy script env ([#609](https://github.com/atls/raijin/issues/609)) ([bc924d9](https://github.com/atls/raijin/commit/bc924d9e8b469ff1d177bdefb267e288d697c991))
 
 ## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.2...@atls/yarn-plugin-renderer@1.0.3) (2025-12-07)
 
-
 ### Bug Fixes
 
-
-* **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
-
-
+- **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
 
 ## [1.0.2](https://github.com/atls/raijin/compare/@atls/yarn-plugin-renderer@1.0.1...@atls/yarn-plugin-renderer@1.0.2) (2025-03-09)
 

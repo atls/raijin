@@ -25,19 +25,15 @@ test('should resolve js specifier to ts source when physical virtual path is una
   const parentURL = pathToFileURL('/virtual/workspace/src/index.ts').href
   const attemptedSpecifiers: Array<string> = []
 
-  const result = await resolve(
-    './dependency.js',
-    { parentURL } as never,
-    ((specifier: string) => {
-      attemptedSpecifiers.push(specifier)
+  const result = await resolve('./dependency.js', { parentURL } as never, (specifier: string) => {
+    attemptedSpecifiers.push(specifier)
 
-      if (specifier === './dependency.ts') {
-        return { shortCircuit: true, url: 'file:///workspace/src/dependency.ts' }
-      }
+    if (specifier === './dependency.ts') {
+      return { shortCircuit: true, url: 'file:///workspace/src/dependency.ts' }
+    }
 
-      throw new Error(`Cannot resolve ${specifier}`)
-    }) as never
-  )
+    throw new Error(`Cannot resolve ${specifier}`)
+  })
 
   assert.deepEqual(attemptedSpecifiers, ['./dependency.ts'])
   assert.equal(result.url, 'file:///workspace/src/dependency.ts')
@@ -82,15 +78,13 @@ test('should not resolve extensionless relative specifier to declaration source'
 
     await assert.rejects(
       async () =>
-        resolve(
-          './setup',
-          { parentURL: pathToFileURL(parentPath).href } as never,
-          ((specifier: string) => {
-            fallbackSpecifier = specifier
+        resolve('./setup', { parentURL: pathToFileURL(parentPath).href } as never, (
+          specifier: string
+        ) => {
+          fallbackSpecifier = specifier
 
-            throw createModuleNotFoundError(`Cannot resolve ${specifier}`)
-          }) as never
-        ),
+          throw createModuleNotFoundError(`Cannot resolve ${specifier}`)
+        }),
       /Cannot resolve \.\/setup/
     )
 
@@ -131,13 +125,9 @@ test('should not resolve package subpath fallback for export condition errors', 
 
     await assert.rejects(
       async () =>
-        resolve(
-          'fixture',
-          { parentURL: pathToFileURL(parentPath).href } as never,
-          (() => {
-            throw error
-          }) as never
-        ),
+        resolve('fixture', { parentURL: pathToFileURL(parentPath).href } as never, () => {
+          throw error
+        }),
       (actual) => actual === error
     )
   } finally {
@@ -182,13 +172,9 @@ test('should preserve missing ESM import condition when CommonJS condition exist
 
     await assert.rejects(
       async () =>
-        resolve(
-          'fixture',
-          { parentURL } as never,
-          (() => {
-            throw error
-          }) as never
-        ),
+        resolve('fixture', { parentURL } as never, () => {
+          throw error
+        }),
       (actual) => actual === error
     )
   } finally {
@@ -201,13 +187,9 @@ test('should not resolve cjs specifier to cts source', async () => {
 
   await assert.rejects(
     async () =>
-      resolve(
-        './dependency.cjs',
-        { parentURL } as never,
-        ((specifier: string) => {
-          throw new Error(`Cannot resolve ${specifier}`)
-        }) as never
-      ),
+      resolve('./dependency.cjs', { parentURL } as never, (specifier: string) => {
+        throw new Error(`Cannot resolve ${specifier}`)
+      }),
     /Cannot resolve \.\/dependency\.cjs/
   )
 })
@@ -262,11 +244,11 @@ test('should not load declaration files as runtime sources', async () => {
     await writeFile(join(workspace, 'package.json'), JSON.stringify({ type: 'module' }), 'utf-8')
     await writeFile(sourcePath, `export interface RuntimeOnly {}\n`, 'utf-8')
 
-    const result = await load(
-      pathToFileURL(sourcePath).href,
-      {} as never,
-      (() => ({ format: 'module', shortCircuit: true, source: 'fallback' })) as never
-    )
+    const result = await load(pathToFileURL(sourcePath).href, {} as never, () => ({
+      format: 'module',
+      shortCircuit: true,
+      source: 'fallback',
+    }))
 
     assert.equal((result as { source: string }).source, 'fallback')
   } finally {

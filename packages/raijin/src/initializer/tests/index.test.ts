@@ -135,7 +135,7 @@ test('an older installed package updates to npm latest without changing project 
   context.after(async () => rm(cwd, { recursive: true, force: true }))
   const packageJson = {
     name: 'consumer',
-    type: 'commonjs',
+    type: 'module',
     packageManager: 'yarn@4.12.0',
     devDependencies: { '@atls/raijin': '0.7.0' },
     scripts: { verify: 'node verify.js' },
@@ -188,7 +188,8 @@ test('member-only package cannot split its Yarn project runtime', async (context
   const root = await mkdtemp(join(tmpdir(), 'raijin-member-'))
   context.after(async () => rm(root, { recursive: true, force: true }))
   const cwd = join(root, 'packages/member')
-  const memberManifest = '{"name":"member","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+  const memberManifest =
+    '{"name":"member","type":"module","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
 
   await mkdir(cwd, { recursive: true })
   await writeFile(
@@ -214,7 +215,7 @@ test('member-only package cannot split its Yarn project runtime', async (context
   const newMemberCwd = join(root, 'packages/new-member')
 
   await mkdir(newMemberCwd)
-  await writeFile(join(newMemberCwd, 'package.json'), '{"name":"new-member"}\n')
+  await writeFile(join(newMemberCwd, 'package.json'), '{"name":"new-member","type":"module"}\n')
   await assert.rejects(
     runRaijinInitializer({
       argv: ['init', '--type', 'project'],
@@ -236,7 +237,7 @@ test('non-member nested package is rejected without creating a lockfile', async 
   await writeFile(join(root, 'yarn.lock'), '')
   await writeFile(
     join(cwd, 'package.json'),
-    '{"name":"child","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+    '{"name":"child","type":"module","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
   )
 
   await assert.rejects(
@@ -273,7 +274,7 @@ test('nested project with its own lockfile updates only its own runtime', async 
   await writeFile(join(root, 'yarn.lock'), '# parent lock\n')
   await writeFile(
     join(cwd, 'package.json'),
-    '{"name":"child","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+    '{"name":"child","type":"module","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
   )
   await writeFile(join(cwd, 'yarn.lock'), '# child lock\n')
 
@@ -295,7 +296,7 @@ test('nested project with its own lockfile updates only its own runtime', async 
   assert.equal(await readFile(join(cwd, 'yarn.lock'), 'utf-8'), '# child lock\n')
 })
 
-test('update onboards an existing package without creating a scaffold', async (context) => {
+test('update rejects an existing CommonJS package before Yarn runs', async (context) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-onboard-'))
   context.after(async () => rm(cwd, { recursive: true, force: true }))
   const packageJson = { name: 'existing', type: 'commonjs', scripts: { verify: 'node verify.js' } }
@@ -304,32 +305,27 @@ test('update onboards an existing package without creating a scaffold', async (c
   await writeFile(join(cwd, 'package.json'), `${JSON.stringify(packageJson)}\n`)
   await writeFile(join(cwd, 'tsconfig.json'), '{"compilerOptions":{"strict":false}}\n')
 
-  await runRaijinInitializer({
-    argv: ['update'],
-    cwd,
-    fetchImpl,
-    queryYarnPackage,
-    readYarnCommand,
-    runYarnCommand: async (args) => {
-      commands.push(args)
-    },
-  })
-
-  assert.deepEqual(commands, [['add', '--prefer-dev', '-E', '@atls/raijin@1.2.3']])
-  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), {
-    ...packageJson,
-    packageManager: 'yarn@4.14.1',
-  })
-  assert.equal(
-    await readFile(join(cwd, 'tsconfig.json'), 'utf-8'),
-    '{"compilerOptions":{"strict":false}}\n'
+  await assert.rejects(
+    runRaijinInitializer({
+      argv: ['update'],
+      cwd,
+      fetchImpl,
+      queryYarnPackage,
+      readYarnCommand,
+      runYarnCommand: async (args) => {
+        commands.push(args)
+      },
+    }),
+    /requires package\.json "type" to be "module"/
   )
+  assert.deepEqual(commands, [])
+  assert.deepEqual(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')), packageJson)
 })
 
 test('metadata mismatch leaves the configured package and runtime untouched', async (context) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-mismatch-'))
   context.after(async () => rm(cwd, { recursive: true, force: true }))
-  const packageJson = '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+  const packageJson = '{"type":"module","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
 
   await writeFile(join(cwd, 'package.json'), packageJson)
 
@@ -371,7 +367,7 @@ test('metadata mismatch leaves the configured package and runtime untouched', as
 test('missing release asset and wrong runtime digest stop update before changing the project', async (context) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-release-asset-'))
   context.after(async () => rm(cwd, { recursive: true, force: true }))
-  const packageJson = '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+  const packageJson = '{"type":"module","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
 
   await writeFile(join(cwd, 'package.json'), packageJson)
 
@@ -427,7 +423,10 @@ test('missing release asset and wrong runtime digest stop update before changing
 test('incompatible runtime module scope fails before Yarn changes the package', async (context) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-scope-'))
   context.after(async () => rm(cwd, { recursive: true, force: true }))
-  await writeFile(join(cwd, 'package.json'), '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n')
+  await writeFile(
+    join(cwd, 'package.json'),
+    '{"type":"module","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+  )
   await mkdir(join(cwd, '.yarn/releases'), { recursive: true })
   await writeFile(join(cwd, '.yarn/releases/package.json'), '{"type":"commonjs"}\n')
 
@@ -451,7 +450,10 @@ test('incompatible runtime module scope fails before Yarn changes the package', 
 test('wrong active runtime version remains staged and cannot report success', async (context) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-version-'))
   context.after(async () => rm(cwd, { recursive: true, force: true }))
-  await writeFile(join(cwd, 'package.json'), '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n')
+  await writeFile(
+    join(cwd, 'package.json'),
+    '{"type":"module","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+  )
 
   await assert.rejects(
     runRaijinInitializer({
@@ -474,7 +476,10 @@ test('wrong active runtime version remains staged and cannot report success', as
 test('failed Yarn install exposes one retryable staged runtime without activation', async (context) => {
   const cwd = await mkdtemp(join(tmpdir(), 'raijin-retry-'))
   context.after(async () => rm(cwd, { recursive: true, force: true }))
-  await writeFile(join(cwd, 'package.json'), '{"devDependencies":{"@atls/raijin":"0.7.0"}}\n')
+  await writeFile(
+    join(cwd, 'package.json'),
+    '{"type":"module","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+  )
   await mkdir(join(cwd, '.yarn/releases'), { recursive: true })
   await writeFile(join(cwd, '.yarn/releases/yarn.js'), 'old-runtime')
   await writeFile(join(cwd, '.yarnrc.yml'), 'yarnPath: .yarn/releases/yarn.js\n')

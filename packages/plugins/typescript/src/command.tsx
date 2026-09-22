@@ -21,7 +21,7 @@ export class TypeCheckCommand extends BaseCommand {
 
   declare context: WorkspaceCommandContext
 
-  args: Array<string> = Option.Rest({ required: 0 })
+  args: Array<string> = Option.Rest()
 
   override async execute(): Promise<number> {
     const { invocationCwd, project, workspace } = this.context.invocation

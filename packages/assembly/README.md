@@ -8,3 +8,5 @@ Tracking:
 
 - upstream issue: https://github.com/yarnpkg/berry/issues/7200
 - upstream pull request: https://github.com/yarnpkg/berry/pull/7201
+
+The `scripts/surface` directory owns checked-runtime inventory and verification. Repository commands call these private assembly tools; they are not public Raijin package exports.

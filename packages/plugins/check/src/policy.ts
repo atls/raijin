@@ -142,45 +142,43 @@ export const runCheckPolicy = async (input: CheckPolicyInput): Promise<number> =
     },
     ...(targets && !testTargets
       ? []
-      : (['unit', 'integration'] as const).map(
-          (scenario): CheckStage => ({
-            name: `Test:${scenario}`,
-            run: async () => {
-              const testInput =
-                testTargets ??
-                createCommandInput({
-                  cwd: toPortablePath(cwd),
-                  source: 'generated',
-                  targets: [],
-                })
-              const selectedTests = await discoverProjectTests({
-                rootCwd: projectCwd,
-                cwd,
-                input: testInput,
-                scenario,
+      : (['unit', 'integration'] as const).map((scenario): CheckStage => ({
+          name: `Test:${scenario}`,
+          run: async () => {
+            const testInput =
+              testTargets ??
+              createCommandInput({
+                cwd: toPortablePath(cwd),
+                source: 'generated',
+                targets: [],
               })
+            const selectedTests = await discoverProjectTests({
+              rootCwd: projectCwd,
+              cwd,
+              input: testInput,
+              scenario,
+            })
 
-              if (selectedTests.length === 0) {
-                return 0
-              }
+            if (selectedTests.length === 0) {
+              return 0
+            }
 
-              const result = await testProject({
-                rootCwd: projectCwd,
-                cwd,
-                input: testInput,
-                reporter: 'spec',
-                scenario,
-                stdout,
-              })
+            const result = await testProject({
+              rootCwd: projectCwd,
+              cwd,
+              input: testInput,
+              reporter: 'spec',
+              scenario,
+              stdout,
+            })
 
-              if (result.status === 'provider-failed') {
-                stderr.write(`${result.failure.name}: ${result.failure.message}\n`)
-              }
+            if (result.status === 'provider-failed') {
+              stderr.write(`${result.failure.name}: ${result.failure.message}\n`)
+            }
 
-              return result.terminal.exitCode
-            },
-          })
-        )),
+            return result.terminal.exitCode
+          },
+        }))),
   ]
 
   return runCheckStages(stages, stdout, stderr)

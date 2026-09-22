@@ -3,12 +3,15 @@ import type { MessageName }         from '@yarnpkg/core'
 import assert                       from 'node:assert/strict'
 import { PassThrough }              from 'node:stream'
 import { test }                     from 'node:test'
+import { fileURLToPath }            from 'node:url'
 
 import { Configuration }            from '@yarnpkg/core'
 import { npath }                    from '@yarnpkg/fslib'
 
 import { presentProjectGeneration } from '../project.js'
 import { reportProjectGeneration }  from '../project.js'
+
+const moduleDirectory = fileURLToPath(new URL('.', import.meta.url))
 
 const createReport = () => {
   const errors: Array<string> = []
@@ -72,7 +75,7 @@ test('should report a current scaffold without fabricating changes', () => {
 })
 
 test('should return a native nonzero report for an unsupported scaffold type', async (context) => {
-  const configuration = Configuration.create(npath.toPortablePath(import.meta.dirname))
+  const configuration = Configuration.create(npath.toPortablePath(moduleDirectory))
   const stdout = new PassThrough()
   const output: Array<Buffer> = []
   const message = 'Unsupported project scaffold type "service". Expected one of: library, project.'

@@ -1,72 +1,36 @@
-
-
 ## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.11...@atls/yarn-plugin-commit@1.0.12) (2026-06-17)
-
 
 ### Bug Fixes
 
-
-* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
-
-
-
-
+- **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
 
 ## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.10...@atls/yarn-plugin-commit@1.0.11) (2026-06-01)
 
-
 ### Bug Fixes
 
-
-* **common:** reuse current yarn in staged hooks ([dc09336](https://github.com/atls/raijin/commit/dc093368b2fdbb57133486175a01321f0bb6a09c))
-
-
-
-
-
+- **common:** reuse current yarn in staged hooks ([dc09336](https://github.com/atls/raijin/commit/dc093368b2fdbb57133486175a01321f0bb6a09c))
 
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.9...@atls/yarn-plugin-commit@1.0.10) (2026-04-29)
 
-
-
-
-
-
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.8...@atls/yarn-plugin-commit@1.0.9) (2026-04-26)
-
 
 ### Bug Fixes
 
-
-* **commit-staged:** use repository yarn for lint-staged tasks ([b941f41](https://github.com/atls/raijin/commit/b941f41bc15a1c9c5df6688d54720b0992ba29d4))
-* **yarn-cli:** rebuild bundled commit staged commands ([bc10113](https://github.com/atls/raijin/commit/bc101136fef158944671fb80ba91141939a9ec1f))
-* **yarn-plugin-commit:** resolve yarn path from git root ([c54480a](https://github.com/atls/raijin/commit/c54480ac73092fba4082b8d603ebe135ef87fa1b))
-
-
-
-
+- **commit-staged:** use repository yarn for lint-staged tasks ([b941f41](https://github.com/atls/raijin/commit/b941f41bc15a1c9c5df6688d54720b0992ba29d4))
+- **yarn-cli:** rebuild bundled commit staged commands ([bc10113](https://github.com/atls/raijin/commit/bc101136fef158944671fb80ba91141939a9ec1f))
+- **yarn-plugin-commit:** resolve yarn path from git root ([c54480a](https://github.com/atls/raijin/commit/c54480ac73092fba4082b8d603ebe135ef87fa1b))
 
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.7...@atls/yarn-plugin-commit@1.0.8) (2025-12-07)
 
-
-
-
-
-
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.6...@atls/yarn-plugin-commit@1.0.7) (2025-11-14)
-
 
 ### Bug Fixes
 
-
-* **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
+- **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
 
 ### Reverts
 
-
-* **yarn:** remove react import ([4880057](https://github.com/atls/raijin/commit/4880057b1a563f12e659e8664e0411152e2bb36a))
-
-
+- **yarn:** remove react import ([4880057](https://github.com/atls/raijin/commit/4880057b1a563f12e659e8664e0411152e2bb36a))
 
 ## [1.0.6](https://github.com/atls/raijin/compare/@atls/yarn-plugin-commit@1.0.5...@atls/yarn-plugin-commit@1.0.6) (2025-08-04)
 

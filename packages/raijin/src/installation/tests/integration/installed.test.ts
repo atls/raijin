@@ -12,6 +12,7 @@ import { tmpdir }                                 from 'node:os'
 import { join }                                   from 'node:path'
 import { resolve }                                from 'node:path'
 import { test }                                   from 'node:test'
+import { fileURLToPath }                          from 'node:url'
 import { promisify }                              from 'node:util'
 
 import { runRaijinInitializer }                   from '../../../index.js'
@@ -19,7 +20,8 @@ import { createSha256Digest }                     from '../../../runtime/release
 import { readYarnCommand }                        from '../../../yarn/command.js'
 import { runYarnCommand as runNativeYarnCommand } from '../../../yarn/command.js'
 
-const repoRoot = resolve(import.meta.dirname, '../../../../../..')
+const moduleDirectory = fileURLToPath(new URL('.', import.meta.url))
+const repoRoot = resolve(moduleDirectory, '../../../../../..')
 const execute = promisify(execFile)
 const gitLocalVariables = (await execute('git', ['rev-parse', '--local-env-vars'])).stdout
   .trim()
@@ -54,17 +56,21 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
   context.after(async () => rm(fixtureRoot, { recursive: true, force: true }))
   const archive = join(fixtureRoot, 'raijin.tgz')
   const runtime = await readFile(join(repoRoot, '.yarn/releases/yarn.js'))
+  const rootPackageJson = JSON.parse(await readFile(join(repoRoot, 'package.json'), 'utf-8')) as {
+    packageManager: string
+  }
   const packageJson = JSON.parse(
     await readFile(join(repoRoot, 'packages/raijin/package.json'), 'utf-8')
   ) as {
     version: string
   }
+  const expectedYarnVersion = rootPackageJson.packageManager.replace(/^yarn@/u, '')
   const { version } = packageJson
   const releaseFixture = {
     assetName: 'yarn.js',
     assetUrl: `https://github.com/atls/raijin/releases/download/%40atls%2Fraijin%40${version}/yarn.js`,
     packageIntegrity: 'sha512-YWJjZA==',
-    packageManager: 'yarn@4.14.1',
+    packageManager: rootPackageJson.packageManager,
     packageName: '@atls/raijin',
     sha256: createSha256Digest(runtime),
     sourceRevision: 'a'.repeat(40),
@@ -165,7 +171,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
         })}\n`
       )
       await writeFile(join(cwd, 'yarn.lock'), '')
-      await writeFile(join(memberCwd, 'package.json'), '{"name":"member"}\n')
+      await writeFile(join(memberCwd, 'package.json'), '{"name":"member","type":"module"}\n')
       await runNativeYarnCommand(['install', '--no-immutable'], cwd, {
         packageManager: releaseFixture.packageManager,
         skipInstallHooks: true,
@@ -192,7 +198,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       await writeFile(join(fixtureRoot, 'yarn.lock'), '# parent lock\n')
       await writeFile(
         join(cwd, 'package.json'),
-        '{"name":"nested","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
+        '{"name":"nested","type":"module","devDependencies":{"@atls/raijin":"0.7.0"}}\n'
       )
       await writeFile(join(cwd, 'yarn.lock'), '')
 
@@ -210,7 +216,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
     if (scaffoldType === 'onboard') {
       await writeFile(
         join(cwd, 'package.json'),
-        '{"name":"existing","type":"commonjs","scripts":{"verify":"node verify.js"}}\n'
+        '{"name":"existing","type":"module","scripts":{"verify":"node verify.js"}}\n'
       )
       await writeFile(join(cwd, 'tsconfig.json'), '{"compilerOptions":{"strict":false}}\n')
       const template = join(cwd, 'git-template')
@@ -232,7 +238,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
         scripts: Record<string, string>
       }
 
-      assert.equal(existing.type, 'commonjs')
+      assert.equal(existing.type, 'module')
       assert.deepEqual(existing.scripts, { verify: 'node verify.js' })
       assert.equal(
         await readFile(join(cwd, 'tsconfig.json'), 'utf-8'),
@@ -243,7 +249,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
           packageManager: releaseFixture.packageManager,
           followYarnPath: true,
         }),
-        '4.14.1\n'
+        `${expectedYarnVersion}\n`
       )
       assert.equal((await readdir(cwd)).includes('eslint.config.mjs'), false)
       return
@@ -269,7 +275,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
         packageManager: releaseFixture.packageManager,
         followYarnPath: true,
       }),
-      '4.14.1\n'
+      `${expectedYarnVersion}\n`
     )
     assert.ok((await readFile(join(cwd, '.pnp.cjs'))).length > 0)
     assert.equal(
@@ -284,34 +290,16 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
 
     const tsconfig = await readFile(join(cwd, 'tsconfig.json'))
 
-    if (scaffoldType === 'library') {
-      const projectManifest = JSON.parse(
-        await readFile(join(cwd, 'package.json'), 'utf-8')
-      ) as Record<string, unknown>
-
-      await writeFile(
-        join(cwd, 'package.json'),
-        `${JSON.stringify({ ...projectManifest, type: 'commonjs' })}\n`
-      )
-    }
-
     await runRaijinInitializer({ ...options, argv: ['update'] })
 
     assert.deepEqual(await readFile(join(cwd, 'tsconfig.json')), tsconfig)
-    if (scaffoldType === 'library') {
-      const projectManifest = JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')) as {
-        type: string
-      }
-
-      assert.equal(projectManifest.type, 'commonjs')
-      assert.equal(
-        await readYarnCommand(['--version'], cwd, {
-          packageManager: releaseFixture.packageManager,
-          followYarnPath: true,
-        }),
-        '4.14.1\n'
-      )
-    }
+    assert.equal(
+      await readYarnCommand(['--version'], cwd, {
+        packageManager: releaseFixture.packageManager,
+        followYarnPath: true,
+      }),
+      `${expectedYarnVersion}\n`
+    )
     assert.equal((await readdir(join(cwd, '.yarn/releases'))).includes('yarn.js.pending'), false)
   }
 

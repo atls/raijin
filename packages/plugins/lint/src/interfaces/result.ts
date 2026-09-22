@@ -26,9 +26,10 @@ export type LintFileResult = {
 }
 
 export type LintTerminal =
-  | { readonly exitCode: 0; readonly reason: 'clean' }
-  | { readonly exitCode: 1; readonly reason: 'diagnostics' }
-  | { readonly exitCode: 1; readonly reason: 'provider-failed' }
+
+    | { readonly exitCode: 0; readonly reason: 'clean' }
+    | { readonly exitCode: 1; readonly reason: 'diagnostics' }
+    | { readonly exitCode: 1; readonly reason: 'provider-failed' }
 
 type LintProjectCompletedFields = {
   readonly status: 'completed'

@@ -17,8 +17,9 @@ type TypecheckScopeFields = {
 }
 
 export type TypecheckScope =
-  | (TypecheckScopeFields & { readonly kind: 'files'; readonly files: ReadonlyArray<string> })
-  | (TypecheckScopeFields & { readonly kind: 'project' })
+
+    | (TypecheckScopeFields & { readonly kind: 'files'; readonly files: ReadonlyArray<string> })
+    | (TypecheckScopeFields & { readonly kind: 'project' })
 
 export const getTypecheckManifestSources = (
   project: Project,

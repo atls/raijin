@@ -1,112 +1,36 @@
-
-
 ## [1.0.17](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.16...@atls/yarn-plugin-check@1.0.17) (2026-06-17)
-
 
 ### Bug Fixes
 
-
-* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
-
-
-
-
+- **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
 
 ## [1.0.16](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.16...@atls/yarn-plugin-check@1.0.16) (2026-06-17)
 
-
-
-
-
-
 ## [1.0.16](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.16...@atls/yarn-plugin-check@1.0.16) (2026-06-14)
-
-
-
-
-
 
 ## [1.0.16](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.16...@atls/yarn-plugin-check@1.0.16) (2026-06-11)
 
-
-
-
-
-
 ## [1.0.16](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.15...@atls/yarn-plugin-check@1.0.16) (2026-06-08)
-
-
-
-
-
 
 ## [1.0.15](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.14...@atls/yarn-plugin-check@1.0.15) (2026-06-01)
 
-
-
-
-
-
 ## [1.0.14](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.13...@atls/yarn-plugin-check@1.0.14) (2026-04-29)
-
-
-
-
-
 
 ## [1.0.13](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.12...@atls/yarn-plugin-check@1.0.13) (2026-04-27)
 
-
-
-
-
-
 ## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.11...@atls/yarn-plugin-check@1.0.12) (2026-04-27)
-
-
-
-
-
 
 ## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.10...@atls/yarn-plugin-check@1.0.11) (2026-04-23)
 
-
-
-
-
-
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.9...@atls/yarn-plugin-check@1.0.10) (2026-04-02)
-
-
-
-
-
 
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.8...@atls/yarn-plugin-check@1.0.9) (2026-04-01)
 
-
-
-
-
-
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.7...@atls/yarn-plugin-check@1.0.8) (2026-04-01)
-
-
-
-
-
 
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.6...@atls/yarn-plugin-check@1.0.7) (2025-12-07)
 
-
-
-
-
-
 ## [1.0.6](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.5...@atls/yarn-plugin-check@1.0.6) (2025-11-14)
-
-
-
 
 ## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-check@1.0.4...@atls/yarn-plugin-check@1.0.5) (2025-10-09)
 

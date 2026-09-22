@@ -2,14 +2,14 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { executeRuntime } from './runtime-inventory.js'
-import { loadRuntimeCliSurface } from './runtime-inventory.js'
+import { executeRuntime } from './inventory.js'
+import { loadRuntimeCliSurface } from './inventory.js'
 
 const [builtRuntimeArgument, checkedRuntimeArgument, assemblyManifestArgument] =
   process.argv.slice(2)
 
 if (!builtRuntimeArgument || !checkedRuntimeArgument || !assemblyManifestArgument) {
-  throw new Error('Usage: check-runtime.js <built-runtime> <checked-runtime> <assembly-manifest>')
+  throw new Error('Usage: verify.js <built-runtime> <checked-runtime> <assembly-manifest>')
 }
 
 const cwd = process.cwd()

@@ -22,7 +22,7 @@ export class LintCommand extends BaseCommand {
 
   fix = Option.Boolean('--fix')
 
-  files: Array<string> = Option.Rest({ required: 0 })
+  files: Array<string> = Option.Rest()
 
   cache: boolean = Option.Boolean('--cache', false)
 

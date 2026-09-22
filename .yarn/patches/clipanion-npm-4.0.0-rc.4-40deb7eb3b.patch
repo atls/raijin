@@ -1,0 +1,28 @@
+diff --git a/lib/advanced/options/utils.js b/lib/advanced/options/utils.js
+index c1a6d1fef87b058a377be4654f33c5a362a98ff0..a890c622bf12253a7222d020baa97efb6429f01a 100644
+--- a/lib/advanced/options/utils.js
++++ b/lib/advanced/options/utils.js
+@@ -7 +7 @@ var errors = require('../../errors.js');
+-const isOptionSymbol = Symbol(`clipanion/isOption`);
++const isOptionSymbol = Symbol.for(`clipanion/isOption`);
+diff --git a/lib/advanced/options/utils.mjs b/lib/advanced/options/utils.mjs
+index 004b4e140f4597c9066f7fd9ec537bba3861bda9..25da51a7b7410c471413f5ba3a7ef2ef500b74e9 100644
+--- a/lib/advanced/options/utils.mjs
++++ b/lib/advanced/options/utils.mjs
+@@ -3 +3 @@ import { UsageError } from '../../errors.mjs';
+-const isOptionSymbol = Symbol(`clipanion/isOption`);
++const isOptionSymbol = Symbol.for(`clipanion/isOption`);
+diff --git a/lib/core.js b/lib/core.js
+index e03d9dadc6af464ca2a1a3978b28bcd76d758655..eb3a5cee8501e08b84098fb6eb5873af3669b846 100644
+--- a/lib/core.js
++++ b/lib/core.js
+@@ -489 +489 @@ const reducers = {
+-const NoLimits = Symbol();
++const NoLimits = Symbol.for(`clipanion/NoLimits`);
+diff --git a/lib/core.mjs b/lib/core.mjs
+index afae8ac0c8046dd8e377dd418af294ad7e8272b1..1f6427aae94f45955e19f3115a78eeca84f58135 100644
+--- a/lib/core.mjs
++++ b/lib/core.mjs
+@@ -485 +485 @@ const reducers = {
+-const NoLimits = Symbol();
++const NoLimits = Symbol.for(`clipanion/NoLimits`);

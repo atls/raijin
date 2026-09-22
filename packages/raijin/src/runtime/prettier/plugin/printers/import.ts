@@ -31,8 +31,8 @@ type AttributedImportDeclaration = ImportDeclaration & {
 
 const hasImportSourceComments = (node: ImportDeclaration): boolean =>
   Boolean((node as AlignableImportDeclaration).importSourceAlignBlocked) ||
-  hasComments(node as CommentedNode) ||
-  hasComments(node.source as CommentedNode | undefined) ||
+  hasComments(node) ||
+  hasComments(node.source) ||
   node.specifiers.some((specifier) => {
     const commentedSpecifier = specifier as CommentedNode
 

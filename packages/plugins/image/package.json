@@ -26,13 +26,13 @@
     "@actions/github": "6.0.0",
     "@atls/raijin": "workspace:*",
     "@iarna/toml": "2.2.5",
-    "clipanion": "4.0.0-rc.2"
+    "clipanion": "4.0.0-rc.4"
   },
   "devDependencies": {
-    "@types/node": "24.12.2",
-    "@yarnpkg/builder": "4.2.0",
-    "@yarnpkg/cli": "4.14.1",
-    "@yarnpkg/core": "4.7.0",
+    "@types/node": "24.13.6",
+    "@yarnpkg/builder": "4.2.4",
+    "@yarnpkg/cli": "4.18.0",
+    "@yarnpkg/core": "4.9.1",
     "@yarnpkg/fslib": "3.1.5",
     "typescript": "5.9.3"
   },

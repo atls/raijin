@@ -36,7 +36,7 @@ test('renders with the destination stdout width', () => {
   const Probe = (): React.ReactElement => {
     const { stdout } = useStdout()
 
-    return <Text>{stdout?.columns}</Text>
+    return <Text>{stdout.columns}</Text>
   }
 
   try {

@@ -1,259 +1,107 @@
-
-
 ## [1.0.34](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.32...@atls/yarn-plugin-tools@1.0.34) (2026-06-17)
-
 
 ### Bug Fixes
 
-
-* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
-* **yarn-plugin-tools:** preserve hook final newline ([ccfe781](https://github.com/atls/raijin/commit/ccfe7816894f0146a9373893e11e5830b14dae34))
-
-
-
-
+- **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
+- **yarn-plugin-tools:** preserve hook final newline ([ccfe781](https://github.com/atls/raijin/commit/ccfe7816894f0146a9373893e11e5830b14dae34))
 
 ## [1.0.33](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.32...@atls/yarn-plugin-tools@1.0.33) (2026-06-17)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
-
-
-
-
+- **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
 
 ## [1.0.32](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.32...@atls/yarn-plugin-tools@1.0.32) (2026-06-16)
 
-
-
-
-
-
 ## [1.0.32](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.31...@atls/yarn-plugin-tools@1.0.32) (2026-06-14)
-
 
 ### Bug Fixes
 
-
-* **tools:** keep command routes on managed wrappers ([43b3686](https://github.com/atls/raijin/commit/43b36863bef68cc27309ef8005f352c44b7bdfb7))
-* **yarn-plugin-tools:** avoid eval node wrapper ([073a368](https://github.com/atls/raijin/commit/073a36839672d82469a159fcb348c4cd74e2a023))
-* **yarn-plugin-tools:** forward managed node flags ([97c7078](https://github.com/atls/raijin/commit/97c7078f2a1d4bfbcd3255a5d673a886294faf16))
-* **yarn-plugin-tools:** preserve unrelated node loaders ([1986e92](https://github.com/atls/raijin/commit/1986e92e2ebf33ea0d218dddbd40d9f5c3109d1d))
-
-
-
-
+- **tools:** keep command routes on managed wrappers ([43b3686](https://github.com/atls/raijin/commit/43b36863bef68cc27309ef8005f352c44b7bdfb7))
+- **yarn-plugin-tools:** avoid eval node wrapper ([073a368](https://github.com/atls/raijin/commit/073a36839672d82469a159fcb348c4cd74e2a023))
+- **yarn-plugin-tools:** forward managed node flags ([97c7078](https://github.com/atls/raijin/commit/97c7078f2a1d4bfbcd3255a5d673a886294faf16))
+- **yarn-plugin-tools:** preserve unrelated node loaders ([1986e92](https://github.com/atls/raijin/commit/1986e92e2ebf33ea0d218dddbd40d9f5c3109d1d))
 
 ## [1.0.31](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.30...@atls/yarn-plugin-tools@1.0.31) (2026-06-12)
 
-
 ### Bug Fixes
 
-
-* **yarn-plugin-renderer:** stabilize workspace build route ([8e60b56](https://github.com/atls/raijin/commit/8e60b5623c6156133eae727b98c371fa65449474))
-
-
-
-
+- **yarn-plugin-renderer:** stabilize workspace build route ([8e60b56](https://github.com/atls/raijin/commit/8e60b5623c6156133eae727b98c371fa65449474))
 
 ## [1.0.30](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.30...@atls/yarn-plugin-tools@1.0.30) (2026-06-11)
 
-
-
-
-
-
 ## [1.0.30](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.30...@atls/yarn-plugin-tools@1.0.30) (2026-06-11)
-
-
-
-
-
 
 ## [1.0.30](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.29...@atls/yarn-plugin-tools@1.0.30) (2026-06-10)
 
-
-
-
-
-
 ## [1.0.29](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.28...@atls/yarn-plugin-tools@1.0.29) (2026-06-08)
-
 
 ### Bug Fixes
 
-
-* **common:** centralize current yarn executable ([0826676](https://github.com/atls/raijin/commit/0826676f7004ee1042c916eeead53851118c8d21))
-* **common:** use current executable for command re-entry ([7a4a03a](https://github.com/atls/raijin/commit/7a4a03a1eb0409361d4807deb5bbb6665cb1fc4b))
-
-
-
-
+- **common:** centralize current yarn executable ([0826676](https://github.com/atls/raijin/commit/0826676f7004ee1042c916eeead53851118c8d21))
+- **common:** use current executable for command re-entry ([7a4a03a](https://github.com/atls/raijin/commit/7a4a03a1eb0409361d4807deb5bbb6665cb1fc4b))
 
 ## [1.0.28](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.27...@atls/yarn-plugin-tools@1.0.28) (2026-06-01)
 
-
 ### Bug Fixes
 
-
-* **common:** reuse current yarn in staged hooks ([dc09336](https://github.com/atls/raijin/commit/dc093368b2fdbb57133486175a01321f0bb6a09c))
-
-
-
-
-
+- **common:** reuse current yarn in staged hooks ([dc09336](https://github.com/atls/raijin/commit/dc093368b2fdbb57133486175a01321f0bb6a09c))
 
 ## [1.0.27](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.26...@atls/yarn-plugin-tools@1.0.27) (2026-05-14)
 
-
-
-
-
-
 ## [1.0.26](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.25...@atls/yarn-plugin-tools@1.0.26) (2026-04-30)
-
-
-
-
-
 
 ## [1.0.25](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.24...@atls/yarn-plugin-tools@1.0.25) (2026-04-29)
 
-
-
-
-
-
 ## [1.0.24](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.23...@atls/yarn-plugin-tools@1.0.24) (2026-04-29)
-
-
-
-
-
 
 ## [1.0.23](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.22...@atls/yarn-plugin-tools@1.0.23) (2026-04-28)
 
-
-
-
-
-
 ## [1.0.22](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.21...@atls/yarn-plugin-tools@1.0.22) (2026-04-28)
-
-
-
-
-
 
 ## [1.0.21](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.20...@atls/yarn-plugin-tools@1.0.21) (2026-04-27)
 
-
 ### Bug Fixes
 
-
-* **yarn:** avoid corepack in proxy script env ([#609](https://github.com/atls/raijin/issues/609)) ([bc924d9](https://github.com/atls/raijin/commit/bc924d9e8b469ff1d177bdefb267e288d697c991))
-
-
-
-
+- **yarn:** avoid corepack in proxy script env ([#609](https://github.com/atls/raijin/issues/609)) ([bc924d9](https://github.com/atls/raijin/commit/bc924d9e8b469ff1d177bdefb267e288d697c991))
 
 ## [1.0.20](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.19...@atls/yarn-plugin-tools@1.0.20) (2026-04-26)
 
-
-
-
-
-
 ## [1.0.19](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.18...@atls/yarn-plugin-tools@1.0.19) (2026-04-26)
-
 
 ### Bug Fixes
 
-
-* **hooks:** run pre-commit via repository yarn ([6bfd60d](https://github.com/atls/raijin/commit/6bfd60d7667489555532d238f132786634145d65))
-
-
-
-
+- **hooks:** run pre-commit via repository yarn ([6bfd60d](https://github.com/atls/raijin/commit/6bfd60d7667489555532d238f132786634145d65))
 
 ## [1.0.18](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.17...@atls/yarn-plugin-tools@1.0.18) (2026-04-23)
 
-
-
-
-
-
 ## [1.0.17](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.16...@atls/yarn-plugin-tools@1.0.17) (2026-04-06)
-
-
-
-
-
 
 ## [1.0.16](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.15...@atls/yarn-plugin-tools@1.0.16) (2026-04-02)
 
-
-
-
-
-
 ## [1.0.15](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.14...@atls/yarn-plugin-tools@1.0.15) (2026-04-01)
-
-
-
-
-
 
 ## [1.0.14](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.13...@atls/yarn-plugin-tools@1.0.14) (2026-04-01)
 
-
-
-
-
-
 ## [1.0.13](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.12...@atls/yarn-plugin-tools@1.0.13) (2026-02-18)
-
 
 ### Features
 
-
-* **yarn:** image pack yarn-path configuration ([#531](https://github.com/atls/raijin/issues/531)) ([d938755](https://github.com/atls/raijin/commit/d9387551c12521107e07cb3696ab36cc6af78181))
-
-
-
-
+- **yarn:** image pack yarn-path configuration ([#531](https://github.com/atls/raijin/issues/531)) ([d938755](https://github.com/atls/raijin/commit/d9387551c12521107e07cb3696ab36cc6af78181))
 
 ## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.11...@atls/yarn-plugin-tools@1.0.12) (2025-12-07)
 
-
 ### Bug Fixes
 
-
-* **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
-
-
-
-
+- **raijin:** linter ([790b4d8](https://github.com/atls/raijin/commit/790b4d8943b1352521fc782143999bb74d8b152c))
 
 ## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.10...@atls/yarn-plugin-tools@1.0.11) (2025-11-15)
 
-
-
-
-
-
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.9...@atls/yarn-plugin-tools@1.0.10) (2025-11-14)
-
 
 ### Bug Fixes
 
-
-* **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
-
-
+- **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
 
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-tools@1.0.8...@atls/yarn-plugin-tools@1.0.9) (2025-10-09)
 

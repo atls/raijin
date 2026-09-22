@@ -23,11 +23,6 @@ type AlignableExportDeclaration = SourceExportDeclaration & {
   exportSourceAlignBlocked?: boolean
 }
 
-type RangedNode = {
-  end?: number | null
-  range?: [number, number] | null
-}
-
 type CommentedNode = {
   exported?: CommentedNode | null
   innerComments?: Array<unknown> | null
@@ -36,18 +31,14 @@ type CommentedNode = {
   trailingComments?: Array<unknown> | null
 }
 
-type AttributedExportDeclaration = SourceExportDeclaration & {
-  attributes?: Array<unknown> | null
-}
-
 export const isSourceExportDeclaration = (node: Node): node is SourceExportDeclaration =>
   (node.type === 'ExportAllDeclaration' || node.type === 'ExportNamedDeclaration') &&
   Boolean(node.source)
 
 const hasExportSourceComments = (node: SourceExportDeclaration): boolean =>
   Boolean((node as AlignableExportDeclaration).exportSourceAlignBlocked) ||
-  hasComments(node as CommentedNode) ||
-  hasComments(node.source as CommentedNode | undefined) ||
+  hasComments(node) ||
+  hasComments(node.source) ||
   ('specifiers' in node &&
     node.specifiers.some((specifier) => {
       const commentedSpecifier = specifier as CommentedNode
@@ -79,8 +70,8 @@ const hasUnsupportedImportAssertion = (
   node: SourceExportDeclaration,
   originalText: string | undefined
 ): boolean => {
-  const sourceEnd = getRangeEnd(node.source as RangedNode | null | undefined)
-  const nodeEnd = getRangeEnd(node as RangedNode)
+  const sourceEnd = getRangeEnd(node.source)
+  const nodeEnd = getRangeEnd(node)
 
   if (!originalText || sourceEnd === undefined || nodeEnd === undefined) {
     return false
@@ -90,7 +81,7 @@ const hasUnsupportedImportAssertion = (
 }
 
 const hasImportAttributes = (node: SourceExportDeclaration): boolean => {
-  const { attributes } = node as AttributedExportDeclaration
+  const { attributes } = node
 
   return Boolean(attributes && attributes.length > 0)
 }

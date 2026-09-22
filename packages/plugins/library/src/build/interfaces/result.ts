@@ -22,6 +22,4 @@ export interface LibraryBuildArtifactFailure {
 }
 
 export type LibraryBuildResult =
-  | LibraryBuildArtifactFailure
-  | LibraryBuildCompilationFailure
-  | LibraryBuildCompletedResult
+  LibraryBuildArtifactFailure | LibraryBuildCompilationFailure | LibraryBuildCompletedResult

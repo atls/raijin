@@ -36,7 +36,7 @@ export class CheckCommand extends BaseCommand {
 
   since = Option.String('--since')
 
-  targets: Array<string> = Option.Rest({ required: 0 })
+  targets: Array<string> = Option.Rest()
 
   override async execute(): Promise<number> {
     if (this.since && !this.verify) {

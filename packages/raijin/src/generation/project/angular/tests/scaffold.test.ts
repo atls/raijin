@@ -13,6 +13,7 @@ import { relative }                   from 'node:path'
 import { after }                      from 'node:test'
 import { before }                     from 'node:test'
 import { test }                       from 'node:test'
+import { fileURLToPath }              from 'node:url'
 
 import { NodeWorkflow }               from '@angular-devkit/schematics/tools/index.js'
 import { tgzUtils }                   from '@yarnpkg/core'
@@ -26,7 +27,8 @@ import { materialize }                from '../../yarn/collection/package.js'
 import { readSource }                 from '../../yarn/collection/package.js'
 import { scaffoldProjectWithAngular } from '../scaffold.js'
 
-const baselinePath = join(import.meta.dirname, 'fixtures/baseline')
+const moduleDirectory = fileURLToPath(new URL('.', import.meta.url))
+const baselinePath = join(moduleDirectory, 'fixtures/baseline')
 const collectionSource = 'src/generation/project/angular/collection'
 const scaffoldTypes = ['project', 'library'] as const
 
@@ -83,8 +85,8 @@ const createTarget = async (name: string): Promise<string> => {
 
 before(async () => {
   fixtureRoot = npath.fromPortablePath(await xfs.mktempPromise())
-  buildRoot = await mkdtemp(join(import.meta.dirname, '.collection-'))
-  await cp(join(import.meta.dirname, '../collection'), join(buildRoot, collectionSource), {
+  buildRoot = await mkdtemp(join(moduleDirectory, '.collection-'))
+  await cp(join(moduleDirectory, '../collection'), join(buildRoot, collectionSource), {
     recursive: true,
   })
   await buildProjectCollection({ packageRoot: buildRoot })

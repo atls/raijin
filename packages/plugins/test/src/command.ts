@@ -42,7 +42,7 @@ const createTestCommand = (path: Array<string>, scenario: TestScenario, descript
 
     watch: boolean = Option.Boolean('-w,--watch', false)
 
-    files: Array<string> = Option.Rest({ required: 0 })
+    files: Array<string> = Option.Rest()
 
     testReporter = Option.String('--test-reporter', {
       validator: isEnum(['tap']),

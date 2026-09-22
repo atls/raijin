@@ -1,18 +1,19 @@
 export type GeneratedProjectChange =
-  | {
-      artifact: string
-      bytes: number
-      kind: 'created' | 'updated'
-    }
-  | {
-      artifact: string
-      destination: string
-      kind: 'renamed'
-    }
-  | {
-      artifact: string
-      kind: 'deleted'
-    }
+
+    | {
+        artifact: string
+        bytes: number
+        kind: 'created' | 'updated'
+      }
+    | {
+        artifact: string
+        destination: string
+        kind: 'renamed'
+      }
+    | {
+        artifact: string
+        kind: 'deleted'
+      }
 
 export interface GeneratedProjectResult {
   changes: Array<GeneratedProjectChange>

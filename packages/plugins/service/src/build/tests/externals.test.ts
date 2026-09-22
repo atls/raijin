@@ -7,6 +7,15 @@ import { test }             from 'node:test'
 
 import { WebpackExternals } from '../externals.js'
 
+const createExternalData = (request: string) => ({
+  context: '',
+  contextInfo: { issuer: '', issuerLayer: null },
+  dependencyType: 'esm',
+  getResolve: () => async (): Promise<string> => request,
+  originalRequest: request,
+  request,
+})
+
 const createResolver = async (): Promise<
   (request: string) => Promise<{ result?: string; type?: string }>
 > => {
@@ -35,7 +44,7 @@ const createResolver = async (): Promise<
 
   return async (request: string): Promise<{ result?: string; type?: string }> =>
     new Promise((resolve, reject) => {
-      externals({ request }, (error, result, type) => {
+      externals(createExternalData(request), (error, result, type) => {
         if (error) {
           reject(error)
         } else {
@@ -84,7 +93,7 @@ test('should keep explicit service externals externalized before built-in bundle
   const externals = await new WebpackExternals(cwd).build()
   const resolveExternal = async (request: string): Promise<{ result?: string; type?: string }> =>
     new Promise((resolve, reject) => {
-      externals({ request }, (error, result, type) => {
+      externals(createExternalData(request), (error, result, type) => {
         if (error) {
           reject(error)
         } else {
@@ -134,7 +143,7 @@ test('should keep Yarn-discovered workspace dependencies bundled', async () => {
   ]).build()
   const resolveExternal = async (request: string): Promise<{ result?: string; type?: string }> =>
     new Promise((resolve, reject) => {
-      externals({ request }, (error, result, type) => {
+      externals(createExternalData(request), (error, result, type) => {
         if (error) {
           reject(error)
         } else {

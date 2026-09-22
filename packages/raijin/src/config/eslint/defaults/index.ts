@@ -25,6 +25,8 @@ const typeAwareJavaScriptRules = (
   }
 ).configs['flat/disable-type-checked'].rules
 
+type EslintPlugin = NonNullable<Linter.Config['plugins']>[string]
+
 const config: Array<Linter.Config> = [
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
@@ -44,7 +46,7 @@ const config: Array<Linter.Config> = [
       '@typescript-eslint': typescriptEslintPlugin,
       // @ts-expect-error: Invalid types
       'react-hooks': reactHooksPlugin,
-      '@next/next': nextjsPlugin,
+      '@next/next': nextjsPlugin as unknown as EslintPlugin,
       'jsx-a11y': jsxA11yPlugin,
       n: nodePlugin,
       security: securityPlugin,

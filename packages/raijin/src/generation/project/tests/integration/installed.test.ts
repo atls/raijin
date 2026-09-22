@@ -1,22 +1,24 @@
-import assert        from 'node:assert/strict'
-import { execFile }  from 'node:child_process'
-import { copyFile }  from 'node:fs/promises'
-import { mkdir }     from 'node:fs/promises'
-import { mkdtemp }   from 'node:fs/promises'
-import { readFile }  from 'node:fs/promises'
-import { readdir }   from 'node:fs/promises'
-import { rm }        from 'node:fs/promises'
-import { writeFile } from 'node:fs/promises'
-import { tmpdir }    from 'node:os'
-import { delimiter } from 'node:path'
-import { join }      from 'node:path'
-import { resolve }   from 'node:path'
-import { test }      from 'node:test'
-import { promisify } from 'node:util'
+import assert            from 'node:assert/strict'
+import { execFile }      from 'node:child_process'
+import { copyFile }      from 'node:fs/promises'
+import { mkdir }         from 'node:fs/promises'
+import { mkdtemp }       from 'node:fs/promises'
+import { readFile }      from 'node:fs/promises'
+import { readdir }       from 'node:fs/promises'
+import { rm }            from 'node:fs/promises'
+import { writeFile }     from 'node:fs/promises'
+import { tmpdir }        from 'node:os'
+import { delimiter }     from 'node:path'
+import { join }          from 'node:path'
+import { resolve }       from 'node:path'
+import { test }          from 'node:test'
+import { fileURLToPath } from 'node:url'
+import { promisify }     from 'node:util'
 
 const execute = promisify(execFile)
-const repoRoot = resolve(import.meta.dirname, '../../../../../../..')
-const baselineRoot = resolve(import.meta.dirname, '../../angular/tests/fixtures/baseline')
+const moduleDirectory = fileURLToPath(new URL('.', import.meta.url))
+const repoRoot = resolve(moduleDirectory, '../../../../../../..')
+const baselineRoot = resolve(moduleDirectory, '../../angular/tests/fixtures/baseline')
 
 test('installed packed collection generates both baselines and rejects an omitted collection', async (context) => {
   const temporaryRoot = await mkdtemp(join(tmpdir(), 'raijin-installed-generation-'))

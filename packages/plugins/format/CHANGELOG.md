@@ -1,80 +1,32 @@
-
-
 ## [1.0.12](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.11...@atls/yarn-plugin-format@1.0.12) (2026-06-17)
-
 
 ### Bug Fixes
 
-
-* **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
-
-
-
-
+- **yarn-plugin-library:** move private pack metadata from publishConfig ([1b13f19](https://github.com/atls/raijin/commit/1b13f19aa0f46c9526db6963319c8f1031c298a7))
 
 ## [1.0.11](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.10...@atls/yarn-plugin-format@1.0.11) (2026-04-29)
 
-
-
-
-
-
 ## [1.0.10](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.9...@atls/yarn-plugin-format@1.0.10) (2026-04-26)
-
-
-
-
-
 
 ## [1.0.9](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.8...@atls/yarn-plugin-format@1.0.9) (2026-04-01)
 
-
-
-
-
-
 ## [1.0.8](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.7...@atls/yarn-plugin-format@1.0.8) (2026-04-01)
-
-
-
-
-
 
 ## [1.0.7](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.6...@atls/yarn-plugin-format@1.0.7) (2026-03-16)
 
-
-
-
-
-
 ## [1.0.6](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.5...@atls/yarn-plugin-format@1.0.6) (2026-02-07)
-
-
-
-
-
 
 ## [1.0.5](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.4...@atls/yarn-plugin-format@1.0.5) (2025-12-07)
 
-
-
-
-
-
 ## [1.0.4](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.3...@atls/yarn-plugin-format@1.0.4) (2025-11-14)
-
 
 ### Bug Fixes
 
-
-* **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
+- **yarn:** plugins regular-execute after proxy-execute ([06c81b2](https://github.com/atls/raijin/commit/06c81b27ff4f642c4a4ce0cb96da5a87e66ff2b4))
 
 ### Reverts
 
-
-* **yarn:** remove react import ([4880057](https://github.com/atls/raijin/commit/4880057b1a563f12e659e8664e0411152e2bb36a))
-
-
+- **yarn:** remove react import ([4880057](https://github.com/atls/raijin/commit/4880057b1a563f12e659e8664e0411152e2bb36a))
 
 ## [1.0.3](https://github.com/atls/raijin/compare/@atls/yarn-plugin-format@1.0.2...@atls/yarn-plugin-format@1.0.3) (2025-03-09)
 

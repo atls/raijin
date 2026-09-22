@@ -9,8 +9,7 @@ export interface StartProjectInput {
 }
 
 export type StartProjectResult =
-  | { execution: ApplicationExecutionResult; status: 'executed' }
-  | { status: 'artifact-missing' }
+  { execution: ApplicationExecutionResult; status: 'executed' } | { status: 'artifact-missing' }
 
 export const startProject = async ({
   application,

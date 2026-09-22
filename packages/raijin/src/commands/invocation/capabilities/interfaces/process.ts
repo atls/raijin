@@ -4,8 +4,9 @@ export interface ProcessOutputEvent {
 }
 
 export type ProcessOutputPolicy =
-  | { mode: 'capture'; forward?: boolean }
-  | { mode: 'handle'; handler: (event: ProcessOutputEvent) => void }
+
+    | { mode: 'capture'; forward?: boolean }
+    | { mode: 'handle'; handler: (event: ProcessOutputEvent) => void }
 
 export type ProcessEnvironmentPatch = Readonly<Record<string, string>>
 
@@ -15,11 +16,12 @@ export interface ProcessExecutionOutput {
 }
 
 export type ProcessExecutionCompletion =
-  | { reason: 'cancelled'; cause: unknown }
-  | { reason: 'completed'; exitCode: number }
-  | { reason: 'signalled'; cause: unknown; signal?: string }
-  | { reason: 'start-failed'; cause: unknown }
-  | { reason: 'timed-out'; cause: unknown }
+
+    | { reason: 'cancelled'; cause: unknown }
+    | { reason: 'completed'; exitCode: number }
+    | { reason: 'signalled'; cause: unknown; signal?: string }
+    | { reason: 'start-failed'; cause: unknown }
+    | { reason: 'timed-out'; cause: unknown }
 
 export type ProcessExecutionResult = ProcessExecutionCompletion & ProcessExecutionOutput
 
