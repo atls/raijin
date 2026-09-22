@@ -75,6 +75,31 @@ test('preserves root-relative targets', async (context) => {
   )
 })
 
+test('explicit files keep unit and integration scenarios separate', async (context) => {
+  const { cwd, rootCwd } = await createProject()
+
+  context.after(async () => rm(rootCwd, { force: true, recursive: true }))
+
+  assert.deepEqual(
+    await discoverProjectTests({
+      cwd,
+      input: createInput(cwd, ['src/integration/api.test.ts', 'src/unit.test.ts']),
+      rootCwd,
+      scenario: 'unit',
+    }),
+    [join(cwd, 'src', 'unit.test.ts')]
+  )
+  assert.deepEqual(
+    await discoverProjectTests({
+      cwd,
+      input: createInput(cwd, ['src/integration/api.test.ts', 'src/unit.test.ts']),
+      rootCwd,
+      scenario: 'integration',
+    }),
+    [join(cwd, 'src', 'integration', 'api.test.ts')]
+  )
+})
+
 test('applies project test ignore patterns', async (context) => {
   const { cwd, rootCwd } = await createProject()
 

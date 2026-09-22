@@ -29,7 +29,8 @@
       "yarn format",
       "yarn lint"
     ],
-    "*.{ts,tsx}": "yarn typecheck"
+    "*.{ts,tsx}": "yarn typecheck",
+    "*.{test,spec}.{ts,tsx}": "yarn test unit"
   },
   "resolutions": {
     "clipanion@npm:4.0.0-rc.4": "patch:clipanion@npm%3A4.0.0-rc.4#~/.yarn/patches/clipanion-npm-4.0.0-rc.4-40deb7eb3b.patch",
