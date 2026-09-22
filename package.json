@@ -17,11 +17,9 @@
   ],
   "scripts": {
     "cli:build": "yarn workspace @atls/raijin-assembly build",
-    "raijin:check": "yarn raijin:check:drift && yarn raijin:check:runtime && yarn raijin:check:localization",
-    "raijin:check:drift": "node scripts/raijin/generate-artifacts.js && git diff --exit-code -- docs/raijin/commands.md docs/raijin/commands.ru.md docs/raijin/packages.md docs/raijin/packages.ru.md && test -z \"$(git ls-files --others --exclude-standard -- docs/raijin/commands.md docs/raijin/commands.ru.md docs/raijin/packages.md docs/raijin/packages.ru.md)\"",
+    "raijin:check": "yarn raijin:check:runtime && yarn raijin:check:localization",
     "raijin:check:localization": "node scripts/raijin/check-localization-sync.js",
-    "raijin:check:runtime": "yarn cli:build && node packages/assembly/scripts/surface/verify.js packages/assembly/dist/runtime/yarn.js .yarn/releases/yarn.js packages/assembly/package.json",
-    "raijin:generate": "node scripts/raijin/generate-artifacts.js"
+    "raijin:check:runtime": "yarn cli:build && node packages/assembly/scripts/surface/verify.js packages/assembly/dist/runtime/yarn.js .yarn/releases/yarn.js packages/assembly/package.json"
   },
   "lint-staged": {
     "*.{yml,yaml,json,graphql,md}": "yarn format",
@@ -33,8 +31,6 @@
     "*.{test,spec}.{ts,tsx}": "yarn test unit"
   },
   "resolutions": {
-    "clipanion@npm:4.0.0-rc.4": "patch:clipanion@npm%3A4.0.0-rc.4#~/.yarn/patches/clipanion-npm-4.0.0-rc.4-40deb7eb3b.patch",
-    "clipanion@npm:^4.0.0-rc.2": "patch:clipanion@npm%3A4.0.0-rc.4#~/.yarn/patches/clipanion-npm-4.0.0-rc.4-40deb7eb3b.patch",
     "jsonc-parser@npm:3.3.1": "patch:jsonc-parser@npm%3A3.3.1#~/.yarn/patches/jsonc-parser-npm-3.3.1-f57c3cdcf5.patch",
     "yoga-layout-prebuilt@npm:^1.9.6": "patch:yoga-layout-prebuilt@npm%3A1.10.0#~/.yarn/patches/yoga-layout-prebuilt-npm-1.10.0-855b15449f.patch"
   },

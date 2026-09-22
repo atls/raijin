@@ -7,8 +7,8 @@
 ## Куда идти по задаче
 
 - Подключить или обновить бандл: [quickstart.ru.md](./quickstart.ru.md)
-- Выбрать и понять команду: [commands.ru.md](./commands.ru.md)
-- Разобраться с workspace-пакетами: [packages.ru.md](./packages.ru.md)
+- Посмотреть синтаксис команд через `yarn --help` и `yarn <command> --help`
+- Найти назначение пакета в его README
 - Разобраться с владельцами проверок: [verification.md](./verification.md)
 
 <!-- sync:router-read-order -->
@@ -16,27 +16,8 @@
 ## Порядок чтения
 
 1. [quickstart.ru.md](./quickstart.ru.md)
-2. [commands.ru.md](./commands.ru.md)
-3. [packages.ru.md](./packages.ru.md)
-4. [verification.md](./verification.md)
+2. [verification.md](./verification.md)
 
-<!-- sync:router-quick-rules -->
+## Проверки репозитория
 
-## Правила использования
-
-- Используйте команды только со статусом `active`
-- `inactive` команды считаются недоступными
-
-<!-- sync:router-generation -->
-
-## Генерация и проверки
-
-- `yarn raijin:generate`
 - `yarn raijin:check`
-
-<!-- sync:router-coverage -->
-
-## Покрытие текущей версии
-
-- Команд: 20 (active: 20, inactive: 0)
-- Workspace-пакетов: 16

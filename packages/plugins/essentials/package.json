@@ -26,7 +26,7 @@
     "@atls/raijin": "workspace:*",
     "@yarnpkg/fslib": "3.1.5",
     "@yarnpkg/plugin-essentials": "4.6.2",
-    "clipanion": "4.0.0-rc.4"
+    "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
     "@yarnpkg/builder": "4.2.4",

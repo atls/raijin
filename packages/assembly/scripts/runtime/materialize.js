@@ -42,11 +42,6 @@ try {
   await copyFile(runtimePath, checkedRuntimePath)
 
   assert.deepEqual(await readFile(checkedRuntimePath), await readFile(runtimePath))
-
-  await execute(checkedRuntimePath, ['raijin:generate'], {
-    cwd: repoRoot,
-    env: environment,
-  })
 } finally {
   await rm(fixtureCwd, { recursive: true, force: true })
 }

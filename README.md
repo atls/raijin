@@ -105,5 +105,3 @@ yarn workspaces list
 - Индекс документации EN: [docs/README.md](docs/README.md)
 - Роутер раздела Raijin: [docs/raijin/README.ru.md](docs/raijin/README.ru.md)
 - Быстрый старт: [docs/raijin/quickstart.ru.md](docs/raijin/quickstart.ru.md)
-- Карта команд: [docs/raijin/commands.ru.md](docs/raijin/commands.ru.md)
-- Карта пакетов: [docs/raijin/packages.ru.md](docs/raijin/packages.ru.md)

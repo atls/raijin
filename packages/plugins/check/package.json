@@ -29,7 +29,7 @@
     "@atls/yarn-plugin-test": "workspace:*",
     "@atls/yarn-plugin-typescript": "workspace:*",
     "@yarnpkg/plugin-git": "patch:@yarnpkg/plugin-git@npm%3A3.2.1#~/.yarn/patches/@yarnpkg-plugin-git-npm-3.2.1.patch",
-    "clipanion": "4.0.0-rc.4"
+    "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
     "@yarnpkg/builder": "4.2.4",

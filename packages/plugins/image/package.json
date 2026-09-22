@@ -26,7 +26,7 @@
     "@actions/github": "6.0.0",
     "@atls/raijin": "workspace:*",
     "@iarna/toml": "2.2.5",
-    "clipanion": "4.0.0-rc.4"
+    "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
     "@types/node": "24.13.6",
