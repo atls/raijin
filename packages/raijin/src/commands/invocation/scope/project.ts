@@ -17,7 +17,7 @@ export const resolveProjectScope = async (
   const { configuration, project, workspace } = await resolveProject(invocationCwd, context.plugins)
   const nodeLinker = project.configuration.get('nodeLinker')
 
-  if (nodeLinker !== 'pnp') {
+  if (nodeLinker !== 'pnp' && nodeLinker !== 'node-modules') {
     throw new UnsupportedNodeLinkerError(nodeLinker)
   }
 
