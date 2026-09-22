@@ -202,6 +202,5 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts"
   },
-  "schematics": "./dist/generation/project/collection/collection.json",
-  "typecheckSkipLibCheck": false
+  "schematics": "./dist/generation/project/collection/collection.json"
 }

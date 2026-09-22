@@ -50,6 +50,5 @@
   "packageManager": "yarn@4.18.0",
   "engines": {
     "node": ">=24.15.0 <25"
-  },
-  "typecheckSkipLibCheck": false
+  }
 }
