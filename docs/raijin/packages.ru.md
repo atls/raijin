@@ -85,7 +85,7 @@
 - Локация: `packages/plugins/generate`
 - Группа: `plugins`
 - Видимость: `private`
-- Описание: Project and icon generation commands
+- Описание: Project scaffolding commands
 - Скрипты: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-image -->

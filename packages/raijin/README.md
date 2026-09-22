@@ -36,7 +36,7 @@ Configuration order is explicit: Raijin defaults come first, and the project's r
 - `src/config`: ESLint, Prettier and TypeScript configuration
 - `src/execution`: managed Node applications, ordinary processes and their shared subprocess implementation
 - `src/filesystem`: project file discovery and native paths
-- `src/generation`: project scaffolding and SVG component generation
+- `src/generation`: project scaffolding
 - `src/initializer` and `src/installation`: public initialization, update and hook installation
 - `src/project` and `src/yarn`: project metadata and native Yarn execution
 - `src/runtime`: runtime delivery, loaders and tool entrypoints

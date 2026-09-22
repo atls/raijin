@@ -38,5 +38,5 @@ Navigation for custom `atls` Yarn bundle docs
 
 ## Coverage snapshot
 
-- Commands: 21 (active: 21, inactive: 0)
+- Commands: 20 (active: 20, inactive: 0)
 - Workspace packages: 16

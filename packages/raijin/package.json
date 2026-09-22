@@ -16,7 +16,6 @@
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
-    "./generation/icons": "./src/generation/icons/index.ts",
     "./generation/project": "./src/generation/project/index.ts",
     "./commands": "./src/commands/index.ts",
     "./config/eslint": "./src/config/eslint/index.ts",
@@ -24,9 +23,6 @@
     "./config/typescript": "./src/config/typescript/index.ts",
     "./filesystem": "./src/filesystem/index.ts",
     "./installation/hooks/skip": "./hooks/skip.js",
-    "./generation/icons/node": "./src/generation/icons/node/index.ts",
-    "./generation/icons/svgr": "./src/generation/icons/svgr/index.ts",
-    "./generation/icons/yarn": "./src/generation/icons/yarn/index.ts",
     "./generation/project/installed": "./src/generation/project/installed.ts",
     "./project": "./src/project/index.ts",
     "./yarn": "./src/yarn/index.ts",
@@ -40,7 +36,6 @@
     "./runtime-exec-argv": "./src/runtime/runtime-exec-argv.ts",
     "./runtime-resolver": "./src/runtime/runtime-resolver.ts",
     "./typescript-loader": "./src/runtime/typescript-loader.ts",
-    "./svgr": "./src/runtime/svgr.ts",
     "./ts-node-register": "./src/runtime/ts-node-register.ts",
     "./ts-ext-register": "./src/runtime/ts-ext-register.ts",
     "./prettier": "./src/runtime/prettier/index.ts",
@@ -71,13 +66,10 @@
     "@angular-devkit/schematics": "19.1.5",
     "@babel/types": "7.25.6",
     "@next/eslint-plugin-next": "16.0.7",
-    "@svgr/core": "8.1.0",
-    "@svgr/plugin-jsx": "8.1.0",
     "@typescript-eslint/eslint-plugin": "8.48.1",
     "@typescript-eslint/parser": "8.48.1",
     "@yarnpkg/core": "4.7.0",
     "@yarnpkg/fslib": "3.1.5",
-    "camelcase": "8.0.0",
     "eslint": "9.39.5",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-n": "17.23.1",
@@ -181,11 +173,6 @@
         "import": "./dist/runtime/typescript-loader.js",
         "types": "./dist/runtime/typescript-loader.d.ts",
         "default": "./dist/runtime/typescript-loader.js"
-      },
-      "./svgr": {
-        "import": "./dist/runtime/svgr.js",
-        "types": "./dist/runtime/svgr.d.ts",
-        "default": "./dist/runtime/svgr.js"
       },
       "./ts-node-register": {
         "import": "./dist/runtime/ts-node-register.js",

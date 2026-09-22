@@ -1,18 +1,17 @@
-# Project and icon generation
+# Project generation
 
-Exposes project scaffolding and SVG-to-component generation through the checked Yarn runtime.
+Exposes project scaffolding through the checked Yarn runtime.
 
 ## Usage
 
 ```sh
 yarn generate project --type project
 yarn generate project --type library
-yarn ui icons generate
 ```
 
 ## Responsibilities
 
-Project generation delegates to the installed Angular collection and preserves existing user files. Icon generation reads `icons/*.svg` with the project's `template.ts` and `replacements.ts`, writes the managed components and index in `src`, then formats and lints the result. Duplicate component names and provider failures are reported as failures. `--native` selects SVGR's native component mode.
+Project generation delegates to the installed Angular collection and preserves existing user files. The project and library variants share the neutral baseline owned by that collection.
 
 ## Verification
 

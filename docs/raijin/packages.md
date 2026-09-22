@@ -85,7 +85,7 @@ Private plugin packages and their entrypoints
 - Location: `packages/plugins/generate`
 - Group: `plugins`
 - Visibility: `private`
-- Description: Project and icon generation commands
+- Description: Project scaffolding commands
 - Scripts: `build`
 
 <!-- sync:package-card:atls-yarn-plugin-image -->

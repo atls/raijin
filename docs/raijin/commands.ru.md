@@ -107,7 +107,7 @@
 
 ### Домен `generate`
 
-- Команды: `generate project`, `ui icons generate`
+- Команды: `generate project`
 
 <details>
 <summary>Подробности домена `generate`</summary>
@@ -120,16 +120,6 @@
 - Описание: generate a Raijin project scaffold
 - Использование: `yarn generate project [-t,--type #0]`
 - Пример: `yarn generate project`
-- Плагин: `@atls/yarn-plugin-generate`
-
-<!-- sync:command-card:ui-icons-generate -->
-
-#### `ui icons generate`
-
-- Статус: `active`
-- Описание: generate icon components from source assets
-- Использование: `yarn ui icons generate [-n,--native]`
-- Пример: `yarn ui icons generate`
 - Плагин: `@atls/yarn-plugin-generate`
 
 </details>

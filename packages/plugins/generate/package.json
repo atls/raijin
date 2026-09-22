@@ -2,7 +2,7 @@
   "name": "@atls/yarn-plugin-generate",
   "version": "1.0.0",
   "private": true,
-  "description": "Project and icon generation commands",
+  "description": "Project scaffolding commands",
   "homepage": "https://github.com/atls/raijin#readme",
   "bugs": {
     "url": "https://github.com/atls/raijin/issues"
@@ -24,8 +24,6 @@
   },
   "dependencies": {
     "@atls/raijin": "workspace:*",
-    "@atls/yarn-plugin-format": "workspace:*",
-    "@atls/yarn-plugin-lint": "workspace:*",
     "clipanion": "4.0.0-rc.2"
   },
   "devDependencies": {
