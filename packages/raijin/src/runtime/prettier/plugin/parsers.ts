@@ -1,16 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
+import type { ImportDeclaration }             from '@babel/types'
 import type { Parser }                        from 'prettier'
 
 import * as babel                             from 'prettier/plugins/babel'
 import * as typescript                        from 'prettier/plugins/typescript'
 import sortPackageJson                        from 'sort-package-json'
 
+import { ImportSortTypeScriptParser }         from './import-sort/typescript.parser.js'
 import { preprocess as importSortPreprocess } from './import-sort/index.js'
+import { hasAttachedImportComments }          from './import-sort/typescript.parser.js'
 
 const parse: Parser['parse'] = async (source, { plugins }) => {
   // @ts-expect-error parser options type is wider at runtime than @types/prettier declares
   const program = typescript.parsers.typescript.parse(source, { plugins })
+  const imports = new Map(
+    new ImportSortTypeScriptParser(program)
+      .parseImports(source)
+      .map((imported) => [imported.importStart ?? imported.start, imported])
+  )
 
   const bodyLength = program.body.length
 
@@ -19,6 +27,13 @@ const parse: Parser['parse'] = async (source, { plugins }) => {
   nodes.forEach((node, nodeIndex: number) => {
     if (node.type === 'ImportDeclaration') {
       if (node.specifiers.length > 1) {
+        const importStart = (node as ImportDeclaration).range?.[0]
+        const importRange = importStart === undefined ? undefined : imports.get(importStart)
+
+        if (importRange && hasAttachedImportComments(program, importRange)) {
+          return
+        }
+
         const index = bodyLength - nodeIndex - 1
 
         program.body.splice(index, 1)

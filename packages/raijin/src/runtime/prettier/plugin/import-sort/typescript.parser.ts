@@ -6,6 +6,14 @@ import type { IParser }           from 'import-sort-parser'
 import type { NamedMember }       from 'import-sort-parser'
 import type { AST }               from 'prettier'
 
+export const hasAttachedImportComments = (
+  program: AST,
+  imported: Pick<IImport, 'end' | 'start'>
+): boolean =>
+  (program.comments as Array<{ range?: [number, number] }>).some(
+    ({ range }) => range !== undefined && range[0] >= imported.start && range[1] <= imported.end
+  )
+
 const formatSplitNamedImport = (
   program: AST,
   code: string,
@@ -29,14 +37,8 @@ const formatSplitNamedImport = (
   }
 
   const { range } = node
-  const comments = program.comments as Array<{ range?: [number, number] }>
 
-  if (
-    comments.some(
-      ({ range: commentRange }) =>
-        commentRange !== undefined && commentRange[0] >= range[0] && commentRange[1] <= range[1]
-    )
-  ) {
+  if (hasAttachedImportComments(program, imported)) {
     return undefined
   }
 

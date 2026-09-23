@@ -518,6 +518,31 @@ test('should format split named imports and following code in one pass', async (
   )
 })
 
+test('should keep directive comments on their unsplit import', async () => {
+  const leading = await formatTypeScript(
+    [
+      '// eslint-disable-next-line',
+      "import { First, Second } from 'pkg'",
+      'export const value = First(Second)',
+    ].join('\n')
+  )
+
+  assert.match(leading, /\/\/ eslint-disable-next-line\nimport \{ First, Second \} from 'pkg'/u)
+  assert.equal(leading.match(/from 'pkg'/gu)?.length, 1)
+  assert.equal(await formatTypeScript(leading), leading)
+
+  const trailing = await formatTypeScript(
+    [
+      "import { First, Second } from 'pkg' // eslint-disable-line",
+      'export const value = First(Second)',
+    ].join('\n')
+  )
+
+  assert.match(trailing, /import \{ First, Second \} from 'pkg' \/\/ eslint-disable-line/u)
+  assert.equal(trailing.match(/from 'pkg'/gu)?.length, 1)
+  assert.equal(await formatTypeScript(trailing), trailing)
+})
+
 test('should align namespace imports that become single line after formatting', async () => {
   const source = [
     'import * as',
