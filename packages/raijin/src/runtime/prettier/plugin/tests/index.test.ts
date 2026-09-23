@@ -452,6 +452,72 @@ test('should align imports that become single line after formatting', async () =
   )
 })
 
+test('should format split named imports and following code in one pass', async () => {
+  const source = [
+    "import './globals.css'",
+    "import type { Metadata } from 'next'",
+    "import { Geist, Geist_Mono } from 'next/font/google'",
+    'export const metadata: Metadata = Geist(Geist_Mono)',
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "import './globals.css'",
+      '',
+      "import type { Metadata } from 'next'",
+      '',
+      "import { Geist }         from 'next/font/google'",
+      "import { Geist_Mono }    from 'next/font/google'",
+      '',
+      'export const metadata: Metadata = Geist(Geist_Mono)',
+      '',
+    ].join('\n')
+  )
+
+  await assertFormatted(
+    [
+      "import { First, Second } from 'pkg'",
+      "import { Third } from 'pkg'",
+      'export const result = First(Second, Third)',
+    ].join('\n'),
+    [
+      "import { First }  from 'pkg'",
+      "import { Second } from 'pkg'",
+      "import { Third }  from 'pkg'",
+      'export const result = First(Second, Third)',
+      '',
+    ].join('\n')
+  )
+
+  await assertFormatted(
+    [
+      "import Default, { First, Second } from 'pkg'",
+      'export const result = Default(First, Second)',
+    ].join('\n'),
+    [
+      "import { First }  from 'pkg'",
+      "import { Second } from 'pkg'",
+      "import Default    from 'pkg'",
+      'export const result = Default(First, Second)',
+      '',
+    ].join('\n')
+  )
+
+  await assertFormatted(
+    ["import { First as one, type Second as two } from 'pkg'", 'export const result = one'].join(
+      '\n'
+    ),
+    [
+      "import { First as one }       from 'pkg'",
+      "import { type Second as two } from 'pkg'",
+      '',
+      'export const result = one',
+      '',
+    ].join('\n')
+  )
+})
+
 test('should align namespace imports that become single line after formatting', async () => {
   const source = [
     'import * as',

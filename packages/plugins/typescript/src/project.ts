@@ -3,20 +3,24 @@ import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
 import type { TypecheckInput }          from './interfaces/input.js'
 
 import { isAbsolute }                   from 'node:path'
+import { dirname }                      from 'node:path'
 import { relative }                     from 'node:path'
 import { sep }                          from 'node:path'
 
 const PROJECT_CONFIG = 'tsconfig.json'
+const AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE = 2209
 
 const createDiagnosticsProgram = (
   commandLine: TypeScriptRuntime.ParsedCommandLine,
   typecheckSkipLibCheck: boolean | undefined,
   typescript: typeof TypeScriptRuntime,
-  files?: ReadonlyArray<string>
+  files?: ReadonlyArray<string>,
+  rootDir?: string
 ): TypeScriptRuntime.Program => {
   const options: TypeScriptRuntime.CompilerOptions = {
     ...commandLine.options,
     ...(typecheckSkipLibCheck === undefined ? {} : { skipLibCheck: typecheckSkipLibCheck }),
+    ...(rootDir === undefined ? {} : { rootDir }),
     noEmit: true,
   }
   const host = Object.assign(typescript.createCompilerHost(options), {
@@ -30,6 +34,40 @@ const createDiagnosticsProgram = (
     configFileParsingDiagnostics: commandLine.errors,
     ...(files === undefined ? { projectReferences: commandLine.projectReferences } : {}),
   })
+}
+
+const checkDiagnosticsProgram = (
+  commandLine: TypeScriptRuntime.ParsedCommandLine,
+  configFileName: string,
+  typecheckSkipLibCheck: boolean | undefined,
+  typescript: typeof TypeScriptRuntime,
+  files?: ReadonlyArray<string>
+): {
+  program: TypeScriptRuntime.Program
+  diagnostics: ReadonlyArray<TypeScriptRuntime.Diagnostic>
+} => {
+  const program = createDiagnosticsProgram(commandLine, typecheckSkipLibCheck, typescript, files)
+  const diagnostics = typescript.getPreEmitDiagnostics(program)
+
+  if (
+    commandLine.options.rootDir !== undefined ||
+    !diagnostics.some(({ code }) => code === AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE)
+  ) {
+    return { program, diagnostics }
+  }
+
+  const resolvedProgram = createDiagnosticsProgram(
+    commandLine,
+    typecheckSkipLibCheck,
+    typescript,
+    files,
+    dirname(configFileName)
+  )
+
+  return {
+    program: resolvedProgram,
+    diagnostics: typescript.getPreEmitDiagnostics(resolvedProgram),
+  }
 }
 
 const checkResolvedReferences = (
@@ -50,13 +88,14 @@ const checkResolvedReferences = (
 
       checkedProjectPaths.add(reference.sourceFile.fileName)
 
-      const program = createDiagnosticsProgram(
+      const { diagnostics: referenceDiagnostics } = checkDiagnosticsProgram(
         reference.commandLine,
+        reference.sourceFile.fileName,
         typecheckSkipLibCheck,
         typescript
       )
 
-      diagnostics.push(...typescript.getPreEmitDiagnostics(program))
+      diagnostics.push(...referenceDiagnostics)
       checkReferences(reference.references)
     })
   }
@@ -116,13 +155,14 @@ export const checkProject = (
     return parseDiagnostics
   }
 
-  const rootProgram = createDiagnosticsProgram(
+  const { program: rootProgram, diagnostics: rootDiagnostics } = checkDiagnosticsProgram(
     rootCommandLine,
+    rootConfigFileName,
     typecheckSkipLibCheck,
     typescript,
     input.kind === 'files' ? input.files : undefined
   )
-  const diagnostics = [...parseDiagnostics, ...typescript.getPreEmitDiagnostics(rootProgram)]
+  const diagnostics = [...parseDiagnostics, ...rootDiagnostics]
 
   return input.kind === 'files'
     ? diagnostics

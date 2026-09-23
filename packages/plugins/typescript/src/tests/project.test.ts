@@ -113,6 +113,33 @@ describe('root project discovery', () => {
   })
 })
 
+test('checks an export-mapped project without requiring a configured rootDir', async (t) => {
+  const config = JSON.stringify({
+    compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', outDir: 'dist' },
+    include: ['src/**/*.ts'],
+  })
+  const cwd = await createProject({
+    'package.json': JSON.stringify({
+      name: 'raijin-typecheck-project',
+      type: 'module',
+      exports: { '.': './src/index.ts' },
+    }),
+    'tsconfig.json': config,
+    'src/index.ts': 'export const value = true\n',
+    'src/consumer.ts':
+      "import { value } from 'raijin-typecheck-project'\nexport const result: boolean = value\n",
+  })
+  const before = await readTree(cwd)
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const diagnostics = checkProject({ kind: 'project', cwd, projectCwd: cwd }, undefined, ts)
+
+  assertDiagnostics(diagnostics)
+  assert.deepEqual(diagnostics, [])
+  assert.deepEqual(await readTree(cwd), before)
+})
+
 test('preserves native extends, include, exclude, and compiler options', async (t) => {
   const cwd = await createProject({
     'configs/base.json': JSON.stringify({

@@ -6,7 +6,86 @@ import type { IParser }           from 'import-sort-parser'
 import type { NamedMember }       from 'import-sort-parser'
 import type { AST }               from 'prettier'
 
+const formatSplitNamedImport = (
+  program: AST,
+  code: string,
+  imported: IImport,
+  eol: string,
+  isLastImport: boolean
+): string | undefined => {
+  const node = (program.body as Array<Node>).find(
+    (entry) => entry.type === 'ImportDeclaration' && entry.range?.[0] === imported.importStart
+  ) as ImportDeclaration | undefined
+
+  if (
+    !node?.range ||
+    node.specifiers.length < 2 ||
+    !node.specifiers.every(
+      (specifier) =>
+        specifier.type === 'ImportSpecifier' || specifier.type === 'ImportDefaultSpecifier'
+    )
+  ) {
+    return undefined
+  }
+
+  const { range } = node
+  const comments = program.comments as Array<{ range?: [number, number] }>
+
+  if (
+    comments.some(
+      ({ range: commentRange }) =>
+        commentRange !== undefined && commentRange[0] >= range[0] && commentRange[1] <= range[1]
+    )
+  ) {
+    return undefined
+  }
+
+  const namedMembers = imported.namedMembers.map(({ name, alias }) => {
+    const specifier = node.specifiers.find((entry) => {
+      if (entry.type !== 'ImportSpecifier') {
+        return false
+      }
+
+      const importedName =
+        entry.imported.type === 'Identifier' ? entry.imported.name : entry.imported.value
+
+      return importedName === name && entry.local.name === alias
+    })
+
+    return specifier?.range ? code.slice(specifier.range[0], specifier.range[1]) : undefined
+  })
+
+  if (!namedMembers.every((member) => member !== undefined)) {
+    return undefined
+  }
+
+  const defaultSpecifier = node.specifiers.find(
+    (specifier) => specifier.type === 'ImportDefaultSpecifier'
+  )
+
+  if (defaultSpecifier?.range && node.source.range) {
+    const moduleSource = code.slice(node.source.range[0], node.source.range[1])
+    const suffix = code.slice(node.source.range[1], range[1])
+    const importKeyword = node.importKind === 'type' ? 'import type' : 'import'
+    const namedDeclarations = namedMembers.map(
+      (member) => `${importKeyword} { ${member} } from ${moduleSource}${suffix}`
+    )
+    const defaultDeclaration = `${importKeyword} ${code.slice(defaultSpecifier.range[0], defaultSpecifier.range[1])} from ${moduleSource}${suffix}`
+
+    return [...namedDeclarations, defaultDeclaration].join(eol)
+  }
+
+  const first = node.specifiers[0]
+  const last = node.specifiers.at(-1)!
+  const prefix = code.slice(range[0], first.range![0])
+  const suffix = code.slice(last.range![1], range[1])
+
+  return `${namedMembers.map((member) => `${prefix}${member}${suffix}`).join(eol)}${isLastImport ? eol : ''}`
+}
+
 export class ImportSortTypeScriptParser implements IParser {
+  private remainingImports = 0
+
   constructor(private readonly program: AST) {}
 
   parseImports(code: string): Array<IImport> {
@@ -41,7 +120,7 @@ export class ImportSortTypeScriptParser implements IParser {
               // @ts-expect-error property does not exist
               name: specifier.imported.name,
               alias: specifier.local.name,
-              type: node.importKind === 'type',
+              type: specifier.importKind === 'type',
             })),
         }
 
@@ -83,6 +162,8 @@ export class ImportSortTypeScriptParser implements IParser {
         return imp
       })
 
+    this.remainingImports = imports.length
+
     return imports
   }
 
@@ -91,6 +172,23 @@ export class ImportSortTypeScriptParser implements IParser {
     const importEnd = imported.importEnd || imported.end
 
     const importCode = code.substring(importStart, importEnd)
+    this.remainingImports -= 1
+
+    const splitNamedImport = formatSplitNamedImport(
+      this.program,
+      code,
+      imported,
+      eol,
+      this.remainingImports === 0
+    )
+
+    if (splitNamedImport !== undefined) {
+      return (
+        code.substring(imported.start, importStart) +
+        splitNamedImport +
+        code.substring(importEnd, importEnd + (imported.end - importEnd))
+      )
+    }
 
     const { namedMembers } = imported
 
@@ -143,15 +241,16 @@ export class ImportSortTypeScriptParser implements IParser {
         '{' +
         eol +
         namedMembers
-          .map(({ name, alias }: { name: string; alias: string }, index) => {
+          .map(({ name, alias, type }: NamedMember, index) => {
             const lastImport: boolean = index === namedMembers.length - 1
             const comma: string = !useTrailingComma && lastImport ? '' : ','
+            const member = `${type ? 'type ' : ''}${name}`
 
             if (name === alias) {
-              return `${prefix}${name}${comma}` + eol
+              return `${prefix}${member}${comma}` + eol
             }
 
-            return `${prefix}${name} as ${alias}${comma}` + eol
+            return `${prefix}${member} as ${alias}${comma}` + eol
           })
           .join('') +
         '}'
@@ -165,12 +264,14 @@ export class ImportSortTypeScriptParser implements IParser {
       '{' +
       space +
       namedMembers
-        .map(({ name, alias }) => {
+        .map(({ name, alias, type }) => {
+          const member = `${type ? 'type ' : ''}${name}`
+
           if (name === alias) {
-            return `${name}`
+            return member
           }
 
-          return `${name} as ${alias}`
+          return `${member} as ${alias}`
         })
         .join(', ') +
       comma +
