@@ -159,7 +159,10 @@ test('should leave a PnP-ignored independent project to its own lint configurati
 
   await mkdir(sourceDirectory, { recursive: true })
   await mkdir(join(childDirectory, '.yarn/releases'), { recursive: true })
-  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
+  await writeFile(
+    join(cwd, 'package.json'),
+    '{"type":"module","linterIgnorePatterns":["!client/**"]}\n'
+  )
   await writeFile(
     join(cwd, 'tsconfig.json'),
     '{"compilerOptions":{"strict":true},"include":["src/**/*.ts"]}\n'

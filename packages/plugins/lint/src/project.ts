@@ -123,7 +123,7 @@ export const lintProjectSources = async ({
         ...(cache ? { cacheLocation: join(rootCwd, '.config/eslint/.eslintcache') } : {}),
       })),
       globInputPaths: false,
-      ignorePatterns: [...BASELINE_IGNORE_PATTERNS, ...pnpIgnorePatterns, ...ignorePatterns],
+      ignorePatterns: [...BASELINE_IGNORE_PATTERNS, ...ignorePatterns, ...pnpIgnorePatterns],
       warnIgnored: false,
     })
     const lintTargets =
