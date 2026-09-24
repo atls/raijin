@@ -12,7 +12,7 @@ yarn lint --cache
 
 ## Responsibilities
 
-ESLint owns config loading, target expansion, ignores, fixes and cache behavior. Raijin supplies the invocation boundary and its defaults when no project config exists. A project config is not silently replaced with Raijin rules. Missing targets and provider errors remain failures.
+ESLint owns config loading, target expansion, ignores, fixes and cache behavior. Raijin supplies the invocation boundary and its defaults when no project config exists. At a PnP project root, Raijin also passes Yarn's declared `pnpIgnorePatterns` to ESLint so an independent nested project remains under its own checks. Workspace invocations retain their own target scope. A project config is not silently replaced with Raijin rules. Missing targets and provider errors remain failures.
 
 ## Verification
 

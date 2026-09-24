@@ -51,6 +51,10 @@ export class CheckCommand extends BaseCommand {
     const { project } = invocation.yarn
     const projectCwd = toNativeCwd(project.cwd)
     const workspacePackageNames = getWorkspacePackageNames(project)
+    const pnpIgnorePatterns =
+      project.configuration.get('nodeLinker') === 'pnp'
+        ? project.configuration.get('pnpIgnorePatterns')
+        : []
 
     if (this.since) {
       const workspaces = await resolveCheckWorkspaces(project, this.since)
@@ -81,6 +85,7 @@ export class CheckCommand extends BaseCommand {
         const code = await runCheckPolicy({
           cwd,
           projectCwd,
+          pnpIgnorePatterns: cwd === projectCwd ? pnpIgnorePatterns : [],
           verify: true,
           skipTypecheck,
           typecheckScopes:
@@ -112,6 +117,7 @@ export class CheckCommand extends BaseCommand {
         const code = await runCheckPolicy({
           cwd: toNativeCwd(group.workspace.cwd),
           projectCwd,
+          pnpIgnorePatterns: group.workspace.cwd === project.cwd ? pnpIgnorePatterns : [],
           verify: this.verify,
           targets: group.input,
           testTargets: group.directories.targets.length > 0 ? group.directories : undefined,
@@ -131,6 +137,7 @@ export class CheckCommand extends BaseCommand {
     return runCheckPolicy({
       cwd: projectCwd,
       projectCwd,
+      pnpIgnorePatterns,
       verify: this.verify,
       typecheckScopes: await resolveProjectTypecheckScopes(project),
       workspacePackageNames,

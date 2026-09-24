@@ -105,6 +105,7 @@ export const lintProjectSources = async ({
   rootCwd,
   cwd,
   targets,
+  pnpIgnorePatterns = [],
   fix = false,
   cache = false,
 }: LintProjectInput): Promise<LintProjectResult> => {
@@ -122,7 +123,7 @@ export const lintProjectSources = async ({
         ...(cache ? { cacheLocation: join(rootCwd, '.config/eslint/.eslintcache') } : {}),
       })),
       globInputPaths: false,
-      ignorePatterns: [...BASELINE_IGNORE_PATTERNS, ...ignorePatterns],
+      ignorePatterns: [...BASELINE_IGNORE_PATTERNS, ...pnpIgnorePatterns, ...ignorePatterns],
       warnIgnored: false,
     })
     const lintTargets =

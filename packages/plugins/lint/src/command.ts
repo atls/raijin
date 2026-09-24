@@ -34,9 +34,14 @@ export class LintCommand extends BaseCommand {
         source: 'explicit',
         targets: this.files,
       })
+      const { configuration } = this.context.invocation.workspace.project
       const result = await lintProjectSources({
         rootCwd: toNativeCwd(project.cwd),
         cwd: toNativeCwd(executionCwd),
+        pnpIgnorePatterns:
+          executionCwd === project.cwd && configuration.get('nodeLinker') === 'pnp'
+            ? configuration.get('pnpIgnorePatterns')
+            : [],
         targets:
           input.targets.length > 0
             ? input.targets.map(({ path }) => toNativePath(path))

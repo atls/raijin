@@ -148,6 +148,70 @@ test('should lint project sources and ignore generated output when targets are o
   )
 })
 
+test('should leave a PnP-ignored independent project to its own lint configuration', async (t) => {
+  const cwd = await createProject('lint-independent-project')
+  const sourceDirectory = join(cwd, 'src')
+  const childDirectory = join(cwd, 'client')
+  const sourceFile = join(sourceDirectory, 'index.ts')
+  const childConfig = join(childDirectory, 'eslint.config.js')
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  await mkdir(sourceDirectory, { recursive: true })
+  await mkdir(join(childDirectory, '.yarn/releases'), { recursive: true })
+  await writeFile(join(cwd, 'package.json'), '{"type":"module"}\n')
+  await writeFile(
+    join(cwd, 'tsconfig.json'),
+    '{"compilerOptions":{"strict":true},"include":["src/**/*.ts"]}\n'
+  )
+  await writeFile(sourceFile, 'export const value = 1;\n')
+  await writeFile(join(childDirectory, 'package.json'), '{"type":"module"}\n')
+  await writeFile(join(childDirectory, 'yarn.lock'), '# independent project\n')
+  await writeFile(join(childDirectory, '.yarnrc.yml'), 'nodeLinker: node-modules\n')
+  await writeFile(join(childDirectory, '.prettierrc.js'), 'export default {}\n')
+  await writeFile(childConfig, 'export default []\n')
+  await writeFile(join(childDirectory, '.yarn/releases/yarn.js'), 'export {}\n')
+
+  const input = {
+    rootCwd: cwd,
+    cwd,
+    pnpIgnorePatterns: ['./client/**'],
+  }
+  const full = await lintProjectSources(input)
+
+  assert.equal(full.status, 'completed', JSON.stringify(full, undefined, 2))
+  assert.deepEqual(
+    full.results.map(({ filePath }) => filePath),
+    [sourceFile]
+  )
+  assert.deepEqual(
+    full.terminal,
+    { exitCode: 0, reason: 'clean' },
+    JSON.stringify(full, undefined, 2)
+  )
+
+  const explicit = await lintProjectSources({ ...input, targets: [childConfig] })
+
+  assert.equal(explicit.status, 'completed', JSON.stringify(explicit, undefined, 2))
+  assert.deepEqual(explicit.results, [])
+  assert.deepEqual(explicit.terminal, { exitCode: 0, reason: 'clean' })
+
+  await writeFile(sourceFile, "console.log('root violation')\n")
+
+  const failingRoot = await lintProjectSources(input)
+
+  assert.equal(failingRoot.status, 'completed', JSON.stringify(failingRoot, undefined, 2))
+  assert.deepEqual(
+    failingRoot.results.map(({ filePath }) => filePath),
+    [sourceFile]
+  )
+  assert.equal(
+    failingRoot.results[0]?.diagnostics.some(({ ruleId }) => ruleId === 'no-console'),
+    true
+  )
+  assert.deepEqual(failingRoot.terminal, { exitCode: 1, reason: 'diagnostics' })
+})
+
 test('should project unmatched literal targets as provider failures', async (t) => {
   const cwd = await createProject('lint-provider-failure')
 

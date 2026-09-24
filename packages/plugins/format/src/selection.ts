@@ -154,7 +154,8 @@ const selectProjectTargets = async (cwd: string): Promise<Array<string>> =>
 
 export const selectFiles = async (
   cwd: string,
-  input?: CommandInput
+  input?: CommandInput,
+  pnpIgnorePatterns: ReadonlyArray<string> = []
 ): Promise<Array<{ file: string; path: string }>> => {
   const targets = Array.from(
     new Set(input ? await selectExplicitTargets(input) : await selectProjectTargets(cwd))
@@ -162,6 +163,7 @@ export const selectFiles = async (
   const paths = ignorer
     .default()
     .add(ignoredPaths)
+    .add(pnpIgnorePatterns.map((pattern) => pattern.replace(/^\.\//u, '')))
     .add(await resolvePrettierProjectIgnorePatterns(cwd))
     .filter(targets.map((path) => relative(cwd, path)))
   const isGitIgnored = createGitIgnoreSelector(cwd)
