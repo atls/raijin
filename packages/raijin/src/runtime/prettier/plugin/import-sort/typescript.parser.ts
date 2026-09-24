@@ -1,18 +1,9 @@
 import type { Node }              from '@babel/types'
-import type { Comment }           from '@babel/types'
 import type { ImportDeclaration } from '@babel/types'
 import type { IImport }           from 'import-sort-parser'
 import type { IParser }           from 'import-sort-parser'
 import type { NamedMember }       from 'import-sort-parser'
 import type { AST }               from 'prettier'
-
-export const hasAttachedImportComments = (
-  program: AST,
-  imported: Pick<IImport, 'end' | 'start'>
-): boolean =>
-  (program.comments as Array<{ range?: [number, number] }>).some(
-    ({ range }) => range !== undefined && range[0] >= imported.start && range[1] <= imported.end
-  )
 
 const formatSplitNamedImport = (
   program: AST,
@@ -37,10 +28,6 @@ const formatSplitNamedImport = (
   }
 
   const { range } = node
-
-  if (hasAttachedImportComments(program, imported)) {
-    return undefined
-  }
 
   const namedMembers = imported.namedMembers.map(({ name, alias }) => {
     const specifier = node.specifiers.find((entry) => {
@@ -91,8 +78,6 @@ export class ImportSortTypeScriptParser implements IParser {
   constructor(private readonly program: AST) {}
 
   parseImports(code: string): Array<IImport> {
-    const sourceLines = code.split(/\r?\n/u)
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const imports: Array<IImport> = this.program.body
       .filter((node: Node) => node.type === 'ImportDeclaration')
@@ -126,49 +111,6 @@ export class ImportSortTypeScriptParser implements IParser {
               alias: specifier.local.name,
               type: specifier.importKind === 'type',
             })),
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        const trailingComment = this.program.comments.find(
-          (comment: Comment) =>
-            comment.loc!.start.line === node.loc!.end.line &&
-            comment.loc!.start.column >= node.loc!.end.column &&
-            sourceLines[node.loc!.end.line - 1]
-              ?.slice(node.loc!.end.column, comment.loc!.start.column)
-              .trim() === ''
-        )
-
-        if (trailingComment) {
-          // eslint-disable-next-line prefer-destructuring
-          imp.end = trailingComment.range[1]
-        }
-
-        const findLeadingComments = (position: number): typeof this.program.comments => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          const leadingComment = this.program.comments.find(
-            (comment: Comment) =>
-              comment.loc!.end.line === position &&
-              sourceLines[comment.loc!.start.line - 1]
-                ?.slice(0, comment.loc!.start.column)
-                .trim() === '' &&
-              sourceLines[comment.loc!.end.line - 1]?.slice(comment.loc!.end.column).trim() === ''
-          )
-
-          if (!leadingComment) {
-            return []
-          }
-
-          const parents = findLeadingComments(leadingComment.loc.start.line - 1)
-
-          return [...parents, leadingComment]
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const leadingComments: Array<any> = findLeadingComments(node.loc!.start.line - 1)
-
-        if (leadingComments.length > 0) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          imp.start = leadingComments.at(0).range.at(0)
         }
 
         return imp

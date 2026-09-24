@@ -7,17 +7,14 @@ import * as babel                             from 'prettier/plugins/babel'
 import * as typescript                        from 'prettier/plugins/typescript'
 import sortPackageJson                        from 'sort-package-json'
 
-import { ImportSortTypeScriptParser }         from './import-sort/typescript.parser.js'
 import { preprocess as importSortPreprocess } from './import-sort/index.js'
-import { hasAttachedImportComments }          from './import-sort/typescript.parser.js'
+import { getSortableImports }                 from './import-sort/preprocess.js'
 
 const parse: Parser['parse'] = async (source, { plugins }) => {
   // @ts-expect-error parser options type is wider at runtime than @types/prettier declares
   const program = typescript.parsers.typescript.parse(source, { plugins })
-  const imports = new Map(
-    new ImportSortTypeScriptParser(program)
-      .parseImports(source)
-      .map((imported) => [imported.importStart ?? imported.start, imported])
+  const sortableImportStarts = new Set(
+    getSortableImports(program, source).map((imported) => imported.range[0])
   )
 
   const bodyLength = program.body.length
@@ -28,9 +25,7 @@ const parse: Parser['parse'] = async (source, { plugins }) => {
     if (node.type === 'ImportDeclaration') {
       if (node.specifiers.length > 1) {
         const importStart = (node as ImportDeclaration).range?.[0]
-        const importRange = importStart === undefined ? undefined : imports.get(importStart)
-
-        if (importRange && hasAttachedImportComments(program, importRange)) {
+        if (importStart === undefined || !sortableImportStarts.has(importStart)) {
           return
         }
 
