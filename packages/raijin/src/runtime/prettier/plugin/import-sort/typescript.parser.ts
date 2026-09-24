@@ -91,6 +91,8 @@ export class ImportSortTypeScriptParser implements IParser {
   constructor(private readonly program: AST) {}
 
   parseImports(code: string): Array<IImport> {
+    const sourceLines = code.split(/\r?\n/u)
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const imports: Array<IImport> = this.program.body
       .filter((node: Node) => node.type === 'ImportDeclaration')
@@ -141,7 +143,11 @@ export class ImportSortTypeScriptParser implements IParser {
         const findLeadingComments = (position: number): typeof this.program.comments => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           const leadingComment = this.program.comments.find(
-            (comment: Comment) => comment.loc!.end.line === position
+            (comment: Comment) =>
+              comment.loc!.end.line === position &&
+              sourceLines[comment.loc!.start.line - 1]
+                ?.slice(0, comment.loc!.start.column)
+                .trim() === ''
           )
 
           if (!leadingComment) {

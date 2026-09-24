@@ -574,6 +574,21 @@ test('should keep directive comments on their unsplit import', async () => {
   assert.equal(await formatTypeScript(trailingMultiline), trailingMultiline)
 })
 
+test('should keep a multiline comment with the preceding statement when sorting imports', async () => {
+  const source = [
+    'const marker = true /* previous statement',
+    ' */',
+    "import { Zebra } from 'z'",
+    "import { Alpha } from 'a'",
+    'export { marker }',
+  ].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.match(formatted, /const marker = true \/\* previous statement\n \*\/\n/u)
+  assert.ok(formatted.indexOf("from 'a'") < formatted.indexOf("from 'z'"))
+  assert.equal(await formatTypeScript(formatted), formatted)
+})
+
 test('should align namespace imports that become single line after formatting', async () => {
   const source = [
     'import * as',
