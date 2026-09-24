@@ -7,28 +7,16 @@ import { relative }                     from 'node:path'
 import { sep }                          from 'node:path'
 
 const PROJECT_CONFIG = 'tsconfig.json'
-const AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE = 2209
-
-type ProgramWithCommonSourceDirectory = TypeScriptRuntime.Program & {
-  getCommonSourceDirectory: () => string
-}
-
-const hasCommonSourceDirectory = (
-  program: TypeScriptRuntime.Program
-): program is ProgramWithCommonSourceDirectory =>
-  'getCommonSourceDirectory' in program && typeof program.getCommonSourceDirectory === 'function'
 
 const createDiagnosticsProgram = (
   commandLine: TypeScriptRuntime.ParsedCommandLine,
   typecheckSkipLibCheck: boolean | undefined,
   typescript: typeof TypeScriptRuntime,
-  files?: ReadonlyArray<string>,
-  rootDir?: string
+  files?: ReadonlyArray<string>
 ): TypeScriptRuntime.Program => {
   const options: TypeScriptRuntime.CompilerOptions = {
     ...commandLine.options,
     ...(typecheckSkipLibCheck === undefined ? {} : { skipLibCheck: typecheckSkipLibCheck }),
-    ...(rootDir === undefined ? {} : { rootDir }),
     noEmit: true,
   }
   const host = Object.assign(typescript.createCompilerHost(options), {
@@ -42,48 +30,6 @@ const createDiagnosticsProgram = (
     configFileParsingDiagnostics: commandLine.errors,
     ...(files === undefined ? { projectReferences: commandLine.projectReferences } : {}),
   })
-}
-
-const checkDiagnosticsProgram = (
-  commandLine: TypeScriptRuntime.ParsedCommandLine,
-  typecheckSkipLibCheck: boolean | undefined,
-  typescript: typeof TypeScriptRuntime,
-  files?: ReadonlyArray<string>
-): {
-  program: TypeScriptRuntime.Program
-  diagnostics: ReadonlyArray<TypeScriptRuntime.Diagnostic>
-} => {
-  const program = createDiagnosticsProgram(commandLine, typecheckSkipLibCheck, typescript, files)
-  const diagnostics = typescript.getPreEmitDiagnostics(program)
-
-  if (
-    commandLine.options.rootDir !== undefined ||
-    !diagnostics.some(({ code }) => code === AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE)
-  ) {
-    return { program, diagnostics }
-  }
-
-  const sourceProgram =
-    files === undefined
-      ? program
-      : createDiagnosticsProgram(commandLine, typecheckSkipLibCheck, typescript)
-
-  if (!hasCommonSourceDirectory(sourceProgram)) {
-    return { program, diagnostics }
-  }
-
-  const resolvedProgram = createDiagnosticsProgram(
-    commandLine,
-    typecheckSkipLibCheck,
-    typescript,
-    files,
-    sourceProgram.getCommonSourceDirectory()
-  )
-
-  return {
-    program: resolvedProgram,
-    diagnostics: typescript.getPreEmitDiagnostics(resolvedProgram),
-  }
 }
 
 const checkResolvedReferences = (
@@ -104,13 +50,13 @@ const checkResolvedReferences = (
 
       checkedProjectPaths.add(reference.sourceFile.fileName)
 
-      const { diagnostics: referenceDiagnostics } = checkDiagnosticsProgram(
+      const program = createDiagnosticsProgram(
         reference.commandLine,
         typecheckSkipLibCheck,
         typescript
       )
 
-      diagnostics.push(...referenceDiagnostics)
+      diagnostics.push(...typescript.getPreEmitDiagnostics(program))
       checkReferences(reference.references)
     })
   }
@@ -170,13 +116,13 @@ export const checkProject = (
     return parseDiagnostics
   }
 
-  const { program: rootProgram, diagnostics: rootDiagnostics } = checkDiagnosticsProgram(
+  const rootProgram = createDiagnosticsProgram(
     rootCommandLine,
     typecheckSkipLibCheck,
     typescript,
     input.kind === 'files' ? input.files : undefined
   )
-  const diagnostics = [...parseDiagnostics, ...rootDiagnostics]
+  const diagnostics = [...parseDiagnostics, ...typescript.getPreEmitDiagnostics(rootProgram)]
 
   return input.kind === 'files'
     ? diagnostics

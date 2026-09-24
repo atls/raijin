@@ -113,40 +113,7 @@ describe('root project discovery', () => {
   })
 })
 
-test('checks an export-mapped project without requiring a configured rootDir', async (t) => {
-  const config = JSON.stringify({
-    compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', outDir: 'dist' },
-    include: ['src/**/*.ts'],
-  })
-
-  const checkExportedEntry = async (exportedEntry: string): Promise<void> => {
-    const cwd = await createProject({
-      'package.json': JSON.stringify({
-        name: 'raijin-typecheck-project',
-        type: 'module',
-        exports: { '.': exportedEntry },
-      }),
-      'tsconfig.json': config,
-      'src/index.ts': 'export const value = true\n',
-      'src/consumer.ts':
-        "import { value } from 'raijin-typecheck-project'\nexport const result: boolean = value\n",
-    })
-    const before = await readTree(cwd)
-
-    t.after(async () => rm(cwd, { recursive: true, force: true }))
-
-    const diagnostics = checkProject({ kind: 'project', cwd, projectCwd: cwd }, undefined, ts)
-
-    assertDiagnostics(diagnostics)
-    assert.deepEqual(diagnostics, [], exportedEntry)
-    assert.deepEqual(await readTree(cwd), before)
-  }
-
-  await checkExportedEntry('./src/index.ts')
-  await checkExportedEntry('./dist/index.js')
-})
-
-test('uses the configured source root for a nested file check in a dist-exported project', async (t) => {
+test('preserves TypeScript root ambiguity for a dist export without configured rootDir', async (t) => {
   const cwd = await createProject({
     'package.json': JSON.stringify({
       name: 'raijin-typecheck-project',
@@ -157,6 +124,33 @@ test('uses the configured source root for a nested file check in a dist-exported
       compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', outDir: 'dist' },
       include: ['src/**/*.ts'],
     }),
+    'src/index.ts': 'export const value = true\n',
+    'src/consumer.ts':
+      "import { value } from 'raijin-typecheck-project'\nexport const result: boolean = value\n",
+  })
+  const before = await readTree(cwd)
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const diagnostics = checkProject({ kind: 'project', cwd, projectCwd: cwd }, undefined, ts)
+
+  assertDiagnostics(diagnostics)
+  assert.equal(hasDiagnostic(diagnostics, 2209), true)
+  assert.deepEqual(await readTree(cwd), before)
+})
+
+test('preserves TypeScript root ambiguity for mixed source and tooling file checks', async (t) => {
+  const cwd = await createProject({
+    'package.json': JSON.stringify({
+      name: 'raijin-typecheck-project',
+      type: 'module',
+      exports: { '.': './dist/index.js' },
+    }),
+    'tsconfig.json': JSON.stringify({
+      compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', outDir: 'dist' },
+      include: ['src/**/*.ts', 'vite.config.ts'],
+    }),
+    'vite.config.ts': "export const mode = 'development'\n",
     'src/index.ts': 'export const value = true\n',
     'src/sub/consumer.ts':
       "import { value } from 'raijin-typecheck-project'\nexport const result: boolean = value\n",
@@ -176,7 +170,9 @@ test('uses the configured source root for a nested file check in a dist-exported
   assertDiagnostics(fullDiagnostics)
   assertDiagnostics(selectedDiagnostics)
   assert.equal(hasDiagnostic(fullDiagnostics, 2322, '/src/unselected.ts'), true)
-  assert.deepEqual(selectedDiagnostics, [])
+  assert.equal(hasDiagnostic(fullDiagnostics, 2209), true)
+  assert.equal(hasDiagnostic(selectedDiagnostics, 2209), true)
+  assert.equal(hasDiagnostic(selectedDiagnostics, 2322, '/src/unselected.ts'), false)
   assert.deepEqual(await readTree(cwd), before)
 })
 
