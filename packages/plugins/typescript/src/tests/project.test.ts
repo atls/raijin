@@ -146,6 +146,40 @@ test('checks an export-mapped project without requiring a configured rootDir', a
   await checkExportedEntry('./dist/index.js')
 })
 
+test('uses the configured source root for a nested file check in a dist-exported project', async (t) => {
+  const cwd = await createProject({
+    'package.json': JSON.stringify({
+      name: 'raijin-typecheck-project',
+      type: 'module',
+      exports: { '.': './dist/index.js' },
+    }),
+    'tsconfig.json': JSON.stringify({
+      compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', outDir: 'dist' },
+      include: ['src/**/*.ts'],
+    }),
+    'src/index.ts': 'export const value = true\n',
+    'src/sub/consumer.ts':
+      "import { value } from 'raijin-typecheck-project'\nexport const result: boolean = value\n",
+    'src/unselected.ts': 'export const unrelated: string = 1\n',
+  })
+  const before = await readTree(cwd)
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const fullDiagnostics = checkProject({ kind: 'project', cwd, projectCwd: cwd }, undefined, ts)
+  const selectedDiagnostics = checkProject(
+    { kind: 'files', cwd, projectCwd: cwd, files: [join(cwd, 'src/sub/consumer.ts')] },
+    undefined,
+    ts
+  )
+
+  assertDiagnostics(fullDiagnostics)
+  assertDiagnostics(selectedDiagnostics)
+  assert.equal(hasDiagnostic(fullDiagnostics, 2322, '/src/unselected.ts'), true)
+  assert.deepEqual(selectedDiagnostics, [])
+  assert.deepEqual(await readTree(cwd), before)
+})
+
 test('preserves native extends, include, exclude, and compiler options', async (t) => {
   const cwd = await createProject({
     'configs/base.json': JSON.stringify({

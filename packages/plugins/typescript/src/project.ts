@@ -58,9 +58,17 @@ const checkDiagnosticsProgram = (
 
   if (
     commandLine.options.rootDir !== undefined ||
-    !diagnostics.some(({ code }) => code === AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE) ||
-    !hasCommonSourceDirectory(program)
+    !diagnostics.some(({ code }) => code === AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE)
   ) {
+    return { program, diagnostics }
+  }
+
+  const sourceProgram =
+    files === undefined
+      ? program
+      : createDiagnosticsProgram(commandLine, typecheckSkipLibCheck, typescript)
+
+  if (!hasCommonSourceDirectory(sourceProgram)) {
     return { program, diagnostics }
   }
 
@@ -69,7 +77,7 @@ const checkDiagnosticsProgram = (
     typecheckSkipLibCheck,
     typescript,
     files,
-    program.getCommonSourceDirectory()
+    sourceProgram.getCommonSourceDirectory()
   )
 
   return {
