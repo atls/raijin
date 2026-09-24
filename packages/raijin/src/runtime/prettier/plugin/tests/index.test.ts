@@ -505,6 +505,14 @@ test('should leave import attributes on their original declaration', async () =>
   assert.equal(await formatTypeScript(formatted), formatted)
 })
 
+test('should preserve braces inside a named import module specifier', async () => {
+  const source = ["import { Alpha } from './{data}.js'", 'export { Alpha }'].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.match(formatted, /import \{ Alpha \} from '.\/\{data\}\.js'/u)
+  assert.equal(await formatTypeScript(formatted), formatted)
+})
+
 test('should keep import and export source alignment independent', async () => {
   const source = [
     "import { Foo } from './foo.js'",

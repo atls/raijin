@@ -125,7 +125,6 @@ export class ImportSortTypeScriptParser implements IParser {
     const importStart = imported.importStart || imported.start
     const importEnd = imported.importEnd || imported.end
 
-    const importCode = code.substring(importStart, importEnd)
     this.remainingImports -= 1
 
     const splitNamedImport = formatSplitNamedImport(
@@ -150,28 +149,48 @@ export class ImportSortTypeScriptParser implements IParser {
       return code.substring(imported.start, imported.end)
     }
 
-    const newImportCode = importCode.replace(/\{[\s\S]*\}/g, (namedMembersString) => {
-      const useMultipleLines = namedMembersString.includes(eol)
+    const node = (this.program.body as Array<Node>).find(
+      (entry) => entry.type === 'ImportDeclaration' && entry.range?.[0] === importStart
+    ) as ImportDeclaration | undefined
+    const firstNamed = node?.specifiers.find((specifier) => specifier.type === 'ImportSpecifier')
+    const lastNamed = node?.specifiers.findLast((specifier) => specifier.type === 'ImportSpecifier')
 
-      let prefix: string | undefined
+    if (!firstNamed?.range || !lastNamed?.range) {
+      return code.substring(imported.start, imported.end)
+    }
 
-      if (useMultipleLines) {
-        ;[prefix] = namedMembersString.split(eol)[1].match(/^\s*/)
-      }
+    const openingBrace = code.lastIndexOf('{', firstNamed.range[0])
+    const closingBrace = code.indexOf('}', lastNamed.range[1])
 
-      const useSpaces = namedMembersString.charAt(1) === ' '
+    if (openingBrace < importStart || closingBrace < 0 || closingBrace >= importEnd) {
+      return code.substring(imported.start, imported.end)
+    }
 
-      const userTrailingComma = namedMembersString.replace('}', '').trim().endsWith(',')
+    const namedMembersString = code.slice(openingBrace, closingBrace + 1)
+    const useMultipleLines = namedMembersString.includes(eol)
 
-      return this.formatNamedMembers(
-        namedMembers,
-        useMultipleLines,
-        useSpaces,
-        userTrailingComma,
-        prefix,
-        eol
-      )
-    })
+    let prefix: string | undefined
+
+    if (useMultipleLines) {
+      prefix = namedMembersString.split(eol)[1]?.match(/^\s*/u)?.[0]
+    }
+
+    const useSpaces = namedMembersString.charAt(1) === ' '
+
+    const userTrailingComma = namedMembersString.slice(0, -1).trim().endsWith(',')
+
+    const formattedMembers = this.formatNamedMembers(
+      namedMembers,
+      useMultipleLines,
+      useSpaces,
+      userTrailingComma,
+      prefix,
+      eol
+    )
+    const newImportCode =
+      code.slice(importStart, openingBrace) +
+      formattedMembers +
+      code.slice(closingBrace + 1, importEnd)
 
     return (
       code.substring(imported.start, importStart) +
