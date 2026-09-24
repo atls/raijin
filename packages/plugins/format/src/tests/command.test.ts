@@ -39,7 +39,13 @@ const runCommand = async (
   const invocation = {
     executionCwd: toPortableCwd(cwd),
     invocationCwd: toPortableCwd(cwd),
-    yarn: { project: { workspaces: [] as Array<Workspace> } },
+    yarn: {
+      project: {
+        cwd: toPortableCwd(cwd),
+        configuration: { get: () => 'node-modules' },
+        workspaces: [] as Array<Workspace>,
+      },
+    },
   } as unknown as WorkspaceInvocation
   const command = Object.assign(Object.create(FormatCommand.prototype), {
     context: { invocation, stderr: stderr.output, stdout: stdout.output },

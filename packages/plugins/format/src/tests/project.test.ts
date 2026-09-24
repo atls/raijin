@@ -159,6 +159,75 @@ test('should honor nested gitignore negation without reentering an ignored paren
   assert.equal(await readFile(blockedFile, 'utf8'), 'export declare const blocked :number\n')
 })
 
+test('should not format files inside a PnP-ignored independent project', async (t) => {
+  const cwd = await createProject()
+  const sourceDirectory = join(cwd, 'src')
+  const childDirectory = join(cwd, 'client')
+  const sourceFile = join(sourceDirectory, 'index.ts')
+  const childFile = join(childDirectory, 'index.ts')
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  await mkdir(sourceDirectory, { recursive: true })
+  await mkdir(childDirectory, { recursive: true })
+  await writeFile(sourceFile, 'export const root={value:1}\n')
+  await writeFile(childFile, 'export const child={value:1}\n')
+  await writeFile(join(childDirectory, 'yarn.lock'), '# independent project\n')
+  await writeFile(join(childDirectory, '.yarnrc.yml'), 'nodeLinker: node-modules\n')
+
+  const pnpIgnorePatterns = ['./client/**']
+  const targets = createTargets(cwd, ['src/index.ts', 'client/index.ts'])
+
+  assert.deepEqual(await formatProjectSources({ cwd, targets, pnpIgnorePatterns }), {
+    files: [{ file: join('src', 'index.ts'), status: 'changed' }],
+  })
+  assert.equal(await readFile(sourceFile, 'utf8'), 'export const root = { value: 1 }\n')
+  assert.equal(await readFile(childFile, 'utf8'), 'export const child={value:1}\n')
+
+  const projectFiles = (
+    await formatProjectSources({ cwd, pnpIgnorePatterns, write: false })
+  ).files.map(({ file }) => file)
+
+  assert.equal(projectFiles.includes(join('client', 'index.ts')), false)
+  assert.equal(projectFiles.includes(join('src', 'index.ts')), true)
+})
+
+test('should honor Yarn brace and extglob PnP ignore patterns', async (t) => {
+  await Promise.all(
+    ['./{client,legacy}/**', './@(client|legacy)/**'].map(async (pattern) => {
+      const cwd = await createProject()
+      const rootFile = join(cwd, 'src/index.ts')
+      const clientFile = join(cwd, 'client/index.ts')
+      const legacyFile = join(cwd, 'legacy/index.ts')
+
+      t.after(async () => rm(cwd, { recursive: true, force: true }))
+      await mkdir(join(cwd, 'src'), { recursive: true })
+      await mkdir(join(cwd, 'client'), { recursive: true })
+      await mkdir(join(cwd, 'legacy'), { recursive: true })
+      await writeFile(rootFile, 'export const root={value:1}\n')
+      await writeFile(clientFile, 'export const client={value:1}\n')
+      await writeFile(legacyFile, 'export const legacy={value:1}\n')
+
+      const targets = createTargets(cwd, ['src/index.ts', 'client/index.ts', 'legacy/index.ts'])
+      const pnpIgnorePatterns = [pattern]
+
+      assert.deepEqual(await formatProjectSources({ cwd, targets, pnpIgnorePatterns }), {
+        files: [{ file: join('src', 'index.ts'), status: 'changed' }],
+      })
+      assert.equal(await readFile(clientFile, 'utf8'), 'export const client={value:1}\n')
+      assert.equal(await readFile(legacyFile, 'utf8'), 'export const legacy={value:1}\n')
+
+      const projectFiles = (
+        await formatProjectSources({ cwd, pnpIgnorePatterns, write: false })
+      ).files.map(({ file }) => file)
+
+      assert.equal(projectFiles.includes(join('src', 'index.ts')), true)
+      assert.equal(projectFiles.includes(join('client', 'index.ts')), false)
+      assert.equal(projectFiles.includes(join('legacy', 'index.ts')), false)
+    })
+  )
+})
+
 test('should report formatter drift without writing in verification mode', async (t) => {
   const cwd = await createProject()
   const sourceFile = join(cwd, 'source.ts')
