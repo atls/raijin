@@ -557,6 +557,21 @@ test('should keep directive comments on their unsplit import', async () => {
   )
   assert.equal(multiline.match(/from 'pkg'/gu)?.length, 1)
   assert.equal(await formatTypeScript(multiline), multiline)
+
+  const trailingMultiline = await formatTypeScript(
+    [
+      "import { First, Second } from 'pkg' /* eslint-disable-line",
+      ' */',
+      'export const value = First(Second)',
+    ].join('\n')
+  )
+
+  assert.match(
+    trailingMultiline,
+    /import \{ First, Second \} from 'pkg' \/\* eslint-disable-line\n \*\//u
+  )
+  assert.equal(trailingMultiline.match(/from 'pkg'/gu)?.length, 1)
+  assert.equal(await formatTypeScript(trailingMultiline), trailingMultiline)
 })
 
 test('should align namespace imports that become single line after formatting', async () => {

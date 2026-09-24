@@ -127,15 +127,15 @@ export class ImportSortTypeScriptParser implements IParser {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        const lineComment = this.program.comments.find(
+        const trailingComment = this.program.comments.find(
           (comment: Comment) =>
-            comment.loc!.start.line === node.loc!.start.line &&
-            comment.loc!.end.line === node.loc!.end.line
+            comment.loc!.start.line === node.loc!.end.line &&
+            comment.loc!.start.column >= node.loc!.end.column
         )
 
-        if (lineComment) {
+        if (trailingComment) {
           // eslint-disable-next-line prefer-destructuring
-          imp.end = lineComment.range[1]
+          imp.end = trailingComment.range[1]
         }
 
         const findLeadingComments = (position: number): typeof this.program.comments => {
