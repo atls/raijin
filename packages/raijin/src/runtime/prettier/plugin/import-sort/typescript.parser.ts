@@ -141,7 +141,7 @@ export class ImportSortTypeScriptParser implements IParser {
         const findLeadingComments = (position: number): typeof this.program.comments => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           const leadingComment = this.program.comments.find(
-            (comment: Comment) => comment.loc!.start.line === position
+            (comment: Comment) => comment.loc!.end.line === position
           )
 
           if (!leadingComment) {
