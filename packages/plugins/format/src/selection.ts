@@ -7,6 +7,7 @@ import { relative }                             from 'node:path'
 import { resolve }                              from 'node:path'
 import { sep }                                  from 'node:path'
 
+import { miscUtils }                            from '@yarnpkg/core'
 import ignorer                                  from 'ignore'
 
 import { resolvePrettierProjectIgnorePatterns } from '@atls/raijin/config/prettier'
@@ -160,12 +161,18 @@ export const selectFiles = async (
   const targets = Array.from(
     new Set(input ? await selectExplicitTargets(input) : await selectProjectTargets(cwd))
   )
+  const yarnIgnorePattern = miscUtils.buildIgnorePattern([...pnpIgnorePatterns])
+  // eslint-disable-next-line security/detect-non-literal-regexp
+  const yarnIgnoreMatcher = yarnIgnorePattern ? new RegExp(yarnIgnorePattern) : undefined
   const paths = ignorer
     .default()
     .add(ignoredPaths)
-    .add(pnpIgnorePatterns.map((pattern) => pattern.replace(/^\.\//u, '')))
     .add(await resolvePrettierProjectIgnorePatterns(cwd))
-    .filter(targets.map((path) => relative(cwd, path)))
+    .filter(
+      targets
+        .map((path) => relative(cwd, path))
+        .filter((path) => !yarnIgnoreMatcher?.test(path.split(sep).join('/')))
+    )
   const isGitIgnored = createGitIgnoreSelector(cwd)
   const selected = await Promise.all(
     paths.map(async (file) => ({ file, ignored: await isGitIgnored(resolve(cwd, file)) }))
