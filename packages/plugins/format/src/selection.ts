@@ -1,8 +1,11 @@
 import type { CommandInput }                    from '@atls/raijin/commands'
 
+import { readFile }                             from 'node:fs/promises'
 import { stat }                                 from 'node:fs/promises'
+import { join }                                 from 'node:path'
 import { relative }                             from 'node:path'
 import { resolve }                              from 'node:path'
+import { sep }                                  from 'node:path'
 
 import ignorer                                  from 'ignore'
 
@@ -35,6 +38,69 @@ const ignoredPaths = [
 const sourcePatterns = ['**/*.{js,mjs,cjs,ts,tsx,yml,yaml,json,graphql,md,mdx}']
 
 const discoveryIgnores = ['**/node_modules/**', '**/.{git,svn,hg}/**', '**/.yarn/**', '**/.idea/**']
+
+type GitIgnore = ReturnType<typeof ignorer.default>
+
+type ScopedGitIgnore = { directory: string; matcher: GitIgnore }
+
+const readGitIgnore = async (directory: string): Promise<GitIgnore | undefined> => {
+  try {
+    return ignorer.default().add(await readFile(join(directory, '.gitignore'), 'utf8'))
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return undefined
+    }
+
+    throw error
+  }
+}
+
+const matchesGitIgnore = (
+  path: string,
+  scopedIgnores: Array<ScopedGitIgnore>,
+  directory = false
+): boolean =>
+  scopedIgnores.reduce((ignored, { directory: ignoreDirectory, matcher }) => {
+    const candidate = `${relative(ignoreDirectory, path).split(sep).join('/')}${directory ? '/' : ''}`
+    const result = matcher.test(candidate)
+
+    if (result.ignored) return true
+    if (result.unignored) return false
+
+    return ignored
+  }, false)
+
+const createGitIgnoreSelector = (cwd: string) => {
+  const cache = new Map<string, Promise<GitIgnore | undefined>>()
+
+  const getGitIgnore = async (directory: string): Promise<GitIgnore | undefined> => {
+    if (!cache.has(directory)) cache.set(directory, readGitIgnore(directory))
+
+    return cache.get(directory)!
+  }
+
+  return async (path: string): Promise<boolean> => {
+    const parts = relative(cwd, path).split(sep)
+
+    if (parts[0] === '..') return false
+
+    const scopedIgnores: Array<ScopedGitIgnore> = []
+    const directories = parts
+      .slice(0, -1)
+      .reduce<Array<string>>((result, part) => [...result, join(result.at(-1)!, part)], [cwd])
+    const matchers = await Promise.all(directories.map(getGitIgnore))
+
+    for (const [index, directory] of directories.entries()) {
+      if (index > 0 && matchesGitIgnore(directory, scopedIgnores, true)) return true
+
+      const matcher = matchers[index]
+
+      if (matcher) scopedIgnores.push({ directory, matcher })
+    }
+
+    return matchesGitIgnore(path, scopedIgnores)
+  }
+}
 
 const selectTarget = async (target: CommandInput['targets'][number]): Promise<Array<string>> => {
   const targetPath = toNativePath(target.path)
@@ -98,6 +164,11 @@ export const selectFiles = async (
     .add(ignoredPaths)
     .add(await resolvePrettierProjectIgnorePatterns(cwd))
     .filter(targets.map((path) => relative(cwd, path)))
+  const isGitIgnored = createGitIgnoreSelector(cwd)
+  const selected = await Promise.all(
+    paths.map(async (file) => ({ file, ignored: await isGitIgnored(resolve(cwd, file)) }))
+  )
+  const selectedPaths = selected.filter(({ ignored }) => !ignored).map(({ file }) => file)
 
-  return paths.map((file) => ({ file, path: resolve(cwd, file) }))
+  return selectedPaths.map((file) => ({ file, path: resolve(cwd, file) }))
 }

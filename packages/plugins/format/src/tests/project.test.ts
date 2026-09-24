@@ -77,6 +77,88 @@ test('should use project Prettier configuration for targetless formatting', asyn
   assert.equal(await readFile(sourceFile, 'utf8'), 'const value = { foo: 1 }\n')
 })
 
+test('should leave root and nested gitignored files untouched for explicit and project formatting', async (t) => {
+  const cwd = await createProject()
+  const appDirectory = join(cwd, 'apps/web')
+  const siblingDirectory = join(cwd, 'apps/other')
+  const generatedFile = join(cwd, 'generated.ts')
+  const nextTypes = join(appDirectory, 'next-env.d.ts')
+  const handwrittenTypes = join(appDirectory, 'new-types.d.ts')
+  const siblingTypes = join(siblingDirectory, 'next-env.d.ts')
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+  await mkdir(appDirectory, { recursive: true })
+  await mkdir(siblingDirectory, { recursive: true })
+  await writeFile(join(cwd, '.gitignore'), 'generated.ts\n')
+  await writeFile(join(appDirectory, '.gitignore'), 'next-env.d.ts\n')
+  await writeFile(generatedFile, 'const generated={value:1}\n')
+  await writeFile(nextTypes, 'export declare const generated :number\n')
+  await writeFile(handwrittenTypes, 'export declare const handwritten :number\n')
+  await writeFile(siblingTypes, 'export declare const sibling :number\n')
+
+  const targets = createTargets(cwd, [
+    'generated.ts',
+    'apps/web/next-env.d.ts',
+    'apps/web/new-types.d.ts',
+    'apps/other/next-env.d.ts',
+  ])
+
+  assert.deepEqual(await formatProjectSources({ cwd, targets }), {
+    files: [
+      { file: join('apps', 'web', 'new-types.d.ts'), status: 'changed' },
+      { file: join('apps', 'other', 'next-env.d.ts'), status: 'changed' },
+    ],
+  })
+  assert.equal(await readFile(generatedFile, 'utf8'), 'const generated={value:1}\n')
+  assert.equal(await readFile(nextTypes, 'utf8'), 'export declare const generated :number\n')
+  assert.equal(
+    await readFile(handwrittenTypes, 'utf8'),
+    'export declare const handwritten: number\n'
+  )
+
+  const projectFiles = (await formatProjectSources({ cwd, write: false })).files.map(
+    ({ file }) => file
+  )
+
+  assert.equal(projectFiles.includes('generated.ts'), false)
+  assert.equal(projectFiles.includes(join('apps', 'web', 'next-env.d.ts')), false)
+  assert.equal(projectFiles.includes(join('apps', 'web', 'new-types.d.ts')), true)
+  assert.equal(projectFiles.includes(join('apps', 'other', 'next-env.d.ts')), true)
+})
+
+test('should honor nested gitignore negation without reentering an ignored parent directory', async (t) => {
+  const cwd = await createProject()
+  const appDirectory = join(cwd, 'apps/web')
+  const blockedDirectory = join(cwd, 'blocked')
+  const restoredFile = join(appDirectory, 'restored.d.ts')
+  const ignoredFile = join(appDirectory, 'ignored.d.ts')
+  const blockedFile = join(blockedDirectory, 'restored.d.ts')
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+  await mkdir(appDirectory, { recursive: true })
+  await mkdir(blockedDirectory, { recursive: true })
+  await writeFile(join(cwd, '.gitignore'), 'apps/web/*.d.ts\nblocked/\n')
+  await writeFile(join(appDirectory, '.gitignore'), '!restored.d.ts\n')
+  await writeFile(join(blockedDirectory, '.gitignore'), '!restored.d.ts\n')
+  await writeFile(restoredFile, 'export declare const restored :number\n')
+  await writeFile(ignoredFile, 'export declare const ignored :number\n')
+  await writeFile(blockedFile, 'export declare const blocked :number\n')
+
+  assert.deepEqual(
+    await formatProjectSources({
+      cwd,
+      targets: createTargets(cwd, [
+        'apps/web/restored.d.ts',
+        'apps/web/ignored.d.ts',
+        'blocked/restored.d.ts',
+      ]),
+    }),
+    { files: [{ file: join('apps', 'web', 'restored.d.ts'), status: 'changed' }] }
+  )
+  assert.equal(await readFile(ignoredFile, 'utf8'), 'export declare const ignored :number\n')
+  assert.equal(await readFile(blockedFile, 'utf8'), 'export declare const blocked :number\n')
+})
+
 test('should report formatter drift without writing in verification mode', async (t) => {
   const cwd = await createProject()
   const sourceFile = join(cwd, 'source.ts')
