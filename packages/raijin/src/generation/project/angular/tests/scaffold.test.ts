@@ -52,7 +52,10 @@ const snapshot = async (root: string): Promise<Record<string, string>> => {
   )
 }
 
-const assertBaseline = async (target: string): Promise<Array<string>> => {
+const assertBaseline = async (
+  target: string,
+  scaffoldType: 'library' | 'project'
+): Promise<Array<string>> => {
   const expected = Object.fromEntries<string>(
     Object.entries(await snapshot(baselinePath)).map(([path, content]): [string, string] => [
       path.replace(/\.fixture$/u, ''),
@@ -66,7 +69,16 @@ const assertBaseline = async (target: string): Promise<Array<string>> => {
 
   for (const [path, content] of Object.entries(expected)) {
     if (path === 'tsconfig.json') {
-      assert.deepEqual(JSON.parse(actual[path]), JSON.parse(content))
+      const actualConfig = JSON.parse(actual[path]) as {
+        compilerOptions: Record<string, unknown>
+      }
+
+      if (scaffoldType === 'project') {
+        assert.equal(actualConfig.compilerOptions.rootDir, '.')
+        delete actualConfig.compilerOptions.rootDir
+      }
+
+      assert.deepEqual(actualConfig, JSON.parse(content))
     } else {
       assert.equal(actual[path], content.replace(/\r?\n/gu, EOL), path)
     }
@@ -114,7 +126,7 @@ scaffoldTypes.forEach((scaffoldType) => {
 
     assert.equal(result.status, 'generated', JSON.stringify(result))
 
-    const paths = await assertBaseline(target)
+    const paths = await assertBaseline(target, scaffoldType)
 
     assert.deepEqual(
       result.changes.map(({ artifact }) => artifact).sort(),
@@ -272,7 +284,7 @@ test('should generate both baselines from an archived collection without policy 
         })
 
         assert.equal(result.status, 'generated', JSON.stringify(result))
-        await assertBaseline(target)
+        await assertBaseline(target, scaffoldType)
         assert.deepEqual(
           await scaffoldProjectWithAngular({
             collectionPath: installedCollection,

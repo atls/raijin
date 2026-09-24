@@ -113,6 +113,15 @@ const config: Array<Linter.Config> = [
     },
   },
   {
+    files: ['**/*/eslint.config.mjs', '**/*/postcss.config.mjs'],
+    languageOptions: {
+      parserOptions: {
+        project: false,
+        projectService: false,
+      },
+    },
+  },
+  {
     files: ['**/release.config.{js,cjs,mjs}', '**/.releaserc.{js,cjs,mjs}'],
     languageOptions: {
       parserOptions: {

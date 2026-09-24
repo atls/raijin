@@ -25,10 +25,13 @@ const updateTypeScriptConfig = (options: Options): Rule =>
       typeof config.compilerOptions === 'object' && config.compilerOptions !== null
         ? config.compilerOptions
         : {}
+    const generatedProjectRoot =
+      !tree.exists(TSCONFIG_PATH) && options.scaffoldType === 'project' ? { rootDir: '.' } : {}
     const updatedConfig = {
       ...config,
       compilerOptions: {
         ...options.typescriptCompilerOptions,
+        ...generatedProjectRoot,
         ...existingCompilerOptions,
       },
     }

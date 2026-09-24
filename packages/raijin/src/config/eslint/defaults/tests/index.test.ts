@@ -50,6 +50,23 @@ test('should lint nested Next.js config files without typed project matching', (
   assert.equal(nextConfig.rules['n/no-sync'], 'off')
 })
 
+test('should exclude nested ESLint and PostCSS configs from typed project matching', async () => {
+  const eslint = new ESLint({ overrideConfigFile: true, baseConfig: eslintconfig })
+  const root = await eslint.calculateConfigForFile('eslint.config.mjs')
+  const nestedEslint = await eslint.calculateConfigForFile('apps/web/eslint.config.mjs')
+  const nestedPostcss = await eslint.calculateConfigForFile('apps/web/postcss.config.mjs')
+  const source = await eslint.calculateConfigForFile('apps/web/src/page.tsx')
+
+  assert.ok(root)
+  assert.ok(nestedEslint)
+  assert.ok(nestedPostcss)
+  assert.ok(source)
+  assert.ok(root.languageOptions.parserOptions.projectService)
+  assert.equal(nestedEslint.languageOptions.parserOptions.projectService, false)
+  assert.equal(nestedPostcss.languageOptions.parserOptions.projectService, false)
+  assert.ok(source.languageOptions.parserOptions.projectService)
+})
+
 test('should scope release templates to semantic-release configuration', async () => {
   const eslint = new ESLint({ overrideConfigFile: true, baseConfig: eslintconfig })
   const release = await eslint.calculateConfigForFile('.github/actions/release/release.config.js')

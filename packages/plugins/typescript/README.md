@@ -11,7 +11,7 @@ yarn typecheck src/index.ts
 
 ## Responsibilities
 
-Without targets, the command checks the selected TypeScript project. Explicit files retain the applicable project compiler options. TypeScript owns configuration inheritance, references, includes and excludes. Raijin adds invocation scope, diagnostics and the explicit `typecheckSkipLibCheck` policy. Missing project configuration and compiler/provider failures remain observable failures.
+Without targets, the command checks the selected TypeScript project. Explicit files retain the applicable project compiler options. TypeScript owns configuration inheritance, references, includes, excludes and `rootDir`. Raijin adds invocation scope, diagnostics and the explicit `typecheckSkipLibCheck` policy. An ambiguous source root for a package export remains TypeScript's diagnostic; Raijin does not infer or rewrite the project's `rootDir`. Missing project configuration and compiler/provider failures remain observable failures.
 
 ## Verification
 

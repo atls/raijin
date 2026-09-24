@@ -394,7 +394,7 @@ test('should align empty type source export declarations', async () => {
   )
 })
 
-test('should align empty source import declarations without aligning side-effect imports', async () => {
+test('should keep empty source and side-effect imports in place', async () => {
   const source = [
     "import './side-effect.js'",
     "import {} from './empty.js'",
@@ -405,14 +405,112 @@ test('should align empty source import declarations without aligning side-effect
   await assertFormatted(
     source,
     [
-      "import {}               from './empty.js'",
       "import './side-effect.js'",
+      "import {}               from './empty.js'",
       "import type {}          from './types.js'",
-      '',
       "import { VeryLongName } from './x.js'",
       '',
     ].join('\n')
   )
+})
+
+test('should preserve side-effect import order while sorting following imports', async () => {
+  const source = [
+    "import './z-side-effect.js'",
+    "import './a-side-effect.js'",
+    "import { Zebra } from 'z'",
+    "import { Alpha } from 'a'",
+    'export const result = [Alpha, Zebra]',
+  ].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.ok(formatted.indexOf("'./z-side-effect.js'") < formatted.indexOf("'./a-side-effect.js'"))
+  assert.ok(formatted.indexOf("from 'a'") < formatted.indexOf("from 'z'"))
+  assert.equal(await formatTypeScript(formatted), formatted)
+})
+
+test('should keep file-leading comments above the original first import', async () => {
+  const source = [
+    '/** @license example */',
+    "import { Zebra } from 'z'",
+    "import { Charlie } from 'c'",
+    "import { Alpha } from 'a'",
+    'export const result = [Alpha, Charlie, Zebra]',
+  ].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.ok(formatted.startsWith('/** @license example */\n'))
+  assert.ok(formatted.indexOf("from 'z'") < formatted.indexOf("from 'a'"))
+  assert.ok(formatted.indexOf("from 'a'") < formatted.indexOf("from 'c'"))
+  assert.equal(await formatTypeScript(formatted), formatted)
+})
+
+test('should leave commented imports in place and sort only a later clean run', async () => {
+  const source = [
+    "import { Zebra } from 'z'",
+    '/* this describes Alpha */',
+    "import { Alpha } from 'a'",
+    "import { Delta } from 'd'",
+    "import { Charlie } from 'c'",
+    'export const result = [Alpha, Charlie, Delta, Zebra]',
+  ].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.ok(formatted.indexOf("from 'z'") < formatted.indexOf('/* this describes Alpha */'))
+  assert.ok(formatted.indexOf('/* this describes Alpha */') < formatted.indexOf("from 'a'"))
+  assert.ok(formatted.indexOf("from 'a'") < formatted.indexOf("from 'c'"))
+  assert.ok(formatted.indexOf("from 'c'") < formatted.indexOf("from 'd'"))
+  assert.equal(await formatTypeScript(formatted), formatted)
+})
+
+test('should not sort imports across executable statements', async () => {
+  const source = [
+    "import { Zebra } from 'z'",
+    'first()',
+    "import { Charlie } from 'c'",
+    "import { Alpha } from 'a'",
+    'second()',
+  ].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.ok(formatted.indexOf("from 'z'") < formatted.indexOf('first()'))
+  assert.ok(formatted.indexOf('first()') < formatted.indexOf("from 'a'"))
+  assert.ok(formatted.indexOf("from 'a'") < formatted.indexOf("from 'c'"))
+  assert.ok(formatted.indexOf("from 'a'") < formatted.indexOf('second()'))
+  assert.equal(await formatTypeScript(formatted), formatted)
+})
+
+test('should preserve quoted import names without lossy splitting', async () => {
+  const source = [
+    'import { "foo-bar" as fooBar, Other } from "pkg"',
+    'export { fooBar, Other }',
+  ].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.match(formatted, /['"]foo-bar['"] as fooBar/u)
+  assert.equal(formatted.match(/from 'pkg'/gu)?.length, 1)
+  assert.doesNotMatch(formatted, /undefined/u)
+  assert.equal(await formatTypeScript(formatted), formatted)
+})
+
+test('should leave import attributes on their original declaration', async () => {
+  const source = [
+    "import { Zebra, Alpha } from './data.json' with { type: 'json' }",
+    'export { Alpha, Zebra }',
+  ].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.match(formatted, /with \{ type: 'json' \}/u)
+  assert.equal(formatted.match(/from '.\/data.json'/gu)?.length, 1)
+  assert.equal(await formatTypeScript(formatted), formatted)
+})
+
+test('should preserve braces inside a named import module specifier', async () => {
+  const source = ["import { Alpha } from './{data}.js'", 'export { Alpha }'].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.match(formatted, /import \{ Alpha \} from '.\/\{data\}\.js'/u)
+  assert.equal(await formatTypeScript(formatted), formatted)
 })
 
 test('should keep import and export source alignment independent', async () => {
@@ -450,6 +548,173 @@ test('should align imports that become single line after formatting', async () =
       '\n'
     )
   )
+})
+
+test('should format split named imports and following code in one pass', async () => {
+  const source = [
+    "import './globals.css'",
+    "import type { Metadata } from 'next'",
+    "import { Geist, Geist_Mono } from 'next/font/google'",
+    'export const metadata: Metadata = Geist(Geist_Mono)',
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "import './globals.css'",
+      "import type { Metadata } from 'next'",
+      '',
+      "import { Geist }         from 'next/font/google'",
+      "import { Geist_Mono }    from 'next/font/google'",
+      'export const metadata: Metadata = Geist(Geist_Mono)',
+      '',
+    ].join('\n')
+  )
+
+  await assertFormatted(
+    [
+      "import { First, Second } from 'pkg'",
+      "import { Third } from 'pkg'",
+      'export const result = First(Second, Third)',
+    ].join('\n'),
+    [
+      "import { First }  from 'pkg'",
+      "import { Second } from 'pkg'",
+      "import { Third }  from 'pkg'",
+      'export const result = First(Second, Third)',
+      '',
+    ].join('\n')
+  )
+
+  await assertFormatted(
+    [
+      "import Default, { First, Second } from 'pkg'",
+      'export const result = Default(First, Second)',
+    ].join('\n'),
+    [
+      "import { First }  from 'pkg'",
+      "import { Second } from 'pkg'",
+      "import Default    from 'pkg'",
+      'export const result = Default(First, Second)',
+      '',
+    ].join('\n')
+  )
+
+  await assertFormatted(
+    ["import { First as one, type Second as two } from 'pkg'", 'export const result = one'].join(
+      '\n'
+    ),
+    [
+      "import { First as one }       from 'pkg'",
+      "import { type Second as two } from 'pkg'",
+      'export const result = one',
+      '',
+    ].join('\n')
+  )
+})
+
+test('should keep directive comments on their unsplit import', async () => {
+  const leading = await formatTypeScript(
+    [
+      '// eslint-disable-next-line',
+      "import { First, Second } from 'pkg'",
+      'export const value = First(Second)',
+    ].join('\n')
+  )
+
+  assert.match(leading, /\/\/ eslint-disable-next-line\nimport \{ First, Second \} from 'pkg'/u)
+  assert.equal(leading.match(/from 'pkg'/gu)?.length, 1)
+  assert.equal(await formatTypeScript(leading), leading)
+
+  const trailing = await formatTypeScript(
+    [
+      "import { First, Second } from 'pkg' // eslint-disable-line",
+      'export const value = First(Second)',
+    ].join('\n')
+  )
+
+  assert.match(trailing, /import \{ First, Second \} from 'pkg' \/\/ eslint-disable-line/u)
+  assert.equal(trailing.match(/from 'pkg'/gu)?.length, 1)
+  assert.equal(await formatTypeScript(trailing), trailing)
+
+  const multiline = await formatTypeScript(
+    [
+      '/* eslint-disable-next-line @typescript-eslint/no-unused-vars',
+      ' */',
+      "import { First, Second } from 'pkg'",
+      'export const value = First(Second)',
+    ].join('\n')
+  )
+
+  assert.match(
+    multiline,
+    /\/\* eslint-disable-next-line @typescript-eslint\/no-unused-vars\n \*\/\nimport \{ First, Second \} from 'pkg'/u
+  )
+  assert.equal(multiline.match(/from 'pkg'/gu)?.length, 1)
+  assert.equal(await formatTypeScript(multiline), multiline)
+
+  const trailingMultiline = await formatTypeScript(
+    [
+      "import { First, Second } from 'pkg' /* eslint-disable-line",
+      ' */',
+      'export const value = First(Second)',
+    ].join('\n')
+  )
+
+  assert.match(
+    trailingMultiline,
+    /import \{ First, Second \} from 'pkg' \/\* eslint-disable-line\n \*\//u
+  )
+  assert.equal(trailingMultiline.match(/from 'pkg'/gu)?.length, 1)
+  assert.equal(await formatTypeScript(trailingMultiline), trailingMultiline)
+})
+
+test('should keep a multiline comment with the preceding statement when sorting imports', async () => {
+  const source = [
+    'const marker = true /* previous statement',
+    ' */',
+    "import { Zebra } from 'z'",
+    "import { Alpha } from 'a'",
+    'export { marker }',
+  ].join('\n')
+  const formatted = await formatTypeScript(source)
+
+  assert.match(formatted, /const marker = true \/\* previous statement\n \*\/\n/u)
+  assert.ok(formatted.indexOf("from 'z'") < formatted.indexOf("from 'a'"))
+  assert.equal(await formatTypeScript(formatted), formatted)
+})
+
+test('should not move executable code with nearby import comments', async () => {
+  const trailing = await formatTypeScript(
+    [
+      "import { Zebra } from 'z'; first() /* first effect",
+      ' */',
+      "import { Alpha } from 'a'; second() /* second effect",
+      ' */',
+      'export const result = [Alpha, Zebra]',
+    ].join('\n')
+  )
+
+  assert.ok(trailing.indexOf("from 'z'") < trailing.indexOf("from 'a'"))
+  assert.ok(trailing.indexOf('first()') < trailing.indexOf('second()'))
+  assert.match(trailing, /first\(\) \/\* first effect\n \*\//u)
+  assert.equal(await formatTypeScript(trailing), trailing)
+
+  const leading = await formatTypeScript(
+    [
+      '/* first note',
+      ' */ const first = sideEffect()',
+      "import { Zebra } from 'z'",
+      '/* second note',
+      ' */ const second = sideEffect()',
+      "import { Alpha } from 'a'",
+      'export { first, second }',
+    ].join('\n')
+  )
+
+  assert.ok(leading.indexOf("from 'z'") < leading.indexOf("from 'a'"))
+  assert.ok(leading.indexOf('const first') < leading.indexOf('const second'))
+  assert.equal(await formatTypeScript(leading), leading)
 })
 
 test('should align namespace imports that become single line after formatting', async () => {
@@ -513,8 +778,8 @@ test('should leave import declarations with attributes outside source alignment'
     source,
     [
       "import { Foo }          from './foo.js'",
-      "import { VeryLongName } from './x.js'",
       "import packageJson from '../package.json' with { type: 'json' }",
+      "import { VeryLongName } from './x.js'",
       '',
     ].join('\n')
   )

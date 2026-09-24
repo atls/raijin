@@ -150,7 +150,16 @@ test('installed packed collection generates both baselines and rejects an omitte
                   const expected = await readFile(join(baselineRoot, fixture), 'utf8')
 
                   if (path === 'tsconfig.json') {
-                    assert.deepEqual(JSON.parse(actual), JSON.parse(expected))
+                    const actualConfig = JSON.parse(actual) as {
+                      compilerOptions: Record<string, unknown>
+                    }
+
+                    if (scaffoldType === 'project') {
+                      assert.equal(actualConfig.compilerOptions.rootDir, '.')
+                      delete actualConfig.compilerOptions.rootDir
+                    }
+
+                    assert.deepEqual(actualConfig, JSON.parse(expected))
                   } else {
                     assert.equal(actual, expected, path)
                   }

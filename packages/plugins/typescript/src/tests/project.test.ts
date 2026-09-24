@@ -113,6 +113,69 @@ describe('root project discovery', () => {
   })
 })
 
+test('preserves TypeScript root ambiguity for a dist export without configured rootDir', async (t) => {
+  const cwd = await createProject({
+    'package.json': JSON.stringify({
+      name: 'raijin-typecheck-project',
+      type: 'module',
+      exports: { '.': './dist/index.js' },
+    }),
+    'tsconfig.json': JSON.stringify({
+      compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', outDir: 'dist' },
+      include: ['src/**/*.ts'],
+    }),
+    'src/index.ts': 'export const value = true\n',
+    'src/consumer.ts':
+      "import { value } from 'raijin-typecheck-project'\nexport const result: boolean = value\n",
+  })
+  const before = await readTree(cwd)
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const diagnostics = checkProject({ kind: 'project', cwd, projectCwd: cwd }, undefined, ts)
+
+  assertDiagnostics(diagnostics)
+  assert.equal(hasDiagnostic(diagnostics, 2209), true)
+  assert.deepEqual(await readTree(cwd), before)
+})
+
+test('preserves TypeScript root ambiguity for mixed source and tooling file checks', async (t) => {
+  const cwd = await createProject({
+    'package.json': JSON.stringify({
+      name: 'raijin-typecheck-project',
+      type: 'module',
+      exports: { '.': './dist/index.js' },
+    }),
+    'tsconfig.json': JSON.stringify({
+      compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', outDir: 'dist' },
+      include: ['src/**/*.ts', 'vite.config.ts'],
+    }),
+    'vite.config.ts': "export const mode = 'development'\n",
+    'src/index.ts': 'export const value = true\n',
+    'src/sub/consumer.ts':
+      "import { value } from 'raijin-typecheck-project'\nexport const result: boolean = value\n",
+    'src/unselected.ts': 'export const unrelated: string = 1\n',
+  })
+  const before = await readTree(cwd)
+
+  t.after(async () => rm(cwd, { recursive: true, force: true }))
+
+  const fullDiagnostics = checkProject({ kind: 'project', cwd, projectCwd: cwd }, undefined, ts)
+  const selectedDiagnostics = checkProject(
+    { kind: 'files', cwd, projectCwd: cwd, files: [join(cwd, 'src/sub/consumer.ts')] },
+    undefined,
+    ts
+  )
+
+  assertDiagnostics(fullDiagnostics)
+  assertDiagnostics(selectedDiagnostics)
+  assert.equal(hasDiagnostic(fullDiagnostics, 2322, '/src/unselected.ts'), true)
+  assert.equal(hasDiagnostic(fullDiagnostics, 2209), true)
+  assert.equal(hasDiagnostic(selectedDiagnostics, 2209), true)
+  assert.equal(hasDiagnostic(selectedDiagnostics, 2322, '/src/unselected.ts'), false)
+  assert.deepEqual(await readTree(cwd), before)
+})
+
 test('preserves native extends, include, exclude, and compiler options', async (t) => {
   const cwd = await createProject({
     'configs/base.json': JSON.stringify({
