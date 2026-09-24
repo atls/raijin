@@ -27,6 +27,11 @@ Yarn records the unpacking in the root manifest's `dependenciesMeta`. The projec
 keeps PnP and its ESM loader. Raijin does not edit Next's sources or silently
 change installation settings. Commands preserve the Next CLI exit status.
 
+For `eslint-config-next@16.3.6`, the checked Yarn runtime supplies the missing
+`next` peer through Yarn's package-extension hook. This lets the stock Next
+ESLint configuration resolve the project's own Next installation under PnP;
+Raijin does not rewrite the project's ESLint configuration.
+
 Next owns its internal development-server workers. In Next 16.3.5, forcibly
 killing a dev worker can end the provider with exit code zero; forcibly killing
 its supervising CLI can leave a worker alive. Renderer does not add a second
