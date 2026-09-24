@@ -118,26 +118,32 @@ test('checks an export-mapped project without requiring a configured rootDir', a
     compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', outDir: 'dist' },
     include: ['src/**/*.ts'],
   })
-  const cwd = await createProject({
-    'package.json': JSON.stringify({
-      name: 'raijin-typecheck-project',
-      type: 'module',
-      exports: { '.': './src/index.ts' },
-    }),
-    'tsconfig.json': config,
-    'src/index.ts': 'export const value = true\n',
-    'src/consumer.ts':
-      "import { value } from 'raijin-typecheck-project'\nexport const result: boolean = value\n",
-  })
-  const before = await readTree(cwd)
 
-  t.after(async () => rm(cwd, { recursive: true, force: true }))
+  const checkExportedEntry = async (exportedEntry: string): Promise<void> => {
+    const cwd = await createProject({
+      'package.json': JSON.stringify({
+        name: 'raijin-typecheck-project',
+        type: 'module',
+        exports: { '.': exportedEntry },
+      }),
+      'tsconfig.json': config,
+      'src/index.ts': 'export const value = true\n',
+      'src/consumer.ts':
+        "import { value } from 'raijin-typecheck-project'\nexport const result: boolean = value\n",
+    })
+    const before = await readTree(cwd)
 
-  const diagnostics = checkProject({ kind: 'project', cwd, projectCwd: cwd }, undefined, ts)
+    t.after(async () => rm(cwd, { recursive: true, force: true }))
 
-  assertDiagnostics(diagnostics)
-  assert.deepEqual(diagnostics, [])
-  assert.deepEqual(await readTree(cwd), before)
+    const diagnostics = checkProject({ kind: 'project', cwd, projectCwd: cwd }, undefined, ts)
+
+    assertDiagnostics(diagnostics)
+    assert.deepEqual(diagnostics, [], exportedEntry)
+    assert.deepEqual(await readTree(cwd), before)
+  }
+
+  await checkExportedEntry('./src/index.ts')
+  await checkExportedEntry('./dist/index.js')
 })
 
 test('preserves native extends, include, exclude, and compiler options', async (t) => {

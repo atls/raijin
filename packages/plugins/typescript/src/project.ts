@@ -3,12 +3,20 @@ import type { ts as TypeScriptRuntime } from '@atls/raijin/typescript'
 import type { TypecheckInput }          from './interfaces/input.js'
 
 import { isAbsolute }                   from 'node:path'
-import { dirname }                      from 'node:path'
 import { relative }                     from 'node:path'
 import { sep }                          from 'node:path'
 
 const PROJECT_CONFIG = 'tsconfig.json'
 const AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE = 2209
+
+type ProgramWithCommonSourceDirectory = TypeScriptRuntime.Program & {
+  getCommonSourceDirectory: () => string
+}
+
+const hasCommonSourceDirectory = (
+  program: TypeScriptRuntime.Program
+): program is ProgramWithCommonSourceDirectory =>
+  'getCommonSourceDirectory' in program && typeof program.getCommonSourceDirectory === 'function'
 
 const createDiagnosticsProgram = (
   commandLine: TypeScriptRuntime.ParsedCommandLine,
@@ -38,7 +46,6 @@ const createDiagnosticsProgram = (
 
 const checkDiagnosticsProgram = (
   commandLine: TypeScriptRuntime.ParsedCommandLine,
-  configFileName: string,
   typecheckSkipLibCheck: boolean | undefined,
   typescript: typeof TypeScriptRuntime,
   files?: ReadonlyArray<string>
@@ -51,7 +58,8 @@ const checkDiagnosticsProgram = (
 
   if (
     commandLine.options.rootDir !== undefined ||
-    !diagnostics.some(({ code }) => code === AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE)
+    !diagnostics.some(({ code }) => code === AMBIGUOUS_PROJECT_ROOT_DIAGNOSTIC_CODE) ||
+    !hasCommonSourceDirectory(program)
   ) {
     return { program, diagnostics }
   }
@@ -61,7 +69,7 @@ const checkDiagnosticsProgram = (
     typecheckSkipLibCheck,
     typescript,
     files,
-    dirname(configFileName)
+    program.getCommonSourceDirectory()
   )
 
   return {
@@ -90,7 +98,6 @@ const checkResolvedReferences = (
 
       const { diagnostics: referenceDiagnostics } = checkDiagnosticsProgram(
         reference.commandLine,
-        reference.sourceFile.fileName,
         typecheckSkipLibCheck,
         typescript
       )
@@ -157,7 +164,6 @@ export const checkProject = (
 
   const { program: rootProgram, diagnostics: rootDiagnostics } = checkDiagnosticsProgram(
     rootCommandLine,
-    rootConfigFileName,
     typecheckSkipLibCheck,
     typescript,
     input.kind === 'files' ? input.files : undefined
