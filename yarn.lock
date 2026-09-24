@@ -397,7 +397,6 @@ __metadata:
     husky: "npm:9.1.7"
     import-sort: "npm:6.0.0"
     import-sort-parser: "npm:6.0.0"
-    import-sort-parser-typescript: "npm:6.0.0"
     import-sort-style: "npm:6.0.0"
     node-loader: "npm:2.1.0"
     prettier: "npm:3.9.8"
@@ -8089,15 +8088,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"import-sort-parser-typescript@npm:6.0.0":
-  version: 6.0.0
-  resolution: "import-sort-parser-typescript@npm:6.0.0"
-  dependencies:
-    typescript: "npm:^3.2.4"
-  checksum: 10/b98b05011f39f41c9747b354fb1a946748dba1e7f7f03a48b8d346a5a9b22f64391ee889521ad3cd3342cb936ef53d884f9614474b906920f612ab624bbec86d
-  languageName: node
-  linkType: hard
-
 "import-sort-parser@npm:*, import-sort-parser@npm:6.0.0, import-sort-parser@npm:^6.0.0":
   version: 6.0.0
   resolution: "import-sort-parser@npm:6.0.0"
@@ -12611,16 +12601,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^3.2.4":
-  version: 3.9.10
-  resolution: "typescript@npm:3.9.10"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10/f86a085eea24fdd665850c6be4dd69c7a71fe3d27ecc712be88cdc7a52d866f4f2416ad91c554df60f499dedcf288a24b3d8052e502833d8acc661a9d21bb98f
-  languageName: node
-  linkType: hard
-
 "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>":
   version: 5.9.3
   resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
@@ -12628,16 +12608,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10/696e1b017bc2635f4e0c94eb4435357701008e2f272f553d06e35b494b8ddc60aa221145e286c28ace0c89ee32827a28c2040e3a69bdc108b1a5dc8fb40b72e3
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A^3.2.4#optional!builtin<compat/typescript>":
-  version: 3.9.10
-  resolution: "typescript@patch:typescript@npm%3A3.9.10#optional!builtin<compat/typescript>::version=3.9.10&hash=3bd3d3"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10/77024c200e1f80d95185d5a973bcc4b0ecc12a77851390b1382e372195313769373a4b8b1642df4a8d4ae1df5911dcd9bde111cf6755eb4b6091f374e97c6dc5
   languageName: node
   linkType: hard
 
