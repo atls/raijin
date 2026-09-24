@@ -132,7 +132,10 @@ export class ImportSortTypeScriptParser implements IParser {
         const trailingComment = this.program.comments.find(
           (comment: Comment) =>
             comment.loc!.start.line === node.loc!.end.line &&
-            comment.loc!.start.column >= node.loc!.end.column
+            comment.loc!.start.column >= node.loc!.end.column &&
+            sourceLines[node.loc!.end.line - 1]
+              ?.slice(node.loc!.end.column, comment.loc!.start.column)
+              .trim() === ''
         )
 
         if (trailingComment) {
@@ -147,7 +150,8 @@ export class ImportSortTypeScriptParser implements IParser {
               comment.loc!.end.line === position &&
               sourceLines[comment.loc!.start.line - 1]
                 ?.slice(0, comment.loc!.start.column)
-                .trim() === ''
+                .trim() === '' &&
+              sourceLines[comment.loc!.end.line - 1]?.slice(comment.loc!.end.column).trim() === ''
           )
 
           if (!leadingComment) {

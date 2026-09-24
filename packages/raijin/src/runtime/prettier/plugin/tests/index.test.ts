@@ -589,6 +589,39 @@ test('should keep a multiline comment with the preceding statement when sorting 
   assert.equal(await formatTypeScript(formatted), formatted)
 })
 
+test('should not move executable code with nearby import comments', async () => {
+  const trailing = await formatTypeScript(
+    [
+      "import { Zebra } from 'z'; first() /* first effect",
+      ' */',
+      "import { Alpha } from 'a'; second() /* second effect",
+      ' */',
+      'export const result = [Alpha, Zebra]',
+    ].join('\n')
+  )
+
+  assert.ok(trailing.indexOf("from 'a'") < trailing.indexOf("from 'z'"))
+  assert.ok(trailing.indexOf('first()') < trailing.indexOf('second()'))
+  assert.match(trailing, /first\(\) \/\* first effect\n \*\//u)
+  assert.equal(await formatTypeScript(trailing), trailing)
+
+  const leading = await formatTypeScript(
+    [
+      '/* first note',
+      ' */ const first = sideEffect()',
+      "import { Zebra } from 'z'",
+      '/* second note',
+      ' */ const second = sideEffect()',
+      "import { Alpha } from 'a'",
+      'export { first, second }',
+    ].join('\n')
+  )
+
+  assert.ok(leading.indexOf("from 'a'") < leading.indexOf("from 'z'"))
+  assert.ok(leading.indexOf('const first') < leading.indexOf('const second'))
+  assert.equal(await formatTypeScript(leading), leading)
+})
+
 test('should align namespace imports that become single line after formatting', async () => {
   const source = [
     'import * as',
