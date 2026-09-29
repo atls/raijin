@@ -1,73 +1,50 @@
-# Raijin Quickstart
+# Raijin quickstart
 
-Minimal flow for creating or connecting a project to Raijin
+Use the published package and its matching checked Yarn runtime as one pair. This guide covers setup and day-to-day commands; each capability's package README owns its detailed behavior.
 
 <!-- sync:preflight -->
 
-## 1. Prerequisites
+## 1. Before you start
 
-- Node.js: `>= 24`
-- Yarn: `>= 4`
-- Corepack is available to run the exact Yarn version from the verified release revision's root `package.json` before activating the Raijin runtime
-- A new project uses Yarn PnP and ESM; update preserves the existing `type` and `nodeLinker`
-- For a new project: an empty directory
-- For an existing project: `package.json` in the project root
+- Use Node.js `>=24.15.0 <25` and make Yarn/Corepack available for the initial `yarn dlx` invocation
+- Start a new project in an empty directory; for an existing project, use the Yarn project root with a `package.json` declaring `"type": "module"`
+- A new project uses Yarn PnP and ESM. Update keeps the existing `nodeLinker` and project configuration; it does not convert CommonJS projects
 
-Expected result:
-
-- `yarn --version` works
-- Published `@atls/raijin@0.7.0` still uses `yarn.mjs`. The new installer requires a later published release with a checked `yarn.js` asset and its digest; until publication it exits without activating a new runtime
+The `@atls/raijin@0.7.0` release has the older `yarn.mjs`, not the checked `yarn.js` required by the new installer. The public `init/update` commands below apply **after a v2 release with the matching asset**. The installer rejects the older package without activating a runtime; a local packed-package test is not proof of public installation.
 
 <!-- sync:new-project -->
 
-## 2. New project
+## 2. Create a project after the v2 release
 
 ```bash
 yarn dlx @atls/raijin init --type project
 ```
 
-Use `--type library` for the library scaffold
+Use `--type library` for a library scaffold. The installer selects one published package and its matching release asset, verifies the runtime digest, installs the package, and creates the scaffold once. The project records that checked runtime at `.yarn/releases/yarn.js` through `yarnPath`.
 
-Expected result:
-
-- `package.json` is created when it does not exist yet, and `packageManager` is normalized to the verified release revision's root `package.json` value
-- Raijin runtime is downloaded from the GitHub Release asset, verified by `sha256`, and stored as `.yarn/releases/yarn.js`
-- Yarn completes package installation before `.yarnrc.yml` switches to the verified `yarnPath`
-- Project scaffold is created through the embedded Raijin collection
-- Bundle commands (`check`, `workspaces list`, etc.) become available
-
-If the project is not yet a Git repository, hook installation is deferred: run `git init`, then `yarn install`. In a local project with `.git`, installation creates hooks through Husky.
-
-Before the first commit, complete the required [check configuration](#staged-checks). Scaffolding does not create a lint-staged configuration.
+If the directory is not yet a Git repository, run `git init` and then `yarn install` to activate the hooks. Scaffolding does not create the project's lint-staged rules; [configure them before the first commit](#staged-checks).
 
 <!-- sync:existing-project -->
 
-## 3. Existing project
+## 3. Connect or update an existing project after the v2 release
 
 ```bash
 yarn dlx @atls/raijin update
 ```
 
-Update does not run the scaffold
+Update does not run the scaffold or replace the project's TypeScript, ESLint, Prettier, or lint-staged configuration. It selects npm's published `latest` Raijin package and its matching checked runtime, and stops before writes if the existing manifest is not ESM. In a monorepo, run it at the Yarn project root that declares `@atls/raijin`; a separate nested Yarn project needs its own `yarn.lock`.
 
-Expected result:
-
-- Existing project gets one exact `@atls/raijin` and checked runtime pair while preserving TypeScript, ESLint, Prettier, and hooks
-- For Yarn workspaces, run this at the project root that declares `@atls/raijin`; a separate nested project must have its own `yarn.lock`
-
-Before committing the setup changes, complete the [check configuration](#staged-checks). Preserve any existing lint-staged configuration; do not replace it with the example.
+Preserve existing project-owned checks. Commit the updated manifest, lockfile, `.yarnrc.yml`, checked runtime and any intentional configuration changes together.
 
 <!-- sync:bundle-upgrade -->
 
-## 4. Upgrade installed bundle
+## 4. Upgrade the installed pair
 
 ```bash
 yarn dlx @atls/raijin update
 ```
 
-Expected result:
-
-- Bundle is upgraded to the latest available version, and `packageManager` is normalized to the verified release revision's root `package.json` value
+The same command selects the latest published Raijin package and its checked runtime together. It normalizes `packageManager` to the verified release revision's Yarn version. A package-only dependency bump does not update the checked runtime.
 
 <!-- sync:staged-checks -->
 
@@ -77,11 +54,11 @@ Expected result:
 
 This step is required when setting up new or existing projects. A configured Git hook calls `yarn commit staged`. Raijin supplies no default lint-staged configuration: without one, staged-file checks fail.
 
-Husky 9.1.7 sets the relative `core.hooksPath` to `.config/husky/_`. Raijin changes only its marked `pre-commit`, `commit-msg`, and `prepare-commit-msg` entry files; other hook files are not overwritten. If switching from the current Git hooks directory would leave an active hook without execution, installation stops with an explicit conflict before changing hook state. An unowned Raijin-name entry also conflicts. CI, image packaging, and `HUSKY=0` skip hook installation.
+Husky 9.1.7 owns the relative Git `core.hooksPath` at `.config/husky/_`; Raijin installs only its marked `pre-commit`, `commit-msg`, and `prepare-commit-msg` entries. An existing active hook that would be displaced causes a conflict instead of a silent overwrite. CI, image packaging, and `HUSKY=0` skip hook installation. Do not set `core.hooksPath` by hand for Raijin.
 
 Check existing settings first. The `lint-staged` field in `package.json`, JSON/YAML `.lintstagedrc` files, and `lint-staged.config.*` remain valid native formats. Preserve the project's chosen format, commands, and exclusions; do not create a competing configuration.
 
-If there is no configuration yet, for a single Raijin PnP/ESM project with TypeScript and Node-run `*.test.ts`/`*.spec.ts` tests, create `.lintstagedrc.json` at its root:
+If there is no configuration yet, this is an example for a single Raijin PnP/ESM project with TypeScript and Node-run `*.test.ts`/`*.spec.ts` tests. Adjust it to the checks that actually belong to your project:
 
 ```json
 {
@@ -92,50 +69,66 @@ If there is no configuration yet, for a single Raijin PnP/ESM project with TypeS
 }
 ```
 
-Each independent Yarn project in the same Git repository defines its configuration in its own directory: lint-staged uses the nearest config and does not merge it with the root config. Root backend checks must not run checks for an independent client.
+Each independent Yarn project in the same Git repository defines its own configuration: lint-staged uses the nearest config and does not merge it with the root config. The root must not silently check or skip an independent client.
 
 A TypeScript/Jest client uses its own compiler and `yarn run test` when its `test` script runs Jest; it does not need a Raijin dependency. To check an entire `tsconfig.json` without appending staged paths, use a lint-staged JS configuration callback such as `() => "yarn exec tsc --noEmit -p tsconfig.json"`. Configurations must cover all required checks; a missing client config must not leave its files unchecked.
 
-After configuring checks, stage the configuration and intended changes, then run from the repository root:
+After configuring checks, stage the configuration and an actual changed file, then run from the repository root:
 
 ```bash
 yarn commit staged
 ```
 
-Confirm that checks ran for every affected project, then make a normal commit. An empty staged set or no matching files does not prove that checks are configured. Fix missing commands or required configuration rather than bypassing the hook.
+Confirm that checks ran for every affected project, then make a normal commit. An empty staged set or no matching files does not prove that checks are configured. See the [commit capability](../../packages/plugins/commit/README.md) for transaction and conflict behavior.
 
 <!-- sync:verification -->
 
-## 6. Basic verification
+## 6. Check the project
 
 ```bash
 yarn check
-yarn workspaces list
+yarn check --verify
+yarn check packages/app
 ```
 
-Expected result:
-
-- `yarn check` runs a complete validation pass without routing errors
-- The native Yarn command `yarn workspaces list` returns the available project workspaces
-
-<!-- sync:project-generation-check -->
-
-## 7. Local project generation check
-
-```bash
-yarn test unit --target packages/raijin/src/generation/project
-yarn test integration --target packages/raijin/src/generation/project
-```
-
-Expected result:
-
-- Generator tests verify scaffolding and preservation of user files; the integration test installs the packed package and runs the shipped CLI, including failure when the collection is missing
+`yarn check` runs Format, Lint, TypeCheck, unit tests and integration tests for the active project; formatting may be written. `--verify` runs the same policy without formatting writes and fails on drift. A directory target limits Format, Lint and tests to that directory while TypeScript checks its applicable project configuration. A file target stays focused on that file. See [verification scopes](./verification.md) before using a targeted command as a substitute for a full project check.
 
 <!-- sync:consumer-howto -->
 
-## 8. How to use in an external project
+## 7. Check a pull request in CI
 
-- Use `yarn dlx @atls/raijin init --type project` for first setup; use `library` for the library scaffold
-- After first setup, update the pair with `yarn dlx @atls/raijin update`
-- Before the first commit, complete the [check configuration](#staged-checks) and commit it together with `.yarn/releases` and `.yarnrc.yml`
-- Use the same commands in CI and locally to avoid behavior drift
+```yaml
+name: Verify
+on: pull_request
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+      - run: yarn install --immutable
+      - run: yarn check --verify --since "$BASE_SHA"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+```
+
+This example belongs to a consumer repository. Git must contain the PR base commit and merge-base history; otherwise change selection fails rather than silently checking the wrong scope. Raijin's own GitHub workflows are generated from Terraform source in the infrastructure repository, so edit that source instead of the generated `.github/workflows` copy. Raijin supplies the check policy; Git owns comparison history, Yarn selects changed and dependent workspaces, and GitHub Actions runs the workflow.
+
+<!-- sync:nextjs -->
+
+## 8. Use Next.js under Yarn PnP
+
+For the verified single-project Next.js 16.3.6 setup, add `"type": "module"` to the root `package.json` before connecting Raijin. This sets the ESM package scope required by the checked Yarn runtime; it does not require changing the stock Next application sources. In a monorepo, keep the root TypeScript project scoped to its own files and let the Next workspace retain its own `tsconfig.json`.
+
+```sh
+yarn renderer build
+yarn renderer start
+yarn renderer dev
+```
+
+Raijin forwards the selected workspace and supported Next CLI arguments; build and dev select Next's documented Webpack mode under PnP. Next still owns application config, environment files, output and server behavior. See the [renderer capability](../../packages/plugins/renderer/README.md).

@@ -1,44 +1,40 @@
-# Verification Ownership
+# Choose a Raijin verification scope
 
-Repository verification exposes stable aggregate capabilities while each check, test, fixture, and consumer scenario remains with its implementation owner.
+Raijin has three different check surfaces. Use the one that matches the moment; a passing staged or changed-workspace check does not prove the whole project passes.
 
-## Durable Rules
+## Full project while developing
 
-- The repository aggregate invokes stable capabilities and does not select test files or consumer scenarios
-- Test discovery and selection stay with the package or capability that implements the test contract
-- Unit and contract tests stay with the production responsibility they verify
-- Disposable consumer assets stay outside runtime source and keep fixtures local to their scenario
-- Shared runner code represents semantics required by multiple scenarios, never a generic `test-utils`, `fixtures`, or `helpers` collection
-- Executable CLI verification reads the exact checked runtime directly
+```sh
+yarn check
+yarn check --verify
+```
 
-## Ownership Transitions
+`yarn check` runs Format, Lint, TypeCheck, unit tests and integration tests for the active Yarn project, in that order. It may write formatting changes. A failing stage makes the command fail, but later stages still run so their diagnostics remain visible.
 
-This table records current implementation ownership. A tracking issue names a migration, not the current owner.
+`--verify` runs the same policy without writing formatted files; formatting drift is a failure. To focus on a directory, use `yarn check packages/app`. Format, Lint and test discovery stay within that directory, while TypeScript uses its applicable project configuration and may include more files. A single-file target checks that file rather than pretending to validate the package.
 
-| Responsibility                    | Current owner                                    | State     | Transition condition                                                                                                         |
-| --------------------------------- | ------------------------------------------------ | --------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Repository verification aggregate | Root `raijin:check` capability                   | Current   | It remains an aggregate and delegates only to stable owner capabilities                                                      |
-| CLI surface and checked runtime   | `@atls/raijin-assembly`                          | Current   | #845 established this boundary; later changes remain with the same capability                                                |
-| Disposable consumer scenarios     | `@atls/raijin-assembly` runtime consumer scripts | Current   | #806 may extend their coverage only after the final command inventory is available                                           |
-| Project test execution            | `packages/plugins/test`                          | Current   | #839 established one result for the general, unit, integration, and checks consumers                                         |
-| Check orchestration               | `packages/plugins/checks`                        | Migrating | #831 replaces it only after local and CI orchestration share one capability and the duplicate command composition is removed |
-| Complete command consumer matrix  | Not implemented                                  | Planned   | #806 becomes current only after the final registered inventory has a package-owned entrypoint and consumer proof             |
+## Staged files before a commit
 
-Project tests are invoked through Raijin's public Yarn commands. The test plugin uses the built-in Node.js test-runner API internally; this does not require calling Node.js directly.
+```sh
+yarn commit staged
+```
 
-## Unit Platform Verification
+The installed pre-commit hook calls this command. Native lint-staged discovers the nearest project-owned configuration, selects files from the Git index, runs its declared tasks and restages their results. Raijin supplies no universal default configuration. An independent nested Yarn project needs its own configuration; a successful command with no staged matches is not evidence that every project is covered.
 
-The Terraform-owned Checks workflow runs the complete repository unit suite with
-`yarn test unit` on Node.js 24 in `Unit / ubuntu-latest` and
-`Unit / windows-latest`. Each job has a ten-minute budget. Matrix fail-fast is
-disabled so a failure on one platform does not cancel the other platform's run.
+The same hook installation also supplies interactive `yarn commit message` preparation and `yarn commit message lint` validation. Husky owns Git hook execution; Raijin owns only its marked entries. See [hook setup](./quickstart.md#staged-checks) and the [commit capability](../../packages/plugins/commit/README.md).
 
-These full-suite platform checks complement the existing shared checks, which
-retain pull-request changed or affected scope. A successful native Windows run
-does not replace acceptance of the delivered GitHub Actions matrix.
+## Changed and affected workspaces in a pull request
 
-## Update Contract
+```sh
+yarn check --verify --since origin/main
+```
 
-- A pull request that changes implementation ownership updates the corresponding row in the same delivery unit
-- A planned or migrating responsibility becomes current only after its transition condition and focused proof are complete
-- Every migration changes one owner at a time; adjacent test semantics, check orchestration, or consumer coverage remain with their tracking issue
+Replace `origin/main` with the actual PR base ref. It must exist locally with enough Git history to find a merge base. Yarn's Git change detection selects changed workspaces and recursive dependents. A relevant root or lockfile change runs one full-project pass; a comparison with no selected workspaces reports `No workspaces changed`. This mode never writes formatting changes. It is not a staged-file hook, a full-project assertion for an unrelated change, or a GitHub Check Run created by Raijin. See the [consumer CI example](./quickstart.md#7-check-a-pull-request-in-ci).
+
+## Who owns what
+
+Raijin owns the order of checks, command entrypoints and observable exit result. Prettier, ESLint, TypeScript and Node execute their own formatting, lint, compilation and test rules. Git owns refs and merge-base history; Yarn owns the project, lockfile, PnP and workspace change selection; lint-staged and Husky own staged-file transaction and hook execution; GitHub Actions owns CI execution.
+
+Raijin's own GitHub workflow files are generated from Terraform source in the infrastructure repository. The `.github/workflows` copy is not the place to change those workflows. Consumers own their own CI configuration and may use the [quickstart example](./quickstart.md#7-check-a-pull-request-in-ci).
+
+For the implementation details of each command, start with [check](../../packages/plugins/check/README.md), [format](../../packages/plugins/format/README.md), [lint](../../packages/plugins/lint/README.md), [typecheck](../../packages/plugins/typescript/README.md), [test](../../packages/plugins/test/README.md) and [commit](../../packages/plugins/commit/README.md).

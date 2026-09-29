@@ -1,21 +1,21 @@
-# Atlantis Raijin Docs
+# Raijin documentation
 
-Documentation router for `Raijin`
+Choose a guide by the work you need to do.
 
 <!-- sync:docs-router-links -->
 
-## Documentation versions
+## Languages
 
 - RU (default): [README.ru.md](./README.ru.md)
 - EN: [README.md](./README.md)
 
 <!-- sync:docs-router-scenarios -->
 
-## Scenario routing
+## By task
 
-- Need to install or upgrade bundle quickly: [raijin/quickstart.md](./raijin/quickstart.md)
-- Need repository verification ownership: [raijin/verification.md](./raijin/verification.md)
-- Need a compact Raijin docs overview: [raijin/README.md](./raijin/README.md)
+- Install or update the checked package/runtime pair, configure hooks and CI: [quickstart](./raijin/quickstart.md)
+- Choose the right local, staged or PR check: [verification scopes](./raijin/verification.md)
+- Find retained commands and their owning packages: [command map](./raijin/README.md)
 
 <!-- sync:docs-router-read-order -->
 

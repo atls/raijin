@@ -9,99 +9,71 @@
 
 ## What this is
 
-Raijin is an engineering operating model for a unified delivery contour, shipped as the custom `atls` Yarn bundle
-It aligns teams on strict standards and strong contracts to increase delivery predictability and real engineering throughput
+Raijin is a Yarn command layer for Node.js/TypeScript projects and monorepos. The `@atls/raijin` package and its checked Yarn runtime give development, Git hooks, and CI the same commands. Raijin connects existing tools; it does not replace Yarn, TypeScript, ESLint, Next.js, or their project configuration.
 
 <!-- sync:root-audience -->
 
 ## Who it is for
 
-- Teams maintaining multiple `Node.js`/`TypeScript` projects
-- Developers who need one command contract locally and in `GitHub Actions`
-- Open-source and internal repositories that need predictable checks and upgrades
+- Teams with multiple Node.js/TypeScript projects or Yarn monorepos that repeat the same checks across `package.json` files
+- Projects that need the same checks locally, before a commit, and on a pull request
+
+If a single project is well served by a few ordinary scripts, it may not need Raijin.
 
 <!-- sync:root-capabilities -->
 
 ## What Raijin can do
 
-- Code validation: `check`, `lint`, `typecheck`, `test`
-- Verify changes against a Git ref: `check --verify --since <ref>`
-- Build and package publication: `service build`, `library build`, `npm publish`
-- Generators and utility commands for monorepo infrastructure
+- `yarn check` covers the whole project and may repair formatting; `yarn check --verify --since <ref>` checks changed workspaces and their dependents without writing files
+- `yarn commit staged` checks staged files using the project's own lint-staged configuration
+- `library build`, `service build/dev/start`, `renderer build/dev/start`, and `image pack` cover their respective workloads; each command owner documents the details
+- `generate project` creates a scaffold, while public `init/update` installs a checked package/runtime pair after that pair is published
 
 <!-- sync:root-quickstart -->
 
 ## Quickstart
 
-### New project
+Use Node.js `>=24.15.0 <25` and an available Yarn/Corepack launcher. The `@atls/raijin@0.7.0` release does not contain the checked `yarn.js` required by the new installer: the public setup commands below apply only after v2 is published with the matching release asset.
+
+### New project after the v2 release
 
 ```bash
 yarn dlx @atls/raijin init --type project
 ```
 
-Use `--type library` for the library scaffold
+Run this in an empty directory; use `--type library` for a library. The installer verifies the package and `.yarn/releases/yarn.js` pair before creating the scaffold. Until v2 is published, a local packed-package test does not prove this network path.
 
-Expected result:
-
-- Project scaffold is created and the versioned Raijin runtime is installed
-- `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.js` file
-- The project scaffold is created once after the package and runtime are installed
-- Raijin commands are available via `yarn`
-
-### Existing project
+### Existing project after the v2 release
 
 ```bash
 yarn dlx @atls/raijin update
 ```
 
-Existing project settings are preserved
-
-Expected result:
-
-- A configured project updates only the verified package/runtime pair; project settings are preserved
-- In a monorepo, run the command from the Yarn project root that declares `@atls/raijin`. A separate nested project needs its own `yarn.lock`; a member workspace is not made into a separate project automatically
+Run this from a Yarn project root whose `package.json` declares `"type": "module"`. The installer rejects another module scope before changing files. A member workspace is not a separate Yarn project; an independent nested project needs its own `yarn.lock`.
 
 ### Before the first commit
 
-After connecting a new or existing project, complete the [pre-commit check setup](./docs/raijin/quickstart.md#staged-checks). Raijin requires explicit project-owned lint-staged configuration. When configured, the Git hook calls `yarn commit staged`; without that configuration, staged-file checks fail.
+After setup, [configure staged checks](./docs/raijin/quickstart.md#staged-checks): Raijin installs hooks through Husky but does not invent a lint-staged configuration for your project.
 
-### Upgrade
-
-```bash
-yarn dlx @atls/raijin update
-```
-
-Expected result:
-
-- The bundle is upgraded to the latest available version through Yarn
-
-### Verify
+### Verify an installed project locally
 
 ```bash
 yarn check
-yarn workspaces list
 ```
 
-Expected result:
-
-- Commands run with expected routing and expected validation steps
+`check` runs formatting, lint, typecheck, unit tests, and integration tests. Use `yarn check --verify` when files must not change. The [three verification scopes](./docs/raijin/verification.md)—whole project, staged files, and changed workspaces in a PR—are not interchangeable.
 
 <!-- sync:root-consumer-howto -->
 
 ## How to use in another project
 
-1. Install the bundle using [Quickstart](./docs/raijin/quickstart.md)
-2. Configure [pre-commit checks](./docs/raijin/quickstart.md#staged-checks) for each independent project
-3. Commit the check configuration together with `.yarn/releases` and `.yarnrc.yml` changes
-4. Update the package/runtime pair with `yarn dlx @atls/raijin update` after a new release
+Start with [Quickstart](./docs/raijin/quickstart.md) for setup, project-owned staged checks, and a CI example. For Next.js under Yarn PnP, check the ESM package scope and the [renderer commands](./packages/plugins/renderer/README.md).
 
 <!-- sync:root-read-more -->
 
 ## Where to read next
 
-- RU (default): [README.md](README.md)
-- EN: [README_EN.md](README_EN.md)
-- Docs index RU: [docs/README.ru.md](docs/README.ru.md)
-- Docs index EN: [docs/README.md](docs/README.md)
-- Raijin section router: [docs/raijin/README.md](docs/raijin/README.md)
-- Quickstart: [docs/raijin/quickstart.md](docs/raijin/quickstart.md)
+- [Quickstart and CI](./docs/raijin/quickstart.md)
+- [Choosing a verification scope](./docs/raijin/verification.md)
+- [Command and package docs](./docs/raijin/README.md)
+- [Русский README](./README.md)

@@ -15,28 +15,27 @@ environment files, static assets and build output remain owned by Next.js.
 Production start uses the ordinary Next build output; no standalone directory or
 Raijin entrypoint is generated.
 
-Build and development use the documented Webpack option because Turbopack does
-not support Yarn PnP. With Next 16.3.5, Node 24.20.0 and Yarn 4.14.1, unpack Next
-through Yarn to avoid its CommonJS hook failing inside the PnP ZIP loader:
+For the verified PnP setup, build and development pass Next's documented
+[`--webpack` option](https://nextjs.org/docs/app/api-reference/cli/next). A clean stock Next 16.3.6 App Router project built, started,
+served CSS and hot-reloaded with Node 24.20.0 and the checked Yarn 4.18 runtime
+without `yarn unplug next`. Existing project-owned Yarn unplug settings are not
+rewritten by Raijin. Commands preserve the Next CLI exit status.
 
-```sh
-yarn unplug next
-```
-
-Yarn records the unpacking in the root manifest's `dependenciesMeta`. The project
-keeps PnP and its ESM loader. Raijin does not edit Next's sources or silently
-change installation settings. Commands preserve the Next CLI exit status.
+The single-project integration needs `"type": "module"` in its root
+`package.json` before connecting Raijin; the checked Yarn runtime uses that
+ESM package scope. In a monorepo, scope the root TypeScript project to its own
+files and keep the Next workspace's `tsconfig.json` separate. Raijin does not
+edit stock Next application sources to make either configuration work.
 
 For `eslint-config-next@16.3.6`, the checked Yarn runtime supplies the missing
 `next` peer through Yarn's package-extension hook. This lets the stock Next
 ESLint configuration resolve the project's own Next installation under PnP;
 Raijin does not rewrite the project's ESLint configuration.
 
-Next owns its internal development-server workers. In Next 16.3.5, forcibly
-killing a dev worker can end the provider with exit code zero; forcibly killing
-its supervising CLI can leave a worker alive. Renderer does not add a second
-worker supervisor. Normal CLI cancellation with SIGINT or SIGTERM shuts down
-the tested server and releases its port.
+Next owns its internal development-server workers; renderer adds no second
+supervisor. Normal CLI cancellation with SIGINT or SIGTERM shut down the tested
+server and released its port. Force-killing an internal worker is not the
+supported stop path.
 
 The former renderer-specific tunnel and certificate-path options are removed.
 Use Next's public options for supported development-server behavior. UI-library

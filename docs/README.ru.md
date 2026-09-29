@@ -1,21 +1,21 @@
-# Atlantis Raijin Docs
+# Документация Raijin
 
-Маршрутизатор документации по набору инструментов `Raijin`
+Выберите руководство по задаче.
 
 <!-- sync:docs-router-links -->
 
-## Версии документации
+## Языки
 
 - Русская версия: [README.ru.md](./README.ru.md)
 - Английская версия: [README.md](./README.md)
 
 <!-- sync:docs-router-scenarios -->
 
-## Куда идти по сценарию
+## По задаче
 
-- Нужно быстро подключить или обновить бандл в проекте: [raijin/quickstart.ru.md](./raijin/quickstart.ru.md)
-- Нужно понять владельцев проверок: [raijin/verification.md](./raijin/verification.md)
-- Нужен обзор структуры раздела Raijin: [raijin/README.ru.md](./raijin/README.ru.md)
+- Подключить или обновить проверенную пару пакета и runtime, настроить hooks и CI: [быстрый старт](./raijin/quickstart.ru.md)
+- Выбрать локальную, staged- или PR-проверку: [области проверки](./raijin/verification.md)
+- Найти сохранённые команды и пакеты-владельцы: [карта команд](./raijin/README.ru.md)
 
 <!-- sync:docs-router-read-order -->
 
