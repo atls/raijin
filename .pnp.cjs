@@ -546,7 +546,6 @@ const RAW_RUNTIME_STATE =
           ["husky", "npm:9.1.7"],\
           ["import-sort", "npm:6.0.0"],\
           ["import-sort-parser", "npm:6.0.0"],\
-          ["import-sort-parser-typescript", "npm:6.0.0"],\
           ["import-sort-style", "npm:6.0.0"],\
           ["node-loader", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:2.1.0"],\
           ["prettier", "npm:3.9.8"],\
@@ -10374,17 +10373,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["import-sort-parser-typescript", [\
-      ["npm:6.0.0", {\
-        "packageLocation": "../.yarn/berry/cache/import-sort-parser-typescript-npm-6.0.0-97a472ec0a-10.zip/node_modules/import-sort-parser-typescript/",\
-        "packageDependencies": [\
-          ["import-sort-parser", "npm:6.0.0"],\
-          ["import-sort-parser-typescript", "npm:6.0.0"],\
-          ["typescript", "patch:typescript@npm%3A3.9.10#optional!builtin<compat/typescript>::version=3.9.10&hash=3bd3d3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["import-sort-style", [\
       ["npm:6.0.0", {\
         "packageLocation": "../.yarn/berry/cache/import-sort-style-npm-6.0.0-2a38d7ad07-10.zip/node_modules/import-sort-style/",\
@@ -15403,13 +15391,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["typescript", [\
-      ["patch:typescript@npm%3A3.9.10#optional!builtin<compat/typescript>::version=3.9.10&hash=3bd3d3", {\
-        "packageLocation": "../.yarn/berry/cache/typescript-patch-24818892bd-10.zip/node_modules/typescript/",\
-        "packageDependencies": [\
-          ["typescript", "patch:typescript@npm%3A3.9.10#optional!builtin<compat/typescript>::version=3.9.10&hash=3bd3d3"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5", {\
         "packageLocation": "../.yarn/berry/cache/typescript-patch-6fda4d02cf-10.zip/node_modules/typescript/",\
         "packageDependencies": [\
