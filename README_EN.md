@@ -33,17 +33,17 @@ If a single project is well served by a few ordinary scripts, it may not need Ra
 
 ## Quickstart
 
-Use Node.js `>=24.15.0 <25` and an available Yarn/Corepack launcher. The `@atls/raijin@0.7.0` release does not contain the checked `yarn.js` required by the new installer: the public setup commands below apply only after v2 is published with the matching release asset.
+Use Node.js `>=24.15.0 <25` and an available Yarn/Corepack launcher. The installer selects a published Raijin package and its matching checked `yarn.js`; if the release asset is missing, it does not activate a new runtime.
 
-### New project after the v2 release
+### New project
 
 ```bash
 yarn dlx @atls/raijin init --type project
 ```
 
-Run this in an empty directory; use `--type library` for a library. The installer verifies the package and `.yarn/releases/yarn.js` pair before creating the scaffold. Until v2 is published, a local packed-package test does not prove this network path.
+Run this in an empty directory; use `--type library` for a library. The installer verifies the package and `.yarn/releases/yarn.js` pair before creating the scaffold.
 
-### Existing project after the v2 release
+### Existing project
 
 ```bash
 yarn dlx @atls/raijin update

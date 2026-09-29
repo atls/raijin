@@ -10,11 +10,11 @@ Use the published package and its matching checked Yarn runtime as one pair. Thi
 - Start a new project in an empty directory; for an existing project, use the Yarn project root with a `package.json` declaring `"type": "module"`
 - A new project uses Yarn PnP and ESM. Update keeps the existing `nodeLinker` and project configuration; it does not convert CommonJS projects
 
-The `@atls/raijin@0.7.0` release has the older `yarn.mjs`, not the checked `yarn.js` required by the new installer. The public `init/update` commands below apply **after a v2 release with the matching asset**. The installer rejects the older package without activating a runtime; a local packed-package test is not proof of public installation.
+Public `init/update` selects a published Raijin package and its matching checked `yarn.js` release asset. If the package, matching release metadata or runtime asset is unavailable, the installer stops without activating an unverified runtime.
 
 <!-- sync:new-project -->
 
-## 2. Create a project after the v2 release
+## 2. Create a project
 
 ```bash
 yarn dlx @atls/raijin init --type project
@@ -26,7 +26,7 @@ If the directory is not yet a Git repository, run `git init` and then `yarn inst
 
 <!-- sync:existing-project -->
 
-## 3. Connect or update an existing project after the v2 release
+## 3. Connect or update an existing project
 
 ```bash
 yarn dlx @atls/raijin update
