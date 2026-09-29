@@ -11,7 +11,7 @@ yarn check --verify
 
 `yarn check` runs Format, Lint, TypeCheck, unit tests and integration tests for the active Yarn project, in that order. It may write formatting changes. A failing stage makes the command fail, but later stages still run so their diagnostics remain visible.
 
-`--verify` runs the same policy without writing formatted files; formatting drift is a failure. To focus on a directory, use `yarn check packages/app`. Format, Lint and test discovery stay within that directory, while TypeScript uses its applicable project configuration and may include more files. A single-file target checks that file rather than pretending to validate the package.
+`--verify` runs the same policy without writing formatted files; formatting drift is a failure. To focus on a directory, use `yarn check packages/app`. Format, Lint and test discovery stay within that directory, while TypeScript uses its applicable project configuration and may include more files. A single-file target runs only Format, Lint and file TypeCheck; it does not run unit or integration tests or validate the package.
 
 ## Staged files before a commit
 

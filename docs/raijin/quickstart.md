@@ -91,7 +91,7 @@ yarn check --verify
 yarn check packages/app
 ```
 
-`yarn check` runs Format, Lint, TypeCheck, unit tests and integration tests for the active project; formatting may be written. `--verify` runs the same policy without formatting writes and fails on drift. A directory target limits Format, Lint and tests to that directory while TypeScript checks its applicable project configuration. A file target stays focused on that file. See [verification scopes](./verification.md) before using a targeted command as a substitute for a full project check.
+`yarn check` runs Format, Lint, TypeCheck, unit tests and integration tests for the active project; formatting may be written. `--verify` runs the same policy without formatting writes and fails on drift. A directory target limits Format, Lint and tests to that directory while TypeScript checks its applicable project configuration. A single-file target runs only Format, Lint and file TypeCheck; it does not run unit or integration tests, even when the target is a test file. Run the relevant tests separately or use the full project check when test execution is required. See [verification scopes](./verification.md) before using a targeted command as a substitute for a full project check.
 
 <!-- sync:consumer-howto -->
 
