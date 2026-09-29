@@ -601,6 +601,24 @@ test('should format split named imports and following code in one pass', async (
   )
 
   await assertFormatted(
+    [
+      "import './setup.js'",
+      "import Default, { First, Second } from 'pkg'",
+      '',
+      'export const result = Default(First, Second)',
+    ].join('\n'),
+    [
+      "import './setup.js'",
+      "import { First }  from 'pkg'",
+      "import { Second } from 'pkg'",
+      "import Default    from 'pkg'",
+      '',
+      'export const result = Default(First, Second)',
+      '',
+    ].join('\n')
+  )
+
+  await assertFormatted(
     ["import { First as one, type Second as two } from 'pkg'", 'export const result = one'].join(
       '\n'
     ),
@@ -608,6 +626,20 @@ test('should format split named imports and following code in one pass', async (
       "import { First as one }       from 'pkg'",
       "import { type Second as two } from 'pkg'",
       'export const result = one',
+      '',
+    ].join('\n')
+  )
+})
+
+test('should keep default and namespace imports stable after one pass', async () => {
+  await assertFormatted(
+    ["import Default, * as Namespace from 'pkg'", 'export const result = Default(Namespace)'].join(
+      '\n'
+    ),
+    [
+      "import * as Namespace from 'pkg'",
+      "import Default        from 'pkg'",
+      'export const result = Default(Namespace)',
       '',
     ].join('\n')
   )
