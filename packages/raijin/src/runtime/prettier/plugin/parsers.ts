@@ -23,21 +23,36 @@ const parse: Parser['parse'] = async (source, { plugins }) => {
 
   nodes.forEach((node, nodeIndex: number) => {
     if (node.type === 'ImportDeclaration') {
-      if (node.specifiers.length > 1) {
-        const importStart = (node as ImportDeclaration).range?.[0]
+      const declaration = node as ImportDeclaration
+
+      if (declaration.specifiers.length > 1) {
+        const importStart = declaration.range?.[0]
         if (importStart === undefined || !sortableImportStarts.has(importStart)) {
           return
         }
 
         const index = bodyLength - nodeIndex - 1
+        const nonDefaults = declaration.specifiers.filter(
+          (specifier) => specifier.type !== 'ImportDefaultSpecifier'
+        )
+        const defaults = declaration.specifiers.filter(
+          (specifier) => specifier.type === 'ImportDefaultSpecifier'
+        )
+        const specifiers =
+          nonDefaults.length > 0 && defaults.length > 0
+            ? [...nonDefaults, ...defaults]
+            : declaration.specifiers
 
         program.body.splice(index, 1)
 
-        node.specifiers.forEach((_: unknown, specifierIndex: number) => {
+        specifiers.forEach((specifier, specifierIndex) => {
           program.body.splice(index + specifierIndex, 0, {
-            ...node,
-            // eslint-disable-next-line @typescript-eslint/no-shadow
-            specifiers: node.specifiers.filter((_: unknown, i: number) => specifierIndex === i),
+            ...declaration,
+            range:
+              specifierIndex === specifiers.length - 1
+                ? declaration.range
+                : [declaration.range![0], specifier.range![1]],
+            specifiers: [specifier],
           })
         })
       }
