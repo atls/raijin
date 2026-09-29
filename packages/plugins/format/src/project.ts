@@ -8,9 +8,10 @@ export const formatProjectSources = async ({
   cwd,
   targets,
   write = true,
+  pnpIgnorePatterns = [],
   workspacePackageNames,
 }: FormatProjectInput): Promise<FormatProjectResult> => {
-  const selectedFiles = await selectFiles(cwd, targets)
+  const selectedFiles = await selectFiles(cwd, targets, pnpIgnorePatterns)
   const files: Array<FormatProjectResult['files'][number]> = []
 
   await selectedFiles.reduce<Promise<void>>(async (previous, file) => {

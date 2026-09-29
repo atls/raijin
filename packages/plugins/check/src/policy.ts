@@ -24,6 +24,7 @@ type CheckStage = {
 export type CheckPolicyInput = {
   readonly cwd: string
   readonly projectCwd: string
+  readonly pnpIgnorePatterns?: ReadonlyArray<string>
   readonly verify: boolean
   readonly skipTypecheck?: boolean
   readonly targets?: CommandInput
@@ -62,6 +63,7 @@ export const runCheckPolicy = async (input: CheckPolicyInput): Promise<number> =
   const {
     cwd,
     projectCwd,
+    pnpIgnorePatterns = [],
     verify,
     skipTypecheck = false,
     targets,
@@ -78,6 +80,7 @@ export const runCheckPolicy = async (input: CheckPolicyInput): Promise<number> =
       run: async () => {
         const result = await formatProjectSources({
           cwd,
+          pnpIgnorePatterns,
           targets,
           write: !verify,
           workspacePackageNames,
@@ -98,6 +101,7 @@ export const runCheckPolicy = async (input: CheckPolicyInput): Promise<number> =
         const result = await lintProjectSources({
           rootCwd: projectCwd,
           cwd,
+          pnpIgnorePatterns,
           targets: targets ? targets.targets.map(({ path }) => toNativePath(path)) : [cwd],
         })
 

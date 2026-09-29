@@ -32,6 +32,11 @@ export class FormatCommand extends BaseCommand {
 
       await formatProjectSources({
         cwd: toNativeCwd(executionCwd),
+        pnpIgnorePatterns:
+          executionCwd === yarn.project.cwd &&
+          yarn.project.configuration.get('nodeLinker') === 'pnp'
+            ? yarn.project.configuration.get('pnpIgnorePatterns')
+            : [],
         targets: targets.targets.length > 0 ? targets : undefined,
         workspacePackageNames: getWorkspacePackageNames(yarn.project),
       })
