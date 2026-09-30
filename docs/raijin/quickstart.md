@@ -97,6 +97,8 @@ yarn check packages/app
 
 ## 7. Check a pull request in CI
 
+The workflow reads the Node version from your project's `package.json`, not from the Raijin dependency. After `init`, add `engines.node` to that manifest using the range declared by the installed `@atls/raijin` package. The initializer does not copy this field.
+
 ```yaml
 name: Verify
 on: pull_request

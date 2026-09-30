@@ -97,6 +97,8 @@ yarn check packages/app
 
 ## 7. Проверить pull request в CI
 
+CI берёт версию Node из `package.json` вашего проекта, а не из зависимости Raijin. После `init` добавьте туда `engines.node` с диапазоном, указанным в установленном пакете `@atls/raijin`: установщик не копирует это поле.
+
 ```yaml
 name: Verify
 on: pull_request
