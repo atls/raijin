@@ -16,36 +16,18 @@ jobs:
   release:
     name: Release
     if: ${{ github.ref == 'refs/heads/master' && vars.RAIJIN_RELEASE_ENABLED == 'true' }}
-    runs-on: ubuntu-latest
+    uses: atls/shared/.github/workflows/publish-semantic.yaml@master
     permissions:
       contents: write
       packages: write
 
-    steps:
-      - name: Create GitHub App token
-        uses: actions/create-github-app-token@v3.2.0
-        id: app-token
-        with:
-          client-id: ${{ vars.ATLANTIS_SUPER_BOT_CLIENT_ID }}
-          private-key: ${{ secrets.ATLANTIS_SUPER_BOT_PRIVATE_KEY }}
-
-      - name: Checkout accepted master revision
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ github.sha }}
-          token: ${{ steps.app-token.outputs.token }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: package.json
-
-      - name: Install Raijin
-        uses: ./.github/actions/install
-
-      - name: Release Raijin
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          GITHUB_PACKAGES_TOKEN: ${{ github.token }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn semantic-release --extends ./.github/actions/release/release.config.js
+    with:
+      packageName: '@atls/raijin'
+      clientId: ${{ vars.ATLANTIS_SUPER_BOT_CLIENT_ID }}
+      prepareCommand: yarn cli:build
+      githubPackages: true
+      assetPath: .yarn/releases/yarn.js
+      assetName: yarn.js
+    secrets:
+      appPrivateKey: ${{ secrets.ATLANTIS_SUPER_BOT_PRIVATE_KEY }}
+      npmAuthToken: ${{ secrets.NPM_TOKEN }}
