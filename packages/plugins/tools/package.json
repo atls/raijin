@@ -1,0 +1,34 @@
+{
+  "name": "@atls/yarn-plugin-tools",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Yarn environment and repository hook integration",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/plugins/tools"
+  },
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "builder build plugin"
+  },
+  "dependencies": {
+    "@atls/raijin": "workspace:*"
+  },
+  "devDependencies": {
+    "@yarnpkg/builder": "4.2.4",
+    "@yarnpkg/cli": "4.18.0",
+    "@yarnpkg/core": "4.9.1",
+    "@yarnpkg/fslib": "3.1.5"
+  }
+}

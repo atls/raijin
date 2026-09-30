@@ -7,36 +7,17 @@ Navigation for custom `atls` Yarn bundle docs
 ## Navigate by task
 
 - Install or upgrade the bundle: [quickstart.md](./quickstart.md)
-- Pick and understand a command: [commands.md](./commands.md)
-- Understand workspace packages: [packages.md](./packages.md)
+- Inspect command syntax with `yarn --help` and `yarn <command> --help`
+- Find package responsibilities in each package's README
+- Understand repository verification ownership: [verification.md](./verification.md)
 
 <!-- sync:router-read-order -->
 
 ## Read order
 
 1. [quickstart.md](./quickstart.md)
-2. [commands.md](./commands.md)
-3. [packages.md](./packages.md)
+2. [verification.md](./verification.md)
 
-<!-- sync:router-quick-rules -->
+## Repository checks
 
-## Usage rules
-
-- Use only commands with `active` status
-- `inactive` commands are treated as unavailable
-
-<!-- sync:router-generation -->
-
-## Generation and checks
-
-- `yarn raijin:generate`
 - `yarn raijin:check`
-- `yarn schematic:test`
-
-<!-- sync:router-coverage -->
-
-## Coverage snapshot
-
-- Commands: 38 (active: 37, inactive: 1)
-- Workspace packages: 59
-- Last generated: 2026-07-03T14:50:45.554Z

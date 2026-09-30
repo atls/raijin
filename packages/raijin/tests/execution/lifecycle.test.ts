@@ -1,0 +1,160 @@
+import assert                        from 'node:assert/strict'
+import { rm }                        from 'node:fs/promises'
+import { test }                      from 'node:test'
+
+import { npath }                     from '@yarnpkg/fslib'
+
+import { assertCompleted }           from './assert-completed.js'
+import { compose }                   from './compose.js'
+import { createProjectContext }      from './create-project-context.js'
+import { resolveFixturePath }        from './resolve-fixture-path.js'
+import { trackTemporaryDirectories } from './track-temporary-directories.js'
+
+const entry = resolveFixturePath('entry.ts')
+
+test('should cancel execution and remove its temporary directory', async (context) => {
+  const { project } = await createProjectContext()
+  const removed = trackTemporaryDirectories(context)
+  const executor = compose({ project })
+  const result = await executor.execute({
+    arguments: ['wait'],
+    cancelSignal: AbortSignal.timeout(50),
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    entry,
+  })
+
+  assert.equal(result.reason, 'cancelled')
+  assert.equal(removed.length, 1)
+})
+
+test('should time out execution and remove its temporary directory', async (context) => {
+  const { project } = await createProjectContext()
+  const removed = trackTemporaryDirectories(context)
+  const executor = compose({ project })
+  const result = await executor.execute({
+    arguments: ['wait'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    entry,
+    timeoutMs: 50,
+  })
+
+  assert.equal(result.reason, 'timed-out')
+  assert.equal(removed.length, 1)
+})
+
+test(
+  'should preserve signal termination and remove its temporary directory',
+  { skip: process.platform === 'win32' },
+  async (context) => {
+    const { project } = await createProjectContext()
+    const removed = trackTemporaryDirectories(context)
+    const executor = compose({ project })
+    const result = await executor.execute({
+      arguments: ['signal'],
+      cwd: npath.fromPortablePath(project.cwd),
+      input: 'ignore',
+      output: { mode: 'capture' },
+      entry,
+    })
+
+    assert.equal(result.reason, 'signalled')
+    assert.equal(result.signal, 'SIGTERM')
+    assert.equal(removed.length, 1)
+  }
+)
+
+test('should wait for captured output before completing', async () => {
+  const { project } = await createProjectContext()
+  const executor = compose({ project })
+  const result = await executor.execute({
+    arguments: ['stream'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    entry,
+  })
+
+  assertCompleted(result)
+  assert.equal(result.stdout.length, 256 * 1024)
+})
+
+test('should return an output failure when the application handler throws', async (context) => {
+  const { project } = await createProjectContext()
+  const removed = trackTemporaryDirectories(context)
+  const executor = compose({ project })
+  const result = await executor.execute({
+    arguments: ['report', 'unused'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: {
+      mode: 'handle',
+      handler: () => {
+        throw new Error('handler failed')
+      },
+    },
+    entry,
+  })
+
+  assert.deepEqual(result, {
+    reason: 'output-failed',
+    exitCode: 0,
+    stderr: '',
+    stdout: '',
+  })
+  assert.equal(removed.length, 1)
+})
+
+test('should preserve a non-zero exit when the application handler throws', async (context) => {
+  const { project } = await createProjectContext()
+  const removed = trackTemporaryDirectories(context)
+  const executor = compose({ project })
+  const result = await executor.execute({
+    arguments: ['write-and-fail'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: {
+      mode: 'handle',
+      handler: () => {
+        throw new Error('handler failed')
+      },
+    },
+    entry,
+  })
+
+  assert.deepEqual(result, {
+    reason: 'output-failed',
+    exitCode: 7,
+    stderr: '',
+    stdout: '',
+  })
+  assert.equal(removed.length, 1)
+})
+
+test('should report cleanup failure without discarding the process result', async (context) => {
+  const { project } = await createProjectContext()
+  const removed = trackTemporaryDirectories(context, new Error('cleanup failed'))
+  const executor = compose({ project })
+  const result = await executor.execute({
+    arguments: ['fail'],
+    cwd: npath.fromPortablePath(project.cwd),
+    input: 'ignore',
+    output: { mode: 'capture' },
+    entry,
+  })
+
+  assert.deepEqual(result, {
+    reason: 'cleanup-failed',
+    execution: {
+      reason: 'completed',
+      exitCode: 7,
+      stderr: '',
+      stdout: '',
+    },
+  })
+  assert.equal(removed.length, 1)
+  await rm(removed[0], { force: true, recursive: true })
+})

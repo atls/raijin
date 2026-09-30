@@ -1,0 +1,79 @@
+import assert                        from 'node:assert/strict'
+import { test }                      from 'node:test'
+
+import { npath }                     from '@yarnpkg/fslib'
+
+import { assertCompleted }           from './assert-completed.js'
+import { compose }                   from './compose.js'
+import { createProjectContext }      from './create-project-context.js'
+import { resolveFixturePath }        from './resolve-fixture-path.js'
+import { trackTemporaryDirectories } from './track-temporary-directories.js'
+
+const entry = resolveFixturePath('entry.ts')
+
+test('should execute TypeScript through the project PnP environment', async (context) => {
+  const { project, workspace } = await createProjectContext()
+  const callerNodeOptions = '--title=raijin-caller --trace-warnings'
+  const removed = trackTemporaryDirectories(context)
+  const nodeOptionsName = process.platform === 'win32' ? 'Node_Options' : 'NODE_OPTIONS'
+  const executor = compose({
+    baseEnvironment: {
+      ...process.env,
+      [nodeOptionsName]: callerNodeOptions,
+      RAIJIN_REMOVE_ME: 'remove-me',
+    },
+    locator: workspace.anchoredLocator,
+    project,
+  })
+  const result = await executor.execute({
+    arguments: ['report', 'argument-value'],
+    cwd: npath.fromPortablePath(project.cwd),
+    environment: {
+      RAIJIN_REMOVE_ME: undefined,
+      RAIJIN_TEST_VALUE: 'preserved-value',
+    },
+    input: 'ignore',
+    output: { mode: 'capture' },
+    entry,
+  })
+
+  assert.ok(Number(process.versions.node.split('.')[0]) >= 24)
+  assertCompleted(result)
+  assert.equal(result.exitCode, 0, result.stderr)
+  const report = JSON.parse(result.stdout) as Record<string, unknown>
+  const { nodeOptions } = report
+
+  assert.ok(typeof nodeOptions === 'string')
+  assert.ok(nodeOptions.includes(callerNodeOptions))
+  assert.deepEqual(report, {
+    argument: 'argument-value',
+    callerTitle: 'raijin-caller',
+    dependencyLoaded: true,
+    nodeOptions,
+    preserved: 'preserved-value',
+  })
+  assert.equal(removed.length, 1)
+})
+
+for (const name of ['PROJECT_CWD', 'RAIJIN_NODE_LOADER']) {
+  test(`should return a stable failure when ${name} is overridden`, async (context) => {
+    const { project } = await createProjectContext()
+    const removed = trackTemporaryDirectories(context)
+    const executor = compose({ project })
+    const result = await executor.execute({
+      arguments: ['report', 'unused'],
+      cwd: npath.fromPortablePath(project.cwd),
+      environment: { [name]: '/unsupported' },
+      input: 'ignore',
+      output: { mode: 'capture' },
+      entry,
+    })
+
+    assert.deepEqual(result, {
+      reason: 'start-failed',
+      stderr: '',
+      stdout: '',
+    })
+    assert.equal(removed.length, 1)
+  })
+}

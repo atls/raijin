@@ -43,21 +43,12 @@ node_modules
 /.yarn/install-state.gz
 /.yarn/sdks
 /.yarn/raijin
+/.config/eslint/.eslintcache
 
 dist/
-!yarn/cli/dist/
-yarn/cli/dist/*
-yarn/plugin-*/bundles/
-!yarn/plugin-badges/bundles/
-!yarn/plugin-badges/bundles/**
-!yarn/plugin-pnp-patch/bundles/
-!yarn/plugin-pnp-patch/bundles/**
-
-yarn/plugin-*/bundles/
-!yarn/plugin-badges/bundles/
-!yarn/plugin-badges/bundles/**
-!yarn/plugin-pnp-patch/bundles/
-!yarn/plugin-pnp-patch/bundles/**
+!packages/assembly/dist/
+packages/assembly/dist/*
+packages/plugins/*/bundles/
 
 package.tgz
 
@@ -69,5 +60,6 @@ fsevents-patch-*.zip
 @esbuild-*-npm-*.zip
 @rollup-rollup-*-*-npm-*.zip
 .idea
+*.iml
 .vim
 .vscode

@@ -1,0 +1,203 @@
+{
+  "name": "@atls/raijin",
+  "version": "0.7.0",
+  "description": "Public Raijin initializer and runtime package",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/raijin"
+  },
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts",
+    "./generation/project": "./src/generation/project/index.ts",
+    "./commands": "./src/commands/index.ts",
+    "./config/eslint": "./src/config/eslint/index.ts",
+    "./config/prettier": "./src/config/prettier/index.ts",
+    "./config/typescript": "./src/config/typescript/index.ts",
+    "./filesystem": "./src/filesystem/index.ts",
+    "./installation/hooks/skip": "./hooks/skip.js",
+    "./generation/project/installed": "./src/generation/project/installed.ts",
+    "./project": "./src/project/index.ts",
+    "./yarn": "./src/yarn/index.ts",
+    "./runtime": "./src/runtime.ts",
+    "./runtime/node/bootstrap": "./src/runtime/node/bootstrap/index.ts",
+    "./types": "./types/index.d.ts",
+    "./eslint": "./src/runtime/eslint.ts",
+    "./webpack": "./src/runtime/webpack.ts",
+    "./webpack-proto-imports-loader": "./src/runtime/webpack/proto-imports.loader.ts",
+    "./typescript": "./src/runtime/typescript.ts",
+    "./runtime-exec-argv": "./src/runtime/runtime-exec-argv.ts",
+    "./runtime-resolver": "./src/runtime/runtime-resolver.ts",
+    "./typescript-loader": "./src/runtime/typescript-loader.ts",
+    "./ts-node-register": "./src/runtime/ts-node-register.ts",
+    "./ts-ext-register": "./src/runtime/ts-ext-register.ts",
+    "./prettier": "./src/runtime/prettier/index.ts",
+    "./prettier-plugin": "./src/runtime/prettier/plugin/index.ts",
+    "./typescript-config": "./src/runtime/typescript-config.ts"
+  },
+  "main": "src/index.ts",
+  "bin": {
+    "raijin": "./bin/raijin.js",
+    "raijin-hooks": "./bin/raijin-hooks.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "hooks",
+    "README.md",
+    "types"
+  ],
+  "scripts": {
+    "build": "yarn run build:library && yarn run build:project-generation",
+    "build:library": "yarn library build",
+    "build:project-generation": "node ./scripts/generation/project/build.ts",
+    "prepack": "yarn run build",
+    "postpack": "rm -rf dist"
+  },
+  "dependencies": {
+    "@angular-devkit/core": "22.1.8",
+    "@angular-devkit/schematics": "22.1.8",
+    "@babel/types": "7.25.6",
+    "@next/eslint-plugin-next": "16.3.5",
+    "@typescript-eslint/eslint-plugin": "8.70.1",
+    "@typescript-eslint/parser": "8.70.1",
+    "@yarnpkg/core": "4.9.1",
+    "@yarnpkg/fslib": "3.1.5",
+    "eslint": "9.39.5",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-n": "18.3.0",
+    "eslint-plugin-perfectionist": "5.12.1",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-compiler": "19.1.0-rc.2",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-security": "4.0.1",
+    "execa": "10.0.1",
+    "fast-glob": "3.3.2",
+    "husky": "9.1.7",
+    "node-loader": "2.1.0",
+    "prettier": "3.9.8",
+    "protocol-buffers-schema": "3.6.0",
+    "rxjs": "7.8.2",
+    "sort-package-json": "4.0.0",
+    "strip-json-comments": "3.1.1",
+    "ts-loader": "9.5.2",
+    "typescript": "5.9.3",
+    "webpack": "5.111.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.6",
+    "@types/protocol-buffers-schema": "3.4.3",
+    "@yarnpkg/cli": "4.18.0",
+    "@yarnpkg/esbuild-plugin-pnp": "3.0.0-rc.15",
+    "esbuild": "0.24.2"
+  },
+  "engines": {
+    "node": ">=24.15.0 <25"
+  },
+  "publishConfig": {
+    "access": "public",
+    "bin": {
+      "raijin": "./bin/raijin.js",
+      "raijin-hooks": "./bin/raijin-hooks.js"
+    },
+    "exports": {
+      "./package.json": "./package.json",
+      "./types": "./types/index.d.ts",
+      "./installation/hooks/skip": {
+        "import": "./hooks/skip.js",
+        "types": "./hooks/skip.d.ts",
+        "default": "./hooks/skip.js"
+      },
+      "./config/eslint": {
+        "import": "./dist/config/eslint/index.js",
+        "types": "./dist/config/eslint/index.d.ts",
+        "default": "./dist/config/eslint/index.js"
+      },
+      "./config/typescript": {
+        "import": "./dist/config/typescript/index.js",
+        "types": "./dist/config/typescript/index.d.ts",
+        "default": "./dist/config/typescript/index.js"
+      },
+      "./runtime": {
+        "import": "./dist/runtime.js",
+        "types": "./dist/runtime.d.ts",
+        "default": "./dist/runtime.js"
+      },
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./eslint": {
+        "import": "./dist/runtime/eslint.js",
+        "types": "./dist/runtime/eslint.d.ts",
+        "default": "./dist/runtime/eslint.js"
+      },
+      "./webpack": {
+        "import": "./dist/runtime/webpack.js",
+        "types": "./dist/runtime/webpack.d.ts",
+        "default": "./dist/runtime/webpack.js"
+      },
+      "./webpack-proto-imports-loader": {
+        "import": "./dist/runtime/webpack/proto-imports.loader.js",
+        "types": "./dist/runtime/webpack/proto-imports.loader.d.ts",
+        "default": "./dist/runtime/webpack/proto-imports.loader.js"
+      },
+      "./typescript": {
+        "import": "./dist/runtime/typescript.js",
+        "types": "./dist/runtime/typescript.d.ts",
+        "default": "./dist/runtime/typescript.js"
+      },
+      "./runtime-exec-argv": {
+        "import": "./dist/runtime/runtime-exec-argv.js",
+        "types": "./dist/runtime/runtime-exec-argv.d.ts",
+        "default": "./dist/runtime/runtime-exec-argv.js"
+      },
+      "./runtime-resolver": {
+        "import": "./dist/runtime/runtime-resolver.js",
+        "types": "./dist/runtime/runtime-resolver.d.ts",
+        "default": "./dist/runtime/runtime-resolver.js"
+      },
+      "./typescript-loader": {
+        "import": "./dist/runtime/typescript-loader.js",
+        "types": "./dist/runtime/typescript-loader.d.ts",
+        "default": "./dist/runtime/typescript-loader.js"
+      },
+      "./ts-node-register": {
+        "import": "./dist/runtime/ts-node-register.js",
+        "types": "./dist/runtime/ts-node-register.d.ts",
+        "default": "./dist/runtime/ts-node-register.js"
+      },
+      "./ts-ext-register": {
+        "import": "./dist/runtime/ts-ext-register.js",
+        "types": "./dist/runtime/ts-ext-register.d.ts",
+        "default": "./dist/runtime/ts-ext-register.js"
+      },
+      "./prettier": {
+        "import": "./dist/runtime/prettier/index.js",
+        "types": "./dist/runtime/prettier/index.d.ts",
+        "default": "./dist/runtime/prettier/index.js"
+      },
+      "./prettier-plugin": {
+        "import": "./dist/runtime/prettier/plugin/index.js",
+        "types": "./dist/runtime/prettier/plugin/index.d.ts",
+        "default": "./dist/runtime/prettier/plugin/index.js"
+      },
+      "./typescript-config": {
+        "import": "./dist/runtime/typescript-config.js",
+        "types": "./dist/runtime/typescript-config.d.ts",
+        "default": "./dist/runtime/typescript-config.js"
+      }
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
+  },
+  "schematics": "./dist/generation/project/collection/collection.json"
+}

@@ -1,0 +1,6 @@
+export type { EnvironmentPatch } from './interfaces/environment.js'
+export type { ExecuteInput }     from './interfaces/executor.js'
+export type { ExecuteResult }    from './interfaces/executor.js'
+export type { Executor }         from './interfaces/executor.js'
+export type { OutputEvent }      from './interfaces/output.js'
+export type { OutputPolicy }     from './interfaces/output.js'

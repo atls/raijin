@@ -1,0 +1,45 @@
+import type { Executor }                from '../executor.js'
+import type { InvocationContext }       from './interfaces/context.js'
+import type { ProjectInvocation }       from './interfaces/invocation.js'
+import type { ResolvedProjectScope }    from './interfaces/project.js'
+
+import { createProjectModel }           from '@atls/raijin/project'
+
+import { UnsupportedNodeLinkerError }   from '../exceptions/unsupported-node-linker.js'
+import { createInvocationCapabilities } from '../capabilities/create.js'
+import { resolveProject }               from '../yarn/project.js'
+import { resolveInvocationCwd }         from './context.js'
+
+export const resolveProjectScope = async (
+  context: InvocationContext
+): Promise<ResolvedProjectScope> => {
+  const invocationCwd = resolveInvocationCwd(context)
+  const { configuration, project, workspace } = await resolveProject(invocationCwd, context.plugins)
+  const nodeLinker = project.configuration.get('nodeLinker')
+
+  if (nodeLinker !== 'pnp' && nodeLinker !== 'node-modules') {
+    throw new UnsupportedNodeLinkerError(nodeLinker)
+  }
+
+  return { configuration, invocationCwd, project, workspace }
+}
+
+export const resolveProjectCommandInvocation = async (
+  context: InvocationContext,
+  executor: Executor
+): Promise<ProjectInvocation> => {
+  const { configuration, invocationCwd, project } = await resolveProjectScope(context)
+
+  return {
+    executionCwd: project.cwd,
+    invocationCwd,
+    project: createProjectModel(project),
+    ...createInvocationCapabilities({
+      configuration,
+      environment: context.env,
+      executionCwd: project.cwd,
+      executor,
+      project,
+    }),
+  }
+}

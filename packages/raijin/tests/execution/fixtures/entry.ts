@@ -1,0 +1,46 @@
+const mode = process.argv[2]
+
+switch (mode) {
+  case 'fail':
+    process.exitCode = 7
+    break
+  case 'input': {
+    process.stdin.setEncoding('utf8')
+    process.stderr.write('context-error')
+
+    for await (const chunk of process.stdin as AsyncIterable<string>) {
+      process.stdout.write(chunk)
+    }
+    break
+  }
+  case 'report': {
+    const { Configuration } = await import('@yarnpkg/core')
+
+    process.stdout.write(
+      JSON.stringify({
+        argument: process.argv[3],
+        callerTitle: process.title,
+        dependencyLoaded: typeof Configuration === 'function',
+        nodeOptions: process.env.NODE_OPTIONS,
+        preserved: process.env.RAIJIN_TEST_VALUE,
+        removed: process.env.RAIJIN_REMOVE_ME,
+      })
+    )
+    break
+  }
+  case 'signal':
+    process.kill(process.pid, 'SIGTERM')
+    break
+  case 'stream':
+    process.stdout.write('x'.repeat(256 * 1024))
+    break
+  case 'wait':
+    setInterval(() => undefined, 1000)
+    break
+  case 'write-and-fail':
+    process.stdout.write('ready')
+    process.exitCode = 7
+    break
+  default:
+    throw new Error(`Unsupported managed Node fixture mode: ${String(mode)}`)
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "RaijinProjectGeneration",
+  "title": "Generate a Raijin project scaffold",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "scaffoldType": {
+      "description": "The project scaffold type.",
+      "type": "string",
+      "enum": ["project", "library"]
+    },
+    "typescriptCompilerOptions": { "type": "object" }
+  },
+  "required": ["scaffoldType", "typescriptCompilerOptions"]
+}

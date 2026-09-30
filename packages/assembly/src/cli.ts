@@ -1,0 +1,34 @@
+import { runExit }                              from '@yarnpkg/cli'
+import { npath }                                from '@yarnpkg/fslib'
+import { ppath }                                from '@yarnpkg/fslib'
+
+import { composeCommandInvocations }            from '@atls/raijin/commands'
+
+import { registerRaijinSourceWorkspaceRuntime } from './bootstrap/source-workspace.js'
+import { getPluginConfiguration }               from './plugins/getPluginConfiguration.js'
+import { createCliSurfaceInventory }            from './surface/inventory.js'
+import packageJson from '../package.json' with { type: 'json' }
+
+const selfPath = npath.toPortablePath(npath.resolve(process.argv[1]))
+const pluginConfiguration = await Promise.resolve(
+  getPluginConfiguration(packageJson['@yarnpkg/builder'].bundles.standard)
+)
+
+await registerRaijinSourceWorkspaceRuntime(ppath.cwd(), pluginConfiguration)
+
+composeCommandInvocations(pluginConfiguration)
+
+if (process.env.RAIJIN_CLI_INVENTORY === '1') {
+  const inventory = await createCliSurfaceInventory({
+    cwd: ppath.cwd(),
+    pluginConfiguration,
+  })
+
+  process.stdout.write(`${JSON.stringify(inventory, null, 2)}\n`)
+} else {
+  runExit(process.argv.slice(2), {
+    cwd: ppath.cwd(),
+    selfPath,
+    pluginConfiguration,
+  })
+}

@@ -24,9 +24,9 @@ It aligns teams on strict standards and strong contracts to increase delivery pr
 
 ## What Raijin can do
 
-- Code validation: `check`, `lint`, `typecheck`, `test`, `checks *`
-- Change scope tooling: `files changed *`, `workspaces changed *`
-- Build and release flows: `service build`, `library build`, `release create`, `npm publish`
+- Code validation: `check`, `lint`, `typecheck`, `test`
+- Verify changes against a Git ref: `check --verify --since <ref>`
+- Build and package publication: `service build`, `library build`, `npm publish`
 - Generators and utility commands for monorepo infrastructure
 
 <!-- sync:root-quickstart -->
@@ -36,21 +36,6 @@ It aligns teams on strict standards and strong contracts to increase delivery pr
 ### New project
 
 ```bash
-yarn init @atls/raijin --type project
-```
-
-Use `--type library` for the library scaffold
-
-Expected result:
-
-- Project scaffold is created and the versioned Raijin runtime is installed
-- `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.mjs` file
-- Project schematics and the first sync run automatically
-- Raijin commands are available via `yarn`
-
-### Existing project
-
-```bash
 yarn dlx @atls/raijin init --type project
 ```
 
@@ -58,12 +43,32 @@ Use `--type library` for the library scaffold
 
 Expected result:
 
-- The project gets the same Raijin runtime, schematics, and first sync without manual bootstrap steps
+- Project scaffold is created and the versioned Raijin runtime is installed
+- `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.js` file
+- The project scaffold is created once after the package and runtime are installed
+- Raijin commands are available via `yarn`
+
+### Existing project
+
+```bash
+yarn dlx @atls/raijin update
+```
+
+Existing project settings are preserved
+
+Expected result:
+
+- A configured project updates only the verified package/runtime pair; project settings are preserved
+- In a monorepo, run the command from the Yarn project root that declares `@atls/raijin`. A separate nested project needs its own `yarn.lock`; a member workspace is not made into a separate project automatically
+
+### Before the first commit
+
+After connecting a new or existing project, complete the [pre-commit check setup](./docs/raijin/quickstart.md#staged-checks). Raijin requires explicit project-owned lint-staged configuration. When configured, the Git hook calls `yarn commit staged`; without that configuration, staged-file checks fail.
 
 ### Upgrade
 
 ```bash
-yarn set version atls
+yarn dlx @atls/raijin update
 ```
 
 Expected result:
@@ -74,7 +79,7 @@ Expected result:
 
 ```bash
 yarn check
-yarn files changed list
+yarn workspaces list
 ```
 
 Expected result:
@@ -86,8 +91,9 @@ Expected result:
 ## How to use in another project
 
 1. Install the bundle using [Quickstart](./docs/raijin/quickstart.md)
-2. Commit `.yarn/releases` and `.yarnrc.yml` changes to version control
-3. Update with `yarn set version atls` when newer bundle versions are released
+2. Configure [pre-commit checks](./docs/raijin/quickstart.md#staged-checks) for each independent project
+3. Commit the check configuration together with `.yarn/releases` and `.yarnrc.yml` changes
+4. Update the package/runtime pair with `yarn dlx @atls/raijin update` after a new release
 
 <!-- sync:root-read-more -->
 
@@ -99,5 +105,3 @@ Expected result:
 - Docs index EN: [docs/README.md](docs/README.md)
 - Raijin section router: [docs/raijin/README.md](docs/raijin/README.md)
 - Quickstart: [docs/raijin/quickstart.md](docs/raijin/quickstart.md)
-- Commands map: [docs/raijin/commands.md](docs/raijin/commands.md)
-- Packages map: [docs/raijin/packages.md](docs/raijin/packages.md)

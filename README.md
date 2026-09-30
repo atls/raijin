@@ -24,9 +24,9 @@ Raijin — это подход к работе в едином инженерн�
 
 ## Что умеет Raijin
 
-- Проверки кода: `check`, `lint`, `typecheck`, `test`, `checks *`
-- Работа с изменениями: `files changed *`, `workspaces changed *`
-- Сборка и выпуск: `service build`, `library build`, `release create`, `npm publish`
+- Проверки кода: `check`, `lint`, `typecheck`, `test`
+- Проверка изменений относительно Git ref: `check --verify --since <ref>`
+- Сборка и публикация пакетов: `service build`, `library build`, `npm publish`
 - Генераторы и служебные команды для инфраструктуры монорепозитория
 
 <!-- sync:root-quickstart -->
@@ -36,21 +36,6 @@ Raijin — это подход к работе в едином инженерн�
 ### Новый проект
 
 ```bash
-yarn init @atls/raijin --type project
-```
-
-Для библиотечного каркаса используйте `--type library`
-
-Ожидаемый результат:
-
-- Создаётся каркас проекта и устанавливается версионная среда выполнения Raijin
-- `.yarnrc.yml` сразу указывает на стабильный файл `.yarn/releases/yarn.mjs`
-- Схемы проекта и первичная синхронизация выполняются автоматически
-- Команды `raijin` становятся доступны через `yarn`
-
-### Существующий проект
-
-```bash
 yarn dlx @atls/raijin init --type project
 ```
 
@@ -58,12 +43,32 @@ yarn dlx @atls/raijin init --type project
 
 Ожидаемый результат:
 
-- Проект получает ту же среду выполнения Raijin, схемы и первичную синхронизацию без ручных шагов первичного подключения
+- Создаётся каркас проекта и устанавливается версионная среда выполнения Raijin
+- `.yarnrc.yml` сразу указывает на стабильный файл `.yarn/releases/yarn.js`
+- Каркас проекта создаётся один раз после установки пакета и среды выполнения
+- Команды `raijin` становятся доступны через `yarn`
+
+### Существующий проект
+
+```bash
+yarn dlx @atls/raijin update
+```
+
+Существующие настройки проекта сохраняются
+
+Ожидаемый результат:
+
+- Подключённый проект обновляет только проверенную пару пакета и среды выполнения; пользовательские настройки сохраняются
+- В монорепозитории запускайте команду из корня Yarn-проекта, где объявлен `@atls/raijin`. Отдельному вложенному проекту нужен собственный `yarn.lock`; каталог member workspace не становится отдельным проектом автоматически
+
+### Перед первым коммитом
+
+После подключения нового или существующего проекта выполните [настройку проверок перед коммитом](./docs/raijin/quickstart.ru.md#staged-checks). Raijin требует явную конфигурацию lint-staged, принадлежащую проекту. Когда Git hook настроен, он вызывает `yarn commit staged`; без конфигурации проверка подготовленных файлов завершится ошибкой.
 
 ### Обновление
 
 ```bash
-yarn set version atls
+yarn dlx @atls/raijin update
 ```
 
 Ожидаемый результат:
@@ -74,7 +79,7 @@ yarn set version atls
 
 ```bash
 yarn check
-yarn files changed list
+yarn workspaces list
 ```
 
 Ожидаемый результат:
@@ -86,8 +91,9 @@ yarn files changed list
 ## Как использовать в чужом проекте
 
 1. Подключите бандл по разделу [Быстрый старт](./docs/raijin/quickstart.ru.md)
-2. Зафиксируйте изменения `.yarn/releases` и `.yarnrc.yml` в системе контроля версий
-3. Обновляйте бандл командой `yarn set version atls` по мере выхода новых версий
+2. Настройте [проверки перед коммитом](./docs/raijin/quickstart.ru.md#staged-checks) для каждого самостоятельного проекта
+3. Зафиксируйте конфигурацию проверок вместе с изменениями `.yarn/releases` и `.yarnrc.yml`
+4. Обновляйте пару пакета и среды выполнения командой `yarn dlx @atls/raijin update` после выхода нового релиза
 
 <!-- sync:root-read-more -->
 
@@ -99,5 +105,3 @@ yarn files changed list
 - Индекс документации EN: [docs/README.md](docs/README.md)
 - Роутер раздела Raijin: [docs/raijin/README.ru.md](docs/raijin/README.ru.md)
 - Быстрый старт: [docs/raijin/quickstart.ru.md](docs/raijin/quickstart.ru.md)
-- Карта команд: [docs/raijin/commands.ru.md](docs/raijin/commands.ru.md)
-- Карта пакетов: [docs/raijin/packages.ru.md](docs/raijin/packages.ru.md)
