@@ -125,7 +125,7 @@ jobs:
 
 ## 8. Использовать Next.js под Yarn PnP
 
-В проверенном одиночном проекте Next.js 16.3.6 добавьте `"type": "module"` в корневой `package.json` до подключения Raijin. Это задаёт ESM-область пакета для проверенного Yarn runtime; менять исходники стандартного приложения Next не требуется. В монорепозитории ограничьте корневой TypeScript-проект его собственными файлами и сохраните отдельный `tsconfig.json` у Next workspace.
+Если Next.js и Raijin работают в одном Yarn-проекте, до подключения Raijin укажите `"type": "module"` в корневом `package.json`. Так Node.js определяет формат `.js`-файлов; подробнее — в [документации Node.js об ES-модулях](https://nodejs.org/api/packages.html#type). Исходники приложения менять не нужно. В монорепозитории у приложения остаётся собственный `tsconfig.json`.
 
 ```sh
 yarn renderer build
@@ -133,4 +133,4 @@ yarn renderer start
 yarn renderer dev
 ```
 
-Raijin передаёт выбранный workspace и поддерживаемые аргументы CLI Next; build и dev используют документированный режим Webpack под PnP. Конфигурация приложения, environment-файлы, результат сборки и сервер остаются у Next. Подробности — у [владельца renderer-команд](../../packages/plugins/renderer/README.md).
+Raijin запускает Next из каталога выбранного приложения и передаёт ему аргументы команды. Для сборки и разработки под PnP используется [режим Webpack](https://nextjs.org/docs/app/api-reference/cli/next). Настройки, переменные окружения, результат сборки и сервер остаются за Next.js. Подробности — в [описании renderer-команд](../../packages/plugins/renderer/README.md).

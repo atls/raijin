@@ -125,7 +125,7 @@ This example belongs to a consumer repository. Git must contain the PR base comm
 
 ## 8. Use Next.js under Yarn PnP
 
-For the verified single-project Next.js 16.3.6 setup, add `"type": "module"` to the root `package.json` before connecting Raijin. This sets the ESM package scope required by the checked Yarn runtime; it does not require changing the stock Next application sources. In a monorepo, keep the root TypeScript project scoped to its own files and let the Next workspace retain its own `tsconfig.json`.
+When Next.js and Raijin share one Yarn project, add `"type": "module"` to the root `package.json` before connecting Raijin. Node.js uses this field to interpret `.js` files; see the [Node.js guide to package types](https://nodejs.org/api/packages.html#type). You do not need to change the Next application sources. In a monorepo, keep a separate `tsconfig.json` for the application.
 
 ```sh
 yarn renderer build
@@ -133,4 +133,4 @@ yarn renderer start
 yarn renderer dev
 ```
 
-Raijin forwards the selected workspace and supported Next CLI arguments; build and dev select Next's documented Webpack mode under PnP. Next still owns application config, environment files, output and server behavior. See the [renderer capability](../../packages/plugins/renderer/README.md).
+Raijin runs Next from the selected application's directory and passes through command arguments. Build and dev use Next's documented [Webpack mode](https://nextjs.org/docs/app/api-reference/cli/next) under PnP. Next remains responsible for application configuration, environment variables, build output and server behavior. See the [renderer commands](../../packages/plugins/renderer/README.md).
