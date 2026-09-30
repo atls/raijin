@@ -9,31 +9,28 @@
 
 ## What this is
 
-Raijin is a Yarn command layer for Node.js/TypeScript projects and monorepos. The `@atls/raijin` package and its checked Yarn runtime give development, Git hooks, and CI the same commands. Raijin connects existing tools; it does not replace Yarn, TypeScript, ESLint, Next.js, or their project configuration.
+Raijin brings development, verification and build commands together for Node.js and TypeScript projects on Yarn. They run locally, before commits and in CI with the scope that fits the job. Prettier, ESLint, TypeScript and the project still own their rules; Raijin does not replace their configuration.
 
 <!-- sync:root-audience -->
 
-## Who it is for
+## When it helps
 
-- Teams with multiple Node.js/TypeScript projects or Yarn monorepos that repeat the same checks across `package.json` files
-- Projects that need the same checks locally, before a commit, and on a pull request
-
-If a single project is well served by a few ordinary scripts, it may not need Raijin.
+When one check lives in a project script, another in a hook and a third in CI, they soon drift apart. Raijin helps keep that set consistent across projects or a monorepo. A project with only a few scripts may not need it.
 
 <!-- sync:root-capabilities -->
 
-## What Raijin can do
+## What you can do
 
-- `yarn check` covers the whole project and may repair formatting; `yarn check --verify --since <ref>` checks changed workspaces and their dependents without writing files
-- `yarn commit staged` checks staged files using the project's own lint-staged configuration
-- `library build`, `service build/dev/start`, `renderer build/dev/start`, and `image pack` cover their respective workloads; each command owner documents the details
-- `generate project` creates a scaffold, while public `init/update` installs a checked package/runtime pair after that pair is published
+- Check the project with `yarn check`; `--verify` does not change files
+- Check staged files with `yarn commit staged` and the project's lint-staged configuration
+- Build libraries, run services and Next.js, and pack images using the [command map](./docs/raijin/README.md)
+- Create a project with `init` or connect an existing one with `update`
 
 <!-- sync:root-quickstart -->
 
 ## Quickstart
 
-Use Node.js `>=24.15.0 <25` and an available Yarn/Corepack launcher. The installer selects a published Raijin package and its matching checked `yarn.js`; if the release asset is missing, it does not activate a new runtime.
+Use a Node.js version within the range declared by the [Raijin package](./packages/raijin/package.json), and make Yarn/Corepack available. The installer selects a published package and its matching Yarn runtime, then verifies the pair before connecting it.
 
 ### New project
 
@@ -41,7 +38,7 @@ Use Node.js `>=24.15.0 <25` and an available Yarn/Corepack launcher. The install
 yarn dlx @atls/raijin init --type project
 ```
 
-Run this in an empty directory; use `--type library` for a library. The installer verifies the package and `.yarn/releases/yarn.js` pair before creating the scaffold.
+Run this in an empty directory; use `--type library` for a library.
 
 ### Existing project
 
@@ -49,31 +46,30 @@ Run this in an empty directory; use `--type library` for a library. The installe
 yarn dlx @atls/raijin update
 ```
 
-Run this from a Yarn project root whose `package.json` declares `"type": "module"`. The installer rejects another module scope before changing files. A member workspace is not a separate Yarn project; an independent nested project needs its own `yarn.lock`.
+Run this from a Yarn project root whose `package.json` declares `"type": "module"`. The installer leaves an existing project with another module format unchanged. An independent nested Yarn project needs its own `yarn.lock`.
 
 ### Before the first commit
 
-After setup, [configure staged checks](./docs/raijin/quickstart.md#staged-checks): Raijin installs hooks through Husky but does not invent a lint-staged configuration for your project.
+After setup, [configure pre-commit checks](./docs/raijin/quickstart.md#staged-checks). Raijin installs hooks through Husky; the project decides which checks they run.
 
-### Verify an installed project locally
+### Check your changes
 
 ```bash
 yarn check
 ```
 
-`check` runs formatting, lint, typecheck, unit tests, and integration tests. Use `yarn check --verify` when files must not change. The [three verification scopes](./docs/raijin/verification.md)—whole project, staged files, and changed workspaces in a PR—are not interchangeable.
+Local `check` covers the whole Yarn project: formatting, lint, typechecking and tests. Before a commit, `yarn commit staged` uses the project's rules for staged files. In a pull request, `yarn check --verify --since <ref>` checks changed workspaces and their dependents without writing files. These are different scopes; a passing hook does not replace a full project check. The [check command](./packages/plugins/check/README.md) documents its exact behavior.
 
 <!-- sync:root-consumer-howto -->
 
-## How to use in another project
+## How to connect a project
 
-Start with [Quickstart](./docs/raijin/quickstart.md) for setup, project-owned staged checks, and a CI example. For Next.js under Yarn PnP, check the ESM package scope and the [renderer commands](./packages/plugins/renderer/README.md).
+[Quickstart](./docs/raijin/quickstart.md) covers project setup, hooks and CI. For Next.js under Yarn PnP, check the [ES module setup](./docs/raijin/quickstart.md#7-use-nextjs-under-yarn-pnp).
 
 <!-- sync:root-read-more -->
 
 ## Where to read next
 
 - [Quickstart and CI](./docs/raijin/quickstart.md)
-- [Choosing a verification scope](./docs/raijin/verification.md)
 - [Command and package docs](./docs/raijin/README.md)
 - [Русский README](./README.md)

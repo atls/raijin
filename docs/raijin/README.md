@@ -1,27 +1,20 @@
 # Raijin guides
 
-Start with the checked package/runtime pair, then choose the command that fits your work. Raijin keeps one command contract across local development, hooks and CI while Yarn and the underlying tools retain their own behavior.
+The quickstart covers setup. This page lists Raijin commands and links to their detailed behavior.
 
 <!-- sync:router-scenarios -->
 
-## Navigate by task
+## Start here
 
-- Create or connect a project, configure hooks, or copy a consumer CI example: [quickstart](./quickstart.md)
-- Choose between full-project, staged-file and changed-workspace checks: [verification scopes](./verification.md)
-- Inspect exact syntax in the installed runtime: `yarn --help` and `yarn <command> --help`
-
-<!-- sync:router-read-order -->
-
-## Read order
-
-1. [quickstart.md](./quickstart.md)
-2. [verification.md](./verification.md)
+- Create or connect a project: [quickstart](./quickstart.md)
+- Choose a local check, hook or CI check: [root README](../../README_EN.md)
+- Check an installed command's arguments: `yarn <command> --help`
 
 <!-- sync:router-command-map -->
 
 ## Commands by task
 
-| Task                 | Retained commands                                                               | Detailed owner                                                                                                               |
+| Task                 | Commands                                                                        | Where to read more                                                                                                           |
 | -------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | Project checks       | `check`, `format`, `lint`, `typecheck`, `test`, `test unit`, `test integration` | [check](../../packages/plugins/check/README.md), [test](../../packages/plugins/test/README.md) and their linked capabilities |
 | Commit checks        | `commit staged`, `commit message`, `commit message lint`                        | [commit](../../packages/plugins/commit/README.md)                                                                            |
@@ -32,4 +25,4 @@ Start with the checked package/runtime pair, then choose the command that fits y
 | Image                | `image pack`                                                                    | [image](../../packages/plugins/image/README.md)                                                                              |
 | Verified pair update | `set version atls`                                                              | [essentials](../../packages/plugins/essentials/README.md) and the [public installer](../../packages/raijin/README.md)        |
 
-The public `raijin init/update` binary sets up or updates the checked package/runtime pair; it is not an extra registered Yarn command. Native Yarn commands such as `workspaces list` and `npm publish` remain Yarn's, not Raijin's. In the Raijin source repository, `yarn raijin:check` verifies the assembly and checked runtime; consumers do not need that repository-only script.
+Public `init` and `update` connect the package and Yarn pair but are not commands registered in the installed Yarn runtime. Native commands such as `workspaces list` and `npm publish` remain Yarn's. The `raijin:check` script belongs only to the Raijin source repository.

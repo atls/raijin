@@ -1,26 +1,18 @@
 # Документация Raijin
 
-Выберите руководство по задаче.
+Здесь — быстрый старт и карта команд. Если только подключаете Raijin, начните с быстрого старта.
 
 <!-- sync:docs-router-links -->
 
 ## Языки
 
-- Русская версия: [README.ru.md](./README.ru.md)
-- Английская версия: [README.md](./README.md)
+- [Русский](./README.ru.md)
+- [English](./README.md)
 
 <!-- sync:docs-router-scenarios -->
 
-## По задаче
+## Что читать
 
-- Подключить или обновить проверенную пару пакета и runtime, настроить hooks и CI: [быстрый старт](./raijin/quickstart.ru.md)
-- Выбрать локальную, staged- или PR-проверку: [области проверки](./raijin/verification.md)
-- Найти сохранённые команды и пакеты-владельцы: [карта команд](./raijin/README.ru.md)
-
-<!-- sync:docs-router-read-order -->
-
-## Порядок чтения
-
-1. [raijin/README.ru.md](./raijin/README.ru.md)
-2. [raijin/quickstart.ru.md](./raijin/quickstart.ru.md)
-3. [raijin/verification.md](./raijin/verification.md)
+- Подключение, хуки и CI: [быстрый старт](./raijin/quickstart.ru.md)
+- Все доступные команды: [карта команд](./raijin/README.ru.md)
+- Когда нужна полная проверка, хук или проверка PR: [корневой README](../README.md)

@@ -1,16 +1,16 @@
 # Raijin quickstart
 
-Use the published package and its matching checked Yarn runtime as one pair. This guide covers setup and day-to-day commands; each capability's package README owns its detailed behavior.
+Raijin is installed as a pair: the package and checked Yarn. This guide covers the steps for a project; command details stay with their packages.
 
 <!-- sync:preflight -->
 
 ## 1. Before you start
 
-- Use Node.js `>=24.15.0 <25` and make Yarn/Corepack available for the initial `yarn dlx` invocation
-- Start a new project in an empty directory; for an existing project, use the Yarn project root with a `package.json` declaring `"type": "module"`
-- A new project uses Yarn PnP and ESM. Update keeps the existing `nodeLinker` and project configuration; it does not convert CommonJS projects
+- For the first run, use Yarn/Corepack and a Node.js version within the `engines.node` range declared by `@atls/raijin`
+- Create a new project in an empty directory; connect an existing one from the Yarn project root with `"type": "module"` in its `package.json`
+- New projects use PnP and ES modules. Update preserves project settings and does not convert CommonJS to ESM
 
-Public `init/update` selects a published Raijin package and its matching checked `yarn.js` release asset. If the package, matching release metadata or runtime asset is unavailable, the installer stops without activating an unverified runtime.
+The installer verifies the published package against its matching `yarn.js`. If the pair does not match, it leaves the project's active runtime unchanged.
 
 <!-- sync:new-project -->
 
@@ -20,9 +20,9 @@ Public `init/update` selects a published Raijin package and its matching checked
 yarn dlx @atls/raijin init --type project
 ```
 
-Use `--type library` for a library scaffold. The installer selects one published package and its matching release asset, verifies the runtime digest, installs the package, and creates the scaffold once. The project records that checked runtime at `.yarn/releases/yarn.js` through `yarnPath`.
+Use `--type library` for a library. After verifying the pair, the installer creates the scaffold and records Yarn at `.yarn/releases/yarn.js`.
 
-If the directory is not yet a Git repository, run `git init` and then `yarn install` to activate the hooks. Scaffolding does not create the project's lint-staged rules; [configure them before the first commit](#staged-checks).
+If Git is not initialized yet, run `git init` and then `yarn install` to activate hooks. [Configure pre-commit checks](#staged-checks) yourself.
 
 <!-- sync:existing-project -->
 
@@ -32,33 +32,23 @@ If the directory is not yet a Git repository, run `git init` and then `yarn inst
 yarn dlx @atls/raijin update
 ```
 
-Update does not run the scaffold or replace the project's TypeScript, ESLint, Prettier, or lint-staged configuration. It selects npm's published `latest` Raijin package and its matching checked runtime, and stops before writes if the existing manifest is not ESM. In a monorepo, run it at the Yarn project root that declares `@atls/raijin`; a separate nested Yarn project needs its own `yarn.lock`.
+This command connects the latest published Raijin package and Yarn pair or updates an installed pair. It does not recreate the project or replace its TypeScript, ESLint, Prettier or lint-staged settings. In a monorepo, run it from the Yarn project root; an independent nested project needs its own `yarn.lock`.
 
-Preserve existing project-owned checks. Commit the updated manifest, lockfile, `.yarnrc.yml`, checked runtime and any intentional configuration changes together.
-
-<!-- sync:bundle-upgrade -->
-
-## 4. Upgrade the installed pair
-
-```bash
-yarn dlx @atls/raijin update
-```
-
-The same command selects the latest published Raijin package and its checked runtime together. It normalizes `packageManager` to the verified release revision's Yarn version. A package-only dependency bump does not update the checked runtime.
+Commit changes to `package.json`, `yarn.lock`, `.yarnrc.yml` and `.yarn/releases/yarn.js` together with any needed project settings.
 
 <!-- sync:staged-checks -->
 
 <a id="staged-checks"></a>
 
-## 5. Pre-commit checks
+## 4. Pre-commit checks
 
-This step is required when setting up new or existing projects. A configured Git hook calls `yarn commit staged`. Raijin supplies no default lint-staged configuration: without one, staged-file checks fail.
+The pre-commit hook runs `yarn commit staged`. Raijin cannot decide which files your project needs to check or how. Without a lint-staged configuration, the command fails.
 
-Husky 9.1.7 owns the relative Git `core.hooksPath` at `.config/husky/_`; Raijin installs only its marked `pre-commit`, `commit-msg`, and `prepare-commit-msg` entries. An existing active hook that would be displaced causes a conflict instead of a silent overwrite. CI, image packaging, and `HUSKY=0` skip hook installation. Do not set `core.hooksPath` by hand for Raijin.
+Hooks are installed through Husky. Raijin does not overwrite active hooks owned by another tool; a conflict stops setup. Hooks are not installed in CI or while packing an image. See the [installation details](../../packages/raijin/README.md#git-hooks).
 
-Check existing settings first. The `lint-staged` field in `package.json`, JSON/YAML `.lintstagedrc` files, and `lint-staged.config.*` remain valid native formats. Preserve the project's chosen format, commands, and exclusions; do not create a competing configuration.
+Keep an existing lint-staged configuration. For a new one, use the `lint-staged` field in `package.json`, `.lintstagedrc`, or `lint-staged.config.*`, following the project's existing convention.
 
-If there is no configuration yet, this is an example for a single Raijin PnP/ESM project with TypeScript and Node-run `*.test.ts`/`*.spec.ts` tests. Adjust it to the checks that actually belong to your project:
+Here is an example for a TypeScript project with tests run by Node. Adjust the commands and file patterns to match your project:
 
 ```json
 {
@@ -69,21 +59,19 @@ If there is no configuration yet, this is an example for a single Raijin PnP/ESM
 }
 ```
 
-Each independent Yarn project in the same Git repository defines its own configuration: lint-staged uses the nearest config and does not merge it with the root config. The root must not silently check or skip an independent client.
+An independent Yarn project inside the same Git repository needs its own configuration: lint-staged uses the nearest one and does not merge it with the root. That project runs its own commands; it does not need Raijin just to run hooks.
 
-A TypeScript/Jest client uses its own compiler and `yarn run test` when its `test` script runs Jest; it does not need a Raijin dependency. To check an entire `tsconfig.json` without appending staged paths, use a lint-staged JS configuration callback such as `() => "yarn exec tsc --noEmit -p tsconfig.json"`. Configurations must cover all required checks; a missing client config must not leave its files unchecked.
-
-After configuring checks, stage the configuration and an actual changed file, then run from the repository root:
+Stage the configuration and a changed file, then run from the repository root:
 
 ```bash
 yarn commit staged
 ```
 
-Confirm that checks ran for every affected project, then make a normal commit. An empty staged set or no matching files does not prove that checks are configured. See the [commit capability](../../packages/plugins/commit/README.md) for transaction and conflict behavior.
+Confirm that checks actually ran for every affected project. An empty index proves nothing about the setup. The [commit documentation](../../packages/plugins/commit/README.md) explains transaction and conflict behavior.
 
 <!-- sync:verification -->
 
-## 6. Check the project
+## 5. Check the project
 
 ```bash
 yarn check
@@ -91,13 +79,13 @@ yarn check --verify
 yarn check packages/app
 ```
 
-`yarn check` runs Format, Lint, TypeCheck, unit tests and integration tests for the active project; formatting may be written. `--verify` runs the same policy without formatting writes and fails on drift. A directory target limits Format, Lint and tests to that directory while TypeScript checks its applicable project configuration. A single-file target runs only Format, Lint and file TypeCheck; it does not run unit or integration tests, even when the target is a test file. Run the relevant tests separately or use the full project check when test execution is required. See [verification scopes](./verification.md) before using a targeted command as a substitute for a full project check.
+Without a target, `check` covers the whole Yarn project: formatting, lint, types and tests. `--verify` runs the same checks without changing files. A directory narrows formatting, lint and test discovery; TypeScript checks the applicable project from its `tsconfig.json`. A single file runs only formatting, lint and typechecking, not tests. The [check documentation](../../packages/plugins/check/README.md) covers the details.
 
 <!-- sync:consumer-howto -->
 
-## 7. Check a pull request in CI
+## 6. Check a pull request in CI
 
-The workflow reads the Node version from your project's `package.json`, not from the Raijin dependency. After `init`, add `engines.node` to that manifest using the range declared by the installed `@atls/raijin` package. The initializer does not copy this field.
+CI reads the Node version from your project's `package.json`. After `init`, add `engines.node` using the range declared by the installed `@atls/raijin` package; the initializer does not copy this field.
 
 ```yaml
 name: Verify
@@ -119,11 +107,11 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 ```
 
-This example belongs to a consumer repository. Git must contain the PR base commit and merge-base history; otherwise change selection fails rather than silently checking the wrong scope. Raijin's own GitHub workflows are generated from Terraform source in the infrastructure repository, so edit that source instead of the generated `.github/workflows` copy. Raijin supplies the check policy; Git owns comparison history, Yarn selects changed and dependent workspaces, and GitHub Actions runs the workflow.
+This example belongs in your project's repository. `fetch-depth: 0` keeps the history needed to compare against the pull request base. Raijin selects changed workspaces and their dependents; GitHub Actions runs the check. Raijin's own workflows are generated from Terraform in the infrastructure repository, not edited in the generated `.github/workflows` copy.
 
 <!-- sync:nextjs -->
 
-## 8. Use Next.js under Yarn PnP
+## 7. Use Next.js under Yarn PnP
 
 When Next.js and Raijin share one Yarn project, add `"type": "module"` to the root `package.json` before connecting Raijin. Node.js uses this field to interpret `.js` files; see the [Node.js guide to package types](https://nodejs.org/api/packages.html#type). You do not need to change the Next application sources. In a monorepo, keep a separate `tsconfig.json` for the application.
 
