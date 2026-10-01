@@ -17,7 +17,7 @@ Raijin — инструмент для организации инженерно
 yarn dlx @atls/raijin init --type project
 ```
 
-Если собрались подключать Raijin к существующему проекту:
+Если интегрируете Raijin в рабочий проект:
 
 ```sh
 yarn dlx @atls/raijin update

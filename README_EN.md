@@ -17,7 +17,7 @@ If you're starting from scratch:
 yarn dlx @atls/raijin init --type project
 ```
 
-If you're adding Raijin to an existing project:
+If you're integrating Raijin into an existing project:
 
 ```sh
 yarn dlx @atls/raijin update
