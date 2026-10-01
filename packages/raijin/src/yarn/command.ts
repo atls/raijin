@@ -4,6 +4,15 @@ import type { YarnCommandOptions }         from './runner.js'
 import type { YarnPackageMetadata }        from './runner.js'
 import type { YarnPackageQuery }           from './runner.js'
 
+import { mkdtemp }                         from 'node:fs/promises'
+import { rm }                              from 'node:fs/promises'
+import { writeFile }                       from 'node:fs/promises'
+import { tmpdir }                          from 'node:os'
+import { join }                            from 'node:path'
+
+import { Configuration }                   from '@yarnpkg/core'
+import { npath }                           from '@yarnpkg/fslib'
+
 import { RaijinYarnCommandException }      from './exceptions/command.js'
 import { assertProcessCompleted } from '../commands/invocation/capabilities/assert-process-completed.js'
 import { set as setEnvironmentVariable }   from '../execution/environment/map.js'
@@ -96,7 +105,21 @@ export const queryYarnPackage: YarnPackageQuery = async (name, version, cwd, pac
     '--fields',
     'name,version,gitHead,dist',
   ]
-  const stdout = await readYarnCommand(args, cwd, { packageManager })
+  const projectCwd = await Configuration.findProjectCwd(npath.toPortablePath(cwd))
+  const temporaryCwd = projectCwd ? undefined : await mkdtemp(join(tmpdir(), 'raijin-metadata-'))
+  let stdout: string
+
+  try {
+    if (temporaryCwd) {
+      await writeFile(join(temporaryCwd, 'yarn.lock'), '')
+    }
+
+    stdout = await readYarnCommand(args, temporaryCwd ?? cwd, { packageManager })
+  } finally {
+    if (temporaryCwd) {
+      await rm(temporaryCwd, { recursive: true, force: true })
+    }
+  }
 
   const metadata: unknown = JSON.parse(stdout)
 
