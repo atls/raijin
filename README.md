@@ -37,7 +37,3 @@ yarn dlx @atls/raijin update
 | Next.js                     | `renderer build`, `renderer dev`, `renderer start`                              | [renderer](./packages/plugins/renderer/README.md)                                                              |
 | Образ                       | `image pack`                                                                    | [image](./packages/plugins/image/README.md)                                                                    |
 | Обновление проверенной пары | `set version atls`                                                              | [essentials](./packages/plugins/essentials/README.md) и [публичный установщик](./packages/raijin/README.md)    |
-
-## Для сопровождающих
-
-Сценарии GitHub Actions самого Raijin доставляются Terraform из [atls/infrastructure](https://github.com/atls/infrastructure). Меняйте исходники там, а не доставленные файлы в `.github/workflows`. Проекты-потребители владеют своими сценариями CI.

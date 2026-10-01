@@ -37,7 +37,3 @@ For prerequisites, Git hooks, and a CI example, see [Set up Raijin](./docs/raiji
 | Next.js              | `renderer build`, `renderer dev`, `renderer start`                              | [renderer](./packages/plugins/renderer/README.md)                                                                |
 | Image                | `image pack`                                                                    | [image](./packages/plugins/image/README.md)                                                                      |
 | Verified pair update | `set version atls`                                                              | [essentials](./packages/plugins/essentials/README.md) and the [public installer](./packages/raijin/README.md)    |
-
-## For maintainers
-
-The Raijin repository's own GitHub workflows are delivered from [atls/infrastructure](https://github.com/atls/infrastructure) by Terraform. Change their source there, not the delivered `.github/workflows` files. Consumer projects own their own CI workflows.
