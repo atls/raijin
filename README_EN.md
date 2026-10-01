@@ -38,8 +38,6 @@ For prerequisites, Git hooks, and a CI example, see [Set up Raijin](./docs/raiji
 | Image                | `image pack`                                                                    | [image](./packages/plugins/image/README.md)                                                                      |
 | Verified pair update | `set version atls`                                                              | [essentials](./packages/plugins/essentials/README.md) and the [public installer](./packages/raijin/README.md)    |
 
-Installation and updates (`init`, `update`) use the public package. `workspaces list` and `npm publish` are Yarn commands, not Raijin commands.
-
 ## For maintainers
 
 The Raijin repository's own GitHub workflows are delivered from [atls/infrastructure](https://github.com/atls/infrastructure) by Terraform. Change their source there, not the delivered `.github/workflows` files. Consumer projects own their own CI workflows.

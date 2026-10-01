@@ -38,8 +38,6 @@ yarn dlx @atls/raijin update
 | Образ                       | `image pack`                                                                    | [image](./packages/plugins/image/README.md)                                                                    |
 | Обновление проверенной пары | `set version atls`                                                              | [essentials](./packages/plugins/essentials/README.md) и [публичный установщик](./packages/raijin/README.md)    |
 
-Установка и обновление (`init`, `update`) работают через публичный пакет. `workspaces list` и `npm publish` — команды Yarn, не Raijin.
-
 ## Для сопровождающих
 
 Сценарии GitHub Actions самого Raijin доставляются Terraform из [atls/infrastructure](https://github.com/atls/infrastructure). Меняйте исходники там, а не доставленные файлы в `.github/workflows`. Проекты-потребители владеют своими сценариями CI.
