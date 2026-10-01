@@ -10,8 +10,6 @@ jobs:
     permissions: write-all
     with:
       node-version-file: package.json
-      base-ref: ${{ github.event.pull_request.base.sha }}
-      checksCommand: 'yarn check --verify --since "$RAIJIN_BASE_REF"'
 
   raijin:
     name: Raijin checks
