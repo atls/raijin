@@ -86,18 +86,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
       - run: yarn install --immutable
-      - run: yarn check --verify --since "$BASE_SHA"
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      - run: yarn check --verify
 ```
 
-Этот workflow добавляется в репозиторий вашего проекта. `fetch-depth: 0` сохраняет историю, нужную для сравнения с базой pull request. Проверка не меняет файлы и охватывает изменённые рабочие области вместе с зависящими от них.
+Этот workflow добавляется в репозиторий вашего проекта. Проверка не меняет файлы и охватывает весь Yarn-проект.
 
 ## 7. Использовать Next.js под Yarn PnP
 
