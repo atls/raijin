@@ -30,7 +30,7 @@ yarn dlx @atls/raijin update
 
 Зафиксируйте изменения `package.json`, `yarn.lock`, `.yarnrc.yml` и `.yarn/releases/yarn.js` одним коммитом вместе с нужными настройками проекта.
 
-Yarn [по умолчанию не устанавливает версии моложе суток](https://yarnpkg.com/features/security). Сразу после выпуска `dlx` может поэтому запустить старый Raijin. Если вы сверили [новый выпуск](https://github.com/atls/raijin/releases) и он нужен сейчас, разово снимите возрастное ограничение только для пакета Raijin:
+Yarn [по умолчанию не выбирает версии моложе суток](https://yarnpkg.com/features/security). Сразу после выпуска `dlx` может поэтому запустить старый Raijin. Если вы сверили [новый выпуск](https://github.com/atls/raijin/releases) и он нужен сейчас, разово снимите возрастное ограничение только для пакета Raijin:
 
 ```sh
 YARN_NPM_PREAPPROVED_PACKAGES='@atls/raijin' yarn dlx @atls/raijin init --type project
