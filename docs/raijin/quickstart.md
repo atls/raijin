@@ -30,14 +30,6 @@ This command connects the latest published Raijin package and Yarn pair or updat
 
 Commit changes to `package.json`, `yarn.lock`, `.yarnrc.yml` and `.yarn/releases/yarn.js` together with any needed project settings.
 
-[Yarn does not select versions less than a day old by default](https://yarnpkg.com/features/security), so `dlx` may run an older Raijin immediately after publication. If you have checked the [new release](https://github.com/atls/raijin/releases) and need it now, exempt only Raijin for one command:
-
-```sh
-YARN_NPM_PREAPPROVED_PACKAGES='@atls/raijin' yarn dlx @atls/raijin init --type project
-```
-
-For an update, replace `init --type project` with `update`. The exemption does not change project settings; subsequent `yarn install --immutable` runs use the locked version without it.
-
 <a id="staged-checks"></a>
 
 ## 4. Pre-commit checks
