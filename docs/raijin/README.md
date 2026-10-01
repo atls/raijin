@@ -2,15 +2,11 @@
 
 The quickstart covers setup. This page lists Raijin commands and links to their detailed behavior.
 
-<!-- sync:router-scenarios -->
-
 ## Start here
 
 - Create or connect a project: [quickstart](./quickstart.md)
 - Choose a local check, hook or CI check: [root README](../../README_EN.md)
 - Check an installed command's arguments: `yarn <command> --help`
-
-<!-- sync:router-command-map -->
 
 ## Commands by task
 
@@ -25,4 +21,4 @@ The quickstart covers setup. This page lists Raijin commands and links to their 
 | Image                | `image pack`                                                                    | [image](../../packages/plugins/image/README.md)                                                                              |
 | Verified pair update | `set version atls`                                                              | [essentials](../../packages/plugins/essentials/README.md) and the [public installer](../../packages/raijin/README.md)        |
 
-Public `init` and `update` connect the package and Yarn pair but are not commands registered in the installed Yarn runtime. Native commands such as `workspaces list` and `npm publish` remain Yarn's. The `raijin:check` script belongs only to the Raijin source repository.
+Public `init` and `update` connect the package and Yarn pair but are not commands registered in the installed Yarn runtime. Native commands such as `workspaces list` and `npm publish` remain Yarn's.

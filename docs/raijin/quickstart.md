@@ -1,18 +1,14 @@
 # Raijin quickstart
 
-Raijin is installed as a pair: the package and checked Yarn. This guide covers the steps for a project; command details stay with their packages.
-
-<!-- sync:preflight -->
+This guide covers project setup, pre-commit checks, and a CI example. The [command map](./README.md) links to details for individual commands.
 
 ## 1. Before you start
 
-- For the first run, use Yarn/Corepack and a Node.js version within the `engines.node` range declared by `@atls/raijin`
-- Create a new project in an empty directory; connect an existing one from the Yarn project root with `"type": "module"` in its `package.json`
-- New projects use PnP and ES modules. Update preserves project settings and does not convert CommonJS to ESM
+- For the first run, use Yarn and a Node.js version within the `engines.node` range of the [published Raijin package](https://www.npmjs.com/package/@atls/raijin)
+- Create a new project in an empty directory. Connect an existing one from the Yarn project root with `"type": "module"` in its `package.json`; the [Node.js guide](https://nodejs.org/api/packages.html#type) explains this field
+- New projects use PnP and ES modules. Update does not convert an existing project to another module format
 
 The installer verifies the published package against its matching `yarn.js`. If the pair does not match, it leaves the project's active runtime unchanged.
-
-<!-- sync:new-project -->
 
 ## 2. Create a project
 
@@ -24,8 +20,6 @@ Use `--type library` for a library. After verifying the pair, the installer crea
 
 If Git is not initialized yet, run `git init` and then `yarn install` to activate hooks. [Configure pre-commit checks](#staged-checks) yourself.
 
-<!-- sync:existing-project -->
-
 ## 3. Connect or update an existing project
 
 ```bash
@@ -36,15 +30,13 @@ This command connects the latest published Raijin package and Yarn pair or updat
 
 Commit changes to `package.json`, `yarn.lock`, `.yarnrc.yml` and `.yarn/releases/yarn.js` together with any needed project settings.
 
-<!-- sync:staged-checks -->
-
 <a id="staged-checks"></a>
 
 ## 4. Pre-commit checks
 
-The pre-commit hook runs `yarn commit staged`. Raijin cannot decide which files your project needs to check or how. Without a lint-staged configuration, the command fails.
+The pre-commit hook runs `yarn commit staged`. The project decides which files to check and how: without its lint-staged configuration, the command fails.
 
-Hooks are installed through Husky. Raijin does not overwrite active hooks owned by another tool; a conflict stops setup. Hooks are not installed in CI or while packing an image. See the [installation details](../../packages/raijin/README.md#git-hooks).
+Raijin installs hooks through Husky without overwriting active hooks owned by another tool. A conflict stops setup; hooks are not installed in CI or while packing an image. See the [installation details](../../packages/raijin/README.md#git-hooks).
 
 Keep an existing lint-staged configuration. For a new one, use the `lint-staged` field in `package.json`, `.lintstagedrc`, or `lint-staged.config.*`, following the project's existing convention.
 
@@ -69,8 +61,6 @@ yarn commit staged
 
 Confirm that checks actually ran for every affected project. An empty index proves nothing about the setup. The [commit documentation](../../packages/plugins/commit/README.md) explains transaction and conflict behavior.
 
-<!-- sync:verification -->
-
 ## 5. Check the project
 
 ```bash
@@ -81,11 +71,9 @@ yarn check packages/app
 
 Without a target, `check` covers the whole Yarn project: formatting, lint, types and tests. `--verify` runs the same checks without changing files. A directory narrows formatting, lint and test discovery; TypeScript checks the applicable project from its `tsconfig.json`. A single file runs only formatting, lint and typechecking, not tests. The [check documentation](../../packages/plugins/check/README.md) covers the details.
 
-<!-- sync:consumer-howto -->
-
 ## 6. Check a pull request in CI
 
-CI reads the Node version from your project's `package.json`. After `init`, add `engines.node` using the range declared by the installed `@atls/raijin` package; the initializer does not copy this field.
+Your project owns its CI Node version. If you use the example below, add `engines.node` to its `package.json` after `init`, using the range declared by the installed `@atls/raijin` package; the initializer does not copy this field.
 
 ```yaml
 name: Verify
@@ -107,13 +95,11 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 ```
 
-This example belongs in your project's repository. `fetch-depth: 0` keeps the history needed to compare against the pull request base. Raijin selects changed workspaces and their dependents; GitHub Actions runs the check. Raijin's own workflows are generated from Terraform in the infrastructure repository, not edited in the generated `.github/workflows` copy.
-
-<!-- sync:nextjs -->
+Add this workflow to your project's repository. `fetch-depth: 0` keeps the history needed to compare against the pull request base. The check does not modify files and covers changed workspaces together with their dependents.
 
 ## 7. Use Next.js under Yarn PnP
 
-When Next.js and Raijin share one Yarn project, add `"type": "module"` to the root `package.json` before connecting Raijin. Node.js uses this field to interpret `.js` files; see the [Node.js guide to package types](https://nodejs.org/api/packages.html#type). You do not need to change the Next application sources. In a monorepo, keep a separate `tsconfig.json` for the application.
+When Next.js and Raijin share one Yarn project, the root `package.json` needs `"type": "module"`. This is Node.js's rule for ES modules; see its [package guide](https://nodejs.org/api/packages.html#type). You do not need to change the Next.js application sources. In a monorepo, keep the application's own `tsconfig.json`.
 
 ```sh
 yarn renderer build
@@ -121,4 +107,4 @@ yarn renderer start
 yarn renderer dev
 ```
 
-Raijin runs Next from the selected application's directory and passes through command arguments. Build and dev use Next's documented [Webpack mode](https://nextjs.org/docs/app/api-reference/cli/next) under PnP. Next remains responsible for application configuration, environment variables, build output and server behavior. See the [renderer commands](../../packages/plugins/renderer/README.md).
+These commands delegate build and server execution to Next.js; under PnP, build and dev use its [Webpack mode](https://nextjs.org/docs/app/api-reference/cli/next). Next.js still owns application configuration. The [renderer guide](../../packages/plugins/renderer/README.md) lists command arguments.

@@ -2,14 +2,10 @@
 
 Start with the quickstart if you are connecting Raijin. The command map lists everything available afterwards.
 
-<!-- sync:docs-router-links -->
-
 ## Languages
 
 - [Русский](./README.ru.md)
 - [English](./README.md)
-
-<!-- sync:docs-router-scenarios -->
 
 ## What to read
 

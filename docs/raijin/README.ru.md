@@ -2,15 +2,11 @@
 
 Подключение описано в быстром старте. Здесь — команды Raijin и ссылки на их подробное поведение.
 
-<!-- sync:router-scenarios -->
-
 ## С чего начать
 
 - Создать или подключить проект: [быстрый старт](./quickstart.ru.md)
 - Различить локальную проверку, хук и CI: [корневой README](../../README.md)
 - Уточнить аргументы установленной команды: `yarn <command> --help`
-
-<!-- sync:router-command-map -->
 
 ## Команды по задаче
 
@@ -25,4 +21,4 @@
 | Образ                       | `image pack`                                                                    | [image](../../packages/plugins/image/README.md)                                                                        |
 | Обновление проверенной пары | `set version atls`                                                              | [essentials](../../packages/plugins/essentials/README.md) и [публичный установщик](../../packages/raijin/README.md)    |
 
-Публичные `init` и `update` подключают пару пакета и Yarn, но не входят в список команд установленного Yarn. Обычные команды Yarn, например `workspaces list` и `npm publish`, остаются командами Yarn. Внутренний скрипт `raijin:check` нужен только в репозитории Raijin.
+Публичные `init` и `update` подключают пару пакета и Yarn, но не входят в список команд установленного Yarn. Обычные команды Yarn, например `workspaces list` и `npm publish`, остаются командами Yarn.

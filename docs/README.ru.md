@@ -2,14 +2,10 @@
 
 Здесь — быстрый старт и карта команд. Если только подключаете Raijin, начните с быстрого старта.
 
-<!-- sync:docs-router-links -->
-
 ## Языки
 
 - [Русский](./README.ru.md)
 - [English](./README.md)
-
-<!-- sync:docs-router-scenarios -->
 
 ## Что читать
 
