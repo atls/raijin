@@ -2,38 +2,38 @@
 
 # Raijin
 
-[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README.md)
-[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README_EN.md)
+[![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README.ru.md)
+[![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README.md)
 [![npm version](https://img.shields.io/npm/v/%40atls%2Fraijin.svg)](https://www.npmjs.com/package/@atls/raijin)
 [![BSD-3-Clause license](https://img.shields.io/github/license/atls/raijin)](LICENSE)
 
-Raijin — инструмент для организации инженерной работы. Он помогает формировать культуру команды: правила и конвенции заложены в продукт и работают прямо в проектах. Устойчивые конвенции помогают выстроить инженерную работу так, чтобы в разных проектах команда опиралась на одни и те же принципы и требования к качеству.
+Raijin is a tool for organizing engineering work and building engineering culture. Its rules and conventions are built into the product and apply directly in projects. They help a team rely on the same principles and quality standards across its work.
 
-## Начать
+## Start
 
-Если начинаете с нуля:
+If you're starting from scratch:
 
 ```sh
 yarn dlx @atls/raijin init --type project
 ```
 
-Если интегрируете Raijin в рабочий проект:
+If you're integrating Raijin into an existing project:
 
 ```sh
 yarn dlx @atls/raijin update
 ```
 
-Требования к проекту, подключение хуков и пример CI — в [настройке Raijin](./docs/raijin/setup.ru.md).
+For prerequisites, Git hooks, and a CI example, see [Set up Raijin](./docs/raijin/setup.md).
 
-## Команды
+## Commands
 
-| Задача                      | Команды                                                                                                            | Подробности                                                                                                    |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| Проверки проекта            | `yarn check`, `yarn format`, `yarn lint`, `yarn typecheck`, `yarn test`, `yarn test unit`, `yarn test integration` | [check](./packages/plugins/check/README.md), [test](./packages/plugins/test/README.md) и связанные возможности |
-| Проверки коммита            | `yarn commit staged`, `yarn commit message`, `yarn commit message lint`                                            | [commit](./packages/plugins/commit/README.md)                                                                  |
-| Каркас                      | `yarn generate project`                                                                                            | [generate](./packages/plugins/generate/README.md)                                                              |
-| Библиотека                  | `yarn library build`                                                                                               | [library](./packages/plugins/library/README.md)                                                                |
-| Сервис                      | `yarn service build`, `yarn service dev`, `yarn service start`                                                     | [service](./packages/plugins/service/README.md)                                                                |
-| Next.js                     | `yarn renderer build`, `yarn renderer dev`, `yarn renderer start`                                                  | [renderer](./packages/plugins/renderer/README.md)                                                              |
-| Образ                       | `yarn image pack`                                                                                                  | [image](./packages/plugins/image/README.md)                                                                    |
-| Обновление проверенной пары | `yarn set version atls`                                                                                            | [essentials](./packages/plugins/essentials/README.md) и [публичный установщик](./packages/raijin/README.md)    |
+| Task                 | Commands                                                                                                           | Details                                                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| Project checks       | `yarn check`, `yarn format`, `yarn lint`, `yarn typecheck`, `yarn test`, `yarn test unit`, `yarn test integration` | [check](./packages/plugins/check/README.md), [test](./packages/plugins/test/README.md), and related capabilities |
+| Commit checks        | `yarn commit staged`, `yarn commit message`, `yarn commit message lint`                                            | [commit](./packages/plugins/commit/README.md)                                                                    |
+| Scaffold             | `yarn generate project`                                                                                            | [generate](./packages/plugins/generate/README.md)                                                                |
+| Library              | `yarn library build`                                                                                               | [library](./packages/plugins/library/README.md)                                                                  |
+| Service              | `yarn service build`, `yarn service dev`, `yarn service start`                                                     | [service](./packages/plugins/service/README.md)                                                                  |
+| Next.js              | `yarn renderer build`, `yarn renderer dev`, `yarn renderer start`                                                  | [renderer](./packages/plugins/renderer/README.md)                                                                |
+| Image                | `yarn image pack`                                                                                                  | [image](./packages/plugins/image/README.md)                                                                      |
+| Verified pair update | `yarn set version atls`                                                                                            | [essentials](./packages/plugins/essentials/README.md) and the [public installer](./packages/raijin/README.md)    |
