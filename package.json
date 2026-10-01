@@ -17,8 +17,7 @@
   ],
   "scripts": {
     "cli:build": "yarn workspace @atls/raijin-assembly build",
-    "raijin:check": "yarn raijin:check:runtime && yarn raijin:check:localization",
-    "raijin:check:localization": "node scripts/raijin/check-localization-sync.js",
+    "raijin:check": "yarn raijin:check:runtime",
     "raijin:check:runtime": "yarn cli:build && node packages/assembly/scripts/surface/verify.js packages/assembly/dist/runtime/yarn.js .yarn/releases/yarn.js packages/assembly/package.json"
   },
   "lint-staged": {

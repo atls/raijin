@@ -1,107 +1,39 @@
 ![raijin-github-cover](https://github.com/user-attachments/assets/ac98b900-ee3c-4ea8-a081-e83a1f5f3282)
 
-# Atlantis Raijin
+# Raijin
 
 [![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README.md)
 [![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README_EN.md)
+[![npm version](https://img.shields.io/npm/v/%40atls%2Fraijin.svg)](https://www.npmjs.com/package/@atls/raijin)
+[![BSD-3-Clause license](https://img.shields.io/github/license/atls/raijin)](LICENSE)
 
-<!-- sync:root-what -->
+Raijin — инструмент для организации инженерной работы. Он помогает формировать культуру команды: правила и конвенции заложены в продукт и работают прямо в проектах. Устойчивые конвенции помогают выстроить инженерную работу так, чтобы в разных проектах команда опиралась на одни и те же принципы и требования к качеству.
 
-## Что это
+## Начать
 
-Raijin — это подход к работе в едином инженерном контуре, поставляемый как кастомный Yarn-бандл `atls`
-Он объединяет команды вокруг строгих стандартов и мощных контрактов, чтобы повышать предсказуемость поставки и реальную производительность
+Если начинаете с нуля:
 
-<!-- sync:root-audience -->
-
-## Для кого
-
-- Для команд, которые поддерживают несколько `Node.js`/`TypeScript` проектов
-- Для разработчиков, которым нужен единый контракт команд в локальной среде и в `GitHub Actions`
-- Для опенсорс и внутренних репозиториев, где важны предсказуемые проверки и обновления
-
-<!-- sync:root-capabilities -->
-
-## Что умеет Raijin
-
-- Проверки кода: `check`, `lint`, `typecheck`, `test`
-- Проверка изменений относительно Git ref: `check --verify --since <ref>`
-- Сборка и публикация пакетов: `service build`, `library build`, `npm publish`
-- Генераторы и служебные команды для инфраструктуры монорепозитория
-
-<!-- sync:root-quickstart -->
-
-## Быстрый старт
-
-### Новый проект
-
-```bash
+```sh
 yarn dlx @atls/raijin init --type project
 ```
 
-Для библиотечного каркаса используйте `--type library`
+Если интегрируете Raijin в рабочий проект:
 
-Ожидаемый результат:
-
-- Создаётся каркас проекта и устанавливается версионная среда выполнения Raijin
-- `.yarnrc.yml` сразу указывает на стабильный файл `.yarn/releases/yarn.js`
-- Каркас проекта создаётся один раз после установки пакета и среды выполнения
-- Команды `raijin` становятся доступны через `yarn`
-
-### Существующий проект
-
-```bash
+```sh
 yarn dlx @atls/raijin update
 ```
 
-Существующие настройки проекта сохраняются
+Требования к проекту, подключение хуков и пример CI — в [настройке Raijin](./docs/raijin/setup.ru.md).
 
-Ожидаемый результат:
+## Команды
 
-- Подключённый проект обновляет только проверенную пару пакета и среды выполнения; пользовательские настройки сохраняются
-- В монорепозитории запускайте команду из корня Yarn-проекта, где объявлен `@atls/raijin`. Отдельному вложенному проекту нужен собственный `yarn.lock`; каталог member workspace не становится отдельным проектом автоматически
-
-### Перед первым коммитом
-
-После подключения нового или существующего проекта выполните [настройку проверок перед коммитом](./docs/raijin/quickstart.ru.md#staged-checks). Raijin требует явную конфигурацию lint-staged, принадлежащую проекту. Когда Git hook настроен, он вызывает `yarn commit staged`; без конфигурации проверка подготовленных файлов завершится ошибкой.
-
-### Обновление
-
-```bash
-yarn dlx @atls/raijin update
-```
-
-Ожидаемый результат:
-
-- Бандл обновляется до последней доступной версии штатным механизмом Yarn
-
-### Проверка
-
-```bash
-yarn check
-yarn workspaces list
-```
-
-Ожидаемый результат:
-
-- Команды выполняются без ошибки маршрутизации и с ожидаемым набором шагов
-
-<!-- sync:root-consumer-howto -->
-
-## Как использовать в чужом проекте
-
-1. Подключите бандл по разделу [Быстрый старт](./docs/raijin/quickstart.ru.md)
-2. Настройте [проверки перед коммитом](./docs/raijin/quickstart.ru.md#staged-checks) для каждого самостоятельного проекта
-3. Зафиксируйте конфигурацию проверок вместе с изменениями `.yarn/releases` и `.yarnrc.yml`
-4. Обновляйте пару пакета и среды выполнения командой `yarn dlx @atls/raijin update` после выхода нового релиза
-
-<!-- sync:root-read-more -->
-
-## Где читать дальше
-
-- RU (по умолчанию): [README.md](README.md)
-- EN: [README_EN.md](README_EN.md)
-- Индекс документации RU: [docs/README.ru.md](docs/README.ru.md)
-- Индекс документации EN: [docs/README.md](docs/README.md)
-- Роутер раздела Raijin: [docs/raijin/README.ru.md](docs/raijin/README.ru.md)
-- Быстрый старт: [docs/raijin/quickstart.ru.md](docs/raijin/quickstart.ru.md)
+| Задача                      | Команды                                                                                                            | Подробности                                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Проверки проекта            | `yarn check`, `yarn format`, `yarn lint`, `yarn typecheck`, `yarn test`, `yarn test unit`, `yarn test integration` | [check](./packages/plugins/check/README.md), [test](./packages/plugins/test/README.md) и связанные возможности |
+| Проверки коммита            | `yarn commit staged`, `yarn commit message`, `yarn commit message lint`                                            | [commit](./packages/plugins/commit/README.md)                                                                  |
+| Каркас                      | `yarn generate project`                                                                                            | [generate](./packages/plugins/generate/README.md)                                                              |
+| Библиотека                  | `yarn library build`                                                                                               | [library](./packages/plugins/library/README.md)                                                                |
+| Сервис                      | `yarn service build`, `yarn service dev`, `yarn service start`                                                     | [service](./packages/plugins/service/README.md)                                                                |
+| Next.js                     | `yarn renderer build`, `yarn renderer dev`, `yarn renderer start`                                                  | [renderer](./packages/plugins/renderer/README.md)                                                              |
+| Образ                       | `yarn image pack`                                                                                                  | [image](./packages/plugins/image/README.md)                                                                    |
+| Обновление проверенной пары | `yarn set version atls`                                                                                            | [essentials](./packages/plugins/essentials/README.md) и [публичный установщик](./packages/raijin/README.md)    |

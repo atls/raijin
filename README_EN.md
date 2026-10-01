@@ -1,107 +1,39 @@
 ![raijin-github-cover](https://github.com/user-attachments/assets/ac98b900-ee3c-4ea8-a081-e83a1f5f3282)
 
-# Atlantis Raijin
+# Raijin
 
 [![Raijin Docs RU](https://img.shields.io/badge/Raijin%20Docs-RU-0b5fff)](README.md)
 [![Raijin Docs EN](https://img.shields.io/badge/Raijin%20Docs-EN-1f8a70)](README_EN.md)
+[![npm version](https://img.shields.io/npm/v/%40atls%2Fraijin.svg)](https://www.npmjs.com/package/@atls/raijin)
+[![BSD-3-Clause license](https://img.shields.io/github/license/atls/raijin)](LICENSE)
 
-<!-- sync:root-what -->
+Raijin is a tool for organizing engineering work and building engineering culture. Its rules and conventions are built into the product and apply directly in projects. They help a team rely on the same principles and quality standards across its work.
 
-## What this is
+## Start
 
-Raijin is an engineering operating model for a unified delivery contour, shipped as the custom `atls` Yarn bundle
-It aligns teams on strict standards and strong contracts to increase delivery predictability and real engineering throughput
+If you're starting from scratch:
 
-<!-- sync:root-audience -->
-
-## Who it is for
-
-- Teams maintaining multiple `Node.js`/`TypeScript` projects
-- Developers who need one command contract locally and in `GitHub Actions`
-- Open-source and internal repositories that need predictable checks and upgrades
-
-<!-- sync:root-capabilities -->
-
-## What Raijin can do
-
-- Code validation: `check`, `lint`, `typecheck`, `test`
-- Verify changes against a Git ref: `check --verify --since <ref>`
-- Build and package publication: `service build`, `library build`, `npm publish`
-- Generators and utility commands for monorepo infrastructure
-
-<!-- sync:root-quickstart -->
-
-## Quickstart
-
-### New project
-
-```bash
+```sh
 yarn dlx @atls/raijin init --type project
 ```
 
-Use `--type library` for the library scaffold
+If you're integrating Raijin into an existing project:
 
-Expected result:
-
-- Project scaffold is created and the versioned Raijin runtime is installed
-- `.yarnrc.yml` points directly to the stable `.yarn/releases/yarn.js` file
-- The project scaffold is created once after the package and runtime are installed
-- Raijin commands are available via `yarn`
-
-### Existing project
-
-```bash
+```sh
 yarn dlx @atls/raijin update
 ```
 
-Existing project settings are preserved
+For prerequisites, Git hooks, and a CI example, see [Set up Raijin](./docs/raijin/setup.md).
 
-Expected result:
+## Commands
 
-- A configured project updates only the verified package/runtime pair; project settings are preserved
-- In a monorepo, run the command from the Yarn project root that declares `@atls/raijin`. A separate nested project needs its own `yarn.lock`; a member workspace is not made into a separate project automatically
-
-### Before the first commit
-
-After connecting a new or existing project, complete the [pre-commit check setup](./docs/raijin/quickstart.md#staged-checks). Raijin requires explicit project-owned lint-staged configuration. When configured, the Git hook calls `yarn commit staged`; without that configuration, staged-file checks fail.
-
-### Upgrade
-
-```bash
-yarn dlx @atls/raijin update
-```
-
-Expected result:
-
-- The bundle is upgraded to the latest available version through Yarn
-
-### Verify
-
-```bash
-yarn check
-yarn workspaces list
-```
-
-Expected result:
-
-- Commands run with expected routing and expected validation steps
-
-<!-- sync:root-consumer-howto -->
-
-## How to use in another project
-
-1. Install the bundle using [Quickstart](./docs/raijin/quickstart.md)
-2. Configure [pre-commit checks](./docs/raijin/quickstart.md#staged-checks) for each independent project
-3. Commit the check configuration together with `.yarn/releases` and `.yarnrc.yml` changes
-4. Update the package/runtime pair with `yarn dlx @atls/raijin update` after a new release
-
-<!-- sync:root-read-more -->
-
-## Where to read next
-
-- RU (default): [README.md](README.md)
-- EN: [README_EN.md](README_EN.md)
-- Docs index RU: [docs/README.ru.md](docs/README.ru.md)
-- Docs index EN: [docs/README.md](docs/README.md)
-- Raijin section router: [docs/raijin/README.md](docs/raijin/README.md)
-- Quickstart: [docs/raijin/quickstart.md](docs/raijin/quickstart.md)
+| Task                 | Commands                                                                                                           | Details                                                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| Project checks       | `yarn check`, `yarn format`, `yarn lint`, `yarn typecheck`, `yarn test`, `yarn test unit`, `yarn test integration` | [check](./packages/plugins/check/README.md), [test](./packages/plugins/test/README.md), and related capabilities |
+| Commit checks        | `yarn commit staged`, `yarn commit message`, `yarn commit message lint`                                            | [commit](./packages/plugins/commit/README.md)                                                                    |
+| Scaffold             | `yarn generate project`                                                                                            | [generate](./packages/plugins/generate/README.md)                                                                |
+| Library              | `yarn library build`                                                                                               | [library](./packages/plugins/library/README.md)                                                                  |
+| Service              | `yarn service build`, `yarn service dev`, `yarn service start`                                                     | [service](./packages/plugins/service/README.md)                                                                  |
+| Next.js              | `yarn renderer build`, `yarn renderer dev`, `yarn renderer start`                                                  | [renderer](./packages/plugins/renderer/README.md)                                                                |
+| Image                | `yarn image pack`                                                                                                  | [image](./packages/plugins/image/README.md)                                                                      |
+| Verified pair update | `yarn set version atls`                                                                                            | [essentials](./packages/plugins/essentials/README.md) and the [public installer](./packages/raijin/README.md)    |

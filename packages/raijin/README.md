@@ -4,11 +4,11 @@ Raijin provides project commands and an optional ESLint flat configuration.
 
 Raijin projects use ESM. Initialization and update stop before changing an existing project unless its `package.json` declares `"type": "module"`.
 
-The public install/update path selects npm's published `latest` version and requires the exact matching GitHub release to contain an uploaded `yarn.js` asset with a SHA-256 digest. The package's `gitHead` must match the release tag commit; Corepack uses the Yarn version from that commit's root `package.json`. Published `@atls/raijin@0.7.0` still provides only `yarn.mjs`, so the new installer refuses that release before changing the active runtime. A generated release manifest is not needed.
+The public install/update path selects npm's published `latest` version and requires the exact matching GitHub release to contain an uploaded `yarn.js` asset with a SHA-256 digest. The package's `gitHead` must match the release tag commit; Corepack uses the Yarn version from that commit's root `package.json`. A missing or mismatched asset is rejected before the active runtime changes. A generated release manifest is not needed.
 
 ## Git hooks
 
-Local Yarn installation and successful Raijin runtime update install repository hooks through the pinned Husky 9.1.7 package. Husky owns `.config/husky/_` and the relative Git `core.hooksPath`; Raijin owns only its marked entry files for `pre-commit`, `commit-msg`, and `prepare-commit-msg`. Other hook files are not overwritten. If switching from Git's current hook directory would leave an active existing hook behind, installation stops with an explicit conflict before changing hook state; an unowned Raijin-name entry also conflicts. CI, image packaging, and `HUSKY=0` skip hook installation. In a new directory without `.git`, initialize Git and run `yarn install` to activate hooks before the first commit.
+Local installation and runtime updates install Git hooks through Husky. Husky owns `.config/husky/_` and the relative `core.hooksPath`; Raijin adds only its marked `pre-commit`, `commit-msg`, and `prepare-commit-msg` entries. Existing hooks are not overwritten: a conflict stops installation before hook state changes. Hooks are skipped in CI, image packaging and with `HUSKY=0`. In a new directory, run `git init` and then `yarn install` to activate them before the first commit.
 
 ## ESLint configuration
 
