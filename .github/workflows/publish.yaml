@@ -15,7 +15,7 @@ concurrency:
 jobs:
   release:
     name: Release
-    if: ${{ github.ref == 'refs/heads/master' && vars.RAIJIN_RELEASE_ENABLED == 'true' }}
+    if: ${{ github.ref == 'refs/heads/master' }}
     uses: atls/shared/.github/workflows/publish-semantic.yaml@master
     permissions:
       contents: write
