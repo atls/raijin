@@ -53,7 +53,7 @@ Here is an example for a TypeScript project with tests run by Node. Adjust the c
 }
 ```
 
-An independent Yarn project inside the same Git repository needs its own configuration: lint-staged uses the nearest one and does not merge it with the root. That project runs its own commands; it does not need Raijin just to run hooks.
+An independent Yarn project inside the same Git repository needs its own configuration: lint-staged uses the nearest one and does not merge it with the root. That project runs its own commands.
 
 Stage the configuration and a changed file, then run from the repository root:
 
