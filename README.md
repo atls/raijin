@@ -23,7 +23,23 @@ yarn dlx @atls/raijin init --type project
 yarn dlx @atls/raijin update
 ```
 
-## Документация
+Требования к проекту, подключение хуков и пример CI — в [настройке Raijin](./docs/raijin/setup.ru.md).
 
-- [Настройка Raijin](./docs/raijin/quickstart.ru.md)
-- [Руководства и команды](./docs/raijin/README.ru.md)
+## Команды
+
+| Задача                      | Команды                                                                         | Подробности                                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Проверки проекта            | `check`, `format`, `lint`, `typecheck`, `test`, `test unit`, `test integration` | [check](./packages/plugins/check/README.md), [test](./packages/plugins/test/README.md) и связанные возможности |
+| Проверки коммита            | `commit staged`, `commit message`, `commit message lint`                        | [commit](./packages/plugins/commit/README.md)                                                                  |
+| Каркас                      | `generate project`                                                              | [generate](./packages/plugins/generate/README.md)                                                              |
+| Библиотека                  | `library build`                                                                 | [library](./packages/plugins/library/README.md)                                                                |
+| Сервис                      | `service build`, `service dev`, `service start`                                 | [service](./packages/plugins/service/README.md)                                                                |
+| Next.js                     | `renderer build`, `renderer dev`, `renderer start`                              | [renderer](./packages/plugins/renderer/README.md)                                                              |
+| Образ                       | `image pack`                                                                    | [image](./packages/plugins/image/README.md)                                                                    |
+| Обновление проверенной пары | `set version atls`                                                              | [essentials](./packages/plugins/essentials/README.md) и [публичный установщик](./packages/raijin/README.md)    |
+
+Установка и обновление (`init`, `update`) работают через публичный пакет. `workspaces list` и `npm publish` — команды Yarn, не Raijin.
+
+## Для сопровождающих
+
+Сценарии GitHub Actions самого Raijin доставляются Terraform из [atls/infrastructure](https://github.com/atls/infrastructure). Меняйте исходники там, а не доставленные файлы в `.github/workflows`. Проекты-потребители владеют своими сценариями CI.

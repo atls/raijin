@@ -23,7 +23,23 @@ If you're adding Raijin to an existing project:
 yarn dlx @atls/raijin update
 ```
 
-## Documentation
+For prerequisites, Git hooks, and a CI example, see [Set up Raijin](./docs/raijin/setup.md).
 
-- [Set up Raijin](./docs/raijin/quickstart.md)
-- [Guides and commands](./docs/raijin/README.md)
+## Commands
+
+| Task                 | Commands                                                                        | Details                                                                                                          |
+| -------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Project checks       | `check`, `format`, `lint`, `typecheck`, `test`, `test unit`, `test integration` | [check](./packages/plugins/check/README.md), [test](./packages/plugins/test/README.md), and related capabilities |
+| Commit checks        | `commit staged`, `commit message`, `commit message lint`                        | [commit](./packages/plugins/commit/README.md)                                                                    |
+| Scaffold             | `generate project`                                                              | [generate](./packages/plugins/generate/README.md)                                                                |
+| Library              | `library build`                                                                 | [library](./packages/plugins/library/README.md)                                                                  |
+| Service              | `service build`, `service dev`, `service start`                                 | [service](./packages/plugins/service/README.md)                                                                  |
+| Next.js              | `renderer build`, `renderer dev`, `renderer start`                              | [renderer](./packages/plugins/renderer/README.md)                                                                |
+| Image                | `image pack`                                                                    | [image](./packages/plugins/image/README.md)                                                                      |
+| Verified pair update | `set version atls`                                                              | [essentials](./packages/plugins/essentials/README.md) and the [public installer](./packages/raijin/README.md)    |
+
+Installation and updates (`init`, `update`) use the public package. `workspaces list` and `npm publish` are Yarn commands, not Raijin commands.
+
+## For maintainers
+
+The Raijin repository's own GitHub workflows are delivered from [atls/infrastructure](https://github.com/atls/infrastructure) by Terraform. Change their source there, not the delivered `.github/workflows` files. Consumer projects own their own CI workflows.

@@ -1,6 +1,8 @@
-# Raijin quickstart
+# Set up Raijin
 
-This guide covers project setup, pre-commit checks, and a CI example. The [command map](./README.md) links to details for individual commands.
+[Русский](./setup.ru.md) · [English](./setup.md)
+
+This guide covers project setup, pre-commit checks, and a CI example.
 
 ## 1. Before you start
 
