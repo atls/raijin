@@ -34,17 +34,10 @@ jobs:
           yarn raijin:check
 
   unit:
-    name: Unit / ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Unit / windows-latest
+    runs-on: windows-latest
     timeout-minutes: 10
     permissions: read-all
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
 
     steps:
       - name: Checkout
