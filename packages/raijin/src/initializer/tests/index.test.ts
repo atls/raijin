@@ -125,9 +125,8 @@ test('bootstrap installs exact package before runtime activation and scaffolds o
   ])
   assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.js'), 'utf-8'), 'runtime')
   assert.equal(await exists(join(cwd, '.yarn/releases/yarn.js.bootstrap.pending')), false)
-  assert.deepEqual(JSON.parse(await readFile(join(cwd, '.yarn/releases/package.json'), 'utf-8')), {
-    type: 'module',
-  })
+  assert.equal(await exists(join(cwd, '.yarn/releases/package.json')), false)
+  assert.equal(JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')).type, 'module')
 })
 
 test('an older installed package updates to npm latest without changing project configuration', async (context) => {
@@ -182,6 +181,7 @@ test('an older installed package updates to npm latest without changing project 
   assert.match(yarnrc, /enableGlobalCache: false/)
   assert.match(yarnrc, /yarnPath: .yarn\/releases\/yarn.js/)
   assert.equal(await exists(join(cwd, 'yarn.lock')), true)
+  assert.equal(await exists(join(cwd, '.yarn/releases/package.json')), false)
 })
 
 test('member-only package cannot split its Yarn project runtime', async (context) => {

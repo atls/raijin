@@ -282,6 +282,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       createSha256Digest(await readFile(join(cwd, '.yarn/releases/yarn.js'))),
       releaseFixture.sha256
     )
+    assert.equal((await readdir(join(cwd, '.yarn/releases'))).includes('package.json'), false)
     assert.equal(
       (await readdir(join(cwd, '.yarn/releases'))).includes('yarn.js.bootstrap.pending'),
       false
@@ -301,6 +302,7 @@ test('packed Raijin package and checked runtime bootstrap project and library, t
       `${expectedYarnVersion}\n`
     )
     assert.equal((await readdir(join(cwd, '.yarn/releases'))).includes('yarn.js.pending'), false)
+    assert.equal((await readdir(join(cwd, '.yarn/releases'))).includes('package.json'), false)
   }
 
   await verifyScaffoldType('project')
