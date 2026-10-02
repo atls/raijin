@@ -183,7 +183,7 @@ const assertInstalledPackage = async (
   }
 }
 
-const assertRuntimeModuleScope = async (runtimePath: string): Promise<boolean> => {
+const assertRuntimeModuleScope = async (runtimePath: string): Promise<void> => {
   const scopePath = join(dirname(runtimePath), RELEASE_PACKAGE_MANIFEST)
 
   try {
@@ -192,23 +192,12 @@ const assertRuntimeModuleScope = async (runtimePath: string): Promise<boolean> =
     if (current.type !== RELEASE_PACKAGE_TYPE) {
       throw new Error(`Cannot activate ESM Raijin runtime: ${scopePath} is not type module`)
     }
-
-    return true
   } catch (error) {
     if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
-      return false
+      return
     }
 
     throw error
-  }
-}
-
-const ensureRuntimeModuleScope = async (runtimePath: string): Promise<void> => {
-  if (!(await assertRuntimeModuleScope(runtimePath))) {
-    await writeFile(
-      join(dirname(runtimePath), RELEASE_PACKAGE_MANIFEST),
-      `${JSON.stringify({ type: RELEASE_PACKAGE_TYPE }, null, 2)}\n`
-    )
   }
 }
 
@@ -229,7 +218,6 @@ const activateRuntime = async (cwd: string, stagedPath: string): Promise<void> =
   await mkdir(dirname(runtimePath), { recursive: true })
 
   try {
-    await ensureRuntimeModuleScope(runtimePath)
     await copyFile(stagedPath, temporaryPath)
     await rename(temporaryPath, runtimePath)
     await Configuration.updateConfiguration(npath.toPortablePath(cwd), { yarnPath })
