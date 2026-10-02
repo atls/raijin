@@ -124,10 +124,7 @@ const createRepository = async (context: { after: (callback: () => Promise<void>
 
 const withoutSkipEnvironment = async (run: () => Promise<void>): Promise<void> => {
   const original = Object.fromEntries(
-    [...gitLocalVariables, 'CI', 'GITHUB_ACTIONS', 'IMAGE_PACK', 'HUSKY'].map((name) => [
-      name,
-      process.env[name],
-    ])
+    [...gitLocalVariables, 'CI', 'GITHUB_ACTIONS', 'HUSKY'].map((name) => [name, process.env[name]])
   )
 
   for (const name of Object.keys(original)) Reflect.deleteProperty(process.env, name)
@@ -344,7 +341,6 @@ for (const [name, value] of [
   ['CI', '1'],
   ['CI', 'yes'],
   ['GITHUB_ACTIONS', 'true'],
-  ['IMAGE_PACK', '1'],
   ['HUSKY', '0'],
 ]) {
   test(`${name}=${value} leaves hook state untouched`, async (context) => {
