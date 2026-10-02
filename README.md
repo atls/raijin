@@ -7,9 +7,11 @@
 [![npm version](https://img.shields.io/npm/v/%40atls%2Fraijin.svg)](https://www.npmjs.com/package/@atls/raijin)
 [![BSD-3-Clause license](https://img.shields.io/github/license/atls/raijin)](LICENSE)
 
-Raijin is a tool for organizing engineering work and building engineering culture. Its rules and conventions are built into the product and apply directly in projects. They help a team rely on the same principles and quality standards across its work.
+Raijin is a versioned Yarn toolchain for Node.js and TypeScript projects. It gives teams shared commands for code checks, project scaffolding, builds, and Git commit checks. The same checks can run locally and in CI, while each project keeps control of its ESLint, Prettier, and TypeScript configuration.
 
 ## Start
+
+Raijin requires Yarn 4 and Node.js `>=24.15 <25`. Existing projects must use ES modules (`"type": "module"`).
 
 If you're starting from scratch:
 
