@@ -36,7 +36,7 @@ const git = async (args: Array<string>, cwd: string) => {
 }
 
 const withLocalHooks = async (run: () => Promise<void>): Promise<void> => {
-  const names = [...gitLocalVariables, 'CI', 'GITHUB_ACTIONS', 'IMAGE_PACK', 'HUSKY']
+  const names = [...gitLocalVariables, 'CI', 'GITHUB_ACTIONS', 'HUSKY']
   const previous = Object.fromEntries(names.map((name) => [name, process.env[name]]))
 
   for (const name of names) Reflect.deleteProperty(process.env, name)
