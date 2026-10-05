@@ -1,0 +1,113 @@
+import type { Workspace }            from '@yarnpkg/core'
+
+import assert                        from 'node:assert/strict'
+import { execFile }                  from 'node:child_process'
+import { mkdtemp }                   from 'node:fs/promises'
+import { mkdir }                     from 'node:fs/promises'
+import { rm }                        from 'node:fs/promises'
+import { writeFile }                 from 'node:fs/promises'
+import { tmpdir }                    from 'node:os'
+import { join }                      from 'node:path'
+import { test }                      from 'node:test'
+import { promisify }                 from 'node:util'
+
+import { structUtils }               from '@yarnpkg/core'
+import { npath }                     from '@yarnpkg/fslib'
+
+import { recommendWorkspaceVersion } from '../recommend.js'
+
+const execFileAsync = promisify(execFile)
+
+const git = async (cwd: string, ...args: Array<string>): Promise<void> => {
+  const inheritedGitState = new Set([
+    'GIT_INDEX_FILE',
+    'GIT_DIR',
+    'GIT_WORK_TREE',
+    'GIT_COMMON_DIR',
+    'GIT_PREFIX',
+    'GIT_OBJECT_DIRECTORY',
+    'GIT_ALTERNATE_OBJECT_DIRECTORIES',
+  ])
+  const env = Object.fromEntries(
+    Object.entries(process.env).filter(([key]) => !inheritedGitState.has(key))
+  )
+
+  await execFileAsync('git', args, { cwd, env })
+}
+
+const commit = async (
+  cwd: string,
+  type: string,
+  name: string,
+  packageName = 'a'
+): Promise<void> => {
+  const packageCwd = join(cwd, 'packages', packageName)
+  await mkdir(packageCwd, { recursive: true })
+  await writeFile(join(packageCwd, `${name}.ts`), `export const ${name} = true\n`)
+  await git(cwd, 'add', `packages/${packageName}`)
+  await git(
+    cwd,
+    '-c',
+    'user.name=Fixture',
+    '-c',
+    'user.email=fixture@example.invalid',
+    '-c',
+    'commit.gpgsign=false',
+    'commit',
+    '-m',
+    `${type}(${packageName}): ${name}`
+  )
+}
+
+const workspace = (version: string, name = '@fixture/a'): Workspace =>
+  ({
+    manifest: {
+      name: structUtils.parseIdent(name),
+      version,
+    },
+    relativeCwd: npath.toPortablePath('packages/a'),
+  }) as Workspace
+
+test('recommends the strongest bump from package commits and respects the current tag', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'raijin-bump-'))
+  t.after(async () => rm(root, { recursive: true, force: true }))
+
+  await mkdir(join(root, 'packages/a'), { recursive: true })
+  await git(root, 'init', '-q')
+  await commit(root, 'chore', 'initial')
+  await git(root, 'tag', '@fixture/a@0.2.7')
+
+  await commit(root, 'fix', 'repair')
+  await commit(root, 'feat', 'feature')
+  await commit(root, 'chore', 'metadata')
+
+  assert.equal(await recommendWorkspaceVersion(root, workspace('0.2.7')), 'minor')
+
+  await git(root, 'tag', '@fixture/a@0.3.0')
+  await commit(root, 'feat', 'unrelated', 'b')
+
+  assert.equal(await recommendWorkspaceVersion(root, workspace('0.3.0')), null)
+
+  await commit(root, 'chore', 'cleanup')
+
+  assert.equal(await recommendWorkspaceVersion(root, workspace('0.3.0')), 'patch')
+  assert.equal(await recommendWorkspaceVersion(root, workspace('0.4.0')), null)
+  assert.equal(await recommendWorkspaceVersion(root, workspace('0.1.0', '@fixture/new')), null)
+
+  await writeFile(join(root, 'packages/a', 'breaking.ts'), 'export const breaking = true\n')
+  await git(root, 'add', '.')
+  await git(
+    root,
+    '-c',
+    'user.name=Fixture',
+    '-c',
+    'user.email=fixture@example.invalid',
+    '-c',
+    'commit.gpgsign=false',
+    'commit',
+    '-m',
+    'feat(a)!: change API'
+  )
+
+  assert.equal(await recommendWorkspaceVersion(root, workspace('0.3.0')), 'major')
+})
