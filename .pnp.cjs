@@ -55,6 +55,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/plugins/lint"\
     },\
     {\
+      "name": "@atls/yarn-plugin-release",\
+      "reference": "workspace:packages/plugins/release"\
+    },\
+    {\
       "name": "@atls/yarn-plugin-renderer",\
       "reference": "workspace:packages/plugins/renderer"\
     },\
@@ -94,6 +98,7 @@ const RAW_RUNTIME_STATE =
     ["@atls/yarn-plugin-image", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/image", "workspace:packages/plugins/image"]],\
     ["@atls/yarn-plugin-library", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/library", "workspace:packages/plugins/library"]],\
     ["@atls/yarn-plugin-lint", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/lint", "workspace:packages/plugins/lint"]],\
+    ["@atls/yarn-plugin-release", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/release", "workspace:packages/plugins/release"]],\
     ["@atls/yarn-plugin-renderer", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/renderer", "workspace:packages/plugins/renderer"]],\
     ["@atls/yarn-plugin-service", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/service", "workspace:packages/plugins/service"]],\
     ["@atls/yarn-plugin-test", ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/test", "workspace:packages/plugins/test"]],\
@@ -527,6 +532,7 @@ const RAW_RUNTIME_STATE =
           ["@atls/yarn-plugin-image", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/image"],\
           ["@atls/yarn-plugin-library", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/library"],\
           ["@atls/yarn-plugin-lint", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/lint"],\
+          ["@atls/yarn-plugin-release", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/release"],\
           ["@atls/yarn-plugin-renderer", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/renderer"],\
           ["@atls/yarn-plugin-service", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/service"],\
           ["@atls/yarn-plugin-test", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/test"],\
@@ -935,6 +941,67 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/core", "npm:4.9.1"],\
           ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@atls/yarn-plugin-release", [\
+      ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/release", {\
+        "packageLocation": "./.yarn/__virtual__/@atls-yarn-plugin-release-virtual-24d2e67bde/1/packages/plugins/release/",\
+        "packageDependencies": [\
+          ["@atls/raijin", "workspace:packages/raijin"],\
+          ["@atls/yarn-plugin-release", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#workspace:packages/plugins/release"],\
+          ["@conventional-changelog/git-client", "virtual:3b5773b5b43cde1379f96668a28f0b9d6fd9707186392cdceb40cfa8a196e9283cce959cf597c0b18c71c3b7a0debe09a46ed0d6d87ffec28c9d6b3356e24121#npm:3.1.2"],\
+          ["@types/node", "npm:24.13.6"],\
+          ["@types/semver", "npm:7.8.0"],\
+          ["@types/yarnpkg__cli", null],\
+          ["@types/yarnpkg__core", null],\
+          ["@types/yarnpkg__plugin-git", null],\
+          ["@yarnpkg/builder", "npm:4.2.4"],\
+          ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.18.0"],\
+          ["@yarnpkg/core", "npm:4.9.1"],\
+          ["@yarnpkg/fslib", "npm:3.1.5"],\
+          ["@yarnpkg/parsers", "npm:3.1.0"],\
+          ["@yarnpkg/plugin-git", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#patch:@yarnpkg/plugin-git@npm%3A3.2.1#~/.yarn/patches/@yarnpkg-plugin-git-npm-3.2.1.patch::version=3.2.1&hash=f5b8aa"],\
+          ["@yarnpkg/plugin-version", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#npm:4.3.0"],\
+          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
+          ["conventional-changelog-conventionalcommits", "npm:10.4.0"],\
+          ["conventional-commits-filter", "npm:6.0.1"],\
+          ["conventional-commits-parser", "npm:7.1.2"],\
+          ["conventional-recommended-bump", "npm:12.1.0"],\
+          ["semver", "npm:7.6.3"]\
+        ],\
+        "packagePeers": [\
+          "@types/yarnpkg__cli",\
+          "@types/yarnpkg__core",\
+          "@types/yarnpkg__plugin-git",\
+          "@yarnpkg/cli",\
+          "@yarnpkg/core",\
+          "@yarnpkg/plugin-git"\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["workspace:packages/plugins/release", {\
+        "packageLocation": "./packages/plugins/release/",\
+        "packageDependencies": [\
+          ["@atls/raijin", "workspace:packages/raijin"],\
+          ["@atls/yarn-plugin-release", "workspace:packages/plugins/release"],\
+          ["@conventional-changelog/git-client", "virtual:3b5773b5b43cde1379f96668a28f0b9d6fd9707186392cdceb40cfa8a196e9283cce959cf597c0b18c71c3b7a0debe09a46ed0d6d87ffec28c9d6b3356e24121#npm:3.1.2"],\
+          ["@types/node", "npm:24.13.6"],\
+          ["@types/semver", "npm:7.8.0"],\
+          ["@yarnpkg/builder", "npm:4.2.4"],\
+          ["@yarnpkg/cli", "virtual:51b843830b759e70a0d31f353665bb31325a6cbab3f20887563d62a05cd97d426d649a7f366feb6e8768b68d251c2cca71730a99b823515b8d11399ded4b6be9#npm:4.18.0"],\
+          ["@yarnpkg/core", "npm:4.9.1"],\
+          ["@yarnpkg/fslib", "npm:3.1.5"],\
+          ["@yarnpkg/parsers", "npm:3.1.0"],\
+          ["@yarnpkg/plugin-git", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#patch:@yarnpkg/plugin-git@npm%3A3.2.1#~/.yarn/patches/@yarnpkg-plugin-git-npm-3.2.1.patch::version=3.2.1&hash=f5b8aa"],\
+          ["@yarnpkg/plugin-version", "virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#npm:4.3.0"],\
+          ["clipanion", "virtual:b80567f1f726ad28b5f69c2f4d583115762754ed5e643c8ffc700d555267034c078163b8acf27ac9e54b95573c3afeb591dde0dc0755beb1e2c159d60551a612#npm:4.0.0-rc.2"],\
+          ["conventional-changelog-conventionalcommits", "npm:10.4.0"],\
+          ["conventional-commits-filter", "npm:6.0.1"],\
+          ["conventional-commits-parser", "npm:7.1.2"],\
+          ["conventional-recommended-bump", "npm:12.1.0"],\
+          ["semver", "npm:7.6.3"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -1980,6 +2047,33 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
+      ["npm:3.1.2", {\
+        "packageLocation": "../.yarn/berry/cache/@conventional-changelog-git-client-npm-3.1.2-66547651cc-10.zip/node_modules/@conventional-changelog/git-client/",\
+        "packageDependencies": [\
+          ["@conventional-changelog/git-client", "npm:3.1.2"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:3b5773b5b43cde1379f96668a28f0b9d6fd9707186392cdceb40cfa8a196e9283cce959cf597c0b18c71c3b7a0debe09a46ed0d6d87ffec28c9d6b3356e24121#npm:3.1.2", {\
+        "packageLocation": "./.yarn/__virtual__/@conventional-changelog-git-client-virtual-6f8bdcdf04/2/.yarn/berry/cache/@conventional-changelog-git-client-npm-3.1.2-66547651cc-10.zip/node_modules/@conventional-changelog/git-client/",\
+        "packageDependencies": [\
+          ["@conventional-changelog/git-client", "virtual:3b5773b5b43cde1379f96668a28f0b9d6fd9707186392cdceb40cfa8a196e9283cce959cf597c0b18c71c3b7a0debe09a46ed0d6d87ffec28c9d6b3356e24121#npm:3.1.2"],\
+          ["@simple-libs/child-process-utils", "npm:2.0.0"],\
+          ["@simple-libs/stream-utils", "npm:2.0.0"],\
+          ["@types/conventional-commits-filter", null],\
+          ["@types/conventional-commits-parser", null],\
+          ["conventional-commits-filter", "npm:6.0.1"],\
+          ["conventional-commits-parser", "npm:7.1.2"],\
+          ["semver", "npm:7.8.5"]\
+        ],\
+        "packagePeers": [\
+          "@types/conventional-commits-filter",\
+          "@types/conventional-commits-parser",\
+          "conventional-commits-filter",\
+          "conventional-commits-parser"\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["virtual:e4c0f6a34a9a263fd62f982e04dbe8e65e4b4db5b5c3ea77e45089ff5dccfae2fa25f956b67fa161b0ffb50c6c151261e2a890c6077a30785a29ecf8045ca782#npm:2.7.0", {\
         "packageLocation": "./.yarn/__virtual__/@conventional-changelog-git-client-virtual-c6b9a315c0/2/.yarn/berry/cache/@conventional-changelog-git-client-npm-2.7.0-ac0e227cf7-10.zip/node_modules/@conventional-changelog/git-client/",\
         "packageDependencies": [\
@@ -2006,6 +2100,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/@conventional-changelog-template-npm-1.2.0-cd766cc024-10.zip/node_modules/@conventional-changelog/template/",\
         "packageDependencies": [\
           ["@conventional-changelog/template", "npm:1.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:1.4.0", {\
+        "packageLocation": "../.yarn/berry/cache/@conventional-changelog-template-npm-1.4.0-5aa546c980-10.zip/node_modules/@conventional-changelog/template/",\
+        "packageDependencies": [\
+          ["@conventional-changelog/template", "npm:1.4.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3179,6 +3280,14 @@ const RAW_RUNTIME_STATE =
           ["@simple-libs/stream-utils", "npm:1.2.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:2.0.0", {\
+        "packageLocation": "../.yarn/berry/cache/@simple-libs-child-process-utils-npm-2.0.0-893ea4d5c2-10.zip/node_modules/@simple-libs/child-process-utils/",\
+        "packageDependencies": [\
+          ["@simple-libs/child-process-utils", "npm:2.0.0"],\
+          ["@simple-libs/stream-utils", "npm:2.0.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@simple-libs/stream-utils", [\
@@ -3456,6 +3565,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/@types-semver-npm-7.5.8-26073743d7-10.zip/node_modules/@types/semver/",\
         "packageDependencies": [\
           ["@types/semver", "npm:7.5.8"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:7.8.0", {\
+        "packageLocation": "../.yarn/berry/cache/@types-semver-npm-7.8.0-9c468999fb-10.zip/node_modules/@types/semver/",\
+        "packageDependencies": [\
+          ["@types/semver", "npm:7.8.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5889,6 +6005,7 @@ const RAW_RUNTIME_STATE =
       ["virtual:2befc00a30966353465b36b65062bb10c30c8d7a43f562e7f666d778945543eafb1aff18a5b1597a92ef26193a32bb0c25bc44d49d6f863613caedba34233842#npm:4.3.0", {\
         "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-version-virtual-c5084e2a1f/2/.yarn/berry/cache/@yarnpkg-plugin-version-npm-4.3.0-85a0e2ace0-10.zip/node_modules/@yarnpkg/plugin-version/",\
         "packageDependencies": [\
+          ["@types/semver", "npm:7.8.0"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@types/yarnpkg__plugin-git", null],\
@@ -5919,6 +6036,7 @@ const RAW_RUNTIME_STATE =
       ["virtual:d67e49e7858deffe934ea5e85ef47448fee7fea8efa89e5fb872525b2e14d1605b1954419347d0d914d1e54404c0df0fbe50a4fa675262beb53ccb20a223f32f#npm:4.2.0", {\
         "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-version-virtual-1d62a3a64d/2/.yarn/berry/cache/@yarnpkg-plugin-version-npm-4.2.0-f652bfa0a9-10.zip/node_modules/@yarnpkg/plugin-version/",\
         "packageDependencies": [\
+          ["@types/semver", "npm:7.8.0"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@types/yarnpkg__plugin-git", null],\
@@ -5949,6 +6067,7 @@ const RAW_RUNTIME_STATE =
       ["virtual:ffb9572c3ed5e8252c75819a8fd294e7ea6b59175f16e00f50e7f6cdd6953f0d022841aac2db8cad1cb433921558cc5d5014c553e774f840027c81fc1e3b431c#npm:4.3.0", {\
         "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-version-virtual-b44dbd23a0/2/.yarn/berry/cache/@yarnpkg-plugin-version-npm-4.3.0-85a0e2ace0-10.zip/node_modules/@yarnpkg/plugin-version/",\
         "packageDependencies": [\
+          ["@types/semver", "npm:7.8.0"],\
           ["@types/yarnpkg__cli", null],\
           ["@types/yarnpkg__core", null],\
           ["@types/yarnpkg__plugin-git", null],\
@@ -6374,6 +6493,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/argparse-npm-2.0.1-faff7999e6-10.zip/node_modules/argparse/",\
         "packageDependencies": [\
           ["argparse", "npm:2.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["argue-cli", [\
+      ["npm:3.2.0", {\
+        "packageLocation": "../.yarn/berry/cache/argue-cli-npm-3.2.0-521f866f00-10.zip/node_modules/argue-cli/",\
+        "packageDependencies": [\
+          ["argue-cli", "npm:3.2.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -7101,11 +7229,37 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["conventional-changelog-conventionalcommits", [\
+      ["npm:10.4.0", {\
+        "packageLocation": "../.yarn/berry/cache/conventional-changelog-conventionalcommits-npm-10.4.0-d77d8f5cd1-10.zip/node_modules/conventional-changelog-conventionalcommits/",\
+        "packageDependencies": [\
+          ["@conventional-changelog/template", "npm:1.4.0"],\
+          ["conventional-changelog-conventionalcommits", "npm:10.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-changelog-preset-loader", [\
+      ["npm:6.0.1", {\
+        "packageLocation": "../.yarn/berry/cache/conventional-changelog-preset-loader-npm-6.0.1-5f8f6ac3c8-10.zip/node_modules/conventional-changelog-preset-loader/",\
+        "packageDependencies": [\
+          ["conventional-changelog-preset-loader", "npm:6.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["conventional-commits-filter", [\
       ["npm:5.0.0", {\
         "packageLocation": "../.yarn/berry/cache/conventional-commits-filter-npm-5.0.0-32862a6db4-10.zip/node_modules/conventional-commits-filter/",\
         "packageDependencies": [\
           ["conventional-commits-filter", "npm:5.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:6.0.1", {\
+        "packageLocation": "../.yarn/berry/cache/conventional-commits-filter-npm-6.0.1-0b557d1d70-10.zip/node_modules/conventional-commits-filter/",\
+        "packageDependencies": [\
+          ["conventional-commits-filter", "npm:6.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -7126,6 +7280,29 @@ const RAW_RUNTIME_STATE =
           ["@simple-libs/stream-utils", "npm:2.0.0"],\
           ["conventional-commits-parser", "npm:7.0.0"],\
           ["meow", "npm:14.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:7.1.2", {\
+        "packageLocation": "../.yarn/berry/cache/conventional-commits-parser-npm-7.1.2-c0923c6ec7-10.zip/node_modules/conventional-commits-parser/",\
+        "packageDependencies": [\
+          ["@simple-libs/stream-utils", "npm:2.0.0"],\
+          ["argue-cli", "npm:3.2.0"],\
+          ["conventional-commits-parser", "npm:7.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["conventional-recommended-bump", [\
+      ["npm:12.1.0", {\
+        "packageLocation": "../.yarn/berry/cache/conventional-recommended-bump-npm-12.1.0-3b5773b5b4-10.zip/node_modules/conventional-recommended-bump/",\
+        "packageDependencies": [\
+          ["@conventional-changelog/git-client", "virtual:3b5773b5b43cde1379f96668a28f0b9d6fd9707186392cdceb40cfa8a196e9283cce959cf597c0b18c71c3b7a0debe09a46ed0d6d87ffec28c9d6b3356e24121#npm:3.1.2"],\
+          ["argue-cli", "npm:3.2.0"],\
+          ["conventional-changelog-preset-loader", "npm:6.0.1"],\
+          ["conventional-commits-filter", "npm:6.0.1"],\
+          ["conventional-commits-parser", "npm:7.1.2"],\
+          ["conventional-recommended-bump", "npm:12.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
