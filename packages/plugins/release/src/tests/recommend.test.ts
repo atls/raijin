@@ -4,6 +4,7 @@ import assert                        from 'node:assert/strict'
 import { execFile }                  from 'node:child_process'
 import { mkdtemp }                   from 'node:fs/promises'
 import { mkdir }                     from 'node:fs/promises'
+import { rename }                    from 'node:fs/promises'
 import { rm }                        from 'node:fs/promises'
 import { writeFile }                 from 'node:fs/promises'
 import { tmpdir }                    from 'node:os'
@@ -59,13 +60,13 @@ const commit = async (
   )
 }
 
-const workspace = (version: string, name = '@fixture/a'): Workspace =>
+const workspace = (version: string, name = '@fixture/a', relativeCwd = 'packages/a'): Workspace =>
   ({
     manifest: {
       name: structUtils.parseIdent(name),
       version,
     },
-    relativeCwd: npath.toPortablePath('packages/a'),
+    relativeCwd: npath.toPortablePath(relativeCwd),
   }) as Workspace
 
 test('recommends the strongest bump from package commits and respects the current tag', async (t) => {
@@ -74,6 +75,10 @@ test('recommends the strongest bump from package commits and respects the curren
 
   await mkdir(join(root, 'packages/a'), { recursive: true })
   await git(root, 'init', '-q')
+  await writeFile(
+    join(root, 'packages/a/package.json'),
+    '{"name":"@fixture/a","version":"0.2.7"}\n'
+  )
   await commit(root, 'chore', 'initial')
   await git(root, 'tag', '@fixture/a@0.2.7')
 
@@ -110,4 +115,52 @@ test('recommends the strongest bump from package commits and respects the curren
   )
 
   assert.equal(await recommendWorkspaceVersion(root, workspace('0.3.0')), 'major')
+})
+
+test('stops before recording a bump when a package moved since its tag', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'raijin-bump-move-'))
+  t.after(async () => rm(root, { recursive: true, force: true }))
+
+  await mkdir(join(root, 'packages/a'), { recursive: true })
+  await git(root, 'init', '-q')
+  await writeFile(
+    join(root, 'packages/a/package.json'),
+    '{"name":"@fixture/a","version":"1.0.0"}\n'
+  )
+  await commit(root, 'chore', 'initial')
+  await git(root, 'tag', '@fixture/a@1.0.0')
+
+  await writeFile(join(root, 'packages/a/breaking.ts'), 'export const breaking = true\n')
+  await git(root, 'add', 'packages/a')
+  await git(
+    root,
+    '-c',
+    'user.name=Fixture',
+    '-c',
+    'user.email=fixture@example.invalid',
+    '-c',
+    'commit.gpgsign=false',
+    'commit',
+    '-m',
+    'feat(a)!: change API'
+  )
+  await rename(join(root, 'packages/a'), join(root, 'packages/b'))
+  await git(root, 'add', '-A')
+  await git(
+    root,
+    '-c',
+    'user.name=Fixture',
+    '-c',
+    'user.email=fixture@example.invalid',
+    '-c',
+    'commit.gpgsign=false',
+    'commit',
+    '-m',
+    'chore(a): move package'
+  )
+
+  await assert.rejects(
+    recommendWorkspaceVersion(root, workspace('1.0.0', '@fixture/a', 'packages/b')),
+    /record an explicit Yarn version decision/
+  )
 })

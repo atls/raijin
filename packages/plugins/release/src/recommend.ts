@@ -2,9 +2,13 @@ import type { Workspace }        from '@yarnpkg/core'
 import type { Preset }           from 'conventional-recommended-bump'
 
 import { ConventionalGitClient } from '@conventional-changelog/git-client'
+import { Manifest }              from '@yarnpkg/core'
+import { Filename }              from '@yarnpkg/fslib'
 import { packagePrefix }         from '@conventional-changelog/git-client'
+import { execUtils }             from '@yarnpkg/core'
 import { structUtils }           from '@yarnpkg/core'
 import { npath }                 from '@yarnpkg/fslib'
+import { ppath }                 from '@yarnpkg/fslib'
 import { Bumper }                from 'conventional-recommended-bump'
 import createPreset              from 'conventional-changelog-conventionalcommits'
 import semver                    from 'semver'
@@ -27,6 +31,32 @@ const createBumpPreset = (): Preset => {
 }
 
 const preset = createBumpPreset()
+
+const requireTaggedWorkspacePath = async (
+  root: string,
+  workspace: Workspace,
+  ident: string,
+  tag: string
+): Promise<void> => {
+  const manifestPath = ppath.join(workspace.relativeCwd, Filename.manifest)
+  const { code, stdout } = await execUtils.execvp('git', ['show', `${tag}:${manifestPath}`], {
+    cwd: npath.toPortablePath(root),
+  })
+
+  if (code !== 0) {
+    throw new Error(
+      `Cannot infer ${ident}: its manifest was not at ${manifestPath} in ${tag}; record an explicit Yarn version decision`
+    )
+  }
+
+  const taggedManifest = Manifest.fromText(stdout)
+
+  if (!taggedManifest.name || structUtils.stringifyIdent(taggedManifest.name) !== ident) {
+    throw new Error(
+      `Cannot infer ${ident}: its package path changed since ${tag}; record an explicit Yarn version decision`
+    )
+  }
+}
 
 export const recommendWorkspaceVersion = async (
   root: string,
@@ -65,6 +95,8 @@ export const recommendWorkspaceVersion = async (
   if (taggedVersion !== currentVersion) {
     return null
   }
+
+  await requireTaggedWorkspacePath(root, workspace, ident, tag)
 
   const result = await new Bumper(root)
     .config(preset)
