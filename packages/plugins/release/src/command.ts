@@ -11,6 +11,7 @@ import { Option }                       from 'clipanion'
 
 import { selectReleaseCandidates }      from './candidates.js'
 import { getExplicitVersionDecisions }  from './deferred-decisions.js'
+import { inferDependentDecisions }      from './dependents.js'
 import { recommendWorkspaceVersion }    from './recommend.js'
 
 export class InferVersionsCommand extends BaseCommand {
@@ -49,7 +50,22 @@ export class InferVersionsCommand extends BaseCommand {
       )
     }
 
-    if (inferred.size === 0) {
+    const decisions = inferDependentDecisions(
+      project,
+      explicit,
+      await versionUtils.resolveVersionFiles(project),
+      inferred
+    )
+
+    for (const [workspace, decision] of decisions) {
+      if (inferred.has(workspace)) continue
+
+      this.context.stdout.write(
+        `${structUtils.stringifyIdent(workspace.manifest.name!)}: ${decision} (dependent)\n`
+      )
+    }
+
+    if (decisions.size === 0) {
       this.context.stdout.write('No version decisions to infer\n')
       return 0
     }
@@ -60,7 +76,7 @@ export class InferVersionsCommand extends BaseCommand {
 
     const versionFile = await versionUtils.openVersionFile(project, { allowEmpty: true })
 
-    for (const [workspace, decision] of inferred) {
+    for (const [workspace, decision] of decisions) {
       versionFile.releases.set(workspace, decision)
     }
 

@@ -6,6 +6,10 @@ commit interpretation: breaking changes select `major`, features select
 `minor`, and other package commits select `patch`. Several commits produce one
 decision per workspace.
 
+Yarn's dependency rules add a patch decision for public workspaces that depend
+on a releasing workspace, including transitive dependents. Explicit Yarn
+decisions still take precedence; private dependents receive `decline`.
+
 The command writes only missing Yarn deferred version decisions. Existing
 `.yarn/versions` records, including `decline` and exact versions, take
 precedence. `--dry-run` prints recommendations without changing the project.
