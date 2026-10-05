@@ -16,7 +16,9 @@ import { versionUtils }            from '@yarnpkg/plugin-version'
 
 import { inferDependentDecisions } from '../dependents.js'
 
-const createProject = async (): Promise<{ project: Project; root: string }> => {
+const createProject = async (
+  rootName: string | null = '@fixture/root'
+): Promise<{ project: Project; root: string }> => {
   const root = await mkdtemp(join(tmpdir(), 'raijin-dependents-'))
   const packages = {
     a: { name: '@fixture/a', version: '1.0.0', dependencies: { '@fixture/b': 'workspace:^' } },
@@ -27,7 +29,7 @@ const createProject = async (): Promise<{ project: Project; root: string }> => {
   await writeFile(
     join(root, 'package.json'),
     JSON.stringify({
-      name: '@fixture/root',
+      ...(rootName ? { name: rootName } : {}),
       private: true,
       version: '1.0.0',
       workspaces: ['packages/*'],
@@ -88,4 +90,22 @@ test('preserves explicit decline and propagates an existing positive version dec
   )
 
   assert.equal(decisions.size, 0)
+})
+
+test('does not write a decision for an unnamed private dependent root', async (t) => {
+  const { project, root } = await createProject(null)
+  t.after(async () => rm(root, { recursive: true, force: true }))
+
+  const b = project.getWorkspaceByIdent(structUtils.parseIdent('@fixture/b'))
+  const decisions = inferDependentDecisions(
+    project,
+    new Set(),
+    new Map(),
+    new Map([[b, versionUtils.Decision.MINOR]])
+  )
+
+  assert.deepEqual(
+    [...decisions].map(([workspace]) => structUtils.stringifyIdent(workspace.manifest.name!)),
+    ['@fixture/b', '@fixture/a', '@fixture/c']
+  )
 })

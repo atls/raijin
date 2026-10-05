@@ -35,6 +35,11 @@ export const inferDependentDecisions = (
     for (const [workspace] of dependents) {
       if (releases.has(workspace)) continue
 
+      if (!workspace.manifest.name) {
+        releases.set(workspace, versionUtils.Decision.DECLINE)
+        continue
+      }
+
       const decision =
         workspace.manifest.raw.private === true
           ? versionUtils.Decision.DECLINE
