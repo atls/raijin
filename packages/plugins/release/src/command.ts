@@ -37,7 +37,7 @@ export class InferVersionsCommand extends BaseCommand {
     const recommendations = await Promise.all(
       candidates.map(async (workspace) => ({
         workspace,
-        decision: await recommendWorkspaceVersion(root, workspace),
+        decision: await recommendWorkspaceVersion(root, workspace, project.workspaces),
       }))
     )
 

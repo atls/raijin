@@ -4,6 +4,7 @@ import type { Preset }           from 'conventional-recommended-bump'
 import { ConventionalGitClient } from '@conventional-changelog/git-client'
 import { Manifest }              from '@yarnpkg/core'
 import { Filename }              from '@yarnpkg/fslib'
+import { PortablePath }          from '@yarnpkg/fslib'
 import { packagePrefix }         from '@conventional-changelog/git-client'
 import { execUtils }             from '@yarnpkg/core'
 import { structUtils }           from '@yarnpkg/core'
@@ -56,11 +57,50 @@ const requireTaggedWorkspacePath = async (
       `Cannot infer ${ident}: its package path changed since ${tag}; record an explicit Yarn version decision`
     )
   }
+
+  const { code: historyCode, stdout: movedPaths } = await execUtils.execvp(
+    'git',
+    [
+      'log',
+      '--follow',
+      '--find-renames',
+      '--diff-filter=AR',
+      '--format=%H',
+      `${tag}..HEAD`,
+      '--',
+      manifestPath,
+    ],
+    { cwd: npath.toPortablePath(root) }
+  )
+
+  if (historyCode !== 0 || movedPaths.trim() !== '') {
+    throw new Error(
+      `Cannot infer ${ident}: its package path changed since ${tag}; record an explicit Yarn version decision`
+    )
+  }
 }
+
+const workspaceCommitPaths = (
+  workspace: Workspace,
+  workspaces: ReadonlyArray<Workspace>
+): Array<string> => [
+  npath.fromPortablePath(workspace.relativeCwd),
+  ...workspaces
+    .filter(
+      (candidate) =>
+        candidate !== workspace &&
+        ppath.contains(
+          ppath.resolve(PortablePath.root, workspace.relativeCwd),
+          ppath.resolve(PortablePath.root, candidate.relativeCwd)
+        ) !== null
+    )
+    .map((candidate) => `:(top,exclude)${candidate.relativeCwd}`),
+]
 
 export const recommendWorkspaceVersion = async (
   root: string,
-  workspace: Workspace
+  workspace: Workspace,
+  workspaces: ReadonlyArray<Workspace>
 ): Promise<VersionRecommendation | null> => {
   const { name, version: currentVersion } = workspace.manifest
 
@@ -101,7 +141,7 @@ export const recommendWorkspaceVersion = async (
   const result = await new Bumper(root)
     .config(preset)
     .tag(tag)
-    .commits({ path: npath.fromPortablePath(workspace.relativeCwd) })
+    .commits({ path: workspaceCommitPaths(workspace, workspaces) })
     .bump(preset.whatBump)
 
   if (result.commits.length === 0) {

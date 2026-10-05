@@ -19,9 +19,10 @@ workspace whose manifest version is ahead of its latest tag has a pending
 release and is not bumped again. A manifest version behind its latest tag is
 rejected. The checkout needs complete package-tag history.
 
-If a tagged package moved to a different path, path-limited Git history is
-insufficient to infer its bump. The command stops without writing a decision;
-record an explicit Yarn version decision for that move.
+If a tagged package changed paths after its tag, even if it later moved back,
+path-limited Git history is insufficient to infer its bump. The command stops
+without writing a decision; record an explicit Yarn version decision for that
+move.
 
 Yarn applies recorded versions and publishes packages. The shared release
 workflow owns changelogs, GitHub Releases, and retries; this plugin does not
