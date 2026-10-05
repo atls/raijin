@@ -4,12 +4,12 @@ import type { Preset }           from 'conventional-recommended-bump'
 import { ConventionalGitClient } from '@conventional-changelog/git-client'
 import { Manifest }              from '@yarnpkg/core'
 import { Filename }              from '@yarnpkg/fslib'
-import { PortablePath }          from '@yarnpkg/fslib'
 import { packagePrefix }         from '@conventional-changelog/git-client'
 import { execUtils }             from '@yarnpkg/core'
 import { structUtils }           from '@yarnpkg/core'
 import { npath }                 from '@yarnpkg/fslib'
 import { ppath }                 from '@yarnpkg/fslib'
+import { UsageError }            from 'clipanion'
 import { Bumper }                from 'conventional-recommended-bump'
 import createPreset              from 'conventional-changelog-conventionalcommits'
 import semver                    from 'semver'
@@ -45,7 +45,7 @@ const requireTaggedWorkspacePath = async (
   })
 
   if (code !== 0) {
-    throw new Error(
+    throw new UsageError(
       `Cannot infer ${ident}: its manifest was not at ${manifestPath} in ${tag}; record an explicit Yarn version decision`
     )
   }
@@ -53,7 +53,7 @@ const requireTaggedWorkspacePath = async (
   const taggedManifest = Manifest.fromText(stdout)
 
   if (!taggedManifest.name || structUtils.stringifyIdent(taggedManifest.name) !== ident) {
-    throw new Error(
+    throw new UsageError(
       `Cannot infer ${ident}: its package path changed since ${tag}; record an explicit Yarn version decision`
     )
   }
@@ -74,33 +74,15 @@ const requireTaggedWorkspacePath = async (
   )
 
   if (historyCode !== 0 || movedPaths.trim() !== '') {
-    throw new Error(
+    throw new UsageError(
       `Cannot infer ${ident}: its package path changed since ${tag}; record an explicit Yarn version decision`
     )
   }
 }
 
-const workspaceCommitPaths = (
-  workspace: Workspace,
-  workspaces: ReadonlyArray<Workspace>
-): Array<string> => [
-  npath.fromPortablePath(workspace.relativeCwd),
-  ...workspaces
-    .filter(
-      (candidate) =>
-        candidate !== workspace &&
-        ppath.contains(
-          ppath.resolve(PortablePath.root, workspace.relativeCwd),
-          ppath.resolve(PortablePath.root, candidate.relativeCwd)
-        ) !== null
-    )
-    .map((candidate) => `:(top,exclude)${candidate.relativeCwd}`),
-]
-
 export const recommendWorkspaceVersion = async (
   root: string,
-  workspace: Workspace,
-  workspaces: ReadonlyArray<Workspace>
+  workspace: Workspace
 ): Promise<VersionRecommendation | null> => {
   const { name, version: currentVersion } = workspace.manifest
 
@@ -141,7 +123,7 @@ export const recommendWorkspaceVersion = async (
   const result = await new Bumper(root)
     .config(preset)
     .tag(tag)
-    .commits({ path: workspaceCommitPaths(workspace, workspaces) })
+    .commits({ path: npath.fromPortablePath(workspace.relativeCwd) })
     .bump(preset.whatBump)
 
   if (result.commits.length === 0) {

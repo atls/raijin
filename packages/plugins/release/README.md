@@ -6,6 +6,11 @@ commit interpretation: breaking changes select `major`, features select
 `minor`, and other package commits select `patch`. Several commits produce one
 decision per workspace.
 
+Automatic inference covers publishable leaf workspaces and a publishable root
+when it is the only workspace. A publishable workspace containing another
+workspace needs an explicit Yarn version decision, so the child's commits
+cannot be mistaken for changes to its parent.
+
 Yarn's dependency rules add a patch decision for public workspaces that depend
 on a releasing workspace, including transitive dependents. Explicit Yarn
 decisions still take precedence; private dependents receive `decline`.

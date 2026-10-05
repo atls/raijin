@@ -72,8 +72,7 @@ const workspace = (version: string, name = '@fixture/a', relativeCwd = 'packages
 const recommend = async (
   root: string,
   candidate: Workspace
-): ReturnType<typeof recommendWorkspaceVersion> =>
-  recommendWorkspaceVersion(root, candidate, [candidate])
+): ReturnType<typeof recommendWorkspaceVersion> => recommendWorkspaceVersion(root, candidate)
 
 test('recommends the strongest bump from package commits and respects the current tag', async (t) => {
   const root = await mkdtemp(join(tmpdir(), 'raijin-bump-'))
@@ -171,17 +170,12 @@ test('stops before recording a bump when a package moved since its tag', async (
   )
 })
 
-test('excludes child workspace commits from a publishable root', async (t) => {
+test('infers a publishable single-package root', async (t) => {
   const root = await mkdtemp(join(tmpdir(), 'raijin-bump-root-'))
   t.after(async () => rm(root, { recursive: true, force: true }))
 
-  await mkdir(join(root, 'packages/a'), { recursive: true })
   await git(root, 'init', '-q')
   await writeFile(join(root, 'package.json'), '{"name":"@fixture/root","version":"1.0.0"}\n')
-  await writeFile(
-    join(root, 'packages/a/package.json'),
-    '{"name":"@fixture/a","version":"1.0.0"}\n'
-  )
   await git(root, 'add', '.')
   await git(
     root,
@@ -197,17 +191,7 @@ test('excludes child workspace commits from a publishable root', async (t) => {
   )
   await git(root, 'tag', '@fixture/root@1.0.0')
 
-  await commit(root, 'feat', 'child-feature')
-
-  const rootWorkspace = workspace('1.0.0', '@fixture/root', '.')
-  const childWorkspace = workspace('1.0.0')
-
-  assert.equal(
-    await recommendWorkspaceVersion(root, rootWorkspace, [rootWorkspace, childWorkspace]),
-    null
-  )
-
-  await writeFile(join(root, 'root.ts'), 'export const fixed = true\n')
+  await writeFile(join(root, 'root.ts'), 'export const feature = true\n')
   await git(root, 'add', 'root.ts')
   await git(
     root,
@@ -219,13 +203,10 @@ test('excludes child workspace commits from a publishable root', async (t) => {
     'commit.gpgsign=false',
     'commit',
     '-m',
-    'fix: root behavior'
+    'feat: root API'
   )
 
-  assert.equal(
-    await recommendWorkspaceVersion(root, rootWorkspace, [rootWorkspace, childWorkspace]),
-    'patch'
-  )
+  assert.equal(await recommend(root, workspace('1.0.0', '@fixture/root', '.')), 'minor')
 })
 
 test('stops when a package moved away and back after its tag', async (t) => {
