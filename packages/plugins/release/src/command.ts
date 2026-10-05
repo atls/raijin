@@ -9,6 +9,7 @@ import { npath }                        from '@yarnpkg/fslib'
 import { versionUtils }                 from '@yarnpkg/plugin-version'
 import { Option }                       from 'clipanion'
 
+import { selectReleaseCandidates }      from './candidates.js'
 import { getExplicitVersionDecisions }  from './deferred-decisions.js'
 import { recommendWorkspaceVersion }    from './recommend.js'
 
@@ -31,13 +32,7 @@ export class InferVersionsCommand extends BaseCommand {
     )
     const inferred = new Map<Workspace, VersionRecommendation>()
 
-    const candidates = project.workspaces.filter(
-      (workspace) =>
-        workspace !== project.topLevelWorkspace &&
-        workspace.manifest.raw.private !== true &&
-        workspace.manifest.name !== null &&
-        !explicit.has(structUtils.stringifyIdent(workspace.manifest.name))
-    )
+    const candidates = selectReleaseCandidates(project, explicit)
     const recommendations = await Promise.all(
       candidates.map(async (workspace) => ({
         workspace,
