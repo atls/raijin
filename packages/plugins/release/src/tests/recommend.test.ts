@@ -209,6 +209,48 @@ test('infers a publishable single-package root', async (t) => {
   assert.equal(await recommend(root, workspace('1.0.0', '@fixture/root', '.')), 'minor')
 })
 
+test('resolves a tagged manifest from a Yarn project nested below the Git root', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'raijin-bump-nested-'))
+  t.after(async () => rm(root, { recursive: true, force: true }))
+
+  await mkdir(join(root, 'sub/packages/a'), { recursive: true })
+  await git(root, 'init', '-q')
+  await writeFile(
+    join(root, 'sub/packages/a/package.json'),
+    '{"name":"@fixture/a","version":"1.0.0"}\n'
+  )
+  await git(root, 'add', '.')
+  await git(
+    root,
+    '-c',
+    'user.name=Fixture',
+    '-c',
+    'user.email=fixture@example.invalid',
+    '-c',
+    'commit.gpgsign=false',
+    'commit',
+    '-m',
+    'chore: initial'
+  )
+  await git(root, 'tag', '@fixture/a@1.0.0')
+  await writeFile(join(root, 'sub/packages/a/feature.ts'), 'export const feature = true\n')
+  await git(root, 'add', 'sub/packages/a/feature.ts')
+  await git(
+    root,
+    '-c',
+    'user.name=Fixture',
+    '-c',
+    'user.email=fixture@example.invalid',
+    '-c',
+    'commit.gpgsign=false',
+    'commit',
+    '-m',
+    'feat(a): nested feature'
+  )
+
+  assert.equal(await recommend(join(root, 'sub'), workspace('1.0.0')), 'minor')
+})
+
 test('stops when a package moved away and back after its tag', async (t) => {
   const root = await mkdtemp(join(tmpdir(), 'raijin-bump-roundtrip-'))
   t.after(async () => rm(root, { recursive: true, force: true }))

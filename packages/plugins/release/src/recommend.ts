@@ -40,7 +40,7 @@ const requireTaggedWorkspacePath = async (
   tag: string
 ): Promise<void> => {
   const manifestPath = ppath.join(workspace.relativeCwd, Filename.manifest)
-  const { code, stdout } = await execUtils.execvp('git', ['show', `${tag}:${manifestPath}`], {
+  const { code, stdout } = await execUtils.execvp('git', ['show', `${tag}:./${manifestPath}`], {
     cwd: npath.toPortablePath(root),
   })
 
