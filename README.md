@@ -36,5 +36,18 @@ For prerequisites, Git hooks, and a CI example, see [Set up Raijin](./docs/raiji
 | Service              | `yarn service build`, `yarn service dev`, `yarn service start`                                                     | [service](./packages/plugins/service/README.md)                                                                  |
 | Next.js              | `yarn renderer build`, `yarn renderer dev`, `yarn renderer start`                                                  | [renderer](./packages/plugins/renderer/README.md)                                                                |
 | Image                | `yarn image pack`                                                                                                  | [image](./packages/plugins/image/README.md)                                                                      |
-| Package versions     | `yarn release version infer`, `yarn release version infer --dry-run`                                               | [release](./packages/plugins/release/README.md)                                                                  |
+| Package releases     | `yarn release version infer`, `yarn release version infer --dry-run`                                               | [@atls/yarn-plugin-release](./packages/plugins/release/README.md)                                                |
 | Verified pair update | `yarn set version atls`                                                                                            | [essentials](./packages/plugins/essentials/README.md) and the [public installer](./packages/raijin/README.md)    |
+
+## Package releases
+
+The checked Raijin Yarn runtime includes `@atls/yarn-plugin-release`. Its
+`yarn release version infer` command reads package commits since their latest
+release tags and records only missing Yarn deferred version decisions. Existing
+decisions, including `decline`, take precedence, and workspaces that depend on
+releasing packages are included.
+
+Use `yarn release version infer --dry-run` to preview decisions. Yarn applies
+versions and publishes packages; the shared release workflow owns changelogs
+and GitHub Releases. See the [release plugin guide](./packages/plugins/release/README.md)
+for the supported cases and explicit-decision exceptions.
