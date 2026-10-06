@@ -820,6 +820,15 @@ test('should keep long proto imports aligned with other imports', async () => {
   )
 })
 
+test('should not wrap a named import to align with a long default binding', async () => {
+  const source = [
+    "import extraordinarilyLongDefaultBindingIdentifier from './a.js'",
+    "import { 'foo-bar' as foo, 'baz-bar' as baz } from './x.js'",
+  ].join('\n')
+
+  await assertFormatted(source, `${source}\n`, { printWidth: 60 })
+})
+
 test('should leave import declarations with attributes outside source alignment', async () => {
   const source = [
     "import { Foo } from './foo.js'",
