@@ -376,14 +376,23 @@ const getMaxSourceColumn = (nodes: Array<Node>): number =>
 const getAlignableSourceNodes = (
   nodes: Array<Node>,
   options: Options,
-  isAlignable: (node: Node) => boolean
+  isAlignable: (node: Node) => boolean,
+  alignPastPrintWidth: boolean
 ): Array<Node> => {
   const printWidth = getPrintWidth(options)
   let alignableNodes = nodes.filter((node) => {
     const entry = sourceAlignEntries.get(node)
 
-    return isAlignable(node) && isMeasuredSourceAlignEntry(entry) && entry.lineWidth <= printWidth
+    return (
+      isAlignable(node) &&
+      isMeasuredSourceAlignEntry(entry) &&
+      (alignPastPrintWidth || entry.lineWidth <= printWidth)
+    )
   })
+
+  if (alignPastPrintWidth) {
+    return alignableNodes
+  }
 
   while (alignableNodes.length > 0) {
     const maxSourceColumn = getMaxSourceColumn(alignableNodes)
@@ -409,13 +418,14 @@ const getAlignableSourceNodes = (
 export const setSourceAlignOffsets = (
   nodes: Array<Node>,
   options: Options,
-  isAlignable: (node: Node) => boolean
+  isAlignable: (node: Node) => boolean,
+  alignPastPrintWidth = false
 ): void => {
   nodes.forEach((node) => {
     resetSourceAlignNode(node)
   })
 
-  const alignableNodes = getAlignableSourceNodes(nodes, options, isAlignable)
+  const alignableNodes = getAlignableSourceNodes(nodes, options, isAlignable, alignPastPrintWidth)
   const maxSourceColumn = getMaxSourceColumn(alignableNodes)
 
   alignableNodes.forEach((node) => {

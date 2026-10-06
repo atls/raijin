@@ -782,7 +782,7 @@ test('should respect bracket spacing when aligning imports', async () => {
   )
 })
 
-test('should keep source imports within print width after alignment padding', async () => {
+test('should align source imports when padding exceeds print width', async () => {
   const source = [
     "import { Foo } from './long-enough-module.js'",
     "import { VeryLongName } from './x.js'",
@@ -791,11 +791,32 @@ test('should keep source imports within print width after alignment padding', as
   await assertFormatted(
     source,
     [
-      "import { Foo } from './long-enough-module.js'",
+      "import { Foo }          from './long-enough-module.js'",
       "import { VeryLongName } from './x.js'",
       '',
     ].join('\n'),
     { printWidth: 53 }
+  )
+})
+
+test('should keep long proto imports aligned with other imports', async () => {
+  const source = [
+    "import { Transport } from '@nestjs/microservices'",
+    '',
+    "import reflection from '@atls/nestjs-grpc-reflection/proto/grpc/reflection/v1alpha/reflection.proto'",
+    '',
+    "import echo from '../proto/examples/echo/v1/echo.proto'",
+  ].join('\n')
+
+  await assertFormatted(
+    source,
+    [
+      "import { Transport } from '@nestjs/microservices'",
+      "import reflection    from '@atls/nestjs-grpc-reflection/proto/grpc/reflection/v1alpha/reflection.proto'",
+      '',
+      "import echo          from '../proto/examples/echo/v1/echo.proto'",
+      '',
+    ].join('\n')
   )
 })
 
