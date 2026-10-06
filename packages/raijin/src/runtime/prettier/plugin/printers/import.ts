@@ -88,5 +88,10 @@ export const registerImportSourceDoc = (node: ImportDeclaration, doc: Doc): void
 export const setImportAlignOffsets = (body: Array<Node>, options: Options): void => {
   const { originalText } = options as OriginalTextOptions
 
-  setSourceAlignOffsets(body, options, (node) => isAlignableImportDeclaration(node, originalText))
+  setSourceAlignOffsets(
+    body,
+    options,
+    (node) => isAlignableImportDeclaration(node, originalText),
+    true
+  )
 }
