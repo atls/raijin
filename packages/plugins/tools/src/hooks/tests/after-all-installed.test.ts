@@ -8,7 +8,7 @@ import { structUtils }       from '@yarnpkg/core'
 import { afterAllInstalled } from '../after-all-installed.js'
 
 const withoutSkip = async (run: () => Promise<void>): Promise<void> => {
-  const names = ['CI', 'GITHUB_ACTIONS', 'IMAGE_PACK', 'HUSKY']
+  const names = ['CI', 'GITHUB_ACTIONS', 'HUSKY']
   const previous = Object.fromEntries(names.map((name) => [name, process.env[name]]))
 
   for (const name of names) Reflect.deleteProperty(process.env, name)

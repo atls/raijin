@@ -43,7 +43,7 @@ const createYarnInvocation = (
   }
 
   if (options.skipInstallHooks) {
-    environment.IMAGE_PACK = '1'
+    environment.HUSKY = '0'
   }
 
   return options.packageManager
