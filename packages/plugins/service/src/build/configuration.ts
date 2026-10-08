@@ -43,7 +43,8 @@ export class WebpackConfig {
     },
     private readonly cwd: string,
     private readonly outputPath: string,
-    workspaceDependencies: Iterable<string> = []
+    workspaceDependencies: Iterable<string> = [],
+    private readonly standalone = false
   ) {
     this.workspaceDependencies = new Set(workspaceDependencies)
   }
@@ -61,7 +62,11 @@ export class WebpackConfig {
       prefix: 'code-service-',
     })
 
-    const webpackExternals = new WebpackExternals(this.cwd, this.workspaceDependencies)
+    const webpackExternals = new WebpackExternals(
+      this.cwd,
+      this.workspaceDependencies,
+      this.standalone
+    )
     const externals = [await webpackExternals.build()]
 
     const plugins = this.createPlugins(environment, additionalPlugins, true)
@@ -87,7 +92,9 @@ export class WebpackConfig {
         chunkFormat: environment === 'development' ? 'commonjs' : 'module',
         module: true,
         clean: environment === 'production',
-        assetModuleFilename: 'assets/[name][ext]',
+        assetModuleFilename: this.standalone
+          ? 'assets/[name].[contenthash][ext]'
+          : 'assets/[name][ext]',
       },
       resolve: {
         extensionAlias: {

@@ -106,3 +106,7 @@ yarn renderer dev
 ```
 
 Эти команды передают сборку и запуск самому Next.js; под PnP сборка и разработка используют его [режим Webpack](https://nextjs.org/docs/app/api-reference/cli/next). Настройки приложения остаются за Next.js. Аргументы команд описаны в [renderer](../../packages/plugins/renderer/README.md).
+
+## 8. Собрать сервис для запуска вне Yarn-проекта
+
+Если сервис будет работать вне своего Yarn-проекта, используйте `yarn service build --standalone`. Состав готового артефакта и запуск описаны в [руководстве service](../../packages/plugins/service/README.md). Обычные команды сборки, разработки и запуска сохраняют прежнее поведение.
