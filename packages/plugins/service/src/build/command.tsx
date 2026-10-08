@@ -1,3 +1,4 @@
+import { Option }                   from 'clipanion'
 import { render }                   from 'ink'
 import React                        from 'react'
 
@@ -16,6 +17,8 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
     description: 'build a service production artifact',
   })
 
+  standalone = Option.Boolean('--standalone', false)
+
   override async execute(): Promise<number> {
     const { invocation } = this.context
     const { executionCwd, workspace } = invocation
@@ -27,6 +30,7 @@ export class ServiceBuildCommand extends AbstractServiceCommand {
     try {
       const result = await buildProject({
         cwd: toNativeCwd(executionCwd),
+        standalone: this.standalone,
         onProgress: ({ message, percent }) => {
           progress.rerender(<ServiceProgress message={message} percent={percent} />)
         },

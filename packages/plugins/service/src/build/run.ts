@@ -11,6 +11,7 @@ import { loadWebpackRuntime }   from './runtime.js'
 export interface BuildProjectInput {
   cwd: string
   onProgress?: (progress: { message: string; percent: number }) => void
+  standalone?: boolean
   workspacePackageNames?: Iterable<string>
 }
 
@@ -50,6 +51,7 @@ const collectDiagnostics = (stats: wp.Stats): Array<BuildDiagnostic> => {
 export const buildProject = async ({
   cwd,
   onProgress,
+  standalone = false,
   workspacePackageNames = [],
 }: BuildProjectInput): Promise<BuildProjectResult> => {
   let artifact: Awaited<ReturnType<typeof stageArtifact>> | undefined
@@ -65,7 +67,8 @@ export const buildProject = async ({
       { nodeLoader: nodeLoaderPath, protoLoader: protoLoaderPath, tsLoader: tsLoaderPath },
       cwd,
       artifact.path,
-      workspacePackageNames
+      workspacePackageNames,
+      standalone
     ).build(
       'production',
       onProgress

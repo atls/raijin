@@ -1,18 +1,18 @@
 import type { materializeTypeScriptConfig as MaterializeTypeScriptConfig } from '@atls/raijin/config/typescript'
-import type { typescriptDefaults as TypeScriptDefaults } from '@atls/raijin/config/typescript'
-import type { webpack as wp }                            from '@atls/raijin/webpack'
+import type { typescriptDefaults as TypeScriptDefaults }                   from '@atls/raijin/config/typescript'
+import type { webpack as wp }                                              from '@atls/raijin/webpack'
 
-import type { WebpackEnvironment }                       from './interfaces.js'
+import type { WebpackEnvironment }                                         from './interfaces.js'
 
-import { readFile }                                      from 'node:fs/promises'
-import { rm }                                            from 'node:fs/promises'
-import { dirname }                                       from 'node:path'
-import { join }                                          from 'node:path'
+import { readFile }                                                        from 'node:fs/promises'
+import { rm }                                                              from 'node:fs/promises'
+import { dirname }                                                         from 'node:path'
+import { join }                                                            from 'node:path'
 
-import { resolveRaijinRuntimeUrl }                       from '@atls/raijin/runtime-resolver'
+import { resolveRaijinRuntimeUrl }                                         from '@atls/raijin/runtime-resolver'
 
-import { WebpackExternals }                              from './externals.js'
-import { createOptionalImportIgnorePlugin }              from './optional-imports.js'
+import { WebpackExternals }                                                from './externals.js'
+import { createOptionalImportIgnorePlugin }                                from './optional-imports.js'
 
 export interface CompilationConfiguration {
   configuration: wp.Configuration
@@ -43,7 +43,8 @@ export class WebpackConfig {
     },
     private readonly cwd: string,
     private readonly outputPath: string,
-    workspaceDependencies: Iterable<string> = []
+    workspaceDependencies: Iterable<string> = [],
+    private readonly standalone = false
   ) {
     this.workspaceDependencies = new Set(workspaceDependencies)
   }
@@ -61,7 +62,11 @@ export class WebpackConfig {
       prefix: 'code-service-',
     })
 
-    const webpackExternals = new WebpackExternals(this.cwd, this.workspaceDependencies)
+    const webpackExternals = new WebpackExternals(
+      this.cwd,
+      this.workspaceDependencies,
+      this.standalone
+    )
     const externals = [await webpackExternals.build()]
 
     const plugins = this.createPlugins(environment, additionalPlugins, true)

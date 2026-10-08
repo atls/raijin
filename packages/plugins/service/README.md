@@ -6,6 +6,7 @@ Builds, develops and starts an ESM Node application in the selected workspace.
 
 ```sh
 yarn service build
+yarn service build --standalone
 yarn service dev
 yarn service start
 ```
@@ -13,6 +14,8 @@ yarn service start
 ## Responsibilities
 
 Webpack owns compilation. A build stages a complete artifact before replacing `dist`; start requires that completed artifact. Development watches compilation and restarts the application after successful rebuilds. Managed Node execution supplies the project environment, loader and process cleanup. Diagnostics and application output are presented without hiding a failing result.
+
+`--standalone` bundles declared package dependencies into the output so the built service can run outside the Yarn project. Node.js built-ins remain provided by Node. This mode rejects `tools.service.externals`; the default build keeps its existing external dependency behavior.
 
 ## Verification
 

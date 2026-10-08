@@ -25,7 +25,8 @@ export class WebpackExternals {
 
   constructor(
     private readonly cwd: string,
-    workspaceDependencies: Iterable<string> = []
+    workspaceDependencies: Iterable<string> = [],
+    private readonly standalone = false
   ) {
     this.#workspaceDependencies = new Set(workspaceDependencies)
   }
@@ -72,6 +73,11 @@ export class WebpackExternals {
 
   async build(): Promise<typeof this.externals> {
     this.#externals = await this.loadExternals()
+
+    if (this.standalone && this.#externals.length > 0) {
+      throw new Error('Standalone service build cannot use tools.service.externals')
+    }
+
     this.#dependencies = await this.loadDependencies()
     this.#optionalDependencies = await this.loadOptionalDependencies()
 
@@ -86,7 +92,9 @@ export class WebpackExternals {
       type?: webpack.Configuration['externalsType']
     ) => void
   ): void {
-    if (request && this.#externals.includes(request)) {
+    if (this.standalone) {
+      callback()
+    } else if (request && this.#externals.includes(request)) {
       callback(undefined, request, 'module')
     } else if (request && BUNDLED_DEPENDENCIES.has(this.getPackageRequestName(request))) {
       callback()

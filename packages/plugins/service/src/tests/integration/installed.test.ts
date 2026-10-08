@@ -3,6 +3,7 @@ import { execFile }      from 'node:child_process'
 import { spawn }         from 'node:child_process'
 import { once }          from 'node:events'
 import { access }        from 'node:fs/promises'
+import { copyFile }      from 'node:fs/promises'
 import { mkdir }         from 'node:fs/promises'
 import { mkdtemp }       from 'node:fs/promises'
 import { readFile }      from 'node:fs/promises'
@@ -184,5 +185,27 @@ setInterval(() => undefined, 1000)
         development.kill('SIGKILL')
       }
     }
+
+    await run(cwd, ['add', 'react@18.3.1'])
+    await writeFile(
+      join(cwd, 'src/index.ts'),
+      `import React from 'react'
+
+process.stdout.write(\`STANDALONE_READY:\${React.createElement('div').type}\\n\`)
+`
+    )
+    await run(cwd, ['service', 'build', '--standalone'])
+
+    const standaloneDir = await mkdtemp(join(tmpdir(), 'service-standalone-'))
+
+    await writeFile(join(standaloneDir, 'package.json'), JSON.stringify({ type: 'module' }))
+    await copyFile(join(cwd, 'dist/index.js'), join(standaloneDir, 'index.js'))
+
+    const standalone = await execute(process.execPath, ['index.js'], {
+      cwd: standaloneDir,
+      env: environment(),
+    })
+
+    assert.match(standalone.stdout, /STANDALONE_READY:div/)
   }
 )

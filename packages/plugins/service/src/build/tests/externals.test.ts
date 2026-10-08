@@ -16,9 +16,9 @@ const createExternalData = (request: string) => ({
   request,
 })
 
-const createResolver = async (): Promise<
-  (request: string) => Promise<{ result?: string; type?: string }>
-> => {
+const createResolver = async (
+  standalone = false
+): Promise<(request: string) => Promise<{ result?: string; type?: string }>> => {
   const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-externals-'))
 
   await writeFile(
@@ -40,7 +40,7 @@ const createResolver = async (): Promise<
     })
   )
 
-  const externals = await new WebpackExternals(cwd).build()
+  const externals = await new WebpackExternals(cwd, [], standalone).build()
 
   return async (request: string): Promise<{ result?: string; type?: string }> =>
     new Promise((resolve, reject) => {
@@ -71,6 +71,34 @@ test('should externalize dependency ranges from all manifest blocks as ESM impor
     result: '@internal/module',
     type: 'module',
   })
+})
+
+test('standalone build bundles declared dependencies', async () => {
+  const resolveExternal = await createResolver(true)
+
+  for (const request of [
+    '@nestjs/common',
+    '@nestjs/terminus',
+    '@fastify/swagger-ui',
+    'rxjs',
+    '@internal/module',
+  ]) {
+    assert.deepEqual(await resolveExternal(request), { result: undefined, type: undefined })
+  }
+})
+
+test('standalone build rejects explicit externals', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-externals-'))
+
+  await writeFile(
+    join(cwd, 'package.json'),
+    JSON.stringify({ tools: { service: { externals: ['@nestjs/common'] } } })
+  )
+
+  await assert.rejects(
+    new WebpackExternals(cwd, [], true).build(),
+    /Standalone service build cannot use tools.service.externals/
+  )
 })
 
 test('should keep explicit service externals externalized before built-in bundle overrides', async () => {
