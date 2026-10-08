@@ -199,8 +199,8 @@ process.stdout.write(\`STANDALONE_READY:\${React.createElement('div').type}\\n\`
     const standaloneDir = await mkdtemp(join(tmpdir(), 'service-standalone-'))
     const standaloneDist = join(standaloneDir, 'dist')
 
+    await writeFile(join(standaloneDir, 'package.json'), JSON.stringify({ type: 'commonjs' }))
     await cp(join(cwd, 'dist'), standaloneDist, { recursive: true })
-    await writeFile(join(standaloneDist, 'package.json'), JSON.stringify({ type: 'module' }))
 
     const standalone = await execute(process.execPath, ['index.js'], {
       cwd: standaloneDist,

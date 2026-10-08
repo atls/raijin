@@ -60,7 +60,7 @@ export const buildProject = async ({
   let result: BuildProjectResult
 
   try {
-    artifact = await stageArtifact(cwd)
+    artifact = await stageArtifact(cwd, standalone)
     const { nodeLoaderPath, protoLoaderPath, tsLoaderPath, webpack } = await loadWebpackRuntime(cwd)
     compilation = await new WebpackConfig(
       webpack,

@@ -22,7 +22,7 @@ export interface StagedArtifact {
   dispose: () => Promise<void>
 }
 
-export const stageArtifact = async (cwd: string): Promise<StagedArtifact> => {
+export const stageArtifact = async (cwd: string, standalone = false): Promise<StagedArtifact> => {
   const path = await mkdtemp(join(cwd, '.raijin-service-build-'))
   const target = join(cwd, ARTIFACT_DIRECTORY)
   const backup = join(cwd, `.raijin-service-backup-${randomUUID()}`)
@@ -31,6 +31,10 @@ export const stageArtifact = async (cwd: string): Promise<StagedArtifact> => {
   return {
     path,
     commit: async () => {
+      if (standalone) {
+        await writeFile(join(path, 'package.json'), `${JSON.stringify({ type: 'module' })}\n`)
+      }
+
       await writeFile(join(path, DESCRIPTOR_FILE), `${JSON.stringify({ entry: ENTRY_FILE })}\n`)
 
       let hasBackup = false
