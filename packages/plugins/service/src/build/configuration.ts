@@ -92,7 +92,9 @@ export class WebpackConfig {
         chunkFormat: environment === 'development' ? 'commonjs' : 'module',
         module: true,
         clean: environment === 'production',
-        assetModuleFilename: 'assets/[name][ext]',
+        assetModuleFilename: this.standalone
+          ? 'assets/[name].[contenthash][ext]'
+          : 'assets/[name][ext]',
       },
       resolve: {
         extensionAlias: {

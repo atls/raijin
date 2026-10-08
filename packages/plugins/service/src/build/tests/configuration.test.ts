@@ -1,6 +1,7 @@
 import { strict as assert } from 'node:assert'
 import { mkdtemp }          from 'node:fs/promises'
 import { readFile }         from 'node:fs/promises'
+import { readdir }          from 'node:fs/promises'
 import { mkdir }            from 'node:fs/promises'
 import { writeFile }        from 'node:fs/promises'
 import { tmpdir }           from 'node:os'
@@ -16,14 +17,17 @@ import { WebpackConfig }    from '../configuration.js'
 
 const createConfig = async (
   cwd: string,
-  environment: 'development' | 'production' = 'production'
+  environment: 'development' | 'production' = 'production',
+  standalone = false
 ) =>
   (
     await new WebpackConfig(
       webpack,
       { nodeLoader: nodeLoaderPath, protoLoader: protoLoaderPath, tsLoader: tsLoaderPath },
       cwd,
-      join(cwd, 'dist')
+      join(cwd, 'dist'),
+      [],
+      standalone
     ).build(environment)
   ).configuration
 
@@ -202,4 +206,48 @@ test('should preserve native import.meta in bundled workspace code', async () =>
 
   assert.match(output, /import\.meta\.resolve\(['"]node:path['"]\)/)
   assert.doesNotMatch(output, /\{\}\.resolve\(['"]node:path['"]\)/)
+})
+
+test('standalone build emits distinct assets with the same source filename', async () => {
+  const cwd = await mkdtemp(join(tmpdir(), 'code-service-webpack-assets-'))
+
+  await mkdir(join(cwd, 'src/one'), { recursive: true })
+  await mkdir(join(cwd, 'src/two'), { recursive: true })
+  await writeFile(join(cwd, 'package.json'), JSON.stringify({ type: 'module' }))
+  await writeFile(join(cwd, 'src/one/logo.svg'), '<svg>one</svg>')
+  await writeFile(join(cwd, 'src/two/logo.svg'), '<svg>two</svg>')
+  await writeFile(
+    join(cwd, 'src/index.ts'),
+    `import first from './one/logo.svg'
+import second from './two/logo.svg'
+
+export const logos = [first, second]
+`
+  )
+
+  const compiler = webpack(await createConfig(cwd, 'production', true))
+
+  await new Promise<void>((resolve, reject) => {
+    compiler.run((error, stats) => {
+      compiler.close((closeError) => {
+        if (error || closeError) {
+          reject(error || closeError)
+        } else if (stats?.hasErrors()) {
+          reject(new Error(stats.toString({ all: false, errors: true })))
+        } else {
+          resolve()
+        }
+      })
+    })
+  })
+
+  const files = await readdir(join(cwd, 'dist/assets'))
+
+  assert.equal(files.length, 2)
+  assert.deepEqual(
+    (
+      await Promise.all(files.map((file) => readFile(join(cwd, 'dist/assets', file), 'utf-8')))
+    ).sort(),
+    ['<svg>one</svg>', '<svg>two</svg>']
+  )
 })
