@@ -40,7 +40,9 @@ const hookContent = (command) => `${OWNERSHIP_MARKER}\n${command}\n`
 
 /** @param {keyof typeof hooks} name @param {string} content */
 const isRaijinOwned = (name, content) =>
-  content.startsWith(`${OWNERSHIP_MARKER}\n`) || content === legacyHooks[name]
+  content.startsWith(`${OWNERSHIP_MARKER}\n`) ||
+  content === legacyHooks[name] ||
+  content === legacyHooks[name].trimEnd()
 
 /** @param {string} path @param {boolean} allowRaijinEntries */
 const findActiveForeignHook = async (path, allowRaijinEntries) => {

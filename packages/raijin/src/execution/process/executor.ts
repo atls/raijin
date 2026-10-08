@@ -1,9 +1,9 @@
 import type { ProcessExecutionResult } from '../../commands/invocation/capabilities/interfaces/process.js'
-import type { Executor }      from '../../commands/invocation/executor.js'
-import type { ExecuteResult } from '../subprocess/execute.interfaces.js'
-import type { Streams }       from '../subprocess/execute.interfaces.js'
+import type { Executor }               from '../../commands/invocation/executor.js'
+import type { ExecuteResult }          from '../subprocess/execute.interfaces.js'
+import type { Streams }                from '../subprocess/execute.interfaces.js'
 
-import { execute }            from '../subprocess/execute.js'
+import { execute }                     from '../subprocess/execute.js'
 
 const toProcessExecutionResult = (result: ExecuteResult): ProcessExecutionResult => {
   const output = { stderr: result.stderr, stdout: result.stdout }

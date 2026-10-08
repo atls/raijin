@@ -124,10 +124,7 @@ const createRepository = async (context: { after: (callback: () => Promise<void>
 
 const withoutSkipEnvironment = async (run: () => Promise<void>): Promise<void> => {
   const original = Object.fromEntries(
-    [...gitLocalVariables, 'CI', 'GITHUB_ACTIONS', 'IMAGE_PACK', 'HUSKY'].map((name) => [
-      name,
-      process.env[name],
-    ])
+    [...gitLocalVariables, 'CI', 'GITHUB_ACTIONS', 'HUSKY'].map((name) => [name, process.env[name]])
   )
 
   for (const name of Object.keys(original)) Reflect.deleteProperty(process.env, name)
@@ -283,21 +280,23 @@ test('a symlink with an ownership marker is still an unowned hook path', async (
   await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
 })
 
-test('exact legacy Raijin entries migrate while keeping an unrelated Husky file', async (context) => {
-  const cwd = await createRepository(context)
-  const hooks = join(cwd, '.config/husky')
+for (const newline of ['\n', '']) {
+  test(`exact legacy Raijin entries ${newline ? 'with' : 'without'} final newline migrate`, async (context) => {
+    const cwd = await createRepository(context)
+    const hooks = join(cwd, '.config/husky')
 
-  await mkdir(join(hooks, '_'), { recursive: true })
-  await writeFile(join(hooks, 'commit-msg'), 'yarn commit message lint\n')
-  await writeFile(join(hooks, 'pre-commit'), 'yarn commit staged\n')
-  await writeFile(join(hooks, 'prepare-commit-msg'), 'yarn commit message $@\n')
-  await writeFile(join(hooks, '_/custom'), 'keep native neighbor\n')
+    await mkdir(join(hooks, '_'), { recursive: true })
+    await writeFile(join(hooks, 'commit-msg'), `yarn commit message lint${newline}`)
+    await writeFile(join(hooks, 'pre-commit'), `yarn commit staged${newline}`)
+    await writeFile(join(hooks, 'prepare-commit-msg'), `yarn commit message $@${newline}`)
+    await writeFile(join(hooks, '_/custom'), 'keep native neighbor\n')
 
-  await withoutSkipEnvironment(async () => installRepositoryHooks(cwd))
+    await withoutSkipEnvironment(async () => installRepositoryHooks(cwd))
 
-  assert.equal(await readFile(join(hooks, '_/custom'), 'utf8'), 'keep native neighbor\n')
-  assert.match(await readFile(join(hooks, 'commit-msg'), 'utf8'), /lint "\$1"\n$/)
-})
+    assert.equal(await readFile(join(hooks, '_/custom'), 'utf8'), 'keep native neighbor\n')
+    assert.match(await readFile(join(hooks, 'commit-msg'), 'utf8'), /lint "\$1"\n$/)
+  })
+}
 
 test('each sibling worktree uses its own hook entries with one relative Git setting', async (context) => {
   const cwd = await createRepository(context)
@@ -344,7 +343,6 @@ for (const [name, value] of [
   ['CI', '1'],
   ['CI', 'yes'],
   ['GITHUB_ACTIONS', 'true'],
-  ['IMAGE_PACK', '1'],
   ['HUSKY', '0'],
 ]) {
   test(`${name}=${value} leaves hook state untouched`, async (context) => {
