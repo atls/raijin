@@ -106,3 +106,7 @@ yarn renderer dev
 ```
 
 These commands delegate build and server execution to Next.js; under PnP, build and dev use its [Webpack mode](https://nextjs.org/docs/app/api-reference/cli/next). Next.js still owns application configuration. The [renderer guide](../../packages/plugins/renderer/README.md) lists command arguments.
+
+## 8. Build a service outside the Yarn project
+
+Use `yarn service build --standalone` when a service will run outside its Yarn project. The [service guide](../../packages/plugins/service/README.md) describes the complete artifact and how to run it. The ordinary build, development and start commands keep their existing behavior.

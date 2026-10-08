@@ -17,6 +17,12 @@ Webpack owns compilation. A build stages a complete artifact before replacing `d
 
 `--standalone` bundles declared package dependencies into `dist` so the built service can run outside the Yarn project. Copy the entire `dist` directory, including chunks created by dynamic imports, emitted assets, and its ESM `package.json`, and run `index.js` from that directory. Node.js built-ins remain provided by Node. This mode rejects `tools.service.externals`; the default build keeps its existing external dependency behavior.
 
+After copying the complete `dist` directory to its destination, run it from the destination's parent directory:
+
+```sh
+node dist/index.js
+```
+
 ## Verification
 
 Run from the repository root:
