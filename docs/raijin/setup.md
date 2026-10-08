@@ -38,7 +38,7 @@ Commit changes to `package.json`, `yarn.lock`, `.yarnrc.yml` and `.yarn/releases
 
 The pre-commit hook runs `yarn commit staged`. The project decides which files to check and how: without its lint-staged configuration, the command fails.
 
-Raijin installs hooks through Husky without overwriting active hooks owned by another tool. A conflict stops setup; hooks are not installed in CI or while packing an image. See the [installation details](../../packages/raijin/README.md#git-hooks).
+Raijin installs hooks through Husky without overwriting active hooks owned by another tool. A conflict stops setup; hooks are not installed in CI. See the [installation details](../../packages/raijin/README.md#git-hooks).
 
 Keep an existing lint-staged configuration. For a new one, use the `lint-staged` field in `package.json`, `.lintstagedrc`, or `lint-staged.config.*`, following the project's existing convention.
 
