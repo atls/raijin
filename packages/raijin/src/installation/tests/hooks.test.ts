@@ -280,21 +280,23 @@ test('a symlink with an ownership marker is still an unowned hook path', async (
   await assert.rejects(executeGit(['config', 'core.hooksPath'], cwd))
 })
 
-test('exact legacy Raijin entries migrate while keeping an unrelated Husky file', async (context) => {
-  const cwd = await createRepository(context)
-  const hooks = join(cwd, '.config/husky')
+for (const newline of ['\n', '']) {
+  test(`exact legacy Raijin entries ${newline ? 'with' : 'without'} final newline migrate`, async (context) => {
+    const cwd = await createRepository(context)
+    const hooks = join(cwd, '.config/husky')
 
-  await mkdir(join(hooks, '_'), { recursive: true })
-  await writeFile(join(hooks, 'commit-msg'), 'yarn commit message lint\n')
-  await writeFile(join(hooks, 'pre-commit'), 'yarn commit staged\n')
-  await writeFile(join(hooks, 'prepare-commit-msg'), 'yarn commit message $@\n')
-  await writeFile(join(hooks, '_/custom'), 'keep native neighbor\n')
+    await mkdir(join(hooks, '_'), { recursive: true })
+    await writeFile(join(hooks, 'commit-msg'), `yarn commit message lint${newline}`)
+    await writeFile(join(hooks, 'pre-commit'), `yarn commit staged${newline}`)
+    await writeFile(join(hooks, 'prepare-commit-msg'), `yarn commit message $@${newline}`)
+    await writeFile(join(hooks, '_/custom'), 'keep native neighbor\n')
 
-  await withoutSkipEnvironment(async () => installRepositoryHooks(cwd))
+    await withoutSkipEnvironment(async () => installRepositoryHooks(cwd))
 
-  assert.equal(await readFile(join(hooks, '_/custom'), 'utf8'), 'keep native neighbor\n')
-  assert.match(await readFile(join(hooks, 'commit-msg'), 'utf8'), /lint "\$1"\n$/)
-})
+    assert.equal(await readFile(join(hooks, '_/custom'), 'utf8'), 'keep native neighbor\n')
+    assert.match(await readFile(join(hooks, 'commit-msg'), 'utf8'), /lint "\$1"\n$/)
+  })
+}
 
 test('each sibling worktree uses its own hook entries with one relative Git setting', async (context) => {
   const cwd = await createRepository(context)
