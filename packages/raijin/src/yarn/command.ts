@@ -14,7 +14,7 @@ import { Configuration }                   from '@yarnpkg/core'
 import { npath }                           from '@yarnpkg/fslib'
 
 import { RaijinYarnCommandException }      from './exceptions/command.js'
-import { assertProcessCompleted } from '../commands/invocation/capabilities/assert-process-completed.js'
+import { assertProcessCompleted }          from '../commands/invocation/capabilities/assert-process-completed.js'
 import { set as setEnvironmentVariable }   from '../execution/environment/map.js'
 import { create as createProcessExecutor } from '../execution/process/executor.js'
 import { createLauncherBaseEnvironment }   from './launcher.js'

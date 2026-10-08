@@ -1,0 +1,51 @@
+{
+  "name": "@atls/yarn-plugin-release",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Infer Yarn workspace version decisions from commits",
+  "homepage": "https://github.com/atls/raijin#readme",
+  "bugs": {
+    "url": "https://github.com/atls/raijin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atls/raijin.git",
+    "directory": "packages/plugins/release"
+  },
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "builder build plugin"
+  },
+  "dependencies": {
+    "@atls/raijin": "workspace:*",
+    "@conventional-changelog/git-client": "3.1.2",
+    "@yarnpkg/fslib": "3.1.5",
+    "@yarnpkg/parsers": "3.1.0",
+    "@yarnpkg/plugin-git": "patch:@yarnpkg/plugin-git@npm%3A3.2.1#~/.yarn/patches/@yarnpkg-plugin-git-npm-3.2.1.patch",
+    "@yarnpkg/plugin-version": "4.3.0",
+    "clipanion": "4.0.0-rc.2",
+    "conventional-changelog-conventionalcommits": "10.4.0",
+    "conventional-commits-filter": "6.0.1",
+    "conventional-commits-parser": "7.1.2",
+    "conventional-recommended-bump": "12.1.0",
+    "semver": "7.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.6",
+    "@types/semver": "7.8.0",
+    "@yarnpkg/builder": "4.2.4",
+    "@yarnpkg/cli": "4.18.0",
+    "@yarnpkg/core": "4.9.1"
+  },
+  "peerDependencies": {
+    "@yarnpkg/cli": "*",
+    "@yarnpkg/core": "*",
+    "@yarnpkg/plugin-git": "*"
+  }
+}

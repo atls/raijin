@@ -41,6 +41,7 @@ type SourceAlignEntry = {
   doc: Doc
   fromPart?: Array<unknown>
   lineWidth?: number
+  mayBreakBeforeSource?: boolean
   sourceColumn?: number
 }
 
@@ -60,6 +61,7 @@ type DocCommand = {
 type FlattenResult = {
   foundStop: boolean
   invalid: boolean
+  mayBreak: boolean
   text: string
 }
 
@@ -226,6 +228,7 @@ const flattenDoc = (doc: Doc, stopPart?: Array<unknown>): FlattenResult => {
   const chunks: Array<string> = []
   let foundStop = false
   let invalid = false
+  let mayBreak = false
 
   const visit = (part: Doc): void => {
     if (foundStop || invalid) {
@@ -284,6 +287,7 @@ const flattenDoc = (doc: Doc, stopPart?: Array<unknown>): FlattenResult => {
         if (part.hard || part.literal) {
           invalid = true
         } else {
+          mayBreak = true
           chunks.push(part.soft ? '' : ' ')
         }
         break
@@ -302,6 +306,7 @@ const flattenDoc = (doc: Doc, stopPart?: Array<unknown>): FlattenResult => {
   return {
     foundStop,
     invalid,
+    mayBreak,
     text: chunks.join(''),
   }
 }
@@ -330,6 +335,7 @@ export const registerSourceAlignDoc = (node: Node, doc: Doc): void => {
     doc,
     fromPart,
     lineWidth: getDocTextWidth(line.text),
+    mayBreakBeforeSource: prefix.mayBreak,
     sourceColumn: getDocTextWidth(prefix.text),
   })
 }
@@ -361,7 +367,11 @@ const isMeasuredSourceAlignEntry = (
     return false
   }
 
-  return typeof entry.sourceColumn === 'number' && typeof entry.lineWidth === 'number'
+  return (
+    typeof entry.sourceColumn === 'number' &&
+    typeof entry.lineWidth === 'number' &&
+    typeof entry.mayBreakBeforeSource === 'boolean'
+  )
 }
 
 const getMaxSourceColumn = (nodes: Array<Node>): number =>
@@ -376,13 +386,18 @@ const getMaxSourceColumn = (nodes: Array<Node>): number =>
 const getAlignableSourceNodes = (
   nodes: Array<Node>,
   options: Options,
-  isAlignable: (node: Node) => boolean
+  isAlignable: (node: Node) => boolean,
+  alignPastPrintWidth: boolean
 ): Array<Node> => {
   const printWidth = getPrintWidth(options)
   let alignableNodes = nodes.filter((node) => {
     const entry = sourceAlignEntries.get(node)
 
-    return isAlignable(node) && isMeasuredSourceAlignEntry(entry) && entry.lineWidth <= printWidth
+    return (
+      isAlignable(node) &&
+      isMeasuredSourceAlignEntry(entry) &&
+      (entry.lineWidth <= printWidth || (alignPastPrintWidth && !entry.mayBreakBeforeSource))
+    )
   })
 
   while (alignableNodes.length > 0) {
@@ -392,7 +407,8 @@ const getAlignableSourceNodes = (
 
       return (
         isMeasuredSourceAlignEntry(entry) &&
-        entry.lineWidth + maxSourceColumn - entry.sourceColumn <= printWidth
+        (entry.lineWidth + maxSourceColumn - entry.sourceColumn <= printWidth ||
+          (alignPastPrintWidth && !entry.mayBreakBeforeSource))
       )
     })
 
@@ -409,13 +425,14 @@ const getAlignableSourceNodes = (
 export const setSourceAlignOffsets = (
   nodes: Array<Node>,
   options: Options,
-  isAlignable: (node: Node) => boolean
+  isAlignable: (node: Node) => boolean,
+  alignPastPrintWidth = false
 ): void => {
   nodes.forEach((node) => {
     resetSourceAlignNode(node)
   })
 
-  const alignableNodes = getAlignableSourceNodes(nodes, options, isAlignable)
+  const alignableNodes = getAlignableSourceNodes(nodes, options, isAlignable, alignPastPrintWidth)
   const maxSourceColumn = getMaxSourceColumn(alignableNodes)
 
   alignableNodes.forEach((node) => {
