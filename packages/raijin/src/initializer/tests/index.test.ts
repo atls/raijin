@@ -184,6 +184,40 @@ test('an older installed package updates to npm latest without changing project 
   assert.equal(await exists(join(cwd, '.yarn/releases/package.json')), false)
 })
 
+test('update preserves an opted-in latest dependency descriptor', async (context) => {
+  const cwd = await mkdtemp(join(tmpdir(), 'raijin-latest-update-'))
+  context.after(async () => rm(cwd, { recursive: true, force: true }))
+  const commands: Array<Array<string>> = []
+
+  await writeFile(
+    join(cwd, 'package.json'),
+    JSON.stringify({
+      name: 'consumer',
+      type: 'module',
+      packageManager: 'yarn@4.12.0',
+      devDependencies: { '@atls/raijin': 'latest' },
+    })
+  )
+
+  await runRaijinInitializer({
+    argv: ['update'],
+    cwd,
+    fetchImpl,
+    queryYarnPackage,
+    readYarnCommand,
+    runYarnCommand: async (args) => {
+      commands.push(args)
+    },
+  })
+
+  assert.deepEqual(commands, [['up', '--fixed', '@atls/raijin@latest']])
+  assert.equal(
+    JSON.parse(await readFile(join(cwd, 'package.json'), 'utf-8')).devDependencies['@atls/raijin'],
+    'latest'
+  )
+  assert.equal(await readFile(join(cwd, '.yarn/releases/yarn.js'), 'utf-8'), 'runtime')
+})
+
 test('member-only package cannot split its Yarn project runtime', async (context) => {
   const root = await mkdtemp(join(tmpdir(), 'raijin-member-'))
   context.after(async () => rm(root, { recursive: true, force: true }))

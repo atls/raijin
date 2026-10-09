@@ -26,6 +26,7 @@ import { installRepositoryHooks }               from '../../hooks/install.js'
 import { ensurePackageManifest }                from '../initializer/project.js'
 import { ensureYarnLock }                       from '../initializer/project.js'
 import { hasPackageJson }                       from '../initializer/project.js'
+import { readRaijinDependencyDescriptor }       from '../initializer/project.js'
 import { downloadRaijinRuntime }                from '../runtime/download.js'
 import { createRaijinReleaseTagName }           from '../runtime/download.js'
 import { fetchPublishedRaijinPackage }          from '../runtime/download.js'
@@ -272,6 +273,8 @@ export const installRaijin = async ({
   runYarnCommand: runCommand = runYarnCommand,
 }: InstallRaijinOptions): Promise<void> => {
   const targetCwd = await resolveInstallationTarget(cwd, mode)
+  const retainLatestDescriptor =
+    mode === 'update' && (await readRaijinDependencyDescriptor(targetCwd)) === 'latest'
 
   const published = await fetchPublishedRaijinPackage(fetchImpl)
   const { version } = published
@@ -303,13 +306,17 @@ export const installRaijin = async ({
   await writeFile(stagedPath, runtime)
 
   try {
-    await runCommand(
-      mode !== 'update'
-        ? ['add', '--prefer-dev', '-E', `${RAIJIN_RUNTIME_PACKAGE_NAME}@${version}`]
-        : ['up', '-E', `${RAIJIN_RUNTIME_PACKAGE_NAME}@${version}`],
-      targetCwd,
-      { packageManager, skipInstallHooks: true }
-    )
+    let installArguments: Array<string>
+
+    if (mode !== 'update') {
+      installArguments = ['add', '--prefer-dev', '-E', `${RAIJIN_RUNTIME_PACKAGE_NAME}@${version}`]
+    } else if (retainLatestDescriptor) {
+      installArguments = ['up', '--fixed', `${RAIJIN_RUNTIME_PACKAGE_NAME}@latest`]
+    } else {
+      installArguments = ['up', '-E', `${RAIJIN_RUNTIME_PACKAGE_NAME}@${version}`]
+    }
+
+    await runCommand(installArguments, targetCwd, { packageManager, skipInstallHooks: true })
     await assertInstalledPackage(targetCwd, version, packageManager, readCommand)
     await updatePackageManager(targetCwd, packageManager)
     await activateRuntime(targetCwd, stagedPath)

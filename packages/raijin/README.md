@@ -6,6 +6,8 @@ Raijin projects use ESM. Initialization and update stop before changing an exist
 
 The public install/update path selects npm's published `latest` version and requires the exact matching GitHub release to contain an uploaded `yarn.js` asset with a SHA-256 digest. The package's `gitHead` must match the release tag commit; Corepack uses the Yarn version from that commit's root `package.json`. A missing or mismatched asset is rejected before the active runtime changes. A generated release manifest is not needed.
 
+When an existing project declares `"@atls/raijin": "latest"`, update keeps that descriptor while resolving the verified release into `yarn.lock` and activating its matching Yarn runtime. Projects with an exact dependency descriptor retain their exact-version update behavior.
+
 ## Git hooks
 
 Local installation and runtime updates install Git hooks through Husky. Husky owns `.config/husky/_` and the relative `core.hooksPath`; Raijin adds only its marked `pre-commit`, `commit-msg`, and `prepare-commit-msg` entries. Existing hooks are not overwritten: a conflict stops installation before hook state changes. Hooks are skipped in CI and with `HUSKY=0`. In a new directory, run `git init` and then `yarn install` to activate them before the first commit.

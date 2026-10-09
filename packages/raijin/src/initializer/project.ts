@@ -56,23 +56,30 @@ export const assertRaijinProjectModuleType = async (cwd: string): Promise<void> 
   }
 }
 
-export const hasRaijinPackage = async (cwd: string): Promise<boolean> => {
+export const readRaijinDependencyDescriptor = async (cwd: string): Promise<unknown> => {
   if (!(await hasPackageJson(cwd))) {
-    return false
+    return undefined
   }
 
   const manifest = await readPackageManifest(cwd)
 
-  return ['dependencies', 'devDependencies', 'optionalDependencies'].some((field) => {
+  for (const field of ['dependencies', 'devDependencies', 'optionalDependencies']) {
     const dependencies = manifest[field]
 
-    return (
+    if (
       dependencies !== null &&
       typeof dependencies === 'object' &&
       Object.hasOwn(dependencies, '@atls/raijin')
-    )
-  })
+    ) {
+      return (dependencies as Record<string, unknown>)['@atls/raijin']
+    }
+  }
+
+  return undefined
 }
+
+export const hasRaijinPackage = async (cwd: string): Promise<boolean> =>
+  (await readRaijinDependencyDescriptor(cwd)) !== undefined
 
 export const hasYarnLock = async (cwd: string): Promise<boolean> => hasProjectFile(cwd, YARN_LOCK)
 
