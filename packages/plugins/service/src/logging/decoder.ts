@@ -1,7 +1,7 @@
-import type { LogRecord }            from '@atls/logger'
 import type { ProcessOutputEvent }   from '@atls/raijin/commands'
 
 import type { BuildDiagnostic }      from '../build/interfaces.js'
+import type { ServiceLoggerRecord }  from './interfaces.js'
 import type { ServiceLogRecord }     from './interfaces.js'
 
 import { SeverityNumber }            from '@atls/logger'
@@ -34,7 +34,7 @@ const isBuildDiagnostic = (value: unknown): value is BuildDiagnostic => {
   )
 }
 
-const isLoggerRecord = (value: unknown): value is LogRecord => {
+const isLoggerRecord = (value: unknown): value is ServiceLoggerRecord => {
   if (!isObjectRecord(value)) {
     return false
   }
