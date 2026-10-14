@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@atls/cli-ui": "workspace:*",
-    "@atls/logger": "0.0.4",
+    "@atls/logger": "1.0.0",
     "@atls/raijin": "workspace:*",
     "@mikro-orm/sql-highlighter": "1.0.1",
     "clipanion": "4.0.0-rc.2",

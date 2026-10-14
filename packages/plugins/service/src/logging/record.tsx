@@ -1,5 +1,6 @@
-import type { LogRecord as Record }        from '@atls/logger'
 import type { ReactElement }               from 'react'
+
+import type { ServiceLoggerRecord }        from './interfaces.js'
 
 import { LOGGER_NAMESPACE_ATTRIBUTE_NAME } from '@atls/logger'
 import { Box }                             from 'ink'
@@ -11,10 +12,7 @@ import { LogMikroOrm }                     from './mikro-orm.jsx'
 import { LogNamespace }                    from './namespace.jsx'
 import { LogStackTrace }                   from './stack-trace.jsx'
 
-export interface LogRecordProps extends Record {
-  namespace?: string
-  stack?: string
-}
+export type LogRecordProps = ServiceLoggerRecord
 
 export const LogRecord = ({
   namespace,
