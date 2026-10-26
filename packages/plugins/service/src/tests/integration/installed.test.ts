@@ -7,6 +7,7 @@ import { cp }            from 'node:fs/promises'
 import { mkdir }         from 'node:fs/promises'
 import { mkdtemp }       from 'node:fs/promises'
 import { readFile }      from 'node:fs/promises'
+import { rm }            from 'node:fs/promises'
 import { writeFile }     from 'node:fs/promises'
 import { get }           from 'node:http'
 import { tmpdir }        from 'node:os'
@@ -23,6 +24,9 @@ const environment = (): NodeJS.ProcessEnv => {
   const env = { ...process.env }
 
   delete env.NODE_OPTIONS
+  delete env.RAIJIN_NODE_LOADER
+  delete env.RAIJIN_NODE_LOADER_REGISTRATION
+  delete env.RAIJIN_REGISTERED_PNP_LOADER
   delete env.YARN_VERSION
   delete env.YARN_YARN_PATH
   env.YARN_ENABLE_IMMUTABLE_INSTALLS = 'false'
@@ -208,5 +212,125 @@ process.stdout.write(\`STANDALONE_READY:\${React.createElement('div').type}\\n\`
     })
 
     assert.match(standalone.stdout, /STANDALONE_READY:div/)
+  }
+)
+
+test(
+  'starts two service workspaces with one root runtime after production focus',
+  { timeout: 180_000 },
+  async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'service-production-'))
+    const archive = join(directory, 'raijin.tgz')
+
+    try {
+      await run(repoRoot, ['workspace', '@atls/raijin', 'pack', '--out', archive])
+
+      for await (const nodeLinker of ['pnp', 'node-modules']) {
+        const cwd = join(directory, nodeLinker)
+        const consumerRuntime = join(cwd, '.yarn', 'releases', 'yarn.js')
+        const runConsumer = async (args: Array<string>, executionCwd = cwd) =>
+          execute(process.execPath, [consumerRuntime, ...args], {
+            cwd: executionCwd,
+            env: environment(),
+            maxBuffer: 8 * 1024 * 1024,
+            timeout: 60_000,
+          })
+
+        await mkdir(join(cwd, '.yarn', 'releases'), { recursive: true })
+        await cp(runtime, consumerRuntime)
+        await writeFile(
+          join(cwd, 'package.json'),
+          JSON.stringify({
+            name: 'service-platform',
+            private: true,
+            type: 'module',
+            workspaces: ['services/*'],
+            dependencies: { '@atls/raijin': `file:${archive}` },
+          })
+        )
+        await writeFile(
+          join(cwd, '.yarnrc.yml'),
+          `nodeLinker: ${nodeLinker}\npnpEnableEsmLoader: true\nyarnPath: .yarn/releases/yarn.js\n`
+        )
+
+        for await (const name of ['first', 'second']) {
+          const workspace = join(cwd, 'services', name)
+
+          await mkdir(join(workspace, 'src'), { recursive: true })
+          await writeFile(
+            join(workspace, 'package.json'),
+            JSON.stringify({
+              name: `@service/${name}`,
+              private: true,
+              type: 'module',
+              scripts: {
+                build: 'yarn service build --standalone',
+                start: 'yarn service start',
+              },
+            })
+          )
+          await writeFile(
+            join(workspace, 'src', 'index.ts'),
+            `import { createServer } from 'node:http'
+
+const server = createServer((_request, response) => {
+  response.end('${name}')
+  server.close()
+})
+
+server.listen(0, '127.0.0.1', () => {
+  const address = server.address()
+  process.stdout.write(\`READY:\${typeof address === 'object' && address ? address.port : 0}\\n\`)
+})
+`
+          )
+        }
+
+        await runConsumer(['install'])
+
+        for await (const name of ['first', 'second']) {
+          await runConsumer(['workspace', `@service/${name}`, 'run', 'build'])
+        }
+
+        await runConsumer(['workspaces', 'focus', '--production', '@service/first'])
+        await assert.rejects(runConsumer(['run', 'start'], join(cwd, 'services', 'first')), {
+          code: 1,
+        })
+
+        for await (const name of ['first', 'second']) {
+          await runConsumer([
+            'workspaces',
+            'focus',
+            '--production',
+            'service-platform',
+            `@service/${name}`,
+          ])
+
+          const started = spawn(process.execPath, [consumerRuntime, 'run', 'start'], {
+            cwd: join(cwd, 'services', name),
+            env: environment(),
+            stdio: ['ignore', 'pipe', 'pipe'],
+          })
+          const completed = once(started, 'close')
+
+          try {
+            const ready = await waitForMatch(started, /READY:(\d+)/)
+
+            assert.equal(await request(Number(ready[1])), name)
+
+            const [exitCode] = (await completed) as [number | null]
+
+            assert.equal(exitCode, 0)
+          } finally {
+            if (started.exitCode === null) {
+              started.kill('SIGKILL')
+              await completed
+            }
+          }
+        }
+      }
+    } finally {
+      await rm(directory, { recursive: true, force: true })
+    }
   }
 )
