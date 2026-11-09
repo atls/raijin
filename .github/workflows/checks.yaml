@@ -2,6 +2,17 @@ name: Checks
 
 on:
   pull_request:
+    paths:
+      - '**'
+      - '!.agents/**'
+      - '!.codex/context/**'
+      - '!**/*.md'
+      - '!.github/assets/**'
+      - '**/src/**'
+      - '**/test*/**'
+      - '**/__tests__/**'
+      - '**/*fixtures*/**'
+      - '**/templates/**'
 
 jobs:
   checks:
